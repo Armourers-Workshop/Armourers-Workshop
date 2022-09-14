@@ -66,7 +66,7 @@ public class PaintbrushItem extends AbstractPaintToolItem implements IItemTintCo
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ArmourersWorkshop.getResource("small"), (itemStack, level, entity) -> ToolOptions.FULL_BLOCK_MODE.get(itemStack) ? 0 : 1);
+        builder.accept(ArmourersWorkshop.getResource("small"), (itemStack, level, entity, id) -> ToolOptions.FULL_BLOCK_MODE.get(itemStack) ? 0 : 1);
     }
 
     @Override

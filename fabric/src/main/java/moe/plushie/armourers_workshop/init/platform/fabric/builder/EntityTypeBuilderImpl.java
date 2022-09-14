@@ -4,9 +4,9 @@ import moe.plushie.armourers_workshop.api.common.IEntityRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IEntityTypeBuilder;
 import moe.plushie.armourers_workshop.core.registry.Registry;
+import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricEntityRenderers;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -78,7 +78,7 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
     public IEntityTypeBuilder<T> bind(Supplier<IEntityRendererProvider<T>> provider) {
         this.binder = () -> entityType -> {
             // here is safe call client registry.
-            EntityRendererRegistry.INSTANCE.register(entityType, (manager, context) -> provider.get().getEntityRenderer(manager));
+            AbstractFabricEntityRenderers.register(entityType, provider.get());
         };
         return this;
     }

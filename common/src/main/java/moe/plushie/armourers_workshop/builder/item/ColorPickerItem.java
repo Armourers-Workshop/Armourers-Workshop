@@ -56,7 +56,7 @@ public class ColorPickerItem extends AbstractConfigurableToolItem implements IIt
             NetworkManager.sendToServer(packet);
             // we only play local sound, color pick not need send to other players.
             playSound(context);
-            return InteractionResult.CONSUME;
+            return InteractionResult.SUCCESS;
         }
         if (tileEntity instanceof IPaintProvider) {
             Player player = context.getPlayer();
@@ -80,7 +80,7 @@ public class ColorPickerItem extends AbstractConfigurableToolItem implements IIt
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ArmourersWorkshop.getResource("empty"), (itemStack, level, entity) -> ColorUtils.hasColor(itemStack) ? 0 : 1);
+        builder.accept(ArmourersWorkshop.getResource("empty"), (itemStack, level, entity, id) -> ColorUtils.hasColor(itemStack) ? 0 : 1);
     }
 
     @Override

@@ -2,7 +2,9 @@ package moe.plushie.armourers_workshop.core.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
+import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
@@ -10,6 +12,7 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
@@ -18,7 +21,6 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -42,11 +44,13 @@ public final class ExtendedItemRenderer {
             int si = Math.min(width, height);
             matrixStack.pushPose();
             matrixStack.translate(x + width / 2f, y + height / 2f, z);
+            // we need do a vertical mirror, but normal matrix no needs.
+            matrixStack.last().pose().multiply(Matrix4f.createScaleMatrix(1, -1, 1));
             matrixStack.mulPose(Vector3f.XP.rotationDegrees(rx));
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(ry - (float) (t / 10 % 360)));
+            matrixStack.mulPose(Vector3f.YP.rotationDegrees(ry + (float) (t / 10 % 360)));
+            ModDebugger.rotate(matrixStack);
             matrixStack.scale(0.625f, 0.625f, 0.625f);
             matrixStack.scale(si, si, si);
-            matrixStack.scale(-1, 1, 1);
             renderSkin(bakedSkin, scheme, itemStack, null, Vector3f.ONE, 1, 1, 1, 0, 0xf000f0, matrixStack, buffers);
             matrixStack.popPose();
         }
@@ -54,8 +58,8 @@ public final class ExtendedItemRenderer {
 
     public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, PoseStack matrixStack, MultiBufferSource buffers) {
         Entity entity = SkinItemRenderer.getInstance().getMannequinEntity();
-        HumanoidModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
-        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
+        MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
+        SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer == null || entity == null || entity.level == null) {
             return;
         }
@@ -72,7 +76,7 @@ public final class ExtendedItemRenderer {
 
         SkinRenderContext context = SkinRenderContext.getInstance();
         context.setup(light, partialTicks, matrixStack, buffers);
-        renderer.render(entity, model, bakedSkin, scheme, itemStack, 0, context);
+        renderer.render(entity, SkinRendererManager.wrap(model), bakedSkin, scheme, itemStack, 0, context);
 
         matrixStack.popPose();
     }

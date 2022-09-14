@@ -1,25 +1,25 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
+import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
-import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.TickUtils;
-import moe.plushie.armourers_workshop.utils.TrigUtils;
+import moe.plushie.armourers_workshop.utils.*;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -28,12 +28,12 @@ import net.minecraft.world.level.block.state.BlockState;
 @Environment(value = EnvType.CLIENT)
 public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlockEntity> extends AbstractBlockEntityRenderer<T> {
 
-    public HologramProjectorBlockEntityRenderer(BlockEntityRenderDispatcher rendererManager) {
-        super(rendererManager);
+    public HologramProjectorBlockEntityRenderer(AbstractBlockEntityRendererContext context) {
+        super(context);
     }
 
     @Override
-    public void render(T entity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T entity, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
         if (!entity.isPowered()) {
             return;
         }
@@ -44,8 +44,8 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         }
         BlockState blockState = entity.getBlockState();
         Entity mannequin = SkinItemRenderer.getInstance().getMannequinEntity();
-        HumanoidModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
-        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(mannequin, model, null);
+        MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
+        SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(mannequin, model, null);
         if (renderer == null || mannequin == null || mannequin.level == null) {
             return;
         }
@@ -56,29 +56,29 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
             overLight = 0xf000f0;
         }
 
-        matrixStack.pushPose();
-        matrixStack.translate(0.5f, 0.5f, 0.5f);
-        matrixStack.mulPose(entity.getRenderRotations(blockState));
-        matrixStack.translate(0.0f, 0.5f, 0.0f);
+        poseStack.pushPose();
+        poseStack.translate(0.5f, 0.5f, 0.5f);
+        poseStack.mulPose(entity.getRenderRotations(blockState));
+        poseStack.translate(0.0f, 0.5f, 0.0f);
 
-        matrixStack.scale(f, f, f);
-        matrixStack.scale(-1, -1, 1);
+        poseStack.scale(f, f, f);
+        poseStack.scale(-1, -1, 1);
 
         Rectangle3f rect = bakedSkin.getRenderBounds(mannequin, model, null, itemStack);
-        apply(entity, rect, partialTicks1, matrixStack, buffers);
+        apply(entity, rect, partialTicks1, poseStack, buffers);
 
         SkinRenderContext context = SkinRenderContext.getInstance();
-        context.setup(overLight, partialTicks1, matrixStack, buffers);
-        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, itemStack, 0, context);
+        context.setup(overLight, partialTicks1, poseStack, buffers);
+        renderer.render(mannequin, SkinRendererManager.wrap(model), bakedSkin, ColorScheme.EMPTY, itemStack, 0, context);
 
-        matrixStack.popPose();
+        poseStack.popPose();
 
         if (ModDebugger.hologramProjectorBlock) {
             BlockPos pos = entity.getBlockPos();
-            matrixStack.pushPose();
-            matrixStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-            RenderSystem.drawBoundingBox(matrixStack, entity.getCustomRenderBoundingBox(blockState), UIColor.ORANGE, buffers);
-            matrixStack.popPose();
+            poseStack.pushPose();
+            poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
+            RenderSystem.drawBoundingBox(poseStack, entity.getCustomRenderBoundingBox(blockState), UIColor.ORANGE, buffers);
+            poseStack.popPose();
         }
     }
 

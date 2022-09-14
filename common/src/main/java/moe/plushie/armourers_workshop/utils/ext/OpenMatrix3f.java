@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.utils.ext;
 
 import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 
 import java.nio.FloatBuffer;
@@ -17,6 +18,10 @@ public class OpenMatrix3f extends Matrix3f {
 
     public OpenMatrix3f(Matrix3f matrix) {
         super(matrix);
+    }
+
+    public OpenMatrix3f(Matrix4f matrix) {
+        super(fromFloatBuffer(OpenMatrix4f.toFloatBuffer(matrix)));
     }
 
     public static OpenMatrix3f createScaleMatrix(float x, float y, float z) {

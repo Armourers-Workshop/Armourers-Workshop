@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
+import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
@@ -12,7 +13,7 @@ import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.ItemStack;
 
 @Environment(value = EnvType.CLIENT)
-public class TridentSkinRenderer<T extends ThrownTrident, M extends Model> extends SkinRenderer<T, M> {
+public class TridentSkinRenderer<T extends ThrownTrident, V extends Model, M extends IModelHolder<V>> extends SkinRenderer<T, V, M> {
 
     public TridentSkinRenderer(EntityProfile profile) {
         super(profile);

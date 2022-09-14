@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.Model;
@@ -12,7 +13,7 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 
 @Environment(value = EnvType.CLIENT)
-public class ArrowSkinRenderer<T extends AbstractArrow, M extends Model> extends SkinRenderer<T, M> {
+public class ArrowSkinRenderer<T extends AbstractArrow, V extends Model, M extends IModelHolder<V>> extends SkinRenderer<T, V, M> {
 
     public ArrowSkinRenderer(EntityProfile profile) {
         super(profile);

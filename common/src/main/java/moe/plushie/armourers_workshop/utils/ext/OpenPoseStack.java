@@ -41,8 +41,8 @@ public abstract class OpenPoseStack {
 
             @Override
             public void mulPose(Matrix4f matrix) {
-//                pose.multiply(new OpenMatrix4f(matrix));
-//                normal.multiply(new OpenMatrix3f(matrix));
+                pose.multiply(new OpenMatrix4f(matrix));
+                normal.multiply(new OpenMatrix3f(matrix));
             }
 
             @Override

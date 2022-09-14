@@ -1,18 +1,28 @@
 package moe.plushie.armourers_workshop.core.client.model;
 
+import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
+import moe.plushie.armourers_workshop.compatibility.AbstractPlayerModel;
+import moe.plushie.armourers_workshop.init.platform.RendererManager;
+import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import net.minecraft.client.model.HumanoidModel;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.LivingEntity;
 
-public class TransformModel<T extends LivingEntity> extends HumanoidModel<T> {
+@Environment(value= EnvType.CLIENT)
+public class TransformModel<T extends LivingEntity> extends AbstractPlayerModel<T> {
 
     public TransformModel(float scale) {
-        super(scale);
+        this(RendererManager.getEntityContext(), scale);
+    }
+
+    protected TransformModel(AbstractEntityRendererContext context, float scale) {
+        super(context, scale, false);
     }
 
     public void setup(T entity, int light, float partialRenderTick) {
         // dump from LivingEntityRenderer
-        // TODO:@SAGESSE
+        // FIXME:@SAGESSE
         //boolean shouldSit = entity.isPassenger() && (entity.getVehicle() != null && entity.getVehicle().shouldRiderSit());
         boolean shouldSit = entity.isPassenger() && (entity.getVehicle() != null);
         young = entity.isBaby();
@@ -44,7 +54,7 @@ public class TransformModel<T extends LivingEntity> extends HumanoidModel<T> {
             f2 = f1 - f;
         }
         float f7 = entity.tickCount + partialRenderTick;
-        float f6 = MathUtils.lerp(partialRenderTick, entity.xRotO, entity.xRot);
+        float f6 = MathUtils.lerp(partialRenderTick, entity.xRotO, Accessor.getXRot(entity));
         float f8 = 0.0F;
         float f5 = 0.0F;
         if (!shouldSit && entity.isAlive()) {

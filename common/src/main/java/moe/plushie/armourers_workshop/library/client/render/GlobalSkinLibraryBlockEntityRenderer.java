@@ -2,15 +2,16 @@ package moe.plushie.armourers_workshop.library.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.core.client.render.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.library.block.GlobalSkinLibraryBlock;
+import moe.plushie.armourers_workshop.utils.ModelPartBuilder;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,11 +19,10 @@ import net.minecraft.world.level.block.state.BlockState;
 @Environment(value = EnvType.CLIENT)
 public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends AbstractBlockEntityRenderer<T> {
 
-    private final ModelPart model = new ModelPart(64, 32, 0, 0);
+    private final ModelPart model = ModelPartBuilder.of(64, 32).cube(-8, -8, -8, 16, 16, 16).build();
 
-    public GlobalSkinLibraryBlockEntityRenderer(BlockEntityRenderDispatcher rendererManager) {
-        super(rendererManager);
-        this.model.addBox(-8, -8, -8, 16, 16, 16);
+    public GlobalSkinLibraryBlockEntityRenderer(AbstractBlockEntityRendererContext context) {
+        super(context);
     }
 
     @Override
@@ -50,8 +50,8 @@ public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends
             matrixStack.mulPose(TrigUtils.rotate(angle * 4, angle, angle * 2, true));
         }
 
-        VertexConsumer builder = buffers.getBuffer(SkinRenderType.EARTH);
-        model.render(matrixStack, builder, 0, 0, 1.0f, 1.0f, 1.0f, 0.5f);
+        VertexConsumer builder = buffers.getBuffer(SkinRenderType.IMAGE_EARTH);
+        model.render(matrixStack, builder, light, overlay, 1.0f, 1.0f, 1.0f, 0.5f);
 
         matrixStack.popPose();
     }

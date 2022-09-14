@@ -22,7 +22,7 @@ def targets = ["common","forge","fabric"]
 targets.forEach {
     sourceSets.register(it) {
         it.java.srcDirs("../../${it.name}/src/main/java")
-        it.java.srcDirs("../../${it.name}/src/main/resources")
+        it.resources.srcDirs("../../${it.name}/src/main/resources")
     }
 }
 
@@ -56,4 +56,10 @@ task applyCoreProperties {
     }
 }
 
-defaultTasks "applyCoreSources"
+task applyCoreConfigurations {
+    doLast {
+        delete files("../../.idea/runConfigurations")
+    }
+}
+
+defaultTasks("applyCoreSources", "applyCoreConfigurations")

@@ -1,23 +1,25 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
+import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
+import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
-import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -26,8 +28,8 @@ import net.minecraft.world.level.block.state.BlockState;
 @Environment(value = EnvType.CLIENT)
 public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extends AbstractBlockEntityRenderer<T> {
 
-    public SkinnableBlockEntityRenderer(BlockEntityRenderDispatcher rendererManager) {
-        super(rendererManager);
+    public SkinnableBlockEntityRenderer(AbstractBlockEntityRendererContext context) {
+        super(context);
     }
 
     @Override
@@ -38,8 +40,8 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
         }
         BlockState blockState = entity.getBlockState();
         Entity mannequin = SkinItemRenderer.getInstance().getMannequinEntity();
-        HumanoidModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
-        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(mannequin, model, null);
+        MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
+        SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(mannequin, model, null);
         if (renderer == null || mannequin == null || mannequin.level == null) {
             return;
         }
@@ -56,7 +58,7 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
 
         SkinRenderContext context = SkinRenderContext.getInstance();
         context.setup(light, partialTicks1, matrixStack, buffers);
-        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, 0, context);
+        renderer.render(mannequin, SkinRendererManager.wrap(model), bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, 0, context);
 
         matrixStack.popPose();
 

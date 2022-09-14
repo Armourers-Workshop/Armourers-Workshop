@@ -11,10 +11,8 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.LazyOptional;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -29,16 +27,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 
 import java.util.function.BiConsumer;
 
-public class SkinItem extends Item implements IItemPropertiesProvider {
+public class SkinItem extends BlockItem implements IItemPropertiesProvider {
 
-    private final LazyOptional<BlockItem> blockItem;
-
-    public SkinItem(Item.Properties properties) {
-        super(properties);
-        this.blockItem = LazyOptional.of(() -> new BlockItem(ModBlocks.SKINNABLE.get(), properties));
+    public SkinItem(Block block, Item.Properties properties) {
+        super(block, properties);
     }
 
     public static ItemStack replace(ItemStack targetStack, ItemStack sourceStack) {
@@ -111,8 +107,10 @@ public class SkinItem extends Item implements IItemPropertiesProvider {
         return InteractionResultHolder.consume(itemStack.copy());
     }
 
+    @Override
     public InteractionResult place(BlockPlaceContext context) {
-        return blockItem.resolve().map(item -> item.place(new SkinBlockPlaceContext(context))).orElse(InteractionResult.PASS);
+        // we need expand the context info.
+        return super.place(new SkinBlockPlaceContext(context));
     }
 
     @Override
@@ -126,7 +124,7 @@ public class SkinItem extends Item implements IItemPropertiesProvider {
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ArmourersWorkshop.getResource("loading"), (itemStack, level, entity) -> {
+        builder.accept(ArmourersWorkshop.getResource("loading"), (itemStack, level, entity, id) -> {
             SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
             BakedSkin bakedSkin = BakedSkin.of(descriptor);
             if (bakedSkin != null) {
@@ -135,5 +133,4 @@ public class SkinItem extends Item implements IItemPropertiesProvider {
             return descriptor.getType().getId();
         });
     }
-
 }

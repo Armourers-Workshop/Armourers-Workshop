@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
+import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -19,10 +20,10 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 @Environment(value = EnvType.CLIENT)
-public class LivingSkinRenderer<T extends LivingEntity, M extends EntityModel<T>> extends SkinRenderer<T, M> {
+public class LivingSkinRenderer<T extends LivingEntity, V extends EntityModel<T>, M extends IModelHolder<V>> extends SkinRenderer<T, V, M> {
 
-    protected final HashMap<Class<?>, BiFunction<RenderLayerParent<T, M>, RenderLayer<T, M>, RenderLayer<T, M>>> mappers = new HashMap<>();
-    protected LivingEntityRenderer<T, M> renderer;
+    protected final HashMap<Class<?>, BiFunction<RenderLayerParent<T, V>, RenderLayer<T, V>, RenderLayer<T, V>>> mappers = new HashMap<>();
+    protected LivingEntityRenderer<T, V> renderer;
 
     public LivingSkinRenderer(EntityProfile profile) {
         super(profile);
@@ -32,16 +33,16 @@ public class LivingSkinRenderer<T extends LivingEntity, M extends EntityModel<T>
     public void init(EntityRenderer<T> entityRenderer) {
         super.init(entityRenderer);
         if (entityRenderer instanceof LivingEntityRenderer<?, ?>) {
-            init((LivingEntityRenderer<T, M>) entityRenderer);
+            init((LivingEntityRenderer<T, V>) entityRenderer);
         }
     }
 
-    protected void init(LivingEntityRenderer<T, M> entityRenderer) {
-        List<RenderLayer<T, M>> layers = entityRenderer.layers;
+    protected void init(LivingEntityRenderer<T, V> entityRenderer) {
+        List<RenderLayer<T, V>> layers = entityRenderer.layers;
         this.renderer = entityRenderer;
         this.mappers.forEach((key, value) -> {
             for (int index = 0; index < layers.size(); ++index) {
-                RenderLayer<T, M> oldValue = layers.get(index);
+                RenderLayer<T, V> oldValue = layers.get(index);
                 if (key.isInstance(oldValue)) {
                     layers.set(index, value.apply(entityRenderer, oldValue));
                 }
@@ -53,12 +54,12 @@ public class LivingSkinRenderer<T extends LivingEntity, M extends EntityModel<T>
     public int render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int slotIndex, SkinRenderContext context) {
         // we don't know how to draw without a model, right?
         if (model == null) {
-            model = getModel();
+            model = SkinRendererManager.wrap(getModel());
         }
         return super.render(entity, model, bakedSkin, scheme, itemStack, slotIndex, context);
     }
 
-    public M getModel() {
+    public V getModel() {
         return renderer.getModel();
     }
 }

@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.common.IBlockEntitySupplier;
 import moe.plushie.armourers_workshop.api.common.IMenuProvider;
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
 import moe.plushie.armourers_workshop.api.common.builder.*;
+import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -47,5 +48,7 @@ public class BuilderManager {
         <T> ICapabilityTypeBuilder<T> createCapabilityTypeBuilder(Class<T> type, Function<Entity, Optional<T>> factory);
 
         <T extends IKeyBinding> IKeyBindingBuilder<T> createKeyBindingBuilder(String key);
+
+        <T extends IPermissionNode> IPermissionNodeBuilder<T> createPermissionBuilder();
     }
 }

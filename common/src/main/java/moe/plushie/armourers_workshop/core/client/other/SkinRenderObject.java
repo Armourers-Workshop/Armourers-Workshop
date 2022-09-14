@@ -2,17 +2,16 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.math.Matrix4f;
+import moe.plushie.armourers_workshop.api.common.IRenderBufferObject;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 
 import java.nio.ByteBuffer;
 
 @Environment(value = EnvType.CLIENT)
-public class SkinRenderObject implements AutoCloseable {
+public class SkinRenderObject implements IRenderBufferObject, AutoCloseable {
 
     protected int id = -1;
 
@@ -24,6 +23,7 @@ public class SkinRenderObject implements AutoCloseable {
         RenderSystem.glBindBuffer(GL15.GL_ARRAY_BUFFER, () -> 0);
     }
 
+    @Override
     public void bind() {
         RenderSystem.glBindBuffer(GL15.GL_ARRAY_BUFFER, () -> this.id);
     }
@@ -53,11 +53,12 @@ public class SkinRenderObject implements AutoCloseable {
     }
 
     public void draw(Matrix4f matrix, int mode, int vertexCount) {
-        OpenPoseStack poseStack = RenderSystem.getResolvedModelViewStack();
-        poseStack.pushPose();
-        poseStack.mulPose(matrix);
-        GL11.glDrawArrays(mode, 0, vertexCount);
-        poseStack.popPose();
+//        PoseStack poseStack = RenderSystem.getModelStack();
+//        poseStack.pushPose();
+//        //poseStack.mulPose(matrix);
+//        poseStack.mulPoseMatrix(matrix);
+//        RenderSystem.applyModelViewMatrix();
+//        GL11.glDrawArrays(mode, 0, vertexCount);
     }
 
     public void close() {

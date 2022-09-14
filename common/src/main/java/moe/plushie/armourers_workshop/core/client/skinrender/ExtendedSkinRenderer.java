@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -12,20 +13,16 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 @Environment(value = EnvType.CLIENT)
-public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends EntityModel<T>> extends LivingSkinRenderer<T, M> {
-
-    protected final IPartAccessor<M> accessor;
+public abstract class ExtendedSkinRenderer<T extends LivingEntity, V extends EntityModel<T>, M extends IHumanoidModelHolder<V>> extends LivingSkinRenderer<T, V, M> {
 
     public ExtendedSkinRenderer(EntityProfile profile) {
         super(profile);
-        this.accessor = getAccessor();
     }
 
     @Override
@@ -79,82 +76,80 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
         super.apply(entity, model, overriddenManager, renderData);
         // model
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_HEAD)) {
-            addModelOverride(accessor.getHead(model));
+            addModelOverride(model.getHeadPart());
         }
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_CHEST)) {
-            addModelOverride(accessor.getBody(model));
+            addModelOverride(model.getBodyPart());
         }
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_LEFT_ARM)) {
-            addModelOverride(accessor.getLeftArm(model));
+            addModelOverride(model.getLeftArmPart());
         }
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_RIGHT_ARM)) {
-            addModelOverride(accessor.getRightArm(model));
+            addModelOverride(model.getRightArmPart());
         }
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_LEFT_LEG)) {
-            addModelOverride(accessor.getLeftLeg(model));
+            addModelOverride(model.getLeftLegPart());
         }
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_RIGHT_LEG)) {
-            addModelOverride(accessor.getRightLeg(model));
+            addModelOverride(model.getRightLegPart());
         }
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_LEFT_FOOT)) {
-            addModelOverride(accessor.getLeftLeg(model));
+            addModelOverride(model.getLeftLegPart());
         }
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_RIGHT_FOOT)) {
-            addModelOverride(accessor.getRightLeg(model));
+            addModelOverride(model.getRightLegPart());
         }
         // overlay
         if (overriddenManager.overrideOverlay(SkinPartTypes.BIPED_HEAD)) {
-            addModelOverride(accessor.getHat(model));
+            addModelOverride(model.getHatPart());
         }
     }
 
-    public abstract IPartAccessor<M> getAccessor();
-
     protected void setHatPart(PoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, accessor.getHat(model));
+        transformer.apply(matrixStack, model.getHatPart());
     }
 
     protected void setHeadPart(PoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, accessor.getHead(model));
+        transformer.apply(matrixStack, model.getHeadPart());
     }
 
     protected void setBodyPart(PoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, accessor.getBody(model));
+        transformer.apply(matrixStack, model.getBodyPart());
     }
 
     protected void setLeftArmPart(PoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, accessor.getLeftArm(model));
+        transformer.apply(matrixStack, model.getLeftArmPart());
     }
 
     protected void setRightArmPart(PoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, accessor.getRightArm(model));
+        transformer.apply(matrixStack, model.getRightArmPart());
     }
 
     protected void setLeftLegPart(PoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, accessor.getLeftLeg(model));
+        transformer.apply(matrixStack, model.getLeftLegPart());
     }
 
     protected void setRightLegPart(PoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, accessor.getRightLeg(model));
+        transformer.apply(matrixStack, model.getRightLegPart());
     }
 
     protected void setLeftFootPart(PoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, accessor.getLeftLeg(model));
+        transformer.apply(matrixStack, model.getLeftLegPart());
     }
 
     protected void setRightFootPart(PoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, accessor.getRightLeg(model));
+        transformer.apply(matrixStack, model.getRightLegPart());
     }
 
     protected void setSkirtPart(PoseStack matrixStack, M model) {
-        ModelPart body = accessor.getBody(model);
-        ModelPart leg = accessor.getRightLeg(model);
+        ModelPart body = model.getBodyPart();
+        ModelPart leg = model.getRightLegPart();
         matrixStack.translate(body.x, leg.y, leg.z);
         if (body.yRot != 0) {
             matrixStack.mulPose(Vector3f.YP.rotation(body.yRot));
         }
         // skirt does not wobble during normal walking.
-        if (!model.riding) {
+        if (!model.isRiding()) {
             return;
         }
         if (leg.xRot != 0) {
@@ -164,26 +159,9 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
 
     protected void setWings(PoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
         if (bakedPart.getProperties().get(SkinProperty.WINGS_MATCHING_POSE)) {
-            transformer.apply(matrixStack, accessor.getBody(model));
+            transformer.apply(matrixStack, model.getBodyPart());
         }
         matrixStack.translate(0, 0, 2);
-    }
-
-    public interface IPartAccessor<M extends Model> {
-
-        ModelPart getHat(M model);
-
-        ModelPart getHead(M model);
-
-        ModelPart getBody(M model);
-
-        ModelPart getLeftArm(M model);
-
-        ModelPart getRightArm(M model);
-
-        ModelPart getLeftLeg(M model);
-
-        ModelPart getRightLeg(M model);
     }
 }
 

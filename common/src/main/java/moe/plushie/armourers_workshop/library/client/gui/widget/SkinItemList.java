@@ -188,7 +188,7 @@ public class SkinItemList extends UIView {
             dh *= 1.5f;
         }
 
-        ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx - dw / 2, dy - dw / 2, 100, dw, dh, 160, 45, 0, matrixStack, buffers);
+        ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx - dw / 2, dy - dw / 2, 100, dw, dh, 20, 45, 0, matrixStack, buffers);
     }
 
     public void renderItemBackground(PoseStack matrixStack, int x, int y, int width, int height, boolean isHovered, Entry entry) {

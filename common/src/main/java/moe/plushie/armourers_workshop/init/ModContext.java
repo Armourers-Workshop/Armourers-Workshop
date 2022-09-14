@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.compatibility.AbstractSavedData;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.level.saveddata.SavedData;
 import org.apache.commons.codec.binary.Hex;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.UUID;
 
-public class ModContext extends SavedData {
+public class ModContext extends AbstractSavedData {
 
     private static ModContext current;
 
@@ -22,13 +22,29 @@ public class ModContext extends SavedData {
     private byte[] x1;
 
     public ModContext() {
-        super(Constants.Key.SKIN);
         random();
         setDirty();
     }
 
+    public ModContext(CompoundTag tag) {
+        int count = 0;
+        if (tag.hasUUID("t0")) {
+            t0 = tag.getUUID("t0");
+            count += 1;
+        }
+        if (tag.hasUUID("t1")) {
+            t1 = tag.getUUID("t1");
+            count += 1;
+        }
+        if (count != 2) {
+            random();
+            setDirty();
+        }
+        apply(t0, t1);
+    }
+
     public static void init(MinecraftServer server) {
-        current = server.overworld().getDataStorage().computeIfAbsent(ModContext::new, Constants.Key.SKIN);
+        current = AbstractSavedData.load(ModContext::new, ModContext::new, server.overworld().getDataStorage(), Constants.Key.SKIN);
     }
 
     public static void init(UUID t0, UUID t1) {
@@ -121,24 +137,6 @@ public class ModContext extends SavedData {
     private void random() {
         t0 = UUID.randomUUID();
         t1 = UUID.randomUUID();
-    }
-
-    @Override
-    public void load(CompoundTag nbt) {
-        int count = 0;
-        if (nbt.hasUUID("t0")) {
-            t0 = nbt.getUUID("t0");
-            count += 1;
-        }
-        if (nbt.hasUUID("t1")) {
-            t1 = nbt.getUUID("t1");
-            count += 1;
-        }
-        if (count != 2) {
-            random();
-            setDirty();
-        }
-        apply(t0, t1);
     }
 
     @Override

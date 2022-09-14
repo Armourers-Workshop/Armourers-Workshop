@@ -2,21 +2,22 @@ package moe.plushie.armourers_workshop.core.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
+import moe.plushie.armourers_workshop.compatibility.AbstractPlayerModel;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.core.Rotations;
 
 @Environment(value = EnvType.CLIENT)
-public class MannequinModel<T extends MannequinEntity> extends PlayerModel<T> {
+public class MannequinModel<T extends MannequinEntity> extends AbstractPlayerModel<T> {
 
     private Rotations mainPose;
 
-    public MannequinModel(float scale, boolean slim) {
-        super(scale, slim);
+    public MannequinModel(AbstractEntityRendererContext context, float scale, boolean slim) {
+        super(context, scale, slim);
     }
 
     @Override

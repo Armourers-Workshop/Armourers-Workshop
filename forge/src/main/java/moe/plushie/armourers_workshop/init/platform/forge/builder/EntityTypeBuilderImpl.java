@@ -4,13 +4,13 @@ import moe.plushie.armourers_workshop.api.common.IEntityRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IEntityTypeBuilder;
 import moe.plushie.armourers_workshop.core.registry.Registry;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeEntityRenderers;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -75,7 +75,7 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
     public IEntityTypeBuilder<T> bind(Supplier<IEntityRendererProvider<T>> provider) {
         this.binder = () -> entityType -> {
             // here is safe call client registry.
-            RenderingRegistry.registerEntityRenderingHandler(entityType, provider.get()::getEntityRenderer);
+            AbstractForgeEntityRenderers.register(entityType, provider.get());
         };
         return this;
     }

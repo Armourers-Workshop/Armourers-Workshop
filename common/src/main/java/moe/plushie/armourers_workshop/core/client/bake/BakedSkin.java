@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
+import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -159,21 +160,25 @@ public class BakedSkin implements IBakedSkin {
     }
 
     public OpenVoxelShape getRenderShape(Entity entity, Model model, ItemStack itemStack, ItemTransforms.TransformType transformType) {
-        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
-        if (renderer == null) {
-            return OpenVoxelShape.empty();
+        SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
+        if (renderer != null) {
+            return getRenderShape(entity, SkinRendererManager.wrap(model), itemStack, transformType, renderer);
         }
+        return OpenVoxelShape.empty();
+    }
+
+    public <T extends Entity, V extends Model, M extends IModelHolder<V>> OpenVoxelShape getRenderShape(T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, SkinRenderer<T, V, M> renderer) {
         PoseStack matrixStack = new PoseStack();
         OpenVoxelShape shape = OpenVoxelShape.empty();
         SkinRenderContext context = new SkinRenderContext();
         context.setup(0, 0, transformType, matrixStack, null);
         for (BakedSkinPart part : skinParts) {
-            addRenderShape(part, entity, model, itemStack, shape, renderer, context);
+            addRenderShape(entity, model, itemStack, part, shape, context, renderer);
         }
         return shape;
     }
 
-    private void addRenderShape(BakedSkinPart part, Entity entity, Model model, ItemStack itemStack, OpenVoxelShape shape, SkinRenderer<Entity, Model> renderer, SkinRenderContext context) {
+    private <T extends Entity, V extends Model, M extends IModelHolder<V>> void addRenderShape(T entity, M model, ItemStack itemStack, BakedSkinPart part, OpenVoxelShape shape, SkinRenderContext context, SkinRenderer<T, V, M> renderer) {
         if (!renderer.prepare(entity, model, this, part, itemStack, context.transformType)) {
             return;
         }
@@ -184,7 +189,7 @@ public class BakedSkin implements IBakedSkin {
         shape1.mul(matrixStack.last().pose());
         shape.add(shape1);
         for (BakedSkinPart childPart : part.getChildren()) {
-            addRenderShape(childPart, entity, model, itemStack, shape, renderer, context);
+            addRenderShape(entity, model, itemStack, childPart, shape, context, renderer);
         }
         matrixStack.popPose();
     }

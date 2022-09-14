@@ -1,5 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
+import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
+import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.layer.ForwardingLayer;
 import moe.plushie.armourers_workshop.core.client.model.TransformModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
@@ -7,17 +10,21 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.layers.VillagerProfessionLayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 @Environment(value = EnvType.CLIENT)
-public class VillagerSkinRenderer<T extends LivingEntity, M extends VillagerModel<T>> extends ExtendedSkinRenderer<T, M> {
+public class VillagerSkinRenderer<T extends LivingEntity, V extends VillagerModel<T>, M extends IHumanoidModelHolder<V>> extends ExtendedSkinRenderer<T, V, M> {
 
     private final TransformModel<T> transformModel = new TransformModel<>(0.0f);
+    private final M transformModelHolder = ObjectUtils.unsafeCast(SkinRendererManager.wrap(transformModel));
 
     public VillagerSkinRenderer(EntityProfile profile) {
         super(profile);
@@ -40,37 +47,41 @@ public class VillagerSkinRenderer<T extends LivingEntity, M extends VillagerMode
     @Override
     public void willRenderModel(T entity, M model, SkinRenderData renderData, SkinRenderContext context) {
         super.willRenderModel(entity, model, renderData, context);
-        copyRot(transformModel.head, model.head);
+        copyRot(transformModelHolder.getHeadPart(), model.getHeadPart());
     }
 
     @Override
     protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_LEFT_ARM)) {
-            addModelOverride(model.arms);
+            addModelOverride(model.getLeftArmPart());
         }
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_RIGHT_ARM)) {
-            addModelOverride(model.arms);
+            addModelOverride(model.getRightArmPart());
         }
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_HEAD)) {
-            addModelOverride(model.head);
-            addModelOverride(model.hat); // when override the head, the hat needs to override too
-            addModelOverride(model.hatRim);
-            addModelOverride(model.nose);
+            addModelOverride(model.getHeadPart());
+            addModelOverride(model.getHatPart()); // when override the head, the hat needs to override too
+            addModelOverride(model.getPart("hat_rim"));
+            addModelOverride(model.getPart("nose"));
         }
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_CHEST)) {
-            addModelOverride(model.body);
-            addModelOverride(model.jacket);
+            addModelOverride(model.getBodyPart());
+            addModelOverride(model.getPart("jacket"));
         }
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_LEFT_LEG) || overriddenManager.overrideModel(SkinPartTypes.BIPED_LEFT_FOOT)) {
-            addModelOverride(model.leg0);
+            addModelOverride(model.getLeftLegPart());
         }
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_RIGHT_LEG) || overriddenManager.overrideModel(SkinPartTypes.BIPED_RIGHT_FOOT)) {
-            addModelOverride(model.leg1);
+            addModelOverride(model.getRightLegPart());
         }
     }
 
     private boolean isVisibleHat(T entity, M model) {
-        return model.hat.visible;
+        ModelPart part = model.getHatPart();
+        if (part != null) {
+            return part.visible;
+        }
+        return false;
     }
 
     private void copyRot(ModelPart model, ModelPart fromModel) {
@@ -80,36 +91,7 @@ public class VillagerSkinRenderer<T extends LivingEntity, M extends VillagerMode
     }
 
     @Override
-    public IPartAccessor<M> getAccessor() {
-        return new IPartAccessor<M>() {
-
-            public ModelPart getHat(M model) {
-                return transformModel.hat;
-            }
-
-            public ModelPart getHead(M model) {
-                return transformModel.head;
-            }
-
-            public ModelPart getBody(M model) {
-                return transformModel.body;
-            }
-
-            public ModelPart getLeftArm(M model) {
-                return transformModel.leftArm;
-            }
-
-            public ModelPart getRightArm(M model) {
-                return transformModel.rightArm;
-            }
-
-            public ModelPart getLeftLeg(M model) {
-                return transformModel.leftLeg;
-            }
-
-            public ModelPart getRightLeg(M model) {
-                return transformModel.rightLeg;
-            }
-        };
+    protected M getOverrideModel(M model) {
+        return transformModelHolder;
     }
 }

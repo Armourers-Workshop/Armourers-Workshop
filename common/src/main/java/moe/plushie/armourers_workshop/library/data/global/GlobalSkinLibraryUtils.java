@@ -32,8 +32,7 @@ public final class GlobalSkinLibraryUtils {
             DOWNLOADED_USERS.add(userId);
 
             GlobalTaskUserInfo taskUserInfo = new GlobalTaskUserInfo(userId);
-            ListenableFutureTask<PlushieUser> task = taskUserInfo.createTask();
-            Futures.addCallback(task, new FutureCallback<PlushieUser>() {
+            ListenableFutureTask<PlushieUser> task = taskUserInfo.createTask(new FutureCallback<PlushieUser>() {
 
                 @Override
                 public void onSuccess(PlushieUser result) {

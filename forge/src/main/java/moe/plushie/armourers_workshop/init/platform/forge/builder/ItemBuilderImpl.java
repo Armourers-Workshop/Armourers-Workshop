@@ -1,25 +1,17 @@
 package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
-import moe.plushie.armourers_workshop.api.common.IItemStackRendererProvider;
-import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
-import moe.plushie.armourers_workshop.core.registry.Registry;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeItemBuilder;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
-public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
-
-    private Item.Properties properties = new Item.Properties();
-    private Supplier<Consumer<T>> binder;
-    private final Function<Item.Properties, T> supplier;
+public class ItemBuilderImpl<T extends Item> extends AbstractForgeItemBuilder<T> {
 
     public ItemBuilderImpl(Function<Item.Properties, T> supplier) {
-        this.supplier = supplier;
+        super(supplier);
     }
 
     @Override
@@ -62,16 +54,5 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
     public IItemBuilder<T> fireResistant() {
         this.properties = properties.fireResistant();
         return this;
-    }
-
-    @Override
-    public IItemBuilder<T> bind(Supplier<IItemStackRendererProvider> provider) {
-        this.properties = properties.setISTER(() -> provider.get()::getItemModelRenderer);
-        return this;
-    }
-
-    @Override
-    public IRegistryKey<T> build(String name) {
-        return Registry.ITEM.register(name, () -> supplier.apply(properties));
     }
 }

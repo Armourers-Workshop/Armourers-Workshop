@@ -20,7 +20,7 @@ public class SkinWardrobeOutfitSetting extends SkinWardrobeBaseSetting {
 
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
-        RenderSystem.bind(ModTextures.WARDROBE_2);
+        RenderSystem.setShaderTexture(0, ModTextures.WARDROBE_2);
         container.forEachCustomSlots(slot -> {
             RenderSystem.blit(context.poseStack, slot.x - 1, slot.y - 1, 238, 194, 18, 18);
         });

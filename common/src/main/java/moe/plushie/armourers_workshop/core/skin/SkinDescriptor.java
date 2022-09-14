@@ -80,7 +80,7 @@ public class SkinDescriptor implements ISkinDescriptor {
             return true;
         }
         if (skinType instanceof ISkinToolType) {
-            return ((ISkinToolType) skinType).contains(itemStack.getItem());
+            return ((ISkinToolType) skinType).contains(itemStack);
         }
         return false;
     }

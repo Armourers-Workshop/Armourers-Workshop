@@ -1,9 +1,12 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
+import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
+import moe.plushie.armourers_workshop.compatibility.AbstractLivingEntityRenderer;
+import moe.plushie.armourers_workshop.core.client.layer.SkinWardrobeLayer;
 import moe.plushie.armourers_workshop.core.client.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
-import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
@@ -12,8 +15,6 @@ import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
@@ -22,9 +23,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 
 @Environment(value = EnvType.CLIENT)
-public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingEntityRenderer<T, MannequinModel<T>> {
+public class MannequinEntityRenderer<T extends MannequinEntity> extends AbstractLivingEntityRenderer<T, MannequinModel<T>> {
 
     public static boolean enableLimitScale = false;
+
+    private final AbstractEntityRendererContext context;
 
     private final MannequinModel<T> normalModel;
     private final MannequinModel<T> slimModel;
@@ -36,15 +39,21 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingEn
 
     private boolean enableChildRenderer = false;
 
-    public MannequinEntityRenderer(EntityRenderDispatcher rendererManager) {
-        super(rendererManager, new MannequinModel<>(0, false), 0.0f);
-        this.addLayer(new HumanoidArmorLayer<>(this, new MannequinArmorModel<>(0.5f), new MannequinArmorModel<>(1.0f)));
+    public MannequinEntityRenderer(AbstractEntityRendererContext context) {
+        super(context, new MannequinModel<>(context, 0, false), 0.0f);
+        this.context = context;
+        this.addLayer(new HumanoidArmorLayer<>(this, MannequinArmorModel.innerModel(context), MannequinArmorModel.outerModel(context)));
         this.addLayer(new ItemInHandLayer<>(this));
+        //#if MC >= 11800
+        //# this.addLayer(new ElytraLayer<>(this, context.getModelSet()));
+        //# this.addLayer(new CustomHeadLayer<>(this, context.getModelSet()));
+        //#else
         this.addLayer(new ElytraLayer<>(this));
         this.addLayer(new CustomHeadLayer<>(this));
+        //#endif
         // two models by mannequin, only deciding which model using when texture specified.
         this.normalModel = this.model;
-        this.slimModel = new MannequinModel<>(0, true);
+        this.slimModel = new MannequinModel<>(context, 0, true);
     }
 
     @Override
@@ -100,7 +109,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingEn
 
     public MannequinEntityRenderer<T> getChildRenderer() {
         if (mannequinRenderer == null) {
-            mannequinRenderer = new MannequinEntityRenderer<>(entityRenderDispatcher);
+            mannequinRenderer = new MannequinEntityRenderer<>(context);
         }
         return mannequinRenderer;
     }

@@ -3,29 +3,33 @@ package moe.plushie.armourers_workshop.core.client.layer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
+import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
+import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.init.ModContributors;
+import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.Entity;
 
 @Environment(value = EnvType.CLIENT)
-public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M extends IModelHolder<V>> extends RenderLayer<T, V> {
 
-    protected final SkinRenderer<T, M> skinRenderer;
-    protected final RenderLayerParent<T, M> entityRenderer;
+    protected final SkinRenderer<T, V, M> skinRenderer;
+    protected final RenderLayerParent<T, V> entityRenderer;
 
-    public SkinWardrobeLayer(SkinRenderer<T, M> skinRenderer, RenderLayerParent<T, M> renderer) {
+    public SkinWardrobeLayer(SkinRenderer<T, V, M> skinRenderer, RenderLayerParent<T, V> renderer) {
         super(renderer);
         this.skinRenderer = skinRenderer;
         this.entityRenderer = renderer;
@@ -36,7 +40,7 @@ public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> exten
         if (entity.isInvisible()) {
             return;
         }
-        M model = getParentModel();
+        M model = SkinRendererManager.wrap(getParentModel());
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {
             return;
@@ -49,7 +53,7 @@ public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> exten
         // render the contributor
         ModContributors.Contributor contributor = ModContributors.by(entity);
         if (contributor != null && renderData.shouldRenderExtra()) {
-            renderMagicCircle(matrixStack, buffers, entity.tickCount + entity.getId() * 31, partialTicks, 24, contributor.color);
+            renderMagicCircle(matrixStack, buffers, entity.tickCount + entity.getId() * 31, partialTicks, 24, contributor.color, packedLightIn, OverlayTexture.NO_OVERLAY);
         }
 
         float f = 1 / 16f;
@@ -65,7 +69,7 @@ public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> exten
         matrixStack.popPose();
     }
 
-    public void renderMagicCircle(PoseStack matrixStack, MultiBufferSource renderTypeBuffer, int ticks, float partialTickTime, int offset, int color) {
+    public void renderMagicCircle(PoseStack matrixStack, MultiBufferSource renderTypeBuffer, int ticks, float partialTickTime, int offset, int color, int lightmap, int overlay) {
         matrixStack.pushPose();
         matrixStack.translate(0, offset / 16.0f, 0);
 
@@ -77,7 +81,7 @@ public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> exten
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(rotation));
         matrixStack.scale(circleScale, circleScale, circleScale);
         Matrix4f mat = matrixStack.last().pose();
-        VertexConsumer builder = renderTypeBuffer.getBuffer(SkinRenderType.MAGIC);
+        VertexConsumer builder = renderTypeBuffer.getBuffer(SkinRenderType.IMAGE_MAGIC);
         builder.vertex(mat, -1, 0, -1).color(red, green, blue, 0xff).uv(1, 0).endVertex();
         builder.vertex(mat, 1, 0, -1).color(red, green, blue, 0xff).uv(0, 0).endVertex();
         builder.vertex(mat, 1, 0, 1).color(red, green, blue, 0xff).uv(0, 1).endVertex();
@@ -87,11 +91,14 @@ public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> exten
     }
 
     protected void applyModelScale(PoseStack matrixStack, M model) {
-        if (model.young && model instanceof HumanoidModel) {
-            HumanoidModel<?> bipedModel = (HumanoidModel<?>) model;
-            float scale = 1.0f / bipedModel.babyBodyScale;
+        if (model.isBaby()) {
+            float scale = 1 / model.getBabyScale();
+            IVector3f offset = model.getBabyOffset();
+            if (offset == null) {
+                return;
+            }
             matrixStack.scale(scale, scale, scale);
-            matrixStack.translate(0.0f, bipedModel.bodyYOffset / 16.0f, 0.0f);
+            matrixStack.translate(offset.getX() / 16f, offset.getY() / 16f, offset.getZ() / 16f);
         }
     }
 }

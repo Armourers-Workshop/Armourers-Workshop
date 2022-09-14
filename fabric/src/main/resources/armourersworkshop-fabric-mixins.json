@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "moe.plushie.armourers_workshop.init.mixin.fabric",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "FabricClientPacketListenerMixin",
+    "FabricLivingRendererMixin",
+    "FabricPlayerRendererMixin"
+  ],
+  "mixins": [
+    "FabricBlockItemMixin",
+    "FabricEntityMixin",
+    "FabricLivingEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

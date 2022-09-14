@@ -382,7 +382,7 @@ public class DataSerializers {
     }
 
     public static IPaintColor getPaintColor(CompoundTag nbt, String key, IPaintColor defaultValue) {
-        if (nbt.contains(key, Constants.TagFlags.INT)) {
+        if (nbt != null && nbt.contains(key, Constants.TagFlags.INT)) {
             return PaintColor.of(nbt.getInt(key));
         }
         return defaultValue;
@@ -512,6 +512,9 @@ public class DataSerializers {
     }
 
     public static CompoundTag saveBlockTag(BlockEntity blockEntity) {
+        if (blockEntity == null) {
+            return null;
+        }
         //#if MC >= 11800
         //# return blockEntity.saveWithFullMetadata();
         //#else

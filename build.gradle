@@ -8,6 +8,10 @@ architectury {
     minecraft = rootProject.minecraft_version
 }
 
+
+rootProject.ext.searchFile = { sourceSets, filter -> sourceSets.collect { it.allSource }.collectMany { it.findAll(filter) } }
+rootProject.ext.mixinConfigs = ["resolve": { name -> mixinConfigs.get("common") + mixinConfigs.get(name) }]
+
 subprojects {
     apply plugin: "dev.architectury.loom"
 
@@ -23,18 +27,24 @@ subprojects {
         // mappings "net.fabricmc:yarn:1.16.5+build.10:v2"
     }
 
+    sourceSets.forEach {
+        it.java.srcDirs("../versions/${rootProject.minecraft_version}/${project.name}/src/${it.name}/java")
+        it.resources.srcDirs("../versions/${rootProject.minecraft_version}/${project.name}/src/${it.name}/resources")
+    }
+
+    // we need to search all source files to get to the actived mixins.
+    mixinConfigs.put(project.name, searchFile(sourceSets, { it.name.endsWith("mixins.json") }))
+
     task signJar {
         onlyIf { System.getenv("AW_SIGN_STORE") != null }
         doLast {
-            ant.signjar(
-                    destDir: "${remapJar.destinationDir}",
+            ant.signjar(destDir: "${remapJar.destinationDir}",
                     jar: "${remapJar.archivePath}",
                     alias: System.getenv("AW_SIGN_ALIAS"),
                     keypass: System.getenv("AW_SIGN_KEY_PASS"),
                     storepass: System.getenv("AW_SIGN_STORE_PASS"),
                     keystore: System.getenv("AW_SIGN_STORE"),
-                    storetype: "jks"
-            )
+                    storetype: "jks")
         }
     }
 
@@ -49,7 +59,7 @@ allprojects {
         version = "homebaked"
     }
 
-	def uname = rootProject.archives_base_name.replaceAll("-","")
+    def uname = rootProject.archives_base_name.replaceAll("-", "")
     archivesBaseName = "${uname.toLowerCase()}-${project.name}-${rootProject.minecraft_version}"
     version = "${rootProject.mod_version}-${version}"
     group = rootProject.maven_group
@@ -64,14 +74,7 @@ allprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
-
-        // The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
-        // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
-        // We'll use that if it's available, but otherwise we'll use the older option.
-        def targetVersion = 8
-        if (JavaVersion.current().isJava9Compatible()) {
-            options.release = targetVersion
-        }
+        options.release = rootProject.java_version as int
     }
 
     java {

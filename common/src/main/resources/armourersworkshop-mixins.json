@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "package": "moe.plushie.armourers_workshop.init.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "ArrowRendererMixin",
+    "EntityModelMixin",
+    "EntityRendererMixin",
+    "HttpTextureMixin",
+    "InventoryScreenMixin",
+    "ItemRendererMixin",
+    "RebuildTaskMixin",
+    "RenderBuffersMixin",
+    "ThrownTridentRendererMixin"
+  ],
+  "mixins": [
+    "EntityMixin",
+    "ItemStackMixin",
+    "ServerPacketListenerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

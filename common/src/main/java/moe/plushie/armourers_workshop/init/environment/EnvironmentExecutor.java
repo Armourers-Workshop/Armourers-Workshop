@@ -11,11 +11,11 @@ import java.util.function.Supplier;
 
 public class EnvironmentExecutor {
 
+    private static final Manager INIT = new Manager();
     private static final Manager SETUP = new Manager();
-    private static final Manager FINISH = new Manager();
 
     public synchronized static void initOn(EnvironmentType type, Supplier<Runnable> task) {
-        SETUP.add(type, task);
+        INIT.add(type, task);
     }
 
     public synchronized static <T> void initOn(EnvironmentType type, Supplier<Consumer<T>> task, Supplier<T> value) {
@@ -26,15 +26,15 @@ public class EnvironmentExecutor {
     }
 
     public synchronized static void init(EnvironmentType type) {
+        INIT.run(type);
+    }
+
+    public synchronized static void setupOn(EnvironmentType type, Supplier<Runnable> task) {
+        SETUP.add(type, task);
+    }
+
+    public synchronized static void setup(EnvironmentType type) {
         SETUP.run(type);
-    }
-
-    public synchronized static void loadOn(EnvironmentType type, Supplier<Runnable> task) {
-        FINISH.add(type, task);
-    }
-
-    public synchronized static void load(EnvironmentType type) {
-        FINISH.run(type);
     }
 
     public static <T> Optional<T> callWhenOn(EnvironmentType envType, Supplier<Supplier<T>> supplier) {

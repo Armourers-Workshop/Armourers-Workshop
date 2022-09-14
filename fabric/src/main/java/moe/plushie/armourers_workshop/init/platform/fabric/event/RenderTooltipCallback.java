@@ -6,16 +6,17 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public interface RenderTooltipCallback {
-    Event<RenderTooltipCallback> EVENT = EventFactory.createArrayBacked(RenderTooltipCallback.class, callbacks -> (poseStack, list, i, j, w, x, y, w2, h) -> {
+    Event<RenderTooltipCallback> EVENT = EventFactory.createArrayBacked(RenderTooltipCallback.class, callbacks -> (poseStack, itemStack, x, y, width, height, mouseX, mouseY, screenWidth, screenHeight) -> {
         for (RenderTooltipCallback callback : callbacks) {
-            callback.onRenderTooltip(poseStack, list, i, j, w, x, y, w2, h);
+            callback.onRenderTooltip(poseStack, itemStack, x, y, width, height, mouseX, mouseY, screenWidth, screenHeight);
         }
     });
 
-    void onRenderTooltip(PoseStack poseStack, List<? extends FormattedCharSequence> list, int i, int j, int w, int x, int y, int w2, int h);
+    void onRenderTooltip(PoseStack poseStack, ItemStack itemStack, int x, int y, int width, int height, int mouseX, int mouseY, int screenWidth, int screenHeight);
 }

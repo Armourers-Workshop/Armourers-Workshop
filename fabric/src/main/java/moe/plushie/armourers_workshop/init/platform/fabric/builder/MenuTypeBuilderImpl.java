@@ -5,14 +5,12 @@ import moe.plushie.armourers_workshop.api.common.*;
 import moe.plushie.armourers_workshop.api.common.builder.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuScreen;
 import moe.plushie.armourers_workshop.core.registry.Registry;
+import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricMenuType;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -48,7 +46,7 @@ public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements 
     @Override
     public IRegistryKey<MenuType<T>> build(String name) {
         MenuType<?>[] menuTypes = {null};
-        MenuType<T> menuType = new ExtendedScreenHandlerType<>((id, inv, buf) -> factory.createMenu(menuTypes[0], id, inv, serializer.read(buf, inv.player)));
+        MenuType<T> menuType = AbstractFabricMenuType.create((id, inv, buf) -> factory.createMenu(menuTypes[0], id, inv, serializer.read(buf, inv.player)));
         IRegistryKey<MenuType<T>> object = Registry.MENU_TYPE.register(name, () -> menuType);
         MenuManager.registerMenuOpener(menuType, serializer, (player, title, value) -> {
             SimpleMenuProvider menuProvider = new SimpleMenuProvider((window, inv, player2) -> factory.createMenu(menuTypes[0], window, inv, value), title);

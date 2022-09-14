@@ -8,12 +8,11 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedFaceRenderer;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
+import moe.plushie.armourers_workshop.compatibility.AbstractItemEntityRenderer;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -21,15 +20,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-@SuppressWarnings({"unused"})
 @Environment(value = EnvType.CLIENT)
-public class SkinCubeItemRenderer extends BlockEntityWithoutLevelRenderer {
+public class SkinCubeItemRenderer extends AbstractItemEntityRenderer {
 
     private static SkinCubeItemRenderer INSTANCE;
-
-    private final RenderType normalRenderType = SkinRenderType.layeredItemSolid(ModTextures.BLOCK_CUBE);
-    private final RenderType translucentRenderType = SkinRenderType.layeredItemTranslucent(ModTextures.BLOCK_CUBE_GLASS);
-    private final RenderType unsortedTranslucentRenderType = SkinRenderType.unsortedTranslucent(ModTextures.BLOCK_CUBE_GLASS);
 
     public static SkinCubeItemRenderer getInstance() {
         if (INSTANCE == null) {
@@ -50,12 +44,12 @@ public class SkinCubeItemRenderer extends BlockEntityWithoutLevelRenderer {
         }
         Block block = item.getBlock();
 
-        boolean isGlowing = block.is(ModBlocks.SKIN_CUBE_GLOWING.get()) || block.is(ModBlocks.SKIN_CUBE_GLASS_GLOWING.get());
-        boolean isGlass = block.is(ModBlocks.SKIN_CUBE_GLASS.get()) || block.is(ModBlocks.SKIN_CUBE_GLASS_GLOWING.get());
+        boolean isGlowing = block.equals(ModBlocks.SKIN_CUBE_GLOWING.get()) || block.equals(ModBlocks.SKIN_CUBE_GLASS_GLOWING.get());
+        boolean isGlass = block.equals(ModBlocks.SKIN_CUBE_GLASS.get()) || block.equals(ModBlocks.SKIN_CUBE_GLASS_GLOWING.get());
 
-        RenderType renderType = normalRenderType;
+        RenderType renderType = SkinRenderType.BLOCK_CUBE;
         if (isGlass) {
-            renderType = translucentRenderType;
+            renderType = SkinRenderType.BLOCK_CUBE_GLASS;
         }
         if (isGlowing) {
             float f1 = 1 / 16.0f;
@@ -66,7 +60,7 @@ public class SkinCubeItemRenderer extends BlockEntityWithoutLevelRenderer {
             matrixStack.scale(f, f, f);
             renderCube(blockPaintColor, light, overlay, matrixStack, builder2);
             matrixStack.popPose();
-            renderType = unsortedTranslucentRenderType;
+            renderType = SkinRenderType.BLOCK_CUBE_GLASS_UNSORTED;
         }
         VertexConsumer builder1 = renderTypeBuffer.getBuffer(renderType);
         renderCube(blockPaintColor, light, overlay, matrixStack, builder1);

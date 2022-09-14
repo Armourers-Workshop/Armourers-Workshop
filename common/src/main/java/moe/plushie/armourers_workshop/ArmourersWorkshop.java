@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import com.apple.library.coregraphics.CGGraphicsRenderer;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.*;
@@ -9,8 +8,9 @@ import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.init.platform.SkinManager;
+import moe.plushie.armourers_workshop.init.platform.RendererManager;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 
@@ -45,15 +45,16 @@ public class ArmourersWorkshop {
         // setup client in setup.
         EnvironmentExecutor.initOn(EnvironmentType.CLIENT, () -> () -> {
             // setup client objects.
-            ModDebugger.init();
-            ModKeyBindings.init();
+//            SkinResourceManager.init();
             ClientWardrobeHandler.init();
-            CGGraphicsRenderer.init();
+            ModKeyBindings.init();
+            ModDebugger.init();
         });
         // setup client renderer in finish.
-        EnvironmentExecutor.loadOn(EnvironmentType.CLIENT, () -> () -> {
+        EnvironmentExecutor.setupOn(EnvironmentType.CLIENT, () -> () -> {
             // setup skin manager.
-            SkinManager.init();
+            RenderSystem.init();
+            RendererManager.init();
         });
     }
 

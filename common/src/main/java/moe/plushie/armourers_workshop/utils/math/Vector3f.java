@@ -3,13 +3,14 @@ package moe.plushie.armourers_workshop.utils.math;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Quaternion;
 import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
+import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import moe.plushie.armourers_workshop.utils.ext.OpenMatrix3f;
 import net.minecraft.core.Position;
 
 @SuppressWarnings("unused")
-public final class Vector3f implements Position {
+public final class Vector3f implements IVector3f, Position {
 
     public static Vector3f ZERO = new Vector3f(0.0F, 0.0F, 0.0F);
     public static Vector3f ONE = new Vector3f(1.0f, 1.0F, 1.0F);
@@ -82,6 +83,7 @@ public final class Vector3f implements Position {
         return this.z;
     }
 
+    @Override
     public float getX() {
         return x;
     }
@@ -90,6 +92,7 @@ public final class Vector3f implements Position {
         this.x = x;
     }
 
+    @Override
     public float getY() {
         return y;
     }
@@ -98,6 +101,7 @@ public final class Vector3f implements Position {
         this.y = y;
     }
 
+    @Override
     public float getZ() {
         return z;
     }

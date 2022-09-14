@@ -5,15 +5,15 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
+import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.core.client.render.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedFaceRenderer;
 import moe.plushie.armourers_workshop.init.ModItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -27,8 +27,8 @@ public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> ext
     private static float markerAlpha = 0F;
     private static long lastWorldTimeUpdate;
 
-    public SkinCubeBlockEntityRenderer(BlockEntityRenderDispatcher rendererManager) {
-        super(rendererManager);
+    public SkinCubeBlockEntityRenderer(AbstractBlockEntityRendererContext context) {
+        super(context);
     }
 
     public static void updateAlpha(BlockEntity tileEntity) {
@@ -71,13 +71,13 @@ public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> ext
             return;
         }
         int alpha = (int) (markerAlpha * 255);
-        VertexConsumer builder = buffers.getBuffer(SkinRenderType.MARKER_FACE);
+        VertexConsumer builder = buffers.getBuffer(SkinRenderType.IMAGE_MARKER);
         for (Direction direction : Direction.values()) {
             if (!entity.shouldChangeColor(direction)) {
                 continue;
             }
             IPaintColor paintColor = entity.getColor(direction);
-            ExtendedFaceRenderer.renderMarker(0, 0, 0, direction, paintColor, alpha, matrixStack, builder);
+            ExtendedFaceRenderer.renderMarker(0, 0, 0, direction, paintColor, alpha, light, overlay, matrixStack, builder);
         }
     }
 }

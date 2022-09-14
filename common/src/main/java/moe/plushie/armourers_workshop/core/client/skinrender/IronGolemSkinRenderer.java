@@ -1,18 +1,18 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.IronGolemModel;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.item.ItemStack;
 
 @Environment(value = EnvType.CLIENT)
-public class IronGolemSkinRenderer<T extends IronGolem, M extends IronGolemModel<T>> extends ExtendedSkinRenderer<T, M> {
+public class IronGolemSkinRenderer<T extends IronGolem, V extends IronGolemModel<T>, M extends IHumanoidModelHolder<V>> extends ExtendedSkinRenderer<T, V, M> {
 
     public IronGolemSkinRenderer(EntityProfile profile) {
         super(profile);
@@ -76,39 +76,5 @@ public class IronGolemSkinRenderer<T extends IronGolem, M extends IronGolemModel
     protected void setWings(PoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
         matrixStack.translate(0, -2, 3);
         super.setWings(matrixStack, entity, model, itemStack, transformType, bakedPart);
-    }
-
-    @Override
-    public IPartAccessor<M> getAccessor() {
-        return new IPartAccessor<M>() {
-
-            public ModelPart getHat(M model) {
-                return model.head;
-            }
-
-            public ModelPart getHead(M model) {
-                return model.head;
-            }
-
-            public ModelPart getBody(M model) {
-                return model.body;
-            }
-
-            public ModelPart getLeftArm(M model) {
-                return model.arm1;
-            }
-
-            public ModelPart getRightArm(M model) {
-                return model.arm0;
-            }
-
-            public ModelPart getLeftLeg(M model) {
-                return model.leg1;
-            }
-
-            public ModelPart getRightLeg(M model) {
-                return model.leg0;
-            }
-        };
     }
 }

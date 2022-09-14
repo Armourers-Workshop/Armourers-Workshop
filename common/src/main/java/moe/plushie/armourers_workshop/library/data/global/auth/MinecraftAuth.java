@@ -37,10 +37,10 @@ public class MinecraftAuth {
                 lastAuthTime = System.currentTimeMillis();
                 return true;
             } catch (MalformedURLException e) {
-                // TODO Auto-generated catch block
+                // TODO: Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
+                // TODO: Auto-generated catch block
                 e.printStackTrace();
             }
             return false;

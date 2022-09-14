@@ -10,10 +10,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.common.IMenuScreenProvider;
 import moe.plushie.armourers_workshop.api.common.IMenuWindow;
 import moe.plushie.armourers_workshop.api.common.IMenuWindowProvider;
+import moe.plushie.armourers_workshop.compatibility.AbstractMenuScreen;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -22,7 +22,7 @@ import net.minecraft.world.inventory.Slot;
 import org.lwjgl.glfw.GLFW;
 
 @Environment(value = EnvType.CLIENT)
-public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IMenuWindow<M>> extends AbstractContainerScreen<M> {
+public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IMenuWindow<M>> extends AbstractMenuScreen<M> {
 
     private UIFont font;
 
@@ -59,8 +59,8 @@ public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IM
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    protected void containerTick() {
+        super.containerTick();
         menuWindow.screenWillTick();
     }
 

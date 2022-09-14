@@ -42,7 +42,7 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ArmourersWorkshop.getResource("empty"), (itemStack, level, entity) -> {
+        builder.accept(ArmourersWorkshop.getResource("empty"), (itemStack, level, entity, id) -> {
             CompoundTag tag = itemStack.getTag();
             if (tag != null && tag.contains(Constants.Key.TILE_ENTITY_LINKED_POS)) {
                 return 0;

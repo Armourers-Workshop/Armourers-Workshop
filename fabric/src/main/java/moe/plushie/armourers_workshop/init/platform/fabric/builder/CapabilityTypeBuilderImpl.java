@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.ICapabilityType;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.ICapabilityTypeBuilder;
-import moe.plushie.armourers_workshop.init.capability.CapabilityStorage;
+import moe.plushie.armourers_workshop.init.platform.fabric.capability.CapabilityStorage;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 

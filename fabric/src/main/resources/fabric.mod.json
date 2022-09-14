@@ -17,15 +17,15 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "moe.plushie.armourers_workshop.init.CommonEventDispatcher"
+      "moe.plushie.armourers_workshop.init.platform.fabric.CommonEventDispatcherImpl"
     ],
     "client": [
-      "moe.plushie.armourers_workshop.init.ClientEventDispatcher"
+      "moe.plushie.armourers_workshop.init.platform.fabric.ClientEventDispatcherImpl"
     ]
   },
   "mixins": [
-    "armourers_workshop-fabric.mixins.json",
-    "armourers_workshop-common.mixins.json"
+    "armourersworkshop-fabric-mixins.json",
+    "armourersworkshop-mixins.json"
   ],
   "depends": {
     "fabric": ">=0.42.0",

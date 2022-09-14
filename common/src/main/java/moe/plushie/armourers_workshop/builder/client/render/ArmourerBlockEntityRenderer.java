@@ -10,11 +10,12 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
-import moe.plushie.armourers_workshop.builder.client.render.guide.GuideRendererManager;
+import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRendererManager;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
+import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinDynamicTexture;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.core.client.render.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -25,7 +26,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -41,8 +41,8 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
     private final Rectangle3f originBox = new Rectangle3f(-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f);
     private final GuideRendererManager rendererManager = new GuideRendererManager();
 
-    public ArmourerBlockEntityRenderer(BlockEntityRenderDispatcher rendererManager) {
-        super(rendererManager);
+    public ArmourerBlockEntityRenderer(AbstractBlockEntityRendererContext context) {
+        super(context);
     }
 
     @Override
@@ -164,7 +164,7 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
             }
             this.overrides.clear();
             this.overrides.put(SkinRenderType.PLAYER_CUTOUT_NO_CULL, () -> SkinRenderType.entityCutoutNoCull(texture));
-            this.overrides.put(SkinRenderType.PLAYER_CUTOUT, () -> SkinRenderType.entityCutout(texture));
+            this.overrides.put(SkinRenderType.PLAYER_CUTOUT, () -> SkinRenderType.entityCutoutNoCull(texture));
             this.overrides.put(SkinRenderType.PLAYER_TRANSLUCENT, () -> SkinRenderType.entityTranslucentCull(texture));
         }
 

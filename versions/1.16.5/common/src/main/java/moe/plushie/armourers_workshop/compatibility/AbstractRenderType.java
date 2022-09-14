@@ -1,0 +1,275 @@
+package moe.plushie.armourers_workshop.compatibility;
+
+import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
+import moe.plushie.armourers_workshop.api.client.IRenderTypeBuilder;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderFormat;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.OptionalDouble;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+@Environment(value = EnvType.CLIENT)
+public class AbstractRenderType extends RenderType {
+
+    private static final VertexFormat SKIN_NORMAL_FORMAT = new VertexFormat(ImmutableList.<VertexFormatElement>builder().add(DefaultVertexFormat.ELEMENT_POSITION).add(DefaultVertexFormat.ELEMENT_COLOR).add(DefaultVertexFormat.ELEMENT_UV0).add(DefaultVertexFormat.ELEMENT_UV1).add(DefaultVertexFormat.ELEMENT_NORMAL).add(DefaultVertexFormat.ELEMENT_PADDING).build());
+    private static final VertexFormat SKIN_LIGHTING_FORMAT = new VertexFormat(ImmutableList.<VertexFormatElement>builder().add(DefaultVertexFormat.ELEMENT_POSITION).add(DefaultVertexFormat.ELEMENT_COLOR).add(DefaultVertexFormat.ELEMENT_UV0).build());
+
+    private static final TexturingStateShard COLORS_OFFSET = new TexturingStateShard("aw_offset_ov", () -> {
+        RenderSystem.matrixMode(GL11.GL_TEXTURE);
+        RenderSystem.pushMatrix();
+        RenderSystem.loadIdentity();
+        RenderSystem.multMatrix(RenderSystem.getTextureMatrix());
+        RenderSystem.matrixMode(GL11.GL_MODELVIEW);
+    }, () -> {
+        RenderSystem.matrixMode(GL11.GL_TEXTURE);
+        RenderSystem.popMatrix();
+        RenderSystem.matrixMode(GL11.GL_MODELVIEW);
+    });
+
+    private static final TexturingStateShard OR_REVERSE = new TexturingStateShard("aw_or_reverse", () -> {
+        RenderSystem.disableTexture();
+        RenderSystem.enableColorLogicOp();
+        RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
+    }, () -> {
+        RenderSystem.disableColorLogicOp();
+        RenderSystem.enableTexture();
+    });
+
+    // unlike vanilla, we do not modify any opengl options.
+    private static final TextureStateShard NO_TEXTURE = new TextureStateShard() {
+        @Override
+        public void setupRenderState() {
+        }
+
+        @Override
+        public void clearRenderState() {
+        }
+    };
+
+    private static final Map<SkinRenderFormat, Supplier<IRenderTypeBuilder>> MAPPER = _make(it -> {
+
+        it.put(SkinRenderFormat.LINE, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_LINES, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
+        it.put(SkinRenderFormat.IMAGE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
+
+        it.put(SkinRenderFormat.GUI_IMAGE, () -> _builder(DefaultVertexFormat.POSITION_TEX, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTextureState(NO_TEXTURE)));
+        it.put(SkinRenderFormat.GUI_HIGHLIGHTED_TEXT, () -> _builder(DefaultVertexFormat.POSITION, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTexturingState(OR_REVERSE)));
+
+        it.put(SkinRenderFormat.BLOCK, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING)));
+        it.put(SkinRenderFormat.BLOCK_CUTOUT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING)));
+
+        it.put(SkinRenderFormat.ENTITY_CUTOUT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING)));
+        it.put(SkinRenderFormat.ENTITY_CUTOUT_NO_CULL, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING)));
+        it.put(SkinRenderFormat.ENTITY_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING)));
+
+        it.put(SkinRenderFormat.SKIN_FACE_SOLID, () -> _builder(SKIN_NORMAL_FORMAT, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP)));
+        it.put(SkinRenderFormat.SKIN_FACE_TRANSLUCENT, () -> _builder(SKIN_NORMAL_FORMAT, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP).setAlphaState(DEFAULT_ALPHA)));
+        it.put(SkinRenderFormat.SKIN_FACE_LIGHTING, () -> _builder(SKIN_LIGHTING_FORMAT, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET)));
+        it.put(SkinRenderFormat.SKIN_FACE_LIGHTING_TRANSLUCENT, () -> _builder(SKIN_LIGHTING_FORMAT, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setAlphaState(DEFAULT_ALPHA)));
+    });
+
+    public AbstractRenderType(String name, RenderType delegate, boolean affectsCrumbling, boolean sortUpload, Runnable setupRenderState, Runnable clearRenderState) {
+        super(name, delegate.format(), delegate.mode(), delegate.bufferSize(), affectsCrumbling, sortUpload, () -> {
+            delegate.setupRenderState();
+            setupRenderState.run();
+        }, () -> {
+            clearRenderState.run();
+            delegate.clearRenderState();
+        });
+    }
+
+    private static Builder _builder(VertexFormat format, int mode, Function<CompositeState.CompositeStateBuilder, CompositeState.CompositeStateBuilder> config) {
+        Builder builder = new Builder(format, mode);
+        builder.stateBuilder = config.apply(builder.stateBuilder);
+        return builder;
+    }
+
+
+    public static IRenderTypeBuilder builder(SkinRenderFormat format) {
+        Supplier<IRenderTypeBuilder> provider = MAPPER.get(format);
+        if (provider != null) {
+            return provider.get();
+        }
+        throw new RuntimeException("can't supported render format");
+    }
+
+    private static <T, U> HashMap<T, U> _make(Consumer<HashMap<T, U>> consumer) {
+        HashMap<T, U> map = new HashMap<>();
+        consumer.accept(map);
+        return map;
+    }
+
+    public static class Builder implements IRenderTypeBuilder {
+
+        private static final Map<Target, OutputStateShard> TABLE_OUTPUT = _make(it -> {
+            it.put(Target.TRANSLUCENT, TRANSLUCENT_TARGET);
+            it.put(Target.MAIN, MAIN_TARGET);
+        });
+
+        private static final Map<Transparency, TransparencyStateShard> TABLE_TRANSPARENCY = _make(it -> {
+            it.put(Transparency.TRANSLUCENT, TRANSLUCENT_TRANSPARENCY);
+            it.put(Transparency.NONE, NO_TRANSPARENCY);
+        });
+
+        private static final Map<WriteMask, WriteMaskStateShard> TABLE_WRITE_MASK = _make(it -> {
+            it.put(WriteMask.COLOR_DEPTH_WRITE, COLOR_DEPTH_WRITE);
+            it.put(WriteMask.COLOR_WRITE, COLOR_WRITE);
+            it.put(WriteMask.DEPTH_WRITE, DEPTH_WRITE);
+        });
+
+        private static final Map<DepthTest, DepthTestStateShard> TABLE_DEPTH_TEST = _make(it -> {
+            it.put(DepthTest.NONE, NO_DEPTH_TEST);
+            it.put(DepthTest.EQUAL, EQUAL_DEPTH_TEST);
+            it.put(DepthTest.LESS_EQUAL, LEQUAL_DEPTH_TEST);
+        });
+
+        private static <T, U> HashMap<T, U> _make(Consumer<HashMap<T, U>> consumer) {
+            HashMap<T, U> map = new HashMap<>();
+            consumer.accept(map);
+            return map;
+        }
+
+        boolean isOutline = false;
+        boolean affectsCrumbling = false;
+        boolean sortOnUpload = false;
+
+        RenderType renderType;
+        CompositeState.CompositeStateBuilder stateBuilder = CompositeState.builder();
+
+        int mode;
+        VertexFormat format;
+
+        private Builder(VertexFormat format, int mode) {
+            this.format = format;
+            this.mode = mode;
+            this.setupDefault();
+        }
+
+        private void setupDefault() {
+            if (renderType != null) {
+                affectsCrumbling = renderType.affectsCrumbling();
+            }
+            stateBuilder.setCullState(NO_CULL);
+        }
+
+        @Override
+        public IRenderTypeBuilder texture(ResourceLocation texture, boolean blur, boolean mipmap) {
+            TextureStateShard state = new TextureStateShard(texture, blur, mipmap);
+            this.stateBuilder = stateBuilder.setTextureState(state);
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder texturing(Texturing texturing) {
+//            TexturingStateShard state = TABLE_TEXTURING.getOrDefault(texturing, DEFAULT_TEXTURING);
+//            this.stateBuilder = stateBuilder.setTexturingState(state);
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder target(Target target) {
+            this.stateBuilder = stateBuilder.setOutputState(TABLE_OUTPUT.getOrDefault(target, MAIN_TARGET));
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder transparency(Transparency transparency) {
+            this.stateBuilder = stateBuilder.setTransparencyState(TABLE_TRANSPARENCY.getOrDefault(transparency, NO_TRANSPARENCY));
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder writeMask(WriteMask mask) {
+            this.stateBuilder = stateBuilder.setWriteMaskState(TABLE_WRITE_MASK.getOrDefault(mask, COLOR_DEPTH_WRITE));
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder depthTest(DepthTest test) {
+            this.stateBuilder = stateBuilder.setDepthTestState(TABLE_DEPTH_TEST.getOrDefault(test, NO_DEPTH_TEST));
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder polygonOffset(float factor, float units) {
+            this.stateBuilder = stateBuilder.setLayeringState(new LayeringStateShard("aw_polygon_offset_" + units, () -> {
+                RenderSystem.enablePolygonOffset();
+                RenderSystem.polygonOffset(factor, units);
+            }, () -> {
+                RenderSystem.polygonOffset(0, 0);
+                RenderSystem.disablePolygonOffset();
+            }));
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder stroke(float width) {
+            this.stateBuilder = stateBuilder.setLayeringState(new LayeringStateShard("aw_custom_line", () -> {
+                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+                GL11.glLineWidth(width);
+            }, () -> {
+                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+            }));
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder lineWidth(float width) {
+            this.stateBuilder = stateBuilder.setLineState(new LineStateShard(OptionalDouble.of(width)));
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder cull() {
+            this.stateBuilder = stateBuilder.setCullState(CULL);
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder lightmap() {
+            this.stateBuilder = stateBuilder.setLightmapState(LIGHTMAP);
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder overlay() {
+            this.stateBuilder = stateBuilder.setOverlayState(OVERLAY);
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder outline() {
+            this.isOutline = true;
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder crumbling() {
+            this.affectsCrumbling = true;
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder sortOnUpload() {
+            this.sortOnUpload = true;
+            return this;
+        }
+
+        @Override
+        public RenderType build(String name) {
+            return RenderType.create(name, format, mode, 256, affectsCrumbling, sortOnUpload, stateBuilder.createCompositeState(isOutline));
+        }
+    }
+}

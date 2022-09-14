@@ -3,21 +3,20 @@ package com.apple.library.coregraphics;
 import com.apple.library.foundation.NSString;
 import com.apple.library.impl.AppearanceImpl;
 import com.apple.library.impl.TooltipRenderer;
-import com.apple.library.uikit.*;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.apple.library.uikit.UIColor;
+import com.apple.library.uikit.UIFont;
+import com.apple.library.uikit.UIImage;
+import com.apple.library.uikit.UIView;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 @Environment(value = EnvType.CLIENT)
 public class CGGraphicsRenderer {
@@ -106,7 +105,11 @@ public class CGGraphicsRenderer {
         if (text == null) {
             return;
         }
-        context.screen.renderTooltip(context.poseStack, text.component(), context.mouseX, context.mouseY);
+        // there are some versions of tooltip that don't split normally,
+        // and while we can't decide on the final tooltip size,
+        // but we can to handle the break the newline
+        List<? extends FormattedCharSequence> texts = context.font.font().split(text.component(), 100000);
+        context.screen.renderTooltip(context.poseStack, texts, context.mouseX, context.mouseY);
     }
 
     public static void renderTooltipRender(TooltipRenderer renderer, CGRect rect, CGGraphicsContext context) {
@@ -132,34 +135,21 @@ public class CGGraphicsRenderer {
         int l = rect.getMaxY();
         int m = gradient.startColor.getRGB();
         int n = gradient.endColor.getRGB();
-        RenderSystem.disableTexture();
-        RenderSystem.enableBlend();
-        RenderSystem.disableAlphaTest();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.shadeModel(7425);
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder bufferBuilder = tesselator.getBuilder();
-        bufferBuilder.begin(7, DefaultVertexFormat.POSITION_COLOR);
-        _fillGradient(context.poseStack.last().pose(), bufferBuilder, i, j, k, l, 0, m, n);
-        tesselator.end();
-        RenderSystem.shadeModel(7424);
-        RenderSystem.disableBlend();
-        RenderSystem.enableAlphaTest();
-        RenderSystem.enableTexture();
+        InternalRenderer.GRADIENT.render(context.poseStack, i, j, k, l, m, n);
     }
 
-    private static void _fillGradient(Matrix4f matrix4f, BufferBuilder bufferBuilder, int i, int j, int k, int l, int m, int n, int o) {
-        float f = (float)(n >> 24 & 0xFF) / 255.0f;
-        float g = (float)(n >> 16 & 0xFF) / 255.0f;
-        float h = (float)(n >> 8 & 0xFF) / 255.0f;
-        float p = (float)(n & 0xFF) / 255.0f;
-        float q = (float)(o >> 24 & 0xFF) / 255.0f;
-        float r = (float)(o >> 16 & 0xFF) / 255.0f;
-        float s = (float)(o >> 8 & 0xFF) / 255.0f;
-        float t = (float)(o & 0xFF) / 255.0f;
-        bufferBuilder.vertex(matrix4f, k, j, m).color(g, h, p, f).endVertex();
-        bufferBuilder.vertex(matrix4f, i, j, m).color(g, h, p, f).endVertex();
-        bufferBuilder.vertex(matrix4f, i, l, m).color(r, s, t, q).endVertex();
-        bufferBuilder.vertex(matrix4f, k, l, m).color(r, s, t, q).endVertex();
+    private static class InternalRenderer extends Screen {
+
+        static final InternalRenderer INSTANCE = new InternalRenderer();
+
+        static final F1 GRADIENT = INSTANCE::fillGradient;
+
+        protected InternalRenderer() {
+            super(new NSString("").component());
+        }
+
+        interface F1 {
+            void render(PoseStack poseStack, int i, int j, int k, int l, int m, int n);
+        }
     }
 }

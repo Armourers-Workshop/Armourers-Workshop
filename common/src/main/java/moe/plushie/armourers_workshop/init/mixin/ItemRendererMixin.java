@@ -20,7 +20,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ItemRendererMixin {
 
     @Inject(method = "getModel", at = @At("RETURN"), cancellable = true)
-    private void hooked_getModel(ItemStack itemStack, Level level, LivingEntity entity, CallbackInfoReturnable<BakedModel> cir) {
+    //#if MC >= 11800
+    //# private void hooked_getModel(ItemStack itemStack, Level level, LivingEntity entity, int i, CallbackInfoReturnable<BakedModel> cir)
+    //#else
+    private void hooked_getModel(ItemStack itemStack, Level level, LivingEntity entity, CallbackInfoReturnable<BakedModel> cir)
+    //#endif
+    {
         BakedModel bakedModel = cir.getReturnValue();
         if (ClientWardrobeHandler.shouldRenderEmbeddedSkin(entity, level, itemStack, false)) {
             cir.setReturnValue(BakedModelStroage.wrap(bakedModel, itemStack, entity, level));

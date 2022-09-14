@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
+import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
@@ -14,7 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 @Environment(value = EnvType.CLIENT)
-public class FirstPersonSkinRenderer<T extends LivingEntity, M extends FirstPersonPlayerModel<T>> extends SkinRenderer<T, M> {
+public class FirstPersonSkinRenderer<T extends LivingEntity, V extends FirstPersonPlayerModel<T>, M extends IModelHolder<V>> extends SkinRenderer<T, V, M> {
 
     public FirstPersonSkinRenderer(EntityProfile profile) {
         super(profile);

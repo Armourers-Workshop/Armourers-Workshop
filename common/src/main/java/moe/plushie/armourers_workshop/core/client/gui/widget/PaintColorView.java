@@ -6,14 +6,13 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.RenderStateShard;
 
 @Environment(value = EnvType.CLIENT)
 public class PaintColorView extends UIView {
@@ -30,19 +29,17 @@ public class PaintColorView extends UIView {
         super.render(point, context);
         int cu = (int) paintType.getU();
         int cv = (int) paintType.getV();
+        int dv = (cv + (int)TickUtils.getPaintTextureOffset()) % 256;
 
         if (paintType != SkinPaintTypes.RAINBOW) {
-            RenderSystem.color(color);
+            RenderSystem.setShaderColor(color);
         }
 
         CGRect rect = bounds();
-        RenderStateShard renderState = SkinRenderType.colorOffset();
-        renderState.setupRenderState();
-        RenderSystem.resize(context.poseStack, 0, 0, cu, cv, rect.width, rect.height, 1, 1, ModTextures.CUBE);
-        renderState.clearRenderState();
+        RenderSystem.resize(context.poseStack, 0, 0, cu, dv, rect.width, rect.height, 1, 1, ModTextures.CUBE);
 
         if (paintType != SkinPaintTypes.RAINBOW) {
-            RenderSystem.color(UIColor.WHITE);
+            RenderSystem.setShaderColor(UIColor.WHITE);
         }
     }
 

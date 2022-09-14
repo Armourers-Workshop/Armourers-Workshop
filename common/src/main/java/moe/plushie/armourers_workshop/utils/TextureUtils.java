@@ -47,7 +47,7 @@ public final class TextureUtils {
     }
 
     public static IPaintColor getPlayerTextureModelColor(PlayerTextureDescriptor descriptor, TexturePos texturePos) {
-        BakedEntityTexture textureModel = TextureUtils.getPlayerTextureModel(descriptor);
+        BakedEntityTexture textureModel = getPlayerTextureModel(descriptor);
         if (textureModel != null) {
             return textureModel.getColor(texturePos);
         }

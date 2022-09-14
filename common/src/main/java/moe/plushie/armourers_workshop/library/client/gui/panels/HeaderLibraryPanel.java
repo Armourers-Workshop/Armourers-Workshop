@@ -100,7 +100,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         iconButtonMyFiles.setHidden(true);
         iconButtonUploadSkin.setHidden(true);
         iconButtonJoin.setHidden(true);
-        iconButtonInfo.setHidden(true);
+        iconButtonInfo.setHidden(false);
         iconButtonModeration.setHidden(true);
 
         boolean isRemoteUser = PlushieAuth.isRemoteUser();

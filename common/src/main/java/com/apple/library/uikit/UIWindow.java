@@ -4,8 +4,10 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
-import com.apple.library.impl.*;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
+import com.apple.library.impl.InvokerResult;
+import com.apple.library.impl.LBSIterator;
+import com.apple.library.impl.WeakDispatcherImpl;
+import com.apple.library.impl.WindowDispatcherImpl;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -463,9 +465,7 @@ public class UIWindow extends UIView {
             }
             boolean isOpaque = view.isOpaque();
             if (!isOpaque) {
-                RenderSystem.enableAlphaTest();
-                RenderSystem.enableBlend();
-                RenderSystem.defaultBlendFunc();
+                context.enableBlend();
             }
             view.render(new CGPoint(ix, iy), context);
             for (UIView subview : view.subviews()) {

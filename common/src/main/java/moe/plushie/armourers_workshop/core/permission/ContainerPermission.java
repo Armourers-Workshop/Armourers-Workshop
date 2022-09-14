@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.permission;
 
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
-import moe.plushie.armourers_workshop.init.platform.PermissionManager;
+import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -19,12 +19,12 @@ public class ContainerPermission extends Permission {
     }
 
     public <T extends AbstractContainerMenu> boolean accept(IRegistryKey<MenuType<T>> type, Entity target, Player player) {
-        String node = get(type.getRegistryName());
-        return eval(node, player, new PermissionManager.TargetContext(player, target));
+        IPermissionNode node = get(type.getRegistryName());
+        return eval(node, player, new TargetPermissionContext(player, target));
     }
 
     public <T extends AbstractContainerMenu> boolean accept(IRegistryKey<MenuType<T>> type, Level level, BlockPos pos, Player player) {
-        String node = get(type.getRegistryName());
-        return eval(node, player, new PermissionManager.BlockContext(player, pos, level.getBlockState(pos), null));
+        IPermissionNode node = get(type.getRegistryName());
+        return eval(node, player, new BlockPermissionContext(player, pos, level.getBlockState(pos), null));
     }
 }

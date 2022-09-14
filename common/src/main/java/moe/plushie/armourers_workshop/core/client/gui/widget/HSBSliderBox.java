@@ -14,7 +14,6 @@ import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.components.Button;
 
 @Environment(value = EnvType.CLIENT)
 public class HSBSliderBox extends UIControl {
@@ -62,21 +61,21 @@ public class HSBSliderBox extends UIControl {
         CGRect fixedBounds = bounds.insetBy(1, 1, 1, 1);
         PoseStack matrixStack = context.poseStack;
         context.drawImage(backgroundImage, bounds);
-        // TODO: Refactor
+        // TODO: Refactoring
         int cx = fixedBounds.x;
         int cy = fixedBounds.y;
         int cw = fixedBounds.width;
         int ch = fixedBounds.height;
         float value = values[type.ordinal()];
 
-        RenderSystem.bind(ModTextures.HUE);
+        RenderSystem.setShaderTexture(0, ModTextures.HUE);
 
         if (type == Type.SATURATION) {
-            RenderSystem.color(hueColor);
+            RenderSystem.setShaderColor(hueColor);
             RenderSystem.resize(matrixStack, cx, cy, 0, 176, cw, ch, 256, 20);
-            RenderSystem.color(brightnessColor);
+            RenderSystem.setShaderColor(brightnessColor);
             RenderSystem.resize(matrixStack, cx, cy, type.u, type.v, cw, ch, type.texWidth, type.texHeight);
-            RenderSystem.color(UIColor.WHITE);
+            RenderSystem.setShaderColor(UIColor.WHITE);
         } else {
             RenderSystem.resize(matrixStack, cx, cy, type.u, type.v, cw, ch, type.texWidth, type.texHeight);
         }

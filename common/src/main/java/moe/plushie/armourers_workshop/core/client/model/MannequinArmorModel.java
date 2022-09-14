@@ -1,20 +1,25 @@
 package moe.plushie.armourers_workshop.core.client.model;
 
+import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
+import moe.plushie.armourers_workshop.compatibility.AbstractMannequinArmorModel;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.HumanoidModel;
 
 @Environment(value = EnvType.CLIENT)
-public class MannequinArmorModel<T extends MannequinEntity> extends HumanoidModel<T> {
+public class MannequinArmorModel<T extends MannequinEntity> extends AbstractMannequinArmorModel<T> {
 
-    public MannequinArmorModel(float scale) {
-        this(scale, 64, 32);
+    public MannequinArmorModel(AbstractEntityRendererContext context, Type type) {
+        super(context, type);
     }
 
-    public MannequinArmorModel(float scale, int texWidth, int texHeight) {
-        super(scale, 0.0F, texWidth, texHeight);
+    public static <T extends MannequinEntity> MannequinArmorModel<T> innerModel(AbstractEntityRendererContext context) {
+        return new MannequinArmorModel<>(context, Type.INNER);
+    }
+
+    public static <T extends MannequinEntity> MannequinArmorModel<T> outerModel(AbstractEntityRendererContext context) {
+        return new MannequinArmorModel<>(context, Type.OUTER);
     }
 
     @Override

@@ -100,6 +100,12 @@ public class CGGraphicsContext {
         poseStack.popPose();
     }
 
+    public void enableBlend() {
+        RenderSystem.enableAlphaTest();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+    }
+
     public void strokeDebugRect(int tag, CGRect rect) {
         if (ModDebugger.viewHierarchy) {
             strokeRect(ColorUtils.getPaletteColor(tag), rect);

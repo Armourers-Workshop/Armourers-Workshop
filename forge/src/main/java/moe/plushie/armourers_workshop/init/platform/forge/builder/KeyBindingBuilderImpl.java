@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
 import moe.plushie.armourers_workshop.api.common.builder.IKeyBindingBuilder;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeClientRegistries;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.ext.OpenKeyModifier;
 import net.minecraft.client.KeyMapping;
@@ -14,7 +15,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.settings.IKeyConflictContext;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         if (handler != null) {
             INPUTS.add(Pair.of(binding, handler));
         }
-        ClientRegistry.registerKeyBinding(binding);
+        AbstractForgeClientRegistries.registerKeyMapping(binding);
         IKeyBinding binding1 = new IKeyBinding() {
 
             @Override

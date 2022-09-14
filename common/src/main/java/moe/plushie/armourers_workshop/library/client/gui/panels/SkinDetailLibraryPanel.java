@@ -191,7 +191,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         BakedSkin bakedSkin = BakedSkin.of(entry.descriptor);
         if (bakedSkin != null) {
             MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, rect.x, rect.y, 100, rect.width, rect.height, 160, 45, 0, context.poseStack, buffers);
+            ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, rect.x, rect.y, 100, rect.width, rect.height, 20, 45, 0, context.poseStack, buffers);
             buffers.endBatch();
         }
     }

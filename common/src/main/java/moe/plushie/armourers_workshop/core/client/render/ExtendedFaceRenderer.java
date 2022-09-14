@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 
 public class ExtendedFaceRenderer {
@@ -25,27 +26,32 @@ public class ExtendedFaceRenderer {
             {{1, 0, 0}, {1, 1, 0}, {1, 1, 1}, {1, 0, 1}, {1, 0, 0}},    // -x
     };
 
-    public static void render(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, PoseStack matrixStack, VertexConsumer builder) {
+    public static void render(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, PoseStack matrixStack, VertexConsumer builder) {
         Matrix4f pose = matrixStack.last().pose();
         Matrix3f normal = matrixStack.last().normal();
         ISkinPaintType paintType = paintColor.getPaintType();
         int color = paintColor.getRGB();
         byte[][] vertexes = SkinUtils.FACE_VERTEXES[direction.get3DDataValue()];
+//        int[] indexes = {0,1,2,0,2,3};
+//        for (int i : indexes) {
         for (int i = 0; i < 4; ++i) {
             builder.vertex(pose, x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
                     .color(color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff, alpha & 0xff)
                     .uv(paintType.getU() / 256f, paintType.getV() / 256f)
+                    .overlayCoords(overlay)
+                    .uv2(light)
                     .normal(normal, vertexes[4][0], vertexes[4][1], vertexes[4][2])
                     .endVertex();
         }
     }
 
-    public static void renderMarker(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, PoseStack matrixStack, VertexConsumer builder) {
+    public static void renderMarker(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, PoseStack matrixStack, VertexConsumer builder) {
         if (paintColor.getPaintType() == SkinPaintTypes.NORMAL) {
             return;
         }
 
         Matrix4f mat = matrixStack.last().pose();
+        Matrix3f normal = matrixStack.last().normal();
         ISkinPaintType paintType = paintColor.getPaintType();
         int u = paintType.getIndex() % 8;
         int v = paintType.getIndex() / 8;
@@ -54,6 +60,9 @@ public class ExtendedFaceRenderer {
             builder.vertex(mat, x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
                     .color(255, 255, 255, alpha & 0xff)
                     .uv((u + FACE_MARK_TEXTURES[i][0]) / 8f, (v + FACE_MARK_TEXTURES[i][1]) / 8f)
+                    .overlayCoords(overlay)
+                    .uv2(light)
+                    .normal(normal, vertexes[4][0], vertexes[4][1], vertexes[4][2])
                     .endVertex();
         }
     }

@@ -2,11 +2,11 @@ package moe.plushie.armourers_workshop.core.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.compatibility.AbstractItemEntityRenderer;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -14,7 +14,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
 
 @Environment(value = EnvType.CLIENT)
-public class MannequinItemRenderer extends BlockEntityWithoutLevelRenderer {
+public class MannequinItemRenderer extends AbstractItemEntityRenderer {
 
     private static MannequinItemRenderer INSTANCE;
 

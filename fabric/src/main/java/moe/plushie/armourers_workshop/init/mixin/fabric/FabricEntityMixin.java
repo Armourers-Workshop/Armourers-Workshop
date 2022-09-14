@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.mixin.fabric;
 
-import moe.plushie.armourers_workshop.init.capability.CapabilityStorage;
+import moe.plushie.armourers_workshop.init.platform.fabric.capability.CapabilityStorage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;

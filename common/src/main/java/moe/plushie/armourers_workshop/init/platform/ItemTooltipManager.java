@@ -135,13 +135,10 @@ public class ItemTooltipManager {
         return tooltip;
     }
 
-    public static void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltips, TooltipFlag flags, @Nullable Function<Component, Component> applier) {
+    public static void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltips, TooltipFlag flags) {
         List<Component> newTooltips = createSkinTooltip(itemStack);
         if (newTooltips.isEmpty()) {
             return;
-        }
-        if (applier != null) {
-            newTooltips = newTooltips.stream().map(applier).collect(Collectors.toList());
         }
         if (flags.isAdvanced()) {
             String registryName = Registry.ITEM.getKey(itemStack.getItem()).toString();
@@ -184,7 +181,7 @@ public class ItemTooltipManager {
             RenderSystem.drawContinuousTexturedBox(matrixStack, ModTextures.GUI_PREVIEW, tx, ty, 0, 0, size, size, 62, 62, 4, 400);
         }
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        ExtendedItemRenderer.renderSkin(descriptor, itemStack, tx, ty, 500, size, size, 150, 45, 0, matrixStack, buffers);
+        ExtendedItemRenderer.renderSkin(descriptor, itemStack, tx, ty, 500, size, size, 30, 45, 0, matrixStack, buffers);
         buffers.endBatch();
     }
 }

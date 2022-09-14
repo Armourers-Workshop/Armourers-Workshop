@@ -78,7 +78,7 @@ public class BottleItem extends FlavouredItem implements IItemTintColorProvider,
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ArmourersWorkshop.getResource("empty"), (itemStack, level, entity) -> ColorUtils.hasColor(itemStack) ? 0 : 1);
+        builder.accept(ArmourersWorkshop.getResource("empty"), (itemStack, level, entity, id) -> ColorUtils.hasColor(itemStack) ? 0 : 1);
     }
 
     @Override

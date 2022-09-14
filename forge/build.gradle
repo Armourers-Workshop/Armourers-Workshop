@@ -14,8 +14,12 @@ loom {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
-        mixinConfig "armourers_workshop-forge.mixins.json"
-        mixinConfig "armourers_workshop-common.mixins.json"
+        // when we switch the minecraft, the mixin will changes,
+        // so we need find all active mixins in the project,
+        // and then add all mixins name to manifest.
+        getRootProject().mixinConfigs.resolve(name).forEach {
+            mixinConfig it.name
+        }
     }
 }
 

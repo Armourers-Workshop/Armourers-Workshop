@@ -41,13 +41,13 @@ public class ModTextures {
 
     public static final ResourceLocation CUBE = res("textures/armour/cube.png");
     public static final ResourceLocation CIRCLE = res("textures/other/nanoha-circle.png");
-    public static final ResourceLocation EARTH = res("textures/tile-entities/global-skin-library.png");
+    public static final ResourceLocation EARTH = res("textures/blockentity/global-skin-library.png");
 
     public static final ResourceLocation GUI_PREVIEW = res("textures/gui/skin-preview.png");
     public static final ResourceLocation SKIN_PANEL = res("textures/gui/controls/skin-panel.png");
     public static final ResourceLocation SCROLLBAR = res("textures/gui/controls/scrollbar.png");
 
-    public static final ResourceLocation MARKERS = res("textures/tile-entities/markers.png");
+    public static final ResourceLocation MARKERS = res("textures/blockentity/markers.png");
     public static final ResourceLocation GUIDES = res("textures/block/guide.png");
 
     public static final ResourceLocation BLOCK_CUBE = res("textures/block/colourable/colourable.png");

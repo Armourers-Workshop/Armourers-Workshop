@@ -20,7 +20,12 @@ public class HttpTextureMixin {
     private String urlString;
 
     @Inject(method = "processLegacySkin", at = @At(value = "HEAD"))
-    private static void hooked_processLegacySkin(NativeImage image, CallbackInfoReturnable<NativeImage> cir) {
+    //#if MC >= 11800
+    //# private void hooked_processLegacySkin(NativeImage image, CallbackInfoReturnable<NativeImage> cir)
+    //#else
+    private static void hooked_processLegacySkin(NativeImage image, CallbackInfoReturnable<NativeImage> cir)
+    //#endif
+    {
         slimModel = false;
         if (image != null && image.getWidth() > 54 && image.getHeight() > 20) {
             slimModel = (image.getPixelRGBA(54, 20) & 0xff000000) == 0;

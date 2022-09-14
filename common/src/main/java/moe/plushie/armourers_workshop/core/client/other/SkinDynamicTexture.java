@@ -1,31 +1,32 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Objects;
+import java.util.Optional;
 
-
-/**
- * @author RiskyKen
- */
+@Environment(value = EnvType.CLIENT)
 public class SkinDynamicTexture extends DynamicTexture {
 
     private final TextureManager textureManager;
     private SkinPaintData paintData;
     private NativeImage downloadedImage;
-    private ResourceLocation refer;
-    private boolean needsUpdate = true;
-    private boolean uploaded = false;
-    private int changeTotal = 0;
 
+    private ResourceLocation refer;
+    private AbstractTexture referTexture;
+
+    private boolean needsUpdate = true;
 
     public SkinDynamicTexture() {
         super(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT, true);
@@ -39,8 +40,9 @@ public class SkinDynamicTexture extends DynamicTexture {
     public void setRefer(ResourceLocation refer) {
         if (!Objects.equals(this.refer, refer)) {
             this.refer = refer;
+            this.referTexture = Optional.ofNullable(refer).map(textureManager::getTexture).orElse(null);
             this.downloadedImage = null;
-            this.needsUpdate = true;
+            this.setNeedsUpdate();
         }
     }
 
@@ -51,29 +53,35 @@ public class SkinDynamicTexture extends DynamicTexture {
     public void setPaintData(SkinPaintData paintData) {
         if (this.paintData != paintData) {
             this.paintData = paintData;
-            this.needsUpdate = true;
-            this.changeTotal = 0;
-            if (paintData == null) {
-                return;
-            }
-            for (int value : paintData.getData()) {
-                if (PaintColor.isOpaque(value)) {
-                    this.changeTotal += 1;
-                }
-            }
+            this.setNeedsUpdate();
         }
     }
 
     @Override
     public void upload() {
-        needsUpdate = false;
         NativeImage downloadedImage = getDownloadedImage();
         NativeImage mergedImage = getPixels();
-        if (mergedImage == null || downloadedImage == null || paintData == null) {
-            uploaded = false;
+        if (mergedImage == null || downloadedImage == null) {
             return;
         }
         mergedImage.copyFrom(downloadedImage);
+        if (paintData != null) {
+            applyPaintColor(mergedImage);
+        }
+        super.upload();
+    }
+
+    private void setNeedsUpdate() {
+        this.needsUpdate = true;
+        RenderSystem.recordRenderCall(() -> {
+            if (this.needsUpdate) {
+                this.needsUpdate = false;
+                this.upload();
+            }
+        });
+    }
+
+    private void applyPaintColor(NativeImage mergedImage) {
         for (int iy = 0; iy < paintData.getHeight(); ++iy) {
             for (int ix = 0; ix < paintData.getWidth(); ++ix) {
                 int color = paintData.getColor(ix, iy);
@@ -86,34 +94,15 @@ public class SkinDynamicTexture extends DynamicTexture {
                 }
             }
         }
-        super.bind();
-        mergedImage.upload(0, 0, 0, false);
-        uploaded = true;
-    }
-
-    @Override
-    public void bind() {
-        if (changeTotal != 0) {
-            if (needsUpdate) {
-                upload();
-            }
-            if (uploaded) {
-                super.bind();
-                return;
-            }
-        }
-        if (refer != null) {
-            RenderSystem.bind(refer);
-        }
     }
 
     private NativeImage getDownloadedImage() {
         if (downloadedImage != null) {
             return downloadedImage;
         }
-        if (refer != null) {
+        if (referTexture != null) {
+            referTexture.bind();
             downloadedImage = new NativeImage(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT, true);
-            RenderSystem.bind(refer);
             downloadedImage.downloadTexture(0, false);
         }
         return downloadedImage;

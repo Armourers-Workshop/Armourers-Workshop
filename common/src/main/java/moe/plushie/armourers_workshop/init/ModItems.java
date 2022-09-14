@@ -16,6 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @SuppressWarnings({"unused", "SameParameterValue"})
@@ -25,7 +26,7 @@ public class ModItems {
     private static final ItemBuilder BUILDING = new ItemBuilder(ModItemGroups.BUILDING_GROUP);
     private static final ItemBuilder NONE = new ItemBuilder(null);
 
-    public static final IRegistryKey<Item> SKIN = NONE.normal(SkinItem::new).bind(() -> SkinItemRenderer::getInstance).build("skin");
+    public static final IRegistryKey<Item> SKIN = NONE.block(SkinItem::new, ModBlocks.SKINNABLE).bind(() -> SkinItemRenderer::getInstance).build("skin");
     public static final IRegistryKey<Item> MANNEQUIN = MAIN.normal(MannequinItem::new).rarity(Rarity.RARE).bind(() -> MannequinItemRenderer::getInstance).build("mannequin");
 
     public static final IRegistryKey<Item> SKIN_LIBRARY = MAIN.block(ModBlocks.SKIN_LIBRARY).build("skin-library");
@@ -94,7 +95,11 @@ public class ModItems {
         }
 
         IItemBuilder<Item> block(IRegistryKey<Block> block) {
-            return normal(properties -> new BlockItem(block.get(), properties)).rarity(Rarity.RARE);
+            return block(BlockItem::new, block).rarity(Rarity.RARE);
+        }
+
+        IItemBuilder<Item> block(BiFunction<Block, Item.Properties, Item> provider, IRegistryKey<Block> block) {
+            return normal(properties -> provider.apply(block.get(), properties));
         }
 
         IItemBuilder<Item> cube(IRegistryKey<Block> block) {

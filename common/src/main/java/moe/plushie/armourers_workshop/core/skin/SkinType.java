@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -65,16 +66,16 @@ public class SkinType implements ISkinType {
 
     public static class Tool extends SkinType implements ISkinToolType {
 
-        protected Predicate<Item> predicate;
+        protected Predicate<ItemStack> predicate;
 
-        public Tool(String name, int id, List<? extends ISkinPartType> parts, Predicate<Item> predicate) {
+        public Tool(String name, int id, List<? extends ISkinPartType> parts, Predicate<ItemStack> predicate) {
             super(name, id, parts);
             this.predicate = predicate;
         }
 
         @Override
-        public boolean contains(Item item) {
-            return predicate.test(item);
+        public boolean contains(ItemStack itemStack) {
+            return predicate.test(itemStack);
         }
 
         //        @Override

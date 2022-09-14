@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
@@ -8,11 +9,10 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.GhastModel;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.monster.Ghast;
 
 @Environment(value = EnvType.CLIENT)
-public class GhastSkinRenderer<T extends Ghast, M extends GhastModel<T>> extends LivingSkinRenderer<T, M> {
+public class GhastSkinRenderer<T extends Ghast, V extends GhastModel<T>, M extends IModelHolder<V>> extends LivingSkinRenderer<T, V, M> {
 
     public GhastSkinRenderer(EntityProfile profile) {
         super(profile);
@@ -27,9 +27,7 @@ public class GhastSkinRenderer<T extends Ghast, M extends GhastModel<T>> extends
     protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
         super.apply(entity, model, overriddenManager, renderData);
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_HEAD)) {
-            for (ModelPart modelRenderer : model.parts()) {
-                addModelOverride(modelRenderer);
-            }
+            model.getAllParts().forEach(this::addModelOverride);
         }
     }
 

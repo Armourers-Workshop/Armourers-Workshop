@@ -1,11 +1,12 @@
 package moe.plushie.armourers_workshop.init.platform;
 
-
 import moe.plushie.armourers_workshop.api.client.ISkinRendererProvider;
+import moe.plushie.armourers_workshop.compatibility.AbstractModelPartRegistries;
 import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
 import moe.plushie.armourers_workshop.core.client.skinrender.*;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
+import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,7 +27,6 @@ public class SkinManager {
         SkinRendererManager manager = SkinRendererManager.getInstance();
         adapt(manager::registerRenderer);
         ModEntityProfiles.forEach(manager::bind);
-        manager.init();
     }
 
     protected static void adapt(Consumer<Builder> manager) {
@@ -49,13 +49,13 @@ public class SkinManager {
         manager.accept(Builder.of(CreeperSkinRenderer::new).whenModel(CreeperModel.class));
     }
 
-    protected static class Builder implements ISkinRendererProvider<SkinRenderer<?, ?>> {
+    protected static class Builder implements ISkinRendererProvider<SkinRenderer<?, ?, ?>> {
 
         Class<?> modelClass;
         Class<?> rendererClass;
-        Function<EntityProfile, SkinRenderer<?, ?>> factory;
+        Function<EntityProfile, SkinRenderer<?, ?, ?>> factory;
 
-        public static Builder of(Function<EntityProfile, SkinRenderer<?, ?>> factory) {
+        public static Builder of(Function<EntityProfile, SkinRenderer<?, ?, ?>> factory) {
             Builder builder = new Builder();
             builder.factory = factory;
             return builder;
@@ -73,7 +73,7 @@ public class SkinManager {
 
         @Nullable
         @Override
-        public SkinRenderer<?, ?> create(EntityType<?> entityType, EntityRenderer<?> entityRenderer, Model entityModel, EntityProfile entityProfile) {
+        public SkinRenderer<?, ?, ?> create(EntityType<?> entityType, EntityRenderer<?> entityRenderer, Model entityModel, EntityProfile entityProfile) {
             // when specify the type of the model, we need to check it.
             if (this.modelClass != null && !this.modelClass.isInstance(entityModel)) {
                 return null;
@@ -82,7 +82,7 @@ public class SkinManager {
             if (this.rendererClass != null && !this.rendererClass.isInstance(entityRenderer)) {
                 return null;
             }
-            SkinRenderer<?, ?> skinRenderer = this.factory.apply(entityProfile);
+            SkinRenderer<?, ?, ?> skinRenderer = this.factory.apply(entityProfile);
             skinRenderer.initTransformers();
             skinRenderer.init(ObjectUtils.unsafeCast(entityRenderer));
             return skinRenderer;

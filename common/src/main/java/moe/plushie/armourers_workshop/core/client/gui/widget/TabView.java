@@ -2,13 +2,14 @@ package moe.plushie.armourers_workshop.core.client.gui.widget;
 
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
-import com.apple.library.impl.AppearanceImpl;
 import com.apple.library.impl.WeakDispatcherImpl;
 import com.apple.library.uikit.*;
+import moe.plushie.armourers_workshop.init.ModTextures;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.function.BiConsumer;
 
 public class TabView extends UIView {
@@ -226,6 +227,7 @@ public class TabView extends UIView {
             this.iconView = new UIImageView(new CGRect(0, 0, 16, 16));
             this.iconView.setUserInteractionEnabled(true);
             this.addSubview(iconView);
+            this.setOpaque(false);
         }
 
         @Override
@@ -252,17 +254,25 @@ public class TabView extends UIView {
             if (this.alignment1 == alignment) {
                 return;
             }
-            UIImage image = AppearanceImpl.TAB_BUTTON_LEFT_IMAGE;
-            if (alignment == 1) {
-                image = AppearanceImpl.TAB_BUTTON_RIGHT_IMAGE;
-            }
             CGRect rect = bounds();
             CGRect iconRect = iconView.bounds();
             int ix = (rect.width - iconRect.width) / 2 + (alignment - 1); // patch: 0: -1, 1: 0
             int iy = (rect.height - iconRect.height) / 2;
             this.alignment1 = alignment;
-            this.setBackgroundImage(image, State.ALL);
+            this.setBackgroundImage(_tabButtonImages(alignment), State.ALL);
             this.iconView.setFrame(new CGRect(ix, iy, iconRect.width, iconRect.height));
+        }
+
+        private UIImage _tabButtonImages(int alignment) {
+            // we use special mapping tables.
+            HashMap<Integer, CGPoint> offsets = new HashMap<>();
+            offsets.put(UIControl.State.NORMAL, new CGPoint(0, 1));
+            offsets.put(UIControl.State.HIGHLIGHTED, new CGPoint(1, 1));
+            offsets.put(UIControl.State.SELECTED | UIControl.State.NORMAL, new CGPoint(0, 0));
+            offsets.put(UIControl.State.SELECTED | UIControl.State.HIGHLIGHTED, new CGPoint(1, 0));
+            int width = 26;
+            int height = 30;
+            return UIImage.of(ModTextures.TABS).uv(width * alignment * 2, 0).size(width, height).unzip(offsets::get).build();
         }
     }
 }

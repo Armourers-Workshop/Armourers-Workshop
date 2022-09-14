@@ -7,6 +7,7 @@ import com.apple.library.foundation.NSIndexPath;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.impl.AppearanceImpl;
+import com.apple.library.impl.SoundManagerImpl;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -60,6 +61,7 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
     @Override
     public void mouseDown(UIEvent event) {
         super.mouseDown(event);
+        SoundManagerImpl.click();
         setSelected(!isSelected());
     }
 

@@ -35,7 +35,7 @@ public class SlotGridView extends UIView {
         if (slots == null) {
             return;
         }
-        RenderSystem.bind(ModTextures.COMMON);
+        RenderSystem.setShaderTexture(0, ModTextures.COMMON);
         for (int i = startIndex; i < endIndex; ++i) {
             Slot slot = slots.get(i);
             RenderSystem.blit(context.poseStack, slot.x - 1, slot.y - 1, 238, 0, 18, 18);

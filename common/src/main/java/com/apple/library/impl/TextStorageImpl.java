@@ -9,11 +9,11 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextPosition;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIFont;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Matrix4f;
+import moe.plushie.armourers_workshop.compatibility.AbstractShaderTesselator;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 
 @Environment(value= EnvType.CLIENT)
 public class TextStorageImpl {
@@ -173,24 +172,17 @@ public class TextStorageImpl {
             return;
         }
         Matrix4f mat = context.poseStack.last().pose();
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuilder();
-        RenderSystem.color(AppearanceImpl.TEXT_HIGHLIGHTED_COLOR);
-        RenderSystem.disableTexture();
-        RenderSystem.enableColorLogicOp();
-        RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-        bufferbuilder.begin(RenderSystem.VERTEX_QUADS_MODE, DefaultVertexFormat.POSITION);
-
+        AbstractShaderTesselator tesselator = AbstractShaderTesselator.getInstance();
+        BufferBuilder builder = tesselator.begin(SkinRenderType.GUI_HIGHLIGHTED_TEXT);
+        RenderSystem.setShaderColor(AppearanceImpl.TEXT_HIGHLIGHTED_COLOR);
         for (CGRect rect : highlightedRects) {
-            bufferbuilder.vertex(mat, rect.getMinX(), rect.getMaxY(), 0).endVertex();
-            bufferbuilder.vertex(mat, rect.getMaxX(), rect.getMaxY(), 0).endVertex();
-            bufferbuilder.vertex(mat, rect.getMaxX(), rect.getMinY(), 0).endVertex();
-            bufferbuilder.vertex(mat, rect.getMinX(), rect.getMinY(), 0).endVertex();
+            builder.vertex(mat, rect.getMinX(), rect.getMaxY(), 0).endVertex();
+            builder.vertex(mat, rect.getMaxX(), rect.getMaxY(), 0).endVertex();
+            builder.vertex(mat, rect.getMaxX(), rect.getMinY(), 0).endVertex();
+            builder.vertex(mat, rect.getMinX(), rect.getMinY(), 0).endVertex();
         }
-
-        tessellator.end();
-        RenderSystem.disableColorLogicOp();
-        RenderSystem.enableTexture();
+        tesselator.end();
+        RenderSystem.setShaderColor(UIColor.WHITE);
     }
 
     public String value() {
@@ -622,12 +614,6 @@ public class TextStorageImpl {
         }
         CGPoint endPoint() {
             return new CGPoint(rect.x + rect.width, rect.y);
-        }
-
-        private static <T> ArrayList<T> makePairs(Consumer<ArrayList<T>> consumer) {
-            ArrayList<T> list = new ArrayList<>();
-            consumer.accept(list);
-            return list;
         }
     }
 }

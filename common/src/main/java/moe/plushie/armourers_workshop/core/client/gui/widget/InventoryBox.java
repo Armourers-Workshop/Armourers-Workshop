@@ -48,7 +48,7 @@ public class InventoryBox extends UIControl {
         int u = 176;
         int v = 0;
         ResourceLocation texture = ModTextures.ARMOURER;
-        RenderSystem.bind(texture);
+        RenderSystem.setShaderTexture(0, texture);
         int width = bounds().width;
         int height = bounds().height;
         int hoverWidth = MathUtils.clamp(mouseOffset.x, 0, width);

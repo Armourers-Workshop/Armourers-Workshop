@@ -1,12 +1,13 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
+import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
+import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
+import moe.plushie.armourers_workshop.core.client.other.QuadToLineVertexBuilder;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.core.data.MannequinHitResult;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -17,8 +18,9 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -76,10 +78,10 @@ public class HighlightPlacementRenderer {
         matrixStack.translate(location.x() - origin.x(), location.y() - origin.y(), location.z() - origin.z());
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(-target.getRotation()));
 
-        HumanoidModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
+        MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
         if (model != null) {
             float f = target.getScale() * 0.9375f; // base scale from player model
-            VertexConsumer vertexBuilder = buffers.getBuffer(SkinRenderType.ENTITY_OUTLINE);
+            VertexConsumer vertexBuilder = new QuadToLineVertexBuilder(buffers.getBuffer(SkinRenderType.HIGHLIGHTED_ENTITY_LINES));
             matrixStack.pushPose();
             matrixStack.scale(f, f, f);
             matrixStack.scale(-1, -1, 1);
@@ -115,8 +117,7 @@ public class HighlightPlacementRenderer {
         matrixStack.translate(-origin.x(), -origin.y(), -origin.z());
         matrixStack.translate(0.5f, 0.5f, 0.5f);
 
-        Matrix4f mat = matrixStack.last().pose();
-        VertexConsumer builder = buffers.getBuffer(SkinRenderType.LINES_WITHOUT_TEST);
+        VertexConsumer builder = buffers.getBuffer(SkinRenderType.HIGHLIGHTED_LINES);
 
         for (BlockPos pos1 : blockSamples) {
             float x0 = pos1.getX() - 0.5f;
@@ -125,7 +126,7 @@ public class HighlightPlacementRenderer {
             float x1 = pos1.getX() + 0.5f;
             float y1 = pos1.getY() + 0.5f;
             float z1 = pos1.getZ() + 0.5f;
-            RenderSystem.drawBoundingBox(mat, x0, y0, z0, x1, y1, z1, UIColor.RED, builder);
+            RenderSystem.drawBoundingBox(matrixStack, x0, y0, z0, x1, y1, z1, UIColor.RED, builder);
         }
 
         for (BlockPos pos1 : blockEffects) {
@@ -135,7 +136,7 @@ public class HighlightPlacementRenderer {
             float x1 = pos1.getX() + 0.4f;
             float y1 = pos1.getY() + 0.4f;
             float z1 = pos1.getZ() + 0.4f;
-            RenderSystem.drawBoundingBox(mat, x0, y0, z0, x1, y1, z1, UIColor.GREEN, builder);
+            RenderSystem.drawBoundingBox(matrixStack, x0, y0, z0, x1, y1, z1, UIColor.GREEN, builder);
         }
 
         matrixStack.popPose();

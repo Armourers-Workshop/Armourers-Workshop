@@ -17,6 +17,7 @@ import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.utils.texture.SkyBox;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.RenderType;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,7 +28,7 @@ import java.util.function.BiConsumer;
 @Environment(value = EnvType.CLIENT)
 public class PackedQuad {
 
-    private final HashMap<SkinRenderType, ArrayList<SkinCubeFace>> allFaces = new HashMap<>();
+    private final HashMap<RenderType, ArrayList<SkinCubeFace>> allFaces = new HashMap<>();
 
     private final Rectangle3i bounds;
     private final OpenVoxelShape renderShape;
@@ -72,7 +73,7 @@ public class PackedQuad {
         return allQuads;
     }
 
-    public void forEach(BiConsumer<SkinRenderType, ArrayList<SkinCubeFace>> action) {
+    public void forEach(BiConsumer<RenderType, ArrayList<SkinCubeFace>> action) {
         allFaces.forEach(action);
     }
 
@@ -81,7 +82,7 @@ public class PackedQuad {
             if (face.getPaintType() == SkinPaintTypes.NONE) {
                 continue;
             }
-            SkinRenderType renderType = SkinRenderType.by(face.getCube());
+            RenderType renderType = SkinRenderType.by(face.getCube());
             allFaces.computeIfAbsent(renderType, k -> new ArrayList<>()).add(face);
             colorInfo.add(face.getColor());
             faceTotal += 1;

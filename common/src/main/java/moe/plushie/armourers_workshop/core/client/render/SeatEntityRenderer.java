@@ -1,22 +1,22 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.apple.library.uikit.UIColor;
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.compatibility.AbstractEntityRenderer;
+import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 @Environment(value = EnvType.CLIENT)
-public class SeatEntityRenderer<T extends SeatEntity> extends EntityRenderer<T> {
+public class SeatEntityRenderer<T extends SeatEntity> extends AbstractEntityRenderer<T> {
 
-    public SeatEntityRenderer(EntityRenderDispatcher rendererManager) {
-        super(rendererManager);
+    public SeatEntityRenderer(AbstractEntityRendererContext context) {
+        super(context);
     }
 
     @Override

@@ -1,15 +1,16 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.compatibility.AbstractRenderPoseStack;
+import moe.plushie.armourers_workshop.compatibility.AbstractShaderExecutor;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.TickUtils;
+import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -105,7 +106,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
 
         public abstract Matrix4f getMatrix();
 
-        public abstract Matrix3f getNormalMatrix();
+        public abstract Matrix3f getInvNormalMatrix();
 
         public abstract ISkinPartType getPartType();
 
@@ -115,9 +116,9 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
 
         public abstract SkinRenderObject getVertexBuffer();
 
-        public void render(SkinRenderType renderType, int index, int maxVertexCount) {
-            SkinLightBufferObject lightBuffer = null;
+        public void render(RenderType renderType, int index, int maxVertexCount) {
             SkinRenderObject vertexBuffer = getVertexBuffer();
+            AbstractShaderExecutor executor = AbstractShaderExecutor.getInstance();
 
             float polygonOffset = getPolygonOffset();
             if (polygonOffset != 0) {
@@ -129,23 +130,21 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
                 RenderSystem.enablePolygonOffset();
             }
 
-            if (renderType.usesLight()) {
-                lightBuffer = SkinLightBufferObject.getLightBuffer(getLightmap());
-                lightBuffer.ensureCapacity(maxVertexCount);
-                lightBuffer.bind();
-                lightBuffer.getFormat().setupBufferState(0L);
-            }
+            RenderSystem.setShaderColor(1, 1, 1, 1);
+            RenderSystem.setShaderLight(getLightmap());
+            RenderSystem.setTextureMatrix(Matrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
+            RenderSystem.setInverseNormalMatrix(getInvNormalMatrix());
 
-            vertexBuffer.bind();
-            renderType.format().setupBufferState(getVertexOffset());
+            AbstractRenderPoseStack modelViewStack = RenderSystem.getModelStack();
+            modelViewStack.pushPose();
+            modelViewStack.mulPose(getMatrix());
+            modelViewStack.apply();
 
-            vertexBuffer.draw(getMatrix(), renderType.mode(), getVertexCount());
+            executor.setMaxVertexCount(maxVertexCount);
+            executor.execute(vertexBuffer, getVertexOffset(), getVertexCount(), renderType);
 
-            renderType.format().clearBufferState();
-
-            if (lightBuffer != null) {
-                lightBuffer.getFormat().clearBufferState();
-            }
+            modelViewStack.popPose();
+            modelViewStack.apply();
 
             if (polygonOffset != 0) {
                 RenderSystem.polygonOffset(0f, 0f);
@@ -173,7 +172,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
             setupRenderState();
 
             int index = 0;
-            for (SkinRenderType renderType : SkinRenderType.RENDER_ORDERING_FACES) {
+            for (RenderType renderType : SkinRenderType.RENDER_ORDERING_FACES) {
                 ArrayList<Pass> pendingPasses = tasks.get(renderType);
                 if (pendingPasses == null || pendingPasses.isEmpty()) {
                     continue;
@@ -191,8 +190,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         }
 
         private void setupRenderState() {
-            RenderSystem.enableRescaleNormal();
-
+            AbstractShaderExecutor.getInstance().setup();
             if (ModDebugger.wireframeRender) {
                 RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
             }
@@ -202,8 +200,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
             if (ModDebugger.wireframeRender) {
                 RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
             }
-
-            RenderSystem.disableRescaleNormal();
+            AbstractShaderExecutor.getInstance().clean();
             SkinRenderObject.unbind();
         }
     }
@@ -211,7 +208,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
     public static class Merger extends RenderType {
 
         protected Merger(String name, VertexFormat format, int bufferSize) {
-            super(name, format, RenderSystem.VERTEX_QUADS_MODE, bufferSize, true, false, Merger::noop, Merger::noop);
+            super(name, format, SkinRenderType.FACE_SOLID.mode(), bufferSize, true, false, Merger::noop, Merger::noop);
         }
 
         protected static void noop() {

@@ -18,7 +18,7 @@ public class SkinningItemRecipe extends SkinningRecipe {
     @Override
     protected boolean isValidTarget(ItemStack itemStack) {
         if (toolType != null) {
-            return toolType.contains(itemStack.getItem());
+            return toolType.contains(itemStack);
         }
         return super.isValidTarget(itemStack);
     }

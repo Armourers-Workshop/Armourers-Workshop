@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init.client;
 
 import com.google.common.collect.Iterables;
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -23,7 +24,6 @@ import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -195,43 +195,34 @@ public class ClientWardrobeHandler {
 
     public static void onRenderLivingPre(LivingEntity entity, float p_225623_2_, float partialTicks, int light, PoseStack matrixStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
         SkinRenderData renderData = SkinRenderData.of(entity);
-        if (renderData == null) {
-            return;
-        }
-        EntityModel<?> entityModel = entityRenderer.getModel();
-        SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, entityRenderer);
-        if (renderer != null) {
-            SkinRenderContext renderContext = SkinRenderContext.getInstance();
-            renderContext.setup(light, partialTicks, matrixStack, buffers);
-            renderer.willRender(entity, entityModel, renderData, renderContext);
+        if (renderData != null) {
+            SkinRendererManager.getInstance().willRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> {
+                SkinRenderContext renderContext = SkinRenderContext.getInstance();
+                renderContext.setup(light, partialTicks, matrixStack, buffers);
+                return renderContext;
+            });
         }
     }
 
     public static void onRenderLiving(LivingEntity entity, float p_225623_2_, float partialTicks, int light, PoseStack matrixStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
         SkinRenderData renderData = SkinRenderData.of(entity);
-        if (renderData == null) {
-            return;
-        }
-        EntityModel<?> entityModel = entityRenderer.getModel();
-        SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, entityRenderer);
-        if (renderer != null) {
-            SkinRenderContext renderContext = SkinRenderContext.getInstance();
-            renderContext.setup(light, partialTicks, matrixStack, buffers);
-            renderer.willRenderModel(entity, entityModel, renderData, renderContext);
+        if (renderData != null) {
+            SkinRendererManager.getInstance().willRenderModel(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> {
+                SkinRenderContext renderContext = SkinRenderContext.getInstance();
+                renderContext.setup(light, partialTicks, matrixStack, buffers);
+                return renderContext;
+            });
         }
     }
 
     public static void onRenderLivingPost(LivingEntity entity, float p_225623_2_, float partialTicks, int light, PoseStack matrixStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
         SkinRenderData renderData = SkinRenderData.of(entity);
-        if (renderData == null) {
-            return;
-        }
-        EntityModel<?> entityModel = entityRenderer.getModel();
-        SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, entityRenderer);
-        if (renderer != null) {
-            SkinRenderContext renderContext = SkinRenderContext.getInstance();
-            renderContext.setup(light, partialTicks, matrixStack, buffers);
-            renderer.didRender(entity, entityModel, renderData, renderContext);
+        if (renderData != null) {
+            SkinRendererManager.getInstance().didRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> {
+                SkinRenderContext renderContext = SkinRenderContext.getInstance();
+                renderContext.setup(light, partialTicks, matrixStack, buffers);
+                return renderContext;
+            });
         }
     }
 
@@ -331,15 +322,16 @@ public class ClientWardrobeHandler {
 
     private static int render(Entity entity, ItemStack itemStack, Model model, SkinRenderContext context, Supplier<Iterable<SkinRenderData.Entry>> provider) {
         int r = 0;
-        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
+        SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer == null) {
             return 0;
         }
+        IModelHolder<Model> modelHolder = SkinRendererManager.wrap(model);
         for (SkinRenderData.Entry entry : provider.get()) {
             if (itemStack == null) {
                 itemStack = entry.getItemStack();
             }
-            r += renderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), itemStack, entry.getSlotIndex(), context);
+            r += renderer.render(entity, modelHolder, entry.getBakedSkin(), entry.getBakedScheme(), itemStack, entry.getSlotIndex(), context);
         }
         return r;
     }

@@ -116,7 +116,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
         }
         if (tileEntity.isSeat() && !player.isShiftKeyDown()) {
             if (ModPermissions.SKINNABLE_SIT.accept(tileEntity, player)) {
-                if (level.isClientSide) {
+                if (level.isClientSide()) {
                     return InteractionResult.CONSUME;
                 }
                 Vector3d seatPos = tileEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);

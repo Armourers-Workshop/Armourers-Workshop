@@ -89,12 +89,12 @@ public class SkinCubeFace {
     }
 
     @Environment(value = EnvType.CLIENT)
-    public void render(BakedSkinPart part, ColorScheme scheme, PoseStack matrixStack, VertexConsumer builder) {
+    public void render(BakedSkinPart part, ColorScheme scheme, int light, int overlay, PoseStack matrixStack, VertexConsumer builder) {
         PaintColor resolvedColor = resolve(color, scheme, part.getColorInfo(), part.getType(), 0);
         if (resolvedColor.getPaintType() == SkinPaintTypes.NONE) {
             return;
         }
-        ExtendedFaceRenderer.render(x, y, z, direction, resolvedColor, alpha, matrixStack, builder);
+        ExtendedFaceRenderer.render(x, y, z, direction, resolvedColor, alpha, light, overlay, matrixStack, builder);
     }
 
     @Environment(value = EnvType.CLIENT)

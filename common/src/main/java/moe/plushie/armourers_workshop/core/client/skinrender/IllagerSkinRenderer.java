@@ -4,14 +4,14 @@ import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.IllagerModel;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.monster.AbstractIllager;
 
 @Environment(value = EnvType.CLIENT)
-public class IllagerSkinRenderer<T extends AbstractIllager, M extends IllagerModel<T>> extends ExtendedSkinRenderer<T, M> {
+public class IllagerSkinRenderer<T extends AbstractIllager, V extends IllagerModel<T>, M extends IHumanoidModelHolder<V>> extends ExtendedSkinRenderer<T, V, M> {
 
     public IllagerSkinRenderer(EntityProfile profile) {
         super(profile);
@@ -21,45 +21,11 @@ public class IllagerSkinRenderer<T extends AbstractIllager, M extends IllagerMod
     protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
         super.apply(entity, model, overriddenManager, renderData);
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_LEFT_ARM)) {
-            addModelOverride(model.arms);
+            addModelOverride(model.getPart("arms"));
         }
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_RIGHT_ARM)) {
-            addModelOverride(model.arms);
+            addModelOverride(model.getPart("arms"));
         }
-    }
-
-    @Override
-    public IPartAccessor<M> getAccessor() {
-        return new IPartAccessor<M>() {
-
-            public ModelPart getHat(M model) {
-                return model.hat;
-            }
-
-            public ModelPart getHead(M model) {
-                return model.head;
-            }
-
-            public ModelPart getBody(M model) {
-                return model.body;
-            }
-
-            public ModelPart getLeftArm(M model) {
-                return model.leftArm;
-            }
-
-            public ModelPart getRightArm(M model) {
-                return model.rightArm;
-            }
-
-            public ModelPart getLeftLeg(M model) {
-                return model.leftLeg;
-            }
-
-            public ModelPart getRightLeg(M model) {
-                return model.rightLeg;
-            }
-        };
     }
 }
 

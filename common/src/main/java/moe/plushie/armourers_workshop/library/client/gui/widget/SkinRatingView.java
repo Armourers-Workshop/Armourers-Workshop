@@ -60,7 +60,7 @@ public class SkinRatingView extends UIControl {
         super.render(point, context);
 
         PoseStack matrixStack = context.poseStack;
-        RenderSystem.bind(ModTextures.RATING);
+        RenderSystem.setShaderTexture(0, ModTextures.RATING);
 
         for (int i = 0; i < (getMaxValue() / 2); i++) {
             RenderSystem.blit(matrixStack, i * 16, 0, 32, 0, 16, 16);

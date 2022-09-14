@@ -1,20 +1,21 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.compatibility.AbstractItemEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModEntities;
+import moe.plushie.armourers_workshop.init.platform.RendererManager;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -22,12 +23,12 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
 
 @Environment(value = EnvType.CLIENT)
-public class SkinItemRenderer extends BlockEntityWithoutLevelRenderer {
+public class SkinItemRenderer extends AbstractItemEntityRenderer {
 
     private static SkinItemRenderer INSTANCE;
     private ItemStack playerMannequinItem;
     private MannequinEntity entity;
-    private HumanoidModel<MannequinEntity> model;
+    private MannequinModel<MannequinEntity> model;
 
     public static SkinItemRenderer getInstance() {
         if (INSTANCE == null) {
@@ -73,10 +74,10 @@ public class SkinItemRenderer extends BlockEntityWithoutLevelRenderer {
         return entity;
     }
 
-    public HumanoidModel<?> getMannequinModel() {
+    public MannequinModel<?> getMannequinModel() {
         MannequinEntity entity = getMannequinEntity();
         if (model == null && entity != null) {
-            model = new HumanoidModel<>(0);
+            model = new MannequinModel<>(RendererManager.getEntityContext(), 0, false);
             model.young = false;
             model.crouching = false;
             model.riding = false;

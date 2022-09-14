@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeNetworkManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.PacketSplitter;
 import net.minecraft.client.Minecraft;
@@ -17,18 +18,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.event.EventNetworkChannel;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.UUID;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class NetworkManagerImpl implements NetworkManager.Impl {
+public class NetworkManagerImpl extends AbstractForgeNetworkManager implements NetworkManager.Impl {
 
     private static NetworkDispatcher dispatcher;
 
@@ -40,23 +36,17 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
 
     public void init(String name, String version) {
         dispatcher = new NetworkDispatcher(ArmourersWorkshop.getResource(name));
-        EventNetworkChannel channel = NetworkRegistry.ChannelBuilder
-                .named(dispatcher.channelName)
-                .networkProtocolVersion(() -> version)
-                .clientAcceptedVersions(version::equals)
-                .serverAcceptedVersions(version::equals)
-                .eventNetworkChannel();
-        channel.registerObject(dispatcher);
+        AbstractForgeNetworkManager.register(dispatcher.channelName, version, dispatcher);
     }
 
     @Override
     public void sendToTracking(final CustomPacket message, final Entity entity) {
-        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity)::send);
+        dispatcher.split(message, Direction.PLAY_TO_CLIENT, AbstractForgeNetworkManager.trackingEntityAndSelf(() -> entity)::send);
     }
 
     @Override
     public void sendTo(final CustomPacket message, final ServerPlayer player) {
-        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, player.connection::send);
+        dispatcher.split(message, Direction.PLAY_TO_CLIENT, player.connection::send);
     }
 
     @Override
@@ -64,7 +54,7 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
     public void sendToServer(final CustomPacket message) {
         ClientPacketListener connection = Minecraft.getInstance().getConnection();
         if (connection != null) {
-            dispatcher.split(message, NetworkDirection.PLAY_TO_SERVER, connection::send);
+            dispatcher.split(message, Direction.PLAY_TO_SERVER, connection::send);
         }
     }
 
@@ -81,8 +71,8 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
         }
 
         @SubscribeEvent
-        public void onServerEvent(final NetworkEvent.ClientCustomPayloadEvent event) {
-            NetworkEvent.Context context = event.getSource().get();
+        public void onServerEvent(final ClientCustomPayloadEvent event) {
+            Context context = event.getSource().get();
             ServerPlayer player = context.getSender();
             if (player == null) {
                 return;
@@ -94,15 +84,15 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
 
         @OnlyIn(value = Dist.CLIENT)
         @SubscribeEvent
-        public void onClientEvent(final NetworkEvent.ServerCustomPayloadEvent event) {
-            if (event instanceof NetworkEvent.ServerCustomPayloadLoginEvent) {
+        public void onClientEvent(final ServerCustomPayloadEvent event) {
+            if (event instanceof ServerCustomPayloadLoginEvent) {
                 return;
             }
             Player player = Minecraft.getInstance().player;
             if (player == null) {
                 return;
             }
-            NetworkEvent.Context context = event.getSource().get();
+            Context context = event.getSource().get();
             IClientPacketHandler packetHandler = this;
             merge(player.getUUID(), event.getPayload(), packet -> context.enqueueWork(() -> packet.accept(packetHandler, player)));
             context.setPacketHandled(true);
@@ -112,10 +102,10 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
             splitter.merge(uuid, buffer, consumer);
         }
 
-        public void split(final CustomPacket message, NetworkDirection dir, Consumer<Packet<?>> consumer) {
+        public void split(final CustomPacket message, Direction dir, Consumer<Packet<?>> consumer) {
             int partSize = maxPartSize;
             // download from the server side, the forge is resolved, the maximum packet size is than 10m.
-            if (dir == NetworkDirection.PLAY_TO_CLIENT) {
+            if (dir == Direction.PLAY_TO_CLIENT) {
                 partSize = Integer.MAX_VALUE;
             }
             splitter.split(message, buf -> dir.buildPacket(Pair.of(buf, 0), channelName).getThis(), partSize, consumer);

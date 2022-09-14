@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.common.IBlockEntitySupplier;
 import moe.plushie.armourers_workshop.api.common.IMenuProvider;
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
 import moe.plushie.armourers_workshop.api.common.builder.*;
+import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.*;
 import net.minecraft.world.entity.Entity;
@@ -74,5 +75,10 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     @Override
     public <T extends IKeyBinding> IKeyBindingBuilder<T> createKeyBindingBuilder(String key) {
         return new KeyBindingBuilderImpl<>(key);
+    }
+
+    @Override
+    public <T extends IPermissionNode> IPermissionNodeBuilder<T> createPermissionBuilder() {
+        return new PermissionNodeBuilderImpl<>();
     }
 }

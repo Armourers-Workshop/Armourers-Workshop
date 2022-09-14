@@ -7,6 +7,7 @@ import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSIndexPath;
 import com.apple.library.impl.TooltipRenderer;
 import com.apple.library.uikit.*;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -240,7 +241,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             }
             if (!getDescriptor().isEmpty()) {
                 MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-                ExtendedItemRenderer.renderSkin(getDescriptor(), ItemStack.EMPTY, x, y, 100, width, height - 1, 160, 45, 0, matrixStack, buffers);
+                ExtendedItemRenderer.renderSkin(getDescriptor(), ItemStack.EMPTY, x, y, 100, width, height - 1, 20, 45, 0, matrixStack, buffers);
             }
         }
 
@@ -266,7 +267,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             RenderSystem.drawContinuousTexturedBox(matrixStack, ModTextures.GUI_PREVIEW, dx, dy, 0, 0, size, size, 62, 62, 4, dz);
             RenderSystem.drawShadowText(matrixStack, tooltips, dx + 4, dy + 4, size - 8, dz, font, 7, 0xffffff);
             MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx, dy, dz + 100, size, size, 150, 45, 0, matrixStack, buffers);
+            ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx, dy, dz + 100, size, size, 30, 45, 0, matrixStack, buffers);
             buffers.endBatch();
         }
 

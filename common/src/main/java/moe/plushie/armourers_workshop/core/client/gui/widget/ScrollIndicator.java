@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.gui.widget;
 
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.impl.SoundManagerImpl;
 import com.apple.library.uikit.*;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.MathUtils;
@@ -25,6 +26,7 @@ public class ScrollIndicator extends UIControl {
     @Override
     public void mouseDown(UIEvent event) {
         super.mouseDown(event);
+        SoundManagerImpl.click();
         middleButton.setSelected(true);
         updateValue(valueAtPoint(convertPointFromView(event.locationInWindow(), null)));
     }
