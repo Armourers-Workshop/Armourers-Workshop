@@ -10,8 +10,10 @@ import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.init.command.ColorArgument;
 import moe.plushie.armourers_workshop.init.command.FileArgument;
 import moe.plushie.armourers_workshop.init.command.ListArgument;
+import moe.plushie.armourers_workshop.init.command.ColorSchemeArgument;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
@@ -74,6 +76,8 @@ public class CommonEventDispatcher {
     public void onCommonSetup(FMLCommonSetupEvent event) {
         ArgumentTypes.register(ArmourersWorkshop.getResource("items").toString(), ListArgument.class, new ListArgument.Serializer());
         ArgumentTypes.register(ArmourersWorkshop.getResource("files").toString(), FileArgument.class, new FileArgument.Serializer());
+        ArgumentTypes.register(ArmourersWorkshop.getResource("dye").toString(), ColorSchemeArgument.class, new ColorSchemeArgument.Serializer());
+        ArgumentTypes.register(ArmourersWorkshop.getResource("color").toString(), ColorArgument.class, new ColorArgument.Serializer());
 
         EntityDataSerializers.registerSerializer(DataSerializers.PLAYER_TEXTURE);
 

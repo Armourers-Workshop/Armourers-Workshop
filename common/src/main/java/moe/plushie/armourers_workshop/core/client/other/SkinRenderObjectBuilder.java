@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
+import com.apple.library.uikit.UIColor;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -10,7 +11,6 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
-import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;

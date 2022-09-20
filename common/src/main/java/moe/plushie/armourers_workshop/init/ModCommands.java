@@ -10,9 +10,11 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.slot.ItemOverrideType;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.registry.Registry;
@@ -20,13 +22,13 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.exporter.SkinExportManager;
-import moe.plushie.armourers_workshop.init.command.FileArgument;
-import moe.plushie.armourers_workshop.init.command.ListArgument;
-import moe.plushie.armourers_workshop.init.command.ReflectArgumentBuilder;
+import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.init.command.*;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.Accessor;
+import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.Util;
@@ -38,15 +40,31 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ModCommands {
+
+    private static final HashMap<String, ISkinPaintType> DYE_TYPES = Util.make(() -> {
+        HashMap<String, ISkinPaintType> map = new HashMap<>();
+        for (int i = 0; i < 8; ++i) {
+            ISkinPaintType paintType = SkinPaintTypes.byId(i + 1);
+            String name = paintType.getRegistryName().getPath();
+            map.put(name.replaceAll("_", ""), paintType);
+        }
+        return map;
+    });
+
+    private static final DynamicCommandExceptionType ERROR_MISSING_DYE_SLOT = new DynamicCommandExceptionType(ob -> {
+        return TranslateUtils.title("commands.armourers_workshop.armourers.error.missingSkin", ob);
+    });
 
     private static final DynamicCommandExceptionType ERROR_MISSING_SKIN = new DynamicCommandExceptionType(ob -> {
         return TranslateUtils.title("commands.armourers_workshop.armourers.error.missingSkin", ob);
@@ -63,10 +81,11 @@ public class ModCommands {
                 .then(ReflectArgumentBuilder.literal("debug", ModDebugger.class))
                 .requires(source -> source.hasPermission(2))
                 .then(Commands.literal("library").then(Commands.literal("reload").executes(Executor::reloadLibrary)))
-                .then(Commands.literal("setSkin").then(players().then(slots().then(skins().executes(Executor::setSkin))).then(skins().executes(Executor::setSkin))))
-                .then(Commands.literal("giveSkin").then(players().then(skins().executes(Executor::giveSkin))))
+                .then(Commands.literal("setSkin").then(players().then(slots().then(skins().then(skinDying().executes(Executor::setSkin))).executes(Executor::setSkin)).then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))))
+                .then(Commands.literal("giveSkin").then(players().then(skins().then(skinDying().executes(Executor::giveSkin)).executes(Executor::giveSkin))))
                 .then(Commands.literal("clearSkin").then(players().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
                 .then(Commands.literal("exportSkin").then(skinFormats().then(outputFileName().then(scale().executes(Executor::exportSkin)).executes(Executor::exportSkin))))
+                .then(Commands.literal("setColor").then(players().then(dyesSlotNames().then(dyeColor().executes(Executor::setColor)))))
                 .then(Commands.literal("rsyncWardrobe").then(players().executes(Executor::resyncWardrobe)))
                 .then(Commands.literal("openWardrobe").then(players().executes(Executor::openWardrobe)))
                 .then(Commands.literal("itemSkinnable").then(addOrRemote().then(overrideTypes().executes(Executor::setItemSkinnable))))
@@ -83,6 +102,18 @@ public class ModCommands {
 
     static ArgumentBuilder<CommandSourceStack, ?> skinFormats() {
         return Commands.argument("format", ListArgument.list(SkinExportManager.getExporters()));
+    }
+
+    static ArgumentBuilder<CommandSourceStack, ?> skinDying() {
+        return Commands.argument("dying", new ColorSchemeArgument());
+    }
+
+    static ArgumentBuilder<CommandSourceStack, ?> dyesSlotNames() {
+        return Commands.argument("dye_slot", new ListArgument(DYE_TYPES.keySet()));
+    }
+
+    static ArgumentBuilder<CommandSourceStack, ?> dyeColor() {
+        return Commands.argument("color", new ColorArgument());
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> scale() {
@@ -118,10 +149,6 @@ public class ModCommands {
         return Commands.argument("operator", new ListArgument(Lists.newArrayList("add", "remove")));
     }
 
-    static ArgumentBuilder<CommandSourceStack, ?> dyes() {
-        return Commands.argument("dye", StringArgumentType.string());
-    }
-
     private static class Executor {
 
         static int reloadLibrary(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
@@ -138,9 +165,29 @@ public class ModCommands {
             return false;
         }
 
+        static int setColor(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+            ISkinPaintType paintType = DYE_TYPES.get(ListArgument.getString(context, "dye_slot"));
+            if (paintType == null) {
+                throw ERROR_MISSING_DYE_SLOT.create(null);
+            }
+            PaintColor paintColor = ColorArgument.getColor(context, "color");
+            for (Player player : EntityArgument.getPlayers(context, "targets")) {
+                SkinWardrobe wardrobe = SkinWardrobe.of(player);
+                if (wardrobe == null) {
+                    continue;
+                }
+                int slot = SkinSlotType.getDyeSlotIndex(paintType);
+                ItemStack itemStack = new ItemStack(ModItems.BOTTLE.get());
+                ColorUtils.setColor(itemStack, paintColor);
+                Container inventory = wardrobe.getInventory();
+                inventory.setItem(slot, itemStack);
+                wardrobe.broadcast();
+            }
+            return 0;
+        }
+
         static int giveSkin(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            String identifier = FileArgument.getString(context, "skin");
-            SkinDescriptor descriptor = loadSkinDescriptor(identifier);
+            SkinDescriptor descriptor = loadSkinDescriptor(context);
             if (descriptor.isEmpty()) {
                 return 0;
             }
@@ -168,8 +215,7 @@ public class ModCommands {
         }
 
         static int setSkin(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            String identifier = FileArgument.getString(context, "skin");
-            SkinDescriptor descriptor = loadSkinDescriptor(identifier);
+            SkinDescriptor descriptor = loadSkinDescriptor(context);
             if (descriptor.isEmpty()) {
                 return 0;
             }
@@ -309,7 +355,15 @@ public class ModCommands {
             return 1;
         }
 
-        static SkinDescriptor loadSkinDescriptor(String identifier) {
+        static SkinDescriptor loadSkinDescriptor(CommandContext<CommandSourceStack> context) {
+            String identifier = FileArgument.getString(context, "skin");
+            if (identifier.isEmpty()) {
+                return SkinDescriptor.EMPTY;
+            }
+            ColorScheme scheme = ColorScheme.EMPTY;
+            if (containsNode(context, "dying")) {
+                scheme = ColorSchemeArgument.getColorScheme(context, "dying");
+            }
             boolean needCopy = false;
             if (identifier.startsWith("/")) {
                 identifier = DataDomain.DEDICATED_SERVER.normalize(identifier);
@@ -320,7 +374,7 @@ public class ModCommands {
                 if (needCopy) {
                     identifier = SkinLoader.getInstance().saveSkin(identifier, skin);
                 }
-                return new SkinDescriptor(identifier, skin.getType(), ColorScheme.EMPTY);
+                return new SkinDescriptor(identifier, skin.getType(), scheme);
             }
             return SkinDescriptor.EMPTY;
         }

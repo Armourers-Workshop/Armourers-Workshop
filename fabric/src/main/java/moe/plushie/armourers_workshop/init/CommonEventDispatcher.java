@@ -12,6 +12,8 @@ import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.init.command.ColorArgument;
+import moe.plushie.armourers_workshop.init.command.ColorSchemeArgument;
 import moe.plushie.armourers_workshop.init.command.FileArgument;
 import moe.plushie.armourers_workshop.init.command.ListArgument;
 import moe.plushie.armourers_workshop.init.config.FabricConfig;
@@ -128,6 +130,8 @@ public class CommonEventDispatcher implements ModInitializer {
     public void onCommonSetup() {
         ArgumentTypes.register("armourers_workshop:items", ListArgument.class, new ListArgument.Serializer());
         ArgumentTypes.register("armourers_workshop:files", FileArgument.class, new FileArgument.Serializer());
+        ArgumentTypes.register("armourers_workshop:dye", ColorSchemeArgument.class, new ColorSchemeArgument.Serializer());
+        ArgumentTypes.register("armourers_workshop:color", ColorArgument.class, new ColorArgument.Serializer());
 
         EntityDataSerializers.registerSerializer(DataSerializers.PLAYER_TEXTURE);
 
