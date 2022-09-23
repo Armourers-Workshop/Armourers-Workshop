@@ -120,11 +120,6 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
         panels.forEach(AbstractLibraryPanel::tick);
     }
 
-    @Override
-    public boolean shouldRenderBackground() {
-        return false;
-    }
-
     private <T extends AbstractLibraryPanel> T addPanel(Supplier<T> provider) {
         T value = provider.get();
         value.setRouter(router);

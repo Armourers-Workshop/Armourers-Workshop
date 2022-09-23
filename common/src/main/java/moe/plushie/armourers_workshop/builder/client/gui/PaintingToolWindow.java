@@ -45,7 +45,7 @@ public class PaintingToolWindow extends MenuWindow<AbstractContainerMenu> {
     public PaintingToolWindow(Component title, ArrayList<IPaintingToolProperty<?>> properties, ItemStack itemStack, InteractionHand hand) {
         super(createMenu(), getInventory(), new NSString(title));
         this.inventoryView.removeFromSuperview();
-        this.setContents(ModTextures.defaultWindowImage());
+        this.setBackgroundView(ModTextures.defaultWindowImage());
         this.hand = hand;
         this.itemStack = itemStack;
         properties.forEach(property -> {

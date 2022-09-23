@@ -37,7 +37,7 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
 
     public OutfitMakerWindow(OutfitMakerMenu container, Inventory inventory, NSString title) {
         super(container, inventory, title);
-        this.setContents(UIImage.of(ModTextures.OUTFIT_MAKER).build());
+        this.setBackgroundView(UIImage.of(ModTextures.OUTFIT_MAKER).build());
         this.setFrame(new CGRect(0, 0, 176, 240));
         this.tileEntity = container.getTileEntity();
     }

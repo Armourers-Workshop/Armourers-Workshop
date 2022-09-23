@@ -9,6 +9,8 @@ import com.apple.library.uikit.UIWindow;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -18,6 +20,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 
+@Environment(value= EnvType.CLIENT)
 public class SlotListView<M extends AbstractContainerMenu> extends UIView {
 
     protected final M menu;

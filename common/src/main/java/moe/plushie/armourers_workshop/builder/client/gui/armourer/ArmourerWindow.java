@@ -26,7 +26,7 @@ public class ArmourerWindow extends MenuWindow<ArmourerMenu> {
     public ArmourerWindow(ArmourerMenu container, Inventory inventory, NSString title) {
         super(container, inventory, title);
         this.setFrame(new CGRect(0, 0, 176, 224));
-        this.setContents(ModTextures.defaultWindowImage());
+        this.setBackgroundView(ModTextures.defaultWindowImage());
         this.inventoryView.setStyle(PlayerInventoryView.Style.COMPACT);
         this.inventoryView.setUserInteractionEnabled(false);
         this.tileEntity = container.getTileEntity();

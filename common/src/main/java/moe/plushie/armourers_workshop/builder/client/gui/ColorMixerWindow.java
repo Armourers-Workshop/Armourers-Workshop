@@ -195,7 +195,7 @@ public class ColorMixerWindow extends MenuWindow<ColorMixerMenu> implements UITe
     }
 
     private void setupBackgroundView() {
-        setContents(UIImage.of(ModTextures.COLOUR_MIXER).build());
+        setBackgroundView(UIImage.of(ModTextures.COLOUR_MIXER).build());
 
         setupLabel(5, 21, "label.hue");
         setupLabel(5, 46, "label.saturation");

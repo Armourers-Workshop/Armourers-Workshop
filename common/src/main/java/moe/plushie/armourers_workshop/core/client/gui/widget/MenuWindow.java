@@ -4,9 +4,7 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
-import com.apple.library.uikit.UIEvent;
-import com.apple.library.uikit.UILabel;
-import com.apple.library.uikit.UIWindow;
+import com.apple.library.uikit.*;
 import moe.plushie.armourers_workshop.api.common.IMenuWindow;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -25,7 +23,7 @@ public class MenuWindow<M extends AbstractContainerMenu> extends UIWindow implem
         this.menu = menu;
         this.title = title;
         this.inventory = inventory;
-        this.setupDefaultView();
+        this.setDefaultView();
     }
 
     @Override
@@ -45,7 +43,7 @@ public class MenuWindow<M extends AbstractContainerMenu> extends UIWindow implem
         return false;
     }
 
-    private void setupDefaultView() {
+    protected void setDefaultView() {
         titleView.setText(title);
         titleView.setTextHorizontalAlignment(NSTextAlignment.Horizontal.CENTER);
         titleView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
@@ -55,5 +53,12 @@ public class MenuWindow<M extends AbstractContainerMenu> extends UIWindow implem
         inventoryView.setStyle(PlayerInventoryView.Style.NONE);
         inventoryView.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleRightMargin | AutoresizingMask.flexibleTopMargin);
         addSubview(inventoryView);
+    }
+
+    protected void setBackgroundView(UIImage image) {
+        UIView backgroundView = new UIView(bounds());
+        backgroundView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
+        backgroundView.setContents(image);
+        insertViewAtIndex(backgroundView, 0);
     }
 }
