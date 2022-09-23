@@ -49,7 +49,8 @@ allprojects {
         version = "homebaked"
     }
 
-    archivesBaseName = "${rootProject.archives_base_name}-${project.name}"
+	def uname = rootProject.archives_base_name.replaceAll("-","")
+    archivesBaseName = "${uname.toLowerCase()}-${project.name}-${rootProject.minecraft_version}"
     version = "${rootProject.mod_version}-${version}"
     group = rootProject.maven_group
 
