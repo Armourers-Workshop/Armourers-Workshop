@@ -116,9 +116,9 @@ public abstract class GlobalTask<V> implements Callable<V> {
         ListenableFutureTask<V> futureTask = createTask();
         if (callback != null) {
             //#if MC >= 11800
-            //# Futures.addCallback(futureTask, callback, GLOBAL_TASK_EXECUTOR);
+            Futures.addCallback(futureTask, callback, GLOBAL_TASK_EXECUTOR);
             //#else
-            Futures.addCallback(futureTask, callback);
+            //# Futures.addCallback(futureTask, callback);
             //#endif
         }
         return futureTask;

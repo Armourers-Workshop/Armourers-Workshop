@@ -1,11 +1,12 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod(ArmourersWorkshop.MOD_ID)
+@Mod(ModConstants.MOD_ID)
 public class ArmourersWorkshopImpl {
 
     public ArmourersWorkshopImpl() {

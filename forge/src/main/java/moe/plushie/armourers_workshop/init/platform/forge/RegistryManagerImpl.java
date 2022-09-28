@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
 import com.google.common.collect.ImmutableMap;
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
-import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeRegistries;
+import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -54,7 +54,7 @@ public class RegistryManagerImpl {
 
         protected RegistryProxy(R registry) {
             this.registry = registry;
-            this.deferredRegister = DeferredRegister.create(registry, ArmourersWorkshop.MOD_ID);
+            this.deferredRegister = DeferredRegister.create(registry, ModConstants.MOD_ID);
             this.deferredRegister.register(FMLJavaModLoadingContext.get().getModEventBus());
         }
 
@@ -74,10 +74,10 @@ public class RegistryManagerImpl {
         }
 
         @Override
-        public <I extends T> IRegistryKey<I> register(String name, Supplier<? extends I> sup) {
-            ResourceLocation registryName = ArmourersWorkshop.getResource(name);
+        public <I extends T> IRegistryKey<I> register(String name, Supplier<? extends I> provider) {
+            ResourceLocation registryName = ModConstants.key(name);
             ModLog.debug("Registering '{}'", registryName);
-            Supplier<I> value = deferredRegister.register(name, sup);
+            Supplier<I> value = deferredRegister.register(name, provider);
             IRegistryKey<I> object = new IRegistryKey<I>() {
                 @Override
                 public ResourceLocation getRegistryName() {

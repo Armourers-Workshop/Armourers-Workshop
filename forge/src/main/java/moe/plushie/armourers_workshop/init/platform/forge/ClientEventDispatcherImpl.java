@@ -66,6 +66,7 @@ public class ClientEventDispatcherImpl extends AbstractForgeClientEventDispatche
         FMLJavaModLoadingContext.get().getModEventBus().register(dispatcher);
         MinecraftForge.EVENT_BUS.register(dispatcher);
         MinecraftForge.EVENT_BUS.register(new Forge());
+        EnvironmentExecutor.willInit(EnvironmentType.CLIENT);
     }
 
     @SubscribeEvent
@@ -129,12 +130,12 @@ public class ClientEventDispatcherImpl extends AbstractForgeClientEventDispatche
     @SubscribeEvent
     public void onClientSetup(FMLClientSetupEvent event) {
         // forwarding to executor
-        EnvironmentExecutor.init(EnvironmentType.CLIENT);
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT);
     }
 
     @SubscribeEvent
     public void onClientFinish(FMLLoadCompleteEvent event) {
-        event.enqueueWork(() -> EnvironmentExecutor.setup(EnvironmentType.CLIENT));
+        event.enqueueWork(() -> EnvironmentExecutor.didSetup(EnvironmentType.CLIENT));
     }
 
     private static class Forge extends Handler {

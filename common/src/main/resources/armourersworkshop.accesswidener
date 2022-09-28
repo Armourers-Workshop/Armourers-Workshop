@@ -24,11 +24,11 @@ accessible field net/minecraft/client/model/AgeableListModel bodyYOffset F
 accessible field net/minecraft/client/model/AgeableListModel babyHeadScale F
 accessible field net/minecraft/client/model/AgeableListModel babyBodyScale F
 ##if MC >= 11800
-### accessible field net/minecraft/client/model/AgeableListModel babyYHeadOffset F
-### accessible field net/minecraft/client/model/AgeableListModel babyZHeadOffset F
+accessible field net/minecraft/client/model/AgeableListModel babyYHeadOffset F
+accessible field net/minecraft/client/model/AgeableListModel babyZHeadOffset F
 ##else
-accessible field net/minecraft/client/model/AgeableListModel yHeadOffset F
-accessible field net/minecraft/client/model/AgeableListModel zHeadOffset F
+### accessible field net/minecraft/client/model/AgeableListModel yHeadOffset F
+### accessible field net/minecraft/client/model/AgeableListModel zHeadOffset F
 ##endif
 
 accessible field net/minecraft/client/model/ChickenModel head Lnet/minecraft/client/model/geom/ModelPart;
@@ -36,31 +36,31 @@ accessible field net/minecraft/client/model/ChickenModel beak Lnet/minecraft/cli
 accessible field net/minecraft/client/model/ChickenModel redThing Lnet/minecraft/client/model/geom/ModelPart;
 
 ##if MC >= 11800
-### accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
+accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
 ##else
-accessible field net/minecraft/client/model/VillagerModel hat Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/VillagerModel head Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/VillagerModel hatRim Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/VillagerModel body Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/VillagerModel jacket Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/VillagerModel arms Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/VillagerModel leg0 Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/VillagerModel leg1 Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/VillagerModel nose Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/IllagerModel hat Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/IllagerModel head Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/IllagerModel body Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/IllagerModel arms Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/IllagerModel leftLeg Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/IllagerModel rightLeg Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/IllagerModel leftArm Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/IllagerModel rightArm Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/CreeperModel head Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/CreeperModel hair Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/IronGolemModel head Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/IronGolemModel body Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/IronGolemModel arm0 Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/IronGolemModel arm1 Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/IronGolemModel leg0 Lnet/minecraft/client/model/geom/ModelPart;
-accessible field net/minecraft/client/model/IronGolemModel leg1 Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/VillagerModel hat Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/VillagerModel head Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/VillagerModel hatRim Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/VillagerModel body Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/VillagerModel jacket Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/VillagerModel arms Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/VillagerModel leg0 Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/VillagerModel leg1 Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/VillagerModel nose Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/IllagerModel hat Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/IllagerModel head Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/IllagerModel body Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/IllagerModel arms Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/IllagerModel leftLeg Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/IllagerModel rightLeg Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/IllagerModel leftArm Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/IllagerModel rightArm Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/CreeperModel head Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/CreeperModel hair Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/IronGolemModel head Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/IronGolemModel body Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/IronGolemModel arm0 Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/IronGolemModel arm1 Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/IronGolemModel leg0 Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/IronGolemModel leg1 Lnet/minecraft/client/model/geom/ModelPart;
 ##endif

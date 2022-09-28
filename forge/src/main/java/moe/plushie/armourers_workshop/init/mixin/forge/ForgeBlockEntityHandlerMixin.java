@@ -10,7 +10,7 @@ import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(IBlockEntityHandler.class)
-public interface IBlockEntityHandlerMixin extends AbstractForgeBlockEntity {
+public interface ForgeBlockEntityHandlerMixin extends AbstractForgeBlockEntity {
 
     // @Override from IBlockEntityHandler
     @SuppressWarnings("unused")

@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.IItemHandler;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.builder.other.WorldUpdater;
@@ -63,6 +62,7 @@ public class CommonEventDispatcherImpl extends AbstractForgeCommonEventDispatche
         CommonEventDispatcherImpl dispatcher = new CommonEventDispatcherImpl();
         FMLJavaModLoadingContext.get().getModEventBus().register(dispatcher);
         MinecraftForge.EVENT_BUS.register(new Forge());
+        EnvironmentExecutor.willInit(EnvironmentType.COMMON);
     }
 
     @SubscribeEvent
@@ -73,19 +73,19 @@ public class CommonEventDispatcherImpl extends AbstractForgeCommonEventDispatche
 
     @SubscribeEvent
     public void onCommonSetup(FMLCommonSetupEvent event) {
-        ArgumentTypes.register(ArmourersWorkshop.getResource("items").toString(), ListArgument.class, new ListArgument.Serializer());
-        ArgumentTypes.register(ArmourersWorkshop.getResource("files").toString(), FileArgument.class, new FileArgument.Serializer());
-        ArgumentTypes.register(ArmourersWorkshop.getResource("dye").toString(), ColorSchemeArgument.class, new ColorSchemeArgument.Serializer());
-        ArgumentTypes.register(ArmourersWorkshop.getResource("color").toString(), ColorArgument.class, new ColorArgument.Serializer());
+        ArgumentTypes.register(ModConstants.key("items").toString(), ListArgument.class, new ListArgument.Serializer());
+        ArgumentTypes.register(ModConstants.key("files").toString(), FileArgument.class, new FileArgument.Serializer());
+        ArgumentTypes.register(ModConstants.key("dye").toString(), ColorSchemeArgument.class, new ColorSchemeArgument.Serializer());
+        ArgumentTypes.register(ModConstants.key("color").toString(), ColorArgument.class, new ColorArgument.Serializer());
 
         EntityDataSerializers.registerSerializer(DataSerializers.PLAYER_TEXTURE);
 
-        EnvironmentExecutor.init(EnvironmentType.COMMON);
+        EnvironmentExecutor.didInit(EnvironmentType.COMMON);
     }
 
     @SubscribeEvent
     public void onCommonFinish(FMLLoadCompleteEvent event) {
-        event.enqueueWork(() -> EnvironmentExecutor.setup(EnvironmentType.COMMON));
+        event.enqueueWork(() -> EnvironmentExecutor.didSetup(EnvironmentType.COMMON));
     }
 
     @Override
@@ -197,9 +197,9 @@ public class CommonEventDispatcherImpl extends AbstractForgeCommonEventDispatche
                 BlockSnapshot snapshot = event.getBlockSnapshot();
                 Component reason = TranslateUtils.title("chat.armourers_workshop.undo.placeBlock");
                 //#if MC >= 11800
-                //# CompoundTag tag = snapshot.getTag();
+                CompoundTag tag = snapshot.getTag();
                 //#else
-                CompoundTag tag = snapshot.getNbt();
+                //# CompoundTag tag = snapshot.getNbt();
                 //#endif
                 BlockUtils.snapshot(level, event.getPos(), snapshot.getReplacedBlock(), tag, player, reason);
             }

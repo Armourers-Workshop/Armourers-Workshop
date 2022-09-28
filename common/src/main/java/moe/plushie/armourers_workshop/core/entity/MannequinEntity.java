@@ -190,9 +190,9 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
     public void setYBodyRot(float rot) {
         this.yRotO = rot;
         //#if MC >= 11800
-        //# this.setYRot(rot);
+        this.setYRot(rot);
         //#else
-        this.yRot = rot;
+        //# this.yRot = rot;
         //#endif
         this.yBodyRotO = this.yBodyRot = 0;
         this.yHeadRotO = this.yHeadRot = rot;

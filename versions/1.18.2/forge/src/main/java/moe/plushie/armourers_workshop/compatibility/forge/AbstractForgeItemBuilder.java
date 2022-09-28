@@ -36,7 +36,7 @@ public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemB
     public IRegistryKey<T> build(String name) {
         return Registry.ITEM.register(name, () -> {
             T value = supplier.apply(properties);
-            EnvironmentExecutor.initOn(EnvironmentType.CLIENT, binder, () -> value);
+            EnvironmentExecutor.didInit(EnvironmentType.CLIENT, binder, () -> value);
             return value;
         });
     }

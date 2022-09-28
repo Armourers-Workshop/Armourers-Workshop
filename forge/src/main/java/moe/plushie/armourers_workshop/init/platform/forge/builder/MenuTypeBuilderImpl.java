@@ -48,7 +48,7 @@ public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements 
             return true;
         });
         menuTypes[0] = menuType;
-        EnvironmentExecutor.initOn(EnvironmentType.CLIENT, binder, object);
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, binder, object);
         return object;
     }
 }

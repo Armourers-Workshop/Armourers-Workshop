@@ -195,9 +195,9 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
             super.removed(player);
             Inventory playerInventory = Accessor.getInventory(player);
             //#if MC >= 11800
-            //# playerInventory.setPickedItem(ItemStack.EMPTY);
+            playerInventory.setPickedItem(ItemStack.EMPTY);
             //#else
-            playerInventory.setCarried(ItemStack.EMPTY);
+            //# playerInventory.setCarried(ItemStack.EMPTY);
             //#endif
         }
 

@@ -76,6 +76,8 @@ public class ClientEventDispatcherImpl implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        EnvironmentExecutor.willInit(EnvironmentType.CLIENT);
+
         ClientTickEvents.START_CLIENT_TICK.register(this::onRenderTick);
         ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register(this::onTextureStitch);
         ModelLoadingRegistry.INSTANCE.registerModelProvider(this::onModelRegistry);
@@ -98,12 +100,12 @@ public class ClientEventDispatcherImpl implements ClientModInitializer {
 
         registerItemModels();
 
-        EnvironmentExecutor.init(EnvironmentType.CLIENT);
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT);
 
         // load all configs
         FabricConfigTracker.INSTANCE.loadConfigs(FabricConfig.Type.CLIENT, FabricLoader.getInstance().getConfigDir());
 
-        RenderSystem.recordRenderCall(() -> EnvironmentExecutor.setup(EnvironmentType.CLIENT));
+        RenderSystem.recordRenderCall(() -> EnvironmentExecutor.didSetup(EnvironmentType.CLIENT));
     }
 
     public void registerBlockColors() {

@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(IBlockHandler.class)
-public interface IBlockHandlerMixin extends IForgeBlock {
+public interface ForgeBlockHandlerMixin extends IForgeBlock {
 
     @Override
     default boolean isBed(BlockState state, BlockGetter level, BlockPos pos, @Nullable Entity entity) {

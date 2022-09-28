@@ -516,9 +516,9 @@ public class DataSerializers {
             return null;
         }
         //#if MC >= 11800
-        //# return blockEntity.saveWithFullMetadata();
+        return blockEntity.saveWithFullMetadata();
         //#else
-        return blockEntity.save(new CompoundTag());
+        //# return blockEntity.save(new CompoundTag());
         //#endif
     }
 
@@ -527,9 +527,9 @@ public class DataSerializers {
             return;
         }
         //#if MC >= 11800
-        //# blockEntity.load(tag);
+        blockEntity.load(tag);
         //#else
-        blockEntity.load(blockEntity.getBlockState(), tag);
+        //# blockEntity.load(blockEntity.getBlockState(), tag);
         //#endif
     }
 

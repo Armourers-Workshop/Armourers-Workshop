@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.ICapabilityType;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.ITagRepresentable;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -32,7 +32,7 @@ public class AbstractForgeCapabilityManager {
     }
 
     private static IRegistryKey<ICapabilityType<SkinWardrobe>> createWardrobeCapabilityType(String registryName, Function<Entity, Optional<SkinWardrobe>> provider) {
-        ResourceLocation name = ArmourersWorkshop.getResource(registryName);
+        ResourceLocation name = ModConstants.key(registryName);
         Capability<SkinWardrobe> capability = CapabilityManager.get(new CapabilityToken<SkinWardrobe>() {});
         ICapabilityType<SkinWardrobe> capabilityType = entity -> entity.getCapability(capability).resolve();
         return new RegistryObjectProxy<>(name, SkinWardrobe.class, provider, capabilityType, () -> capability);

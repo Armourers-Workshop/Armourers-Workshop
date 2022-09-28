@@ -11,30 +11,40 @@ import java.util.function.Supplier;
 
 public class EnvironmentExecutor {
 
-    private static final Manager INIT = new Manager();
-    private static final Manager SETUP = new Manager();
+    private static final Manager WILL_INIT = new Manager();
+    private static final Manager DID_INIT = new Manager();
 
-    public synchronized static void initOn(EnvironmentType type, Supplier<Runnable> task) {
-        INIT.add(type, task);
+    private static final Manager WILL_SETUP = new Manager();
+    private static final Manager DID_SETUP = new Manager();
+
+    public synchronized static void willInit(EnvironmentType type) {
+        WILL_INIT.run(type);
     }
 
-    public synchronized static <T> void initOn(EnvironmentType type, Supplier<Consumer<T>> task, Supplier<T> value) {
-        if (task == null || value == null) {
-            return;
+    public synchronized static void willInit(EnvironmentType type, Supplier<Runnable> task) {
+        WILL_INIT.add(type, task);
+    }
+
+    public synchronized static void didInit(EnvironmentType type) {
+        DID_INIT.run(type);
+    }
+
+    public synchronized static void didInit(EnvironmentType type, Supplier<Runnable> task) {
+        DID_INIT.add(type, task);
+    }
+
+    public synchronized static <T> void didInit(EnvironmentType type, Supplier<Consumer<T>> task, Supplier<T> value) {
+        if (task != null && value != null) {
+            didInit(type, () -> () -> task.get().accept(value.get()));
         }
-        initOn(type, () -> () -> task.get().accept(value.get()));
     }
 
-    public synchronized static void init(EnvironmentType type) {
-        INIT.run(type);
+    public synchronized static void didSetup(EnvironmentType type) {
+        DID_SETUP.run(type);
     }
 
-    public synchronized static void setupOn(EnvironmentType type, Supplier<Runnable> task) {
-        SETUP.add(type, task);
-    }
-
-    public synchronized static void setup(EnvironmentType type) {
-        SETUP.run(type);
+    public synchronized static void didSetup(EnvironmentType type, Supplier<Runnable> task) {
+        DID_SETUP.add(type, task);
     }
 
     public static <T> Optional<T> callWhenOn(EnvironmentType envType, Supplier<Supplier<T>> supplier) {

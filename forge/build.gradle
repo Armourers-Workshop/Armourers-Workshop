@@ -17,7 +17,7 @@ loom {
         // when we switch the minecraft, the mixin will changes,
         // so we need find all active mixins in the project,
         // and then add all mixins name to manifest.
-        getRootProject().mixinConfigs.resolve(name).forEach {
+        getRootProject().mixinConfigs.resolve(name).sort().forEach {
             mixinConfig it.name
         }
     }

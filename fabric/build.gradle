@@ -66,7 +66,7 @@ processResources {
     // so we need find all active mixins in the project,
     // and then add all mixins name to manifest.
     def mixins = ""
-    rootProject.mixinConfigs.resolve(project.name).forEach {
+    rootProject.mixinConfigs.resolve(project.name).sort().forEach {
         if (!mixins.isEmpty()) {
             mixins += ", "
         }

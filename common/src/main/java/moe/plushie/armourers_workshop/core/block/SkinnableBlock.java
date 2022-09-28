@@ -61,7 +61,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntities.SKINNABLE_CUBE.create(level, blockPos, blockState);
+        return ModBlockEntities.SKINNABLE.create(level, blockPos, blockState);
     }
 
     @Override

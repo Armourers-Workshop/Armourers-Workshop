@@ -17,7 +17,7 @@
 //    public static final ParticleType<PaintSplashParticleData> PAINT_SPLASH = register("paint_splash", false, PaintSplashParticleData.Type::new);
 //
 //    private static <T extends IParticleData> ParticleType<T> register(String name, boolean overrideLimiter, Function<Boolean, ParticleType<T>> builder) {
-//        ResourceLocation registryName = ArmourersWorkshop.getResource(name);
+//        ResourceLocation registryName = ModSchemaKeys.getResource(name);
 //        ParticleType<T> particleType = builder.apply(overrideLimiter);
 //        particleType.setRegistryName(registryName);
 //        REGISTERED_ITEMS.add(particleType);

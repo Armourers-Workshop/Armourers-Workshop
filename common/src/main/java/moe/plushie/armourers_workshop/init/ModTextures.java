@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.coregraphics.CGPoint;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
@@ -54,7 +52,7 @@ public class ModTextures {
     public static final ResourceLocation BLOCK_CUBE_GLASS = res("textures/block/colourable/colourable-glass.png");
 
     private static ResourceLocation res(String name) {
-        return ArmourersWorkshop.getResource(name);
+        return ModConstants.key(name);
     }
 
     public static UIImage defaultWindowImage() {

@@ -4,9 +4,9 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.handlers.IGuiProperties;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuScreen;
 import moe.plushie.armourers_workshop.core.client.gui.widget.SlotListView;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +16,7 @@ public class JEIAddon implements IModPlugin {
 
     @Override
     public ResourceLocation getPluginUid() {
-        return ArmourersWorkshop.getResource("gui-fix");
+        return ModConstants.key("gui-fix");
     }
 
     @Override

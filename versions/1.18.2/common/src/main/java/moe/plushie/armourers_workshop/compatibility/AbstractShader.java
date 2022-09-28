@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compatibility;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.shaders.Uniform;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -33,7 +33,7 @@ public class AbstractShader extends ShaderInstance {
 
     protected static ResourceProvider _getResourceProvider(ResourceManager resourceManager) {
         return rl -> {
-            ResourceLocation nrl = ArmourersWorkshop.getResource(rl.getPath());
+            ResourceLocation nrl = ModConstants.key(rl.getPath());
             if (resourceManager.hasResource(nrl)) {
                 return resourceManager.getResource(nrl);
             }

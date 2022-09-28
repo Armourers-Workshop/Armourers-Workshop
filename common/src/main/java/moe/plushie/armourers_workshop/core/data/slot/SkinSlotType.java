@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.data.slot;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -8,6 +7,7 @@ import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -113,7 +113,7 @@ public enum SkinSlotType {
     }
 
     public ResourceLocation getIconSprite() {
-        return ArmourersWorkshop.getResource("item/slot/" + name);
+        return ModConstants.key("item/slot/" + name);
     }
 
     public boolean isResizable() {

@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.init.platform.fabric;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
-import moe.plushie.armourers_workshop.init.platform.fabric.builder.ConfigBuilderImpl;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.platform.fabric.builder.ConfigBuilderImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -15,7 +15,7 @@ import java.util.Optional;
 public class EnvironmentManagerImpl {
 
     public static String getVersion() {
-        Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(ArmourersWorkshop.MOD_ID);
+        Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(ModConstants.MOD_ID);
         if (container.isPresent()) {
             return container.get().getMetadata().getVersion().toString();
         }

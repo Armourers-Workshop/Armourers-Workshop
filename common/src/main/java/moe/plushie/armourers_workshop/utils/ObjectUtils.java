@@ -3,6 +3,11 @@ package moe.plushie.armourers_workshop.utils;
 import com.apple.library.foundation.NSRange;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.function.Consumer;
 import java.util.function.Function;
 

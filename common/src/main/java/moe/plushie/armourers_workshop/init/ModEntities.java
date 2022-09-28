@@ -13,8 +13,8 @@ import net.minecraft.world.entity.MobCategory;
 
 public final class ModEntities {
 
-    public static final IRegistryKey<EntityType<MannequinEntity>> MANNEQUIN = normal(MannequinEntity::new).fixed(0.6f, 1.88f).bind(() -> MannequinEntityRenderer::new).build("mannequin");
-    public static final IRegistryKey<EntityType<SeatEntity>> SEAT = normal(SeatEntity::new).fixed(0.0f, 0.0f).noSummon().bind(() -> SeatEntityRenderer::new).build("seat");
+    public static final IRegistryKey<EntityType<MannequinEntity>> MANNEQUIN = normal(MannequinEntity::new).fixed(0.6f, 1.88f).bind(() -> MannequinEntityRenderer::new).build(ModConstants.ENTITY_MANNEQUIN);
+    public static final IRegistryKey<EntityType<SeatEntity>> SEAT = normal(SeatEntity::new).fixed(0.0f, 0.0f).noSummon().bind(() -> SeatEntityRenderer::new).build(ModConstants.ENTITY_SEAT);
 
     private static <T extends Entity> IEntityTypeBuilder<T> normal(EntityType.EntityFactory<T> entityFactory) {
         return BuilderManager.getInstance().createEntityTypeBuilder(entityFactory, MobCategory.MISC);

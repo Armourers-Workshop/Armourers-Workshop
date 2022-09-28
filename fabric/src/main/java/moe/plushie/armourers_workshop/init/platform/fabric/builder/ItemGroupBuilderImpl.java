@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.builder.IItemGroupBuilder;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.world.item.CreativeModeTab;
@@ -37,7 +37,7 @@ public class ItemGroupBuilderImpl<T extends CreativeModeTab> implements IItemGro
     }
 
     private CreativeModeTab creativeModeTab(String name) {
-        return FabricItemGroupBuilder.create(ArmourersWorkshop.getResource(name))
+        return FabricItemGroupBuilder.create(ModConstants.key(name))
                 .icon(() -> icon.get().get())
                 .appendItems(appendItems)
                 .build();

@@ -16,7 +16,7 @@
   "mixins": [
     "EntityMixin",
     "ItemStackMixin",
-    "ServerPacketListenerMixin"
+    "DataFixMixin"
   ],
   "injectors": {
     "defaultRequire": 1

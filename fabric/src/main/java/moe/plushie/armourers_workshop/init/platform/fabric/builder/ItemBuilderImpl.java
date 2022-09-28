@@ -80,7 +80,7 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
     @Override
     public IRegistryKey<T> build(String name) {
         IRegistryKey<T> object = Registry.ITEM.register(name, () -> supplier.apply(properties));
-        EnvironmentExecutor.initOn(EnvironmentType.CLIENT, binder, object);
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, binder, object);
         return object;
     }
 }

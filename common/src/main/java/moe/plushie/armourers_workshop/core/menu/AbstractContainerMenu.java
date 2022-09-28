@@ -15,9 +15,9 @@ public abstract class AbstractContainerMenu extends net.minecraft.world.inventor
 
     protected void clearContainer(Player player, Container container) {
         //#if MC >= 11800
-        //# super.clearContainer(player, container);
+        super.clearContainer(player, container);
         //#else
-        this.clearContainer(player, player.level, container);
+        //# this.clearContainer(player, player.level, container);
         //#endif
     }
 

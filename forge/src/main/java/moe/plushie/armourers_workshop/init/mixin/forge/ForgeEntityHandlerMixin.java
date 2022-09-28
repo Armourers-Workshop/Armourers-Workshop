@@ -8,7 +8,7 @@ import net.minecraftforge.common.extensions.IForgeEntity;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(IEntityHandler.class)
-public interface IEntityHandlerMixin extends IForgeEntity {
+public interface ForgeEntityHandlerMixin extends IForgeEntity {
 
     @Override
     default ItemStack getPickedResult(HitResult target) {

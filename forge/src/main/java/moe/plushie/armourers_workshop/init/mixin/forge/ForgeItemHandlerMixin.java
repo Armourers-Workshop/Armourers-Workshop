@@ -11,7 +11,7 @@ import net.minecraftforge.common.extensions.IForgeItem;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(IItemHandler.class)
-public interface IItemHandlerMixin extends IForgeItem {
+public interface ForgeItemHandlerMixin extends IForgeItem {
 
     @Override
     default boolean onLeftClickEntity(ItemStack itemStack, Player player, Entity entity) {

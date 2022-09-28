@@ -21,9 +21,9 @@ public class HttpTextureMixin {
 
     @Inject(method = "processLegacySkin", at = @At(value = "HEAD"))
     //#if MC >= 11800
-    //# private void hooked_processLegacySkin(NativeImage image, CallbackInfoReturnable<NativeImage> cir)
+    private void hooked_processLegacySkin(NativeImage image, CallbackInfoReturnable<NativeImage> cir)
     //#else
-    private static void hooked_processLegacySkin(NativeImage image, CallbackInfoReturnable<NativeImage> cir)
+    //# private static void hooked_processLegacySkin(NativeImage image, CallbackInfoReturnable<NativeImage> cir)
     //#endif
     {
         slimModel = false;

@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.item;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
@@ -9,6 +8,7 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
@@ -78,7 +78,7 @@ public class BottleItem extends FlavouredItem implements IItemTintColorProvider,
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ArmourersWorkshop.getResource("empty"), (itemStack, level, entity, id) -> ColorUtils.hasColor(itemStack) ? 0 : 1);
+        builder.accept(ModConstants.key("empty"), (itemStack, level, entity, id) -> ColorUtils.hasColor(itemStack) ? 0 : 1);
     }
 
     @Override

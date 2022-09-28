@@ -59,9 +59,9 @@ public class SeatEntity extends LivingEntity {
     @Override
     public void kill() {
         //#if MC >= 11800
-        //# this.remove(RemovalReason.KILLED);
+        this.remove(RemovalReason.KILLED);
         //#else
-        this.remove();
+        //# this.remove();
         //#endif
     }
 
@@ -92,9 +92,9 @@ public class SeatEntity extends LivingEntity {
         this.yBodyRot = f;
         this.yHeadRot = f;
         //#if MC >= 11800
-        //# super.setYRot(f);
+        super.setYRot(f);
         //#else
-        this.yRot = f;
+        //# this.yRot = f;
         //#endif
     }
 

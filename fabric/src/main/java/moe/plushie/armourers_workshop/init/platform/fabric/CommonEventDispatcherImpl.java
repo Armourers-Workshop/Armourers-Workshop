@@ -79,6 +79,7 @@ public class CommonEventDispatcherImpl implements ModInitializer {
     @Override
     public void onInitialize() {
         ArmourersWorkshop.init();
+        EnvironmentExecutor.willInit(EnvironmentType.COMMON);
 
         CommandRegistrationCallback.EVENT.register(this::registerCommands);
 
@@ -114,11 +115,12 @@ public class CommonEventDispatcherImpl implements ModInitializer {
         registerEntityAttributes();
 
         onCommonSetup();
+        EnvironmentExecutor.didInit(EnvironmentType.COMMON);
 
         // load all configs
         FabricConfigTracker.INSTANCE.loadConfigs(FabricConfig.Type.COMMON, FabricLoader.getInstance().getConfigDir());
 
-        EnvironmentExecutor.setup(EnvironmentType.COMMON);
+        EnvironmentExecutor.didSetup(EnvironmentType.COMMON);
     }
 
     public void registerEntityAttributes() {
@@ -134,8 +136,6 @@ public class CommonEventDispatcherImpl implements ModInitializer {
         ArgumentTypes.register("armourers_workshop:color", ColorArgument.class, new ColorArgument.Serializer());
 
         EntityDataSerializers.registerSerializer(DataSerializers.PLAYER_TEXTURE);
-
-        EnvironmentExecutor.init(EnvironmentType.COMMON);
     }
 
     public void onConfigReloaded(FabricConfig config) {
@@ -271,9 +271,9 @@ public class CommonEventDispatcherImpl implements ModInitializer {
         if (handler != null && handler.isCustomBed(level, sleepingPos, state, entity)) {
             level.setBlock(sleepingPos, state.setValue(BedBlock.OCCUPIED, false), 3);
             //#if MC >= 11800
-            //# float yRot = entity.getYRot();
+            float yRot = entity.getYRot();
             //#else
-            float yRot = entity.yRot;
+            //# float yRot = entity.yRot;
             //#endif
             Vec3 vector3d1 = BedBlock.findStandUpPosition(entity.getType(), level, sleepingPos, yRot).orElseGet(() -> {
                 BlockPos blockpos = sleepingPos.above();
@@ -283,11 +283,11 @@ public class CommonEventDispatcherImpl implements ModInitializer {
             float f = (float) MathUtils.wrapDegrees(MathUtils.atan2(vector3d2.z, vector3d2.x) * (double) (180F / (float) Math.PI) - 90.0D);
             entity.setPos(vector3d1.x, vector3d1.y, vector3d1.z);
             //#if MC >= 11800
-            //# entity.setYRot(f);
-            //# entity.setXRot(0);
+            entity.setYRot(f);
+            entity.setXRot(0);
             //#else
-            entity.yRot = f;
-            entity.xRot = 0;
+            //# entity.yRot = f;
+            //# entity.xRot = 0;
             //#endif
         }
     }

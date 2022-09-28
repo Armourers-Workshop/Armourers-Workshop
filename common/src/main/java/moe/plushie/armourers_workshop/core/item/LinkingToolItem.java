@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.item;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.IItemHandler;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -42,7 +42,7 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ArmourersWorkshop.getResource("empty"), (itemStack, level, entity, id) -> {
+        builder.accept(ModConstants.key("empty"), (itemStack, level, entity, id) -> {
             CompoundTag tag = itemStack.getTag();
             if (tag != null && tag.contains(Constants.Key.TILE_ENTITY_LINKED_POS)) {
                 return 0;

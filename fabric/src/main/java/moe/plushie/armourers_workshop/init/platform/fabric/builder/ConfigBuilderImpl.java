@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.config.IConfigBuilder;
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
 import moe.plushie.armourers_workshop.api.config.IConfigValue;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfig;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfigSpec;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -52,7 +52,7 @@ public class ConfigBuilderImpl {
         if (spec instanceof SpecProxy) {
             ((SpecProxy) spec).spec = pair.getValue();
         }
-        Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(ArmourersWorkshop.MOD_ID);
+        Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(ModConstants.MOD_ID);
         if (container.isPresent()) {
             FabricConfig ignored = new FabricConfig(type, pair.getValue(), container.get());
         }

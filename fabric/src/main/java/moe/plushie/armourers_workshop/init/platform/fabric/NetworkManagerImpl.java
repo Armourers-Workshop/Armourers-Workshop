@@ -3,10 +3,10 @@ package moe.plushie.armourers_workshop.init.platform.fabric;
 import io.netty.buffer.Unpooled;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
@@ -54,7 +54,7 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
     }
 
     public void init(String name, String version) {
-        dispatcher = new NetworkDispatcher(ArmourersWorkshop.getResource(name), version);
+        dispatcher = new NetworkDispatcher(ModConstants.key(name), version);
 
         ServerLoginConnectionEvents.QUERY_START.register(dispatcher::startServerHandshake);
         ServerLoginNetworking.registerGlobalReceiver(dispatcher.channelName, dispatcher::onServerHandshake);

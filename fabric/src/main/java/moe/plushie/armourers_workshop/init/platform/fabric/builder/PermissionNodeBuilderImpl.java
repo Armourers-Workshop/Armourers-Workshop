@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.builder.IPermissionNodeBuilder;
 import moe.plushie.armourers_workshop.api.permission.IPermissionContext;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.network.chat.Component;
@@ -20,7 +20,7 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
 
     @Override
     public T build(String name) {
-        ResourceLocation registryName = ArmourersWorkshop.getResource(name);
+        ResourceLocation registryName = ModConstants.key(name);
         ModLog.debug("Registering Permission '{}'", registryName);
         return ObjectUtils.unsafeCast(makeNode(registryName));
     }

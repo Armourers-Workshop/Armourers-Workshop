@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.item;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
@@ -12,6 +11,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModItems;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -124,7 +124,7 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ArmourersWorkshop.getResource("loading"), (itemStack, level, entity, id) -> {
+        builder.accept(ModConstants.key("loading"), (itemStack, level, entity, id) -> {
             SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
             BakedSkin bakedSkin = BakedSkin.of(descriptor);
             if (bakedSkin != null) {

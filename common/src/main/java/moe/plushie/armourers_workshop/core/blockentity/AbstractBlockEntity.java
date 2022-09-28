@@ -14,9 +14,9 @@ public abstract class AbstractBlockEntity extends BlockEntity implements IBlockE
 
     public AbstractBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         //#if MC >= 11800
-        //# super(blockEntityType, blockPos, blockState);
+        super(blockEntityType, blockPos, blockState);
         //#else
-        super(blockEntityType);
+        //# super(blockEntityType);
         //#endif
     }
 
@@ -32,28 +32,28 @@ public abstract class AbstractBlockEntity extends BlockEntity implements IBlockE
     }
 
     //#if MC >= 11800
-    //# @Override
-    //# public void load(CompoundTag compoundTag) {
-        //# super.load(compoundTag);
-        //# this.readFromNBT(compoundTag);
-    //# }
-    //# @Override
-    //# protected void saveAdditional(CompoundTag compoundTag) {
-        //# super.saveAdditional(compoundTag);
-        //# this.writeToNBT(compoundTag);
-    //# }
-    //#else
     @Override
-    public void load(BlockState state, CompoundTag compoundTag) {
-        super.load(state, compoundTag);
+    public void load(CompoundTag compoundTag) {
+        super.load(compoundTag);
         this.readFromNBT(compoundTag);
     }
     @Override
-    public CompoundTag save(CompoundTag compoundTag) {
-        super.save(compoundTag);
+    protected void saveAdditional(CompoundTag compoundTag) {
+        super.saveAdditional(compoundTag);
         this.writeToNBT(compoundTag);
-        return compoundTag;
     }
+    //#else
+    //# @Override
+    //# public void load(BlockState state, CompoundTag compoundTag) {
+        //# super.load(state, compoundTag);
+        //# this.readFromNBT(compoundTag);
+    //# }
+    //# @Override
+    //# public CompoundTag save(CompoundTag compoundTag) {
+        //# super.save(compoundTag);
+        //# this.writeToNBT(compoundTag);
+        //# return compoundTag;
+    //# }
     //#endif
 
     @Override
@@ -61,9 +61,9 @@ public abstract class AbstractBlockEntity extends BlockEntity implements IBlockE
         CompoundTag tag = new CompoundTag();
         this.writeToNBT(tag);
         //#if MC >= 11800
-        //# return ClientboundBlockEntityDataPacket.create(this, be -> tag);
+        return ClientboundBlockEntityDataPacket.create(this, be -> tag);
         //#else
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, tag);
+        //# return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, tag);
         //#endif
     }
 

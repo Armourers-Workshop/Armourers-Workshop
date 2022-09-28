@@ -53,7 +53,7 @@ public class BlockEntityBuilderImpl<T extends BlockEntity> implements IBlockEnti
             Block[] blocks1 = blocks.stream().map(Supplier::get).toArray(Block[]::new);
             return AbstractForgeBlockEntity.createType(supplier, blocks1);
         });
-        EnvironmentExecutor.initOn(EnvironmentType.CLIENT, binder, object);
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, binder, object);
         return new IBlockEntityKey<T>() {
             @Override
             public T create(BlockGetter level, BlockPos blockPos, BlockState blockState) {

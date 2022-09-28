@@ -208,13 +208,13 @@ public class PlayerTextureLoader {
     private void loadVanillaGameProfile(GameProfile profile, Consumer<Optional<GameProfile>> complete) {
         executor.execute(() -> {
             //#if MC >= 11800
-            //# SkullBlockEntity.updateGameprofile(profile, resolvedProfile -> complete.accept(Optional.ofNullable(resolvedProfile)));
+            SkullBlockEntity.updateGameprofile(profile, resolvedProfile -> complete.accept(Optional.ofNullable(resolvedProfile)));
             //#else
-            try {
-                complete.accept(Optional.ofNullable(SkullBlockEntity.updateGameprofile(profile)));
-            } catch (Exception exception) {
-                complete.accept(Optional.empty()); // we called mojang API, it will throw `com.mojang.authlib.exceptions.*`.
-            }
+            //# try {
+                //# complete.accept(Optional.ofNullable(SkullBlockEntity.updateGameprofile(profile)));
+            //# } catch (Exception exception) {
+                //# complete.accept(Optional.empty()); // we called mojang API, it will throw `com.mojang.authlib.exceptions.*`.
+            //# }
             //#endif
         });
     }
@@ -231,9 +231,9 @@ public class PlayerTextureLoader {
         ResourceLocation location = new ResourceLocation("skins/aw-" + identifier);
         TextureManager textureManager = Minecraft.getInstance().getTextureManager();
         //#if MC >= 11800
-        //# AbstractTexture processingTexture = textureManager.getTexture(location, null);
+        AbstractTexture processingTexture = textureManager.getTexture(location, null);
         //#else
-        AbstractTexture processingTexture = textureManager.getTexture(location);
+        //# AbstractTexture processingTexture = textureManager.getTexture(location);
         //#endif
         if (processingTexture != null) {
             return;

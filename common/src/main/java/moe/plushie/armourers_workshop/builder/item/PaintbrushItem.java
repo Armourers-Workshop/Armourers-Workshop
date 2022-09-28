@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.builder.item;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.*;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
@@ -12,6 +11,7 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModSounds;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import net.minecraft.core.BlockPos;
@@ -66,7 +66,7 @@ public class PaintbrushItem extends AbstractPaintToolItem implements IItemTintCo
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ArmourersWorkshop.getResource("small"), (itemStack, level, entity, id) -> ToolOptions.FULL_BLOCK_MODE.get(itemStack) ? 0 : 1);
+        builder.accept(ModConstants.key("small"), (itemStack, level, entity, id) -> ToolOptions.FULL_BLOCK_MODE.get(itemStack) ? 0 : 1);
     }
 
     @Override

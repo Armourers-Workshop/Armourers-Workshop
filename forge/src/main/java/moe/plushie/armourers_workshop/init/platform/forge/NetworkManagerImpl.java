@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
-import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeNetworkManager;
+import moe.plushie.armourers_workshop.core.network.CustomPacket;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.PacketSplitter;
 import net.minecraft.client.Minecraft;
@@ -35,7 +35,7 @@ public class NetworkManagerImpl extends AbstractForgeNetworkManager implements N
     }
 
     public void init(String name, String version) {
-        dispatcher = new NetworkDispatcher(ArmourersWorkshop.getResource(name));
+        dispatcher = new NetworkDispatcher(ModConstants.key(name));
         AbstractForgeNetworkManager.register(dispatcher.channelName, version, dispatcher);
     }
 

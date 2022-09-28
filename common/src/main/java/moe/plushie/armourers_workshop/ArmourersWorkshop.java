@@ -16,9 +16,6 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ArmourersWorkshop {
 
-    public static final String MOD_ID = "armourers_workshop";
-    public static final String MOD_NET_ID = "5";
-
     public static void init() {
         ModItemGroups.init();
         ModItems.init();
@@ -30,9 +27,9 @@ public class ArmourersWorkshop {
         ModSounds.init();
         ModConfig.init();
         // setup common objects.
-        EnvironmentExecutor.initOn(EnvironmentType.COMMON, () -> () -> {
+        EnvironmentExecutor.didInit(EnvironmentType.COMMON, () -> () -> {
             // setup network manager.
-            NetworkManager.init("play", MOD_NET_ID);
+            NetworkManager.init("play", ModConstants.MOD_NET_ID);
             ModPackets.init();
 
             ModEntityProfiles.init();
@@ -43,7 +40,7 @@ public class ArmourersWorkshop {
             EnvironmentExecutor.run(() -> SkinLibraryManager::startClient, () -> SkinLibraryManager::startServer);
         });
         // setup client in setup.
-        EnvironmentExecutor.initOn(EnvironmentType.CLIENT, () -> () -> {
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, () -> () -> {
             // setup client objects.
 //            SkinResourceManager.init();
             ClientWardrobeHandler.init();
@@ -51,29 +48,25 @@ public class ArmourersWorkshop {
             ModDebugger.init();
         });
         // setup client renderer in finish.
-        EnvironmentExecutor.setupOn(EnvironmentType.CLIENT, () -> () -> {
+        EnvironmentExecutor.didSetup(EnvironmentType.CLIENT, () -> () -> {
             // setup skin manager.
             RenderSystem.init();
             RendererManager.init();
         });
     }
 
-    public static ResourceLocation getResource(String path) {
-        return new ResourceLocation(MOD_ID, path);
-    }
-
     public static ResourceLocation getItemIcon(ISkinType skinType) {
         if (skinType == SkinTypes.UNKNOWN || skinType.getRegistryName() == null) {
             return null;
         }
-        return getResource("textures/item/template/" + skinType.getRegistryName().getPath() + ".png");
+        return ModConstants.key("textures/item/template/" + skinType.getRegistryName().getPath() + ".png");
     }
 
     public static ModelResourceLocation getCustomModel(ResourceLocation resourceLocation) {
         String name = resourceLocation.getPath().toLowerCase();
         name = name.replaceAll("\\.base", "");
         name = name.replaceAll("\\.", "_");
-        return new ModelResourceLocation(getResource("skin/" + name), "inventory");
+        return new ModelResourceLocation(ModConstants.key("skin/" + name), "inventory");
     }
 
 }

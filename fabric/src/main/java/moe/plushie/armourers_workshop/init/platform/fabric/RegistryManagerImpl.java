@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.init.platform.fabric;
 
 import com.google.common.collect.ImmutableMap;
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -66,7 +66,7 @@ public class RegistryManagerImpl {
 
         @Override
         public <I extends T> IRegistryKey<I> register(String name, Supplier<? extends I> sup) {
-            ResourceLocation registryName = ArmourersWorkshop.getResource(name);
+            ResourceLocation registryName = ModConstants.key(name);
             ModLog.debug("Registering '{}'", registryName);
             I value = R.register(registry, registryName, sup.get());
             IRegistryKey<I> object = new IRegistryKey<I>() {

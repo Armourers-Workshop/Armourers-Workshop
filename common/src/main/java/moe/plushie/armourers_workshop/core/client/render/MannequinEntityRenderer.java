@@ -45,11 +45,11 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
         this.addLayer(new HumanoidArmorLayer<>(this, MannequinArmorModel.innerModel(context), MannequinArmorModel.outerModel(context)));
         this.addLayer(new ItemInHandLayer<>(this));
         //#if MC >= 11800
-        //# this.addLayer(new ElytraLayer<>(this, context.getModelSet()));
-        //# this.addLayer(new CustomHeadLayer<>(this, context.getModelSet()));
+        this.addLayer(new ElytraLayer<>(this, context.getModelSet()));
+        this.addLayer(new CustomHeadLayer<>(this, context.getModelSet()));
         //#else
-        this.addLayer(new ElytraLayer<>(this));
-        this.addLayer(new CustomHeadLayer<>(this));
+        //# this.addLayer(new ElytraLayer<>(this));
+        //# this.addLayer(new CustomHeadLayer<>(this));
         //#endif
         // two models by mannequin, only deciding which model using when texture specified.
         this.normalModel = this.model;

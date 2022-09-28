@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.core.holiday.*;
 import moe.plushie.armourers_workshop.core.item.GiftSackItem;
 import moe.plushie.armourers_workshop.utils.Accessor;
@@ -111,7 +110,7 @@ public final class ModHolidays {
         if (builder != null) {
             holiday.setHandler(builder.get());
         }
-        ModLog.debug("Registering Holiday '{}:{}'", ArmourersWorkshop.MOD_ID, name);
+        ModLog.debug("Registering Holiday '{}:{}'", ModConstants.MOD_ID, name);
         HOLIDAY_LIST.add(holiday);
         return holiday;
     }

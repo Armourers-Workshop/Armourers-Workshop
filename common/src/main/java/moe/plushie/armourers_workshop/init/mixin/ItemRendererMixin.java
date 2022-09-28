@@ -21,9 +21,9 @@ public class ItemRendererMixin {
 
     @Inject(method = "getModel", at = @At("RETURN"), cancellable = true)
     //#if MC >= 11800
-    //# private void hooked_getModel(ItemStack itemStack, Level level, LivingEntity entity, int i, CallbackInfoReturnable<BakedModel> cir)
+    private void hooked_getModel(ItemStack itemStack, Level level, LivingEntity entity, int i, CallbackInfoReturnable<BakedModel> cir)
     //#else
-    private void hooked_getModel(ItemStack itemStack, Level level, LivingEntity entity, CallbackInfoReturnable<BakedModel> cir)
+    //# private void hooked_getModel(ItemStack itemStack, Level level, LivingEntity entity, CallbackInfoReturnable<BakedModel> cir)
     //#endif
     {
         BakedModel bakedModel = cir.getReturnValue();
