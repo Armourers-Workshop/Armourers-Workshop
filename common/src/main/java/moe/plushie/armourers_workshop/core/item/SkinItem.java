@@ -120,7 +120,15 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
         if (skin != null && !skin.getCustomName().trim().isEmpty()) {
             return new TextComponent(skin.getCustomName());
         }
+        if (skin != null) {
+            return TranslateUtils.Name.of(skin.getType());
+        }
         return super.getName(itemStack);
+    }
+
+    @Override
+    public String getDescriptionId() {
+        return this.getOrCreateDescriptionId();
     }
 
     @Override
