@@ -1,12 +1,13 @@
 package moe.plushie.armourers_workshop.init.platform;
 
 import moe.plushie.armourers_workshop.api.client.ISkinRendererProvider;
-import moe.plushie.armourers_workshop.compatibility.AbstractModelPartRegistries;
 import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
 import moe.plushie.armourers_workshop.core.client.skinrender.*;
+import moe.plushie.armourers_workshop.core.client.skinrender.plugin.MobLayerFixPlugin;
+import moe.plushie.armourers_workshop.core.client.skinrender.plugin.SlimeOuterFixPlugin;
+import moe.plushie.armourers_workshop.core.client.skinrender.plugin.VillagerLayerFixPlugin;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
-import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,26 +28,31 @@ public class SkinManager {
         SkinRendererManager manager = SkinRendererManager.getInstance();
         adapt(manager::registerRenderer);
         ModEntityProfiles.forEach(manager::bind);
+        //
+        manager.registerPlugin(SlimeSkinRenderer.class, new SlimeOuterFixPlugin<>());
+        manager.registerPlugin(VillagerSkinRenderer.class, new VillagerLayerFixPlugin<>());
+        manager.registerPlugin(ZombieVillagerSkinRenderer.class, new VillagerLayerFixPlugin<>());
+        manager.registerPlugin(BipedSkinRenderer.class, new MobLayerFixPlugin<>());
     }
 
     protected static void adapt(Consumer<Builder> manager) {
         // using special skin renderer of the arrow.
-        manager.accept(Builder.of(ArrowSkinRenderer::new).whenRenderer(ArrowRenderer.class));
-        manager.accept(Builder.of(TridentSkinRenderer::new).whenRenderer(ThrownTridentRenderer.class));
+        manager.accept(Builder.of(ArrowSkinRenderer::new).renderer(ArrowRenderer.class));
+        manager.accept(Builder.of(TridentSkinRenderer::new).renderer(ThrownTridentRenderer.class));
 
-        manager.accept(Builder.of(IllagerSkinRenderer::new).whenModel(IllagerModel.class));
-        manager.accept(Builder.of(ZombieVillagerSkinRenderer::new).whenModel(ZombieVillagerModel.class));
-        manager.accept(Builder.of(VillagerSkinRenderer::new).whenModel(VillagerModel.class));
-        manager.accept(Builder.of(IronGolemSkinRenderer::new).whenModel(IronGolemModel.class));
+        manager.accept(Builder.of(IllagerSkinRenderer::new).model(IllagerModel.class));
+        manager.accept(Builder.of(ZombieVillagerSkinRenderer::new).model(ZombieVillagerModel.class));
+        manager.accept(Builder.of(VillagerSkinRenderer::new).model(VillagerModel.class));
+        manager.accept(Builder.of(IronGolemSkinRenderer::new).model(IronGolemModel.class));
 
-        manager.accept(Builder.of(FirstPersonSkinRenderer::new).whenModel(FirstPersonPlayerModel.class));
-        manager.accept(Builder.of(PlayerSkinRenderer::new).whenModel(PlayerModel.class));
-        manager.accept(Builder.of(BipedSkinRenderer::new).whenModel(HumanoidModel.class));
+        manager.accept(Builder.of(FirstPersonSkinRenderer::new).model(FirstPersonPlayerModel.class));
+        manager.accept(Builder.of(PlayerSkinRenderer::new).model(PlayerModel.class));
+        manager.accept(Builder.of(BipedSkinRenderer::new).model(HumanoidModel.class));
 
-        manager.accept(Builder.of(SlimeSkinRenderer::new).whenModel(SlimeModel.class));
-        manager.accept(Builder.of(GhastSkinRenderer::new).whenModel(GhastModel.class));
-        manager.accept(Builder.of(ChickenSkinRenderer::new).whenModel(ChickenModel.class));
-        manager.accept(Builder.of(CreeperSkinRenderer::new).whenModel(CreeperModel.class));
+        manager.accept(Builder.of(SlimeSkinRenderer::new).model(SlimeModel.class));
+        manager.accept(Builder.of(GhastSkinRenderer::new).model(GhastModel.class));
+        manager.accept(Builder.of(ChickenSkinRenderer::new).model(ChickenModel.class));
+        manager.accept(Builder.of(CreeperSkinRenderer::new).model(CreeperModel.class));
     }
 
     protected static class Builder implements ISkinRendererProvider<SkinRenderer<?, ?, ?>> {
@@ -61,12 +67,12 @@ public class SkinManager {
             return builder;
         }
 
-        public <T> Builder whenModel(Class<T> modelClass) {
+        public <T> Builder model(Class<T> modelClass) {
             this.modelClass = modelClass;
             return this;
         }
 
-        public <T> Builder whenRenderer(Class<T> rendererClass) {
+        public <T> Builder renderer(Class<T> rendererClass) {
             this.rendererClass = rendererClass;
             return this;
         }

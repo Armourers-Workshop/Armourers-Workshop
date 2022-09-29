@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.Entity;
 
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 
 @Environment(value = EnvType.CLIENT)
 public class ForwardingLayer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
@@ -29,8 +30,8 @@ public class ForwardingLayer<T extends Entity, M extends EntityModel<T>> extends
         this.test = test;
     }
 
-    public static <T extends Entity, V extends EntityModel<T>, M extends IModelHolder<V>> BiFunction<RenderLayerParent<T, V>, RenderLayer<T, V>, RenderLayer<T, V>> when(BiFunction<T, M, Boolean> test) {
-        return (entityRenderer, layer) -> new ForwardingLayer<>(entityRenderer, layer, (e, m) -> test.apply(e, SkinRendererManager.wrap(m)));
+    public static <T extends Entity, V extends EntityModel<T>, M extends IModelHolder<V>> BiFunction<RenderLayerParent<T, V>, RenderLayer<T, V>, RenderLayer<T, V>> when(BiPredicate<T, M> test) {
+        return (entityRenderer, layer) -> new ForwardingLayer<>(entityRenderer, layer, (e, m) -> test.test(e, SkinRendererManager.wrap(m)));
     }
 
     @Override

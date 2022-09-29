@@ -38,13 +38,13 @@ public class LivingSkinRenderer<T extends LivingEntity, V extends EntityModel<T>
     }
 
     protected void init(LivingEntityRenderer<T, V> entityRenderer) {
-        List<RenderLayer<T, V>> layers = entityRenderer.layers;
         this.renderer = entityRenderer;
-        this.mappers.forEach((key, value) -> {
+        SkinRendererManager.getInstance().getPlugins(this).forEach(plugin -> {
+            List<RenderLayer<T, V>> layers = entityRenderer.layers;
             for (int index = 0; index < layers.size(); ++index) {
-                RenderLayer<T, V> oldValue = layers.get(index);
-                if (key.isInstance(oldValue)) {
-                    layers.set(index, value.apply(entityRenderer, oldValue));
+                RenderLayer<T, V> newValue = plugin.getOverrideLayer(this, entityRenderer, layers.get(index));
+                if (newValue != null) {
+                    layers.set(index, newValue);
                 }
             }
         });

@@ -28,7 +28,7 @@ public class ChickenSkinRenderer<T extends LivingEntity, V extends ChickenModel<
         super.apply(entity, model, overriddenManager, renderData);
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_HEAD)) {
             addModelOverride(model.getPart("head"));
-            addModelOverride(model.getPart("break"));
+            addModelOverride(model.getPart("beak"));
             addModelOverride(model.getPart("red_thing"));
         }
     }

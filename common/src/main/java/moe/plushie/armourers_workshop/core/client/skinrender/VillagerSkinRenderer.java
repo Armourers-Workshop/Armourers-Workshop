@@ -31,14 +31,6 @@ public class VillagerSkinRenderer<T extends LivingEntity, V extends VillagerMode
     }
 
     @Override
-    public void initTransformers() {
-        super.initTransformers();
-        // proxy => VillagerProfessionLayer
-        // proxy => CrossedArmsItemLayer
-        mappers.put(VillagerProfessionLayer.class, ForwardingLayer.when(this::isVisibleHat));
-    }
-
-    @Override
     public void willRender(T entity, M model, SkinRenderData renderData, SkinRenderContext context) {
         super.willRender(entity, model, renderData, context);
         transformModel.setup(entity, context.light, context.partialTicks);

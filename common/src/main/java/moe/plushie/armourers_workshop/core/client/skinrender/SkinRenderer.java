@@ -267,7 +267,5 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
             }
         }
     }
-
-    public static class Context {
-    }
 }
+

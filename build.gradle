@@ -35,7 +35,7 @@ subprojects {
     // we need to search all source files to get to the actived mixins.
     mixinConfigs.put(project.name, searchFile(sourceSets, { it.name.endsWith("mixins.json") }))
 
-    task signJar {
+    task signJar(dependsOn: remapSourcesJar) {
         onlyIf { System.getenv("AW_SIGN_STORE") != null }
         doLast {
             ant.signjar(destDir: "${remapJar.destinationDir}",

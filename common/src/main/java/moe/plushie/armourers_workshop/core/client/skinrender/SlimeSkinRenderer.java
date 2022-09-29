@@ -23,7 +23,6 @@ public class SlimeSkinRenderer<T extends Slime, V extends SlimeModel<T>, M exten
     @Override
     public void initTransformers() {
         transformer.registerArmor(SkinPartTypes.BIPED_HEAD, this::offset);
-        mappers.put(SlimeOuterLayer.class, ForwardingLayer.when(this::visibleHead));
     }
 
     @Override
@@ -32,10 +31,6 @@ public class SlimeSkinRenderer<T extends Slime, V extends SlimeModel<T>, M exten
         if (overriddenManager.overrideModel(SkinPartTypes.BIPED_HEAD)) {
             model.getAllParts().forEach(this::addModelOverride);
         }
-    }
-
-    private boolean visibleHead(T entity, M model) {
-        return model.getAllParts().stream().findFirst().map(m -> m.visible).orElse(false);
     }
 
     private void offset(PoseStack matrixStack, M model) {

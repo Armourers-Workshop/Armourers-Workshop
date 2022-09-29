@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
+import moe.plushie.armourers_workshop.api.client.ISkinRendererPlugin;
 import moe.plushie.armourers_workshop.api.client.ISkinRendererProvider;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
@@ -26,11 +27,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 @Environment(value = EnvType.CLIENT)
 public class SkinRendererManager  {
@@ -38,6 +41,8 @@ public class SkinRendererManager  {
     private static final SkinRendererManager INSTANCE = new SkinRendererManager();
 
     private final ArrayList<ISkinRendererProvider<SkinRenderer<?, ?, ?>>> builders = new ArrayList<>();
+    private final ArrayList<Pair<Class<?>, ISkinRendererPlugin<?, ?, ?>>> plugins = new ArrayList<>();
+
     private ArrayList<Runnable> pendingTasks = new ArrayList<>();
 
     public static SkinRendererManager getInstance() {
@@ -102,6 +107,20 @@ public class SkinRendererManager  {
                 }
             }
         });
+    }
+
+    public <T extends SkinRenderer<?, ?, ?>> void registerPlugin(Class<T> targetType, ISkinRendererPlugin<?, ?, ?> plugin) {
+        plugins.add(Pair.of(targetType, plugin));
+    }
+
+    public <T extends LivingEntity, V extends EntityModel<T>, M extends IModelHolder<V>> Collection<ISkinRendererPlugin<T, V, M>> getPlugins(SkinRenderer<T, V, M> renderer) {
+        ArrayList<ISkinRendererPlugin<T, V, M>> plugins1 = new ArrayList<>();
+        plugins.forEach(pair -> {
+            if (pair.getKey().isInstance(renderer)) {
+                plugins1.add(ObjectUtils.unsafeCast(pair.getValue()));
+            }
+        });
+        return plugins1;
     }
 
     public void registerRenderer(ISkinRendererProvider<SkinRenderer<?, ?, ?>> builder) {
