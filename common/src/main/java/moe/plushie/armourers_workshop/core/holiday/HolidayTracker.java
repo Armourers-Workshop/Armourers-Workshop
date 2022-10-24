@@ -35,7 +35,7 @@ public class HolidayTracker extends AbstractSavedData {
     }
 
     public static HolidayTracker of(MinecraftServer server) {
-        return AbstractSavedData.load(HolidayTracker::new, HolidayTracker::new, server.overworld().getDataStorage(), Constants.Key.SKIN);
+        return AbstractSavedData.load(HolidayTracker::new, HolidayTracker::new, server.overworld().getDataStorage(), Constants.Key.HOLIDAY_TRACKER);
     }
 
     public void add(Player player, Holiday holiday) {
