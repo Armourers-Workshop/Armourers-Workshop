@@ -59,6 +59,7 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
         SkinRenderContext context = SkinRenderContext.getInstance();
         context.setup(light, partialTicks1, matrixStack, buffers);
         renderer.render(mannequin, SkinRendererManager.wrap(model), bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, 0, context);
+        context.clean();
 
         matrixStack.popPose();
 

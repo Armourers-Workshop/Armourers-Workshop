@@ -34,6 +34,9 @@ dependencies {
 
     modInclude "com.electronwill.night-config:core:${project.night_config}"
     modInclude "com.electronwill.night-config:toml:${project.night_config}"
+
+//    modLocalRuntime "net.coderbot.iris:iris:mc1.18.2-1.3.1"
+//    modLocalRuntime "me.jellysquid.mods.sodium:sodium:fabric-mc1.18.2-0.4.1+build.15"
 }
 
 def modInclude(str) {

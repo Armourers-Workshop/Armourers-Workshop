@@ -10,7 +10,6 @@
     "InventoryScreenMixin",
     "ItemRendererMixin",
     "RebuildTaskMixin",
-    "RenderBuffersMixin",
     "ThrownTridentRendererMixin"
   ],
   "mixins": [

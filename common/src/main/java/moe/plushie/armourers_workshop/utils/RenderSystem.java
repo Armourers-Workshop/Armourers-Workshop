@@ -11,6 +11,7 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
+import moe.plushie.armourers_workshop.compatibility.AbstractRenderPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractRenderSystem;
 import moe.plushie.armourers_workshop.compatibility.AbstractShaderTesselator;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
@@ -28,6 +29,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.core.Direction;
 import net.minecraft.locale.Language;
@@ -50,7 +52,12 @@ public final class RenderSystem extends AbstractRenderSystem {
 
     private static int shaderLight = 0;
 
-    private static Matrix3f inverseNormalMatrix = Matrix3f.createScaleMatrix(1, 1, 1);;
+    private static final AbstractRenderPoseStack extendedModelViewStack = new AbstractRenderPoseStack();
+
+    private static final Storage<Matrix3f> extendedNormalMatrix = new Storage<>(Matrix3f.createScaleMatrix(1, 1, 1));
+    private static final Storage<Matrix4f> extendedTextureMatrix = new Storage<>(Matrix4f.createScaleMatrix(1, 1, 1));
+    private static final Storage<Matrix4f> extendedLightmapTextureMatrix = new Storage<>(Matrix4f.createScaleMatrix(1, 1, 1));
+    private static final Storage<Matrix4f> extendedModelViewMatrix = new Storage<>(Matrix4f.createScaleMatrix(1, 1, 1));
 
     private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(3);
 
@@ -410,6 +417,8 @@ public final class RenderSystem extends AbstractRenderSystem {
             builder.vertex(mat, x + vertexes[i][0] * w, y + vertexes[i][1] * h, z + vertexes[i][2] * d)
                     .color(r, g, b, a)
                     .uv(u + values[textures[i][0]], v + values[textures[i][1]])
+                    .overlayCoords(OverlayTexture.NO_OVERLAY)
+                    .uv2(0xf000f0)
                     .endVertex();
         }
     }
@@ -639,17 +648,85 @@ public final class RenderSystem extends AbstractRenderSystem {
         shaderLight = light;
     }
 
-    public static Matrix3f getInverseNormalMatrix() {
-        assertOnRenderThread();
-        return inverseNormalMatrix;
+    public static class Storage<T> {
+
+        private T value;
+        private T backup;
+
+        public Storage(T value) {
+            this.value = value;
+            this.backup = value;
+        }
+
+        public void save() {
+            backup = value;
+        }
+
+        public void load() {
+            value = backup;
+        }
+
+        public void set(T value) {
+            if (!isOnRenderThread()) {
+                recordRenderCall(() -> this.value = value);
+            } else {
+                this.value = value;
+            }
+        }
+
+        public T get() {
+            assertOnRenderThread();
+            return value;
+        }
     }
 
-    public static void setInverseNormalMatrix(Matrix3f matrix3f) {
-        Matrix3f value = matrix3f.copy();
-        if (!isOnRenderThread()) {
-            recordRenderCall(() -> inverseNormalMatrix = value);
-        } else {
-            inverseNormalMatrix = value;
-        }
+    public static Matrix3f getExtendedNormalMatrix() {
+        return extendedNormalMatrix.get();
+    }
+
+    public static void setExtendedNormalMatrix(Matrix3f value) {
+        extendedNormalMatrix.set(value);
+    }
+
+    public static Matrix4f getExtendedTextureMatrix() {
+        return extendedTextureMatrix.get();
+    }
+
+    public static void setExtendedTextureMatrix(Matrix4f value) {
+        extendedTextureMatrix.set(value);
+    }
+
+    public static Matrix4f getExtendedLightmapTextureMatrix() {
+        return extendedLightmapTextureMatrix.get();
+    }
+
+    public static void setExtendedLightmapTextureMatrix(Matrix4f value) {
+        extendedLightmapTextureMatrix.set(value);
+    }
+
+    public static Matrix4f getExtendedModelViewMatrix() {
+        return extendedModelViewMatrix.get();
+    }
+
+    public static void setExtendedModelViewMatrix(Matrix4f value) {
+        extendedModelViewMatrix.set(value);
+    }
+
+    public static void backupExtendedMatrix() {
+        extendedTextureMatrix.save();
+        extendedNormalMatrix.save();
+        extendedLightmapTextureMatrix.save();
+        extendedModelViewMatrix.save();
+    }
+
+    public static void restoreExtendedMatrix() {
+        extendedTextureMatrix.load();
+        extendedNormalMatrix.load();
+        extendedLightmapTextureMatrix.load();
+        extendedModelViewMatrix.load();
+    }
+
+    public static AbstractRenderPoseStack getExtendedModelViewStack() {
+        return extendedModelViewStack;
     }
 }

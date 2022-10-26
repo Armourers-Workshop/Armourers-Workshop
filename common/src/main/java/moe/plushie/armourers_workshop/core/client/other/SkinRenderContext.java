@@ -59,6 +59,9 @@ public class SkinRenderContext {
         this.transformType = ItemTransforms.TransformType.NONE;
     }
 
+    public void clean() {
+    }
+
     public SkinRenderObjectBuilder getBuffer(@Nonnull Skin skin) {
         SkinVertexBufferBuilder bufferBuilder = SkinVertexBufferBuilder.getBuffer(buffers);
         return bufferBuilder.getBuffer(skin);

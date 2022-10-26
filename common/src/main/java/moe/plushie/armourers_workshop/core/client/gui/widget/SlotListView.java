@@ -111,7 +111,7 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
             poseStack.pushPose();
             poseStack.translate(-leftPos, -topPos, 0);
 
-            AbstractRenderPoseStack modelViewStack = RenderSystem.getModelStack();
+            AbstractRenderPoseStack modelViewStack = RenderSystem.getExtendedModelViewStack();
             modelViewStack.pushPose();
             modelViewStack.translate(0, 0, 400);
             modelViewStack.apply();

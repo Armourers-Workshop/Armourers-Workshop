@@ -36,7 +36,7 @@ public class EntityPreviewView extends UIControl {
         }
         CGRect bounds = bounds();
         CGPoint pos = convertPointToView(new CGPoint(bounds.width / 2, bounds.height - 8), null);
-        AbstractRenderPoseStack modelViewStack = RenderSystem.getModelStack();
+        AbstractRenderPoseStack modelViewStack = RenderSystem.getExtendedModelViewStack();
         modelViewStack.pushPose();
         modelViewStack.translate(0, 0, 300);
         modelViewStack.translate(pos.x, pos.y, 50);

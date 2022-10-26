@@ -25,13 +25,12 @@ import java.util.function.Supplier;
 public class AbstractRenderType extends RenderType {
 
     private static final VertexFormat SKIN_NORMAL_FORMAT = new VertexFormat(ImmutableList.<VertexFormatElement>builder().add(DefaultVertexFormat.ELEMENT_POSITION).add(DefaultVertexFormat.ELEMENT_COLOR).add(DefaultVertexFormat.ELEMENT_UV0).add(DefaultVertexFormat.ELEMENT_UV1).add(DefaultVertexFormat.ELEMENT_NORMAL).add(DefaultVertexFormat.ELEMENT_PADDING).build());
-    private static final VertexFormat SKIN_LIGHTING_FORMAT = new VertexFormat(ImmutableList.<VertexFormatElement>builder().add(DefaultVertexFormat.ELEMENT_POSITION).add(DefaultVertexFormat.ELEMENT_COLOR).add(DefaultVertexFormat.ELEMENT_UV0).build());
 
     private static final TexturingStateShard COLORS_OFFSET = new TexturingStateShard("aw_offset_ov", () -> {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);
         RenderSystem.pushMatrix();
         RenderSystem.loadIdentity();
-        RenderSystem.multMatrix(RenderSystem.getTextureMatrix());
+        RenderSystem.multMatrix(RenderSystem.getExtendedTextureMatrix());
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
     }, () -> {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);
@@ -62,7 +61,7 @@ public class AbstractRenderType extends RenderType {
     private static final Map<SkinRenderFormat, Supplier<IRenderTypeBuilder>> MAPPER = _make(it -> {
 
         it.put(SkinRenderFormat.LINE, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_LINES, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
-        it.put(SkinRenderFormat.IMAGE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
+        it.put(SkinRenderFormat.IMAGE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
 
         it.put(SkinRenderFormat.GUI_IMAGE, () -> _builder(DefaultVertexFormat.POSITION_TEX, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTextureState(NO_TEXTURE)));
         it.put(SkinRenderFormat.GUI_HIGHLIGHTED_TEXT, () -> _builder(DefaultVertexFormat.POSITION, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTexturingState(OR_REVERSE)));
@@ -76,8 +75,8 @@ public class AbstractRenderType extends RenderType {
 
         it.put(SkinRenderFormat.SKIN_FACE_SOLID, () -> _builder(SKIN_NORMAL_FORMAT, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP)));
         it.put(SkinRenderFormat.SKIN_FACE_TRANSLUCENT, () -> _builder(SKIN_NORMAL_FORMAT, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP).setAlphaState(DEFAULT_ALPHA)));
-        it.put(SkinRenderFormat.SKIN_FACE_LIGHTING, () -> _builder(SKIN_LIGHTING_FORMAT, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET)));
-        it.put(SkinRenderFormat.SKIN_FACE_LIGHTING_TRANSLUCENT, () -> _builder(SKIN_LIGHTING_FORMAT, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setAlphaState(DEFAULT_ALPHA)));
+        it.put(SkinRenderFormat.SKIN_FACE_LIGHTING, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET)));
+        it.put(SkinRenderFormat.SKIN_FACE_LIGHTING_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setAlphaState(DEFAULT_ALPHA)));
     });
 
     public AbstractRenderType(String name, RenderType delegate, boolean affectsCrumbling, boolean sortUpload, Runnable setupRenderState, Runnable clearRenderState) {

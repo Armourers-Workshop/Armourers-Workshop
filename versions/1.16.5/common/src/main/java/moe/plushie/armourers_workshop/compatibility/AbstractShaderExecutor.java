@@ -28,9 +28,8 @@ public class AbstractShaderExecutor {
         maxVertexCount = count;
     }
 
-    public void execute(IRenderBufferObject object, int vertexOffset, int vertexCount, RenderType renderType) {
+    public void execute(IRenderBufferObject object, int vertexOffset, int vertexCount, RenderType renderType, VertexFormat vertexFormat) {
         AbstractLightBufferObject lightBuffer = null;
-        VertexFormat format = renderType.format();
 
         if (renderType == SkinRenderType.FACE_SOLID || renderType == SkinRenderType.FACE_TRANSLUCENT) {
             lightBuffer = AbstractLightBufferObject.getLightBuffer(RenderSystem.getShaderLight());
@@ -40,11 +39,14 @@ public class AbstractShaderExecutor {
         }
 
         object.bind();
-        format.setupBufferState(vertexOffset);
+        vertexFormat.setupBufferState(vertexOffset);
 
+        RenderSystem.pushMatrix();
+        RenderSystem.multMatrix(RenderSystem.getExtendedModelViewMatrix());
         RenderSystem.drawArrays(renderType.mode(), 0, vertexCount);
+        RenderSystem.popMatrix();
 
-        format.clearBufferState();
+        vertexFormat.clearBufferState();
 
         if (lightBuffer != null) {
             lightBuffer.getFormat().clearBufferState();

@@ -70,6 +70,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         SkinRenderContext context = SkinRenderContext.getInstance();
         context.setup(overLight, partialTicks1, poseStack, buffers);
         renderer.render(mannequin, SkinRendererManager.wrap(model), bakedSkin, ColorScheme.EMPTY, itemStack, 0, context);
+        context.clean();
 
         poseStack.popPose();
 

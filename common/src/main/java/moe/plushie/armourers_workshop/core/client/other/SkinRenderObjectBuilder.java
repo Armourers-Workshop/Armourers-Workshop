@@ -46,7 +46,6 @@ public class SkinRenderObjectBuilder {
     protected final ArrayList<CachedTask> pendingCacheTasks = new ArrayList<>();
     protected boolean isSent = false;
 
-
     public SkinRenderObjectBuilder(Skin skin) {
         this.skin = skin;
     }
@@ -66,39 +65,39 @@ public class SkinRenderObjectBuilder {
         cachingTasks.put(key, task);
         addCompileTask(task);
 
-//        AbstractRenderSystem.SkinShader.SKIN_NORMAL_MAT__ = matrixStack.last().normal().copy();
-//        AbstractRenderSystem.SkinShader.SKIN_NORMAL_MAT__.invert();
-//        AbstractRenderSystem.SkinShader.SKIN_POSE_MAT__ = matrixStack.last().pose();
+//        RenderSystem.backupExtendedMatrix();
+//
+//        Matrix3f normalMatrix = matrixStack.last().normal().copy();
+//        normalMatrix.invert();
+//
+//        RenderSystem.setShaderColor(1, 1, 1, 1);
+////            RenderSystem.setShaderLight(light);
+//        RenderSystem.setExtendedNormalMatrix(normalMatrix);
+//        RenderSystem.setExtendedTextureMatrix(Matrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
+//
+//        AbstractShaderExecutor.getInstance().setup();
 //        MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+////        MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
 //        PoseStack matrixStack1 = new PoseStack();
 ////        PoseStack matrixStack1 = matrixStack;
 //        part.forEach((renderType, quads) -> {
 //            VertexConsumer builder = buffers.getBuffer(renderType);
 ////            BufferBuilder builder = new BufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
 ////            builder.begin(renderType.mode(), renderType.format());
-//            quads.forEach(quad -> quad.render(part, scheme, light, OverlayTexture.NO_OVERLAY, matrixStack1, builder));
-////            for (Direction dir : Direction.values()) {
-////                ExtendedFaceRenderer.render(0, 0, 0, dir, PaintColor.WHITE, 255, light, OverlayTexture.NO_OVERLAY, matrixStack1, builder);
-////            }
-////            builder.end();
-////            BufferUploader.end(builder);
+//            quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, OverlayTexture.NO_OVERLAY, matrixStack1, builder));
 //
-////            CachedTask cachedTask = new CachedTask(part, scheme, builder);
-////            CompiledTask compiledTask = new CompiledTask(renderType, builder, part.getRenderPolygonOffset(), part.getType());
-////            compiledTask.vertexCount = quads.size() * 4;
-////            compiledTask.bufferBuilder = builder;
-////            cachedTask.mergedTasks = new ArrayList<>();
-////            cachedTask.mergedTasks.add(compiledTask);
-////            cachedRenderPipeline.render(cachedTask, matrixStack, light, partialTicks, slotIndex);
 //
-//            PoseStack modelPoseStack = RenderSystem.getModelStack();
+//            AbstractRenderPoseStack modelPoseStack = RenderSystem.getModelStack();
 //            modelPoseStack.pushPose();
-//            modelPoseStack.mulPoseMatrix(matrixStack.last().pose());
-//            RenderSystem.applyModelViewMatrix();
+//            modelPoseStack.mulPose(matrixStack.last().pose());
+//            modelPoseStack.apply();
 //            buffers.endBatch();
 //            modelPoseStack.popPose();
-//            RenderSystem.applyModelViewMatrix();
+//            modelPoseStack.apply();
 //        });
+//        AbstractShaderExecutor.getInstance().clean();
+//
+//        RenderSystem.restoreExtendedMatrix();
     }
 
     public void addShapeData(Vector3f origin, PoseStack matrixStack) {
@@ -164,13 +163,15 @@ public class SkinRenderObjectBuilder {
         ArrayList<ByteBuffer> byteBuffers = new ArrayList<>();
 
         for (CompiledTask compiledTask : buildingTasks) {
-            VertexFormat format = compiledTask.renderType.format();
             Pair<BufferBuilder.DrawState, ByteBuffer> pair = compiledTask.bufferBuilder.popNextBuffer();
+            BufferBuilder.DrawState drawState = pair.getFirst();
+            VertexFormat format = drawState.format();//compiledTask.renderType.format();
             ByteBuffer byteBuffer = pair.getSecond();
             compiledTask.vertexBuffer = vertexBuffer;
-            compiledTask.vertexCount = byteBuffer.remaining() / format.getVertexSize();
+            compiledTask.vertexCount = drawState.vertexCount();
             compiledTask.vertexOffset = totalRenderedBytes;
             compiledTask.bufferBuilder = null;
+            compiledTask.format = format;
             byteBuffers.add(byteBuffer);
             totalRenderedBytes += byteBuffer.remaining();
         }
@@ -210,6 +211,7 @@ public class SkinRenderObjectBuilder {
         int vertexOffset;
         BufferBuilder bufferBuilder;
         SkinRenderObject vertexBuffer;
+        VertexFormat format;
 
         CompiledTask(RenderType renderType, BufferBuilder bufferBuilder, float polygonOffset, ISkinPartType partType) {
             this.partType = partType;
@@ -228,10 +230,11 @@ public class SkinRenderObjectBuilder {
         protected final ArrayList<CompiledPass> tasks = new ArrayList<>();
 
         void render(CachedTask task, PoseStack matrixStack, int lightmap, float partialTicks, int slotIndex) {
-            Matrix4f matrix = matrixStack.last().pose().copy();
-            Matrix3f invNormalMatrix = matrixStack.last().normal().copy();
-            invNormalMatrix.invert();
-            task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, matrix, invNormalMatrix, lightmap, partialTicks, slotIndex)));
+            Matrix4f matrix = RenderSystem.getExtendedModelViewStack().lastPose().copy();
+            matrix.multiply(matrixStack.last().pose());
+            Matrix3f normalMatrix = matrixStack.last().normal().copy();
+            normalMatrix.invert();
+            task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, matrix, normalMatrix, lightmap, partialTicks, slotIndex)));
         }
 
         void commit(Consumer<SkinVertexBufferBuilder.Pass> consumer) {
@@ -294,13 +297,21 @@ public class SkinRenderObjectBuilder {
         }
 
         @Override
-        public Matrix4f getMatrix() {
+        public Matrix4f getModelViewMatrix() {
             return matrix;
         }
 
         @Override
         public Matrix3f getInvNormalMatrix() {
             return invNormalMatrix;
+        }
+
+        @Override
+        public VertexFormat getFormat() {
+            if (compiledTask.format == null) {
+                return compiledTask.renderType.format();
+            }
+            return compiledTask.format;
         }
 
         @Override

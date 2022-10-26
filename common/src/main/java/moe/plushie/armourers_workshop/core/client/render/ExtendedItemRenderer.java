@@ -77,6 +77,7 @@ public final class ExtendedItemRenderer {
         SkinRenderContext context = SkinRenderContext.getInstance();
         context.setup(light, partialTicks, matrixStack, buffers);
         renderer.render(entity, SkinRendererManager.wrap(model), bakedSkin, scheme, itemStack, 0, context);
+        context.clean();
 
         matrixStack.popPose();
     }

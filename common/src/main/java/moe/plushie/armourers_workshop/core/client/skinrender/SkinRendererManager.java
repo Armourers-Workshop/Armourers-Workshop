@@ -215,21 +215,27 @@ public class SkinRendererManager  {
     public <T extends Entity, V extends Model, M extends IModelHolder<V>> void willRender(T entity, V entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
         SkinRenderer<T, V, M> renderer = getRenderer(entity, entityModel, entityRenderer);
         if (renderer != null) {
-            renderer.willRender(entity, wrap(entityModel), renderData, context.get());
+            SkinRenderContext context1 = context.get();
+            renderer.willRender(entity, wrap(entityModel), renderData, context1);
+            context1.clean();
         }
     }
 
     public <T extends Entity, V extends Model, M extends IModelHolder<V>> void willRenderModel(T entity, V entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
         SkinRenderer<T, V, M> renderer = getRenderer(entity, entityModel, entityRenderer);
         if (renderer != null) {
-            renderer.willRenderModel(entity, wrap(entityModel), renderData, context.get());
+            SkinRenderContext context1 = context.get();
+            renderer.willRenderModel(entity, wrap(entityModel), renderData, context1);
+            context1.clean();
         }
     }
 
     public <T extends Entity, V extends Model, M extends IModelHolder<V>> void didRender(T entity, V entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
         SkinRenderer<T, V, M> renderer = getRenderer(entity, entityModel, entityRenderer);
         if (renderer != null) {
-            renderer.didRender(entity, wrap(entityModel), renderData, context.get());
+            SkinRenderContext context1 = context.get();
+            renderer.didRender(entity, wrap(entityModel), renderData, context1);
+            context1.clean();
         }
     }
 }

@@ -77,6 +77,7 @@ public class ClientWardrobeHandler {
         if (count != 0 && !ModDebugger.itemOverride) {
             callback.cancel();
         }
+        context.clean();
 
         matrixStack.popPose();
     }
@@ -116,6 +117,7 @@ public class ClientWardrobeHandler {
         if (count != 0 && !ModDebugger.itemOverride) {
             callback.cancel();
         }
+        context.clean();
 
         matrixStack.popPose();
     }
@@ -189,6 +191,7 @@ public class ClientWardrobeHandler {
         if (count != 0 && !ModDebugger.handOverride) {
             cancelHandler.run();
         }
+        context.clean();
 
         matrixStack.popPose();
     }
@@ -279,6 +282,7 @@ public class ClientWardrobeHandler {
                     if (counter != 0 && !ModDebugger.itemOverride) {
                         callback.cancel();
                     }
+                    context.clean();
                     matrixStack.popPose();
                 }
                 break;

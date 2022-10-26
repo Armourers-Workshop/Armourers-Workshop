@@ -46,7 +46,7 @@ public class AbstractShader extends ShaderInstance {
             setSampler("Sampler" + i, RenderSystem.getShaderTexture(i));
         }
         if (MODEL_VIEW_MATRIX != null) {
-            MODEL_VIEW_MATRIX.set(RenderSystem.getModelViewMatrix());
+            MODEL_VIEW_MATRIX.set(RenderSystem.getExtendedModelViewMatrix());
         }
         if (PROJECTION_MATRIX != null) {
             PROJECTION_MATRIX.set(RenderSystem.getProjectionMatrix());
@@ -55,7 +55,7 @@ public class AbstractShader extends ShaderInstance {
             INVERSE_VIEW_ROTATION_MATRIX.set(RenderSystem.getInverseViewRotationMatrix());
         }
         if (TEXTURE_MATRIX != null) {
-            TEXTURE_MATRIX.set(RenderSystem.getTextureMatrix());
+            TEXTURE_MATRIX.set(RenderSystem.getExtendedTextureMatrix());
         }
         if (COLOR_MODULATOR != null) {
             COLOR_MODULATOR.set(RenderSystem.getShaderColor());
@@ -85,7 +85,7 @@ public class AbstractShader extends ShaderInstance {
         RenderSystem.setupShaderLights(this);
         // Custom
         if (INVERSE_NORMAL_MATRIX != null) {
-            INVERSE_NORMAL_MATRIX.set(RenderSystem.getInverseNormalMatrix());
+            INVERSE_NORMAL_MATRIX.set(RenderSystem.getExtendedNormalMatrix());
         }
         if (LIGHT_MODULATOR != null) {
             int light = RenderSystem.getShaderLight();

@@ -2,11 +2,13 @@ package moe.plushie.armourers_workshop.compatibility;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
 import moe.plushie.armourers_workshop.api.common.IRenderBufferObject;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import org.lwjgl.opengl.GL11;
@@ -33,13 +35,12 @@ public class AbstractShaderExecutor {
         maxVertexCount = count;
     }
 
-    public void execute(IRenderBufferObject object, int vertexOffset, int vertexCount, RenderType renderType) {
+    public void execute(IRenderBufferObject object, int vertexOffset, int vertexCount, RenderType renderType, VertexFormat vertexFormat) {
         ShaderInstance shader = RenderSystem.getShader();
         if (shader == null) {
             return;
         }
 
-        VertexFormat vertexFormat = renderType.format();
         VertexFormat.Mode mode = renderType.mode();
 //            ByteBuffer byteBuffer = pair.getSecond();
 //            int i = drawState.vertexCount();
@@ -67,12 +68,13 @@ public class AbstractShaderExecutor {
 //                m = indexType.asGLType;
         }
 
+        _setupShader(shader);
         shader.apply();
-//            GL11.glDrawArrays(mode.asGLMode, 0, j);
         GL11.glDrawElements(renderType.mode().asGLMode, j, m, 0L);
         shader.clear();
 
         _cleanVertexFormat(vertexFormat);
+
     }
 
     private void _setupVertexFormat(VertexFormat vertexFormat, IRenderBufferObject object, int offset) {
@@ -113,131 +115,48 @@ public class AbstractShaderExecutor {
     }
 
 
-
-
-
-////            if (renderType == SkinRenderType.SOLID_FACE || renderType == SkinRenderType.TRANSLUCENT_SOLID_FACE) {
-////                lightBuffer = SkinLightBufferObject.getLightBuffer(getLightmap());
-////                lightBuffer.ensureCapacity(maxVertexCount);
-////                lightBuffer.bind();
-////                lightBuffer.setupBufferState(lightBuffer.getFormat(), 0L);
-////            }
-////            com.mojang.blaze3d.systems.RenderSystem
-//
-//
-////            Matrix4f projectMat = RenderSystem.getProjectionMatrix().copy();
-////            projectMat.multiply(getMatrix());
-//
-////            PoseStack poseStack = RenderSystem.getModelStack();
-////            poseStack.pushPose();
-////            poseStack.last().pose().multiply(getMatrix());
-////            poseStack.last().normal().mul(getNormalMatrix());
-////
-////            Matrix3f matrix3f = poseStack.last().normal().copy();
-////            if (matrix3f.invert()) {
-//////                RenderSystem.setInverseViewRotationMatrix(matrix3f);
-////            }
-////
-////            RenderSystem.applyModelViewMatrix();
-//
-////            BufferUploader.end(getBuildBuffer());
-//
-//    //            Pair<DrawState, ByteBuffer> pair = getBuildBuffer().popNextBuffer();
-////            BufferBuilder.DrawState drawState = pair.getFirst();
-//    VertexFormat vertexFormat = renderType.format();//drawState.format();
-//    VertexFormat.Mode mode = renderType.mode();
-//    //            ByteBuffer byteBuffer = pair.getSecond();
-////            int i = drawState.vertexCount();
-////            int k = i * vertexFormat.getVertexSize();
-////            int j = drawState.indexCount();
-//    int j = getVertexCount() + getVertexCount() / 2;
-//    int i = getVertexCount();
-//
-//    //            vertexBuffer.bind();
-//    setupVertexFormat(vertexFormat, vertexBuffer, getVertexOffset());
-//
-//    int m;
-//    int l = 0;
-//            if (/*drawState.sequentialIndex()*/true) {
-//        int q = maxVertexCount + maxVertexCount / 2;
-//        RenderSystem.AutoStorageIndexBuffer autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(renderType.mode(), q);
-//        l = autoStorageIndexBuffer.name();
-//        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, l);
-//        m = autoStorageIndexBuffer.type().asGLType;
-////            } else {
-////                int n = vertexFormat.getOrCreateIndexBufferObject();
-////                    GlStateManager._glBindBuffer(34963, n);
-////                byteBuffer.position(k);
-////                byteBuffer.limit(k + j * indexType.bytes);
-////                GlStateManager._glBufferData(34963, byteBuffer, 35048);
-////                m = indexType.asGLType;
-//    }
-//
-////
-////            int vboid = vertexFormat.getOrCreateVertexBufferObject();
-////            VertexFormat.IndexType indexType = drawState.indexType();
-////            GlStateManager._glBindBuffer(34962, vboid);
-////            byteBuffer.clear();
-////            vertexFormat.setupBufferState();
-//////            BufferUploader.updateVertexSetup(vertexFormat);
-////            byteBuffer.position(0);
-////            byteBuffer.limit(k);
-////            GlStateManager._glBufferData(34962, byteBuffer, 35048);
-//
-//
-////                        Matrix3f mq = getNormalMatrix().copy();
-////            mq.invert();
-////            AbstractRenderSystem.SkinShader.SKIN_NORMAL_MAT__ = mq;
-//
-//            RenderSystem.setShaderColor(1, 1, 1, 1);
-//            RenderSystem.setShaderLight(getLightmap());
-//            RenderSystem.setTextureMatrix(Matrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
-//            RenderSystem.setInverseNormalMatrix(getInvNormalMatrix());
-//
-//    PoseStack modelViewStack = RenderSystem.getModelStack();
-//            modelViewStack.pushPose();
-//            modelViewStack.last().pose().multiply(getMatrix());
-//            RenderSystem.applyModelViewMatrix();
-//
-//            shader.apply();
-////            GL11.glDrawArrays(mode.asGLMode, 0, j);
-//            GL11.glDrawElements(renderType.mode().asGLMode, j, m, 0L);
-//            shader.clear();
-//
-//    cleanVertexFormat(vertexFormat);
-//
-//            modelViewStack.popPose();
-//            RenderSystem.applyModelViewMatrix();
-//
-//
-////            if (l != 0) {
-////                GlStateManager._glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
-////            }
-//
-////            vertexBuffer.bind();
-////
-//////            renderType.format().setupBufferState();
-//////            renderType.format().setupBufferState(getVertexOffset());
-//////            vertexBuffer.setupBufferState(renderType.format(), getVertexOffset());
-////            int i = renderType.format().getVertexSize();
-////            int q = getVertexOffset();
-////            ImmutableList<VertexFormatElement> list = renderType.format().getElements();
-////            for (int j = 0; j < list.size(); ++j) {
-////                VertexFormatElement element = list.get(j);
-////                element.setupBufferState(j, q, i);
-////                q += element.getByteSize();
-////            }
-////
-////            vertexBuffer.draw(getMatrix(), 7, getVertexCount());
-//////            vertexBuffer.clearBufferState(renderType.format());
-////
-//////            renderType.format().clearBufferState();
-////            for (int j = 0; j < list.size(); ++j) {
-////                list.get(j).clearBufferState(j);
-////            }
-////
-////            if (lightBuffer != null) {
-////                lightBuffer.clearBufferState(lightBuffer.getFormat());
-////            }
-//
+    private void _setupShader(ShaderInstance shader) {
+        // setup shader uniforms and sampler.
+        for (int i = 0; i < 8; ++i) {
+            shader.setSampler("Sampler" + i, RenderSystem.getShaderTexture(i));
+        }
+        if (shader.MODEL_VIEW_MATRIX != null) {
+            shader.MODEL_VIEW_MATRIX.set(RenderSystem.getExtendedModelViewMatrix());
+        }
+        if (shader.PROJECTION_MATRIX != null) {
+            shader.PROJECTION_MATRIX.set(RenderSystem.getProjectionMatrix());
+        }
+        if (shader.INVERSE_VIEW_ROTATION_MATRIX != null) {
+            shader.INVERSE_VIEW_ROTATION_MATRIX.set(RenderSystem.getInverseViewRotationMatrix());
+        }
+        if (shader.TEXTURE_MATRIX != null) {
+            shader.TEXTURE_MATRIX.set(RenderSystem.getExtendedTextureMatrix());
+        }
+        if (shader.COLOR_MODULATOR != null) {
+            shader.COLOR_MODULATOR.set(RenderSystem.getShaderColor());
+        }
+        if (shader.FOG_START != null) {
+            shader.FOG_START.set(RenderSystem.getShaderFogStart());
+        }
+        if (shader.FOG_END != null) {
+            shader.FOG_END.set(RenderSystem.getShaderFogEnd());
+        }
+        if (shader.FOG_COLOR != null) {
+            shader.FOG_COLOR.set(RenderSystem.getShaderFogColor());
+        }
+        if (shader.FOG_SHAPE != null) {
+            shader.FOG_SHAPE.set(RenderSystem.getShaderFogShape().getIndex());
+        }
+        if (shader.GAME_TIME != null) {
+            shader.GAME_TIME.set(RenderSystem.getShaderGameTime());
+        }
+        if (shader.SCREEN_SIZE != null) {
+            Window window = Minecraft.getInstance().getWindow();
+            shader.SCREEN_SIZE.set((float) window.getWidth(), (float) window.getHeight());
+        }
+        if (shader.LINE_WIDTH != null) {
+            shader.LINE_WIDTH.set(RenderSystem.getShaderLineWidth());
+        }
+        RenderSystem.setupShaderLights(shader);
+    }
 }

@@ -1,32 +1,36 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
+import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.compatibility.AbstractRenderPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractShaderExecutor;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
-import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 @Environment(value = EnvType.CLIENT)
 public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBufferSource {
 
-    public static final RenderType MERGER = new Merger("skin_merger", DefaultVertexFormat.POSITION, 256);
+    private static SkinVertexBufferBuilder MERGED_VERTEX_BUILDER;
+    private static Matrix4f NORMAL_LIGHTMAP_MAT = Matrix4f.createScaleMatrix(1, 1, 1);
 
     protected final Pipeline pipeline = new Pipeline();
 
@@ -42,15 +46,37 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
     }
 
     public static SkinVertexBufferBuilder getBuffer(MultiBufferSource buffers) {
-        VertexConsumer builder = buffers.getBuffer(MERGER);
-        if (builder instanceof SkinVertexBufferBuilder) {
-            return (SkinVertexBufferBuilder) builder;
+        attach(buffers, Sheets.solidBlockSheet(), SkinVertexBufferBuilder::renderSolid);
+//        attach(buffers, Sheets.translucentCullBlockSheet(), SkinVertexBufferBuilder::renderTranslucent);
+        return getInstance();
+    }
+
+    private static void attach(MultiBufferSource buffers, RenderType renderType, Runnable action) {
+        VertexConsumer ignored = buffers.getBuffer(renderType);
+
+        IRenderAttachable builder = ObjectUtils.safeCast(renderType, IRenderAttachable.class);
+        if (builder != null) {
+            builder.attachRenderTask(action);
         }
-        return new SkinVertexBufferBuilder();
+    }
+
+    public static void renderSolid() {
+        getInstance().flush();
+    }
+
+    public static void renderTranslucent() {
+        getInstance().flush();
+    }
+
+    public static SkinVertexBufferBuilder getInstance() {
+        if (MERGED_VERTEX_BUILDER == null) {
+            MERGED_VERTEX_BUILDER = new SkinVertexBufferBuilder();
+        }
+        return MERGED_VERTEX_BUILDER;
     }
 
     public static void clearAllCache() {
-        SkinVertexBufferBuilder builder = getBuffer(Minecraft.getInstance().renderBuffers().bufferSource());
+        SkinVertexBufferBuilder builder = getInstance();
         builder.cachingBuilders.clear();
         builder.cachingBuilders2.clear();
     }
@@ -78,9 +104,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         return bufferBuilder;
     }
 
-    @Override
-    public void end() {
-        super.end();
+    public void flush() {
         if (!pendingBuilders.isEmpty()) {
             for (SkinRenderObjectBuilder builder : pendingBuilders.values()) {
                 builder.endBatch(pipeline);
@@ -94,17 +118,16 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         }
     }
 
-    static final FloatBuffer buffer = FloatBuffer.allocate(9);
-
     public abstract static class Pass {
 
-        public abstract int getLightmap();
 
         public abstract int getVertexOffset();
 
         public abstract int getVertexCount();
 
-        public abstract Matrix4f getMatrix();
+        public abstract int getLightmap();
+
+        public abstract Matrix4f getModelViewMatrix();
 
         public abstract Matrix3f getInvNormalMatrix();
 
@@ -112,9 +135,28 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
 
         public abstract RenderType getRenderType();
 
+        public abstract VertexFormat getFormat();
+
         public abstract float getPolygonOffset();
 
         public abstract SkinRenderObject getVertexBuffer();
+
+        public Matrix4f getLightmapTextureMatrix() {
+            //#if MC >= 11800
+            RenderType renderType = getRenderType();
+            //#else
+            //# RenderType renderType = SkinRenderType.FACE_LIGHTING;
+            //#endif
+            if (getRenderType() != SkinRenderType.FACE_SOLID && renderType != SkinRenderType.FACE_TRANSLUCENT) {
+                return NORMAL_LIGHTMAP_MAT;
+            }
+            int lightmap = getLightmap();
+            int u = lightmap & 0xffff;
+            int v = (lightmap >> 16) & 0xffff;
+            Matrix4f newValue = new Matrix4f();
+            newValue.translate(new Vector3f(u, v, 0));
+            return newValue;
+        }
 
         public void render(RenderType renderType, int index, int maxVertexCount) {
             SkinRenderObject vertexBuffer = getVertexBuffer();
@@ -132,19 +174,13 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
 
             RenderSystem.setShaderColor(1, 1, 1, 1);
             RenderSystem.setShaderLight(getLightmap());
-            RenderSystem.setTextureMatrix(Matrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
-            RenderSystem.setInverseNormalMatrix(getInvNormalMatrix());
 
-            AbstractRenderPoseStack modelViewStack = RenderSystem.getModelStack();
-            modelViewStack.pushPose();
-            modelViewStack.mulPose(getMatrix());
-            modelViewStack.apply();
+            RenderSystem.setExtendedLightmapTextureMatrix(getLightmapTextureMatrix());
+            RenderSystem.setExtendedNormalMatrix(getInvNormalMatrix());
+            RenderSystem.setExtendedModelViewMatrix(getModelViewMatrix());
 
             executor.setMaxVertexCount(maxVertexCount);
-            executor.execute(vertexBuffer, getVertexOffset(), getVertexCount(), renderType);
-
-            modelViewStack.popPose();
-            modelViewStack.apply();
+            executor.execute(vertexBuffer, getVertexOffset(), getVertexCount(), renderType, getFormat());
 
             if (polygonOffset != 0) {
                 RenderSystem.polygonOffset(0f, 0f);
@@ -156,13 +192,14 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
     public static class Pipeline {
 
         //        private final HashMap<ISkinPartType, Integer> partIndexes = new HashMap<>();
+        private final AbstractShaderExecutor executor = AbstractShaderExecutor.getInstance();
         private final HashMap<RenderType, ArrayList<Pass>> tasks = new HashMap<>();
+
         private int maxVertexCount = 0;
 
         public void add(Pass pass) {
             tasks.computeIfAbsent(pass.getRenderType(), k -> new ArrayList<>()).add(pass);
             maxVertexCount = Math.max(maxVertexCount, pass.getVertexCount());
-//            pass.partIndex = partIndexes.computeIfAbsent(pass.getPartType(), partType -> partIndexes.size());
         }
 
         public void end() {
@@ -190,7 +227,9 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         }
 
         private void setupRenderState() {
-            AbstractShaderExecutor.getInstance().setup();
+            RenderSystem.backupExtendedMatrix();
+            RenderSystem.setExtendedTextureMatrix(Matrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
+            executor.setup();
             if (ModDebugger.wireframeRender) {
                 RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
             }
@@ -200,30 +239,9 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
             if (ModDebugger.wireframeRender) {
                 RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
             }
-            AbstractShaderExecutor.getInstance().clean();
+            executor.clean();
             SkinRenderObject.unbind();
-        }
-    }
-
-    public static class Merger extends RenderType {
-
-        protected Merger(String name, VertexFormat format, int bufferSize) {
-            super(name, format, SkinRenderType.FACE_SOLID.mode(), bufferSize, true, false, Merger::noop, Merger::noop);
-        }
-
-        protected static void noop() {
-        }
-
-        @Override
-        public void end(BufferBuilder builder, int p_228631_2_, int p_228631_3_, int p_228631_4_) {
-            if (builder.building()) {
-                builder.end();
-            }
-        }
-
-        @Override
-        public String toString() {
-            return "RenderType[Merger[Skin]]";
+            RenderSystem.restoreExtendedMatrix();
         }
     }
 }

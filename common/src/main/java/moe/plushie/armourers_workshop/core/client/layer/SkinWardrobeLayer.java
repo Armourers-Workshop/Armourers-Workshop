@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.init.ModContributors;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -65,11 +64,12 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
             context.setup(packedLightIn, partialTicks2, null, matrixStack, buffers);
             skinRenderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), entry.getItemStack(), entry.getSlotIndex(), context);
         }
+        context.clean();
 
         matrixStack.popPose();
     }
 
-    public void renderMagicCircle(PoseStack matrixStack, MultiBufferSource renderTypeBuffer, int ticks, float partialTickTime, int offset, int color, int lightmap, int overlay) {
+    public void renderMagicCircle(PoseStack matrixStack, MultiBufferSource buffers, int ticks, float partialTickTime, int offset, int color, int lightmap, int overlay) {
         matrixStack.pushPose();
         matrixStack.translate(0, offset / 16.0f, 0);
 
@@ -81,12 +81,11 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(rotation));
         matrixStack.scale(circleScale, circleScale, circleScale);
         Matrix4f mat = matrixStack.last().pose();
-        VertexConsumer builder = renderTypeBuffer.getBuffer(SkinRenderType.IMAGE_MAGIC);
-        builder.vertex(mat, -1, 0, -1).color(red, green, blue, 0xff).uv(1, 0).endVertex();
-        builder.vertex(mat, 1, 0, -1).color(red, green, blue, 0xff).uv(0, 0).endVertex();
-        builder.vertex(mat, 1, 0, 1).color(red, green, blue, 0xff).uv(0, 1).endVertex();
-        builder.vertex(mat, -1, 0, 1).color(red, green, blue, 0xff).uv(1, 1).endVertex();
-
+        VertexConsumer builder = buffers.getBuffer(SkinRenderType.IMAGE_MAGIC);
+        builder.vertex(mat, -1, 0, -1).color(red, green, blue, 0xff).uv(1, 0).overlayCoords(overlay).uv2(lightmap).endVertex();
+        builder.vertex(mat, 1, 0, -1).color(red, green, blue, 0xff).uv(0, 0).overlayCoords(overlay).uv2(lightmap).endVertex();
+        builder.vertex(mat, 1, 0, 1).color(red, green, blue, 0xff).uv(0, 1).overlayCoords(overlay).uv2(lightmap).endVertex();
+        builder.vertex(mat, -1, 0, 1).color(red, green, blue, 0xff).uv(1, 1).overlayCoords(overlay).uv2(lightmap).endVertex();
         matrixStack.popPose();
     }
 

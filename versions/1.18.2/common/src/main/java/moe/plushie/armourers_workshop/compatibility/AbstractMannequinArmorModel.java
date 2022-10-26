@@ -12,7 +12,6 @@ public abstract class AbstractMannequinArmorModel<T extends MannequinEntity> ext
 
     public AbstractMannequinArmorModel(AbstractEntityRendererContext context, Type type) {
         super(context.bakeLayer(type.layer));
-        // super(bl ? 0.5f : 1.0f, 0.0f, 64, 32);
     }
 
     public enum Type {
@@ -24,6 +23,5 @@ public abstract class AbstractMannequinArmorModel<T extends MannequinEntity> ext
             this.layer = layer;
         }
     }
-
 }
 
