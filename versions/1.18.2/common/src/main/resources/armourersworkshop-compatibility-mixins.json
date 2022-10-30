@@ -4,6 +4,9 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "AbstractEntityRenderDispatcherMixin",
+    "AbstractVanillaShaderMixin",
+    "AbstractOptifineShaderMixin",
+    "AbstractIrisShaderMixin",
     "AbstractRenderStateMixin"
   ],
   "mixins": [

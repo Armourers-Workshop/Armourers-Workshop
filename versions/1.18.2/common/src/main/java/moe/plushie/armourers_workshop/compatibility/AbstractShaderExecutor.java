@@ -7,6 +7,8 @@ import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
 import moe.plushie.armourers_workshop.api.common.IRenderBufferObject;
+import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -29,6 +31,7 @@ public class AbstractShaderExecutor {
     }
 
     public void clean() {
+        AbstractShaderUniforms.rollback();
     }
 
     public void setMaxVertexCount(int count) {
@@ -40,7 +43,18 @@ public class AbstractShaderExecutor {
         if (shader == null) {
             return;
         }
+        ISkinDataProvider provider = ObjectUtils.unsafeCast(shader);
+        AbstractShaderUniforms uniforms = provider.getSkinData();
+        if (uniforms == null) {
+            uniforms = new AbstractShaderUniforms();
+            provider.setSkinData(uniforms);
+        }
 
+//        if (renderType == SkinRenderType.FACE_LIGHTING || renderType == SkinRenderType.FACE_LIGHTING_TRANSLUCENT) {
+//            RenderSystem.setExtendedNormalMatrix(IGNORED_NORMAL);
+//        }
+
+//        VertexFormat vertexFormat = renderType.format();
         VertexFormat.Mode mode = renderType.mode();
 //            ByteBuffer byteBuffer = pair.getSecond();
 //            int i = drawState.vertexCount();
@@ -70,7 +84,9 @@ public class AbstractShaderExecutor {
 
         _setupShader(shader);
         shader.apply();
+        uniforms.apply();
         GL11.glDrawElements(renderType.mode().asGLMode, j, m, 0L);
+        uniforms.clear();
         shader.clear();
 
         _cleanVertexFormat(vertexFormat);
