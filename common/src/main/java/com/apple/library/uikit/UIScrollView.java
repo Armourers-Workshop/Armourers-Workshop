@@ -172,7 +172,7 @@ public class UIScrollView extends UIView {
         private final BiFunction<Integer, Integer, Integer> selector;
 
         public Indicator(BiFunction<Integer, Integer, Integer> selector) {
-            super(CGRect.ZERO);
+            super(CGRect.   ZERO);
             this.selector = selector;
             this.setBackgroundColor(new UIColor(0x7f000000, true));
             this.setHidden(true);
@@ -209,7 +209,7 @@ public class UIScrollView extends UIView {
         }
 
         public void setRadio(float value, float maxValue) {
-            if (value == 0 || maxValue == 0 || value <= maxValue) {
+            if (value == 0 || maxValue == 0 || value >= maxValue) {
                 setHidden(true);
                 allowsDisplay = false;
                 radio = 0;
