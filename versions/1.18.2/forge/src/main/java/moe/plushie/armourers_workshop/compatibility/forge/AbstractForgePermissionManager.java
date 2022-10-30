@@ -16,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import net.minecraftforge.server.permission.PermissionAPI;
 import net.minecraftforge.server.permission.events.PermissionGatherEvent;
 import net.minecraftforge.server.permission.nodes.PermissionDynamicContext;
@@ -42,6 +43,9 @@ public abstract class AbstractForgePermissionManager {
 
             @Override
             public boolean resolve(Player player, IPermissionContext context) {
+                if (!hasPermissionAPI()) {
+                    return false;
+                }
                 if (player instanceof ServerPlayer) {
                     return PermissionAPI.getPermission((ServerPlayer) player, node, makeContexts(context));
                 }
@@ -50,6 +54,9 @@ public abstract class AbstractForgePermissionManager {
 
             @Override
             public boolean resolve(GameProfile profile, IPermissionContext context) {
+                if (!hasPermissionAPI()) {
+                    return false;
+                }
                 return PermissionAPI.getOfflinePermission(profile.getId(), node, makeContexts(context));
             }
         };
@@ -81,6 +88,11 @@ public abstract class AbstractForgePermissionManager {
             }
         }
         return contexts.toArray(new PermissionDynamicContext<?>[0]);
+    }
+
+    private static boolean hasPermissionAPI() {
+        // in version 1.18, the permission api only available on the service side.
+        return ServerLifecycleHooks.getCurrentServer() != null;
     }
 
     private static ArrayList<PermissionNode<?>> makeRegisterQueue() {

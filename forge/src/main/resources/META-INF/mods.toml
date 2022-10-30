@@ -17,13 +17,13 @@ Minecraft armour customization mod.
 [[dependencies.armourers_workshop]]
 modId = "forge"
 mandatory = true
-versionRange = "[36,)"
+versionRange = "[${forge_version},)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.armourers_workshop]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.16.5,)"
+versionRange = "[${minecraft_version},)"
 ordering = "NONE"
 side = "BOTH"
