@@ -44,7 +44,7 @@ public abstract class AbstractForgePermissionManager {
             @Override
             public boolean resolve(Player player, IPermissionContext context) {
                 if (!hasPermissionAPI()) {
-                    return false;
+                    return true;
                 }
                 if (player instanceof ServerPlayer) {
                     return PermissionAPI.getPermission((ServerPlayer) player, node, makeContexts(context));
@@ -55,7 +55,7 @@ public abstract class AbstractForgePermissionManager {
             @Override
             public boolean resolve(GameProfile profile, IPermissionContext context) {
                 if (!hasPermissionAPI()) {
-                    return false;
+                    return true;
                 }
                 return PermissionAPI.getOfflinePermission(profile.getId(), node, makeContexts(context));
             }
