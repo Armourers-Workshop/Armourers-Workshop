@@ -4,12 +4,14 @@ import moe.plushie.armourers_workshop.api.config.IConfigBuilder;
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
 import moe.plushie.armourers_workshop.api.config.IConfigValue;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
+import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +59,7 @@ public class ConfigBuilderImpl {
 
         private ForgeConfigSpec spec;
         private Map<String, Object> snapshot;
+        private final ArrayList<Runnable> listeners = new ArrayList<>();
         private final HashMap<String, ValueProxy<Object>> values;
 
         public SpecProxy(HashMap<String, ValueProxy<Object>> values) {
@@ -81,12 +84,15 @@ public class ConfigBuilderImpl {
                 this.reload();
                 return;
             }
+            ModLog.debug("apply snapshot from server");
             snapshot.forEach((key, object) -> {
                 ValueProxy<Object> value = values.get(key);
                 if (value.setter != null) {
-                    value.write(object);
+                    value.setter.accept(object);
                 }
             });
+            // when the config did changes, we need notify to all listeners.
+            this.listeners.forEach(Runnable::run);
         }
 
         @Override
@@ -95,11 +101,14 @@ public class ConfigBuilderImpl {
             if (this.snapshot != null) {
                 return;
             }
+            ModLog.debug("apply changes from spec");
             this.values.forEach((key, value) -> {
                 if (value.setter != null) {
                     value.setter.accept(value.read());
                 }
             });
+            // when the config did changes, we need notify to all listeners.
+            this.listeners.forEach(Runnable::run);
         }
 
         @Override
@@ -108,6 +117,7 @@ public class ConfigBuilderImpl {
             if (this.snapshot != null) {
                 return;
             }
+            ModLog.debug("save changes into spec");
             this.values.forEach((key, value) -> {
                 if (value.getter != null) {
                     value.write(value.getter.get());
@@ -116,6 +126,11 @@ public class ConfigBuilderImpl {
             if (this.spec != null) {
                 this.spec.save();
             }
+        }
+
+        @Override
+        public void notify(Runnable action) {
+            this.listeners.add(action);
         }
     }
 

@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
+import moe.plushie.armourers_workshop.core.network.UpdateContextPacket;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.init.*;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfig;
@@ -213,7 +214,7 @@ public class CommonEventDispatcherImpl implements ModInitializer {
         SkinUtils.copySkinFromOwner(entity);
         if (entity instanceof ServerPlayer) {
             ServerPlayer player = (ServerPlayer) entity;
-            NetworkManager.sendContextTo(player);
+            NetworkManager.sendTo(new UpdateContextPacket(), player);
             NetworkManager.sendWardrobeTo(player, player);
         }
     }

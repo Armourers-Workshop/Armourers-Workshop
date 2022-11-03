@@ -4,7 +4,11 @@ import moe.plushie.armourers_workshop.api.config.IConfigBuilder;
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
 import moe.plushie.armourers_workshop.core.data.slot.ItemOverrideType;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
+import moe.plushie.armourers_workshop.core.network.UpdateContextPacket;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 
 import java.util.ArrayList;
@@ -200,5 +204,11 @@ public class ModConfigSpec {
     }
 
     public static void init() {
+        EnvironmentExecutor.didSetup(EnvironmentType.COMMON, () -> () -> {
+            // when the server config is changes, we need to synchronize it again.
+            if (EnvironmentManager.isDedicatedServer()) {
+                COMMON.notify(() -> NetworkManager.sendToAll(new UpdateContextPacket()));
+            }
+        });
     }
 }

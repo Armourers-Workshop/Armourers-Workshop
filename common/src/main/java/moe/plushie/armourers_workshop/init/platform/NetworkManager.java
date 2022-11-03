@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.init.platform;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
-import moe.plushie.armourers_workshop.core.network.UpdateContextPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
@@ -27,8 +26,8 @@ public class NetworkManager {
         IMPL.sendToServer(message);
     }
 
-    public static void sendContextTo(ServerPlayer player) {
-        sendTo(new UpdateContextPacket(), player);
+    public static void sendToAll(final CustomPacket message) {
+        IMPL.sendToAll(message);
     }
 
     public static void sendWardrobeTo(Entity entity, ServerPlayer player) {
@@ -50,6 +49,8 @@ public class NetworkManager {
         void sendTo(final CustomPacket message, final ServerPlayer player);
 
         void sendToServer(final CustomPacket message);
+
+        void sendToAll(final CustomPacket message);
     }
 }
 

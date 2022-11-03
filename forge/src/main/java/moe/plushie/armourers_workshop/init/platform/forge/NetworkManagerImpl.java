@@ -58,6 +58,11 @@ public class NetworkManagerImpl extends AbstractForgeNetworkManager implements N
         }
     }
 
+    @Override
+    public void sendToAll(CustomPacket message) {
+        dispatcher.split(message, Direction.PLAY_TO_CLIENT, AbstractForgeNetworkManager.allPlayers()::send);
+    }
+
     public static class NetworkDispatcher implements IServerPacketHandler, IClientPacketHandler {
 
         final ResourceLocation channelName;

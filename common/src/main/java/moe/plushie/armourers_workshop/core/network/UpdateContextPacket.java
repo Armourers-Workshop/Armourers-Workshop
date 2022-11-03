@@ -73,7 +73,7 @@ public class UpdateContextPacket extends CustomPacket {
                 fields.put(name, value);
             }
             oi.close();
-            ModConfigSpec.COMMON.apply(fields);
+           ModConfigSpec.COMMON.apply(fields);
         } catch (Exception e) {
             e.printStackTrace();
         }

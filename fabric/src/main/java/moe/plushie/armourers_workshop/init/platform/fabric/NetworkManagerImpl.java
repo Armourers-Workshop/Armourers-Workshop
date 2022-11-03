@@ -92,6 +92,11 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
         }
     }
 
+    @Override
+    public void sendToAll(CustomPacket message) {
+        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, getSender(PlayerLookup.all(getServer())));
+    }
+
     private Consumer<Packet<?>> getSender(Collection<ServerPlayer> players) {
         return packet -> players.forEach(player -> player.connection.send(packet));
     }

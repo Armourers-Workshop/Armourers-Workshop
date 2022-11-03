@@ -12,4 +12,5 @@ public interface IConfigSpec {
 
     void save();
 
+    void notify(Runnable action);
 }
