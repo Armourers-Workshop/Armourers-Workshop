@@ -8,6 +8,5 @@ import net.fabricmc.api.Environment;
 public class AbstractRenderSystem extends RenderSystem {
 
     public static void init() {
-        AbstractShaders.initShader();
     }
 }

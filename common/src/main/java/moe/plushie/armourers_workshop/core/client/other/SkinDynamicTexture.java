@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -101,7 +102,7 @@ public class SkinDynamicTexture extends DynamicTexture {
             return downloadedImage;
         }
         if (referTexture != null) {
-            referTexture.bind();
+            GL11.glBindTexture(3553, referTexture.getId());
             downloadedImage = new NativeImage(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT, true);
             downloadedImage.downloadTexture(0, false);
         }

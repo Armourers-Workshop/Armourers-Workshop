@@ -40,7 +40,7 @@ public class AbstractRenderType extends RenderType {
     private static final Map<SkinRenderFormat, Supplier<IRenderTypeBuilder>> MAPPER = _make(it -> {
 
         it.put(SkinRenderFormat.LINE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_NORMAL, VertexFormat.Mode.LINES, RENDERTYPE_LINES_SHADER));
-        it.put(SkinRenderFormat.IMAGE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, POSITION_COLOR_TEX_SHADER).overlay().lightmap());
+        it.put(SkinRenderFormat.IMAGE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, POSITION_COLOR_TEX_LIGHTMAP_SHADER).overlay().lightmap());
 
         it.put(SkinRenderFormat.GUI_IMAGE, () -> _builder(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, POSITION_TEX_SHADER));
         it.put(SkinRenderFormat.GUI_HIGHLIGHTED_TEXT, () -> _builder(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, POSITION_SHADER).or(builder -> builder.setTexturingState(OR_REVERSE)));
@@ -102,6 +102,7 @@ public class AbstractRenderType extends RenderType {
         private static final Map<Texturing, TexturingStateShard> TABLE_TEXTURING = _make(it -> {
 //            it.put(Texturing.ENTITY_COLOR_OFFSET, new TexturingStateShard("aw_offset_texturing", RenderSystem::setupColorOffsetState, RenderSystem::clearColorOffsetState));
         });
+
 
         private static final Map<Target, OutputStateShard> TABLE_OUTPUT = _make(it -> {
             it.put(Target.TRANSLUCENT, TRANSLUCENT_TARGET);

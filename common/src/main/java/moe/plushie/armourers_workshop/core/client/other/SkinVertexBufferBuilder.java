@@ -16,7 +16,6 @@ import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;

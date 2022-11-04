@@ -21,6 +21,10 @@ public abstract class AbstractForgeNetworkManager extends NetworkEvent {
         channel.registerObject(dispatcher);
     }
 
+    public static PacketDistributor.PacketTarget allPlayers() {
+        return PacketDistributor.ALL.noArg();
+    }
+
     public static PacketDistributor.PacketTarget trackingEntityAndSelf(Supplier<Entity> supplier) {
         return PacketDistributor.TRACKING_ENTITY_AND_SELF.with(supplier);
     }
