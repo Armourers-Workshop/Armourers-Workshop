@@ -188,10 +188,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     @Override
     public NonNullList<ItemStack> getItems() {
-        if (items != null) {
-            return items;
-        }
-        return NonNullList.create();
+        return getOrCreateItems();
     }
 
     @Override
