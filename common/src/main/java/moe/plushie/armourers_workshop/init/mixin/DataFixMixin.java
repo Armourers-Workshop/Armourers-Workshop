@@ -18,13 +18,13 @@ import java.util.function.Supplier;
 public class DataFixMixin {
 
     @Inject(method = "registerEntities", at = @At("RETURN"))
-    public void hooked_registerEntities(Schema schema, CallbackInfoReturnable<Map<String, Supplier<TypeTemplate>>> cir) {
+    public void aw2$registerEntities(Schema schema, CallbackInfoReturnable<Map<String, Supplier<TypeTemplate>>> cir) {
         BiConsumer<String, Supplier<TypeTemplate>> ap = cir.getReturnValue()::put;
         ModConstants.entityTypes().forEach(key -> ap.accept(key.toString(), DSL::remainder));
     }
 
     @Inject(method = "registerBlockEntities", at = @At("RETURN"))
-    public void hooked_registerBlockEntities(Schema schema, CallbackInfoReturnable<Map<String, Supplier<TypeTemplate>>> cir) {
+    public void aw2$registerBlockEntities(Schema schema, CallbackInfoReturnable<Map<String, Supplier<TypeTemplate>>> cir) {
         BiConsumer<String, Supplier<TypeTemplate>> ap = cir.getReturnValue()::put;
         ModConstants.blockEntityTypes().forEach(key -> ap.accept(key.toString(), DSL::remainder));
     }

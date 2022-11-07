@@ -18,7 +18,7 @@ public class AbstractRenderStateMixin implements IRenderAttachable {
     }
 
     @Inject(method = "clearRenderState", at = @At("RETURN"))
-    public void hooked_loadCallback(CallbackInfo ci) {
+    public void aw2$loadCallback(CallbackInfo ci) {
         if (aw$attachment != null) {
             aw$attachment.run();
             aw$attachment = null;

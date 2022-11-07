@@ -12,12 +12,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class InventoryScreenMixin {
 
     @Inject(method = "renderEntityInInventory", at = @At("HEAD"))
-    private static void hooked_renderEntityInInventory_begin(int x, int y, int scale, float mouseX, float mouseY, LivingEntity entity, CallbackInfo ci) {
+    private static void aw2$renderEntityInInventory_begin(int x, int y, int scale, float mouseX, float mouseY, LivingEntity entity, CallbackInfo ci) {
         ClientWardrobeHandler.onRenderEntityInInventoryPre(entity, x, y, scale, mouseX, y);
     }
 
     @Inject(method = "renderEntityInInventory", at = @At("RETURN"))
-    private static void hooked_renderEntityInInventory_end(int x, int y, int scale, float mouseX, float mouseY, LivingEntity entity, CallbackInfo ci) {
+    private static void aw2$renderEntityInInventory_end(int x, int y, int scale, float mouseX, float mouseY, LivingEntity entity, CallbackInfo ci) {
         ClientWardrobeHandler.onRenderEntityInInventoryPost(entity);
     }
 }

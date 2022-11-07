@@ -21,7 +21,7 @@ public class FabricLivingEntityMixin {
     private Optional<BlockPos> lastClimbablePos;
 
     @Inject(method = "onClimbable", at = @At("HEAD"), cancellable = true)
-    public void hooked_isClimbing(CallbackInfoReturnable<Boolean> cir) {
+    public void aw2$isClimbing(CallbackInfoReturnable<Boolean> cir) {
         LivingEntity entity = ObjectUtils.unsafeCast(this);
         BlockPos blockPos = entity.blockPosition();
         InteractionResult result = EntityClimbingEvents.ALLOW_CLIMBING.invoker().allowClimbing(entity, blockPos, entity.getFeetBlockState());

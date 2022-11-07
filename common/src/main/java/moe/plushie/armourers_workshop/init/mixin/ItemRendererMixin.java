@@ -21,9 +21,9 @@ public class ItemRendererMixin {
 
     @Inject(method = "getModel", at = @At("RETURN"), cancellable = true)
     //#if MC >= 11800
-    private void hooked_getModel(ItemStack itemStack, Level level, LivingEntity entity, int i, CallbackInfoReturnable<BakedModel> cir)
+    private void aw2$getModel(ItemStack itemStack, Level level, LivingEntity entity, int i, CallbackInfoReturnable<BakedModel> cir)
     //#else
-    //# private void hooked_getModel(ItemStack itemStack, Level level, LivingEntity entity, CallbackInfoReturnable<BakedModel> cir)
+    //# private void aw2$getModel(ItemStack itemStack, Level level, LivingEntity entity, CallbackInfoReturnable<BakedModel> cir)
     //#endif
     {
         BakedModel bakedModel = cir.getReturnValue();
@@ -33,7 +33,7 @@ public class ItemRendererMixin {
     }
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
-    private void hooked_render(ItemStack itemStack, ItemTransforms.TransformType transformType, boolean p_229111_3_, PoseStack matrixStack, MultiBufferSource buffers, int packedLight, int overlay, BakedModel bakedModel, CallbackInfo ci) {
+    private void aw2$render(ItemStack itemStack, ItemTransforms.TransformType transformType, boolean p_229111_3_, PoseStack matrixStack, MultiBufferSource buffers, int packedLight, int overlay, BakedModel bakedModel, CallbackInfo ci) {
         BakedModelStroage stroage = BakedModelStroage.unwrap(bakedModel);
         if (stroage == null) {
             return;

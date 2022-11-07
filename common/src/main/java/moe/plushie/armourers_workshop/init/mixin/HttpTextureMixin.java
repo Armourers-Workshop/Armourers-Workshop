@@ -21,9 +21,9 @@ public class HttpTextureMixin {
 
     @Inject(method = "processLegacySkin", at = @At(value = "HEAD"))
     //#if MC >= 11800
-    private void hooked_processLegacySkin(NativeImage image, CallbackInfoReturnable<NativeImage> cir)
+    private void aw2$processLegacySkin(NativeImage image, CallbackInfoReturnable<NativeImage> cir)
     //#else
-    //# private static void hooked_processLegacySkin(NativeImage image, CallbackInfoReturnable<NativeImage> cir)
+    //# private static void aw2$processLegacySkin(NativeImage image, CallbackInfoReturnable<NativeImage> cir)
     //#endif
     {
         slimModel = false;
@@ -33,7 +33,7 @@ public class HttpTextureMixin {
     }
 
     @Inject(method = "load(Ljava/io/InputStream;)Lcom/mojang/blaze3d/platform/NativeImage;", at = @At(value = "RETURN"))
-    private void hooked_loadCallback(CallbackInfoReturnable<NativeImage> ci) {
+    private void aw2$loadCallback(CallbackInfoReturnable<NativeImage> ci) {
         PlayerTextureLoader.getInstance().receivePlayerTexture(urlString, ci.getReturnValue(), slimModel);
     }
 }

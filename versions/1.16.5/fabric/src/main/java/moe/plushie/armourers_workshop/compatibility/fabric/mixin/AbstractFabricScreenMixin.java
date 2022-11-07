@@ -20,17 +20,17 @@ public class AbstractFabricScreenMixin {
     private ItemStack aw$tooltipStack = ItemStack.EMPTY;
 
     @Inject(method = "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V", at = @At(value = "HEAD"))
-    public void hooked_renderTooltipPre(PoseStack poseStack, ItemStack itemStack, int i, int j, CallbackInfo ci) {
+    public void aw2$renderTooltipPre(PoseStack poseStack, ItemStack itemStack, int i, int j, CallbackInfo ci) {
         aw$tooltipStack = itemStack;
     }
 
     @Inject(method = "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V", at = @At(value = "RETURN"))
-    public void hooked_renderTooltipPost(PoseStack poseStack, ItemStack itemStack, int i, int j, CallbackInfo ci) {
+    public void aw2$renderTooltipPost(PoseStack poseStack, ItemStack itemStack, int i, int j, CallbackInfo ci) {
         aw$tooltipStack = ItemStack.EMPTY;
     }
 
     @Inject(method = "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Ljava/util/List;II)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void hooked_renderTooltip(PoseStack poseStack, List<? extends FormattedCharSequence> list, int mouseX, int mouseY, CallbackInfo ci, int w, int x, int y, int w2, int h) {
+    public void aw2$renderTooltip(PoseStack poseStack, List<? extends FormattedCharSequence> list, int mouseX, int mouseY, CallbackInfo ci, int w, int x, int y, int w2, int h) {
         Screen screen = ObjectUtils.unsafeCast(this);
         int screenWidth = screen.width;
         int screenHeight = screen.height;

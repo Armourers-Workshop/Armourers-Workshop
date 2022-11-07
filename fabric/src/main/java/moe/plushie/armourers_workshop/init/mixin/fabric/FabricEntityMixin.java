@@ -23,12 +23,12 @@ public class FabricEntityMixin implements CapabilityStorage.Provider {
     }
 
     @Inject(method = "saveWithoutId", at = @At(value = "RETURN"))
-    private void hooked_save(CompoundTag compoundTag, CallbackInfoReturnable<CompoundTag> cir) {
+    private void aw2$save(CompoundTag compoundTag, CallbackInfoReturnable<CompoundTag> cir) {
         getCapabilityStorage().save(Entity.class.cast(this), compoundTag);
     }
 
     @Inject(method = "load", at = @At(value = "RETURN"))
-    private void hooked_load(CompoundTag compoundTag, CallbackInfo ci) {
+    private void aw2$load(CompoundTag compoundTag, CallbackInfo ci) {
         getCapabilityStorage().load(Entity.class.cast(this), compoundTag);
     }
 }

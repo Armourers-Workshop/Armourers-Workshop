@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class AbstractEntityRenderDispatcherMixin {
 
     @Inject(method = "onResourceManagerReload", at = @At("RETURN"))
-    private void hooked_loadCallback(ResourceManager resourceManager, CallbackInfo ci) {
+    private void aw2$loadCallback(ResourceManager resourceManager, CallbackInfo ci) {
         SkinRendererManager.getInstance().init();
     }
 }

@@ -15,7 +15,7 @@ import java.util.Set;
 public class RebuildTaskMixin {
 
     @Inject(method = "handleBlockEntity", at = @At("HEAD"), cancellable = true)
-    private void hooked_handleBlockEntity(ChunkRenderDispatcher.CompiledChunk compiledChunk, Set<BlockEntity> set, BlockEntity blockEntity, CallbackInfo ci) {
+    private void aw2$handleBlockEntity(ChunkRenderDispatcher.CompiledChunk compiledChunk, Set<BlockEntity> set, BlockEntity blockEntity, CallbackInfo ci) {
         IBlockEntityExtendedRenderer renderer = ObjectUtils.safeCast(blockEntity, IBlockEntityExtendedRenderer.class);
         if (renderer != null && !renderer.shouldUseExtendedRenderer()) {
             ci.cancel();

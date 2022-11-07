@@ -23,17 +23,17 @@ public class AbstractFabricScreenMixin {
     @Shadow protected Font font;
 
     @Inject(method = "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V", at = @At(value = "HEAD"))
-    public void hooked_renderTooltipPre(PoseStack poseStack, ItemStack itemStack, int i, int j, CallbackInfo ci) {
+    public void aw2$renderTooltipPre(PoseStack poseStack, ItemStack itemStack, int i, int j, CallbackInfo ci) {
         aw$tooltipStack = itemStack;
     }
 
     @Inject(method = "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V", at = @At(value = "RETURN"))
-    public void hooked_renderTooltipPost(PoseStack poseStack, ItemStack itemStack, int i, int j, CallbackInfo ci) {
+    public void aw2$renderTooltipPost(PoseStack poseStack, ItemStack itemStack, int i, int j, CallbackInfo ci) {
         aw$tooltipStack = ItemStack.EMPTY;
     }
 
     @Inject(method = "renderTooltipInternal", at = @At(value = "HEAD"))
-    public void hooked_renderTooltip(PoseStack poseStack, List<ClientTooltipComponent> tooltips, int mouseX, int mouseY, CallbackInfo ci) {
+    public void aw2$renderTooltip(PoseStack poseStack, List<ClientTooltipComponent> tooltips, int mouseX, int mouseY, CallbackInfo ci) {
         if (tooltips.isEmpty()) {
             return;
         }

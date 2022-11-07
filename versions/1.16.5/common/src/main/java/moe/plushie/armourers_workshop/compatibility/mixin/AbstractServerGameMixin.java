@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class AbstractServerGameMixin {
 
     @Inject(method = "noBlocksAround", at = @At("RETURN"), cancellable = true)
-    private void hooked_noBlocksAround(Entity entity, CallbackInfoReturnable<Boolean> callback) {
+    private void aw2$noBlocksAround(Entity entity, CallbackInfoReturnable<Boolean> callback) {
         if (!callback.getReturnValue()) {
             return;
         }

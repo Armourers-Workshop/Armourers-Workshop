@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ForgeLivingRendererMixin<T extends LivingEntity> {
 
     @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;setupAnim(Lnet/minecraft/world/entity/Entity;FFFFF)V", shift = At.Shift.AFTER))
-    private void hooked_render(T entity, float p_225623_2_, float partialTicks, PoseStack matrixStack, MultiBufferSource buffers, int light, CallbackInfo ci) {
+    private void aw2$render(T entity, float p_225623_2_, float partialTicks, PoseStack matrixStack, MultiBufferSource buffers, int light, CallbackInfo ci) {
         ClientWardrobeHandler.onRenderLiving(entity, p_225623_2_, partialTicks, light, matrixStack, buffers, LivingEntityRenderer.class.cast(this));
     }
 }

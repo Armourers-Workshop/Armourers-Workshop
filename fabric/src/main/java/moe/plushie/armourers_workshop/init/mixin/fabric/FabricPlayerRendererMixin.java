@@ -15,14 +15,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class FabricPlayerRendererMixin {
 
     @Inject(method = "renderRightHand", at = @At("HEAD"), cancellable = true)
-    public void hooked_renderRightHand(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, AbstractClientPlayer player, CallbackInfo ci) {
+    public void aw2$renderRightHand(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, AbstractClientPlayer player, CallbackInfo ci) {
         if (!RenderSpecificArmEvents.MAIN_HAND.invoker().render(poseStack, multiBufferSource, i, player, InteractionHand.MAIN_HAND)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "renderLeftHand", at = @At("HEAD"), cancellable = true)
-    public void hooked_renderLeftHand(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, AbstractClientPlayer player, CallbackInfo ci) {
+    public void aw2$renderLeftHand(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, AbstractClientPlayer player, CallbackInfo ci) {
         if (!RenderSpecificArmEvents.OFF_HAND.invoker().render(poseStack, multiBufferSource, i, player, InteractionHand.OFF_HAND)) {
             ci.cancel();
         }

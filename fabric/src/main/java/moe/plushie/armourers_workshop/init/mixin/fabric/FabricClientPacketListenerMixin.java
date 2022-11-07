@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class FabricClientPacketListenerMixin {
 
     @Inject(method = "handleBlockEntityData", at = @At("RETURN"))
-    private void hooked_handleBlockEntityData(ClientboundBlockEntityDataPacket packet, CallbackInfo ci) {
+    private void aw2$handleBlockEntityData(ClientboundBlockEntityDataPacket packet, CallbackInfo ci) {
         Level level = Minecraft.getInstance().level;
         if (level == null) {
             return;

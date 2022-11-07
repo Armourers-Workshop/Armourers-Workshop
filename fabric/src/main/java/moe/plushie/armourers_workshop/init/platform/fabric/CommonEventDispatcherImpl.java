@@ -131,10 +131,10 @@ public class CommonEventDispatcherImpl implements ModInitializer {
     }
 
     public void onCommonSetup() {
-        ArgumentTypes.register("armourers_workshop:items", ListArgument.class, new ListArgument.Serializer());
-        ArgumentTypes.register("armourers_workshop:files", FileArgument.class, new FileArgument.Serializer());
-        ArgumentTypes.register("armourers_workshop:dye", ColorSchemeArgument.class, new ColorSchemeArgument.Serializer());
-        ArgumentTypes.register("armourers_workshop:color", ColorArgument.class, new ColorArgument.Serializer());
+        ArgumentTypes.register(ModConstants.key("items").toString(), ListArgument.class, new ListArgument.Serializer());
+        ArgumentTypes.register(ModConstants.key("files").toString(), FileArgument.class, new FileArgument.Serializer());
+        ArgumentTypes.register(ModConstants.key("dye").toString(), ColorSchemeArgument.class, new ColorSchemeArgument.Serializer());
+        ArgumentTypes.register(ModConstants.key("color").toString(), ColorArgument.class, new ColorArgument.Serializer());
 
         EntityDataSerializers.registerSerializer(DataSerializers.PLAYER_TEXTURE);
     }
