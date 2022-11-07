@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.compatibility.mixin;
 
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class AbstractEntityRenderDispatcherMixin {
 
     @Inject(method = "onResourceManagerReload", at = @At("RETURN"))
-    private void aw2$loadCallback(ResourceManager resourceManager, CallbackInfo ci) {
-        SkinRendererManager.getInstance().init();
+    private void aw2$reloadResources(ResourceManager resourceManager, CallbackInfo ci) {
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, () -> SkinRendererManager.getInstance()::init);
     }
 }
