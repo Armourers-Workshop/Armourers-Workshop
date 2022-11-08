@@ -40,7 +40,6 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
@@ -575,10 +574,6 @@ public final class RenderSystem extends AbstractRenderSystem {
         bufferBuilder.vertex(matrix, x, y, zLevel).uv(u * uScale, (v * vScale)).endVertex();
     }
 
-//    public static OpenPoseStack getResolvedModelViewStack() {
-//        return MODEL_VIEW_STACK;
-//    }
-
 //    public static void disableLighting() {
 //        net.minecraft.client.GameSettings
 //        lightX = OpenGlHelper.lastBrightnessX;
@@ -596,41 +591,6 @@ public final class RenderSystem extends AbstractRenderSystem {
 //        int k = i / 65536;
 //        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
 //    }
-
-//    public static void setupColorOffsetState() {
-////        // TODO: @SAGESSE
-////        backupTextureMatrix();
-////        setTextureMatrix(Matrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
-////        GL11.glMatrixMode(GL11.GL_TEXTURE);
-////        GL11.glPushMatrix();
-////        GL11.glLoadIdentity();
-////        GL11.glTranslatef(0, TickUtils.getPaintTextureOffset() / 256.0f, 0);
-////        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-//    }
-//
-//    public static void clearColorOffsetState() {
-////        restoreTextureMatrix();
-////        GL11.glMatrixMode(GL11.GL_TEXTURE);
-////        GL11.glPopMatrix();
-////        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-//    }
-
-
-    public static void disableAlphaTest() {
-        call(() -> GL11.glDisable(GL11.GL_ALPHA_TEST));
-    }
-
-    public static void enableAlphaTest() {
-        call(() -> GL11.glEnable(GL11.GL_ALPHA_TEST));
-    }
-
-    public static void disableRescaleNormal() {
-        call(() -> GL11.glDisable(GL15.GL_RESCALE_NORMAL));
-    }
-
-    public static void enableRescaleNormal() {
-        call(() -> GL11.glEnable(GL15.GL_RESCALE_NORMAL));
-    }
 
     public static void setShaderColor(UIColor color) {
         setShaderColor(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, color.getAlpha() / 255f);
