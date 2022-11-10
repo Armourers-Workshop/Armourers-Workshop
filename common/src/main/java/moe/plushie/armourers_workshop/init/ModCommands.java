@@ -41,6 +41,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -87,13 +88,17 @@ public class ModCommands {
                 .then(Commands.literal("exportSkin").then(skinFormats().then(outputFileName().then(scale().executes(Executor::exportSkin)).executes(Executor::exportSkin))))
                 .then(Commands.literal("setColor").then(players().then(dyesSlotNames().then(dyeColor().executes(Executor::setColor)))))
                 .then(Commands.literal("rsyncWardrobe").then(players().executes(Executor::resyncWardrobe)))
-                .then(Commands.literal("openWardrobe").then(players().executes(Executor::openWardrobe)))
+                .then(Commands.literal("openWardrobe").then(entities().executes(Executor::openWardrobe)))
                 .then(Commands.literal("itemSkinnable").then(addOrRemote().then(overrideTypes().executes(Executor::setItemSkinnable))))
                 .then(Commands.literal("setUnlockedSlots").then(players().then(resizableSlotNames().then(resizableSlotAmounts().executes(Executor::setUnlockedWardrobeSlots)))));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> players() {
         return Commands.argument("targets", EntityArgument.players());
+    }
+
+    static ArgumentBuilder<CommandSourceStack, ?> entities() {
+        return Commands.argument("entities", EntityArgument.entities());
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> slots() {
@@ -328,8 +333,9 @@ public class ModCommands {
         }
 
         static int openWardrobe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            for (Player player : EntityArgument.getPlayers(context, "targets")) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(player);
+            Player player = context.getSource().getPlayerOrException();
+            for (Entity entity : EntityArgument.getEntities(context, "entities")) {
+                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe != null) {
                     MenuManager.openMenu(ModMenus.WARDROBE_OP, player, wardrobe);
                     break;
