@@ -7,6 +7,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.BooleanSupplier;
+
 public abstract class AbstractContainerMenu extends net.minecraft.world.inventory.AbstractContainerMenu {
 
     public AbstractContainerMenu(@Nullable MenuType<?> containerType, int containerId) {
@@ -39,5 +41,34 @@ public abstract class AbstractContainerMenu extends net.minecraft.world.inventor
         }
         slot.setChanged();
         return ItemStack.EMPTY;
+    }
+
+    protected void addPlayerSlots(Container inventory, int slotsX, int slotsY) {
+        addPlayerSlots(inventory, slotsX, slotsY, Slot::new);
+    }
+
+    protected void addPlayerSlots(Container inventory, int slotsX, int slotsY, ISlotBuilder builder) {
+        for (int col = 0; col < 9; ++col) {
+            this.addSlot(builder.create(inventory, col, slotsX + col * 18, slotsY + 58));
+        }
+        for (int row = 0; row < 3; ++row) {
+            for (int col = 0; col < 9; ++col) {
+                this.addSlot(builder.create(inventory, col + row * 9 + 9, slotsX + col * 18, slotsY + row * 18));
+            }
+        }
+    }
+
+    protected ISlotBuilder visibleSlotBuilder(BooleanSupplier supplier) {
+        return (inv, slot, x, y) -> new Slot(inv, slot, x, y) {
+            @Override
+            public boolean isActive() {
+                return supplier.getAsBoolean();
+            }
+        };
+    }
+
+    public interface ISlotBuilder {
+
+        Slot create(Container inventory, int slot, int x, int y);
     }
 }

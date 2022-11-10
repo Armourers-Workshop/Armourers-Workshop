@@ -9,7 +9,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +35,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
         this.wardrobe = wardrobe;
         this.player = inventory.player;
 
-        addPlayerSlots(inventory);
+        addPlayerSlots(inventory, 59, 168, visibleSlotBuilder(this::shouldRenderInventory));
 
         addSkinSlots(SkinSlotType.HEAD, Group.SKINS, 0, 0);
         addSkinSlots(SkinSlotType.CHEST, Group.SKINS, 0, 1);
@@ -50,19 +49,6 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
         addSkinSlots(SkinSlotType.DYE, Group.DYES, 0, 0);
 
         addMannequinSlots(Group.SKINS, 0, 5);
-    }
-
-    protected void addPlayerSlots(Container inventory) {
-        int posX = 51;
-        int posY = 168;
-        for (int col = 0; col < 9; ++col) {
-            this.addSlot(new PlayerSlot(inventory, col, posX + 8 + col * 18, posY + 58));
-        }
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
-                this.addSlot(new PlayerSlot(inventory, col + row * 9 + 9, posX + 8 + col * 18, posY + row * 18));
-            }
-        }
     }
 
     protected void addEquipmentSlots(Group group, int column, int row) {
@@ -244,17 +230,6 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
 
         public int getExtendedHeight() {
             return extendedHeight;
-        }
-    }
-
-    public final class PlayerSlot extends Slot {
-        public PlayerSlot(Container inventory, int index, int x, int y) {
-            super(inventory, index, x, y);
-        }
-
-        @Override
-        public boolean isActive() {
-            return shouldRenderInventory();
         }
     }
 }

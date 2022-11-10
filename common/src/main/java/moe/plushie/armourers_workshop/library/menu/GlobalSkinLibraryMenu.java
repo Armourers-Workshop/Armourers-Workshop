@@ -42,7 +42,7 @@ public class GlobalSkinLibraryMenu extends AbstractBlockContainerMenu {
         this.slots.clear();
         int inventoryX = x + 5;
         int inventoryY = y + height;
-        this.addPlayerSlots(playerInventory, x + width - inventoryWidth - 4, y + height - inventoryHeight - 5);
+        this.addPlayerSlots(playerInventory, x + width - inventoryWidth - 4, y + height - inventoryHeight - 5, visibleSlotBuilder(() -> isVisible));
         this.addInputSlot(inventory, 0, inventoryX + 1, inventoryY - 27);
         this.addOutputSlot(inventory, 1, inventoryX + 129, inventoryY - 27);
     }
@@ -88,25 +88,5 @@ public class GlobalSkinLibraryMenu extends AbstractBlockContainerMenu {
                 return isVisible;
             }
         });
-    }
-
-    protected void addPlayerSlot(Container inventory, int slot, int x, int y) {
-        addSlot(new Slot(inventory, slot, x, y) {
-            @Override
-            public boolean isActive() {
-                return isVisible;
-            }
-        });
-    }
-
-    protected void addPlayerSlots(Container inventory, int slotsX, int slotsY) {
-        for (int col = 0; col < 9; ++col) {
-            this.addPlayerSlot(inventory, col, slotsX + col * 18, slotsY + 58);
-        }
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
-                this.addPlayerSlot(inventory, col + row * 9 + 9, slotsX + col * 18, slotsY + row * 18);
-            }
-        }
     }
 }

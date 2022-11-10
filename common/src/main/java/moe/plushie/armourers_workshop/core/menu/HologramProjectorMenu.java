@@ -24,7 +24,7 @@ public class HologramProjectorMenu extends AbstractBlockContainerMenu {
 
     public void reload(int inventoryX, int inventoryY, int width, int height) {
         slots.clear();
-        addPlayerSlots(playerInventory, inventoryX, inventoryY);
+        addPlayerSlots(playerInventory, inventoryX + 8, inventoryY + 16, visibleSlotBuilder(this::shouldRenderInventory));
         if (inventory != null) {
             addSkinSlots(inventory, 1, width, height);
         }
@@ -54,30 +54,6 @@ public class HologramProjectorMenu extends AbstractBlockContainerMenu {
         for (int i = 0; i < size; ++i) {
             int tx = slotsX + i * 19;
             addSlot(new GroupSlot(inventory, group, i, tx, slotsY));
-        }
-    }
-
-    protected void addPlayerSlots(Container inventory, int x, int y) {
-        int slotsX = x + 8;
-        int slotsY = y + 16;
-        for (int col = 0; col < 9; ++col) {
-            this.addSlot(new PlayerSlot(inventory, col, slotsX + col * 18, slotsY + 58));
-        }
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
-                this.addSlot(new PlayerSlot(inventory, col + row * 9 + 9, slotsX + col * 18, slotsY + row * 18));
-            }
-        }
-    }
-
-    public final class PlayerSlot extends Slot {
-        public PlayerSlot(Container inventory, int index, int x, int y) {
-            super(inventory, index, x, y);
-        }
-
-        @Override
-        public boolean isActive() {
-            return shouldRenderInventory();
         }
     }
 

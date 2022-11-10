@@ -217,19 +217,6 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
             addPlaceholderSlots(inventory, inventory.getContainerSize() - 2, placeholderRect.x, placeholderRect.y);
         }
 
-        protected void addPlayerSlots(Container inventory, int x, int y) {
-            int slotsX = x + 8;
-            int slotsY = y + 16;
-            for (int col = 0; col < 9; ++col) {
-                this.addSlot(new Slot(inventory, col, slotsX + col * 18, slotsY + 58));
-            }
-            for (int row = 0; row < 3; ++row) {
-                for (int col = 0; col < 9; ++col) {
-                    this.addSlot(new Slot(inventory, col + row * 9 + 9, slotsX + col * 18, slotsY + row * 18));
-                }
-            }
-        }
-
         protected void addPlaceholderSlots(Container inventory, int offset, int placeholderX, int placeholderY) {
             for (int i = 0; i < 2; ++i) {
                 addSlot(new Slot(inventory, offset + i, placeholderX + i * 110, placeholderY) {

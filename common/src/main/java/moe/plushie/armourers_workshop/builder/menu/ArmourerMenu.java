@@ -33,7 +33,7 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
 
     public ArmourerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, ContainerLevelAccess access) {
         super(menuType, block, containerId, access);
-        this.addPlayerSlots(playerInventory, 8, 142);
+        this.addPlayerSlots(playerInventory, 8, 142, visibleSlotBuilder(this::shouldRenderInventory));
         this.addCustomSlot(inventory, 0, 64, 21);
         this.addCustomSlot(inventory, 1, 147, 21);
     }
@@ -173,17 +173,6 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
                 return slot == 0 && !SkinDescriptor.of(itemStack).isEmpty();
             }
         });
-    }
-
-    protected void addPlayerSlots(Container inventory, int slotsX, int slotsY) {
-        for (int col = 0; col < 9; ++col) {
-            this.addSlot(new GroupSlot(inventory, col, slotsX + col * 18, slotsY + 58));
-        }
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
-                this.addSlot(new GroupSlot(inventory, col + row * 9 + 9, slotsX + col * 18, slotsY + row * 18));
-            }
-        }
     }
 
     public Group getGroup() {

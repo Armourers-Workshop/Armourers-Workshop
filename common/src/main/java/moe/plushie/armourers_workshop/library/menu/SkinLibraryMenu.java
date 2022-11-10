@@ -76,17 +76,6 @@ public class SkinLibraryMenu extends AbstractBlockContainerMenu {
         });
     }
 
-    protected void addPlayerSlots(Container inventory, int slotsX, int slotsY) {
-        for (int col = 0; col < 9; ++col) {
-            this.addSlot(new Slot(inventory, col, slotsX + col * 18, slotsY + 58));
-        }
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
-                this.addSlot(new Slot(inventory, col + row * 9 + 9, slotsX + col * 18, slotsY + row * 18));
-            }
-        }
-    }
-
     public ItemStack getInputStack() {
         return inventory.getItem(0);
     }
