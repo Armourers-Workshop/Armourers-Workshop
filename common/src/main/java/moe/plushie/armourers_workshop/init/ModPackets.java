@@ -2,10 +2,7 @@ package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.builder.network.*;
 import moe.plushie.armourers_workshop.core.network.*;
-import moe.plushie.armourers_workshop.library.network.SaveSkinPacket;
-import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilePacket;
-import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilesPacket;
-import moe.plushie.armourers_workshop.library.network.UploadSkinPacket;
+import moe.plushie.armourers_workshop.library.network.*;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.function.Function;
@@ -22,6 +19,8 @@ public enum ModPackets {
     PACKET_UPLOAD_FILE(SaveSkinPacket.class, SaveSkinPacket::new),
 
     PACKET_UPLOAD_SKIN_TO_GLOBAL(UploadSkinPacket.class, UploadSkinPacket::new),
+    PACKET_UPLOAD_SKIN_TO_GLOBAL_PRE(UploadSkinPrePacket.class, UploadSkinPrePacket::new),
+
     PACKET_UPDATE_OUTFIT_MAKER(UpdateOutfitMakerPacket.class, UpdateOutfitMakerPacket::new),
     PACKET_UPDATE_ARMOURER(UpdateArmourerPacket.class, UpdateArmourerPacket::new),
 

@@ -1,8 +1,10 @@
 package moe.plushie.armourers_workshop.init.platform;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
+import moe.plushie.armourers_workshop.core.network.CustomReplyPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
@@ -35,6 +37,16 @@ public class NetworkManager {
         if (wardrobe != null) {
             wardrobe.broadcast(player);
         }
+    }
+
+    public static <R> void sendTo(final CustomReplyPacket<R> message, final ServerPlayer player, IResultHandler<R> handler) {
+        CustomReplyPacket.Receiver.await(message, handler);
+        sendTo(message, player);
+    }
+
+    public static <R> void sendToServer(final CustomReplyPacket<R> message, IResultHandler<R> handler) {
+        CustomReplyPacket.Receiver.await(message, handler);
+        sendToServer(message);
     }
 
     @ExpectPlatform

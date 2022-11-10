@@ -17,6 +17,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
@@ -44,8 +45,7 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.*;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -115,6 +115,60 @@ public class DataSerializers {
 
         public PlayerTextureDescriptor copy(PlayerTextureDescriptor descriptor) {
             return descriptor;
+        }
+    };
+
+    public static final EntityDataSerializer<Exception> EXCEPTION = new EntityDataSerializer<Exception>() {
+
+        public void write(FriendlyByteBuf buffer, Exception exception) {
+            OutputStream outputStream = null;
+            ObjectOutputStream objectOutputStream = null;
+            try {
+                boolean compress = ModConfig.Common.serverCompressesSkins;
+                buffer.writeBoolean(compress);
+                outputStream = createOutputStream(buffer, compress);
+                objectOutputStream = new ObjectOutputStream(outputStream);
+                objectOutputStream.writeObject(exception);
+            } catch (Exception exception1) {
+                exception1.printStackTrace();
+            } finally {
+                StreamUtils.closeQuietly(objectOutputStream, outputStream);
+            }
+        }
+
+        public Exception read(FriendlyByteBuf buffer) {
+            InputStream inputStream = null;
+            ObjectInputStream objectInputStream = null;
+            try {
+                boolean compress = buffer.readBoolean();
+                inputStream = createInputStream(buffer, compress);
+                objectInputStream = new ObjectInputStream(inputStream);
+                return (Exception) objectInputStream.readObject();
+            } catch (Exception exception) {
+                return exception;
+            } finally {
+                StreamUtils.closeQuietly(objectInputStream, inputStream);
+            }
+        }
+
+        public Exception copy(Exception value) {
+            return value;
+        }
+
+        private InputStream createInputStream(FriendlyByteBuf buffer, boolean compress) throws Exception {
+            InputStream inputStream = new ByteBufInputStream(buffer);
+            if (compress) {
+                return new GZIPInputStream(inputStream);
+            }
+            return inputStream;
+        }
+
+        private OutputStream createOutputStream(FriendlyByteBuf buffer, boolean compress) throws Exception {
+            ByteBufOutputStream outputStream = new ByteBufOutputStream(buffer);
+            if (compress) {
+                return new GZIPOutputStream(outputStream);
+            }
+            return outputStream;
         }
     };
 

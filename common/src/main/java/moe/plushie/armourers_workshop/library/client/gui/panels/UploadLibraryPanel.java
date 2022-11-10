@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskResult;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinUpload;
 import moe.plushie.armourers_workshop.library.menu.GlobalSkinLibraryMenu;
 import moe.plushie.armourers_workshop.library.network.UploadSkinPacket;
+import moe.plushie.armourers_workshop.library.network.UploadSkinPrePacket;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.fabricmc.api.EnvType;
@@ -164,11 +165,18 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
             return;
         }
 
-        // upload now
         this.isUploading = true;
-        GameProfile gameProfile = Minecraft.getInstance().getUser().getGameProfile();
-        Thread thread = new Thread(() -> uploadSkin(gameProfile, bakedSkin.getSkin()));
-        thread.start();
+        // we need to check this user the global skin upload permission in the server first.
+        NetworkManager.sendToServer(new UploadSkinPrePacket(), (result, exception) -> Minecraft.getInstance().execute(() -> {
+            if (exception != null || result == null || !result) {
+                onUploadFailed("Authentication failed.");
+                return;
+            }
+            // upload now
+            GameProfile gameProfile = Minecraft.getInstance().getUser().getGameProfile();
+            Thread thread = new Thread(() -> uploadSkin(gameProfile, bakedSkin.getSkin()));
+            thread.start();
+        }));
     }
 
     public void uploadSkin(GameProfile profile, Skin skin) {

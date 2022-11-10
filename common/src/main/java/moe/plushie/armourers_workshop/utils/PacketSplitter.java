@@ -17,8 +17,9 @@ import java.util.function.Function;
 
 public class PacketSplitter {
 
-    private final byte firstFlag = -2;
-    private final byte lastFlag = -3;
+    private final int SPLIT_BODY_FLAG = -1;
+    private final int SPLIT_BEGIN_FLAG = -2;
+    private final int SPLIT_END_FLAG = -3;
 
     private final HashMap<UUID, ArrayList<ByteBuf>> receivedBuffers = new HashMap<>();
     private final ExecutorService executor = Executors.newFixedThreadPool(2, r -> new Thread(r, "Network-Data-Coder"));
@@ -41,11 +42,11 @@ public class PacketSplitter {
             for (int index = 0; index < bufferSize; index += partSize) {
                 ByteBuf partPrefix = Unpooled.buffer(4);
                 if (index == 0) {
-                    partPrefix.writeInt(firstFlag);
+                    partPrefix.writeInt(SPLIT_BEGIN_FLAG);
                 } else if ((index + partSize) >= bufferSize) {
-                    partPrefix.writeInt(lastFlag);
+                    partPrefix.writeInt(SPLIT_END_FLAG);
                 } else {
-                    partPrefix.writeInt(-1);
+                    partPrefix.writeInt(SPLIT_BODY_FLAG);
                 }
                 int resolvedPartSize = Math.min(bufferSize - index, partSize);
                 ByteBuf buffer1 = Unpooled.wrappedBuffer(partPrefix, buffer.retainedSlice(buffer.readerIndex(), resolvedPartSize));
@@ -61,7 +62,7 @@ public class PacketSplitter {
         int packetState = buffer.getInt(0);
         if (packetState < 0) {
             ArrayList<ByteBuf> playerReceivedBuffers = receivedBuffers.computeIfAbsent(uuid, k -> new ArrayList<>());
-            if (packetState == firstFlag) {
+            if (packetState == SPLIT_BEGIN_FLAG) {
                 if (!playerReceivedBuffers.isEmpty()) {
                     ModLog.warn("aw2:split received out of order - inbound buffer not empty when receiving first");
                     playerReceivedBuffers.clear();
@@ -69,7 +70,7 @@ public class PacketSplitter {
             }
             buffer.skipBytes(4); // skip header
             playerReceivedBuffers.add(buffer.retainedDuplicate()); // we need to keep writer/reader index
-            if (packetState == lastFlag) {
+            if (packetState == SPLIT_END_FLAG) {
                 executor.submit(() -> {
                     // ownership will transfer to full buffer, so don't call release again.
                     FriendlyByteBuf full = new FriendlyByteBuf(Unpooled.wrappedBuffer(playerReceivedBuffers.toArray(new ByteBuf[0])));
