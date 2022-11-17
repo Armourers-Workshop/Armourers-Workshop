@@ -143,10 +143,14 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
     }
 
     @Override
+    public int getViewDistance() {
+        return 272;
+    }
+
+    @Override
     public boolean shouldRenderOffScreen(T entity) {
         return true;
     }
-
 
     public static class PlayerTextureOverride implements MultiBufferSource {
 

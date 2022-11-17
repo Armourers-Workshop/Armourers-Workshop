@@ -129,4 +129,9 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
             RenderSystem.drawPoint(matrixStack, null, 128, buffers);
         }
     }
+
+    @Override
+    public int getViewDistance() {
+        return 272;
+    }
 }

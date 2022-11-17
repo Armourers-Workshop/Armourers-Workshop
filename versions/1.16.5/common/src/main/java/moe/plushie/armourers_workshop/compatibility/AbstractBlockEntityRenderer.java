@@ -11,4 +11,8 @@ public abstract class AbstractBlockEntityRenderer<T extends BlockEntity> extends
     public AbstractBlockEntityRenderer(AbstractBlockEntityRendererContext context) {
         super(context.getBlockEntityRenderDispatcher());
     }
+
+    public int getViewDistance() {
+        return 256;
+    }
 }

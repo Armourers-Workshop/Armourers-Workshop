@@ -16,7 +16,7 @@ public class RightArmPartType extends SkinPartType implements ISkinPartTypeTextu
         super();
         this.buildingSpace = new Rectangle3i(-5, -28, -16, 24, 44, 32);
         this.guideSpace = new Rectangle3i(-1, -10, -2, 4, 12, 4);
-        this.offset = new Vector3i(-18, -1, 0);
+        this.offset = new Vector3i(-30, -1, 0);
     }
 
     @Override
