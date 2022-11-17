@@ -6,8 +6,11 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 import moe.plushie.armourers_workshop.api.common.IRenderBufferObject;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -21,6 +24,12 @@ public class AbstractShaderExecutor {
     private static final AbstractShaderExecutor INSTANCE = new AbstractShaderExecutor();
 
     private int maxVertexCount = 0;
+    private int defaultVertexLight = 0;
+
+    private int lastLightmap = 0;
+    private Matrix4f lastLightmapMat;
+
+    private final Matrix4f noneLightmapMat = Matrix4f.createScaleMatrix(1, 1, 1);
 
     public static AbstractShaderExecutor getInstance() {
         return INSTANCE;
@@ -38,6 +47,10 @@ public class AbstractShaderExecutor {
         maxVertexCount = count;
     }
 
+    public void setDefaultVertexLight(int lightmap) {
+        defaultVertexLight = lightmap;
+    }
+
     public void execute(IRenderBufferObject object, int vertexOffset, int vertexCount, RenderType renderType, VertexFormat vertexFormat) {
         ShaderInstance shader = RenderSystem.getShader();
         if (shader == null) {
@@ -50,9 +63,20 @@ public class AbstractShaderExecutor {
             provider.setSkinData(uniforms);
         }
 
-//        if (renderType == SkinRenderType.FACE_LIGHTING || renderType == SkinRenderType.FACE_LIGHTING_TRANSLUCENT) {
-//            RenderSystem.setExtendedNormalMatrix(IGNORED_NORMAL);
-//        }
+        if (renderType == SkinRenderType.FACE_SOLID || renderType == SkinRenderType.FACE_TRANSLUCENT) {
+            // we only recreate when something changes.
+            if (lastLightmapMat == null || defaultVertexLight != lastLightmap) {
+                int u = defaultVertexLight & 0xffff;
+                int v = (defaultVertexLight >> 16) & 0xffff;
+                Matrix4f newValue = new Matrix4f();
+                newValue.translate(new Vector3f(u, v, 0));
+                lastLightmap = defaultVertexLight;
+                lastLightmapMat = newValue;
+            }
+            RenderSystem.setExtendedLightmapTextureMatrix(lastLightmapMat);
+        } else {
+            RenderSystem.setExtendedLightmapTextureMatrix(noneLightmapMat);
+        }
 
 //        VertexFormat vertexFormat = renderType.format();
         VertexFormat.Mode mode = renderType.mode();

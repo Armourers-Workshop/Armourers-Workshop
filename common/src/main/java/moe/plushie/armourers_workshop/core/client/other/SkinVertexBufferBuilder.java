@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.compatibility.AbstractShaderExecutor;
@@ -29,7 +28,6 @@ import java.util.HashMap;
 public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBufferSource {
 
     private static SkinVertexBufferBuilder MERGED_VERTEX_BUILDER;
-    private static Matrix4f NORMAL_LIGHTMAP_MAT = Matrix4f.createScaleMatrix(1, 1, 1);
 
     protected final Pipeline pipeline = new Pipeline();
 
@@ -140,23 +138,6 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
 
         public abstract SkinRenderObject getVertexBuffer();
 
-        public Matrix4f getLightmapTextureMatrix() {
-            //#if MC >= 11800
-            RenderType renderType = getRenderType();
-            //#else
-            //# RenderType renderType = SkinRenderType.FACE_LIGHTING;
-            //#endif
-            if (getRenderType() != SkinRenderType.FACE_SOLID && renderType != SkinRenderType.FACE_TRANSLUCENT) {
-                return NORMAL_LIGHTMAP_MAT;
-            }
-            int lightmap = getLightmap();
-            int u = lightmap & 0xffff;
-            int v = (lightmap >> 16) & 0xffff;
-            Matrix4f newValue = new Matrix4f();
-            newValue.translate(new Vector3f(u, v, 0));
-            return newValue;
-        }
-
         public void render(RenderType renderType, int index, int maxVertexCount) {
             SkinRenderObject vertexBuffer = getVertexBuffer();
             AbstractShaderExecutor executor = AbstractShaderExecutor.getInstance();
@@ -172,12 +153,11 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
             }
 
             RenderSystem.setShaderColor(1, 1, 1, 1);
-            RenderSystem.setShaderLight(getLightmap());
 
-            RenderSystem.setExtendedLightmapTextureMatrix(getLightmapTextureMatrix());
             RenderSystem.setExtendedNormalMatrix(getInvNormalMatrix());
             RenderSystem.setExtendedModelViewMatrix(getModelViewMatrix());
 
+            executor.setDefaultVertexLight(getLightmap());
             executor.setMaxVertexCount(maxVertexCount);
             executor.execute(vertexBuffer, getVertexOffset(), getVertexCount(), renderType, getFormat());
 

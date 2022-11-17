@@ -600,14 +600,6 @@ public final class RenderSystem extends AbstractRenderSystem {
         setShaderColor(f, g, h, 1.0f);
     }
 
-    public static int getShaderLight() {
-        return shaderLight;
-    }
-
-    public static void setShaderLight(int light) {
-        shaderLight = light;
-    }
-
     public static class Storage<T> {
 
         private T value;

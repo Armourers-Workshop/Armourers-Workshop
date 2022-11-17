@@ -11,6 +11,7 @@ public class AbstractShaderExecutor {
     private static final AbstractShaderExecutor INSTANCE = new AbstractShaderExecutor();
 
     private int maxVertexCount = 0;
+    private int defaultVertexLight = 0;
 
     public static AbstractShaderExecutor getInstance() {
         return INSTANCE;
@@ -28,11 +29,15 @@ public class AbstractShaderExecutor {
         maxVertexCount = count;
     }
 
+    public void setDefaultVertexLight(int lightmap) {
+        defaultVertexLight = lightmap;
+    }
+
     public void execute(IRenderBufferObject object, int vertexOffset, int vertexCount, RenderType renderType, VertexFormat vertexFormat) {
         AbstractLightBufferObject lightBuffer = null;
 
         if (renderType == SkinRenderType.FACE_SOLID || renderType == SkinRenderType.FACE_TRANSLUCENT) {
-            lightBuffer = AbstractLightBufferObject.getLightBuffer(RenderSystem.getShaderLight());
+            lightBuffer = AbstractLightBufferObject.getLightBuffer(defaultVertexLight);
             lightBuffer.ensureCapacity(maxVertexCount);
             lightBuffer.bind();
             lightBuffer.getFormat().setupBufferState(0L);
