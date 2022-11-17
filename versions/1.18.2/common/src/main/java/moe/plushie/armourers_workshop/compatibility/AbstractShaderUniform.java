@@ -121,16 +121,16 @@ public abstract class AbstractShaderUniform {
         public Loader(int programId) {
             this.programId = programId;
 
-            register("aw_TextureMatrix", RenderSystem::getExtendedTextureMatrix, Matrix4fUniform::new);
-            register("aw_NormalMatrix", RenderSystem::getExtendedNormalMatrix, Matrix3fUniform::new);
-            register("aw_LightmapTextureMatrix", RenderSystem::getExtendedLightmapTextureMatrix, Matrix4fUniform::new);
+            register("__aw__TextureMatrix", RenderSystem::getExtendedTextureMatrix, Matrix4fUniform::new);
+            register("__aw__NormalMatrix", RenderSystem::getExtendedNormalMatrix, Matrix3fUniform::new);
+            register("__aw__LightmapTextureMatrix", RenderSystem::getExtendedLightmapTextureMatrix, Matrix4fUniform::new);
 
             // optifine only!
             register("modelViewMatrix", RenderSystem::getExtendedModelViewMatrix, Matrix4fUniform::new);
-            if (!registeredNames.contains("aw_TextureMatrix")) {
+            if (!registeredNames.contains("__aw__TextureMatrix")) {
                 register("textureMatrix", RenderSystem::getExtendedTextureMatrix, Matrix4fUniform::new);
             }
-            if (!registeredNames.contains("aw_NormalMatrix")) {
+            if (!registeredNames.contains("__aw__NormalMatrix")) {
                 register("normalMatrix", RenderSystem::getExtendedNormalMatrix, Matrix3fUniform::new);
             }
         }

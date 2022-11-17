@@ -27,30 +27,30 @@ public class AbstractProgramPreprocessor {
 
 
     private String processIrisShader(String source) {
-        source = replace(source, "ivec2", "UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 0, 1))");
-        source = replace(source, "vec2", "UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 0, 1))");
-        //source = replace(source, "vec3", "Normal", "mat3", "normalMatrix", "($1 * $2)");
+        source = replace(source, "ivec2", "UV2", "mat4", "__aw__LightmapTextureMatrix", "ivec2($2 * vec4($1, 0, 1))");
+        source = replace(source, "vec2", "UV0", "mat4", "__aw__TextureMatrix", "vec2($2 * vec4($1, 0, 1))");
+        // source = replace(source, "vec3", "Normal", "mat3", "__aw__NormalMatrix", "($1 * $2)");
         ModLog.debug("process iris shader: \n{}", source);
         return source;
     }
 
     private String processOptifineShader(String source) {
-        source = replace(source, "ivec2", "UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 0, 1))");
+        source = replace(source, "ivec2", "UV2", "mat4", "__aw__LightmapTextureMatrix", "ivec2($2 * vec4($1, 0, 1))");
         ModLog.debug("process optifine shader: \n{}", source);
         return source;
     }
 
     private String processVanillaShader(String source) {
-        source = replace(source, "ivec2", "UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 0, 1))");
-        source = replace(source, "vec2", "UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 0, 1))");
-        source = replace(source, "vec3", "Normal", "mat3", "aw_NormalMatrix", "($1 * $2)");
+        source = replace(source, "ivec2", "UV2", "mat4", "__aw__LightmapTextureMatrix", "ivec2($2 * vec4($1, 0, 1))");
+        source = replace(source, "vec2", "UV0", "mat4", "__aw__TextureMatrix", "vec2($2 * vec4($1, 0, 1))");
+        source = replace(source, "vec3", "Normal", "mat3", "__aw__NormalMatrix", "($1 * $2)");
         ModLog.debug("process vanilla shader: \n{}", source);
         return source;
     }
 
     private String replace(String source, String varType, String var, String matrixType, String matrix, String expr) {
         // compile regular expressions.
-        String[] texts = {"in\\s+${varType}\\s+${var};", "$0\nuniform ${matrixType} ${matrix} = ${matrixType}(1);\n#define ${var} ${expr}"};
+        String[] texts = {"in\\s+${varType}\\s+${var};", "$0\nuniform ${matrixType} ${matrix} = ${matrixType}(1);\n#define __aw__${var} ${expr}\n#define ${var} __aw__${var}"};
         for (int i = 0; i < texts.length; ++i) {
             String tmp = texts[i];
             tmp = tmp.replace("${varType}", varType);
