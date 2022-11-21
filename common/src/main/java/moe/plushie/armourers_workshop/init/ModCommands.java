@@ -82,15 +82,15 @@ public class ModCommands {
                 .then(ReflectArgumentBuilder.literal("debug", ModDebugger.class))
                 .requires(source -> source.hasPermission(2))
                 .then(Commands.literal("library").then(Commands.literal("reload").executes(Executor::reloadLibrary)))
-                .then(Commands.literal("setSkin").then(players().then(slots().then(skins().then(skinDying().executes(Executor::setSkin))).executes(Executor::setSkin)).then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))))
+                .then(Commands.literal("setSkin").then(entities().then(slots().then(skins().then(skinDying().executes(Executor::setSkin))).executes(Executor::setSkin)).then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))))
                 .then(Commands.literal("giveSkin").then(players().then(skins().then(skinDying().executes(Executor::giveSkin)).executes(Executor::giveSkin))))
-                .then(Commands.literal("clearSkin").then(players().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
+                .then(Commands.literal("clearSkin").then(entities().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
                 .then(Commands.literal("exportSkin").then(skinFormats().then(outputFileName().then(scale().executes(Executor::exportSkin)).executes(Executor::exportSkin))))
-                .then(Commands.literal("setColor").then(players().then(dyesSlotNames().then(dyeColor().executes(Executor::setColor)))))
+                .then(Commands.literal("setColor").then(entities().then(dyesSlotNames().then(dyeColor().executes(Executor::setColor)))))
                 .then(Commands.literal("rsyncWardrobe").then(players().executes(Executor::resyncWardrobe)))
                 .then(Commands.literal("openWardrobe").then(entities().executes(Executor::openWardrobe)))
                 .then(Commands.literal("itemSkinnable").then(addOrRemote().then(overrideTypes().executes(Executor::setItemSkinnable))))
-                .then(Commands.literal("setUnlockedSlots").then(players().then(resizableSlotNames().then(resizableSlotAmounts().executes(Executor::setUnlockedWardrobeSlots)))));
+                .then(Commands.literal("setUnlockedSlots").then(entities().then(resizableSlotNames().then(resizableSlotAmounts().executes(Executor::setUnlockedWardrobeSlots)))));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> players() {
@@ -176,8 +176,8 @@ public class ModCommands {
                 throw ERROR_MISSING_DYE_SLOT.create(null);
             }
             PaintColor paintColor = ColorArgument.getColor(context, "color");
-            for (Player player : EntityArgument.getPlayers(context, "targets")) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(player);
+            for (Entity entity : EntityArgument.getEntities(context, "entities")) {
+                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe == null) {
                     continue;
                 }
@@ -225,8 +225,8 @@ public class ModCommands {
                 return 0;
             }
             ItemStack itemStack = descriptor.asItemStack();
-            for (Player player : EntityArgument.getPlayers(context, "targets")) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(player);
+            for (Entity entity : EntityArgument.getEntities(context, "entities")) {
+                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
                 SkinSlotType slotType = SkinSlotType.of(descriptor.getType());
                 if (slotType == null || wardrobe == null) {
                     continue;
@@ -242,8 +242,8 @@ public class ModCommands {
         }
 
         static int clearSkin(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            for (Player player : EntityArgument.getPlayers(context, "targets")) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(player);
+            for (Entity entity : EntityArgument.getEntities(context, "entities")) {
+                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe == null) {
                     continue;
                 }
@@ -345,8 +345,8 @@ public class ModCommands {
         }
 
         static int setUnlockedWardrobeSlots(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            for (Player player : EntityArgument.getPlayers(context, "targets")) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(player);
+            for (Entity entity : EntityArgument.getEntities(context, "entities")) {
+                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe == null) {
                     continue;
                 }

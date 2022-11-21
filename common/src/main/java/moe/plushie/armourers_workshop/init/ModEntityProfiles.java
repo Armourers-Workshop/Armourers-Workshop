@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ModEntityProfiles {
@@ -133,7 +134,16 @@ public class ModEntityProfiles {
     }
 
     public static void register(String registryName, EntityProfile entityProfile) {
-        EntityType.byString(registryName).ifPresent(entityType -> register(entityType, entityProfile));
+        register(registryName, entityProfile, null);
+    }
+
+    public static void register(String registryName, EntityProfile entityProfile, Consumer<EntityType<?>> consumer) {
+        EntityType.byString(registryName).ifPresent(entityType -> {
+            register(entityType, entityProfile);
+            if (consumer != null) {
+                consumer.accept(entityType);
+            }
+        });
     }
 
     public static void forEach(BiConsumer<EntityType<?>, EntityProfile> consumer) {
