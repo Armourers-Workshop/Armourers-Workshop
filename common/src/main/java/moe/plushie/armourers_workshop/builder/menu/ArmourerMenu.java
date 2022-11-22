@@ -170,7 +170,14 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
 
             @Override
             public boolean mayPlace(ItemStack itemStack) {
-                return slot == 0 && !SkinDescriptor.of(itemStack).isEmpty();
+                if (slot == 0) {
+                    // we can put the skin template to save skin in the survival mode.
+                    if (itemStack.getItem() == ModItems.SKIN_TEMPLATE.get()) {
+                        return true;
+                    }
+                    return !SkinDescriptor.of(itemStack).isEmpty();
+                }
+                return false; // this is output slot.
             }
         });
     }
