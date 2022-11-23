@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.Nullable;
@@ -14,6 +15,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ModEntityProfiles {
+
+    private static final HashMap<String, EntityProfile> ALL_PROFILES = new HashMap<>();
+    private static final HashMap<EntityType<?>, EntityProfile> ENTITY_PROFILES = new HashMap<>();
 
     public static final EntityProfile PLAYER = Builder.create()
             .add(SkinTypes.ARMOR_HEAD, ModEntityProfiles::playerSlots)
@@ -30,7 +34,7 @@ public class ModEntityProfiles {
             .add(SkinTypes.TOOL_HOE, 1)
             .add(SkinTypes.TOOL_PICKAXE, 1)
             .add(SkinTypes.TOOL_SHOVEL, 1)
-            .build();
+            .build("player");
 
     public static final EntityProfile MANNEQUIN = Builder.create()
             .add(SkinTypes.ARMOR_HEAD, 10)
@@ -39,9 +43,26 @@ public class ModEntityProfiles {
             .add(SkinTypes.ARMOR_FEET, 10)
             .add(SkinTypes.ARMOR_WINGS, 10)
             .add(SkinTypes.OUTFIT, 10)
-            .build();
+            .build("mannequin");
 
-    public static final EntityProfile COMMON = Builder.create()
+    public static final EntityProfile CUSTOM = Builder.create()
+            .add(SkinTypes.ARMOR_HEAD, 10)
+            .add(SkinTypes.ARMOR_CHEST, 10)
+            .add(SkinTypes.ARMOR_LEGS, 10)
+            .add(SkinTypes.ARMOR_FEET, 10)
+            .add(SkinTypes.ARMOR_WINGS, 10)
+            .add(SkinTypes.OUTFIT, 10)
+            .add(SkinTypes.ITEM_BOW, 1)
+            .add(SkinTypes.ITEM_SWORD, 1)
+            .add(SkinTypes.ITEM_SHIELD, 1)
+            .add(SkinTypes.ITEM_TRIDENT, 1)
+            .add(SkinTypes.TOOL_AXE, 1)
+            .add(SkinTypes.TOOL_HOE, 1)
+            .add(SkinTypes.TOOL_PICKAXE, 1)
+            .add(SkinTypes.TOOL_SHOVEL, 1)
+            .build("custom");
+
+    public static final EntityProfile MOB = Builder.create()
             .add(SkinTypes.ARMOR_HEAD, ModEntityProfiles::mobSlots)
             .add(SkinTypes.ARMOR_CHEST, ModEntityProfiles::mobSlots)
             .add(SkinTypes.ARMOR_LEGS, ModEntityProfiles::mobSlots)
@@ -56,7 +77,7 @@ public class ModEntityProfiles {
             .add(SkinTypes.TOOL_HOE, 1)
             .add(SkinTypes.TOOL_PICKAXE, 1)
             .add(SkinTypes.TOOL_SHOVEL, 1)
-            .build();
+            .build("mob");
 
     public static final EntityProfile VILLAGER = Builder.create()
             .add(SkinTypes.ARMOR_HEAD, ModEntityProfiles::mobSlots)
@@ -65,19 +86,17 @@ public class ModEntityProfiles {
             .add(SkinTypes.ARMOR_FEET, ModEntityProfiles::mobSlots)
             .add(SkinTypes.ARMOR_WINGS, ModEntityProfiles::mobSlots)
             .add(SkinTypes.OUTFIT, ModEntityProfiles::mobSlots)
-            .build();
+            .build("villager");
 
     public static final EntityProfile ONLY_HEAD = Builder.create()
             .add(SkinTypes.ARMOR_HEAD, ModEntityProfiles::mobSlots)
-            .build();
+            .build("only_head");
 
     public static final EntityProfile PROJECTING = Builder.create()
             .add(SkinTypes.ITEM_BOW, 1)
             .add(SkinTypes.ITEM_TRIDENT, 1)
             .fixed()
-            .build();
-
-    private static final HashMap<EntityType<?>, EntityProfile> PROFILES = new HashMap<>();
+            .build("projecting");
 
     private static int playerSlots(ISkinType type) {
         return ModConfig.Common.prefersWardrobePlayerSlots;
@@ -94,23 +113,23 @@ public class ModEntityProfiles {
         register(EntityType.WITCH, VILLAGER);
         register(EntityType.WANDERING_TRADER, VILLAGER);
 
-        register(EntityType.SKELETON, COMMON);
-        register(EntityType.STRAY, COMMON);
-        register(EntityType.WITHER_SKELETON, COMMON);
-        register(EntityType.ZOMBIE, COMMON);
-        register(EntityType.HUSK, COMMON);
-        register(EntityType.ZOMBIE_VILLAGER, COMMON);
-        register(EntityType.DROWNED, COMMON);
+        register(EntityType.SKELETON, MOB);
+        register(EntityType.STRAY, MOB);
+        register(EntityType.WITHER_SKELETON, MOB);
+        register(EntityType.ZOMBIE, MOB);
+        register(EntityType.HUSK, MOB);
+        register(EntityType.ZOMBIE_VILLAGER, MOB);
+        register(EntityType.DROWNED, MOB);
 
-        register(EntityType.EVOKER, COMMON);
-        register(EntityType.ILLUSIONER, COMMON);
-        register(EntityType.PILLAGER, COMMON);
-        register(EntityType.VINDICATOR, COMMON);
+        register(EntityType.EVOKER, MOB);
+        register(EntityType.ILLUSIONER, MOB);
+        register(EntityType.PILLAGER, MOB);
+        register(EntityType.VINDICATOR, MOB);
 
-        register(EntityType.VEX, COMMON);
-        register(EntityType.PIGLIN, COMMON);
-        register(EntityType.PIGLIN_BRUTE, COMMON);
-        register(EntityType.ZOMBIFIED_PIGLIN, COMMON);
+        register(EntityType.VEX, MOB);
+        register(EntityType.PIGLIN, MOB);
+        register(EntityType.PIGLIN_BRUTE, MOB);
+        register(EntityType.ZOMBIFIED_PIGLIN, MOB);
 
         register(EntityType.SLIME, ONLY_HEAD);
         register(EntityType.GHAST, ONLY_HEAD);
@@ -130,7 +149,7 @@ public class ModEntityProfiles {
 
     public static void register(EntityType<?> entityType, EntityProfile entityProfile) {
         ModLog.debug("Registering Entity Profile '{}'", Registry.ENTITY_TYPE.getKey(entityType));
-        PROFILES.put(entityType, entityProfile);
+        ENTITY_PROFILES.put(entityType, entityProfile);
     }
 
     public static void register(String registryName, EntityProfile entityProfile) {
@@ -147,7 +166,7 @@ public class ModEntityProfiles {
     }
 
     public static void forEach(BiConsumer<EntityType<?>, EntityProfile> consumer) {
-        PROFILES.forEach(consumer);
+        ENTITY_PROFILES.forEach(consumer);
     }
 
     @Nullable
@@ -157,7 +176,12 @@ public class ModEntityProfiles {
 
     @Nullable
     public static <T extends Entity> EntityProfile getProfile(EntityType<T> entityType) {
-        return PROFILES.get(entityType);
+        return ENTITY_PROFILES.get(entityType);
+    }
+
+    @Nullable
+    public static EntityProfile getProfile(ResourceLocation registryName) {
+        return ALL_PROFILES.get(registryName.toString());
     }
 
     public static class Builder<T> {
@@ -185,8 +209,10 @@ public class ModEntityProfiles {
             return this;
         }
 
-        public EntityProfile build() {
-            return new EntityProfile(supports, editable);
+        public EntityProfile build(String registryName) {
+            EntityProfile profile = new EntityProfile(ModConstants.key(registryName), supports, editable);
+            ALL_PROFILES.put(profile.getRegistryName().toString(), profile);
+            return profile;
         }
     }
 }

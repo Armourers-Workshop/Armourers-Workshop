@@ -12,12 +12,14 @@ import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
+import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModConfig;
+import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
@@ -175,6 +177,7 @@ public class DataSerializers {
     public static final IPlayerDataSerializer<SkinWardrobe> ENTITY_WARDROBE = new IPlayerDataSerializer<SkinWardrobe>() {
         public void write(FriendlyByteBuf buffer, Player player, SkinWardrobe wardrobe) {
             buffer.writeInt(wardrobe.getId());
+            buffer.writeResourceLocation(wardrobe.getProfile().getRegistryName());
         }
 
         public SkinWardrobe read(FriendlyByteBuf buffer, Player player) {
@@ -191,7 +194,15 @@ public class DataSerializers {
                     }
                 }
             }
-            return SkinWardrobe.of(entity);
+            SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+            EntityProfile serverProfile = ModEntityProfiles.getProfile(buffer.readResourceLocation());
+            if (wardrobe != null && serverProfile != null) {
+                // we need to maintain consistency of the entity profile,
+                // some strange mods(e.g.: taterzens) deliberately make the
+                // entity type inconsistent by server side and client side
+                wardrobe.setProfile(serverProfile);
+            }
+            return wardrobe;
         }
     };
 

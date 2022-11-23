@@ -12,8 +12,8 @@ public class ModCompatible {
     private static EntityType<?> customNPCEntityType;
 
     public static void registerCustomEntityType() {
-        ModEntityProfiles.register("taterzens:npc", ModEntityProfiles.MANNEQUIN);
-        ModEntityProfiles.register("customnpcs:customnpc", ModEntityProfiles.MANNEQUIN, entityType -> customNPCEntityType = entityType);
+        ModEntityProfiles.register("taterzens:npc", ModEntityProfiles.CUSTOM);
+        ModEntityProfiles.register("customnpcs:customnpc", ModEntityProfiles.CUSTOM, entityType -> customNPCEntityType = entityType);
     }
 
     public static Iterable<ItemStack> getArmorSlots(Entity entity) {

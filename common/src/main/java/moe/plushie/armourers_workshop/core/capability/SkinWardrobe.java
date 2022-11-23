@@ -37,9 +37,9 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
     private final SimpleContainer inventory = new SimpleContainer(SkinSlotType.getTotalSize());
 
     private final WeakReference<Entity> entity;
-    private final EntityProfile profile;
 
     private int id; // a.k.a entity id
+    private EntityProfile profile; // maybe synced to new profile from server side.
 
     public SkinWardrobe(Entity entity, EntityProfile profile) {
         this.id = entity.getId();
@@ -61,6 +61,10 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
             return Optional.of(new SkinWardrobe(entity, profile));
         }
         return Optional.empty();
+    }
+
+    public void setProfile(EntityProfile profile) {
+        this.profile = profile;
     }
 
     public EntityProfile getProfile() {
@@ -178,6 +182,14 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
         }
         return slotType.getMaxSize();
     }
+
+    public int getMaximumSize(SkinSlotType slotType) {
+        if (slotType == SkinSlotType.DYE) {
+            return 8;
+        }
+        return slotType.getMaxSize();
+    }
+
 
 //    public int getFlags(int bits) {
 //        return 0;
