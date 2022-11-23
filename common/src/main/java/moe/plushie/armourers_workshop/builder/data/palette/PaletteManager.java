@@ -74,6 +74,9 @@ public class PaletteManager {
     }
 
     public void renamePalette(String oldName, String newName) {
+        if (oldName.equals(newName)) {
+            return;
+        }
         Palette palette = getPalette(oldName);
         palette.setName(newName);
         paletteMap.put(newName, palette);
