@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.common.IRenderBufferObject;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL15;
 
 import java.nio.ByteBuffer;
@@ -65,7 +66,8 @@ public class SkinRenderObject implements IRenderBufferObject, AutoCloseable {
         if (this.id < 0) {
             return;
         }
-        RenderSystem.glDeleteBuffers(this.id);
+        int id = this.id;
+        Minecraft.getInstance().submit(() -> RenderSystem.glDeleteBuffers(id));
         this.id = -1;
     }
 
