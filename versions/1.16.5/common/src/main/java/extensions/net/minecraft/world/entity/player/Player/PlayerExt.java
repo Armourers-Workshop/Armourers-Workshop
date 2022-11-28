@@ -21,6 +21,6 @@ public class PlayerExt {
     }
 
     public static void sendSystemMessage(@This Player player, Component text, UUID uuid) {
-        player.sendSystemMessage(text, uuid);
+        player.sendMessage(text, uuid);
     }
 }
