@@ -182,13 +182,11 @@ public final class Vector3f implements IVector3f, Position {
     }
 
     public void transform(Matrix3f mat) {
-        float f = this.x;
-        float f1 = this.y;
-        float f2 = this.z;
-        float[][] buf = OpenMatrix3f.toFloatBuffer(mat);
-        this.x = buf[0][0] * f + buf[0][1] * f1 + buf[0][2] * f2;
-        this.y = buf[1][0] * f + buf[1][1] * f1 + buf[1][2] * f2;
-        this.z = buf[2][0] * f + buf[2][1] * f1 + buf[2][2] * f2;
+        float[] floats = {x, y, z};
+        OpenMatrix3f.of(mat).multiply(floats);
+        x = floats[0];
+        y = floats[1];
+        z = floats[2];
     }
 
     public void transform(Quaternion value) {

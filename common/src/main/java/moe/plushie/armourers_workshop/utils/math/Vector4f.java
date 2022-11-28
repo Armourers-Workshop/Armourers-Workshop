@@ -72,6 +72,38 @@ public class Vector4f {
         return this.w;
     }
 
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
+    }
+
+    public float getW() {
+        return w;
+    }
+
+    public void setW(float w) {
+        this.w = w;
+    }
+
     public void mul(Position pos) {
         this.x *= pos.x();
         this.y *= pos.y();
@@ -104,15 +136,12 @@ public class Vector4f {
     }
 
     public void transform(Matrix4f matrix) {
-        float f = this.x;
-        float f1 = this.y;
-        float f2 = this.z;
-        float f3 = this.w;
-        float[][] buf = OpenMatrix4f.toFloatBuffer(matrix);
-        this.x = buf[0][0] * f + buf[0][1] * f1 + buf[0][2] * f2 + buf[0][3] * f3;
-        this.y = buf[1][0] * f + buf[1][1] * f1 + buf[1][2] * f2 + buf[1][3] * f3;
-        this.z = buf[2][0] * f + buf[2][1] * f1 + buf[2][2] * f2 + buf[2][3] * f3;
-        this.w = buf[3][0] * f + buf[3][1] * f1 + buf[3][2] * f2 + buf[3][3] * f3;
+        float[] floats = {x, y, z, w};
+        OpenMatrix4f.of(matrix).multiply(floats);
+        x = floats[0];
+        y = floats[1];
+        z = floats[2];
+        w = floats[3];
     }
 
     public void transform(Quaternion q) {

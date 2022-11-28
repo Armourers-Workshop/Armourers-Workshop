@@ -21,7 +21,7 @@ public class OpenMatrix3f extends Matrix3f {
     }
 
     public OpenMatrix3f(Matrix4f matrix) {
-        super(fromFloatBuffer(OpenMatrix4f.toFloatBuffer(matrix)));
+        super(matrix);
     }
 
     public static OpenMatrix3f createScaleMatrix(float x, float y, float z) {
@@ -32,82 +32,96 @@ public class OpenMatrix3f extends Matrix3f {
         return matrix;
     }
 
-    public static OpenMatrix3f fromFloatBuffer(float[][] values) {
-        OpenMatrix3f matrix = new OpenMatrix3f();
-        matrix.m00 = values[0][0];
-        matrix.m01 = values[0][1];
-        matrix.m02 = values[0][2];
-        matrix.m10 = values[1][0];
-        matrix.m11 = values[1][1];
-        matrix.m12 = values[1][2];
-        matrix.m20 = values[2][0];
-        matrix.m21 = values[2][1];
-        matrix.m22 = values[2][2];
-        return matrix;
-    }
-
-    public static float[][] toFloatBuffer(Matrix3f matrix) {
-        if (matrix instanceof OpenMatrix3f) {
-            return ((OpenMatrix3f) matrix).toArray();
+    public static OpenMatrix3f of(Matrix3f other) {
+        if (other instanceof OpenMatrix3f) {
+            return (OpenMatrix3f) other;
         }
-        return new OpenMatrix3f(matrix).toArray();
+        return new OpenMatrix3f(other);
     }
 
-    public float[][] toArray() {
-        return new float[][]{{m00, m01, m02}, {m10, m11, m12}, {m20, m21, m22}};
+    public void multiply(float[] values) {
+        float x = values[0];
+        float y = values[1];
+        float z = values[2];
+        values[0] = m00 * x + m01 * y + m02 * z;
+        values[1] = m10 * x + m11 * y + m12 * z;
+        values[2] = m20 * x + m21 * y + m22 * z;
     }
 
     public void multiply(Matrix3f other) {
-        float[][] buf = toFloatBuffer(other);
-        float f = m00 * buf[0][0] + m01 * buf[1][0] + m02 * buf[2][0];
-        float f1 = m00 * buf[0][1] + m01 * buf[1][1] + m02 * buf[2][1];
-        float f2 = m00 * buf[0][2] + m01 * buf[1][2] + m02 * buf[2][2];
-        float f3 = m10 * buf[0][0] + m11 * buf[1][0] + m12 * buf[2][0];
-        float f4 = m10 * buf[0][1] + m11 * buf[1][1] + m12 * buf[2][1];
-        float f5 = m10 * buf[0][2] + m11 * buf[1][2] + m12 * buf[2][2];
-        float f6 = m20 * buf[0][0] + m21 * buf[1][0] + m22 * buf[2][0];
-        float f7 = m20 * buf[0][1] + m21 * buf[1][1] + m22 * buf[2][1];
-        float f8 = m20 * buf[0][2] + m21 * buf[1][2] + m22 * buf[2][2];
-        this.m00 = f;
-        this.m01 = f1;
-        this.m02 = f2;
-        this.m10 = f3;
-        this.m11 = f4;
-        this.m12 = f5;
-        this.m20 = f6;
-        this.m21 = f7;
-        this.m22 = f8;
+        multiply(this, of(other), this);
     }
 
     public void multiply(Quaternion other) {
-        this.multiply(new OpenMatrix3f(other));
+        multiply(new OpenMatrix3f(other));
+    }
+
+    public void multiplyFront(Matrix3f other) {
+        multiply(of(other), this, this);
+    }
+
+    public void multiplyFront(Quaternion other) {
+        multiplyFront(new OpenMatrix3f(other));
     }
 
     public void multiply(float ratio) {
-        this.m00 *= ratio;
-        this.m01 *= ratio;
-        this.m02 *= ratio;
-        this.m10 *= ratio;
-        this.m11 *= ratio;
-        this.m12 *= ratio;
-        this.m20 *= ratio;
-        this.m21 *= ratio;
-        this.m22 *= ratio;
+        m00 *= ratio;
+        m01 *= ratio;
+        m02 *= ratio;
+        m10 *= ratio;
+        m11 *= ratio;
+        m12 *= ratio;
+        m20 *= ratio;
+        m21 *= ratio;
+        m22 *= ratio;
     }
 
-    public void store(FloatBuffer floatBuffer) {
-        floatBuffer.put(bufferIndex(0, 0), this.m00);
-        floatBuffer.put(bufferIndex(0, 1), this.m01);
-        floatBuffer.put(bufferIndex(0, 2), this.m02);
-        floatBuffer.put(bufferIndex(1, 0), this.m10);
-        floatBuffer.put(bufferIndex(1, 1), this.m11);
-        floatBuffer.put(bufferIndex(1, 2), this.m12);
-        floatBuffer.put(bufferIndex(2, 0), this.m20);
-        floatBuffer.put(bufferIndex(2, 1), this.m21);
-        floatBuffer.put(bufferIndex(2, 2), this.m22);
+    public void load(FloatBuffer buffer) {
+        m00 = buffer.get(bufferIndex(0, 0));
+        m01 = buffer.get(bufferIndex(0, 1));
+        m02 = buffer.get(bufferIndex(0, 2));
+        m10 = buffer.get(bufferIndex(1, 0));
+        m11 = buffer.get(bufferIndex(1, 1));
+        m12 = buffer.get(bufferIndex(1, 2));
+        m20 = buffer.get(bufferIndex(2, 0));
+        m21 = buffer.get(bufferIndex(2, 1));
+        m22 = buffer.get(bufferIndex(2, 2));
+    }
+
+    public void store(FloatBuffer buffer) {
+        buffer.put(bufferIndex(0, 0), m00);
+        buffer.put(bufferIndex(0, 1), m01);
+        buffer.put(bufferIndex(0, 2), m02);
+        buffer.put(bufferIndex(1, 0), m10);
+        buffer.put(bufferIndex(1, 1), m11);
+        buffer.put(bufferIndex(1, 2), m12);
+        buffer.put(bufferIndex(2, 0), m20);
+        buffer.put(bufferIndex(2, 1), m21);
+        buffer.put(bufferIndex(2, 2), m22);
     }
 
     private static int bufferIndex(int i, int j) {
         return j * 3 + i;
+    }
+
+    private static void multiply(OpenMatrix3f lhs, OpenMatrix3f rhs, OpenMatrix3f ret) {
+        float m00 = lhs.m00 * rhs.m00 + lhs.m10 * rhs.m01 + lhs.m20 * rhs.m02;
+        float m01 = lhs.m01 * rhs.m00 + lhs.m11 * rhs.m01 + lhs.m21 * rhs.m02;
+        float m02 = lhs.m02 * rhs.m00 + lhs.m12 * rhs.m01 + lhs.m22 * rhs.m02;
+        float m10 = lhs.m00 * rhs.m10 + lhs.m10 * rhs.m11 + lhs.m20 * rhs.m12;
+        float m11 = lhs.m01 * rhs.m10 + lhs.m11 * rhs.m11 + lhs.m21 * rhs.m12;
+        float m12 = lhs.m02 * rhs.m10 + lhs.m12 * rhs.m11 + lhs.m22 * rhs.m12;
+        float m20 = lhs.m00 * rhs.m20 + lhs.m10 * rhs.m21 + lhs.m20 * rhs.m22;
+        float m21 = lhs.m01 * rhs.m20 + lhs.m11 * rhs.m21 + lhs.m21 * rhs.m22;
+        float m22 = lhs.m02 * rhs.m20 + lhs.m12 * rhs.m21 + lhs.m22 * rhs.m22;
+        ret.m00 = m00;
+        ret.m01 = m01;
+        ret.m02 = m02;
+        ret.m10 = m10;
+        ret.m11 = m11;
+        ret.m12 = m12;
+        ret.m20 = m20;
+        ret.m21 = m21;
+        ret.m22 = m22;
     }
 }
