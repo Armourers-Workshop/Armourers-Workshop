@@ -230,11 +230,7 @@ public class PlayerTextureLoader {
         String identifier = Hashing.sha1().hashUnencodedChars(url).toString();
         ResourceLocation location = new ResourceLocation("skins/aw-" + identifier);
         TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-        //#if MC >= 11800
         AbstractTexture processingTexture = textureManager.getTexture(location, null);
-        //#else
-        //# AbstractTexture processingTexture = textureManager.getTexture(location);
-        //#endif
         if (processingTexture != null) {
             return;
         }

@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.PlayerInventoryView
 import moe.plushie.armourers_workshop.core.client.gui.widget.SlotListView;
 import moe.plushie.armourers_workshop.core.menu.AbstractContainerMenu;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -41,7 +40,7 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         super();
         this.setFrame(new CGRect(0, 0, 240, 130));
         Player player = Objects.requireNonNull(Minecraft.getInstance().player);
-        this.playerInventory = Accessor.getInventory(player);
+        this.playerInventory = player.getInventory();
         this.inventory = createBackup(playerInventory);
         this.listView = new SlotListView<>(new PickerContainer(inventory), playerInventory, bounds());
         this.setup();
@@ -193,7 +192,7 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         @Override
         public void removed(Player player) {
             super.removed(player);
-            Inventory playerInventory = Accessor.getInventory(player);
+            Inventory playerInventory = player.getInventory();
             //#if MC >= 11800
             playerInventory.setPickedItem(ItemStack.EMPTY);
             //#else

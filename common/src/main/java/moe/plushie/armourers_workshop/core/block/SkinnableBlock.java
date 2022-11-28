@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.init.ModEntities;
 import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
-import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.math.Vector3d;
 import net.minecraft.core.BlockPos;
@@ -236,7 +235,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
         }
         // anyway, we only drop all items once.
         tileEntity.setDropped(true);
-        if (player == null || !Accessor.getAbilities(player).instabuild) {
+        if (player == null || !player.getAbilities().instabuild) {
             DataSerializers.dropItemStack(level, blockPos, tileEntity.getDescriptor().asItemStack());
         }
         if (tileEntity.isInventory()) {

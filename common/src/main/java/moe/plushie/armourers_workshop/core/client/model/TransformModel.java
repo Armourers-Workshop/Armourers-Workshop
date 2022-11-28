@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.client.model;
 import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
 import moe.plushie.armourers_workshop.compatibility.AbstractPlayerModel;
 import moe.plushie.armourers_workshop.init.platform.RendererManager;
-import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -54,7 +53,7 @@ public class TransformModel<T extends LivingEntity> extends AbstractPlayerModel<
             f2 = f1 - f;
         }
         float f7 = entity.tickCount + partialRenderTick;
-        float f6 = MathUtils.lerp(partialRenderTick, entity.xRotO, Accessor.getXRot(entity));
+        float f6 = MathUtils.lerp(partialRenderTick, entity.xRotO, entity.getXRot());
         float f8 = 0.0F;
         float f5 = 0.0F;
         if (!shouldSit && entity.isAlive()) {

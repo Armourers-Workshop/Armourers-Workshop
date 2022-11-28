@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.builder.other;
 
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -85,7 +84,7 @@ public class CubeWrapper implements IPaintable {
     public CompoundTag getBlockEntityNBT() {
         BlockEntity tileEntity = getBlockEntity();
         if (tileEntity != null) {
-            return DataSerializers.saveBlockTag(tileEntity);
+            return tileEntity.saveWithFullMetadata();
         }
         return null;
     }

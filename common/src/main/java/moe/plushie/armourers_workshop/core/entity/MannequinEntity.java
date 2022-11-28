@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
-import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
@@ -189,11 +188,7 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
     @Override
     public void setYBodyRot(float rot) {
         this.yRotO = rot;
-        //#if MC >= 11800
         this.setYRot(rot);
-        //#else
-        //# this.yRot = rot;
-        //#endif
         this.yBodyRotO = this.yBodyRot = 0;
         this.yHeadRotO = this.yHeadRot = rot;
     }
@@ -236,7 +231,7 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
         if (player.isShiftKeyDown()) {
             double ry = TrigUtils.getAngleDegrees(player.getX(), player.getZ(), getX(), getZ()) + 90.0;
             Rotations rotations = getBodyPose();
-            float yRot = Accessor.getYRot(this);
+            float yRot = this.getYRot();
             setBodyPose(new Rotations(rotations.getX(), (float) ry - yRot, rotations.getZ()));
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
@@ -254,7 +249,7 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
         if (source.getEntity() instanceof Player) {
             player = (Player) source.getEntity();
         }
-        if (player != null && !Accessor.getAbilities(player).instabuild) {
+        if (player != null && !player.getAbilities().instabuild) {
             Block.popResource(this.level, this.blockPosition(), createMannequinStack());
         }
         this.brokenByAnything(source);

@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.blockentity;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -75,6 +74,6 @@ public abstract class AbstractBlockEntity extends BlockEntity implements IBlockE
 
     @Override
     public CompoundTag getUpdateTag() {
-        return DataSerializers.saveBlockTag(this);
+        return this.saveWithFullMetadata();
     }
 }

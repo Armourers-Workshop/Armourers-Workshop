@@ -214,7 +214,7 @@ public class CommonEventDispatcherImpl extends AbstractForgeCommonEventDispatche
                 BlockEntity blockEntity = level.getBlockEntity(event.getPos());
                 CompoundTag oldNBT = null;
                 if (blockEntity != null) {
-                    oldNBT = DataSerializers.saveBlockTag(blockEntity);
+                    oldNBT = blockEntity.saveWithFullMetadata();
                 }
                 Component reason = TranslateUtils.title("chat.armourers_workshop.undo.breakBlock");
                 BlockUtils.snapshot(level, event.getPos(), event.getState(), oldNBT, event.getPlayer(), reason);

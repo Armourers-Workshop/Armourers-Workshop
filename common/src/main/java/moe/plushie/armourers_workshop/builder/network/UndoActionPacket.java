@@ -48,9 +48,9 @@ public class UndoActionPacket extends CustomPacket {
                 IUndoCommand command = stack.undo();
                 message = TranslateUtils.title("chat.armourers_workshop.undo.undoing", command.name());
             }
-            player.sendMessage(message, player.getUUID());
+            player.sendSystemMessage(message, player.getUUID());
         } catch (CommandRuntimeException exception) {
-            player.sendMessage(exception.getComponent(), player.getUUID());
+            player.sendSystemMessage(exception.getComponent(), player.getUUID());
         } catch (Exception exception) {
             exception.printStackTrace();
         }

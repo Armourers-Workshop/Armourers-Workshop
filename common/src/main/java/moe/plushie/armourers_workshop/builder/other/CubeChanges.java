@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.commands.CommandRuntimeException;
@@ -98,7 +97,7 @@ public class CubeChanges implements IUndoCommand, IWorldUpdateTask {
         }
         if (isChangedNBT) {
             ObjectUtils.ifPresent(level.getBlockEntity(blockPos), blockEntity -> {
-                CompoundTag newTag = DataSerializers.saveBlockTag(blockEntity);
+                CompoundTag newTag = blockEntity.saveWithFullMetadata();
                 changes.setCompoundTag(newTag);
             });
         } else if (colors != null) {
@@ -141,7 +140,7 @@ public class CubeChanges implements IUndoCommand, IWorldUpdateTask {
         }
         if (nbt != null) {
             if (tileEntity != null) {
-                DataSerializers.loadBlockTag(tileEntity, nbt);
+                tileEntity.load(nbt);
                 changes += 1;
             }
         }

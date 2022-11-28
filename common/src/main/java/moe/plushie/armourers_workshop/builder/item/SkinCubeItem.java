@@ -53,9 +53,9 @@ public class SkinCubeItem extends BlockItem implements IItemColorProvider, IPain
             BlockEntity tileEntity = level.getBlockEntity(pos);
             CompoundTag nbt = itemStack.getTagElement(Constants.Key.BLOCK_ENTITY);
             if (nbt != null && tileEntity != null) {
-                CompoundTag newNBT = DataSerializers.saveBlockTag(tileEntity);
+                CompoundTag newNBT = tileEntity.saveWithFullMetadata();
                 newNBT.put(Constants.Key.COLOR, nbt.getCompound(Constants.Key.COLOR));
-                DataSerializers.loadBlockTag(tileEntity, newNBT);
+                tileEntity.load(newNBT);
             }
         }
         return super.updateCustomBlockEntityTag(pos, level, player, itemStack, blockState);

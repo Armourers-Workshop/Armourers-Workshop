@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.data;
 
 import moe.plushie.armourers_workshop.core.item.MannequinItem;
-import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import net.minecraft.core.BlockPos;
@@ -51,7 +50,7 @@ public class MannequinHitResult extends BlockHitResult {
                 }
                 target = newLocation;
             }
-            int l = MathUtils.floor(Accessor.getYRot(player) * 16 / 360 + 0.5) % 16;
+            int l = MathUtils.floor(player.getYRot() * 16 / 360 + 0.5) % 16;
             rotation = l * 22.5f + 180f;
         }
 

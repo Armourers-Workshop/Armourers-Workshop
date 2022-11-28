@@ -4,7 +4,6 @@ import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
 import moe.plushie.armourers_workshop.compatibility.AbstractLivingEntityRenderer;
-import moe.plushie.armourers_workshop.core.client.layer.SkinWardrobeLayer;
 import moe.plushie.armourers_workshop.core.client.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;

@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.utils.Accessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.Entity;
@@ -112,7 +111,7 @@ public class SkinOverriddenManager {
     private ItemStack setItem(Entity entity, EquipmentSlot slotType, ItemStack itemStack) {
         // for the player, using `setItemSlot` will cause play sound.
         if (entity instanceof Player) {
-            Inventory inventory = Accessor.getInventory((Player) entity);
+            Inventory inventory = ((Player) entity).getInventory();
             ItemStack itemStack1 = inventory.armor.get(slotType.getIndex());
             inventory.armor.set(slotType.getIndex(), itemStack);
             return itemStack1;

@@ -17,7 +17,6 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.menu.AbstractContainerMenu;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -62,7 +61,7 @@ public class PaintingToolWindow extends MenuWindow<AbstractContainerMenu> {
     private static Inventory getInventory() {
         Player player = Minecraft.getInstance().player;
         if (player != null) {
-            return Accessor.getInventory(player);
+            return player.getInventory();
         }
         return null;
     }

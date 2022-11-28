@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.builder.data.undo.action;
 
 import moe.plushie.armourers_workshop.api.action.IUndoCommand;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -32,13 +31,15 @@ public class SetBlockAction extends BlockUndoAction {
         CompoundTag oldNBT = null;
         BlockEntity oldTileEntity = level.getBlockEntity(blockPos);
         if (oldTileEntity != null) {
-            oldNBT = DataSerializers.saveBlockTag(oldTileEntity);
+            oldNBT = oldTileEntity.saveWithFullMetadata();
         }
         SetBlockAction oldChanges = new SetBlockAction(level, blockPos, oldState, oldNBT);
         level.setBlock(blockPos, newValue, Constants.BlockFlags.DEFAULT_AND_RERENDER);
         if (newValueNBT != null) {
             BlockEntity tileEntity = level.getBlockEntity(blockPos);
-            DataSerializers.loadBlockTag(tileEntity, newValueNBT);
+            if (tileEntity != null) {
+                tileEntity.load(newValueNBT);
+            }
         }
         return oldChanges;
     }

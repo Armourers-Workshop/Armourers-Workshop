@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.builder.other;
 
 import moe.plushie.armourers_workshop.api.common.IWorldUpdateTask;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
@@ -74,7 +73,9 @@ public class WorldBlockUpdateTask implements IWorldUpdateTask {
         level.setBlock(blockPos, blockState, blockFlags);
         if (nbt != null) {
             BlockEntity tileEntity = level.getBlockEntity(blockPos);
-            DataSerializers.loadBlockTag(tileEntity, nbt);
+            if (tileEntity != null) {
+                tileEntity.load(nbt);
+            }
         }
         if (modifier != null) {
             modifier.accept(blockState);

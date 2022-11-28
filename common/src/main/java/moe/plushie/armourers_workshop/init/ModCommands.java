@@ -27,7 +27,6 @@ import moe.plushie.armourers_workshop.init.command.*;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
-import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -198,7 +197,7 @@ public class ModCommands {
             }
             ItemStack itemStack = descriptor.asItemStack();
             for (Player player : EntityArgument.getPlayers(context, "targets")) {
-                boolean flag = Accessor.getInventory(player).add(itemStack);
+                boolean flag = player.getInventory().add(itemStack);
                 if (flag && itemStack.isEmpty()) {
                     itemStack.setCount(1);
                     ItemEntity itemEntity1 = player.drop(itemStack, false);
@@ -278,13 +277,13 @@ public class ModCommands {
                 throw ERROR_MISSING_SKIN.create(identifier);
             }
             float resolvedScale = scale;
-            player.sendMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.processing", filename), player.getUUID());
+            player.sendSystemMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.processing", filename), player.getUUID());
             Util.backgroundExecutor().execute(() -> {
                 try {
                     SkinExportManager.exportSkin(skin, format, filename, resolvedScale);
-                    player.sendMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.success", filename), player.getUUID());
+                    player.sendSystemMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.success", filename), player.getUUID());
                 } catch (Exception e) {
-                    player.sendMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.failure", filename), player.getUUID());
+                    player.sendSystemMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.failure", filename), player.getUUID());
                     e.printStackTrace();
                 }
             });
@@ -318,7 +317,7 @@ public class ModCommands {
             // notify the user of what happened
             String messageKey = "commands.armourers_workshop.armourers.setItemSkinnable." + operator;
             Component overrideTypeName = TranslateUtils.Name.of(overrideType);
-            player.sendMessage(TranslateUtils.title(messageKey, itemStack.getDisplayName(), overrideTypeName), player.getUUID());
+            player.sendSystemMessage(TranslateUtils.title(messageKey, itemStack.getDisplayName(), overrideTypeName), player.getUUID());
             return 1;
         }
 

@@ -271,11 +271,7 @@ public class CommonEventDispatcherImpl implements ModInitializer {
         IBlockHandler handler = ObjectUtils.safeCast(state.getBlock(), IBlockHandler.class);
         if (handler != null && handler.isCustomBed(level, sleepingPos, state, entity)) {
             level.setBlock(sleepingPos, state.setValue(BedBlock.OCCUPIED, false), 3);
-            //#if MC >= 11800
             float yRot = entity.getYRot();
-            //#else
-            //# float yRot = entity.yRot;
-            //#endif
             Vec3 vector3d1 = BedBlock.findStandUpPosition(entity.getType(), level, sleepingPos, yRot).orElseGet(() -> {
                 BlockPos blockpos = sleepingPos.above();
                 return new Vec3((double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.1D, (double) blockpos.getZ() + 0.5D);
@@ -283,13 +279,8 @@ public class CommonEventDispatcherImpl implements ModInitializer {
             Vec3 vector3d2 = Vec3.atBottomCenterOf(sleepingPos).subtract(vector3d1).normalize();
             float f = (float) MathUtils.wrapDegrees(MathUtils.atan2(vector3d2.z, vector3d2.x) * (double) (180F / (float) Math.PI) - 90.0D);
             entity.setPos(vector3d1.x, vector3d1.y, vector3d1.z);
-            //#if MC >= 11800
             entity.setYRot(f);
             entity.setXRot(0);
-            //#else
-            //# entity.yRot = f;
-            //# entity.xRot = 0;
-            //#endif
         }
     }
 
@@ -300,7 +291,11 @@ public class CommonEventDispatcherImpl implements ModInitializer {
             Level level = blockPlaceContext.getLevel();
             BlockPos blockPos = blockPlaceContext.getClickedPos();
             BlockState oldState = level.getBlockState(blockPos);
-            CompoundTag oldNBT = DataSerializers.saveBlockTag(level.getBlockEntity(blockPos));
+            BlockEntity oldBlockEntity = level.getBlockEntity(blockPos);
+            CompoundTag oldNBT = null;
+            if (oldBlockEntity != null) {
+                oldNBT = oldBlockEntity.saveWithFullMetadata();
+            }
             Component reason = TranslateUtils.title("chat.armourers_workshop.undo.placeBlock");
             BlockUtils.snapshot(level, blockPos, oldState, oldNBT, player, reason);
         }
@@ -310,7 +305,11 @@ public class CommonEventDispatcherImpl implements ModInitializer {
     public boolean onBlockBreak(Level level, Player player, BlockPos pos, BlockState state, /* Nullable */ BlockEntity blockEntity) {
         Block block = state.getBlock();
         if (player instanceof ServerPlayer && block instanceof SkinCubeBlock) {
-            CompoundTag oldNBT = DataSerializers.saveBlockTag(level.getBlockEntity(pos));
+            BlockEntity oldBlockEntity = level.getBlockEntity(pos);
+            CompoundTag oldNBT = null;
+            if (oldBlockEntity != null) {
+                oldNBT = oldBlockEntity.saveWithFullMetadata();
+            }
             Component reason = TranslateUtils.title("chat.armourers_workshop.undo.breakBlock");
             BlockUtils.snapshot(level, pos, state, oldNBT, player, reason);
         }

@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.entity;
 
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.init.ModConfig;
-import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.fabricmc.api.EnvType;
@@ -52,7 +51,7 @@ public class SeatEntity extends LivingEntity {
     public void travel(Vec3 p_213352_1_) {
         if (isAlive() && !getPassengers().isEmpty()) {
             Entity passenger = getPassengers().get(0);
-            this.setYRot(Accessor.getYRot(passenger));
+            this.setYRot(passenger.getYRot());
         }
     }
 
@@ -87,15 +86,12 @@ public class SeatEntity extends LivingEntity {
         return level != null && blockPos != null && level.getBlockEntity(blockPos) instanceof SkinnableBlockEntity;
     }
 
+    @Override
     public void setYRot(float f) {
+        super.setYRot(f);
         this.yRotO = f;
         this.yBodyRot = f;
         this.yHeadRot = f;
-        //#if MC >= 11800
-        super.setYRot(f);
-        //#else
-        //# this.yRot = f;
-        //#endif
     }
 
     @Override

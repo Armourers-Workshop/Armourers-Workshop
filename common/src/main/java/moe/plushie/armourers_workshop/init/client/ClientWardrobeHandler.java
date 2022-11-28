@@ -17,7 +17,6 @@ import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.platform.TransformationProvider;
-import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
@@ -57,8 +56,8 @@ public class ClientWardrobeHandler {
         }
         matrixStack.pushPose();
 
-        float xRot = Accessor.getXRot(entity);
-        float yRot = Accessor.getYRot(entity);
+        float xRot = entity.getXRot();
+        float yRot = entity.getYRot();
         float xRotO = entity.xRotO;
         float yRotO = entity.yRotO;
 
@@ -93,8 +92,8 @@ public class ClientWardrobeHandler {
         }
         matrixStack.pushPose();
 
-        float xRot = Accessor.getXRot(entity);
-        float yRot = Accessor.getYRot(entity);
+        float xRot = entity.getXRot();
+        float yRot = entity.getYRot();
         float xRotO = entity.xRotO;
         float yRotO = entity.yRotO;
 

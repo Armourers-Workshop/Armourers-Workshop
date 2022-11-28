@@ -42,7 +42,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.Nullable;
@@ -574,28 +573,6 @@ public class DataSerializers {
             }
         }
         return elements;
-    }
-
-    public static CompoundTag saveBlockTag(BlockEntity blockEntity) {
-        if (blockEntity == null) {
-            return null;
-        }
-        //#if MC >= 11800
-        return blockEntity.saveWithFullMetadata();
-        //#else
-        //# return blockEntity.save(new CompoundTag());
-        //#endif
-    }
-
-    public static void loadBlockTag(BlockEntity blockEntity, CompoundTag tag) {
-        if (blockEntity == null) {
-            return;
-        }
-        //#if MC >= 11800
-        blockEntity.load(tag);
-        //#else
-        //# blockEntity.load(blockEntity.getBlockState(), tag);
-        //#endif
     }
 
     @Nullable

@@ -108,7 +108,7 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
             CubeTransform transform = tileEntity.getTransform();
             skin = WorldUtils.saveSkinFromWorld(level, transform, skinProps, tileEntity.getSkinType(), tileEntity.getPaintData());
         } catch (SkinSaveException e) {
-            player.sendMessage(new TextComponent(e.getMessage()), player.getUUID());
+            player.sendSystemMessage(new TextComponent(e.getMessage()), player.getUUID());
         }
 
         if (skin == null) {

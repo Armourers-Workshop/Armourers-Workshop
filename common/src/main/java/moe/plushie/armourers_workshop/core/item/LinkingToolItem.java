@@ -62,25 +62,25 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
         SkinnableBlockEntity tileEntity = getTitleEntity(level, context.getClickedPos());
         if (tileEntity != null && player.isShiftKeyDown()) {
             tileEntity.setLinkedBlockPos(null);
-            player.sendMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.clear"), player.getUUID());
+            player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.clear"), player.getUUID());
             return InteractionResult.SUCCESS;
         }
         if (linkedBlockPos != null) {
             setLinkedBlockPos(itemStack, null);
             if (tileEntity != null) {
                 tileEntity.setLinkedBlockPos(linkedBlockPos);
-                player.sendMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.finish"), player.getUUID());
+                player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.finish"), player.getUUID());
                 return InteractionResult.SUCCESS;
             }
-            player.sendMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.fail"), player.getUUID());
+            player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.fail"), player.getUUID());
             return InteractionResult.SUCCESS;
         }
         if (tileEntity != null) {
-            player.sendMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.linkedToSkinnable"), player.getUUID());
+            player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.linkedToSkinnable"), player.getUUID());
             return InteractionResult.FAIL;
         }
         setLinkedBlockPos(itemStack, context.getClickedPos());
-        player.sendMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.start"), player.getUUID());
+        player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.start"), player.getUUID());
         return InteractionResult.SUCCESS;
     }
 
