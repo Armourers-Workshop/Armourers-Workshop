@@ -59,7 +59,7 @@ public class OpenMatrix4f extends Matrix4f {
     }
 
     public void multiply(Matrix4f other) {
-        OpenMatrix4f.multiply(this, OpenMatrix4f.of(other), this);
+        multiply(of(other), this, this);
     }
 
     public void multiply(Quaternion quaternion) {
@@ -67,7 +67,7 @@ public class OpenMatrix4f extends Matrix4f {
     }
 
     public void multiplyFront(Matrix4f other) {
-        multiply(of(other), this, this);
+        multiply(this, of(other), this);
     }
 
     public void multiplyFront(Quaternion other) {

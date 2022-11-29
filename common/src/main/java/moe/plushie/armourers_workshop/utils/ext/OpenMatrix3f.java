@@ -49,7 +49,7 @@ public class OpenMatrix3f extends Matrix3f {
     }
 
     public void multiply(Matrix3f other) {
-        multiply(this, of(other), this);
+        multiply(of(other), this, this);
     }
 
     public void multiply(Quaternion other) {
@@ -57,7 +57,7 @@ public class OpenMatrix3f extends Matrix3f {
     }
 
     public void multiplyFront(Matrix3f other) {
-        multiply(of(other), this, this);
+        multiply(this, of(other), this);
     }
 
     public void multiplyFront(Quaternion other) {
