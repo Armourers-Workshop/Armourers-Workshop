@@ -277,13 +277,13 @@ public class ModCommands {
                 throw ERROR_MISSING_SKIN.create(identifier);
             }
             float resolvedScale = scale;
-            player.sendSystemMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.processing", filename), player.getUUID());
+            player.sendSystemMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.processing", filename));
             Util.backgroundExecutor().execute(() -> {
                 try {
                     SkinExportManager.exportSkin(skin, format, filename, resolvedScale);
-                    player.sendSystemMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.success", filename), player.getUUID());
+                    player.sendSystemMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.success", filename));
                 } catch (Exception e) {
-                    player.sendSystemMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.failure", filename), player.getUUID());
+                    player.sendSystemMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.failure", filename));
                     e.printStackTrace();
                 }
             });
@@ -317,7 +317,7 @@ public class ModCommands {
             // notify the user of what happened
             String messageKey = "commands.armourers_workshop.armourers.setItemSkinnable." + operator;
             Component overrideTypeName = TranslateUtils.Name.of(overrideType);
-            player.sendSystemMessage(TranslateUtils.title(messageKey, itemStack.getDisplayName(), overrideTypeName), player.getUUID());
+            player.sendSystemMessage(TranslateUtils.title(messageKey, itemStack.getDisplayName(), overrideTypeName));
             return 1;
         }
 

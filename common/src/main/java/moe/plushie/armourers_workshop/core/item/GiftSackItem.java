@@ -64,7 +64,7 @@ public class GiftSackItem extends FlavouredItem implements IItemTintColorProvide
             if (player.getInventory().add(giftStack)) {
                 itemStack.shrink(1);
             } else {
-                player.sendSystemMessage(TranslateUtils.title("chat.armourers_workshop.inventoryFull"), player.getUUID());
+                player.sendSystemMessage(TranslateUtils.title("chat.armourers_workshop.inventoryFull"));
             }
         }
         return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());

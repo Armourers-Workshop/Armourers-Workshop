@@ -62,25 +62,25 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
         SkinnableBlockEntity tileEntity = getTitleEntity(level, context.getClickedPos());
         if (tileEntity != null && player.isShiftKeyDown()) {
             tileEntity.setLinkedBlockPos(null);
-            player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.clear"), player.getUUID());
+            player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.clear"));
             return InteractionResult.SUCCESS;
         }
         if (linkedBlockPos != null) {
             setLinkedBlockPos(itemStack, null);
             if (tileEntity != null) {
                 tileEntity.setLinkedBlockPos(linkedBlockPos);
-                player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.finish"), player.getUUID());
+                player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.finish"));
                 return InteractionResult.SUCCESS;
             }
-            player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.fail"), player.getUUID());
+            player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.fail"));
             return InteractionResult.SUCCESS;
         }
         if (tileEntity != null) {
-            player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.linkedToSkinnable"), player.getUUID());
+            player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.linkedToSkinnable"));
             return InteractionResult.FAIL;
         }
         setLinkedBlockPos(itemStack, context.getClickedPos());
-        player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.start"), player.getUUID());
+        player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.start"));
         return InteractionResult.SUCCESS;
     }
 

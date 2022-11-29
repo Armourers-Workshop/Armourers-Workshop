@@ -63,11 +63,11 @@ allprojects {
     }
 
     def uname = rootProject.archives_base_name.replaceAll("-", "")
-    def version = rootProject.java_version as int
+    def jversion = rootProject.java_version as int
 
     group = rootProject.maven_group
     archivesBaseName = "${uname.toLowerCase()}-${project.name}-${rootProject.minecraft_version}"
-    targetCompatibility = sourceCompatibility = version
+    targetCompatibility = sourceCompatibility = jversion
 
     repositories {
         // Add repositories to retrieve artifacts from in here.
@@ -79,14 +79,19 @@ allprojects {
     }
 
     dependencies {
-        implementation "systems.manifold:manifold-ext-rt:${rootProject.manifold_version}"
+        compileOnly "systems.manifold:manifold-ext:${rootProject.manifold_version}"
         annotationProcessor "systems.manifold:manifold-ext:${rootProject.manifold_version}"
         testAnnotationProcessor "systems.manifold:manifold-ext:${rootProject.manifold_version}"
     }
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
-        options.compilerArgs += ["-Xplugin:Manifold"]
+        options.compilerArgs << "-Xplugin:Manifold no-bootstrap"
+        if (jversion <= 8) {
+            // in minecraft 1.16, it must use --release flags, to resolve:
+            // java.lang.NoSuchMethodError: java.nio.ByteBuffer.rewind()Ljava/nio/ByteBuffer;
+            options.release = jversion
+        }
     }
 
     java {

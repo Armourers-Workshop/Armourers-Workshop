@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.compatibility;
 
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
 import net.minecraft.server.packs.resources.Resource;
@@ -39,7 +40,7 @@ public class AbstractProgramProvider implements ResourceProvider {
             public InputStream getInputStream() {
                 InputStream inputStream = resource.getInputStream();
                 try {
-                    String source = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                    String source = StreamUtils.toString(inputStream, StandardCharsets.UTF_8);
                     source = preprocessor.process(source);
                     return new ByteArrayInputStream(source.getBytes());
                 } catch (Exception exception) {

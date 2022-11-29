@@ -129,7 +129,7 @@ public class UpdateArmourerPacket extends CustomPacket {
                     CubeApplier applier = new CubeApplier(tileEntity.getLevel());
                     tileEntity.replaceCubes(applier, SkinPartTypes.UNKNOWN, event);
                     applier.submit(TranslateUtils.title("action.armourers_workshop.block.replace"), player);
-                    player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.replace.success", applier.getChanges()), player.getUUID());
+                    player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.replace.success", applier.getChanges()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

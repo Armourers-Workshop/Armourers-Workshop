@@ -269,7 +269,7 @@ public final class SkinIOUtils {
     }
 
     public static void recoverSkins(Player player) {
-        player.sendSystemMessage(new TextComponent("Starting skin recovery."), player.getUUID());
+        player.sendSystemMessage(new TextComponent("Starting skin recovery."));
         File skinDir = getSkinDatabaseDirectory();
         if (skinDir.exists() & skinDir.isDirectory()) {
             File recoverDir = new File(System.getProperty("user.dir"), "recovered-skins");
@@ -277,8 +277,8 @@ public final class SkinIOUtils {
                 recoverDir.mkdirs();
             }
             File[] skinFiles = skinDir.listFiles();
-            player.sendSystemMessage(new TextComponent(String.format("Found %d skins to be recovered.", skinFiles.length)), player.getUUID());
-            player.sendSystemMessage(new TextComponent("Working..."), player.getUUID());
+            player.sendSystemMessage(new TextComponent(String.format("Found %d skins to be recovered.", skinFiles.length)));
+            player.sendSystemMessage(new TextComponent("Working..."));
             int unnamedSkinCount = 0;
             int successCount = 0;
             int failCount = 0;
@@ -326,17 +326,17 @@ public final class SkinIOUtils {
                     failCount++;
                 }
             }
-            player.sendSystemMessage(new TextComponent("Finished skin recovery."), player.getUUID());
-            player.sendSystemMessage(new TextComponent(String.format("%d skins were recovered and %d fail recovery.", successCount, failCount)), player.getUUID());
+            player.sendSystemMessage(new TextComponent("Finished skin recovery."));
+            player.sendSystemMessage(new TextComponent(String.format("%d skins were recovered and %d fail recovery.", successCount, failCount)));
         } else {
-            player.sendSystemMessage(new TextComponent("No skins found to recover."), player.getUUID());
+            player.sendSystemMessage(new TextComponent("No skins found to recover."));
         }
     }
 
     public static void updateSkins(Player player) {
         File updateDir = new File(System.getProperty("user.dir"), "skin-update");
         if (!updateDir.exists() & updateDir.isDirectory()) {
-            player.sendSystemMessage(new TextComponent("Directory skin-update not found."), player.getUUID());
+            player.sendSystemMessage(new TextComponent("Directory skin-update not found."));
             return;
         }
 
@@ -345,8 +345,8 @@ public final class SkinIOUtils {
             outputDir.mkdir();
         }
         File[] skinFiles = updateDir.listFiles();
-        player.sendSystemMessage(new TextComponent(String.format("Found %d skins to be updated.", skinFiles.length)), player.getUUID());
-        player.sendSystemMessage(new TextComponent("Working..."), player.getUUID());
+        player.sendSystemMessage(new TextComponent(String.format("Found %d skins to be updated.", skinFiles.length)));
+        player.sendSystemMessage(new TextComponent("Working..."));
         int successCount = 0;
         int failCount = 0;
 
@@ -366,8 +366,8 @@ public final class SkinIOUtils {
                 }
             }
         }
-        player.sendSystemMessage(new TextComponent("Finished skin update."), player.getUUID());
-        player.sendSystemMessage(new TextComponent(String.format("%d skins were updated and %d failed.", successCount, failCount)), player.getUUID());
+        player.sendSystemMessage(new TextComponent("Finished skin update."));
+        player.sendSystemMessage(new TextComponent(String.format("%d skins were updated and %d failed.", successCount, failCount)));
     }
 
     public static boolean isInSubDirectory(File dir, File file) {

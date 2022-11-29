@@ -78,7 +78,7 @@ public final class ModHolidays {
             if (player.getInventory().add(itemStack)) {
                 storage.add(player, holiday1);
             } else {
-                player.sendSystemMessage(TranslateUtils.title("chat.armourers_workshop.inventoryGiftFail"), player.getUUID());
+                player.sendSystemMessage(TranslateUtils.title("chat.armourers_workshop.inventoryGiftFail"));
             }
         }
     }

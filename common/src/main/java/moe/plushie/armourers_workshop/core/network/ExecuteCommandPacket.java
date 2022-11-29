@@ -71,7 +71,7 @@ public class ExecuteCommandPacket extends CustomPacket {
                     break;
                 }
             }
-            player.sendSystemMessage(new TextComponent(key + " = " + data), player.getUUID());
+            player.sendSystemMessage(new TextComponent(key + " = " + data));
             // auto-save when change
             if (ModConfig.Client.class == object) {
                 ModConfigSpec.CLIENT.save();

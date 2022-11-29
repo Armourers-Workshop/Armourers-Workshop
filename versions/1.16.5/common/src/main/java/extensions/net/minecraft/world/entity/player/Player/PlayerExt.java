@@ -20,7 +20,7 @@ public class PlayerExt {
         return player.inventory;
     }
 
-    public static void sendSystemMessage(@This Player player, Component text, UUID uuid) {
-        player.sendMessage(text, uuid);
+    public static void sendSystemMessage(@This Player player, Component text) {
+        player.sendMessage(text, player.getUUID());
     }
 }

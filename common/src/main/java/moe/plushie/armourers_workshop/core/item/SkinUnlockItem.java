@@ -34,14 +34,14 @@ public class SkinUnlockItem extends FlavouredItem {
         }
         Component skinName = TranslateUtils.Name.of(skinType);
         if (wardrobe.getUnlockedSize(slotType) >= slotType.getMaxSize()) {
-            player.sendSystemMessage(new TranslatableComponent("chat.armourers_workshop.slotUnlockedFailed", skinName), player.getUUID());
+            player.sendSystemMessage(new TranslatableComponent("chat.armourers_workshop.slotUnlockedFailed", skinName));
             return InteractionResultHolder.fail(itemStack);
         }
         itemStack.shrink(1);
         int count = wardrobe.getUnlockedSize(slotType) + 1;
         wardrobe.setUnlockedSize(slotType, count);
         wardrobe.broadcast();
-        player.sendSystemMessage(new TranslatableComponent("chat.armourers_workshop.slotUnlocked", skinName, Integer.toString(count)), player.getUUID());
+        player.sendSystemMessage(new TranslatableComponent("chat.armourers_workshop.slotUnlocked", skinName, Integer.toString(count)));
         return InteractionResultHolder.success(itemStack);
     }
 }
