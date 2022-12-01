@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.builder.blockentity;
 
-import moe.plushie.armourers_workshop.core.blockentity.AbstractContainerBlockEntity;
+import moe.plushie.armourers_workshop.core.blockentity.UpdatableContainerBlockEntity;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.core.BlockPos;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.apache.logging.log4j.util.Strings;
 
-public class OutfitMakerBlockEntity extends AbstractContainerBlockEntity {
+public class OutfitMakerBlockEntity extends UpdatableContainerBlockEntity {
 
     private String itemName = "";
     private String itemFlavour = "";

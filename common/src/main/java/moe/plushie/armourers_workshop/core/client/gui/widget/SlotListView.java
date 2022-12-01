@@ -14,7 +14,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
@@ -31,7 +30,7 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
     public SlotListView(M menu, Inventory inventory, CGRect frame) {
         super(frame);
         this.menu = menu;
-        this.screen = new DelegateScreen<>(menu, inventory, TextComponent.EMPTY);
+        this.screen = new DelegateScreen<>(menu, inventory, Component.literal(""));
     }
 
     @Override

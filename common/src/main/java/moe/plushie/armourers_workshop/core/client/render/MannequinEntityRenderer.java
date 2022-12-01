@@ -10,14 +10,11 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
-import net.minecraft.client.renderer.entity.layers.ElytraLayer;
-import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 
@@ -40,19 +37,14 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
 
     public MannequinEntityRenderer(AbstractEntityRendererContext context) {
         super(context, new MannequinModel<>(context, 0, false), 0.0f);
-        this.context = context;
-        this.addLayer(new HumanoidArmorLayer<>(this, MannequinArmorModel.innerModel(context), MannequinArmorModel.outerModel(context)));
-        this.addLayer(new ItemInHandLayer<>(this));
-        //#if MC >= 11800
-        this.addLayer(new ElytraLayer<>(this, context.getModelSet()));
-        this.addLayer(new CustomHeadLayer<>(this, context.getModelSet()));
-        //#else
-        //# this.addLayer(new ElytraLayer<>(this));
-        //# this.addLayer(new CustomHeadLayer<>(this));
-        //#endif
+        this.addLayer(ClientNativeManager.getFactory().createHumanoidArmorLayer(this, context, MannequinArmorModel.innerModel(context), MannequinArmorModel.outerModel(context)));
+        this.addLayer(ClientNativeManager.getFactory().createItemInHandLayer(this, context));
+        this.addLayer(ClientNativeManager.getFactory().createElytraLayer(this, context));
+        this.addLayer(ClientNativeManager.getFactory().createCustomHeadLayer(this, context));
         // two models by mannequin, only deciding which model using when texture specified.
         this.normalModel = this.model;
         this.slimModel = new MannequinModel<>(context, 0, true);
+        this.context = context;
     }
 
     @Override

@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import net.minecraft.Util;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 public class ColorParser {
 
-    public static final DynamicCommandExceptionType ERROR_INVALID_COLOR_FORMAT = new DynamicCommandExceptionType((obj) -> new TranslatableComponent("commands.armourers.invalidColorFormat", obj));
+    public static final DynamicCommandExceptionType ERROR_INVALID_COLOR_FORMAT = new DynamicCommandExceptionType((obj) -> Component.translatable("commands.armourers.invalidColorFormat", obj));
 
     private static final IntegerArgumentType INTEGER_ARGUMENT = IntegerArgumentType.integer(0, 255);
 

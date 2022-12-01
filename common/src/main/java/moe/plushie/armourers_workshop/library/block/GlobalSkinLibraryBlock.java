@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.library.block;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
-import moe.plushie.armourers_workshop.init.ModMenus;
+import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
+import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -24,11 +24,11 @@ public class GlobalSkinLibraryBlock extends AbstractHorizontalBlock implements I
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntities.SKIN_LIBRARY_GLOBAL.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.SKIN_LIBRARY_GLOBAL.create(level, blockPos, blockState);
     }
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        return MenuManager.openMenu(ModMenus.SKIN_LIBRARY_GLOBAL, level.getBlockEntity(blockPos), player);
+        return MenuManager.openMenu(ModMenuTypes.SKIN_LIBRARY_GLOBAL, level.getBlockEntity(blockPos), player);
     }
 }

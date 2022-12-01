@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
-import moe.plushie.armourers_workshop.api.common.IRenderBufferObject;
+import moe.plushie.armourers_workshop.api.client.IRenderBufferObject;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.renderer.RenderType;

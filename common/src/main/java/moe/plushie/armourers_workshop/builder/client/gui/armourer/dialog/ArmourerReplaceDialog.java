@@ -212,7 +212,7 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
 
         protected void reloadSlots(CGRect inventoryRect, CGRect placeholderRect) {
             slots.clear();
-            addPlayerSlots(inventory, inventoryRect.x, inventoryRect.y);
+            addPlayerSlots(inventory, inventoryRect.x + 8, inventoryRect.y + 16);
             addPlaceholderSlots(inventory, inventory.getContainerSize() - 2, placeholderRect.x, placeholderRect.y);
         }
 

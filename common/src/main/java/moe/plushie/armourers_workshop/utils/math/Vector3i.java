@@ -9,6 +9,7 @@ import net.minecraft.core.Position;
 public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
 
     public static final Vector3i ZERO = new Vector3i(0, 0, 0);
+
     private int x;
     private int y;
     private int z;

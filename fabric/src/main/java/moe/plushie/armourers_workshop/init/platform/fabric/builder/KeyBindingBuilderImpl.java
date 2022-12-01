@@ -4,11 +4,11 @@ import com.mojang.blaze3d.platform.InputConstants;
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
 import moe.plushie.armourers_workshop.api.common.builder.IKeyBindingBuilder;
+import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.ext.OpenKeyModifier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 @Environment(EnvType.CLIENT)
 public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBindingBuilder<T> {
 
-    private static final ArrayList<Pair<KeyMapping, Supplier<Runnable>>> INPUTS = new ArrayList<>();
+    private static final ArrayList<Pair<KeyMapping, Supplier<Runnable>>> INPUTS = createAndAttach();
 
     private IKeyModifier modifier = OpenKeyModifier.NONE;
     private String category = "";
@@ -57,7 +57,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         if (handler != null) {
             INPUTS.add(Pair.of(binding, handler));
         }
-        KeyBindingHelper.registerKeyBinding(binding);
+        ClientNativeManager.getProvider().willRegisterKeyMapping(registry -> registry.register(binding));
         IKeyBinding binding1 = new IKeyBinding() {
 
             @Override
@@ -100,11 +100,13 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         }
     }
 
-    public static void tick() {
-        INPUTS.forEach(pair -> {
+    private static <T> ArrayList<T> createAndAttach() {
+        // attach the input event to client.
+        ClientNativeManager.getProvider().willInput(ignored -> INPUTS.forEach(pair -> {
             if (pair.getKey().consumeClick()) {
                 pair.getValue().get().run();
             }
-        });
+        }));
+        return new ArrayList<>();
     }
 }

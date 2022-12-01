@@ -88,7 +88,7 @@ public class UpdateWardrobePacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // We can't allow wardrobe updates without container.
-        String playerName = player.getName().getContents();
+        String playerName = player.getDisplayName().getString();
         if (!(player.containerMenu instanceof SkinWardrobeMenu)) {
             ModLog.info("the wardrobe {} operation rejected for '{}'", field, playerName);
             return;

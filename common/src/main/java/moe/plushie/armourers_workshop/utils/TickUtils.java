@@ -2,18 +2,19 @@ package moe.plushie.armourers_workshop.utils;
 
 public class TickUtils {
 
+    private static boolean isPaused;
     private static long pausedTime;
     private static long ignoredTime;
 
-    private static long getTime() {
-        if (pausedTime != 0) {
+    private static long time() {
+        if (isPaused) {
             return pausedTime - ignoredTime;
         }
         return System.currentTimeMillis() - ignoredTime;
     }
 
     public static int ticks() {
-        return (int) (getTime() % 100000000);
+        return (int) (time() % 100000000);
     }
 
     public static float getPaintTextureOffset() {
@@ -21,12 +22,14 @@ public class TickUtils {
         return Math.round(f);
     }
 
-    public static void pause() {
-        pausedTime = System.currentTimeMillis();
-    }
-
-    public static void resume() {
-        ignoredTime += System.currentTimeMillis() - pausedTime;
-        pausedTime = 0;
+    public static void tick(boolean newValue) {
+        if (isPaused != newValue) {
+            isPaused = newValue;
+            if (newValue) {
+                pausedTime = System.currentTimeMillis();
+            } else {
+                ignoredTime += System.currentTimeMillis() - pausedTime;
+            }
+        }
     }
 }

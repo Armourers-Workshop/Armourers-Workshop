@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.builder.block;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.api.common.IBlockHandler;
 import moe.plushie.armourers_workshop.builder.blockentity.BoundingBoxBlockEntity;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
+import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -36,7 +36,7 @@ public class BoundingBoxBlock extends Block implements IBlockEntityProvider, IBl
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntities.BOUNDING_BOX.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.BOUNDING_BOX.create(level, blockPos, blockState);
     }
 
     @Override

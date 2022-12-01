@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public abstract class RotableContainerBlockEntity extends AbstractContainerBlockEntity implements IBlockEntityHandler {
+public abstract class RotableContainerBlockEntity extends UpdatableContainerBlockEntity implements IBlockEntityHandler {
 
     public static final AABB ZERO_BOX = new AABB(0, 0, 0, 0, 0, 0);
 

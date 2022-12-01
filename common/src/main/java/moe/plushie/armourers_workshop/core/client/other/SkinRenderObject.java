@@ -1,8 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.math.Matrix4f;
-import moe.plushie.armourers_workshop.api.common.IRenderBufferObject;
+import moe.plushie.armourers_workshop.api.client.IRenderBufferObject;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -29,16 +28,16 @@ public class SkinRenderObject implements IRenderBufferObject, AutoCloseable {
         RenderSystem.glBindBuffer(GL15.GL_ARRAY_BUFFER, () -> this.id);
     }
 
-    public void upload(BufferBuilder builder) {
-        if (!RenderSystem.isOnRenderThread()) {
-            RenderSystem.recordRenderCall(() -> this.upload(builder));
-            return;
-        }
-        if (this.id < 0) {
-            return;
-        }
-        upload(builder.popNextBuffer().getSecond());
-    }
+//    public void upload(BufferBuilder builder) {
+//        if (!RenderSystem.isOnRenderThread()) {
+//            RenderSystem.recordRenderCall(() -> this.upload(builder));
+//            return;
+//        }
+//        if (this.id < 0) {
+//            return;
+//        }
+//        upload(builder.popNextBuffer().getSecond());
+//    }
 
     public void upload(ByteBuffer byteBuffer) {
         if (!RenderSystem.isOnRenderThread()) {

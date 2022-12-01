@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.block;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
-import moe.plushie.armourers_workshop.init.ModMenus;
+import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
+import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
@@ -34,7 +34,7 @@ public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock impl
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntities.HOLOGRAM_PROJECTOR.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.HOLOGRAM_PROJECTOR.create(level, blockPos, blockState);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock impl
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        return MenuManager.openMenu(ModMenus.HOLOGRAM_PROJECTOR, level.getBlockEntity(blockPos), player);
+        return MenuManager.openMenu(ModMenuTypes.HOLOGRAM_PROJECTOR, level.getBlockEntity(blockPos), player);
     }
 
     @Override

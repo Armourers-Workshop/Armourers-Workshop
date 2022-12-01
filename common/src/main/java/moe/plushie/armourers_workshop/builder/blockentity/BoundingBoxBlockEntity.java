@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.builder.data.BoundingBox;
-import moe.plushie.armourers_workshop.core.blockentity.AbstractBlockEntity;
+import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.Arrays;
 import java.util.Map;
 
-public class BoundingBoxBlockEntity extends AbstractBlockEntity implements IPaintable, IBlockEntityExtendedRenderer {
+public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPaintable, IBlockEntityExtendedRenderer {
 
     protected static final BlockPos INVALID = BlockPos.of(-1);
 

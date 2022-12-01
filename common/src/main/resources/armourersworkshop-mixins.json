@@ -9,7 +9,7 @@
     "HttpTextureMixin",
     "InventoryScreenMixin",
     "ItemRendererMixin",
-    "RebuildTaskMixin",
+    "BlockEntityRenderDispatcherMixin",
     "ThrownTridentRendererMixin"
   ],
   "mixins": [

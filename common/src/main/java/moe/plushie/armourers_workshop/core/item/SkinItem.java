@@ -10,13 +10,12 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -118,7 +117,7 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
     public Component getName(ItemStack itemStack) {
         Skin skin = SkinLoader.getInstance().getSkin(itemStack);
         if (skin != null && !skin.getCustomName().trim().isEmpty()) {
-            return new TextComponent(skin.getCustomName());
+            return TranslateUtils.formatted(skin.getCustomName());
         }
         if (skin != null) {
             return TranslateUtils.Name.of(skin.getType());

@@ -9,7 +9,9 @@ import java.util.EnumSet;
 
 @SuppressWarnings("unused")
 public class Vector3d implements Position {
+
     public static final Vector3d ZERO = new Vector3d(0.0D, 0.0D, 0.0D);
+
     public final double x;
     public final double y;
     public final double z;
@@ -24,10 +26,10 @@ public class Vector3d implements Position {
         this(pos.x(), pos.y(), pos.z());
     }
 
-    public static Vector3d fromRGB24(int p_237487_0_) {
-        double d0 = (double) (p_237487_0_ >> 16 & 255) / 255.0D;
-        double d1 = (double) (p_237487_0_ >> 8 & 255) / 255.0D;
-        double d2 = (double) (p_237487_0_ & 255) / 255.0D;
+    public static Vector3d fromRGB24(int rgb) {
+        double d0 = (double) (rgb >> 16 & 255) / 255.0D;
+        double d1 = (double) (rgb >> 8 & 255) / 255.0D;
+        double d2 = (double) (rgb & 255) / 255.0D;
         return new Vector3d(d0, d1, d2);
     }
 
@@ -207,8 +209,8 @@ public class Vector3d implements Position {
         return new Vector3d(d0, d1, d2);
     }
 
-    public double get(Direction.Axis p_216370_1_) {
-        return p_216370_1_.choose(this.x, this.y, this.z);
+    public double get(Direction.Axis axis) {
+        return axis.choose(x, y, z);
     }
 
     public final double x() {

@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.compatibility.mixin;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
-import moe.plushie.armourers_workshop.compatibility.AbstractProgramPreprocessor;
 import moe.plushie.armourers_workshop.compatibility.AbstractProgramProvider;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.ShaderPreprocessor;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +21,7 @@ public abstract class AbstractVanillaShaderMixin implements ISkinDataProvider {
 //            return new AbstractProgramProvider("vsh", new AbstractProgramPreprocessor(""), arg1);
 //        }
         if (arg3.equals("rendertype_entity_solid") || arg3.equals("new_entity")) {
-            return new AbstractProgramProvider("vsh", new AbstractProgramPreprocessor(""), arg1);
+            return new AbstractProgramProvider("vsh", new ShaderPreprocessor(""), arg1);
         }
         return arg1;
     }

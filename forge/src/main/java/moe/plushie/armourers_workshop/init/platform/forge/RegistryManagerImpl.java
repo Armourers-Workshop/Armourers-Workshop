@@ -1,11 +1,12 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
 import com.google.common.collect.ImmutableMap;
+import moe.plushie.armourers_workshop.api.common.IRegistry;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeRegistries;
 import moe.plushie.armourers_workshop.core.registry.Registry;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -14,10 +15,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -27,12 +24,12 @@ import java.util.function.Supplier;
 public class RegistryManagerImpl {
 
     private static final ImmutableMap<Class<?>, Registry<?>> REGISTRIES = new ImmutableMap.Builder<Class<?>, Registry<?>>()
-            .put(Block.class, new RegistryProxy<>(AbstractForgeRegistries.BLOCKS))
-            .put(Item.class, new RegistryProxy<>(AbstractForgeRegistries.ITEMS))
-            .put(MenuType.class, new RegistryProxy<>(AbstractForgeRegistries.MENUS))
-            .put(EntityType.class, new RegistryProxy<>(AbstractForgeRegistries.ENTITIES))
-            .put(BlockEntityType.class, new RegistryProxy<>(AbstractForgeRegistries.BLOCK_ENTITIES))
-            .put(SoundEvent.class, new RegistryProxy<>(AbstractForgeRegistries.SOUND_EVENTS))
+            .put(Block.class, new RegistryProxy<>(AbstractForgeRegistries.wrap(AbstractForgeRegistries.BLOCKS)))
+            .put(Item.class, new RegistryProxy<>(AbstractForgeRegistries.wrap(AbstractForgeRegistries.ITEMS)))
+            .put(MenuType.class, new RegistryProxy<>(AbstractForgeRegistries.wrap(AbstractForgeRegistries.MENU_TYPES)))
+            .put(EntityType.class, new RegistryProxy<>(AbstractForgeRegistries.wrap(AbstractForgeRegistries.ENTITY_TYPES)))
+            .put(BlockEntityType.class, new RegistryProxy<>(AbstractForgeRegistries.wrap(AbstractForgeRegistries.BLOCK_ENTITY_TYPES)))
+            .put(SoundEvent.class, new RegistryProxy<>(AbstractForgeRegistries.wrap(AbstractForgeRegistries.SOUND_EVENTS)))
             .build();
 
     public static <T> Registry<T> makeRegistry(Class<? super T> clazz) {
@@ -41,21 +38,17 @@ public class RegistryManagerImpl {
         if (registry != null) {
             return ObjectUtils.unsafeCast(registry);
         }
-
         // if an error is thrown here, that mean vanilla broke something.
         throw new AssertionError("not supported registry entry of the " + clazz);
     }
 
-    public static class RegistryProxy<T extends IForgeRegistryEntry<T>, R extends IForgeRegistry<T>> extends Registry<T> {
+    public static class RegistryProxy<T> extends Registry<T> {
 
-        protected final R registry;
-        protected final DeferredRegister<T> deferredRegister;
+        protected final IRegistry<T> registry;
         protected final LinkedHashSet<IRegistryKey<T>> entriesView = new LinkedHashSet<>();
 
-        protected RegistryProxy(R registry) {
+        protected RegistryProxy(IRegistry<T> registry) {
             this.registry = registry;
-            this.deferredRegister = DeferredRegister.create(registry, ModConstants.MOD_ID);
-            this.deferredRegister.register(FMLJavaModLoadingContext.get().getModEventBus());
         }
 
         @Override
@@ -77,7 +70,7 @@ public class RegistryManagerImpl {
         public <I extends T> IRegistryKey<I> register(String name, Supplier<? extends I> provider) {
             ResourceLocation registryName = ModConstants.key(name);
             ModLog.debug("Registering '{}'", registryName);
-            Supplier<I> value = deferredRegister.register(name, provider);
+            Supplier<I> value = registry.register(name, provider);
             IRegistryKey<I> object = new IRegistryKey<I>() {
                 @Override
                 public ResourceLocation getRegistryName() {

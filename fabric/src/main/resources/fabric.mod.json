@@ -17,10 +17,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "moe.plushie.armourers_workshop.init.platform.fabric.CommonEventDispatcherImpl"
+      "moe.plushie.armourers_workshop.init.platform.fabric.proxy.CommonProxyImpl"
     ],
     "client": [
-      "moe.plushie.armourers_workshop.init.platform.fabric.ClientEventDispatcherImpl"
+      "moe.plushie.armourers_workshop.init.platform.fabric.proxy.ClientProxyImpl"
     ]
   },
   "mixins": [

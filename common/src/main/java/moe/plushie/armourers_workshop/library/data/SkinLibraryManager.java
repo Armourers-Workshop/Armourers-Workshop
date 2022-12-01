@@ -206,7 +206,7 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
             }
             syncedPlayers.add(uuid);
             String key = Constants.PRIVATE + "/" + uuid;
-            String name = player.getName().getString();
+            String name = player.getScoreboardName();
             ArrayList<SkinLibraryFile> privateFiles = this.privateFiles.getOrDefault(key, new ArrayList<>());
             UpdateLibraryFilesPacket packet = new UpdateLibraryFilesPacket(publicFiles, privateFiles);
             NetworkManager.sendTo(packet, player);

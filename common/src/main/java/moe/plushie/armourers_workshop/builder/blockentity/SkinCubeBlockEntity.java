@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.client.IBlockEntityExtendedRenderer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
-import moe.plushie.armourers_workshop.core.blockentity.AbstractBlockEntity;
+import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Map;
 
-public class SkinCubeBlockEntity extends AbstractBlockEntity implements IPaintable, IBlockEntityExtendedRenderer {
+public class SkinCubeBlockEntity extends UpdatableBlockEntity implements IPaintable, IBlockEntityExtendedRenderer {
 
     protected BlockPaintColor colors = new BlockPaintColor(PaintColor.WHITE);
     protected boolean customRenderer = false;

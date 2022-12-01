@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.item;
 import moe.plushie.armourers_workshop.core.data.MannequinHitResult;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.init.ModEntities;
+import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -87,7 +87,7 @@ public class MannequinItem extends FlavouredItem {
         ItemStack itemStack = context.getItemInHand();
         if (level instanceof ServerLevel) {
             ServerLevel serverWorld = (ServerLevel) level;
-            MannequinEntity entity = ModEntities.MANNEQUIN.get().create(serverWorld, itemStack.getTag(), null, context.getPlayer(), rayTraceResult.getBlockPos(), MobSpawnType.SPAWN_EGG, true, true);
+            MannequinEntity entity = ModEntityTypes.MANNEQUIN.get().create(serverWorld, itemStack.getTag(), null, context.getPlayer(), rayTraceResult.getBlockPos(), MobSpawnType.SPAWN_EGG, true, true);
             if (entity == null) {
                 return InteractionResult.FAIL;
             }

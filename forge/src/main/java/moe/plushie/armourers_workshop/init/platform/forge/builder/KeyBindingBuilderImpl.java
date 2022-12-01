@@ -5,7 +5,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
 import moe.plushie.armourers_workshop.api.common.builder.IKeyBindingBuilder;
-import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeClientRegistries;
+import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.ext.OpenKeyModifier;
 import net.minecraft.client.KeyMapping;
@@ -37,7 +37,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
             .put(KeyModifier.NONE, OpenKeyModifier.NONE)
             .build();
 
-    private static final ArrayList<Pair<KeyMapping, Supplier<Runnable>>> INPUTS = new ArrayList<>();
+    private static final ArrayList<Pair<KeyMapping, Supplier<Runnable>>> INPUTS = createAndAttach();
 
     private final String key;
     private IKeyModifier modifier = OpenKeyModifier.NONE;
@@ -76,7 +76,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         if (handler != null) {
             INPUTS.add(Pair.of(binding, handler));
         }
-        AbstractForgeClientRegistries.registerKeyMapping(binding);
+        ClientNativeManager.getProvider().willRegisterKeyMapping(registry -> registry.register(binding));
         IKeyBinding binding1 = new IKeyBinding() {
 
             @Override
@@ -119,11 +119,13 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         }
     }
 
-    public static void tick() {
-        INPUTS.forEach(pair -> {
+    private static <T> ArrayList<T> createAndAttach() {
+        // attach the input event to client.
+        ClientNativeManager.getProvider().willInput(ignored -> INPUTS.forEach(pair -> {
             if (pair.getKey().consumeClick()) {
                 pair.getValue().get().run();
             }
-        });
+        }));
+        return new ArrayList<>();
     }
 }

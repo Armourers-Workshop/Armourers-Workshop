@@ -7,7 +7,6 @@ import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSIndexPath;
 import com.apple.library.impl.TooltipRenderer;
 import com.apple.library.uikit.*;
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -23,12 +22,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -187,7 +184,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
 
         public Entry(ISkinLibrary.Entry entry) {
             super(CGRect.ZERO);
-            this.title = new TextComponent(entry.getName());
+            this.title = Component.literal(entry.getName());
             this.font = Minecraft.getInstance().font;
             this.entry = entry;
             if (!entry.isDirectory()) {

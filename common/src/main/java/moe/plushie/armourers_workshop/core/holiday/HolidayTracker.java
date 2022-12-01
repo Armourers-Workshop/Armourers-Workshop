@@ -39,13 +39,13 @@ public class HolidayTracker extends AbstractSavedData {
     }
 
     public void add(Player player, Holiday holiday) {
-        ModLog.info("give a {} gift sack for the {}", holiday.getName(), player.getName().getContents());
+        ModLog.info("give a {} gift sack for the {}", holiday.getName(), player.getScoreboardName());
         logs.add(getKey(player, holiday));
         setDirty();
     }
 
     public void remove(Player player, Holiday holiday) {
-        ModLog.info("take a {} gift sack for the {}", holiday.getName(), player.getName().getContents());
+        ModLog.info("take a {} gift sack for the {}", holiday.getName(), player.getScoreboardName());
         logs.remove(getKey(player, holiday));
         setDirty();
     }

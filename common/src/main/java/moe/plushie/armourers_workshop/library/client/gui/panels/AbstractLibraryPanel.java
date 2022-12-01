@@ -13,8 +13,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 
 import java.util.function.Predicate;
 
@@ -60,7 +60,7 @@ public abstract class AbstractLibraryPanel extends UIView {
 
     protected NSString getURLText(String url) {
         Style style = Style.EMPTY.withColor(ChatFormatting.BLUE).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
-        return new NSString(new TextComponent(url).withStyle(style));
+        return new NSString(Component.literal(url).withStyle(style));
     }
 
     protected CGGradient getDefaultColor() {

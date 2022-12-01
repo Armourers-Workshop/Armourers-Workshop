@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.builder.block;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
-import moe.plushie.armourers_workshop.init.ModMenus;
+import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
+import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,7 +28,7 @@ public class AdvancedSkinBuilderBlock extends AbstractHorizontalBlock implements
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntities.ADVANCED_SKIN_BUILDER.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.ADVANCED_SKIN_BUILDER.create(level, blockPos, blockState);
     }
 
     @Override
@@ -50,6 +50,6 @@ public class AdvancedSkinBuilderBlock extends AbstractHorizontalBlock implements
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        return MenuManager.openMenu(ModMenus.ADVANCED_SKIN_BUILDER, level.getBlockEntity(blockPos), player);
+        return MenuManager.openMenu(ModMenuTypes.ADVANCED_SKIN_BUILDER, level.getBlockEntity(blockPos), player);
     }
 }

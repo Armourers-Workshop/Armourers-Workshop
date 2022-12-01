@@ -3,21 +3,21 @@ package moe.plushie.armourers_workshop.init.command;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
+import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.synchronization.ArgumentSerializer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,10 +27,10 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 // /path/name.armour
-public class FileArgument implements ArgumentType<String> {
+public class FileArgument implements IArgumentType<String> {
 
-    public static final SimpleCommandExceptionType ERROR_START = new SimpleCommandExceptionType(new TextComponent("File must start with '/'"));
-    public static final SimpleCommandExceptionType ERROR_NOT_FOUND = new SimpleCommandExceptionType(new TextComponent("Not found any file"));
+    public static final SimpleCommandExceptionType ERROR_START = new SimpleCommandExceptionType(Component.literal("File must start with '/'"));
+    public static final SimpleCommandExceptionType ERROR_NOT_FOUND = new SimpleCommandExceptionType(Component.literal("Not found any file"));
     private static final Collection<String> EXAMPLES = Arrays.asList("/", "/file.armour", "\"<scheme>:<identifier>\"");
     private final File rootFile;
     private final ArrayList<String> fileList;
@@ -146,14 +146,18 @@ public class FileArgument implements ArgumentType<String> {
         return results;
     }
 
-    public static class Serializer implements ArgumentSerializer<FileArgument> {
 
+
+    public static class Serializer implements IArgumentSerializer<FileArgument> {
+
+        @Override
         public void serializeToNetwork(FileArgument argument, FriendlyByteBuf buffer) {
             ArrayList<String> lists = argument.getFileList("/");
             buffer.writeInt(lists.size());
             lists.forEach(buffer::writeUtf);
         }
 
+        @Override
         public FileArgument deserializeFromNetwork(FriendlyByteBuf buffer) {
             int size = buffer.readInt();
             ArrayList<String> lists = new ArrayList<>(size);
@@ -163,6 +167,7 @@ public class FileArgument implements ArgumentType<String> {
             return new FileArgument(lists);
         }
 
+        @Override
         public void serializeToJson(FileArgument argument, JsonObject json) {
             JsonArray array = new JsonArray();
             ArrayList<String> lists = argument.getFileList("/");

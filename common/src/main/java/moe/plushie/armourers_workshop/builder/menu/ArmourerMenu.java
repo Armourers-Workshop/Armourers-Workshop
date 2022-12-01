@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -108,7 +108,7 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
             CubeTransform transform = tileEntity.getTransform();
             skin = WorldUtils.saveSkinFromWorld(level, transform, skinProps, tileEntity.getSkinType(), tileEntity.getPaintData());
         } catch (SkinSaveException e) {
-            player.sendSystemMessage(new TextComponent(e.getMessage()));
+            player.sendSystemMessage(Component.literal(e.getMessage()));
         }
 
         if (skin == null) {

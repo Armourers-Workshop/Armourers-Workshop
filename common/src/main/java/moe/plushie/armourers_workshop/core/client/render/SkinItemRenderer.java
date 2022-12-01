@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.init.ModEntities;
+import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import moe.plushie.armourers_workshop.init.platform.RendererManager;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -64,7 +64,7 @@ public class SkinItemRenderer extends AbstractItemEntityRenderer {
     public MannequinEntity getMannequinEntity() {
         ClientLevel level = Minecraft.getInstance().level;
         if (entity == null) {
-            entity = new MannequinEntity(ModEntities.MANNEQUIN.get(), level);
+            entity = new MannequinEntity(ModEntityTypes.MANNEQUIN.get(), level);
             entity.setId(MannequinEntity.PLACEHOLDER_ENTITY_ID);
             entity.setExtraRenderer(false); // never magic cir
         }

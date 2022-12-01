@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.block;
 
-import moe.plushie.armourers_workshop.init.ModMenus;
+import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -19,6 +19,6 @@ public class SkinningTableBlock extends AbstractHorizontalBlock {
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        return MenuManager.openMenu(ModMenus.SKINNING_TABLE, level, blockPos, player);
+        return MenuManager.openMenu(ModMenuTypes.SKINNING_TABLE, level, blockPos, player);
     }
 }

@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.library.block;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
+import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModBlocks;
-import moe.plushie.armourers_workshop.init.ModMenus;
+import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.library.blockentity.SkinLibraryBlockEntity;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
@@ -28,16 +28,16 @@ public class SkinLibraryBlock extends AbstractHorizontalBlock implements IBlockE
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntities.SKIN_LIBRARY.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.SKIN_LIBRARY.create(level, blockPos, blockState);
     }
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if (this == ModBlocks.SKIN_LIBRARY_CREATIVE.get()) {
-            return MenuManager.openMenu(ModMenus.SKIN_LIBRARY_CREATIVE, level.getBlockEntity(blockPos), player);
+            return MenuManager.openMenu(ModMenuTypes.SKIN_LIBRARY_CREATIVE, level.getBlockEntity(blockPos), player);
         }
         if (this == ModBlocks.SKIN_LIBRARY.get()) {
-            return MenuManager.openMenu(ModMenus.SKIN_LIBRARY, level.getBlockEntity(blockPos), player);
+            return MenuManager.openMenu(ModMenuTypes.SKIN_LIBRARY, level.getBlockEntity(blockPos), player);
         }
         return InteractionResult.CONSUME;
     }

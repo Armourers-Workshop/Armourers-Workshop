@@ -142,7 +142,7 @@ public class ModEntityProfiles {
 //        register(EntityType.ARMOR_STAND, EntityProfiles.MANNEQUIN);
         register(EntityType.IRON_GOLEM, MANNEQUIN);
 
-        register(ModEntities.MANNEQUIN.get(), MANNEQUIN);
+        register(ModEntityTypes.MANNEQUIN.get(), MANNEQUIN);
 
         ModCompatible.registerCustomEntityType();
     }

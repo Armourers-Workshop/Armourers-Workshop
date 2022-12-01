@@ -1,8 +1,8 @@
 package com.apple.library.impl;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 
 public class StringEncoderImpl {
 
@@ -11,7 +11,7 @@ public class StringEncoderImpl {
     private Style style = Style.EMPTY;
     private StringBuilder builder = new StringBuilder();
 
-    private final TextComponent component = new TextComponent("");
+    private final MutableComponent component = Component.literal("");
 
     public boolean append(int index, Style newStyle, int ch) {
         if (style != newStyle && count != 0) {
@@ -34,6 +34,6 @@ public class StringEncoderImpl {
 
     private void flush() {
         String value = builder.toString();
-        component.append(new TextComponent(value).setStyle(style));
+        component.append(Component.literal(value).setStyle(style));
     }
 }

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
 import com.google.common.collect.Lists;
+import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -35,7 +36,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -73,6 +73,10 @@ public class ModCommands {
     private static final DynamicCommandExceptionType ERROR_MISSING_ITEM_STACK = new DynamicCommandExceptionType(ob -> {
         return TranslateUtils.title("commands.armourers_workshop.armourers.error.missingItemSkinnable", ob);
     });
+
+    public static void init(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(commands());
+    }
 
     // :/armourers setSkin|giveSkin|clearSkin
     public static LiteralArgumentBuilder<CommandSourceStack> commands() {
@@ -213,7 +217,7 @@ public class ModCommands {
                         itemEntity.setOwner(player.getUUID());
                     }
                 }
-                context.getSource().sendSuccess(new TranslatableComponent("commands.give.success.single", 1, itemStack.getDisplayName(), player.getDisplayName()), true);
+                context.getSource().sendSuccess(Component.translatable("commands.give.success.single", 1, itemStack.getDisplayName(), player.getDisplayName()), true);
             }
             return 1;
         }
@@ -297,7 +301,7 @@ public class ModCommands {
             ItemOverrideType overrideType = ItemOverrideType.of(ListArgument.getString(context, "skin_type"));
             ItemStack itemStack = player.getMainHandItem();
             if (overrideType == null || itemStack.isEmpty()) {
-                throw ERROR_MISSING_ITEM_STACK.create(player.getDisplayName());
+                throw ERROR_MISSING_ITEM_STACK.create(player.getScoreboardName());
             }
             ResourceLocation identifier = Registry.ITEM.getKey(itemStack.getItem());
             String key = String.format("%s:%s", overrideType.getName(), identifier);
@@ -336,7 +340,7 @@ public class ModCommands {
             for (Entity entity : EntityArgument.getEntities(context, "entities")) {
                 SkinWardrobe wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe != null) {
-                    MenuManager.openMenu(ModMenus.WARDROBE_OP, player, wardrobe);
+                    MenuManager.openMenu(ModMenuTypes.WARDROBE_OP, player, wardrobe);
                     break;
                 }
             }

@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.compatibility;
 
+import moe.plushie.armourers_workshop.utils.ShaderPreprocessor;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
@@ -16,9 +17,9 @@ public class AbstractProgramProvider implements ResourceProvider {
 
     private final String type;
     private final ResourceProvider provider;
-    private final AbstractProgramPreprocessor preprocessor;
+    private final ShaderPreprocessor preprocessor;
 
-    public AbstractProgramProvider(String type, AbstractProgramPreprocessor preprocessor, ResourceProvider provider) {
+    public AbstractProgramProvider(String type, ShaderPreprocessor preprocessor, ResourceProvider provider) {
         this.type = type;
         this.provider = provider;
         this.preprocessor = preprocessor;

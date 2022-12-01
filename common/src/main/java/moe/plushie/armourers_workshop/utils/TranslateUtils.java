@@ -4,50 +4,43 @@ package moe.plushie.armourers_workshop.utils;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.compatibility.AbstractTranslatableComponent;
 import moe.plushie.armourers_workshop.core.data.slot.ItemOverrideType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModLog;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 public final class TranslateUtils {
 
-
-    public static Component literal(String content) {
-        return new TextComponent(getFormattedString(content));
+    public static MutableComponent formatted(String content) {
+        return Component.literal(getFormattedString(content));
     }
 
-    public static TranslatableComponent title(String key) {
-        return new ColorFixedTranslationTextComponent(key);
+    public static MutableComponent title(String key, Object... args) {
+        return AbstractTranslatableComponent.of(key, args);
     }
 
-    public static TranslatableComponent title(String key, Object... args) {
-        return new ColorFixedTranslationTextComponent(key, args);
+    public static MutableComponent subtitle(String key, Object... args) {
+        return title(key, args).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY));
     }
 
     public static ArrayList<Component> subtitles(String key) {
         ArrayList<Component> results = new ArrayList<>();
-        TranslatableComponent value1 = TranslateUtils.subtitle(key);
+        MutableComponent value1 = subtitle(key);
         String value = value1.getString();
         if (key.equals(value)) {
             return results;
         }
         Style style = Style.EMPTY.withColor(ChatFormatting.GRAY);
         for (String line : getFormattedString(value).split("(\\r?\\n)|(%n)")) {
-            results.add(new TextComponent(line).setStyle(style));
+            results.add(Component.literal(line).setStyle(style));
         }
         return results;
-    }
-
-    public static TranslatableComponent subtitle(String key, Object... args) {
-        TranslatableComponent text = new ColorFixedTranslationTextComponent(key, args);
-        text.setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY));
-        return text;
     }
 
     public static String getEmbeddedStyle(String value) {
@@ -96,31 +89,13 @@ public final class TranslateUtils {
         return value;
     }
 
-    private static class ColorFixedTranslationTextComponent extends TranslatableComponent {
-
-        public ColorFixedTranslationTextComponent(String p_i45160_1_, Object... p_i45160_2_) {
-            super(p_i45160_1_, p_i45160_2_);
-        }
-
-        @Override
-        @Environment(value = EnvType.CLIENT)
-        public <T> Optional<T> visitSelf(FormattedText.StyledContentConsumer<T> acceptor, Style initStyle) {
-            String[] lastStyle = {""};
-            return super.visitSelf((style1, value) -> {
-                String embeddedStyle = lastStyle[0];
-                lastStyle[0] = embeddedStyle + getEmbeddedStyle(value);
-                return acceptor.accept(style1, embeddedStyle + getFormattedString(value));
-            }, initStyle);
-        }
-    }
-
     public static class Name {
 
-        public static TranslatableComponent of(ItemOverrideType overrideType) {
+        public static MutableComponent of(ItemOverrideType overrideType) {
             return title("itemOverrideType.armourers_workshop." + overrideType.getName());
         }
 
-        public static TranslatableComponent of(ISkinType skinType) {
+        public static MutableComponent of(ISkinType skinType) {
             if (skinType == SkinTypes.UNKNOWN) {
                 return title("skinType.armourers_workshop.all");
             }
@@ -128,10 +103,10 @@ public final class TranslateUtils {
             return title("skinType.armourers_workshop." + path);
         }
 
-        public static TranslatableComponent of(ISkinPartType skinPartType) {
+        public static MutableComponent of(ISkinPartType skinPartType) {
             String path = skinPartType.getRegistryName().getPath();
             String key = "skinPartType.armourers_workshop." + path;
-            TranslatableComponent text = title(key);
+            MutableComponent text = title(key);
             if (!text.getString().equals(key)) {
                 return text;
             }
@@ -139,7 +114,7 @@ public final class TranslateUtils {
             return title("skinPartType.armourers_workshop.all.base");
         }
 
-        public static TranslatableComponent of(ISkinPaintType paintType) {
+        public static MutableComponent of(ISkinPaintType paintType) {
             String path = paintType.getRegistryName().getPath();
             return title("paintType.armourers_workshop." + path);
         }

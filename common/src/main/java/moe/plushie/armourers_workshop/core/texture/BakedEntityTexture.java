@@ -1,21 +1,21 @@
 package moe.plushie.armourers_workshop.core.texture;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.api.math.ITexturePos;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.color.TexturedPaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
 import moe.plushie.armourers_workshop.utils.texture.SkyBox;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -45,8 +45,8 @@ public class BakedEntityTexture {
         this.resourceLocation = resourceLocation;
         BufferedImage bufferedImage;
         try {
-            Resource resource = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
-            bufferedImage = ImageIO.read(resource.getInputStream());
+            IResourceManager resourceManager = ClientNativeManager.getResourceManager();
+            bufferedImage = ImageIO.read(resourceManager.readResource(resourceLocation));
             if (bufferedImage != null) {
 //                slim = (bufferedImage.getRGB(54, 20) & 0xff000000) == 0;
                 this.loadColors(bufferedImage.getWidth(), bufferedImage.getHeight(), slim, bufferedImage::getRGB);

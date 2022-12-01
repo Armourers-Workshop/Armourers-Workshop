@@ -118,39 +118,35 @@ public class Vector4f {
     }
 
     public float dot(Vector4f pos) {
-        return this.x * pos.x + this.y * pos.y + this.z * pos.z + this.w * pos.w;
+        return x * pos.x + y * pos.y + z * pos.z + w * pos.w;
     }
 
     public boolean normalize() {
-        float f = this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
+        float f = x * x + y * y + z * z + w * w;
         if ((double) f < 1.0E-5D) {
             return false;
-        } else {
-            float f1 = MathUtils.fastInvSqrt(f);
-            this.x *= f1;
-            this.y *= f1;
-            this.z *= f1;
-            this.w *= f1;
-            return true;
         }
+        float f1 = MathUtils.fastInvSqrt(f);
+        x *= f1;
+        y *= f1;
+        z *= f1;
+        w *= f1;
+        return true;
     }
 
     public void transform(Matrix4f matrix) {
         float[] floats = {x, y, z, w};
         OpenMatrix4f.of(matrix).multiply(floats);
-        x = floats[0];
-        y = floats[1];
-        z = floats[2];
-        w = floats[3];
+        set(floats[0], floats[1], floats[2], floats[3]);
     }
 
     public void transform(Quaternion q) {
         Quaternion quaternion = new Quaternion(q);
-        quaternion.mul(new Quaternion(this.x(), this.y(), this.z(), 0.0F));
+        quaternion.mul(new Quaternion(x, y, z, 0.0F));
         Quaternion quaternion1 = new Quaternion(q);
         quaternion1.conj();
         quaternion.mul(quaternion1);
-        this.set(quaternion.i(), quaternion.j(), quaternion.k(), this.w());
+        set(quaternion.i(), quaternion.j(), quaternion.k(), this.w());
     }
 
     public void perspectiveDivide() {

@@ -3,10 +3,10 @@
   "package": "moe.plushie.armourers_workshop.compatibility.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
+    "AbstractRenderStateMixin"
   ],
   "mixins": [
-    "AbstractServerGameMixin",
-    "AbstractRenderStateMixin"
+    "AbstractServerGameMixin"
   ],
   "injectors": {
     "defaultRequire": 1

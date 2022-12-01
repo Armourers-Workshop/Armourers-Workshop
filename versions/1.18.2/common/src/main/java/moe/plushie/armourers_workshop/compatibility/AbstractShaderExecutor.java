@@ -8,11 +8,12 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
-import moe.plushie.armourers_workshop.api.common.IRenderBufferObject;
+import moe.plushie.armourers_workshop.api.client.IRenderBufferObject;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.ShaderUniforms;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -40,7 +41,7 @@ public class AbstractShaderExecutor {
     }
 
     public void clean() {
-        AbstractShaderUniforms.rollback();
+        ShaderUniforms.rollback();
     }
 
     public void setMaxVertexCount(int count) {
@@ -57,9 +58,9 @@ public class AbstractShaderExecutor {
             return;
         }
         ISkinDataProvider provider = ObjectUtils.unsafeCast(shader);
-        AbstractShaderUniforms uniforms = provider.getSkinData();
+        ShaderUniforms uniforms = provider.getSkinData();
         if (uniforms == null) {
-            uniforms = new AbstractShaderUniforms();
+            uniforms = new ShaderUniforms();
             provider.setSkinData(uniforms);
         }
 
@@ -117,27 +118,18 @@ public class AbstractShaderExecutor {
 
     }
 
+    static int VAO = 0;
     private void _setupVertexFormat(VertexFormat vertexFormat, IRenderBufferObject object, int offset) {
         boolean bl;
-        int i = vertexFormat.getOrCreateVertexArrayObject();
-//        int j = vertexFormat.getOrCreateVertexBufferObject();
-//        boolean bl2 = bl = vertexFormat != lastFormat;
-//        if (bl) {
-//            BufferUploader.reset();
-//        }
-//        if (i != lastVertexArrayObject) {
-        GlStateManager._glBindVertexArray(i);
-//            lastVertexArrayObject = i;
-//        }
+        if (VAO == 0) {
+            // RenderSystem.glGenVertexArrays();
+            VAO = GlStateManager._glGenVertexArrays();
+        }
+        RenderSystem.glBindVertexArray(() -> VAO);
+
         object.bind();
-//        if (j != lastVertexBufferObject) {
-//            GlStateManager._glBindBuffer(34962, j);
-//            lastVertexBufferObject = j;
-//        }
-//        if (bl) {
-//            vertexFormat.setupBufferState();
-//            lastFormat = vertexFormat;
-//        }
+
+//        vertexFormat.setupBufferState();
         int x = vertexFormat.getVertexSize();
         int q = offset;
         ImmutableList<VertexFormatElement> list = vertexFormat.getElements();
@@ -150,8 +142,9 @@ public class AbstractShaderExecutor {
 
     private void _cleanVertexFormat(VertexFormat vertexFormat) {
         vertexFormat.clearBufferState();
-        GlStateManager._glBindBuffer(34962, 0);
-        GlStateManager._glBindVertexArray(0);
+
+        RenderSystem.glBindBuffer(GL15.GL_ARRAY_BUFFER, () -> 0);
+        RenderSystem.glBindVertexArray(() -> 0);
     }
 
 

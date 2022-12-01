@@ -9,18 +9,14 @@ import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIScrollView;
 import com.apple.library.uikit.UIView;
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;

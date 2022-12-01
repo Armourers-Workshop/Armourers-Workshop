@@ -184,18 +184,16 @@ public final class Vector3f implements IVector3f, Position {
     public void transform(Matrix3f mat) {
         float[] floats = {x, y, z};
         OpenMatrix3f.of(mat).multiply(floats);
-        x = floats[0];
-        y = floats[1];
-        z = floats[2];
+        set(floats[0], floats[1], floats[2]);
     }
 
     public void transform(Quaternion value) {
         Quaternion quaternion = new Quaternion(value);
-        quaternion.mul(new Quaternion(this.getX(), this.getY(), this.getZ(), 0.0F));
+        quaternion.mul(new Quaternion(x, y, z, 0.0F));
         Quaternion quaternion1 = new Quaternion(value);
         quaternion1.conj();
         quaternion.mul(quaternion1);
-        this.set(quaternion.i(), quaternion.j(), quaternion.k());
+        set(quaternion.i(), quaternion.j(), quaternion.k());
     }
 
     public void lerp(Vector3f vec, float f) {

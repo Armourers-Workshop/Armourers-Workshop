@@ -62,7 +62,7 @@ public class UpdateArmourerPacket extends CustomPacket {
     }
 
     private void acceptFieldUpdate(Player player, ArmourerBlockEntity tileEntity, ArmourerMenu container) {
-        String playerName = player.getName().getContents();
+        String playerName = player.getDisplayName().getString();
         if (!field.permission.accept(tileEntity, player)) {
             return;
         }

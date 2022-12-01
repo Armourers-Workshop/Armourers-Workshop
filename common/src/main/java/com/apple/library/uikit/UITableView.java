@@ -4,13 +4,13 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSIndexPath;
 import com.apple.library.impl.DelegateImpl;
-import org.apache.logging.log4j.util.BiConsumer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.function.BiConsumer;
 
 public class UITableView extends UIScrollView {
 

@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import net.minecraft.Util;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -20,7 +20,7 @@ import java.util.function.Function;
 
 public class ColorSchemeParser {
 
-    public static final DynamicCommandExceptionType ERROR_INVALID_DYE_FORMAT = new DynamicCommandExceptionType((obj) -> new TranslatableComponent("commands.armourers.invalidDyeFormat", obj));
+    public static final DynamicCommandExceptionType ERROR_INVALID_DYE_FORMAT = new DynamicCommandExceptionType((obj) -> Component.translatable("commands.armourers.invalidDyeFormat", obj));
 
     private static final Function<SuggestionsBuilder, CompletableFuture<Suggestions>> SUGGEST_NOTHING = SuggestionsBuilder::buildFuture;
 

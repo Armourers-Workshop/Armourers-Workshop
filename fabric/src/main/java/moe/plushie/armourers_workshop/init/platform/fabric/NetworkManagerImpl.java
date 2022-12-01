@@ -20,7 +20,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientHandshakePacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -43,7 +43,7 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public class NetworkManagerImpl implements NetworkManager.Impl {
 
-    public static MinecraftServer CURRENT_SERVER;
+    private static MinecraftServer CURRENT_SERVER;
 
     private NetworkDispatcher dispatcher;
 
@@ -51,6 +51,14 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
         NetworkManagerImpl impl = new NetworkManagerImpl();
         impl.init(name, version);
         return impl;
+    }
+
+    public static void attach(MinecraftServer server) {
+        CURRENT_SERVER = server;
+    }
+
+    public static void detach(MinecraftServer server) {
+        CURRENT_SERVER = null;
     }
 
     public void init(String name, String version) {
@@ -130,7 +138,7 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
                     return;
                 }
             }
-            handler.disconnect(new TextComponent("Please install correct Armourers Workshop to play on this server!"));
+            handler.disconnect(Component.literal("Please install correct Armourers Workshop to play on this server!"));
         }
 
         @Environment(value = EnvType.CLIENT)

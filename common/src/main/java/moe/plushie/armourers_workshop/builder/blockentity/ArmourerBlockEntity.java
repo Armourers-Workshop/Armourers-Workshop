@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
 import moe.plushie.armourers_workshop.builder.data.BoundingBox;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
 import moe.plushie.armourers_workshop.builder.other.*;
-import moe.plushie.armourers_workshop.core.blockentity.AbstractBlockEntity;
+import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -20,7 +20,6 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModBlocks;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
@@ -50,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEntityHandler, IPaintToolSelector.Provider {
+public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockEntityHandler, IPaintToolSelector.Provider {
 
     protected int flags = 0;
     protected int version = 0;

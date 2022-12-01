@@ -6,9 +6,9 @@ import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
-import moe.plushie.armourers_workshop.init.ModEntities;
-import moe.plushie.armourers_workshop.init.ModMenus;
+import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
+import moe.plushie.armourers_workshop.init.ModEntityTypes;
+import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
@@ -60,7 +60,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntities.SKINNABLE.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.SKINNABLE.create(level, blockPos, blockState);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
             }
         }
         if (tileEntity.isInventory()) {
-            InteractionResult result = MenuManager.openMenu(ModMenus.SKINNABLE, level.getBlockEntity(blockPos), player);
+            InteractionResult result = MenuManager.openMenu(ModMenuTypes.SKINNABLE, level.getBlockEntity(blockPos), player);
             if (result.consumesAction()) {
                 player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
             }
@@ -271,7 +271,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
                 return null; // is using
             }
         }
-        SeatEntity entity = new SeatEntity(ModEntities.SEAT.get(), level);
+        SeatEntity entity = new SeatEntity(ModEntityTypes.SEAT.get(), level);
         entity.setPos(pos.x(), pos.y(), pos.z());
         entity.setBlockPos(blockPos);
         level.addFreshEntity(entity);

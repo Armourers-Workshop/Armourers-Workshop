@@ -74,7 +74,7 @@ public class GiftSackItem extends FlavouredItem implements IItemTintColorProvide
     public void fillItemCategory(CreativeModeTab creativeModeTab, NonNullList<ItemStack> nonNullList) {
         super.fillItemCategory(creativeModeTab, nonNullList);
         // add all the gifts into creative inventory
-        if (this.allowdedIn(creativeModeTab)) {
+        if (this.allowedIn(creativeModeTab)) {
             for (Holiday holiday : ModHolidays.getHolidays()) {
                 if (holiday.getHandler() != null) {
                     nonNullList.add(of(holiday));

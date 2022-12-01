@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
 import java.io.InputStream;
@@ -71,7 +71,7 @@ public class ExecuteCommandPacket extends CustomPacket {
                     break;
                 }
             }
-            player.sendSystemMessage(new TextComponent(key + " = " + data));
+            player.sendSystemMessage(Component.literal(key + " = " + data));
             // auto-save when change
             if (ModConfig.Client.class == object) {
                 ModConfigSpec.CLIENT.save();

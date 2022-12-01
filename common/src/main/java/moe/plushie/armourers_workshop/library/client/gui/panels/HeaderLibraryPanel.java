@@ -18,7 +18,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
@@ -80,7 +81,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         // Green - Authenticated member.
         // Red - Missing profile info.
         CGRect rect = bounds();
-        TextComponent profile = new TextComponent(" - ");
+        MutableComponent profile = Component.literal(" - ");
         profile.append(gameProfile.getName());
         int colour = 0xFFFFFF;
         if (!gameProfile.isLegacy()) {

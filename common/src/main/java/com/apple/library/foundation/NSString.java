@@ -7,7 +7,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.FormattedCharSequence;
 
 import java.util.ArrayList;
@@ -18,13 +17,15 @@ import java.util.stream.Collectors;
 
 public class NSString {
 
+    private static final Component EMPTY_COMPONENT = Component.literal("");
+
     private Component completedValue;
 
     private final Component value;
     private final FormattedCharSequence sequence;
 
     public NSString(String value) {
-        this(new TextComponent(value));
+        this(Component.literal(value));
     }
 
     public NSString(Component value) {
@@ -76,7 +77,7 @@ public class NSString {
             completedValue = impl.encode();
             return completedValue;
         }
-        return TextComponent.EMPTY;
+        return EMPTY_COMPONENT;
     }
 
     public String contents() {

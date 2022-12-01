@@ -4,10 +4,6 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 public class UIPopoverView extends UIWindow {
 
     private UIView contentView;

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.library.blockentity;
 
-import moe.plushie.armourers_workshop.core.blockentity.AbstractContainerBlockEntity;
+import moe.plushie.armourers_workshop.core.blockentity.UpdatableContainerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SkinLibraryBlockEntity extends AbstractContainerBlockEntity {
+public class SkinLibraryBlockEntity extends UpdatableContainerBlockEntity {
 
     private NonNullList<ItemStack> items = NonNullList.withSize(2, ItemStack.EMPTY);
 

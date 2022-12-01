@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class DyeTableBlockEntity extends AbstractContainerBlockEntity {
+public class DyeTableBlockEntity extends UpdatableContainerBlockEntity {
 
     private NonNullList<ItemStack> items = NonNullList.withSize(10, ItemStack.EMPTY);
 

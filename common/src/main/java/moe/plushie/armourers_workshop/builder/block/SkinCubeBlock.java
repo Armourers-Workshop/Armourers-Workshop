@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.core.data.OptionalDirection;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
+import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -53,7 +53,7 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements IBlockEnti
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntities.SKIN_CUBE.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.SKIN_CUBE.create(level, blockPos, blockState);
     }
 
     @Override

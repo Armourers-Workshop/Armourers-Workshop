@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.utils.math;
 
-import com.google.common.base.MoreObjects;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 
 public class Vector2i {
@@ -29,16 +28,16 @@ public class Vector2i {
         return this.x;
     }
 
-    protected void setX(int p_223471_1_) {
-        this.x = p_223471_1_;
+    protected void setX(int x) {
+        this.x = x;
     }
 
     public int getY() {
         return this.y;
     }
 
-    protected void setY(int p_185336_1_) {
-        this.y = p_185336_1_;
+    protected void setY(int y) {
+        this.y = y;
     }
 
     public String toString() {

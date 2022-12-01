@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.blockentity;
 
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.core.blockentity.AbstractBlockEntity;
+import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
@@ -12,7 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ColorMixerBlockEntity extends AbstractBlockEntity implements IPaintProvider {
+public class ColorMixerBlockEntity extends UpdatableBlockEntity implements IPaintProvider {
 
     private IPaintColor color = PaintColor.WHITE;
 

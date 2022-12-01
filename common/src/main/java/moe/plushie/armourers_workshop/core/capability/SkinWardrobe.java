@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
-import moe.plushie.armourers_workshop.init.ModMenus;
+import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.minecraft.nbt.CompoundTag;
@@ -216,7 +216,7 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
     }
 
     public boolean isEditable(Player player) {
-        if (!ModPermissions.OPEN.accept(ModMenus.WARDROBE, getEntity(), player)) {
+        if (!ModPermissions.OPEN.accept(ModMenuTypes.WARDROBE, getEntity(), player)) {
             return false;
         }
         // can't edit another player's wardrobe

@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.block;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.core.blockentity.DyeTableBlockEntity;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
-import moe.plushie.armourers_workshop.init.ModMenus;
+import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
+import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
@@ -25,12 +25,12 @@ public class DyeTableBlock extends AbstractHorizontalBlock implements IBlockEnti
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntities.DYE_TABLE.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.DYE_TABLE.create(level, blockPos, blockState);
     }
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        return MenuManager.openMenu(ModMenus.DYE_TABLE, level.getBlockEntity(blockPos), player);
+        return MenuManager.openMenu(ModMenuTypes.DYE_TABLE, level.getBlockEntity(blockPos), player);
     }
 
     @Override

@@ -4,11 +4,12 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.*;
-import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.proxy.ClientProxy;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.init.platform.RendererManager;
+import moe.plushie.armourers_workshop.init.proxy.CommonProxy;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -20,13 +21,15 @@ public class ArmourersWorkshop {
         ModItemGroups.init();
         ModItems.init();
         ModBlocks.init();
-        ModBlockEntities.init();
-        ModEntities.init();
+        ModBlockEntityTypes.init();
+        ModEntityTypes.init();
         ModCapabilities.init();
-        ModMenus.init();
+        ModMenuTypes.init();
         ModSounds.init();
         ModConfig.init();
+        ModArgumentTypes.init();
         // setup common objects.
+        EnvironmentExecutor.willInit(EnvironmentType.COMMON, () -> CommonProxy::init);
         EnvironmentExecutor.didInit(EnvironmentType.COMMON, () -> () -> {
             // setup network manager.
             NetworkManager.init("play", ModConstants.MOD_NET_ID);
@@ -39,15 +42,8 @@ public class ArmourersWorkshop {
 
             EnvironmentExecutor.run(() -> SkinLibraryManager::startClient, () -> SkinLibraryManager::startServer);
         });
-        // setup client in setup.
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, () -> () -> {
-            // setup client objects.
-//            SkinResourceManager.init();
-            ClientWardrobeHandler.init();
-            ModKeyBindings.init();
-            ModDebugger.init();
-        });
-        // setup client renderer in finish.
+        // setup client object.
+        EnvironmentExecutor.willInit(EnvironmentType.CLIENT, () -> ClientProxy::init);
         EnvironmentExecutor.didSetup(EnvironmentType.CLIENT, () -> () -> {
             // setup skin manager.
             RenderSystem.init();

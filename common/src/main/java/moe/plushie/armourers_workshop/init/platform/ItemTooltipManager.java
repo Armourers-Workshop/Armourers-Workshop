@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform;
 
+import com.apple.library.coregraphics.CGRect;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
@@ -12,24 +13,18 @@ import moe.plushie.armourers_workshop.init.*;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import com.apple.library.coregraphics.CGRect;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.apache.logging.log4j.util.Strings;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Environment(value = EnvType.CLIENT)
 public class ItemTooltipManager {
@@ -43,8 +38,7 @@ public class ItemTooltipManager {
         if (ModConfig.Client.tooltipSkinAuthor && Strings.isNotBlank(skin.getAuthorName())) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinAuthor", skin.getAuthorName().trim()));
         }
-        Component textComponent = TranslateUtils.Name.of(skin.getType());
-        tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinType", textComponent));
+        tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinType", TranslateUtils.Name.of(skin.getType())));
         return tooltip;
     }
 
@@ -82,8 +76,7 @@ public class ItemTooltipManager {
         }
 
         if (ModConfig.Client.tooltipSkinType) {
-            Component textComponent = TranslateUtils.Name.of(skin.getType());
-            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinType", textComponent));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinType", TranslateUtils.Name.of(skin.getType())));
         }
 
         if (!isItemOwner && ModConfig.Client.tooltipFlavour && Strings.isNotBlank(skin.getFlavourText())) {
@@ -114,7 +107,7 @@ public class ItemTooltipManager {
             if (ModConfig.Client.tooltipProperties && !skin.getProperties().isEmpty()) {
                 tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinProperties"));
                 for (String prop : skin.getProperties().getPropertiesList()) {
-                    tooltip.add(TranslateUtils.literal(" " + prop));
+                    tooltip.add(Component.literal(" " + prop));
                 }
             }
         }
@@ -135,7 +128,7 @@ public class ItemTooltipManager {
         return tooltip;
     }
 
-    public static void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltips, TooltipFlag flags) {
+    public static void appendHoverText(ItemStack itemStack, List<Component> tooltips, TooltipFlag flags) {
         List<Component> newTooltips = createSkinTooltip(itemStack);
         if (newTooltips.isEmpty()) {
             return;
@@ -144,7 +137,8 @@ public class ItemTooltipManager {
             String registryName = Registry.ITEM.getKey(itemStack.getItem()).toString();
             for (int index = tooltips.size(); index > 0; --index) {
                 Component text = tooltips.get(index - 1);
-                if (text instanceof TextComponent && registryName.equals(text.getContents())) {
+                // FIXME: @SAGESSE Test 1.16/1.18
+                if (registryName.equals(text.getString())) {
                     tooltips.addAll(index - 1, newTooltips);
                     return;
                 }

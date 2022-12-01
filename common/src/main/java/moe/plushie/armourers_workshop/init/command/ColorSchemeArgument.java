@@ -2,16 +2,16 @@ package moe.plushie.armourers_workshop.init.command;
 
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
+import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.synchronization.ArgumentSerializer;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.Arrays;
@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class ColorSchemeArgument implements ArgumentType<ColorScheme> {
+public class ColorSchemeArgument implements IArgumentType<ColorScheme> {
 
     private static final Collection<String> EXAMPLES = Arrays.asList("<dyeIndex=[paintType:]#RRGGBB>", "<dyeIndex=[paintType:]R,G,B>");
 
@@ -59,15 +59,18 @@ public class ColorSchemeArgument implements ArgumentType<ColorScheme> {
         return EXAMPLES;
     }
 
-    public static class Serializer implements ArgumentSerializer<ColorSchemeArgument> {
+    public static class Serializer implements IArgumentSerializer<ColorSchemeArgument> {
 
+        @Override
         public void serializeToNetwork(ColorSchemeArgument argument, FriendlyByteBuf buffer) {
         }
 
+        @Override
         public ColorSchemeArgument deserializeFromNetwork(FriendlyByteBuf buffer) {
             return new ColorSchemeArgument();
         }
 
+        @Override
         public void serializeToJson(ColorSchemeArgument argument, JsonObject json) {
         }
     }

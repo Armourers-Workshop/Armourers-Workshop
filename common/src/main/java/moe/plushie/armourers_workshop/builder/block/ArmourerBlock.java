@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.builder.block;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
-import moe.plushie.armourers_workshop.init.ModMenus;
+import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
+import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
@@ -33,12 +33,12 @@ public class ArmourerBlock extends AbstractHorizontalBlock implements IBlockEnti
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntities.ARMOURER.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.ARMOURER.create(level, blockPos, blockState);
     }
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult traceResult) {
-        return MenuManager.openMenu(ModMenus.ARMOURER, level.getBlockEntity(blockPos), player);
+        return MenuManager.openMenu(ModMenuTypes.ARMOURER, level.getBlockEntity(blockPos), player);
     }
 
     @Override

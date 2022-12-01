@@ -4,11 +4,14 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
+import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderObject;
 import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.RenderType;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
@@ -16,7 +19,7 @@ import javax.annotation.Nonnull;
 @Environment(value = EnvType.CLIENT)
 public class AbstractLightBufferObject extends SkinRenderObject {
 
-    public static final VertexFormat FORMAT = createDefaultFormat();
+    public static final RenderType TYPE = RenderType.create("", createDefaultFormat(), GL11.GL_QUADS, 256, false, false, RenderType.CompositeState.builder().createCompositeState(false));
     public static final int PAGE_SIZE = 4096;
     private static final SkinCache.LRU<Integer, AbstractLightBufferObject> SHARED_LIGHTS = new SkinCache.LRU<>();
     private final int light;
@@ -42,17 +45,19 @@ public class AbstractLightBufferObject extends SkinRenderObject {
             return;
         }
         int alignedCapacity = ((capacity / PAGE_SIZE) + 1) * PAGE_SIZE;
-        BufferBuilder builder = new BufferBuilder(alignedCapacity * getFormat().getVertexSize());
-        builder.begin(GL11.GL_QUADS, getFormat());
+        IBufferBuilder builder = ClientNativeManager.getFactory().createBuilderBuffer(alignedCapacity * getFormat().getVertexSize());
+        builder.begin(TYPE);
+        BufferBuilder bufferBuilder = builder.asBufferBuilder();
         for (int i = 0; i < alignedCapacity; ++i) {
-            builder.uv2(light).endVertex();
+            bufferBuilder.uv2(light).endVertex();
         }
-        builder.end();
-        this.upload(builder);
+        IRenderedBuffer renderedBuffer = builder.end();
+        this.upload(renderedBuffer.vertexBuffer());
         this.capacity = alignedCapacity;
+        renderedBuffer.release();
     }
 
     public VertexFormat getFormat() {
-        return FORMAT;
+        return TYPE.format();
     }
 }

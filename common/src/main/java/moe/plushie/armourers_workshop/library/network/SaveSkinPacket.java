@@ -174,12 +174,12 @@ public class SaveSkinPacket extends CustomPacket {
     }
 
     private void accept(Player player, String op) {
-        String playerName = player.getName().getContents();
+        String playerName = player.getScoreboardName();
         ModLog.info("accept {} request of the '{}', from: '{}', to: '{}'", op, playerName, source, destination);
     }
 
     private void error(Player player, String op, String reason) {
-        String playerName = player.getName().getContents();
+        String playerName = player.getScoreboardName();
         ModLog.info("abort {} request of the '{}', reason: '{}', from: '{}', to: '{}'", op, playerName, reason, source, destination);
     }
 

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
+import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.api.common.IBlockEntitySupplier;
 import moe.plushie.armourers_workshop.api.common.IMenuProvider;
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
@@ -65,6 +66,11 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     @Override
     public <T extends AbstractContainerMenu, V> IMenuTypeBuilder<T> createMenuTypeBuilder(IMenuProvider<T, V> factory, IPlayerDataSerializer<V> serializer) {
         return new MenuTypeBuilderImpl<>(factory, serializer);
+    }
+
+    @Override
+    public <T extends IArgumentType<?>> IArgumentTypeBuilder<T> createArgumentTypeBuilder(Class<T> argumentType) {
+        return new ArgumentTypeBuilderImpl<>(argumentType);
     }
 
     @Override

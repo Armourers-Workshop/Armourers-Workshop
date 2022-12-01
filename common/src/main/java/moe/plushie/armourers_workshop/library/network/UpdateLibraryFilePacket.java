@@ -54,7 +54,7 @@ public class UpdateLibraryFilePacket extends CustomPacket {
 
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
-        String playerName = player.getName().getContents();
+        String playerName = player.getScoreboardName();
         if (!mode.permission.accept(player)) {
             return;
         }

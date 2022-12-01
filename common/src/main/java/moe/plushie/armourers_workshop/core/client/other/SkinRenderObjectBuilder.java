@@ -6,14 +6,16 @@ import com.google.common.cache.CacheBuilder;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
+import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
+import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -142,11 +144,11 @@ public class SkinRenderObjectBuilder {
             ColorScheme scheme = task.scheme;
             ArrayList<CompiledTask> mergedTasks = new ArrayList<>();
             part.forEach((renderType, quads) -> {
-                BufferBuilder builder = new BufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
-                builder.begin(renderType.mode(), renderType.format());
-                quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, OverlayTexture.NO_OVERLAY, matrixStack1, builder));
-                builder.end();
-                CompiledTask compiledTask = new CompiledTask(renderType, builder, part.getRenderPolygonOffset(), part.getType());
+                IBufferBuilder builder = ClientNativeManager.getFactory().createBuilderBuffer(quads.size() * 8 * renderType.format().getVertexSize());
+                builder.begin(renderType);
+                quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, OverlayTexture.NO_OVERLAY, matrixStack1, builder.asBufferBuilder()));
+                IRenderedBuffer renderedBuffer = builder.end();
+                CompiledTask compiledTask = new CompiledTask(renderType, renderedBuffer, part.getRenderPolygonOffset(), part.getType());
                 mergedTasks.add(compiledTask);
                 buildingTasks.add(compiledTask);
             });
@@ -163,10 +165,9 @@ public class SkinRenderObjectBuilder {
         ArrayList<ByteBuffer> byteBuffers = new ArrayList<>();
 
         for (CompiledTask compiledTask : buildingTasks) {
-            Pair<BufferBuilder.DrawState, ByteBuffer> pair = compiledTask.bufferBuilder.popNextBuffer();
-            BufferBuilder.DrawState drawState = pair.getFirst();
+            BufferBuilder.DrawState drawState = compiledTask.bufferBuilder.drawState();
             VertexFormat format = drawState.format();//compiledTask.renderType.format();
-            ByteBuffer byteBuffer = pair.getSecond();
+            ByteBuffer byteBuffer = compiledTask.bufferBuilder.vertexBuffer();
             compiledTask.vertexBuffer = vertexBuffer;
             compiledTask.vertexCount = drawState.vertexCount();
             compiledTask.vertexOffset = totalRenderedBytes;
@@ -209,11 +210,11 @@ public class SkinRenderObjectBuilder {
         final RenderType renderType;
         int vertexCount;
         int vertexOffset;
-        BufferBuilder bufferBuilder;
+        IRenderedBuffer bufferBuilder;
         SkinRenderObject vertexBuffer;
         VertexFormat format;
 
-        CompiledTask(RenderType renderType, BufferBuilder bufferBuilder, float polygonOffset, ISkinPartType partType) {
+        CompiledTask(RenderType renderType, IRenderedBuffer bufferBuilder, float polygonOffset, ISkinPartType partType) {
             this.partType = partType;
             this.renderType = renderType;
             this.bufferBuilder = bufferBuilder;

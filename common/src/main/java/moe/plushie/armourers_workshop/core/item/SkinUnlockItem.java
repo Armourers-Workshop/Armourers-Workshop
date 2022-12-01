@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -34,14 +33,14 @@ public class SkinUnlockItem extends FlavouredItem {
         }
         Component skinName = TranslateUtils.Name.of(skinType);
         if (wardrobe.getUnlockedSize(slotType) >= slotType.getMaxSize()) {
-            player.sendSystemMessage(new TranslatableComponent("chat.armourers_workshop.slotUnlockedFailed", skinName));
+            player.sendSystemMessage(Component.translatable("chat.armourers_workshop.slotUnlockedFailed", skinName));
             return InteractionResultHolder.fail(itemStack);
         }
         itemStack.shrink(1);
         int count = wardrobe.getUnlockedSize(slotType) + 1;
         wardrobe.setUnlockedSize(slotType, count);
         wardrobe.broadcast();
-        player.sendSystemMessage(new TranslatableComponent("chat.armourers_workshop.slotUnlocked", skinName, Integer.toString(count)));
+        player.sendSystemMessage(Component.translatable("chat.armourers_workshop.slotUnlocked", skinName, Integer.toString(count)));
         return InteractionResultHolder.success(itemStack);
     }
 }

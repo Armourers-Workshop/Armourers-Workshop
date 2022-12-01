@@ -61,7 +61,6 @@ public final class ModHolidays {
     }
 
     public static void welcome(Player player) {
-        ModLog.debug("welcome back {}", player.getStringUUID());
         MinecraftServer server = player.getServer();
         if (server == null || ModConfig.Common.disableAllHolidayEvents) {
             return;
