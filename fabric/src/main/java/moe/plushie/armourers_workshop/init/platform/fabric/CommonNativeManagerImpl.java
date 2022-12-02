@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.fabric;
 
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricCommonNativeImpl;
+import moe.plushie.armourers_workshop.init.provider.CommonNativeFactory;
 import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
 
 public class CommonNativeManagerImpl {
@@ -11,4 +12,7 @@ public class CommonNativeManagerImpl {
         return INSTANCE;
     }
 
+    public static CommonNativeFactory getFactory() {
+        return INSTANCE;
+    }
 }

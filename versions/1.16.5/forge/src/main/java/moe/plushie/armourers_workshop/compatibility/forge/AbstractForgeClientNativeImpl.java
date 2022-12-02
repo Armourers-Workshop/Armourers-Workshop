@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.compatibility.forge;
 
 import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.compatibility.AbstractClientNativeImpl;
+import moe.plushie.armourers_workshop.compatibility.v1618.ClientNativeExt_V1618;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
-import moe.plushie.armourers_workshop.init.platform.forge.provider.ClientNativeProviderImpl;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -14,7 +14,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 import java.util.function.Consumer;
 
-public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl implements ClientNativeProviderImpl {
+public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl implements AbstractForgeClientNativeProvider, ClientNativeExt_V1618 {
 
     private CGRect screenLayout = CGRect.ZERO;
 

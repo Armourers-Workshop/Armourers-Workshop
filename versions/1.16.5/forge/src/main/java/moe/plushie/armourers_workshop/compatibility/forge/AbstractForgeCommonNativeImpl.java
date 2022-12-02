@@ -1,17 +1,12 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
-import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
-import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
-import moe.plushie.armourers_workshop.compatibility.AbstractArgumentSerializer;
+import moe.plushie.armourers_workshop.compatibility.v1618.CommonNativeExt_V1618;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
-import moe.plushie.armourers_workshop.init.platform.forge.provider.CommonNativeProviderImpl;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.minecraft.commands.synchronization.ArgumentTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -38,16 +33,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class AbstractForgeCommonNativeImpl implements CommonNativeProviderImpl {
-
-    private static <T extends IArgumentType<?>> void registerArgument(ResourceLocation registryName, Class<T> argumentType, IArgumentSerializer<T> argumentSerializer) {
-        ArgumentTypes.register(registryName.toString(), argumentType, new AbstractArgumentSerializer<>(argumentSerializer));
-    }
-
-    @Override
-    public void willRegisterArgument(Consumer<ArgumentRegistry> consumer) {
-        consumer.accept(AbstractForgeCommonNativeImpl::registerArgument);
-    }
+public class AbstractForgeCommonNativeImpl implements AbstractForgeCommonNativeProvider, CommonNativeExt_V1618 {
 
     @Override
     public void willServerTick(Consumer<ServerLevel> consumer) {

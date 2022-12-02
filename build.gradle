@@ -29,6 +29,8 @@ subprojects {
     sourceSets.forEach {
         it.java.srcDirs("../versions/${rootProject.minecraft_version}/${project.name}/src/${it.name}/java")
         it.resources.srcDirs("../versions/${rootProject.minecraft_version}/${project.name}/src/${it.name}/resources")
+        it.java.srcDirs("../versions/library/${project.name}/src/${it.name}/java")
+        it.resources.srcDirs("../versions/library/${project.name}/src/${it.name}/resources")
     }
 
     // we need to search all source files to get to the actived mixins.

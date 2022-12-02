@@ -1,12 +1,10 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
-import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.api.common.IRegistry;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
-import moe.plushie.armourers_workshop.compatibility.AbstractArgumentTypeInfo;
+import moe.plushie.armourers_workshop.compatibility.v19.CommonNativeProviderExt_V1920;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
-import moe.plushie.armourers_workshop.init.platform.forge.provider.CommonNativeProviderImpl;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
@@ -41,19 +39,19 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class AbstractForgeCommonNativeImpl implements CommonNativeProviderImpl {
+public class AbstractForgeCommonNativeImpl implements AbstractForgeCommonNativeProvider, CommonNativeProviderExt_V1920 {
 
     private static final IRegistry<ArgumentTypeInfo<?, ?>> ARGUMENT_REGISTRY = AbstractForgeRegistries.wrap(ForgeRegistries.COMMAND_ARGUMENT_TYPES);
 
-    private static <T extends IArgumentType<?>> void registerArgument(ResourceLocation registryName, Class<T> argumentType, IArgumentSerializer<T> argumentSerializer) {
-        AbstractArgumentTypeInfo<T> info = new AbstractArgumentTypeInfo<>(argumentSerializer);
-        ArgumentTypeInfo<?, ?> info1 = ArgumentTypeInfos.registerByClass(argumentType, info);
-        ARGUMENT_REGISTRY.register(registryName.getPath(), () -> info1);
-    }
-
     @Override
-    public void willRegisterArgument(Consumer<ArgumentRegistry> consumer) {
-        consumer.accept(AbstractForgeCommonNativeImpl::registerArgument);
+    public void willRegisterArgumentInfo(Consumer<ArgumentInfoRegistry> consumer) {
+        consumer.accept(new ArgumentInfoRegistry() {
+            @Override
+            public <T extends IArgumentType<?>> void register(ResourceLocation registryName, Class<T> argumentType, ArgumentTypeInfo<T, ?> argumentInfo) {
+                ArgumentTypeInfo<?, ?> info1 = ArgumentTypeInfos.registerByClass(argumentType, argumentInfo);
+                ARGUMENT_REGISTRY.register(registryName.getPath(), () -> info1);
+            }
+        });
     }
 
     @Override

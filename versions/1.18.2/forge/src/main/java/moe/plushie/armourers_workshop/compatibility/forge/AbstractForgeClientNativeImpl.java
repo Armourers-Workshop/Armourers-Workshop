@@ -1,29 +1,48 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
 import com.apple.library.coregraphics.CGRect;
+import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.compatibility.AbstractClientNativeImpl;
+import moe.plushie.armourers_workshop.compatibility.forge.v18.ClientForgeExt_V1820;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
-import moe.plushie.armourers_workshop.init.platform.forge.provider.ClientNativeProviderImpl;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.model.ForgeModelBakery;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl implements ClientNativeProviderImpl {
+public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl implements AbstractForgeClientNativeProvider, ClientForgeExt_V1820 {
 
     @Override
     public void willRegisterItemColor(Consumer<ItemColorRegistry> consumer) {
         NotificationCenterImpl.observer(ColorHandlerEvent.Item.class, consumer, event -> (provider, values) -> event.getItemColors().register(provider::getTintColor, values));
+    }
+
+    @Override
+    public void willRegisterItemRenderer(Consumer<ItemRendererRegistry> consumer) {
+        consumer.accept((item, provider) -> {
+            ISkinDataProvider provider1 = ObjectUtils.unsafeCast(item);
+            BlockEntityWithoutLevelRenderer renderer = provider.getItemModelRenderer();
+            provider1.setSkinData(new IItemRenderProperties() {
+
+                @Override
+                public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+                    return renderer;
+                }
+            });
+        });
     }
 
     @Override

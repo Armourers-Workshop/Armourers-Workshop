@@ -1,0 +1,79 @@
+package moe.plushie.armourers_workshop.compatibility.v1618;
+
+import com.google.gson.JsonObject;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
+import moe.plushie.armourers_workshop.api.common.IArgumentType;
+import moe.plushie.armourers_workshop.init.provider.CommonNativeFactory;
+import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import net.minecraft.commands.synchronization.ArgumentSerializer;
+import net.minecraft.commands.synchronization.ArgumentTypes;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+
+import java.util.Optional;
+import java.util.function.Consumer;
+
+@Available("[1.16, 1.19)")
+public interface CommonNativeExt_V1618 extends CommonNativeProvider, CommonNativeFactory {
+
+    @Override
+    default void willRegisterArgument(Consumer<CommonNativeProvider.ArgumentRegistry> consumer) {
+        consumer.accept(ArgumentSerializer68::register);
+    }
+
+    @Override
+    default MutableComponent createTranslatableComponent(String key, Object... args) {
+        return new TranslatableComponent68(key, args);
+    }
+
+    class ArgumentSerializer68<A extends IArgumentType<?>> implements ArgumentSerializer<A> {
+
+        private final IArgumentSerializer<A> serializer;
+
+        public ArgumentSerializer68(IArgumentSerializer<A> serializer) {
+            this.serializer = serializer;
+        }
+
+        public static <T extends IArgumentType<?>> void register(ResourceLocation registryName, Class<T> argumentType, IArgumentSerializer<T> argumentSerializer) {
+            ArgumentTypes.register(registryName.toString(), argumentType, new ArgumentSerializer68<>(argumentSerializer));
+        }
+
+
+        @Override
+        public void serializeToNetwork(A argumentType, FriendlyByteBuf friendlyByteBuf) {
+            serializer.serializeToNetwork(argumentType, friendlyByteBuf);
+        }
+
+        @Override
+        public A deserializeFromNetwork(FriendlyByteBuf friendlyByteBuf) {
+            return serializer.deserializeFromNetwork(friendlyByteBuf);
+        }
+
+        @Override
+        public void serializeToJson(A argumentType, JsonObject jsonObject) {
+            serializer.serializeToJson(argumentType, jsonObject);
+        }
+    }
+
+    class TranslatableComponent68 extends TranslatableComponent {
+
+        TranslatableComponent68(String key, Object... args) {
+            super(key, args);
+        }
+
+        @Override
+        public <T> Optional<T> visit(StyledContentConsumer<T> acceptor, Style initStyle) {
+            String[] lastStyle = {""};
+            return super.visit((style1, value) -> {
+                String embeddedStyle = lastStyle[0];
+                lastStyle[0] = embeddedStyle + TranslateUtils.getEmbeddedStyle(value);
+                return acceptor.accept(style1, embeddedStyle + TranslateUtils.getFormattedString(value));
+            }, initStyle);
+        }
+    }
+}

@@ -4,10 +4,10 @@ package moe.plushie.armourers_workshop.utils;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.compatibility.AbstractTranslatableComponent;
 import moe.plushie.armourers_workshop.core.data.slot.ItemOverrideType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.platform.CommonNativeManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -22,7 +22,7 @@ public final class TranslateUtils {
     }
 
     public static MutableComponent title(String key, Object... args) {
-        return AbstractTranslatableComponent.of(key, args);
+        return CommonNativeManager.getFactory().createTranslatableComponent(key, args);
     }
 
     public static MutableComponent subtitle(String key, Object... args) {

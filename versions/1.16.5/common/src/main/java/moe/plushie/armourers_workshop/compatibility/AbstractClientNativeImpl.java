@@ -1,13 +1,6 @@
 package moe.plushie.armourers_workshop.compatibility;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.datafixers.util.Pair;
-import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
-import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
-import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeFactory;
-import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
@@ -17,15 +10,9 @@ import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.LivingEntity;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-
-public abstract class AbstractClientNativeImpl implements ClientNativeProvider, ClientNativeFactory {
+public abstract class AbstractClientNativeImpl implements AbstractClientNativeProvider, ClientNativeFactory {
 
     @Override
     public <T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>> HumanoidArmorLayer<T, M, A> createHumanoidArmorLayer(LivingEntityRenderer<T, M> renderer, AbstractEntityRendererContext context, A innerModel, A outerModel) {
@@ -45,49 +32,5 @@ public abstract class AbstractClientNativeImpl implements ClientNativeProvider, 
     @Override
     public <T extends LivingEntity, M extends EntityModel<T> & HeadedModel> CustomHeadLayer<T, M> createCustomHeadLayer(LivingEntityRenderer<T, M> renderer, AbstractEntityRendererContext context) {
         return new CustomHeadLayer<>(renderer);
-    }
-
-    @Override
-    public IBufferBuilder createBuilderBuffer(int size) {
-        BufferBuilder bufferBuilder = new BufferBuilder(size);
-        return new IBufferBuilder() {
-            @Override
-            public BufferBuilder asBufferBuilder() {
-                return bufferBuilder;
-            }
-
-            @Override
-            public IRenderedBuffer end() {
-                bufferBuilder.end();
-                Pair<BufferBuilder.DrawState, ByteBuffer> pair = bufferBuilder.popNextBuffer();
-                return new IRenderedBuffer() {
-                    @Override
-                    public ByteBuffer vertexBuffer() {
-                        return pair.getSecond();
-                    }
-
-                    @Override
-                    public BufferBuilder.DrawState drawState() {
-                        return pair.getFirst();
-                    }
-                };
-            }
-        };
-    }
-
-    @Override
-    public IResourceManager getResourceManager() {
-        ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-        return new IResourceManager() {
-            @Override
-            public boolean hasResource(ResourceLocation resourceLocation) {
-                return resourceManager.hasResource(resourceLocation);
-            }
-
-            @Override
-            public InputStream readResource(ResourceLocation resourceLocation) throws IOException {
-                return resourceManager.getResource(resourceLocation).getInputStream();
-            }
-        };
     }
 }

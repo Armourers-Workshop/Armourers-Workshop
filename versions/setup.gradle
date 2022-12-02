@@ -12,25 +12,80 @@ buildscript {
 apply plugin: JavaPlugin
 apply plugin: PreprocessorPlugin
 
+static def parseVersion(version, undefined) {
+    // if is a limiter, ignore.
+    def value = 0
+    if (version.startsWith("(") || version.endsWith(")")) {
+        if (version.size() == 1) {
+            return undefined;
+        }
+        value = -1
+    }
+    // remove all limiter if needs.
+    version = version.replaceAll("[()\\[\\]]", "")
+    def (major, minor, patch) = version.tokenize('-')[0].tokenize('.')
+    return "${major}${minor.padLeft(2, '0')}${(patch ?: '').padLeft(2, '0')}" as int + value
+}
+
+static def parseVersionFromFile(file) {
+    // only process the source file.
+    if (file.name.endsWithAny(".java", ".java.tp")) {
+        // read version range in the file.
+        def regex = ~/@Available\((\s*value\s*=)?\s*"(.+)"\s*\)/
+        def results = file.getText("UTF-8") =~ regex
+        if (results.size() != 0) {
+            def range = results[0][2].split(",\\s*")
+            if (range.size() == 1) {
+                range = [range[0], range[0]]
+            }
+            return [parseVersion(range[0], 0), parseVersion(range[1], Integer.MAX_VALUE)]
+        }
+    }
+    return null
+}
+
 // we needs convert the version to number, for example: 1.16.5 => 11605.
 def minecraft_version = rootDir.getName()
-def (major, minor, patch) = minecraft_version.tokenize('-')[0].tokenize('.')
-def minecraft_version_number = "${major}${minor.padLeft(2, '0')}${(patch ?: '').padLeft(2, '0')}" as int
+def minecraft_version_number = parseVersion(minecraft_version, 0)
 
-def targets = ["common","forge","fabric"]
+def targets = ["common", "forge", "fabric"]
 
 targets.forEach {
     sourceSets.register(it) {
         it.java.srcDirs("../../${it.name}/src/main/java")
         it.resources.srcDirs("../../${it.name}/src/main/resources")
+        it.java.srcDirs("../library/${it.name}/src/main/java")
+        it.resources.srcDirs("../library/${it.name}/src/main/resources")
     }
 }
 
 macroPreprocessorSettings {
     inPlace = true
     remove = true
-    vars = [MC:minecraft_version_number]
+    vars = [MC: minecraft_version_number]
     com.github.hexomod.macro.Preprocessor.SLASH_KEYWORDS.put("comment", "//#")
+}
+
+task switchCoreSource {
+    sourceSets.forEach {
+        def sourceSet = it
+        sourceSet.allSource.forEach {
+            def range = parseVersionFromFile(it)
+            if (range != null) {
+                def name = it.name
+                if (minecraft_version_number >= range[0] && minecraft_version_number <= range[1]) {
+                    name = name.replaceAll(/\.java\.tp$/, /.java/)
+                } else {
+                    name = name.replaceAll(/\.java$/, /.java.tp/)
+                }
+                if (name != it.name) {
+                    def file = new File(it.parentFile, name)
+                    println "Switch ${it.name}"
+                    it.renameTo(file)
+                }
+            }
+        }
+    }
 }
 
 task applyCoreSources {
@@ -49,8 +104,7 @@ task applyCoreProperties {
         def contents = target.getText("UTF-8")
         def properties = new Properties()
         properties.load(it.newDataInputStream())
-        properties.forEach { key, value ->
-            contents = contents.replaceAll("${key}\\s*=\\s*[^#\\n]+", "${key}=${value}")
+        properties.forEach { key, value -> contents = contents.replaceAll("${key}\\s*=\\s*[^#\\n]+", "${key}=${value}")
         }
         target.write(contents, "UTF-8")
     }
@@ -62,4 +116,4 @@ task applyCoreConfigurations {
     }
 }
 
-defaultTasks("applyCoreSources", "applyCoreConfigurations")
+defaultTasks("switchCoreSource", "applyCoreSources", "applyCoreConfigurations")
