@@ -61,7 +61,9 @@ public class ItemTooltipManager {
         SkinUsedCounter counter = bakedSkin.getUsedCounter();
 
         if (!isItemOwner) {
-            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.hasSkin"));
+            if (ModConfig.Client.tooltipHasSkin) {
+                tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.hasSkin"));
+            }
             if (ModConfig.Client.tooltipSkinName && Strings.isNotBlank(skin.getCustomName())) {
                 tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinName", skin.getCustomName().trim()));
             }
