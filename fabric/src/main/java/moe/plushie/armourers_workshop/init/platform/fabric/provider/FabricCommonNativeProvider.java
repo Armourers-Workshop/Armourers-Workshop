@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.PlayerBlockPlaceEvents;
 import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -81,16 +80,6 @@ public interface FabricCommonNativeProvider extends CommonNativeProvider {
     @Override
     default void willPlayerClone(BiConsumer<Player, Player> consumer) {
         ServerPlayerEvents.COPY_FROM.register(((oldPlayer, newPlayer, alive) -> consumer.accept(oldPlayer, newPlayer)));
-    }
-
-    @Override
-    default void willPlayerDrop(Consumer<Player> consumer) {
-        ServerLivingEntityEvents.ALLOW_DEATH.register((entity, source, damageAmount) -> {
-            if (entity instanceof Player) {
-                consumer.accept((Player) entity);
-            }
-            return true;
-        });
     }
 
     @Override

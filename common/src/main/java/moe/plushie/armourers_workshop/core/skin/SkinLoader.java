@@ -381,7 +381,7 @@ public class SkinLoader {
     public static class LocalDataSession extends LoadingSession {
 
         public LocalDataSession() {
-            super("AW-SKIN-LC");
+            super("AW-SKIN-LD");
         }
 
         @Override

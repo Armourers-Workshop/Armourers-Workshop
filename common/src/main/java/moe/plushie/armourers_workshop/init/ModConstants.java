@@ -16,7 +16,7 @@ public class ModConstants {
     private static final ArrayList<String> BLOCK_ENTITY_TYPES = new ArrayList<>();
 
     public static final String MOD_ID = "armourers_workshop";
-    public static final String MOD_NET_ID = "6";
+    public static final String MOD_NET_ID = "8";
 
     public static final String ENTITY_MANNEQUIN = buildEntityType("mannequin");
     public static final String ENTITY_SEAT = buildEntityType("seat");

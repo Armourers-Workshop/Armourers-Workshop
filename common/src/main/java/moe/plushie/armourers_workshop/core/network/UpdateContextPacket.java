@@ -13,22 +13,35 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+import java.util.UUID;
 
 public class UpdateContextPacket extends CustomPacket {
+
+    private UUID token = null;
 
     public UpdateContextPacket() {
     }
 
+    public UpdateContextPacket(Player player) {
+        this.token = player.getUUID();
+    }
+
     public UpdateContextPacket(FriendlyByteBuf buffer) {
-        ModContext.init(buffer.readUUID(), buffer.readUUID());
+        if (buffer.readBoolean()) {
+            ModContext.init(buffer.readUUID(), buffer.readUUID());
+        }
         readConfigSpec(buffer);
     }
 
     @Override
     public void encode(FriendlyByteBuf buffer) {
-        buffer.writeUUID(Objects.requireNonNull(ModContext.t0()));
-        buffer.writeUUID(Objects.requireNonNull(ModContext.t1()));
+        if (token != null) {
+            buffer.writeBoolean(true);
+            buffer.writeUUID(ModContext.t2(token));
+            buffer.writeUUID(ModContext.t3(token));
+        } else {
+            buffer.writeBoolean(false);
+        }
         writeConfigSpec(buffer);
     }
 

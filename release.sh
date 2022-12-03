@@ -18,7 +18,7 @@ for minecraft_version in $minecraft_versions; do
 	echo switch of $minecraft_version
 	./gradlew -p versions/$minecraft_version
 	echo build of $minecraft_version
-	./gradlew build -Pversion=$1 --no-daemon
+	./gradlew build -Pversion=$1
 
 	echo archive fabric of $minecraft_version
 	mv "fabric/build/libs/armourersworkshop-fabric-$minecraft_version-$mod_version.jar" "$release_path"

@@ -5,11 +5,12 @@ import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.codec.binary.Hex;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ModContext extends AbstractSavedData {
@@ -70,7 +71,14 @@ public class ModContext extends AbstractSavedData {
         return null;
     }
 
-    @Nullable
+    public static UUID t2(UUID p) {
+        return md5(Objects.requireNonNull(t0()), p);
+    }
+
+    public static UUID t3(UUID p) {
+        return md5(Objects.requireNonNull(t1()), p);
+    }
+
     public static byte[] x0() {
         if (current != null) {
             return current.x0;
@@ -78,7 +86,6 @@ public class ModContext extends AbstractSavedData {
         return null;
     }
 
-    @Nullable
     public static byte[] x1() {
         if (current != null) {
             return current.x1;
@@ -95,6 +102,21 @@ public class ModContext extends AbstractSavedData {
             e.printStackTrace();
             return value;
         }
+    }
+
+    @NotNull
+    private static UUID md5(UUID v1, UUID v2) {
+        int v0 = 20220616;
+        ByteBuffer buffer0 = ByteBuffer.allocate(8 * Long.BYTES);
+        buffer0.putLong(v0 + 0xe08e99f7);
+        buffer0.putLong(v1.getLeastSignificantBits());
+        buffer0.putLong(v0 + 0x9ee714d5);
+        buffer0.putLong(v2.getMostSignificantBits());
+        buffer0.putLong(v0 + 0x3cf6f6ac);
+        buffer0.putLong(v1.getLeastSignificantBits());
+        buffer0.putLong(v0 + 0x6c8caf3c);
+        buffer0.putLong(v2.getLeastSignificantBits());
+        return UUID.nameUUIDFromBytes(buffer0.array());
     }
 
     private void apply(UUID t0, UUID t1) {
