@@ -27,7 +27,7 @@ public class ItemRendererMixin {
     //#endif
     {
         BakedModel bakedModel = cir.getReturnValue();
-        if (ClientWardrobeHandler.shouldRenderEmbeddedSkin(entity, level, itemStack, false)) {
+        if (ClientWardrobeHandler.shouldRenderEmbeddedSkin(entity, level, itemStack, null)) {
             cir.setReturnValue(BakedModelStroage.wrap(bakedModel, itemStack, entity, level));
         }
     }
@@ -41,6 +41,6 @@ public class ItemRendererMixin {
         BakedModel resolvedModel = stroage.getOriginModel();
         LivingEntity entity = stroage.getEntity();
         Level level = stroage.getLevel();
-        ClientWardrobeHandler.onRenderEmbeddedSkin(entity, level, itemStack, transformType, p_229111_3_, matrixStack, buffers, resolvedModel, packedLight, overlay, ci);
+        ClientWardrobeHandler.renderEmbeddedSkin(entity, level, itemStack, transformType, p_229111_3_, matrixStack, buffers, resolvedModel, packedLight, overlay, ci);
     }
 }

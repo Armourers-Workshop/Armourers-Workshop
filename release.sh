@@ -4,7 +4,8 @@ if [[ "$1" == "" ]]; then
 fi
 
 mod_version="2.0.0-$1"
-minecraft_versions="1.16.5 1.18.2 1.19.2"
+minecraft_supportd_versions="1.16.5 1.18.2 1.19.2"
+minecraft_versions="${2:-$minecraft_supportd_versions}"
 
 release_path="build/release/$mod_version"
 

@@ -3,7 +3,9 @@ package moe.plushie.armourers_workshop.init.client;
 import com.google.common.collect.Iterables;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
+import moe.plushie.armourers_workshop.core.client.model.BakedModelStroage;
 import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
@@ -12,6 +14,7 @@ import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDebugger;
@@ -228,45 +231,65 @@ public class ClientWardrobeHandler {
         }
     }
 
-    public static boolean shouldRenderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, boolean isRenderInGUI) {
-        //
-        if (level == null) {
-            if (!ModConfig.enableEmbeddedSkinRenderer()) {
-                return false;
+    public static boolean shouldRenderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, ItemTransforms.TransformType transformType) {
+        // this a silly solution, but I don't want to depend more mixins.
+        // in ground: level and entity is empty.
+        // in gui: level is empty.
+        if (level != null && entity != null) {
+            // when the wardrobe has override skin of the item,
+            // we easily get a conclusion to needs embedded skin.
+            SkinRenderData renderData = SkinRenderData.of(entity);
+            if (renderData != null && !Iterables.isEmpty(renderData.getItemSkins(itemStack, entity instanceof MannequinEntity))) {
+                return true;
             }
-            if (itemStack.getItem() == ModItems.SKIN.get()) {
-                return false;
-            }
-            return !SkinDescriptor.of(itemStack).isEmpty();
         }
-        SkinRenderData renderData = SkinRenderData.of(entity);
-        if (renderData != null) {
-            return !Iterables.isEmpty(renderData.getItemSkins(itemStack, entity instanceof MannequinEntity));
+        // when the item is a skin item itself,
+        // we easily get a conclusion to no needs embedded skin
+        if (itemStack.getItem() == ModItems.SKIN.get()) {
+            return false;
         }
-        return false;
+        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        if (descriptor.isEmpty()) {
+            return false;
+        }
+        // when the skin item, we no required enable of embbed skin option in the config.
+        return ModConfig.enableEmbeddedSkinRenderer() || descriptor.getType() == SkinTypes.ITEM ;
     }
 
-    public static void onRenderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, ItemTransforms.TransformType transformType, boolean p_229109_4_, PoseStack matrixStack, MultiBufferSource buffers, BakedModel bakedModel, int packedLight, int overlay, CallbackInfo callback) {
-        if (itemStack.isEmpty()) {
-            return;
-        }
+    public static void renderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, ItemTransforms.TransformType transformType, boolean leftHandHackery, PoseStack matrixStack, MultiBufferSource buffers, BakedModel bakedModel, int packedLight, int overlay, CallbackInfo callback) {
         int counter = 0;
         switch (transformType) {
             case GUI:
+            case GROUND:
+            case FIXED: {
                 SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
                 if (descriptor.isEmpty()) {
                     return;
                 }
-                TransformationProvider.handleTransforms(matrixStack, bakedModel, transformType, false);
+                matrixStack.pushPose();
+                TransformationProvider.handleTransforms(matrixStack, BakedModelStroage.getSkinBakedModel(), transformType, leftHandHackery);
                 matrixStack.translate(-0.5D, -0.5D, -0.5D);
                 SkinItemRenderer.getInstance().renderByItem(descriptor.sharedItemStack(), transformType, matrixStack, buffers, packedLight, overlay);
                 callback.cancel();
+                matrixStack.popPose();
                 break;
-
+            }
             case THIRD_PERSON_LEFT_HAND:
             case THIRD_PERSON_RIGHT_HAND:
             case FIRST_PERSON_LEFT_HAND:
             case FIRST_PERSON_RIGHT_HAND: {
+                // in special case, entity hold a item type skin.
+                // so we need replace it to custom renderer.
+                SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+                if (!descriptor.isEmpty() && !(descriptor.getType() instanceof ISkinToolType)) {
+                    matrixStack.pushPose();
+                    TransformationProvider.handleTransforms(matrixStack, BakedModelStroage.getSkinBakedModel(), transformType, leftHandHackery);
+                    matrixStack.translate(-0.5D, -0.5D, -0.5D);
+                    SkinItemRenderer.getInstance().renderByItem(descriptor.sharedItemStack(), transformType, matrixStack, buffers, packedLight, overlay);
+                    callback.cancel();
+                    matrixStack.popPose();
+                    return;
+                }
                 SkinRenderData renderData = SkinRenderData.of(entity);
                 if (renderData != null) {
 //                    matrixStack.translate(0, 1, -2);
@@ -286,9 +309,12 @@ public class ClientWardrobeHandler {
                 }
                 break;
             }
+            default: {
+                // we not support unknown operates.
+                break;
+            }
         }
     }
-
 
     public static void onRenderEntityInInventoryPre(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY) {
         if (!ModConfig.Client.enableEntityInInventoryClip) {
