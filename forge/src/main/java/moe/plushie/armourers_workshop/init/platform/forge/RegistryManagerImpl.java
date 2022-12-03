@@ -68,9 +68,10 @@ public class RegistryManagerImpl {
 
         @Override
         public <I extends T> IRegistryKey<I> register(String name, Supplier<? extends I> provider) {
+            RegistryLazyValue<? extends I> lazyProvider = new RegistryLazyValue<>(provider);
             ResourceLocation registryName = ModConstants.key(name);
             ModLog.debug("Registering '{}'", registryName);
-            Supplier<I> value = registry.register(name, provider);
+            Supplier<I> value = registry.register(name, lazyProvider);
             IRegistryKey<I> object = new IRegistryKey<I>() {
                 @Override
                 public ResourceLocation getRegistryName() {
@@ -79,11 +80,30 @@ public class RegistryManagerImpl {
 
                 @Override
                 public I get() {
-                    return value.get();
+                    return lazyProvider.get();
                 }
             };
             entriesView.add(ObjectUtils.unsafeCast(object));
             return object;
+        }
+    }
+
+    public static class RegistryLazyValue<T> implements Supplier<T> {
+
+        private T value;
+        private Supplier<T> provider;
+
+        public RegistryLazyValue(Supplier<T> provider) {
+            this.provider = provider;
+        }
+
+        @Override
+        public T get() {
+            if (provider != null) {
+                value = provider.get();
+                provider = null;
+            }
+            return value;
         }
     }
 }
