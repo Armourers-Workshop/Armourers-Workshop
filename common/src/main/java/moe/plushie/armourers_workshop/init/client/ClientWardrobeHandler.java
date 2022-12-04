@@ -296,7 +296,6 @@ public class ClientWardrobeHandler {
 //                    RenderUtils.drawPoint(matrixStack, null, 2, buffers);
                     matrixStack.pushPose();
                     matrixStack.scale(-SCALE, -SCALE, SCALE);
-
                     boolean replaceSkinItem = entity instanceof MannequinEntity;
                     SkinRenderContext context = SkinRenderContext.getInstance();
                     context.setup(packedLight, TickUtils.ticks(), transformType, matrixStack, buffers);

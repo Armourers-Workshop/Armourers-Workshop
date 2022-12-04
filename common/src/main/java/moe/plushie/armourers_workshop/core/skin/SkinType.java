@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -77,10 +76,5 @@ public class SkinType implements ISkinType {
         public boolean contains(ItemStack itemStack) {
             return predicate.test(itemStack);
         }
-
-        //        @Override
-//        public ITag<Item> getTag() {
-//            return tag;
-//        }
     }
 }

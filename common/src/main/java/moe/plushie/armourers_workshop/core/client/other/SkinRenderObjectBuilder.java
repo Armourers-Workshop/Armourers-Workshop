@@ -11,6 +11,7 @@ import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.compatibility.AbstractRenderPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -144,7 +145,7 @@ public class SkinRenderObjectBuilder {
             ColorScheme scheme = task.scheme;
             ArrayList<CompiledTask> mergedTasks = new ArrayList<>();
             part.forEach((renderType, quads) -> {
-                IBufferBuilder builder = ClientNativeManager.getFactory().createBuilderBuffer(quads.size() * 8 * renderType.format().getVertexSize());
+                IBufferBuilder builder = ClientNativeManager.createBuilderBuffer(quads.size() * 8 * renderType.format().getVertexSize());
                 builder.begin(renderType);
                 quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, OverlayTexture.NO_OVERLAY, matrixStack1, builder.asBufferBuilder()));
                 IRenderedBuffer renderedBuffer = builder.end();
@@ -171,6 +172,7 @@ public class SkinRenderObjectBuilder {
             compiledTask.vertexBuffer = vertexBuffer;
             compiledTask.vertexCount = drawState.vertexCount();
             compiledTask.vertexOffset = totalRenderedBytes;
+            compiledTask.bufferBuilder.release();
             compiledTask.bufferBuilder = null;
             compiledTask.format = format;
             byteBuffers.add(byteBuffer);
@@ -230,12 +232,15 @@ public class SkinRenderObjectBuilder {
 
         protected final ArrayList<CompiledPass> tasks = new ArrayList<>();
 
-        void render(CachedTask task, PoseStack matrixStack, int lightmap, float partialTicks, int slotIndex) {
-            Matrix4f matrix = RenderSystem.getExtendedModelViewStack().lastPose().copy();
-            matrix.multiply(matrixStack.last().pose());
-            Matrix3f normalMatrix = matrixStack.last().normal().copy();
+        void render(CachedTask task, PoseStack poseStack, int lightmap, float partialTicks, int slotIndex) {
+            AbstractRenderPoseStack modelViewStack = RenderSystem.getExtendedModelViewStack();
+            Matrix4f modelViewMatrix = modelViewStack.lastPose().copy();
+            modelViewMatrix.multiply(poseStack.last().pose());
+//            // transpose(inverse(modelViewMatrix))
+            Matrix3f normalMatrix = poseStack.last().normal().copy();
             normalMatrix.invert();
-            task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, matrix, normalMatrix, lightmap, partialTicks, slotIndex)));
+            normalMatrix.mul(modelViewStack.lastNormal());
+            task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, modelViewMatrix, normalMatrix, lightmap, partialTicks, slotIndex)));
         }
 
         void commit(Consumer<SkinVertexBufferBuilder.Pass> consumer) {

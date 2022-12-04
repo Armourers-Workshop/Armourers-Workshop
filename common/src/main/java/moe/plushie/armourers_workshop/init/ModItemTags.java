@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.common.IItemTagKey;
-import moe.plushie.armourers_workshop.api.common.ITagKey;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import net.minecraft.world.item.Item;
 
@@ -20,12 +19,4 @@ public class ModItemTags {
     private static IItemTagKey<Item> skinnable(String name) {
         return BuilderManager.getInstance().createItemTagBuilder().build("skinnable/" + name);
     }
-
-//    public static boolean isToolItem(Item item) {
-//        return item.is(PICKAXES) || item.is(AXES) || item.is(SHOVELS) || item.is(HOES);
-//    }
-//
-//    public static boolean isWeaponItem(Item item) {
-//        return item.is(SWORDS) || item.is(SHIELDS) || item.is(BOWS);
-//    }
 }

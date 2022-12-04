@@ -1,15 +1,13 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
-import moe.plushie.armourers_workshop.api.client.ISkinRendererPlugin;
-import moe.plushie.armourers_workshop.api.client.ISkinRendererProvider;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
-import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.core.client.layer.SkinWardrobeLayer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
+import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -33,17 +31,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.function.*;
+import java.util.function.Supplier;
 
 @Environment(value = EnvType.CLIENT)
 public class SkinRendererManager  {
 
     private static final SkinRendererManager INSTANCE = new SkinRendererManager();
 
-    private final ArrayList<ISkinRendererProvider<SkinRenderer<?, ?, ?>>> builders = new ArrayList<>();
-    private final ArrayList<Pair<Class<?>, ISkinRendererPlugin<?, ?, ?>>> plugins = new ArrayList<>();
+    private final ArrayList<SkinRenderer.Factory<SkinRenderer<?, ?, ?>>> builders = new ArrayList<>();
+    private final ArrayList<Pair<Class<?>, SkinRenderer.Plugin<?, ?, ?>>> plugins = new ArrayList<>();
 
-    private ArrayList<Runnable> pendingTasks = new ArrayList<>();
+    private final ArrayList<Runnable> pendingTasks = new ArrayList<>();
 
     public static SkinRendererManager getInstance() {
         return INSTANCE;
@@ -109,12 +107,12 @@ public class SkinRendererManager  {
         });
     }
 
-    public <T extends SkinRenderer<?, ?, ?>> void registerPlugin(Class<T> targetType, ISkinRendererPlugin<?, ?, ?> plugin) {
+    public <T extends SkinRenderer<?, ?, ?>> void registerPlugin(Class<T> targetType, SkinRenderer.Plugin<?, ?, ?> plugin) {
         plugins.add(Pair.of(targetType, plugin));
     }
 
-    public <T extends LivingEntity, V extends EntityModel<T>, M extends IModelHolder<V>> Collection<ISkinRendererPlugin<T, V, M>> getPlugins(SkinRenderer<T, V, M> renderer) {
-        ArrayList<ISkinRendererPlugin<T, V, M>> plugins1 = new ArrayList<>();
+    public <T extends LivingEntity, V extends EntityModel<T>, M extends IModelHolder<V>> Collection<SkinRenderer.Plugin<T, V, M>> getPlugins(SkinRenderer<T, V, M> renderer) {
+        ArrayList<SkinRenderer.Plugin<T, V, M>> plugins1 = new ArrayList<>();
         plugins.forEach(pair -> {
             if (pair.getKey().isInstance(renderer)) {
                 plugins1.add(ObjectUtils.unsafeCast(pair.getValue()));
@@ -123,7 +121,7 @@ public class SkinRendererManager  {
         return plugins1;
     }
 
-    public void registerRenderer(ISkinRendererProvider<SkinRenderer<?, ?, ?>> builder) {
+    public void registerRenderer(SkinRenderer.Factory<SkinRenderer<?, ?, ?>> builder) {
         builders.add(builder);
     }
 
@@ -171,7 +169,7 @@ public class SkinRendererManager  {
     @Nullable
     protected <T extends Entity, V extends Model, M extends IModelHolder<V>> SkinRenderer<T, V, M> createRenderer(EntityType<?> entityType, EntityRenderer<?> entityRenderer, Model entityModel) {
         EntityProfile entityProfile = ModEntityProfiles.getProfile(entityType);
-        for (ISkinRendererProvider<SkinRenderer<?, ?, ?>> builder : builders) {
+        for (SkinRenderer.Factory<SkinRenderer<?, ?, ?>> builder : builders) {
             SkinRenderer<?, ?, ?> skinRenderer = builder.create(entityType, entityRenderer, entityModel, entityProfile);
             if (skinRenderer != null) {
                 return ObjectUtils.unsafeCast(skinRenderer);

@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.api.skin;
 
-import moe.plushie.armourers_workshop.utils.math.Vector3i;
+import moe.plushie.armourers_workshop.api.math.IVector3i;
 import net.minecraft.core.Direction;
 
 public interface ISkinMarker {
 
-    Vector3i getPosition();
+    IVector3i getPosition();
 
     Direction getDirection();
 }

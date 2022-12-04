@@ -21,12 +21,17 @@ import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -202,6 +207,16 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
         return profile;
     }
 
+    public interface Plugin<T extends LivingEntity, V extends EntityModel<T>, M extends IModelHolder<V>> {
+
+        RenderLayer<T, V> getOverrideLayer(SkinRenderer<T, V, M> skinRenderer, LivingEntityRenderer<T, V> entityRenderer, RenderLayer<T, V> renderLayer);
+    }
+
+    public interface Factory<T> {
+
+        T create(EntityType<?> entityType, EntityRenderer<?> entityRenderer, Model entityModel, EntityProfile entityProfile);
+    }
+
     @FunctionalInterface
     public interface ITransform<T, M> {
         void apply(PoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart);
@@ -267,5 +282,6 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
             }
         }
     }
+
 }
 

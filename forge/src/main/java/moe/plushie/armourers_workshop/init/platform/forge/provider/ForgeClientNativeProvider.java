@@ -28,7 +28,6 @@ public interface ForgeClientNativeProvider extends ClientNativeProvider {
     @Override
     default void willPlayerLogin(Consumer<Player> consumer) {
         willPlayerEnter(player -> {
-            // TODO: test in server @SAGESSE
             if (player != null && player.equals(Minecraft.getInstance().player)) {
                 consumer.accept(player);
             }
@@ -38,7 +37,6 @@ public interface ForgeClientNativeProvider extends ClientNativeProvider {
     @Override
     default void willPlayerLogout(Consumer<Player> consumer) {
         willPlayerLeave(player -> {
-            // TODO: test in server @SAGESSE
             if (player == null || player.equals(Minecraft.getInstance().player)) {
                 consumer.accept(player);
             }

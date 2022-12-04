@@ -41,6 +41,9 @@ public final class BlockUtils {
     }
 
     public static void snapshot(LevelAccessor level, BlockPos blockPos, BlockState blockState, CompoundTag tag, Player player, Component reason) {
+        if (level == null) {
+            return;
+        }
         UndoNamedGroupAction group = new UndoNamedGroupAction(reason);
         group.push(new SetBlockAction((Level) level, blockPos, blockState, tag));
         UndoManager.of(player.getUUID()).push(group);

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.transform;
 
 import moe.plushie.armourers_workshop.api.action.ICanRotation;
+import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
@@ -8,7 +9,6 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
-import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
@@ -61,7 +61,7 @@ public class SkinWingsTransform extends SkinTransform {
 
     @Override
     public void post(OpenPoseStack matrixStack) {
-        Vector3i point = marker.getPosition();
+        IVector3i point = marker.getPosition();
         float angle = (float) getRotationDegrees();
         Vector3f offset = new Vector3f(point.getX() + 0.5f, point.getY() + 0.5f, point.getZ() + 0.5f);
         if (!isMirror) {

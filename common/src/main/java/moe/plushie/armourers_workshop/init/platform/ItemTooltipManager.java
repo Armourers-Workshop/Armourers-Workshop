@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init.platform;
 
 import com.apple.library.coregraphics.CGRect;
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.skin.ISkinEquipmentType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.registry.Registry;
@@ -122,7 +123,7 @@ public class ItemTooltipManager {
 //            }
 //        }
 
-        if (ModConfig.Client.tooltipOpenWardrobe && isItemOwner) {
+        if (ModConfig.Client.tooltipOpenWardrobe && isItemOwner && skin.getType() instanceof ISkinEquipmentType) {
             Component keyName = ModKeyBindings.OPEN_WARDROBE_KEY.getKeyName();
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinOpenWardrobe", keyName));
         }

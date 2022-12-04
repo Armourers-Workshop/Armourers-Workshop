@@ -45,7 +45,7 @@ public class AbstractLightBufferObject extends SkinRenderObject {
             return;
         }
         int alignedCapacity = ((capacity / PAGE_SIZE) + 1) * PAGE_SIZE;
-        IBufferBuilder builder = ClientNativeManager.getFactory().createBuilderBuffer(alignedCapacity * getFormat().getVertexSize());
+        IBufferBuilder builder = ClientNativeManager.createBuilderBuffer(alignedCapacity * getFormat().getVertexSize());
         builder.begin(TYPE);
         BufferBuilder bufferBuilder = builder.asBufferBuilder();
         for (int i = 0; i < alignedCapacity; ++i) {

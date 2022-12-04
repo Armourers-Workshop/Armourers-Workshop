@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.client.skinrender.plugin;
 
-import moe.plushie.armourers_workshop.api.client.ISkinRendererPlugin;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.core.client.layer.ForwardingLayer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
@@ -13,13 +12,11 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 @Environment(value = EnvType.CLIENT)
-public class ForwardingLayerPlugin<T extends LivingEntity, V extends EntityModel<T>, M extends IModelHolder<V>> implements ISkinRendererPlugin<T, V, M> {
+public class ForwardingLayerPlugin<T extends LivingEntity, V extends EntityModel<T>, M extends IModelHolder<V>> implements SkinRenderer.Plugin<T, V, M> {
 
     private final ArrayList<Entry> entries = new ArrayList<>();
 

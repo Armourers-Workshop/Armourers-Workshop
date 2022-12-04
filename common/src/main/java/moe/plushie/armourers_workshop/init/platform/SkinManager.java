@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.init.platform;
 
-import moe.plushie.armourers_workshop.api.client.ISkinRendererProvider;
 import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
 import moe.plushie.armourers_workshop.core.client.skinrender.*;
 import moe.plushie.armourers_workshop.core.client.skinrender.plugin.MobLayerFixPlugin;
@@ -55,7 +54,7 @@ public class SkinManager {
         manager.accept(Builder.of(CreeperSkinRenderer::new).model(CreeperModel.class));
     }
 
-    protected static class Builder implements ISkinRendererProvider<SkinRenderer<?, ?, ?>> {
+    protected static class Builder implements SkinRenderer.Factory<SkinRenderer<?, ?, ?>> {
 
         Class<?> modelClass;
         Class<?> rendererClass;
