@@ -17,7 +17,7 @@ public abstract class AbstractForgeNetworkManager extends NetworkEvent {
     }
 
     public static void register(ResourceLocation channelName, String channelVersion, Object dispatcher) {
-        EventNetworkChannel channel = NetworkRegistry.ChannelBuilder.named(channelName).networkProtocolVersion(() -> channelVersion).clientAcceptedVersions(channelVersion::equals).serverAcceptedVersions(channelVersion::equals).eventNetworkChannel();
+        EventNetworkChannel channel = NetworkRegistry.ChannelBuilder.named(channelName).networkProtocolVersion(() -> channelVersion).clientAcceptedVersions(cv -> true).serverAcceptedVersions(channelVersion::equals).eventNetworkChannel();
         channel.registerObject(dispatcher);
     }
 

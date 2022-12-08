@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeRegistrie
 import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.platform.forge.addon.BukkitAddon;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -21,15 +22,15 @@ import java.util.LinkedHashSet;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public class RegistryManagerImpl {
+public class RegistryManagerImpl extends AbstractForgeRegistries {
 
     private static final ImmutableMap<Class<?>, Registry<?>> REGISTRIES = new ImmutableMap.Builder<Class<?>, Registry<?>>()
-            .put(Block.class, new RegistryProxy<>(AbstractForgeRegistries.wrap(AbstractForgeRegistries.BLOCKS)))
-            .put(Item.class, new RegistryProxy<>(AbstractForgeRegistries.wrap(AbstractForgeRegistries.ITEMS)))
-            .put(MenuType.class, new RegistryProxy<>(AbstractForgeRegistries.wrap(AbstractForgeRegistries.MENU_TYPES)))
-            .put(EntityType.class, new RegistryProxy<>(AbstractForgeRegistries.wrap(AbstractForgeRegistries.ENTITY_TYPES)))
-            .put(BlockEntityType.class, new RegistryProxy<>(AbstractForgeRegistries.wrap(AbstractForgeRegistries.BLOCK_ENTITY_TYPES)))
-            .put(SoundEvent.class, new RegistryProxy<>(AbstractForgeRegistries.wrap(AbstractForgeRegistries.SOUND_EVENTS)))
+            .put(Block.class, new RegistryProxy<>("blocks", wrap(BLOCKS)))
+            .put(Item.class, new RegistryProxy<>("items", wrap(ITEMS)))
+            .put(MenuType.class, new RegistryProxy<>("menuTypes", wrap(MENU_TYPES)))
+            .put(EntityType.class, new RegistryProxy<>("entityTypes", wrap(ENTITY_TYPES)))
+            .put(BlockEntityType.class, new RegistryProxy<>("blockEntityTypes", wrap(BLOCK_ENTITY_TYPES)))
+            .put(SoundEvent.class, new RegistryProxy<>("soundEvents", wrap(SOUND_EVENTS)))
             .build();
 
     public static <T> Registry<T> makeRegistry(Class<? super T> clazz) {
@@ -44,10 +45,12 @@ public class RegistryManagerImpl {
 
     public static class RegistryProxy<T> extends Registry<T> {
 
+        protected final String category;
         protected final IRegistry<T> registry;
         protected final LinkedHashSet<IRegistryKey<T>> entriesView = new LinkedHashSet<>();
 
-        protected RegistryProxy(IRegistry<T> registry) {
+        protected RegistryProxy(String category, IRegistry<T> registry) {
+            this.category = category;
             this.registry = registry;
         }
 
@@ -84,6 +87,7 @@ public class RegistryManagerImpl {
                 }
             };
             entriesView.add(ObjectUtils.unsafeCast(object));
+            BukkitAddon.register(category, registryName, registry::getId);
             return object;
         }
     }

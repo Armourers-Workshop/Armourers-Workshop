@@ -9,37 +9,39 @@ import java.util.function.Function;
 
 public enum ModPackets {
 
-    PACKET_UPDATE_CONTEXT(UpdateContextPacket.class, UpdateContextPacket::new),
+    UPDATE_CONTEXT(0x00, UpdateContextPacket.class, UpdateContextPacket::new),
 
-    PACKET_UNDO_ACTION(UndoActionPacket.class, UndoActionPacket::new),
-    PACKET_UPDATE_COLOR_PICKER(UpdateColorPickerPacket.class, UpdateColorPickerPacket::new),
+    REQUEST_FILE(0x01, RequestSkinPacket.class, RequestSkinPacket::new),
+    RESPONSE_FILE(0x02, ResponseSkinPacket.class, ResponseSkinPacket::new),
 
-    PACKET_REQUEST_FILE(RequestSkinPacket.class, RequestSkinPacket::new),
-    PACKET_RESPONSE_FILE(ResponseSkinPacket.class, ResponseSkinPacket::new),
-    PACKET_UPLOAD_FILE(SaveSkinPacket.class, SaveSkinPacket::new),
+    OPEN_WARDROBE(0x03, OpenWardrobePacket.class, OpenWardrobePacket::new),
+    UPDATE_WARDROBE(0x04, UpdateWardrobePacket.class, UpdateWardrobePacket::new),
 
-    PACKET_UPLOAD_SKIN_TO_GLOBAL(UploadSkinPacket.class, UploadSkinPacket::new),
-    PACKET_UPLOAD_SKIN_TO_GLOBAL_PRE(UploadSkinPrePacket.class, UploadSkinPrePacket::new),
+    UPDATE_HOLOGRAM_PROJECTOR(0x05, UpdateHologramProjectorPacket.class, UpdateHologramProjectorPacket::new),
+    UPDATE_COLOUR_MIXER(0x06, UpdateColorMixerPacket.class, UpdateColorMixerPacket::new),
 
-    PACKET_UPDATE_OUTFIT_MAKER(UpdateOutfitMakerPacket.class, UpdateOutfitMakerPacket::new),
-    PACKET_UPDATE_ARMOURER(UpdateArmourerPacket.class, UpdateArmourerPacket::new),
+    EXECUTE_COMMAND(0x07, ExecuteCommandPacket.class, ExecuteCommandPacket::new),
 
-    PACKET_UPDATE_HOLOGRAM_PROJECTOR(UpdateHologramProjectorPacket.class, UpdateHologramProjectorPacket::new),
-    PACKET_UPDATE_COLOUR_MIXER(UpdateColorMixerPacket.class, UpdateColorMixerPacket::new),
+    UPLOAD_FILE(0x40, SaveSkinPacket.class, SaveSkinPacket::new),
 
-    PACKET_UPDATE_PAINTING_TOOL(UpdatePaintingToolPacket.class, UpdatePaintingToolPacket::new),
-    PACKET_UPDATE_BLOCK_COLOR(UpdateBlockColorPacket.class, UpdateBlockColorPacket::new),
+    UPDATE_LIBRARY_FILE(0x41, UpdateLibraryFilePacket.class, UpdateLibraryFilePacket::new),
+    UPDATE_LIBRARY_FILES(0x42, UpdateLibraryFilesPacket.class, UpdateLibraryFilesPacket::new),
 
-    PACKET_UPDATE_LIBRARY_FILE(UpdateLibraryFilePacket.class, UpdateLibraryFilePacket::new),
-    PACKET_UPDATE_LIBRARY_FILES(UpdateLibraryFilesPacket.class, UpdateLibraryFilesPacket::new),
+    UPLOAD_SKIN_TO_GLOBAL(0x43, UploadSkinPacket.class, UploadSkinPacket::new),
+    UPLOAD_SKIN_TO_GLOBAL_PRE(0x44, UploadSkinPrePacket.class, UploadSkinPrePacket::new),
 
-    PACKET_EXECUTE_COMMAND(ExecuteCommandPacket.class, ExecuteCommandPacket::new),
+    UPDATE_BLOCK_COLOR(0x80, UpdateBlockColorPacket.class, UpdateBlockColorPacket::new),
 
-    PACKET_OPEN_WARDROBE(OpenWardrobePacket.class, OpenWardrobePacket::new),
-    PACKET_UPDATE_WARDROBE(UpdateWardrobePacket.class, UpdateWardrobePacket::new);
+    UPDATE_COLOR_PICKER(0x81, UpdateColorPickerPacket.class, UpdateColorPickerPacket::new),
+    UPDATE_PAINTING_TOOL(0x82, UpdatePaintingToolPacket.class, UpdatePaintingToolPacket::new),
 
-    ModPackets(Class<? extends CustomPacket> packetClass, Function<FriendlyByteBuf, CustomPacket> factory) {
-        CustomPacket.register(ordinal(), packetClass, factory);
+    UNDO_ACTION(0x83, UndoActionPacket.class, UndoActionPacket::new),
+
+    UPDATE_OUTFIT_MAKER(0x84, UpdateOutfitMakerPacket.class, UpdateOutfitMakerPacket::new),
+    UPDATE_ARMOURER(0x85, UpdateArmourerPacket.class, UpdateArmourerPacket::new);
+
+    ModPackets(int index, Class<? extends CustomPacket> packetClass, Function<FriendlyByteBuf, CustomPacket> factory) {
+        CustomPacket.register(index, packetClass, factory);
     }
 
     public static void init() {

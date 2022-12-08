@@ -8,10 +8,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fml.event.IModBusEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.*;
 
 import java.util.function.Supplier;
 
@@ -25,6 +22,16 @@ public abstract class AbstractForgeRegistries extends ForgeRegistries {
         DeferredRegister<T> registry1 = DeferredRegister.create(registry, ModConstants.MOD_ID);
         registry1.register(FMLJavaModLoadingContext.get().getModEventBus());
         return new IRegistry<T>() {
+
+            @Override
+            public int getId(ResourceLocation registryName) {
+                // we need query the registry entry id in the forge.
+                if (registry instanceof ForgeRegistry<T>) {
+                    return ((ForgeRegistry<T>) registry).getID(registryName);
+                }
+                return 0;
+            }
+
             @Override
             public ResourceLocation getKey(T object) {
                 return registry.getKey(object);

@@ -6,6 +6,8 @@ import java.util.function.Supplier;
 
 public interface IRegistry<T> {
 
+    int getId(ResourceLocation registryName);
+
     ResourceLocation getKey(T object);
 
     T getValue(ResourceLocation registryName);

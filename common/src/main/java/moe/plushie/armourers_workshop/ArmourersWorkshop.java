@@ -32,8 +32,8 @@ public class ArmourersWorkshop {
         EnvironmentExecutor.willInit(EnvironmentType.COMMON, () -> CommonProxy::init);
         EnvironmentExecutor.didInit(EnvironmentType.COMMON, () -> () -> {
             // setup network manager.
-            NetworkManager.init("play", ModConstants.MOD_NET_ID);
             ModPackets.init();
+            NetworkManager.init("play", ModConstants.MOD_NET_ID);
 
             ModEntityProfiles.init();
             ModHolidays.init();

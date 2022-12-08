@@ -105,11 +105,7 @@ public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
 
     @Override
     public IBlockBuilder<T> noDrops() {
-        //#if MC >= 11900
         this.properties = properties.noLootTable();
-        //#else
-        //# this.properties = properties.noDrops();
-        //#endif
         return this;
     }
 
