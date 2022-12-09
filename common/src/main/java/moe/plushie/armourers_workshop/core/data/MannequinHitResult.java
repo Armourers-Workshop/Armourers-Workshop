@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.data;
 import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
@@ -25,7 +26,7 @@ public class MannequinHitResult extends BlockHitResult {
         this.rotation = rotation;
     }
 
-    public static MannequinHitResult test(Player player, Vec3 origin, Vec3 target, BlockPos pos) {
+    public static MannequinHitResult test(Player player, Vector3f origin, Vec3 target, BlockPos pos) {
         Level level = player.level;
         ItemStack itemStack = player.getMainHandItem();
         float scale = MannequinItem.getScale(itemStack);

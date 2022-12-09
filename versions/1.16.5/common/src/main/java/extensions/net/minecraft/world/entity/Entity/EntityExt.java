@@ -7,7 +7,6 @@ import net.minecraft.world.entity.Entity;
 @Extension
 public class EntityExt {
 
-
     public static void setYRot(@This Entity entity, float value) {
         entity.yRot = value;
     }

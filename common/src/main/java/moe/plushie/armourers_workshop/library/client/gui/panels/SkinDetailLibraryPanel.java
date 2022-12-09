@@ -171,7 +171,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
             }
         }
         if (Strings.isNotBlank(playerTexture.getName())) {
-            font.draw(context.poseStack, getDisplayText("uploader", playerTexture.getName()).chars(), rect.x + 32, rect.y + 12, 0xffeeeeee);
+            font.draw(context.poseStack.cast(), getDisplayText("uploader", playerTexture.getName()).chars(), rect.x + 32, rect.y + 12, 0xffeeeeee);
             RenderSystem.enableAlphaTest();
         }
     }
@@ -191,7 +191,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         BakedSkin bakedSkin = BakedSkin.of(entry.descriptor);
         if (bakedSkin != null) {
             MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, rect.x, rect.y, 100, rect.width, rect.height, 20, 45, 0, context.poseStack, buffers);
+            ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, rect.x, rect.y, 100, rect.width, rect.height, 20, 45, 0, 0, 0xf000f0, context.poseStack, buffers);
             buffers.endBatch();
         }
     }

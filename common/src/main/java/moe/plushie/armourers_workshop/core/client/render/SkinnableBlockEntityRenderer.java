@@ -2,7 +2,8 @@ package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
+import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
@@ -13,9 +14,9 @@ import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.Model;
@@ -33,11 +34,12 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
     }
 
     @Override
-    public void render(T entity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int light, int overlay) {
         BakedSkin bakedSkin = BakedSkin.of(entity.getDescriptor());
         if (bakedSkin == null) {
             return;
         }
+        IPoseStack poseStack = IPoseStack.of(poseStackIn);
         BlockState blockState = entity.getBlockState();
         Entity mannequin = SkinItemRenderer.getInstance().getMannequinEntity();
         MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
@@ -47,37 +49,37 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
         }
         float f = 1 / 16f;
         float partialTicks1 = TickUtils.ticks();
-        Quaternion rotations = entity.getRenderRotations(blockState);
+        OpenQuaternionf rotations = entity.getRenderRotations(blockState);
 
-        matrixStack.pushPose();
-        matrixStack.translate(0.5f, 0.5f, 0.5f);
-        matrixStack.mulPose(rotations);
+        poseStack.pushPose();
+        poseStack.translate(0.5f, 0.5f, 0.5f);
+        poseStack.rotate(rotations);
 
-        matrixStack.scale(f, f, f);
-        matrixStack.scale(-1, -1, 1);
+        poseStack.scale(f, f, f);
+        poseStack.scale(-1, -1, 1);
 
         SkinRenderContext context = SkinRenderContext.getInstance();
-        context.setup(light, partialTicks1, matrixStack, buffers);
+        context.setup(light, partialTicks1, poseStack, buffers);
         renderer.render(mannequin, SkinRendererManager.wrap(model), bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, 0, context);
         context.clean();
 
-        matrixStack.popPose();
+        poseStack.popPose();
 
         if (ModDebugger.skinnableBlock) {
             bakedSkin.getBlockBounds().forEach((pos, rect) -> {
-                matrixStack.pushPose();
-                matrixStack.translate(0.5f, 0.5f, 0.5f);
-                matrixStack.scale(f, f, f);
-                matrixStack.mulPose(rotations);
-                matrixStack.translate(pos.getX() * 16f, pos.getY() * 16f, pos.getZ() * 16f);
-                RenderSystem.drawBoundingBox(matrixStack, rect, UIColor.RED, buffers);
-                matrixStack.popPose();
+                poseStack.pushPose();
+                poseStack.translate(0.5f, 0.5f, 0.5f);
+                poseStack.scale(f, f, f);
+                poseStack.rotate(rotations);
+                poseStack.translate(pos.getX() * 16f, pos.getY() * 16f, pos.getZ() * 16f);
+                RenderSystem.drawBoundingBox(poseStack, rect, UIColor.RED, buffers);
+                poseStack.popPose();
             });
             BlockPos pos = entity.getBlockPos();
-            matrixStack.pushPose();
-            matrixStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-            RenderSystem.drawBoundingBox(matrixStack, entity.getCustomRenderBoundingBox(blockState), UIColor.ORANGE, buffers);
-            matrixStack.popPose();
+            poseStack.pushPose();
+            poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
+            RenderSystem.drawBoundingBox(poseStack, entity.getCustomRenderBoundingBox(blockState), UIColor.ORANGE, buffers);
+            poseStack.popPose();
         }
     }
 }

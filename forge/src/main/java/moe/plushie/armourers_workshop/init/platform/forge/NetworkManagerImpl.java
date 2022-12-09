@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeNetworkManager;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.PacketSplitter;
 import net.minecraft.client.Minecraft;
@@ -65,6 +66,7 @@ public class NetworkManagerImpl extends AbstractForgeNetworkManager implements N
 
     public static class NetworkDispatcher implements IServerPacketHandler, IClientPacketHandler {
 
+        final UUID clientUUID = UUID.randomUUID();
         final ResourceLocation channelName;
         final PacketSplitter splitter;
 
@@ -93,13 +95,9 @@ public class NetworkManagerImpl extends AbstractForgeNetworkManager implements N
             if (event instanceof ServerCustomPayloadLoginEvent) {
                 return;
             }
-            Player player = Minecraft.getInstance().player;
-            if (player == null) {
-                return;
-            }
-            Context context = event.getSource().get();
             IClientPacketHandler packetHandler = this;
-            merge(player.getUUID(), event.getPayload(), packet -> context.enqueueWork(() -> packet.accept(packetHandler, player)));
+            Context context = event.getSource().get();
+            merge(clientUUID, event.getPayload(), packet -> context.enqueueWork(() -> packet.accept(packetHandler, Minecraft.getInstance().player)));
             context.setPacketHandled(true);
         }
 

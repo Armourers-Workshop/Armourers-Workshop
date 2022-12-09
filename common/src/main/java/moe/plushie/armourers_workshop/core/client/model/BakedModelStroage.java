@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.model;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -56,7 +57,7 @@ public class BakedModelStroage {
 
     public static BakedModel getSkinBakedModel() {
         if (SHARED_MODEL == null) {
-            SHARED_MODEL = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation("armourers_workshop:skin#inventory"));
+            SHARED_MODEL = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(ModConstants.key("skin"), "inventory"));
         }
         return SHARED_MODEL;
     }

@@ -1,8 +1,9 @@
 package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
+import moe.plushie.armourers_workshop.api.common.IItemGroup;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeItemBuilder;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
@@ -39,8 +40,8 @@ public class ItemBuilderImpl<T extends Item> extends AbstractForgeItemBuilder<T>
     }
 
     @Override
-    public IItemBuilder<T> tab(CreativeModeTab creativeModeTab) {
-        this.properties = properties.tab(creativeModeTab);
+    public IItemBuilder<T> group(IRegistryKey<IItemGroup> group) {
+        this.group = group;
         return this;
     }
 

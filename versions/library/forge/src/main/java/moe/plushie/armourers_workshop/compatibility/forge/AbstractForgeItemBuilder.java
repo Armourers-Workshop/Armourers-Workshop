@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.common.IItemStackRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
@@ -19,6 +20,7 @@ public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemB
 
     protected Item.Properties properties = new Item.Properties();
     protected Supplier<Consumer<T>> binder;
+    protected IRegistryKey<IItemGroup> group;
     protected final Function<Item.Properties, T> supplier;
 
     public AbstractForgeItemBuilder(Function<Item.Properties, T> supplier) {
@@ -37,6 +39,9 @@ public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemB
     public IRegistryKey<T> build(String name) {
         return Registry.ITEM.register(name, () -> {
             T value = supplier.apply(properties);
+            if (group != null) {
+                group.get().add(() -> value);
+            }
             EnvironmentExecutor.didInit(EnvironmentType.CLIENT, binder, () -> value);
             return value;
         });

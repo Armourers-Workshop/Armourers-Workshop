@@ -2,12 +2,13 @@ package moe.plushie.armourers_workshop.library.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.library.block.GlobalSkinLibraryBlock;
 import moe.plushie.armourers_workshop.utils.ModelPartBuilder;
-import moe.plushie.armourers_workshop.utils.TrigUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
@@ -26,10 +27,11 @@ public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends
     }
 
     @Override
-    public void render(T entity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffers, int light, int overlay) {
-        matrixStack.pushPose();
-        matrixStack.translate(0.5f, 1.5f, 0.5f);
-        matrixStack.scale(-1, -1, 1);
+    public void render(T entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int light, int overlay) {
+        IPoseStack poseStack = IPoseStack.of(poseStackIn);
+        poseStack.pushPose();
+        poseStack.translate(0.5f, 1.5f, 0.5f);
+        poseStack.scale(-1, -1, 1);
 
         float f = 0.0625f;
         float xPos = 2.5f;
@@ -37,22 +39,22 @@ public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends
         float yPos = 4.0f;
         BlockState state = entity.getBlockState();
         Direction direction = state.getValue(GlobalSkinLibraryBlock.FACING).getOpposite();
-        matrixStack.translate(
+        poseStack.translate(
                 (xPos * -direction.getStepZ() + zPos * direction.getStepX()) * f,
                 yPos * f,
                 (xPos * -direction.getStepX() + zPos * -direction.getStepZ()) * f
         );
 
-        matrixStack.scale(0.2f, 0.2f, 0.2f);
+        poseStack.scale(0.2f, 0.2f, 0.2f);
 
         if (entity.getLevel() != null) {
             float angle = (entity.getLevel().getGameTime()) % 360 + partialTicks;
-            matrixStack.mulPose(TrigUtils.rotate(angle * 4, angle, angle * 2, true));
+            poseStack.rotate(new OpenQuaternionf(angle * 4, angle, angle * 2, true));
         }
 
         VertexConsumer builder = buffers.getBuffer(SkinRenderType.IMAGE_EARTH);
-        model.render(matrixStack, builder, light, overlay, 1.0f, 1.0f, 1.0f, 0.5f);
+        model.render(poseStackIn, builder, light, overlay, 1.0f, 1.0f, 1.0f, 0.5f);
 
-        matrixStack.popPose();
+        poseStack.popPose();
     }
 }

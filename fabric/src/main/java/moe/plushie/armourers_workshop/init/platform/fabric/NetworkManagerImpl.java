@@ -115,6 +115,7 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
 
     public static class NetworkDispatcher implements IServerPacketHandler, IClientPacketHandler {
 
+        final UUID clientUUID = UUID.randomUUID();
         final String channelVersion;
         final ResourceLocation channelName;
         final PacketSplitter splitter;
@@ -155,18 +156,8 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
 
         @Environment(value = EnvType.CLIENT)
         public void onClientEvent(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender responseSender) {
-            Player player = client.player;
-            if (player == null) {
-                // is login retry later.
-                buf.retain();
-                client.tell(() -> {
-                    onClientEvent(client, handler, buf, responseSender);
-                    buf.release();
-                });
-                return;
-            }
             IClientPacketHandler packetHandler = this;
-            merge(player.getUUID(), buf, packet -> client.execute(() -> packet.accept(packetHandler, player)));
+            merge(clientUUID, buf, packet -> client.execute(() -> packet.accept(packetHandler, client.player)));
         }
 
         public void merge(UUID uuid, FriendlyByteBuf buffer, Consumer<CustomPacket> consumer) {

@@ -1,19 +1,14 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import com.google.common.collect.Iterators;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
-import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -24,8 +19,7 @@ public class SkinRenderContext {
 
     public int light;
     public float partialTicks;
-    public PoseStack poseStack;
-    public final FixedPoseStack openPoseStack = new FixedPoseStack(null);
+    public IPoseStack poseStack;
     public MultiBufferSource buffers;
     public ItemTransforms.TransformType transformType;
 
@@ -41,20 +35,18 @@ public class SkinRenderContext {
         return QUEUES.next();
     }
 
-    public void setup(int light, float partialTick, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource buffers) {
+    public void setup(int light, float partialTick, ItemTransforms.TransformType transformType, IPoseStack poseStack, MultiBufferSource buffers) {
         this.light = light;
         this.partialTicks = partialTick;
         this.poseStack = poseStack;
-        this.openPoseStack.matrixStack = poseStack;
         this.buffers = buffers;
         this.transformType = transformType;
     }
 
-    public void setup(int light, float partialTick, PoseStack poseStack, MultiBufferSource buffers) {
+    public void setup(int light, float partialTick, IPoseStack poseStack, MultiBufferSource buffers) {
         this.light = light;
         this.partialTicks = partialTick;
         this.poseStack = poseStack;
-        this.openPoseStack.matrixStack = poseStack;
         this.buffers = buffers;
         this.transformType = ItemTransforms.TransformType.NONE;
     }
@@ -62,56 +54,56 @@ public class SkinRenderContext {
     public void clean() {
     }
 
-    public SkinRenderObjectBuilder getBuffer(@Nonnull Skin skin) {
+    public SkinRenderObjectBuilder getBuffer(@NotNull Skin skin) {
         SkinVertexBufferBuilder bufferBuilder = SkinVertexBufferBuilder.getBuffer(buffers);
         return bufferBuilder.getBuffer(skin);
     }
 
-    public static class FixedPoseStack extends OpenPoseStack {
-
-        public PoseStack matrixStack;
-
-        public FixedPoseStack(PoseStack matrixStack) {
-            this.matrixStack = matrixStack;
-        }
-
-        @Override
-        public void pushPose() {
-            matrixStack.pushPose();
-        }
-
-        @Override
-        public void popPose() {
-            matrixStack.popPose();
-        }
-
-        @Override
-        public void translate(float x, float y, float z) {
-            matrixStack.translate(x, y, z);
-        }
-
-        @Override
-        public void scale(float x, float y, float z) {
-            matrixStack.scale(x, y, z);
-        }
-
-        @Override
-        public void mulPose(Quaternion quaternion) {
-            matrixStack.mulPose(quaternion);
-        }
-
-        @Override
-        public void mulPose(Matrix4f matrix) {
-        }
-
-        @Override
-        public void applyPose(Vector4f vector) {
-            vector.transform(matrixStack.last().pose());
-        }
-
-        @Override
-        public void applyNormal(Vector3f vector) {
-            vector.transform(matrixStack.last().normal());
-        }
-    }
+//    public static class FixedPoseStack extends IPoseStack {
+//
+//        public PoseStack matrixStack;
+//
+//        public FixedPoseStack(PoseStack matrixStack) {
+//            this.matrixStack = matrixStack;
+//        }
+//
+//        @Override
+//        public void pushPose() {
+//            matrixStack.pushPose();
+//        }
+//
+//        @Override
+//        public void popPose() {
+//            matrixStack.popPose();
+//        }
+//
+//        @Override
+//        public void translate(float x, float y, float z) {
+//            matrixStack.translate(x, y, z);
+//        }
+//
+//        @Override
+//        public void scale(float x, float y, float z) {
+//            matrixStack.scale(x, y, z);
+//        }
+//
+//        @Override
+//        public void mulPose(OpenQuaternionf quaternion) {
+//            matrixStack.mulPose(quaternion);
+//        }
+//
+//        @Override
+//        public void mulPose(OpenMatrix4f matrix) {
+//        }
+//
+//        @Override
+//        public void applyPose(Vector4f vector) {
+//            vector.transform(matrixStack.last().pose());
+//        }
+//
+//        @Override
+//        public void applyNormal(Vector3f vector) {
+//            vector.transform(matrixStack.last().normal());
+//        }
+//    }
 }

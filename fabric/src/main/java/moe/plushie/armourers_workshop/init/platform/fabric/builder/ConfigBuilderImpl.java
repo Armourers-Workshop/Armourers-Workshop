@@ -48,7 +48,9 @@ public class ConfigBuilderImpl {
         Pair<T, FabricConfigSpec> pair = new FabricConfigSpec.Builder().configure(builder -> applier.apply(new BuilderProxy(builder)));
         IConfigSpec spec = pair.getKey().build();
         if (spec instanceof SpecProxy) {
-            ((SpecProxy) spec).spec = pair.getValue();
+            SpecProxy proxy = (SpecProxy)spec;
+            proxy.spec = pair.getValue();
+            proxy.type = type.extension();
         }
         Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(ModConstants.MOD_ID);
         if (container.isPresent()) {
@@ -59,7 +61,9 @@ public class ConfigBuilderImpl {
 
     public static class SpecProxy implements IConfigSpec {
 
+        private String type = "";
         private FabricConfigSpec spec;
+
         private Map<String, Object> snapshot;
         private final ArrayList<Runnable> listeners = new ArrayList<>();
         private final HashMap<String, ValueProxy<Object>> values;
@@ -86,7 +90,7 @@ public class ConfigBuilderImpl {
                 this.reload();
                 return;
             }
-            ModLog.debug("apply snapshot from server");
+            ModLog.debug("apply {} snapshot from server", type);
             snapshot.forEach((key, object) -> {
                 ValueProxy<Object> value = values.get(key);
                 if (value.setter != null) {
@@ -103,7 +107,7 @@ public class ConfigBuilderImpl {
             if (this.snapshot != null) {
                 return;
             }
-            ModLog.debug("apply changes from spec");
+            ModLog.debug("apply {} changes from spec", type);
             this.values.forEach((key, value) -> {
                 if (value.setter != null) {
                     value.setter.accept(value.read());
@@ -119,7 +123,7 @@ public class ConfigBuilderImpl {
             if (this.snapshot != null) {
                 return;
             }
-            ModLog.debug("save changes into spec");
+            ModLog.debug("save {} changes into spec", type);
             this.values.forEach((key, value) -> {
                 if (value.getter != null) {
                     value.write(value.getter.get());

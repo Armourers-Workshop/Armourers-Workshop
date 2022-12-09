@@ -1,9 +1,7 @@
 package moe.plushie.armourers_workshop.utils.math;
 
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
+import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.ext.OpenMatrix4f;
 import net.minecraft.core.Position;
 
 @SuppressWarnings("unused")
@@ -134,16 +132,16 @@ public class Vector4f {
         return true;
     }
 
-    public void transform(Matrix4f matrix) {
+    public void transform(IMatrix4f matrix) {
         float[] floats = {x, y, z, w};
-        OpenMatrix4f.of(matrix).multiply(floats);
+        matrix.multiply(floats);
         set(floats[0], floats[1], floats[2], floats[3]);
     }
 
-    public void transform(Quaternion q) {
-        Quaternion quaternion = new Quaternion(q);
-        quaternion.mul(new Quaternion(x, y, z, 0.0F));
-        Quaternion quaternion1 = new Quaternion(q);
+    public void transform(OpenQuaternionf q) {
+        OpenQuaternionf quaternion = new OpenQuaternionf(q);
+        quaternion.mul(new OpenQuaternionf(x, y, z, 0.0F));
+        OpenQuaternionf quaternion1 = new OpenQuaternionf(q);
         quaternion1.conj();
         quaternion.mul(quaternion1);
         set(quaternion.i(), quaternion.j(), quaternion.k(), this.w());

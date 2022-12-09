@@ -1,10 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
-import moe.plushie.armourers_workshop.api.common.IArgumentType;
-import moe.plushie.armourers_workshop.api.common.IBlockEntitySupplier;
-import moe.plushie.armourers_workshop.api.common.IMenuProvider;
-import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
+import moe.plushie.armourers_workshop.api.common.*;
 import moe.plushie.armourers_workshop.api.common.builder.*;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
@@ -13,7 +10,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -44,7 +40,7 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     }
 
     @Override
-    public <T extends CreativeModeTab> IItemGroupBuilder<T> createItemGroupBuilder() {
+    public <T extends IItemGroup> IItemGroupBuilder<T> createItemGroupBuilder() {
         return new ItemGroupBuilderImpl<>();
     }
 

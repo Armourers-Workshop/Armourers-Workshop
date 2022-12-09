@@ -12,9 +12,8 @@ import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
-
-import javax.annotation.Nonnull;
 
 @Environment(value = EnvType.CLIENT)
 public class AbstractLightBufferObject extends SkinRenderObject {
@@ -31,7 +30,7 @@ public class AbstractLightBufferObject extends SkinRenderObject {
         this.capacity = 0;
     }
 
-    @Nonnull
+    @NotNull
     public static AbstractLightBufferObject getLightBuffer(int light) {
         return SHARED_LIGHTS.computeIfAbsent(light, AbstractLightBufferObject::new);
     }

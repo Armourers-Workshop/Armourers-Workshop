@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -105,59 +105,59 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, V extends Ent
         }
     }
 
-    protected void setHatPart(PoseStack matrixStack, M model) {
+    protected void setHatPart(IPoseStack matrixStack, M model) {
         transformer.apply(matrixStack, model.getHatPart());
     }
 
-    protected void setHeadPart(PoseStack matrixStack, M model) {
+    protected void setHeadPart(IPoseStack matrixStack, M model) {
         transformer.apply(matrixStack, model.getHeadPart());
     }
 
-    protected void setBodyPart(PoseStack matrixStack, M model) {
+    protected void setBodyPart(IPoseStack matrixStack, M model) {
         transformer.apply(matrixStack, model.getBodyPart());
     }
 
-    protected void setLeftArmPart(PoseStack matrixStack, M model) {
+    protected void setLeftArmPart(IPoseStack matrixStack, M model) {
         transformer.apply(matrixStack, model.getLeftArmPart());
     }
 
-    protected void setRightArmPart(PoseStack matrixStack, M model) {
+    protected void setRightArmPart(IPoseStack matrixStack, M model) {
         transformer.apply(matrixStack, model.getRightArmPart());
     }
 
-    protected void setLeftLegPart(PoseStack matrixStack, M model) {
+    protected void setLeftLegPart(IPoseStack matrixStack, M model) {
         transformer.apply(matrixStack, model.getLeftLegPart());
     }
 
-    protected void setRightLegPart(PoseStack matrixStack, M model) {
+    protected void setRightLegPart(IPoseStack matrixStack, M model) {
         transformer.apply(matrixStack, model.getRightLegPart());
     }
 
-    protected void setLeftFootPart(PoseStack matrixStack, M model) {
+    protected void setLeftFootPart(IPoseStack matrixStack, M model) {
         transformer.apply(matrixStack, model.getLeftLegPart());
     }
 
-    protected void setRightFootPart(PoseStack matrixStack, M model) {
+    protected void setRightFootPart(IPoseStack matrixStack, M model) {
         transformer.apply(matrixStack, model.getRightLegPart());
     }
 
-    protected void setSkirtPart(PoseStack matrixStack, M model) {
+    protected void setSkirtPart(IPoseStack matrixStack, M model) {
         ModelPart body = model.getBodyPart();
         ModelPart leg = model.getRightLegPart();
         matrixStack.translate(body.x, leg.y, leg.z);
         if (body.yRot != 0) {
-            matrixStack.mulPose(Vector3f.YP.rotation(body.yRot));
+            matrixStack.rotate(Vector3f.YP.rotation(body.yRot));
         }
         // skirt does not wobble during normal walking.
         if (!model.isRiding()) {
             return;
         }
         if (leg.xRot != 0) {
-            matrixStack.mulPose(Vector3f.XP.rotation(leg.xRot));
+            matrixStack.rotate(Vector3f.XP.rotation(leg.xRot));
         }
     }
 
-    protected void setWings(PoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+    protected void setWings(IPoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
         if (bakedPart.getProperties().get(SkinProperty.WINGS_MATCHING_POSE)) {
             transformer.apply(matrixStack, model.getBodyPart());
         }

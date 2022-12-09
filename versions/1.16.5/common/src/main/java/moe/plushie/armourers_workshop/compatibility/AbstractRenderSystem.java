@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -41,6 +42,13 @@ public class AbstractRenderSystem extends RenderSystem {
     public static void enableRescaleNormal() {
         RenderSystem.assertThread(RenderSystem::isOnGameThread);
         GL11.glEnable(GL15.GL_RESCALE_NORMAL);
+    }
+
+    public static void applyModelViewMatrix() {
+    }
+
+    public static void multMatrix(IMatrix4f matrix4f) {
+        multMatrix(AbstractMatrix4fWrapper.of(matrix4f));
     }
 
     public static void init() {

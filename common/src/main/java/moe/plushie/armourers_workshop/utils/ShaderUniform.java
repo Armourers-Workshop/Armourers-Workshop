@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.utils;
 
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
+import moe.plushie.armourers_workshop.api.math.IMatrix3f;
+import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
@@ -38,11 +38,11 @@ public abstract class ShaderUniform {
 
         private final FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
         private final Stack<FloatBuffer> cachedBuffers = new Stack<>();
-        private final Supplier<Matrix4f> value;
+        private final Supplier<IMatrix4f> value;
 
-        private Matrix4f cachedValue;
+        private IMatrix4f cachedValue;
 
-        Matrix4fUniform(String name, int program, int location, Supplier<Matrix4f> value) {
+        Matrix4fUniform(String name, int program, int location, Supplier<IMatrix4f> value) {
             super(name, program, location);
             this.cachedValue = null;
             this.value = value;
@@ -50,10 +50,10 @@ public abstract class ShaderUniform {
 
         @Override
         public void apply() {
-            Matrix4f newValue = value.get();
+            IMatrix4f newValue = value.get();
             if (newValue != cachedValue) {
                 cachedValue = newValue.copy();
-                cachedValue.store(buffer);
+                cachedValue.get(buffer);
                 buffer.rewind();
                 GL20.glUniformMatrix4fv(location, false, buffer);
             }
@@ -77,10 +77,10 @@ public abstract class ShaderUniform {
 
         private final FloatBuffer buffer = BufferUtils.createFloatBuffer(9);
         private final Stack<FloatBuffer> cachedBuffers = new Stack<>();
-        private final Supplier<Matrix3f> value;
-        private Matrix3f cachedValue;
+        private final Supplier<IMatrix3f> value;
+        private IMatrix3f cachedValue;
 
-        Matrix3fUniform(String name, int program, int location, Supplier<Matrix3f> value) {
+        Matrix3fUniform(String name, int program, int location, Supplier<IMatrix3f> value) {
             super(name, program, location);
             this.cachedValue = null;
             this.value = value;
@@ -88,10 +88,10 @@ public abstract class ShaderUniform {
 
         @Override
         public void apply() {
-            Matrix3f newValue = value.get();
+            IMatrix3f newValue = value.get();
             if (newValue != cachedValue) {
                 cachedValue = newValue.copy();
-                cachedValue.store(buffer);
+                cachedValue.get(buffer);
                 buffer.rewind();
                 GL20.glUniformMatrix3fv(location, false, buffer);
             }
@@ -120,18 +120,21 @@ public abstract class ShaderUniform {
         public Loader(int programId) {
             this.programId = programId;
 
+            register("aw_LightmapTextureMatrix", RenderSystem::getExtendedLightmapTextureMatrix, Matrix4fUniform::new);
             register("aw_TextureMatrix", RenderSystem::getExtendedTextureMatrix, Matrix4fUniform::new);
             register("aw_NormalMatrix", RenderSystem::getExtendedNormalMatrix, Matrix3fUniform::new);
-            register("aw_LightmapTextureMatrix", RenderSystem::getExtendedLightmapTextureMatrix, Matrix4fUniform::new);
+            register("aw_ModelViewMat", RenderSystem::getExtendedModelViewMatrix, Matrix4fUniform::new);
 
+
+            //register("aw_LightmapTextureMatrix", RenderSystem::getExtendedLightmapTextureMatrix, Matrix4fUniform::new);
             // optifine only!
-            register("modelViewMatrix", RenderSystem::getExtendedModelViewMatrix, Matrix4fUniform::new);
-            if (!registeredNames.contains("aw_TextureMatrix")) {
-                register("textureMatrix", RenderSystem::getExtendedTextureMatrix, Matrix4fUniform::new);
-            }
-            if (!registeredNames.contains("aw_NormalMatrix")) {
-                register("normalMatrix", RenderSystem::getExtendedNormalMatrix, Matrix3fUniform::new);
-            }
+//            register("modelViewMatrix", RenderSystem::getExtendedModelViewMatrix, Matrix4fUniform::new);
+//            if (!registeredNames.contains("aw_TextureMatrix")) {
+//                register("textureMatrix", RenderSystem::getExtendedTextureMatrix, Matrix4fUniform::new);
+//            }
+//            if (!registeredNames.contains("aw_NormalMatrix")) {
+//                register("normalMatrix", RenderSystem::getExtendedNormalMatrix, Matrix3fUniform::new);
+//            }
         }
 
         private <T> void register(String name, Supplier<T> supplier, Factory<T> factory) {

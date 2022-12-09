@@ -1,10 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.fabric;
 
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
-import moe.plushie.armourers_workshop.api.common.IArgumentType;
-import moe.plushie.armourers_workshop.api.common.IBlockEntitySupplier;
-import moe.plushie.armourers_workshop.api.common.IMenuProvider;
-import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
+import moe.plushie.armourers_workshop.api.common.*;
 import moe.plushie.armourers_workshop.api.common.builder.*;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
@@ -44,7 +41,7 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     }
 
     @Override
-    public <T extends CreativeModeTab> IItemGroupBuilder<T> createItemGroupBuilder() {
+    public <T extends IItemGroup> IItemGroupBuilder<T> createItemGroupBuilder() {
         return new ItemGroupBuilderImpl<>();
     }
 

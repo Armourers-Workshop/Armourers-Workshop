@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractItemEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
@@ -38,7 +39,7 @@ public class SkinItemRenderer extends AbstractItemEntityRenderer {
     }
 
     @Override
-    public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack matrixStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
+    public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack poseStackIn, MultiBufferSource renderTypeBuffer, int light, int overlay) {
         if (itemStack.isEmpty()) {
             return;
         }
@@ -47,18 +48,19 @@ public class SkinItemRenderer extends AbstractItemEntityRenderer {
         if (bakedSkin == null) {
             return;
         }
+        IPoseStack poseStack = IPoseStack.of(poseStackIn);
         BakedModel bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
         ItemTransform transform = bakedModel.getTransforms().getTransform(transformType);
 
-        matrixStack.pushPose();
-        matrixStack.translate(0.5f, 0.5f, 0.5f); // reset to center
+        poseStack.pushPose();
+        poseStack.translate(0.5f, 0.5f, 0.5f); // reset to center
 
         Vector3f rotation = new Vector3f(-transform.rotation.x(), -transform.rotation.y(), transform.rotation.z());
         Vector3f scale = Vector3f.ONE;//new Vector3f(transform.scale.x(), transform.scale.y(), transform.scale.z());
         ColorScheme scheme = descriptor.getColorScheme();
-        ExtendedItemRenderer.renderSkin(bakedSkin, scheme, itemStack, rotation, scale, 1, 1, 1, 0, light, matrixStack, renderTypeBuffer);
+        ExtendedItemRenderer.renderSkin(bakedSkin, scheme, itemStack, rotation, scale, 1, 1, 1, 0, light, poseStack, renderTypeBuffer);
 
-        matrixStack.popPose();
+        poseStack.popPose();
     }
 
     public MannequinEntity getMannequinEntity() {

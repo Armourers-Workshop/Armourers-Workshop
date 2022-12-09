@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractEntityRenderer;
 import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
@@ -20,10 +21,11 @@ public class SeatEntityRenderer<T extends SeatEntity> extends AbstractEntityRend
     }
 
     @Override
-    public void render(T entity, float p_225623_2_, float partialTicks, PoseStack matrixStack, MultiBufferSource buffers, int packedLightIn) {
+    public void render(T entity, float p_225623_2_, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int packedLightIn) {
         if (ModDebugger.skinnableBlock) {
-            RenderSystem.drawPoint(matrixStack, buffers);
-            RenderSystem.drawBoundingBox(matrixStack, -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, UIColor.ORANGE, buffers);
+            IPoseStack poseStack = IPoseStack.of(poseStackIn);
+            RenderSystem.drawPoint(poseStack, buffers);
+            RenderSystem.drawBoundingBox(poseStack, -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, UIColor.ORANGE, buffers);
         }
     }
 

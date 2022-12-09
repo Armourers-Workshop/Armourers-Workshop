@@ -6,7 +6,7 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIEvent;
-import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -59,7 +59,7 @@ public class SkinRatingView extends UIControl {
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
 
-        PoseStack matrixStack = context.poseStack;
+        IPoseStack matrixStack = context.poseStack;
         RenderSystem.setShaderTexture(0, ModTextures.RATING);
 
         for (int i = 0; i < (getMaxValue() / 2); i++) {

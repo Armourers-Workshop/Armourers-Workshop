@@ -4,13 +4,9 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import moe.plushie.armourers_workshop.api.math.IRectangle3f;
-import moe.plushie.armourers_workshop.api.math.IRectangle3i;
+import moe.plushie.armourers_workshop.api.math.*;
 import moe.plushie.armourers_workshop.compatibility.AbstractRenderPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractRenderSystem;
 import moe.plushie.armourers_workshop.compatibility.AbstractShaderTesselator;
@@ -20,9 +16,7 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
-import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
+import moe.plushie.armourers_workshop.utils.math.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -49,14 +43,12 @@ import java.util.LinkedList;
 @Environment(value = EnvType.CLIENT)
 public final class RenderSystem extends AbstractRenderSystem {
 
-    private static int shaderLight = 0;
+    private static final IPoseStack extendedModelViewStack = AbstractRenderPoseStack.create();
 
-    private static final AbstractRenderPoseStack extendedModelViewStack = new AbstractRenderPoseStack();
-
-    private static final Storage<Matrix3f> extendedNormalMatrix = new Storage<>(Matrix3f.createScaleMatrix(1, 1, 1));
-    private static final Storage<Matrix4f> extendedTextureMatrix = new Storage<>(Matrix4f.createScaleMatrix(1, 1, 1));
-    private static final Storage<Matrix4f> extendedLightmapTextureMatrix = new Storage<>(Matrix4f.createScaleMatrix(1, 1, 1));
-    private static final Storage<Matrix4f> extendedModelViewMatrix = new Storage<>(Matrix4f.createScaleMatrix(1, 1, 1));
+    private static final Storage<IMatrix3f> extendedNormalMatrix = new Storage<>(OpenMatrix3f.createScaleMatrix(1, 1, 1));
+    private static final Storage<IMatrix4f> extendedTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
+    private static final Storage<IMatrix4f> extendedLightmapTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
+    private static final Storage<IMatrix4f> extendedModelViewMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
 
     private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(3);
 
@@ -93,38 +85,38 @@ public final class RenderSystem extends AbstractRenderSystem {
     }
 
 
-    public static void blit(PoseStack matrixStack, int x, int y, int u, int v, int width, int height) {
-        Screen.blit(matrixStack, x, y, 0, u, v, width, height, 256, 256);
+    public static void blit(IPoseStack matrixStack, int x, int y, int u, int v, int width, int height) {
+        Screen.blit(matrixStack.cast(), x, y, 0, u, v, width, height, 256, 256);
     }
 
-    public static void blit(PoseStack matrixStack, int x, int y, int u, int v, int width, int height, ResourceLocation texture) {
+    public static void blit(IPoseStack matrixStack, int x, int y, int u, int v, int width, int height, ResourceLocation texture) {
         setShaderTexture(0, texture);
-        Screen.blit(matrixStack, x, y, 0, u, v, width, height, 256, 256);
+        Screen.blit(matrixStack.cast(), x, y, 0, u, v, width, height, 256, 256);
     }
 
-    public static void blit(PoseStack matrixStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, ResourceLocation texture) {
+    public static void blit(IPoseStack matrixStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, ResourceLocation texture) {
         setShaderTexture(0, texture);
-        Screen.blit(matrixStack, x, y, 0, u, v, width, height, texWidth, texHeight);
+        Screen.blit(matrixStack.cast(), x, y, 0, u, v, width, height, texWidth, texHeight);
     }
 
-    public static void tile(PoseStack matrixStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, int r0, int r1, int r2, int r3) {
+    public static void tile(IPoseStack matrixStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, int r0, int r1, int r2, int r3) {
         drawContinuousTexturedBox(matrixStack, x, y, u, v, width, height, texWidth, texHeight, r0, r1, r2, r3, 0);
     }
 
-    public static void tile(PoseStack matrixStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, int r0, int r1, int r2, int r3, ResourceLocation texture) {
+    public static void tile(IPoseStack matrixStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, int r0, int r1, int r2, int r3, ResourceLocation texture) {
         setShaderTexture(0, texture);
         drawContinuousTexturedBox(matrixStack, x, y, u, v, width, height, texWidth, texHeight, r0, r1, r2, r3, 0);
     }
 
-    public static void resize(PoseStack matrixStack, int x, int y, int u, int v, int width, int height, int targetWidth, int targetHeight) {
+    public static void resize(IPoseStack matrixStack, int x, int y, int u, int v, int width, int height, int targetWidth, int targetHeight) {
         resize(matrixStack, x, y, u, v, width, height, targetWidth, targetHeight, 256, 256);
     }
 
-    public static void resize(PoseStack matrixStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, int texWidth, int texHeight) {
+    public static void resize(IPoseStack matrixStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, int texWidth, int texHeight) {
         float f = 1.0f / texWidth;
         float f1 = 1.0f / texHeight;
 
-        Matrix4f mat = matrixStack.last().pose();
+        IMatrix4f mat = matrixStack.lastPose();
         AbstractShaderTesselator tessellator = AbstractShaderTesselator.getInstance();
         BufferBuilder bufferbuilder = tessellator.begin(SkinRenderType.GUI_IMAGE);
         bufferbuilder.vertex(mat, x, y + height, 0).uv(u * f, (v + sourceHeight) * f1).endVertex();
@@ -135,12 +127,12 @@ public final class RenderSystem extends AbstractRenderSystem {
     }
 
 
-    public static void resize(PoseStack matrixStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, ResourceLocation texture) {
+    public static void resize(IPoseStack matrixStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, ResourceLocation texture) {
         setShaderTexture(0, texture);
         resize(matrixStack, x, y, u, v, width, height, sourceWidth, sourceHeight);
     }
 
-    public static void resize(PoseStack matrixStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, int texWidth, int texHeight, ResourceLocation texture) {
+    public static void resize(IPoseStack matrixStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, int texWidth, int texHeight, ResourceLocation texture) {
         setShaderTexture(0, texture);
         resize(matrixStack, x, y, u, v, width, height, sourceWidth, sourceHeight, texWidth, texHeight);
     }
@@ -210,15 +202,15 @@ public final class RenderSystem extends AbstractRenderSystem {
         return true;
     }
 
-    public static void drawText(PoseStack matrixStack, Font font, FormattedText text, int x, int y, int width, int zLevel, int textColor) {
+    public static void drawText(IPoseStack matrixStack, Font font, FormattedText text, int x, int y, int width, int zLevel, int textColor) {
         drawText(matrixStack, font, Collections.singleton(text), x, y, width, zLevel, false, 9, textColor);
     }
 
-    public static void drawShadowText(PoseStack matrixStack, Iterable<FormattedText> lines, int x, int y, int width, int zLevel, Font font, int fontSize, int textColor) {
+    public static void drawShadowText(IPoseStack matrixStack, Iterable<FormattedText> lines, int x, int y, int width, int zLevel, Font font, int fontSize, int textColor) {
         drawText(matrixStack, font, lines, x, y, width, zLevel, true, fontSize, textColor);
     }
 
-    public static void drawText(PoseStack matrixStack, Font font, Iterable<FormattedText> lines, int x, int y, int width, int zLevel, boolean shadow, int fontSize, int textColor) {
+    public static void drawText(IPoseStack matrixStack, Font font, Iterable<FormattedText> lines, int x, int y, int width, int zLevel, boolean shadow, int fontSize, int textColor) {
         float f = fontSize / 9f;
         ArrayList<FormattedText> wrappedTextLines = new ArrayList<>();
         for (FormattedText line : lines) {
@@ -227,12 +219,12 @@ public final class RenderSystem extends AbstractRenderSystem {
         matrixStack.pushPose();
         matrixStack.translate(x, y, zLevel);
         matrixStack.scale(f, f, f);
-        Matrix4f mat = matrixStack.last().pose();
+        IMatrix4f mat = matrixStack.lastPose();
         MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 
         int dx = 0, dy = 0;
         for (FormattedText line : wrappedTextLines) {
-            int qx = font.drawInBatch(Language.getInstance().getVisualOrder(line), dx, dy, textColor, shadow, mat, buffers, false, 0, 15728880);
+            int qx = font.drawInBatch2(Language.getInstance().getVisualOrder(line), dx, dy, textColor, shadow, mat, buffers, false, 0, 15728880);
             if (qx == dx) {
                 dy += 7;
             } else {
@@ -247,7 +239,7 @@ public final class RenderSystem extends AbstractRenderSystem {
         enableAlphaTest();
     }
 
-    public static void drawPlayerHead(PoseStack matrixStack, int x, int y, int width, int height, PlayerTextureDescriptor descriptor) {
+    public static void drawPlayerHead(IPoseStack matrixStack, int x, int y, int width, int height, PlayerTextureDescriptor descriptor) {
         ResourceLocation texture = DefaultPlayerSkin.getDefaultSkin();
         if (!descriptor.isEmpty()) {
             PlayerTexture texture1 = PlayerTextureLoader.getInstance().loadTexture(descriptor);
@@ -260,7 +252,7 @@ public final class RenderSystem extends AbstractRenderSystem {
         resize(matrixStack, x - 1, y - 1, 40, 8, width + 2, height + 2, 8, 8, 64, 64);
     }
 
-    private static void drawLine(VertexConsumer builder, PoseStack matrix, float x0, float y0, float z0, float x1, float y1, float z1, UIColor color) {
+    private static void drawLine(IPoseStack matrix, float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, VertexConsumer builder) {
         float nx = 0, ny = 0, nz = 0;
         if (x0 != x1) {
             nx = 1;
@@ -271,36 +263,36 @@ public final class RenderSystem extends AbstractRenderSystem {
         if (z0 != z1) {
             nz = 1;
         }
-        Matrix4f mat = matrix.last().pose();
-        Matrix3f normal = matrix.last().normal();
+        IMatrix4f mat = matrix.lastPose();
+        IMatrix3f normal = matrix.lastNormal();
         builder.vertex(mat, x0, y0, z0).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).normal(normal, nx, ny, nz).endVertex();
         builder.vertex(mat, x1, y1, z1).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).normal(normal, nx, ny, nz).endVertex();
     }
 
-    public static void drawBoundingBox(PoseStack mat, float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, VertexConsumer builder) {
-        drawLine(builder, mat, x1, y0, z1, x0, y0, z1, color);
-        drawLine(builder, mat, x1, y0, z1, x1, y1, z1, color);
-        drawLine(builder, mat, x1, y0, z1, x1, y0, z0, color);
-        drawLine(builder, mat, x1, y1, z0, x0, y1, z0, color);
-        drawLine(builder, mat, x1, y1, z0, x1, y0, z0, color);
-        drawLine(builder, mat, x1, y1, z0, x1, y1, z1, color);
-        drawLine(builder, mat, x0, y1, z1, x1, y1, z1, color);
-        drawLine(builder, mat, x0, y1, z1, x0, y0, z1, color);
-        drawLine(builder, mat, x0, y1, z1, x0, y1, z0, color);
-        drawLine(builder, mat, x0, y0, z0, x1, y0, z0, color);
-        drawLine(builder, mat, x0, y0, z0, x0, y1, z0, color);
-        drawLine(builder, mat, x0, y0, z0, x0, y0, z1, color);
+    public static void drawBoundingBox(IPoseStack mat, float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, VertexConsumer builder) {
+        drawLine(mat, x1, y0, z1, x0, y0, z1, color, builder);
+        drawLine(mat, x1, y0, z1, x1, y1, z1, color, builder);
+        drawLine(mat, x1, y0, z1, x1, y0, z0, color, builder);
+        drawLine(mat, x1, y1, z0, x0, y1, z0, color, builder);
+        drawLine(mat, x1, y1, z0, x1, y0, z0, color, builder);
+        drawLine(mat, x1, y1, z0, x1, y1, z1, color, builder);
+        drawLine(mat, x0, y1, z1, x1, y1, z1, color, builder);
+        drawLine(mat, x0, y1, z1, x0, y0, z1, color, builder);
+        drawLine(mat, x0, y1, z1, x0, y1, z0, color, builder);
+        drawLine(mat, x0, y0, z0, x1, y0, z0, color, builder);
+        drawLine(mat, x0, y0, z0, x0, y1, z0, color, builder);
+        drawLine(mat, x0, y0, z0, x0, y0, z1, color, builder);
     }
 
-    public static void drawPoint(PoseStack matrix, @Nullable MultiBufferSource renderTypeBuffer) {
+    public static void drawPoint(IPoseStack matrix, @Nullable MultiBufferSource renderTypeBuffer) {
         drawPoint(matrix, null, 2, renderTypeBuffer);
     }
 
-    public static void drawPoint(PoseStack matrix, @Nullable Vector3f point, float size, @Nullable MultiBufferSource renderTypeBuffer) {
+    public static void drawPoint(IPoseStack matrix, @Nullable Vector3f point, float size, @Nullable MultiBufferSource renderTypeBuffer) {
         drawPoint(matrix, point, size, size, size, renderTypeBuffer);
     }
 
-    public static void drawPoint(PoseStack matrix, @Nullable Vector3f point, float width, float height, float depth, @Nullable MultiBufferSource renderTypeBuffer) {
+    public static void drawPoint(IPoseStack matrix, @Nullable Vector3f point, float width, float height, float depth, @Nullable MultiBufferSource renderTypeBuffer) {
         if (renderTypeBuffer == null) {
             renderTypeBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
         }
@@ -313,30 +305,30 @@ public final class RenderSystem extends AbstractRenderSystem {
             y0 = point.getY();
             z0 = point.getZ();
         }
-        drawLine(builder, matrix, x0 - width, y0, z0, x0 + width, y0, z0, UIColor.RED); // x
-        drawLine(builder, matrix, x0, y0 - height, z0, x0, y0 + height, z0, UIColor.GREEN); // Y
-        drawLine(builder, matrix, x0, y0, z0 - depth, x0, y0, z0 + depth, UIColor.BLUE); // Z
+        drawLine(matrix, x0 - width, y0, z0, x0 + width, y0, z0, UIColor.RED, builder); // x
+        drawLine(matrix, x0, y0 - height, z0, x0, y0 + height, z0, UIColor.GREEN, builder); // Y
+        drawLine(matrix, x0, y0, z0 - depth, x0, y0, z0 + depth, UIColor.BLUE, builder); // Z
     }
 
-    public static void drawTargetBox(PoseStack matrixStack, float width, float height, float depth, MultiBufferSource buffers) {
+    public static void drawTargetBox(IPoseStack matrixStack, float width, float height, float depth, MultiBufferSource buffers) {
         if (ModDebugger.targetBounds) {
             drawBoundingBox(matrixStack, -width / 2, -height / 2, -depth / 2, width / 2, height / 2, depth / 2, UIColor.ORANGE, buffers);
             drawPoint(matrixStack, null, width, height, depth, buffers);
         }
     }
 
-    public static void drawBoundingBox(PoseStack matrix, float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, MultiBufferSource renderTypeBuffer) {
+    public static void drawBoundingBox(IPoseStack matrix, float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, MultiBufferSource renderTypeBuffer) {
         VertexConsumer builder = renderTypeBuffer.getBuffer(SkinRenderType.lines());
         drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, builder);
     }
 
-    public static void drawBoundingBox(PoseStack poseStack, CGRect rect, UIColor color) {
+    public static void drawBoundingBox(IPoseStack poseStack, CGRect rect, UIColor color) {
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         drawBoundingBox(poseStack, rect.x, rect.y, 0, rect.x + rect.width, rect.y + rect.height, 0, color, buffers);
         buffers.endBatch();
     }
 
-//    public static void drawAllEdges(PoseStack matrix, VoxelShape shape, UIColor color) {
+//    public static void drawAllEdges(IPoseStack matrix, VoxelShape shape, UIColor color) {
 //        MultiBufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 //        VertexConsumer builder = buffer.getBuffer(RenderType.lines());
 //        Matrix4f mat = matrix.last().pose();
@@ -346,7 +338,7 @@ public final class RenderSystem extends AbstractRenderSystem {
 //        });
 //    }
 
-    public static void drawBoundingBox(PoseStack matrix, Rectangle3f rec, UIColor color, MultiBufferSource renderTypeBuffer) {
+    public static void drawBoundingBox(IPoseStack matrix, Rectangle3f rec, UIColor color, MultiBufferSource renderTypeBuffer) {
         float x0 = rec.getMinX();
         float y0 = rec.getMinY();
         float z0 = rec.getMinZ();
@@ -356,7 +348,7 @@ public final class RenderSystem extends AbstractRenderSystem {
         drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, renderTypeBuffer);
     }
 
-    public static void drawBoundingBox(PoseStack matrix, Rectangle3i rec, UIColor color, MultiBufferSource renderTypeBuffer) {
+    public static void drawBoundingBox(IPoseStack matrix, Rectangle3i rec, UIColor color, MultiBufferSource renderTypeBuffer) {
         int x0 = rec.getMinX();
         int y0 = rec.getMinY();
         int z0 = rec.getMinZ();
@@ -366,7 +358,7 @@ public final class RenderSystem extends AbstractRenderSystem {
         drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, renderTypeBuffer);
     }
 
-    public static void drawBoundingBox(PoseStack matrix, AABB rec, UIColor color, MultiBufferSource renderTypeBuffer) {
+    public static void drawBoundingBox(IPoseStack matrix, AABB rec, UIColor color, MultiBufferSource renderTypeBuffer) {
         float x0 = (float) rec.minX;
         float y0 = (float) rec.minY;
         float z0 = (float) rec.minZ;
@@ -376,7 +368,7 @@ public final class RenderSystem extends AbstractRenderSystem {
         drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, renderTypeBuffer);
     }
 
-    public static void drawCube(PoseStack matrix, IRectangle3i rect, float r, float g, float b, float a, MultiBufferSource buffers) {
+    public static void drawCube(IPoseStack matrix, IRectangle3i rect, float r, float g, float b, float a, MultiBufferSource buffers) {
         float x = rect.getMinX();
         float y = rect.getMinY();
         float z = rect.getMinZ();
@@ -386,7 +378,7 @@ public final class RenderSystem extends AbstractRenderSystem {
         drawCube(matrix, x, y, z, w, h, d, r, g, b, a, buffers);
     }
 
-    public static void drawCube(PoseStack matrix, IRectangle3f rect, float r, float g, float b, float a, MultiBufferSource buffers) {
+    public static void drawCube(IPoseStack matrix, IRectangle3f rect, float r, float g, float b, float a, MultiBufferSource buffers) {
         float x = rect.getMinX();
         float y = rect.getMinY();
         float z = rect.getMinZ();
@@ -396,11 +388,11 @@ public final class RenderSystem extends AbstractRenderSystem {
         drawCube(matrix, x, y, z, w, h, d, r, g, b, a, buffers);
     }
 
-    public static void drawCube(PoseStack matrix, float x, float y, float z, float w, float h, float d, float r, float g, float b, float a, MultiBufferSource buffers) {
+    public static void drawCube(IPoseStack matrix, float x, float y, float z, float w, float h, float d, float r, float g, float b, float a, MultiBufferSource buffers) {
         if (w == 0 || h == 0 || d == 0) {
             return;
         }
-        Matrix4f mat = matrix.last().pose();
+        IMatrix4f mat = matrix.lastPose();
         SkinVertexBufferBuilder builder1 = SkinVertexBufferBuilder.getBuffer(buffers);
         VertexConsumer builder = builder1.getBuffer(SkinRenderType.IMAGE_GUIDE);
         for (Direction dir : Direction.values()) {
@@ -408,7 +400,7 @@ public final class RenderSystem extends AbstractRenderSystem {
         }
     }
 
-    public static void drawFace(Matrix4f mat, Direction dir, float x, float y, float z, float w, float h, float d, float u, float v, float r, float g, float b, float a, VertexConsumer builder) {
+    public static void drawFace(IMatrix4f mat, Direction dir, float x, float y, float z, float w, float h, float d, float u, float v, float r, float g, float b, float a, VertexConsumer builder) {
         byte[][] vertexes = FACE_MARK_VERTEXES[dir.get3DDataValue()];
         byte[][] textures = FACE_MARK_TEXTURES[dir.get3DDataValue()];
         float[] values = {0, w, h, d};
@@ -439,7 +431,7 @@ public final class RenderSystem extends AbstractRenderSystem {
      * @param borderSize    the size of the box's borders
      * @param zLevel        the zLevel to draw at
      */
-    public static void drawContinuousTexturedBox(PoseStack matrixStack, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
+    public static void drawContinuousTexturedBox(IPoseStack matrixStack, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
                                                  int borderSize, float zLevel) {
         drawContinuousTexturedBox(matrixStack, x, y, u, v, width, height, textureWidth, textureHeight, borderSize, borderSize, borderSize, borderSize, zLevel);
     }
@@ -462,7 +454,7 @@ public final class RenderSystem extends AbstractRenderSystem {
      * @param borderSize    the size of the box's borders
      * @param zLevel        the zLevel to draw at
      */
-    public static void drawContinuousTexturedBox(PoseStack matrixStack, ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
+    public static void drawContinuousTexturedBox(IPoseStack matrixStack, ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
                                                  int borderSize, float zLevel) {
         drawContinuousTexturedBox(matrixStack, res, x, y, u, v, width, height, textureWidth, textureHeight, borderSize, borderSize, borderSize, borderSize, zLevel);
     }
@@ -488,7 +480,7 @@ public final class RenderSystem extends AbstractRenderSystem {
      * @param rightBorder   the size of the box's right border
      * @param zLevel        the zLevel to draw at
      */
-    public static void drawContinuousTexturedBox(PoseStack matrixStack, ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
+    public static void drawContinuousTexturedBox(IPoseStack matrixStack, ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
                                                  int topBorder, int bottomBorder, int leftBorder, int rightBorder, float zLevel) {
         setShaderTexture(0, res);
         drawContinuousTexturedBox(matrixStack, x, y, u, v, width, height, textureWidth, textureHeight, topBorder, bottomBorder, leftBorder, rightBorder, zLevel);
@@ -514,7 +506,7 @@ public final class RenderSystem extends AbstractRenderSystem {
      * @param rightBorder   the size of the box's right border
      * @param zLevel        the zLevel to draw at
      */
-    public static void drawContinuousTexturedBox(PoseStack matrixStack, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
+    public static void drawContinuousTexturedBox(IPoseStack matrixStack, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
                                                  int topBorder, int bottomBorder, int leftBorder, int rightBorder, float zLevel) {
         setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         enableBlend();
@@ -564,14 +556,14 @@ public final class RenderSystem extends AbstractRenderSystem {
         tesselator.end();
     }
 
-    private static void _drawTexturedModalRect(PoseStack matrixStack, int x, int y, int u, int v, int width, int height, float zLevel, BufferBuilder bufferBuilder) {
+    private static void _drawTexturedModalRect(IPoseStack matrixStack, int x, int y, int u, int v, int width, int height, float zLevel, BufferBuilder bufferBuilder) {
         final float uScale = 1f / 0x100;
         final float vScale = 1f / 0x100;
-        Matrix4f matrix = matrixStack.last().pose();
-        bufferBuilder.vertex(matrix, x, y + height, zLevel).uv(u * uScale, ((v + height) * vScale)).endVertex();
-        bufferBuilder.vertex(matrix, x + width, y + height, zLevel).uv((u + width) * uScale, ((v + height) * vScale)).endVertex();
-        bufferBuilder.vertex(matrix, x + width, y, zLevel).uv((u + width) * uScale, (v * vScale)).endVertex();
-        bufferBuilder.vertex(matrix, x, y, zLevel).uv(u * uScale, (v * vScale)).endVertex();
+        IMatrix4f mat = matrixStack.lastPose();
+        bufferBuilder.vertex(mat, x, y + height, zLevel).uv(u * uScale, ((v + height) * vScale)).endVertex();
+        bufferBuilder.vertex(mat, x + width, y + height, zLevel).uv((u + width) * uScale, ((v + height) * vScale)).endVertex();
+        bufferBuilder.vertex(mat, x + width, y, zLevel).uv((u + width) * uScale, (v * vScale)).endVertex();
+        bufferBuilder.vertex(mat, x, y, zLevel).uv(u * uScale, (v * vScale)).endVertex();
     }
 
 //    public static void disableLighting() {
@@ -632,35 +624,35 @@ public final class RenderSystem extends AbstractRenderSystem {
         }
     }
 
-    public static Matrix3f getExtendedNormalMatrix() {
+    public static IMatrix3f getExtendedNormalMatrix() {
         return extendedNormalMatrix.get();
     }
 
-    public static void setExtendedNormalMatrix(Matrix3f value) {
+    public static void setExtendedNormalMatrix(IMatrix3f value) {
         extendedNormalMatrix.set(value);
     }
 
-    public static Matrix4f getExtendedTextureMatrix() {
+    public static IMatrix4f getExtendedTextureMatrix() {
         return extendedTextureMatrix.get();
     }
 
-    public static void setExtendedTextureMatrix(Matrix4f value) {
+    public static void setExtendedTextureMatrix(IMatrix4f value) {
         extendedTextureMatrix.set(value);
     }
 
-    public static Matrix4f getExtendedLightmapTextureMatrix() {
+    public static IMatrix4f getExtendedLightmapTextureMatrix() {
         return extendedLightmapTextureMatrix.get();
     }
 
-    public static void setExtendedLightmapTextureMatrix(Matrix4f value) {
+    public static void setExtendedLightmapTextureMatrix(IMatrix4f value) {
         extendedLightmapTextureMatrix.set(value);
     }
 
-    public static Matrix4f getExtendedModelViewMatrix() {
+    public static IMatrix4f getExtendedModelViewMatrix() {
         return extendedModelViewMatrix.get();
     }
 
-    public static void setExtendedModelViewMatrix(Matrix4f value) {
+    public static void setExtendedModelViewMatrix(IMatrix4f value) {
         extendedModelViewMatrix.set(value);
     }
 
@@ -678,7 +670,7 @@ public final class RenderSystem extends AbstractRenderSystem {
         extendedModelViewMatrix.load();
     }
 
-    public static AbstractRenderPoseStack getExtendedModelViewStack() {
+    public static IPoseStack getExtendedModelViewStack() {
         return extendedModelViewStack;
     }
 }

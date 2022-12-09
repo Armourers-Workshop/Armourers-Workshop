@@ -11,7 +11,7 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIFont;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.math.Matrix4f;
+import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.compatibility.AbstractShaderTesselator;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -138,14 +138,14 @@ public class TextStorageImpl {
         context.saveGraphicsState();
         context.translateCTM(offset.x, offset.y, 0);
 
-        Matrix4f mat = context.poseStack.last().pose();
+        IMatrix4f mat = context.poseStack.lastPose();
         MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
         if (placeholder != null && cachedTextLines.isEmpty()) {
             int placeholderColor = defaultPlaceholderColor();
-            font.drawInBatch(placeholder.chars(), 0, 0, placeholderColor, true, mat, buffers, false, 0, 15728880);
+            font.drawInBatch2(placeholder.chars(), 0, 0, placeholderColor, true, mat, buffers, false, 0, 15728880);
         }
         for (TextLine line : cachedTextLines) {
-            font.drawInBatch(line.chars, line.rect.x, line.rect.y, textColor, true, mat, buffers, false, 0, 15728880);
+            font.drawInBatch2(line.chars, line.rect.x, line.rect.y, textColor, true, mat, buffers, false, 0, 15728880);
             context.strokeDebugRect(line.index, line.rect);
         }
         buffers.endBatch();
@@ -171,7 +171,7 @@ public class TextStorageImpl {
         if (!isFocused || highlightedRects == null || highlightedRects.isEmpty()) {
             return;
         }
-        Matrix4f mat = context.poseStack.last().pose();
+        IMatrix4f mat = context.poseStack.lastPose();
         AbstractShaderTesselator tesselator = AbstractShaderTesselator.getInstance();
         BufferBuilder builder = tesselator.begin(SkinRenderType.GUI_HIGHLIGHTED_TEXT);
         RenderSystem.setShaderColor(AppearanceImpl.TEXT_HIGHLIGHTED_COLOR);

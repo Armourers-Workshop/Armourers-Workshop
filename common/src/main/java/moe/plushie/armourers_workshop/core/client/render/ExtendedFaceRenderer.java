@@ -1,14 +1,13 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
+import moe.plushie.armourers_workshop.api.math.IMatrix3f;
+import moe.plushie.armourers_workshop.api.math.IMatrix4f;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 
 public class ExtendedFaceRenderer {
@@ -26,9 +25,9 @@ public class ExtendedFaceRenderer {
             {{1, 0, 0}, {1, 1, 0}, {1, 1, 1}, {1, 0, 1}, {1, 0, 0}},    // -x
     };
 
-    public static void render(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, PoseStack matrixStack, VertexConsumer builder) {
-        Matrix4f pose = matrixStack.last().pose();
-        Matrix3f normal = matrixStack.last().normal();
+    public static void render(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, IPoseStack poseStack, VertexConsumer builder) {
+        IMatrix4f pose = poseStack.lastPose();
+        IMatrix3f normal = poseStack.lastNormal();
         ISkinPaintType paintType = paintColor.getPaintType();
         int color = paintColor.getRGB();
         byte[][] vertexes = SkinUtils.FACE_VERTEXES[direction.get3DDataValue()];
@@ -45,13 +44,13 @@ public class ExtendedFaceRenderer {
         }
     }
 
-    public static void renderMarker(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, PoseStack matrixStack, VertexConsumer builder) {
+    public static void renderMarker(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, IPoseStack poseStack, VertexConsumer builder) {
         if (paintColor.getPaintType() == SkinPaintTypes.NORMAL) {
             return;
         }
 
-        Matrix4f mat = matrixStack.last().pose();
-        Matrix3f normal = matrixStack.last().normal();
+        IMatrix4f mat = poseStack.lastPose();
+        IMatrix3f normal = poseStack.lastNormal();
         ISkinPaintType paintType = paintColor.getPaintType();
         int u = paintType.getIndex() % 8;
         int v = paintType.getIndex() / 8;
@@ -67,9 +66,9 @@ public class ExtendedFaceRenderer {
         }
     }
 
-    public static void render2(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, PoseStack matrixStack, VertexConsumer builder) {
-        Matrix4f pose = matrixStack.last().pose();
-        Matrix3f normal = matrixStack.last().normal();
+    public static void render2(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, IPoseStack matrixStack, VertexConsumer builder) {
+        IMatrix4f pose = matrixStack.lastPose();
+        IMatrix3f normal = matrixStack.lastNormal();
         int u = 0;
         int v = 0;
         int color = paintColor.getRGB();

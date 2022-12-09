@@ -3,9 +3,10 @@ package moe.plushie.armourers_workshop.core.client.other;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
+import moe.plushie.armourers_workshop.api.math.IMatrix3f;
+import moe.plushie.armourers_workshop.api.math.IMatrix4f;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.compatibility.AbstractShaderExecutor;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -13,14 +14,15 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -78,9 +80,9 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         builder.cachingBuilders2.clear();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public VertexConsumer getBuffer(@Nonnull RenderType renderType) {
+    public VertexConsumer getBuffer(@NotNull RenderType renderType) {
         BufferBuilder buffer = pendingBuilders2.get(renderType);
         if (buffer != null) {
             return buffer;
@@ -91,7 +93,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         return buffer;
     }
 
-    public SkinRenderObjectBuilder getBuffer(@Nonnull Skin skin) {
+    public SkinRenderObjectBuilder getBuffer(@NotNull Skin skin) {
         SkinRenderObjectBuilder bufferBuilder = pendingBuilders.get(skin);
         if (bufferBuilder != null) {
             return bufferBuilder;
@@ -124,9 +126,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
 
         public abstract int getLightmap();
 
-        public abstract Matrix4f getModelViewMatrix();
-
-        public abstract Matrix3f getInvNormalMatrix();
+        public abstract IPoseStack getPoseStack();
 
         public abstract ISkinPartType getPartType();
 
@@ -139,6 +139,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         public abstract SkinRenderObject getVertexBuffer();
 
         public void render(RenderType renderType, int index, int maxVertexCount) {
+            IPoseStack poseStack = getPoseStack();
             SkinRenderObject vertexBuffer = getVertexBuffer();
             AbstractShaderExecutor executor = AbstractShaderExecutor.getInstance();
 
@@ -154,8 +155,8 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
 
             RenderSystem.setShaderColor(1, 1, 1, 1);
 
-            RenderSystem.setExtendedNormalMatrix(getInvNormalMatrix());
-            RenderSystem.setExtendedModelViewMatrix(getModelViewMatrix());
+            RenderSystem.setExtendedNormalMatrix(poseStack.lastNormal());
+            RenderSystem.setExtendedModelViewMatrix(poseStack.lastPose());
 
             executor.setDefaultVertexLight(getLightmap());
             executor.setMaxVertexCount(maxVertexCount);
@@ -207,7 +208,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
 
         private void setupRenderState() {
             RenderSystem.backupExtendedMatrix();
-            RenderSystem.setExtendedTextureMatrix(Matrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
+            RenderSystem.setExtendedTextureMatrix(OpenMatrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
             executor.setup();
             if (ModDebugger.wireframeRender) {
                 RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);

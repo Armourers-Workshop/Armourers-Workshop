@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.data;
 
-import com.mojang.math.Quaternion;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -12,7 +11,8 @@ import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
-import moe.plushie.armourers_workshop.utils.ext.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -149,7 +149,7 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         }
 
         public void transform(Vector3f r) {
-            Quaternion q = TrigUtils.rotate(r.getX(), r.getY(), r.getZ(), true);
+            OpenQuaternionf q = new OpenQuaternionf(r.getX(), r.getY(), r.getZ(), true);
 
             Vector4f f = new Vector4f(offset.getX(), offset.getY(), offset.getZ(), 1.0f);
             f.transform(q);
@@ -208,7 +208,7 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         public void transform(Vector3f r) {
             super.transform(r);
 
-            Quaternion q = TrigUtils.rotate(r.getX(), r.getY(), r.getZ(), true);
+            OpenQuaternionf q = new OpenQuaternionf(r.getX(), r.getY(), r.getZ(), true);
             ArrayList<SkinMarker> newMarkerList = new ArrayList<>();
             for (SkinMarker marker : markerList) {
                 Vector4f f = new Vector4f(marker.x, marker.y, marker.z, 1.0f);

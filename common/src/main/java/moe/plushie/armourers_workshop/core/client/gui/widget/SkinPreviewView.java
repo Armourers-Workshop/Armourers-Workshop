@@ -4,7 +4,7 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIControl;
-import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import net.fabricmc.api.EnvType;
@@ -35,7 +35,7 @@ public class SkinPreviewView extends UIControl {
         int z = 200;
         int width = rect.width;
         int height = rect.height;
-        PoseStack matrixStack = context.poseStack;
+        IPoseStack matrixStack = context.poseStack;
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         ExtendedItemRenderer.renderSkin(descriptor, ItemStack.EMPTY, x, y, z, width, height, 20, 45, 0, matrixStack, buffers);
         buffers.endBatch();

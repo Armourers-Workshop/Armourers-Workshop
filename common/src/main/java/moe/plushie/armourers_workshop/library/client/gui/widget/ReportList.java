@@ -268,7 +268,6 @@ public class ReportList extends UIScrollView {
         public void render(CGPoint point, CGGraphicsContext context) {
             super.render(point, context);
             int xOffset = 0;
-            PoseStack matrixStack = context.poseStack;
             for (int i = 0; i < names.length; i++) {
                 int columnWidth = 10;
                 GuiDetailListColumn column = getColumn(i);
@@ -277,16 +276,16 @@ public class ReportList extends UIScrollView {
                     if (columnWidth == -1) {
                         columnWidth = contentWidth - 2 - xOffset;
                     }
-                    Screen.fill(matrixStack, xOffset, 0, xOffset + columnWidth, contentHeight, 0xCC808080);
+                    Screen.fill(context.poseStack.cast(), xOffset, 0, xOffset + columnWidth, contentHeight, 0xCC808080);
                     List<FormattedText> lines = wrappedTextLines.get(i);
                     if (lines != null) {
                         int dy = 0;
                         for (FormattedText line : lines) {
-                            font.draw(matrixStack, Language.getInstance().getVisualOrder(line), 1 + xOffset, 1 + dy, 0xFFFFFF);
+                            font.draw(context.poseStack.cast(), Language.getInstance().getVisualOrder(line), 1 + xOffset, 1 + dy, 0xFFFFFF);
                             dy += 10;
                         }
                     } else {
-                        font.draw(matrixStack, names[i], 1 + xOffset, 1, 0xFFFFFF);
+                        font.draw(context.poseStack.cast(), names[i], 1 + xOffset, 1, 0xFFFFFF);
                     }
                     xOffset += columnWidth + 1;
                 }

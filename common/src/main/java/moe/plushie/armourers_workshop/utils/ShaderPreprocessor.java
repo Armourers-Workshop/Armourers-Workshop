@@ -25,42 +25,56 @@ public class ShaderPreprocessor {
 
 
     private String processIrisShader(String source) {
-        source = replace(source, "ivec2", "UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 0, 1))");
-        source = replace(source, "vec2", "UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 0, 1))");
-        // source = replace(source, "vec3", "Normal", "mat3", "aw_NormalMatrix", "($1 * $2)");
+        source = attribute(source, "ivec2", "iris_UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 0, 1))");
+        source = attribute(source, "vec2", "iris_UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 0, 1))");
+        // source = attribute(source, "vec3", "Normal", "mat3", "aw_NormalMatrix", "($1 * $2)");
+        source = uniform(source, "mat4", "iris_ModelViewMat", "mat4", "aw_ModelViewMat", "($1 * $2)");
         ModLog.debug("process iris shader: \n{}", source);
         return source;
     }
 
     private String processOptifineShader(String source) {
-        source = replace(source, "ivec2", "UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 0, 1))");
+        source = attribute(source, "ivec2", "vaUV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 0, 1))");
+        source = uniform(source, "mat4", "textureMatrix", "mat4", "aw_TextureMatrix", "($1 * $2)");
+        source = uniform(source, "mat3", "normalMatrix", "mat3", "aw_NormalMatrix", "($1 * $2)");
+        source = uniform(source, "mat4", "modelViewMatrix", "mat4", "aw_ModelViewMat", "($1 * $2)");
         ModLog.debug("process optifine shader: \n{}", source);
         return source;
     }
 
     private String processVanillaShader(String source) {
-        source = replace(source, "ivec2", "UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 0, 1))");
-        source = replace(source, "vec2", "UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 0, 1))");
-        source = replace(source, "vec3", "Normal", "mat3", "aw_NormalMatrix", "($1 * $2)");
+        source = attribute(source, "ivec2", "UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 0, 1))");
+        source = attribute(source, "vec2", "UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 0, 1))");
+        source = attribute(source, "vec3", "Normal", "mat3", "aw_NormalMatrix", "($1 * $2)");
+        source = uniform(source, "mat4", "ModelViewMat", "mat4", "aw_ModelViewMat", "($1 * $2)");
         ModLog.debug("process vanilla shader: \n{}", source);
         return source;
     }
 
-    private String replace(String source, String varType, String var, String matrixType, String matrix, String expr) {
+    private String uniform(String source, String varType, String var, String matrixType, String matrix, String expr) {
+        return replace("uniform", source, varType, var, matrixType, matrix, expr);
+    }
+
+    private String attribute(String source, String varType, String var, String matrixType, String matrix, String expr) {
+        return replace("in", source, varType, var, matrixType, matrix, expr);
+    }
+
+    private String replace(String category, String source, String varType, String var, String matrixType, String matrix, String expr) {
         // compile regular expressions.
         String[] texts = {
-                "in\\s+${varType}\\s+${var}\\s*;", "__aw_${var}_wa__",
+                "${category}\\s+${varType}\\s+${var}\\s*;", "__aw_${var}_aw__",
                 "\\b${var}\\b", "${expr}",
-                "__aw_${var}_wa__", "in ${varType} ${var};\nuniform ${matrixType} ${matrix} = ${matrixType}(1);",
+                "__aw_${var}_aw__", "${category} ${varType} ${var};\nuniform ${matrixType} ${matrix} = ${matrixType}(1);",
         };
         String[] regexes = new String[texts.length];
         for (int i = 0; i < texts.length; ++i) {
             String tmp = texts[i];
+            tmp = tmp.replace("${category}", category);
             tmp = tmp.replace("${varType}", varType);
-            tmp = tmp.replace("${var}", prefix + var);
+            tmp = tmp.replace("${var}", var);
             tmp = tmp.replace("${matrixType}", matrixType);
             tmp = tmp.replace("${matrix}", matrix);
-            tmp = tmp.replace("${expr}", expr.replace("$1", prefix + var).replace("$2", matrix));
+            tmp = tmp.replace("${expr}", expr.replace("$1", var).replace("$2", matrix));
             regexes[i] = tmp;
         }
         // we need to replace all the content correctly.

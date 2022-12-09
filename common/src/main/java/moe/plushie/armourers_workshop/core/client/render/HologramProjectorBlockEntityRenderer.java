@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.render;
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
@@ -13,7 +14,9 @@ import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.*;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.TickUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -33,7 +36,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
     }
 
     @Override
-    public void render(T entity, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int light, int overlay) {
         if (!entity.isPowered()) {
             return;
         }
@@ -42,6 +45,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         if (bakedSkin == null) {
             return;
         }
+        IPoseStack poseStack = IPoseStack.of(poseStackIn);
         BlockState blockState = entity.getBlockState();
         Entity mannequin = SkinItemRenderer.getInstance().getMannequinEntity();
         MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
@@ -58,7 +62,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
 
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f);
-        poseStack.mulPose(entity.getRenderRotations(blockState));
+        poseStack.rotate(entity.getRenderRotations(blockState));
         poseStack.translate(0.0f, 0.5f, 0.0f);
 
         poseStack.scale(f, f, f);
@@ -83,7 +87,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         }
     }
 
-    private void apply(T entity, Rectangle3f rect, float partialTicks, PoseStack matrixStack, MultiBufferSource buffers) {
+    private void apply(T entity, Rectangle3f rect, float partialTicks, IPoseStack poseStack, MultiBufferSource buffers) {
         Vector3f angle = entity.getModelAngle();
         Vector3f offset = entity.getModelOffset();
         Vector3f rotationOffset = entity.getRotationOffset();
@@ -108,25 +112,25 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         }
 
         float scale = entity.getModelScale();
-        matrixStack.scale(scale, scale, scale);
+        poseStack.scale(scale, scale, scale);
         if (entity.isOverrideOrigin()) {
-            matrixStack.translate(0, -rect.getMaxY(), 0); // to model center
+            poseStack.translate(0, -rect.getMaxY(), 0); // to model center
         }
-        matrixStack.translate(-offset.x(), -offset.y(), offset.z());
+        poseStack.translate(-offset.getX(), -offset.getY(), offset.getZ());
 
         if (entity.shouldShowRotationPoint()) {
-            RenderSystem.drawBoundingBox(matrixStack, -1, -1, -1, 1, 1, 1, UIColor.MAGENTA, buffers);
+            RenderSystem.drawBoundingBox(poseStack, -1, -1, -1, 1, 1, 1, UIColor.MAGENTA, buffers);
         }
 
         if (ModDebugger.hologramProjectorBlock) {
-            RenderSystem.drawPoint(matrixStack, null, 128, buffers);
+            RenderSystem.drawPoint(poseStack, null, 128, buffers);
         }
 
-        matrixStack.mulPose(TrigUtils.rotate(rotX, -rotY, rotZ, true));
-        matrixStack.translate(rotationOffset.x(), -rotationOffset.y(), rotationOffset.z());
+        poseStack.rotate(new OpenQuaternionf(rotX, -rotY, rotZ, true));
+        poseStack.translate(rotationOffset.getX(), -rotationOffset.getY(), rotationOffset.getZ());
 
         if (ModDebugger.hologramProjectorBlock) {
-            RenderSystem.drawPoint(matrixStack, null, 128, buffers);
+            RenderSystem.drawPoint(poseStack, null, 128, buffers);
         }
     }
 

@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.ShaderUniforms;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -28,9 +29,9 @@ public class AbstractShaderExecutor {
     private int defaultVertexLight = 0;
 
     private int lastLightmap = 0;
-    private Matrix4f lastLightmapMat;
+    private OpenMatrix4f lastLightmapMat;
 
-    private final Matrix4f noneLightmapMat = Matrix4f.createScaleMatrix(1, 1, 1);
+    private final OpenMatrix4f noneLightmapMat = OpenMatrix4f.createScaleMatrix(1, 1, 1);
 
     public static AbstractShaderExecutor getInstance() {
         return INSTANCE;
@@ -38,10 +39,14 @@ public class AbstractShaderExecutor {
 
     public void setup() {
         BufferUploader.reset();
+        // yep we reset it.
+        RenderSystem.getModelViewMatrix().setIdentity();
+        RenderSystem.getTextureMatrix().setIdentity();
     }
 
     public void clean() {
         ShaderUniforms.rollback();
+        RenderSystem.applyModelViewMatrix();
     }
 
     public void setMaxVertexCount(int count) {
@@ -69,8 +74,8 @@ public class AbstractShaderExecutor {
             if (lastLightmapMat == null || defaultVertexLight != lastLightmap) {
                 int u = defaultVertexLight & 0xffff;
                 int v = (defaultVertexLight >> 16) & 0xffff;
-                Matrix4f newValue = new Matrix4f();
-                newValue.translate(new Vector3f(u, v, 0));
+                OpenMatrix4f newValue = OpenMatrix4f.createScaleMatrix(0, 0, 0);
+                newValue.translate(u, v, 0);
                 lastLightmap = defaultVertexLight;
                 lastLightmapMat = newValue;
             }
@@ -154,7 +159,7 @@ public class AbstractShaderExecutor {
             shader.setSampler("Sampler" + i, RenderSystem.getShaderTexture(i));
         }
         if (shader.MODEL_VIEW_MATRIX != null) {
-            shader.MODEL_VIEW_MATRIX.set(RenderSystem.getExtendedModelViewMatrix());
+            shader.MODEL_VIEW_MATRIX.set(RenderSystem.getModelViewMatrix());
         }
         if (shader.PROJECTION_MATRIX != null) {
             shader.PROJECTION_MATRIX.set(RenderSystem.getProjectionMatrix());
@@ -163,7 +168,7 @@ public class AbstractShaderExecutor {
             shader.INVERSE_VIEW_ROTATION_MATRIX.set(RenderSystem.getInverseViewRotationMatrix());
         }
         if (shader.TEXTURE_MATRIX != null) {
-            shader.TEXTURE_MATRIX.set(RenderSystem.getExtendedTextureMatrix());
+            shader.TEXTURE_MATRIX.set(RenderSystem.getTextureMatrix());
         }
         if (shader.COLOR_MODULATOR != null) {
             shader.COLOR_MODULATOR.set(RenderSystem.getShaderColor());

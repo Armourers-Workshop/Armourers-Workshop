@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.utils.math;
 
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.AABB;
@@ -155,11 +153,11 @@ public class Rectangle3f implements IRectangle3f {
         return new Rectangle3f(x + dx, y + dy, z + dz, width, height, depth);
     }
 
-    public void mul(Quaternion quaternion) {
-        mul(new Matrix4f(quaternion));
+    public void mul(OpenQuaternionf quaternion) {
+        mul(new OpenMatrix4f(quaternion));
     }
 
-    public void mul(Matrix4f matrix) {
+    public void mul(OpenMatrix4f matrix) {
         List<Vector4f> vertexes = Arrays.asList(
                 new Vector4f(x, y, z, 1.0f),
                 new Vector4f(x + width, y, z, 1.0f),

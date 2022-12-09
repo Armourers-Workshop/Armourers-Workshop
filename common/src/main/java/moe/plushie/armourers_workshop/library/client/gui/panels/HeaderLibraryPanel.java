@@ -6,7 +6,7 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIControl;
 import com.mojang.authlib.GameProfile;
-import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
@@ -70,11 +70,11 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         this.renderPlayerProfile(context.poseStack, context.font.font(), Minecraft.getInstance().getUser().getGameProfile());
     }
 
-    private void renderPlayerProfile(PoseStack matrixStack, Font font, GameProfile gameProfile) {
+    private void renderPlayerProfile(IPoseStack poseStack, Font font, GameProfile gameProfile) {
         if (playerTexture == null) {
             playerTexture = new PlayerTextureDescriptor(gameProfile);
         }
-        RenderSystem.drawPlayerHead(matrixStack, 5, 5, 16, 16, playerTexture);
+        RenderSystem.drawPlayerHead(poseStack, 5, 5, 16, 16, playerTexture);
 
         // White - not a member.
         // Yellow - Member not authenticated.
@@ -93,7 +93,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         if (PlushieAuth.PLUSHIE_SESSION.isAuthenticated()) {
             colour = 0xAAFFAA;
         }
-        font.draw(matrixStack, profile, 24, (rect.height - font.lineHeight) / 2f, colour);
+        font.draw(poseStack.cast(), profile, 24, (rect.height - font.lineHeight) / 2f, colour);
     }
 
     private void betaCheckUpdate() {

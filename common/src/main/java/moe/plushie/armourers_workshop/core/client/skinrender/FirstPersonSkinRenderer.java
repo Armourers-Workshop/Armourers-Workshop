@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -48,13 +48,13 @@ public class FirstPersonSkinRenderer<T extends LivingEntity, V extends FirstPers
         return super.prepare(entity, model, bakedSkin, bakedPart, itemStack, transformType);
     }
 
-    public void setLeftArm(PoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+    public void setLeftArm(IPoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
         matrixStack.translate(-5, -2, 0);
-        matrixStack.mulPose(new Quaternion(180, 180, -5, true));
+        matrixStack.rotate(new OpenQuaternionf(180, 180, -5, true));
     }
 
-    public void setRightArm(PoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+    public void setRightArm(IPoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
         matrixStack.translate(5, -2, 0);
-        matrixStack.mulPose(new Quaternion(180, 180, 5, true));
+        matrixStack.rotate(new OpenQuaternionf(180, 180, 5, true));
     }
 }

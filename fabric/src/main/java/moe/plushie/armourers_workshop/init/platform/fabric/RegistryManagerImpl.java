@@ -1,10 +1,12 @@
 package moe.plushie.armourers_workshop.init.platform.fabric;
 
 import com.google.common.collect.ImmutableMap;
+import moe.plushie.armourers_workshop.api.common.IRegistry;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistries;
 import moe.plushie.armourers_workshop.core.registry.Registry;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -22,12 +24,12 @@ import java.util.function.Supplier;
 public class RegistryManagerImpl {
 
     private static final ImmutableMap<Class<?>, Registry<?>> REGISTRIES = new ImmutableMap.Builder<Class<?>, Registry<?>>()
-            .put(Block.class, new RegistryProxy<>(net.minecraft.core.Registry.BLOCK))
-            .put(Item.class, new RegistryProxy<>(net.minecraft.core.Registry.ITEM))
-            .put(MenuType.class, new RegistryProxy<>(net.minecraft.core.Registry.MENU))
-            .put(EntityType.class, new RegistryProxy<>(net.minecraft.core.Registry.ENTITY_TYPE))
-            .put(BlockEntityType.class, new RegistryProxy<>(net.minecraft.core.Registry.BLOCK_ENTITY_TYPE))
-            .put(SoundEvent.class, new RegistryProxy<>(net.minecraft.core.Registry.SOUND_EVENT))
+            .put(Block.class, new RegistryProxy<>("blocks", AbstractFabricRegistries.BLOCKS))
+            .put(Item.class, new RegistryProxy<>("items", AbstractFabricRegistries.ITEMS))
+            .put(MenuType.class, new RegistryProxy<>("menuTypes", AbstractFabricRegistries.MENU_TYPES))
+            .put(EntityType.class, new RegistryProxy<>("entityTypes", AbstractFabricRegistries.ENTITY_TYPES))
+            .put(BlockEntityType.class, new RegistryProxy<>("blockEntityTypes", AbstractFabricRegistries.BLOCK_ENTITY_TYPES))
+            .put(SoundEvent.class, new RegistryProxy<>("soundEvents", AbstractFabricRegistries.SOUND_EVENTS))
             .build();
 
     public static <T> Registry<T> makeRegistry(Class<? super T> clazz) {
@@ -40,18 +42,21 @@ public class RegistryManagerImpl {
         throw new AssertionError("not supported registry entry of the " + clazz);
     }
 
-    public static class RegistryProxy<T, R extends net.minecraft.core.Registry<T>> extends Registry<T> {
+    public static class RegistryProxy<T> extends Registry<T> {
 
-        protected final R registry;
+        protected final String category;
+
+        protected final IRegistry<T> registry;
         protected final LinkedHashSet<IRegistryKey<T>> entriesView = new LinkedHashSet<>();
 
-        protected RegistryProxy(R registry) {
+        protected RegistryProxy(String category, IRegistry<T> registry) {
+            this.category = category;
             this.registry = registry;
         }
 
         @Override
         public T get(ResourceLocation registryName) {
-            return registry.get(registryName);
+            return registry.getValue(registryName);
         }
 
         @Override
@@ -68,7 +73,7 @@ public class RegistryManagerImpl {
         public <I extends T> IRegistryKey<I> register(String name, Supplier<? extends I> sup) {
             ResourceLocation registryName = ModConstants.key(name);
             ModLog.debug("Registering '{}'", registryName);
-            I value = R.register(registry, registryName, sup.get());
+            Supplier<I> value = registry.register(name, sup);
             IRegistryKey<I> object = new IRegistryKey<I>() {
                 @Override
                 public ResourceLocation getRegistryName() {
@@ -77,7 +82,7 @@ public class RegistryManagerImpl {
 
                 @Override
                 public I get() {
-                    return value;
+                    return value.get();
                 }
             };
             entriesView.add(ObjectUtils.unsafeCast(object));

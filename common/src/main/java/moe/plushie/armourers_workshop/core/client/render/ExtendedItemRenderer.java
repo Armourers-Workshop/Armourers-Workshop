@@ -1,8 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -12,10 +11,10 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
-import moe.plushie.armourers_workshop.utils.TrigUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -31,83 +30,82 @@ import org.jetbrains.annotations.Nullable;
 @Environment(value = EnvType.CLIENT)
 public final class ExtendedItemRenderer {
 
-    public static void renderSkin(SkinDescriptor descriptor, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, PoseStack matrixStack, MultiBufferSource buffers) {
+    public static void renderSkin(SkinDescriptor descriptor, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, IPoseStack poseStack, MultiBufferSource buffers) {
         BakedSkin bakedSkin = BakedSkin.of(descriptor);
         if (bakedSkin != null) {
-            renderSkin(bakedSkin, descriptor.getColorScheme(), itemStack, x, y, z, width, height, rx, ry, rz, matrixStack, buffers);
+            renderSkin(bakedSkin, descriptor.getColorScheme(), itemStack, x, y, z, width, height, rx, ry, rz, 0, 0xf000f0, poseStack, buffers);
         }
     }
 
-    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, PoseStack matrixStack, MultiBufferSource buffers) {
+    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, float partialTicks, int light, IPoseStack poseStack, MultiBufferSource buffers) {
         if (bakedSkin != null) {
             int t = TickUtils.ticks();
             int si = Math.min(width, height);
-            matrixStack.pushPose();
-            matrixStack.translate(x + width / 2f, y + height / 2f, z);
+            poseStack.pushPose();
+            poseStack.translate(x + width / 2f, y + height / 2f, z);
             // we need do a vertical mirror, but normal matrix no needs.
-            matrixStack.last().pose().multiply(Matrix4f.createScaleMatrix(1, -1, 1));
-            matrixStack.mulPose(Vector3f.XP.rotationDegrees(rx));
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(ry + (float) (t / 10 % 360)));
-            ModDebugger.rotate(matrixStack);
-            matrixStack.scale(0.625f, 0.625f, 0.625f);
-            matrixStack.scale(si, si, si);
-            renderSkin(bakedSkin, scheme, itemStack, null, Vector3f.ONE, 1, 1, 1, 0, 0xf000f0, matrixStack, buffers);
-            matrixStack.popPose();
+            poseStack.lastPose().multiply(OpenMatrix4f.createScaleMatrix(1, -1, 1));
+            poseStack.rotate(Vector3f.XP.rotationDegrees(rx));
+            poseStack.rotate(Vector3f.YP.rotationDegrees(ry + (float) (t / 10 % 360)));
+            poseStack.scale(0.625f, 0.625f, 0.625f);
+            poseStack.scale(si, si, si);
+            renderSkin(bakedSkin, scheme, itemStack, null, Vector3f.ONE, 1, 1, 1, partialTicks, light, poseStack, buffers);
+            poseStack.popPose();
         }
     }
 
-    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, PoseStack matrixStack, MultiBufferSource buffers) {
+    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, IPoseStack poseStack, MultiBufferSource buffers) {
         Entity entity = SkinItemRenderer.getInstance().getMannequinEntity();
         MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
         SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer == null || entity == null || entity.level == null) {
             return;
         }
-        matrixStack.pushPose();
-        matrixStack.scale(-1, -1, 1);
+        poseStack.pushPose();
+        poseStack.scale(-1, -1, 1);
 
         Rectangle3f rect = bakedSkin.getRenderBounds(entity, model, rotation, itemStack);
         float newScale = Math.min(targetWidth / rect.getWidth(), targetHeight / rect.getHeight());
         newScale = Math.min(newScale, targetDepth / rect.getDepth());
-        RenderSystem.drawTargetBox(matrixStack, targetWidth, targetHeight, targetDepth, buffers);
+        RenderSystem.drawTargetBox(poseStack, targetWidth, targetHeight, targetDepth, buffers);
 
-        matrixStack.scale(newScale / scale.getX(), newScale / scale.getY(), newScale / scale.getZ());
-        matrixStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
+        poseStack.scale(newScale / scale.getX(), newScale / scale.getY(), newScale / scale.getZ());
+        poseStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
 
         SkinRenderContext context = SkinRenderContext.getInstance();
-        context.setup(light, partialTicks, matrixStack, buffers);
+        context.setup(light, partialTicks, poseStack, buffers);
         renderer.render(entity, SkinRendererManager.wrap(model), bakedSkin, scheme, itemStack, 0, context);
         context.clean();
 
-        matrixStack.popPose();
+        poseStack.popPose();
     }
 
-    public static void renderMannequin(PlayerTextureDescriptor descriptor, Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, PoseStack matrixStack, MultiBufferSource buffers) {
+    public static void renderMannequin(PlayerTextureDescriptor descriptor, Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, IPoseStack poseStack, MultiBufferSource buffers) {
         MannequinEntity entity = SkinItemRenderer.getInstance().getMannequinEntity();
         if (entity == null || entity.level == null) {
             return;
         }
-        matrixStack.pushPose();
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
+        poseStack.pushPose();
+        poseStack.rotate(Vector3f.YP.rotationDegrees(180));
 
         if (!descriptor.equals(entity.getTextureDescriptor())) {
             entity.setTextureDescriptor(descriptor);
         }
 
         Rectangle3f rect = new Rectangle3f(entity.getBoundingBox());
-        RenderSystem.drawTargetBox(matrixStack, targetWidth, targetHeight, targetDepth, buffers);
+        RenderSystem.drawTargetBox(poseStack, targetWidth, targetHeight, targetDepth, buffers);
 
         Rectangle3f resolvedRect = rect.offset(rect.getMidX(), rect.getMidY(), rect.getMidZ());
-        resolvedRect.mul(new Matrix4f(TrigUtils.rotate(rotation.getX(), rotation.getY(), rotation.getZ(), true)));
+        resolvedRect.mul(new OpenMatrix4f(new OpenQuaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), true)));
         float newScale = Math.min(targetWidth / resolvedRect.getWidth(), targetHeight / resolvedRect.getHeight());
 
-        matrixStack.scale(newScale, newScale, newScale);
-        matrixStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
+        poseStack.scale(newScale, newScale, newScale);
+        poseStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
 
         EntityRenderDispatcher rendererManager = Minecraft.getInstance().getEntityRenderDispatcher();
-        RenderSystem.runAsFancy(() -> rendererManager.render(entity, 0.0d, 0.0d, 0.0d, 0.0f, 1.0f, matrixStack, buffers, light));
+        RenderSystem.runAsFancy(() -> rendererManager.render(entity, 0.0d, 0.0d, 0.0d, 0.0f, 1.0f, poseStack.cast(), buffers, light));
 
-        matrixStack.popPose();
+        poseStack.popPose();
     }
 }
 

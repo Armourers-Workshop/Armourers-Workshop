@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "package": "moe.plushie.armourers_workshop.compatibility.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "AbstractPoseStackMixin",
+    "AbstractPoseStateWrapperMixin",
+    "AbstractEntityRenderDispatcherMixin",
+    "AbstractGameRendererMixin",
+    "AbstractVanillaShaderMixin",
+    "AbstractOptifineShaderMixin",
+    "AbstractIrisShaderMixin",
+    "AbstractRenderStateMixin"
+  ],
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

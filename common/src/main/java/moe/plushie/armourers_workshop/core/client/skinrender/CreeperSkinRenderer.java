@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
@@ -32,7 +32,7 @@ public class CreeperSkinRenderer<T extends LivingEntity, V extends CreeperModel<
         }
     }
 
-    private void offset(PoseStack matrixStack, M model) {
+    private void offset(IPoseStack matrixStack, M model) {
         transformer.apply(matrixStack, model.getPart("head"));
     }
 }

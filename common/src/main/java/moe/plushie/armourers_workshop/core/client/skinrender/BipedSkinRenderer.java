@@ -1,10 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.api.client.ISkinBabyModel;
+import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
-import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.HumanoidModel;
@@ -18,7 +17,7 @@ public class BipedSkinRenderer<T extends LivingEntity, V extends HumanoidModel<T
     }
 
     @Override
-    protected void setHeadPart(PoseStack matrixStack, M model) {
+    protected void setHeadPart(IPoseStack matrixStack, M model) {
         super.setHeadPart(matrixStack, model);
         if (model.isBaby()) {
             float scale = model.getBabyScale();

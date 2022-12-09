@@ -1,42 +1,9 @@
 package moe.plushie.armourers_workshop.utils;
 
-import com.mojang.math.Quaternion;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 
 public class TrigUtils {
-
-    // Same to Quaternion(Vector3f vec, float f, boolean bl)
-    public static Quaternion rotate(Vector3f vec, float f, boolean bl) {
-        if (bl) {
-            f *= (float) Math.PI / 180;
-        }
-        float g = MathUtils.sin(f / 2.0f);
-        float i = vec.getX() * g;
-        float j = vec.getY() * g;
-        float k = vec.getZ() * g;
-        float r = MathUtils.cos(f / 2.0f);
-        return new Quaternion(i, j, k, r);
-    }
-
-    // Same to Quaternion(float x, float y, float z, boolean bl)
-    public static Quaternion rotate(float x, float y, float z, boolean bl) {
-        if (bl) {
-            x *= ((float) Math.PI / 180F);
-            y *= ((float) Math.PI / 180F);
-            z *= ((float) Math.PI / 180F);
-        }
-        float f = MathUtils.sin(0.5F * x);
-        float f1 = MathUtils.cos(0.5F * x);
-        float f2 = MathUtils.sin(0.5F * y);
-        float f3 = MathUtils.cos(0.5F * y);
-        float f4 = MathUtils.sin(0.5F * z);
-        float f5 = MathUtils.cos(0.5F * z);
-        float i = f * f3 * f5 + f1 * f2 * f4;
-        float j = f1 * f2 * f5 - f * f3 * f4;
-        float k = f * f2 * f5 + f1 * f3 * f4;
-        float r = f1 * f3 * f5 - f * f2 * f4;
-        return new Quaternion(i, j, k, r);
-    }
 
     public static double getAngleRadians(double x1, double y1, double x2, double y2) {
         double x = x2 - x1;

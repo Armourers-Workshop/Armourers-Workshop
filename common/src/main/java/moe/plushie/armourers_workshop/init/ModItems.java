@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
 import moe.plushie.armourers_workshop.builder.client.render.SkinCubeItemRenderer;
@@ -11,7 +12,6 @@ import moe.plushie.armourers_workshop.core.item.*;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
@@ -80,14 +80,14 @@ public class ModItems {
 
     private static class ItemBuilder {
 
-        CreativeModeTab tab;
+        IRegistryKey<IItemGroup> group;
 
-        ItemBuilder(CreativeModeTab tab) {
-            this.tab = tab;
+        ItemBuilder(IRegistryKey<IItemGroup> group) {
+            this.group = group;
         }
 
         <T extends Item> IItemBuilder<Item> normal(Function<Item.Properties, T> factory) {
-            return ObjectUtils.unsafeCast(BuilderManager.getInstance().createItemBuilder(factory).stacksTo(1).tab(tab));
+            return ObjectUtils.unsafeCast(BuilderManager.getInstance().createItemBuilder(factory).stacksTo(1).group(group));
         }
 
         <T extends Item> IItemBuilder<Item> rare(Function<Item.Properties, T> factory) {

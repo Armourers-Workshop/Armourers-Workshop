@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
 import moe.plushie.armourers_workshop.compatibility.AbstractLivingEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.model.MannequinArmorModel;
@@ -53,26 +54,30 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
     }
 
     @Override
-    public void render(T entity, float p_225623_2_, float partialTicks, PoseStack matrixStack, MultiBufferSource buffers, int packedLightIn) {
+    public void render(T entity, float p_225623_2_, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int packedLightIn) {
         // when mannequin holding mannequin recursive rendering occurs, and we will enable the child renderer.
         if (this.enableChildRenderer) {
-            this.getChildRenderer().render(entity, p_225623_2_, partialTicks, matrixStack, buffers, packedLightIn);
+            this.getChildRenderer().render(entity, p_225623_2_, partialTicks, poseStackIn, buffers, packedLightIn);
             return;
         }
+        IPoseStack poseStack = IPoseStack.of(poseStackIn);
         PlayerTextureLoader textureLoader = PlayerTextureLoader.getInstance();
         this.enableChildRenderer = true;
         this.texture = textureLoader.getTextureLocation(entity);
         this.bakedTexture = textureLoader.getTextureModel(texture);
         this.model = getModel();
         this.model.setAllVisible(entity.isModelVisible());
-        super.render(entity, p_225623_2_, partialTicks, matrixStack, buffers, packedLightIn);
+        super.render(entity, p_225623_2_, partialTicks, poseStackIn, buffers, packedLightIn);
         this.enableChildRenderer = false;
         if (ModDebugger.mannequinCulling) {
-            matrixStack.pushPose();
+            poseStack.pushPose();
             AABB box = entity.getBoundingBoxForCulling();
-            matrixStack.translate(-box.minX - (box.maxX - box.minX) / 2, -box.minY, -box.minZ - (box.maxZ - box.minZ) / 2);
-            RenderSystem.drawBoundingBox(matrixStack, box, UIColor.YELLOW, buffers);
-            matrixStack.popPose();
+            double tx = -box.minX - (box.maxX - box.minX) / 2;
+            double ty = -box.minY;
+            double tz = -box.minZ - (box.maxZ - box.minZ) / 2;
+            poseStack.translate((float) tx, (float) ty, (float) tz);
+            RenderSystem.drawBoundingBox(poseStack, box, UIColor.YELLOW, buffers);
+            poseStack.popPose();
         }
     }
 

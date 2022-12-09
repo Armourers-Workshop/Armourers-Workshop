@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init.platform;
 
 import com.apple.library.coregraphics.CGRect;
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinEquipmentType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
@@ -14,6 +15,7 @@ import moe.plushie.armourers_workshop.init.*;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -150,10 +152,11 @@ public class ItemTooltipManager {
         tooltips.addAll(newTooltips);
     }
 
-    public static void renderHoverText(ItemStack itemStack, CGRect frame, int mouseX, int mouseY, int screenWidth, int screenHeight, PoseStack matrixStack) {
+    public static void renderHoverText(ItemStack itemStack, CGRect frame, int mouseX, int mouseY, int screenWidth, int screenHeight, PoseStack poseStackIn) {
         if (!ModConfig.Client.skinPreEnabled) {
             return;
         }
+        IPoseStack poseStack = IPoseStack.of(poseStackIn);
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         BakedSkin bakedSkin = BakedSkin.of(descriptor);
         if (bakedSkin == null) {
@@ -175,10 +178,10 @@ public class ItemTooltipManager {
 
         if (ModConfig.Client.skinPreDrawBackground) {
             RenderSystem.enableDepthTest();
-            RenderSystem.drawContinuousTexturedBox(matrixStack, ModTextures.GUI_PREVIEW, tx, ty, 0, 0, size, size, 62, 62, 4, 400);
+            RenderSystem.drawContinuousTexturedBox(poseStack, ModTextures.GUI_PREVIEW, tx, ty, 0, 0, size, size, 62, 62, 4, 400);
         }
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        ExtendedItemRenderer.renderSkin(descriptor, itemStack, tx, ty, 500, size, size, 30, 45, 0, matrixStack, buffers);
+        ExtendedItemRenderer.renderSkin(descriptor, itemStack, tx, ty, 500, size, size, 30, 45, 0, poseStack, buffers);
         buffers.endBatch();
     }
 }

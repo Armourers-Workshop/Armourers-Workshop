@@ -95,9 +95,9 @@ public class CGGraphicsRenderer {
             color = AppearanceImpl.TEXT_COLOR;
         }
         if (shadowColor != null) {
-            font.font().drawShadow(context.poseStack, text.chars(), x, y, color.getRGB());
+            font.font().drawShadow(context.poseStack.cast(), text.chars(), x, y, color.getRGB());
         } else {
-            font.font().draw(context.poseStack, text.chars(), x, y, color.getRGB());
+            font.font().draw(context.poseStack.cast(), text.chars(), x, y, color.getRGB());
         }
     }
 
@@ -109,7 +109,7 @@ public class CGGraphicsRenderer {
         // and while we can't decide on the final tooltip size,
         // but we can to handle the break the newline
         List<? extends FormattedCharSequence> texts = context.font.font().split(text.component(), 100000);
-        context.screen.renderTooltip(context.poseStack, texts, context.mouseX, context.mouseY);
+        context.screen.renderTooltip(context.poseStack.cast(), texts, context.mouseX, context.mouseY);
     }
 
     public static void renderTooltipRender(TooltipRenderer renderer, CGRect rect, CGGraphicsContext context) {
@@ -122,7 +122,7 @@ public class CGGraphicsRenderer {
         if (color == null || color == UIColor.CLEAR) {
             return;
         }
-        Screen.fill(context.poseStack, rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, color.getRGB());
+        Screen.fill(context.poseStack.cast(), rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, color.getRGB());
     }
 
     public static void renderGradient(CGGradient gradient, CGRect rect, CGGraphicsContext context) {
@@ -135,7 +135,7 @@ public class CGGraphicsRenderer {
         int l = rect.getMaxY();
         int m = gradient.startColor.getRGB();
         int n = gradient.endColor.getRGB();
-        InternalRenderer.GRADIENT.render(context.poseStack, i, j, k, l, m, n);
+        InternalRenderer.GRADIENT.render(context.poseStack.cast(), i, j, k, l, m, n);
     }
 
     private static class InternalRenderer extends Screen {

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init.platform.fabric.proxy;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.common.IEntityHandler;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -81,16 +82,17 @@ public class ClientProxyImpl implements ClientModInitializer {
         //         return;
         //     }
         // }
+        IPoseStack poseStack = IPoseStack.of(context.matrixStack());
         ItemStack itemStack = player.getMainHandItem();
         Item item = itemStack.getItem();
         if (ModConfig.Client.enableEntityPlacementHighlight && item == ModItems.MANNEQUIN.get()) {
-            HighlightPlacementRenderer.renderEntity(player, target, context.camera(), context.matrixStack(), context.consumers());
+            HighlightPlacementRenderer.renderEntity(player, target, context.camera(), poseStack, context.consumers());
         }
         if (ModConfig.Client.enableBlockPlacementHighlight && item == ModItems.SKIN.get()) {
-            HighlightPlacementRenderer.renderBlock(itemStack, player, target, context.camera(), context.matrixStack(), context.consumers());
+            HighlightPlacementRenderer.renderBlock(itemStack, player, target, context.camera(), poseStack, context.consumers());
         }
         if (ModConfig.Client.enablePaintToolPlacementHighlight && item == ModItems.BLENDING_TOOL.get()) {
-            HighlightPlacementRenderer.renderPaintTool(itemStack, player, target, context.camera(), context.matrixStack(), context.consumers());
+            HighlightPlacementRenderer.renderPaintTool(itemStack, player, target, context.camera(), poseStack, context.consumers());
         }
         return true;
     }
@@ -123,7 +125,7 @@ public class ClientProxyImpl implements ClientModInitializer {
 //            }
 //        }
 
-    public boolean onRenderSpecificFirstPersonHand(PoseStack poseStack, MultiBufferSource buffers, int light, Player player, InteractionHand hand) {
+    public boolean onRenderSpecificFirstPersonHand(PoseStack poseStackIn, MultiBufferSource buffers, int light, Player player, InteractionHand hand) {
         if (!ModConfig.enableFirstPersonSkinRenderer()) {
             return true;
         }
@@ -132,6 +134,7 @@ public class ClientProxyImpl implements ClientModInitializer {
             transformType = ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
         }
         boolean[] flags = {false};
+        IPoseStack poseStack = IPoseStack.of(poseStackIn);
         ClientWardrobeHandler.onRenderSpecificHand(player, 0, light, 0, transformType, poseStack, buffers, () -> {
             flags[0] = true;
         });

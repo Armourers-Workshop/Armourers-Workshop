@@ -1,13 +1,12 @@
 package moe.plushie.armourers_workshop.utils;
 
 import com.apple.library.foundation.NSRange;
+import moe.plushie.armourers_workshop.api.math.IMatrix3f;
+import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.BufferUtils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.nio.FloatBuffer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -43,4 +42,18 @@ public class ObjectUtils {
             consumer.accept(src);
         }
     }
+
+
+    public static void set(IMatrix3f matrixIn, IMatrix3f matrixOut) {
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(9);
+        matrixIn.get(buffer);
+        matrixOut.set(buffer);
+    }
+
+    public static void set(IMatrix4f matrixIn, IMatrix4f matrixOut) {
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+        matrixIn.get(buffer);
+        matrixOut.set(buffer);
+    }
+
 }

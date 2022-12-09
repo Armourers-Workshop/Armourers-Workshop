@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
@@ -82,12 +83,12 @@ public class MannequinItem extends FlavouredItem {
             return InteractionResult.FAIL;
         }
         Level level = context.getLevel();
-        Vec3 origin = new Vec3(player.getX(), player.getY(), player.getZ());
+        Vector3f origin = new Vector3f((float) player.getX(), (float) player.getY(), (float) player.getZ());
         MannequinHitResult rayTraceResult = MannequinHitResult.test(player, origin, context.getClickLocation(), context.getClickedPos());
         ItemStack itemStack = context.getItemInHand();
         if (level instanceof ServerLevel) {
             ServerLevel serverWorld = (ServerLevel) level;
-            MannequinEntity entity = ModEntityTypes.MANNEQUIN.get().create(serverWorld, itemStack.getTag(), null, context.getPlayer(), rayTraceResult.getBlockPos(), MobSpawnType.SPAWN_EGG, true, true);
+            MannequinEntity entity = ModEntityTypes.MANNEQUIN.get().create(serverWorld, itemStack.getTag(), null, rayTraceResult.getBlockPos(), MobSpawnType.SPAWN_EGG, true, true);
             if (entity == null) {
                 return InteractionResult.FAIL;
             }

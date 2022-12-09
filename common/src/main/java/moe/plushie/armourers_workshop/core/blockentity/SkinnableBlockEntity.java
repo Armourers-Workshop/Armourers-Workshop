@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.blockentity;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.math.Quaternion;
 import moe.plushie.armourers_workshop.api.client.IBlockEntityExtendedRenderer;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -13,7 +12,8 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
-import moe.plushie.armourers_workshop.utils.ext.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3d;
@@ -71,7 +71,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     private SkinProperties properties;
     private SkinDescriptor descriptor = SkinDescriptor.EMPTY;
 
-    private Quaternion renderRotations;
+    private OpenQuaternionf renderRotations;
     private AABB renderBoundingBox;
 
     private boolean isDropped = false;
@@ -176,12 +176,12 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public Quaternion getRenderRotations(BlockState blockState) {
+    public OpenQuaternionf getRenderRotations(BlockState blockState) {
         if (renderRotations != null) {
             return renderRotations;
         }
         Vector3f r = getRotations(blockState);
-        renderRotations = TrigUtils.rotate(r.getX(), r.getY(), r.getZ(), true);
+        renderRotations = new OpenQuaternionf(r.getX(), r.getY(), r.getZ(), true);
         return renderRotations;
     }
 

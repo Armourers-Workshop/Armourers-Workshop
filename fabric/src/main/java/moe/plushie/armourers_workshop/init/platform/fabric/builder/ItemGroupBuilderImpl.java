@@ -1,20 +1,25 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
+import moe.plushie.armourers_workshop.api.common.IItemGroup;
+import moe.plushie.armourers_workshop.api.common.IItemGroupProvider;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IItemGroupBuilder;
+import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistries;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class ItemGroupBuilderImpl<T extends CreativeModeTab> implements IItemGroupBuilder<T> {
+public class ItemGroupBuilderImpl<T extends IItemGroup> implements IItemGroupBuilder<T> {
 
     private Supplier<Supplier<ItemStack>> icon = () -> () -> ItemStack.EMPTY;
-    private BiConsumer<List<ItemStack>, CreativeModeTab> appendItems;
 
     public ItemGroupBuilderImpl() {
     }
@@ -26,20 +31,51 @@ public class ItemGroupBuilderImpl<T extends CreativeModeTab> implements IItemGro
     }
 
     @Override
-    public IItemGroupBuilder<T> appendItems(BiConsumer<List<ItemStack>, CreativeModeTab> appendItems) {
-        this.appendItems = appendItems;
-        return this;
+    public IRegistryKey<T> build(String name) {
+        ResourceLocation registryName = ModConstants.key(name);
+        ItemGroup group = new ItemGroup(registryName);
+        ModLog.debug("Registering '{}'", registryName);
+        return new IRegistryKey<T>() {
+            @Override
+            public ResourceLocation getRegistryName() {
+                return registryName;
+            }
+
+            @Override
+            public T get() {
+                return ObjectUtils.unsafeCast(group);
+            }
+        };
     }
 
-    @Override
-    public T build(String name) {
-        return ObjectUtils.unsafeCast(creativeModeTab(name));
-    }
+    public class ItemGroup implements IItemGroup {
 
-    private CreativeModeTab creativeModeTab(String name) {
-        return FabricItemGroupBuilder.create(ModConstants.key(name))
-                .icon(() -> icon.get().get())
-                .appendItems(appendItems)
-                .build();
+        private final CreativeModeTab tab;
+        private final ArrayList<Supplier<Item>> items = new ArrayList<>();
+
+        public ItemGroup(ResourceLocation registryName) {
+            this.tab = AbstractFabricRegistries.registerCreativeModeTab(registryName, icon.get(), this::fill);
+        }
+
+        public void fill(List<ItemStack> results) {
+            for (Supplier<Item> itemProvider : items) {
+                Item item = itemProvider.get();
+                results.add(item.getDefaultInstance());
+                IItemGroupProvider provider = ObjectUtils.safeCast(item, IItemGroupProvider.class);
+                if (provider != null) {
+                    provider.fillItemGroup(results, this);
+                }
+            }
+        }
+
+        @Override
+        public void add(Supplier<Item> item) {
+            items.add(item);
+        }
+
+        @Override
+        public CreativeModeTab get() {
+            return tab;
+        }
     }
 }

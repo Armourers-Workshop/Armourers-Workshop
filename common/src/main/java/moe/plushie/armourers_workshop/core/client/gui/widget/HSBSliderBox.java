@@ -4,11 +4,11 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.impl.AppearanceImpl;
+import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIImage;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.apple.library.uikit.UIColor;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -59,7 +59,7 @@ public class HSBSliderBox extends UIControl {
         super.render(point, context);
         CGRect bounds = bounds();
         CGRect fixedBounds = bounds.insetBy(1, 1, 1, 1);
-        PoseStack matrixStack = context.poseStack;
+        IPoseStack matrixStack = context.poseStack;
         context.drawImage(backgroundImage, bounds);
         // TODO: Refactoring
         int cx = fixedBounds.x;

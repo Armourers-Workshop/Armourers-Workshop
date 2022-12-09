@@ -20,6 +20,6 @@ public class SkinResourceLocation extends ResourceLocation {
 
     @Override
     public String toString() {
-        return this.namespace + ':' + this.realPath;
+        return this.getNamespace() + ':' + this.realPath;
     }
 }

@@ -2,10 +2,7 @@ package moe.plushie.armourers_workshop.init.platform;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
-import moe.plushie.armourers_workshop.api.common.IArgumentType;
-import moe.plushie.armourers_workshop.api.common.IBlockEntitySupplier;
-import moe.plushie.armourers_workshop.api.common.IMenuProvider;
-import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
+import moe.plushie.armourers_workshop.api.common.*;
 import moe.plushie.armourers_workshop.api.common.builder.*;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import net.minecraft.world.entity.Entity;
@@ -36,7 +33,7 @@ public class BuilderManager {
 
         <T extends Item> IItemTagBuilder<T> createItemTagBuilder();
 
-        <T extends CreativeModeTab> IItemGroupBuilder<T> createItemGroupBuilder();
+        <T extends IItemGroup> IItemGroupBuilder<T> createItemGroupBuilder();
 
         <T extends Block> IBlockBuilder<T> createBlockBuilder(Function<BlockBehaviour.Properties, T> supplier, Material material, MaterialColor materialColor);
 

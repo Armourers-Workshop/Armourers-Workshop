@@ -7,7 +7,6 @@ import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
 import com.google.gson.JsonObject;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
@@ -117,7 +116,7 @@ public class SkinItemList extends UIView {
         int width = rect.width;
         int height = rect.height;
         if ((backgroundColor & 0xff000000) != 0) {
-            Screen.fill(context.poseStack, x, y, x + width, y + height, backgroundColor);
+            Screen.fill(context.poseStack.cast(), x, y, x + width, y + height, backgroundColor);
         }
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         for (int i = 0; i < totalCount; ++i) {
@@ -148,8 +147,8 @@ public class SkinItemList extends UIView {
         if (!RenderSystem.inScissorRect(clipBox)) {
             return;
         }
-        renderItemBackground(context.poseStack, ix, iy, iw, ih, isHovered, entry);
-        renderItemContent(context.poseStack, ix, iy, iw, ih, isHovered, entry, buffers);
+        renderItemBackground(ix, iy, iw, ih, isHovered, entry, context);
+        renderItemContent(ix, iy, iw, ih, isHovered, entry, buffers, context);
         if (isHovered) {
             RenderSystem.addClipRect(clipBox.insetBy(1, 1, 1, 1));
             buffers.endBatch();
@@ -157,7 +156,7 @@ public class SkinItemList extends UIView {
         }
     }
 
-    public void renderItemContent(PoseStack matrixStack, int x, int y, int width, int height, boolean isHovered, Entry entry, MultiBufferSource buffers) {
+    public void renderItemContent(int x, int y, int width, int height, boolean isHovered, Entry entry, MultiBufferSource buffers, CGGraphicsContext context) {
         BakedSkin bakedSkin = BakedSkin.of(entry.descriptor);
         if (bakedSkin == null) {
             int speed = 60;
@@ -166,7 +165,7 @@ public class SkinItemList extends UIView {
             int frame = (int) ((System.currentTimeMillis() / speed) % frames);
             int u = MathUtils.floor(frame / 9f);
             int v = frame - u * 9;
-            RenderSystem.resize(matrixStack, x + 8, y + 8, u * 28, v * 28, width - 16, height - 16, 27, 27, ModTextures.SKIN_PANEL);
+            RenderSystem.resize(context.poseStack, x + 8, y + 8, u * 28, v * 28, width - 16, height - 16, 27, 27, ModTextures.SKIN_PANEL);
             return;
         }
         Skin skin = bakedSkin.getSkin();
@@ -174,12 +173,12 @@ public class SkinItemList extends UIView {
             String name = entry.name;
             List<FormattedText> properties = font.getSplitter().splitLines(name, width - 2, Style.EMPTY);
             int iy = y + height - properties.size() * font.lineHeight - 2;
-            RenderSystem.drawText(matrixStack, font, properties, x + 1, iy, width - 2, 0, false, 9, 0xffeeeeee);
+            RenderSystem.drawText(context.poseStack, font, properties, x + 1, iy, width - 2, 0, false, 9, 0xffeeeeee);
         }
 
         ResourceLocation texture = ArmourersWorkshop.getItemIcon(skin.getType());
         if (texture != null) {
-            RenderSystem.resize(matrixStack, x + 1, y + 1, 0, 0, width / 4, height / 4, 16, 16, 16, 16, texture);
+            RenderSystem.resize(context.poseStack, x + 1, y + 1, 0, 0, width / 4, height / 4, 16, 16, 16, 16, texture);
         }
 
         int dx = x + width / 2, dy = y + height / 2, dw = width, dh = height;
@@ -188,10 +187,10 @@ public class SkinItemList extends UIView {
             dh *= 1.5f;
         }
 
-        ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx - dw / 2, dy - dw / 2, 100, dw, dh, 20, 45, 0, matrixStack, buffers);
+        ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx - dw / 2, dy - dw / 2, 100, dw, dh, 20, 45, 0, 0, 0xf000f0, context.poseStack, buffers);
     }
 
-    public void renderItemBackground(PoseStack matrixStack, int x, int y, int width, int height, boolean isHovered, Entry entry) {
+    public void renderItemBackground(int x, int y, int width, int height, boolean isHovered, Entry entry, CGGraphicsContext context) {
         int backgroundColour = 0x22AAAAAA;
         int borderColour = 0x22FFFFFF;
 
@@ -200,12 +199,12 @@ public class SkinItemList extends UIView {
             borderColour = 0xCC888811;
         }
 
-        Screen.fill(matrixStack, x, y, x + width, y + height, backgroundColour);
+        Screen.fill(context.poseStack.cast(), x, y, x + width, y + height, backgroundColour);
 
-        Screen.fill(matrixStack, x, y + 1, x + 1, y + height, borderColour);
-        Screen.fill(matrixStack, x, y, x + width - 1, y + 1, borderColour);
-        Screen.fill(matrixStack, x + 1, y + height - 1, x + width, y + height, borderColour);
-        Screen.fill(matrixStack, x + width - 1, y, x + width, y + height - 1, borderColour);
+        Screen.fill(context.poseStack.cast(), x, y + 1, x + 1, y + height, borderColour);
+        Screen.fill(context.poseStack.cast(), x, y, x + width - 1, y + 1, borderColour);
+        Screen.fill(context.poseStack.cast(), x + 1, y + height - 1, x + width, y + height, borderColour);
+        Screen.fill(context.poseStack.cast(), x + width - 1, y, x + width, y + height - 1, borderColour);
 
         RenderSystem.enableAlphaTest();
     }

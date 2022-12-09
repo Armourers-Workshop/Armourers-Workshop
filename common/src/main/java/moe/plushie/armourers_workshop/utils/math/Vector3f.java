@@ -1,12 +1,10 @@
 package moe.plushie.armourers_workshop.utils.math;
 
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Quaternion;
 import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
+import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
-import moe.plushie.armourers_workshop.utils.ext.OpenMatrix3f;
 import net.minecraft.core.Position;
 
 @SuppressWarnings("unused")
@@ -181,16 +179,16 @@ public final class Vector3f implements IVector3f, Position {
         this.z = f * f4 - f1 * f3;
     }
 
-    public void transform(Matrix3f mat) {
+    public void transform(IMatrix3f mat) {
         float[] floats = {x, y, z};
-        OpenMatrix3f.of(mat).multiply(floats);
+        mat.multiply(floats);
         set(floats[0], floats[1], floats[2]);
     }
 
-    public void transform(Quaternion value) {
-        Quaternion quaternion = new Quaternion(value);
-        quaternion.mul(new Quaternion(x, y, z, 0.0F));
-        Quaternion quaternion1 = new Quaternion(value);
+    public void transform(OpenQuaternionf value) {
+        OpenQuaternionf quaternion = new OpenQuaternionf(value);
+        quaternion.mul(new OpenQuaternionf(x, y, z, 0.0F));
+        OpenQuaternionf quaternion1 = new OpenQuaternionf(value);
         quaternion1.conj();
         quaternion.mul(quaternion1);
         set(quaternion.i(), quaternion.j(), quaternion.k());
@@ -203,12 +201,12 @@ public final class Vector3f implements IVector3f, Position {
         this.z = this.z * f1 + vec.z * f;
     }
 
-    public Quaternion rotation(float f) {
-        return TrigUtils.rotate(this, f, false);
+    public OpenQuaternionf rotation(float f) {
+        return new OpenQuaternionf(this, f, false);
     }
 
-    public Quaternion rotationDegrees(float f) {
-        return TrigUtils.rotate(this, f, true);
+    public OpenQuaternionf rotationDegrees(float f) {
+        return new OpenQuaternionf(this, f, true);
     }
 
     public Vector3f copy() {

@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.item;
 
+import moe.plushie.armourers_workshop.api.common.IItemGroup;
+import moe.plushie.armourers_workshop.api.common.IItemGroupProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.core.holiday.Holiday;
 import moe.plushie.armourers_workshop.init.ModHolidays;
@@ -7,16 +9,16 @@ import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class GiftSackItem extends FlavouredItem implements IItemTintColorProvider {
+import java.util.List;
+
+public class GiftSackItem extends FlavouredItem implements IItemGroupProvider, IItemTintColorProvider {
 
     public GiftSackItem(Properties properties) {
         super(properties);
@@ -71,14 +73,11 @@ public class GiftSackItem extends FlavouredItem implements IItemTintColorProvide
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab creativeModeTab, NonNullList<ItemStack> nonNullList) {
-        super.fillItemCategory(creativeModeTab, nonNullList);
+    public void fillItemGroup(List<ItemStack> results, IItemGroup group) {
         // add all the gifts into creative inventory
-        if (this.allowedIn(creativeModeTab)) {
-            for (Holiday holiday : ModHolidays.getHolidays()) {
-                if (holiday.getHandler() != null) {
-                    nonNullList.add(of(holiday));
-                }
+        for (Holiday holiday : ModHolidays.getHolidays()) {
+            if (holiday.getHandler() != null) {
+                results.add(of(holiday));
             }
         }
     }

@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.data;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -24,7 +24,7 @@ public class DataLoader<K, V> {
         this.loader = loader;
     }
 
-    @Nonnull
+    @NotNull
     public static <K, V> Builder<K, V> newBuilder() {
         return new Builder<>();
     }
@@ -131,7 +131,7 @@ public class DataLoader<K, V> {
             return this;
         }
 
-        @Nonnull
+        @NotNull
         public <K1 extends K, V1 extends V> DataLoader<K1, V1> build(BiConsumer<K1, Consumer<Optional<V1>>> loader) {
             return new DataLoader<>(executor, loader);
         }

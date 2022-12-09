@@ -128,7 +128,7 @@ public class CommonProxyImpl implements ModInitializer {
         if (handler != null && handler.isCustomBed(level, sleepingPos, state, entity)) {
             level.setBlock(sleepingPos, state.setValue(BedBlock.OCCUPIED, false), 3);
             float yRot = entity.getYRot();
-            Vec3 vector3d1 = BedBlock.findStandUpPosition(entity.getType(), level, sleepingPos, yRot).orElseGet(() -> {
+            Vec3 vector3d1 = BedBlock.findStandUpPosition(entity.getType(), level, sleepingPos, Direction.UP, yRot).orElseGet(() -> {
                 BlockPos blockpos = sleepingPos.above();
                 return new Vec3((double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.1D, (double) blockpos.getZ() + 0.5D);
             });

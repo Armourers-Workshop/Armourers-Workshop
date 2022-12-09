@@ -1,15 +1,14 @@
 package moe.plushie.armourers_workshop.utils;
 
-import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModConfig;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -85,7 +84,7 @@ public final class SkinUtils {
 //        return null;
 //    }
 
-//    public static void apply(OpenPoseStack matrixStack, SkinPart skinPart, float partialTicks, @Nullable Entity entity) {
+//    public static void apply(IPoseStack matrixStack, SkinPart skinPart, float partialTicks, @Nullable Entity entity) {
 //        ISkinPartType partType = skinPart.getType();
 //        if (!(partType instanceof ICanRotation)) {
 //            return;
@@ -256,7 +255,7 @@ public final class SkinUtils {
     }
 
 
-    public static VoxelShape apply(VoxelShape shape, Matrix4f matrix) {
+    public static VoxelShape apply(VoxelShape shape, OpenMatrix4f matrix) {
         float minX = (float) shape.min(Direction.Axis.X);
         float minY = (float) shape.min(Direction.Axis.Y);
         float minZ = (float) shape.min(Direction.Axis.Z);

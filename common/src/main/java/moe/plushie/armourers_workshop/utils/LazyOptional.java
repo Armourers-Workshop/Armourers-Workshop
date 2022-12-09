@@ -5,9 +5,9 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -34,7 +34,7 @@ import java.util.function.Supplier;
  */
 public class LazyOptional<T> {
 
-    private static final @Nonnull
+    private static final @NotNull
     LazyOptional<Void> EMPTY = new LazyOptional<>(null);
     private static final Logger LOGGER = LogManager.getLogger();
     private final Supplier<T> supplier;

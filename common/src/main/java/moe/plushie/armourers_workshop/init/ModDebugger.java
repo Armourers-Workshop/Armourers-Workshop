@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -52,17 +52,17 @@ public class ModDebugger {
     public static boolean sortOrderToolTip;
 
     @Environment(value = EnvType.CLIENT)
-    public static void rotate(PoseStack matrixStack) {
-        matrixStack.mulPose(new Quaternion(rx, ry, rz, true));
+    public static void rotate(IPoseStack matrixStack) {
+        matrixStack.rotate(new OpenQuaternionf(rx, ry, rz, true));
     }
 
     @Environment(value = EnvType.CLIENT)
-    public static void scale(PoseStack matrixStack) {
+    public static void scale(IPoseStack matrixStack) {
         matrixStack.scale(sx, sy, sz);
     }
 
     @Environment(value = EnvType.CLIENT)
-    public static void translate(PoseStack matrixStack) {
+    public static void translate(IPoseStack matrixStack) {
         matrixStack.translate(tx, ty, tz);
     }
 

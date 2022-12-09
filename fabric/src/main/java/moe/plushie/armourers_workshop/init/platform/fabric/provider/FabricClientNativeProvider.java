@@ -9,10 +9,8 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.InventoryMenu;
 
 import java.util.function.Consumer;
 
@@ -23,23 +21,9 @@ public interface FabricClientNativeProvider extends ClientNativeProvider {
         consumer.accept((provider, element) -> ColorProviderRegistry.ITEM.register(provider::getTintColor, element));
     }
 
-//    @Override
-//    default void willRegisterItemProperty(Consumer<ItemPropertyRegistry> consumer) {
-//        consumer.accept((registryName, item, property) -> ItemProperties.register(item, registryName, property::getValue));
-//    }
-
     @Override
     default void willRegisterBlockColor(Consumer<BlockColorRegistry> consumer) {
         consumer.accept((provider, element) -> ColorProviderRegistry.BLOCK.register(provider::getTintColor, element));
-    }
-
-    @Override
-    default void willRegisterTexture(Consumer<TextureRegistry> consumer) {
-        ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register((atlas, registry) -> {
-            if (atlas.location().equals(InventoryMenu.BLOCK_ATLAS)) {
-                consumer.accept(registry::register);
-            }
-        });
     }
 
     @Override

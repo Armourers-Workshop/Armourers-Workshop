@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideDataProvider;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideRenderer;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
@@ -12,10 +13,10 @@ import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRendererManager;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
+import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinDynamicTexture;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -46,7 +47,8 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
     }
 
     @Override
-    public void render(T entity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int light, int overlay) {
+        IPoseStack poseStack = IPoseStack.of(poseStackIn);
         ISkinType skinType = entity.getSkinType();
         ISkinProperties skinProperties = entity.getSkinProperties();
 
@@ -67,9 +69,9 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
         boolean isShowHelper = entity.isShowHelper();
         boolean isUsesHelper = entity.usesHelper();
 
-        matrixStack.pushPose();
-        transform(matrixStack, entity);
-        matrixStack.scale(-1, -1, 1);
+        poseStack.pushPose();
+        transform(poseStack, entity);
+        poseStack.scale(-1, -1, 1);
 
         float polygonOffset = 0f;
         for (ISkinPartType partType : skinType.getParts()) {
@@ -101,45 +103,45 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
                 isOverlayOverridden = true;
             }
 
-            matrixStack.pushPose();
-            matrixStack.translate(origin.getX(), origin.getY() + rect.getMinY(), origin.getZ());
-            matrixStack.translate(polygonOffset, polygonOffset, polygonOffset);
+            poseStack.pushPose();
+            poseStack.translate(origin.getX(), origin.getY() + rect.getMinY(), origin.getZ());
+            poseStack.translate(polygonOffset, polygonOffset, polygonOffset);
 
             // render guide model
             if (!isModelOverridden) {
                 IGuideRenderer guideRenderer = rendererManager.getRenderer(partType);
                 if (guideRenderer != null) {
-                    matrixStack.pushPose();
-                    matrixStack.translate(0, -rect2.getMinY(), 0);
-                    matrixStack.scale(16, 16, 16);
+                    poseStack.pushPose();
+                    poseStack.translate(0, -rect2.getMinY(), 0);
+                    poseStack.scale(16, 16, 16);
                     renderData.shouldRenderOverlay = !isOverlayOverridden;
-                    guideRenderer.render(matrixStack, renderData, 0xf000f0, OverlayTexture.NO_OVERLAY, buffers);
-                    matrixStack.popPose();
+                    guideRenderer.render(poseStack, renderData, 0xf000f0, OverlayTexture.NO_OVERLAY, buffers);
+                    poseStack.popPose();
                 }
             }
 
-            matrixStack.scale(-1, -1, 1);
+            poseStack.scale(-1, -1, 1);
 
             // render building grid
             if (isShowGuides) {
-                RenderSystem.drawCube(matrixStack, rect, r, g, b, a, buffers);
-                RenderSystem.drawCube(matrixStack, originBox, 0, 1, 0, 0.5f, buffers);
+                RenderSystem.drawCube(poseStack, rect, r, g, b, a, buffers);
+                RenderSystem.drawCube(poseStack, originBox, 0, 1, 0, 0.5f, buffers);
             }
             // render guide grid
             if (isShowModelGuides && isModelOverridden) {
-                RenderSystem.drawCube(matrixStack, rect2, 0, 0, 1, 0.25f, buffers);
+                RenderSystem.drawCube(poseStack, rect2, 0, 0, 1, 0.25f, buffers);
             }
 
-            matrixStack.popPose();
+            poseStack.popPose();
             polygonOffset += 0.001f;
         }
-        matrixStack.popPose();
+        poseStack.popPose();
         override.setBuffers(null);
     }
 
-    public void transform(PoseStack matrixStack, T entity) {
+    public void transform(IPoseStack matrixStack, T entity) {
         matrixStack.translate(0, 1, 0); // apply height offset
-        matrixStack.mulPose(CubeTransform.getRotationDegrees(entity.getFacing())); // apply facing rotation
+        matrixStack.rotate(CubeTransform.getRotationDegrees(entity.getFacing())); // apply facing rotation
     }
 
     @Override

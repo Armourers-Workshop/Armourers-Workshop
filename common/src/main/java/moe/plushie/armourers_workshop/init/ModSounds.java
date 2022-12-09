@@ -16,7 +16,7 @@ public class ModSounds {
     public static final IRegistryKey<SoundEvent> BOI = register("boi");
 
     private static IRegistryKey<SoundEvent> register(String name) {
-        return Registry.SOUND_EVENT.register(name, () -> new SoundEvent(ModConstants.key(name)));
+        return Registry.SOUND_EVENT.register(name, () -> SoundEvent.createVariableRangeEvent(ModConstants.key(name)));
     }
 
     public static void init() {

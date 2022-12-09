@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
+import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.common.IItemStackRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
@@ -8,7 +9,6 @@ import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
@@ -20,6 +20,7 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
 
     private Item.Properties properties = new FabricItemSettings();
     private Supplier<Consumer<T>> binder;
+    private IRegistryKey<IItemGroup> group;
     private final Function<Item.Properties, T> supplier;
 
     public ItemBuilderImpl(Function<Item.Properties, T> supplier) {
@@ -51,8 +52,8 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
     }
 
     @Override
-    public IItemBuilder<T> tab(CreativeModeTab creativeModeTab) {
-        this.properties = properties.tab(creativeModeTab);
+    public IItemBuilder<T> group(IRegistryKey<IItemGroup> group) {
+        this.group = group;
         return this;
     }
 
@@ -80,6 +81,9 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
     @Override
     public IRegistryKey<T> build(String name) {
         IRegistryKey<T> object = Registry.ITEM.register(name, () -> supplier.apply(properties));
+        if (group != null) {
+            group.get().add(object::get);
+        }
         EnvironmentExecutor.didInit(EnvironmentType.CLIENT, binder, object);
         return object;
     }

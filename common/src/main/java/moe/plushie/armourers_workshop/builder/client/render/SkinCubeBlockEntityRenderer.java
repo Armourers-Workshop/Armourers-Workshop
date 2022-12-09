@@ -2,12 +2,13 @@ package moe.plushie.armourers_workshop.builder.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
+import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedFaceRenderer;
 import moe.plushie.armourers_workshop.init.ModItems;
 import net.fabricmc.api.EnvType;
@@ -70,6 +71,7 @@ public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> ext
         if (!(markerAlpha > 0)) {
             return;
         }
+        IPoseStack poseStack = IPoseStack.of(matrixStack);
         int alpha = (int) (markerAlpha * 255);
         VertexConsumer builder = buffers.getBuffer(SkinRenderType.IMAGE_MARKER);
         for (Direction direction : Direction.values()) {
@@ -77,7 +79,7 @@ public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> ext
                 continue;
             }
             IPaintColor paintColor = entity.getColor(direction);
-            ExtendedFaceRenderer.renderMarker(0, 0, 0, direction, paintColor, alpha, light, overlay, matrixStack, builder);
+            ExtendedFaceRenderer.renderMarker(0, 0, 0, direction, paintColor, alpha, light, overlay, poseStack, builder);
         }
     }
 }

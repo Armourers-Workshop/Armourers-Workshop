@@ -4,7 +4,6 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIView;
 import com.apple.library.uikit.UIWindow;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -74,7 +73,6 @@ public class WindowManagerImpl {
     }
 
     public void render(CGGraphicsContext context, RenderInvoker foreground, RenderInvoker background, RenderInvoker overlay) {
-        PoseStack poseStack = context.poseStack;
         float partialTicks = context.partialTicks;
         int mouseX = context.mouseX;
         int mouseY = context.mouseY;
@@ -88,13 +86,13 @@ public class WindowManagerImpl {
         for (WindowDispatcherImpl dispatcher : dispatchers) {
             dispatcher.render(context);
             if (dispatcher == WindowDispatcherImpl.BACKGROUND) {
-                background.invoke(poseStack, mouseX, mouseY, partialTicks);
+                background.invoke(mouseX, mouseY, partialTicks, context);
             }
             if (dispatcher == WindowDispatcherImpl.FOREGROUND) {
-                foreground.invoke(poseStack, mouseX, mouseY, partialTicks);
+                foreground.invoke(mouseX, mouseY, partialTicks, context);
             }
             if (dispatcher == WindowDispatcherImpl.OVERLAY) {
-                overlay.invoke(poseStack, mouseX, mouseY, partialTicks);
+                overlay.invoke(mouseX, mouseY, partialTicks, context);
                 renderTooltip(tooltipResponder, context);
             }
         }
@@ -175,7 +173,7 @@ public class WindowManagerImpl {
 
     @FunctionalInterface
     public interface RenderInvoker {
-        void invoke(PoseStack poseStack, int mouseX, int mouseY, float partialTicks);
+        void invoke(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context);
     }
 
     public static class Queue<T extends WindowDispatcherImpl> implements Iterable<T> {

@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.core.skin.transform;
 
 import moe.plushie.armourers_workshop.api.action.ICanRotation;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -55,12 +55,12 @@ public class SkinWingsTransform extends SkinTransform {
     }
 
     @Override
-    public void pre(OpenPoseStack poseStack) {
+    public void pre(IPoseStack poseStack) {
         transform.pre(poseStack);
     }
 
     @Override
-    public void post(OpenPoseStack matrixStack) {
+    public void post(IPoseStack poseStack) {
         IVector3i point = marker.getPosition();
         float angle = (float) getRotationDegrees();
         Vector3f offset = new Vector3f(point.getX() + 0.5f, point.getY() + 0.5f, point.getZ() + 0.5f);
@@ -68,11 +68,11 @@ public class SkinWingsTransform extends SkinTransform {
             angle = -angle;
         }
 
-        matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
-        matrixStack.mulPose(getRotationMatrix().rotationDegrees(angle));
-        matrixStack.translate(-offset.getX(), -offset.getY(), -offset.getZ());
+        poseStack.translate(offset.getX(), offset.getY(), offset.getZ());
+        poseStack.rotate(getRotationMatrix().rotationDegrees(angle));
+        poseStack.translate(-offset.getX(), -offset.getY(), -offset.getZ());
 
-        transform.post(matrixStack);
+        transform.post(poseStack);
     }
 
     private double getRotationDegrees() {

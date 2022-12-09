@@ -22,15 +22,15 @@ import java.util.LinkedHashSet;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public class RegistryManagerImpl extends AbstractForgeRegistries {
+public class RegistryManagerImpl {
 
     private static final ImmutableMap<Class<?>, Registry<?>> REGISTRIES = new ImmutableMap.Builder<Class<?>, Registry<?>>()
-            .put(Block.class, new RegistryProxy<>("blocks", wrap(BLOCKS)))
-            .put(Item.class, new RegistryProxy<>("items", wrap(ITEMS)))
-            .put(MenuType.class, new RegistryProxy<>("menuTypes", wrap(MENU_TYPES)))
-            .put(EntityType.class, new RegistryProxy<>("entityTypes", wrap(ENTITY_TYPES)))
-            .put(BlockEntityType.class, new RegistryProxy<>("blockEntityTypes", wrap(BLOCK_ENTITY_TYPES)))
-            .put(SoundEvent.class, new RegistryProxy<>("soundEvents", wrap(SOUND_EVENTS)))
+            .put(Block.class, new RegistryProxy<>("blocks", AbstractForgeRegistries.BLOCKS))
+            .put(Item.class, new RegistryProxy<>("items", AbstractForgeRegistries.ITEMS))
+            .put(MenuType.class, new RegistryProxy<>("menuTypes", AbstractForgeRegistries.MENU_TYPES))
+            .put(EntityType.class, new RegistryProxy<>("entityTypes", AbstractForgeRegistries.ENTITY_TYPES))
+            .put(BlockEntityType.class, new RegistryProxy<>("blockEntityTypes", AbstractForgeRegistries.BLOCK_ENTITY_TYPES))
+            .put(SoundEvent.class, new RegistryProxy<>("soundEvents", AbstractForgeRegistries.SOUND_EVENTS))
             .build();
 
     public static <T> Registry<T> makeRegistry(Class<? super T> clazz) {

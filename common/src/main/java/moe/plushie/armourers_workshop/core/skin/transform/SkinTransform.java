@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.transform;
 
-import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,14 +12,14 @@ public class SkinTransform {
     public void setup(float partialTicks, @Nullable Entity entity) {
     }
 
-    public void apply(OpenPoseStack poseStack) {
+    public void apply(IPoseStack poseStack) {
         pre(poseStack);
         post(poseStack);
     }
 
-    public void pre(OpenPoseStack poseStack) {
+    public void pre(IPoseStack poseStack) {
     }
 
-    public void post(OpenPoseStack poseStack) {
+    public void post(IPoseStack poseStack) {
     }
 }

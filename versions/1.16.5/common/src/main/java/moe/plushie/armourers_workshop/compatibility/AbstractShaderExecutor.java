@@ -1,14 +1,21 @@
 package moe.plushie.armourers_workshop.compatibility;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.client.IRenderBufferObject;
+import moe.plushie.armourers_workshop.api.math.IMatrix4f;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.renderer.RenderType;
+import org.lwjgl.BufferUtils;
+
+import java.nio.FloatBuffer;
 
 public class AbstractShaderExecutor {
 
     private static final AbstractShaderExecutor INSTANCE = new AbstractShaderExecutor();
+
 
     private int maxVertexCount = 0;
     private int defaultVertexLight = 0;
@@ -46,10 +53,11 @@ public class AbstractShaderExecutor {
         object.bind();
         vertexFormat.setupBufferState(vertexOffset);
 
-        RenderSystem.pushMatrix();
-        RenderSystem.multMatrix(RenderSystem.getExtendedModelViewMatrix());
+        IPoseStack modelViewStack = RenderSystem.getExtendedModelViewStack();
+        modelViewStack.pushPose();
+        modelViewStack.multiply(RenderSystem.getExtendedModelViewMatrix());
         RenderSystem.drawArrays(renderType.mode(), 0, vertexCount);
-        RenderSystem.popMatrix();
+        modelViewStack.popPose();
 
         vertexFormat.clearBufferState();
 

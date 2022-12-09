@@ -5,12 +5,10 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIEvent;
-import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.compatibility.AbstractRenderPoseStack;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.render.MannequinEntityRenderer;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -36,21 +34,21 @@ public class EntityPreviewView extends UIControl {
         }
         CGRect bounds = bounds();
         CGPoint pos = convertPointToView(new CGPoint(bounds.width / 2, bounds.height - 8), null);
-        AbstractRenderPoseStack modelViewStack = RenderSystem.getExtendedModelViewStack();
+        IPoseStack modelViewStack = RenderSystem.getExtendedModelViewStack();
         modelViewStack.pushPose();
         modelViewStack.translate(0, 0, 300);
         modelViewStack.translate(pos.x, pos.y, 50);
-        modelViewStack.mulPose(Vector3f.XP.rotationDegrees(-20));
-        modelViewStack.mulPose(Vector3f.YP.rotationDegrees(playerRotation));
+        modelViewStack.rotate(Vector3f.XP.rotationDegrees(-20));
+        modelViewStack.rotate(Vector3f.YP.rotationDegrees(playerRotation));
         modelViewStack.translate(0, 0, -50);
-        modelViewStack.apply();
+        RenderSystem.applyModelViewMatrix();
 
         MannequinEntityRenderer.enableLimitScale = true;
         InventoryScreen.renderEntityInInventory(0, 0, 45, 0, 0, entity);
         MannequinEntityRenderer.enableLimitScale = false;
 
         modelViewStack.popPose();
-        modelViewStack.apply();
+        RenderSystem.applyModelViewMatrix();
     }
 
     @Override

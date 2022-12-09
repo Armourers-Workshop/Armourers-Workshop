@@ -13,8 +13,8 @@ public class BukkitAddon {
     }
 
     public static void register(String category, ResourceLocation registryName, ToIntFunction<ResourceLocation> provider) {
-        EnvironmentExecutor.didSetup(EnvironmentType.COMMON, () -> () -> {
-            ModLog.debug("{} => {} => {}", category, registryName, provider.applyAsInt(registryName));
-        });
+//        EnvironmentExecutor.didSetup(EnvironmentType.COMMON, () -> () -> {
+//            ModLog.debug("{} => {} => {}", category, registryName, provider.applyAsInt(registryName));
+//        });
     }
 }

@@ -1,11 +1,10 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
 import com.google.common.collect.Range;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -22,12 +21,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
-import moe.plushie.armourers_workshop.utils.TrigUtils;
-import moe.plushie.armourers_workshop.utils.ext.OpenVoxelShape;
-import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
-import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
-import moe.plushie.armourers_workshop.utils.math.Vector4f;
+import moe.plushie.armourers_workshop.utils.math.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.Model;
@@ -140,10 +134,10 @@ public class BakedSkin implements IBakedSkin {
             SkinCache.returnKey(key);
             return bounds;
         }
-        Matrix4f matrix = Matrix4f.createScaleMatrix(1, 1, 1);
+        OpenMatrix4f matrix = OpenMatrix4f.createScaleMatrix(1, 1, 1);
         OpenVoxelShape shape = getRenderShape(entity, model, itemStack, ItemTransforms.TransformType.NONE);
         if (rotation != null) {
-            matrix.multiply(TrigUtils.rotate(rotation.getX(), rotation.getY(), rotation.getZ(), true));
+            matrix.rotate(new OpenQuaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), true));
             shape.mul(matrix);
         }
         bounds = shape.bounds().copy();
@@ -168,7 +162,7 @@ public class BakedSkin implements IBakedSkin {
     }
 
     public <T extends Entity, V extends Model, M extends IModelHolder<V>> OpenVoxelShape getRenderShape(T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, SkinRenderer<T, V, M> renderer) {
-        PoseStack matrixStack = new PoseStack();
+        IPoseStack matrixStack = IPoseStack.newClientInstance();
         OpenVoxelShape shape = OpenVoxelShape.empty();
         SkinRenderContext context = new SkinRenderContext();
         context.setup(0, 0, transformType, matrixStack, null);
@@ -182,11 +176,11 @@ public class BakedSkin implements IBakedSkin {
         if (!renderer.prepare(entity, model, this, part, itemStack, context.transformType)) {
             return;
         }
-        PoseStack matrixStack = context.poseStack;
+        IPoseStack matrixStack = context.poseStack;
         OpenVoxelShape shape1 = part.getRenderShape().copy();
         matrixStack.pushPose();
         renderer.apply(entity, model, itemStack, part, this, context);
-        shape1.mul(matrixStack.last().pose());
+        shape1.mul(matrixStack.lastPose());
         shape.add(shape1);
         for (BakedSkinPart childPart : part.getChildren()) {
             addRenderShape(entity, model, itemStack, childPart, shape, context, renderer);

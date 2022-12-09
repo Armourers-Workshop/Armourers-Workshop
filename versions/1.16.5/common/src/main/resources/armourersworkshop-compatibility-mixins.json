@@ -3,6 +3,9 @@
   "package": "moe.plushie.armourers_workshop.compatibility.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
+    "AbstractMatrix3fMixin",
+    "AbstractMatrix4fMixin",
+    "AbstractPoseStackMixin",
     "AbstractRenderStateMixin"
   ],
   "mixins": [

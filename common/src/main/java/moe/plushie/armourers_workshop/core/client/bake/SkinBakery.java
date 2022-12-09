@@ -16,9 +16,9 @@ import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
@@ -48,7 +48,7 @@ public final class SkinBakery {
 //        FMLCommonHandler.instance().bus().register(this);
     }
 
-    @Nonnull
+    @NotNull
     public static SkinBakery getInstance() {
         return Objects.requireNonNull(BAKERY, "bakery not start");
     }
