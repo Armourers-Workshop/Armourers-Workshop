@@ -59,7 +59,7 @@ public interface CommonNativeProviderExt_V1920 extends CommonNativeProvider, Com
 
         @Override
         public void serializeToNetwork(Template<A> template, FriendlyByteBuf friendlyByteBuf) {
-            template.serializer.serializeToNetwork(template.instance, friendlyByteBuf);
+            serializer.serializeToNetwork(template.instance, friendlyByteBuf);
         }
 
         @Override
@@ -69,22 +69,22 @@ public interface CommonNativeProviderExt_V1920 extends CommonNativeProvider, Com
 
         @Override
         public void serializeToJson(Template<A> template, JsonObject jsonObject) {
-            template.serializer.serializeToJson(template.instance, jsonObject);
+            serializer.serializeToJson(template.instance, jsonObject);
         }
 
         @Override
         public Template<A> unpack(A argumentType) {
-            return new Template<>(argumentType, serializer);
+            return new Template<>(argumentType, this);
         }
 
         public static class Template<A extends IArgumentType<?>> implements ArgumentTypeInfo.Template<A> {
 
             private final A instance;
-            private final IArgumentSerializer<A> serializer;
+            private final ArgumentTypeInfo1920<A> argumentType;
 
-            public Template(A instance, IArgumentSerializer<A> serializer) {
+            public Template(A instance, ArgumentTypeInfo1920<A> argumentType) {
                 this.instance = instance;
-                this.serializer = serializer;
+                this.argumentType = argumentType;
             }
 
             @Override
@@ -94,7 +94,7 @@ public interface CommonNativeProviderExt_V1920 extends CommonNativeProvider, Com
 
             @Override
             public ArgumentTypeInfo<A, ?> type() {
-                return new ArgumentTypeInfo1920<>(serializer);
+                return argumentType;
             }
         }
     }
