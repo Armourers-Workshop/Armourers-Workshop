@@ -206,7 +206,7 @@ public class ModConfigSpec {
     public static void init() {
         EnvironmentExecutor.didSetup(EnvironmentType.COMMON, () -> () -> {
             // when the server config is changes, we need to synchronize it again.
-            if (EnvironmentManager.isDedicatedServer()) {
+            if (EnvironmentManager.getServer() != null && EnvironmentManager.isDedicatedServer()) {
                 COMMON.notify(() -> NetworkManager.sendToAll(new UpdateContextPacket()));
             }
         });

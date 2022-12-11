@@ -78,10 +78,10 @@ public class AbstractFabricRegistries {
         };
     }
 
-    public static CreativeModeTab registerCreativeModeTab(ResourceLocation registryName, Supplier<ItemStack> icon, Consumer<List<ItemStack>> consumer) {
+    public static CreativeModeTab registerCreativeModeTab(ResourceLocation registryName, Supplier<Supplier<ItemStack>> icon, Consumer<List<ItemStack>> consumer) {
         return FabricItemGroup.builder(registryName)
                 .title(Component.translatable("itemGroup." + registryName.getNamespace() + "." + registryName.getPath()))
-                .icon(icon)
+                .icon(() -> icon.get().get())
                 .displayItems((set, out, bl) -> {
                     ArrayList<ItemStack> results = new ArrayList<>();
                     consumer.accept(results);

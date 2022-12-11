@@ -92,11 +92,11 @@ public abstract class AbstractForgeRegistries {
         return IModBusEvent.class.isAssignableFrom(clazz);
     }
 
-    public static Supplier<CreativeModeTab> registerCreativeModeTab(ResourceLocation registryName, Supplier<ItemStack> icon, Consumer<List<ItemStack>> itemProvider) {
+    public static Supplier<CreativeModeTab> registerCreativeModeTab(ResourceLocation registryName, Supplier<Supplier<ItemStack>> icon, Consumer<List<ItemStack>> itemProvider) {
         CreativeModeTab[] tabs = {null};
         NotificationCenterImpl.observer(CreativeModeTabEvent.Register.class, event -> tabs[0] = event.registerCreativeModeTab(registryName, configurator -> {
             configurator.title(Component.translatable("itemGroup." + registryName.getNamespace() + "." + registryName.getPath()));
-            configurator.icon(icon);
+            configurator.icon(() -> icon.get().get());
             configurator.displayItems((features, output, flag) -> {
                 ArrayList<ItemStack> list = new ArrayList<>();
                 itemProvider.accept(list);

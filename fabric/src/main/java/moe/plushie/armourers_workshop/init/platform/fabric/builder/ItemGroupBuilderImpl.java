@@ -54,7 +54,7 @@ public class ItemGroupBuilderImpl<T extends IItemGroup> implements IItemGroupBui
         private final ArrayList<Supplier<Item>> items = new ArrayList<>();
 
         public ItemGroup(ResourceLocation registryName) {
-            this.tab = AbstractFabricRegistries.registerCreativeModeTab(registryName, icon.get(), this::fill);
+            this.tab = AbstractFabricRegistries.registerCreativeModeTab(registryName, icon, this::fill);
         }
 
         public void fill(List<ItemStack> results) {

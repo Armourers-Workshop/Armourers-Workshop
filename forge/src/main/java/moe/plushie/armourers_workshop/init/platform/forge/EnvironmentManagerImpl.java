@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.config.IConfigSpec;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.ConfigBuilderImpl;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -15,6 +16,8 @@ import java.io.File;
 
 @SuppressWarnings("unused")
 public class EnvironmentManagerImpl {
+
+    private static MinecraftServer CURRENT_SERVER;
 
     public static String getVersion() {
         IModFileInfo fileInfo = ModList.get().getModFileById(ModConstants.MOD_ID);
@@ -32,6 +35,10 @@ public class EnvironmentManagerImpl {
         return EnvironmentType.CLIENT;
     }
 
+    public static MinecraftServer getServer() {
+        return CURRENT_SERVER;
+    }
+
     public static File getRootDirectory() {
         return new File(FMLPaths.GAMEDIR.get().toFile(), "armourers_workshop");
     }
@@ -46,5 +53,13 @@ public class EnvironmentManagerImpl {
 
     public static IConfigSpec getCommonConfigSpec() {
         return ConfigBuilderImpl.createCommonSpec();
+    }
+
+    public static void attach(MinecraftServer server) {
+        CURRENT_SERVER = server;
+    }
+
+    public static void detach(MinecraftServer server) {
+        CURRENT_SERVER = null;
     }
 }

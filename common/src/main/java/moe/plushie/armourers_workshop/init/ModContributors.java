@@ -5,6 +5,8 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
@@ -63,6 +65,7 @@ public class ModContributors {
         return null;
     }
 
+    @Environment(value = EnvType.CLIENT)
     public static Contributor by(Entity entity) {
         if (entity instanceof MannequinEntity) {
             MannequinEntity mannequin = (MannequinEntity) entity;
@@ -77,6 +80,7 @@ public class ModContributors {
         return null;
     }
 
+    @Environment(value = EnvType.CLIENT)
     public static Contributor getCurrentContributor() {
         if (EnvironmentManager.isDevelopmentEnvironment()) {
             return dev;

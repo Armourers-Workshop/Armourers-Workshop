@@ -35,8 +35,6 @@ import net.minecraft.world.phys.HitResult;
 @Environment(EnvType.CLIENT)
 public class ClientProxyImpl implements ClientModInitializer {
 
-    boolean isPaused = false;
-
     @Override
     public void onInitializeClient() {
         EnvironmentExecutor.willInit(EnvironmentType.CLIENT);

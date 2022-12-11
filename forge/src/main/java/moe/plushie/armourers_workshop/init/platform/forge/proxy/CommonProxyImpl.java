@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.CommonNativeManagerImpl;
+import moe.plushie.armourers_workshop.init.platform.forge.EnvironmentManagerImpl;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.ConfigBuilderImpl;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -17,6 +18,9 @@ public class CommonProxyImpl {
 
     public static void init() {
         EnvironmentExecutor.willInit(EnvironmentType.COMMON);
+
+        CommonNativeManagerImpl.INSTANCE.didServerStart(EnvironmentManagerImpl::attach);
+        CommonNativeManagerImpl.INSTANCE.didServerStop(EnvironmentManagerImpl::detach);
 
         // listen the fml events.
         NotificationCenterImpl.observer(FMLCommonSetupEvent.class, event -> EnvironmentExecutor.didInit(EnvironmentType.COMMON));

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.init.platform;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import net.minecraft.server.MinecraftServer;
 
 import java.io.File;
 
@@ -29,6 +30,11 @@ public class EnvironmentManager {
 
     public static File getSkinCacheDirectory() {
         return new File(getRootDirectory(), "skin-cache");
+    }
+
+    @ExpectPlatform
+    public static MinecraftServer getServer() {
+        throw new AssertionError();
     }
 
     public static boolean isDedicatedServer() {

@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.PacketSplitter;
 import net.fabricmc.api.EnvType;
@@ -43,22 +44,12 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public class NetworkManagerImpl implements NetworkManager.Impl {
 
-    private static MinecraftServer CURRENT_SERVER;
-
     private NetworkDispatcher dispatcher;
 
     public static NetworkManager.Impl getInstance(String name, String version) {
         NetworkManagerImpl impl = new NetworkManagerImpl();
         impl.init(name, version);
         return impl;
-    }
-
-    public static void attach(MinecraftServer server) {
-        CURRENT_SERVER = server;
-    }
-
-    public static void detach(MinecraftServer server) {
-        CURRENT_SERVER = null;
     }
 
     public void init(String name, String version) {
@@ -102,15 +93,11 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
 
     @Override
     public void sendToAll(CustomPacket message) {
-        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, getSender(PlayerLookup.all(getServer())));
+        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, getSender(PlayerLookup.all(EnvironmentManager.getServer())));
     }
 
     private Consumer<Packet<?>> getSender(Collection<ServerPlayer> players) {
         return packet -> players.forEach(player -> player.connection.send(packet));
-    }
-
-    private MinecraftServer getServer() {
-        return CURRENT_SERVER;
     }
 
     public static class NetworkDispatcher implements IServerPacketHandler, IClientPacketHandler {
@@ -157,7 +144,15 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
         @Environment(value = EnvType.CLIENT)
         public void onClientEvent(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender responseSender) {
             IClientPacketHandler packetHandler = this;
-            merge(clientUUID, buf, packet -> client.execute(() -> packet.accept(packetHandler, client.player)));
+            merge(clientUUID, buf, packet -> client.execute(() -> packet.accept(packetHandler, getClientPlayer())));
+        }
+
+        @Environment(value = EnvType.CLIENT)
+        public Player getClientPlayer() {
+            // a better solution is use the player directly, but it's a trap.
+            // java will generate an anonymous lambda for we source code,
+            // and then it will load lambda type on the server environment.
+            return Minecraft.getInstance().player;
         }
 
         public void merge(UUID uuid, FriendlyByteBuf buffer, Consumer<CustomPacket> consumer) {

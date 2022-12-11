@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.fabric.CommonNativeManagerImpl;
+import moe.plushie.armourers_workshop.init.platform.fabric.EnvironmentManagerImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.NetworkManagerImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.ConfigBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfig;
@@ -45,8 +46,8 @@ public class CommonProxyImpl implements ModInitializer {
         ArmourersWorkshop.init();
         EnvironmentExecutor.willInit(EnvironmentType.COMMON);
 
-        CommonNativeManagerImpl.INSTANCE.didServerStart(NetworkManagerImpl::attach);
-        CommonNativeManagerImpl.INSTANCE.didServerStop(NetworkManagerImpl::detach);
+        CommonNativeManagerImpl.INSTANCE.didServerStart(EnvironmentManagerImpl::attach);
+        CommonNativeManagerImpl.INSTANCE.didServerStop(EnvironmentManagerImpl::detach);
 
         AttackEntityCallback.EVENT.register(this::onAttackEntity);
         UseBlockCallback.EVENT.register(this::onUseItemFirst);
