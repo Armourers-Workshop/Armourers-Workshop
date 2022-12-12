@@ -38,6 +38,7 @@ public class AbstractShaderExecutor {
     }
 
     public void setup() {
+        ShaderUniforms.begin();
         BufferUploader.reset();
         // yep we reset it.
         RenderSystem.getModelViewMatrix().identity();
@@ -45,8 +46,8 @@ public class AbstractShaderExecutor {
     }
 
     public void clean() {
-        ShaderUniforms.rollback();
         RenderSystem.applyModelViewMatrix();
+        ShaderUniforms.end();
     }
 
     public void setMaxVertexCount(int count) {
@@ -109,7 +110,6 @@ public class AbstractShaderExecutor {
         shader.apply();
         uniforms.apply();
         GL11.glDrawElements(renderType.mode().asGLMode, j, m, 0L);
-        uniforms.clear();
         shader.clear();
 
         _cleanVertexFormat(vertexFormat);

@@ -9,7 +9,6 @@ import net.fabricmc.api.Environment;
 @Environment(value = EnvType.CLIENT)
 public class AbstractRenderSystem extends RenderSystem {
 
-
     public static void disableAlphaTest() {
     }
 

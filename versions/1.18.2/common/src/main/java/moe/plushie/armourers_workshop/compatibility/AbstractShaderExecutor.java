@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.ShaderUniform;
 import moe.plushie.armourers_workshop.utils.ShaderUniforms;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import net.minecraft.client.Minecraft;
@@ -38,6 +39,7 @@ public class AbstractShaderExecutor {
     }
 
     public void setup() {
+        ShaderUniforms.begin();
         BufferUploader.reset();
         // yep we reset it.
         RenderSystem.getModelViewMatrix().setIdentity();
@@ -45,8 +47,8 @@ public class AbstractShaderExecutor {
     }
 
     public void clean() {
-        ShaderUniforms.rollback();
         RenderSystem.applyModelViewMatrix();
+        ShaderUniforms.end();
     }
 
     public void setMaxVertexCount(int count) {
@@ -58,15 +60,10 @@ public class AbstractShaderExecutor {
     }
 
     public void execute(IRenderBufferObject object, int vertexOffset, int vertexCount, RenderType renderType, VertexFormat vertexFormat) {
+        ShaderUniforms uniforms = ShaderUniforms.getInstance();
         ShaderInstance shader = RenderSystem.getShader();
         if (shader == null) {
             return;
-        }
-        ISkinDataProvider provider = ObjectUtils.unsafeCast(shader);
-        ShaderUniforms uniforms = provider.getSkinData();
-        if (uniforms == null) {
-            uniforms = new ShaderUniforms();
-            provider.setSkinData(uniforms);
         }
 
         if (renderType == SkinRenderType.FACE_SOLID || renderType == SkinRenderType.FACE_TRANSLUCENT) {
@@ -117,7 +114,6 @@ public class AbstractShaderExecutor {
         shader.apply();
         uniforms.apply();
         GL11.glDrawElements(renderType.mode().asGLMode, j, m, 0L);
-        uniforms.clear();
         shader.clear();
 
         _cleanVertexFormat(vertexFormat);
