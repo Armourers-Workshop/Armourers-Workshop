@@ -59,15 +59,10 @@ public class AbstractShaderExecutor {
     }
 
     public void execute(IRenderBufferObject object, int vertexOffset, int vertexCount, RenderType renderType, VertexFormat vertexFormat) {
+        ShaderUniforms uniforms = ShaderUniforms.getInstance();
         ShaderInstance shader = RenderSystem.getShader();
         if (shader == null) {
             return;
-        }
-        ISkinDataProvider provider = ObjectUtils.unsafeCast(shader);
-        ShaderUniforms uniforms = provider.getSkinData();
-        if (uniforms == null) {
-            uniforms = new ShaderUniforms();
-            provider.setSkinData(uniforms);
         }
 
         if (renderType == SkinRenderType.FACE_SOLID || renderType == SkinRenderType.FACE_TRANSLUCENT) {
