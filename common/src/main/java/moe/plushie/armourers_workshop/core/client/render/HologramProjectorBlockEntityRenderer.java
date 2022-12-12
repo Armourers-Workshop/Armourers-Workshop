@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
@@ -45,7 +46,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         if (bakedSkin == null) {
             return;
         }
-        IPoseStack poseStack = IPoseStack.of(poseStackIn);
+        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
         BlockState blockState = entity.getBlockState();
         Entity mannequin = SkinItemRenderer.getInstance().getMannequinEntity();
         MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();

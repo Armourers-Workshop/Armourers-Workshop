@@ -253,7 +253,7 @@ public class ClientWardrobeHandler {
             return false;
         }
         // when the skin item, we no required enable of embbed skin option in the config.
-        return ModConfig.enableEmbeddedSkinRenderer() || descriptor.getType() == SkinTypes.ITEM ;
+        return ModConfig.enableEmbeddedSkinRenderer() || descriptor.getType() == SkinTypes.ITEM;
     }
 
     public static void renderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, ItemTransforms.TransformType transformType, boolean leftHandHackery, IPoseStack poseStack, MultiBufferSource buffers, BakedModel bakedModel, int packedLight, int overlay, CallbackInfo callback) {

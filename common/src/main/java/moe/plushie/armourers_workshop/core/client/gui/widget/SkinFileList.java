@@ -22,7 +22,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -128,7 +127,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
     private void updateContentOffsetIfNeeded(UIControl sender) {
         CGPoint offset = tableView.contentOffset();
         CGSize size = tableView.contentSize();
-        int value = (int)((size.height - tableView.frame().getHeight()) * scrollIndicator.value());
+        int value = (int) ((size.height - tableView.frame().getHeight()) * scrollIndicator.value());
         if (offset.y != value) {
             tableView.setContentOffset(new CGPoint(offset.x, value));
         }
@@ -224,9 +223,9 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
                 iconOffset = 16;
             }
             if (backgroundColor != 0) {
-                Screen.fill(context.poseStack.cast(), left, top, left + width, top + height, backgroundColor);
+                context.fillRect(left, top, left + width, top + height, backgroundColor);
             }
-            font.draw(context.poseStack.cast(), title, left + iconOffset + 2, top + 3, textColor);
+            context.drawText(title.getVisualOrderText(), left + iconOffset + 2, top + 3, textColor);
             renderIcon(context.poseStack, left, top - 1, 16, 16);
         }
 

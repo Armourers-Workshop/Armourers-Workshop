@@ -5,9 +5,8 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector4f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
-import moe.plushie.armourers_workshop.compatibility.AbstractMatrix4fWrapper;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import org.lwjgl.BufferUtils;
 import org.spongepowered.asm.mixin.Implements;
 import org.spongepowered.asm.mixin.Interface;
 import org.spongepowered.asm.mixin.Intrinsic;
@@ -30,13 +29,23 @@ public abstract class AbstractMatrix4fMixin {
     }
 
     @Intrinsic(displace = true)
-    public void aw$rotate(IQuaternionf q) {
-        _aw$self().multiply(new Quaternion(q.i(), q.j(), q.k(), q.r()));
+    public void aw$scale(float x, float y, float z) {
+        _aw$self().multiply(Matrix4f.createScaleMatrix(x, y, z));
+    }
+
+    @Intrinsic(displace = true)
+    public void aw$translate(float x, float y, float z) {
+        _aw$self().multiply(Matrix4f.createTranslateMatrix(x, y, z));
+    }
+
+    @Intrinsic(displace = true)
+    public void aw$rotate(IQuaternionf quaternion) {
+        _aw$self().multiply(AbstractPoseStack.of(quaternion));
     }
 
     @Intrinsic(displace = true)
     public void aw$multiply(IMatrix4f matrix) {
-        _aw$self().multiply(AbstractMatrix4fWrapper.of(matrix));
+        _aw$self().multiply(AbstractPoseStack.of(matrix));
     }
 
     @Intrinsic(displace = true)

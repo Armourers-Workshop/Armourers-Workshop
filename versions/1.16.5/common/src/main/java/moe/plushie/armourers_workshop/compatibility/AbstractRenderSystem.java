@@ -48,7 +48,7 @@ public class AbstractRenderSystem extends RenderSystem {
     }
 
     public static void multMatrix(IMatrix4f matrix4f) {
-        multMatrix(AbstractMatrix4fWrapper.of(matrix4f));
+        multMatrix(AbstractPoseStack.of(matrix4f));
     }
 
     public static void init() {

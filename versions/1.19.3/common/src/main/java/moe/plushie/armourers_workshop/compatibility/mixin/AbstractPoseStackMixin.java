@@ -5,9 +5,8 @@ import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseWrapper;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Implements;
 import org.spongepowered.asm.mixin.Interface;
 import org.spongepowered.asm.mixin.Intrinsic;
@@ -38,8 +37,8 @@ public abstract class AbstractPoseStackMixin {
     }
 
     @Intrinsic(displace = true)
-    public void aw$rotate(IQuaternionf q) {
-        _aw$self().mulPose(new Quaternionf(q.i(), q.j(), q.k(), q.r()));
+    public void aw$rotate(IQuaternionf quaternion) {
+        _aw$self().mulPose(AbstractPoseStack.of(quaternion));
     }
 
     @Intrinsic(displace = true)
@@ -49,19 +48,24 @@ public abstract class AbstractPoseStackMixin {
 
     @Intrinsic(displace = true)
     public IMatrix4f aw$lastPose() {
-        return _aw$last().aw$pose();
+        return _aw$last().aw$getPose();
     }
 
     @Intrinsic(displace = true)
     public IMatrix3f aw$lastNormal() {
-        return _aw$last().aw$normal();
+        return _aw$last().aw$getNormal();
+    }
+
+    @Intrinsic(displace = true)
+    public PoseStack aw$cast() {
+        return _aw$self();
     }
 
     private PoseStack _aw$self() {
         return ObjectUtils.unsafeCast(this);
     }
 
-    private AbstractPoseWrapper _aw$last() {
+    private AbstractPoseStack.Pose _aw$last() {
         return ObjectUtils.unsafeCast(_aw$self().last());
     }
 }

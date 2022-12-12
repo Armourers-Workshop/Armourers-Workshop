@@ -18,6 +18,6 @@ public class AbstractFabricClientNativeImpl extends AbstractClientNativeImpl imp
 
     @Override
     public void willRegisterTexture(Consumer<TextureRegistry> consumer) {
-        // FIXME: @SAGESSE, to use assets/modid/atlases
+        // everything in the block, item, particle and a few other folders is now stitched automatically.
     }
 }

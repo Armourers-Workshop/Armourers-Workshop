@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRen
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinDynamicTexture;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -48,7 +49,7 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
 
     @Override
     public void render(T entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int light, int overlay) {
-        IPoseStack poseStack = IPoseStack.of(poseStackIn);
+        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
         ISkinType skinType = entity.getSkinType();
         ISkinProperties skinProperties = entity.getSkinProperties();
 

@@ -33,10 +33,6 @@ public class AbstractShaderExecutor {
 
     private final OpenMatrix4f noneLightmapMat = OpenMatrix4f.createScaleMatrix(1, 1, 1);
 
-    public static Matrix4f of(IMatrix4f mat) {
-        return AbstractMatrix4fWrapper.of(mat);
-    }
-
     public static AbstractShaderExecutor getInstance() {
         return INSTANCE;
     }
@@ -78,8 +74,10 @@ public class AbstractShaderExecutor {
             if (lastLightmapMat == null || defaultVertexLight != lastLightmap) {
                 int u = defaultVertexLight & 0xffff;
                 int v = (defaultVertexLight >> 16) & 0xffff;
-                OpenMatrix4f newValue = new OpenMatrix4f();
-                newValue.translate(u, v, 0);
+                // a special matrix, function is reset location of the texture.
+                OpenMatrix4f newValue = OpenMatrix4f.createScaleMatrix(0, 0, 0);
+                newValue.m03 = u;
+                newValue.m13 = v;
                 lastLightmap = defaultVertexLight;
                 lastLightmapMat = newValue;
             }

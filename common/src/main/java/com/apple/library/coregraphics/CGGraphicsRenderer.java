@@ -8,6 +8,7 @@ import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIView;
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -122,7 +123,11 @@ public class CGGraphicsRenderer {
         if (color == null || color == UIColor.CLEAR) {
             return;
         }
-        Screen.fill(context.poseStack.cast(), rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, color.getRGB());
+        renderColor(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, color.getRGB(), context);
+    }
+
+    public static void renderColor(int x1, int y1, int x2, int y2, int color, CGGraphicsContext context) {
+        Screen.fill(context.poseStack.cast(), x1, y1, x2, y2, color);
     }
 
     public static void renderGradient(CGGradient gradient, CGRect rect, CGGraphicsContext context) {

@@ -4,6 +4,7 @@ import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.compatibility.AbstractClientNativeImpl;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compatibility.forge.v18.ClientForgeExt_V1820;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
@@ -127,7 +128,7 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
     public void willRenderLivingEntity(RenderLivingEntity renderer) {
         NotificationCenterImpl.observer(RenderLivingEvent.Pre.class, event -> renderer.render(event.getEntity(), event.getRenderer(), () -> {
             SkinRenderContext context = SkinRenderContext.getInstance();
-            IPoseStack poseStack = IPoseStack.of(event.getPoseStack());
+            IPoseStack poseStack = AbstractPoseStack.wrap(event.getPoseStack());
             context.setup(event.getPackedLight(), event.getPartialTick(), poseStack, event.getMultiBufferSource());
             return context;
         }));
@@ -137,7 +138,7 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
     public void didRenderLivingEntity(RenderLivingEntity renderer) {
         NotificationCenterImpl.observer(RenderLivingEvent.Post.class, event -> renderer.render(event.getEntity(), event.getRenderer(), () -> {
             SkinRenderContext context = SkinRenderContext.getInstance();
-            IPoseStack poseStack = IPoseStack.of(event.getPoseStack());
+            IPoseStack poseStack = AbstractPoseStack.wrap(event.getPoseStack());
             context.setup(event.getPackedLight(), event.getPartialTick(), poseStack, event.getMultiBufferSource());
             return context;
         }));

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.init.platform.fabric.proxy;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.common.IEntityHandler;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -80,7 +81,7 @@ public class ClientProxyImpl implements ClientModInitializer {
         //         return;
         //     }
         // }
-        IPoseStack poseStack = IPoseStack.of(context.matrixStack());
+        IPoseStack poseStack = AbstractPoseStack.wrap(context.matrixStack());
         ItemStack itemStack = player.getMainHandItem();
         Item item = itemStack.getItem();
         if (ModConfig.Client.enableEntityPlacementHighlight && item == ModItems.MANNEQUIN.get()) {
@@ -132,7 +133,7 @@ public class ClientProxyImpl implements ClientModInitializer {
             transformType = ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
         }
         boolean[] flags = {false};
-        IPoseStack poseStack = IPoseStack.of(poseStackIn);
+        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
         ClientWardrobeHandler.onRenderSpecificHand(player, 0, light, 0, transformType, poseStack, buffers, () -> {
             flags[0] = true;
         });

@@ -23,17 +23,5 @@ public interface IPoseStack {
     IMatrix3f lastNormal();
 
     @Environment(value = EnvType.CLIENT)
-    default PoseStack cast() {
-        return (PoseStack) this;
-    }
-
-    @Environment(value = EnvType.CLIENT)
-    static IPoseStack of(PoseStack poseStack) {
-        return (IPoseStack) poseStack;
-    }
-
-    @Environment(value = EnvType.CLIENT)
-    static IPoseStack newClientInstance() {
-        return of(new PoseStack());
-    }
+    PoseStack cast();
 }

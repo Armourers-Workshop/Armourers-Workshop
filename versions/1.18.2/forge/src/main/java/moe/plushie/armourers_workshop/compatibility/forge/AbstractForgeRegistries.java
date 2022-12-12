@@ -84,11 +84,11 @@ public abstract class AbstractForgeRegistries {
         return IModBusEvent.class.isAssignableFrom(clazz);
     }
 
-    public static Supplier<CreativeModeTab> registerCreativeModeTab(ResourceLocation registryName, Supplier<ItemStack> icon, Consumer<List<ItemStack>> itemProvider) {
+    public static Supplier<CreativeModeTab> registerCreativeModeTab(ResourceLocation registryName, Supplier<Supplier<ItemStack>> icon, Consumer<List<ItemStack>> itemProvider) {
         CreativeModeTab tab = new CreativeModeTab(registryName.getNamespace() + "." + registryName.getPath()) {
             @Override
             public ItemStack makeIcon() {
-                return icon.get();
+                return icon.get().get();
             }
 
             @Override

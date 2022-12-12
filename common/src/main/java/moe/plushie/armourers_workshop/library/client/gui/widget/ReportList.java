@@ -5,15 +5,9 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
-import com.apple.library.uikit.UIEvent;
-import com.apple.library.uikit.UIScrollView;
-import com.apple.library.uikit.UIView;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.apple.library.uikit.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
@@ -32,14 +26,14 @@ public class ReportList extends UIScrollView {
     protected int selectedIndex;
     protected int contentHeight = 0;
 
-    protected Font font;
+    protected UIFont font;
     protected IEventListener listener;
 
     private int lastWidth;
 
     public ReportList(CGRect frame) {
         super(frame);
-        this.font = Minecraft.getInstance().font;
+        this.font = UIFont.system();
     }
 
     @Override
@@ -251,7 +245,7 @@ public class ReportList extends UIScrollView {
                         columnWidth = itemWidth - 2 - xOffset;
                     }
                     if (Strings.isNotBlank(name)) {
-                        List<FormattedText> lines = font.getSplitter().splitLines(name, columnWidth, Style.EMPTY);
+                        List<FormattedText> lines = font.font().getSplitter().splitLines(name, columnWidth, Style.EMPTY);
                         itemHeight = Math.max(itemHeight, lines.size() * 10);
                         wrappedTextLines.put(i, lines);
                     }
@@ -276,16 +270,16 @@ public class ReportList extends UIScrollView {
                     if (columnWidth == -1) {
                         columnWidth = contentWidth - 2 - xOffset;
                     }
-                    Screen.fill(context.poseStack.cast(), xOffset, 0, xOffset + columnWidth, contentHeight, 0xCC808080);
+                    context.fillRect(xOffset, 0, xOffset + columnWidth, contentHeight, 0xCC808080);
                     List<FormattedText> lines = wrappedTextLines.get(i);
                     if (lines != null) {
                         int dy = 0;
                         for (FormattedText line : lines) {
-                            font.draw(context.poseStack.cast(), Language.getInstance().getVisualOrder(line), 1 + xOffset, 1 + dy, 0xFFFFFF);
+                            context.drawText(Language.getInstance().getVisualOrder(line), 1 + xOffset, 1 + dy, 0xffffff);
                             dy += 10;
                         }
                     } else {
-                        font.draw(context.poseStack.cast(), names[i], 1 + xOffset, 1, 0xFFFFFF);
+                        context.drawText(names[i], 1 + xOffset, 1, 0xffffff);
                     }
                     xOffset += columnWidth + 1;
                 }

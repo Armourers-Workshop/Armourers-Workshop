@@ -6,6 +6,8 @@ import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
+import moe.plushie.armourers_workshop.compatibility.v1618.PoseStack_V1618;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import org.spongepowered.asm.mixin.*;
 
@@ -34,8 +36,8 @@ public abstract class AbstractPoseStackMixin {
     }
 
     @Intrinsic(displace = true)
-    public void aw$rotate(IQuaternionf q) {
-        _aw$self().mulPose(new Quaternion(q.i(), q.j(), q.k(), q.r()));
+    public void aw$rotate(IQuaternionf quaternion) {
+        _aw$self().mulPose(AbstractPoseStack.of(quaternion));
     }
 
     @Intrinsic(displace = true)
@@ -51,6 +53,11 @@ public abstract class AbstractPoseStackMixin {
     @Intrinsic(displace = true)
     public IMatrix3f aw$lastNormal() {
         return ObjectUtils.unsafeCast(_aw$self().last().normal());
+    }
+
+    @Intrinsic(displace = true)
+    public PoseStack aw$cast() {
+        return _aw$self();
     }
 
     private PoseStack _aw$self() {

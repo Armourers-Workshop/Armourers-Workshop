@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.library.block.GlobalSkinLibraryBlock;
 import moe.plushie.armourers_workshop.utils.ModelPartBuilder;
@@ -28,7 +29,7 @@ public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends
 
     @Override
     public void render(T entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int light, int overlay) {
-        IPoseStack poseStack = IPoseStack.of(poseStackIn);
+        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
         poseStack.pushPose();
         poseStack.translate(0.5f, 1.5f, 0.5f);
         poseStack.scale(-1, -1, 1);

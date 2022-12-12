@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.util.FormattedCharSequence;
 
 @Environment(value = EnvType.CLIENT)
 public class CGGraphicsContext {
@@ -62,12 +63,24 @@ public class CGGraphicsContext {
         CGGraphicsRenderer.renderText(text, x, y, color, shadowColor, font, this);
     }
 
+    public void drawText(String text, int x, int y, int color) {
+        font.font().draw(poseStack.cast(), text, x, y, color);
+    }
+
+    public void drawText(FormattedCharSequence text, int x, int y, int color) {
+        font.font().draw(poseStack.cast(), text, x, y, color);
+    }
+
     public void drawTooltip(Object tooltip, CGRect rect) {
         CGGraphicsRenderer.renderTooltip(tooltip, rect, this);
     }
 
     public void fillRect(UIColor color, CGRect rect) {
         CGGraphicsRenderer.renderColor(color, rect, this);
+    }
+
+    public void fillRect(int x1, int y1, int x2, int y2, int color) {
+        CGGraphicsRenderer.renderColor(x1, y1, x2, y2, color, this);
     }
 
     public void fillRect(CGGradient gradient, CGRect rect) {

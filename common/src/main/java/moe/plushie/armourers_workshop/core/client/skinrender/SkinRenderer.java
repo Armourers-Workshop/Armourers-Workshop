@@ -228,22 +228,22 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
         final HashMap<ISkinPartType, ITransform<T, M>> armors = new HashMap<>();
         final HashMap<ItemTransforms.TransformType, ITransform<T, M>> items = new HashMap<>();
 
-        public static <M> void none(PoseStack matrixStack, M model) {
+        public static <M> void none(PoseStack poseStack, M model) {
         }
 
-        public static <T extends Entity, M0 extends Model, M extends IModelHolder<M0>> void withModel(IPoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+        public static <T extends Entity, M0 extends Model, M extends IModelHolder<M0>> void withModel(IPoseStack poseStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
             final float f1 = 16f;
             final float f2 = 1 / 16f;
             final boolean flag = (transformType == ItemTransforms.TransformType.THIRD_PERSON_LEFT_HAND || transformType == ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND);
-//            ModDebugger.translate(matrixStack);
-            matrixStack.scale(f1, f1, f1);
+            poseStack.scale(f1, f1, f1);
             BakedModel bakedModel = SkinModelManager.getInstance().getModel(bakedPart.getType(), itemStack, entity.level, entity);
-            TransformationProvider.handleTransforms(matrixStack, bakedModel, transformType, flag);
-            matrixStack.scale(f2, f2, f2);
-//            ModDebugger.rotate(matrixStack);
-//            ModDebugger.scale(matrixStack);
+            TransformationProvider.handleTransforms(poseStack, bakedModel, transformType, flag);
+            poseStack.scale(f2, f2, f2);
             if (flag) {
-                matrixStack.scale(-1, 1, 1);
+                // we must reverse x-axis the direction of drawing,
+                // but we should not change the normalMatrix,
+                // because the normal direction is correct.
+                poseStack.lastPose().scale(-1, 1, 1);
             }
         }
 

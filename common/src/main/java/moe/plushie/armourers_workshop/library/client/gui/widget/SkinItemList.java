@@ -7,7 +7,9 @@ import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
@@ -116,7 +118,7 @@ public class SkinItemList extends UIView {
         int width = rect.width;
         int height = rect.height;
         if ((backgroundColor & 0xff000000) != 0) {
-            Screen.fill(context.poseStack.cast(), x, y, x + width, y + height, backgroundColor);
+            context.fillRect(x, y, x + width, y + height, backgroundColor);
         }
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         for (int i = 0; i < totalCount; ++i) {
@@ -199,12 +201,11 @@ public class SkinItemList extends UIView {
             borderColour = 0xCC888811;
         }
 
-        Screen.fill(context.poseStack.cast(), x, y, x + width, y + height, backgroundColour);
-
-        Screen.fill(context.poseStack.cast(), x, y + 1, x + 1, y + height, borderColour);
-        Screen.fill(context.poseStack.cast(), x, y, x + width - 1, y + 1, borderColour);
-        Screen.fill(context.poseStack.cast(), x + 1, y + height - 1, x + width, y + height, borderColour);
-        Screen.fill(context.poseStack.cast(), x + width - 1, y, x + width, y + height - 1, borderColour);
+        context.fillRect(x, y, x + width, y + height, backgroundColour);
+        context.fillRect(x, y + 1, x + 1, y + height, borderColour);
+        context.fillRect(x, y, x + width - 1, y + 1, borderColour);
+        context.fillRect(x + 1, y + height - 1, x + width, y + height, borderColour);
+        context.fillRect(x + width - 1, y, x + width, y + height - 1, borderColour);
 
         RenderSystem.enableAlphaTest();
     }

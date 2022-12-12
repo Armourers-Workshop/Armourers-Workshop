@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractItemEntityRenderer;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -48,7 +49,7 @@ public class SkinItemRenderer extends AbstractItemEntityRenderer {
         if (bakedSkin == null) {
             return;
         }
-        IPoseStack poseStack = IPoseStack.of(poseStackIn);
+        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
         BakedModel bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
         ItemTransform transform = bakedModel.getTransforms().getTransform(transformType);
 

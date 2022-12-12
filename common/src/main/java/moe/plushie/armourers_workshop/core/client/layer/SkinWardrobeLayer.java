@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
@@ -40,7 +41,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         if (entity.isInvisible()) {
             return;
         }
-        IPoseStack poseStack = IPoseStack.of(poseStackIn);
+        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
         M model = SkinRendererManager.wrap(getParentModel());
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {

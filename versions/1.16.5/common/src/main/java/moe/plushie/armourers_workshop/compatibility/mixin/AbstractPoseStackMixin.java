@@ -1,20 +1,16 @@
 package moe.plushie.armourers_workshop.compatibility.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import org.lwjgl.BufferUtils;
 import org.spongepowered.asm.mixin.Implements;
 import org.spongepowered.asm.mixin.Interface;
 import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
-
-import java.nio.FloatBuffer;
 
 @Mixin(PoseStack.class)
 @Implements(@Interface(iface = IPoseStack.class, prefix = "aw$"))
@@ -58,6 +54,11 @@ public abstract class AbstractPoseStackMixin {
     @Intrinsic(displace = true)
     public IMatrix3f aw$lastNormal() {
         return ObjectUtils.unsafeCast(_aw$self().last().normal());
+    }
+
+    @Intrinsic(displace = true)
+    public PoseStack aw$cast() {
+        return _aw$self();
     }
 
     private PoseStack _aw$self() {

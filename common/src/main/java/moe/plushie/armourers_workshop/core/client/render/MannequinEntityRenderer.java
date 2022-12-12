@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
 import moe.plushie.armourers_workshop.compatibility.AbstractLivingEntityRenderer;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
@@ -60,7 +61,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
             this.getChildRenderer().render(entity, p_225623_2_, partialTicks, poseStackIn, buffers, packedLightIn);
             return;
         }
-        IPoseStack poseStack = IPoseStack.of(poseStackIn);
+        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
         PlayerTextureLoader textureLoader = PlayerTextureLoader.getInstance();
         this.enableChildRenderer = true;
         this.texture = textureLoader.getTextureLocation(entity);

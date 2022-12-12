@@ -8,6 +8,8 @@ public interface IMatrix3f {
 
     void get(FloatBuffer buffer);
 
+    void scale(float x, float y, float z);
+
     void rotate(IQuaternionf quaternion);
 
     void multiply(IMatrix3f matrix);

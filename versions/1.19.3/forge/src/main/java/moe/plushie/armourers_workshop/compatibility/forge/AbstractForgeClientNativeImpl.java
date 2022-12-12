@@ -4,6 +4,7 @@ import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.compatibility.AbstractClientNativeImpl;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compatibility.forge.v18.ClientForgeExt_V1820;
 import moe.plushie.armourers_workshop.compatibility.v19.ClientNativeProviderExt_V1920;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -16,7 +17,6 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
@@ -69,7 +69,7 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
 
     @Override
     public void willRegisterTexture(Consumer<TextureRegistry> consumer) {
-        // FIXME: @SAGESSE, to use assets/modid/atlases
+        // everything in the block, item, particle and a few other folders is now stitched automaticall.
     }
 
     @Override
@@ -91,7 +91,7 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
     public void willRenderLivingEntity(RenderLivingEntity renderer) {
         NotificationCenterImpl.observer(RenderLivingEvent.Pre.class, event -> renderer.render(event.getEntity(), event.getRenderer(), () -> {
             SkinRenderContext context = SkinRenderContext.getInstance();
-            IPoseStack poseStack = IPoseStack.of(event.getPoseStack());
+            IPoseStack poseStack = AbstractPoseStack.wrap(event.getPoseStack());
             context.setup(event.getPackedLight(), event.getPartialTick(), poseStack, event.getMultiBufferSource());
             return context;
         }));
@@ -101,7 +101,7 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
     public void didRenderLivingEntity(RenderLivingEntity renderer) {
         NotificationCenterImpl.observer(RenderLivingEvent.Post.class, event -> renderer.render(event.getEntity(), event.getRenderer(), () -> {
             SkinRenderContext context = SkinRenderContext.getInstance();
-            IPoseStack poseStack = IPoseStack.of(event.getPoseStack());
+            IPoseStack poseStack = AbstractPoseStack.wrap(event.getPoseStack());
             context.setup(event.getPackedLight(), event.getPartialTick(), poseStack, event.getMultiBufferSource());
             return context;
         }));

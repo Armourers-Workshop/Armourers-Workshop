@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
@@ -162,7 +163,7 @@ public class BakedSkin implements IBakedSkin {
     }
 
     public <T extends Entity, V extends Model, M extends IModelHolder<V>> OpenVoxelShape getRenderShape(T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, SkinRenderer<T, V, M> renderer) {
-        IPoseStack matrixStack = IPoseStack.newClientInstance();
+        IPoseStack matrixStack = AbstractPoseStack.empty();
         OpenVoxelShape shape = OpenVoxelShape.empty();
         SkinRenderContext context = new SkinRenderContext();
         context.setup(0, 0, transformType, matrixStack, null);

@@ -75,7 +75,8 @@ public class AbstractShaderExecutor {
                 int u = defaultVertexLight & 0xffff;
                 int v = (defaultVertexLight >> 16) & 0xffff;
                 OpenMatrix4f newValue = OpenMatrix4f.createScaleMatrix(0, 0, 0);
-                newValue.translate(u, v, 0);
+                newValue.m03 = u;
+                newValue.m13 = v;
                 lastLightmap = defaultVertexLight;
                 lastLightmapMat = newValue;
             }

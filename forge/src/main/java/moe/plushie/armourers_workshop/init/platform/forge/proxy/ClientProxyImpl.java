@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init.platform.forge.proxy;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
@@ -49,7 +50,7 @@ public class ClientProxyImpl {
             //         return;
             //     }
             // }
-            IPoseStack poseStack = IPoseStack.of(poseStackIn);
+            IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
             ItemStack itemStack = player.getMainHandItem();
             Item item = itemStack.getItem();
             if (ModConfig.Client.enableEntityPlacementHighlight && item == ModItems.MANNEQUIN.get()) {
@@ -82,7 +83,7 @@ public class ClientProxyImpl {
             }
             int light = event.getPackedLight();
             Player player = Minecraft.getInstance().player;
-            IPoseStack poseStack = IPoseStack.of(event.getPoseStack());
+            IPoseStack poseStack = AbstractPoseStack.wrap(event.getPoseStack());
             MultiBufferSource buffers = event.getMultiBufferSource();
             ItemTransforms.TransformType transformType = ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND;
             if (event.getArm() == HumanoidArm.RIGHT) {

@@ -4,6 +4,7 @@ import com.apple.library.coregraphics.CGRect;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinEquipmentType;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.registry.Registry;
@@ -15,7 +16,6 @@ import moe.plushie.armourers_workshop.init.*;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -156,7 +156,7 @@ public class ItemTooltipManager {
         if (!ModConfig.Client.skinPreEnabled) {
             return;
         }
-        IPoseStack poseStack = IPoseStack.of(poseStackIn);
+        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         BakedSkin bakedSkin = BakedSkin.of(descriptor);
         if (bakedSkin == null) {

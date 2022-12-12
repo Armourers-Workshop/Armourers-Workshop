@@ -11,12 +11,14 @@ import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -68,20 +70,23 @@ public class SkinRenderObjectBuilder {
         addCompileTask(task);
 
 //        RenderSystem.backupExtendedMatrix();
+//        RenderSystem.getModelViewStack().pushPose();
+//        RenderSystem.getModelViewStack().last().pose().identity();
+//        RenderSystem.applyModelViewMatrix();
 //
-//        Matrix3f normalMatrix = matrixStack.last().normal().copy();
-//        normalMatrix.invert();
+////        Matrix3f normalMatrix = matrixStack.last().normal().copy();
+////        normalMatrix.invert();
 //
 //        RenderSystem.setShaderColor(1, 1, 1, 1);
 ////            RenderSystem.setShaderLight(light);
-//        RenderSystem.setExtendedNormalMatrix(normalMatrix);
-//        RenderSystem.setExtendedTextureMatrix(Matrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
+////        RenderSystem.setExtendedNormalMatrix(normalMatrix);
+//        RenderSystem.setExtendedTextureMatrix(OpenMatrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
 //
 //        AbstractShaderExecutor.getInstance().setup();
 //        MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 ////        MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-//        PoseStack matrixStack1 = new PoseStack();
-////        PoseStack matrixStack1 = matrixStack;
+////        IPoseStack matrixStack1 = new PoseStack();
+//        IPoseStack matrixStack1 = matrixStack;
 //        part.forEach((renderType, quads) -> {
 //            VertexConsumer builder = buffers.getBuffer(renderType);
 ////            BufferBuilder builder = new BufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
@@ -89,16 +94,18 @@ public class SkinRenderObjectBuilder {
 //            quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, OverlayTexture.NO_OVERLAY, matrixStack1, builder));
 //
 //
-//            AbstractRenderPoseStack modelPoseStack = RenderSystem.getModelStack();
-//            modelPoseStack.pushPose();
-//            modelPoseStack.mulPose(matrixStack.last().pose());
-//            modelPoseStack.apply();
+////            IPoseStack modelPoseStack = RenderSystem.getExtendedModelViewStack();
+////            modelPoseStack.pushPose();
+////            modelPoseStack.multiply(matrixStack.lastPose());
+//            RenderSystem.setExtendedModelViewMatrix(matrixStack1.lastPose());
+////            RenderSystem.applyModelViewMatrix();
 //            buffers.endBatch();
-//            modelPoseStack.popPose();
-//            modelPoseStack.apply();
+////            modelPoseStack.popPose();
 //        });
 //        AbstractShaderExecutor.getInstance().clean();
 //
+//        RenderSystem.getModelViewStack().popPose();
+//        RenderSystem.applyModelViewMatrix();
 //        RenderSystem.restoreExtendedMatrix();
     }
 
@@ -137,7 +144,7 @@ public class SkinRenderObjectBuilder {
             return;
         }
 //        long startTime = System.currentTimeMillis();
-        IPoseStack matrixStack1 = IPoseStack.newClientInstance();
+        IPoseStack matrixStack1 = AbstractPoseStack.empty();
         ArrayList<CompiledTask> buildingTasks = new ArrayList<>();
         for (CachedTask task : tasks) {
             BakedSkinPart part = task.part;
@@ -233,12 +240,14 @@ public class SkinRenderObjectBuilder {
 
         void render(CachedTask task, IPoseStack poseStack, int lightmap, float partialTicks, int slotIndex) {
             IPoseStack modelViewStack = RenderSystem.getExtendedModelViewStack();
-            IPoseStack fixedPostStack = IPoseStack.newClientInstance();
-            fixedPostStack.lastPose().multiply(modelViewStack.lastPose());
-            fixedPostStack.lastPose().multiply(poseStack.lastPose());
-//            fixedPostStack.lastNormal().multiply(modelViewStack.lastNormal());
-            fixedPostStack.lastNormal().multiply(poseStack.lastNormal());
-            fixedPostStack.lastNormal().invert();
+            IPoseStack fixedPostStack = new OpenPoseStack();
+            IMatrix4f lastPose = fixedPostStack.lastPose();
+            lastPose.multiply(modelViewStack.lastPose());
+            lastPose.multiply(poseStack.lastPose());
+            IMatrix3f lastNormal = fixedPostStack.lastNormal();
+//            lastNormal.multiply(modelViewStack.lastNormal());
+            lastNormal.multiply(poseStack.lastNormal());
+            lastNormal.invert();
             task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, fixedPostStack, lightmap, partialTicks, slotIndex)));
         }
 

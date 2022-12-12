@@ -74,9 +74,9 @@ public class AbstractFabricRegistries {
         };
     }
 
-    public static CreativeModeTab registerCreativeModeTab(ResourceLocation registryName, Supplier<ItemStack> icon, Consumer<List<ItemStack>> results) {
+    public static CreativeModeTab registerCreativeModeTab(ResourceLocation registryName, Supplier<Supplier<ItemStack>> icon, Consumer<List<ItemStack>> results) {
         return FabricItemGroupBuilder.create(registryName)
-                .icon(icon)
+                .icon(() -> icon.get().get())
                 .appendItems(results)
                 .build();
     }
