@@ -14,7 +14,7 @@ import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 
-@Available("[1.16, 1.19)")
+@Available("[1.16, 1.19.3)")
 @Environment(value = EnvType.CLIENT)
 public abstract class PoseStack_V1618 {
 
