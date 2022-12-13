@@ -1,7 +1,10 @@
-package moe.plushie.armourers_workshop.utils;
+package moe.plushie.armourers_workshop.core.client.shader;
 
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
@@ -10,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 import java.util.function.Supplier;
 
+@Environment(value = EnvType.CLIENT)
 public abstract class ShaderUniform {
 
     protected final String name;

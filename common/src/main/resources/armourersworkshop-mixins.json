@@ -9,6 +9,7 @@
     "HttpTextureMixin",
     "InventoryScreenMixin",
     "ItemRendererMixin",
+    "GlStateManagerMixin",
     "BlockEntityRenderDispatcherMixin",
     "ThrownTridentRendererMixin"
   ],

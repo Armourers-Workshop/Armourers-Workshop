@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -71,7 +72,7 @@ public class SkinRenderObjectBuilder {
 
 //        RenderSystem.backupExtendedMatrix();
 //        RenderSystem.getModelViewStack().pushPose();
-//        RenderSystem.getModelViewStack().last().pose().identity();
+//        RenderSystem.getModelViewStack().last().pose().setIdentity();
 //        RenderSystem.applyModelViewMatrix();
 //
 ////        Matrix3f normalMatrix = matrixStack.last().normal().copy();
@@ -251,7 +252,7 @@ public class SkinRenderObjectBuilder {
             task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, fixedPostStack, lightmap, partialTicks, slotIndex)));
         }
 
-        void commit(Consumer<SkinVertexBufferBuilder.Pass> consumer) {
+        void commit(Consumer<ShaderVertexObject> consumer) {
             if (tasks.size() != 0) {
                 tasks.forEach(consumer);
                 tasks.clear();
@@ -259,7 +260,7 @@ public class SkinRenderObjectBuilder {
         }
     }
 
-    static class CompiledPass extends SkinVertexBufferBuilder.Pass {
+    static class CompiledPass extends ShaderVertexObject {
 
         int lightmap;
         float partialTicks;
@@ -279,12 +280,7 @@ public class SkinRenderObjectBuilder {
         }
 
         @Override
-        public ISkinPartType getPartType() {
-            return compiledTask.partType;
-        }
-
-        @Override
-        public RenderType getRenderType() {
+        public RenderType getType() {
             return compiledTask.renderType;
         }
 

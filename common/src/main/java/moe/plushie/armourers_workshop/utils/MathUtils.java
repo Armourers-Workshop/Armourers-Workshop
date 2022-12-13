@@ -211,6 +211,15 @@ public class MathUtils {
         return (float) Math.toRadians((value + 360) % 360);
     }
 
+
+    public static int roundToward(int i, int j) {
+        return positiveCeilDiv(i, j) * j;
+    }
+
+    public static int positiveCeilDiv(int i, int j) {
+        return -Math.floorDiv(-i, j);
+    }
+
     static {
         for (int i = 0; i < 257; ++i) {
             double d = (double) i / 256.0;

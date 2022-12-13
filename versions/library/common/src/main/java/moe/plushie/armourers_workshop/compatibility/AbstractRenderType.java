@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.compatibility;
 
-import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IRenderTypeBuilder;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderFormat;
@@ -12,7 +10,6 @@ import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -26,9 +23,6 @@ import java.util.function.Supplier;
 @Available("[1.18, )")
 @Environment(value = EnvType.CLIENT)
 public class AbstractRenderType extends RenderType {
-
-    // same to NEW_ENTITY, but iris has some hook in NEW_ENTITY, so we need a new format.
-    public static final VertexFormat SKIN_NORMAL_FORMAT = new VertexFormat(ImmutableMap.<String, VertexFormatElement>builder().put("Position", DefaultVertexFormat.ELEMENT_POSITION).put("Color", DefaultVertexFormat.ELEMENT_COLOR).put("UV0", DefaultVertexFormat.ELEMENT_UV0).put("UV1", DefaultVertexFormat.ELEMENT_UV1).put("UV2", DefaultVertexFormat.ELEMENT_UV2).put("Normal", DefaultVertexFormat.ELEMENT_NORMAL).put("Padding", DefaultVertexFormat.ELEMENT_PADDING).build());
 
     private static final TexturingStateShard OR_REVERSE = new TexturingStateShard("aw_or_reverse", () -> {
         RenderSystem.disableTexture();
@@ -53,11 +47,6 @@ public class AbstractRenderType extends RenderType {
         it.put(SkinRenderFormat.ENTITY_CUTOUT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_CUTOUT_SHADER));
         it.put(SkinRenderFormat.ENTITY_CUTOUT_NO_CULL, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_CUTOUT_NO_CULL_SHADER));
         it.put(SkinRenderFormat.ENTITY_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_TRANSLUCENT_CULL_SHADER));
-
-//        it.put(SkinRenderFormat.SKIN_FACE_SOLID, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, () -> AbstractShaders.SKIN_SOLID_SHADER).overlay().lightmap());
-//        it.put(SkinRenderFormat.SKIN_FACE_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, () -> AbstractShaders.SKIN_TRANSLUCENT_SHADER).overlay().lightmap());
-//        it.put(SkinRenderFormat.SKIN_FACE_LIGHTING, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, () -> AbstractShaders.SKIN_LIGHTING_SOLID_SHADER).overlay().lightmap());
-//        it.put(SkinRenderFormat.SKIN_FACE_LIGHTING_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, () -> AbstractShaders.SKIN_LIGHTING_TRANSLUCENT_SHADER).overlay().lightmap());
 
         it.put(SkinRenderFormat.SKIN_FACE_SOLID, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_SOLID_SHADER).overlay().lightmap());
         it.put(SkinRenderFormat.SKIN_FACE_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_SOLID_SHADER).overlay().lightmap());
@@ -87,10 +76,6 @@ public class AbstractRenderType extends RenderType {
         Builder builder = new Builder(format, mode);
         builder.stateBuilder.setShaderState(shader);
         return builder;
-    }
-
-    private static Builder _builder(VertexFormat format, VertexFormat.Mode mode, Supplier<ShaderInstance> shaderProvider) {
-        return _builder(format, mode, new ShaderStateShard(shaderProvider));
     }
 
     private static <T, U> HashMap<T, U> _make(Consumer<HashMap<T, U>> consumer) {

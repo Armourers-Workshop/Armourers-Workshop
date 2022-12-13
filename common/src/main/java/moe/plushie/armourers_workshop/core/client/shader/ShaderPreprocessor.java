@@ -1,7 +1,10 @@
-package moe.plushie.armourers_workshop.utils;
+package moe.plushie.armourers_workshop.core.client.shader;
 
 import moe.plushie.armourers_workshop.init.ModLog;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+@Environment(value = EnvType.CLIENT)
 public class ShaderPreprocessor {
 
     private final String prefix;

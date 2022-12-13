@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.compatibility.mixin;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
-import moe.plushie.armourers_workshop.utils.ShaderPreprocessor;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderPreprocessor;
 import moe.plushie.armourers_workshop.compatibility.AbstractProgramProvider;
-import moe.plushie.armourers_workshop.utils.ShaderUniforms;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderUniforms;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;

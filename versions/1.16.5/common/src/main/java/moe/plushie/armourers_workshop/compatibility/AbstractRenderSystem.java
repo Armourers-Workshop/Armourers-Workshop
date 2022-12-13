@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.compatibility;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import net.fabricmc.api.EnvType;
@@ -8,6 +9,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
+
+import java.util.function.IntConsumer;
+import java.util.function.IntSupplier;
 
 @Environment(value = EnvType.CLIENT)
 public class AbstractRenderSystem extends RenderSystem {
@@ -22,6 +26,15 @@ public class AbstractRenderSystem extends RenderSystem {
 
     public static void setShaderColor(float r, float g, float b, float a) {
         color4f(r, g, b, a);
+    }
+
+
+    public static void glGenVertexArrays(IntConsumer consumer) {
+        // ignored
+    }
+
+    public static void glBindVertexArray(IntSupplier supplier) {
+        // ignored
     }
 
     public static void disableAlphaTest() {

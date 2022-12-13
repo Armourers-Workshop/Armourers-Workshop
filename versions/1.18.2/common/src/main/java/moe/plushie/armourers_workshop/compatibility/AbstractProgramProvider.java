@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.compatibility;
 
-import moe.plushie.armourers_workshop.utils.ShaderPreprocessor;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderPreprocessor;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;

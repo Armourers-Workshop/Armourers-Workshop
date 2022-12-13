@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.mixin;
 
-import moe.plushie.armourers_workshop.utils.ShaderPreprocessor;
-import moe.plushie.armourers_workshop.utils.ShaderUniforms;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderPreprocessor;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderUniforms;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;

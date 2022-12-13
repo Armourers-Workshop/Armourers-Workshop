@@ -1,11 +1,14 @@
-package moe.plushie.armourers_workshop.utils;
+package moe.plushie.armourers_workshop.core.client.shader;
 
 import moe.plushie.armourers_workshop.init.ModLog;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.lwjgl.opengl.GL20;
 
 import java.util.Collection;
 import java.util.HashMap;
 
+@Environment(value = EnvType.CLIENT)
 public class ShaderUniforms {
 
     private static ShaderUniforms INSTANCE = new ShaderUniforms();

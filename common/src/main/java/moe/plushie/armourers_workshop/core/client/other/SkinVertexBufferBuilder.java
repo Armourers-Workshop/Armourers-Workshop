@@ -4,24 +4,19 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
-import moe.plushie.armourers_workshop.api.math.IMatrix3f;
-import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.compatibility.AbstractShaderExecutor;
+import moe.plushie.armourers_workshop.compatibility.AbstractShader;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexGroup;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.TickUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -117,111 +112,45 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         }
     }
 
-    public abstract static class Pass {
-
-
-        public abstract int getVertexOffset();
-
-        public abstract int getVertexCount();
-
-        public abstract int getLightmap();
-
-        public abstract IPoseStack getPoseStack();
-
-        public abstract ISkinPartType getPartType();
-
-        public abstract RenderType getRenderType();
-
-        public abstract VertexFormat getFormat();
-
-        public abstract float getPolygonOffset();
-
-        public abstract SkinRenderObject getVertexBuffer();
-
-        public void render(RenderType renderType, int index, int maxVertexCount) {
-            IPoseStack poseStack = getPoseStack();
-            SkinRenderObject vertexBuffer = getVertexBuffer();
-            AbstractShaderExecutor executor = AbstractShaderExecutor.getInstance();
-
-            float polygonOffset = getPolygonOffset();
-            if (polygonOffset != 0) {
-                // https://sites.google.com/site/threejstuts/home/polygon_offset
-                // For polygons that are parallel to the near and far clipping planes, the depth slope is zero.
-                // For the polygons in your scene with a depth slope near zero, only a small, constant offset is needed.
-                // To create a small, constant offset, you can pass factor = 0.0 and units = 1.0.
-                RenderSystem.polygonOffset(0, polygonOffset * -1);
-                RenderSystem.enablePolygonOffset();
-            }
-
-            RenderSystem.setShaderColor(1, 1, 1, 1);
-
-            RenderSystem.setExtendedNormalMatrix(poseStack.lastNormal());
-            RenderSystem.setExtendedModelViewMatrix(poseStack.lastPose());
-
-            executor.setDefaultVertexLight(getLightmap());
-            executor.setMaxVertexCount(maxVertexCount);
-            executor.execute(vertexBuffer, getVertexOffset(), getVertexCount(), renderType, getFormat());
-
-            if (polygonOffset != 0) {
-                RenderSystem.polygonOffset(0f, 0f);
-                RenderSystem.disablePolygonOffset();
-            }
-        }
-    }
-
     public static class Pipeline {
 
-        //        private final HashMap<ISkinPartType, Integer> partIndexes = new HashMap<>();
-        private final AbstractShaderExecutor executor = AbstractShaderExecutor.getInstance();
-        private final HashMap<RenderType, ArrayList<Pass>> tasks = new HashMap<>();
+        private final AbstractShader shader = new AbstractShader();
+        private final ArrayList<ShaderVertexGroup> groups = new ArrayList<>();
+        private final HashMap<RenderType, ShaderVertexGroup> pending = new HashMap<>();
 
         private int maxVertexCount = 0;
 
-        public void add(Pass pass) {
-            tasks.computeIfAbsent(pass.getRenderType(), k -> new ArrayList<>()).add(pass);
+        public void add(ShaderVertexObject pass) {
+            pending.computeIfAbsent(pass.getType(), ShaderVertexGroup::new).add(pass);
             maxVertexCount = Math.max(maxVertexCount, pass.getVertexCount());
         }
 
         public void end() {
-            if (tasks.isEmpty()) {
-                return;
-            }
-            setupRenderState();
+            setupVertexGroups();
 
-            int index = 0;
+            shader.begin();
+            groups.forEach(group -> shader.apply(group, () -> group.forEach(shader::render)));
+            shader.end();
+
+            clearVertexGroups();
+        }
+
+        private void setupVertexGroups() {
             for (RenderType renderType : SkinRenderType.RENDER_ORDERING_FACES) {
-                ArrayList<Pass> pendingPasses = tasks.get(renderType);
-                if (pendingPasses == null || pendingPasses.isEmpty()) {
+                ShaderVertexGroup group = pending.get(renderType);
+                if (group == null || group.isEmpty()) {
                     continue;
                 }
-                renderType.setupRenderState();
-                for (Pass pass : pendingPasses) {
-                    pass.render(renderType, index++, maxVertexCount);
-                }
-                renderType.clearRenderState();
+                group.maxVertexCount = maxVertexCount;
+                groups.add(group);
             }
+        }
 
-            clearRenderState();
-            tasks.clear();
+        private void clearVertexGroups() {
+            groups.forEach(ShaderVertexGroup::clear);
+            groups.clear();
             maxVertexCount = 0;
-        }
-
-        private void setupRenderState() {
-            RenderSystem.backupExtendedMatrix();
-            RenderSystem.setExtendedTextureMatrix(OpenMatrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
-            executor.setup();
-            if (ModDebugger.wireframeRender) {
-                RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-            }
-        }
-
-        private void clearRenderState() {
-            if (ModDebugger.wireframeRender) {
-                RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-            }
-            executor.clean();
-            SkinRenderObject.unbind();
-            RenderSystem.restoreExtendedMatrix();
         }
     }
 }
+
