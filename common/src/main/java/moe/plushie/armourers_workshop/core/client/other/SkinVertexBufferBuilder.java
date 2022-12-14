@@ -126,6 +126,9 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         }
 
         public void end() {
+            if (maxVertexCount == 0) {
+                return;
+            }
             setupVertexGroups();
 
             shader.begin();

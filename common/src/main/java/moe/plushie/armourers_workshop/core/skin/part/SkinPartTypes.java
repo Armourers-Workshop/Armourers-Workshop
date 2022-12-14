@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.core.skin.part.feet.RightFootPartType;
 import moe.plushie.armourers_workshop.core.skin.part.head.HatPartType;
 import moe.plushie.armourers_workshop.core.skin.part.head.HeadPartType;
 import moe.plushie.armourers_workshop.core.skin.part.item.ItemPartType;
+import moe.plushie.armourers_workshop.core.skin.part.item.ShieldPartType;
 import moe.plushie.armourers_workshop.core.skin.part.legs.LeftLegPartType;
 import moe.plushie.armourers_workshop.core.skin.part.legs.RightLegPartType;
 import moe.plushie.armourers_workshop.core.skin.part.legs.SkirtPartType;
@@ -58,7 +59,7 @@ public final class SkinPartTypes {
     public static final ISkinPartType ITEM_BOW3 = register("bow.frame3", new BowPartType(2));
     public static final ISkinPartType ITEM_ARROW = register("bow.arrow", new ArrowPartType());
     public static final ISkinPartType ITEM_SWORD = register("sword.base", new ItemPartType());
-    public static final ISkinPartType ITEM_SHIELD = register("shield.base", new ItemPartType());
+    public static final ISkinPartType ITEM_SHIELD = register("shield.base", new ShieldPartType());
     public static final ISkinPartType ITEM_TRIDENT = register("trident.base", new ItemPartType());
 
     public static final ISkinPartType ITEM = register("item.base", new ItemPartType());
