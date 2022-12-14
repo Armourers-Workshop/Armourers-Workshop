@@ -44,7 +44,7 @@ public final class ExtendedItemRenderer {
             poseStack.pushPose();
             poseStack.translate(x + width / 2f, y + height / 2f, z);
             // we need do a vertical mirror, but normal matrix no needs.
-            poseStack.lastPose().multiply(OpenMatrix4f.createScaleMatrix(1, -1, 1));
+            poseStack.lastPose().scale(1, -1, 1);
             poseStack.rotate(Vector3f.XP.rotationDegrees(rx));
             poseStack.rotate(Vector3f.YP.rotationDegrees(ry + (float) (t / 10 % 360)));
             poseStack.scale(0.625f, 0.625f, 0.625f);

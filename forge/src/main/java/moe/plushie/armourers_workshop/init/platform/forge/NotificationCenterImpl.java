@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 public class NotificationCenterImpl {
 
     private static final HashMap<Class<?>, ArrayList<?>> LISTENERS = new HashMap<>();

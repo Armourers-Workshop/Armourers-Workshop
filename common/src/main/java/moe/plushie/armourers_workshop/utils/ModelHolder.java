@@ -2,7 +2,9 @@ package moe.plushie.armourers_workshop.utils;
 
 import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IOverrideModelHolder;
 import moe.plushie.armourers_workshop.api.client.model.IPlayerModelHolder;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.compatibility.AbstractModelPartRegistries;
@@ -140,7 +142,7 @@ public class ModelHolder<T extends Model> implements IModelHolder<T> {
         }
     }
 
-    public static class HumanoidStub<T extends EntityModel<?>> extends EntityStub<T> implements IHumanoidModelHolder<T> {
+    public static class HumanoidStub<T extends EntityModel<?>> extends EntityStub<T> implements IHumanoidModelHolder<T>, IOverrideModelHolder {
 
         private final ModelPart hat;
         private final ModelPart head;
@@ -149,6 +151,8 @@ public class ModelHolder<T extends Model> implements IModelHolder<T> {
         private final ModelPart rightArm;
         private final ModelPart leftLeg;
         private final ModelPart rightLeg;
+
+        private HashMap<String, IPoseStack> overrides;
 
         public HumanoidStub(T model, Consumer<PartSet> provider) {
             super(model, provider);
@@ -194,6 +198,16 @@ public class ModelHolder<T extends Model> implements IModelHolder<T> {
         @Override
         public ModelPart getRightLegPart() {
             return rightLeg;
+        }
+
+        @Override
+        public HashMap<String, IPoseStack> getOverrides() {
+            return overrides;
+        }
+
+        @Override
+        public void setOverrides(HashMap<String, IPoseStack> overrides) {
+            this.overrides = overrides;
         }
     }
 

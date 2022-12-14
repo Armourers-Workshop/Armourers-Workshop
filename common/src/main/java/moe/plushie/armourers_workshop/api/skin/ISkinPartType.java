@@ -47,6 +47,8 @@ public interface ISkinPartType {
 
     IVector3i getRenderOffset();
 
+    IRectangle3i getBounds();
+
     default float getRenderPolygonOffset() {
         return 0;
     }

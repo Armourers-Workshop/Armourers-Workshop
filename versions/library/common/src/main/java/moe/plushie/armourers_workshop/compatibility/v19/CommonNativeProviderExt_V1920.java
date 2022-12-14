@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
+import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.init.provider.CommonNativeFactory;
 import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -15,7 +16,12 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -47,6 +53,25 @@ public interface CommonNativeProviderExt_V1920 extends CommonNativeProvider, Com
                 }, style);
             }
         });
+    }
+
+    @Override
+    default IResourceManager createResourceManager(ResourceManager resourceManager) {
+        return new IResourceManager() {
+            @Override
+            public boolean hasResource(ResourceLocation resourceLocation) {
+                return resourceManager.getResource(resourceLocation).isPresent();
+            }
+
+            @Override
+            public InputStream readResource(ResourceLocation resourceLocation) throws IOException {
+                Optional<Resource> resource = resourceManager.getResource(resourceLocation);
+                if (resource.isPresent()) {
+                    return resource.get().open();
+                }
+                throw new FileNotFoundException(resourceLocation.toString());
+            }
+        };
     }
 
     class ArgumentTypeInfo1920<A extends IArgumentType<?>> implements ArgumentTypeInfo<A, ArgumentTypeInfo1920.Template<A>> {

@@ -12,6 +12,7 @@ public abstract class SkinPartType implements ISkinPartType {
 
     protected ResourceLocation registryName;
 
+    protected Rectangle3i bounds;
     protected Rectangle3i buildingSpace;
     protected Rectangle3i guideSpace;
     protected Vector3i offset;
@@ -42,6 +43,11 @@ public abstract class SkinPartType implements ISkinPartType {
     @Override
     public Vector3i getOffset() {
         return this.offset;
+    }
+
+    @Override
+    public Rectangle3i getBounds() {
+        return bounds;
     }
 
     @Override

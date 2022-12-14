@@ -44,6 +44,9 @@ public class ModDebugger {
 
     public static boolean viewHierarchy = false;
 
+    public static boolean armature = true;
+
+
     // Debug tool
     public static boolean armourerDebugRender;
     public static boolean lodLevels;

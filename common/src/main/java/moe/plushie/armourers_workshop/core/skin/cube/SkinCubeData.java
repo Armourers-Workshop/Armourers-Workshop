@@ -23,6 +23,11 @@ public class SkinCubeData {
     private int cubeCount = 0;
     private BufferSlice bufferSlice;
     private final SkinUsedCounter usedCounter = new SkinUsedCounter();
+    private final ISkinPartType partType;
+
+    public SkinCubeData(ISkinPartType partType) {
+        this.partType = partType;
+    }
 
     public int getCubeCount() {
         return cubeCount;
@@ -34,6 +39,9 @@ public class SkinCubeData {
         usedCounter.reset();
     }
 
+    public ISkinPartType getPartType() {
+        return partType;
+    }
 
     public ISkinCube getCube(int index) {
         return SkinCubes.byId(bufferSlice.at(index).getId());
@@ -70,7 +78,11 @@ public class SkinCubeData {
             alpha = 127;
         }
 
-        return new SkinCubeFace(slice.getX(), slice.getY(), slice.getZ(), PaintColor.of(rgb, paintType), alpha, dir, cube);
+        int x = slice.getX();
+        int y = slice.getY();
+        int z = slice.getZ();
+
+        return new SkinCubeFace(x, y, z, PaintColor.of(rgb, paintType), alpha, dir, cube);
     }
 
     public OpenVoxelShape getRenderShape() {

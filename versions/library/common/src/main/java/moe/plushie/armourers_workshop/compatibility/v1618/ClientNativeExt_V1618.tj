@@ -46,21 +46,4 @@ public interface ClientNativeExt_V1618 extends ClientNativeProvider, ClientNativ
             }
         };
     }
-
-    @Override
-    default IResourceManager getResourceManager() {
-        ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-        return new IResourceManager() {
-            @Override
-            public boolean hasResource(ResourceLocation resourceLocation) {
-                return resourceManager.hasResource(resourceLocation);
-            }
-
-            @Override
-            public InputStream readResource(ResourceLocation resourceLocation) throws IOException {
-                return resourceManager.getResource(resourceLocation).getInputStream();
-            }
-        };
-    }
-
 }

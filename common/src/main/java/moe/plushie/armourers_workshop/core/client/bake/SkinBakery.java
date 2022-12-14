@@ -1,16 +1,13 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
-import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.data.DataLoader;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
-import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -20,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -146,21 +142,27 @@ public final class SkinBakery {
         ColorScheme scheme = new ColorScheme();
         ColorDescriptor colorInfo = new ColorDescriptor();
 
-        for (SkinPart part : skin.getParts()) {
-            SkinCubeData data = part.getCubeData();
-            BakedSkinPart bakedPart = new BakedSkinPart(part, PackedQuad.from(data));
-            bakedParts.add(bakedPart);
-            usedCounter.add(data.getUsedCounter());
-            usedCounter.addFaceTotal(bakedPart.getFaceTotal());
+        skin.getParts().forEach(part -> {
+            PackedQuad.from(part).forEach((partType, quads) -> {
+                // when has a different part type, it means the skin part was split.
+                // for ensure data safety, we need create a blank skin part to manage data.
+                SkinPart usedPart = part;
+                if (usedPart.getType() != partType) {
+                    usedPart = new SkinPart.Empty(partType, quads.getBounds(), quads.getRenderShape());
+                }
+                BakedSkinPart bakedPart = new BakedSkinPart(usedPart, quads);
+                bakedParts.add(bakedPart);
+                usedCounter.addFaceTotal(bakedPart.getFaceTotal());
+            });
+            usedCounter.add(part.getCubeData().getUsedCounter());
             // part.clearCubeData();
-        }
+        });
 
-        for (Map.Entry<ISkinPartType, PackedQuad> entry : PackedQuad.from(skin.getPaintData()).entrySet()) {
-            PackedQuad quads = entry.getValue();
-            TexturePart part = new TexturePart(entry.getKey(), quads.getBounds(), quads.getRenderShape());
+        PackedQuad.from(skin.getPaintData()).forEach((partType, quads) -> {
+            SkinPart part = new SkinPart.Empty(partType, quads.getBounds(), quads.getRenderShape());
             BakedSkinPart bakedPart = new BakedSkinPart(part, quads);
             bakedParts.add(bakedPart);
-        }
+        });
 
         int partId = 0;
         ArrayList<BakedSkinPart> iterator = new ArrayList<>(bakedParts);

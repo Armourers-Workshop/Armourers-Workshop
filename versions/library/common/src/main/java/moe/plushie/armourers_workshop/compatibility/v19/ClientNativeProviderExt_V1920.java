@@ -4,19 +4,10 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
-import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeFactory;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
-import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.util.Optional;
 
 @Available("[1.19, )")
 public interface ClientNativeProviderExt_V1920 extends ClientNativeProvider, ClientNativeFactory {
@@ -50,26 +41,6 @@ public interface ClientNativeProviderExt_V1920 extends ClientNativeProvider, Cli
                         buffer.release();
                     }
                 };
-            }
-        };
-    }
-
-    @Override
-    default IResourceManager getResourceManager() {
-        ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-        return new IResourceManager() {
-            @Override
-            public boolean hasResource(ResourceLocation resourceLocation) {
-                return resourceManager.getResource(resourceLocation).isPresent();
-            }
-
-            @Override
-            public InputStream readResource(ResourceLocation resourceLocation) throws IOException {
-                Optional<Resource> resource = resourceManager.getResource(resourceLocation);
-                if (resource.isPresent()) {
-                    return resource.get().open();
-                }
-                throw new FileNotFoundException(resourceLocation.toString());
             }
         };
     }

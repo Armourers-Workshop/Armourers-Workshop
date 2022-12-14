@@ -84,7 +84,7 @@ public final class SkinPartSerializerV12 {
             }
         }
 
-        cubeData = new SkinCubeData();
+        cubeData = new SkinCubeData(skinPartType);
         cubeData.readFromStream(stream, version, skinPartType);
         markerBlocks = new ArrayList<>();
         if (version > 8) {

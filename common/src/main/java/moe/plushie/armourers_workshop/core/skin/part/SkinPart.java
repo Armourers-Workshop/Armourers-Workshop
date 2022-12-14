@@ -18,6 +18,8 @@ import java.util.List;
 
 public class SkinPart implements ISkinPart {
 
+    protected int id = 0;
+
     protected ISkinPartType partType;
 
     protected OpenVoxelShape renderShape;
@@ -25,8 +27,6 @@ public class SkinPart implements ISkinPart {
 
     protected SkinTransform transform;
     protected SkinProperties properties;
-
-    protected int id = 0;
 
     private HashMap<Long, Rectangle3i> blockGrid;
     private SkinCubeData cubeData;
@@ -133,6 +133,11 @@ public class SkinPart implements ISkinPart {
         return null;
     }
 
+
+    public void setTransform(SkinTransform transform) {
+        this.transform = transform;
+    }
+
     public SkinTransform getTransform() {
         return transform;
     }
@@ -154,5 +159,15 @@ public class SkinPart implements ISkinPart {
     @Override
     public String toString() {
         return "SkinPart [cubeData=" + cubeData + ", markerBlocks=" + markerBlocks + ", skinPart=" + partType.getRegistryName() + "]";
+    }
+
+    public static class Empty extends SkinPart {
+
+        public Empty(ISkinPartType partType, Rectangle3i bounds, OpenVoxelShape renderShape) {
+            super(partType, new ArrayList<>(), new SkinCubeData(partType));
+            this.partBounds = bounds;
+            this.renderShape = renderShape;
+            this.setProperties(new SkinProperties());
+        }
     }
 }

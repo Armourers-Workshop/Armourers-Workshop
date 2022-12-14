@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import com.google.common.collect.Iterables;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.*;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
@@ -33,7 +34,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 
-
 @Environment(value = EnvType.CLIENT)
 public class SkinRenderData implements SkinBakery.IBakeListener {
 
@@ -61,6 +61,8 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
     private int version = 0;
     private int lastVersion = Integer.MAX_VALUE;
+
+    public IPoseStack overridePostStack;
 
     public SkinRenderData() {
     }

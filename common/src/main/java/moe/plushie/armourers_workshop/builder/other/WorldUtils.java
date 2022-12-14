@@ -133,7 +133,7 @@ public final class WorldUtils {
         if (cubeCount < 1) {
             return null;
         }
-        SkinCubeData cubeData = new SkinCubeData();
+        SkinCubeData cubeData = new SkinCubeData(skinPart);
         cubeData.setCubeCount(cubeCount);
 
         ArrayList<SkinMarker> markerBlocks = new ArrayList<>();

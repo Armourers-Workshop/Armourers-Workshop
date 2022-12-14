@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.init.provider;
 
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
-import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,7 +13,6 @@ import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 
 @Environment(value = EnvType.CLIENT)
@@ -29,6 +27,4 @@ public interface ClientNativeFactory {
     <T extends LivingEntity, M extends EntityModel<T> & HeadedModel> CustomHeadLayer<T, M> createCustomHeadLayer(LivingEntityRenderer<T, M> renderer, AbstractEntityRendererContext context);
 
     IBufferBuilder createBuilderBuffer(int size);
-
-    IResourceManager getResourceManager();
 }

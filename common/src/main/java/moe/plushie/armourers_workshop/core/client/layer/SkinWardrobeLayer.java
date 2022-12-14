@@ -47,6 +47,10 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         if (renderData == null) {
             return;
         }
+        if (renderData.overridePostStack != null) {
+            poseStack = renderData.overridePostStack;
+        }
+
         poseStack.pushPose();
 
         // apply the model baby scale.

@@ -5,7 +5,11 @@ import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeFactory;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 
+@Environment(value = EnvType.CLIENT)
 public class ClientNativeManager {
 
     @ExpectPlatform
@@ -19,7 +23,7 @@ public class ClientNativeManager {
     }
 
     public static IResourceManager getResourceManager() {
-        return getFactory().getResourceManager();
+        return CommonNativeManager.createResourceManager(Minecraft.getInstance().getResourceManager());
     }
 
     public static IBufferBuilder createBuilderBuffer(int size) {

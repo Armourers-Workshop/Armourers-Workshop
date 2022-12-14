@@ -69,7 +69,12 @@ public class SkinRenderObjectBuilder {
         CachedTask task = new CachedTask(part, scheme);
         cachingTasks.put(key, task);
         addCompileTask(task);
+//        _addPartData(part, scheme, light, partialTicks, slotIndex, poseStack, shouldRender);
+    }
 
+    private void _addPartData(BakedSkinPart part, ColorScheme scheme, int light, float partialTicks, int slotIndex, IPoseStack poseStack, boolean shouldRender) {
+//        RenderSystem.backupExtendedMatrix();
+//
 //        RenderSystem.backupExtendedMatrix();
 //        RenderSystem.getModelViewStack().pushPose();
 //        RenderSystem.getModelViewStack().last().pose().setIdentity();

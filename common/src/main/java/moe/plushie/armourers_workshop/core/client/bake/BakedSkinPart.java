@@ -5,11 +5,12 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
-import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.transform.SkinFixedTransform;
 import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.transform.SkinWingsTransform;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
@@ -20,6 +21,7 @@ import net.minecraft.client.renderer.RenderType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.function.BiConsumer;
 
 @Environment(value = EnvType.CLIENT)
@@ -43,9 +45,10 @@ public class BakedSkinPart {
 //    }
 //
 //    protected BakedSkinPart(SkinPart part, PackedQuad quads, SkinTransform transform) {
+
         this.part = part;
         this.quads = quads;
-        this.transform = SkinWingsTransform.build(part);
+        this.transform = new SkinTransform.Mul(quads.getTransform(), SkinWingsTransform.build(part));
         this.descriptor = quads.getColorInfo();
     }
 
@@ -114,7 +117,7 @@ public class BakedSkinPart {
     }
 
     public float getRenderPolygonOffset() {
-        if (part instanceof TexturePart) {
+        if (part instanceof SkinPart.Empty) {
             return 20;
         }
         return getType().getRenderPolygonOffset();
