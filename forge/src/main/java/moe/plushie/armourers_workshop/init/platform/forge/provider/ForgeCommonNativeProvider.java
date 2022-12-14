@@ -39,11 +39,6 @@ public interface ForgeCommonNativeProvider extends CommonNativeProvider {
     }
 
     @Override
-    default void willRegisterEntitySerializers(Consumer<EntitySerializersRegistry> consumer) {
-        consumer.accept(EntityDataSerializers::registerSerializer);
-    }
-
-    @Override
     default void willPlayerDrop(Consumer<Player> consumer) {
         willEntityDrop(entity -> {
             if (entity instanceof Player) {

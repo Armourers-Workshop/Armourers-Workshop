@@ -1,17 +1,17 @@
 package moe.plushie.armourers_workshop.utils;
 
-import net.minecraft.network.syncher.EntityDataSerializer;
+import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class AWDataAccessor<S, T> {
 
-    public EntityDataSerializer<T> dataSerializer;
+    public IEntitySerializer<T> dataSerializer;
     protected Function<S, T> supplier;
     protected BiConsumer<S, T> applier;
 
-    public static <S, T> AWDataAccessor<S, T> of(EntityDataSerializer<T> dataSerializer, Function<S, T> supplier, BiConsumer<S, T> applier) {
+    public static <S, T> AWDataAccessor<S, T> of(IEntitySerializer<T> dataSerializer, Function<S, T> supplier, BiConsumer<S, T> applier) {
         AWDataAccessor<S, T> dataAccessor = new AWDataAccessor<>();
         dataAccessor.dataSerializer = dataSerializer;
         dataAccessor.supplier = supplier;
@@ -19,7 +19,7 @@ public class AWDataAccessor<S, T> {
         return dataAccessor;
     }
 
-    public static <S, T> AWDataAccessor<S, T> withDataSerializer(Class<S> clazz, EntityDataSerializer<T> dataSerializer) {
+    public static <S, T> AWDataAccessor<S, T> withDataSerializer(Class<S> clazz, IEntitySerializer<T> dataSerializer) {
         AWDataAccessor<S, T> dataAccessor = new AWDataAccessor<>();
         dataAccessor.dataSerializer = dataSerializer;
         return dataAccessor;

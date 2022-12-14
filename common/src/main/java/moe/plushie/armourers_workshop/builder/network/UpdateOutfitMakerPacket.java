@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.network;
 
 import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.blockentity.OutfitMakerBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.OutfitMakerMenu;
@@ -86,7 +87,7 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
 
         private final AWDataAccessor<OutfitMakerBlockEntity, ?> dataAccessor;
 
-        <T> Field(EntityDataSerializer<T> dataSerializer, Function<OutfitMakerBlockEntity, T> supplier, BiConsumer<OutfitMakerBlockEntity, T> applier) {
+        <T> Field(IEntitySerializer<T> dataSerializer, Function<OutfitMakerBlockEntity, T> supplier, BiConsumer<OutfitMakerBlockEntity, T> applier) {
             this.dataAccessor = AWDataAccessor.of(dataSerializer, supplier, applier);
         }
 

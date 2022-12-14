@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.network;
 
+import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
@@ -7,7 +8,6 @@ import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -21,14 +21,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CustomReplyPacket<R> extends CustomPacket {
 
     private final int id;
-    private final EntityDataSerializer<R> serializer;
+    private final IEntitySerializer<R> serializer;
 
-    public CustomReplyPacket(EntityDataSerializer<R> serializer) {
+    public CustomReplyPacket(IEntitySerializer<R> serializer) {
         this.id = Receiver.COUNTER.getAndIncrement();
         this.serializer = serializer;
     }
 
-    public CustomReplyPacket(EntityDataSerializer<R> serializer, FriendlyByteBuf buffer) {
+    public CustomReplyPacket(IEntitySerializer<R> serializer, FriendlyByteBuf buffer) {
         this.id = buffer.readInt();
         this.serializer = serializer;
     }
@@ -58,7 +58,7 @@ public class CustomReplyPacket<R> extends CustomPacket {
 
     public static class Request<R> {
 
-        public final EntityDataSerializer<R> serializer;
+        public final IEntitySerializer<R> serializer;
         public final IResultHandler<R> handler;
 
         public Request(CustomReplyPacket<R> packet, IResultHandler<R> handler) {

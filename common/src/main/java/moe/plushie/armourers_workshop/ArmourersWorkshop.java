@@ -23,6 +23,7 @@ public class ArmourersWorkshop {
         ModBlocks.init();
         ModBlockEntityTypes.init();
         ModEntityTypes.init();
+        ModEntitySerializers.init();
         ModCapabilities.init();
         ModMenuTypes.init();
         ModSounds.init();

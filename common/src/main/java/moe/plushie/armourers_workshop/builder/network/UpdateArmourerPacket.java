@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.network;
 
 import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
@@ -160,7 +161,7 @@ public class UpdateArmourerPacket extends CustomPacket {
         public final BlockPermission permission;
         private final AWDataAccessor<ArmourerBlockEntity, ?> dataAccessor;
 
-        <T> Field(EntityDataSerializer<T> dataSerializer, Function<ArmourerBlockEntity, T> supplier, BiConsumer<ArmourerBlockEntity, T> applier, BlockPermission permission) {
+        <T> Field(IEntitySerializer<T> dataSerializer, Function<ArmourerBlockEntity, T> supplier, BiConsumer<ArmourerBlockEntity, T> applier, BlockPermission permission) {
             this.permission = permission;
             this.dataAccessor = AWDataAccessor.of(dataSerializer, supplier, applier);
         }

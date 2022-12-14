@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
+import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -53,73 +54,66 @@ import java.util.zip.GZIPOutputStream;
 
 public class DataSerializers {
 
-    public static final EntityDataSerializer<CompoundTag> COMPOUND_TAG = EntityDataSerializers.COMPOUND_TAG;
-    public static final EntityDataSerializer<Integer> INT = EntityDataSerializers.INT;
-    public static final EntityDataSerializer<String> STRING = EntityDataSerializers.STRING;
-    public static final EntityDataSerializer<Boolean> BOOLEAN = EntityDataSerializers.BOOLEAN;
-    public static final EntityDataSerializer<Float> FLOAT = EntityDataSerializers.FLOAT;
+    public static final IEntitySerializer<CompoundTag> COMPOUND_TAG = of(EntityDataSerializers.COMPOUND_TAG);
+    public static final IEntitySerializer<Integer> INT = of(EntityDataSerializers.INT);
+    public static final IEntitySerializer<String> STRING = of(EntityDataSerializers.STRING);
+    public static final IEntitySerializer<Boolean> BOOLEAN = of(EntityDataSerializers.BOOLEAN);
+    public static final IEntitySerializer<Float> FLOAT = of(EntityDataSerializers.FLOAT);
 
-    public static final EntityDataSerializer<Vec3> VECTOR_3D = new EntityDataSerializer<Vec3>() {
+    public static final IEntitySerializer<Vec3> VECTOR_3D = new IEntitySerializer<Vec3>() {
+        @Override
         public void write(FriendlyByteBuf buffer, Vec3 pos) {
             buffer.writeDouble(pos.x());
             buffer.writeDouble(pos.y());
             buffer.writeDouble(pos.z());
         }
 
+        @Override
         public Vec3 read(FriendlyByteBuf buffer) {
             return new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
         }
-
-        public Vec3 copy(Vec3 pos) {
-            return pos;
-        }
     };
 
-    public static final EntityDataSerializer<Vector3f> VECTOR_3F = new EntityDataSerializer<Vector3f>() {
+    public static final IEntitySerializer<Vector3f> VECTOR_3F = new IEntitySerializer<Vector3f>() {
+        @Override
         public void write(FriendlyByteBuf buffer, Vector3f pos) {
             buffer.writeFloat(pos.getX());
             buffer.writeFloat(pos.getY());
             buffer.writeFloat(pos.getZ());
         }
 
+        @Override
         public Vector3f read(FriendlyByteBuf buffer) {
             return new Vector3f(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
         }
-
-        public Vector3f copy(Vector3f pos) {
-            return pos;
-        }
     };
 
-    public static final EntityDataSerializer<IPaintColor> PAINT_COLOR = new EntityDataSerializer<IPaintColor>() {
+    public static final IEntitySerializer<IPaintColor> PAINT_COLOR = new IEntitySerializer<IPaintColor>() {
+        @Override
         public void write(FriendlyByteBuf buffer, IPaintColor color) {
             buffer.writeInt(color.getRawValue());
         }
 
+        @Override
         public IPaintColor read(FriendlyByteBuf buffer) {
             return PaintColor.of(buffer.readInt());
         }
-
-        public IPaintColor copy(IPaintColor value) {
-            return value;
-        }
     };
 
-    public static final EntityDataSerializer<PlayerTextureDescriptor> PLAYER_TEXTURE = new EntityDataSerializer<PlayerTextureDescriptor>() {
+    public static final IEntitySerializer<PlayerTextureDescriptor> PLAYER_TEXTURE = new IEntitySerializer<PlayerTextureDescriptor>() {
+
+        @Override
         public void write(FriendlyByteBuf buffer, PlayerTextureDescriptor descriptor) {
             buffer.writeNbt(descriptor.serializeNBT());
         }
 
+        @Override
         public PlayerTextureDescriptor read(FriendlyByteBuf buffer) {
             return new PlayerTextureDescriptor(buffer.readNbt());
         }
-
-        public PlayerTextureDescriptor copy(PlayerTextureDescriptor descriptor) {
-            return descriptor;
-        }
     };
 
-    public static final EntityDataSerializer<Exception> EXCEPTION = new EntityDataSerializer<Exception>() {
+    public static final IEntitySerializer<Exception> EXCEPTION = new IEntitySerializer<Exception>() {
 
         public void write(FriendlyByteBuf buffer, Exception exception) {
             OutputStream outputStream = null;
@@ -247,6 +241,20 @@ public class DataSerializers {
     };
 
     private static final Random RANDOM = new Random();
+
+    public static <T> IEntitySerializer<T> of(EntityDataSerializer<T> serializer) {
+        return new IEntitySerializer<T>() {
+            @Override
+            public T read(FriendlyByteBuf buffer) {
+                return serializer.read(buffer);
+            }
+
+            @Override
+            public void write(FriendlyByteBuf buffer, T descriptor) {
+                serializer.write(buffer, descriptor);
+            }
+        };
+    }
 
     public static Vector3i getVector3i(CompoundTag nbt, String key) {
         ListTag listNBT = nbt.getList(key, Constants.TagFlags.INT);

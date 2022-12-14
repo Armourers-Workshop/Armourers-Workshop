@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.network;
 
+import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
@@ -173,7 +174,7 @@ public class UpdateWardrobePacket extends CustomPacket {
                     .withApplier(applier);
         }
 
-        <S extends Entity, T> Field(EntityDataSerializer<T> dataSerializer, Function<S, T> supplier, BiConsumer<S, T> applier) {
+        <S extends Entity, T> Field(IEntitySerializer<T> dataSerializer, Function<S, T> supplier, BiConsumer<S, T> applier) {
             this.broadcastChanges = false;
             this.dataAccessor = AWDataAccessor
                     .withDataSerializer(SkinWardrobe.class, dataSerializer)
@@ -191,7 +192,7 @@ public class UpdateWardrobePacket extends CustomPacket {
         }
 
         <T> Field(EntityDataAccessor<T> dataParameter) {
-            this(dataParameter.getSerializer(), e -> e.getEntityData().get(dataParameter), (e, v) -> e.getEntityData().set(dataParameter, v));
+            this(DataSerializers.of(dataParameter.getSerializer()), e -> e.getEntityData().get(dataParameter), (e, v) -> e.getEntityData().set(dataParameter, v));
         }
 
         public <T> void set(SkinWardrobe wardrobe, T value) {
@@ -212,7 +213,7 @@ public class UpdateWardrobePacket extends CustomPacket {
             return ObjectUtils.unsafeCast(dataAccessor);
         }
 
-        public <T> EntityDataSerializer<T> getDataSerializer() {
+        public <T> IEntitySerializer<T> getDataSerializer() {
             AWDataAccessor<SkinWardrobe, T> dataAccessor = getDataAccessor();
             return dataAccessor.dataSerializer;
         }

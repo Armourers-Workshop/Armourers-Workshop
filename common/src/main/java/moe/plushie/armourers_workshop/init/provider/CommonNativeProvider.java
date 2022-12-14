@@ -31,8 +31,6 @@ public interface CommonNativeProvider {
 
     void willRegisterEntityAttributes(Consumer<EntityAttributesRegistry> consumer);
 
-    void willRegisterEntitySerializers(Consumer<EntitySerializersRegistry> consumer);
-
     void willServerTick(Consumer<ServerLevel> consumer);
 
     void willServerStart(Consumer<MinecraftServer> consumer);

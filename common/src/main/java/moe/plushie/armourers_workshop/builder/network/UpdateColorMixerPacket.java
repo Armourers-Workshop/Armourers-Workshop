@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.builder.network;
 
+import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
@@ -55,7 +56,7 @@ public class UpdateColorMixerPacket extends CustomPacket {
 
         private final AWDataAccessor<ColorMixerBlockEntity, ?> dataAccessor;
 
-        <T> Field(EntityDataSerializer<T> dataSerializer, Function<ColorMixerBlockEntity, T> supplier, BiConsumer<ColorMixerBlockEntity, T> applier) {
+        <T> Field(IEntitySerializer<T> dataSerializer, Function<ColorMixerBlockEntity, T> supplier, BiConsumer<ColorMixerBlockEntity, T> applier) {
             this.dataAccessor = AWDataAccessor.of(dataSerializer, supplier, applier);
         }
 

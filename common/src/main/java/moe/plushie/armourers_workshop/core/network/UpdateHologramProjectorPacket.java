@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.network;
 
+import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.utils.AWDataAccessor;
@@ -63,7 +64,7 @@ public class UpdateHologramProjectorPacket extends CustomPacket {
 
         private final AWDataAccessor<HologramProjectorBlockEntity, ?> dataAccessor;
 
-        <T> Field(EntityDataSerializer<T> dataSerializer, Function<HologramProjectorBlockEntity, T> supplier, BiConsumer<HologramProjectorBlockEntity, T> applier) {
+        <T> Field(IEntitySerializer<T> dataSerializer, Function<HologramProjectorBlockEntity, T> supplier, BiConsumer<HologramProjectorBlockEntity, T> applier) {
             this.dataAccessor = AWDataAccessor.of(dataSerializer, supplier, applier);
         }
 

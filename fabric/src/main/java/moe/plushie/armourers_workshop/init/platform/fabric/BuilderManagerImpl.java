@@ -61,6 +61,11 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     }
 
     @Override
+    public <T> IEntitySerializerBuilder<T> createEntitySerializerBuilder(IEntitySerializer<T> serializer) {
+        return new EntitySerializerBuilderImpl<>(serializer);
+    }
+
+    @Override
     public <T extends AbstractContainerMenu, D> IMenuTypeBuilder<T> createMenuTypeBuilder(IMenuProvider<T, D> factory, IPlayerDataSerializer<D> serializer) {
         return new MenuTypeBuilderImpl<>(factory, serializer);
     }

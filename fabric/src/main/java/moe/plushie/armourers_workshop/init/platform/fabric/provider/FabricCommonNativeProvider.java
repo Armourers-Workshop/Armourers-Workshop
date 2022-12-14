@@ -38,11 +38,6 @@ public interface FabricCommonNativeProvider extends CommonNativeProvider {
     }
 
     @Override
-    default void willRegisterEntitySerializers(Consumer<EntitySerializersRegistry> consumer) {
-        consumer.accept(EntityDataSerializers::registerSerializer);
-    }
-
-    @Override
     default void willServerTick(Consumer<ServerLevel> consumer) {
         ServerTickEvents.START_WORLD_TICK.register(consumer::accept);
     }
