@@ -31,8 +31,8 @@ public class GhastSkinRenderer<T extends Ghast, V extends GhastModel<T>, M exten
         }
     }
 
-    private void offset(IPoseStack matrixStack, M model) {
-        matrixStack.translate(0.0f, 24.0f + 1.5f, 0.0f);
-        matrixStack.scale(2f, 2f, 2f);
+    private void offset(IPoseStack poseStack, M model) {
+        poseStack.translate(0.0f, 24.0f + 1.5f, 0.0f);
+        poseStack.scale(2f, 2f, 2f);
     }
 }

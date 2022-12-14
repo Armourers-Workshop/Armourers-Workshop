@@ -67,6 +67,6 @@ public interface ForgeClientNativeProvider extends ClientNativeProvider {
     }
 
     interface RenderBlockHighlight {
-        void render(BlockHitResult traceResult, Camera renderInfo, PoseStack matrixStack, MultiBufferSource buffers);
+        void render(BlockHitResult traceResult, Camera renderInfo, PoseStack poseStack, MultiBufferSource buffers);
     }
 }

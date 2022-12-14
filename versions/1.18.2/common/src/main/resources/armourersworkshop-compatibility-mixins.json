@@ -5,7 +5,7 @@
   "client": [
     "AbstractMatrix3fMixin",
     "AbstractMatrix4fMixin",
-    "AbstractPoseStackMixin",
+    "AbstractPoseStackMixin_V1618",
     "AbstractEntityRenderDispatcherMixin",
     "AbstractGameRendererMixin",
     "AbstractVanillaShaderMixin",

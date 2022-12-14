@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.init.platform.forge.proxy;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;

@@ -34,27 +34,27 @@ public class FeetGuideRenderer extends AbstractGuideRenderer {
         rendererManager.register(SkinPartTypes.BIPED_RIGHT_FOOT, this::renderRightLeg);
     }
 
-    public void render(IPoseStack matrixStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
+    public void render(IPoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
         float f = 1 / 16f;
-        matrixStack.pushPose();
-        matrixStack.translate(2 * f, 0, 0);
-        renderLeftLeg(matrixStack, provider, light, overlay, buffers);
-        matrixStack.translate(-4 * f, 0, 0);
-        renderRightLeg(matrixStack, provider, light, overlay, buffers);
-        matrixStack.popPose();
+        poseStack.pushPose();
+        poseStack.translate(2 * f, 0, 0);
+        renderLeftLeg(poseStack, provider, light, overlay, buffers);
+        poseStack.translate(-4 * f, 0, 0);
+        renderRightLeg(poseStack, provider, light, overlay, buffers);
+        poseStack.popPose();
     }
 
-    public void renderLeftLeg(IPoseStack matrixStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
-        legLeft.render(matrixStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
+    public void renderLeftLeg(IPoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
+        legLeft.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
         if (provider.shouldRenderOverlay()) {
-            leftPants.render(matrixStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
+            leftPants.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
         }
     }
 
-    public void renderRightLeg(IPoseStack matrixStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
-        legRight.render(matrixStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
+    public void renderRightLeg(IPoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
+        legRight.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
         if (provider.shouldRenderOverlay()) {
-            rightPants.render(matrixStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
+            rightPants.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
         }
     }
 }

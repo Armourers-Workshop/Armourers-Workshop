@@ -59,7 +59,7 @@ public class HSBSliderBox extends UIControl {
         super.render(point, context);
         CGRect bounds = bounds();
         CGRect fixedBounds = bounds.insetBy(1, 1, 1, 1);
-        IPoseStack matrixStack = context.poseStack;
+        IPoseStack poseStack = context.poseStack;
         context.drawImage(backgroundImage, bounds);
         // TODO: Refactoring
         int cx = fixedBounds.x;
@@ -72,17 +72,17 @@ public class HSBSliderBox extends UIControl {
 
         if (type == Type.SATURATION) {
             RenderSystem.setShaderColor(hueColor);
-            RenderSystem.resize(matrixStack, cx, cy, 0, 176, cw, ch, 256, 20);
+            RenderSystem.resize(poseStack, cx, cy, 0, 176, cw, ch, 256, 20);
             RenderSystem.setShaderColor(brightnessColor);
-            RenderSystem.resize(matrixStack, cx, cy, type.u, type.v, cw, ch, type.texWidth, type.texHeight);
+            RenderSystem.resize(poseStack, cx, cy, type.u, type.v, cw, ch, type.texWidth, type.texHeight);
             RenderSystem.setShaderColor(UIColor.WHITE);
         } else {
-            RenderSystem.resize(matrixStack, cx, cy, type.u, type.v, cw, ch, type.texWidth, type.texHeight);
+            RenderSystem.resize(poseStack, cx, cy, type.u, type.v, cw, ch, type.texWidth, type.texHeight);
         }
 
         context.addClipRect(convertRectToView(fixedBounds, null));
-        RenderSystem.blit(matrixStack, (int) ((bounds.width - 3) * value) - 2, 0, 0, 0, 7, 4);
-        RenderSystem.blit(matrixStack, (int) ((bounds.width - 3) * value) - 2, bounds.height - 4, 7, 0, 7, 4);
+        RenderSystem.blit(poseStack, (int) ((bounds.width - 3) * value) - 2, 0, 0, 0, 7, 4);
+        RenderSystem.blit(poseStack, (int) ((bounds.width - 3) * value) - 2, bounds.height - 4, 7, 0, 7, 4);
         context.removeClipRect();
     }
 

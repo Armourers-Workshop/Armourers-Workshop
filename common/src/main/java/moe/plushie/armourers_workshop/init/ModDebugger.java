@@ -52,18 +52,18 @@ public class ModDebugger {
     public static boolean sortOrderToolTip;
 
     @Environment(value = EnvType.CLIENT)
-    public static void rotate(IPoseStack matrixStack) {
-        matrixStack.rotate(new OpenQuaternionf(rx, ry, rz, true));
+    public static void rotate(IPoseStack poseStack) {
+        poseStack.rotate(new OpenQuaternionf(rx, ry, rz, true));
     }
 
     @Environment(value = EnvType.CLIENT)
-    public static void scale(IPoseStack matrixStack) {
-        matrixStack.scale(sx, sy, sz);
+    public static void scale(IPoseStack poseStack) {
+        poseStack.scale(sx, sy, sz);
     }
 
     @Environment(value = EnvType.CLIENT)
-    public static void translate(IPoseStack matrixStack) {
-        matrixStack.translate(tx, ty, tz);
+    public static void translate(IPoseStack poseStack) {
+        poseStack.translate(tx, ty, tz);
     }
 
     public static void init() {

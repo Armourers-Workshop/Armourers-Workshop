@@ -11,7 +11,7 @@ import net.minecraftforge.client.ForgeHooksClient;
 @OnlyIn(Dist.CLIENT)
 public class TransformationProviderImpl {
 
-    public static BakedModel handleTransforms(IPoseStack matrixStack, BakedModel bakedModel, ItemTransforms.TransformType transformType, boolean leftHandHackery) {
-        return ForgeHooksClient.handleCameraTransforms(matrixStack.cast(), bakedModel, transformType, leftHandHackery);
+    public static BakedModel handleTransforms(IPoseStack poseStack, BakedModel bakedModel, ItemTransforms.TransformType transformType, boolean leftHandHackery) {
+        return ForgeHooksClient.handleCameraTransforms(poseStack.cast(), bakedModel, transformType, leftHandHackery);
     }
 }

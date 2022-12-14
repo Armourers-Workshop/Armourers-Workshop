@@ -34,10 +34,10 @@ public class AdvancedChestGuideRenderer extends AbstractAdvancedGuideRenderer {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int light, int overlay, float r, float g, float b, float alpha, MultiBufferSource buffers) {
+    public void render(PoseStack poseStack, int light, int overlay, float r, float g, float b, float alpha, MultiBufferSource buffers) {
 //        VertexConsumer builder = buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL);
-//        body.render(matrixStack, builder, light, overlay, r, g, b, alpha);
-//        leftArm.render(matrixStack, builder, light, overlay, r, g, b, alpha);
-//        rightArm.render(matrixStack, builder, light, overlay, r, g, b, alpha);
+//        body.render(poseStack, builder, light, overlay, r, g, b, alpha);
+//        leftArm.render(poseStack, builder, light, overlay, r, g, b, alpha);
+//        rightArm.render(poseStack, builder, light, overlay, r, g, b, alpha);
     }
 }

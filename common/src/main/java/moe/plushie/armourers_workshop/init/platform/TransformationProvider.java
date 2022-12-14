@@ -11,7 +11,7 @@ import net.minecraft.client.resources.model.BakedModel;
 public class TransformationProvider {
 
     @ExpectPlatform
-    public static BakedModel handleTransforms(IPoseStack matrixStack, BakedModel bakedModel, ItemTransforms.TransformType transformType, boolean leftHandHackery) {
+    public static BakedModel handleTransforms(IPoseStack poseStack, BakedModel bakedModel, ItemTransforms.TransformType transformType, boolean leftHandHackery) {
         return bakedModel;
     }
 }

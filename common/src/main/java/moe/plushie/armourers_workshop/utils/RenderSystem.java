@@ -419,7 +419,7 @@ public final class RenderSystem extends AbstractRenderSystem {
      * and filler. It is assumed that the desired texture ResourceLocation object has been bound using
      * Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation).
      *
-     * @param matrixStack   the gui matrix stack
+     * @param poseStack   the gui matrix stack
      * @param x             x axis offset
      * @param y             y axis offset
      * @param u             bound resource location image x offset
@@ -431,9 +431,9 @@ public final class RenderSystem extends AbstractRenderSystem {
      * @param borderSize    the size of the box's borders
      * @param zLevel        the zLevel to draw at
      */
-    public static void drawContinuousTexturedBox(IPoseStack matrixStack, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
+    public static void drawContinuousTexturedBox(IPoseStack poseStack, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
                                                  int borderSize, float zLevel) {
-        drawContinuousTexturedBox(matrixStack, x, y, u, v, width, height, textureWidth, textureHeight, borderSize, borderSize, borderSize, borderSize, zLevel);
+        drawContinuousTexturedBox(poseStack, x, y, u, v, width, height, textureWidth, textureHeight, borderSize, borderSize, borderSize, borderSize, zLevel);
     }
 
     /**
@@ -441,7 +441,7 @@ public final class RenderSystem extends AbstractRenderSystem {
      * and filler. The provided ResourceLocation object will be bound using
      * Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation).
      *
-     * @param matrixStack   the gui matrix stack
+     * @param poseStack   the gui matrix stack
      * @param res           the ResourceLocation object that contains the desired image
      * @param x             x axis offset
      * @param y             y axis offset
@@ -454,9 +454,9 @@ public final class RenderSystem extends AbstractRenderSystem {
      * @param borderSize    the size of the box's borders
      * @param zLevel        the zLevel to draw at
      */
-    public static void drawContinuousTexturedBox(IPoseStack matrixStack, ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
+    public static void drawContinuousTexturedBox(IPoseStack poseStack, ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
                                                  int borderSize, float zLevel) {
-        drawContinuousTexturedBox(matrixStack, res, x, y, u, v, width, height, textureWidth, textureHeight, borderSize, borderSize, borderSize, borderSize, zLevel);
+        drawContinuousTexturedBox(poseStack, res, x, y, u, v, width, height, textureWidth, textureHeight, borderSize, borderSize, borderSize, borderSize, zLevel);
     }
 
     /**
@@ -464,7 +464,7 @@ public final class RenderSystem extends AbstractRenderSystem {
      * and filler. The provided ResourceLocation object will be bound using
      * Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation).
      *
-     * @param matrixStack   the gui matrix stack
+     * @param poseStack   the gui matrix stack
      * @param res           the ResourceLocation object that contains the desired image
      * @param x             x axis offset
      * @param y             y axis offset
@@ -480,10 +480,10 @@ public final class RenderSystem extends AbstractRenderSystem {
      * @param rightBorder   the size of the box's right border
      * @param zLevel        the zLevel to draw at
      */
-    public static void drawContinuousTexturedBox(IPoseStack matrixStack, ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
+    public static void drawContinuousTexturedBox(IPoseStack poseStack, ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
                                                  int topBorder, int bottomBorder, int leftBorder, int rightBorder, float zLevel) {
         setShaderTexture(0, res);
-        drawContinuousTexturedBox(matrixStack, x, y, u, v, width, height, textureWidth, textureHeight, topBorder, bottomBorder, leftBorder, rightBorder, zLevel);
+        drawContinuousTexturedBox(poseStack, x, y, u, v, width, height, textureWidth, textureHeight, topBorder, bottomBorder, leftBorder, rightBorder, zLevel);
     }
 
     /**
@@ -491,7 +491,7 @@ public final class RenderSystem extends AbstractRenderSystem {
      * and filler. It is assumed that the desired texture ResourceLocation object has been bound using
      * Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation).
      *
-     * @param matrixStack   the gui matrix stack
+     * @param poseStack   the gui matrix stack
      * @param x             x axis offset
      * @param y             y axis offset
      * @param u             bound resource location image x offset
@@ -506,7 +506,7 @@ public final class RenderSystem extends AbstractRenderSystem {
      * @param rightBorder   the size of the box's right border
      * @param zLevel        the zLevel to draw at
      */
-    public static void drawContinuousTexturedBox(IPoseStack matrixStack, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
+    public static void drawContinuousTexturedBox(IPoseStack poseStack, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
                                                  int topBorder, int bottomBorder, int leftBorder, int rightBorder, float zLevel) {
         setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         enableBlend();
@@ -521,7 +521,7 @@ public final class RenderSystem extends AbstractRenderSystem {
         int yPasses = canvasHeight / fillerHeight;
         int remainderHeight = canvasHeight % fillerHeight;
 
-        IMatrix4f mat = matrixStack.lastPose();
+        IMatrix4f mat = poseStack.lastPose();
         AbstractShaderTesselator tesselator = AbstractShaderTesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.begin(SkinRenderType.GUI_IMAGE);
 

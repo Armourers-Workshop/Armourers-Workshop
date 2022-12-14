@@ -117,12 +117,12 @@ public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IM
 
 
     @Override
-    protected void renderBg(PoseStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
     }
 
 
     @Override
-    protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {
+    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
     }
 
     @Override

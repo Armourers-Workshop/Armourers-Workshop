@@ -83,12 +83,12 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
     }
 
     @Override
-    protected void scale(T entity, PoseStack matrixStack, float p_225620_3_) {
+    protected void scale(T entity, PoseStack poseStack, float p_225620_3_) {
         float f = 0.9375f; // from player renderer (maybe 15/16)
         if (!enableLimitScale) {
             f *= entity.getScale();
         }
-        matrixStack.scale(f, f, f);
+        poseStack.scale(f, f, f);
     }
 
     @Override

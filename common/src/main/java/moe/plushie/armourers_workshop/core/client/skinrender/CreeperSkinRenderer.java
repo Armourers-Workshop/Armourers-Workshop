@@ -32,7 +32,7 @@ public class CreeperSkinRenderer<T extends LivingEntity, V extends CreeperModel<
         }
     }
 
-    private void offset(IPoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, model.getPart("head"));
+    private void offset(IPoseStack poseStack, M model) {
+        transformer.apply(poseStack, model.getPart("head"));
     }
 }

@@ -37,13 +37,13 @@ public class HeldItemGuideRenderer extends AbstractGuideRenderer {
         rendererManager.register(SkinPartTypes.ITEM, this::render);
     }
 
-    public void render(IPoseStack matrixStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
+    public void render(IPoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
         float f = 1 / 16f;
-        matrixStack.pushPose();
-        matrixStack.rotate(Vector3f.XP.rotationDegrees(-90));
-        armSolid.render(matrixStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
-        matrixStack.translate(0, -0.001f * f, 0);
-        armTransparent.render(matrixStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_TRANSLUCENT), light, overlay, 1, 1, 1, 0.75f);
-        matrixStack.popPose();
+        poseStack.pushPose();
+        poseStack.rotate(Vector3f.XP.rotationDegrees(-90));
+        armSolid.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
+        poseStack.translate(0, -0.001f * f, 0);
+        armTransparent.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_TRANSLUCENT), light, overlay, 1, 1, 1, 0.75f);
+        poseStack.popPose();
     }
 }

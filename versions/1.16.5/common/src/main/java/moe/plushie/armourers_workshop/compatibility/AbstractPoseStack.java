@@ -44,6 +44,11 @@ public class AbstractPoseStack extends PoseStack_V1618 {
             }
 
             @Override
+            public void multiply(IPoseStack poseStack) {
+                // no support
+            }
+
+            @Override
             public void rotate(IQuaternionf quaternion) {
                 RenderSystem.multMatrix(new OpenMatrix4f(quaternion));
             }
@@ -56,6 +61,11 @@ public class AbstractPoseStack extends PoseStack_V1618 {
             @Override
             public IMatrix3f lastNormal() {
                 return emptyStack.lastNormal();
+            }
+
+            @Override
+            public IPoseStack copy() {
+                return emptyStack;
             }
 
             @Override

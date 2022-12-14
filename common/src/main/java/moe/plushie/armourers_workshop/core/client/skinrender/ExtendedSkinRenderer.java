@@ -105,63 +105,63 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, V extends Ent
         }
     }
 
-    protected void setHatPart(IPoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, model.getHatPart());
+    protected void setHatPart(IPoseStack poseStack, M model) {
+        transformer.apply(poseStack, model.getHatPart());
     }
 
-    protected void setHeadPart(IPoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, model.getHeadPart());
+    protected void setHeadPart(IPoseStack poseStack, M model) {
+        transformer.apply(poseStack, model.getHeadPart());
     }
 
-    protected void setBodyPart(IPoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, model.getBodyPart());
+    protected void setBodyPart(IPoseStack poseStack, M model) {
+        transformer.apply(poseStack, model.getBodyPart());
     }
 
-    protected void setLeftArmPart(IPoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, model.getLeftArmPart());
+    protected void setLeftArmPart(IPoseStack poseStack, M model) {
+        transformer.apply(poseStack, model.getLeftArmPart());
     }
 
-    protected void setRightArmPart(IPoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, model.getRightArmPart());
+    protected void setRightArmPart(IPoseStack poseStack, M model) {
+        transformer.apply(poseStack, model.getRightArmPart());
     }
 
-    protected void setLeftLegPart(IPoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, model.getLeftLegPart());
+    protected void setLeftLegPart(IPoseStack poseStack, M model) {
+        transformer.apply(poseStack, model.getLeftLegPart());
     }
 
-    protected void setRightLegPart(IPoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, model.getRightLegPart());
+    protected void setRightLegPart(IPoseStack poseStack, M model) {
+        transformer.apply(poseStack, model.getRightLegPart());
     }
 
-    protected void setLeftFootPart(IPoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, model.getLeftLegPart());
+    protected void setLeftFootPart(IPoseStack poseStack, M model) {
+        transformer.apply(poseStack, model.getLeftLegPart());
     }
 
-    protected void setRightFootPart(IPoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, model.getRightLegPart());
+    protected void setRightFootPart(IPoseStack poseStack, M model) {
+        transformer.apply(poseStack, model.getRightLegPart());
     }
 
-    protected void setSkirtPart(IPoseStack matrixStack, M model) {
+    protected void setSkirtPart(IPoseStack poseStack, M model) {
         ModelPart body = model.getBodyPart();
         ModelPart leg = model.getRightLegPart();
-        matrixStack.translate(body.x, leg.y, leg.z);
+        poseStack.translate(body.x, leg.y, leg.z);
         if (body.yRot != 0) {
-            matrixStack.rotate(Vector3f.YP.rotation(body.yRot));
+            poseStack.rotate(Vector3f.YP.rotation(body.yRot));
         }
         // skirt does not wobble during normal walking.
         if (!model.isRiding()) {
             return;
         }
         if (leg.xRot != 0) {
-            matrixStack.rotate(Vector3f.XP.rotation(leg.xRot));
+            poseStack.rotate(Vector3f.XP.rotation(leg.xRot));
         }
     }
 
-    protected void setWings(IPoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+    protected void setWings(IPoseStack poseStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
         if (bakedPart.getProperties().get(SkinProperty.WINGS_MATCHING_POSE)) {
-            transformer.apply(matrixStack, model.getBodyPart());
+            transformer.apply(poseStack, model.getBodyPart());
         }
-        matrixStack.translate(0, 0, 2);
+        poseStack.translate(0, 0, 2);
     }
 }
 

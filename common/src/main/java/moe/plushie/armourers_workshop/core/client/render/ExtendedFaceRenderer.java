@@ -66,9 +66,9 @@ public class ExtendedFaceRenderer {
         }
     }
 
-    public static void render2(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, IPoseStack matrixStack, VertexConsumer builder) {
-        IMatrix4f pose = matrixStack.lastPose();
-        IMatrix3f normal = matrixStack.lastNormal();
+    public static void render2(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, IPoseStack poseStack, VertexConsumer builder) {
+        IMatrix4f pose = poseStack.lastPose();
+        IMatrix3f normal = poseStack.lastNormal();
         int u = 0;
         int v = 0;
         int color = paintColor.getRGB();

@@ -35,9 +35,9 @@ public class SkinPreviewView extends UIControl {
         int z = 200;
         int width = rect.width;
         int height = rect.height;
-        IPoseStack matrixStack = context.poseStack;
+        IPoseStack poseStack = context.poseStack;
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        ExtendedItemRenderer.renderSkin(descriptor, ItemStack.EMPTY, x, y, z, width, height, 20, 45, 0, matrixStack, buffers);
+        ExtendedItemRenderer.renderSkin(descriptor, ItemStack.EMPTY, x, y, z, width, height, 20, 45, 0, poseStack, buffers);
         buffers.endBatch();
     }
 

@@ -48,13 +48,13 @@ public class FirstPersonSkinRenderer<T extends LivingEntity, V extends FirstPers
         return super.prepare(entity, model, bakedSkin, bakedPart, itemStack, transformType);
     }
 
-    public void setLeftArm(IPoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
-        matrixStack.translate(-5, -2, 0);
-        matrixStack.rotate(new OpenQuaternionf(180, 180, -5, true));
+    public void setLeftArm(IPoseStack poseStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+        poseStack.translate(-5, -2, 0);
+        poseStack.rotate(new OpenQuaternionf(180, 180, -5, true));
     }
 
-    public void setRightArm(IPoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
-        matrixStack.translate(5, -2, 0);
-        matrixStack.rotate(new OpenQuaternionf(180, 180, 5, true));
+    public void setRightArm(IPoseStack poseStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+        poseStack.translate(5, -2, 0);
+        poseStack.rotate(new OpenQuaternionf(180, 180, 5, true));
     }
 }

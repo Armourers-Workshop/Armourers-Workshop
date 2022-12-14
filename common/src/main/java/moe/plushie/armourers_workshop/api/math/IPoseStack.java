@@ -18,9 +18,13 @@ public interface IPoseStack {
 
     void multiply(IMatrix4f matrix);
 
+    void multiply(IPoseStack poseStack);
+
     IMatrix4f lastPose();
 
     IMatrix3f lastNormal();
+
+    IPoseStack copy();
 
     @Environment(value = EnvType.CLIENT)
     PoseStack cast();

@@ -124,44 +124,44 @@ public class ClientWardrobeHandler {
         poseStack.popPose();
     }
 
-//    public static void onRenderArmorPre(Entity entity, EntityModel<?> entityModel, int light, PoseStack matrixStack, MultiBufferSource buffers) {
+//    public static void onRenderArmorPre(Entity entity, EntityModel<?> entityModel, int light, PoseStack poseStack, MultiBufferSource buffers) {
 //        // apply the model baby scale.
 //        if (entityModel.young && entityModel instanceof HumanoidModel<?>) {
 //            HumanoidModel<?> bipedModel = (HumanoidModel<?>) entityModel;
 //            float scale = 1.0f / bipedModel.babyBodyScale;
-//            matrixStack.scale(scale, scale, scale);
-//            matrixStack.translate(0.0f, bipedModel.bodyYOffset / 16.0f, 0.0f);
+//            poseStack.scale(scale, scale, scale);
+//            poseStack.translate(0.0f, bipedModel.bodyYOffset / 16.0f, 0.0f);
 //        }
 //    }
 //
-//    public static void onRenderArmor(Entity entity, Model model, int light, PoseStack matrixStack, MultiBufferSource buffers) {
+//    public static void onRenderArmor(Entity entity, Model model, int light, PoseStack poseStack, MultiBufferSource buffers) {
 //        SkinRenderData renderData = SkinRenderData.of(entity);
 //        if (renderData == null) {
 //            return;
 //        }
-//        matrixStack.pushPose();
-//        matrixStack.scale(SCALE, SCALE, SCALE);
+//        poseStack.pushPose();
+//        poseStack.scale(SCALE, SCALE, SCALE);
 //
-//        render(entity, model, light, matrixStack, buffers, null, renderData::getArmorSkins);
+//        render(entity, model, light, poseStack, buffers, null, renderData::getArmorSkins);
 //
-//        matrixStack.popPose();
+//        poseStack.popPose();
 //    }
 
-//    public static void onRenderItem(Entity entity, ItemStack itemStack, ItemTransforms.TransformType transformType, int light, PoseStack matrixStack, MultiBufferSource buffers, CallbackInfo callback) {
+//    public static void onRenderItem(Entity entity, ItemStack itemStack, ItemTransforms.TransformType transformType, int light, PoseStack poseStack, MultiBufferSource buffers, CallbackInfo callback) {
 //        SkinRenderData renderData = SkinRenderData.of(entity);
 //        if (renderData == null) {
 //            return;
 //        }
-//        matrixStack.pushPose();
-//        matrixStack.scale(-SCALE, -SCALE, SCALE);
+//        poseStack.pushPose();
+//        poseStack.scale(-SCALE, -SCALE, SCALE);
 //
 //        boolean replaceSkinItem = entity instanceof MannequinEntity;
-//        int count = render(entity, null, light, matrixStack, buffers, transformType, () -> renderData.getItemSkins(itemStack, replaceSkinItem));
+//        int count = render(entity, null, light, poseStack, buffers, transformType, () -> renderData.getItemSkins(itemStack, replaceSkinItem));
 //        if (count != 0) {
 //            callback.cancel();
 //        }
 //
-//        matrixStack.popPose();
+//        poseStack.popPose();
 //    }
 //
 //    public static ItemStack getRenderSkinStack(ItemStack itemStack, boolean isRenderInGUI) {
@@ -198,34 +198,34 @@ public class ClientWardrobeHandler {
         poseStack.popPose();
     }
 
-    public static void onRenderLivingPre(LivingEntity entity, float p_225623_2_, float partialTicks, int light, IPoseStack matrixStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
+    public static void onRenderLivingPre(LivingEntity entity, float p_225623_2_, float partialTicks, int light, IPoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
             SkinRendererManager.getInstance().willRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> {
                 SkinRenderContext renderContext = SkinRenderContext.getInstance();
-                renderContext.setup(light, partialTicks, matrixStack, buffers);
+                renderContext.setup(light, partialTicks, poseStack, buffers);
                 return renderContext;
             });
         }
     }
 
-    public static void onRenderLiving(LivingEntity entity, float p_225623_2_, float partialTicks, int light, IPoseStack matrixStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
+    public static void onRenderLiving(LivingEntity entity, float p_225623_2_, float partialTicks, int light, IPoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
             SkinRendererManager.getInstance().willRenderModel(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> {
                 SkinRenderContext renderContext = SkinRenderContext.getInstance();
-                renderContext.setup(light, partialTicks, matrixStack, buffers);
+                renderContext.setup(light, partialTicks, poseStack, buffers);
                 return renderContext;
             });
         }
     }
 
-    public static void onRenderLivingPost(LivingEntity entity, float p_225623_2_, float partialTicks, int light, IPoseStack matrixStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
+    public static void onRenderLivingPost(LivingEntity entity, float p_225623_2_, float partialTicks, int light, IPoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
             SkinRendererManager.getInstance().didRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> {
                 SkinRenderContext renderContext = SkinRenderContext.getInstance();
-                renderContext.setup(light, partialTicks, matrixStack, buffers);
+                renderContext.setup(light, partialTicks, poseStack, buffers);
                 return renderContext;
             });
         }

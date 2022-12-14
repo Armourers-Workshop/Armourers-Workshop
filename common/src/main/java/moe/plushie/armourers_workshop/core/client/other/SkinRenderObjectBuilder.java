@@ -55,14 +55,14 @@ public class SkinRenderObjectBuilder {
         this.skin = skin;
     }
 
-    public void addPartData(BakedSkinPart part, ColorScheme scheme, int light, float partialTicks, int slotIndex, IPoseStack matrixStack, boolean shouldRender) {
+    public void addPartData(BakedSkinPart part, ColorScheme scheme, int light, float partialTicks, int slotIndex, IPoseStack poseStack, boolean shouldRender) {
         Object key = SkinCache.borrowKey(part.getId(), part.requirements(scheme));
         CachedTask cachedTask = cachingTasks.getIfPresent(key);
         if (cachedTask != null) {
             SkinCache.returnKey(key);
             if (shouldRender && cachedTask.isCompiled) {
-                cachedRenderPipeline.render(cachedTask, matrixStack, light, partialTicks, slotIndex);
-                //cachedTask.mergedTasks.forEach(compiledTask -> pendingTasks.add(new CompiledPass(compiledTask, matrixStack, light, partialTicks)));
+                cachedRenderPipeline.render(cachedTask, poseStack, light, partialTicks, slotIndex);
+                //cachedTask.mergedTasks.forEach(compiledTask -> pendingTasks.add(new CompiledPass(compiledTask, poseStack, light, partialTicks)));
             }
             return;
         }
@@ -75,7 +75,7 @@ public class SkinRenderObjectBuilder {
 //        RenderSystem.getModelViewStack().last().pose().setIdentity();
 //        RenderSystem.applyModelViewMatrix();
 //
-////        Matrix3f normalMatrix = matrixStack.last().normal().copy();
+////        Matrix3f normalMatrix = poseStack.last().normal().copy();
 ////        normalMatrix.invert();
 //
 //        RenderSystem.setShaderColor(1, 1, 1, 1);
@@ -87,7 +87,7 @@ public class SkinRenderObjectBuilder {
 //        MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 ////        MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
 ////        IPoseStack matrixStack1 = new PoseStack();
-//        IPoseStack matrixStack1 = matrixStack;
+//        IPoseStack matrixStack1 = poseStack;
 //        part.forEach((renderType, quads) -> {
 //            VertexConsumer builder = buffers.getBuffer(renderType);
 ////            BufferBuilder builder = new BufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
@@ -97,7 +97,7 @@ public class SkinRenderObjectBuilder {
 //
 ////            IPoseStack modelPoseStack = RenderSystem.getExtendedModelViewStack();
 ////            modelPoseStack.pushPose();
-////            modelPoseStack.multiply(matrixStack.lastPose());
+////            modelPoseStack.multiply(poseStack.lastPose());
 //            RenderSystem.setExtendedModelViewMatrix(matrixStack1.lastPose());
 ////            RenderSystem.applyModelViewMatrix();
 //            buffers.endBatch();

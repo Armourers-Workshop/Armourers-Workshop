@@ -33,9 +33,9 @@ public class ChickenSkinRenderer<T extends LivingEntity, V extends ChickenModel<
         }
     }
 
-    private void offset(IPoseStack matrixStack, M model) {
-        transformer.apply(matrixStack, model.getPart("head"));
-        matrixStack.translate(0.0f, -2.0f, -1.0f);
-        matrixStack.scale(0.5f, 0.5f, 0.5f);
+    private void offset(IPoseStack poseStack, M model) {
+        transformer.apply(poseStack, model.getPart("head"));
+        poseStack.translate(0.0f, -2.0f, -1.0f);
+        poseStack.scale(0.5f, 0.5f, 0.5f);
     }
 }

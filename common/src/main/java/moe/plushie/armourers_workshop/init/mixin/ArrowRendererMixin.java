@@ -16,8 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ArrowRendererMixin<T extends AbstractArrow> {
 
     @Inject(method = "render(Lnet/minecraft/world/entity/projectile/AbstractArrow;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("HEAD"), cancellable = true)
-    public void aw2$render(T entity, float p_225623_2_, float partialTicks, PoseStack matrixStack, MultiBufferSource renderType, int light, CallbackInfo callback) {
-        IPoseStack poseStack = AbstractPoseStack.wrap(matrixStack);
+    public void aw2$render(T entity, float p_225623_2_, float partialTicks, PoseStack poseStackIn, MultiBufferSource renderType, int light, CallbackInfo callback) {
+        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
         ClientWardrobeHandler.onRenderArrow(entity, null, p_225623_2_, partialTicks, light, poseStack, renderType, callback);
     }
 }

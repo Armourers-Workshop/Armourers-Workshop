@@ -68,10 +68,10 @@ public class SkinCubeItemRenderer extends AbstractItemEntityRenderer {
         renderCube(blockPaintColor, light, overlay, poseStack, builder1);
     }
 
-    public void renderCube(BlockPaintColor blockPaintColor, int light, int overlay, IPoseStack matrixStack, VertexConsumer builder) {
+    public void renderCube(BlockPaintColor blockPaintColor, int light, int overlay, IPoseStack poseStack, VertexConsumer builder) {
         for (Direction dir : Direction.values()) {
             IPaintColor paintColor = blockPaintColor.getOrDefault(dir, PaintColor.WHITE);
-            ExtendedFaceRenderer.render2(0, 0, 0, dir, paintColor, 255, light, overlay, matrixStack, builder);
+            ExtendedFaceRenderer.render2(0, 0, 0, dir, paintColor, 255, light, overlay, poseStack, builder);
         }
     }
 }

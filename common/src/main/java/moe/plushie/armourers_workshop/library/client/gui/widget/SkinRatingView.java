@@ -59,11 +59,11 @@ public class SkinRatingView extends UIControl {
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
 
-        IPoseStack matrixStack = context.poseStack;
+        IPoseStack poseStack = context.poseStack;
         RenderSystem.setShaderTexture(0, ModTextures.RATING);
 
         for (int i = 0; i < (getMaxValue() / 2); i++) {
-            RenderSystem.blit(matrixStack, i * 16, 0, 32, 0, 16, 16);
+            RenderSystem.blit(poseStack, i * 16, 0, 32, 0, 16, 16);
         }
 
         int rating = getValue();
@@ -74,10 +74,10 @@ public class SkinRatingView extends UIControl {
         int stars = MathUtils.floor(rating / 2F);
         int halfStar = rating % 2;
         for (int i = 0; i < stars; i++) {
-            RenderSystem.blit(matrixStack, i * 16, 0, 0, 0, 16, 16);
+            RenderSystem.blit(poseStack, i * 16, 0, 0, 0, 16, 16);
         }
         if (halfStar == 1) {
-            RenderSystem.blit(matrixStack, stars * 16, 0, 0, 0, 8, 16);
+            RenderSystem.blit(poseStack, stars * 16, 0, 0, 0, 8, 16);
         }
     }
 

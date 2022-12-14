@@ -1,19 +1,22 @@
 package moe.plushie.armourers_workshop.compatibility.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
+import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
 import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
-import moe.plushie.armourers_workshop.compatibility.v1618.PoseStack_V1618;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Implements;
+import org.spongepowered.asm.mixin.Interface;
+import org.spongepowered.asm.mixin.Intrinsic;
+import org.spongepowered.asm.mixin.Mixin;
 
+@Available("[1.19.3, )")
 @Mixin(PoseStack.class)
 @Implements(@Interface(iface = IPoseStack.class, prefix = "aw$"))
-public abstract class AbstractPoseStackMixin {
+public abstract class AbstractPoseStackMixin_V1930 {
 
     @Intrinsic(displace = true)
     public void aw$pushPose() {
@@ -46,13 +49,35 @@ public abstract class AbstractPoseStackMixin {
     }
 
     @Intrinsic(displace = true)
+    public void aw$multiply(IPoseStack poseStack) {
+        PoseStack sourceStack = _aw$self();
+        PoseStack targetStack = ObjectUtils.safeCast(poseStack, PoseStack.class);
+        if (targetStack != null) {
+            sourceStack.last().pose().mul(targetStack.last().pose());
+            sourceStack.last().normal().mul(targetStack.last().normal());
+        } else {
+            aw$lastPose().multiply(poseStack.lastPose());
+            aw$lastNormal().multiply(poseStack.lastNormal());
+        }
+    }
+
+    @Intrinsic(displace = true)
     public IMatrix4f aw$lastPose() {
-        return ObjectUtils.unsafeCast(_aw$self().last().pose());
+        return _aw$last().aw$getPose();
     }
 
     @Intrinsic(displace = true)
     public IMatrix3f aw$lastNormal() {
-        return ObjectUtils.unsafeCast(_aw$self().last().normal());
+        return _aw$last().aw$getNormal();
+    }
+
+    @Intrinsic(displace = true)
+    public IPoseStack aw$copy() {
+        PoseStack targetStack = _aw$self();
+        PoseStack sourceStack = new PoseStack();
+        sourceStack.last().pose().mul(targetStack.last().pose());
+        sourceStack.last().normal().mul(targetStack.last().normal());
+        return ObjectUtils.unsafeCast(sourceStack);
     }
 
     @Intrinsic(displace = true)
@@ -62,5 +87,9 @@ public abstract class AbstractPoseStackMixin {
 
     private PoseStack _aw$self() {
         return ObjectUtils.unsafeCast(this);
+    }
+
+    private AbstractPoseStack.Pose _aw$last() {
+        return ObjectUtils.unsafeCast(_aw$self().last());
     }
 }

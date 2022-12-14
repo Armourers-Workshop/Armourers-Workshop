@@ -67,12 +67,12 @@ public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> ext
     }
 
     @Override
-    public void render(T entity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int light, int overlay) {
         updateAlpha(entity);
         if (!(markerAlpha > 0)) {
             return;
         }
-        IPoseStack poseStack = AbstractPoseStack.wrap(matrixStack);
+        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
         int alpha = (int) (markerAlpha * 255);
         VertexConsumer builder = buffers.getBuffer(SkinRenderType.IMAGE_MARKER);
         for (Direction direction : Direction.values()) {

@@ -97,15 +97,15 @@ public class SkinExporterPolygon implements ISkinExporter {
         os.flush();
 
         // apply the render context matrix.
-        IPoseStack matrixStack = new OpenPoseStack();
-        matrixStack.scale(scale, scale, scale);
-        matrixStack.scale(-1, -1, 1);
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(90));
+        IPoseStack poseStack = new OpenPoseStack();
+        poseStack.scale(scale, scale, scale);
+        poseStack.scale(-1, -1, 1);
+        poseStack.rotate(Vector3f.YP.rotationDegrees(90));
 
         for (SkinCubeFace face : faces) {
             byte[][] vertexes = SkinUtils.getRenderVertexes(face.getDirection());
             for (int i = 0; i < 4; ++i) {
-                writeVert(matrixStack, os, face.x + vertexes[i][0], face.y + vertexes[i][1], face.z + vertexes[i][2], face.getColor());
+                writeVert(poseStack, os, face.x + vertexes[i][0], face.y + vertexes[i][1], face.z + vertexes[i][2], face.getColor());
             }
         }
 
@@ -118,9 +118,9 @@ public class SkinExporterPolygon implements ISkinExporter {
         outputStream.close();
     }
 
-    private void writeVert(IPoseStack matrixStack, OutputStreamWriter os, float x, float y, float z, PaintColor color) throws IOException {
+    private void writeVert(IPoseStack poseStack, OutputStreamWriter os, float x, float y, float z, PaintColor color) throws IOException {
         Vector4f q = new Vector4f(x, y, z, 1);
-        q.transform(matrixStack.lastPose());
+        q.transform(poseStack.lastPose());
         os.write(String.format("%s %s %s %d %d %d", f2s(q.x()), f2s(q.y()), f2s(q.z()), color.getRed(), color.getGreen(), color.getBlue()) + CRLF);
     }
 

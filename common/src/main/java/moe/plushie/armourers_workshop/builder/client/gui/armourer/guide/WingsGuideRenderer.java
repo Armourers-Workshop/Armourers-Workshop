@@ -26,11 +26,11 @@ public class WingsGuideRenderer extends AbstractGuideRenderer {
     }
 
 
-    public void render(IPoseStack matrixStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
+    public void render(IPoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
         float f = 1 / 16f;
-        matrixStack.pushPose();
-        matrixStack.translate(0, 0, -2 * f);
-        chestGuideRenderer.render(matrixStack, provider, light, overlay, buffers);
-        matrixStack.popPose();
+        poseStack.pushPose();
+        poseStack.translate(0, 0, -2 * f);
+        chestGuideRenderer.render(poseStack, provider, light, overlay, buffers);
+        poseStack.popPose();
     }
 }

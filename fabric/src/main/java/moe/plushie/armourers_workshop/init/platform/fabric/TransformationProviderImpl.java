@@ -10,8 +10,8 @@ import net.minecraft.client.resources.model.BakedModel;
 @Environment(EnvType.CLIENT)
 public class TransformationProviderImpl {
 
-    public static BakedModel handleTransforms(IPoseStack matrixStack, BakedModel bakedModel, ItemTransforms.TransformType transformType, boolean leftHandHackery) {
-        bakedModel.getTransforms().getTransform(transformType).apply(leftHandHackery, matrixStack.cast());
+    public static BakedModel handleTransforms(IPoseStack poseStack, BakedModel bakedModel, ItemTransforms.TransformType transformType, boolean leftHandHackery) {
+        bakedModel.getTransforms().getTransform(transformType).apply(leftHandHackery, poseStack.cast());
         return bakedModel;
     }
 

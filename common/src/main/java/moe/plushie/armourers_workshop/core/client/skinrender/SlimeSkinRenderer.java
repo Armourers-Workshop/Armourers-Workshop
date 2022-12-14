@@ -31,7 +31,7 @@ public class SlimeSkinRenderer<T extends LivingEntity, V extends SlimeModel<T>, 
         }
     }
 
-    private void offset(IPoseStack matrixStack, M model) {
-        matrixStack.translate(0.0f, 24.0f, 0.0f);
+    private void offset(IPoseStack poseStack, M model) {
+        poseStack.translate(0.0f, 24.0f, 0.0f);
     }
 }

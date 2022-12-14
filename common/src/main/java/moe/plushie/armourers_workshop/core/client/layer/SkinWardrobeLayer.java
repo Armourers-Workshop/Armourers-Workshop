@@ -92,15 +92,15 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         poseStack.popPose();
     }
 
-    protected void applyModelScale(IPoseStack matrixStack, M model) {
+    protected void applyModelScale(IPoseStack poseStack, M model) {
         if (model.isBaby()) {
             float scale = 1 / model.getBabyScale();
             IVector3f offset = model.getBabyOffset();
             if (offset == null) {
                 return;
             }
-            matrixStack.scale(scale, scale, scale);
-            matrixStack.translate(offset.getX() / 16f, offset.getY() / 16f, offset.getZ() / 16f);
+            poseStack.scale(scale, scale, scale);
+            poseStack.translate(offset.getX() / 16f, offset.getY() / 16f, offset.getZ() / 16f);
         }
     }
 }

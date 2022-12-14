@@ -128,7 +128,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
             if (shouldRenderPart) {
                 counter += 1;
             }
-//            RenderUtils.drawPoint(matrixStack, null, 32, buffers);
+//            RenderUtils.drawPoint(poseStack, null, 32, buffers);
             poseStack.popPose();
         }
 

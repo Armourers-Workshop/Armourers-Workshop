@@ -27,10 +27,10 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
 //    }
 //
 //    @Override
-//    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-//        super.render(matrixStack, mouseX, mouseY, partialTicks);
-////        this.canvasView.render(matrixStack, mouseX, mouseY, partialTicks);
-////        this.window.vanillaRender(this, matrixStack, mouseX, mouseY, partialTicks);
+//    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+//        super.render(poseStack, mouseX, mouseY, partialTicks);
+////        this.canvasView.render(poseStack, mouseX, mouseY, partialTicks);
+////        this.window.vanillaRender(this, poseStack, mouseX, mouseY, partialTicks);
 //    }
 //
 //    @Override

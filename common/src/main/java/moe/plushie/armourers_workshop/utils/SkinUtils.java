@@ -84,7 +84,7 @@ public final class SkinUtils {
 //        return null;
 //    }
 
-//    public static void apply(IPoseStack matrixStack, SkinPart skinPart, float partialTicks, @Nullable Entity entity) {
+//    public static void apply(IPoseStack poseStack, SkinPart skinPart, float partialTicks, @Nullable Entity entity) {
 //        ISkinPartType partType = skinPart.getType();
 //        if (!(partType instanceof ICanRotation)) {
 //            return;
@@ -102,9 +102,9 @@ public final class SkinUtils {
 //            angle = -angle;
 //        }
 //
-//        matrixStack.translate(offset.x(), offset.y(), offset.z());
-//        matrixStack.mul(getRotationMatrix(marker).rotationDegrees(angle));
-//        matrixStack.translate(-offset.x(), -offset.y(), -offset.z());
+//        poseStack.translate(offset.x(), offset.y(), offset.z());
+//        poseStack.mul(getRotationMatrix(marker).rotationDegrees(angle));
+//        poseStack.translate(-offset.x(), -offset.y(), -offset.z());
 //    }
 //
 //    public static double getRotationDegrees(SkinPart skinPart, float partialTicks, @Nullable Entity entity) {

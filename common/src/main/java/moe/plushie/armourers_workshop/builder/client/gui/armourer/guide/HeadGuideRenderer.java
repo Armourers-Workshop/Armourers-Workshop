@@ -26,10 +26,10 @@ public class HeadGuideRenderer extends AbstractGuideRenderer {
         rendererManager.register(SkinPartTypes.BIPED_HEAD, this::render);
     }
 
-    public void render(IPoseStack matrixStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
-        head.render(matrixStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
+    public void render(IPoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
+        head.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
         if (provider.shouldRenderOverlay()) {
-            hat.render(matrixStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
+            hat.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
         }
     }
 }

@@ -140,9 +140,9 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
         override.setBuffers(null);
     }
 
-    public void transform(IPoseStack matrixStack, T entity) {
-        matrixStack.translate(0, 1, 0); // apply height offset
-        matrixStack.rotate(CubeTransform.getRotationDegrees(entity.getFacing())); // apply facing rotation
+    public void transform(IPoseStack poseStack, T entity) {
+        poseStack.translate(0, 1, 0); // apply height offset
+        poseStack.rotate(CubeTransform.getRotationDegrees(entity.getFacing())); // apply facing rotation
     }
 
     @Override

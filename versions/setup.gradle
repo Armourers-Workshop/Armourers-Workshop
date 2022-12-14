@@ -29,7 +29,7 @@ static def parseVersion(version, undefined) {
 
 static def parseVersionFromFile(file) {
     // only process the source file.
-    if (file.name.endsWithAny(".java", ".java.tp")) {
+    if (file.name.endsWithAny(".java", ".tj")) {
         // read version range in the file.
         def regex = ~/@Available\((\s*value\s*=)?\s*"(.+)"\s*\)/
         def results = file.getText("UTF-8") =~ regex
@@ -74,9 +74,9 @@ task switchCoreSource {
             if (range != null) {
                 def name = it.name
                 if (minecraft_version_number >= range[0] && minecraft_version_number <= range[1]) {
-                    name = name.replaceAll(/\.java\.tp$/, /.java/)
+                    name = name.replaceAll(/\.tj/, /.java/)
                 } else {
-                    name = name.replaceAll(/\.java$/, /.java.tp/)
+                    name = name.replaceAll(/\.java$/, /.tj/)
                 }
                 if (name != it.name) {
                     def file = new File(it.parentFile, name)

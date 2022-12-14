@@ -19,62 +19,62 @@ public class IronGolemSkinRenderer<T extends IronGolem, V extends IronGolemModel
     }
 
     @Override
-    protected void setHeadPart(IPoseStack matrixStack, M model) {
-        super.setHeadPart(matrixStack, model);
-        matrixStack.translate(0.0f, -2.0f, -1.5f);
+    protected void setHeadPart(IPoseStack poseStack, M model) {
+        super.setHeadPart(poseStack, model);
+        poseStack.translate(0.0f, -2.0f, -1.5f);
     }
 
     @Override
-    protected void setBodyPart(IPoseStack matrixStack, M model) {
-        matrixStack.translate(0, -2, 0);
-        super.setBodyPart(matrixStack, model);
+    protected void setBodyPart(IPoseStack poseStack, M model) {
+        poseStack.translate(0, -2, 0);
+        super.setBodyPart(poseStack, model);
     }
 
     @Override
-    protected void setLeftArmPart(IPoseStack matrixStack, M model) {
-        matrixStack.translate(10, 0, 0);
-        super.setLeftArmPart(matrixStack, model);
+    protected void setLeftArmPart(IPoseStack poseStack, M model) {
+        poseStack.translate(10, 0, 0);
+        super.setLeftArmPart(poseStack, model);
     }
 
     @Override
-    protected void setRightArmPart(IPoseStack matrixStack, M model) {
-        matrixStack.translate(-10, 0, 0);
-        super.setRightArmPart(matrixStack, model);
+    protected void setRightArmPart(IPoseStack poseStack, M model) {
+        poseStack.translate(-10, 0, 0);
+        super.setRightArmPart(poseStack, model);
     }
 
     @Override
-    protected void setLeftLegPart(IPoseStack matrixStack, M model) {
-        super.setLeftLegPart(matrixStack, model);
-        matrixStack.translate(-0.5f, -3.0f, -1.0f);
+    protected void setLeftLegPart(IPoseStack poseStack, M model) {
+        super.setLeftLegPart(poseStack, model);
+        poseStack.translate(-0.5f, -3.0f, -1.0f);
     }
 
     @Override
-    protected void setRightLegPart(IPoseStack matrixStack, M model) {
-        super.setRightLegPart(matrixStack, model);
-        matrixStack.translate(-0.5f, -3.0f, -1.0f);
+    protected void setRightLegPart(IPoseStack poseStack, M model) {
+        super.setRightLegPart(poseStack, model);
+        poseStack.translate(-0.5f, -3.0f, -1.0f);
     }
 
     @Override
-    protected void setLeftFootPart(IPoseStack matrixStack, M model) {
-        super.setLeftFootPart(matrixStack, model);
-        matrixStack.translate(-0.5f, 1.0f, -1.0f);
+    protected void setLeftFootPart(IPoseStack poseStack, M model) {
+        super.setLeftFootPart(poseStack, model);
+        poseStack.translate(-0.5f, 1.0f, -1.0f);
     }
 
     @Override
-    protected void setRightFootPart(IPoseStack matrixStack, M model) {
-        super.setRightFootPart(matrixStack, model);
-        matrixStack.translate(-0.5f, 1.0f, -1.0f);
+    protected void setRightFootPart(IPoseStack poseStack, M model) {
+        super.setRightFootPart(poseStack, model);
+        poseStack.translate(-0.5f, 1.0f, -1.0f);
     }
 
     @Override
-    protected void setSkirtPart(IPoseStack matrixStack, M model) {
-        super.setSkirtPart(matrixStack, model);
-        matrixStack.translate(-0.5f, -3.0f, -1.0f);
+    protected void setSkirtPart(IPoseStack poseStack, M model) {
+        super.setSkirtPart(poseStack, model);
+        poseStack.translate(-0.5f, -3.0f, -1.0f);
     }
 
     @Override
-    protected void setWings(IPoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
-        matrixStack.translate(0, -2, 3);
-        super.setWings(matrixStack, entity, model, itemStack, transformType, bakedPart);
+    protected void setWings(IPoseStack poseStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+        poseStack.translate(0, -2, 3);
+        super.setWings(poseStack, entity, model, itemStack, transformType, bakedPart);
     }
 }

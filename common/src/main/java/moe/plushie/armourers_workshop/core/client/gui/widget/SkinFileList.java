@@ -229,15 +229,15 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             renderIcon(context.poseStack, left, top - 1, 16, 16);
         }
 
-        public void renderIcon(IPoseStack matrixStack, int x, int y, int width, int height) {
+        public void renderIcon(IPoseStack poseStack, int x, int y, int width, int height) {
             if (entry.isDirectory()) {
                 int u = entry.isPrivateDirectory() ? 32 : 16;
-                RenderSystem.blit(matrixStack, x + (width - 12) / 2, y + (height - 12) / 2 - 1, u, 0, 12, 12, ModTextures.LIST);
+                RenderSystem.blit(poseStack, x + (width - 12) / 2, y + (height - 12) / 2 - 1, u, 0, 12, 12, ModTextures.LIST);
                 return;
             }
             if (!getDescriptor().isEmpty()) {
                 MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-                ExtendedItemRenderer.renderSkin(getDescriptor(), ItemStack.EMPTY, x, y, 100, width, height - 1, 20, 45, 0, matrixStack, buffers);
+                ExtendedItemRenderer.renderSkin(getDescriptor(), ItemStack.EMPTY, x, y, 100, width, height - 1, 20, 45, 0, poseStack, buffers);
             }
         }
 
@@ -258,12 +258,12 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             int dx = point.x - size - 5;
             int dy = MathUtils.clamp(mouseY - size / 2, 0, bounds.height - size);
             Font font = context.font.font();
-            IPoseStack matrixStack = context.poseStack;
+            IPoseStack poseStack = context.poseStack;
             ArrayList<FormattedText> tooltips = new ArrayList<>(ItemTooltipManager.createSkinInfo(bakedSkin));
-            RenderSystem.drawContinuousTexturedBox(matrixStack, ModTextures.GUI_PREVIEW, dx, dy, 0, 0, size, size, 62, 62, 4, dz);
-            RenderSystem.drawShadowText(matrixStack, tooltips, dx + 4, dy + 4, size - 8, dz, font, 7, 0xffffff);
+            RenderSystem.drawContinuousTexturedBox(poseStack, ModTextures.GUI_PREVIEW, dx, dy, 0, 0, size, size, 62, 62, 4, dz);
+            RenderSystem.drawShadowText(poseStack, tooltips, dx + 4, dy + 4, size - 8, dz, font, 7, 0xffffff);
             MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx, dy, dz + 100, size, size, 30, 45, 0, 0, 0xf000f0, matrixStack, buffers);
+            ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx, dy, dz + 100, size, size, 30, 45, 0, 0, 0xf000f0, poseStack, buffers);
             buffers.endBatch();
         }
 

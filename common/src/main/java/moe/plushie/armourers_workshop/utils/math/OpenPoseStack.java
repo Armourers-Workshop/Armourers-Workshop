@@ -59,6 +59,12 @@ public class OpenPoseStack implements IPoseStack {
     }
 
     @Override
+    public void multiply(IPoseStack poseStack) {
+        poseMatrix.multiply(poseStack.lastPose());
+        normalMatrix.multiply(poseStack.lastNormal());
+    }
+
+    @Override
     public IMatrix4f lastPose() {
         return poseMatrix;
     }
@@ -66,6 +72,14 @@ public class OpenPoseStack implements IPoseStack {
     @Override
     public IMatrix3f lastNormal() {
         return normalMatrix;
+    }
+
+    @Override
+    public IPoseStack copy() {
+        OpenPoseStack stack = new OpenPoseStack();
+        stack.poseMatrix.multiply(poseMatrix);
+        stack.normalMatrix.multiply(normalMatrix);
+        return stack;
     }
 
     @Environment(value = EnvType.CLIENT)

@@ -163,10 +163,10 @@ public class BakedSkin implements IBakedSkin {
     }
 
     public <T extends Entity, V extends Model, M extends IModelHolder<V>> OpenVoxelShape getRenderShape(T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, SkinRenderer<T, V, M> renderer) {
-        IPoseStack matrixStack = AbstractPoseStack.empty();
+        IPoseStack poseStack = AbstractPoseStack.empty();
         OpenVoxelShape shape = OpenVoxelShape.empty();
         SkinRenderContext context = new SkinRenderContext();
-        context.setup(0, 0, transformType, matrixStack, null);
+        context.setup(0, 0, transformType, poseStack, null);
         for (BakedSkinPart part : skinParts) {
             addRenderShape(entity, model, itemStack, part, shape, context, renderer);
         }
@@ -177,16 +177,16 @@ public class BakedSkin implements IBakedSkin {
         if (!renderer.prepare(entity, model, this, part, itemStack, context.transformType)) {
             return;
         }
-        IPoseStack matrixStack = context.poseStack;
+        IPoseStack poseStack = context.poseStack;
         OpenVoxelShape shape1 = part.getRenderShape().copy();
-        matrixStack.pushPose();
+        poseStack.pushPose();
         renderer.apply(entity, model, itemStack, part, this, context);
-        shape1.mul(matrixStack.lastPose());
+        shape1.mul(poseStack.lastPose());
         shape.add(shape1);
         for (BakedSkinPart childPart : part.getChildren()) {
             addRenderShape(entity, model, itemStack, childPart, shape, context, renderer);
         }
-        matrixStack.popPose();
+        poseStack.popPose();
     }
 
     public boolean shouldRenderPart(BakedSkinPart bakedPart, Entity entity, ItemStack itemStack, ItemTransforms.TransformType transformType) {

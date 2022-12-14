@@ -61,35 +61,35 @@ public class SkinRenderContext {
 
 //    public static class FixedPoseStack extends IPoseStack {
 //
-//        public PoseStack matrixStack;
+//        public PoseStack poseStack;
 //
-//        public FixedPoseStack(PoseStack matrixStack) {
-//            this.matrixStack = matrixStack;
+//        public FixedPoseStack(PoseStack poseStack) {
+//            this.poseStack = poseStack;
 //        }
 //
 //        @Override
 //        public void pushPose() {
-//            matrixStack.pushPose();
+//            poseStack.pushPose();
 //        }
 //
 //        @Override
 //        public void popPose() {
-//            matrixStack.popPose();
+//            poseStack.popPose();
 //        }
 //
 //        @Override
 //        public void translate(float x, float y, float z) {
-//            matrixStack.translate(x, y, z);
+//            poseStack.translate(x, y, z);
 //        }
 //
 //        @Override
 //        public void scale(float x, float y, float z) {
-//            matrixStack.scale(x, y, z);
+//            poseStack.scale(x, y, z);
 //        }
 //
 //        @Override
 //        public void mulPose(OpenQuaternionf quaternion) {
-//            matrixStack.mulPose(quaternion);
+//            poseStack.mulPose(quaternion);
 //        }
 //
 //        @Override
@@ -98,12 +98,12 @@ public class SkinRenderContext {
 //
 //        @Override
 //        public void applyPose(Vector4f vector) {
-//            vector.transform(matrixStack.last().pose());
+//            vector.transform(poseStack.last().pose());
 //        }
 //
 //        @Override
 //        public void applyNormal(Vector3f vector) {
-//            vector.transform(matrixStack.last().normal());
+//            vector.transform(poseStack.last().normal());
 //        }
 //    }
 }
