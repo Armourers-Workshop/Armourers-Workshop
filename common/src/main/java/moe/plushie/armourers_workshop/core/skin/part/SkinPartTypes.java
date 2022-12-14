@@ -36,25 +36,25 @@ public final class SkinPartTypes {
 
     public static final ISkinPartType UNKNOWN = register("unknown", new UnknownPartType());
 
-    public static final ISkinPartType BIPED_HAT = register("hat.base", new HatPartType());
-    public static final ISkinPartType BIPED_HEAD = register("head.base", new HeadPartType());
-    public static final ISkinPartType BIPED_CHEST = register("chest.base", new ChestPartType());
-    public static final ISkinPartType BIPED_LEFT_ARM = register("chest.leftArm", new LeftArmPartType());
-    public static final ISkinPartType BIPED_RIGHT_ARM = register("chest.rightArm", new RightArmPartType());
-    public static final ISkinPartType BIPED_SKIRT = register("legs.skirt", new SkirtPartType());
-    public static final ISkinPartType BIPED_LEFT_LEG = register("legs.leftLeg", new LeftLegPartType());
-    public static final ISkinPartType BIPED_RIGHT_LEG = register("legs.rightLeg", new RightLegPartType());
-    public static final ISkinPartType BIPED_LEFT_FOOT = register("feet.leftFoot", new LeftFootPartType());
-    public static final ISkinPartType BIPED_RIGHT_FOOT = register("feet.rightFoot", new RightFootPartType());
-    public static final ISkinPartType BIPED_LEFT_WING = register("wings.leftWing", new LeftWingPartType());
-    public static final ISkinPartType BIPED_RIGHT_WING = register("wings.rightWing", new RightWingPartType());
+    public static final ISkinPartType BIPPED_HAT = register("hat.base", new HatPartType());
+    public static final ISkinPartType BIPPED_HEAD = register("head.base", new HeadPartType());
+    public static final ISkinPartType BIPPED_CHEST = register("chest.base", new ChestPartType());
+    public static final ISkinPartType BIPPED_LEFT_ARM = register("chest.leftArm", new LeftArmPartType());
+    public static final ISkinPartType BIPPED_RIGHT_ARM = register("chest.rightArm", new RightArmPartType());
+    public static final ISkinPartType BIPPED_SKIRT = register("legs.skirt", new SkirtPartType());
+    public static final ISkinPartType BIPPED_LEFT_LEG = register("legs.leftLeg", new LeftLegPartType());
+    public static final ISkinPartType BIPPED_RIGHT_LEG = register("legs.rightLeg", new RightLegPartType());
+    public static final ISkinPartType BIPPED_LEFT_FOOT = register("feet.leftFoot", new LeftFootPartType());
+    public static final ISkinPartType BIPPED_RIGHT_FOOT = register("feet.rightFoot", new RightFootPartType());
+    public static final ISkinPartType BIPPED_LEFT_WING = register("wings.leftWing", new LeftWingPartType());
+    public static final ISkinPartType BIPPED_RIGHT_WING = register("wings.rightWing", new RightWingPartType());
 
-    public static final ISkinPartType BIPED_CHEST2 = register("chest.base2", new UnknownPartType());
-    public static final ISkinPartType BIPED_LEFT_ARM2 = register("chest.leftArm2", new UnknownPartType());
-    public static final ISkinPartType BIPED_RIGHT_ARM2 = register("chest.rightArm2", new UnknownPartType());
-    // public static final ISkinPartType BIPED_SKIRT2 = register("legs.skirt2", new UnknownPartType());
-    public static final ISkinPartType BIPED_LEFT_LEG2 = register("legs.leftLeg2", new UnknownPartType());
-    public static final ISkinPartType BIPED_RIGHT_LEG2 = register("legs.rightLeg2", new UnknownPartType());
+    public static final ISkinPartType BIPPED_CHEST2 = register("chest.base2", new UnknownPartType());
+    public static final ISkinPartType BIPPED_LEFT_ARM2 = register("chest.leftArm2", new UnknownPartType());
+    public static final ISkinPartType BIPPED_RIGHT_ARM2 = register("chest.rightArm2", new UnknownPartType());
+    // public static final ISkinPartType BIPPED_SKIRT2 = register("legs.skirt2", new UnknownPartType());
+    public static final ISkinPartType BIPPED_LEFT_LEG2 = register("legs.leftLeg2", new UnknownPartType());
+    public static final ISkinPartType BIPPED_RIGHT_LEG2 = register("legs.rightLeg2", new UnknownPartType());
 
     public static final ISkinPartType TOOL_PICKAXE = register("pickaxe.base", new ItemPartType());
     public static final ISkinPartType TOOL_AXE = register("axe.base", new ItemPartType());
@@ -86,7 +86,7 @@ public final class SkinPartTypes {
             return UNKNOWN;
         }
         if (registryName.equals("armourers:skirt.base")) {
-            return BIPED_SKIRT;
+            return BIPPED_SKIRT;
         }
         if (registryName.equals("armourers:bow.base")) {
             return ITEM_BOW1;

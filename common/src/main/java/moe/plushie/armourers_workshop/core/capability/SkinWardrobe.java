@@ -227,7 +227,7 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
         if (!ModConfig.Common.canOpenWardrobe(entity, player)) {
             return false;
         }
-        return getProfile().isEditable();
+        return !getProfile().isLocked();
     }
 
     @Override

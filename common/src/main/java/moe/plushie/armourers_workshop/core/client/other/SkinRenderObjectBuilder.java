@@ -10,14 +10,18 @@ import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
+import moe.plushie.armourers_workshop.core.armature.ModelBinder;
+import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
+import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -55,13 +59,13 @@ public class SkinRenderObjectBuilder {
         this.skin = skin;
     }
 
-    public void addPartData(BakedSkinPart part, ColorScheme scheme, int light, float partialTicks, int slotIndex, IPoseStack poseStack, boolean shouldRender) {
+    public void addPartData(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, boolean shouldRender, SkinRenderContext context) {
         Object key = SkinCache.borrowKey(part.getId(), part.requirements(scheme));
         CachedTask cachedTask = cachingTasks.getIfPresent(key);
         if (cachedTask != null) {
             SkinCache.returnKey(key);
             if (shouldRender && cachedTask.isCompiled) {
-                cachedRenderPipeline.render(cachedTask, poseStack, light, partialTicks, slotIndex);
+                cachedRenderPipeline.render(cachedTask, context.poseStack, context.light, context.partialTicks, context.slotIndex);
                 //cachedTask.mergedTasks.forEach(compiledTask -> pendingTasks.add(new CompiledPass(compiledTask, poseStack, light, partialTicks)));
             }
             return;
@@ -115,15 +119,37 @@ public class SkinRenderObjectBuilder {
 //        RenderSystem.restoreExtendedMatrix();
     }
 
-    public void addShapeData(Vector3f origin, IPoseStack poseStack) {
+    public void addShapePoint(Vector3f origin, SkinRenderContext context) {
         MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
 //        RenderUtils.drawBoundingBox(poseStack, box, color, SkinRenderBuffer.getInstance());
-        RenderSystem.drawPoint(poseStack, origin, 16, buffers);
+        RenderSystem.drawPoint(context.poseStack, origin, 16, buffers);
     }
 
-    public void addShapeData(Rectangle3f box, UIColor color, IPoseStack poseStack) {
+    public void addShapeBox(Rectangle3f box, UIColor color, SkinRenderContext context) {
         MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        RenderSystem.drawBoundingBox(poseStack, box, color, buffers);
+        RenderSystem.drawBoundingBox(context.poseStack, box, color, buffers);
+    }
+
+    public void addArmatureBox(ITransformf[] transforms, SkinRenderContext context) {
+        if (transforms == null) {
+            return;
+        }
+        IPoseStack poseStack = context.poseStack;
+        MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+        ModelBinder.BIPPED_BOXES.forEach((joint, rect) -> {
+            ITransformf transform = transforms[joint.getId()];
+            if (transform == null) {
+                return;
+            }
+            poseStack.pushPose();
+
+            transform.apply(poseStack);
+
+//			poseStack.translate(box.o.getX(), box.o.getY(), box.o.getZ());
+            RenderSystem.drawBoundingBox(poseStack, rect, ColorUtils.getPaletteColor(joint.getId()), buffers);
+            RenderSystem.drawPoint(poseStack, Vector3f.ZERO, 4, 4, 4, buffers);
+            poseStack.popPose();
+        });
     }
 
     public void endBatch(SkinVertexBufferBuilder.Pipeline pipeline) {

@@ -22,6 +22,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.math.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 @Environment(value = EnvType.CLIENT)
 public class BakedSkin implements IBakedSkin {
@@ -157,39 +159,40 @@ public class BakedSkin implements IBakedSkin {
     public OpenVoxelShape getRenderShape(Entity entity, Model model, ItemStack itemStack, ItemTransforms.TransformType transformType) {
         SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer != null) {
-            return getRenderShape(entity, SkinRendererManager.wrap(model), itemStack, transformType, renderer);
+            return getRenderShape(entity, ModelHolder.ofNullable(model), itemStack, transformType, renderer);
         }
         return OpenVoxelShape.empty();
     }
 
     public <T extends Entity, V extends Model, M extends IModelHolder<V>> OpenVoxelShape getRenderShape(T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, SkinRenderer<T, V, M> renderer) {
-        IPoseStack poseStack = AbstractPoseStack.empty();
-        OpenVoxelShape shape = OpenVoxelShape.empty();
         SkinRenderContext context = new SkinRenderContext();
-        context.setup(0, 0, transformType, poseStack, null);
-        for (BakedSkinPart part : skinParts) {
-            addRenderShape(entity, model, itemStack, part, shape, context, renderer);
+        context.init(null, 0, 0, transformType, AbstractPoseStack.empty(), null);
+        context.setItem(itemStack, 0);
+        context.setTransforms(entity, model);
+        OpenVoxelShape shape = OpenVoxelShape.empty();
+        for (BakedSkinPart bakedPart : skinParts) {
+            addRenderShape(shape, entity, model, bakedPart, renderer, context);
         }
         return shape;
     }
 
-    private <T extends Entity, V extends Model, M extends IModelHolder<V>> void addRenderShape(T entity, M model, ItemStack itemStack, BakedSkinPart part, OpenVoxelShape shape, SkinRenderContext context, SkinRenderer<T, V, M> renderer) {
-        if (!renderer.prepare(entity, model, this, part, itemStack, context.transformType)) {
+    private <T extends Entity, V extends Model, M extends IModelHolder<V>> void addRenderShape(OpenVoxelShape shape, T entity, M model, BakedSkinPart part, SkinRenderer<T, V, M> renderer, SkinRenderContext context) {
+        if (!renderer.prepare(entity, model, part, this, context)) {
             return;
         }
         IPoseStack poseStack = context.poseStack;
         OpenVoxelShape shape1 = part.getRenderShape().copy();
         poseStack.pushPose();
-        renderer.apply(entity, model, itemStack, part, this, context);
+        renderer.apply(entity, model, part, this, context);
         shape1.mul(poseStack.lastPose());
         shape.add(shape1);
         for (BakedSkinPart childPart : part.getChildren()) {
-            addRenderShape(entity, model, itemStack, childPart, shape, context, renderer);
+            addRenderShape(shape, entity, model, childPart, renderer, context);
         }
         poseStack.popPose();
     }
 
-    public boolean shouldRenderPart(BakedSkinPart bakedPart, Entity entity, ItemStack itemStack, ItemTransforms.TransformType transformType) {
+    public <T extends Entity, V extends Model, M extends IModelHolder<V>> boolean shouldRenderPart(T entity, M model, BakedSkinPart bakedPart, SkinRenderContext context) {
         ISkinPartType partType = bakedPart.getType();
         if (partType == SkinPartTypes.ITEM_ARROW) {
             // arrow part only render in arrow entity
@@ -199,7 +202,7 @@ public class BakedSkin implements IBakedSkin {
             // we have some old skin that only contain arrow part,
             // so when it happens, we need to be compatible rendering it.
             // we use `NONE` to rendering the GUI/Ground/ItemFrame.
-            if (transformType == ItemTransforms.TransformType.NONE) {
+            if (context.transformType == ItemTransforms.TransformType.NONE) {
                 return skinParts.size() == 1;
             }
             return false;
@@ -208,7 +211,7 @@ public class BakedSkin implements IBakedSkin {
             return false; // arrow entity only render arrow part
         }
         if (partType instanceof ICanUse && entity instanceof LivingEntity) {
-            int useTick = getUseTick((LivingEntity) entity, itemStack);
+            int useTick = getUseTick((LivingEntity) entity, context.itemStack);
             Range<Integer> useRange = ((ICanUse) partType).getUseRange();
             return useRange.contains(Math.min(useTick, maxUseTick));
         }

@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
@@ -59,10 +60,11 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
         poseStack.scale(f, f, f);
         poseStack.scale(-1, -1, 1);
 
-        SkinRenderContext context = SkinRenderContext.getInstance();
-        context.setup(light, partialTicks1, poseStack, buffers);
-        renderer.render(mannequin, SkinRendererManager.wrap(model), bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, 0, context);
-        context.clean();
+        IModelHolder<Model> modelHolder = ModelHolder.of(model);
+        SkinRenderContext context = SkinRenderContext.alloc(null, light, partialTicks1, poseStack, buffers);
+        context.setTransforms(mannequin, modelHolder);
+        renderer.render(mannequin, modelHolder, bakedSkin, ColorScheme.EMPTY, context);
+        context.release();
 
         poseStack.popPose();
 

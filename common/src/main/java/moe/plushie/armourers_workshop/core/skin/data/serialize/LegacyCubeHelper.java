@@ -55,15 +55,15 @@ public final class LegacyCubeHelper {
         if (version < 2) {
             if (skinPart == SkinPartTypes.ITEM_SWORD) {
                 y -= 1;
-            } else if (skinPart == SkinPartTypes.BIPED_SKIRT) {
+            } else if (skinPart == SkinPartTypes.BIPPED_SKIRT) {
                 y -= 1;
-            } else if (skinPart == SkinPartTypes.BIPED_LEFT_LEG) {
+            } else if (skinPart == SkinPartTypes.BIPPED_LEFT_LEG) {
                 y -= 1;
-            } else if (skinPart == SkinPartTypes.BIPED_RIGHT_LEG) {
+            } else if (skinPart == SkinPartTypes.BIPPED_RIGHT_LEG) {
                 y -= 1;
-            } else if (skinPart == SkinPartTypes.BIPED_LEFT_FOOT) {
+            } else if (skinPart == SkinPartTypes.BIPPED_LEFT_FOOT) {
                 y -= 1;
-            } else if (skinPart == SkinPartTypes.BIPED_RIGHT_FOOT) {
+            } else if (skinPart == SkinPartTypes.BIPPED_RIGHT_FOOT) {
                 y -= 1;
             }
         }

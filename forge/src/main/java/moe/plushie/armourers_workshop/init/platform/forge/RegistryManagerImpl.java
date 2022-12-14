@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.forge.addon.BukkitAddon;
+import moe.plushie.armourers_workshop.utils.LazyValue;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -71,7 +72,7 @@ public class RegistryManagerImpl {
 
         @Override
         public <I extends T> IRegistryKey<I> register(String name, Supplier<? extends I> provider) {
-            RegistryLazyValue<? extends I> lazyProvider = new RegistryLazyValue<>(provider);
+            LazyValue<? extends I> lazyProvider = LazyValue.of(provider);
             ResourceLocation registryName = ModConstants.key(name);
             ModLog.debug("Registering '{}'", registryName);
             Supplier<I> value = registry.register(name, lazyProvider);
@@ -89,25 +90,6 @@ public class RegistryManagerImpl {
             entriesView.add(ObjectUtils.unsafeCast(object));
             BukkitAddon.register(category, registryName, registry::getId);
             return object;
-        }
-    }
-
-    public static class RegistryLazyValue<T> implements Supplier<T> {
-
-        private T value;
-        private Supplier<T> provider;
-
-        public RegistryLazyValue(Supplier<T> provider) {
-            this.provider = provider;
-        }
-
-        @Override
-        public T get() {
-            if (provider != null) {
-                value = provider.get();
-                provider = null;
-            }
-            return value;
         }
     }
 }

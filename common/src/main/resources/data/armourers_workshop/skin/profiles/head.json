@@ -1,0 +1,11 @@
+{
+  "slots": {
+    "head": "default_mob_slots"
+  },
+  "entities": [
+    "minecraft:slime",
+    "minecraft:ghast",
+    "minecraft:chicken",
+    "minecraft:creeper"
+  ]
+}

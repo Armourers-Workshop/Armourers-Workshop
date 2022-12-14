@@ -3,10 +3,17 @@ package moe.plushie.armourers_workshop.utils;
 import com.apple.library.foundation.NSRange;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
+import moe.plushie.armourers_workshop.core.entity.EntityProfile;
+import moe.plushie.armourers_workshop.init.ModEntityProfiles;
+import net.minecraft.world.entity.EntityType;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -27,6 +34,18 @@ public class ObjectUtils {
 
     public static String replaceString(String string, NSRange range, String replacementString) {
         return (new StringBuilder(string)).replace(range.startIndex(), range.endIndex(), replacementString).toString();
+    }
+
+    public static <K, V> void difference(Map<K, V> oldValue, Map<K, V> newValue, BiConsumer<K, V> removeHandler, BiConsumer<K, V> insertHandler) {
+        HashMap<K, V> insertEntities = new HashMap<>();
+        HashMap<K, V> removedEntities = new HashMap<>(oldValue);
+        newValue.forEach((key, value) -> {
+            if (removedEntities.remove(key) == null) {
+                insertEntities.put(key, value);
+            }
+        });
+        removedEntities.forEach(removeHandler);
+        insertEntities.forEach(insertHandler);
     }
 
     @Nullable

@@ -21,11 +21,11 @@ public final class SkinTypes {
 
     public static final ISkinType UNKNOWN = register("unknown", 255, SkinPartTypes.UNKNOWN);
 
-    public static final ISkinType ARMOR_HEAD = registerArmor("head", 1, EquipmentSlot.HEAD, SkinPartTypes.BIPED_HEAD);
-    public static final ISkinType ARMOR_CHEST = registerArmor("chest", 2, EquipmentSlot.CHEST, SkinPartTypes.BIPED_CHEST, SkinPartTypes.BIPED_LEFT_ARM, SkinPartTypes.BIPED_RIGHT_ARM);
-    public static final ISkinType ARMOR_LEGS = registerArmor("legs", 3, EquipmentSlot.LEGS, SkinPartTypes.BIPED_LEFT_LEG, SkinPartTypes.BIPED_RIGHT_LEG, SkinPartTypes.BIPED_SKIRT);
-    public static final ISkinType ARMOR_FEET = registerArmor("feet", 4, EquipmentSlot.FEET, SkinPartTypes.BIPED_LEFT_FOOT, SkinPartTypes.BIPED_RIGHT_FOOT);
-    public static final ISkinType ARMOR_WINGS = registerArmor("wings", 5, null, SkinPartTypes.BIPED_LEFT_WING, SkinPartTypes.BIPED_RIGHT_WING);
+    public static final ISkinType ARMOR_HEAD = registerArmor("head", 1, EquipmentSlot.HEAD, SkinPartTypes.BIPPED_HEAD);
+    public static final ISkinType ARMOR_CHEST = registerArmor("chest", 2, EquipmentSlot.CHEST, SkinPartTypes.BIPPED_CHEST, SkinPartTypes.BIPPED_LEFT_ARM, SkinPartTypes.BIPPED_RIGHT_ARM);
+    public static final ISkinType ARMOR_LEGS = registerArmor("legs", 3, EquipmentSlot.LEGS, SkinPartTypes.BIPPED_LEFT_LEG, SkinPartTypes.BIPPED_RIGHT_LEG, SkinPartTypes.BIPPED_SKIRT);
+    public static final ISkinType ARMOR_FEET = registerArmor("feet", 4, EquipmentSlot.FEET, SkinPartTypes.BIPPED_LEFT_FOOT, SkinPartTypes.BIPPED_RIGHT_FOOT);
+    public static final ISkinType ARMOR_WINGS = registerArmor("wings", 5, null, SkinPartTypes.BIPPED_LEFT_WING, SkinPartTypes.BIPPED_RIGHT_WING);
 
     //public static final ISkinType HORSE = register("horse", 17, SkinPartTypes.BLOCK, SkinPartTypes.BLOCK_MULTI);
     public static final ISkinType OUTFIT = registerArmor("outfit", 6, null, SkinTypes.ARMOR_HEAD, SkinTypes.ARMOR_CHEST, SkinTypes.ARMOR_LEGS, SkinTypes.ARMOR_FEET, SkinTypes.ARMOR_WINGS);
@@ -44,6 +44,9 @@ public final class SkinTypes {
     public static ISkinType byName(String registryName) {
         if (registryName == null) {
             return UNKNOWN;
+        }
+        if (!registryName.startsWith("armourers:")) {
+            registryName = "armourers:" + registryName;
         }
         if (registryName.equals("armourers:skirt")) {
             return ARMOR_LEGS;

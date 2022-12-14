@@ -1,172 +1,74 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
+import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
-import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.init.platform.DataPackManager;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 public class ModEntityProfiles {
 
-    private static final HashMap<String, EntityProfile> ALL_PROFILES = new HashMap<>();
-    private static final HashMap<EntityType<?>, EntityProfile> ENTITY_PROFILES = new HashMap<>();
+    private static final DataPackLoader LOADER = new DataPackLoader("skin/profiles", Builder::new, ModEntityProfiles::clean, ModEntityProfiles::freeze);
 
-    public static final EntityProfile PLAYER = Builder.create()
-            .add(SkinTypes.ARMOR_HEAD, ModEntityProfiles::playerSlots)
-            .add(SkinTypes.ARMOR_CHEST, ModEntityProfiles::playerSlots)
-            .add(SkinTypes.ARMOR_LEGS, ModEntityProfiles::playerSlots)
-            .add(SkinTypes.ARMOR_FEET, ModEntityProfiles::playerSlots)
-            .add(SkinTypes.ARMOR_WINGS, ModEntityProfiles::playerSlots)
-            .add(SkinTypes.OUTFIT, ModEntityProfiles::playerSlots)
-            .add(SkinTypes.ITEM_BOW, 1)
-            .add(SkinTypes.ITEM_SWORD, 1)
-            .add(SkinTypes.ITEM_SHIELD, 1)
-            .add(SkinTypes.ITEM_TRIDENT, 1)
-            .add(SkinTypes.TOOL_AXE, 1)
-            .add(SkinTypes.TOOL_HOE, 1)
-            .add(SkinTypes.TOOL_PICKAXE, 1)
-            .add(SkinTypes.TOOL_SHOVEL, 1)
-            .build("player");
+    private static final ArrayList<BiConsumer<EntityType<?>, EntityProfile>> INSERT_HANDLERS = new ArrayList<>();
+    private static final ArrayList<BiConsumer<EntityType<?>, EntityProfile>> REMOVE_HANDLERS = new ArrayList<>();
 
-    public static final EntityProfile MANNEQUIN = Builder.create()
-            .add(SkinTypes.ARMOR_HEAD, 10)
-            .add(SkinTypes.ARMOR_CHEST, 10)
-            .add(SkinTypes.ARMOR_LEGS, 10)
-            .add(SkinTypes.ARMOR_FEET, 10)
-            .add(SkinTypes.ARMOR_WINGS, 10)
-            .add(SkinTypes.OUTFIT, 10)
-            .build("mannequin");
+    private static final HashMap<ResourceLocation, EntityProfile> PENDING_ENTITY_PROFILES = new HashMap<>();
+    private static final HashMap<EntityType<?>, EntityProfile> PENDING_ENTITIES = new HashMap<>();
 
-    public static final EntityProfile CUSTOM = Builder.create()
-            .add(SkinTypes.ARMOR_HEAD, 10)
-            .add(SkinTypes.ARMOR_CHEST, 10)
-            .add(SkinTypes.ARMOR_LEGS, 10)
-            .add(SkinTypes.ARMOR_FEET, 10)
-            .add(SkinTypes.ARMOR_WINGS, 10)
-            .add(SkinTypes.OUTFIT, 10)
-            .add(SkinTypes.ITEM_BOW, 1)
-            .add(SkinTypes.ITEM_SWORD, 1)
-            .add(SkinTypes.ITEM_SHIELD, 1)
-            .add(SkinTypes.ITEM_TRIDENT, 1)
-            .add(SkinTypes.TOOL_AXE, 1)
-            .add(SkinTypes.TOOL_HOE, 1)
-            .add(SkinTypes.TOOL_PICKAXE, 1)
-            .add(SkinTypes.TOOL_SHOVEL, 1)
-            .build("custom");
+    private static final HashMap<ResourceLocation, EntityProfile> ALL_ENTITY_PROFILES = new HashMap<>();
+    private static final HashMap<EntityType<?>, EntityProfile> ALL_ENTITIES = new HashMap<>();
 
-    public static final EntityProfile MOB = Builder.create()
-            .add(SkinTypes.ARMOR_HEAD, ModEntityProfiles::mobSlots)
-            .add(SkinTypes.ARMOR_CHEST, ModEntityProfiles::mobSlots)
-            .add(SkinTypes.ARMOR_LEGS, ModEntityProfiles::mobSlots)
-            .add(SkinTypes.ARMOR_FEET, ModEntityProfiles::mobSlots)
-            .add(SkinTypes.ARMOR_WINGS, ModEntityProfiles::mobSlots)
-            .add(SkinTypes.OUTFIT, ModEntityProfiles::mobSlots)
-            .add(SkinTypes.ITEM_BOW, 1)
-            .add(SkinTypes.ITEM_SWORD, 1)
-            .add(SkinTypes.ITEM_SHIELD, 1)
-            .add(SkinTypes.ITEM_TRIDENT, 1)
-            .add(SkinTypes.TOOL_AXE, 1)
-            .add(SkinTypes.TOOL_HOE, 1)
-            .add(SkinTypes.TOOL_PICKAXE, 1)
-            .add(SkinTypes.TOOL_SHOVEL, 1)
-            .build("mob");
-
-    public static final EntityProfile VILLAGER = Builder.create()
-            .add(SkinTypes.ARMOR_HEAD, ModEntityProfiles::mobSlots)
-            .add(SkinTypes.ARMOR_CHEST, ModEntityProfiles::mobSlots)
-            .add(SkinTypes.ARMOR_LEGS, ModEntityProfiles::mobSlots)
-            .add(SkinTypes.ARMOR_FEET, ModEntityProfiles::mobSlots)
-            .add(SkinTypes.ARMOR_WINGS, ModEntityProfiles::mobSlots)
-            .add(SkinTypes.OUTFIT, ModEntityProfiles::mobSlots)
-            .build("villager");
-
-    public static final EntityProfile ONLY_HEAD = Builder.create()
-            .add(SkinTypes.ARMOR_HEAD, ModEntityProfiles::mobSlots)
-            .build("only_head");
-
-    public static final EntityProfile PROJECTING = Builder.create()
-            .add(SkinTypes.ITEM_BOW, 1)
-            .add(SkinTypes.ITEM_TRIDENT, 1)
-            .fixed()
-            .build("projecting");
-
-    private static int playerSlots(ISkinType type) {
-        return ModConfig.Common.prefersWardrobePlayerSlots;
+    private static void clean() {
     }
 
-    private static int mobSlots(ISkinType type) {
-        return ModConfig.Common.prefersWardrobeMobSlots;
+    private static void freeze() {
+        //
+        ObjectUtils.difference(ALL_ENTITY_PROFILES, PENDING_ENTITY_PROFILES, (registryName, entityProfile) -> {
+            ModLog.debug("Unregistering Entity Profile '{}'", registryName);
+        }, (registryName, entityProfile) -> {
+            ModLog.debug("Registering Entity Profile '{}'", registryName);
+        });
+        ObjectUtils.difference(ALL_ENTITIES, PENDING_ENTITIES, dispatch(REMOVE_HANDLERS), dispatch(INSERT_HANDLERS));
+        // apply changes
+        ALL_ENTITIES.clear();
+        ALL_ENTITY_PROFILES.clear();
+        ALL_ENTITIES.putAll(PENDING_ENTITIES);
+        ALL_ENTITY_PROFILES.putAll(PENDING_ENTITY_PROFILES);
+        PENDING_ENTITIES.clear();
+        PENDING_ENTITY_PROFILES.clear();
+    }
+
+    private static BiConsumer<EntityType<?>, EntityProfile> dispatch(ArrayList<BiConsumer<EntityType<?>, EntityProfile>> consumers) {
+        return (entityType, entityProfile) -> consumers.forEach(consumer -> consumer.accept(entityType, entityProfile));
     }
 
     public static void init() {
-        register(EntityType.PLAYER, PLAYER);
-
-        register(EntityType.VILLAGER, VILLAGER);
-        register(EntityType.WITCH, VILLAGER);
-        register(EntityType.WANDERING_TRADER, VILLAGER);
-
-        register(EntityType.SKELETON, MOB);
-        register(EntityType.STRAY, MOB);
-        register(EntityType.WITHER_SKELETON, MOB);
-        register(EntityType.ZOMBIE, MOB);
-        register(EntityType.HUSK, MOB);
-        register(EntityType.ZOMBIE_VILLAGER, MOB);
-        register(EntityType.DROWNED, MOB);
-
-        register(EntityType.EVOKER, MOB);
-        register(EntityType.ILLUSIONER, MOB);
-        register(EntityType.PILLAGER, MOB);
-        register(EntityType.VINDICATOR, MOB);
-
-        register(EntityType.VEX, MOB);
-        register(EntityType.PIGLIN, MOB);
-        register(EntityType.PIGLIN_BRUTE, MOB);
-        register(EntityType.ZOMBIFIED_PIGLIN, MOB);
-
-        register(EntityType.SLIME, ONLY_HEAD);
-        register(EntityType.GHAST, ONLY_HEAD);
-        register(EntityType.CHICKEN, ONLY_HEAD);
-        register(EntityType.CREEPER, ONLY_HEAD);
-
-        register(EntityType.ARROW, PROJECTING);
-        register(EntityType.TRIDENT, PROJECTING);
-
-//        register(EntityType.ARMOR_STAND, EntityProfiles.MANNEQUIN);
-        register(EntityType.IRON_GOLEM, MANNEQUIN);
-
-        register(ModEntityTypes.MANNEQUIN.get(), MANNEQUIN);
-
-        ModCompatible.registerCustomEntityType();
-    }
-
-    public static void register(EntityType<?> entityType, EntityProfile entityProfile) {
-        ModLog.debug("Registering Entity Profile '{}'", Registry.ENTITY_TYPE.getKey(entityType));
-        ENTITY_PROFILES.put(entityType, entityProfile);
-    }
-
-    public static void register(String registryName, EntityProfile entityProfile) {
-        register(registryName, entityProfile, null);
-    }
-
-    public static void register(String registryName, EntityProfile entityProfile, Consumer<EntityType<?>> consumer) {
-        EntityType.byString(registryName).ifPresent(entityType -> {
-            register(entityType, entityProfile);
-            if (consumer != null) {
-                consumer.accept(entityType);
-            }
-        });
+        DataPackManager.register(LOADER);
     }
 
     public static void forEach(BiConsumer<EntityType<?>, EntityProfile> consumer) {
-        ENTITY_PROFILES.forEach(consumer);
+        ALL_ENTITIES.forEach(consumer);
+    }
+
+    public static void addListener(BiConsumer<EntityType<?>, EntityProfile> removeHandler, BiConsumer<EntityType<?>, EntityProfile> insertHandler) {
+        REMOVE_HANDLERS.add(removeHandler);
+        INSERT_HANDLERS.add(insertHandler);
     }
 
     @Nullable
@@ -176,43 +78,60 @@ public class ModEntityProfiles {
 
     @Nullable
     public static <T extends Entity> EntityProfile getProfile(EntityType<T> entityType) {
-        return ENTITY_PROFILES.get(entityType);
+        return ALL_ENTITIES.get(entityType);
     }
 
     @Nullable
     public static EntityProfile getProfile(ResourceLocation registryName) {
-        return ALL_PROFILES.get(registryName.toString());
+        return ALL_ENTITY_PROFILES.get(registryName);
     }
 
-    public static class Builder<T> {
+    public static class Builder implements IDataPackBuilder {
 
+        private boolean locked = false;
+
+        private final ResourceLocation registryName;
+
+        private final ArrayList<EntityType<?>> entities = new ArrayList<>();
         private final HashMap<ISkinType, Function<ISkinType, Integer>> supports = new HashMap<>();
-        private boolean editable = true;
 
-        public static <T extends Entity> Builder<T> create() {
-            return new Builder<>();
+        public Builder(ResourceLocation registryName) {
+            this.registryName = ModConstants.key(SkinFileUtils.getBaseName(registryName.getPath()));
         }
 
-
-        private Builder<T> add(ISkinType type, Function<ISkinType, Integer> f) {
-            supports.put(type, f);
-            return this;
+        @Override
+        public void append(IDataPackObject object, ResourceLocation location) {
+            if (object.get("replace").boolValue()) {
+                locked = false;
+                supports.clear();
+                entities.clear();
+            }
+            object.get("locked").ifPresent(o -> {
+                locked = o.boolValue();
+            });
+            object.get("slots").entrySet().forEach(it -> {
+                ISkinType type = SkinTypes.byName(it.getKey());
+                String name = it.getValue().stringValue();
+                if (name.equals("default_mob_slots")) {
+                    supports.put(type, type1 -> ModConfig.Common.prefersWardrobeMobSlots);
+                } else if (name.equals("default_player_slots")) {
+                    supports.put(type, type1 -> ModConfig.Common.prefersWardrobePlayerSlots);
+                } else {
+                    int count = it.getValue().numberValue().intValue();
+                    supports.put(type, type1 -> count);
+                }
+            });
+            object.get("entities").allValues().forEach(o -> {
+                Optional<EntityType<?>> entityType = EntityType.byString(o.stringValue());
+                entityType.ifPresent(entities::add);
+            });
         }
 
-        private Builder<T> add(ISkinType type, int maxCount) {
-            supports.put(type, t -> maxCount);
-            return this;
-        }
-
-        private Builder<T> fixed() {
-            editable = false;
-            return this;
-        }
-
-        public EntityProfile build(String registryName) {
-            EntityProfile profile = new EntityProfile(ModConstants.key(registryName), supports, editable);
-            ALL_PROFILES.put(profile.getRegistryName().toString(), profile);
-            return profile;
+        @Override
+        public void build() {
+            EntityProfile profile = new EntityProfile(registryName, supports, entities, locked);
+            entities.forEach(entityType -> PENDING_ENTITIES.put(entityType, profile));
+            PENDING_ENTITY_PROFILES.put(registryName, profile);
         }
     }
 }

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.armature;
 
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
@@ -80,28 +81,34 @@ public class Armature {
 
 	public static final float Q = 0;
 	// offset +24
-	public static final ImmutableMap<String, TestBox> BOXES = ImmutableMap.<String, TestBox>builder()
-			.put("Head", new TestBox(new Vector3f(0, 24, 0), new Rectangle3f(-4, -8, -4, 8, 8, 8)))
+	public static final ImmutableMap<Joint2, Rectangle3f> BOXES = ImmutableMap.<Joint2, Rectangle3f>builder()
+			.put(Joints.BIPPED_HEAD, new Rectangle3f(-4, -8, -4, 8, 8, 8))
 
-			.put("Chest", new TestBox(new Vector3f(0, 24, 0), new Rectangle3f(-4, 0, -2, 8, 6, 4)))
-			.put("Torso", new TestBox(new Vector3f(0, 18, 0), new Rectangle3f(-4, 0, -2, 8, 6, 4)))
+			.put(Joints.BIPPED_CHEST, new Rectangle3f(-4, 0, -2, 8, 6, 4))
+			.put(Joints.BIPPED_TORSO, new Rectangle3f(-4, 0, -2, 8, 6, 4))
 
-			.put("Skirt", new TestBox(new Vector3f(0, 12, 0), new Rectangle3f(-4, 0, -2, 8, 6, 4)).bind("Torso"))
+			.put(Joints.BIPPED_SKIRT, new Rectangle3f(-4, 0, -2, 8, 12, 4))
 
-			.put("Arm_L", new TestBox(new Vector3f(-5, 22, 0), new Rectangle3f(-1, -2, -2, 4, 6, 4)))
-			.put("Arm_R", new TestBox(new Vector3f(5, 22, 0), new Rectangle3f(-3, -2, -2, 4, 6, 4)))
+			.put(Joints.BIPPED_LEFT_ARM, new Rectangle3f(-1, -2, -2, 4, 6, 4))
+			.put(Joints.BIPPED_RIGHT_ARM, new Rectangle3f(-3, -2, -2, 4, 6, 4))
 
-			.put("Hand_L", new TestBox(new Vector3f(-5, 18, 0), new Rectangle3f(-1, 0, -2, 4, 6, 4)))
-			.put("Hand_R", new TestBox(new Vector3f(5, 18, 0), new Rectangle3f(-3, 0, -2, 4, 6, 4)))
+			.put(Joints.BIPPED_LEFT_HAND, new Rectangle3f(-1, 0, -2, 4, 6, 4))
+			.put(Joints.BIPPED_RIGHT_HAND, new Rectangle3f(-3, 0, -2, 4, 6, 4))
 
-			.put("Thigh_L", new TestBox(new Vector3f(-2, 12, 0), new Rectangle3f(-2, 0, -2, 4, 6, 4)))
-			.put("Thigh_R", new TestBox(new Vector3f(2, 12, 0), new Rectangle3f(-2, 0, -2, 4, 6, 4)))
+			.put(Joints.BIPPED_LEFT_THIGH, new Rectangle3f(-2, 0, -2, 4, 6, 4))
+			.put(Joints.BIPPED_RIGHT_THIGH, new Rectangle3f(-2, 0, -2, 4, 6, 4))
 
-			.put("Leg_L", new TestBox(new Vector3f(-2, 6, 0), new Rectangle3f(-2, 0, -2, 4, 6, 4)))
-			.put("Leg_R", new TestBox(new Vector3f(2, 6, 0), new Rectangle3f(-2, 0, -2, 4, 6, 4)))
+			.put(Joints.BIPPED_LEFT_LEG, new Rectangle3f(-2, 0, -2, 4, 6, 4))
+			.put(Joints.BIPPED_RIGHT_LEG, new Rectangle3f(-2, 0, -2, 4, 6, 4))
 
-			.put("Foot_L", new TestBox(new Vector3f(-2, 12, 0), new Rectangle3f(-2, 8, -2, 4, 4, 4)).bind("Leg_L"))
-			.put("Foot_R", new TestBox(new Vector3f(2, 12, 0), new Rectangle3f(-2, 8, -2, 4, 4, 4)).bind("Leg_R"))
+			.put(Joints.BIPPED_LEFT_FOOT, new Rectangle3f(-2, 8, -2, 4, 4, 4))
+			.put(Joints.BIPPED_RIGHT_FOOT, new Rectangle3f(-2, 8, -2, 4, 4, 4))
+
+			.put(Joints.BIPPED_LEFT_PHALANX, new Rectangle3f(0, 0, 0, 4, 12, 1))
+			.put(Joints.BIPPED_RIGHT_PHALANX, new Rectangle3f(-4, 0, 0, 4, 12, 1))
+
+//			overrides.put("Wing_L", get(mm::getBodyPart));
+//        overrides.put("Wing_R", get(mm::getBodyPart));
 
 			.build();
 
@@ -124,29 +131,21 @@ public class Armature {
 
 	static AtomicInteger III = new AtomicInteger(0);
 
-	public static void renderTest(HashMap<String, IPoseStack> map, MultiBufferSource buffers, IPoseStack poseStack, int packedLightIn, float partialTicks) {
+	public static void renderTest(ITransformf[] transforms, MultiBufferSource buffers, IPoseStack poseStack, int packedLightIn, float partialTicks) {
 		poseStack.pushPose();
-		poseStack.scale(1 / 16f, 1 / 16f, 1 / 16f);
+//		poseStack.scale(1 / 16f, 1 / 16f, 1 / 16f);
 		III.set(0);
-		map.forEach((key, value) -> {
-			TestBox f = BOXES.get(key);
-			if (f == null) {
+		BOXES.forEach((joint, box) -> {
+			ITransformf transform = transforms[joint.getId()];
+			if (transform == null) {
 				return;
 			}
 			poseStack.pushPose();
-//			for (String p : f.parents) {
-//				Matrix4f m42 = map.get(p);
-//				if (m42 != null) {
-//					m4.multiply(m42);
-//				}
-//			}
-			poseStack.scale(16f, 16f, 16f);
-			poseStack.multiply(value);
-			poseStack.scale(1 / 16f, 1 / 16f, 1 / 16f);
-			poseStack.scale(-1, -1, 1);
 
-//			poseStack.translate(f.o.getX(), f.o.getY(), f.o.getZ());
-			RenderSystem.drawBoundingBox(poseStack, f.r, ColorUtils.getPaletteColor(III.incrementAndGet()), buffers);
+			transform.apply(poseStack);
+
+//			poseStack.translate(box.o.getX(), box.o.getY(), box.o.getZ());
+			RenderSystem.drawBoundingBox(poseStack, box, ColorUtils.getPaletteColor(III.incrementAndGet()), buffers);
 			RenderSystem.drawPoint(poseStack, Vector3f.ZERO, 4, 4, 4, buffers);
 			poseStack.popPose();
 		});

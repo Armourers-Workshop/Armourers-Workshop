@@ -16,18 +16,18 @@ public class BipedSkinRenderer<T extends LivingEntity, V extends HumanoidModel<T
         super(profile);
     }
 
-    @Override
-    protected void setHeadPart(IPoseStack poseStack, M model) {
-        super.setHeadPart(poseStack, model);
-        if (model.isBaby()) {
-            float scale = model.getBabyScale();
-            IVector3f offset = model.getBabyOffset();
-            if (offset == null) {
-                return;
-            }
-            poseStack.scale(scale, scale, scale);
-            poseStack.translate(offset.getX() / 16f, offset.getY() / 16f, offset.getZ() / 16f);
-        }
-    }
+//    @Override
+//    protected void setHeadPart(IPoseStack poseStack, M model) {
+//        super.setHeadPart(poseStack, model);
+//        if (model.isBaby()) {
+//            float scale = model.getBabyScale();
+//            IVector3f offset = model.getBabyOffset();
+//            if (offset == null) {
+//                return;
+//            }
+//            poseStack.scale(scale, scale, scale);
+//            poseStack.translate(offset.getX() / 16f, offset.getY() / 16f, offset.getZ() / 16f);
+//        }
+//    }
 }
 

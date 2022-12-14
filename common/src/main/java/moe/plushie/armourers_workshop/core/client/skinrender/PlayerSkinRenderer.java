@@ -20,22 +20,22 @@ public class PlayerSkinRenderer<T extends LivingEntity, V extends PlayerModel<T>
     @Override
     protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
         super.apply(entity, model, overriddenManager, renderData);
-        if (overriddenManager.overrideOverlay(SkinPartTypes.BIPED_HEAD)) {
+        if (overriddenManager.overrideOverlay(SkinPartTypes.BIPPED_HEAD)) {
             addModelOverride(model.getHatPart());
         }
-        if (overriddenManager.overrideOverlay(SkinPartTypes.BIPED_LEFT_ARM)) {
+        if (overriddenManager.overrideOverlay(SkinPartTypes.BIPPED_LEFT_ARM)) {
             addModelOverride(model.getLeftSleevePart());
         }
-        if (overriddenManager.overrideOverlay(SkinPartTypes.BIPED_RIGHT_ARM)) {
+        if (overriddenManager.overrideOverlay(SkinPartTypes.BIPPED_RIGHT_ARM)) {
             addModelOverride(model.getRightSleevePart());
         }
-        if (overriddenManager.overrideOverlay(SkinPartTypes.BIPED_CHEST)) {
+        if (overriddenManager.overrideOverlay(SkinPartTypes.BIPPED_CHEST)) {
             addModelOverride(model.getJacketPart());
         }
-        if (overriddenManager.overrideOverlay(SkinPartTypes.BIPED_LEFT_LEG) || overriddenManager.overrideOverlay(SkinPartTypes.BIPED_LEFT_FOOT)) {
+        if (overriddenManager.overrideOverlay(SkinPartTypes.BIPPED_LEFT_LEG) || overriddenManager.overrideOverlay(SkinPartTypes.BIPPED_LEFT_FOOT)) {
             addModelOverride(model.getLeftPantsPart());
         }
-        if (overriddenManager.overrideOverlay(SkinPartTypes.BIPED_RIGHT_LEG) || overriddenManager.overrideOverlay(SkinPartTypes.BIPED_RIGHT_FOOT)) {
+        if (overriddenManager.overrideOverlay(SkinPartTypes.BIPPED_RIGHT_LEG) || overriddenManager.overrideOverlay(SkinPartTypes.BIPPED_RIGHT_FOOT)) {
             addModelOverride(model.getRightPantsPart());
         }
     }

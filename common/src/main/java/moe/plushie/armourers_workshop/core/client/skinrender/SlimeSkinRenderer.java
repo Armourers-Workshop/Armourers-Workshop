@@ -20,13 +20,13 @@ public class SlimeSkinRenderer<T extends LivingEntity, V extends SlimeModel<T>, 
 
     @Override
     public void initTransformers() {
-        transformer.registerArmor(SkinPartTypes.BIPED_HEAD, this::offset);
+        transformer.registerArmor(SkinPartTypes.BIPPED_HEAD, this::offset);
     }
 
     @Override
     protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
         super.apply(entity, model, overriddenManager, renderData);
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_HEAD)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_HEAD)) {
             model.getAllParts().forEach(this::addModelOverride);
         }
     }

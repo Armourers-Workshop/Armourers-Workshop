@@ -23,7 +23,7 @@ public class HeadGuideRenderer extends AbstractGuideRenderer {
 
     @Override
     public void init(GuideRendererManager rendererManager) {
-        rendererManager.register(SkinPartTypes.BIPED_HEAD, this::render);
+        rendererManager.register(SkinPartTypes.BIPPED_HEAD, this::render);
     }
 
     public void render(IPoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {

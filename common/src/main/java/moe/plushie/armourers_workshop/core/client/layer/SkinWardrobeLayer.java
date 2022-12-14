@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.init.ModContributors;
+import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -38,11 +39,8 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
 
     @Override
     public void render(PoseStack poseStackIn, MultiBufferSource buffers, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (entity.isInvisible()) {
-            return;
-        }
         IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
-        M model = SkinRendererManager.wrap(getParentModel());
+        M model = ModelHolder.of(getParentModel());
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {
             return;
@@ -65,13 +63,17 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         float f = 1 / 16f;
         poseStack.scale(f, f, f);
 
-        SkinRenderContext context = SkinRenderContext.getInstance();
-        float partialTicks2 = TickUtils.ticks();
-        for (SkinRenderData.Entry entry : renderData.getArmorSkins()) {
-            context.setup(packedLightIn, partialTicks2, null, poseStack, buffers);
-            skinRenderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), entry.getItemStack(), entry.getSlotIndex(), context);
+        SkinRenderContext context = SkinRenderContext.alloc(renderData, packedLightIn, TickUtils.ticks(), null, poseStack, buffers);
+        if (renderData.overrideTransforms != null) {
+            context.setTransforms(renderData.overrideTransforms);
+        } else {
+            context.setTransforms(entity, skinRenderer.getOverrideModel(model));
         }
-        context.clean();
+        for (SkinRenderData.Entry entry : renderData.getArmorSkins()) {
+            context.setItem(entry.getItemStack(), entry.getSlotIndex());
+            skinRenderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), context);
+        }
+        context.release();
 
         poseStack.popPose();
     }

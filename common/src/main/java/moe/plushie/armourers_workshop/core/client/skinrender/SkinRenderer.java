@@ -3,8 +3,10 @@ package moe.plushie.armourers_workshop.core.client.skinrender;
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.action.ICanHeld;
+import moe.plushie.armourers_workshop.api.client.IJoint;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -22,6 +24,7 @@ import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
@@ -58,13 +61,16 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
     public void initTransformers() {
     }
 
-    public boolean prepare(T entity, M model, BakedSkin bakedSkin, BakedSkinPart bakedPart, ItemStack itemStack, ItemTransforms.TransformType transformType) {
+    public boolean prepare(T entity, M model, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinRenderContext context) {
         ISkinPartType partType = bakedPart.getType();
+        if (!context.shouldRenderPart(partType)) {
+            return false;
+        }
         if (partType == SkinPartTypes.BLOCK || partType == SkinPartTypes.BLOCK_MULTI) {
             return true;
         }
         if (partType instanceof ICanHeld) {
-            if (transformer.items.containsKey(transformType)) {
+            if (transformer.items.containsKey(context.transformType)) {
                 return true;
             }
         }
@@ -72,14 +78,14 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
     }
 
 
-    public void apply(T entity, M model, ItemStack itemStack, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinRenderContext context) {
+    public void apply(T entity, M model, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinRenderContext context) {
         M model1 = getOverrideModel(model);
-        ITransform<T, M> op = getPartTransform(entity, model1, itemStack, context.transformType, bakedPart);
-        if (op != null && model1 != null) {
+        PartTransform<T, M> partTransform = getPartTransform(entity, model1, bakedPart, bakedSkin, context);
+        if (partTransform != null && model1 != null) {
             SkinTransform transform = bakedPart.getTransform();
             transform.setup(context.partialTicks, entity);
             transform.pre(context.poseStack);
-            op.apply(context.poseStack, entity, model1, itemStack, context.transformType, bakedPart);
+            partTransform.apply(context.poseStack, entity, model1, bakedPart, bakedSkin, context);
             transform.post(context.poseStack);
         }
     }
@@ -96,7 +102,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
         overriders.forEach(m -> m.visible = false);
     }
 
-    public int render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int slotIndex, SkinRenderContext context) {
+    public int render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, SkinRenderContext context) {
         if (profile != null) {
             ISkinType type = bakedSkin.getType();
             if (type instanceof ISkinArmorType && !profile.canSupport(type)) {
@@ -104,24 +110,23 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
             }
         }
         int counter = 0;
-        IPoseStack poseStack = context.poseStack;
         Skin skin = bakedSkin.getSkin();
         ColorScheme scheme1 = bakedSkin.resolve(entity, scheme);
         SkinRenderObjectBuilder builder = context.getBuffer(skin);
         for (BakedSkinPart bakedPart : bakedSkin.getSkinParts()) {
-            if (!prepare(entity, model, bakedSkin, bakedPart, itemStack, context.transformType)) {
+            if (!prepare(entity, model, bakedPart, bakedSkin, context)) {
                 continue;
             }
-            boolean shouldRenderPart = bakedSkin.shouldRenderPart(bakedPart, entity, itemStack, context.transformType);
-            poseStack.pushPose();
-            apply(entity, model, itemStack, bakedPart, bakedSkin, context);
-            builder.addPartData(bakedPart, scheme1, context.light, context.partialTicks, slotIndex, poseStack, shouldRenderPart);
-            counter += renderChildPart(bakedPart, scheme1, slotIndex, shouldRenderPart, builder, context);
+            boolean shouldRenderPart = bakedSkin.shouldRenderPart(entity, model, bakedPart, context);
+            context.pushPose();
+            apply(entity, model, bakedPart, bakedSkin, context);
+            builder.addPartData(bakedPart, bakedSkin, scheme1, shouldRenderPart, context);
+            counter += renderChildPart(bakedPart, bakedSkin, scheme1, shouldRenderPart, builder, context);
             if (shouldRenderPart && ModDebugger.skinPartBounds) {
-                builder.addShapeData(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(bakedPart.getId()), poseStack);
+                builder.addShapeBox(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(bakedPart.getId()), context);
             }
             if (shouldRenderPart && ModDebugger.skinPartOrigin) {
-                builder.addShapeData(Vector3f.ZERO, poseStack);
+                builder.addShapePoint(Vector3f.ZERO, context);
             }
             // we have some cases where we need to pre-render,
             // this is not a real render where we should not increase the number.
@@ -129,40 +134,42 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
                 counter += 1;
             }
 //            RenderUtils.drawPoint(poseStack, null, 32, buffers);
-            poseStack.popPose();
+            context.popPose();
         }
 
         if (ModDebugger.skinBounds) {
-            builder.addShapeData(bakedSkin.getRenderShape(entity, model, itemStack, context.transformType, this).bounds(), UIColor.RED, poseStack);
+            builder.addShapeBox(bakedSkin.getRenderShape(entity, model, context.itemStack, context.transformType, this).bounds(), UIColor.RED, context);
         }
         if (ModDebugger.skinBounds) {
-            builder.addShapeData(Vector3f.ZERO, poseStack);
+            builder.addShapePoint(Vector3f.ZERO, context);
+        }
+        if (ModDebugger.armature && skin.getType() instanceof ISkinArmorType) {
+            builder.addArmatureBox(context.getTransforms(), context);
         }
 
         return counter;
     }
 
-    public int renderChildPart(BakedSkinPart parentPart, ColorScheme scheme, int slotIndex, boolean shouldRenderPart, SkinRenderObjectBuilder builder, SkinRenderContext context) {
+    public int renderChildPart(BakedSkinPart parentPart, BakedSkin bakedSkin, ColorScheme scheme, boolean shouldRenderPart, SkinRenderObjectBuilder builder, SkinRenderContext context) {
         int counter = 0;
         for (BakedSkinPart bakedPart : parentPart.getChildren()) {
-            IPoseStack poseStack = context.poseStack;
+            context.pushPose();
             SkinTransform transform = bakedPart.getTransform();
-            poseStack.pushPose();
-            transform.apply(poseStack);
-            builder.addPartData(bakedPart, scheme, context.light, context.partialTicks, slotIndex, poseStack, shouldRenderPart);
-            counter += renderChildPart(bakedPart, scheme, slotIndex, shouldRenderPart, builder, context);
+            transform.apply(context.poseStack);
+            builder.addPartData(bakedPart, bakedSkin, scheme, shouldRenderPart, context);
+            counter += renderChildPart(bakedPart, bakedSkin, scheme, shouldRenderPart, builder, context);
             if (shouldRenderPart && ModDebugger.skinPartBounds) {
-                builder.addShapeData(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(bakedPart.getId()), poseStack);
+                builder.addShapeBox(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(bakedPart.getId()), context);
             }
             if (shouldRenderPart && ModDebugger.skinPartOrigin) {
-                builder.addShapeData(Vector3f.ZERO, poseStack);
+                builder.addShapePoint(Vector3f.ZERO, context);
             }
             // we have some cases where we need to pre-render,
             // this is not a real render where we should not increase the number.
             if (shouldRenderPart) {
                 counter += 1;
             }
-            poseStack.popPose();
+            context.popPose();
         }
         return counter;
     }
@@ -188,15 +195,15 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
         overriders.add(modelRenderer);
     }
 
-    protected M getOverrideModel(M model) {
+    public M getOverrideModel(M model) {
         return model;
     }
 
-    public ITransform<T, M> getPartTransform(T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+    public PartTransform<T, M> getPartTransform(T entity, M model, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinRenderContext context) {
         ISkinPartType partType = bakedPart.getType();
-        ITransform<T, M> transform = null;
+        PartTransform<T, M> transform = null;
         if (partType instanceof ICanHeld) {
-            transform = transformer.items.get(transformType);
+            transform = transformer.items.get(context.transformType);
         }
         if (transform == null) {
             transform = transformer.armors.get(partType);
@@ -219,19 +226,21 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
     }
 
     @FunctionalInterface
-    public interface ITransform<T, M> {
-        void apply(IPoseStack poseStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart);
+    public interface PartTransform<T, M> {
+        void apply(IPoseStack poseStack, T entity, M model, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinRenderContext context);
     }
 
     public static class Transformer<T, M> {
 
-        final HashMap<ISkinPartType, ITransform<T, M>> armors = new HashMap<>();
-        final HashMap<ItemTransforms.TransformType, ITransform<T, M>> items = new HashMap<>();
+        final HashMap<ISkinPartType, PartTransform<T, M>> armors = new HashMap<>();
+        final HashMap<ItemTransforms.TransformType, PartTransform<T, M>> items = new HashMap<>();
 
         public static <M> void none(PoseStack poseStack, M model) {
         }
 
-        public static <T extends Entity, M0 extends Model, M extends IModelHolder<M0>> void withModel(IPoseStack poseStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+        public static <T extends Entity, M0 extends Model, M extends IModelHolder<M0>> void withModel(IPoseStack poseStack, T entity, M model, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinRenderContext context) {
+            ItemStack itemStack = context.itemStack;
+            ItemTransforms.TransformType transformType = context.transformType;
             final float f1 = 16f;
             final float f2 = 1 / 16f;
             final boolean flag = (transformType == ItemTransforms.TransformType.THIRD_PERSON_LEFT_HAND || transformType == ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND);
@@ -248,22 +257,30 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
         }
 
         public void registerArmor(ISkinPartType partType, Function<M, ModelPart> transformer) {
-            registerArmor(partType, (poseStack, entity, model, itemStack, transformType, bakedPart) -> apply(poseStack, transformer.apply(model)));
+            registerArmor(partType, (poseStack, entity, model, bakedPart, bakedSkin, context) -> apply(poseStack, transformer.apply(model)));
+        }
+
+        public void registerArmor(ISkinPartType partType, IJoint joint) {
+            registerArmor(partType, (poseStack, entity, model, bakedPart, bakedSkin, context) -> {
+                ITransformf[] transforms = context.getTransforms();
+                if (transforms != null) {
+                    ITransformf transform = transforms[joint.getId()];
+                    if (transform != null) {
+                        transform.apply(poseStack);
+                    }
+                }
+            });
         }
 
         public void registerArmor(ISkinPartType partType, BiConsumer<IPoseStack, M> transformer) {
-            registerArmor(partType, (poseStack, entity, model, itemStack, transformType, bakedPart) -> transformer.accept(poseStack, model));
+            registerArmor(partType, (poseStack, entity, model, bakedPart, bakedSkin, context) -> transformer.accept(poseStack, model));
         }
 
-        public void registerArmor(ISkinPartType partType, ITransform<T, M> transformer) {
+        public void registerArmor(ISkinPartType partType, PartTransform<T, M> transformer) {
             armors.put(partType, transformer);
         }
 
-        public void registerItem(ItemTransforms.TransformType transformType, BiConsumer<IPoseStack, M> transformer) {
-            registerItem(transformType, (poseStack, entity, model, itemStack, transformType1, bakedPart) -> transformer.accept(poseStack, model));
-        }
-
-        public void registerItem(ItemTransforms.TransformType transformType, ITransform<T, M> transformer) {
+        public void registerItem(ItemTransforms.TransformType transformType, PartTransform<T, M> transformer) {
             items.put(transformType, transformer);
         }
 
@@ -283,6 +300,5 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
             }
         }
     }
-
 }
 

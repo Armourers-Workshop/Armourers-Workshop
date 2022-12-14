@@ -4,19 +4,17 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "ArrowRendererMixin",
-    "EntityModelMixin",
-    "EntityRendererMixin",
     "HttpTextureMixin",
     "InventoryScreenMixin",
     "ItemRendererMixin",
     "GlStateManagerMixin",
     "BlockEntityRenderDispatcherMixin",
-    "ThrownTridentRendererMixin"
+    "ThrownTridentRendererMixin",
+    "ClientDataAttachMixin"
   ],
   "mixins": [
-    "EntityMixin",
-    "ItemStackMixin",
-    "DataFixMixin"
+    "DataFixMixin",
+    "CommonDataAttachMixin"
   ],
   "injectors": {
     "defaultRequire": 1

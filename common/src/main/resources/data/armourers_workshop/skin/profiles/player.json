@@ -1,0 +1,21 @@
+{
+  "slots": {
+    "head": "default_player_slots",
+    "chest": "default_player_slots",
+    "legs": "default_player_slots",
+    "feet": "default_player_slots",
+    "wings": "default_player_slots",
+    "outfit": "default_player_slots",
+    "bow": 1,
+    "sword": 1,
+    "shield": 1,
+    "trident": 1,
+    "axe": 1,
+    "hoe": 1,
+    "pickaxe": 1,
+    "shovel": 1
+  },
+  "entities": [
+    "minecraft:player"
+  ]
+}

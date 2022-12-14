@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
@@ -72,10 +73,12 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         Rectangle3f rect = bakedSkin.getRenderBounds(mannequin, model, null, itemStack);
         apply(entity, rect, partialTicks1, poseStack, buffers);
 
-        SkinRenderContext context = SkinRenderContext.getInstance();
-        context.setup(overLight, partialTicks1, poseStack, buffers);
-        renderer.render(mannequin, SkinRendererManager.wrap(model), bakedSkin, ColorScheme.EMPTY, itemStack, 0, context);
-        context.clean();
+        IModelHolder<Model> modelHolder = ModelHolder.of(model);
+        SkinRenderContext context = SkinRenderContext.alloc(null, overLight, partialTicks1, poseStack, buffers);
+        context.setItem(itemStack, 0);
+        context.setTransforms(mannequin, modelHolder);
+        renderer.render(mannequin, modelHolder, bakedSkin, ColorScheme.EMPTY, context);
+        context.release();
 
         poseStack.popPose();
 

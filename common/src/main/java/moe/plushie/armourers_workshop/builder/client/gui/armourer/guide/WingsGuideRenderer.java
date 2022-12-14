@@ -21,8 +21,8 @@ public class WingsGuideRenderer extends AbstractGuideRenderer {
 
     @Override
     public void init(GuideRendererManager rendererManager) {
-        rendererManager.register(SkinPartTypes.BIPED_LEFT_WING, this::render);
-        // rendererManager.register(SkinPartTypes.BIPED_RIGHT_WING, this::render); // same to left wing
+        rendererManager.register(SkinPartTypes.BIPPED_LEFT_WING, this::render);
+        // rendererManager.register(SkinPartTypes.BIPPED_RIGHT_WING, this::render); // same to left wing
     }
 
 

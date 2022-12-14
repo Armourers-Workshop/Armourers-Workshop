@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.core.Direction;
@@ -16,27 +17,37 @@ public class SkinCuller {
     private static final int DIRECTION_SIZE = Direction.values().length;
 
     // joints array:
-    private static final ImmutableMap<ISkinPartType, Partition> PARTITIONS = ImmutableMap.<ISkinPartType, Partition>builder()
-            .put(SkinPartTypes.BIPED_HAT, new Simple(SkinPartTypes.BIPED_HAT))
-            .put(SkinPartTypes.BIPED_HEAD, new Simple(SkinPartTypes.BIPED_HEAD))
-            .put(SkinPartTypes.BIPED_CHEST, new Limb(SkinPartTypes.BIPED_CHEST, SkinPartTypes.BIPED_CHEST2, 6))
-            .put(SkinPartTypes.BIPED_LEFT_ARM, new Limb(SkinPartTypes.BIPED_LEFT_ARM, SkinPartTypes.BIPED_LEFT_ARM2, 4))
-            .put(SkinPartTypes.BIPED_RIGHT_ARM, new Limb(SkinPartTypes.BIPED_RIGHT_ARM, SkinPartTypes.BIPED_RIGHT_ARM2, 4))
-            .put(SkinPartTypes.BIPED_SKIRT, new Simple(SkinPartTypes.BIPED_SKIRT))
-            .put(SkinPartTypes.BIPED_LEFT_LEG, new Limb(SkinPartTypes.BIPED_LEFT_LEG, SkinPartTypes.BIPED_LEFT_LEG2, 6))
-            .put(SkinPartTypes.BIPED_RIGHT_LEG, new Limb(SkinPartTypes.BIPED_RIGHT_LEG, SkinPartTypes.BIPED_RIGHT_LEG2, 6))
-            .put(SkinPartTypes.BIPED_LEFT_FOOT, new Simple(SkinPartTypes.BIPED_LEFT_FOOT))
-            .put(SkinPartTypes.BIPED_RIGHT_FOOT, new Simple(SkinPartTypes.BIPED_RIGHT_FOOT))
-            .put(SkinPartTypes.BIPED_LEFT_WING, new Simple(SkinPartTypes.BIPED_LEFT_WING))
-            .put(SkinPartTypes.BIPED_RIGHT_WING, new Simple(SkinPartTypes.BIPED_RIGHT_WING))
+    private static final ImmutableMap<ISkinPartType, Partition> PARTITIONS2 = ImmutableMap.<ISkinPartType, Partition>builder()
+            .put(SkinPartTypes.BIPPED_HAT, new Simple(SkinPartTypes.BIPPED_HAT))
+            .put(SkinPartTypes.BIPPED_HEAD, new Simple(SkinPartTypes.BIPPED_HEAD))
+            .put(SkinPartTypes.BIPPED_CHEST, new Limb(SkinPartTypes.BIPPED_CHEST, SkinPartTypes.BIPPED_CHEST2, 6))
+            .put(SkinPartTypes.BIPPED_LEFT_ARM, new Limb(SkinPartTypes.BIPPED_LEFT_ARM, SkinPartTypes.BIPPED_LEFT_ARM2, 4))
+            .put(SkinPartTypes.BIPPED_RIGHT_ARM, new Limb(SkinPartTypes.BIPPED_RIGHT_ARM, SkinPartTypes.BIPPED_RIGHT_ARM2, 4))
+            .put(SkinPartTypes.BIPPED_SKIRT, new Simple(SkinPartTypes.BIPPED_SKIRT))
+            .put(SkinPartTypes.BIPPED_LEFT_LEG, new Limb(SkinPartTypes.BIPPED_LEFT_LEG, SkinPartTypes.BIPPED_LEFT_LEG2, 6))
+            .put(SkinPartTypes.BIPPED_RIGHT_LEG, new Limb(SkinPartTypes.BIPPED_RIGHT_LEG, SkinPartTypes.BIPPED_RIGHT_LEG2, 6))
+            .put(SkinPartTypes.BIPPED_LEFT_FOOT, new Simple(SkinPartTypes.BIPPED_LEFT_FOOT))
+            .put(SkinPartTypes.BIPPED_RIGHT_FOOT, new Simple(SkinPartTypes.BIPPED_RIGHT_FOOT))
+            .put(SkinPartTypes.BIPPED_LEFT_WING, new Simple(SkinPartTypes.BIPPED_LEFT_WING))
+            .put(SkinPartTypes.BIPPED_RIGHT_WING, new Simple(SkinPartTypes.BIPPED_RIGHT_WING))
             .build();
 
     interface Partition {
         Collection<SearchResult> subdivide(Rectangle3i rect);
     }
 
+    private static Partition getPartition(ISkinPartType partType) {
+        if (ModConfig.Client.enablePartSubdivide) {
+            Partition partition = PARTITIONS2.get(partType);
+            if (partition != null) {
+                return partition;
+            }
+        }
+        return new Simple(partType);
+    }
+
     public static Collection<SearchResult> cullFaces2(SkinCubeData cubeData, Rectangle3i bounds, ISkinPartType partType) {
-        Partition partition = PARTITIONS.getOrDefault(partType, new Simple(partType));
+        Partition partition = getPartition(partType);
         IndexedMap indexedMap = new IndexedMap(cubeData, bounds);
         Collection<SearchResult> results = partition.subdivide(bounds);
         for (SearchResult result : results) {

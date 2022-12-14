@@ -31,9 +31,9 @@ public class ChestGuideRenderer extends AbstractGuideRenderer {
 
     @Override
     public void init(GuideRendererManager rendererManager) {
-        rendererManager.register(SkinPartTypes.BIPED_CHEST, this::render);
-        rendererManager.register(SkinPartTypes.BIPED_LEFT_ARM, this::renderLeftArm);
-        rendererManager.register(SkinPartTypes.BIPED_RIGHT_ARM, this::renderRightArm);
+        rendererManager.register(SkinPartTypes.BIPPED_CHEST, this::render);
+        rendererManager.register(SkinPartTypes.BIPPED_LEFT_ARM, this::renderLeftArm);
+        rendererManager.register(SkinPartTypes.BIPPED_RIGHT_ARM, this::renderRightArm);
     }
 
     public void render(IPoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {

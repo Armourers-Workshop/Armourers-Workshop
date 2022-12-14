@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.init.provider;
 import com.mojang.brigadier.CommandDispatcher;
 import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
+import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -67,6 +68,10 @@ public interface CommonNativeProvider {
 
     interface EntitySerializersRegistry {
         void register(EntityDataSerializer<?> arg);
+    }
+
+    interface DataPackRegistry {
+        void register(DataPackLoader loader);
     }
 
     interface BlockSnapshot {

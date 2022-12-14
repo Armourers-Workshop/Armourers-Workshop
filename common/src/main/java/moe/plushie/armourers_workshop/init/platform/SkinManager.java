@@ -26,7 +26,7 @@ public class SkinManager {
     public static void init() {
         SkinRendererManager manager = SkinRendererManager.getInstance();
         adapt(manager::registerRenderer);
-        ModEntityProfiles.forEach(manager::bind);
+        ModEntityProfiles.addListener(manager::unbind, manager::bind);
         //
         manager.registerPlugin(SlimeSkinRenderer.class, new SlimeOuterFixPlugin<>());
         manager.registerPlugin(VillagerSkinRenderer.class, new VillagerLayerFixPlugin<>());

@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -24,7 +25,7 @@ import net.minecraft.world.item.ItemStack;
 public class VillagerSkinRenderer<T extends LivingEntity, V extends VillagerModel<T>, M extends IHumanoidModelHolder<V>> extends ExtendedSkinRenderer<T, V, M> {
 
     private final TransformModel<T> transformModel = new TransformModel<>(0.0f);
-    private final M transformModelHolder = ObjectUtils.unsafeCast(SkinRendererManager.wrap(transformModel));
+    private final M transformModelHolder = ObjectUtils.unsafeCast(ModelHolder.of(transformModel));
 
     public VillagerSkinRenderer(EntityProfile profile) {
         super(profile);
@@ -44,26 +45,26 @@ public class VillagerSkinRenderer<T extends LivingEntity, V extends VillagerMode
 
     @Override
     protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_LEFT_ARM)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_LEFT_ARM)) {
             addModelOverride(model.getLeftArmPart());
         }
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_RIGHT_ARM)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_RIGHT_ARM)) {
             addModelOverride(model.getRightArmPart());
         }
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_HEAD)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_HEAD)) {
             addModelOverride(model.getHeadPart());
             addModelOverride(model.getHatPart()); // when override the head, the hat needs to override too
             addModelOverride(model.getPart("hat_rim"));
             addModelOverride(model.getPart("nose"));
         }
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_CHEST)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_CHEST)) {
             addModelOverride(model.getBodyPart());
             addModelOverride(model.getPart("jacket"));
         }
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_LEFT_LEG) || overriddenManager.overrideModel(SkinPartTypes.BIPED_LEFT_FOOT)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_LEFT_LEG) || overriddenManager.overrideModel(SkinPartTypes.BIPPED_LEFT_FOOT)) {
             addModelOverride(model.getLeftLegPart());
         }
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_RIGHT_LEG) || overriddenManager.overrideModel(SkinPartTypes.BIPED_RIGHT_FOOT)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_RIGHT_LEG) || overriddenManager.overrideModel(SkinPartTypes.BIPPED_RIGHT_FOOT)) {
             addModelOverride(model.getRightLegPart());
         }
     }
@@ -83,7 +84,7 @@ public class VillagerSkinRenderer<T extends LivingEntity, V extends VillagerMode
     }
 
     @Override
-    protected M getOverrideModel(M model) {
+    public M getOverrideModel(M model) {
         return transformModelHolder;
     }
 }

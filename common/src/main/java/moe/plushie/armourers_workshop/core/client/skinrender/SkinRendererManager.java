@@ -6,7 +6,9 @@ import moe.plushie.armourers_workshop.core.client.layer.SkinWardrobeLayer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
+import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
+import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -20,6 +22,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -31,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Environment(value = EnvType.CLIENT)
@@ -38,17 +42,13 @@ public class SkinRendererManager  {
 
     private static final SkinRendererManager INSTANCE = new SkinRendererManager();
 
+    private final HashMap<EntityType<?>, EntityProfile> entities = new HashMap<>();
+
     private final ArrayList<SkinRenderer.Factory<SkinRenderer<?, ?, ?>>> builders = new ArrayList<>();
     private final ArrayList<Pair<Class<?>, SkinRenderer.Plugin<?, ?, ?>>> plugins = new ArrayList<>();
 
-    private final ArrayList<Runnable> pendingTasks = new ArrayList<>();
-
     public static SkinRendererManager getInstance() {
         return INSTANCE;
-    }
-
-    public static <V extends Model, M extends IModelHolder<V>> M wrap(V model) {
-        return ModelHolder.ofNullable(model);
     }
 
     public void init() {
@@ -73,16 +73,20 @@ public class SkinRendererManager  {
         });
 
         // execute the pending tasks.
-        ArrayList<Runnable> tasks = skinRendererManager.pendingTasks;
-//        skinRendererManager.pendingTasks = null;
-        tasks.forEach(Runnable::run);
+        entities.forEach((this::_bind));
+    }
+
+    public void unbind(EntityType<?> entityType, EntityProfile entityProfile) {
+        ModLog.debug("Detach Entity Renderer '{}'", Registry.ENTITY_TYPE.getKey(entityType));
+        entities.remove(entityType);
+        // TODO: remove layer in the entity renderer.
     }
 
     public void bind(EntityType<?> entityType, EntityProfile entityProfile) {
-        // if the manager not ready, register again later.
-        if (pendingTasks != null) {
-            pendingTasks.add(() -> _bind(entityType, entityProfile));
-        }
+        ModLog.debug("Attach Entity Renderer '{}'", Registry.ENTITY_TYPE.getKey(entityType));
+        entities.put(entityType, entityProfile);
+        // try call once _bind to avoid the bind method being called after init.
+        _bind(entityType, entityProfile);
     }
     private void _bind(EntityType<?> entityType, EntityProfile entityProfile) {
         EntityRenderDispatcher entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
@@ -145,24 +149,11 @@ public class SkinRendererManager  {
     @Nullable
     protected <T extends Entity, V extends Model, M extends IModelHolder<V>> SkinRenderer<T, V, M> getRenderer(EntityType<?> entityType, Model entityModel, EntityRenderer<?> entityRenderer) {
         // in the normal, the entityRenderer only one model type,
-        // but some mods generate dynamically models,
+        // but some mods(Custom NPC) generate dynamically models,
         // so we need to be compatible with that
-        ISkinDataProvider dataProvider = (ISkinDataProvider) entityRenderer;
-        HashMap<Object, SkinRenderer<T, V, M>> skinRenderers = dataProvider.getSkinData();
-        if (skinRenderers == null) {
-            skinRenderers = new HashMap<>();
-            dataProvider.setSkinData(skinRenderers);
-        }
-        Class<?> key = getModelClass(entityModel);
-        SkinRenderer<T, V, M> skinRenderer = skinRenderers.get(key);
-        if (skinRenderer != null) {
-            return skinRenderer;
-        }
-        skinRenderer = createRenderer(entityType, entityRenderer, entityModel);
-        if (skinRenderer != null) {
-            skinRenderers.put(key, skinRenderer);
-        }
-        return skinRenderer;
+        Storage<T, V, M> storage = Storage.of(entityRenderer);
+        // ..
+        return storage.computeIfAbsent(entityModel, key -> createRenderer(entityType, entityRenderer, entityModel));
     }
 
 
@@ -176,13 +167,6 @@ public class SkinRendererManager  {
             }
         }
         return null;
-    }
-
-    protected Class<?> getModelClass(Model model) {
-        if (model != null) {
-            return model.getClass();
-        }
-        return Model.class;
     }
 
     protected EntityModel<?> getModel(EntityRenderer<?> entityRenderer) {
@@ -214,8 +198,8 @@ public class SkinRendererManager  {
         SkinRenderer<T, V, M> renderer = getRenderer(entity, entityModel, entityRenderer);
         if (renderer != null) {
             SkinRenderContext context1 = context.get();
-            renderer.willRender(entity, wrap(entityModel), renderData, context1);
-            context1.clean();
+            renderer.willRender(entity, ModelHolder.of(entityModel), renderData, context1);
+            context1.release();
         }
     }
 
@@ -223,8 +207,8 @@ public class SkinRendererManager  {
         SkinRenderer<T, V, M> renderer = getRenderer(entity, entityModel, entityRenderer);
         if (renderer != null) {
             SkinRenderContext context1 = context.get();
-            renderer.willRenderModel(entity, wrap(entityModel), renderData, context1);
-            context1.clean();
+            renderer.willRenderModel(entity, ModelHolder.of(entityModel), renderData, context1);
+            context1.release();
         }
     }
 
@@ -232,8 +216,35 @@ public class SkinRendererManager  {
         SkinRenderer<T, V, M> renderer = getRenderer(entity, entityModel, entityRenderer);
         if (renderer != null) {
             SkinRenderContext context1 = context.get();
-            renderer.didRender(entity, wrap(entityModel), renderData, context1);
-            context1.clean();
+            renderer.didRender(entity, ModelHolder.of(entityModel), renderData, context1);
+            context1.release();
+            ItemInHandLayer a;
+        }
+    }
+
+    public static class Storage<T extends Entity, V extends Model, M extends IModelHolder<V>> {
+
+        private final HashMap<Object, SkinRenderer<T, V, M>> skinRenderers = new HashMap<>();
+
+        public static <T extends Entity, V extends Model, M extends IModelHolder<V>> Storage<T, V, M> of(EntityRenderer<?> entityRenderer) {
+            ISkinDataProvider dataProvider = (ISkinDataProvider) entityRenderer;
+            Storage<T, V, M> storage = dataProvider.getSkinData();
+            if (storage == null) {
+                storage = new Storage<>();
+                dataProvider.setSkinData(storage);
+            }
+            return storage;
+        }
+
+        public SkinRenderer<T, V, M> computeIfAbsent(Model entityModel, Function<Object, SkinRenderer<T, V, M>> provider) {
+            return skinRenderers.computeIfAbsent(getModelClass(entityModel), provider);
+        }
+
+        private Class<?> getModelClass(Model model) {
+            if (model != null) {
+                return model.getClass();
+            }
+            return Model.class;
         }
     }
 }

@@ -12,10 +12,6 @@ public interface IModelHolder<T extends Model> {
         return false;
     }
 
-    default boolean isRiding() {
-        return false;
-    }
-
     default float getBabyScale() {
         return 1f;
     }

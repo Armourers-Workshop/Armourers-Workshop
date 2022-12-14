@@ -207,6 +207,10 @@ public class MathUtils {
         return 0.6666667F * f + 1.0F / (3.0F * f * f * p_226166_0_);
     }
 
+    public static double toDegrees(double angrad) {
+        return Math.toDegrees(angrad);
+    }
+
     public static float toRadians(double value) {
         return (float) Math.toRadians((value + 360) % 360);
     }

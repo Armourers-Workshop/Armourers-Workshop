@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.layer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
+import moe.plushie.armourers_workshop.utils.ModelHolder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
@@ -31,7 +32,7 @@ public class ForwardingLayer<T extends Entity, M extends EntityModel<T>> extends
     }
 
     public static <T extends Entity, V extends EntityModel<T>, M extends IModelHolder<V>> BiFunction<RenderLayerParent<T, V>, RenderLayer<T, V>, RenderLayer<T, V>> when(BiPredicate<T, M> test) {
-        return (entityRenderer, layer) -> new ForwardingLayer<>(entityRenderer, layer, (e, m) -> test.test(e, SkinRendererManager.wrap(m)));
+        return (entityRenderer, layer) -> new ForwardingLayer<>(entityRenderer, layer, (e, m) -> test.test(e, ModelHolder.of(m)));
     }
 
     @Override

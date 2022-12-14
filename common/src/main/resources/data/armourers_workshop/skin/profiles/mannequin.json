@@ -1,0 +1,13 @@
+{
+  "slots": {
+    "head": 10,
+    "chest": 10,
+    "legs": 10,
+    "feet": 10,
+    "wings": 10,
+    "outfit": 10
+  },
+  "entities": [
+    "armourers_workshop:mannequin"
+  ]
+}

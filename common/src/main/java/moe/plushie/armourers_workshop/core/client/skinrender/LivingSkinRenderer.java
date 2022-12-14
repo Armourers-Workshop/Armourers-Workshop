@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
+import moe.plushie.armourers_workshop.utils.ModelHolder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
@@ -13,7 +14,6 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,12 +51,12 @@ public class LivingSkinRenderer<T extends LivingEntity, V extends EntityModel<T>
     }
 
     @Override
-    public int render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int slotIndex, SkinRenderContext context) {
+    public int render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, SkinRenderContext context) {
         // we don't know how to draw without a model, right?
         if (model == null) {
-            model = SkinRendererManager.wrap(getModel());
+            model = ModelHolder.of(getModel());
         }
-        return super.render(entity, model, bakedSkin, scheme, itemStack, slotIndex, context);
+        return super.render(entity, model, bakedSkin, scheme, context);
     }
 
     public V getModel() {

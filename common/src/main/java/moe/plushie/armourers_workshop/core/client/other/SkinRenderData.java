@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import com.google.common.collect.Iterables;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.*;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
@@ -28,10 +29,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 @Environment(value = EnvType.CLIENT)
@@ -63,6 +61,8 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
     private int lastVersion = Integer.MAX_VALUE;
 
     public IPoseStack overridePostStack;
+    public ITransformf[] overrideTransforms;
+    public Collection<ISkinPartType> overrideParts;
 
     public SkinRenderData() {
     }
@@ -266,7 +266,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
             if (partType.isOverlayOverridden(properties)) {
                 overriddenManager.addOverlay(partType);
             }
-            if (partType == SkinPartTypes.BIPED_SKIRT && !isLimitLimbs) {
+            if (partType == SkinPartTypes.BIPPED_SKIRT && !isLimitLimbs) {
                 isLimitLimbs = properties.get(SkinProperty.MODEL_LEGS_LIMIT_LIMBS);
             }
         }
@@ -380,3 +380,4 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         }
     }
 }
+

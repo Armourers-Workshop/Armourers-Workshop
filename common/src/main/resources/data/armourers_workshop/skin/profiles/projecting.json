@@ -1,0 +1,11 @@
+{
+  "locked": true,
+  "slots": {
+    "bow": 1,
+    "trident": 1
+  },
+  "entities": [
+    "minecraft:arrow",
+    "minecraft:trident"
+  ]
+}

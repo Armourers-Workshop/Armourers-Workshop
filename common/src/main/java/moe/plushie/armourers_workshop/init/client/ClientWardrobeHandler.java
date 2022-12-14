@@ -21,6 +21,7 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.platform.TransformationProvider;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -73,13 +74,12 @@ public class ClientWardrobeHandler {
         poseStack.scale(-SCALE, -SCALE, SCALE);
         poseStack.translate(0, 11, 0);
 
-        SkinRenderContext context = SkinRenderContext.getInstance();
-        context.setup(light, TickUtils.ticks(), poseStack, buffers);
-        int count = render(entity, null, model, context, renderData::getItemSkins);
+        SkinRenderContext context = SkinRenderContext.alloc(renderData, light, TickUtils.ticks(), poseStack, buffers);
+        int count = render(entity, model, context, renderData::getItemSkins);
         if (count != 0 && !ModDebugger.itemOverride) {
             callback.cancel();
         }
-        context.clean();
+        context.release();
 
         poseStack.popPose();
     }
@@ -113,13 +113,12 @@ public class ClientWardrobeHandler {
         poseStack.scale(-SCALE, -SCALE, SCALE);
         poseStack.translate(0, 0, -1);
 
-        SkinRenderContext context = SkinRenderContext.getInstance();
-        context.setup(light, TickUtils.ticks(), poseStack, buffers);
-        int count = render(entity, null, model, context, () -> Collections.singletonList(entry));
+        SkinRenderContext context = SkinRenderContext.alloc(renderData, light, TickUtils.ticks(), poseStack, buffers);
+        int count = render(entity, model, context, () -> Collections.singletonList(entry));
         if (count != 0 && !ModDebugger.itemOverride) {
             callback.cancel();
         }
-        context.clean();
+        context.release();
 
         poseStack.popPose();
     }
@@ -187,13 +186,12 @@ public class ClientWardrobeHandler {
         poseStack.pushPose();
         poseStack.scale(-SCALE, -SCALE, SCALE);
 
-        SkinRenderContext context = SkinRenderContext.getInstance();
-        context.setup(light, TickUtils.ticks(), transformType, poseStack, buffers);
-        int count = render(entity, null, model, context, renderData::getArmorSkins);
+        SkinRenderContext context = SkinRenderContext.alloc(renderData, light, TickUtils.ticks(), transformType, poseStack, buffers);
+        int count = render(entity, model, context, renderData::getArmorSkins);
         if (count != 0 && !ModDebugger.handOverride) {
             cancelHandler.run();
         }
-        context.clean();
+        context.release();
 
         poseStack.popPose();
     }
@@ -201,33 +199,21 @@ public class ClientWardrobeHandler {
     public static void onRenderLivingPre(LivingEntity entity, float p_225623_2_, float partialTicks, int light, IPoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
-            SkinRendererManager.getInstance().willRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> {
-                SkinRenderContext renderContext = SkinRenderContext.getInstance();
-                renderContext.setup(light, partialTicks, poseStack, buffers);
-                return renderContext;
-            });
+            SkinRendererManager.getInstance().willRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, light, partialTicks, poseStack, buffers));
         }
     }
 
     public static void onRenderLiving(LivingEntity entity, float p_225623_2_, float partialTicks, int light, IPoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
-            SkinRendererManager.getInstance().willRenderModel(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> {
-                SkinRenderContext renderContext = SkinRenderContext.getInstance();
-                renderContext.setup(light, partialTicks, poseStack, buffers);
-                return renderContext;
-            });
+            SkinRendererManager.getInstance().willRenderModel(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, light, partialTicks, poseStack, buffers));
         }
     }
 
     public static void onRenderLivingPost(LivingEntity entity, float p_225623_2_, float partialTicks, int light, IPoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
-            SkinRendererManager.getInstance().didRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> {
-                SkinRenderContext renderContext = SkinRenderContext.getInstance();
-                renderContext.setup(light, partialTicks, poseStack, buffers);
-                return renderContext;
-            });
+            SkinRendererManager.getInstance().didRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, light, partialTicks, poseStack, buffers));
         }
     }
 
@@ -297,13 +283,13 @@ public class ClientWardrobeHandler {
                     poseStack.pushPose();
                     poseStack.scale(-SCALE, -SCALE, SCALE);
                     boolean replaceSkinItem = entity instanceof MannequinEntity;
-                    SkinRenderContext context = SkinRenderContext.getInstance();
-                    context.setup(packedLight, TickUtils.ticks(), transformType, poseStack, buffers);
-                    counter = render(entity, itemStack, null, context, () -> renderData.getItemSkins(itemStack, replaceSkinItem));
+                    SkinRenderContext context = SkinRenderContext.alloc(renderData, packedLight, TickUtils.ticks(), transformType, poseStack, buffers);
+                    context.setItem(itemStack, 0);
+                    counter = render(entity, null, context, () -> renderData.getItemSkins(itemStack, replaceSkinItem));
                     if (counter != 0 && !ModDebugger.itemOverride) {
                         callback.cancel();
                     }
-                    context.clean();
+                    context.release();
                     poseStack.popPose();
                 }
                 break;
@@ -348,18 +334,20 @@ public class ClientWardrobeHandler {
         RenderSystem.removeClipRect();
     }
 
-    private static int render(Entity entity, ItemStack itemStack, Model model, SkinRenderContext context, Supplier<Iterable<SkinRenderData.Entry>> provider) {
+    private static int render(Entity entity, Model model, SkinRenderContext context, Supplier<Iterable<SkinRenderData.Entry>> provider) {
         int r = 0;
         SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer == null) {
             return 0;
         }
-        IModelHolder<Model> modelHolder = SkinRendererManager.wrap(model);
+        IModelHolder<Model> modelHolder = ModelHolder.ofNullable(model);
         for (SkinRenderData.Entry entry : provider.get()) {
-            if (itemStack == null) {
-                itemStack = entry.getItemStack();
+            context.slotIndex = entry.getSlotIndex();
+            if (context.itemStack == ItemStack.EMPTY) {
+                context.itemStack = entry.getItemStack();
             }
-            r += renderer.render(entity, modelHolder, entry.getBakedSkin(), entry.getBakedScheme(), itemStack, entry.getSlotIndex(), context);
+            context.setTransforms(entity, modelHolder);
+            r += renderer.render(entity, modelHolder, entry.getBakedSkin(), entry.getBakedScheme(), context);
         }
         return r;
     }

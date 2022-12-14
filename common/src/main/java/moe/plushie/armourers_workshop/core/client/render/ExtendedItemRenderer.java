@@ -5,12 +5,14 @@ import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
@@ -72,10 +74,13 @@ public final class ExtendedItemRenderer {
         poseStack.scale(newScale / scale.getX(), newScale / scale.getY(), newScale / scale.getZ());
         poseStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
 
-        SkinRenderContext context = SkinRenderContext.getInstance();
-        context.setup(light, partialTicks, poseStack, buffers);
-        renderer.render(entity, SkinRendererManager.wrap(model), bakedSkin, scheme, itemStack, 0, context);
-        context.clean();
+        SkinRenderData renderData = SkinRenderData.of(entity);
+        IModelHolder<Model> modelHolder = ModelHolder.of(model);
+        SkinRenderContext context = SkinRenderContext.alloc(renderData, light, partialTicks, poseStack, buffers);
+        context.setItem(itemStack, 0);
+        context.setTransforms(entity, modelHolder);
+        renderer.render(entity, modelHolder, bakedSkin, scheme, context);
+        context.release();
 
         poseStack.popPose();
     }

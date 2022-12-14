@@ -61,6 +61,8 @@ public class ModConfig {
         public static boolean showF3DebugInfo;
         public static float ploOffset = -0.01f;
 
+        public static boolean enablePartSubdivide = false;
+
         public static boolean enableEntityPlacementHighlight = true;
         public static boolean enableBlockPlacementHighlight = true;
         public static boolean enablePaintToolPlacementHighlight = true;

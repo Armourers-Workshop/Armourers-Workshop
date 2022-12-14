@@ -21,14 +21,14 @@ public class SkinOverriddenManager {
 
     // Convert the part to equipment slot
     private static final ImmutableMap<ISkinPartType, EquipmentSlot> PART_TO_EQUIPMENT_SLOTS = new ImmutableMap.Builder<ISkinPartType, EquipmentSlot>()
-            .put(SkinPartTypes.BIPED_HEAD, EquipmentSlot.HEAD)
-            .put(SkinPartTypes.BIPED_CHEST, EquipmentSlot.CHEST)
-            .put(SkinPartTypes.BIPED_LEFT_ARM, EquipmentSlot.CHEST)
-            .put(SkinPartTypes.BIPED_RIGHT_ARM, EquipmentSlot.CHEST)
-            .put(SkinPartTypes.BIPED_LEFT_FOOT, EquipmentSlot.FEET)
-            .put(SkinPartTypes.BIPED_RIGHT_FOOT, EquipmentSlot.FEET)
-            .put(SkinPartTypes.BIPED_LEFT_LEG, EquipmentSlot.LEGS)
-            .put(SkinPartTypes.BIPED_RIGHT_LEG, EquipmentSlot.LEGS)
+            .put(SkinPartTypes.BIPPED_HEAD, EquipmentSlot.HEAD)
+            .put(SkinPartTypes.BIPPED_CHEST, EquipmentSlot.CHEST)
+            .put(SkinPartTypes.BIPPED_LEFT_ARM, EquipmentSlot.CHEST)
+            .put(SkinPartTypes.BIPPED_RIGHT_ARM, EquipmentSlot.CHEST)
+            .put(SkinPartTypes.BIPPED_LEFT_FOOT, EquipmentSlot.FEET)
+            .put(SkinPartTypes.BIPPED_RIGHT_FOOT, EquipmentSlot.FEET)
+            .put(SkinPartTypes.BIPPED_LEFT_LEG, EquipmentSlot.LEGS)
+            .put(SkinPartTypes.BIPPED_RIGHT_LEG, EquipmentSlot.LEGS)
             .build();
 
     private static final ImmutableList<EquipmentSlot> ARMOUR_EQUIPMENT_SLOTS = new ImmutableList.Builder<EquipmentSlot>()

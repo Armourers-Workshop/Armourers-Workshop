@@ -1,6 +1,10 @@
 package moe.plushie.armourers_workshop.utils;
 
+import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
+import net.minecraft.util.GsonHelper;
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -55,6 +59,25 @@ public final class StreamUtils {
             index += length;
         }
         return index;
+    }
+
+    @Nullable
+    public static <T> T fromJson(Gson gson, Reader reader, Class<T> class_) {
+        try {
+            JsonReader jsonReader = new JsonReader(reader);
+            jsonReader.setLenient(false);
+            return gson.getAdapter(class_).read(jsonReader);
+        }
+        catch (IOException iOException) {
+            throw new JsonParseException(iOException);
+        }
+    }
+
+    public static JsonArray getAsJsonArray(JsonObject jsonObject, String string) {
+        if (jsonObject.has(string)) {
+            return GsonHelper.convertToJsonArray(jsonObject.get(string), string);
+        }
+        throw new JsonSyntaxException("Missing " + string + ", expected to find a JsonArray");
     }
 
     public static byte[] toByteArray(final InputStream input) throws IOException {

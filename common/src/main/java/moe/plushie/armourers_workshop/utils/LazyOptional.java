@@ -32,6 +32,7 @@ import java.util.function.Supplier;
  *
  * @param <T> The type of the optional value.
  */
+@SuppressWarnings("unused")
 public class LazyOptional<T> {
 
     private static final @NotNull
