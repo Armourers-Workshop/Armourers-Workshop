@@ -70,7 +70,7 @@ public class SkinDataStorage {
     }
 
     private static LazyOptional<SkinRenderData> getLazyRenderData(Entity entity) {
-        Optional<SkinRenderData> renderData = EnvironmentExecutor.callWhenOn(EnvironmentType.CLIENT, () -> SkinRenderData::new);
+        Optional<SkinRenderData> renderData = EnvironmentExecutor.callWhenOn(EnvironmentType.CLIENT, () -> () -> new SkinRenderData(entity.getType()));
         if (renderData.isPresent()) {
             return LazyOptional.of(renderData::get);
         }

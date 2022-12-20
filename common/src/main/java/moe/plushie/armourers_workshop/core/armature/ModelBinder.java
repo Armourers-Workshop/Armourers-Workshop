@@ -6,38 +6,6 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 
 public class ModelBinder {
 
-    // offset +24
-    public static final ImmutableMap<IJoint, ModelBinder> BIPPED = ImmutableMap.<IJoint, ModelBinder>builder()
-            .put(Joints.BIPPED_HEAD, new ModelBinder(0, 24, 0))
-
-            .put(Joints.BIPPED_CHEST, new ModelBinder(0, 24, 0))
-            .put(Joints.BIPPED_TORSO, new ModelBinder(0, 18, 0))
-
-            .put(Joints.BIPPED_SKIRT, new ModelBinder(0, 12, 0).rebind("Torso"))
-
-            .put(Joints.BIPPED_LEFT_ARM, new ModelBinder(-5, 22, 0))
-            .put(Joints.BIPPED_RIGHT_ARM, new ModelBinder(5, 22, 0))
-
-            .put(Joints.BIPPED_LEFT_HAND, new ModelBinder(-5, 18, 0))
-            .put(Joints.BIPPED_RIGHT_HAND, new ModelBinder(5, 18, 0))
-
-            .put(Joints.BIPPED_LEFT_THIGH, new ModelBinder(-2, 12, 0))
-            .put(Joints.BIPPED_RIGHT_THIGH, new ModelBinder(2, 12, 0))
-
-            .put(Joints.BIPPED_LEFT_LEG, new ModelBinder(-2, 6, 0))
-            .put(Joints.BIPPED_RIGHT_LEG, new ModelBinder(2, 6, 0))
-
-            .put(Joints.BIPPED_LEFT_FOOT, new ModelBinder(-2, 12, 0).rebind("Leg_L"))
-            .put(Joints.BIPPED_RIGHT_FOOT, new ModelBinder(2, 12, 0).rebind("Leg_R"))
-
-            .put(Joints.BIPPED_LEFT_PHALANX, new ModelBinder(0, 24, 2).rebind("Chest"))
-            .put(Joints.BIPPED_RIGHT_PHALANX, new ModelBinder(0, 24, 2).rebind("Chest"))
-//
-////			overrides.put("Wing_L", get(mm::getBodyPart));
-////        overrides.put("Wing_R", get(mm::getBodyPart));
-//
-            .build();
-
     public static final ImmutableMap<IJoint, Rectangle3f> BIPPED_BOXES = ImmutableMap.<IJoint, Rectangle3f>builder()
             .put(Joints.BIPPED_HEAD, new Rectangle3f(-4, -8, -4, 8, 8, 8))
 

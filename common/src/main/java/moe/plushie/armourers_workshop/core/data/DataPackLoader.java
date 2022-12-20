@@ -36,6 +36,7 @@ public class DataPackLoader {
     }
 
     public CompletableFuture<Map<ResourceLocation, IDataPackBuilder>> prepare(IResourceManager resourceManager, Executor executor) {
+        willLoadHandler.run();
         return CompletableFuture.supplyAsync(() -> {
             HashMap<ResourceLocation, IDataPackBuilder> results = new HashMap<>();
             resourceManager.readResources(path, s -> s.endsWith(".json"), (location, inputStream) -> {
@@ -53,7 +54,6 @@ public class DataPackLoader {
     }
 
     public void load(Map<ResourceLocation, IDataPackBuilder> results) {
-        willLoadHandler.run();
         results.forEach((key, builder) -> builder.build());
         didLoadhandler.run();
     }

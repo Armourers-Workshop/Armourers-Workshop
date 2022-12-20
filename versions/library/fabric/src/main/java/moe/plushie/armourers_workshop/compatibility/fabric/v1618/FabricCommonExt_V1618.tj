@@ -1,0 +1,20 @@
+package moe.plushie.armourers_workshop.compatibility.fabric.v1618;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricCommonNativeProvider;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.minecraft.world.entity.player.Player;
+
+import java.util.function.Consumer;
+
+@Available("[1.16, 1.19)")
+public interface FabricCommonExt_V1618 extends AbstractFabricCommonNativeProvider {
+
+    @Override
+    default void willPlayerDrop(Consumer<Player> consumer) {
+        ServerPlayerEvents.ALLOW_DEATH.register((player, source, damageAmount) -> {
+            consumer.accept(player);
+            return true;
+        });
+    }
+}

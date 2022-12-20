@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.api.math.*;
 import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractRenderSystem;
 import moe.plushie.armourers_workshop.compatibility.AbstractShaderTesselator;
+import moe.plushie.armourers_workshop.core.armature.ModelBinder;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
@@ -366,6 +367,31 @@ public final class RenderSystem extends AbstractRenderSystem {
         float y1 = (float) rec.maxY;
         float z1 = (float) rec.maxZ;
         drawBoundingBox(poseStack, x0, y0, z0, x1, y1, z1, color, renderTypeBuffer);
+    }
+
+    public static void drawArmatureBox(IPoseStack poseStack, ITransformf[] transforms) {
+        if (transforms == null) {
+            return;
+        }
+        float f1 = 1 / 16.f;
+        poseStack.pushPose();
+        poseStack.scale(f1, f1, f1);
+        MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+        ModelBinder.BIPPED_BOXES.forEach((joint, rect) -> {
+            ITransformf transform = transforms[joint.getId()];
+            if (transform == null) {
+                return;
+            }
+            poseStack.pushPose();
+
+            transform.apply(poseStack);
+
+//			poseStack.translate(box.o.getX(), box.o.getY(), box.o.getZ());
+            RenderSystem.drawBoundingBox(poseStack, rect, ColorUtils.getPaletteColor(joint.getId()), buffers);
+            RenderSystem.drawPoint(poseStack, Vector3f.ZERO, 4, 4, 4, buffers);
+            poseStack.popPose();
+        });
+        poseStack.popPose();
     }
 
     public static void drawCube(IPoseStack poseStack, IRectangle3i rect, float r, float g, float b, float a, MultiBufferSource buffers) {

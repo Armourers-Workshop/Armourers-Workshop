@@ -4,10 +4,8 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
-import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeFactory;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
@@ -17,12 +15,8 @@ import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.LivingEntity;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 public abstract class AbstractClientNativeImpl implements ClientNativeProvider, ClientNativeFactory {
@@ -71,22 +65,6 @@ public abstract class AbstractClientNativeImpl implements ClientNativeProvider, 
                         return pair.getFirst();
                     }
                 };
-            }
-        };
-    }
-
-    @Override
-    public IResourceManager getResourceManager() {
-        ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-        return new IResourceManager() {
-            @Override
-            public boolean hasResource(ResourceLocation resourceLocation) {
-                return resourceManager.hasResource(resourceLocation);
-            }
-
-            @Override
-            public InputStream readResource(ResourceLocation resourceLocation) throws IOException {
-                return resourceManager.getResource(resourceLocation).getInputStream();
             }
         };
     }

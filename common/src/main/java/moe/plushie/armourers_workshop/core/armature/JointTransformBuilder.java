@@ -8,12 +8,12 @@ public class JointTransformBuilder {
     private final int size;
     private final ITransformf[] transforms;
 
-    public JointTransformBuilder(Armature2 armature) {
+    public JointTransformBuilder(Armature armature) {
         this.size = armature.size();
         this.transforms = new ITransformf[armature.size()];
     }
 
-    public static JointTransformBuilder of(Armature2 armature) {
+    public static JointTransformBuilder of(Armature armature) {
         return new JointTransformBuilder(armature);
     }
 

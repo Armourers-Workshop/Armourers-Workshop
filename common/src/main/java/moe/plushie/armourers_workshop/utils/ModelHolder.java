@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.utils;
 import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.client.model.IPlayerModelHolder;
+import moe.plushie.armourers_workshop.api.data.IExtraDateStorageKey;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.compatibility.AbstractModelPartRegistries;
@@ -27,6 +28,7 @@ public class ModelHolder<T extends Model> implements IModelHolder<T> {
     private static final HashMap<Class<?>, Entry<?, ?>> ENTRIES = new HashMap<>();
 
     private final PartSet table = new PartSet();
+    private final DataStorage storage = new DataStorage();
 
     public ModelHolder(T model, Consumer<PartSet> provider) {
         provider.accept(table);
@@ -81,6 +83,16 @@ public class ModelHolder<T extends Model> implements IModelHolder<T> {
             factory = ObjectUtils.unsafeCast(factory1);
         }
         return factory.create(model, it -> builders.forEach(builder -> builder.accept(model, it)));
+    }
+
+    @Override
+    public <V> V getExtraData(IExtraDateStorageKey<V> key) {
+        return storage.getExtraData(key);
+    }
+
+    @Override
+    public <V> void setExtraData(IExtraDateStorageKey<V> key, V value) {
+        storage.setExtraData(key, value);
     }
 
     @Override

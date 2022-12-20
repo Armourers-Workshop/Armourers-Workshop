@@ -1,21 +1,22 @@
 package moe.plushie.armourers_workshop.compatibility.forge.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
-import moe.plushie.armourers_workshop.core.armature.Armatures;
-import moe.plushie.armourers_workshop.core.armature.JointTransformBuilder;
-import moe.plushie.armourers_workshop.core.armature.ModelBinder;
+import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
+import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightTransformProvider;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModConfig;
+import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,52 +38,42 @@ import java.util.Collections;
 @Mixin(PatchedLivingEntityRenderer.class)
 public abstract class AbstractPatchedLivingEntityRendererMixin {
 
-
-    @Inject(method = "renderLayer", at = @At("HEAD"))
+    @Inject(method = "renderLayer", at = @At("HEAD"), remap = false)
     public void aw$renderLayerPre(LivingEntityRenderer<?, ?> renderer, LivingEntityPatch<?> entityPatch, LivingEntity entityIn, OpenMatrix4f[] poses, MultiBufferSource buffers, PoseStack poseStackIn, int packedLightIn, float partialTicks, CallbackInfo callbackInfo) {
+        IModelHolder<?> model = ModelHolder.ofNullable(renderer.getModel());
         SkinRenderData renderData = SkinRenderData.of(entityIn);
         if (renderData == null) {
             return;
         }
         Armature armature = entityPatch.getEntityModel(ClientModels.LOGICAL_CLIENT).getArmature();
-        JointTransformBuilder builder = JointTransformBuilder.of(Armatures.BIPPED);
         IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
+        JointTransformModifier transformModifier = model.getExtraData(JointTransformModifier.EPICFIGHT);
+        ITransformf[] transforms = transformModifier.getTransforms(entityIn.getType(), model);
 
-        ModelBinder.BIPPED.forEach((joint2, binder) -> {
-            String name = joint2.getName();
-            if (binder.name != null) {
-                name = binder.name;
-            }
+        model.setExtraData(EpicFlightTransformProvider.KEY, name -> {
             Joint joint = armature.searchJointByName(name);
             if (joint == null) {
-                return;
+                return ITransformf.NONE;
             }
-            OpenMatrix4f m4 = new OpenMatrix4f();
-            m4.mulBack(poses[joint.getId()]);
-            m4.translate(binder.x / 16, binder.y / 16, binder.z / 16);
-            PoseStack fixedPoseStack = new PoseStack();
-            fixedPoseStack.last().pose().multiply(OpenMatrix4f.exportToMojangMatrix(m4));
-            IPoseStack animatedTransform = AbstractPoseStack.wrap(fixedPoseStack);
-            builder.put(joint2, poseStack1 -> {
-                float f1 = 16f;
-                float f2 = 1 / 16f;
-                poseStack1.scale(f1, f1, f1);
-                poseStack1.multiply(animatedTransform);
-                poseStack1.scale(-f2, -f2, f2);
-            });
+            return poseStack1 -> {
+                PoseStack poseStack2 = poseStack1.cast();
+                poseStack2.last().pose().multiply(OpenMatrix4f.exportToMojangMatrix(poses[joint.getId()]));
+            };
         });
 
         Collection<ISkinPartType> overrideParts = null;
         if (ObjectUtils.safeCast(this, FirstPersonRenderer.class) != null) {
             overrideParts = Collections.singleton(SkinPartTypes.BIPPED_HEAD);
         }
+
         renderData.overrideParts = overrideParts;
         renderData.overridePostStack = poseStack.copy();
-        renderData.overrideTransforms = builder.build();
+        renderData.overrideTransforms = transforms;
     }
 
-    @Inject(method = "renderLayer", at = @At("RETURN"))
-    public void aw$renderLayerPost(LivingEntityRenderer<?, ?> renderer, LivingEntityPatch<?> entityPatch, LivingEntity entityIn, OpenMatrix4f[] poses, MultiBufferSource buffers, PoseStack poseStack, int packedLightIn, float partialTicks, CallbackInfo callbackInfo) {
+    @Inject(method = "renderLayer", at = @At("RETURN"), remap = false)
+    public void aw$renderLayerPost(LivingEntityRenderer<?, ?> renderer, LivingEntityPatch<?> entityPatch, LivingEntity entityIn, OpenMatrix4f[] poses, MultiBufferSource buffers, PoseStack poseStackIn, int packedLightIn, float partialTicks, CallbackInfo callbackInfo) {
+        IModelHolder<?> model = ModelHolder.ofNullable(renderer.getModel());
         SkinRenderData renderData = SkinRenderData.of(entityIn);
         if (renderData == null) {
             return;
@@ -90,11 +81,17 @@ public abstract class AbstractPatchedLivingEntityRendererMixin {
         renderData.overrideParts = null;
         renderData.overridePostStack = null;
         renderData.overrideTransforms = null;
+        // ..
+        model.setExtraData(EpicFlightTransformProvider.KEY, null);
     }
 
-    @Inject(method = "getRenderType", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getRenderType", at = @At("RETURN"), remap = false, cancellable = true)
     public void aw$getRenderType(LivingEntity entityIn, LivingEntityPatch<?> entityPatch, LivingEntityRenderer<?, ?> renderer, boolean isVisible, boolean isVisibleToPlayer, boolean isGlowing, CallbackInfoReturnable<RenderType> callbackInfo) {
-        if (entityIn instanceof Player) {
+        SkinRenderData renderData = SkinRenderData.of(entityIn);
+        if (renderData == null) {
+            return;
+        }
+        if (renderData.getOverriddenManager().hasAnyPartOverride()) {
             callbackInfo.setReturnValue(null);
         }
     }

@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererC
 import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
 import moe.plushie.armourers_workshop.compatibility.AbstractModelPartRegistries;
 import moe.plushie.armourers_workshop.core.armature.Armatures;
-import moe.plushie.armourers_workshop.core.armature.Joints;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,7 +20,7 @@ public class RendererManager {
         CGGraphicsRenderer.init();
         AbstractModelPartRegistries.init();
         Armatures.init();
-        Joints.init();
+        SkinModifierManager.init();
         SkinManager.init();
         SkinRendererManager.getInstance().init();
     }

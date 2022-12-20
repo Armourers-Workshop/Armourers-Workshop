@@ -95,20 +95,16 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
     @Override
     public void willRenderLivingEntity(RenderLivingEntity renderer) {
         NotificationCenterImpl.observer(RenderLivingEvent.Pre.class, event -> renderer.render(event.getEntity(), event.getRenderer(), () -> {
-            SkinRenderContext context = SkinRenderContext.getInstance();
             IPoseStack poseStack = AbstractPoseStack.wrap(event.getPoseStack());
-            context.setup(event.getPackedLight(), event.getPartialTick(), poseStack, event.getMultiBufferSource());
-            return context;
+            return SkinRenderContext.alloc(null, event.getPackedLight(), event.getPartialTick(), poseStack, event.getMultiBufferSource());
         }));
     }
 
     @Override
     public void didRenderLivingEntity(RenderLivingEntity renderer) {
         NotificationCenterImpl.observer(RenderLivingEvent.Post.class, event -> renderer.render(event.getEntity(), event.getRenderer(), () -> {
-            SkinRenderContext context = SkinRenderContext.getInstance();
             IPoseStack poseStack = AbstractPoseStack.wrap(event.getPoseStack());
-            context.setup(event.getPackedLight(), event.getPartialTick(), poseStack, event.getMultiBufferSource());
-            return context;
+            return SkinRenderContext.alloc(null, event.getPackedLight(), event.getPartialTick(), poseStack, event.getMultiBufferSource());
         }));
     }
 

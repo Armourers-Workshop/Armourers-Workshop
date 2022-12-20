@@ -104,7 +104,7 @@ task applyCoreProperties {
         def contents = target.getText("UTF-8")
         def properties = new Properties()
         properties.load(it.newDataInputStream())
-        properties.forEach { key, value -> contents = contents.replaceAll("${key}\\s*=\\s*[^#\\n]+", "${key}=${value}")
+        properties.forEach { key, value -> contents = contents.replaceAll("${key}\\s*=\\s*[^#\\n]*", "${key}=${value}")
         }
         target.write(contents, "UTF-8")
     }

@@ -1,0 +1,64 @@
+{
+  "type": "armourers_workshop:armature",
+  "joint": {
+    "Head": {
+      "target": "head",
+      "modifier": [
+        "armourers_workshop:baby_head_apt"
+      ]
+    },
+    "Chest": "body",
+    "Torso": {
+      "target": "body",
+      "translate": [ 0, 6, 0 ]
+    },
+    "Skirt": {
+      "target": "body",
+      "modifier": [
+        "armourers_workshop:body_to_skirt"
+      ]
+    },
+    "Arm_L": "left_arm",
+    "Arm_R": "right_arm",
+    "Hand_L": {
+      "target": "left_arm",
+      "translate": [ 0, 4, 0 ]
+    },
+    "Hand_R": {
+      "target": "right_arm",
+      "translate": [ 0, 4, 0 ]
+    },
+    "Thigh_L": "left_leg",
+    "Thigh_R": "right_leg",
+    "Leg_L": {
+      "target": "left_leg",
+      "translate": [ 0, 6, 0 ]
+    },
+    "Leg_R": {
+      "target": "right_leg",
+      "translate": [ 0, 6, 0 ]
+    },
+    "Foot_L": "left_leg",
+    "Foot_R": "right_leg",
+    "Wing_L": {
+      "target": "body",
+      "modifier": [
+        "armourers_workshop:body_to_wing"
+      ]
+    },
+    "Wing_R": {
+      "target": "body",
+      "modifier": [
+        "armourers_workshop:body_to_wing"
+      ]
+    },
+    "Phalanx_L": {
+      "target": "body",
+      "translate": [ 0, 0, 2 ]
+    },
+    "Phalanx_R": {
+      "target": "body",
+      "translate": [ 0, 0, 2 ]
+    }
+  }
+}

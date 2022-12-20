@@ -28,7 +28,7 @@ public class DataPackManagerImpl implements PreparableReloadListener {
             return;
         }
         isInit = true;
-        NotificationCenterImpl.observer(AddReloadListenerEvent .class, event -> event.addListener(new DataPackManagerImpl()));
+        NotificationCenterImpl.observer(AddReloadListenerEvent.class, event -> event.addListener(new DataPackManagerImpl()));
     }
 
     @Override

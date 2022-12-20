@@ -1,0 +1,33 @@
+{
+  "type": "epicfight:armature",
+  "joint": {
+    "Head": "Head",
+    "Chest": "Chest",
+    "Torso": "Torso",
+    "Skirt": {
+      "target": "Torso"
+    },
+    "Arm_L": "Arm_L",
+    "Arm_R": "Arm_R",
+    "Hand_L": "Hand_L",
+    "Hand_R": "Hand_R",
+    "Thigh_L": "Thigh_L",
+    "Thigh_R": "Thigh_R",
+    "Leg_L": "Leg_L",
+    "Leg_R": "Leg_R",
+    "Foot_L": "Leg_L",
+    "Foot_R": "Leg_R",
+    "Wing_L": {
+      "target": "Root"
+    },
+    "Wing_R": {
+      "target": "Root"
+    },
+    "Phalanx_L": {
+      "target": "Chest"
+    },
+    "Phalanx_R": {
+      "target": "Chest"
+    }
+  }
+}

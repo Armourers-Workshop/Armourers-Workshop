@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
-import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.init.ModContributors;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.TickUtils;
@@ -52,7 +51,9 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         poseStack.pushPose();
 
         // apply the model baby scale.
-        applyModelScale(poseStack, model);
+        if (renderData.overrideTransforms == null) {
+            applyModelScale(poseStack, model);
+        }
 
         // render the contributor
         ModContributors.Contributor contributor = ModContributors.by(entity);

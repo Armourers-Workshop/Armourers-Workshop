@@ -23,8 +23,6 @@ import java.util.function.Function;
 @SuppressWarnings("unused")
 public class ModEntityProfiles {
 
-    private static final DataPackLoader LOADER = new DataPackLoader("skin/profiles", Builder::new, ModEntityProfiles::clean, ModEntityProfiles::freeze);
-
     private static final ArrayList<BiConsumer<EntityType<?>, EntityProfile>> INSERT_HANDLERS = new ArrayList<>();
     private static final ArrayList<BiConsumer<EntityType<?>, EntityProfile>> REMOVE_HANDLERS = new ArrayList<>();
 
@@ -59,7 +57,7 @@ public class ModEntityProfiles {
     }
 
     public static void init() {
-        DataPackManager.register(LOADER);
+        DataPackManager.register(new DataPackLoader("skin/profiles", SimpleLoader::new, ModEntityProfiles::clean, ModEntityProfiles::freeze));
     }
 
     public static void forEach(BiConsumer<EntityType<?>, EntityProfile> consumer) {
@@ -86,7 +84,7 @@ public class ModEntityProfiles {
         return ALL_ENTITY_PROFILES.get(registryName);
     }
 
-    public static class Builder implements IDataPackBuilder {
+    public static class SimpleLoader implements IDataPackBuilder {
 
         private boolean locked = false;
 
@@ -95,7 +93,7 @@ public class ModEntityProfiles {
         private final ArrayList<EntityType<?>> entities = new ArrayList<>();
         private final HashMap<ISkinType, Function<ISkinType, Integer>> supports = new HashMap<>();
 
-        public Builder(ResourceLocation registryName) {
+        public SimpleLoader(ResourceLocation registryName) {
             this.registryName = ModConstants.key(SkinFileUtils.getBaseName(registryName.getPath()));
         }
 
