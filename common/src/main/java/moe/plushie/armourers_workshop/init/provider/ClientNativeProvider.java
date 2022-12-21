@@ -5,11 +5,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +23,6 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 @Environment(value = EnvType.CLIENT)
 public interface ClientNativeProvider {
@@ -86,6 +86,6 @@ public interface ClientNativeProvider {
     }
 
     interface RenderLivingEntity {
-        void render(LivingEntity entity, LivingEntityRenderer<?, ?> renderer, Supplier<SkinRenderContext> contextSupplier);
+        void render(LivingEntity entity, float partialTicks, int packedLight, IPoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer);
     }
 }

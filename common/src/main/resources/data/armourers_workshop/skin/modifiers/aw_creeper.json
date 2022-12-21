@@ -1,0 +1,9 @@
+{
+  "type": "armourers_workshop:armature",
+  "joint": {
+    "Head": "head"
+  },
+  "entities": [
+    "minecraft:creeper"
+  ]
+}

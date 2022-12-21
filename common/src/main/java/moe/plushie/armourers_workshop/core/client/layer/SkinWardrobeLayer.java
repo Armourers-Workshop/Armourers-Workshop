@@ -7,6 +7,8 @@ import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
+import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
+import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
@@ -44,14 +46,17 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         if (renderData == null) {
             return;
         }
-        if (renderData.overridePostStack != null) {
-            poseStack = renderData.overridePostStack;
+        EpicFlightContext epicFlightContext = renderData.epicFlightContext;
+        JointTransformModifier transformModifier = null;
+        if (epicFlightContext != null) {
+            poseStack = epicFlightContext.overridePostStack;
+            transformModifier = epicFlightContext.overrideTransformModifier;
         }
 
         poseStack.pushPose();
 
         // apply the model baby scale.
-        if (renderData.overrideTransforms == null) {
+        if (epicFlightContext == null) {
             applyModelScale(poseStack, model);
         }
 
@@ -65,11 +70,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         poseStack.scale(f, f, f);
 
         SkinRenderContext context = SkinRenderContext.alloc(renderData, packedLightIn, TickUtils.ticks(), null, poseStack, buffers);
-        if (renderData.overrideTransforms != null) {
-            context.setTransforms(renderData.overrideTransforms);
-        } else {
-            context.setTransforms(entity, skinRenderer.getOverrideModel(model));
-        }
+        context.setTransforms(transformModifier, entity, skinRenderer.getOverrideModel(model));
         for (SkinRenderData.Entry entry : renderData.getArmorSkins()) {
             context.setItem(entry.getItemStack(), entry.getSlotIndex());
             skinRenderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), context);

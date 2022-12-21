@@ -76,8 +76,8 @@ public class SkinRenderContext {
     }
 
     public boolean shouldRenderPart(ISkinPartType partType) {
-        if (renderData != null && renderData.overrideParts != null) {
-            return !renderData.overrideParts.contains(partType);
+        if (renderData != null && renderData.epicFlightContext != null && renderData.epicFlightContext.overrideParts != null) {
+            return !renderData.epicFlightContext.overrideParts.contains(partType);
         }
         return true;
     }
@@ -87,15 +87,17 @@ public class SkinRenderContext {
         this.slotIndex = slotIndex;
     }
 
-    public void setTransforms(ITransformf[] transforms) {
-        this.transforms = transforms;
+    public void setTransforms(Entity entity, IModelHolder<?> model) {
+        setTransforms(null, entity, model);
     }
 
-    public void setTransforms(Entity entity, IModelHolder<?> model) {
+    public void setTransforms(JointTransformModifier transformModifier, Entity entity, IModelHolder<?> model) {
         if (entity == null || model == null) {
             return;
         }
-        JointTransformModifier transformModifier = model.getExtraData(JointTransformModifier.DEFAULT);
+        if (transformModifier == null) {
+            transformModifier = model.getExtraData(JointTransformModifier.DEFAULT);
+        }
         transforms = transformModifier.getTransforms(entity.getType(), model);
     }
 

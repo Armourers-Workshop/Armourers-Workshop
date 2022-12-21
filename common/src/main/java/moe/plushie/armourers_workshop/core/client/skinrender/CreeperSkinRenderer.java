@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.core.armature.Joints;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
@@ -20,7 +21,7 @@ public class CreeperSkinRenderer<T extends LivingEntity, V extends CreeperModel<
 
     @Override
     public void initTransformers() {
-        transformer.registerArmor(SkinPartTypes.BIPPED_HEAD, this::offset);
+        transformer.registerArmor(SkinPartTypes.BIPPED_HEAD, Joints.BIPPED_HEAD);
     }
 
     @Override
@@ -30,9 +31,5 @@ public class CreeperSkinRenderer<T extends LivingEntity, V extends CreeperModel<
             addModelOverride(model.getPart("head"));
             addModelOverride(model.getPart("hair"));
         }
-    }
-
-    private void offset(IPoseStack poseStack, M model) {
-        transformer.apply(poseStack, model.getPart("head"));
     }
 }

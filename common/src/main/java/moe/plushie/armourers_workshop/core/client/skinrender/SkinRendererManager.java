@@ -218,7 +218,6 @@ public class SkinRendererManager  {
             SkinRenderContext context1 = context.get();
             renderer.didRender(entity, ModelHolder.of(entityModel), renderData, context1);
             context1.release();
-            ItemInHandLayer a;
         }
     }
 

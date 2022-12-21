@@ -102,6 +102,13 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
         overriders.forEach(m -> m.visible = false);
     }
 
+    public void didRender(T entity, M model, SkinRenderData renderData, SkinRenderContext context) {
+        for (ModelPart modelRenderer : overriders) {
+            modelRenderer.visible = true;
+        }
+        overriders.clear();
+    }
+
     public int render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, SkinRenderContext context) {
         if (profile != null) {
             ISkinType type = bakedSkin.getType();
@@ -172,13 +179,6 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
             context.popPose();
         }
         return counter;
-    }
-
-    public void didRender(T entity, M model, SkinRenderData renderData, SkinRenderContext context) {
-        for (ModelPart modelRenderer : overriders) {
-            modelRenderer.visible = true;
-        }
-        overriders.clear();
     }
 
     protected void addModelOverride(ModelPart modelRenderer) {

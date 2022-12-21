@@ -1,7 +1,6 @@
-package moe.plushie.armourers_workshop.compatibility.v1618;
+package moe.plushie.armourers_workshop.compatibility.ext;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
@@ -10,13 +9,14 @@ import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
 
 import java.nio.ByteBuffer;
 
-@Available("[1.16, 1.19)")
-public interface ClientNativeExt_V1618 extends ClientNativeProvider, ClientNativeFactory {
+@Available("[1.19, )")
+public interface AbstractClientNativeProviderExt_V19 extends ClientNativeProvider, ClientNativeFactory {
 
     @Override
     default IBufferBuilder createBuilderBuffer(int size) {
         BufferBuilder bufferBuilder = new BufferBuilder(size);
         return new IBufferBuilder() {
+
             @Override
             public BufferBuilder asBufferBuilder() {
                 return bufferBuilder;
@@ -24,17 +24,21 @@ public interface ClientNativeExt_V1618 extends ClientNativeProvider, ClientNativ
 
             @Override
             public IRenderedBuffer end() {
-                bufferBuilder.end();
-                Pair<BufferBuilder.DrawState, ByteBuffer> pair = bufferBuilder.popNextBuffer();
+                BufferBuilder.RenderedBuffer buffer = bufferBuilder.end();
                 return new IRenderedBuffer() {
                     @Override
                     public ByteBuffer vertexBuffer() {
-                        return pair.getSecond();
+                        return buffer.vertexBuffer();
                     }
 
                     @Override
                     public BufferBuilder.DrawState drawState() {
-                        return pair.getFirst();
+                        return buffer.drawState();
+                    }
+
+                    @Override
+                    public void release() {
+                        buffer.release();
                     }
                 };
             }

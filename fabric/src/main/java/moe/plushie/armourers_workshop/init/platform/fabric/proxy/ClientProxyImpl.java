@@ -134,7 +134,7 @@ public class ClientProxyImpl implements ClientModInitializer {
         }
         boolean[] flags = {false};
         IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
-        ClientWardrobeHandler.onRenderSpecificHand(player, 0, light, 0, transformType, poseStack, buffers, () -> {
+        ClientWardrobeHandler.onRenderSpecificHand(player, 0, light, transformType, poseStack, buffers, () -> {
             flags[0] = true;
         });
         return !flags[0];

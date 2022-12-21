@@ -22,7 +22,9 @@ public class DefaultJointBinder extends ArmatureModifier {
         }
         return poseStack -> {
             transform.apply(poseStack);
-            poseStack.translate(part.x, part.y, part.z);
+            if (part.x != 0 || part.y != 0 || part.z != 0) {
+                poseStack.translate(part.x, part.y, part.z);
+            }
             if (part.zRot != 0) {
                 poseStack.rotate(Vector3f.ZP.rotation(part.zRot));
             }

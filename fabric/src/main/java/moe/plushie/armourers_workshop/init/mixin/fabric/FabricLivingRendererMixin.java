@@ -18,18 +18,18 @@ public class FabricLivingRendererMixin<T extends LivingEntity> {
     @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "HEAD"))
     private void aw2$render_pre(T entity, float p_225623_2_, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int light, CallbackInfo ci) {
         IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
-        ClientWardrobeHandler.onRenderLivingPre(entity, p_225623_2_, partialTicks, light, poseStack, buffers, LivingEntityRenderer.class.cast(this));
+        ClientWardrobeHandler.onRenderLivingPre(entity, partialTicks, light, poseStack, buffers, LivingEntityRenderer.class.cast(this));
     }
 
     @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;setupAnim(Lnet/minecraft/world/entity/Entity;FFFFF)V", shift = At.Shift.AFTER))
     private void aw2$render(T entity, float p_225623_2_, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int light, CallbackInfo ci) {
         IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
-        ClientWardrobeHandler.onRenderLiving(entity, p_225623_2_, partialTicks, light, poseStack, buffers, LivingEntityRenderer.class.cast(this));
+        ClientWardrobeHandler.onRenderLiving(entity, partialTicks, light, poseStack, buffers, LivingEntityRenderer.class.cast(this));
     }
 
     @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "RETURN"))
     private void aw2$render_post(T entity, float p_225623_2_, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int light, CallbackInfo ci) {
         IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
-        ClientWardrobeHandler.onRenderLivingPost(entity, p_225623_2_, partialTicks, light, poseStack, buffers, LivingEntityRenderer.class.cast(this));
+        ClientWardrobeHandler.onRenderLivingPost(entity, partialTicks, light, poseStack, buffers, LivingEntityRenderer.class.cast(this));
     }
 }

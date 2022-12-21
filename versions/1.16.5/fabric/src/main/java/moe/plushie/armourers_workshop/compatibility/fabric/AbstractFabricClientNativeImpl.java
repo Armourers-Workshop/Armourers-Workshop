@@ -1,14 +1,14 @@
 package moe.plushie.armourers_workshop.compatibility.fabric;
 
 import moe.plushie.armourers_workshop.compatibility.AbstractClientNativeImpl;
-import moe.plushie.armourers_workshop.compatibility.v1618.ClientNativeExt_V1618;
+import moe.plushie.armourers_workshop.compatibility.ext.AbstractClientNativeExt_V1618;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.world.inventory.InventoryMenu;
 
 import java.util.function.Consumer;
 
-public class AbstractFabricClientNativeImpl extends AbstractClientNativeImpl implements AbstractFabricClientNativeProvider, ClientNativeExt_V1618 {
+public class AbstractFabricClientNativeImpl extends AbstractClientNativeImpl implements AbstractFabricClientNativeProvider, AbstractClientNativeExt_V1618 {
 
     @Override
     public void willRegisterItemProperty(Consumer<ItemPropertyRegistry> consumer) {

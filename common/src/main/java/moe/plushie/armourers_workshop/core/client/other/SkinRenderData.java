@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.*;
 import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
+import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightContext;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
@@ -63,9 +64,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
     private int version = 0;
     private int lastVersion = Integer.MAX_VALUE;
 
-    public IPoseStack overridePostStack;
-    public ITransformf[] overrideTransforms;
-    public Collection<ISkinPartType> overrideParts;
+    public EpicFlightContext epicFlightContext;
 
     public SkinRenderData(EntityType<?> entityType) {
     }
@@ -317,6 +316,10 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
     }
 
     public boolean isLimitLimbs() {
+        // in EF doesn't need to limit limbs.
+        if (epicFlightContext != null) {
+            return false;
+        }
         return isLimitLimbs;
     }
 

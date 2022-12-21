@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.compatibility.fabric;
 
 import moe.plushie.armourers_workshop.compatibility.AbstractClientNativeImpl;
-import moe.plushie.armourers_workshop.compatibility.v19.ClientNativeProviderExt_V1920;
+import moe.plushie.armourers_workshop.compatibility.ext.AbstractClientNativeProviderExt_V19;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Consumer;
 
-public class AbstractFabricClientNativeImpl extends AbstractClientNativeImpl implements AbstractFabricClientNativeProvider, ClientNativeProviderExt_V1920 {
+public class AbstractFabricClientNativeImpl extends AbstractClientNativeImpl implements AbstractFabricClientNativeProvider, AbstractClientNativeProviderExt_V19 {
 
     public static ItemStack TOOLTIP_ITEM_STACK = ItemStack.EMPTY;
 

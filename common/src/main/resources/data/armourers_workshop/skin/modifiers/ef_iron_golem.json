@@ -1,0 +1,29 @@
+{
+  "type": "epicfight:armature",
+  "parent": "armourers_workshop:skin/modifiers/ef_humanoid",
+  "transform": {
+    "translate": {
+      "Head": [ 0, 36, 0 ],
+      "Chest": [ 0, 36, 0 ],
+      "Torso": [ 0, 30, 0 ],
+      "Skirt": [ 0, 24, 0 ],
+      "Arm_L": [ -5, 34, 0 ],
+      "Arm_R": [ 5, 34, 0 ],
+      "Hand_L": [ -5, 30, 0 ],
+      "Hand_R": [ 5, 30, 0 ],
+      "Thigh_L": [ -2, 24, 0 ],
+      "Thigh_R": [ 2, 24, 0 ],
+      "Leg_L": [ -2, 18, 0 ],
+      "Leg_R": [ 2, 18, 0 ],
+      "Foot_L": [ -2, 12, 0 ],
+      "Foot_R": [ 2, 12, 0 ],
+      "Wing_L": [ 0, 36, 2 ],
+      "Wing_R": [ 0, 36, 2 ],
+      "Phalanx_L": [ 0, 36, 2 ],
+      "Phalanx_R": [ 0, 36, 2 ]
+    }
+  },
+  "entities": [
+    "minecraft:iron_golem"
+  ]
+}

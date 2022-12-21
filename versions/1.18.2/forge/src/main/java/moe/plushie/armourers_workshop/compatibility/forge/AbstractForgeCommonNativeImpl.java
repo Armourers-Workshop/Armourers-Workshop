@@ -1,11 +1,10 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
-import moe.plushie.armourers_workshop.compatibility.v1618.CommonNativeExt_V1618;
+import moe.plushie.armourers_workshop.compatibility.ext.AbstractCommonNativeExt_V1618;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -14,8 +13,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -36,7 +33,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class AbstractForgeCommonNativeImpl implements AbstractForgeCommonNativeProvider, CommonNativeExt_V1618 {
+public class AbstractForgeCommonNativeImpl implements AbstractForgeCommonNativeProvider, AbstractCommonNativeExt_V1618 {
 
     @Override
     public void willServerTick(Consumer<ServerLevel> consumer) {

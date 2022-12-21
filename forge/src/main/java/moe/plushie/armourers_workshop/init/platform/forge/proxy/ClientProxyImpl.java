@@ -63,18 +63,8 @@ public class ClientProxyImpl {
             }
         });
 
-        ClientNativeManagerImpl.INSTANCE.willRenderLivingEntity(((entity, renderer, context) -> {
-            SkinRenderData renderData = SkinRenderData.of(entity);
-            if (renderData != null) {
-                SkinRendererManager.getInstance().willRender(entity, renderer.getModel(), renderer, renderData, context);
-            }
-        }));
-        ClientNativeManagerImpl.INSTANCE.didRenderLivingEntity(((entity, renderer, context) -> {
-            SkinRenderData renderData = SkinRenderData.of(entity);
-            if (renderData != null) {
-                SkinRendererManager.getInstance().didRender(entity, renderer.getModel(), renderer, renderData, context);
-            }
-        }));
+        ClientNativeManagerImpl.INSTANCE.willRenderLivingEntity(ClientWardrobeHandler::onRenderLivingPre);
+        ClientNativeManagerImpl.INSTANCE.didRenderLivingEntity(ClientWardrobeHandler::onRenderLivingPost);
 
         NotificationCenterImpl.observer(RenderArmEvent.class, event -> {
             if (!ModConfig.enableFirstPersonSkinRenderer()) {
@@ -88,7 +78,7 @@ public class ClientProxyImpl {
             if (event.getArm() == HumanoidArm.RIGHT) {
                 transformType = ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
             }
-            ClientWardrobeHandler.onRenderSpecificHand(player, 0, light, 0, transformType, poseStack, buffers, () -> {
+            ClientWardrobeHandler.onRenderSpecificHand(player, 0, light, transformType, poseStack, buffers, () -> {
                 event.setCanceled(true);
             });
         });

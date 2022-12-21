@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
 @Available("[1.19.3, )")
 @Mixin(PoseStack.class)
 @Implements(@Interface(iface = IPoseStack.class, prefix = "aw$"))
-public abstract class AbstractPoseStackMixin_V1930 {
+public abstract class AbstractPoseStackMixin_V19 {
 
     @Intrinsic(displace = true)
     public void aw$pushPose() {

@@ -4,8 +4,7 @@ import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractClientNativeImpl;
 import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
-import moe.plushie.armourers_workshop.compatibility.v1618.ClientNativeExt_V1618;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
+import moe.plushie.armourers_workshop.compatibility.ext.AbstractClientNativeExt_V1618;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +15,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 import java.util.function.Consumer;
 
-public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl implements AbstractForgeClientNativeProvider, ClientNativeExt_V1618 {
+public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl implements AbstractForgeClientNativeProvider, AbstractClientNativeExt_V1618 {
 
     private CGRect screenLayout = CGRect.ZERO;
 
@@ -86,17 +85,17 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
 
     @Override
     public void willRenderLivingEntity(RenderLivingEntity renderer) {
-        NotificationCenterImpl.observer(RenderLivingEvent.Pre.class, event -> renderer.render(event.getEntity(), event.getRenderer(), () -> {
+        NotificationCenterImpl.observer(RenderLivingEvent.Pre.class, event -> {
             IPoseStack poseStack = AbstractPoseStack.wrap(event.getMatrixStack());
-            return SkinRenderContext.alloc(null, event.getLight(), event.getPartialRenderTick(), poseStack, event.getBuffers());
-        }));
+            renderer.render(event.getEntity(), event.getPartialRenderTick(), event.getLight(), poseStack, event.getBuffers(), event.getRenderer());
+        });
     }
 
     @Override
     public void didRenderLivingEntity(RenderLivingEntity renderer) {
-        NotificationCenterImpl.observer(RenderLivingEvent.Post.class, event -> renderer.render(event.getEntity(), event.getRenderer(), () -> {
+        NotificationCenterImpl.observer(RenderLivingEvent.Post.class, event -> {
             IPoseStack poseStack = AbstractPoseStack.wrap(event.getMatrixStack());
-            return SkinRenderContext.alloc(null, event.getLight(), event.getPartialRenderTick(), poseStack, event.getBuffers());
-        }));
+            renderer.render(event.getEntity(), event.getPartialRenderTick(), event.getLight(), poseStack, event.getBuffers(), event.getRenderer());
+        });
     }
 }

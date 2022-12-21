@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.compatibility.v19;
+package moe.plushie.armourers_workshop.compatibility.ext;
 
 import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.api.annotation.Available;
@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 @Available("[1.19, )")
-public interface CommonNativeProviderExt_V1920 extends CommonNativeProvider, CommonNativeFactory {
+public interface AbstractCommonNativeProviderExt_V19 extends CommonNativeProvider, CommonNativeFactory {
 
     void willRegisterArgumentInfo(Consumer<ArgumentInfoRegistry> consumer);
 

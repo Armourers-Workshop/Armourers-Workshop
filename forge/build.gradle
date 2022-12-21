@@ -54,13 +54,13 @@ dependencies {
     //modLocalRuntime("org.samo_lego:taterzens:1.9.6-forge")
     //modLocalRuntime("net.optifine:OptiFine:1.18.2_HD_U_H9_pre1")
 
-    modOptionalApi("yesman.epicfight:EpicFight:${project.epicfight_api_version}", project.epicfight_api_version)
+    modOptionalApi("yesman.epicfight:EpicFight", project.epicfight_api_version)
 }
 
-def modOptionalApi(str, cond) {
-    if (cond != "") {
-        // dependencies.modCompileOnly(str)
-        dependencies.modApi(str)
+def modOptionalApi(lib, ver) {
+    if (ver != "") {
+//        dependencies.modCompileOnly(lib + ":" + ver)
+        dependencies.modApi(lib + ":" + ver)
     }
 }
 

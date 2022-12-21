@@ -81,7 +81,7 @@ public class SkinOverriddenManager {
                 || disabledEquipmentSlots.contains(slotType);
     }
 
-    public boolean hasAnyPartOverride() {
+    public boolean overrideAnyModel() {
         return !disabledModels.isEmpty();
     }
 

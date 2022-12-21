@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.armature.ArmatureModifier;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class EpicFightArmatureBuilder extends ArmatureBuilder {
 
@@ -25,10 +26,21 @@ public class EpicFightArmatureBuilder extends ArmatureBuilder {
     }
 
     @Override
-    public ArmatureModifier getTarget(IDataPackObject object) {
-        if (object.type() == IDataPackObject.Type.STRING) {
-            return new EpicFightJointBinder(object.stringValue());
+    public Collection<ArmatureModifier> getTargets(IDataPackObject object) {
+        switch (object.type()) {
+            case DICTIONARY: {
+                return getTargets(object.get("target"));
+            }
+            case STRING: {
+                String value = object.stringValue();
+                if (!value.isEmpty()) {
+                    return Collections.singleton(new EpicFightJointBinder(value));
+                }
+                return Collections.emptyList();
+            }
+            default: {
+                return Collections.emptyList();
+            }
         }
-        return new EpicFightJointBinder(object.get("target").stringValue());
     }
 }

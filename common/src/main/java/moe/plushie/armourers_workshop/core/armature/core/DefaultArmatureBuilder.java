@@ -5,6 +5,9 @@ import moe.plushie.armourers_workshop.core.armature.ArmatureBuilder;
 import moe.plushie.armourers_workshop.core.armature.ArmatureModifier;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class DefaultArmatureBuilder extends ArmatureBuilder {
 
     public DefaultArmatureBuilder(ResourceLocation name) {
@@ -12,10 +15,21 @@ public class DefaultArmatureBuilder extends ArmatureBuilder {
     }
 
     @Override
-    public ArmatureModifier getTarget(IDataPackObject object) {
-        if (object.type() == IDataPackObject.Type.STRING) {
-            return new DefaultJointBinder(object.stringValue());
+    public Collection<ArmatureModifier> getTargets(IDataPackObject object) {
+        switch (object.type()) {
+            case DICTIONARY: {
+                return getTargets(object.get("target"));
+            }
+            case STRING: {
+                String value = object.stringValue();
+                if (!value.isEmpty()) {
+                    return Collections.singleton(new DefaultJointBinder(value));
+                }
+                return Collections.emptyList();
+            }
+            default: {
+                return Collections.emptyList();
+            }
         }
-        return new DefaultJointBinder(object.get("target").stringValue());
     }
 }

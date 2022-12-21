@@ -5,9 +5,8 @@ import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.compatibility.AbstractClientNativeImpl;
 import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
-import moe.plushie.armourers_workshop.compatibility.forge.v18.ClientForgeExt_V1820;
-import moe.plushie.armourers_workshop.compatibility.v19.ClientNativeProviderExt_V1920;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
+import moe.plushie.armourers_workshop.compatibility.forge.ext.AbstractClientForgeExt_V18;
+import moe.plushie.armourers_workshop.compatibility.ext.AbstractClientNativeProviderExt_V19;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
@@ -23,7 +22,7 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl implements AbstractForgeClientNativeProvider, ClientNativeProviderExt_V1920, ClientForgeExt_V1820 {
+public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl implements AbstractForgeClientNativeProvider, AbstractClientNativeProviderExt_V19, AbstractClientForgeExt_V18 {
 
     @Override
     public void willRegisterItemColor(Consumer<ItemColorRegistry> consumer) {
@@ -89,18 +88,18 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
 
     @Override
     public void willRenderLivingEntity(RenderLivingEntity renderer) {
-        NotificationCenterImpl.observer(RenderLivingEvent.Pre.class, event -> renderer.render(event.getEntity(), event.getRenderer(), () -> {
+        NotificationCenterImpl.observer(RenderLivingEvent.Pre.class, event -> {
             IPoseStack poseStack = AbstractPoseStack.wrap(event.getPoseStack());
-            return SkinRenderContext.alloc(null, event.getPackedLight(), event.getPartialTick(), poseStack, event.getMultiBufferSource());
-        }));
+            renderer.render(event.getEntity(), event.getPartialTick(), event.getPackedLight(), poseStack, event.getMultiBufferSource(), event.getRenderer());
+        });
     }
 
     @Override
     public void didRenderLivingEntity(RenderLivingEntity renderer) {
-        NotificationCenterImpl.observer(RenderLivingEvent.Post.class, event -> renderer.render(event.getEntity(), event.getRenderer(), () -> {
+        NotificationCenterImpl.observer(RenderLivingEvent.Post.class, event -> {
             IPoseStack poseStack = AbstractPoseStack.wrap(event.getPoseStack());
-            return SkinRenderContext.alloc(null, event.getPackedLight(), event.getPartialTick(), poseStack, event.getMultiBufferSource());
-        }));
+            renderer.render(event.getEntity(), event.getPartialTick(), event.getPackedLight(), poseStack, event.getMultiBufferSource(), event.getRenderer());
+        });
     }
 
     @Override

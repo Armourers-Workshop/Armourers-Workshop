@@ -78,7 +78,7 @@ public final class ExtendedItemRenderer {
         IModelHolder<Model> modelHolder = ModelHolder.of(model);
         SkinRenderContext context = SkinRenderContext.alloc(renderData, light, partialTicks, poseStack, buffers);
         context.setItem(itemStack, 0);
-        context.setTransforms(entity, modelHolder);
+        context.setTransforms(entity, renderer.getOverrideModel(modelHolder));
         renderer.render(entity, modelHolder, bakedSkin, scheme, context);
         context.release();
 

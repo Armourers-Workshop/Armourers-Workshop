@@ -51,16 +51,25 @@ public class LivingSkinRenderer<T extends LivingEntity, V extends EntityModel<T>
     }
 
     @Override
+    public M getOverrideModel(M model) {
+        return super.getOverrideModel(getResolvedModel(model));
+    }
+
+    @Override
     public int render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, SkinRenderContext context) {
-        // we don't know how to draw without a model, right?
-        if (model == null) {
-            model = ModelHolder.of(getModel());
-        }
-        return super.render(entity, model, bakedSkin, scheme, context);
+        return super.render(entity, getResolvedModel(model), bakedSkin, scheme, context);
     }
 
     public V getModel() {
         return renderer.getModel();
+    }
+
+    public M getResolvedModel(M model) {
+        // we don't know how to draw without a model, right?
+        if (model == null) {
+            model = ModelHolder.of(getModel());
+        }
+        return model;
     }
 }
 

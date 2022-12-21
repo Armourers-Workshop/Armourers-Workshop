@@ -30,6 +30,7 @@
     "minecraft:vex",
     "minecraft:piglin",
     "minecraft:piglin_brute",
-    "minecraft:zombified_piglin"
+    "minecraft:zombified_piglin",
+    "minecraft:enderman"
   ]
 }

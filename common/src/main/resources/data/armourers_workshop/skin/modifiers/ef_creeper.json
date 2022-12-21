@@ -1,0 +1,14 @@
+{
+  "type": "epicfight:armature",
+  "joint": {
+    "Head": "Head"
+  },
+  "transform": {
+    "translate": {
+      "Head": [ 0, 18, 0 ]
+    }
+  },
+  "entities": [
+    "minecraft:creeper"
+  ]
+}

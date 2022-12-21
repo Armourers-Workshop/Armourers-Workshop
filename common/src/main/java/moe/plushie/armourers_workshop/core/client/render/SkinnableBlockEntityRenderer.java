@@ -62,7 +62,7 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
 
         IModelHolder<Model> modelHolder = ModelHolder.of(model);
         SkinRenderContext context = SkinRenderContext.alloc(null, light, partialTicks1, poseStack, buffers);
-        context.setTransforms(mannequin, modelHolder);
+        context.setTransforms(mannequin, renderer.getOverrideModel(modelHolder));
         renderer.render(mannequin, modelHolder, bakedSkin, ColorScheme.EMPTY, context);
         context.release();
 

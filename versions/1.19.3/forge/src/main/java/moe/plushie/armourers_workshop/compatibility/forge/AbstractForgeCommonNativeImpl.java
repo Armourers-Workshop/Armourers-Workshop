@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
-import moe.plushie.armourers_workshop.compatibility.v19.CommonNativeProviderExt_V1920;
+import moe.plushie.armourers_workshop.compatibility.ext.AbstractCommonNativeProviderExt_V19;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -17,13 +17,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -35,12 +33,11 @@ import net.minecraftforge.event.server.*;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 
-import java.util.ArrayList;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class AbstractForgeCommonNativeImpl implements AbstractForgeCommonNativeProvider, CommonNativeProviderExt_V1920 {
+public class AbstractForgeCommonNativeImpl implements AbstractForgeCommonNativeProvider, AbstractCommonNativeProviderExt_V19 {
 
     @Override
     public void willRegisterArgumentInfo(Consumer<ArgumentInfoRegistry> consumer) {

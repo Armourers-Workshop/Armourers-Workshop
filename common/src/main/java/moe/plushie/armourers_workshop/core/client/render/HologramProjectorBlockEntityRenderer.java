@@ -76,7 +76,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         IModelHolder<Model> modelHolder = ModelHolder.of(model);
         SkinRenderContext context = SkinRenderContext.alloc(null, overLight, partialTicks1, poseStack, buffers);
         context.setItem(itemStack, 0);
-        context.setTransforms(mannequin, modelHolder);
+        context.setTransforms(mannequin, renderer.getOverrideModel(modelHolder));
         renderer.render(mannequin, modelHolder, bakedSkin, ColorScheme.EMPTY, context);
         context.release();
 

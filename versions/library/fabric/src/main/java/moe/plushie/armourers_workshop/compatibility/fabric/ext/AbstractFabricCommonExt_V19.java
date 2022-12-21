@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.compatibility.fabric.v19;
+package moe.plushie.armourers_workshop.compatibility.fabric.ext;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricCommonNativeProvider;
@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import java.util.function.Consumer;
 
 @Available("[1.19, )")
-public interface FabricCommonExt_V19 extends AbstractFabricCommonNativeProvider {
+public interface AbstractFabricCommonExt_V19 extends AbstractFabricCommonNativeProvider {
 
     @Override
     default void willPlayerDrop(Consumer<Player> consumer) {

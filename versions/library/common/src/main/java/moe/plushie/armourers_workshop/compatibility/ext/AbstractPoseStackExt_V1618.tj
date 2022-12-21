@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.compatibility.v1618;
+package moe.plushie.armourers_workshop.compatibility.ext;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.*;
@@ -16,7 +16,7 @@ import java.nio.FloatBuffer;
 
 @Available("[1.16, 1.19.3)")
 @Environment(value = EnvType.CLIENT)
-public abstract class PoseStack_V1618 {
+public abstract class AbstractPoseStackExt_V1618 {
 
     private static final Matrix3f CONVERTER_MAT3 = new Matrix3f();
     private static final Matrix4f CONVERTER_MAT4 = new Matrix4f();

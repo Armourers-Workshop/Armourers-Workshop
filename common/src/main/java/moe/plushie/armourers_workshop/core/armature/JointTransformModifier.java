@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.utils.ModelHolder;
 import net.minecraft.world.entity.EntityType;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 public class JointTransformModifier {
 
@@ -15,7 +16,7 @@ public class JointTransformModifier {
     public static final DataStorageKey<JointTransformModifier> EPICFIGHT = DataStorageKey.of("epicfight", JointTransformModifier.class, () -> new JointTransformModifier(SkinModifierManager.EPICFIGHT));
 
     private final ArmatureManager armatureManager;
-    private final HashMap<EntityType<?>, ITransformf[]> transforms = new HashMap<>();
+    private final HashMap<EntityType<?>, Optional<ITransformf[]>> transforms = new HashMap<>();
 
     private int version;
 
@@ -29,7 +30,7 @@ public class JointTransformModifier {
             version = armatureManager.getVersion();
             transforms.clear();
         }
-        return transforms.computeIfAbsent(entityType, k -> armatureManager.getTransforms(entityType, model));
+        return transforms.computeIfAbsent(entityType, k -> Optional.ofNullable(armatureManager.getTransforms(entityType, model))).orElse(null);
     }
 
 }

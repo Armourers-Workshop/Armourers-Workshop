@@ -5,10 +5,7 @@ import moe.plushie.armourers_workshop.api.client.IJoint;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
-import moe.plushie.armourers_workshop.core.armature.core.AfterTransformModifier;
-import moe.plushie.armourers_workshop.core.armature.core.DefaultBabyJointModifier;
-import moe.plushie.armourers_workshop.core.armature.core.DefaultSkirtJointModifier;
-import moe.plushie.armourers_workshop.core.armature.core.DefaultWingJointModifier;
+import moe.plushie.armourers_workshop.core.armature.core.*;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -42,9 +39,11 @@ public abstract class ArmatureBuilder {
     public void load(Collection<ArmatureBuilder> builders) {
         // merge all builder.
         builders.forEach(builder -> {
-            entities.addAll(builder.entities);
             jointModifiers.putAll(builder.jointModifiers);
             transformModifiers.putAll(builder.transformModifiers);
+            // the entities should not be inherited.
+            entities.clear();
+            entities.addAll(builder.entities);
         });
     }
 
@@ -84,7 +83,7 @@ public abstract class ArmatureBuilder {
         return transform;
     }
 
-    public abstract ArmatureModifier getTarget(IDataPackObject object);
+    public abstract Collection<ArmatureModifier> getTargets(IDataPackObject object);
 
     public List<EntityType<?>> getEntities() {
         return entities;
@@ -101,11 +100,11 @@ public abstract class ArmatureBuilder {
     private Collection<ArmatureModifier> _parseModelModifiers(IDataPackObject object) {
         switch (object.type()) {
             case STRING: {
-                return Collections.singleton(getTarget(object));
+                return getTargets(object);
             }
             case DICTIONARY: {
                 ArrayList<ArmatureModifier> modifiers = new ArrayList<>();
-                modifiers.add(getTarget(object));
+                modifiers.addAll(getTargets(object));
                 modifiers.addAll(_parseTransformModifiers(object, AfterTransformModifier::new));
                 modifiers.addAll(_parseModifiers(object.get("modifier")));
                 return modifiers;
