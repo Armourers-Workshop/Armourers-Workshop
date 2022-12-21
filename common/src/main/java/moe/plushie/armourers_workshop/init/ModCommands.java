@@ -85,7 +85,7 @@ public class ModCommands {
                 .then(ReflectArgumentBuilder.literal("debug", ModDebugger.class))
                 .requires(source -> source.hasPermission(2))
                 .then(Commands.literal("library").then(Commands.literal("reload").executes(Executor::reloadLibrary)))
-                .then(Commands.literal("setSkin").then(entities().then(slots().then(skins().then(skinDying().executes(Executor::setSkin))).executes(Executor::setSkin)).then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))))
+                .then(Commands.literal("setSkin").then(entities().then(slots().then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))).then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))))
                 .then(Commands.literal("giveSkin").then(players().then(skins().then(skinDying().executes(Executor::giveSkin)).executes(Executor::giveSkin))))
                 .then(Commands.literal("clearSkin").then(entities().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
                 .then(Commands.literal("exportSkin").then(skinFormats().then(outputFileName().then(scale().executes(Executor::exportSkin)).executes(Executor::exportSkin))))
