@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform.forge.provider;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
 import net.minecraft.client.Camera;
@@ -67,6 +67,6 @@ public interface ForgeClientNativeProvider extends ClientNativeProvider {
     }
 
     interface RenderBlockHighlight {
-        void render(BlockHitResult traceResult, Camera renderInfo, PoseStack poseStack, MultiBufferSource buffers);
+        void render(BlockHitResult traceResult, Camera renderInfo, IPoseStack poseStack, MultiBufferSource buffers);
     }
 }

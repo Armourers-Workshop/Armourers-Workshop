@@ -11,9 +11,8 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
-import moe.plushie.armourers_workshop.utils.TrigUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
-import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
+import moe.plushie.armourers_workshop.utils.math.Matrix4f;
+import moe.plushie.armourers_workshop.utils.math.Quaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3d;
@@ -71,7 +70,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     private SkinProperties properties;
     private SkinDescriptor descriptor = SkinDescriptor.EMPTY;
 
-    private OpenQuaternionf renderRotations;
+    private Quaternionf renderRotations;
     private AABB renderBoundingBox;
 
     private boolean isDropped = false;
@@ -176,12 +175,12 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public OpenQuaternionf getRenderRotations(BlockState blockState) {
+    public Quaternionf getRenderRotations(BlockState blockState) {
         if (renderRotations != null) {
             return renderRotations;
         }
         Vector3f r = getRotations(blockState);
-        renderRotations = new OpenQuaternionf(r.getX(), r.getY(), r.getZ(), true);
+        renderRotations = new Quaternionf(r.getX(), r.getY(), r.getZ(), true);
         return renderRotations;
     }
 
@@ -342,7 +341,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         }
         float f = 1 / 16f;
         Rectangle3f box = bakedSkin.getRenderBounds(null, null, null, ItemStack.EMPTY).copy();
-        box.mul(OpenMatrix4f.createScaleMatrix(f, -f, f));
+        box.mul(Matrix4f.createScaleMatrix(f, -f, f));
         return box;
     }
 

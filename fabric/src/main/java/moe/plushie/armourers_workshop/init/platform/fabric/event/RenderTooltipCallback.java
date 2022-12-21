@@ -1,14 +1,11 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.event;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public interface RenderTooltipCallback {
@@ -18,5 +15,5 @@ public interface RenderTooltipCallback {
         }
     });
 
-    void onRenderTooltip(PoseStack poseStack, ItemStack itemStack, int x, int y, int width, int height, int mouseX, int mouseY, int screenWidth, int screenHeight);
+    void onRenderTooltip(IPoseStack poseStack, ItemStack itemStack, int x, int y, int width, int height, int mouseX, int mouseY, int screenWidth, int screenHeight);
 }

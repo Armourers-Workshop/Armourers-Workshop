@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModConfig;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.Matrix4f;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -255,7 +255,7 @@ public final class SkinUtils {
     }
 
 
-    public static VoxelShape apply(VoxelShape shape, OpenMatrix4f matrix) {
+    public static VoxelShape apply(VoxelShape shape, Matrix4f matrix) {
         float minX = (float) shape.min(Direction.Axis.X);
         float minY = (float) shape.min(Direction.Axis.Y);
         float minZ = (float) shape.min(Direction.Axis.Z);

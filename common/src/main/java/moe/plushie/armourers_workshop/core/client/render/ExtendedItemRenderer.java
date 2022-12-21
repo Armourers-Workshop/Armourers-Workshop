@@ -15,8 +15,8 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
-import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
+import moe.plushie.armourers_workshop.utils.math.Matrix4f;
+import moe.plushie.armourers_workshop.utils.math.Quaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -101,7 +101,7 @@ public final class ExtendedItemRenderer {
         RenderSystem.drawTargetBox(poseStack, targetWidth, targetHeight, targetDepth, buffers);
 
         Rectangle3f resolvedRect = rect.offset(rect.getMidX(), rect.getMidY(), rect.getMidZ());
-        resolvedRect.mul(new OpenMatrix4f(new OpenQuaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), true)));
+        resolvedRect.mul(new Matrix4f(new Quaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), true)));
         float newScale = Math.min(targetWidth / resolvedRect.getWidth(), targetHeight / resolvedRect.getHeight());
 
         poseStack.scale(newScale, newScale, newScale);

@@ -6,27 +6,27 @@ import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 
-public class OpenMatrix4f implements IMatrix4f {
+public class Matrix4f implements IMatrix4f {
 
     public float m00, m01, m02, m03;
     public float m10, m11, m12, m13;
     public float m20, m21, m22, m23;
     public float m30, m31, m32, m33;
 
-    public OpenMatrix4f() {
+    public Matrix4f() {
     }
 
-    public OpenMatrix4f(IMatrix4f matrix) {
+    public Matrix4f(IMatrix4f matrix) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
         matrix.store(buffer);
         load(buffer);
     }
 
-    public OpenMatrix4f(IQuaternionf quaternion) {
-        float f = quaternion.i();
-        float g = quaternion.j();
-        float h = quaternion.k();
-        float i = quaternion.r();
+    public Matrix4f(IQuaternionf quaternion) {
+        float f = quaternion.x();
+        float g = quaternion.y();
+        float h = quaternion.z();
+        float i = quaternion.w();
         float j = 2.0f * f * f;
         float k = 2.0f * g * g;
         float l = 2.0f * h * h;
@@ -48,8 +48,8 @@ public class OpenMatrix4f implements IMatrix4f {
         m12 = 2.0f * (n - p);
     }
 
-    public static OpenMatrix4f createScaleMatrix(float x, float y, float z) {
-        OpenMatrix4f matrix = new OpenMatrix4f();
+    public static Matrix4f createScaleMatrix(float x, float y, float z) {
+        Matrix4f matrix = new Matrix4f();
         matrix.m00 = x;
         matrix.m11 = y;
         matrix.m22 = z;
@@ -57,8 +57,8 @@ public class OpenMatrix4f implements IMatrix4f {
         return matrix;
     }
 
-    public static OpenMatrix4f createTranslateMatrix(float x, float y, float z) {
-        OpenMatrix4f matrix = new OpenMatrix4f();
+    public static Matrix4f createTranslateMatrix(float x, float y, float z) {
+        Matrix4f matrix = new Matrix4f();
         matrix.m00 = 1;
         matrix.m11 = 1;
         matrix.m22 = 1;
@@ -69,26 +69,26 @@ public class OpenMatrix4f implements IMatrix4f {
         return matrix;
     }
 
-    public static OpenMatrix4f of(IMatrix4f o) {
-        if (o instanceof OpenMatrix4f) {
-            return (OpenMatrix4f) o;
+    public static Matrix4f of(IMatrix4f o) {
+        if (o instanceof Matrix4f) {
+            return (Matrix4f) o;
         }
-        return new OpenMatrix4f(o);
+        return new Matrix4f(o);
     }
 
     @Override
     public void scale(float x, float y, float z) {
-        multiply(OpenMatrix4f.createScaleMatrix(x, y, z));
+        multiply(Matrix4f.createScaleMatrix(x, y, z));
     }
 
     @Override
     public void translate(float x, float y, float z) {
-        multiply(OpenMatrix4f.createTranslateMatrix(x, y, z));
+        multiply(Matrix4f.createTranslateMatrix(x, y, z));
     }
 
     @Override
     public void rotate(IQuaternionf quaternion) {
-        multiply(new OpenMatrix4f(quaternion));
+        multiply(new Matrix4f(quaternion));
     }
 
     @Override
@@ -113,7 +113,7 @@ public class OpenMatrix4f implements IMatrix4f {
     }
 
     public void multiplyFront(IQuaternionf quaternion) {
-        multiplyFront(new OpenMatrix4f(quaternion));
+        multiplyFront(new Matrix4f(quaternion));
     }
 
     public void multiply(float f) {
@@ -214,7 +214,7 @@ public class OpenMatrix4f implements IMatrix4f {
         return builder.toString();
     }
 
-    public OpenMatrix4f set(OpenMatrix3f m) {
+    public Matrix4f set(Matrix3f m) {
         m00 = m.m00;
         m01 = m.m01;
         m02 = m.m02;
@@ -234,7 +234,7 @@ public class OpenMatrix4f implements IMatrix4f {
         return this;
     }
 
-    public OpenMatrix4f set(OpenMatrix4f mat) {
+    public Matrix4f set(Matrix4f mat) {
         m00 = mat.m00;
         m01 = mat.m01;
         m02 = mat.m02;
@@ -254,7 +254,7 @@ public class OpenMatrix4f implements IMatrix4f {
         return this;
     }
 
-    public OpenMatrix4f setIdentity() {
+    public Matrix4f setIdentity() {
         m00 = 1.0f;
         m01 = 0.0f;
         m02 = 0.0f;
@@ -274,8 +274,8 @@ public class OpenMatrix4f implements IMatrix4f {
         return this;
     }
 
-    public OpenMatrix4f copy() {
-        return new OpenMatrix4f(this);
+    public Matrix4f copy() {
+        return new Matrix4f(this);
     }
 
     public float adjugateAndDet() {
@@ -374,8 +374,8 @@ public class OpenMatrix4f implements IMatrix4f {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof OpenMatrix4f)) return false;
-        OpenMatrix4f that = (OpenMatrix4f) o;
+        if (!(o instanceof Matrix4f)) return false;
+        Matrix4f that = (Matrix4f) o;
         if (Float.compare(that.m00, m00) != 0) return false;
         if (Float.compare(that.m01, m01) != 0) return false;
         if (Float.compare(that.m02, m02) != 0) return false;
@@ -419,7 +419,7 @@ public class OpenMatrix4f implements IMatrix4f {
         return j * 4 + i;
     }
 
-    private static void multiply(OpenMatrix4f lhs, OpenMatrix4f rhs, OpenMatrix4f ret) {
+    private static void multiply(Matrix4f lhs, Matrix4f rhs, Matrix4f ret) {
         float m00 = lhs.m00 * rhs.m00 + lhs.m10 * rhs.m01 + lhs.m20 * rhs.m02 + lhs.m30 * rhs.m03;
         float m01 = lhs.m01 * rhs.m00 + lhs.m11 * rhs.m01 + lhs.m21 * rhs.m02 + lhs.m31 * rhs.m03;
         float m02 = lhs.m02 * rhs.m00 + lhs.m12 * rhs.m01 + lhs.m22 * rhs.m02 + lhs.m32 * rhs.m03;

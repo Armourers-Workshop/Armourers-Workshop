@@ -6,13 +6,11 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIWindow;
 import com.apple.library.uikit.UIWindowManager;
-import com.mojang.blaze3d.vertex.PoseStack;
+import me.sagesse.minecraft.client.gui.ContainerMenuScreen;
 import moe.plushie.armourers_workshop.api.common.IMenuScreenProvider;
 import moe.plushie.armourers_workshop.api.common.IMenuWindow;
 import moe.plushie.armourers_workshop.api.common.IMenuWindowProvider;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.AbstractMenuScreen;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -24,7 +22,7 @@ import net.minecraft.world.inventory.Slot;
 import org.lwjgl.glfw.GLFW;
 
 @Environment(value = EnvType.CLIENT)
-public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IMenuWindow<M>> extends AbstractMenuScreen<M> {
+public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IMenuWindow<M>> extends ContainerMenuScreen<M> {
 
     private UIFont font;
 
@@ -73,11 +71,20 @@ public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IM
     }
 
     @Override
-    public void render(PoseStack poseStackIn, int mouseX, int mouseY, float partialTicks) {
-        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
+    public void render(IPoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         CGGraphicsContext context = new CGGraphicsContext(poseStack, mouseX, mouseY, partialTicks, font, this);
         manager.tick();
         manager.render(context, this::_render, this::_renderBackground, this::_renderTooltip);
+    }
+
+    @Override
+    public void renderBg(IPoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
+        // ignored
+    }
+
+    @Override
+    public void renderLabels(IPoseStack poseStack, int mouseX, int mouseY) {
+        // ignored
     }
 
     @Override
@@ -115,16 +122,6 @@ public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IM
         return manager.charTyped(ch, i, 0, this::_charTyped);
     }
 
-
-    @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
-    }
-
-
-    @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
-    }
-
     @Override
     protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
         return !manager.mouseIsInside(mouseX, mouseY, button);
@@ -153,7 +150,7 @@ public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IM
     }
 
     private void _render(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
-        super.render(context.poseStack.cast(), mouseX, mouseY, partialTicks);
+        super.render(context.poseStack, mouseX, mouseY, partialTicks);
     }
 
     private void _renderTooltip(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {

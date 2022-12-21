@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.client.IRenderBufferObject;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.Matrix4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -52,7 +52,7 @@ public class SkinRenderObject implements IRenderBufferObject, AutoCloseable {
         unbind();
     }
 
-    public void draw(OpenMatrix4f matrix, int mode, int vertexCount) {
+    public void draw(Matrix4f matrix, int mode, int vertexCount) {
 //        PoseStack poseStack = RenderSystem.getModelStack();
 //        poseStack.pushPose();
 //        //poseStack.mulPose(matrix);

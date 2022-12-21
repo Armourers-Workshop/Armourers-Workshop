@@ -1,8 +1,5 @@
 package moe.plushie.armourers_workshop.utils;
 
-import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
-
 public class TrigUtils {
 
     public static double getAngleRadians(double x1, double y1, double x2, double y2) {

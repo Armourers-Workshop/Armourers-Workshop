@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.holiday;
 
+import me.sagesse.minecraft.world.SavedData;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.compatibility.AbstractSavedData;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import java.util.Calendar;
 import java.util.HashSet;
 
-public class HolidayTracker extends AbstractSavedData {
+public class HolidayTracker extends SavedData {
 
     private final Calendar calendar = Calendar.getInstance();
     private final HashSet<String> logs = new HashSet<>();
@@ -35,7 +35,7 @@ public class HolidayTracker extends AbstractSavedData {
     }
 
     public static HolidayTracker of(MinecraftServer server) {
-        return AbstractSavedData.load(HolidayTracker::new, HolidayTracker::new, server.overworld().getDataStorage(), Constants.Key.HOLIDAY_TRACKER);
+        return SavedData.load(HolidayTracker::new, HolidayTracker::new, server.overworld().getDataStorage(), Constants.Key.HOLIDAY_TRACKER);
     }
 
     public void add(Player player, Holiday holiday) {

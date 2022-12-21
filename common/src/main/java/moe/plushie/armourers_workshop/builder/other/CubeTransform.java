@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.builder.other;
 
-import moe.plushie.armourers_workshop.utils.TrigUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
+import moe.plushie.armourers_workshop.utils.math.Quaternionf;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.minecraft.core.BlockPos;
@@ -16,7 +15,7 @@ public class CubeTransform {
     public final Direction direction;
     public final Rotation rotation;
     public final Rotation invRotation;
-    public final OpenQuaternionf rotationDegrees;
+    public final Quaternionf rotationDegrees;
 
     public CubeTransform(Level level, BlockPos blockPos, Direction direction) {
         this.level = level;
@@ -47,17 +46,17 @@ public class CubeTransform {
         }
     }
 
-    public static OpenQuaternionf getRotationDegrees(Direction dir) {
+    public static Quaternionf getRotationDegrees(Direction dir) {
         switch (dir) {
             case SOUTH:
-                return new OpenQuaternionf(0, 180, 0, true);
+                return new Quaternionf(0, 180, 0, true);
             case WEST:
-                return new OpenQuaternionf(0, 90, 0, true);
+                return new Quaternionf(0, 90, 0, true);
             case EAST:
-                return new OpenQuaternionf(0, -90, 0, true);
+                return new Quaternionf(0, -90, 0, true);
             case NORTH:
             default:
-                return OpenQuaternionf.ONE;
+                return Quaternionf.ONE;
         }
     }
 
@@ -75,7 +74,7 @@ public class CubeTransform {
 
     public BlockPos mul(int x, int y, int z) {
         // in this case not need to apply matrix transform.
-        if (rotationDegrees == OpenQuaternionf.ONE) {
+        if (rotationDegrees == Quaternionf.ONE) {
             return blockPos.offset(x, y, z);
         }
         // we increase 0.5 offset to avoid down-cast incorrect by float accuracy problems.

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.transform;
 
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
+import moe.plushie.armourers_workshop.utils.math.Quaternionf;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 
 public class SkinFixedTransform extends SkinTransform {
@@ -25,7 +25,7 @@ public class SkinFixedTransform extends SkinTransform {
             poseStack.translate(translate.getX(), translate.getY(), translate.getZ());
         }
         if (rotation != Vector3f.ZERO) {
-            poseStack.rotate(new OpenQuaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), true));
+            poseStack.rotate(new Quaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), true));
         }
         if (scale != Vector3f.ONE) {
             poseStack.scale(scale.getX(), scale.getY(), scale.getZ());

@@ -49,7 +49,7 @@ public abstract class AbstractMatrixUtilsExt_V1618 {
     }
 
     public static Quaternion of(IQuaternionf qat) {
-        return new Quaternion(qat.i(), qat.j(), qat.k(), qat.r());
+        return new Quaternion(qat.x(), qat.y(), qat.z(), qat.w());
     }
 
     public static IMatrix3f of(Matrix3f mat) {

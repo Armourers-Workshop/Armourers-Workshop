@@ -4,7 +4,6 @@ import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.TrigUtils;
 import net.minecraft.core.Position;
 
 @SuppressWarnings("unused")
@@ -31,6 +30,10 @@ public final class Vector3f implements IVector3f, Position {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public Vector3f(Vector3f pos) {
+        this(pos.x, pos.y, pos.z);
     }
 
     public Vector3f(Position pos) {
@@ -168,15 +171,15 @@ public final class Vector3f implements IVector3f, Position {
     }
 
     public void cross(Vector3f vec) {
-        float f = this.x;
-        float f1 = this.y;
-        float f2 = this.z;
-        float f3 = vec.getX();
-        float f4 = vec.getY();
-        float f5 = vec.getZ();
-        this.x = f1 * f5 - f2 * f4;
-        this.y = f2 * f3 - f * f5;
-        this.z = f * f4 - f1 * f3;
+        float ax = this.x;
+        float ay = this.y;
+        float az = this.z;
+        float bx = vec.getX();
+        float by = vec.getY();
+        float bz = vec.getZ();
+        this.x = ay * bz - az * by;
+        this.y = az * bx - ax * bz;
+        this.z = ax * by - ay * bx;
     }
 
     public void transform(IMatrix3f mat) {
@@ -185,13 +188,13 @@ public final class Vector3f implements IVector3f, Position {
         set(floats[0], floats[1], floats[2]);
     }
 
-    public void transform(OpenQuaternionf value) {
-        OpenQuaternionf quaternion = new OpenQuaternionf(value);
-        quaternion.mul(new OpenQuaternionf(x, y, z, 0.0F));
-        OpenQuaternionf quaternion1 = new OpenQuaternionf(value);
+    public void transform(Quaternionf value) {
+        Quaternionf quaternion = new Quaternionf(value);
+        quaternion.mul(new Quaternionf(x, y, z, 0.0F));
+        Quaternionf quaternion1 = new Quaternionf(value);
         quaternion1.conj();
         quaternion.mul(quaternion1);
-        set(quaternion.i(), quaternion.j(), quaternion.k());
+        set(quaternion.x(), quaternion.y(), quaternion.z());
     }
 
     public void lerp(Vector3f vec, float f) {
@@ -201,12 +204,29 @@ public final class Vector3f implements IVector3f, Position {
         this.z = this.z * f1 + vec.z * f;
     }
 
-    public OpenQuaternionf rotation(float f) {
-        return new OpenQuaternionf(this, f, false);
+    /**
+     * Computes distance of Vector3 vector to v.
+     */
+   public float distanceTo(Vector3f v) {
+        return MathUtils.sqrt(distanceToSquared(v));
     }
 
-    public OpenQuaternionf rotationDegrees(float f) {
-        return new OpenQuaternionf(this, f, true);
+    /**
+     * Computes squared distance of Vector3 vector to v.
+     */
+    public float distanceToSquared(Vector3f v) {
+        float dx = x - v.x;
+        float dy = y - v.y;
+        float dz = z - v.z;
+        return dx * dx + dy * dy + dz * dz;
+    }
+
+    public Quaternionf rotation(float f) {
+        return new Quaternionf(this, f, false);
+    }
+
+    public Quaternionf rotationDegrees(float f) {
+        return new Quaternionf(this, f, true);
     }
 
     public Vector3f copy() {
@@ -224,10 +244,28 @@ public final class Vector3f implements IVector3f, Position {
         return String.format("(%g %g %g)", x, y, z);
     }
 
+    public void set(Vector3f vec) {
+        this.x = vec.x;
+        this.y = vec.y;
+        this.z = vec.z;
+    }
+
     public void set(float[] values) {
         this.x = values[0];
         this.y = values[1];
         this.z = values[2];
+    }
+
+    public void setFromSpherical(Sphericalf s) {
+        this.setFromSphericalCoords(s.radius, s.phi, s.theta);
+
+    }
+
+    public void setFromSphericalCoords(float radius, float phi, float theta) {
+        float sinPhiRadius = MathUtils.sin(phi) * radius;
+        this.x = sinPhiRadius * MathUtils.sin(theta);
+        this.y = MathUtils.cos(phi) * radius;
+        this.z = sinPhiRadius * MathUtils.cos(theta);
     }
 }
 

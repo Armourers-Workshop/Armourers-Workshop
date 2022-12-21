@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
+import moe.plushie.armourers_workshop.utils.math.Quaternionf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -56,7 +56,7 @@ public class ModDebugger {
 
     @Environment(value = EnvType.CLIENT)
     public static void rotate(IPoseStack poseStack) {
-        poseStack.rotate(new OpenQuaternionf(rx, ry, rz, true));
+        poseStack.rotate(new Quaternionf(rx, ry, rz, true));
     }
 
     @Environment(value = EnvType.CLIENT)

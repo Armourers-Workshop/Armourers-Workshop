@@ -60,7 +60,7 @@ public class SkinDescriptor implements ISkinDescriptor {
             storage.skinDescriptor = EMPTY;
             return EMPTY;
         }
-        descriptor = new SkinDescriptor(nbt.getCompound(Constants.Key.SKIN));
+        descriptor = DataSerializers.getSkinDescriptor(nbt, Constants.Key.SKIN, EMPTY);
         storage.skinDescriptor = descriptor;
         return descriptor;
     }

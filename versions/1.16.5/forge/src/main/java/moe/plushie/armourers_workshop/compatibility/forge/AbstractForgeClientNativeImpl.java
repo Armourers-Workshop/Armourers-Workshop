@@ -64,7 +64,8 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
             int screenWidth = screenLayout.getWidth();
             int screenHeight = screenLayout.getHeight();
             CGRect frame = new CGRect(event.getX(), event.getY(), event.getWidth(), event.getHeight());
-            consumer.render(event.getStack(), frame, mouseX, mouseY, screenWidth, screenHeight, event.getMatrixStack());
+            IPoseStack poseStack = MatrixUtils.of(event.getMatrixStack());
+            consumer.render(event.getStack(), frame, mouseX, mouseY, screenWidth, screenHeight, poseStack);
         });
     }
 
@@ -80,7 +81,10 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
 
     @Override
     public void willRenderBlockHighlight(RenderBlockHighlight renderer) {
-        NotificationCenterImpl.observer(DrawHighlightEvent.HighlightBlock.class, event -> renderer.render(event.getTarget(), event.getInfo(), event.getMatrix(), event.getBuffers()));
+        NotificationCenterImpl.observer(DrawHighlightEvent.HighlightBlock.class, event -> {
+            IPoseStack poseStack = MatrixUtils.of(event.getMatrix());
+            renderer.render(event.getTarget(), event.getInfo(), poseStack, event.getBuffers());
+        });
     }
 
     @Override

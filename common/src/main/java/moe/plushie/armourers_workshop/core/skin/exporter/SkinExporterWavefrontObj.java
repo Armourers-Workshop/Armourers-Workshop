@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.exporter;
 
-import moe.plushie.armourers_workshop.api.math.*;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.api.skin.ISkinExporter;
@@ -15,7 +16,7 @@ import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.transform.SkinWingsTransform;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
+import moe.plushie.armourers_workshop.utils.math.PoseStack;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
@@ -90,7 +91,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
 
         int partIndex = 0;
         for (Task task : tasks) {
-            IPoseStack poseStack = new OpenPoseStack();
+            PoseStack poseStack = new PoseStack();
             SkinPart skinPart = task.skinPart;
             SkinTransform transform = SkinWingsTransform.build(skinPart);
             // apply the render context matrix.

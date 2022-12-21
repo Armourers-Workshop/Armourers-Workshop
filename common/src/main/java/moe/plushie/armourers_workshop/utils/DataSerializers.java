@@ -28,10 +28,7 @@ import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Rotations;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.FloatTag;
-import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -254,6 +251,15 @@ public class DataSerializers {
                 serializer.write(buffer, descriptor);
             }
         };
+    }
+    public static CompoundTag parseCompoundTag(CompoundTag nbt, String key) {
+        if (nbt.contains(key, Constants.TagFlags.COMPOUND)){
+            return nbt.getCompound(key);
+        }
+        if (nbt.contains(key, Constants.TagFlags.STRING)) {
+            return SkinFileUtils.readNBT(nbt.getString(key));
+        }
+        return null;
     }
 
     public static Vector3i getVector3i(CompoundTag nbt, String key) {
@@ -501,11 +507,9 @@ public class DataSerializers {
     }
 
     public static SkinDescriptor getSkinDescriptor(CompoundTag nbt, String key, SkinDescriptor defaultValue) {
-        if (nbt.contains(key, Constants.TagFlags.COMPOUND)) {
-            CompoundTag nbt1 = nbt.getCompound(key);
-            if (!nbt1.isEmpty()) {
-                return new SkinDescriptor(nbt1);
-            }
+        CompoundTag nbt1 = parseCompoundTag(nbt, key);
+        if (nbt1 != null && !nbt1.isEmpty()) {
+            return new SkinDescriptor(nbt1);
         }
         return defaultValue;
     }

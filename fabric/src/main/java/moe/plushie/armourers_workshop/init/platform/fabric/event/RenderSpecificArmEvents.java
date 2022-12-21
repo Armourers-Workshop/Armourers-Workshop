@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.event;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -31,6 +31,6 @@ public class RenderSpecificArmEvents {
 
     @FunctionalInterface
     public interface SpecificArm {
-        boolean render(PoseStack poseStack, MultiBufferSource buffers, int i, Player player, InteractionHand hand);
+        boolean render(IPoseStack poseStack, MultiBufferSource buffers, int i, Player player, InteractionHand hand);
     }
 }

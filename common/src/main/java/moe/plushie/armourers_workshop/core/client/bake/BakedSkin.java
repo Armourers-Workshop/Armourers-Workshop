@@ -136,10 +136,10 @@ public class BakedSkin implements IBakedSkin {
             SkinCache.returnKey(key);
             return bounds;
         }
-        OpenMatrix4f matrix = OpenMatrix4f.createScaleMatrix(1, 1, 1);
+        Matrix4f matrix = Matrix4f.createScaleMatrix(1, 1, 1);
         OpenVoxelShape shape = getRenderShape(entity, model, itemStack, ItemTransforms.TransformType.NONE);
         if (rotation != null) {
-            matrix.rotate(new OpenQuaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), true));
+            matrix.rotate(new Quaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), true));
             shape.mul(matrix);
         }
         bounds = shape.bounds().copy();

@@ -138,13 +138,13 @@ public class Vector4f {
         set(floats[0], floats[1], floats[2], floats[3]);
     }
 
-    public void transform(OpenQuaternionf q) {
-        OpenQuaternionf quaternion = new OpenQuaternionf(q);
-        quaternion.mul(new OpenQuaternionf(x, y, z, 0.0F));
-        OpenQuaternionf quaternion1 = new OpenQuaternionf(q);
+    public void transform(Quaternionf q) {
+        Quaternionf quaternion = new Quaternionf(q);
+        quaternion.mul(new Quaternionf(x, y, z, 0.0F));
+        Quaternionf quaternion1 = new Quaternionf(q);
         quaternion1.conj();
         quaternion.mul(quaternion1);
-        set(quaternion.i(), quaternion.j(), quaternion.k(), this.w());
+        set(quaternion.x(), quaternion.y(), quaternion.z(), this.w());
     }
 
     public void perspectiveDivide() {

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.compatibility.fabric.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricClientNativeImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderTooltipCallback;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
@@ -58,6 +59,6 @@ public class AbstractFabricScreenMixin {
         if (k2 + j + 6 > screenHeight) {
             k2 = screenHeight - j - 6;
         }
-        RenderTooltipCallback.EVENT.invoker().onRenderTooltip(poseStack, itemStack, j2, k2, i, j, mouseX, mouseY, screenWidth, screenHeight);
+        RenderTooltipCallback.EVENT.invoker().onRenderTooltip(MatrixUtils.of(poseStack), itemStack, j2, k2, i, j, mouseX, mouseY, screenWidth, screenHeight);
     }
 }

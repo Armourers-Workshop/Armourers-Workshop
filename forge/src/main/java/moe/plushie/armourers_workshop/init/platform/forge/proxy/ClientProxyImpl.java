@@ -34,7 +34,7 @@ public class ClientProxyImpl {
         NotificationCenterImpl.observer(FMLLoadCompleteEvent.class, event -> event.enqueueWork(() -> EnvironmentExecutor.didSetup(EnvironmentType.CLIENT)));
 
         // listen the block highlight events.
-        ClientNativeManagerImpl.INSTANCE.willRenderBlockHighlight((traceResult, camera, poseStackIn, buffers) -> {
+        ClientNativeManagerImpl.INSTANCE.willRenderBlockHighlight((traceResult, camera, poseStack, buffers) -> {
             Player player = Minecraft.getInstance().player;
             if (player == null) {
                 return;
@@ -47,7 +47,6 @@ public class ClientProxyImpl {
             //         return;
             //     }
             // }
-            IPoseStack poseStack = MatrixUtils.of(poseStackIn);
             ItemStack itemStack = player.getMainHandItem();
             Item item = itemStack.getItem();
             if (ModConfig.Client.enableEntityPlacementHighlight && item == ModItems.MANNEQUIN.get()) {

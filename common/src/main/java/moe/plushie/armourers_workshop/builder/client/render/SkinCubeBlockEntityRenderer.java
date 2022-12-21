@@ -1,17 +1,15 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import me.sagesse.minecraft.client.renderer.BlockEntityRenderer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedFaceRenderer;
 import moe.plushie.armourers_workshop.init.ModItems;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -24,7 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 @Environment(value = EnvType.CLIENT)
-public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> extends AbstractBlockEntityRenderer<T> {
+public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> extends BlockEntityRenderer<T> {
 
     private static float markerAlpha = 0F;
     private static long lastWorldTimeUpdate;
@@ -67,12 +65,11 @@ public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> ext
     }
 
     @Override
-    public void render(T entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T entity, float partialTicks, IPoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
         updateAlpha(entity);
         if (!(markerAlpha > 0)) {
             return;
         }
-        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
         int alpha = (int) (markerAlpha * 255);
         VertexConsumer builder = buffers.getBuffer(SkinRenderType.IMAGE_MARKER);
         for (Direction direction : Direction.values()) {

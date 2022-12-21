@@ -10,9 +10,8 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
-import moe.plushie.armourers_workshop.utils.TrigUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
-import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
+import moe.plushie.armourers_workshop.utils.math.Matrix4f;
+import moe.plushie.armourers_workshop.utils.math.Quaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -149,7 +148,7 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         }
 
         public void transform(Vector3f r) {
-            OpenQuaternionf q = new OpenQuaternionf(r.getX(), r.getY(), r.getZ(), true);
+            Quaternionf q = new Quaternionf(r.getX(), r.getY(), r.getZ(), true);
 
             Vector4f f = new Vector4f(offset.getX(), offset.getY(), offset.getZ(), 1.0f);
             f.transform(q);
@@ -208,11 +207,11 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         public void transform(Vector3f r) {
             super.transform(r);
 
-            OpenQuaternionf q = new OpenQuaternionf(r.getX(), r.getY(), r.getZ(), true);
+            Quaternionf q = new Quaternionf(r.getX(), r.getY(), r.getZ(), true);
             ArrayList<SkinMarker> newMarkerList = new ArrayList<>();
             for (SkinMarker marker : markerList) {
                 Vector4f f = new Vector4f(marker.x, marker.y, marker.z, 1.0f);
-                f.transform(OpenMatrix4f.createScaleMatrix(-1, -1, 1));
+                f.transform(Matrix4f.createScaleMatrix(-1, -1, 1));
                 f.transform(q);
                 int x = Math.round(f.x());
                 int y = Math.round(f.y());

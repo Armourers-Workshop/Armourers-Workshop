@@ -95,7 +95,7 @@ public class ClientProxy {
 
         registries.willTick(TickUtils::tick);
 
-        registries.willGatherTooltip(ItemTooltipManager::appendHoverText);
-        registries.willRenderTooltip(ItemTooltipManager::renderHoverText);
+        registries.willGatherTooltip(ItemTooltipManager::gatherSkinTooltip);
+        registries.willRenderTooltip(ItemTooltipManager::renderSkinTooltip);
     }
 }

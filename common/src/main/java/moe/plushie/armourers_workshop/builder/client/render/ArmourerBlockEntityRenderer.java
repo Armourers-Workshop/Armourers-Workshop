@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideDataProvider;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideRenderer;
@@ -13,13 +12,12 @@ import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRendererManager;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
-import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
+import me.sagesse.minecraft.client.renderer.BlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinDynamicTexture;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TextureUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -37,7 +35,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 @Environment(value = EnvType.CLIENT)
-public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends AbstractBlockEntityRenderer<T> {
+public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends BlockEntityRenderer<T> {
 
     private final PlayerTextureOverride override = new PlayerTextureOverride();
     private final Rectangle3f originBox = new Rectangle3f(-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f);
@@ -48,8 +46,7 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
     }
 
     @Override
-    public void render(T entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int light, int overlay) {
-        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
+    public void render(T entity, float partialTicks, IPoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
         ISkinType skinType = entity.getSkinType();
         ISkinProperties skinProperties = entity.getSkinProperties();
 

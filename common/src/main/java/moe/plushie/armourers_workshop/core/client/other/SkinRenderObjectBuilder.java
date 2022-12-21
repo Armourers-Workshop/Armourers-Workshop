@@ -23,7 +23,7 @@ import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
+import moe.plushie.armourers_workshop.utils.math.PoseStack;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -272,7 +272,7 @@ public class SkinRenderObjectBuilder {
 
         void render(CachedTask task, IPoseStack poseStack, int lightmap, float partialTicks, int slotIndex) {
             IPoseStack modelViewStack = RenderSystem.getExtendedModelViewStack();
-            IPoseStack fixedPostStack = new OpenPoseStack();
+            IPoseStack fixedPostStack = new PoseStack();
             IMatrix4f lastPose = fixedPostStack.lastPose();
             lastPose.multiply(modelViewStack.lastPose());
             lastPose.multiply(poseStack.lastPose());

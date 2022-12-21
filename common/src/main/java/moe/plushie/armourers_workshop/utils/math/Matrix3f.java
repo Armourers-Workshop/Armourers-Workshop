@@ -7,32 +7,32 @@ import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 
-public class OpenMatrix3f implements IMatrix3f {
+public class Matrix3f implements IMatrix3f {
 
     public float m00, m01, m02;
     public float m10, m11, m12;
     public float m20, m21, m22;
 
-    public OpenMatrix3f() {
+    public Matrix3f() {
     }
 
-    public OpenMatrix3f(IMatrix3f matrix) {
+    public Matrix3f(IMatrix3f matrix) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(9);
         matrix.store(buffer);
         load(buffer);
     }
 
-    public OpenMatrix3f(IMatrix4f matrix) {
+    public Matrix3f(IMatrix4f matrix) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
         matrix.store(buffer);
         import44(buffer);
     }
 
-    public OpenMatrix3f(IQuaternionf quaternion) {
-        float f = quaternion.i();
-        float g = quaternion.j();
-        float h = quaternion.k();
-        float i = quaternion.r();
+    public Matrix3f(IQuaternionf quaternion) {
+        float f = quaternion.x();
+        float g = quaternion.y();
+        float h = quaternion.z();
+        float i = quaternion.w();
         float j = 2.0f * f * f;
         float k = 2.0f * g * g;
         float l = 2.0f * h * h;
@@ -53,29 +53,34 @@ public class OpenMatrix3f implements IMatrix3f {
         m12 = 2.0f * (n - p);
     }
 
-    public static OpenMatrix3f createScaleMatrix(float x, float y, float z) {
-        OpenMatrix3f matrix = new OpenMatrix3f();
+    public static Matrix3f createScaleMatrix(float x, float y, float z) {
+        Matrix3f matrix = new Matrix3f();
         matrix.m00 = x;
         matrix.m11 = y;
         matrix.m22 = z;
         return matrix;
     }
 
-    public static OpenMatrix3f of(IMatrix3f o) {
-        if (o instanceof OpenMatrix3f) {
-            return (OpenMatrix3f) o;
+    public static Matrix3f of(IMatrix3f mat) {
+        if (mat instanceof Matrix3f) {
+            return (Matrix3f) mat;
         }
-        return new OpenMatrix3f(o);
+        return new Matrix3f(mat);
     }
+
+    public static Matrix3f of(IMatrix4f mat) {
+        return new Matrix3f(mat);
+    }
+
 
     @Override
     public void scale(float x, float y, float z) {
-        multiply(OpenMatrix3f.createScaleMatrix(x, y, z));
+        multiply(Matrix3f.createScaleMatrix(x, y, z));
     }
 
     @Override
     public void rotate(IQuaternionf other) {
-        multiply(new OpenMatrix3f(other));
+        multiply(new Matrix3f(other));
     }
 
     @Override
@@ -98,7 +103,7 @@ public class OpenMatrix3f implements IMatrix3f {
     }
 
     public void multiplyFront(IQuaternionf other) {
-        multiplyFront(new OpenMatrix3f(other));
+        multiplyFront(new Matrix3f(other));
     }
 
     public void multiply(float ratio) {
@@ -174,7 +179,7 @@ public class OpenMatrix3f implements IMatrix3f {
         return builder.toString();
     }
 
-    public OpenMatrix3f set(OpenMatrix3f m) {
+    public Matrix3f set(Matrix3f m) {
         m00 = m.m00;
         m01 = m.m01;
         m02 = m.m02;
@@ -187,7 +192,7 @@ public class OpenMatrix3f implements IMatrix3f {
         return this;
     }
 
-    public OpenMatrix3f set(OpenMatrix4f mat) {
+    public Matrix3f set(Matrix4f mat) {
         m00 = mat.m00;
         m01 = mat.m01;
         m02 = mat.m02;
@@ -200,8 +205,8 @@ public class OpenMatrix3f implements IMatrix3f {
         return this;
     }
 
-    public OpenMatrix3f copy() {
-        return new OpenMatrix3f(this);
+    public Matrix3f copy() {
+        return new Matrix3f(this);
     }
 
 
@@ -246,8 +251,8 @@ public class OpenMatrix3f implements IMatrix3f {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof OpenMatrix3f)) return false;
-        OpenMatrix3f that = (OpenMatrix3f) o;
+        if (!(o instanceof Matrix3f)) return false;
+        Matrix3f that = (Matrix3f) o;
         if (Float.compare(that.m00, m00) != 0) return false;
         if (Float.compare(that.m01, m01) != 0) return false;
         if (Float.compare(that.m02, m02) != 0) return false;
@@ -281,7 +286,7 @@ public class OpenMatrix3f implements IMatrix3f {
         return j * 4 + i;
     }
 
-    private static void multiply(OpenMatrix3f lhs, OpenMatrix3f rhs, OpenMatrix3f ret) {
+    private static void multiply(Matrix3f lhs, Matrix3f rhs, Matrix3f ret) {
         float m00 = lhs.m00 * rhs.m00 + lhs.m10 * rhs.m01 + lhs.m20 * rhs.m02;
         float m01 = lhs.m01 * rhs.m00 + lhs.m11 * rhs.m01 + lhs.m21 * rhs.m02;
         float m02 = lhs.m02 * rhs.m00 + lhs.m12 * rhs.m01 + lhs.m22 * rhs.m02;

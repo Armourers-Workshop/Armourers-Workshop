@@ -1,6 +1,9 @@
 package moe.plushie.armourers_workshop.utils;
 
 public class MathUtils {
+
+    public static final float PI = (float) Math.PI;
+
     private static final double FRAC_BIAS = Double.longBitsToDouble(4805340802404319232L);
     private static final double[] ASIN_TAB = new double[257];
     private static final double[] COS_TAB = new double[257];
@@ -136,6 +139,15 @@ public class MathUtils {
         }
 
         return d0;
+    }
+
+
+    public static float acos(float e) {
+        return (float) Math.acos(e);
+    }
+
+    public static float atan2(float d, float e) {
+        return (float) Math.atan2(d, e);
     }
 
     public static double atan2(double d, double e) {

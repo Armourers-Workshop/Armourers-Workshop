@@ -124,7 +124,7 @@ public class ClientProxyImpl implements ClientModInitializer {
 //            }
 //        }
 
-    public boolean onRenderSpecificFirstPersonHand(PoseStack poseStackIn, MultiBufferSource buffers, int light, Player player, InteractionHand hand) {
+    public boolean onRenderSpecificFirstPersonHand(IPoseStack poseStack, MultiBufferSource buffers, int light, Player player, InteractionHand hand) {
         if (!ModConfig.enableFirstPersonSkinRenderer()) {
             return true;
         }
@@ -133,7 +133,6 @@ public class ClientProxyImpl implements ClientModInitializer {
             transformType = ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
         }
         boolean[] flags = {false};
-        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
         ClientWardrobeHandler.onRenderSpecificHand(player, 0, light, transformType, poseStack, buffers, () -> {
             flags[0] = true;
         });

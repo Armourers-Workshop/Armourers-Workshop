@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.client.layer;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
+import moe.plushie.armourers_workshop.compatibility.AbstractRenderLayer;
 import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -13,7 +13,6 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.init.ModContributors;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -22,12 +21,11 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.Entity;
 
 @Environment(value = EnvType.CLIENT)
-public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M extends IModelHolder<V>> extends RenderLayer<T, V> {
+public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M extends IModelHolder<V>> extends AbstractRenderLayer<T, V> {
 
     protected final SkinRenderer<T, V, M> skinRenderer;
     protected final RenderLayerParent<T, V> entityRenderer;
@@ -39,14 +37,13 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
     }
 
     @Override
-    public void render(PoseStack poseStackIn, MultiBufferSource buffers, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        IPoseStack poseStack1 = MatrixUtils.of(poseStackIn);
+    public void render(IPoseStack poseStack, MultiBufferSource buffers, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        IPoseStack poseStack1 = poseStack;
         M model = ModelHolder.of(getParentModel());
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {
             return;
         }
-        IPoseStack poseStack = poseStack1;
         EpicFlightContext epicFlightContext = renderData.epicFlightContext;
         JointTransformModifier transformModifier = null;
         if (epicFlightContext != null) {

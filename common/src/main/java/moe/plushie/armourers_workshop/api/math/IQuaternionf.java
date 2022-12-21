@@ -2,11 +2,11 @@ package moe.plushie.armourers_workshop.api.math;
 
 public interface IQuaternionf {
 
-    float i();
+    float x();
 
-    float j();
+    float y();
 
-    float k();
+    float z();
 
-    float r();
+    float w();
 }

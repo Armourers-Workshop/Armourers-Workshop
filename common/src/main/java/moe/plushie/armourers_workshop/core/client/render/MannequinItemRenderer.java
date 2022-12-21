@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import me.sagesse.minecraft.client.renderer.ItemEntityRenderer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.AbstractItemEntityRenderer;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,7 +14,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
 
 @Environment(value = EnvType.CLIENT)
-public class MannequinItemRenderer extends AbstractItemEntityRenderer {
+public class MannequinItemRenderer extends ItemEntityRenderer {
 
     private static MannequinItemRenderer INSTANCE;
 
@@ -28,11 +26,10 @@ public class MannequinItemRenderer extends AbstractItemEntityRenderer {
     }
 
     @Override
-    public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack poseStackIn, MultiBufferSource renderTypeBuffer, int light, int overlay) {
+    public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, IPoseStack poseStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
         if (itemStack.isEmpty()) {
             return;
         }
-        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
         BakedModel bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
         ItemTransform transform = bakedModel.getTransforms().getTransform(transformType);
 

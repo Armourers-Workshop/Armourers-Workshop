@@ -8,8 +8,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.TrigUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
+import moe.plushie.armourers_workshop.utils.math.Quaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -43,7 +42,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
     private NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
 
-    private OpenQuaternionf renderRotations;
+    private Quaternionf renderRotations;
 
     private int powerMode = 0;
     private float modelScale = 1.0f;
@@ -227,14 +226,14 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public OpenQuaternionf getRenderRotations(BlockState blockState) {
+    public Quaternionf getRenderRotations(BlockState blockState) {
         if (renderRotations != null) {
             return renderRotations;
         }
         AttachFace face = blockState.getOptionalValue(HologramProjectorBlock.FACE).orElse(AttachFace.FLOOR);
         Direction facing = blockState.getOptionalValue(HologramProjectorBlock.FACING).orElse(Direction.NORTH);
         Vector3f rot = FACING_TO_ROT.getOrDefault(Pair.of(face, facing), Vector3f.ZERO);
-        renderRotations = new OpenQuaternionf(rot.getX(), rot.getY(), rot.getZ(), true);
+        renderRotations = new Quaternionf(rot.getX(), rot.getY(), rot.getZ(), true);
         return renderRotations;
     }
 

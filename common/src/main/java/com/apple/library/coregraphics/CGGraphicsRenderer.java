@@ -7,7 +7,7 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIView;
-import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -139,21 +139,19 @@ public class CGGraphicsRenderer {
         int l = rect.getMaxY();
         int m = gradient.startColor.getRGB();
         int n = gradient.endColor.getRGB();
-        InternalRenderer.GRADIENT.render(context.poseStack.cast(), i, j, k, l, m, n);
+        InternalRenderer.INSTANCE.fillGradient(context.poseStack, i, j, k, l, m, n);
     }
 
     private static class InternalRenderer extends Screen {
 
         static final InternalRenderer INSTANCE = new InternalRenderer();
 
-        static final F1 GRADIENT = INSTANCE::fillGradient;
-
         protected InternalRenderer() {
             super(new NSString("").component());
         }
 
-        interface F1 {
-            void render(PoseStack poseStack, int i, int j, int k, int l, int m, int n);
+        public void fillGradient(IPoseStack poseStack, int i, int j, int k, int l, int m, int n) {
+            fillGradient(poseStack.cast(), i, j, k, l, m, n);
         }
     }
 }

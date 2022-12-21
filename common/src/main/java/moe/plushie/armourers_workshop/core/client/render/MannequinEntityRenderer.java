@@ -1,10 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
-import com.mojang.blaze3d.vertex.PoseStack;
+import me.sagesse.minecraft.client.renderer.LivingEntityRenderer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
-import moe.plushie.armourers_workshop.compatibility.AbstractLivingEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
@@ -12,7 +11,6 @@ import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,7 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 
 @Environment(value = EnvType.CLIENT)
-public class MannequinEntityRenderer<T extends MannequinEntity> extends AbstractLivingEntityRenderer<T, MannequinModel<T>> {
+public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingEntityRenderer<T, MannequinModel<T>> {
 
     public static boolean enableLimitScale = false;
 
@@ -55,20 +53,19 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
     }
 
     @Override
-    public void render(T entity, float p_225623_2_, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int packedLightIn) {
+    public void render(T entity, float p_225623_2_, float partialTicks, IPoseStack poseStack, MultiBufferSource buffers, int packedLightIn) {
         // when mannequin holding mannequin recursive rendering occurs, and we will enable the child renderer.
         if (this.enableChildRenderer) {
-            this.getChildRenderer().render(entity, p_225623_2_, partialTicks, poseStackIn, buffers, packedLightIn);
+            this.getChildRenderer().render(entity, p_225623_2_, partialTicks, poseStack, buffers, packedLightIn);
             return;
         }
-        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
         PlayerTextureLoader textureLoader = PlayerTextureLoader.getInstance();
         this.enableChildRenderer = true;
         this.texture = textureLoader.getTextureLocation(entity);
         this.bakedTexture = textureLoader.getTextureModel(texture);
         this.model = getModel();
         this.model.setAllVisible(entity.isModelVisible());
-        super.render(entity, p_225623_2_, partialTicks, poseStackIn, buffers, packedLightIn);
+        super.render(entity, p_225623_2_, partialTicks, poseStack, buffers, packedLightIn);
         this.enableChildRenderer = false;
         if (ModDebugger.mannequinCulling) {
             poseStack.pushPose();
@@ -83,7 +80,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
     }
 
     @Override
-    protected void scale(T entity, PoseStack poseStack, float p_225620_3_) {
+    protected void scale(T entity, IPoseStack poseStack, float p_225620_3_) {
         float f = 0.9375f; // from player renderer (maybe 15/16)
         if (!enableLimitScale) {
             f *= entity.getScale();

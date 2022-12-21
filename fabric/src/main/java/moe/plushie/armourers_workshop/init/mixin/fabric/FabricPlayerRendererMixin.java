@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init.mixin.fabric;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderSpecificArmEvents;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -16,14 +17,14 @@ public class FabricPlayerRendererMixin {
 
     @Inject(method = "renderRightHand", at = @At("HEAD"), cancellable = true)
     public void aw2$renderRightHand(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, AbstractClientPlayer player, CallbackInfo ci) {
-        if (!RenderSpecificArmEvents.MAIN_HAND.invoker().render(poseStack, multiBufferSource, i, player, InteractionHand.MAIN_HAND)) {
+        if (!RenderSpecificArmEvents.MAIN_HAND.invoker().render(MatrixUtils.of(poseStack), multiBufferSource, i, player, InteractionHand.MAIN_HAND)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "renderLeftHand", at = @At("HEAD"), cancellable = true)
     public void aw2$renderLeftHand(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, AbstractClientPlayer player, CallbackInfo ci) {
-        if (!RenderSpecificArmEvents.OFF_HAND.invoker().render(poseStack, multiBufferSource, i, player, InteractionHand.OFF_HAND)) {
+        if (!RenderSpecificArmEvents.OFF_HAND.invoker().render(MatrixUtils.of(poseStack), multiBufferSource, i, player, InteractionHand.OFF_HAND)) {
             ci.cancel();
         }
     }

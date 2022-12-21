@@ -45,10 +45,10 @@ public final class RenderSystem extends AbstractRenderSystem {
 
     private static final IPoseStack extendedModelViewStack = MatrixUtils.modelViewStack();
 
-    private static final Storage<IMatrix3f> extendedNormalMatrix = new Storage<>(OpenMatrix3f.createScaleMatrix(1, 1, 1));
-    private static final Storage<IMatrix4f> extendedTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
-    private static final Storage<IMatrix4f> extendedLightmapTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
-    private static final Storage<IMatrix4f> extendedModelViewMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
+    private static final Storage<IMatrix3f> extendedNormalMatrix = new Storage<>(Matrix3f.createScaleMatrix(1, 1, 1));
+    private static final Storage<IMatrix4f> extendedTextureMatrix = new Storage<>(Matrix4f.createScaleMatrix(1, 1, 1));
+    private static final Storage<IMatrix4f> extendedLightmapTextureMatrix = new Storage<>(Matrix4f.createScaleMatrix(1, 1, 1));
+    private static final Storage<IMatrix4f> extendedModelViewMatrix = new Storage<>(Matrix4f.createScaleMatrix(1, 1, 1));
 
     private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(3);
 

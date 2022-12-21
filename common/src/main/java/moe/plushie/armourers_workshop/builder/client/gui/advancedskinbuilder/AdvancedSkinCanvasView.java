@@ -1,10 +1,21 @@
 package moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder;
 
+import com.apple.library.coregraphics.CGGraphicsContext;
+import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.uikit.UIColor;
+import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.guide.AdvancedChestGuideRenderer;
+import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 @Environment(value = EnvType.CLIENT)
 public class AdvancedSkinCanvasView extends UIView {
@@ -13,29 +24,42 @@ public class AdvancedSkinCanvasView extends UIView {
 //    private final AdvancedSkinChestModel model = new AdvancedSkinChestModel();
     private final AdvancedChestGuideRenderer renderer = new AdvancedChestGuideRenderer();
 
+    OrbitControls orbitControls = new OrbitControls();
+
     public AdvancedSkinCanvasView(CGRect frame) {
         super(frame);
     }
 
-//    @Override
-//    public void render(PoseStack poseStack, int i, int j, float f) {
-//        poseStack.pushPose();
-//        poseStack.translate(width / 2.0, height / 2.0, 500.0);
-////        ModDebugger.translate(poseStack);
-////        ModDebugger.scale(poseStack);
-////        ModDebugger.rotate(poseStack);
-////        translatef(0, 0, 500);
-//
-//        poseStack.scale(10, 10, 10);
-//        poseStack.scale(16, 16, 16);
-//
-//        poseStack.mulPose(Vector3f.XP.rotationDegrees(-40));
-//        poseStack.mulPose(Vector3f.YP.rotationDegrees((float) ((System.currentTimeMillis() / 10) % 360)));
-//
-//        MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-//        RenderSystem.drawPoint(poseStack, buffers);
-//        RenderSystem.drawBoundingBox(poseStack, -1, -1, -1, 1, 1, 1, UIColor.RED, buffers);
-//
+    @Override
+    public void layoutSubviews() {
+        super.layoutSubviews();
+        CGRect rect = bounds();
+        orbitControls.clientWidth = rect.getWidth();
+        orbitControls.clientHeight = rect.getHeight();
+    }
+
+    @Override
+    public void render(CGPoint point, CGGraphicsContext context) {
+        CGRect rect = bounds();
+
+        IPoseStack poseStack = context.poseStack;
+        poseStack.pushPose();
+
+        poseStack.translate(rect.getWidth() / 2f, rect.getHeight() / 2f, 500f);
+
+        ModDebugger.translate(poseStack);
+        ModDebugger.scale(poseStack);
+        ModDebugger.rotate(poseStack);
+
+        poseStack.scale(16, 16, 16);
+
+        MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+        RenderSystem.drawPoint(poseStack, buffers);
+        RenderSystem.drawBoundingBox(context.poseStack, -1, -1, -1, 1, 1, 1, UIColor.RED, buffers);
+
+        buffers.endBatch();
+
+
 //        RenderSystem.disableCull();
 //
 //        renderer.render(poseStack, 0xf000f0, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1, buffers);
@@ -48,8 +72,30 @@ public class AdvancedSkinCanvasView extends UIView {
 //
 //        RenderSystem.enableCull();
 //
-//        buffers.endBatch();
-//        poseStack.popPose();
+        poseStack.popPose();
+    }
+
+
+    @Override
+    public void mouseDown(UIEvent event) {
+        super.mouseDown(event);
+        orbitControls.startRotate(event.locationInWindow());
+    }
+
+    @Override
+    public void mouseDragged(UIEvent event) {
+        super.mouseDragged(event);
+        orbitControls.updateRotate(event.locationInWindow());
+    }
+
+    @Override
+    public void mouseUp(UIEvent event) {
+        super.mouseUp(event);
+        orbitControls.endRotate(event.locationInWindow());
+    }
+
+    //    @Override
+//    public void render(PoseStack poseStack, int i, int j, float f) {
 //    }
 //
 

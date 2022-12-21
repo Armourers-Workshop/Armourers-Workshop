@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.utils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.TagParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -130,6 +131,14 @@ public class SkinFileUtils {
             }
 
             return tag;
+        }
+    }
+
+    public static CompoundTag readNBT(String contents) {
+        try {
+            return TagParser.parseTag(contents);
+        } catch (Exception e) {
+            return new CompoundTag();
         }
     }
 }

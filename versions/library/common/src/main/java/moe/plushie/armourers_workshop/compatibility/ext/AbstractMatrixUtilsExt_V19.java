@@ -50,7 +50,7 @@ public abstract class AbstractMatrixUtilsExt_V19 {
     }
 
     public static Quaternionf of(IQuaternionf qat) {
-        return new Quaternionf(qat.i(), qat.j(), qat.k(), qat.r());
+        return new Quaternionf(qat.x(), qat.y(), qat.z(), qat.w());
     }
 
     public static IMatrix3f of(Matrix3f mat) {
@@ -95,7 +95,7 @@ public abstract class AbstractMatrixUtilsExt_V19 {
 
         @Override
         public void rotate(IQuaternionf quaternion) {
-            mat.rotate(new Quaternionf(quaternion.i(), quaternion.j(), quaternion.k(), quaternion.r()));
+            mat.rotate(new Quaternionf(quaternion.x(), quaternion.y(), quaternion.z(), quaternion.w()));
         }
 
         @Override
@@ -165,7 +165,7 @@ public abstract class AbstractMatrixUtilsExt_V19 {
 
         @Override
         public void rotate(IQuaternionf quaternion) {
-            mat.rotate(new Quaternionf(quaternion.i(), quaternion.j(), quaternion.k(), quaternion.r()));
+            mat.rotate(new Quaternionf(quaternion.x(), quaternion.y(), quaternion.z(), quaternion.w()));
         }
 
         @Override

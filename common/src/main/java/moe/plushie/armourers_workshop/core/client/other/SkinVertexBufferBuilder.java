@@ -2,10 +2,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.compatibility.AbstractShader;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexGroup;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;

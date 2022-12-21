@@ -1,17 +1,15 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import me.sagesse.minecraft.client.renderer.ItemEntityRenderer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.builder.item.SkinCubeItem;
-import moe.plushie.armourers_workshop.compatibility.AbstractItemEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedFaceRenderer;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.init.ModBlocks;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -22,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 @Environment(value = EnvType.CLIENT)
-public class SkinCubeItemRenderer extends AbstractItemEntityRenderer {
+public class SkinCubeItemRenderer extends ItemEntityRenderer {
 
     private static SkinCubeItemRenderer INSTANCE;
 
@@ -34,7 +32,7 @@ public class SkinCubeItemRenderer extends AbstractItemEntityRenderer {
     }
 
     @Override
-    public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack poseStackIn, MultiBufferSource renderTypeBuffer, int light, int overlay) {
+    public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, IPoseStack poseStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
         if (itemStack.isEmpty()) {
             return;
         }
@@ -43,7 +41,6 @@ public class SkinCubeItemRenderer extends AbstractItemEntityRenderer {
         if (blockPaintColor == null) {
             blockPaintColor = BlockPaintColor.WHITE;
         }
-        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
         Block block = item.getBlock();
 
         boolean isGlowing = block.equals(ModBlocks.SKIN_CUBE_GLOWING.get()) || block.equals(ModBlocks.SKIN_CUBE_GLASS_GLOWING.get());

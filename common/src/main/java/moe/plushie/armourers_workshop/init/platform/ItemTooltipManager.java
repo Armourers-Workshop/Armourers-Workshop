@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform;
 
 import com.apple.library.coregraphics.CGRect;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinEquipmentType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -13,7 +12,6 @@ import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.init.*;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
@@ -133,7 +131,7 @@ public class ItemTooltipManager {
         return tooltip;
     }
 
-    public static void appendHoverText(ItemStack itemStack, List<Component> tooltips, TooltipFlag flags) {
+    public static void gatherSkinTooltip(ItemStack itemStack, List<Component> tooltips, TooltipFlag flags) {
         List<Component> newTooltips = createSkinTooltip(itemStack);
         if (newTooltips.isEmpty()) {
             return;
@@ -152,11 +150,10 @@ public class ItemTooltipManager {
         tooltips.addAll(newTooltips);
     }
 
-    public static void renderHoverText(ItemStack itemStack, CGRect frame, int mouseX, int mouseY, int screenWidth, int screenHeight, PoseStack poseStackIn) {
+    public static void renderSkinTooltip(ItemStack itemStack, CGRect frame, int mouseX, int mouseY, int screenWidth, int screenHeight, IPoseStack poseStack) {
         if (!ModConfig.Client.skinPreEnabled) {
             return;
         }
-        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         BakedSkin bakedSkin = BakedSkin.of(descriptor);
         if (bakedSkin == null) {

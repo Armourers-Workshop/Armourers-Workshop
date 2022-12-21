@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import com.apple.library.uikit.UIColor;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.api.client.IJoint;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
@@ -24,7 +23,6 @@ import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
@@ -235,7 +233,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
         final HashMap<ISkinPartType, PartTransform<T, M>> armors = new HashMap<>();
         final HashMap<ItemTransforms.TransformType, PartTransform<T, M>> items = new HashMap<>();
 
-        public static <M> void none(PoseStack poseStack, M model) {
+        public static <M> void none(IPoseStack poseStack, M model) {
         }
 
         public static <T extends Entity, M0 extends Model, M extends IModelHolder<M0>> void withModel(IPoseStack poseStack, T entity, M model, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinRenderContext context) {

@@ -1,10 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
-import com.mojang.blaze3d.vertex.PoseStack;
+import me.sagesse.minecraft.client.renderer.BlockEntityRenderer;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -14,11 +13,10 @@ import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
+import moe.plushie.armourers_workshop.utils.math.Quaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -31,14 +29,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 @Environment(value = EnvType.CLIENT)
-public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlockEntity> extends AbstractBlockEntityRenderer<T> {
+public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlockEntity> extends BlockEntityRenderer<T> {
 
     public HologramProjectorBlockEntityRenderer(AbstractBlockEntityRendererContext context) {
         super(context);
     }
 
     @Override
-    public void render(T entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T entity, float partialTicks, IPoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
         if (!entity.isPowered()) {
             return;
         }
@@ -47,7 +45,6 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         if (bakedSkin == null) {
             return;
         }
-        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
         BlockState blockState = entity.getBlockState();
         Entity mannequin = SkinItemRenderer.getInstance().getMannequinEntity();
         MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
@@ -130,7 +127,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
             RenderSystem.drawPoint(poseStack, null, 128, buffers);
         }
 
-        poseStack.rotate(new OpenQuaternionf(rotX, -rotY, rotZ, true));
+        poseStack.rotate(new Quaternionf(rotX, -rotY, rotZ, true));
         poseStack.translate(rotationOffset.getX(), -rotationOffset.getY(), rotationOffset.getZ());
 
         if (ModDebugger.hologramProjectorBlock) {

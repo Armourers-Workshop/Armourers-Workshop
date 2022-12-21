@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.compatibility.AbstractSavedData;
+import me.sagesse.minecraft.world.SavedData;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
@@ -13,7 +13,7 @@ import java.security.MessageDigest;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ModContext extends AbstractSavedData {
+public class ModContext extends SavedData {
 
     private static ModContext current;
 
@@ -45,7 +45,7 @@ public class ModContext extends AbstractSavedData {
     }
 
     public static void init(MinecraftServer server) {
-        current = AbstractSavedData.load(ModContext::new, ModContext::new, server.overworld().getDataStorage(), Constants.Key.SKIN);
+        current = SavedData.load(ModContext::new, ModContext::new, server.overworld().getDataStorage(), Constants.Key.SKIN);
     }
 
     public static void init(UUID t0, UUID t1) {

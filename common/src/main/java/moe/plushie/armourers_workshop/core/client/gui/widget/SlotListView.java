@@ -6,13 +6,12 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
 import com.apple.library.uikit.UIWindow;
-import com.mojang.blaze3d.vertex.PoseStack;
+import me.sagesse.minecraft.client.gui.ContainerMenuScreen;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -84,7 +83,7 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         return point;
     }
 
-    public static class DelegateScreen<M extends AbstractContainerMenu> extends AbstractContainerScreen<M> {
+    public static class DelegateScreen<M extends AbstractContainerMenu> extends ContainerMenuScreen<M> {
 
         private final Inventory inventory;
 
@@ -106,7 +105,7 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         }
 
         @Override
-        public void render(PoseStack poseStack, int i, int j, float f) {
+        public void render(IPoseStack poseStack, int i, int j, float f) {
             poseStack.pushPose();
             poseStack.translate(-leftPos, -topPos, 0);
 
@@ -123,11 +122,11 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         }
 
         @Override
-        protected void renderBg(PoseStack poseStack, float f, int i, int j) {
+        protected void renderBg(IPoseStack poseStack, float f, int i, int j) {
         }
 
         @Override
-        protected void renderLabels(PoseStack poseStack, int i, int j) {
+        protected void renderLabels(IPoseStack poseStack, int i, int j) {
         }
 
         @Override
