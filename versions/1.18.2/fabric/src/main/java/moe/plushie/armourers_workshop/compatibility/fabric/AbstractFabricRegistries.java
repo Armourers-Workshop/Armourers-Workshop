@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.fabric;
 
 import moe.plushie.armourers_workshop.api.common.IItemTagKey;
 import moe.plushie.armourers_workshop.api.common.IItemTagRegistry;
-import moe.plushie.armourers_workshop.api.common.IRegistry;
+import moe.plushie.armourers_workshop.api.common.IRegistryProvider;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.core.Registry;
@@ -24,12 +24,12 @@ import java.util.function.Supplier;
 
 public class AbstractFabricRegistries {
 
-    public static final IRegistry<Block> BLOCKS = wrap(Registry.BLOCK);
-    public static final IRegistry<Item> ITEMS = wrap(Registry.ITEM);
-    public static final IRegistry<MenuType<?>> MENU_TYPES = wrap(Registry.MENU);
-    public static final IRegistry<EntityType<?>> ENTITY_TYPES = wrap(Registry.ENTITY_TYPE);
-    public static final IRegistry<BlockEntityType<?>> BLOCK_ENTITY_TYPES = wrap(Registry.BLOCK_ENTITY_TYPE);
-    public static final IRegistry<SoundEvent> SOUND_EVENTS = wrap(Registry.SOUND_EVENT);
+    public static final IRegistryProvider<Block> BLOCKS = wrap(Registry.BLOCK);
+    public static final IRegistryProvider<Item> ITEMS = wrap(Registry.ITEM);
+    public static final IRegistryProvider<MenuType<?>> MENU_TYPES = wrap(Registry.MENU);
+    public static final IRegistryProvider<EntityType<?>> ENTITY_TYPES = wrap(Registry.ENTITY_TYPE);
+    public static final IRegistryProvider<BlockEntityType<?>> BLOCK_ENTITY_TYPES = wrap(Registry.BLOCK_ENTITY_TYPE);
+    public static final IRegistryProvider<SoundEvent> SOUND_EVENTS = wrap(Registry.SOUND_EVENT);
 
     public static final IItemTagRegistry<Item> ITEM_TAGS = name -> () -> {
         ResourceLocation registryName = ModConstants.key(name);
@@ -47,8 +47,8 @@ public class AbstractFabricRegistries {
         };
     };
 
-    private static <T, R extends Registry<T>> IRegistry<T> wrap(R registry) {
-        return new IRegistry<T>() {
+    private static <T, R extends Registry<T>> IRegistryProvider<T> wrap(R registry) {
+        return new IRegistryProvider<T>() {
             @Override
             public int getId(ResourceLocation registryName) {
                 return registry.getId(getValue(registryName));

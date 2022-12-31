@@ -26,13 +26,13 @@ public class DataPackLoader {
     private final String path;
     private final Function<ResourceLocation, IDataPackBuilder> provider;
     private final Runnable willLoadHandler;
-    private final Runnable didLoadhandler;
+    private final Runnable didLoadHandler;
 
-    public DataPackLoader(String path, Function<ResourceLocation, IDataPackBuilder> provider, Runnable willLoadHandler, Runnable didLoadhandler) {
+    public DataPackLoader(String path, Function<ResourceLocation, IDataPackBuilder> provider, Runnable willLoadHandler, Runnable didLoadHandler) {
         this.path = path;
         this.provider = provider;
         this.willLoadHandler = willLoadHandler;
-        this.didLoadhandler = didLoadhandler;
+        this.didLoadHandler = didLoadHandler;
     }
 
     public CompletableFuture<Map<ResourceLocation, IDataPackBuilder>> prepare(IResourceManager resourceManager, Executor executor) {
@@ -55,6 +55,6 @@ public class DataPackLoader {
 
     public void load(Map<ResourceLocation, IDataPackBuilder> results) {
         results.forEach((key, builder) -> builder.build());
-        didLoadhandler.run();
+        didLoadHandler.run();
     }
 }

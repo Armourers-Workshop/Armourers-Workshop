@@ -5,9 +5,9 @@ import moe.plushie.armourers_workshop.api.common.IBlockEntityRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IBlockEntitySupplier;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IBlockEntityBuilder;
-import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeBlockEntity;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeBlockEntityRenderers;
+import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.minecraft.core.BlockPos;
@@ -49,7 +49,7 @@ public class BlockEntityBuilderImpl<T extends BlockEntity> implements IBlockEnti
 
     @Override
     public IBlockEntityKey<T> build(String name) {
-        IRegistryKey<BlockEntityType<T>> object = Registry.BLOCK_ENTITY_TYPE.register(name, () -> {
+        IRegistryKey<BlockEntityType<T>> object = Registries.BLOCK_ENTITY_TYPE.register(name, () -> {
             Block[] blocks1 = blocks.stream().map(Supplier::get).toArray(Block[]::new);
             return AbstractForgeBlockEntity.createType(supplier, blocks1);
         });

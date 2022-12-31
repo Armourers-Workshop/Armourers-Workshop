@@ -1,0 +1,19 @@
+{
+  "providers": [
+    "skin/modifiers/aw_creeper.json",
+    "skin/modifiers/aw_humanoid.json",
+    "skin/modifiers/aw_iron_golem.json",
+    "skin/modifiers/ef_ereeper.json",
+    "skin/modifiers/ef_enderman.json",
+    "skin/modifiers/ef_humanoid.json",
+    "skin/modifiers/ef_iron_golem.json",
+    "skin/modifiers/ef_living_entity.json",
+    "skin/profiles/head.json",
+    "skin/profiles/mannequin.json",
+    "skin/profiles/mob.json",
+    "skin/profiles/npc.json",
+    "skin/profiles/player.json",
+    "skin/profiles/projecting.json",
+    "skin/profiles/villager.json"
+  ]
+}

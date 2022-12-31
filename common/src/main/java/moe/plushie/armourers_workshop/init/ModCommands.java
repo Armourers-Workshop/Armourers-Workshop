@@ -18,7 +18,7 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.slot.ItemOverrideType;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
-import moe.plushie.armourers_workshop.core.registry.Registry;
+import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -303,7 +303,7 @@ public class ModCommands {
             if (overrideType == null || itemStack.isEmpty()) {
                 throw ERROR_MISSING_ITEM_STACK.create(player.getScoreboardName());
             }
-            ResourceLocation identifier = Registry.ITEM.getKey(itemStack.getItem());
+            ResourceLocation identifier = Registries.ITEM.getKey(itemStack.getItem());
             String key = String.format("%s:%s", overrideType.getName(), identifier);
             // we always remove and then add again
             if (operator.equals("add")) {

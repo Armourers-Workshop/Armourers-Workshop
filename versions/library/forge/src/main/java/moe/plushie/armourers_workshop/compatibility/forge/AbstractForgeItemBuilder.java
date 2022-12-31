@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.common.IItemStackRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
-import moe.plushie.armourers_workshop.core.registry.Registry;
+import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.ClientNativeManagerImpl;
@@ -37,7 +37,7 @@ public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemB
 
     @Override
     public IRegistryKey<T> build(String name) {
-        return Registry.ITEM.register(name, () -> {
+        return Registries.ITEM.register(name, () -> {
             T value = supplier.apply(properties);
             if (group != null) {
                 group.get().add(() -> value);

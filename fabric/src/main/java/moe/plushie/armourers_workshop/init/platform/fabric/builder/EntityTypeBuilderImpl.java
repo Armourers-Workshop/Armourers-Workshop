@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 import moe.plushie.armourers_workshop.api.common.IEntityRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IEntityTypeBuilder;
-import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricEntityRenderers;
+import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -85,7 +85,7 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
 
     @Override
     public IRegistryKey<EntityType<T>> build(String name) {
-        IRegistryKey<EntityType<T>> object = Registry.ENTITY_TYPE.register(name, () -> builder.build());
+        IRegistryKey<EntityType<T>> object = Registries.ENTITY_TYPE.register(name, () -> builder.build());
         EnvironmentExecutor.didInit(EnvironmentType.CLIENT, binder, object);
         return object;
     }

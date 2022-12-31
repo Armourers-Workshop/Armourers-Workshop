@@ -34,6 +34,8 @@ public abstract class ArmatureBuilder {
 
     public ArmatureBuilder(ResourceLocation name) {
         this.name = name;
+        // must init armatures if needs.
+        Armatures.init();
     }
 
     public void load(Collection<ArmatureBuilder> builders) {

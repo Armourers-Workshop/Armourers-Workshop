@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
-import moe.plushie.armourers_workshop.core.registry.Registry;
+import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
@@ -17,6 +17,7 @@ import moe.plushie.armourers_workshop.init.ModKeyBindings;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
+import moe.plushie.armourers_workshop.init.platform.SkinModifierManager;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -35,6 +36,7 @@ public class ClientProxy {
     public static void init() {
         //            SkinResourceManager.init();
         ClientWardrobeHandler.init();
+        SkinModifierManager.init();
         ModKeyBindings.init();
         ModDebugger.init();
 
@@ -43,14 +45,14 @@ public class ClientProxy {
 
     private static void register(ClientNativeProvider registries) {
         // register custom item color.
-        registries.willRegisterItemColor(registry -> Registry.ITEM.getEntries().forEach(object -> {
+        registries.willRegisterItemColor(registry -> Registries.ITEM.getEntries().forEach(object -> {
             Item item = object.get();
             if (item instanceof IItemTintColorProvider) {
                 registry.register(((IItemTintColorProvider) item), item);
             }
         }));
         // register custom item property.
-        registries.willRegisterItemProperty(registry -> Registry.ITEM.getEntries().forEach(object -> {
+        registries.willRegisterItemProperty(registry -> Registries.ITEM.getEntries().forEach(object -> {
             Item item = object.get();
             IItemPropertiesProvider provider = ObjectUtils.safeCast(item, IItemPropertiesProvider.class);
             if (provider != null) {
@@ -59,7 +61,7 @@ public class ClientProxy {
         }));
 
         // register custom block color.
-        registries.willRegisterBlockColor(registry -> Registry.BLOCK.getEntries().forEach(object -> {
+        registries.willRegisterBlockColor(registry -> Registries.BLOCK.getEntries().forEach(object -> {
             Block block = object.get();
             if (block instanceof IBlockTintColorProvider) {
                 registry.register(((IBlockTintColorProvider) block), block);

@@ -4,8 +4,8 @@ import com.apple.library.uikit.UIWindow;
 import moe.plushie.armourers_workshop.api.common.*;
 import moe.plushie.armourers_workshop.api.common.builder.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuScreen;
-import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeMenuType;
+import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
@@ -41,7 +41,7 @@ public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements 
     public IRegistryKey<MenuType<T>> build(String name) {
         MenuType<?>[] menuTypes = {null};
         MenuType<T> menuType = AbstractForgeMenuType.create((id, inv, buf) -> factory.createMenu(menuTypes[0], id, inv, serializer.read(buf, inv.player)));
-        IRegistryKey<MenuType<T>> object = Registry.MENU_TYPE.register(name, () -> menuType);
+        IRegistryKey<MenuType<T>> object = Registries.MENU_TYPE.register(name, () -> menuType);
         MenuManager.registerMenuOpener(menuType, serializer, (player, title, value) -> {
             SimpleMenuProvider menuProvider = new SimpleMenuProvider((window, inv, player2) -> factory.createMenu(menuTypes[0], window, inv, value), title);
             AbstractForgeMenuType.openMenu(player, menuProvider, buf -> serializer.write(buf, player, value));

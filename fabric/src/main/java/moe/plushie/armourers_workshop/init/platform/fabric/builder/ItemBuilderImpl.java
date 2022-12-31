@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.common.IItemStackRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
-import moe.plushie.armourers_workshop.core.registry.Registry;
+import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
@@ -80,7 +80,7 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
 
     @Override
     public IRegistryKey<T> build(String name) {
-        IRegistryKey<T> object = Registry.ITEM.register(name, () -> supplier.apply(properties));
+        IRegistryKey<T> object = Registries.ITEM.register(name, () -> supplier.apply(properties));
         if (group != null) {
             group.get().add(object::get);
         }

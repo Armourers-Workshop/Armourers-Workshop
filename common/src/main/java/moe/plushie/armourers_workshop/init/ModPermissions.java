@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.core.permission.BlockPermission;
 import moe.plushie.armourers_workshop.core.permission.ContainerPermission;
-import moe.plushie.armourers_workshop.core.registry.Registry;
+import moe.plushie.armourers_workshop.core.registry.Registries;
 
 @SuppressWarnings("unused")
 public class ModPermissions {
@@ -34,7 +34,7 @@ public class ModPermissions {
 
     public static final BlockPermission SKIN_LIBRARY_GLOBAL_SKIN_UPLOAD = new BlockPermission("skin.upload", ModBlocks.SKIN_LIBRARY_GLOBAL);
 
-    public static final ContainerPermission OPEN = new ContainerPermission("open-gui", Registry.MENU_TYPE.getEntries()::forEach);
+    public static final ContainerPermission OPEN = new ContainerPermission("open-gui", Registries.MENU_TYPE.getEntries()::forEach);
 
     public static void init() {
     }

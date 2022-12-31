@@ -2,13 +2,11 @@ package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.common.IItemTagKey;
 import moe.plushie.armourers_workshop.api.common.IItemTagRegistry;
-import moe.plushie.armourers_workshop.api.common.IRegistry;
+import moe.plushie.armourers_workshop.api.common.IRegistryProvider;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
 import net.minecraft.network.syncher.EntityDataSerializer;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
@@ -30,13 +28,13 @@ import java.util.function.Supplier;
 
 public abstract class AbstractForgeRegistries {
 
-    public static final IRegistry<Block> BLOCKS = wrap(ForgeRegistries.BLOCKS);
-    public static final IRegistry<Item> ITEMS = wrap(ForgeRegistries.ITEMS);
-    public static final IRegistry<MenuType<?>> MENU_TYPES = wrap(ForgeRegistries.CONTAINERS);
-    public static final IRegistry<EntityType<?>> ENTITY_TYPES = wrap(ForgeRegistries.ENTITIES);
-    public static final IRegistry<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZERS = createDataSerializer();
-    public static final IRegistry<BlockEntityType<?>> BLOCK_ENTITY_TYPES = wrap(ForgeRegistries.BLOCK_ENTITIES);
-    public static final IRegistry<SoundEvent> SOUND_EVENTS = wrap(ForgeRegistries.SOUND_EVENTS);
+    public static final IRegistryProvider<Block> BLOCKS = wrap(ForgeRegistries.BLOCKS);
+    public static final IRegistryProvider<Item> ITEMS = wrap(ForgeRegistries.ITEMS);
+    public static final IRegistryProvider<MenuType<?>> MENU_TYPES = wrap(ForgeRegistries.CONTAINERS);
+    public static final IRegistryProvider<EntityType<?>> ENTITY_TYPES = wrap(ForgeRegistries.ENTITIES);
+    public static final IRegistryProvider<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZERS = createDataSerializer();
+    public static final IRegistryProvider<BlockEntityType<?>> BLOCK_ENTITY_TYPES = wrap(ForgeRegistries.BLOCK_ENTITIES);
+    public static final IRegistryProvider<SoundEvent> SOUND_EVENTS = wrap(ForgeRegistries.SOUND_EVENTS);
 
     public static final IItemTagRegistry<Item> ITEM_TAGS = name -> () -> {
         ResourceLocation registryName = ModConstants.key(name);
@@ -54,7 +52,7 @@ public abstract class AbstractForgeRegistries {
         };
     };
 
-    public static <T extends IForgeRegistryEntry<T>> IRegistry<T> wrap(IForgeRegistry<T> registry) {
+    public static <T extends IForgeRegistryEntry<T>> IRegistryProvider<T> wrap(IForgeRegistry<T> registry) {
         return new Proxy<>(() -> registry, DeferredRegister.create(registry, ModConstants.MOD_ID));
     }
 
@@ -77,9 +75,9 @@ public abstract class AbstractForgeRegistries {
         return () -> tab;
     }
 
-    private static IRegistry<EntityDataSerializer<?>> createDataSerializer() {
-        IRegistry<DataSerializerEntry> registry = new Proxy<>(ForgeRegistries.DATA_SERIALIZERS, DeferredRegister.create(ForgeRegistries.Keys.DATA_SERIALIZERS, ModConstants.MOD_ID));
-        return new IRegistry<EntityDataSerializer<?>>() {
+    private static IRegistryProvider<EntityDataSerializer<?>> createDataSerializer() {
+        IRegistryProvider<DataSerializerEntry> registry = new Proxy<>(ForgeRegistries.DATA_SERIALIZERS, DeferredRegister.create(ForgeRegistries.Keys.DATA_SERIALIZERS, ModConstants.MOD_ID));
+        return new IRegistryProvider<EntityDataSerializer<?>>() {
             @Override
             public int getId(ResourceLocation registryName) {
                 return registry.getId(registryName);
@@ -103,7 +101,7 @@ public abstract class AbstractForgeRegistries {
         };
     }
 
-    private static class Proxy<T extends IForgeRegistryEntry<T>> implements IRegistry<T> {
+    private static class Proxy<T extends IForgeRegistryEntry<T>> implements IRegistryProvider<T> {
 
         private final Supplier<IForgeRegistry<T>> registry;
         private final DeferredRegister<T> registry1;

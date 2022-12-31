@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.client.layer.SkinWardrobeLayer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
-import moe.plushie.armourers_workshop.core.registry.Registry;
+import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
@@ -22,7 +22,6 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -77,13 +76,13 @@ public class SkinRendererManager  {
     }
 
     public void unbind(EntityType<?> entityType, EntityProfile entityProfile) {
-        ModLog.debug("Detach Entity Renderer '{}'", Registry.ENTITY_TYPE.getKey(entityType));
+        ModLog.debug("Detach Entity Renderer '{}'", Registries.ENTITY_TYPE.getKey(entityType));
         entities.remove(entityType);
         // TODO: remove layer in the entity renderer.
     }
 
     public void bind(EntityType<?> entityType, EntityProfile entityProfile) {
-        ModLog.debug("Attach Entity Renderer '{}'", Registry.ENTITY_TYPE.getKey(entityType));
+        ModLog.debug("Attach Entity Renderer '{}'", Registries.ENTITY_TYPE.getKey(entityType));
         entities.put(entityType, entityProfile);
         // try call once _bind to avoid the bind method being called after init.
         _bind(entityType, entityProfile);

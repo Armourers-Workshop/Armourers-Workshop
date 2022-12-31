@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
-import moe.plushie.armourers_workshop.api.common.IRegistry;
+import moe.plushie.armourers_workshop.api.common.IRegistryProvider;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.compatibility.ext.AbstractCommonNativeProviderExt_V19;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
@@ -41,7 +41,7 @@ import java.util.function.Consumer;
 
 public class AbstractForgeCommonNativeImpl implements AbstractForgeCommonNativeProvider, AbstractCommonNativeProviderExt_V19 {
 
-    private static final IRegistry<ArgumentTypeInfo<?, ?>> ARGUMENT_REGISTRY = AbstractForgeRegistries.wrap(ForgeRegistries.COMMAND_ARGUMENT_TYPES);
+    private static final IRegistryProvider<ArgumentTypeInfo<?, ?>> ARGUMENT_REGISTRY = AbstractForgeRegistries.wrap(ForgeRegistries.COMMAND_ARGUMENT_TYPES);
 
     @Override
     public void willRegisterArgumentInfo(Consumer<ArgumentInfoRegistry> consumer) {

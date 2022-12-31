@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.init.proxy;
 
 import moe.plushie.armourers_workshop.builder.other.WorldUpdater;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
@@ -11,7 +10,6 @@ import moe.plushie.armourers_workshop.core.network.UpdateContextPacket;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.init.*;
 import moe.plushie.armourers_workshop.init.platform.CommonNativeManager;
-import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
@@ -21,8 +19,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
 public class CommonProxy {
-
-//    private static final DataPackLoader MODIFIER_LOADER = new DataPackLoader("armourers_workshop/skin/modifiers", EntityProfile.Builder::new);
 
     public static void init() {
         register(CommonNativeManager.getProvider());
@@ -103,9 +99,4 @@ public class CommonProxy {
             }
         });
     }
-
-//    private static void setup() {
-////        new DataPackBuilder()
-//        loader1.prepare()
-//    }
 }

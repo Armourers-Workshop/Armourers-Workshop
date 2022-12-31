@@ -67,6 +67,8 @@ public class ModEntityProfiles {
     public static void addListener(BiConsumer<EntityType<?>, EntityProfile> removeHandler, BiConsumer<EntityType<?>, EntityProfile> insertHandler) {
         REMOVE_HANDLERS.add(removeHandler);
         INSERT_HANDLERS.add(insertHandler);
+        // if it add listener after the loading, we need manual send a notification.
+        ALL_ENTITIES.forEach(insertHandler);
     }
 
     @Nullable

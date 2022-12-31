@@ -6,9 +6,9 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.*;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
-import moe.plushie.armourers_workshop.init.proxy.ClientProxy;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.init.platform.RendererManager;
+import moe.plushie.armourers_workshop.init.proxy.ClientProxy;
 import moe.plushie.armourers_workshop.init.proxy.CommonProxy;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -24,6 +24,7 @@ public class ArmourersWorkshop {
         ModBlockEntityTypes.init();
         ModEntityTypes.init();
         ModEntitySerializers.init();
+        ModEntityProfiles.init();
         ModCapabilities.init();
         ModMenuTypes.init();
         ModSounds.init();
@@ -36,7 +37,6 @@ public class ArmourersWorkshop {
             ModPackets.init();
             NetworkManager.init("play", ModConstants.MOD_NET_ID);
 
-            ModEntityProfiles.init();
             ModHolidays.init();
             ModPermissions.init();
             SkinningRecipes.init();

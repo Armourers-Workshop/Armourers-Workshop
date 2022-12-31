@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.data.slot;
 
 import moe.plushie.armourers_workshop.api.common.IItemTagKey;
-import moe.plushie.armourers_workshop.core.registry.Registry;
+import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItemTags;
 import net.minecraft.resources.ResourceLocation;
@@ -43,7 +43,7 @@ public enum ItemOverrideType {
 
     public boolean isOverrideItem(ItemStack itemStack) {
         // we first the using the config item overrides.
-        ResourceLocation registryName = Registry.ITEM.getKey(itemStack.getItem());
+        ResourceLocation registryName = Registries.ITEM.getKey(itemStack.getItem());
         if (ModConfig.Common.overrides.contains(name + ":" + registryName)) {
             return true;
         }

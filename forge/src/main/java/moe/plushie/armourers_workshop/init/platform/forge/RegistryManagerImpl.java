@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.init.platform.forge;
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.common.IRegistry;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import moe.plushie.armourers_workshop.api.common.IRegistryProvider;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeRegistries;
-import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.forge.addon.BukkitAddon;
@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public class RegistryManagerImpl {
 
-    private static final ImmutableMap<Class<?>, Registry<?>> REGISTRIES = new ImmutableMap.Builder<Class<?>, Registry<?>>()
+    private static final ImmutableMap<Class<?>, IRegistry<?>> REGISTRIES = new ImmutableMap.Builder<Class<?>, IRegistry<?>>()
             .put(Block.class, new RegistryProxy<>("blocks", AbstractForgeRegistries.BLOCKS))
             .put(Item.class, new RegistryProxy<>("items", AbstractForgeRegistries.ITEMS))
             .put(MenuType.class, new RegistryProxy<>("menuTypes", AbstractForgeRegistries.MENU_TYPES))
@@ -34,9 +34,9 @@ public class RegistryManagerImpl {
             .put(SoundEvent.class, new RegistryProxy<>("soundEvents", AbstractForgeRegistries.SOUND_EVENTS))
             .build();
 
-    public static <T> Registry<T> makeRegistry(Class<? super T> clazz) {
+    public static <T> IRegistry<T> makeRegistry(Class<? super T> clazz) {
         // for vanilla supported registry types, we directly forward to vanilla.
-        Registry<?> registry = REGISTRIES.get(clazz);
+        IRegistry<?> registry = REGISTRIES.get(clazz);
         if (registry != null) {
             return ObjectUtils.unsafeCast(registry);
         }
@@ -44,19 +44,24 @@ public class RegistryManagerImpl {
         throw new AssertionError("not supported registry entry of the " + clazz);
     }
 
-    public static class RegistryProxy<T> extends Registry<T> {
+    public static class RegistryProxy<T> implements IRegistry<T> {
 
         protected final String category;
-        protected final IRegistry<T> registry;
+        protected final IRegistryProvider<T> registry;
         protected final LinkedHashSet<IRegistryKey<T>> entriesView = new LinkedHashSet<>();
 
-        protected RegistryProxy(String category, IRegistry<T> registry) {
+        protected RegistryProxy(String category, IRegistryProvider<T> registry) {
             this.category = category;
             this.registry = registry;
         }
 
         @Override
-        public T get(ResourceLocation registryName) {
+        public int getId(ResourceLocation registryName) {
+            return 0;
+        }
+
+        @Override
+        public T getValue(ResourceLocation registryName) {
             return registry.getValue(registryName);
         }
 

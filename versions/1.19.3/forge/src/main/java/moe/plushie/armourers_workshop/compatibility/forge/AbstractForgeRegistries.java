@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.common.IItemTagKey;
 import moe.plushie.armourers_workshop.api.common.IItemTagRegistry;
-import moe.plushie.armourers_workshop.api.common.IRegistry;
+import moe.plushie.armourers_workshop.api.common.IRegistryProvider;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
@@ -36,14 +36,14 @@ import java.util.function.Supplier;
 
 public abstract class AbstractForgeRegistries {
 
-    public static final IRegistry<Block> BLOCKS = wrap(ForgeRegistries.BLOCKS);
-    public static final IRegistry<Item> ITEMS = wrap(ForgeRegistries.ITEMS);
-    public static final IRegistry<MenuType<?>> MENU_TYPES = wrap(ForgeRegistries.MENU_TYPES);
-    public static final IRegistry<EntityType<?>> ENTITY_TYPES = wrap(ForgeRegistries.ENTITY_TYPES);
-    public static final IRegistry<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZERS = wrap(ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, ForgeRegistries.ENTITY_DATA_SERIALIZERS);
-    public static final IRegistry<BlockEntityType<?>> BLOCK_ENTITY_TYPES = wrap(ForgeRegistries.BLOCK_ENTITY_TYPES);
-    public static final IRegistry<SoundEvent> SOUND_EVENTS = wrap(ForgeRegistries.SOUND_EVENTS);
-    public static final IRegistry<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENT_TYPES = wrap(ForgeRegistries.COMMAND_ARGUMENT_TYPES);
+    public static final IRegistryProvider<Block> BLOCKS = wrap(ForgeRegistries.BLOCKS);
+    public static final IRegistryProvider<Item> ITEMS = wrap(ForgeRegistries.ITEMS);
+    public static final IRegistryProvider<MenuType<?>> MENU_TYPES = wrap(ForgeRegistries.MENU_TYPES);
+    public static final IRegistryProvider<EntityType<?>> ENTITY_TYPES = wrap(ForgeRegistries.ENTITY_TYPES);
+    public static final IRegistryProvider<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZERS = wrap(ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, ForgeRegistries.ENTITY_DATA_SERIALIZERS);
+    public static final IRegistryProvider<BlockEntityType<?>> BLOCK_ENTITY_TYPES = wrap(ForgeRegistries.BLOCK_ENTITY_TYPES);
+    public static final IRegistryProvider<SoundEvent> SOUND_EVENTS = wrap(ForgeRegistries.SOUND_EVENTS);
+    public static final IRegistryProvider<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENT_TYPES = wrap(ForgeRegistries.COMMAND_ARGUMENT_TYPES);
 
     public static final IItemTagRegistry<Item> ITEM_TAGS = name -> () -> {
         ResourceLocation registryName = ModConstants.key(name);
@@ -61,11 +61,11 @@ public abstract class AbstractForgeRegistries {
         };
     };
 
-    public static <T> IRegistry<T> wrap(IForgeRegistry<T> registry) {
+    public static <T> IRegistryProvider<T> wrap(IForgeRegistry<T> registry) {
         return new Proxy<>(() -> registry, DeferredRegister.create(registry, ModConstants.MOD_ID));
     }
 
-    public static <T> IRegistry<T> wrap(ResourceKey<Registry<T>> key, Supplier<IForgeRegistry<T>> registry) {
+    public static <T> IRegistryProvider<T> wrap(ResourceKey<Registry<T>> key, Supplier<IForgeRegistry<T>> registry) {
         return new Proxy<>(registry, DeferredRegister.create(key, ModConstants.MOD_ID));
     }
 
@@ -87,7 +87,7 @@ public abstract class AbstractForgeRegistries {
         return () -> tabs[0];
     }
 
-    private static class Proxy<T> implements IRegistry<T> {
+    private static class Proxy<T> implements IRegistryProvider<T> {
 
         private final Supplier<IForgeRegistry<T>> registry;
         private final DeferredRegister<T> registry1;

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
-import moe.plushie.armourers_workshop.core.registry.Registry;
+import moe.plushie.armourers_workshop.core.registry.Registries;
 import net.minecraft.sounds.SoundEvent;
 
 @SuppressWarnings({"unused"})
@@ -16,7 +16,7 @@ public class ModSounds {
     public static final IRegistryKey<SoundEvent> BOI = register("boi");
 
     private static IRegistryKey<SoundEvent> register(String name) {
-        return Registry.SOUND_EVENT.register(name, () -> SoundEvent.createVariableRangeEvent(ModConstants.key(name)));
+        return Registries.SOUND_EVENT.register(name, () -> SoundEvent.createVariableRangeEvent(ModConstants.key(name)));
     }
 
     public static void init() {
