@@ -44,8 +44,8 @@ public abstract class AbstractModelPartRegistries {
 
         ModelHolder.register(CreeperModel.class, (model, it) -> {
             ModelPart root = model.root();
-            it.put("head", root.getChild("head"));
-            it.put("hair", root.getChild("head"));
+            it.put("head", getChild(root, "head"));
+            it.put("hair", getChild(root, "head"));
         });
 
         ModelHolder.register(ChickenModel.class, (model, it) -> {
@@ -61,44 +61,44 @@ public abstract class AbstractModelPartRegistries {
 
         ModelHolder.register(VillagerModel.class, ModelHolder.HumanoidStub::new, (model, it) -> {
             ModelPart root = model.root();
-            ModelPart head = root.getChild("head");
-            ModelPart hat = head.getChild("hat");
-            ModelPart body = root.getChild("body");
+            ModelPart head = getChild(root, "head");
+            ModelPart hat = getChild(head, "hat");
+            ModelPart body = getChild(root, "body");
             it.put("hat", hat);
-            it.put("hat_rim", hat.getChild("hat_rim"));
+            it.put("hat_rim", getChild(hat, "hat_rim"));
             it.put("head", head);
-            it.put("nose", head.getChild("nose"));
+            it.put("nose", getChild(head, "nose"));
             it.put("body", body);
-            it.put("left_arm", root.getChild("arms"));
-            it.put("right_arm", root.getChild("arms"));
-            it.put("left_leg", root.getChild("left_leg"));
-            it.put("right_leg", root.getChild("right_leg"));
-            it.put("jacket", body.getChild("jacket"));
+            it.put("left_arm", getChild(root, "arms"));
+            it.put("right_arm", getChild(root, "arms"));
+            it.put("left_leg", getChild(root, "left_leg"));
+            it.put("right_leg", getChild(root, "right_leg"));
+            it.put("jacket", getChild(body, "jacket"));
         });
 
         ModelHolder.register(IllagerModel.class, ModelHolder.HumanoidStub::new, (model, it) -> {
             ModelPart root = model.root();
-            ModelPart head = root.getChild("head");
-            ModelPart hat = head.getChild("hat");
+            ModelPart head = getChild(root, "head");
+            ModelPart hat = getChild(head, "hat");
             it.put("hat", hat);
             it.put("head", head);
-            it.put("body", root.getChild("body"));
-            it.put("arms", root.getChild("arms"));
-            it.put("left_arm", root.getChild("left_arm"));
-            it.put("right_arm", root.getChild("right_arm"));
-            it.put("left_leg", root.getChild("left_leg"));
-            it.put("right_leg", root.getChild("right_leg"));
+            it.put("body", getChild(root, "body"));
+            it.put("arms", getChild(root, "arms"));
+            it.put("left_arm", getChild(root, "left_arm"));
+            it.put("right_arm", getChild(root, "right_arm"));
+            it.put("left_leg", getChild(root, "left_leg"));
+            it.put("right_leg", getChild(root, "right_leg"));
         });
 
         ModelHolder.register(IronGolemModel.class, ModelHolder.HumanoidStub::new, (model, it) -> {
             ModelPart root = model.root();
-            it.put("hat", root.getChild("head"));
-            it.put("head", root.getChild("head"));
-            it.put("body", root.getChild("body"));
-            it.put("left_arm", root.getChild("left_arm"));
-            it.put("right_arm", root.getChild("right_arm"));
-            it.put("left_leg", root.getChild("left_leg"));
-            it.put("right_leg", root.getChild("right_leg"));
+            it.put("hat", getChild(root, "head"));
+            it.put("head", getChild(root, "head"));
+            it.put("body", getChild(root, "body"));
+            it.put("left_arm", getChild(root, "left_arm"));
+            it.put("right_arm", getChild(root, "right_arm"));
+            it.put("left_leg", getChild(root, "left_leg"));
+            it.put("right_leg", getChild(root, "right_leg"));
         });
     }
 
@@ -112,5 +112,16 @@ public abstract class AbstractModelPartRegistries {
             return new ModelHolder.Transform(scale, new Vector3f(0, model1.babyYHeadOffset, model1.babyZHeadOffset));
         }
         return new ModelHolder.Transform(1, Vector3f.ZERO);
+    }
+
+    public static ModelPart getChild(ModelPart part, String name) {
+        try {
+            if (part == null) {
+                return null;
+            }
+            return part.getChild(name);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
