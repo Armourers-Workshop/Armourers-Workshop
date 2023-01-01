@@ -11,6 +11,7 @@ import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,6 +29,8 @@ public interface CommonNativeProvider {
     void willRegisterCommand(Consumer<CommandDispatcher<CommandSourceStack>> consumer);
 
     void willRegisterArgument(Consumer<ArgumentRegistry> consumer);
+
+    void willRegisterCustomDataPack(Consumer<Consumer<PreparableReloadListener>> consumer);
 
     void willRegisterEntityAttributes(Consumer<EntityAttributesRegistry> consumer);
 

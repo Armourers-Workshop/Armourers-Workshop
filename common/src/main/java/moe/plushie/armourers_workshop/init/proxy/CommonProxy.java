@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.network.UpdateContextPacket;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.init.*;
 import moe.plushie.armourers_workshop.init.platform.CommonNativeManager;
+import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
@@ -27,6 +28,7 @@ public class CommonProxy {
     private static void register(CommonNativeProvider registries) {
 
         registries.willRegisterCommand(ModCommands::init);
+        registries.willRegisterCustomDataPack(DataPackManager::init);
         registries.willRegisterEntityAttributes(registry -> {
             registry.register(ModEntityTypes.MANNEQUIN.get(), MannequinEntity.createLivingAttributes());
             registry.register(ModEntityTypes.SEAT.get(), SeatEntity.createLivingAttributes());

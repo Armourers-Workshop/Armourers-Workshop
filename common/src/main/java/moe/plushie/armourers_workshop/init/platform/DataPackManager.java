@@ -7,10 +7,9 @@ import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.init.ModConstants;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,37 +19,31 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class DataPackManager {
 
-    private static boolean isInit = false;
     private static final Gson GSON = new Gson();
-    private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(2, r -> new Thread(r, "AW-PACK-LD"));
     private static final ArrayList<DataPackLoader> LOADERS = new ArrayList<>();
 
     public static void register(DataPackLoader loader) {
         LOADERS.add(loader);
-        if (isInit) {
-            return;
-        }
-        isInit = true;
-        EnvironmentExecutor.didSetup(EnvironmentType.COMMON, () -> DataPackManager::apply);
     }
 
-    private static void apply() {
-        InJarResourceManager resourceManager = new InJarResourceManager();
-        ArrayList<Runnable> tasks = new ArrayList<>();
-        ArrayList<CompletableFuture<?>> entries = new ArrayList<>();
-        LOADERS.forEach(loader -> {
-            CompletableFuture<Map<ResourceLocation, IDataPackBuilder>> future = loader.prepare(resourceManager, EXECUTOR);
-            entries.add(future);
-            tasks.add(() -> loader.load(future.join()));
-        });
-        CompletableFuture.allOf(entries.toArray(new CompletableFuture[0])).thenAcceptAsync(void_ -> tasks.forEach(Runnable::run), EXECUTOR);
+    public static void init(Consumer<PreparableReloadListener> registry) {
+        registry.accept(((barrier, resourceManager, profilerFiller, profilerFiller2, executor, executor2) -> {
+            ArrayList<Runnable> tasks = new ArrayList<>();
+            ArrayList<CompletableFuture<?>> entries = new ArrayList<>();
+            IResourceManager resourceManager1 = new InJarResourceManager();
+            LOADERS.forEach(loader -> {
+                CompletableFuture<Map<ResourceLocation, IDataPackBuilder>> future = loader.prepare(resourceManager1, executor);
+                entries.add(future);
+                tasks.add(() -> loader.load(future.join()));
+            });
+            return CompletableFuture.allOf(entries.toArray(new CompletableFuture[0])).thenCompose(barrier::wait).thenAcceptAsync(void_ -> tasks.forEach(Runnable::run), executor2);
+        }));
     }
 
     public static class InJarResourceManager implements IResourceManager {
@@ -102,18 +95,4 @@ public class DataPackManager {
             return packObject;
         }
     }
-    //
-
-//    @Override
-//    public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager resourceManager, ProfilerFiller profilerFiller, ProfilerFiller profilerFiller2, Executor executor, Executor executor2) {
-//        ArrayList<Runnable> tasks = new ArrayList<>();
-//        ArrayList<CompletableFuture<?>> entries = new ArrayList<>();
-//        IResourceManager resourceManager1 = CommonNativeManager.createResourceManager(resourceManager);
-//        loaders.forEach(loader -> {
-//            CompletableFuture<Map<ResourceLocation, IDataPackBuilder>> future = loader.prepare(resourceManager1, executor);
-//            entries.add(future);
-//            tasks.add(() -> loader.load(future.join()));
-//        });
-//        return CompletableFuture.allOf(entries.toArray(CompletableFuture[]::new)).thenCompose(barrier::wait).thenAcceptAsync(void_ -> tasks.forEach(Runnable::run), executor2);
-//    }
 }

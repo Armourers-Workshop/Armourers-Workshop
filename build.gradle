@@ -39,13 +39,16 @@ subprojects {
     task signJar(dependsOn: remapSourcesJar) {
         onlyIf { System.getenv("AW_SIGN_STORE") != null }
         doLast {
+            def store = new File("$buildDir/store")
+            store.bytes = System.getenv("AW_SIGN_STORE").decodeBase64()
             ant.signjar(destDir: "${remapJar.destinationDir}",
                     jar: "${remapJar.archivePath}",
                     alias: System.getenv("AW_SIGN_ALIAS"),
                     keypass: System.getenv("AW_SIGN_KEY_PASS"),
                     storepass: System.getenv("AW_SIGN_STORE_PASS"),
-                    keystore: System.getenv("AW_SIGN_STORE"),
+                    keystore: "$buildDir/store",
                     storetype: "jks")
+            delete(store)
         }
     }
 
@@ -58,10 +61,6 @@ allprojects {
 
     if (version == "unspecified") {
         version = "homebaked"
-    }
-
-    if (version != "") {
-        version = "${rootProject.mod_version}-${version}"
     }
 
     def uname = rootProject.archives_base_name.replaceAll("-", "")
@@ -78,6 +77,7 @@ allprojects {
         // See https://docs.gradle.org/current/userguide/declaring_repositories.html
         // for more information about repositories.
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://cursemaven.com/" }
     }
 
     dependencies {

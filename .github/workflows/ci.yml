@@ -1,0 +1,90 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Build Jar
+
+on:
+  release:
+    types: [published]
+        
+jobs:
+  build:
+    strategy:
+      matrix:
+        version: [1.16.5, 1.18.2, 1.19.2, 1.19.3]
+            
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Set up release version
+      id: release-version
+      run: |
+        version=$(echo ${{ github.event.release.tag_name }} | cut -d'v' -f2)
+        echo "::set-output name=version::$version"
+
+    - name: Switch ${{ matrix.version }}
+      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+      with:
+        arguments: -Pversion=${{ steps.release-version.outputs.version }} -p "versions/${{ matrix.version }}"
+
+    - name: Build ${{ matrix.version }}
+      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+      env:
+        AW_SIGN_ALIAS: ${{ secrets.AW_SIGN_ALIAS }}
+        AW_SIGN_KEY_PASS: ${{ secrets.AW_SIGN_KEY_PASS }}
+        AW_SIGN_STORE: ${{ secrets.AW_SIGN_STORE }}
+        AW_SIGN_STORE_PASS: ${{ secrets.AW_SIGN_STORE_PASS }}
+      with:
+        arguments: -Pversion=${{ steps.release-version.outputs.version }} build
+
+    - name: Upload Fabric ${{ matrix.version }}
+      uses: Kir-Antipov/mc-publish@v3.2
+      with:
+        name: armourersworkshop-fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}.jar
+        version: ${{ steps.release-version.outputs.version }}
+        version-type: alpha
+
+        files-primary: fabric/build/libs/!(*-@(dev-shadow|sources|javadoc|)).jar
+        files-secondary: ""
+        
+        loaders: fabric
+        game-versions: ${{ matrix.version }}
+
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
+        #modrinth-id: Armourers-Workshop
+        #modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
+        
+        curseforge-id: 229523
+        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
+
+    - name: Upload Forge ${{ matrix.version }}
+      uses: Kir-Antipov/mc-publish@v3.2
+      with:
+        name: armourersworkshop-forge-${{ matrix.version }}-${{ steps.release-version.outputs.version }}.jar
+        version: ${{ steps.release-version.outputs.version }}
+        version-type: beta
+
+        files-primary: forge/build/libs/!(*-@(dev-shadow|sources|javadoc)).jar
+        files-secondary: ""
+
+        loaders: forge
+        game-versions: ${{ matrix.version }}
+
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
+        #modrinth-id: Armourers-Workshop
+        #modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
+
+        curseforge-id: 229523
+        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}

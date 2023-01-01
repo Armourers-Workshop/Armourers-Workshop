@@ -57,6 +57,10 @@ public class SkinRendererManager  {
             RenderSystem.recordRenderCall(this::init);
             return;
         }
+        RenderSystem.recordRenderCall(() -> _init(entityRenderManager));
+    }
+
+    private void _init(EntityRenderDispatcher entityRenderManager) {
         SkinRendererManager skinRendererManager = getInstance();
 
         for (EntityRenderer<? extends Player> renderer : entityRenderManager.playerRenderers.values()) {

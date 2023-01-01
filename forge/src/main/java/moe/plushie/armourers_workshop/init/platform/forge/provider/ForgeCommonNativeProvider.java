@@ -4,10 +4,12 @@ import com.mojang.brigadier.CommandDispatcher;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 
@@ -30,6 +32,11 @@ public interface ForgeCommonNativeProvider extends CommonNativeProvider {
     @Override
     default void willRegisterEntityAttributes(Consumer<EntityAttributesRegistry> consumer) {
         NotificationCenterImpl.observer(EntityAttributeCreationEvent.class, consumer, event -> (entity, builder) -> event.put(entity, builder.build()));
+    }
+
+    @Override
+    default void willRegisterCustomDataPack(Consumer<Consumer<PreparableReloadListener>> consumer) {
+        consumer.accept(listener -> NotificationCenterImpl.observer(AddReloadListenerEvent.class, event -> event.addListener(listener)));
     }
 
     @Override
