@@ -288,6 +288,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
         ArrayList<SkinLibraryFile> results = selectedLibrary.search(keyword, skinType, selectedPath);
         fileList.setSelectedItem(null);
         fileList.reloadData(new ArrayList<>(results));
+        fileList.setContentOffset(contentOffsets.getOrDefault(selectedPath, CGPoint.ZERO));
     }
 
     private NSString getDisplayText(String key) {
@@ -522,8 +523,12 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
             return;
         }
         contentOffsets.put(selectedPath, fileList.contentOffset());
+        // when enter a new subdirectory,
+        // we need to clear the content offset.
+        if (newSelectedPath.startsWith(selectedPath)) {
+            contentOffsets.remove(newSelectedPath);
+        }
         selectedPath = newSelectedPath;
-        fileList.setContentOffset(contentOffsets.getOrDefault(newSelectedPath, CGPoint.ZERO));
     }
 
     private boolean hasInputSkin() {
