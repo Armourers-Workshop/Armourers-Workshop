@@ -39,16 +39,16 @@ subprojects {
     task signJar(dependsOn: remapSourcesJar) {
         onlyIf { System.getenv("AW_SIGN_STORE") != null }
         doLast {
-            def store = new File("$buildDir/store")
-            store.bytes = System.getenv("AW_SIGN_STORE").decodeBase64()
+            def file = new File("$buildDir/store.jks")
+            file.bytes = System.getenv("AW_SIGN_STORE").decodeBase64()
             ant.signjar(destDir: "${remapJar.destinationDir}",
                     jar: "${remapJar.archivePath}",
                     alias: System.getenv("AW_SIGN_ALIAS"),
                     keypass: System.getenv("AW_SIGN_KEY_PASS"),
                     storepass: System.getenv("AW_SIGN_STORE_PASS"),
-                    keystore: "$buildDir/store",
+                    keystore: file.path,
                     storetype: "jks")
-            delete(store)
+            file.delete()
         }
     }
 
@@ -60,7 +60,7 @@ allprojects {
     apply plugin: "maven-publish"
 
     if (version == "unspecified") {
-        version = "homebaked"
+        version = "2.0.0-homebaked"
     }
 
     def uname = rootProject.archives_base_name.replaceAll("-", "")

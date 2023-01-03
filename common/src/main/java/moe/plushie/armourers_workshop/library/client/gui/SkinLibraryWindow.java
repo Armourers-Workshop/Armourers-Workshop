@@ -60,6 +60,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
 
     private final SkinComboBox skinTypeList = new SkinComboBox(CGRect.ZERO);
     private final SkinFileList fileList = new SkinFileList(new CGRect(0, 0, 100, 100));
+    private final HashMap<String, CGPoint> contentOffsets = new HashMap<>();
 
     protected ISkinType skinType = SkinTypes.UNKNOWN;
     protected ISkinLibrary.Entry selectedFile = null;
@@ -309,6 +310,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
         if (!newLibrary.isReady()) {
             newLibrary = libraryManager.getLocalSkinLibrary();
         }
+        contentOffsets.clear();
         selectedLibrary = newLibrary;
         setSelectedPath(newLibrary.getRootPath());
         if (isAuthorized()) {
@@ -515,12 +517,13 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
         NetworkManager.sendToServer(packet);
     }
 
-    private void setSelectedPath(String path) {
-        if (Objects.equals(selectedPath, path)) {
+    private void setSelectedPath(String newSelectedPath) {
+        if (Objects.equals(selectedPath, newSelectedPath)) {
             return;
         }
-        selectedPath = path;
-        fileList.setContentOffset(CGPoint.ZERO);
+        contentOffsets.put(selectedPath, fileList.contentOffset());
+        selectedPath = newSelectedPath;
+        fileList.setContentOffset(contentOffsets.getOrDefault(newSelectedPath, CGPoint.ZERO));
     }
 
     private boolean hasInputSkin() {
