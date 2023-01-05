@@ -217,9 +217,5 @@ public class UpdateWardrobePacket extends CustomPacket {
             AWDataAccessor<SkinWardrobe, T> dataAccessor = getDataAccessor();
             return dataAccessor.dataSerializer;
         }
-
-        public boolean isBroadcastChanges() {
-            return broadcastChanges;
-        }
     }
 }

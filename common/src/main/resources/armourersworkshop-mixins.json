@@ -7,7 +7,6 @@
     "HttpTextureMixin",
     "InventoryScreenMixin",
     "ItemRendererMixin",
-    "TextureManagerMixin",
     "BlockEntityRenderDispatcherMixin",
     "ThrownTridentRendererMixin",
     "ClientDataAttachMixin"

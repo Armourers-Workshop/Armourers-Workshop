@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.entity;
 
+import moe.plushie.armourers_workshop.api.common.IEntityType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,10 +12,10 @@ public class EntityProfile {
 
     private final ResourceLocation registryName;
     private final HashMap<ISkinType, Function<ISkinType, Integer>> supports;
-    private final Collection<EntityType<?>> entities;
+    private final Collection<IEntityType<?>> entities;
     private final boolean locked;
 
-    public EntityProfile(ResourceLocation registryName, HashMap<ISkinType, Function<ISkinType, Integer>> supports, Collection<EntityType<?>> entities, boolean locked) {
+    public EntityProfile(ResourceLocation registryName, HashMap<ISkinType, Function<ISkinType, Integer>> supports, Collection<IEntityType<?>> entities, boolean locked) {
         this.registryName = registryName;
         this.supports = supports;
         this.entities = entities;
@@ -38,7 +38,7 @@ public class EntityProfile {
         return 0;
     }
 
-    public Collection<EntityType<?>> getEntities() {
+    public Collection<IEntityType<?>> getEntities() {
         return entities;
     }
 

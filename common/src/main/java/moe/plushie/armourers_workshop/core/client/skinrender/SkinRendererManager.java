@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.common.IEntityType;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.core.client.layer.SkinWardrobeLayer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
-import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
@@ -41,7 +41,7 @@ public class SkinRendererManager  {
 
     private static final SkinRendererManager INSTANCE = new SkinRendererManager();
 
-    private final HashMap<EntityType<?>, EntityProfile> entities = new HashMap<>();
+    private final HashMap<IEntityType<?>, EntityProfile> entities = new HashMap<>();
 
     private final ArrayList<SkinRenderer.Factory<SkinRenderer<?, ?, ?>>> builders = new ArrayList<>();
     private final ArrayList<Pair<Class<?>, SkinRenderer.Plugin<?, ?, ?>>> plugins = new ArrayList<>();
@@ -79,36 +79,41 @@ public class SkinRendererManager  {
         entities.forEach((this::_bind));
     }
 
-    public void unbind(EntityType<?> entityType, EntityProfile entityProfile) {
-        ModLog.debug("Detach Entity Renderer '{}'", Registries.ENTITY_TYPE.getKey(entityType));
+    public void unbind(IEntityType<?> entityType, EntityProfile entityProfile) {
+        ModLog.debug("Detach Entity Renderer '{}'", entityType.getRegistryName());
         entities.remove(entityType);
         // TODO: remove layer in the entity renderer.
     }
 
-    public void bind(EntityType<?> entityType, EntityProfile entityProfile) {
-        ModLog.debug("Attach Entity Renderer '{}'", Registries.ENTITY_TYPE.getKey(entityType));
+    public void bind(IEntityType<?> entityType, EntityProfile entityProfile) {
+        ModLog.debug("Attach Entity Renderer '{}'", entityType.getRegistryName());
         entities.put(entityType, entityProfile);
         // try call once _bind to avoid the bind method being called after init.
         _bind(entityType, entityProfile);
     }
-    private void _bind(EntityType<?> entityType, EntityProfile entityProfile) {
+
+    private void _bind(IEntityType<?> entityType, EntityProfile entityProfile) {
+        EntityType<?> resolvedEntityType = entityType.get();
+        if (resolvedEntityType == null) {
+            return;
+        }
         EntityRenderDispatcher entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
         if (entityRenderManager == null) {
             return;
         }
         // Add our own custom armor layer to the various player renderers.
-        if (entityType == EntityType.PLAYER) {
+        if (resolvedEntityType == EntityType.PLAYER) {
             for (EntityRenderer<? extends Player> renderer : entityRenderManager.playerRenderers.values()) {
                 if (renderer instanceof LivingEntityRenderer<?, ?>) {
-                    setupRenderer(entityType, (LivingEntityRenderer<?, ?>) renderer, false);
+                    setupRenderer(resolvedEntityType, (LivingEntityRenderer<?, ?>) renderer, false);
                 }
             }
         }
         // Add our own custom armor layer to everything that has an armor layer
         entityRenderManager.renderers.forEach((entityType1, renderer) -> {
-            if (entityType.equals(entityType1)) {
+            if (resolvedEntityType.equals(entityType1)) {
                 if (renderer instanceof LivingEntityRenderer<?, ?>) {
-                    setupRenderer(entityType, (LivingEntityRenderer<?, ?>) renderer, false);
+                    setupRenderer(resolvedEntityType, (LivingEntityRenderer<?, ?>) renderer, false);
                 }
             }
         });

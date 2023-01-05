@@ -77,7 +77,8 @@ processResources {
     }
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": project.version,
+                "minecraft_version": rootProject.minecraft_version
         replaceAll it, /(?sim)("mixins"\s*:\s*\[\s*)(.+?)(\s*\])/, /$1/ + mixins + /$3/
     }
 }

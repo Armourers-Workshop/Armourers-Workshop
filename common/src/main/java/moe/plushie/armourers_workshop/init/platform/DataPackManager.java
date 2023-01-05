@@ -9,41 +9,26 @@ import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class DataPackManager {
 
     private static final Gson GSON = new Gson();
-    private static final ArrayList<DataPackLoader> LOADERS = new ArrayList<>();
+//    private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(1, r -> new Thread(r, "AW-PACK-LD"));
 
     public static void register(DataPackLoader loader) {
-        LOADERS.add(loader);
-    }
-
-    public static void init(Consumer<PreparableReloadListener> registry) {
-        registry.accept(((barrier, resourceManager, profilerFiller, profilerFiller2, executor, executor2) -> {
-            ArrayList<Runnable> tasks = new ArrayList<>();
-            ArrayList<CompletableFuture<?>> entries = new ArrayList<>();
-            IResourceManager resourceManager1 = new InJarResourceManager();
-            LOADERS.forEach(loader -> {
-                CompletableFuture<Map<ResourceLocation, IDataPackBuilder>> future = loader.prepare(resourceManager1, executor);
-                entries.add(future);
-                tasks.add(() -> loader.load(future.join()));
-            });
-            return CompletableFuture.allOf(entries.toArray(new CompletableFuture[0])).thenCompose(barrier::wait).thenAcceptAsync(void_ -> tasks.forEach(Runnable::run), executor2);
-        }));
+        IResourceManager resourceManager1 = new InJarResourceManager();
+        CompletableFuture<Map<ResourceLocation, IDataPackBuilder>> future = loader.prepare(resourceManager1, Runnable::run);
+        future.thenAccept(loader::load);
     }
 
     public static class InJarResourceManager implements IResourceManager {

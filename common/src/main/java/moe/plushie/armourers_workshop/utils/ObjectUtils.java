@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class ObjectUtils {
 
@@ -46,6 +47,15 @@ public class ObjectUtils {
         });
         removedEntities.forEach(removeHandler);
         insertEntities.forEach(insertHandler);
+    }
+
+    public static <K, V, R> V find(Map<K, V> map, R req, Function<K, R> resolver) {
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            if (req.equals(resolver.apply(entry.getKey()))) {
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 
     @Nullable

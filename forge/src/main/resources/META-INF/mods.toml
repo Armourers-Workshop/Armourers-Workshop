@@ -3,7 +3,7 @@ loaderVersion = "[36,)"
 issueTrackerURL = "https://github.com/Armourers-Workshop/Armourers-Workshop/issues"
 displayURL = "https://github.com/Armourers-Workshop/Armourers-Workshop"
 logoFile = "icon.png"
-license = "ALL RIGHTS RESERVED"
+license = "CC-BY-NC-SA-3.0"
 
 [[mods]]
 modId = "armourers_workshop"

@@ -3,12 +3,15 @@ package moe.plushie.armourers_workshop.core.armature;
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.client.IJoint;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.common.IEntityType;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
-import moe.plushie.armourers_workshop.core.armature.core.*;
+import moe.plushie.armourers_workshop.core.armature.core.AfterTransformModifier;
+import moe.plushie.armourers_workshop.core.armature.core.DefaultBabyJointModifier;
+import moe.plushie.armourers_workshop.core.armature.core.DefaultSkirtJointModifier;
+import moe.plushie.armourers_workshop.core.armature.core.DefaultWingJointModifier;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
 
 import java.util.*;
 import java.util.function.Function;
@@ -28,7 +31,7 @@ public abstract class ArmatureBuilder {
     protected ResourceLocation parent;
 
     protected final ResourceLocation name;
-    protected final ArrayList<EntityType<?>> entities = new ArrayList<>();
+    protected final ArrayList<IEntityType<?>> entities = new ArrayList<>();
     protected final HashMap<IJoint, Collection<ArmatureModifier>> jointModifiers = new HashMap<>();
     protected final HashMap<IJoint, Collection<ArmatureModifier>> transformModifiers = new HashMap<>();
 
@@ -62,7 +65,7 @@ public abstract class ArmatureBuilder {
             it.get("scale").entrySet().forEach(it2 -> _parseScaleModifiers(it2.getKey(), it2.getValue()));
             it.get("rotate").entrySet().forEach(it2 -> _parseRotateModifiers(it2.getKey(), it2.getValue()));
         });
-        object.get("entities").allValues().forEach(it -> EntityType.byString(it.stringValue()).ifPresent(entities::add));
+        object.get("entities").allValues().forEach(it -> entities.add(IEntityType.of(it.stringValue())));
         object.get("parent").ifPresent(it -> {
             parent = new ResourceLocation(it.stringValue());
         });
@@ -87,7 +90,7 @@ public abstract class ArmatureBuilder {
 
     public abstract Collection<ArmatureModifier> getTargets(IDataPackObject object);
 
-    public List<EntityType<?>> getEntities() {
+    public List<IEntityType<?>> getEntities() {
         return entities;
     }
 
@@ -214,7 +217,7 @@ public abstract class ArmatureBuilder {
 
     private void _addTransformModifier(String name, ArmatureModifier modifier) {
         // ..
-        Collection<IJoint> joints = null;
+        Collection<IJoint> joints;
         if (name.equals("") || name.equals("*")) {
             joints = Armatures.BIPPED.allJoints();
         } else {

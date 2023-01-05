@@ -62,8 +62,8 @@ jobs:
 
         github-token: ${{ secrets.GITHUB_TOKEN }}
 
-        #modrinth-id: Armourers-Workshop
-        #modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
+        modrinth-id: y4JF3gXL
+        modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
         
         curseforge-id: 229523
         curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
@@ -83,8 +83,8 @@ jobs:
 
         github-token: ${{ secrets.GITHUB_TOKEN }}
 
-        #modrinth-id: Armourers-Workshop
-        #modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
+        modrinth-id: y4JF3gXL
+        modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
 
         curseforge-id: 229523
         curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}

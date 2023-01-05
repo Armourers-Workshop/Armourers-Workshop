@@ -28,7 +28,6 @@ public class CommonProxy {
     private static void register(CommonNativeProvider registries) {
 
         registries.willRegisterCommand(ModCommands::init);
-        registries.willRegisterCustomDataPack(DataPackManager::init);
         registries.willRegisterEntityAttributes(registry -> {
             registry.register(ModEntityTypes.MANNEQUIN.get(), MannequinEntity.createLivingAttributes());
             registry.register(ModEntityTypes.SEAT.get(), SeatEntity.createLivingAttributes());

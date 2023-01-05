@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.api.common.IEntityType;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -16,21 +17,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class ModEntityProfiles {
 
-    private static final ArrayList<BiConsumer<EntityType<?>, EntityProfile>> INSERT_HANDLERS = new ArrayList<>();
-    private static final ArrayList<BiConsumer<EntityType<?>, EntityProfile>> REMOVE_HANDLERS = new ArrayList<>();
+    private static final ArrayList<BiConsumer<IEntityType<?>, EntityProfile>> INSERT_HANDLERS = new ArrayList<>();
+    private static final ArrayList<BiConsumer<IEntityType<?>, EntityProfile>> REMOVE_HANDLERS = new ArrayList<>();
 
     private static final HashMap<ResourceLocation, EntityProfile> PENDING_ENTITY_PROFILES = new HashMap<>();
-    private static final HashMap<EntityType<?>, EntityProfile> PENDING_ENTITIES = new HashMap<>();
+    private static final HashMap<IEntityType<?>, EntityProfile> PENDING_ENTITIES = new HashMap<>();
 
     private static final HashMap<ResourceLocation, EntityProfile> ALL_ENTITY_PROFILES = new HashMap<>();
-    private static final HashMap<EntityType<?>, EntityProfile> ALL_ENTITIES = new HashMap<>();
+    private static final HashMap<IEntityType<?>, EntityProfile> ALL_ENTITIES = new HashMap<>();
 
     private static void clean() {
     }
@@ -52,7 +52,7 @@ public class ModEntityProfiles {
         PENDING_ENTITY_PROFILES.clear();
     }
 
-    private static BiConsumer<EntityType<?>, EntityProfile> dispatch(ArrayList<BiConsumer<EntityType<?>, EntityProfile>> consumers) {
+    private static BiConsumer<IEntityType<?>, EntityProfile> dispatch(ArrayList<BiConsumer<IEntityType<?>, EntityProfile>> consumers) {
         return (entityType, entityProfile) -> consumers.forEach(consumer -> consumer.accept(entityType, entityProfile));
     }
 
@@ -60,11 +60,11 @@ public class ModEntityProfiles {
         DataPackManager.register(new DataPackLoader("skin/profiles", SimpleLoader::new, ModEntityProfiles::clean, ModEntityProfiles::freeze));
     }
 
-    public static void forEach(BiConsumer<EntityType<?>, EntityProfile> consumer) {
+    public static void forEach(BiConsumer<IEntityType<?>, EntityProfile> consumer) {
         ALL_ENTITIES.forEach(consumer);
     }
 
-    public static void addListener(BiConsumer<EntityType<?>, EntityProfile> removeHandler, BiConsumer<EntityType<?>, EntityProfile> insertHandler) {
+    public static void addListener(BiConsumer<IEntityType<?>, EntityProfile> removeHandler, BiConsumer<IEntityType<?>, EntityProfile> insertHandler) {
         REMOVE_HANDLERS.add(removeHandler);
         INSERT_HANDLERS.add(insertHandler);
         // if it add listener after the loading, we need manual send a notification.
@@ -78,7 +78,7 @@ public class ModEntityProfiles {
 
     @Nullable
     public static <T extends Entity> EntityProfile getProfile(EntityType<T> entityType) {
-        return ALL_ENTITIES.get(entityType);
+        return ObjectUtils.find(ALL_ENTITIES, entityType, IEntityType::get);
     }
 
     @Nullable
@@ -92,7 +92,7 @@ public class ModEntityProfiles {
 
         private final ResourceLocation registryName;
 
-        private final ArrayList<EntityType<?>> entities = new ArrayList<>();
+        private final ArrayList<IEntityType<?>> entities = new ArrayList<>();
         private final HashMap<ISkinType, Function<ISkinType, Integer>> supports = new HashMap<>();
 
         public SimpleLoader(ResourceLocation registryName) {
@@ -122,8 +122,7 @@ public class ModEntityProfiles {
                 }
             });
             object.get("entities").allValues().forEach(o -> {
-                Optional<EntityType<?>> entityType = EntityType.byString(o.stringValue());
-                entityType.ifPresent(entities::add);
+                entities.add(IEntityType.of(o.stringValue()));
             });
         }
 
