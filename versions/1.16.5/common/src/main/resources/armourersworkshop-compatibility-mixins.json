@@ -5,7 +5,7 @@
   "client": [
     "AbstractMatrix3fMixin",
     "AbstractMatrix4fMixin",
-    "AbstractPoseStackMixin_V1618",
+    "AbstractPoseStackMixin_V1619",
     "AbstractRenderStateMixin"
   ],
   "mixins": [

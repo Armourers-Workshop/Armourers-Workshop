@@ -8,10 +8,10 @@
     "AbstractPoseStateWrapperMixin",
     "AbstractEntityRenderDispatcherMixin",
     "AbstractGameRendererMixin",
-    "AbstractVanillaShaderMixin",
-    "AbstractOptifineShaderMixin",
-    "AbstractIrisShaderMixin",
-    "AbstractRenderStateMixin"
+    "AbstractVanillaShaderMixin_V18",
+    "AbstractOptifineShaderMixin_V18",
+    "AbstractIrisShaderMixin_V18",
+    "AbstractRenderStateMixin_V18"
   ],
   "mixins": [
   ],
