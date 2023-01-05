@@ -51,7 +51,7 @@ jobs:
       uses: Kir-Antipov/mc-publish@v3.2
       with:
         name: armourersworkshop-fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}.jar
-        version: ${{ steps.release-version.outputs.version }}
+        version: fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
         version-type: alpha
 
         files-primary: fabric/build/libs/!(*-@(dev-shadow|sources|javadoc|)).jar
@@ -65,14 +65,18 @@ jobs:
         modrinth-id: y4JF3gXL
         modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
         
-        curseforge-id: 229523
-        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
+#        curseforge-id: 229523
+#        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
+
+        retry-attempts: 3
+        retry-delay: 30000
+        fail-mode: warn
 
     - name: Upload Forge ${{ matrix.version }}
       uses: Kir-Antipov/mc-publish@v3.2
       with:
         name: armourersworkshop-forge-${{ matrix.version }}-${{ steps.release-version.outputs.version }}.jar
-        version: ${{ steps.release-version.outputs.version }}
+        version: forge-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
         version-type: beta
 
         files-primary: forge/build/libs/!(*-@(dev-shadow|sources|javadoc)).jar
@@ -86,5 +90,9 @@ jobs:
         modrinth-id: y4JF3gXL
         modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
 
-        curseforge-id: 229523
-        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
+#        curseforge-id: 229523
+#        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
+
+        retry-attempts: 3
+        retry-delay: 30000
+        fail-mode: warn
