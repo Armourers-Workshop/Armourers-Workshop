@@ -1,18 +1,17 @@
 plugins {
     id "java"
     id "architectury-plugin" version "3.4+"
-    id 'dev.architectury.loom' version "1.0+" apply false
+    id "dev.architectury.loom" version "1.0+" apply false
+    id "moe.plushie.armourers_workshop.loom" version "1.0.0" apply false
 }
 
 architectury {
     minecraft = rootProject.minecraft_version
 }
 
-rootProject.ext.searchFile = { sourceSets, filter -> sourceSets.collect { it.allSource }.collectMany { it.findAll(filter) } }
-rootProject.ext.mixinConfigs = ["resolve": { name -> mixinConfigs.get("common") + mixinConfigs.get(name) }]
-
 subprojects {
     apply plugin: "dev.architectury.loom"
+    apply plugin: 'moe.plushie.armourers_workshop.loom'
 
     loom {
         silentMojangMappingsLicense()
@@ -32,27 +31,6 @@ subprojects {
         it.java.srcDirs("../versions/library/${project.name}/src/${it.name}/java")
         it.resources.srcDirs("../versions/library/${project.name}/src/${it.name}/resources")
     }
-
-    // we need to search all source files to get to the actived mixins.
-    mixinConfigs.put(project.name, searchFile(sourceSets, { it.name.endsWith("mixins.json") }))
-
-    task signJar(dependsOn: remapSourcesJar) {
-        onlyIf { System.getenv("AW_SIGN_STORE") != null }
-        doLast {
-            def file = new File("$buildDir/store.jks")
-            file.bytes = System.getenv("AW_SIGN_STORE").decodeBase64()
-            ant.signjar(destDir: "${remapJar.destinationDir}",
-                    jar: "${remapJar.archivePath}",
-                    alias: System.getenv("AW_SIGN_ALIAS"),
-                    keypass: System.getenv("AW_SIGN_KEY_PASS"),
-                    storepass: System.getenv("AW_SIGN_STORE_PASS"),
-                    keystore: file.path,
-                    storetype: "jks")
-            file.delete()
-        }
-    }
-
-    remapJar.finalizedBy(signJar)
 }
 
 allprojects {

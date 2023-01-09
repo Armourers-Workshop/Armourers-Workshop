@@ -13,13 +13,6 @@ loom {
     forge {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
-
-        // when we switch the minecraft, the mixin will changes,
-        // so we need find all active mixins in the project,
-        // and then add all mixins name to manifest.
-        getRootProject().mixinConfigs.resolve(name).sort().forEach {
-            mixinConfig it.name
-        }
     }
 }
 
@@ -55,13 +48,6 @@ dependencies {
     //modLocalRuntime("net.optifine:OptiFine:1.18.2_HD_U_H9_pre1")
 
     modOptionalApi(project.epicfight_api_version)
-}
-
-def modOptionalApi(lib) {
-    if (lib != "") {
-//        dependencies.modCompileOnly(lib)
-        dependencies.modApi(lib)
-    }
 }
 
 processResources {

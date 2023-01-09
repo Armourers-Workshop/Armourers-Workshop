@@ -24,8 +24,8 @@
     ]
   },
   "mixins": [
-    "armourersworkshop-fabric-mixins.json",
-    "armourersworkshop-mixins.json"
+    "armourersworkshop-mixins.json",
+    "armourersworkshop-fabric-mixins.json"
   ],
   "depends": {
     "fabric": ">=0.42.0",

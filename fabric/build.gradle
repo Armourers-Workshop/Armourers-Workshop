@@ -39,47 +39,13 @@ dependencies {
 //    modLocalRuntime "me.jellysquid.mods.sodium:sodium:fabric-mc1.18.2-0.4.1+build.15"
 }
 
-def modInclude(str) {
-    dependencies.modApi(str)
-    dependencies.include(str)
-}
-
-def replaceAll = { details, regex, value ->
-    def contents = ""
-    details.filter {
-        if (contents.isEmpty()) {
-            contents += it
-            return ""
-        } else {
-            contents += "\n"
-            contents += it
-            return null
-        }
-    }
-    details.filter {
-        contents.replaceAll(regex, value)
-    }
-}
-
 processResources {
     inputs.property "version", project.version
     inputs.property "minecraft_version", project.minecraft_version
 
-    // when we switch the minecraft, the mixin will changes,
-    // so we need find all active mixins in the project,
-    // and then add all mixins name to manifest.
-    def mixins = ""
-    rootProject.mixinConfigs.resolve(project.name).sort().forEach {
-        if (!mixins.isEmpty()) {
-            mixins += ", "
-        }
-        mixins += "\"${it.name}\""
-    }
-
     filesMatching("fabric.mod.json") {
         expand "version": project.version,
                 "minecraft_version": rootProject.minecraft_version
-        replaceAll it, /(?sim)("mixins"\s*:\s*\[\s*)(.+?)(\s*\])/, /$1/ + mixins + /$3/
     }
 }
 

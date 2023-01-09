@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
@@ -33,7 +36,7 @@ public class DataPackManager {
 
     public static class InJarResourceManager implements IResourceManager {
 
-        private IDataPackObject packObject;
+        private List<String> files;
         private final ClassLoader classLoader;
 
         public InJarResourceManager() {
@@ -52,32 +55,45 @@ public class DataPackManager {
 
         @Override
         public void readResources(String path, Predicate<String> validator, BiConsumer<ResourceLocation, InputStream> consumer) {
-            IDataPackObject object = getPackInfo();
-            object.get("providers").allValues().forEach(it -> {
-                String name = it.stringValue();
+            String base = "data/" + ModConstants.MOD_ID + "/";
+            getFiles().forEach(it -> {
+                if (!it.startsWith(base)) {
+                    return;
+                }
+                String name = it.replace(base, "");
                 if (!name.startsWith(path) || !validator.test(name)) {
                     return;
                 }
-                InputStream stream = classLoader.getResourceAsStream("data/" + ModConstants.MOD_ID + "/" + name);
+                InputStream stream = classLoader.getResourceAsStream(it);
                 if (stream != null) {
                     consumer.accept(ModConstants.key(name), stream);
                 }
             });
         }
 
-        private IDataPackObject getPackInfo() {
-            if (packObject != null) {
-                return packObject;
+        private Collection<String> getFiles() {
+            if (files != null) {
+                return files;
             }
-            InputStream inputStream = classLoader.getResourceAsStream("armourersworkshop-datapacks.json");
-            if (inputStream == null) {
-                packObject = () -> null;
-                return packObject;
+            ArrayList<String> results = new ArrayList<>();
+            InputStream inputStream = classLoader.getResourceAsStream("pack.dat");
+            if (inputStream != null) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                try {
+                    while (true){
+                        String file = reader.readLine();
+                        if (file == null) {
+                            break;
+                        }
+                        results.add(file);
+                    }
+                    reader.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-            JsonObject object = StreamUtils.fromJson(GSON, reader, JsonObject.class);
-            packObject = () -> object;
-            return packObject;
+            files = results;
+            return results;
         }
     }
 }

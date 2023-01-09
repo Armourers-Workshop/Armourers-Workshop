@@ -40,12 +40,13 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
 
     @Override
     public void render(PoseStack poseStackIn, MultiBufferSource buffers, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
+        IPoseStack poseStack1 = AbstractPoseStack.wrap(poseStackIn);
         M model = ModelHolder.of(getParentModel());
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {
             return;
         }
+        IPoseStack poseStack = poseStack1;
         EpicFlightContext epicFlightContext = renderData.epicFlightContext;
         JointTransformModifier transformModifier = null;
         if (epicFlightContext != null) {
@@ -63,7 +64,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         // render the contributor
         ModContributors.Contributor contributor = ModContributors.by(entity);
         if (contributor != null && renderData.shouldRenderExtra()) {
-            renderMagicCircle(poseStack, buffers, entity.tickCount + entity.getId() * 31, partialTicks, 24, contributor.color, packedLightIn, OverlayTexture.NO_OVERLAY);
+            renderMagicCircle(poseStack1, buffers, entity.tickCount + entity.getId() * 31, partialTicks, 24, contributor.color, packedLightIn, OverlayTexture.NO_OVERLAY);
         }
 
         float f = 1 / 16f;

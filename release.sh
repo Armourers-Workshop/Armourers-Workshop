@@ -3,7 +3,7 @@ if [[ "$1" == "" ]]; then
   exit -1;
 fi
 
-mod_version="2.0.0-$1"
+mod_version=$1
 minecraft_supportd_versions="1.16.5 1.18.2 1.19.2 1.19.3"
 minecraft_versions="${2:-$minecraft_supportd_versions}"
 
@@ -18,7 +18,7 @@ for minecraft_version in $minecraft_versions; do
 	echo switch of $minecraft_version
 	./gradlew -p versions/$minecraft_version
 	echo build of $minecraft_version
-	./gradlew build -Pversion=$1
+	./gradlew build -Pversion=$mod_version
 
 	echo archive fabric of $minecraft_version
 	mv "fabric/build/libs/armourersworkshop-fabric-$minecraft_version-$mod_version.jar" "$release_path"
