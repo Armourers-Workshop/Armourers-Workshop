@@ -30,7 +30,7 @@ public class AbstractRenderType extends RenderType {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);
         RenderSystem.pushMatrix();
         RenderSystem.loadIdentity();
-        RenderSystem.multMatrix(RenderSystem.getExtendedTextureMatrix());
+        RenderSystem.mulMatrix(RenderSystem.getExtendedTextureMatrix());
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
     }, () -> {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);

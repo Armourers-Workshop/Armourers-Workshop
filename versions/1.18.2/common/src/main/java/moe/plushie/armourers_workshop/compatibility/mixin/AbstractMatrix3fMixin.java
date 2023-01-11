@@ -4,7 +4,7 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Vector3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import org.spongepowered.asm.mixin.Implements;
 import org.spongepowered.asm.mixin.Interface;
@@ -18,12 +18,12 @@ import java.nio.FloatBuffer;
 public abstract class AbstractMatrix3fMixin {
 
     @Intrinsic(displace = true)
-    public void aw$set(FloatBuffer buffer) {
+    public void aw$load(FloatBuffer buffer) {
         _aw$self().load(buffer);
     }
 
     @Intrinsic(displace = true)
-    public void aw$get(FloatBuffer buffer) {
+    public void aw$store(FloatBuffer buffer) {
         _aw$self().store(buffer);
     }
 
@@ -34,12 +34,12 @@ public abstract class AbstractMatrix3fMixin {
 
     @Intrinsic(displace = true)
     public void aw$rotate(IQuaternionf quaternion) {
-        _aw$self().mul(AbstractPoseStack.of(quaternion));
+        _aw$self().mul(MatrixUtils.of(quaternion));
     }
 
     @Intrinsic(displace = true)
     public void aw$multiply(IMatrix3f matrix) {
-        _aw$self().mul(AbstractPoseStack.of(matrix));
+        _aw$self().mul(MatrixUtils.of(matrix));
     }
 
     @Intrinsic(displace = true)

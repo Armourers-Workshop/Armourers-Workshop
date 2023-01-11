@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -14,6 +13,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.init.ModContributors;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -40,7 +40,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
 
     @Override
     public void render(PoseStack poseStackIn, MultiBufferSource buffers, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        IPoseStack poseStack1 = AbstractPoseStack.wrap(poseStackIn);
+        IPoseStack poseStack1 = MatrixUtils.of(poseStackIn);
         M model = ModelHolder.of(getParentModel());
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {

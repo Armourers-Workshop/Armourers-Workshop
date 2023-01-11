@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
@@ -15,6 +14,7 @@ import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
@@ -25,7 +25,6 @@ import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 @Environment(value = EnvType.CLIENT)
@@ -41,7 +40,7 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
         if (bakedSkin == null) {
             return;
         }
-        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
+        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
         BlockState blockState = entity.getBlockState();
         Entity mannequin = SkinItemRenderer.getInstance().getMannequinEntity();
         MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();

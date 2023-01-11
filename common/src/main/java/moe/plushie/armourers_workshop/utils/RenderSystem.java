@@ -7,7 +7,6 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.math.*;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractRenderSystem;
 import moe.plushie.armourers_workshop.compatibility.AbstractShaderTesselator;
 import moe.plushie.armourers_workshop.core.armature.ModelBinder;
@@ -44,7 +43,7 @@ import java.util.LinkedList;
 @Environment(value = EnvType.CLIENT)
 public final class RenderSystem extends AbstractRenderSystem {
 
-    private static final IPoseStack extendedModelViewStack = AbstractPoseStack.modelViewStack();
+    private static final IPoseStack extendedModelViewStack = MatrixUtils.modelViewStack();
 
     private static final Storage<IMatrix3f> extendedNormalMatrix = new Storage<>(OpenMatrix3f.createScaleMatrix(1, 1, 1));
     private static final Storage<IMatrix4f> extendedTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));

@@ -5,17 +5,18 @@ import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
-import moe.plushie.armourers_workshop.compatibility.ext.AbstractPoseStackExt_V1618;
+import moe.plushie.armourers_workshop.compatibility.ext.AbstractMatrixUtilsExt_V1618;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 @Environment(value = EnvType.CLIENT)
-public class AbstractPoseStack extends AbstractPoseStackExt_V1618 {
+public class AbstractMatrixUtils extends AbstractMatrixUtilsExt_V1618 {
 
     public static IPoseStack modelViewStack() {
-        IPoseStack emptyStack = AbstractPoseStack.empty();
+        IPoseStack emptyStack = MatrixUtils.stack();
         return new IPoseStack() {
 
             @Override
@@ -40,7 +41,7 @@ public class AbstractPoseStack extends AbstractPoseStackExt_V1618 {
 
             @Override
             public void multiply(IMatrix4f matrix) {
-                RenderSystem.multMatrix(matrix);
+                RenderSystem.mulMatrix(matrix);
             }
 
             @Override
@@ -50,7 +51,7 @@ public class AbstractPoseStack extends AbstractPoseStackExt_V1618 {
 
             @Override
             public void rotate(IQuaternionf quaternion) {
-                RenderSystem.multMatrix(new OpenMatrix4f(quaternion));
+                RenderSystem.mulMatrix(new OpenMatrix4f(quaternion));
             }
 
             @Override

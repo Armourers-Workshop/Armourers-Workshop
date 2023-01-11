@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.core.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractItemEntityRenderer;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,7 +32,7 @@ public class MannequinItemRenderer extends AbstractItemEntityRenderer {
         if (itemStack.isEmpty()) {
             return;
         }
-        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
+        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
         BakedModel bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
         ItemTransform transform = bakedModel.getTransforms().getTransform(transformType);
 

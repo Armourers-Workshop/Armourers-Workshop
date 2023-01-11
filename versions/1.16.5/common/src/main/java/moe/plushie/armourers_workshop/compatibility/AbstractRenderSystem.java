@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.compatibility;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -60,8 +60,8 @@ public class AbstractRenderSystem extends RenderSystem {
     public static void applyModelViewMatrix() {
     }
 
-    public static void multMatrix(IMatrix4f matrix4f) {
-        multMatrix(AbstractPoseStack.of(matrix4f));
+    public static void mulMatrix(IMatrix4f matrix4f) {
+        multMatrix(MatrixUtils.of(matrix4f));
     }
 
     public static void init() {

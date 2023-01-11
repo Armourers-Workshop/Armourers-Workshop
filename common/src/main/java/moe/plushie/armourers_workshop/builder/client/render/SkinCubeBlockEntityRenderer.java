@@ -8,10 +8,10 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedFaceRenderer;
 import moe.plushie.armourers_workshop.init.ModItems;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -72,7 +72,7 @@ public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> ext
         if (!(markerAlpha > 0)) {
             return;
         }
-        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
+        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
         int alpha = (int) (markerAlpha * 255);
         VertexConsumer builder = buffers.getBuffer(SkinRenderType.IMAGE_MARKER);
         for (Direction direction : Direction.values()) {

@@ -6,12 +6,12 @@ import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.builder.item.SkinCubeItem;
 import moe.plushie.armourers_workshop.compatibility.AbstractItemEntityRenderer;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedFaceRenderer;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.init.ModBlocks;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -43,7 +43,7 @@ public class SkinCubeItemRenderer extends AbstractItemEntityRenderer {
         if (blockPaintColor == null) {
             blockPaintColor = BlockPaintColor.WHITE;
         }
-        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
+        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
         Block block = item.getBlock();
 
         boolean isGlowing = block.equals(ModBlocks.SKIN_CUBE_GLOWING.get()) || block.equals(ModBlocks.SKIN_CUBE_GLASS_GLOWING.get());

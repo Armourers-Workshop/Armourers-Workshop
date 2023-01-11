@@ -4,9 +4,9 @@ import java.nio.FloatBuffer;
 
 public interface IMatrix3f {
 
-    void set(FloatBuffer buffer);
+    void load(FloatBuffer buffer);
 
-    void get(FloatBuffer buffer);
+    void store(FloatBuffer buffer);
 
     void scale(float x, float y, float z);
 

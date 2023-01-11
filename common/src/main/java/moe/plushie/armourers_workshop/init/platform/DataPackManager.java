@@ -1,13 +1,10 @@
 package moe.plushie.armourers_workshop.init.platform;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
-import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.init.ModConstants;
-import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.resources.ResourceLocation;
 
 import java.io.BufferedReader;

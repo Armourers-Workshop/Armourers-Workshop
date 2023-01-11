@@ -56,9 +56,7 @@ processResources {
     inputs.property "minecraft_version", project.minecraft_version
 
     filesMatching("META-INF/mods.toml") {
-        expand "version": project.version,
-                "forge_version": rootProject.forge_api_version,
-                "minecraft_version": rootProject.minecraft_version
+        expand inputs.properties
     }
 }
 

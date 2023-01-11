@@ -18,8 +18,8 @@ public class OpenMatrix4f implements IMatrix4f {
 
     public OpenMatrix4f(IMatrix4f matrix) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-        matrix.get(buffer);
-        set(buffer);
+        matrix.store(buffer);
+        load(buffer);
     }
 
     public OpenMatrix4f(IQuaternionf quaternion) {
@@ -136,7 +136,7 @@ public class OpenMatrix4f implements IMatrix4f {
     }
 
     @Override
-    public void set(FloatBuffer buffer) {
+    public void load(FloatBuffer buffer) {
         m00 = buffer.get(bufferIndex(0, 0));
         m01 = buffer.get(bufferIndex(0, 1));
         m02 = buffer.get(bufferIndex(0, 2));
@@ -156,7 +156,7 @@ public class OpenMatrix4f implements IMatrix4f {
     }
 
     @Override
-    public void get(FloatBuffer buffer) {
+    public void store(FloatBuffer buffer) {
         buffer.put(bufferIndex(0, 0), m00);
         buffer.put(bufferIndex(0, 1), m01);
         buffer.put(bufferIndex(0, 2), m02);

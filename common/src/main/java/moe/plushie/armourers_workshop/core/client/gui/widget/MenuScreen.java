@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.api.common.IMenuWindow;
 import moe.plushie.armourers_workshop.api.common.IMenuWindowProvider;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractMenuScreen;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -74,7 +74,7 @@ public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IM
 
     @Override
     public void render(PoseStack poseStackIn, int mouseX, int mouseY, float partialTicks) {
-        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
+        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
         CGGraphicsContext context = new CGGraphicsContext(poseStack, mouseX, mouseY, partialTicks, font, this);
         manager.tick();
         manager.render(context, this::_render, this::_renderBackground, this::_renderTooltip);

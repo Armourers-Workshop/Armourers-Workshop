@@ -16,7 +16,7 @@ import java.nio.FloatBuffer;
 
 @Available("[1.19.3, )")
 @Environment(value = EnvType.CLIENT)
-public abstract class AbstractPoseStackExt_V19 {
+public abstract class AbstractMatrixUtilsExt_V19 {
 
     private static final Matrix3f CONVERTER_MAT3 = new Matrix3f();
     private static final Matrix4f CONVERTER_MAT4 = new Matrix4f();
@@ -32,8 +32,8 @@ public abstract class AbstractPoseStackExt_V19 {
             return ((Mat3) mat).mat;
         }
         IMatrix3f accessor = ObjectUtils.unsafeCast(CONVERTER_MAT3);
-        mat.get(CONVERTER_BUFFER3);
-        accessor.set(CONVERTER_BUFFER3);
+        mat.store(CONVERTER_BUFFER3);
+        accessor.load(CONVERTER_BUFFER3);
         return CONVERTER_MAT3;
     }
 
@@ -44,7 +44,7 @@ public abstract class AbstractPoseStackExt_V19 {
         if (mat instanceof Mat4) {
             return ((Mat4) mat).mat;
         }
-        mat.get(CONVERTER_BUFFER4);
+        mat.store(CONVERTER_BUFFER4);
         CONVERTER_MAT4.set(CONVERTER_BUFFER4);
         return CONVERTER_MAT4;
     }
@@ -53,12 +53,20 @@ public abstract class AbstractPoseStackExt_V19 {
         return new Quaternionf(qat.i(), qat.j(), qat.k(), qat.r());
     }
 
-    public static IPoseStack wrap(PoseStack poseStack) {
+    public static IMatrix3f of(Matrix3f mat) {
+        return new Mat3(mat);
+    }
+
+    public static IMatrix4f of(Matrix4f mat) {
+        return new Mat4(mat);
+    }
+
+    public static IPoseStack of(PoseStack poseStack) {
         return (IPoseStack) poseStack;
     }
 
-    public static IPoseStack empty() {
-        return wrap(new PoseStack());
+    public static IPoseStack stack() {
+        return of(new PoseStack());
     }
 
 
@@ -71,12 +79,12 @@ public abstract class AbstractPoseStackExt_V19 {
         }
 
         @Override
-        public void set(FloatBuffer buffer) {
+        public void load(FloatBuffer buffer) {
             mat.set(buffer);
         }
 
         @Override
-        public void get(FloatBuffer buffer) {
+        public void store(FloatBuffer buffer) {
             mat.get(buffer);
         }
 
@@ -136,12 +144,12 @@ public abstract class AbstractPoseStackExt_V19 {
         }
 
         @Override
-        public void set(FloatBuffer buffer) {
+        public void load(FloatBuffer buffer) {
             mat.set(buffer);
         }
 
         @Override
-        public void get(FloatBuffer buffer) {
+        public void store(FloatBuffer buffer) {
             mat.get(buffer);
         }
 

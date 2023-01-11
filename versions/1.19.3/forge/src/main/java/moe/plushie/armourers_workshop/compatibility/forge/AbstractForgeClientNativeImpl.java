@@ -4,12 +4,12 @@ import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.compatibility.AbstractClientNativeImpl;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compatibility.forge.ext.AbstractClientForgeExt_V18;
 import moe.plushie.armourers_workshop.compatibility.ext.AbstractClientNativeProviderExt_V19;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -89,7 +89,7 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
     @Override
     public void willRenderLivingEntity(RenderLivingEntity renderer) {
         NotificationCenterImpl.observer(RenderLivingEvent.Pre.class, event -> {
-            IPoseStack poseStack = AbstractPoseStack.wrap(event.getPoseStack());
+            IPoseStack poseStack = MatrixUtils.of(event.getPoseStack());
             renderer.render(event.getEntity(), event.getPartialTick(), event.getPackedLight(), poseStack, event.getMultiBufferSource(), event.getRenderer());
         });
     }
@@ -97,7 +97,7 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
     @Override
     public void didRenderLivingEntity(RenderLivingEntity renderer) {
         NotificationCenterImpl.observer(RenderLivingEvent.Post.class, event -> {
-            IPoseStack poseStack = AbstractPoseStack.wrap(event.getPoseStack());
+            IPoseStack poseStack = MatrixUtils.of(event.getPoseStack());
             renderer.render(event.getEntity(), event.getPartialTick(), event.getPackedLight(), poseStack, event.getMultiBufferSource(), event.getRenderer());
         });
     }

@@ -5,8 +5,8 @@ import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -85,7 +85,7 @@ public class OpenPoseStack implements IPoseStack {
     @Environment(value = EnvType.CLIENT)
     @Override
     public PoseStack cast() {
-        IPoseStack poseStack = AbstractPoseStack.empty();
+        IPoseStack poseStack = MatrixUtils.stack();
         poseStack.lastPose().multiply(poseMatrix);
         poseStack.lastNormal().multiply(normalMatrix);
         return poseStack.cast();

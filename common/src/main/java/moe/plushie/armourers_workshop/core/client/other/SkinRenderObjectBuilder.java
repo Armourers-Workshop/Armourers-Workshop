@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.armature.ModelBinder;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
@@ -22,6 +21,7 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -176,7 +176,7 @@ public class SkinRenderObjectBuilder {
             return;
         }
 //        long startTime = System.currentTimeMillis();
-        IPoseStack matrixStack1 = AbstractPoseStack.empty();
+        IPoseStack matrixStack1 = MatrixUtils.stack();
         ArrayList<CompiledTask> buildingTasks = new ArrayList<>();
         for (CachedTask task : tasks) {
             BakedSkinPart part = task.part;

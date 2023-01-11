@@ -57,7 +57,7 @@ public abstract class ShaderUniform {
             IMatrix4f newValue = value.get();
             if (!newValue.equals(cachedValue)) {
                 cachedValue = newValue.copy();
-                cachedValue.get(buffer);
+                cachedValue.store(buffer);
                 buffer.rewind();
                 GL20.glUniformMatrix4fv(location, false, buffer);
             }
@@ -96,7 +96,7 @@ public abstract class ShaderUniform {
             IMatrix3f newValue = value.get();
             if (!newValue.equals(cachedValue)) {
                 cachedValue = newValue.copy();
-                cachedValue.get(buffer);
+                cachedValue.store(buffer);
                 buffer.rewind();
                 GL20.glUniformMatrix3fv(location, false, buffer);
             }

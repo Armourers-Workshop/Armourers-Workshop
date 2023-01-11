@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
@@ -22,6 +21,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.math.*;
 import net.fabricmc.api.EnvType;
@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 @Environment(value = EnvType.CLIENT)
 public class BakedSkin implements IBakedSkin {
@@ -166,7 +165,7 @@ public class BakedSkin implements IBakedSkin {
 
     public <T extends Entity, V extends Model, M extends IModelHolder<V>> OpenVoxelShape getRenderShape(T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, SkinRenderer<T, V, M> renderer) {
         SkinRenderContext context = new SkinRenderContext();
-        context.init(null, 0, 0, transformType, AbstractPoseStack.empty(), null);
+        context.init(null, 0, 0, transformType, MatrixUtils.stack(), null);
         context.setItem(itemStack, 0);
         context.setTransforms(entity, model);
         OpenVoxelShape shape = OpenVoxelShape.empty();

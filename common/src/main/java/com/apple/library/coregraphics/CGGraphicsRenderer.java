@@ -8,7 +8,6 @@ import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIView;
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;

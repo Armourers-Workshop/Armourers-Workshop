@@ -18,22 +18,14 @@ public class OpenMatrix3f implements IMatrix3f {
 
     public OpenMatrix3f(IMatrix3f matrix) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(9);
-        matrix.get(buffer);
-        set(buffer);
+        matrix.store(buffer);
+        load(buffer);
     }
 
     public OpenMatrix3f(IMatrix4f matrix) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-        matrix.get(buffer);
-        m00 = buffer.get(bufferIndex4(0, 0));
-        m01 = buffer.get(bufferIndex4(0, 1));
-        m02 = buffer.get(bufferIndex4(0, 2));
-        m10 = buffer.get(bufferIndex4(1, 0));
-        m11 = buffer.get(bufferIndex4(1, 1));
-        m12 = buffer.get(bufferIndex4(1, 2));
-        m20 = buffer.get(bufferIndex4(2, 0));
-        m21 = buffer.get(bufferIndex4(2, 1));
-        m22 = buffer.get(bufferIndex4(2, 2));
+        matrix.store(buffer);
+        import44(buffer);
     }
 
     public OpenMatrix3f(IQuaternionf quaternion) {
@@ -121,7 +113,7 @@ public class OpenMatrix3f implements IMatrix3f {
         m22 *= ratio;
     }
 
-    public void set(FloatBuffer buffer) {
+    public void load(FloatBuffer buffer) {
         m00 = buffer.get(bufferIndex(0, 0));
         m01 = buffer.get(bufferIndex(0, 1));
         m02 = buffer.get(bufferIndex(0, 2));
@@ -133,7 +125,7 @@ public class OpenMatrix3f implements IMatrix3f {
         m22 = buffer.get(bufferIndex(2, 2));
     }
 
-    public void get(FloatBuffer buffer) {
+    public void store(FloatBuffer buffer) {
         buffer.put(bufferIndex(0, 0), m00);
         buffer.put(bufferIndex(0, 1), m01);
         buffer.put(bufferIndex(0, 2), m02);
@@ -143,6 +135,18 @@ public class OpenMatrix3f implements IMatrix3f {
         buffer.put(bufferIndex(2, 0), m20);
         buffer.put(bufferIndex(2, 1), m21);
         buffer.put(bufferIndex(2, 2), m22);
+    }
+
+    public void import44(FloatBuffer buffer) {
+        m00 = buffer.get(bufferIndex4(0, 0));
+        m01 = buffer.get(bufferIndex4(0, 1));
+        m02 = buffer.get(bufferIndex4(0, 2));
+        m10 = buffer.get(bufferIndex4(1, 0));
+        m11 = buffer.get(bufferIndex4(1, 1));
+        m12 = buffer.get(bufferIndex4(1, 2));
+        m20 = buffer.get(bufferIndex4(2, 0));
+        m21 = buffer.get(bufferIndex4(2, 1));
+        m22 = buffer.get(bufferIndex4(2, 2));
     }
 
     @Override

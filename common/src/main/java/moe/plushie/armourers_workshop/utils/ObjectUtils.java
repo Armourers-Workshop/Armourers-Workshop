@@ -3,10 +3,6 @@ package moe.plushie.armourers_workshop.utils;
 import com.apple.library.foundation.NSRange;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
-import moe.plushie.armourers_workshop.core.entity.EntityProfile;
-import moe.plushie.armourers_workshop.init.ModEntityProfiles;
-import net.minecraft.world.entity.EntityType;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.BufferUtils;
 
@@ -16,7 +12,6 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class ObjectUtils {
 
@@ -75,14 +70,14 @@ public class ObjectUtils {
 
     public static void set(IMatrix3f matrixIn, IMatrix3f matrixOut) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(9);
-        matrixIn.get(buffer);
-        matrixOut.set(buffer);
+        matrixIn.store(buffer);
+        matrixOut.load(buffer);
     }
 
     public static void set(IMatrix4f matrixIn, IMatrix4f matrixOut) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-        matrixIn.get(buffer);
-        matrixOut.set(buffer);
+        matrixIn.store(buffer);
+        matrixOut.load(buffer);
     }
 
 }

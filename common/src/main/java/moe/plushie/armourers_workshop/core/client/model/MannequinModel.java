@@ -5,9 +5,9 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
 import moe.plushie.armourers_workshop.compatibility.AbstractPlayerModel;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -50,7 +50,7 @@ public class MannequinModel<T extends MannequinEntity> extends AbstractPlayerMod
 
     @Override
     public void renderToBuffer(PoseStack poseStackIn, VertexConsumer builder, int light, int overlay, float r, float g, float b, float a) {
-        IPoseStack poseStack = AbstractPoseStack.wrap(poseStackIn);
+        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
         poseStack.rotate(new OpenQuaternionf(mainPose.getX(), mainPose.getY(), mainPose.getZ(), true));
         super.renderToBuffer(poseStackIn, builder, light, overlay, r, g, b, a);
     }
