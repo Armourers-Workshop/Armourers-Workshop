@@ -24,7 +24,7 @@ public class ArmourersHammerItem extends FlavouredItem implements IItemHandler {
         BlockState newState = state.rotate(Rotation.CLOCKWISE_90);
         if (!newState.equals(state)) {
             level.setBlock(pos, newState, Constants.BlockFlags.BLOCK_UPDATE);
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.PASS;
     }

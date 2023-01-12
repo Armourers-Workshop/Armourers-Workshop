@@ -227,19 +227,19 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
                 customName = itemStack.getHoverName();
             }
             setCustomName(customName);
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
         if (player.isShiftKeyDown()) {
             double ry = TrigUtils.getAngleDegrees(player.getX(), player.getZ(), getX(), getZ()) + 90.0;
             Rotations rotations = getBodyPose();
             float yRot = this.getYRot();
             setBodyPose(new Rotations(rotations.getX(), (float) ry - yRot, rotations.getZ()));
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(this);
         if (wardrobe != null && wardrobe.isEditable(player)) {
             MenuManager.openMenu(ModMenuTypes.WARDROBE, player, wardrobe);
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.PASS;
     }

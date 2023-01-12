@@ -102,7 +102,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
         setChanged();
         setRenderChanged();
         boolean growing = isPowered && isGlowing;
-        if (level != null && !level.isClientSide) {
+        if (level != null && !level.isClientSide()) {
             if (state.getValue(HologramProjectorBlock.LIT) != growing) {
                 BlockState newState = state.setValue(HologramProjectorBlock.LIT, growing);
                 level.setBlock(getBlockPos(), newState, Constants.BlockFlags.BLOCK_UPDATE);

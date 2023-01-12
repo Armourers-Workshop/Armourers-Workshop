@@ -126,7 +126,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     public void updateBlockStates() {
         setChanged();
-        if (level != null && !level.isClientSide) {
+        if (level != null && !level.isClientSide()) {
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
         }
     }

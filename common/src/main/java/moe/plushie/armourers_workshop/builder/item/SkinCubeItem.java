@@ -42,7 +42,7 @@ public class SkinCubeItem extends BlockItem implements IItemColorProvider, IPain
         ItemStack itemStack = context.getItemInHand();
         if (tileEntity instanceof IPaintProvider) {
             setItemColor(itemStack, ((IPaintProvider) tileEntity).getColor());
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.PASS;
     }

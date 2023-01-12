@@ -55,7 +55,7 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
     public InteractionResult useOnFirst(ItemStack itemStack, UseOnContext context) {
         Level level = context.getLevel();
         Player player = context.getPlayer();
-        if (level.isClientSide || player == null) {
+        if (level.isClientSide() || player == null) {
             return InteractionResult.SUCCESS;
         }
         BlockPos linkedBlockPos = getLinkedBlockPos(itemStack);

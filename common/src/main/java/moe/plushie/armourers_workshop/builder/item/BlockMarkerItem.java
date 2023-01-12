@@ -27,7 +27,7 @@ public class BlockMarkerItem extends FlavouredItem {
                 direction = OptionalDirection.NONE;
             }
             level.setBlock(blockPos, SkinCubeBlock.setMarker(blockState, direction), Constants.BlockFlags.BLOCK_UPDATE);
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.PASS;
     }

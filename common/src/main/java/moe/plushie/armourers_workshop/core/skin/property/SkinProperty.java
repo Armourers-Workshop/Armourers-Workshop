@@ -7,10 +7,13 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     // Properties for all skins.
     public static final SkinProperty<String> ALL_CUSTOM_NAME = new SkinProperty<>("customName", "");
     public static final SkinProperty<String> ALL_FLAVOUR_TEXT = new SkinProperty<>("flavour", "");
+
     public static final SkinProperty<String> ALL_AUTHOR_NAME = new SkinProperty<>("authorName", "");
     public static final SkinProperty<String> ALL_AUTHOR_UUID = new SkinProperty<>("authorUUID", "");
 
     public static final SkinProperty<String> ALL_KEY_TAGS = new SkinProperty<>("tags", "");
+
+    public static final SkinProperty<String> ALL_SIGNATURE = new SkinProperty<>("signature", "");
 
     // Properties.
     @Deprecated

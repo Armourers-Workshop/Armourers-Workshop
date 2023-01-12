@@ -48,7 +48,7 @@ public class PaintbrushItem extends AbstractPaintToolItem implements IItemTintCo
     public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity tileEntity, UseOnContext context) {
         if (tileEntity instanceof IPaintProvider) {
             setItemColor(context.getItemInHand(), ((IPaintProvider) tileEntity).getColor());
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.PASS;
     }

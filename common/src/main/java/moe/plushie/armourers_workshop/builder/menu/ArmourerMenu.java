@@ -26,6 +26,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
+import java.util.UUID;
+
 public class ArmourerMenu extends AbstractBlockContainerMenu {
 
     private final SimpleContainer inventory = new SimpleContainer(4);
@@ -95,13 +97,19 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
         Skin skin = null;
         SkinProperties skinProps = new SkinProperties(tileEntity.getSkinProperties());
         skinProps.put(SkinProperty.ALL_AUTHOR_NAME, profile.getName());
+
         // in the offline server the `player.getStringUUID()` is not real player uuid.
         if (profile.getId() != null) {
             skinProps.put(SkinProperty.ALL_AUTHOR_UUID, profile.getId().toString());
         }
+
         if (customName != null) {
             skinProps.put(SkinProperty.ALL_CUSTOM_NAME, customName);
         }
+
+        // we need signature to ensure that each make is a different skin,
+        // in the current version, we will not actually sign the content.
+        skinProps.put(SkinProperty.ALL_SIGNATURE, "none:" + UUID.randomUUID());
 
         try {
             Level level = tileEntity.getLevel();

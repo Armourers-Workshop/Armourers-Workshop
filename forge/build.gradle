@@ -37,17 +37,17 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
-    modApi("mezz.jei:jei-${project.jei_api_version}")
-    //modCompileOnly("com.sk89q.worldedit:worldedit-core:7.2.5-SNAPSHOT")
+    modApi "mezz.jei:jei-${project.jei_api_version}"
+    //modCompileOnly "com.sk89q.worldedit:worldedit-core:7.2.5-SNAPSHOT"
 
-    //modLocalRuntime("mezz.jei:jei-${rootProject.minecraft_version}-forge:${project.jei_version}")
-    //modLocalRuntime("mezz.jei:jei-${rootProject.minecraft_version}:${project.jei_version}")
-    //modLocalRuntime("com.sk89q.worldedit:worldedit-mod:7.2.5-dist")
-    //modLocalRuntime("noppes.npcs:CustomNPCs:1.16.5.20220622snapshot")
-    //modLocalRuntime("org.samo_lego:taterzens:1.9.6-forge")
-    //modLocalRuntime("net.optifine:OptiFine:1.18.2_HD_U_H9_pre1")
+    //modLocalRuntime "mezz.jei:jei-${rootProject.minecraft_version}-forge:${project.jei_version}"
+    //modLocalRuntime "mezz.jei:jei-${rootProject.minecraft_version}:${project.jei_version}"
+    //modLocalRuntime "com.sk89q.worldedit:worldedit-mod:7.2.5-dist"
+    //modLocalRuntime "noppes.npcs:CustomNPCs:1.16.5.20220622snapshot"
+    //modLocalRuntime "org.samo_lego:taterzens:1.9.6-forge"
+    //modLocalRuntime "net.optifine:OptiFine:1.18.2_HD_U_H9_pre1"
 
-    modOptionalApi(project.epicfight_api_version)
+    modOptionalCompileOnly project.epicfight_api_version
 }
 
 processResources {

@@ -62,7 +62,7 @@ public class MenuManager {
         if (!ModPermissions.OPEN.accept(type, level, blockPos, player)) {
             return InteractionResult.FAIL;
         }
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         }
         if (openMenu(type, player, ContainerLevelAccess.create(level, blockPos))) {

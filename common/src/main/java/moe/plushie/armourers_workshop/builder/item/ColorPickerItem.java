@@ -73,7 +73,7 @@ public class ColorPickerItem extends AbstractConfigurableToolItem implements IIt
                 newColor = PaintColor.of(newColor.getRGB(), provider.getColor().getPaintType());
             }
             provider.setColor(newColor);
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.PASS;
     }
