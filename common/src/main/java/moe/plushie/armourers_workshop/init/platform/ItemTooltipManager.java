@@ -4,10 +4,12 @@ import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinEquipmentType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.other.SkinTooltipFlags;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinOptions;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.init.*;
@@ -36,7 +38,7 @@ public class ItemTooltipManager {
         if (Strings.isNotBlank(skin.getCustomName().trim())) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinName", skin.getCustomName().trim()));
         }
-        if (ModConfig.Client.tooltipSkinAuthor && Strings.isNotBlank(skin.getAuthorName())) {
+        if (Strings.isNotBlank(skin.getAuthorName())) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinAuthor", skin.getAuthorName().trim()));
         }
         tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinType", TranslateUtils.Name.of(skin.getType())));
@@ -59,30 +61,31 @@ public class ItemTooltipManager {
             return tooltip;
         }
         Skin skin = bakedSkin.getSkin();
+        SkinOptions options = descriptor.getOptions();
         SkinUsedCounter counter = bakedSkin.getUsedCounter();
 
         if (!isItemOwner) {
-            if (ModConfig.Client.tooltipHasSkin) {
+            if (SkinTooltipFlags.HAS_SKIN.isEnabled(options)) {
                 tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.hasSkin"));
             }
-            if (ModConfig.Client.tooltipSkinName && Strings.isNotBlank(skin.getCustomName())) {
+            if (SkinTooltipFlags.NAME.isEnabled(options) && Strings.isNotBlank(skin.getCustomName())) {
                 tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinName", skin.getCustomName().trim()));
             }
         }
 
-        if (isItemOwner && ModConfig.Client.tooltipFlavour && Strings.isNotBlank(skin.getFlavourText())) {
+        if (isItemOwner && SkinTooltipFlags.FLAVOUR.isEnabled(options) && Strings.isNotBlank(skin.getFlavourText())) {
             tooltip.add(TranslateUtils.title("item.armourers_workshop.rollover.flavour", skin.getFlavourText().trim()));
         }
 
-        if (ModConfig.Client.tooltipSkinAuthor && Strings.isNotBlank(skin.getAuthorName())) {
+        if (SkinTooltipFlags.AUTHOR.isEnabled(options) && Strings.isNotBlank(skin.getAuthorName())) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinAuthor", skin.getAuthorName().trim()));
         }
 
-        if (ModConfig.Client.tooltipSkinType) {
+        if (SkinTooltipFlags.TYPE.isEnabled(options)) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinType", TranslateUtils.Name.of(skin.getType())));
         }
 
-        if (!isItemOwner && ModConfig.Client.tooltipFlavour && Strings.isNotBlank(skin.getFlavourText())) {
+        if (!isItemOwner && SkinTooltipFlags.FLAVOUR.isEnabled(options) && Strings.isNotBlank(skin.getFlavourText())) {
             tooltip.add(TranslateUtils.title("item.armourers_workshop.rollover.flavour", skin.getFlavourText().trim()));
         }
 
@@ -123,7 +126,7 @@ public class ItemTooltipManager {
 //            }
 //        }
 
-        if (ModConfig.Client.tooltipOpenWardrobe && isItemOwner && skin.getType() instanceof ISkinEquipmentType) {
+        if (SkinTooltipFlags.OPEN_WARDROBE.isEnabled(options) && isItemOwner && skin.getType() instanceof ISkinEquipmentType) {
             Component keyName = ModKeyBindings.OPEN_WARDROBE_KEY.getKeyName();
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinOpenWardrobe", keyName));
         }
@@ -155,6 +158,9 @@ public class ItemTooltipManager {
             return;
         }
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        if (!SkinTooltipFlags.PREVIEW.isEnabled(descriptor.getOptions())) {
+            return;
+        }
         BakedSkin bakedSkin = BakedSkin.of(descriptor);
         if (bakedSkin == null) {
             return;

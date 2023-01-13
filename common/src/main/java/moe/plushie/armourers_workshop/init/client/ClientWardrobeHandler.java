@@ -184,6 +184,10 @@ public class ClientWardrobeHandler {
         if (descriptor.isEmpty()) {
             return false;
         }
+        // we allow server manually control the item whether to use the embedded renderer.
+        if (descriptor.getOptions().getEmbeddedItemRenderer() != 0) {
+            return descriptor.getOptions().getEmbeddedItemRenderer() == 2;
+        }
         // when the skin item, we no required enable of embbed skin option in the config.
         return ModConfig.enableEmbeddedSkinRenderer() || descriptor.getType() == SkinTypes.ITEM;
     }

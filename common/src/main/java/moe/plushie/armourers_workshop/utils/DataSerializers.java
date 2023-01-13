@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinOptions;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
@@ -510,6 +511,22 @@ public class DataSerializers {
         CompoundTag nbt1 = parseCompoundTag(nbt, key);
         if (nbt1 != null && !nbt1.isEmpty()) {
             return new SkinDescriptor(nbt1);
+        }
+        return defaultValue;
+    }
+
+    public static void putSkinOptions(CompoundTag nbt, String key, SkinOptions value, SkinOptions defaultValue) {
+        if (!value.equals(defaultValue)) {
+            nbt.put(key, value.serializeNBT());
+        }
+    }
+
+    public static SkinOptions getSkinOptions(CompoundTag nbt, String key, SkinOptions defaultValue) {
+        if (nbt.contains(key, Constants.TagFlags.COMPOUND)) {
+            CompoundTag nbt1 = nbt.getCompound(key);
+            if (!nbt1.isEmpty()) {
+                return new SkinOptions(nbt1);
+            }
         }
         return defaultValue;
     }

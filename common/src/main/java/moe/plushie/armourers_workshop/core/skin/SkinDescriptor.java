@@ -17,32 +17,39 @@ public class SkinDescriptor implements ISkinDescriptor {
 
     private final String identifier;
     private final ISkinType type;
+    private final SkinOptions options;
     private final ColorScheme colorScheme;
 
     // not a required property, but it can help we reduce memory usage and improve performance.
     private ItemStack skinItemStack;
 
     public SkinDescriptor(String identifier) {
-        this(identifier, SkinTypes.UNKNOWN, ColorScheme.EMPTY);
+        this(identifier, SkinTypes.UNKNOWN, SkinOptions.DEFAULT, ColorScheme.EMPTY);
     }
 
     public SkinDescriptor(String identifier, ISkinType type) {
-        this(identifier, type, ColorScheme.EMPTY);
-    }
-
-    public SkinDescriptor(SkinDescriptor descriptor, ColorScheme colorScheme) {
-        this(descriptor.getIdentifier(), descriptor.getType(), colorScheme);
+        this(identifier, type, SkinOptions.DEFAULT, ColorScheme.EMPTY);
     }
 
     public SkinDescriptor(String identifier, ISkinType type, ColorScheme colorScheme) {
+        this(identifier, type, SkinOptions.DEFAULT, colorScheme);
+    }
+
+    public SkinDescriptor(String identifier, ISkinType type, SkinOptions options, ColorScheme colorScheme) {
         this.identifier = identifier;
         this.type = type;
+        this.options = options;
         this.colorScheme = colorScheme;
+    }
+
+    public SkinDescriptor(SkinDescriptor descriptor, ColorScheme colorScheme) {
+        this(descriptor.getIdentifier(), descriptor.getType(), descriptor.getOptions(), colorScheme);
     }
 
     public SkinDescriptor(CompoundTag nbt) {
         this.identifier = nbt.getString(Constants.Key.SKIN_IDENTIFIER);
         this.type = SkinTypes.byName(nbt.getString(Constants.Key.SKIN_TYPE));
+        this.options = DataSerializers.getSkinOptions(nbt, Constants.Key.SKIN_OPTIONS, SkinOptions.DEFAULT);
         this.colorScheme = DataSerializers.getColorScheme(nbt, Constants.Key.SKIN_DYE, ColorScheme.EMPTY);
     }
 
@@ -89,6 +96,7 @@ public class SkinDescriptor implements ISkinDescriptor {
         CompoundTag nbt = new CompoundTag();
         nbt.putString(Constants.Key.SKIN_TYPE, type.getRegistryName().toString());
         nbt.putString(Constants.Key.SKIN_IDENTIFIER, identifier);
+        DataSerializers.putSkinOptions(nbt, Constants.Key.SKIN_OPTIONS, options, SkinOptions.DEFAULT);
         DataSerializers.putColorScheme(nbt, Constants.Key.SKIN_DYE, colorScheme, ColorScheme.EMPTY);
         return nbt;
     }
@@ -120,6 +128,10 @@ public class SkinDescriptor implements ISkinDescriptor {
 
     public ISkinType getType() {
         return type;
+    }
+
+    public SkinOptions getOptions() {
+        return options;
     }
 
     public String getIdentifier() {

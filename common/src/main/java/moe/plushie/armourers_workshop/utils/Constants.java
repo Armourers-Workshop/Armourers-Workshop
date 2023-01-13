@@ -20,6 +20,7 @@ public final class Constants {
         public static final String SKIN_PART_TYPE = "PartType";
         public static final String SKIN_IDENTIFIER = "Identifier";
         public static final String SKIN_DYE = "SkinDyes";
+        public static final String SKIN_OPTIONS = "SkinOptions";
         public static final String SKIN_PROPERTIES = "SkinProperties";
 
         public static final String SKIN_CUBES = "Cubes";
@@ -28,6 +29,9 @@ public final class Constants {
 
         public static final String TEXTURE_URL = "URL";
         public static final String TEXTURE_PROFILE = "User";
+
+        public static final String OPTIONS_TOOLTIP_FLAGS = "TooltipFlags";
+        public static final String OPTIONS_EMBEDDED_ITEM_RENDERER = "EmbeddedItemRenderer";
 
         public static final String PAINT_DATA = "PaintData";
 
