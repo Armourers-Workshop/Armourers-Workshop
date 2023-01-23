@@ -1,0 +1,25 @@
+{
+  "slots": {
+    "head": 10,
+    "chest": 10,
+    "legs": 10,
+    "feet": 10,
+    "wings": 10,
+    "outfit": 10,
+    "bow": 1,
+    "sword": 1,
+    "shield": 1,
+    "trident": 1,
+    "axe": 1,
+    "hoe": 1,
+    "pickaxe": 1,
+    "shovel": 1
+  },
+  "entities": [
+    "vampirism:hunter",
+    "vampirism:hunter_minion",
+    "vampirism:vampire",
+    "vampirism:vampire_minion",
+    "vampirism:vampire_minion_s"
+  ]
+}
