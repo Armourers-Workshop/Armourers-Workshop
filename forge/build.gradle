@@ -35,7 +35,7 @@ dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_api_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
 
     modApi "mezz.jei:jei-${project.jei_api_version}"
     //modCompileOnly "com.sk89q.worldedit:worldedit-core:7.2.5-SNAPSHOT"

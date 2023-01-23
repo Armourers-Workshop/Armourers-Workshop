@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Environment(value = EnvType.CLIENT)
-public class SkinManager {
+public class SkinRendererRegistries {
 
     public static void init() {
         SkinRendererManager manager = SkinRendererManager.getInstance();
@@ -34,24 +34,24 @@ public class SkinManager {
         manager.registerPlugin(BipedSkinRenderer.class, new MobLayerFixPlugin<>());
     }
 
-    protected static void adapt(Consumer<Builder> manager) {
+    protected static void adapt(Consumer<Builder> handler) {
         // using special skin renderer of the arrow.
-        manager.accept(Builder.of(ArrowSkinRenderer::new).renderer(ArrowRenderer.class));
-        manager.accept(Builder.of(TridentSkinRenderer::new).renderer(ThrownTridentRenderer.class));
+        handler.accept(Builder.of(ArrowSkinRenderer::new).renderer(ArrowRenderer.class));
+        handler.accept(Builder.of(TridentSkinRenderer::new).renderer(ThrownTridentRenderer.class));
 
-        manager.accept(Builder.of(IllagerSkinRenderer::new).model(IllagerModel.class));
-        manager.accept(Builder.of(ZombieVillagerSkinRenderer::new).model(ZombieVillagerModel.class));
-        manager.accept(Builder.of(VillagerSkinRenderer::new).model(VillagerModel.class));
-        manager.accept(Builder.of(IronGolemSkinRenderer::new).model(IronGolemModel.class));
+        handler.accept(Builder.of(IllagerSkinRenderer::new).model(IllagerModel.class));
+        handler.accept(Builder.of(ZombieVillagerSkinRenderer::new).model(ZombieVillagerModel.class));
+        handler.accept(Builder.of(VillagerSkinRenderer::new).model(VillagerModel.class));
+        handler.accept(Builder.of(IronGolemSkinRenderer::new).model(IronGolemModel.class));
 
-        manager.accept(Builder.of(FirstPersonSkinRenderer::new).model(FirstPersonPlayerModel.class));
-        manager.accept(Builder.of(PlayerSkinRenderer::new).model(PlayerModel.class));
-        manager.accept(Builder.of(BipedSkinRenderer::new).model(HumanoidModel.class));
+        handler.accept(Builder.of(FirstPersonSkinRenderer::new).model(FirstPersonPlayerModel.class));
+        handler.accept(Builder.of(PlayerSkinRenderer::new).model(PlayerModel.class));
+        handler.accept(Builder.of(BipedSkinRenderer::new).model(HumanoidModel.class));
 
-        manager.accept(Builder.of(SlimeSkinRenderer::new).model(SlimeModel.class));
-        manager.accept(Builder.of(GhastSkinRenderer::new).model(GhastModel.class));
-        manager.accept(Builder.of(ChickenSkinRenderer::new).model(ChickenModel.class));
-        manager.accept(Builder.of(CreeperSkinRenderer::new).model(CreeperModel.class));
+        handler.accept(Builder.of(SlimeSkinRenderer::new).model(SlimeModel.class));
+        handler.accept(Builder.of(GhastSkinRenderer::new).model(GhastModel.class));
+        handler.accept(Builder.of(ChickenSkinRenderer::new).model(ChickenModel.class));
+        handler.accept(Builder.of(CreeperSkinRenderer::new).model(CreeperModel.class));
     }
 
     protected static class Builder implements SkinRenderer.Factory<SkinRenderer<?, ?, ?>> {

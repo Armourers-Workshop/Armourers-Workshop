@@ -111,7 +111,7 @@ public final class SkinSerializerV14 {
         if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PROPS_HEADER)) {
             ModLog.error("Error loading skin props header.");
         }
-        SkinProperties properties = new SkinProperties();
+        SkinProperties properties = SkinProperties.create();
         IOException e = null;
         try {
             properties.readFromStream(stream, fileVersion);

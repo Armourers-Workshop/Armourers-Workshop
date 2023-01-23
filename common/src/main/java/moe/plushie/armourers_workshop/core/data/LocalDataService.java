@@ -189,7 +189,7 @@ public class LocalDataService {
             this.fileSize = nbt.getInt("FileSize");
             this.fileHash = nbt.getInt("FileHash");
             // properties
-            this.properties = new SkinProperties();
+            this.properties = SkinProperties.create();
             this.properties.readFromNBT(nbt.getCompound("Properties"));
             this.propertiesHash = nbt.getInt("PropertiesHash");
         }

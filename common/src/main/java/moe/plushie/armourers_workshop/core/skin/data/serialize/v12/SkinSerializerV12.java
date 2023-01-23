@@ -117,7 +117,7 @@ public final class SkinSerializerV12 {
             }
         }
 
-        SkinProperties properties = new SkinProperties();
+        SkinProperties properties = SkinProperties.create();
         boolean loadedProps = true;
         IOException e = null;
         if (fileVersion < 12) {
@@ -265,7 +265,7 @@ public final class SkinSerializerV12 {
             }
         }
 
-        SkinProperties properties = new SkinProperties();
+        SkinProperties properties = SkinProperties.create();
         boolean loadedProps = true;
         IOException e = null;
         if (fileVersion < 12) {

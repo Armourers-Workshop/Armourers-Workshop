@@ -69,7 +69,7 @@ public class OutfitMakerMenu extends AbstractBlockContainerMenu {
             return;
         }
         ArrayList<SkinPart> skinParts = new ArrayList<>();
-        SkinProperties skinProperties = new SkinProperties();
+        SkinProperties skinProperties = SkinProperties.create();
         String partIndexs = "";
         SkinPaintData paintData = null;
         int skinIndex = 0;

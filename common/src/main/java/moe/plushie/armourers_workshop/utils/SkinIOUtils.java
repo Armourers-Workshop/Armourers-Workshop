@@ -199,7 +199,7 @@ public final class SkinIOUtils {
             Skin skin = loadSkinRecovery(file);
             if (skin != null) {
                 ModLog.warn("Loaded skin with recovery system.");
-                skinType = Pair.of(skin.getType(), new SkinProperties());
+                skinType = Pair.of(skin.getType(), SkinProperties.create());
             }
         }
 

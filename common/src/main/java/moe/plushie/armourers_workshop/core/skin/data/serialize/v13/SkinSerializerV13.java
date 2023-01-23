@@ -90,7 +90,7 @@ public final class SkinSerializerV13 {
             ModLog.error("Error loading skin props header.");
         }
 
-        SkinProperties properties = new SkinProperties();
+        SkinProperties properties = SkinProperties.create();
         boolean loadedProps = true;
         IOException e = null;
         try {
@@ -189,7 +189,7 @@ public final class SkinSerializerV13 {
             ModLog.error("Error loading skin props header.");
         }
 
-        SkinProperties properties = new SkinProperties();
+        SkinProperties properties = SkinProperties.create();
         boolean loadedProps = true;
         IOException e = null;
         try {

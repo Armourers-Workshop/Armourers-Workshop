@@ -229,7 +229,7 @@ public class DataSerializers {
         }
 
         public SkinProperties read(FriendlyByteBuf buffer, Player player) {
-            SkinProperties properties = new SkinProperties();
+            SkinProperties properties = SkinProperties.create();
             CompoundTag nbt = buffer.readNbt();
             if (nbt != null) {
                 properties.readFromNBT(nbt);

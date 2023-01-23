@@ -2,15 +2,20 @@ package moe.plushie.armourers_workshop.utils;
 
 import moe.plushie.armourers_workshop.api.data.IExtraDateStorageKey;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 public class DataStorageKey<T> implements IExtraDateStorageKey<T> {
 
+    private static final AtomicInteger GENERATOR = new AtomicInteger();
+
+    private final int id;
     private final String name;
     private final Class<T> type;
     private final Supplier<T> defaultValue;
 
     public DataStorageKey(String name, Class<T> type, Supplier<T> defaultValue) {
+        this.id = GENERATOR.getAndIncrement();
         this.name = name;
         this.type = type;
         this.defaultValue = defaultValue;
@@ -29,15 +34,12 @@ public class DataStorageKey<T> implements IExtraDateStorageKey<T> {
         if (this == o) return true;
         if (!(o instanceof DataStorageKey)) return false;
         DataStorageKey<?> that = (DataStorageKey<?>) o;
-        if (!name.equals(that.name)) return false;
-        return type.equals(that.type);
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + type.hashCode();
-        return result;
+        return id;
     }
 
     @Override

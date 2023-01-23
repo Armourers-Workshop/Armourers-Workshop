@@ -5,73 +5,75 @@ import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 public class SkinProperty<T> implements ISkinProperty<T> {
 
     // Properties for all skins.
-    public static final SkinProperty<String> ALL_CUSTOM_NAME = new SkinProperty<>("customName", "");
-    public static final SkinProperty<String> ALL_FLAVOUR_TEXT = new SkinProperty<>("flavour", "");
+    public static final SkinProperty<String> ALL_CUSTOM_NAME = normal("customName", "");
+    public static final SkinProperty<String> ALL_FLAVOUR_TEXT = normal("flavour", "");
 
-    public static final SkinProperty<String> ALL_AUTHOR_NAME = new SkinProperty<>("authorName", "");
-    public static final SkinProperty<String> ALL_AUTHOR_UUID = new SkinProperty<>("authorUUID", "");
+    public static final SkinProperty<String> ALL_AUTHOR_NAME = normal("authorName", "");
+    public static final SkinProperty<String> ALL_AUTHOR_UUID = normal("authorUUID", "");
 
-    public static final SkinProperty<String> ALL_KEY_TAGS = new SkinProperty<>("tags", "");
+    public static final SkinProperty<String> ALL_KEY_TAGS = normal("tags", "");
 
-    public static final SkinProperty<String> ALL_SIGNATURE = new SkinProperty<>("signature", "");
+    public static final SkinProperty<String> ALL_SIGNATURE = normal("signature", "");
 
     // Properties.
     @Deprecated
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE = new SkinProperty<>("armourOverride", false);
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE_HEAD = new SkinProperty<>("overrideModelHead", false);
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE_CHEST = new SkinProperty<>("overrideModelChest", false);
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE_ARM_LEFT = new SkinProperty<>("overrideModelArmLeft", false);
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE_ARM_RIGHT = new SkinProperty<>("overrideModelArmRight", false);
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE_LEG_LEFT = new SkinProperty<>("overrideModelLegLeft", false);
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE_LEG_RIGHT = new SkinProperty<>("overrideModelLegRight", false);
+    public static final SkinProperty<Boolean> MODEL_OVERRIDE = normal("armourOverride", false);
+    public static final SkinProperty<Boolean> MODEL_OVERRIDE_HEAD = normal("overrideModelHead", false);
+    public static final SkinProperty<Boolean> MODEL_OVERRIDE_CHEST = normal("overrideModelChest", false);
+    public static final SkinProperty<Boolean> MODEL_OVERRIDE_ARM_LEFT = normal("overrideModelArmLeft", false);
+    public static final SkinProperty<Boolean> MODEL_OVERRIDE_ARM_RIGHT = normal("overrideModelArmRight", false);
+    public static final SkinProperty<Boolean> MODEL_OVERRIDE_LEG_LEFT = normal("overrideModelLegLeft", false);
+    public static final SkinProperty<Boolean> MODEL_OVERRIDE_LEG_RIGHT = normal("overrideModelLegRight", false);
 
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE_CHEST_OF_WINGS = new SkinProperty<>("overrideModelChestOfWings", false);
+    public static final SkinProperty<Boolean> MODEL_OVERRIDE_CHEST_OF_WINGS = normal("overrideModelChestOfWings", false);
 
     @Deprecated
-    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY = new SkinProperty<>("armourHideOverlay", false);
-    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_HEAD = new SkinProperty<>("hideOverlayHead", false);
-    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_CHEST = new SkinProperty<>("hideOverlayChest", false);
-    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_ARM_LEFT = new SkinProperty<>("hideOverlayArmLeft", false);
-    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_ARM_RIGHT = new SkinProperty<>("hideOverlayArmRight", false);
-    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_LEG_LEFT = new SkinProperty<>("hideOverlayLegLeft", false);
-    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_LEG_RIGHT = new SkinProperty<>("hideOverlayLegRight", false);
+    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY = normal("armourHideOverlay", false);
+    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_HEAD = normal("hideOverlayHead", false);
+    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_CHEST = normal("hideOverlayChest", false);
+    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_ARM_LEFT = normal("hideOverlayArmLeft", false);
+    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_ARM_RIGHT = normal("hideOverlayArmRight", false);
+    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_LEG_LEFT = normal("hideOverlayLegLeft", false);
+    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_LEG_RIGHT = normal("hideOverlayLegRight", false);
 
-    public static final SkinProperty<Boolean> MODEL_LEGS_LIMIT_LIMBS = new SkinProperty<>("limitLimbs", false);
+    public static final SkinProperty<Boolean> MODEL_LEGS_LIMIT_LIMBS = normal("limitLimbs", false);
 
-    public static final SkinProperty<String> OUTFIT_PART_INDEXS = new SkinProperty<>("partIndexs", "");
+    public static final SkinProperty<String> OUTFIT_PART_INDEXS = normal("partIndexs", "");
 
-    public static final SkinProperty<Boolean> BLOCK_GLOWING = new SkinProperty<>("blockGlowing", false);
-    public static final SkinProperty<Boolean> BLOCK_LADDER = new SkinProperty<>("blockLadder", false);
-    public static final SkinProperty<Boolean> BLOCK_NO_COLLISION = new SkinProperty<>("blockNoCollision", false);
-    public static final SkinProperty<Boolean> BLOCK_SEAT = new SkinProperty<>("blockSeat", false);
-    public static final SkinProperty<Boolean> BLOCK_MULTIBLOCK = new SkinProperty<>("blockMultiblock", false);
-    public static final SkinProperty<Boolean> BLOCK_BED = new SkinProperty<>("blockBed", false);
-    public static final SkinProperty<Boolean> BLOCK_INVENTORY = new SkinProperty<>("blockInventory", false);
-    public static final SkinProperty<Boolean> BLOCK_ENDER_INVENTORY = new SkinProperty<>("blockEnderInventory", false);
-    public static final SkinProperty<Integer> BLOCK_INVENTORY_WIDTH = new SkinProperty<>("blockInventoryWidth", 9);
-    public static final SkinProperty<Integer> BLOCK_INVENTORY_HEIGHT = new SkinProperty<>("blockInventoryHeight", 4);
+    public static final SkinProperty<Boolean> BLOCK_GLOWING = normal("blockGlowing", false);
+    public static final SkinProperty<Boolean> BLOCK_LADDER = normal("blockLadder", false);
+    public static final SkinProperty<Boolean> BLOCK_NO_COLLISION = normal("blockNoCollision", false);
+    public static final SkinProperty<Boolean> BLOCK_SEAT = normal("blockSeat", false);
+    public static final SkinProperty<Boolean> BLOCK_MULTIBLOCK = normal("blockMultiblock", false);
+    public static final SkinProperty<Boolean> BLOCK_BED = normal("blockBed", false);
+    public static final SkinProperty<Boolean> BLOCK_INVENTORY = normal("blockInventory", false);
+    public static final SkinProperty<Boolean> BLOCK_ENDER_INVENTORY = normal("blockEnderInventory", false);
+    public static final SkinProperty<Integer> BLOCK_INVENTORY_WIDTH = normal("blockInventoryWidth", 9);
+    public static final SkinProperty<Integer> BLOCK_INVENTORY_HEIGHT = normal("blockInventoryHeight", 4);
 
-    public static final SkinProperty<Double> WINGS_MAX_ANGLE = new SkinProperty<>("wingsMaxAngle", 75D, true);
-    public static final SkinProperty<Double> WINGS_MIN_ANGLE = new SkinProperty<>("wingsMinAngle", 0D, true);
-    public static final SkinProperty<Double> WINGS_IDLE_SPEED = new SkinProperty<>("wingsIdleSpeed", 6000D, true);
-    public static final SkinProperty<Double> WINGS_FLYING_SPEED = new SkinProperty<>("wingsFlyingSpeed", 350D, true);
-    public static final SkinProperty<String> WINGS_MOVMENT_TYPE = new SkinProperty<>("wingsMovmentType", MovementType.EASE.name(), true);
-    public static final SkinProperty<Boolean> WINGS_MATCHING_POSE = new SkinProperty<>("wingsMatchingPose", true);
+    public static final SkinProperty<Double> WINGS_MAX_ANGLE = multiple("wingsMaxAngle", 75D);
+    public static final SkinProperty<Double> WINGS_MIN_ANGLE = multiple("wingsMinAngle", 0D);
+    public static final SkinProperty<Double> WINGS_IDLE_SPEED = multiple("wingsIdleSpeed", 6000D);
+    public static final SkinProperty<Double> WINGS_FLYING_SPEED = multiple("wingsFlyingSpeed", 350D);
+    public static final SkinProperty<String> WINGS_MOVMENT_TYPE = multiple("wingsMovmentType", MovementType.EASE.name());
+    public static final SkinProperty<Boolean> WINGS_MATCHING_POSE = multiple("wingsMatchingPose", true);
 
     private final String key;
     private final T defaultValue;
     private final boolean multipleKey;
 
-    public SkinProperty(String key, T defaultValue) {
-        this.key = key;
-        this.defaultValue = defaultValue;
-        this.multipleKey = false;
-    }
-
     public SkinProperty(String key, T defaultValue, boolean multipleKey) {
         this.key = key;
         this.defaultValue = defaultValue;
         this.multipleKey = multipleKey;
+    }
+
+    public static <T> SkinProperty<T> normal(String key, T defaultValue) {
+        return new SkinProperty<>(key, defaultValue, false);
+    }
+
+    public static <T> SkinProperty<T> multiple(String key, T defaultValue) {
+        return new SkinProperty<>(key, defaultValue, true);
     }
 
     @Override

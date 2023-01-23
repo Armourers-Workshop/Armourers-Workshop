@@ -259,15 +259,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
         }
 
         public void registerArmor(ISkinPartType partType, IJoint joint) {
-            registerArmor(partType, (poseStack, entity, model, bakedPart, bakedSkin, context) -> {
-                ITransformf[] transforms = context.getTransforms();
-                if (transforms != null) {
-                    ITransformf transform = transforms[joint.getId()];
-                    if (transform != null) {
-                        transform.apply(poseStack);
-                    }
-                }
-            });
+            registerArmor(partType, (poseStack, entity, model, bakedPart, bakedSkin, context) -> apply(poseStack, joint, context));
         }
 
         public void registerArmor(ISkinPartType partType, BiConsumer<IPoseStack, M> transformer) {
@@ -280,6 +272,16 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
 
         public void registerItem(ItemTransforms.TransformType transformType, PartTransform<T, M> transformer) {
             items.put(transformType, transformer);
+        }
+
+        public void apply(IPoseStack poseStack, IJoint joint, SkinRenderContext context) {
+            ITransformf[] transforms = context.getTransforms();
+            if (transforms != null) {
+                ITransformf transform = transforms[joint.getId()];
+                if (transform != null) {
+                    transform.apply(poseStack);
+                }
+            }
         }
 
         public void apply(IPoseStack poseStack, ModelPart modelRenderer) {

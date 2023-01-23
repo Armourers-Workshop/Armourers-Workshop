@@ -167,7 +167,7 @@ public class SkinPart implements ISkinPart {
             super(partType, new ArrayList<>(), new SkinCubeData(partType));
             this.partBounds = bounds;
             this.renderShape = renderShape;
-            this.setProperties(new SkinProperties());
+            this.setProperties(SkinProperties.create());
         }
     }
 }

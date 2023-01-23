@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
+import moe.plushie.armourers_workshop.api.client.IJoint;
 import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
 import moe.plushie.armourers_workshop.core.armature.Joints;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
@@ -7,6 +8,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
@@ -32,10 +34,8 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, V extends Ent
         transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_LEG, Joints.BIPPED_LEFT_THIGH);
         transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_LEG, Joints.BIPPED_RIGHT_THIGH);
         transformer.registerArmor(SkinPartTypes.BIPPED_SKIRT, Joints.BIPPED_SKIRT);
-//        transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_WING, this::setWings);
-//        transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_WING, this::setWings);
-        transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_WING, Joints.BIPPED_LEFT_PHALANX);
-        transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_WING, Joints.BIPPED_RIGHT_PHALANX);
+        transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_WING, sel(Joints.BIPPED_LEFT_WING, Joints.BIPPED_LEFT_PHALANX));
+        transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_WING, sel(Joints.BIPPED_RIGHT_WING, Joints.BIPPED_RIGHT_PHALANX));
 
         transformer.registerArmor(SkinPartTypes.BIPPED_CHEST2, Joints.BIPPED_TORSO);
         transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_ARM2, Joints.BIPPED_LEFT_HAND);
@@ -108,83 +108,14 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, V extends Ent
         }
     }
 
-//    protected void ov(IPoseStack poseStack, M model, Joint2 joint) {
-//        ITransformf[] transforms = model.getTransforms();
-//        if (transforms != null) {
-//            ITransformf transform = transforms[joint.getId()];
-//            if (transform != null) {
-//                transform.apply(poseStack);
-//            }
-//        }
-//    }
-//
-//    protected void setHatPart(IPoseStack poseStack, M model) {
-//        ov(poseStack, model, Joints.BIPPED_HEAD);
-//        transformer.apply(poseStack, model.getHatPart());
-//    }
-//
-//    protected void setHeadPart(IPoseStack poseStack, M model) {
-//        ov(poseStack, model, Joints.BIPPED_HEAD);
-//        transformer.apply(poseStack, model.getHeadPart());
-//    }
-//
-//    protected void setBodyPart(IPoseStack poseStack, M model) {
-//        ov(poseStack, model, Joints.BIPPED_CHEST);
-//        transformer.apply(poseStack, model.getBodyPart());
-//    }
-//
-//    protected void setLeftArmPart(IPoseStack poseStack, M model) {
-//        ov(poseStack, model, Joints.BIPPED_LEFT_ARM);
-//        transformer.apply(poseStack, model.getLeftArmPart());
-//    }
-//
-//    protected void setRightArmPart(IPoseStack poseStack, M model) {
-//        ov(poseStack, model, Joints.BIPPED_RIGHT_ARM);
-//        transformer.apply(poseStack, model.getRightArmPart());
-//    }
-//
-//    protected void setLeftLegPart(IPoseStack poseStack, M model) {
-//        ov(poseStack, model, Joints.BIPPED_LEFT_THIGH);
-//        transformer.apply(poseStack, model.getLeftLegPart());
-//    }
-//
-//    protected void setRightLegPart(IPoseStack poseStack, M model) {
-//        ov(poseStack, model, Joints.BIPPED_RIGHT_THIGH);
-//        transformer.apply(poseStack, model.getRightLegPart());
-//    }
-//
-//    protected void setLeftFootPart(IPoseStack poseStack, M model) {
-//        ov(poseStack, model, Joints.BIPPED_LEFT_FOOT);
-//        transformer.apply(poseStack, model.getLeftLegPart());
-//    }
-//
-//    protected void setRightFootPart(IPoseStack poseStack, M model) {
-//        ov(poseStack, model, Joints.BIPPED_RIGHT_FOOT);
-//        transformer.apply(poseStack, model.getRightLegPart());
-//    }
-//
-//    protected void setSkirtPart(IPoseStack poseStack, M model) {
-//        ov(poseStack, model, Joints.BIPPED_SKIRT);
-//        ModelPart body = model.getBodyPart();
-//        ModelPart leg = model.getRightLegPart();
-//        poseStack.translate(body.x, leg.y, leg.z);
-//        if (body.yRot != 0) {
-//            poseStack.rotate(Vector3f.YP.rotation(body.yRot));
-//        }
-//        // skirt does not wobble during normal walking.
-//        if (!model.isRiding()) {
-//            return;
-//        }
-//        if (leg.xRot != 0) {
-//            poseStack.rotate(Vector3f.XP.rotation(leg.xRot));
-//        }
-//    }
-//
-//    protected void setWings(IPoseStack poseStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
-//        if (bakedPart.getProperties().get(SkinProperty.WINGS_MATCHING_POSE)) {
-//            transformer.apply(poseStack, model.getBodyPart());
-//        }
-//        poseStack.translate(0, 0, 2);
-//    }
+    protected PartTransform<T, M> sel(IJoint joint1, IJoint joint2) {
+        return (poseStack, entity, model, bakedPart, bakedSkin, context) -> {
+            if (bakedPart.getProperties().get(SkinProperty.WINGS_MATCHING_POSE)) {
+                transformer.apply(poseStack, joint2, context);
+            } else {
+                transformer.apply(poseStack, joint1, context);
+            }
+        };
+    }
 }
 

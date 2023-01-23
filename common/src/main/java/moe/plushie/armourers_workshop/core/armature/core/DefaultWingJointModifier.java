@@ -8,7 +8,6 @@ public class DefaultWingJointModifier extends ArmatureModifier {
 
     @Override
     public ITransformf apply(ITransformf transform, IModelHolder<?> model) {
-        // TODO: @SAGESSE
-        return transform;
+        return ITransformf.NONE;
     }
 }

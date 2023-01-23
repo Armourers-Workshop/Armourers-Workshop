@@ -55,7 +55,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
     protected int version = 0;
 
     protected ISkinType skinType = SkinTypes.ARMOR_HEAD;
-    protected SkinProperties skinProperties = new SkinProperties();
+    protected SkinProperties skinProperties = SkinProperties.create();
     protected PlayerTextureDescriptor textureDescriptor = PlayerTextureDescriptor.EMPTY;
 
     protected SkinPaintData paintData;
@@ -295,7 +295,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
         }
         // remake all properties.
         boolean isMultiBlock = skinProperties.get(SkinProperty.BLOCK_MULTIBLOCK);
-        skinProperties = new SkinProperties();
+        skinProperties = SkinProperties.create();
         skinProperties.put(SkinProperty.BLOCK_MULTIBLOCK, isMultiBlock);
         BlockUtils.combine(this, this::sendBlockUpdates);
     }

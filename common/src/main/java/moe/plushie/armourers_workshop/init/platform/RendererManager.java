@@ -18,7 +18,7 @@ public class RendererManager {
     public static void init() {
         CGGraphicsRenderer.init();
         AbstractModelPartRegistries.init();
-        SkinManager.init();
+        SkinRendererRegistries.init();
         SkinRendererManager.getInstance().init();
     }
 

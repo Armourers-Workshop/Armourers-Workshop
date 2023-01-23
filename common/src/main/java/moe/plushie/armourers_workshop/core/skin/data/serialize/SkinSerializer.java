@@ -132,7 +132,7 @@ public class SkinSerializer {
             String[] split = skinIndexs.split(":");
             int partIndex = 0;
             for (int skinIndex = 0; skinIndex < split.length; ++skinIndex) {
-                SkinProperties stub = new SkinProperties.Stub(properties, skinIndex);
+                SkinProperties stub = SkinProperties.create(properties, skinIndex);
                 int count = Integer.parseInt(split[skinIndex]);
                 while (partIndex < count) {
                     if (partIndex < skinParts.size()) {

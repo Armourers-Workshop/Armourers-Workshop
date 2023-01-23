@@ -69,7 +69,7 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
     }
 
     private void updateSkinProperties(SkinProperties skinProperties) {
-        SkinProperties skinProperties1 = new SkinProperties(tileEntity.getSkinProperties());
+        SkinProperties skinProperties1 = SkinProperties.create(tileEntity.getSkinProperties());
         this.skinProperties.applyTo(skinProperties1);
         if (skinProperties1.equals(tileEntity.getSkinProperties())) {
             return; // no changes

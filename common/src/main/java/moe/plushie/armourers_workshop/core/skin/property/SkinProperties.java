@@ -14,61 +14,6 @@ import java.util.*;
 
 public class SkinProperties implements ISkinProperties {
 
-//    // Properties for all skins.
-//    public static final SkinProperty<String> ALL_CUSTOM_NAME = new SkinProperty<>("customName", "");
-//    public static final SkinProperty<String> ALL_FLAVOUR_TEXT = new SkinProperty<>("flavour", "");
-//    public static final SkinProperty<String> ALL_AUTHOR_NAME = new SkinProperty<>("authorName", "");
-//    public static final SkinProperty<String> ALL_AUTHOR_UUID = new SkinProperty<>("authorUUID", "");
-//
-//    // Properties.
-//    @Deprecated
-//    public static final SkinProperty<Boolean> MODEL_OVERRIDE = new SkinProperty<>("armourOverride", false);
-//    public static final SkinProperty<Boolean> MODEL_OVERRIDE_HEAD = new SkinProperty<>("overrideModelHead", false);
-//    public static final SkinProperty<Boolean> MODEL_OVERRIDE_CHEST = new SkinProperty<>("overrideModelChest", false);
-//    public static final SkinProperty<Boolean> MODEL_OVERRIDE_ARM_LEFT = new SkinProperty<>("overrideModelArmLeft", false);
-//    public static final SkinProperty<Boolean> MODEL_OVERRIDE_ARM_RIGHT = new SkinProperty<>("overrideModelArmRight", false);
-//    public static final SkinProperty<Boolean> MODEL_OVERRIDE_LEG_LEFT = new SkinProperty<>("overrideModelLegLeft", false);
-//    public static final SkinProperty<Boolean> MODEL_OVERRIDE_LEG_RIGHT = new SkinProperty<>("overrideModelLegRight", false);
-//
-//    @Deprecated
-//    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY = new SkinProperty<>("armourHideOverlay", false);
-//    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_HEAD = new SkinProperty<>("hideOverlayHead", false);
-//    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_CHEST = new SkinProperty<>("hideOverlayChest", false);
-//    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_ARM_LEFT = new SkinProperty<>("hideOverlayArmLeft", false);
-//    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_ARM_RIGHT = new SkinProperty<>("hideOverlayArmRight", false);
-//    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_LEG_LEFT = new SkinProperty<>("hideOverlayLegLeft", false);
-//    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_LEG_RIGHT = new SkinProperty<>("hideOverlayLegRight", false);
-//
-//    public static final SkinProperty<Boolean> MODEL_LEGS_LIMIT_LIMBS = new SkinProperty<>("limitLimbs", false);
-//
-//    public static final SkinProperty<String> OUTFIT_PART_INDEXS = new SkinProperty<>("partIndexs", "");
-//
-//    public static final SkinProperty<Boolean> BLOCK_GLOWING = new SkinProperty<>("blockGlowing", false);
-//    public static final SkinProperty<Boolean> BLOCK_LADDER = new SkinProperty<>("blockLadder", false);
-//    public static final SkinProperty<Boolean> BLOCK_NO_COLLISION = new SkinProperty<>("blockNoCollision", false);
-//    public static final SkinProperty<Boolean> BLOCK_SEAT = new SkinProperty<>("blockSeat", false);
-//    public static final SkinProperty<Boolean> BLOCK_MULTIBLOCK = new SkinProperty<>("blockMultiblock", false);
-//    public static final SkinProperty<Boolean> BLOCK_BED = new SkinProperty<>("blockBed", false);
-//    public static final SkinProperty<Boolean> BLOCK_INVENTORY = new SkinProperty<>("blockInventory", false);
-//    public static final SkinProperty<Boolean> BLOCK_ENDER_INVENTORY = new SkinProperty<>("blockEnderInventory", false);
-//    public static final SkinProperty<Integer> BLOCK_INVENTORY_WIDTH = new SkinProperty<>("blockInventoryWidth", 9);
-//    public static final SkinProperty<Integer> BLOCK_INVENTORY_HEIGHT = new SkinProperty<>("blockInventoryHeight", 4);
-//
-//    public static final SkinProperty<Double> WINGS_MAX_ANGLE = new SkinProperty<>("wingsMaxAngle", 75D);
-//    public static final SkinProperty<Double> WINGS_MIN_ANGLE = new SkinProperty<>("wingsMinAngle", 0D);
-//    public static final SkinProperty<Double> WINGS_IDLE_SPEED = new SkinProperty<>("wingsIdleSpeed", 6000D);
-//    public static final SkinProperty<Double> WINGS_FLYING_SPEED = new SkinProperty<>("wingsFlyingSpeed", 350D);
-//    public static final SkinProperty<String> WINGS_MOVMENT_TYPE = new SkinProperty<>("wingsMovmentType", MovementType.EASE.toString());
-//
-//
-//    // Properties for skin parts.
-//    public static final SkinProperty<String> PART_TARGET = new SkinProperty<>("target", "");
-//    public static final SkinProperty<Boolean> PART_OVERRIDE = new SkinProperty<>("partOverride", false);
-//    public static final SkinProperty<Boolean> PART_HIDE_OVERLAY = new SkinProperty<>("partHideOverlay", false);
-//    public static final SkinProperty<Boolean> PART_LEGS_LIMIT_LIMB = new SkinProperty<>("limitLimb", false);
-//
-//    // Legacy
-
     protected LinkedHashMap<String, Object> properties;
 
     public SkinProperties() {
@@ -77,6 +22,18 @@ public class SkinProperties implements ISkinProperties {
 
     public SkinProperties(SkinProperties skinProps) {
         properties = new LinkedHashMap<>(skinProps.properties);
+    }
+
+    public static SkinProperties create() {
+        return new SkinProperties();
+    }
+
+    public static SkinProperties create(SkinProperties properties) {
+        return new SkinProperties(properties);
+    }
+
+    public static SkinProperties create(SkinProperties properties, int skinIndex) {
+        return new SkinProperties.Stub(properties, skinIndex);
     }
 
     public boolean isEmpty() {
@@ -256,7 +213,7 @@ public class SkinProperties implements ISkinProperties {
         });
     }
 
-    enum DataTypes {
+    public enum DataTypes {
         STRING, INT, DOUBLE, BOOLEAN
     }
 
