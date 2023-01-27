@@ -65,8 +65,8 @@ jobs:
         modrinth-id: y4JF3gXL
         modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
         
-#        curseforge-id: 229523
-#        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
+        curseforge-id: 229523
+        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
 
         retry-attempts: 3
         retry-delay: 30000
@@ -90,8 +90,8 @@ jobs:
         modrinth-id: y4JF3gXL
         modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
 
-#        curseforge-id: 229523
-#        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
+        curseforge-id: 229523
+        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
 
         retry-attempts: 3
         retry-delay: 30000
