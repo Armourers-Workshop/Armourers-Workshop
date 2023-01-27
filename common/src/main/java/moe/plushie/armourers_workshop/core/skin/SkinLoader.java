@@ -213,6 +213,9 @@ public class SkinLoader {
         }
 
         public void invoke() {
+            if (this.handlers.isEmpty()) {
+                return;
+            }
             ArrayList<IResultHandler<Skin>> handlers = this.handlers;
             this.handlers = new ArrayList<>();
             handlers.forEach(handler -> handler.apply(skin, exception));
@@ -391,7 +394,7 @@ public class SkinLoader {
 
         @Override
         public InputStream from(Request request) throws Exception {
-            return DataManager.getInstance().loadSkinData3(request.identifier);
+            return DataManager.getInstance().loadSkinData(request.identifier);
         }
     }
 

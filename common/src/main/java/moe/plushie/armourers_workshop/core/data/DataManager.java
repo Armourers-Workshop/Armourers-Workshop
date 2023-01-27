@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.core.data;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
@@ -9,7 +7,6 @@ import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 
 import java.io.*;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -106,34 +103,34 @@ public class DataManager {
 //            FileManager.deleteQuietly(cachedFile);
 //        });
 //    }
+//
+//    public Optional<ByteBuf> loadSkinData(String identifier) {
+//        ModLog.debug("Load skin data: {} ", identifier);
+//        try {
+//            InputStream stream;
+//            if (DataDomain.isDatabase(identifier)) {
+//                stream = LocalDataService.getInstance().getFile(identifier.substring(3));
+//            } else {
+//                String path = identifier;
+//                if (DataDomain.isServer(path) || DataDomain.isLocal(path)) {
+//                    path = SkinFileUtils.normalize(path.substring(3));
+//                }
+//                stream = loadStreamFromPath(path);
+//            }
+//            if (stream == null) {
+//                return Optional.empty();
+//            }
+//            int size = stream.available();
+//            ByteBuf buf = Unpooled.buffer(size);
+//            buf.writeBytes(stream, size);
+//            buf.resetReaderIndex();
+//            return Optional.of(buf);
+//        } catch (Exception e) {
+//            return Optional.empty();
+//        }
+//    }
 
-    public Optional<ByteBuf> loadSkinData(String identifier) {
-        ModLog.debug("Load skin data: {} ", identifier);
-        try {
-            InputStream stream;
-            if (DataDomain.isDatabase(identifier)) {
-                stream = LocalDataService.getInstance().getFile(identifier.substring(3));
-            } else {
-                String path = identifier;
-                if (DataDomain.isServer(path) || DataDomain.isLocal(path)) {
-                    path = SkinFileUtils.normalize(path.substring(3));
-                }
-                stream = loadStreamFromPath(path);
-            }
-            if (stream == null) {
-                return Optional.empty();
-            }
-            int size = stream.available();
-            ByteBuf buf = Unpooled.buffer(size);
-            buf.writeBytes(stream, size);
-            buf.resetReaderIndex();
-            return Optional.of(buf);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-    }
-
-    public InputStream loadSkinData3(String identifier) throws IOException {
+    public InputStream loadSkinData(String identifier) throws IOException {
         ModLog.debug("'{}' => get skin input stream from data manager", identifier);
         if (DataDomain.isDatabase(identifier)) {
             String path = DataDomain.getPath(identifier);
@@ -144,10 +141,10 @@ public class DataManager {
         }
     }
 
-    public void loadSkinData3(String identifier, IResultHandler<InputStream> handler) {
+    public void loadSkinData(String identifier, IResultHandler<InputStream> handler) {
         executor.submit(() -> {
             try {
-                handler.accept(loadSkinData3(identifier));
+                handler.accept(loadSkinData(identifier));
             } catch (Exception exception) {
                 handler.reject(exception);
             }

@@ -5,12 +5,12 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: Build Jar
+name: Publish Jars
 
 on:
   release:
     types: [published]
-        
+
 jobs:
   build:
     strategy:
@@ -21,24 +21,33 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - uses: actions/cache@v3
+      with:
+        key: cache-build-${{ matrix.version }}
+        path: |
+          .gradle
+          ~/.gradle
+
     - uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Set up release version
+    - name: Setup release version
       id: release-version
       run: |
         version=$(echo ${{ github.event.release.tag_name }} | cut -d'v' -f2)
-        echo "::set-output name=version::$version"
+        echo "version=$version" >> $GITHUB_OUTPUT
 
     - name: Switch ${{ matrix.version }}
-      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+      uses: gradle/gradle-build-action@v2
       with:
         arguments: -Pversion=${{ steps.release-version.outputs.version }} -p "versions/${{ matrix.version }}"
+        cache-disabled: true
 
     - name: Build ${{ matrix.version }}
-      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+      uses: gradle/gradle-build-action@v2
       env:
         AW_SIGN_ALIAS: ${{ secrets.AW_SIGN_ALIAS }}
         AW_SIGN_KEY_PASS: ${{ secrets.AW_SIGN_KEY_PASS }}
@@ -46,6 +55,7 @@ jobs:
         AW_SIGN_STORE_PASS: ${{ secrets.AW_SIGN_STORE_PASS }}
       with:
         arguments: -Pversion=${{ steps.release-version.outputs.version }} build
+        cache-disabled: true
 
     - name: Upload Fabric ${{ matrix.version }}
       uses: Kir-Antipov/mc-publish@v3.2
@@ -56,7 +66,7 @@ jobs:
 
         files-primary: fabric/build/libs/!(*-@(dev-shadow|sources|javadoc|)).jar
         files-secondary: ""
-        
+
         loaders: fabric
         game-versions: ${{ matrix.version }}
 
@@ -64,9 +74,9 @@ jobs:
 
         modrinth-id: y4JF3gXL
         modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
-        
-#        curseforge-id: 229523
-#        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
+
+        curseforge-id: 229523
+        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
 
         retry-attempts: 3
         retry-delay: 30000
@@ -90,8 +100,8 @@ jobs:
         modrinth-id: y4JF3gXL
         modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
 
-#        curseforge-id: 229523
-#        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
+        curseforge-id: 229523
+        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
 
         retry-attempts: 3
         retry-delay: 30000
