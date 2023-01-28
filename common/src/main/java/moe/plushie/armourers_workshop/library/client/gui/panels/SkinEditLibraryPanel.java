@@ -60,7 +60,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
         buttonUpdate.setAutoresizingMask(AutoresizingMask.flexibleRightMargin | AutoresizingMask.flexibleTopMargin);
 
         buttonDelete = addTextButton(width - 105, height - 25, 100, 20, "buttonDelete", SkinEditLibraryPanel::removeSkinPre);
-        buttonUpdate.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleTopMargin);
+        buttonDelete.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleTopMargin);
     }
 
     @Override
