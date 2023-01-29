@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.library.network;
 
 import com.google.common.collect.Iterables;
-import com.mojang.datafixers.util.Pair;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
@@ -10,6 +9,7 @@ import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinFileHeader;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryFile;
@@ -73,6 +73,7 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
                     values.add(properties.get(SkinProperty.ALL_CUSTOM_NAME));
                     values.add(properties.get(SkinProperty.ALL_AUTHOR_NAME));
                     values.add(properties.get(SkinProperty.ALL_FLAVOUR_TEXT));
+                    values.add(file.getSkinVersion() + "");
                 }
                 oo.writeUTF(file.getPath());
                 oo.writeByte(values.size());
@@ -104,7 +105,8 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
                 properties.put(SkinProperty.ALL_CUSTOM_NAME, oi.readUTF());
                 properties.put(SkinProperty.ALL_AUTHOR_NAME, oi.readUTF());
                 properties.put(SkinProperty.ALL_FLAVOUR_TEXT, oi.readUTF());
-                files.add(new SkinLibraryFile(DataDomain.DEDICATED_SERVER, basename, path, Pair.of(skinType, properties)));
+                int fileVersion = Integer.parseInt(oi.readUTF());
+                files.add(new SkinLibraryFile(DataDomain.DEDICATED_SERVER, basename, path, SkinFileHeader.of(fileVersion, skinType, properties)));
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
+import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
 import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
@@ -41,7 +42,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -200,17 +200,20 @@ public class DataSerializers {
         }
     };
 
-    public static final IPlayerDataSerializer<ContainerLevelAccess> WORLD_POS = new IPlayerDataSerializer<ContainerLevelAccess>() {
-        public void write(FriendlyByteBuf buffer, Player player, ContainerLevelAccess callable) {
+    public static final IPlayerDataSerializer<IContainerLevelAccess> WORLD_POS = new IPlayerDataSerializer<IContainerLevelAccess>() {
+        public void write(FriendlyByteBuf buffer, Player player, IContainerLevelAccess callable) {
             Optional<BlockPos> pos1 = callable.evaluate((world, pos) -> pos);
             buffer.writeBlockPos(pos1.orElse(BlockPos.ZERO));
+            // buffer.writeNbt(callable.extraData());
         }
 
-        public ContainerLevelAccess read(FriendlyByteBuf buffer, Player player) {
+        public IContainerLevelAccess read(FriendlyByteBuf buffer, Player player) {
             if (player == null || player.level == null) {
                 return null;
             }
-            return ContainerLevelAccess.create(player.level, buffer.readBlockPos());
+            BlockPos blockPos = buffer.readBlockPos();
+            // CompoundTag extraNBT = buffer.readNbt(); 
+            return IContainerLevelAccess.create(player.level, blockPos, null);
         }
     };
 

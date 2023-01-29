@@ -1,30 +1,28 @@
 package moe.plushie.armourers_workshop.core.skin.data.serialize.v13;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinBufferedCubes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
+import moe.plushie.armourers_workshop.core.skin.data.base.IDataInputStream;
+import moe.plushie.armourers_workshop.core.skin.data.base.IDataOutputStream;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.utils.StreamUtils;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public final class SkinPartSerializerV13 {
 
-    private SkinPartSerializerV13() {
+    public SkinPartSerializerV13() {
     }
 
-    public static SkinPart loadSkinPart(DataInputStream stream, int version) throws IOException, InvalidCubeTypeException {
-        ISkinPartType skinPartType = null;
-        SkinCubeData cubeData = null;
+    public SkinPart loadSkinPart(IDataInputStream stream, int version) throws IOException, InvalidCubeTypeException {
+        ISkinPartType partType = null;
+        SkinBufferedCubes cubeData = null;
         ArrayList<SkinMarker> markerBlocks = null;
-        String regName = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
+        String regName = stream.readString();
         if (regName.equals("armourers:skirt.base")) {
             regName = "armourers:legs.skirt";
         }
@@ -34,25 +32,29 @@ public final class SkinPartSerializerV13 {
         if (regName.equals("armourers:arrow.base")) {
             regName = "armourers:bow.arrow";
         }
-        skinPartType = SkinPartTypes.byName(regName);
-        if (skinPartType == null) {
+        partType = SkinPartTypes.byName(regName);
+        if (partType == null) {
             ModLog.error("Skin part was null - reg name: " + regName + " version: " + version);
             throw new IOException("Skin part was null - reg name: " + regName + " version: " + version);
         }
 
-        cubeData = new SkinCubeData(skinPartType);
-        cubeData.readFromStream(stream, version, skinPartType);
+        cubeData = new SkinBufferedCubes();
+        cubeData.readFromStream(stream, version, partType);
         markerBlocks = new ArrayList<>();
         int markerCount = stream.readInt();
         for (int i = 0; i < markerCount; i++) {
-            markerBlocks.add(new SkinMarker(stream, version));
+            markerBlocks.add(new SkinMarker(stream));
         }
-        return new SkinPart(skinPartType, markerBlocks, cubeData);
+
+        SkinPart.Builder builder = new SkinPart.Builder(partType);
+        builder.markers(markerBlocks);
+        builder.cubes(cubeData);
+        return builder.build();
     }
 
-    public static void saveSkinPart(SkinPart skinPart, DataOutputStream stream) throws IOException {
-        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, skinPart.getType().getRegistryName().toString());
-        skinPart.getCubeData().writeToStream(stream);
+    public void saveSkinPart(SkinPart skinPart, IDataOutputStream stream) throws IOException {
+        stream.writeString(skinPart.getType().getRegistryName().toString());
+        SkinBufferedCubes.writeToStream(skinPart.getCubeData(), stream);
         stream.writeInt(skinPart.getMarkers().size());
         for (SkinMarker marker : skinPart.getMarkers()) {
             marker.writeToStream(stream);

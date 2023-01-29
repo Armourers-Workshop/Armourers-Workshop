@@ -4,8 +4,8 @@ import moe.plushie.armourers_workshop.api.action.ICanRotation;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -13,9 +13,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-public class SkinWingsTransform extends SkinTransform {
+public class SkinWingsTransform implements ISkinTransform {
 
     private float partialTicks = 0;
     private boolean isFallFlying = false;
@@ -24,39 +22,20 @@ public class SkinWingsTransform extends SkinTransform {
 
     private final SkinMarker marker;
     private final SkinProperties properties;
-    private final SkinTransform transform;
 
-    public static SkinTransform build(SkinPart part) {
-        SkinTransform transform = part.getTransform();
-        ISkinPartType partType = part.getType();
-        if (!(partType instanceof ICanRotation)) {
-            return transform;
-        }
-        List<SkinMarker> markers = part.getMarkers();
-        if (markers == null || markers.size() == 0) {
-            return transform;
-        }
-        return new SkinWingsTransform(partType, part.getProperties(), markers.get(0), transform);
-    }
-
-    public SkinWingsTransform(ISkinPartType partType, SkinProperties properties, SkinMarker marker, SkinTransform transform) {
+    public SkinWingsTransform(ISkinPartType partType, SkinProperties properties, SkinMarker marker) {
         this.marker = marker;
         this.properties = properties;
-        this.transform = transform;
         this.isMirror = ((ICanRotation) partType).isMirror();
-
     }
 
-    @Override
     public void setup(float partialTicks, @Nullable Entity entity) {
-        this.transform.setup(partialTicks, entity);
         this.partialTicks = partialTicks;
         this.isFallFlying = entity instanceof LivingEntity && ((LivingEntity) entity).isFallFlying();
     }
 
     @Override
     public void pre(IPoseStack poseStack) {
-        transform.pre(poseStack);
     }
 
     @Override
@@ -71,8 +50,6 @@ public class SkinWingsTransform extends SkinTransform {
         poseStack.translate(offset.getX(), offset.getY(), offset.getZ());
         poseStack.rotate(getRotationMatrix().rotationDegrees(angle));
         poseStack.translate(-offset.getX(), -offset.getY(), -offset.getZ());
-
-        transform.post(poseStack);
     }
 
     private double getRotationDegrees() {

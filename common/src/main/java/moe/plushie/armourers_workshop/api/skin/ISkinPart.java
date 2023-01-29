@@ -7,7 +7,7 @@ public interface ISkinPart {
     /**
      * Gets the type this skin part.
      */
-    <T extends ISkinPartType> T getType();
+    ISkinPartType getType();
 
     List<? extends ISkinMarker> getMarkers();
 }

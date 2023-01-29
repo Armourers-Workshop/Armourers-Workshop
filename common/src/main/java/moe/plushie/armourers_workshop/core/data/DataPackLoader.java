@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -17,23 +18,25 @@ import java.util.function.Function;
 
 public class DataPackLoader {
 
-    private final String path;
+    private final ResourceLocation target;
     private final Function<ResourceLocation, IDataPackBuilder> provider;
     private final Runnable willLoadHandler;
     private final Runnable didLoadHandler;
 
     public DataPackLoader(String path, Function<ResourceLocation, IDataPackBuilder> provider, Runnable willLoadHandler, Runnable didLoadHandler) {
-        this.path = path;
+        this.target = ModConstants.key(path);
         this.provider = provider;
         this.willLoadHandler = willLoadHandler;
         this.didLoadHandler = didLoadHandler;
     }
 
     public CompletableFuture<Map<ResourceLocation, IDataPackBuilder>> prepare(IResourceManager resourceManager, Executor executor) {
-        willLoadHandler.run();
+        if (willLoadHandler != null) {
+            willLoadHandler.run();
+        }
         return CompletableFuture.supplyAsync(() -> {
             HashMap<ResourceLocation, IDataPackBuilder> results = new HashMap<>();
-            resourceManager.readResources(path, s -> s.endsWith(".json"), (location, inputStream) -> {
+            resourceManager.readResources(target, s -> s.endsWith(".json"), (location, inputStream) -> {
                 JsonObject object = StreamUtils.fromJson(inputStream, JsonObject.class);
                 if (object == null) {
                     return;
@@ -48,6 +51,8 @@ public class DataPackLoader {
 
     public void load(Map<ResourceLocation, IDataPackBuilder> results) {
         results.forEach((key, builder) -> builder.build());
-        didLoadHandler.run();
+        if (didLoadHandler != null) {
+            didLoadHandler.run();
+        }
     }
 }

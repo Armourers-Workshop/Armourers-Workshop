@@ -7,7 +7,6 @@ import com.apple.library.uikit.UICheckBox;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UISliderBox;
 import com.apple.library.uikit.UIView;
-import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.tooloption.BooleanToolProperty;
 import moe.plushie.armourers_workshop.builder.item.tooloption.IntegerToolProperty;
@@ -27,6 +26,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 

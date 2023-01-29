@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.network.RequestSkinPacket;
+import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModContext;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
@@ -336,6 +337,7 @@ public class SkinLoader {
                 Skin skin = load(request);
                 request.accept(skin);
             } catch (Exception exception) {
+                exception.printStackTrace();
                 request.abort(exception);
             }
         }
@@ -375,15 +377,17 @@ public class SkinLoader {
             InputStream inputStream = null;
             try {
                 inputStream = from(request);
+                long startTime = System.currentTimeMillis();
                 Skin skin = SkinIOUtils.loadSkinFromStream2(inputStream);
-                loadDidFinish(request, skin);
+                long totalTime = System.currentTimeMillis() - startTime;
+                loadDidFinish(request, skin, totalTime);
                 return skin;
             } finally {
                 StreamUtils.closeQuietly(inputStream);
             }
         }
 
-        public abstract void loadDidFinish(Request request, Skin skin);
+        public abstract void loadDidFinish(Request request, Skin skin, long loadTime);
 
         public abstract InputStream from(Request request) throws Exception;
     }
@@ -395,8 +399,8 @@ public class SkinLoader {
         }
 
         @Override
-        public void loadDidFinish(Request request, Skin skin) {
-            ModLog.debug("'{}' => did load skin from local session", request.identifier);
+        public void loadDidFinish(Request request, Skin skin, long loadTime) {
+            ModLog.debug("'{}' => did load skin from local session, time: {}ms", request.identifier, loadTime);
         }
 
         @Override
@@ -510,8 +514,8 @@ public class SkinLoader {
         }
 
         @Override
-        public void loadDidFinish(Request request, Skin skin) {
-            ModLog.debug("'{}' => did load skin from download session", request.identifier);
+        public void loadDidFinish(Request request, Skin skin, long loadTime) {
+            ModLog.debug("'{}' => did load skin from download session, time: {}ms", request.identifier, loadTime);
             caching.add(request.identifier, skin);
         }
 
@@ -604,8 +608,8 @@ public class SkinLoader {
         }
 
         @Override
-        public void loadDidFinish(Request request, Skin skin) {
-            ModLog.debug("'{}' => did load skin from cache session", request.identifier);
+        public void loadDidFinish(Request request, Skin skin, long loadTime) {
+            ModLog.debug("'{}' => did load skin from cache session, time: {}ms", request.identifier, loadTime);
         }
 
         @Override
@@ -615,7 +619,7 @@ public class SkinLoader {
                 throw new FileNotFoundException(request.identifier);
             }
             // global data no need decrypt/encrypt
-            if (isGlobalServer(request.identifier)) {
+            if (isGlobalLibraryResource(request.identifier)) {
                 return new FileInputStream(cacheFile);
             }
             byte[] x0 = ModContext.x0();
@@ -639,9 +643,13 @@ public class SkinLoader {
             File cacheFile = null;
             UUID t0 = ModContext.t0();
             String namespace = DataDomain.getNamespace(identifier);
-            if (isGlobalServer(identifier)) {
+            if (isGlobalLibraryResource(identifier)) {
                 String path = DataDomain.getPath(identifier);
                 String domain = "00000000-0000-0000-0000-000000000000";
+                // for private global skin library caches, it will be stored in its server cache directory.
+                if (t0 != null && ModConfig.Common.enablePrivateGlobalSkinLibrary) {
+                    domain = t0.toString();
+                }
                 // for history reasons and performance optimization,
                 // when skin already downloaded we don't need preview skin.
                 cacheFile = cachingFile(domain, DataDomain.GLOBAL_SERVER.namespace(), path);
@@ -661,7 +669,7 @@ public class SkinLoader {
             return new File(localPath, identifier + ".dat");
         }
 
-        private boolean isGlobalServer(String identifier)  {
+        private boolean isGlobalLibraryResource(String identifier) {
             return DataDomain.GLOBAL_SERVER.matches(identifier) || DataDomain.GLOBAL_SERVER_PREVIEW.matches(identifier);
         }
     }

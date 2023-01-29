@@ -16,6 +16,7 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.skin.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.platform.TransformationProvider;
@@ -80,7 +81,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
         M model1 = getOverrideModel(model);
         PartTransform<T, M> partTransform = getPartTransform(entity, model1, bakedPart, bakedSkin, context);
         if (partTransform != null && model1 != null) {
-            SkinTransform transform = bakedPart.getTransform();
+            SkinPartTransform transform = bakedPart.getTransform();
             transform.setup(context.partialTicks, entity);
             transform.pre(context.poseStack);
             partTransform.apply(context.poseStack, entity, model1, bakedPart, bakedSkin, context);
@@ -159,7 +160,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
         int counter = 0;
         for (BakedSkinPart bakedPart : parentPart.getChildren()) {
             context.pushPose();
-            SkinTransform transform = bakedPart.getTransform();
+            SkinPartTransform transform = bakedPart.getTransform();
             transform.apply(context.poseStack);
             builder.addPartData(bakedPart, bakedSkin, scheme, shouldRenderPart, context);
             counter += renderChildPart(bakedPart, bakedSkin, scheme, shouldRenderPart, builder, context);

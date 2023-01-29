@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
+import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.library.data.impl.*;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
@@ -27,14 +28,7 @@ public class GlobalSkinLibrary extends ServerSession {
     private static final int TOKEN_UPDATE_TIME = 60 * 1000;
     private static final GlobalSkinLibrary INSTANCE = new GlobalSkinLibrary();
 
-    private boolean updatingToken = false;
-    private boolean connecting = false;
-    private boolean connected = false;
-
-    private ServerUser currentUser = new ServerUser(UUID.randomUUID(), "");
-
-    private final HashMap<String, ServerUser> users = new HashMap<>();
-    private final HashSet<String> downloaded = new HashSet<>();
+    private State state = new State(new ArrayList<>());
 
     public static GlobalSkinLibrary getInstance() {
         return INSTANCE;
@@ -45,22 +39,23 @@ public class GlobalSkinLibrary extends ServerSession {
     }
 
     public void connect(GameProfile profile, Consumer<Exception> consumer) {
-        if (connecting || connected) {
+        resolveState();
+        if (state.connecting || state.connected) {
             return;
         }
-        currentUser = new ServerUser(profile.getId(), profile.getName());
+        state.currentUser = new ServerUser(profile.getId(), profile.getName());
         if (!isValidJavaVersion()) {
-            connected = true;
+            state.connected = true;
             // consumer.accept(new RuntimeException("invalid java version"));
             return;
         }
-        connecting = true;
+        state.connecting = true;
         request("/connect", a2m("uuid", profile.getId()), ServerUser::fromJSON, (result, exception) -> {
-            connecting = false;
-            connected = true;
+            state.connecting = false;
+            state.connected = true;
             if (result != null) {
-                currentUser = result;
-                users.put(result.getId(), result);
+                state.currentUser = result;
+                state.users.put(result.getId(), result);
             }
         });
     }
@@ -77,13 +72,13 @@ public class GlobalSkinLibrary extends ServerSession {
 
     public void auth2() {
         ServerToken accessToken = getUser().getAccessToken();
-        if (accessToken == null || accessToken.getRemainingTime() < 0 || accessToken.getRemainingTime() > TOKEN_UPDATE_TIME || updatingToken) {
+        if (accessToken == null || accessToken.getRemainingTime() < 0 || accessToken.getRemainingTime() > TOKEN_UPDATE_TIME || state.updatingToken) {
             return;
         }
         ModLog.debug("Getting new token. Time left: {}", accessToken.getRemainingTime() / 1000);
-        updatingToken = true;
+        state.updatingToken = true;
         request("/user/auth2", null, ServerToken::new, (result, exception) -> {
-            updatingToken = false;
+            state.updatingToken = false;
             if (result != null) {
                 getUser().setAccessToken(result);
             }
@@ -172,12 +167,9 @@ public class GlobalSkinLibrary extends ServerSession {
     }
 
     public void downloadSkin(String skinId, File target, IResultHandler<File> handlerIn) {
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("skinid", skinId);
-        parameters.put("skinFileName", "");
         submit(handlerIn, handlerOut -> {
             try {
-                InputStream inputStream = buildTask("/skin/download", parameters).call();
+                InputStream inputStream = downloadSkin(skinId);
                 SkinFileUtils.copyInputStreamToFile(inputStream, target);
                 handlerOut.accept(target);
             } catch (Exception exception) {
@@ -222,7 +214,7 @@ public class GlobalSkinLibrary extends ServerSession {
         HashMap<String, Object> parameters = super.defaultParameters();
         ServerUser user = getUser();
         ServerToken accessToken = user.getAccessToken();
-        parameters.put("maxFileVersion", SkinSerializer.MAX_FILE_VERSION);
+        parameters.put("maxFileVersion", SkinSerializer.FILE_VERSION_V1M);
         if (user.getId() != null) {
             parameters.put("userId", user.getId());
         }
@@ -232,25 +224,34 @@ public class GlobalSkinLibrary extends ServerSession {
         return parameters;
     }
 
+    @Override
+    protected ArrayList<String> getBaseURLs() {
+        ArrayList<String> customURLs = ModConfig.Common.customGlobalSkinLibraryURLs;
+        if (!customURLs.isEmpty()) {
+            return customURLs;
+        }
+        return super.getBaseURLs();
+    }
+
     public ServerUser getUser() {
-        return currentUser;
+        return state.currentUser;
     }
 
     @Nullable
     public ServerUser getUserById(String userId) {
-        synchronized (users) {
-            ServerUser user = users.get(userId);
+        synchronized (state.users) {
+            ServerUser user = state.users.get(userId);
             if (user != null) {
                 return user;
             }
         }
         ServerUser user = new ServerUser(userId, UUID.randomUUID(), "", ServerPermissions.NO_LOGIN);
-        users.put(userId, user);
-        if (!downloaded.contains(userId)) {
-            downloaded.add(userId);
+        state.users.put(userId, user);
+        if (!state.downloaded.contains(userId)) {
+            state.downloaded.add(userId);
             getUser(userId, (realUser, exception) -> {
-                synchronized (users) {
-                    users.put(userId, realUser);
+                synchronized (state.users) {
+                    state.users.put(userId, realUser);
                 }
             });
         }
@@ -258,7 +259,7 @@ public class GlobalSkinLibrary extends ServerSession {
     }
 
     public boolean isConnected() {
-        return connected;
+        return state.connected;
     }
 
     public boolean isValidJavaVersion() {
@@ -331,6 +332,12 @@ public class GlobalSkinLibrary extends ServerSession {
         return parameters;
     }
 
+    private Map<String, Object> a2m(String m, Object o) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(m, o);
+        return map;
+    }
+
     private ServerPermission resolvePermission(ServerRequest request, @Nullable Map<String, ?> parameters) {
         ServerUser user = getUser();
         ServerPermission permission = request.getPermission();
@@ -353,6 +360,31 @@ public class GlobalSkinLibrary extends ServerSession {
             default: {
                 return permission;
             }
+        }
+    }
+
+    private void resolveState() {
+        ArrayList<String> customURLs = ModConfig.Common.customGlobalSkinLibraryURLs;
+        if (!customURLs.equals(state.hosts)) {
+            state = new State(customURLs);
+        }
+    }
+
+    private static class State {
+
+        ServerUser currentUser = new ServerUser(UUID.randomUUID(), "");
+
+        boolean updatingToken = false;
+        boolean connecting = false;
+        boolean connected = false;
+
+        final HashMap<String, ServerUser> users = new HashMap<>();
+        final HashSet<String> downloaded = new HashSet<>();
+
+        final ArrayList<String> hosts;
+
+        private State(ArrayList<String> hosts) {
+            this.hosts = hosts;
         }
     }
 }

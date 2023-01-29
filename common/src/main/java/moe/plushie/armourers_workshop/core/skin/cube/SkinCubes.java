@@ -1,65 +1,69 @@
 package moe.plushie.armourers_workshop.core.skin.cube;
 
-import moe.plushie.armourers_workshop.api.common.IRegistryKey;
-import moe.plushie.armourers_workshop.api.skin.ISkinCube;
-import moe.plushie.armourers_workshop.init.ModBlocks;
-import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.utils.SkinResourceLocation;
-import net.minecraft.world.level.block.Block;
+import moe.plushie.armourers_workshop.api.skin.ISkinCubeProvider;
+import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
+import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
+import moe.plushie.armourers_workshop.utils.math.Vector3i;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
-@SuppressWarnings("unused")
-public final class SkinCubes {
+public class SkinCubes implements ISkinCubeProvider {
 
-    private static final SkinCube[] ALL_CUBES_MAPPING = new SkinCube[256];
-    private static final Map<String, SkinCube> ALL_CUBES = new HashMap<>();
+    protected int cubeCount = 0;
+    protected final ArrayList<SkinCube> cubes = new ArrayList<>();
+    protected final SkinUsedCounter usedCounter = new SkinUsedCounter();
 
-    public static final ISkinCube SOLID = register("solid", 0, false, false, ModBlocks.SKIN_CUBE);
-    public static final ISkinCube GLOWING = register("glowing", 1, false, true, ModBlocks.SKIN_CUBE_GLOWING);
-    public static final ISkinCube GLASS = register("glass", 2, true, false, ModBlocks.SKIN_CUBE_GLASS);
-    public static final ISkinCube GLASS_GLOWING = register("glass_gowing", 3, true, true, ModBlocks.SKIN_CUBE_GLASS_GLOWING);
-
-    public static ISkinCube byName(String name) {
-        ISkinCube cube = ALL_CUBES.get(name);
-        if (cube != null) {
-            return cube;
-        }
-        return SOLID;
+    public void ensureCapacity(int size) {
+        cubes.ensureCapacity(size);
+        cubeCount = size;
+        usedCounter.reset();
     }
 
-    public static ISkinCube byId(int index) {
-        ISkinCube cube = ALL_CUBES_MAPPING[index & 0xFF];
-        if (cube != null) {
-            return cube;
+    public void forEach(ICubeConsumer consumer) {
+        int count = getCubeCount();
+        for (int i = 0; i < count; ++i) {
+            Vector3i pos = getCube(i).getPos();
+            consumer.apply(i, pos.getX(), pos.getY(), pos.getZ());
         }
-        return SOLID;
     }
 
-    public static ISkinCube byBlock(Block block) {
-        for (SkinCube cube : ALL_CUBES.values()) {
-            if (cube.getBlock() == block) {
-                return cube;
-            }
+    public OpenVoxelShape getRenderShape() {
+        OpenVoxelShape shape = OpenVoxelShape.empty();
+        int count = getCubeCount();
+        if (count == 0) {
+            return shape;
         }
-        return SOLID;
+        for (int i = 0; i < count; ++i) {
+            Vector3i pos = getCube(i).getPos();
+            shape.add(pos.getX(), pos.getY(), pos.getZ(), 1, 1, 1);
+        }
+        shape.optimize();
+        return shape;
     }
 
-    private static SkinCube register(String name, int id, boolean glass, boolean glowing, IRegistryKey<Block> block) {
-        SkinCube cube = new SkinCube(id, glass, glowing, block);
-        cube.setRegistryName(new SkinResourceLocation("armourers", name));
-        if (ALL_CUBES.containsKey(cube.getRegistryName().toString())) {
-            ModLog.warn("A mod tried to register a cube with an id that is in use.");
-            return cube;
-        }
-        ALL_CUBES.put(cube.getRegistryName().toString(), cube);
-        ALL_CUBES_MAPPING[cube.getId() & 0xFF] = cube;
-        ModLog.debug("Registering Skin Cube '{}'", cube.getRegistryName());
-        return cube;
+    public SkinUsedCounter getUsedCounter() {
+        return usedCounter;
     }
 
-    public static int getTotalCubes() {
-        return ALL_CUBES.size();
+    @Override
+    public int getCubeCount() {
+        return cubeCount;
+    }
+
+    public void setCube(int index, SkinCube cube) {
+        if (index < cubes.size()) {
+            cubes.set(index, cube);
+        } else {
+            cubes.add(cube);
+        }
+    }
+
+    @Override
+    public SkinCube getCube(int index) {
+        return cubes.get(index);
+    }
+
+    public interface ICubeConsumer {
+        void apply(int i, int x, int y, int z);
     }
 }

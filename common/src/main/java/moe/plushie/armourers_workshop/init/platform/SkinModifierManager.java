@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.core.armature.ArmatureManager;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultArmatureManager;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightArmatureManager;
 import moe.plushie.armourers_workshop.core.data.DataPackLoader;
+import moe.plushie.armourers_workshop.core.data.DataPackType;
 import net.minecraft.resources.ResourceLocation;
 
 @SuppressWarnings("unused")
@@ -21,7 +22,7 @@ public class SkinModifierManager {
             .build();
 
     public static void init() {
-        DataPackManager.register(new DataPackLoader("skin/modifiers", SimpleLoader::new, SimpleLoader::clean, SimpleLoader::freeze));
+        DataPackManager.register(DataPackType.JAR, new DataPackLoader("skin/modifiers", SimpleLoader::new, SimpleLoader::clean, SimpleLoader::freeze));
     }
 
     public static class SimpleLoader implements IDataPackBuilder {

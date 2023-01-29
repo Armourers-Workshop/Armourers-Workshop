@@ -3,23 +3,11 @@ package moe.plushie.armourers_workshop.api.skin;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
-import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author RiskyKen
  */
-public interface ISkinPartType {
-
-    /**
-     * Gets the name this skin will be registered with. Armourer's Workshop uses the
-     * format skinType + "." + partName. Example
-     * armourers:chest.leftArm is the registry name of Armourer's Workshop chest
-     * left arm skin part.
-     *
-     * @return Registry name
-     */
-    ResourceLocation getRegistryName();
-
+public interface ISkinPartType extends ISkinRegistryEntry {
 
     /**
      * The last 3 values are used to define the size of this part, the first 3

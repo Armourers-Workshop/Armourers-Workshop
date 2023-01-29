@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.builder.menu;
 
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
 import moe.plushie.armourers_workshop.api.math.ITexturePos;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartTypeTextured;
@@ -14,7 +15,6 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
@@ -22,7 +22,6 @@ import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -35,7 +34,7 @@ public class OutfitMakerMenu extends AbstractBlockContainerMenu {
 
     private final Container inventory;
 
-    public OutfitMakerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, ContainerLevelAccess access) {
+    public OutfitMakerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess access) {
         super(menuType, block, containerId, access);
         this.inventory = getTileInventory();
         this.addPlayerSlots(playerInventory, 8, 158);
@@ -128,7 +127,11 @@ public class OutfitMakerMenu extends AbstractBlockContainerMenu {
             skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, tileEntity.getItemName());
             skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, tileEntity.getItemFlavour());
             // build
-            Skin skin = SkinSerializer.makeSkin(SkinTypes.OUTFIT, skinProperties, paintData, skinParts);
+            Skin.Builder builder = new Skin.Builder(SkinTypes.OUTFIT);
+            builder.properties(skinProperties);
+            builder.paintData(paintData);
+            builder.parts(skinParts);
+            Skin skin = builder.build();
             String identifier = SkinLoader.getInstance().saveSkin("", skin);
             SkinDescriptor descriptor = new SkinDescriptor(identifier, skin.getType());
             setOutputStack(descriptor.asItemStack());

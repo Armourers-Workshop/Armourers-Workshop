@@ -15,6 +15,7 @@ import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public interface ForgeCommonNativeProvider extends CommonNativeProvider {
 
@@ -35,8 +36,8 @@ public interface ForgeCommonNativeProvider extends CommonNativeProvider {
     }
 
     @Override
-    default void willRegisterCustomDataPack(Consumer<Consumer<PreparableReloadListener>> consumer) {
-        consumer.accept(listener -> NotificationCenterImpl.observer(AddReloadListenerEvent.class, event -> event.addListener(listener)));
+    default void willRegisterCustomDataPack(Supplier<PreparableReloadListener> consumer) {
+        NotificationCenterImpl.observer(AddReloadListenerEvent.class, event -> event.addListener(consumer.get()));
     }
 
     @Override

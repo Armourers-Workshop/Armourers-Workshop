@@ -2,17 +2,18 @@ package moe.plushie.armourers_workshop.core.skin.property;
 
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
+import moe.plushie.armourers_workshop.core.skin.data.base.IDataInputStream;
+import moe.plushie.armourers_workshop.core.skin.data.base.IDataOutputStream;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.nbt.*;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
 
 public class SkinProperties implements ISkinProperties {
+
+    public static final SkinProperties EMPTY = new SkinProperties();
 
     protected LinkedHashMap<String, Object> properties;
 
@@ -95,15 +96,15 @@ public class SkinProperties implements ISkinProperties {
         this.properties = new LinkedHashMap<>(properties.properties);
     }
 
-    public void writeToStream(DataOutputStream stream) throws IOException {
+    public void writeToStream(IDataOutputStream stream) throws IOException {
         stream.writeInt(properties.size());
         for (int i = 0; i < properties.size(); i++) {
             String key = (String) properties.keySet().toArray()[i];
             Object value = properties.get(key);
-            StreamUtils.writeStringUtf8(stream, key);
+            stream.writeString(key);
             if (value instanceof String) {
                 stream.writeByte(DataTypes.STRING.ordinal());
-                StreamUtils.writeStringUtf8(stream, (String) value);
+                stream.writeString((String) value);
             }
             if (value instanceof Integer) {
                 stream.writeByte(DataTypes.INT.ordinal());
@@ -120,16 +121,10 @@ public class SkinProperties implements ISkinProperties {
         }
     }
 
-    public void readFromStream(DataInputStream stream, int fileVersion) throws IOException {
+    public void readFromStream(IDataInputStream stream) throws IOException {
         int count = stream.readInt();
         for (int i = 0; i < count; i++) {
-
-            String key = null;
-            if (fileVersion > 12) {
-                key = StreamUtils.readStringUtf8(stream);
-            } else {
-                key = stream.readUTF();
-            }
+            String key = stream.readString();
             int byteType = stream.readByte();
             DataTypes type = DataTypes.byId(byteType);
             if (type == null) {
@@ -139,11 +134,7 @@ public class SkinProperties implements ISkinProperties {
             Object value = null;
             switch (type) {
                 case STRING:
-                    if (fileVersion > 12) {
-                        value = StreamUtils.readStringUtf8(stream);
-                    } else {
-                        value = stream.readUTF();
-                    }
+                    value = stream.readString();
                     break;
                 case INT:
                     value = stream.readInt();

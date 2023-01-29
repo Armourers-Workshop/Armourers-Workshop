@@ -118,6 +118,10 @@ public class ModConfigSpec {
                 define("extractOfficialSkins", true, "Allow the mod to extract the official skins that come with the mod into the library folder.").bind(v -> extractOfficialSkins = v, () -> extractOfficialSkins);
                 define("allowPreviewSkins", true, "Shows model previews in the library.", "Causes a lot of extra load on servers.", "Best to turn off on high population servers").bind(n -> allowLibraryPreviews = n, () -> allowLibraryPreviews);
                 define("allowManageSkins", false, "Allows clients to manage skins of the server computer library.", "Required permission level 5 or higher.").bind(v -> allowLibraryRemoteManage = v, () -> allowLibraryRemoteManage);
+
+                Predicate<Object> elementValidator = item -> true;
+                defineList("customGlobalServerURLs", new ArrayList<String>(), elementValidator, "We priority use https for the access token APIs.").bind(v -> customGlobalSkinLibraryURLs = new ArrayList<>(v), () -> new ArrayList<>(customGlobalSkinLibraryURLs));
+                define("privateGlobalServer", false, "For the private global servers, will have special handling for caching.").bind(v -> enablePrivateGlobalSkinLibrary = v, () -> enablePrivateGlobalSkinLibrary);
             });
             defineCategory("recipe", "Setting for mod recipes.", () -> {
                 define("disableRecipes", false, "Disable vanilla recipes. Use if you want to manually add recipes for a mod pack.").bind(v -> disableRecipes = v, () -> disableRecipes);

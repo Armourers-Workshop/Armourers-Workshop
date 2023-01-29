@@ -1,29 +1,27 @@
 package moe.plushie.armourers_workshop.core.skin.data.serialize.v12;
 
-import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
+import moe.plushie.armourers_workshop.core.skin.data.base.IDataInputStream;
+import moe.plushie.armourers_workshop.core.skin.data.base.IDataOutputStream;
+import moe.plushie.armourers_workshop.core.skin.data.base.IDataSerializer;
+import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinFileHeader;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.utils.StreamUtils;
 import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
 import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public final class SkinSerializerV12 {
+public final class SkinSerializerV12 implements IDataSerializer {
 
-    private static final int FILE_VERSION = 13;
+    private static final int FILE_VERSION = 12;
 
     private static final String TAG_SKIN_HEADER = "AW-SKIN-START";
 
@@ -41,10 +39,12 @@ public final class SkinSerializerV12 {
 
     private static final String TAG_SKIN_FOOTER = "AW-SKIN-END";
 
-    private SkinSerializerV12() {
+    private final SkinPartSerializerV12 partSerializer = new SkinPartSerializerV12();
+
+    public SkinSerializerV12() {
     }
 
-    public static String getTypeNameByLegacyId(int legacyId) {
+    public String getTypeNameByLegacyId(int legacyId) {
         switch (legacyId) {
             case 0:
                 return "armourers:head";
@@ -67,21 +67,22 @@ public final class SkinSerializerV12 {
         }
     }
 
-    public static void writeToStream(Skin skin, DataOutputStream stream) throws IOException {
+    @Override
+    public void writeToStream(Skin skin, IDataOutputStream stream, int fileVersion) throws IOException {
         // Write the skin file version.
         stream.writeInt(FILE_VERSION);
         // Write skin header.
-        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_HEADER);
+        stream.writeString(TAG_SKIN_HEADER);
         // Write skin props.
-        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PROPS_HEADER);
-        skin.getProperties().writeToStream(stream);
-        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PROPS_FOOTER);
+        stream.writeString(TAG_SKIN_PROPS_HEADER);
+        stream.writeSkinProperties(skin.getProperties());
+        stream.writeString(TAG_SKIN_PROPS_FOOTER);
         // Write the skin type.
-        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_TYPE_HEADER);
-        stream.writeUTF(skin.getType().getRegistryName().toString());
-        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_TYPE_FOOTER);
+        stream.writeString(TAG_SKIN_TYPE_HEADER);
+        stream.writeType(skin.getType());
+        stream.writeString(TAG_SKIN_TYPE_FOOTER);
         // Write paint data.
-        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PAINT_HEADER);
+        stream.writeString(TAG_SKIN_PAINT_HEADER);
         if (skin.getPaintData() != null) {
             stream.writeBoolean(true);
             // TODO: Support v2 skin
@@ -92,41 +93,43 @@ public final class SkinSerializerV12 {
         } else {
             stream.writeBoolean(false);
         }
-        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PAINT_FOOTER);
+        stream.writeString(TAG_SKIN_PAINT_FOOTER);
         //Write parts
         stream.writeByte(skin.getParts().size());
         for (SkinPart skinPart : skin.getParts()) {
-            StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PART_HEADER);
-            SkinPartSerializerV12.saveSkinPart(skinPart, stream);
-            StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PART_FOOTER);
+            stream.writeString(TAG_SKIN_PART_HEADER);
+            partSerializer.saveSkinPart(skinPart, stream);
+            stream.writeString(TAG_SKIN_PART_FOOTER);
         }
         // Write skin footer.
-        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_FOOTER);
+        stream.writeString(TAG_SKIN_FOOTER);
     }
 
-    public static Skin readSkinFromStream(DataInputStream stream, int fileVersion) throws IOException, InvalidCubeTypeException {
+    @Override
+    public Skin readFromStream(IDataInputStream stream, int fileVersion) throws IOException, InvalidCubeTypeException {
         if (fileVersion > 12) {
-            String header = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
+            String header = stream.readString();
             if (!header.equals(TAG_SKIN_HEADER)) {
                 ModLog.error("Error loading skin header.");
             }
 
-            String propsHeader = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
+            String propsHeader = stream.readString();
             if (!propsHeader.equals(TAG_SKIN_PROPS_HEADER)) {
                 ModLog.error("Error loading skin props header.");
             }
         }
 
-        SkinProperties properties = SkinProperties.create();
+        SkinProperties properties = null;
         boolean loadedProps = true;
         IOException e = null;
         if (fileVersion < 12) {
-            String authorName = stream.readUTF();
-            String customName = stream.readUTF();
+            String authorName = stream.readString();
+            String customName = stream.readString();
             String tags = "";
             if (!(fileVersion < 4)) {
-                tags = stream.readUTF();
+                tags = stream.readString();
             }
+            properties = SkinProperties.create();
             properties.put(SkinProperty.ALL_AUTHOR_NAME, authorName);
             properties.put(SkinProperty.ALL_CUSTOM_NAME, customName);
             if (!tags.equalsIgnoreCase("")) {
@@ -134,21 +137,22 @@ public final class SkinSerializerV12 {
             }
         } else {
             try {
-                properties.readFromStream(stream, fileVersion);
+                properties = stream.readProperties();
             } catch (IOException propE) {
                 ModLog.error("prop load failed");
                 e = propE;
                 loadedProps = false;
+                properties = SkinProperties.create();
             }
         }
 
         if (fileVersion > 12) {
-            String propsFooter = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
+            String propsFooter = stream.readString();
             if (!propsFooter.equals(TAG_SKIN_PROPS_FOOTER)) {
                 ModLog.error("Error loading skin props footer.");
             }
 
-            String typeHeader = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
+            String typeHeader = stream.readString();
             if (!typeHeader.equals(TAG_SKIN_TYPE_HEADER)) {
                 ModLog.error("Error loading skin type header.");
             }
@@ -165,8 +169,7 @@ public final class SkinSerializerV12 {
             }
         } else {
             if (loadedProps) {
-                String regName = stream.readUTF();
-                skinType = SkinTypes.byName(regName);
+                skinType = stream.readType(SkinTypes::byName);
             } else {
                 StringBuilder sb = new StringBuilder();
                 while (true) {
@@ -188,7 +191,7 @@ public final class SkinSerializerV12 {
         }
 
         if (fileVersion > 12) {
-            String typeFooter = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
+            String typeFooter = stream.readString();
             if (!typeFooter.equals(TAG_SKIN_TYPE_FOOTER)) {
                 ModLog.error("Error loading skin type footer.");
             }
@@ -199,7 +202,7 @@ public final class SkinSerializerV12 {
         }
 
         if (fileVersion > 12) {
-            String typeFooter = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
+            String typeFooter = stream.readString();
             if (!typeFooter.equals(TAG_SKIN_PAINT_HEADER)) {
                 ModLog.error("Error loading skin paint header.");
             }
@@ -218,7 +221,7 @@ public final class SkinSerializerV12 {
             }
         }
         if (fileVersion > 12) {
-            String typeFooter = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
+            String typeFooter = stream.readString();
             if (!typeFooter.equals(TAG_SKIN_PAINT_FOOTER)) {
                 ModLog.error("Error loading skin paint footer.");
             }
@@ -228,14 +231,14 @@ public final class SkinSerializerV12 {
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
         for (int i = 0; i < size; i++) {
             if (fileVersion > 12) {
-                String partHeader = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
+                String partHeader = stream.readString();
                 if (!partHeader.equals(TAG_SKIN_PART_HEADER)) {
                     ModLog.error("Error loading skin part header.");
                 }
             }
-            SkinPart part = SkinPartSerializerV12.loadSkinPart(stream, fileVersion);
+            SkinPart part = partSerializer.loadSkinPart(stream, fileVersion);
             if (fileVersion > 12) {
-                String partFooter = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
+                String partFooter = stream.readString();
                 if (!partFooter.equals(TAG_SKIN_PART_FOOTER)) {
                     ModLog.error("Error loading skin part footer.");
                 }
@@ -244,39 +247,46 @@ public final class SkinSerializerV12 {
         }
 
         if (fileVersion > 12) {
-            String footer = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
+            String footer = stream.readString();
             if (!footer.equals(TAG_SKIN_FOOTER)) {
                 ModLog.error("Error loading skin footer.");
             }
         }
-        return SkinSerializer.makeSkin(skinType, properties, paintData, parts);
+
+        Skin.Builder builder = new Skin.Builder(skinType);
+        builder.properties(properties);
+        builder.paintData(paintData);
+        builder.parts(parts);
+        return builder.build();
     }
 
-    public static Pair<ISkinType, ISkinProperties> readSkinTypeNameFromStream(DataInputStream stream, int fileVersion) throws IOException {
+    @Override
+    public SkinFileHeader readInfoFromStream(IDataInputStream stream, int fileVersion) throws IOException {
         if (fileVersion > 12) {
-            String header = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
+            String header = stream.readString();
             if (!header.equals(TAG_SKIN_HEADER)) {
                 ModLog.error("Error loading skin header.");
             }
 
-            String propsHeader = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
+            String propsHeader = stream.readString();
             if (!propsHeader.equals(TAG_SKIN_PROPS_HEADER)) {
                 ModLog.error("Error loading skin props header.");
             }
         }
 
-        SkinProperties properties = SkinProperties.create();
+        SkinProperties properties = null;
         boolean loadedProps = true;
         IOException e = null;
         if (fileVersion < 12) {
-            String authorName = stream.readUTF();
-            String customName = stream.readUTF();
+            String authorName = stream.readString();
+            String customName = stream.readString();
             String tags = "";
             if (!(fileVersion < 4)) {
-                tags = stream.readUTF();
+                tags = stream.readString();
             } else {
                 tags = "";
             }
+            properties = SkinProperties.create();
             properties.put(SkinProperty.ALL_AUTHOR_NAME, authorName);
             properties.put(SkinProperty.ALL_CUSTOM_NAME, customName);
             if (!tags.equalsIgnoreCase("")) {
@@ -284,21 +294,22 @@ public final class SkinSerializerV12 {
             }
         } else {
             try {
-                properties.readFromStream(stream, fileVersion);
+                properties = stream.readProperties();
             } catch (IOException propE) {
                 ModLog.error("prop load failed");
                 e = propE;
                 loadedProps = false;
+                properties = SkinProperties.create();
             }
         }
 
         if (fileVersion > 12) {
-            String propsFooter = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
+            String propsFooter = stream.readString();
             if (!propsFooter.equals(TAG_SKIN_PROPS_FOOTER)) {
                 ModLog.error("Error loading skin props footer.");
             }
 
-            String typeHeader = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
+            String typeHeader = stream.readString();
             if (!typeHeader.equals(TAG_SKIN_TYPE_HEADER)) {
                 ModLog.error("Error loading skin type header.");
             }
@@ -315,8 +326,7 @@ public final class SkinSerializerV12 {
             }
         } else {
             if (loadedProps) {
-                String regName = stream.readUTF();
-                equipmentSkinType = SkinTypes.byName(regName);
+                equipmentSkinType = stream.readType(SkinTypes::byName);
             } else {
                 StringBuilder sb = new StringBuilder();
                 while (true) {
@@ -336,6 +346,16 @@ public final class SkinSerializerV12 {
                 ModLog.info("got failed type " + equipmentSkinType);
             }
         }
-        return Pair.of(equipmentSkinType, properties);
+        return SkinFileHeader.of(fileVersion, equipmentSkinType, properties);
+    }
+
+    @Override
+    public int getSupportedVersion() {
+        return FILE_VERSION;
+    }
+
+    @Override
+    public boolean isSupportedVersion(int fileVersion) {
+        return fileVersion <= FILE_VERSION;
     }
 }

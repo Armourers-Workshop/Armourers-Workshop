@@ -7,7 +7,7 @@ public interface ISkin {
     /**
      * Gets the type this skin.
      */
-    <T extends ISkinType> T getType();
+    ISkinType getType();
 
     /**
      * Get the part type of this skin.

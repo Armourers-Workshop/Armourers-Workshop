@@ -1,9 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin.face;
 
 import com.google.common.collect.ImmutableMap;
+import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
+import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
@@ -46,7 +48,7 @@ public class SkinCuller {
         return new Simple(partType);
     }
 
-    public static Collection<SearchResult> cullFaces2(SkinCubeData cubeData, Rectangle3i bounds, ISkinPartType partType) {
+    public static Collection<SearchResult> cullFaces2(SkinCubes cubeData, Rectangle3i bounds, ISkinPartType partType) {
         Partition partition = getPartition(partType);
         IndexedMap indexedMap = new IndexedMap(cubeData, bounds);
         Collection<SearchResult> results = partition.subdivide(bounds);
@@ -57,7 +59,7 @@ public class SkinCuller {
             for (Direction dir : Direction.values()) {
                 for (SearchResult result : results) {
                     if (result.flags.get(i * DIRECTION_SIZE + dir.get3DDataValue())) {
-                        result.add(cubeData.getCubeFace(i, dir));
+                        result.add(cubeData.getCube(i).getFace(dir));
                     }
                 }
             }
@@ -65,7 +67,7 @@ public class SkinCuller {
         return results;
     }
 
-    public static ArrayList<SkinCubeFace> cullFaces(SkinCubeData cubeData, Rectangle3i bounds) {
+    public static ArrayList<SkinCubeFace> cullFaces(SkinCubes cubeData, Rectangle3i bounds) {
         IndexedMap indexedMap = new IndexedMap(cubeData, bounds);
         Rectangle3i rect = new Rectangle3i(0, 0, 0, bounds.getWidth(), bounds.getHeight(), bounds.getDepth());
         BitSet flags = cullFaceFlags(cubeData, indexedMap, rect);
@@ -73,14 +75,14 @@ public class SkinCuller {
         for (int i = 0; i < cubeData.getCubeCount(); ++i) {
             for (Direction dir : Direction.values()) {
                 if (flags.get(i * DIRECTION_SIZE + dir.get3DDataValue())) {
-                    faces.add(cubeData.getCubeFace(i, dir));
+                    faces.add(cubeData.getCube(i).getFace(dir));
                 }
             }
         }
         return faces;
     }
 
-    private static BitSet cullFaceFlags(SkinCubeData cubeData, IndexedMap map, Rectangle3i rect) {
+    private static BitSet cullFaceFlags(SkinCubes cubeData, IndexedMap map, Rectangle3i rect) {
         BitSet flags = new BitSet(cubeData.getCubeCount() * DIRECTION_SIZE);
         Rectangle3i searchArea = new Rectangle3i(rect.getX() - 1, rect.getY() - 1, rect.getZ() - 1, rect.getWidth() + 2, rect.getHeight() + 2, rect.getDepth() + 2);
         HashSet<Vector3i> closedSet = new HashSet<>();
@@ -100,13 +102,13 @@ public class SkinCuller {
                     continue;
                 }
                 boolean isBlank = false;
-                ISkinCube targetCube = cubeData.getCube(targetIndex);
+                ISkinCubeType targetCube = cubeData.getCube(targetIndex).getType();
                 if (targetCube.isGlass()) {
                     pendingList.add(pos1);
                     // when source cube and target cube is linked glass, ignore.
                     int sourceIndex = map.get(pos);
                     if (sourceIndex != -1) {
-                        isBlank = cubeData.getCube(sourceIndex).isGlass();
+                        isBlank = cubeData.getCube(sourceIndex).getType().isGlass();
                     }
                 }
                 // first, when not any rotation of the cube, it's always facing north.
@@ -195,7 +197,7 @@ public class SkinCuller {
             this.faces.add(face);
         }
 
-        public void cull(SkinCubeData cubeData, IndexedMap map) {
+        public void cull(SkinCubes cubeData, IndexedMap map) {
             this.flags = cullFaceFlags(cubeData, map, bounds);
         }
 
@@ -236,7 +238,7 @@ public class SkinCuller {
         private int maxY;
         private int maxZ;
 
-        public IndexedMap(SkinCubeData cubeData, Rectangle3i bounds) {
+        public IndexedMap(SkinCubes cubeData, Rectangle3i bounds) {
             this.size = cubeData.getCubeCount();
             this.x = bounds.getX();
             this.y = bounds.getY();
@@ -246,9 +248,10 @@ public class SkinCuller {
             this.depth = bounds.getDepth();
             this.indexes = new int[this.depth][this.height][this.width];
             for (int i = 0; i < this.size; i++) {
-                int x = cubeData.getCubePosX(i) - this.x;
-                int y = cubeData.getCubePosY(i) - this.y;
-                int z = cubeData.getCubePosZ(i) - this.z;
+                IVector3i pos = cubeData.getCube(i).getPos();
+                int x = pos.getX() - this.x;
+                int y = pos.getY() - this.y;
+                int z = pos.getZ() - this.z;
                 this.indexes[z][y][x] = i + 1;
             }
             this.limit(new Rectangle3i(0, 0, 0, this.width, this.height, this.depth));

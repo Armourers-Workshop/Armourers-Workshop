@@ -2,7 +2,8 @@ package moe.plushie.armourers_workshop.core.skin.part;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPart;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
+import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
@@ -11,39 +12,42 @@ import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import net.minecraft.core.BlockPos;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class SkinPart implements ISkinPart {
 
-    protected int id = 0;
+    protected int id;
+    protected Integer parentId;
+    protected String name;
 
     protected ISkinPartType partType;
 
     protected OpenVoxelShape renderShape;
     protected Rectangle3i partBounds;
 
-    protected SkinTransform transform;
-    protected SkinProperties properties;
+    protected SkinTransform transform = SkinTransform.IDENTIFIER;
+    protected SkinProperties properties = SkinProperties.EMPTY;
 
     private HashMap<Long, Rectangle3i> blockGrid;
-    private SkinCubeData cubeData;
+    private SkinCubes cubeData;
     private final ArrayList<SkinMarker> markerBlocks;
 
-    public SkinPart(ISkinPartType partType, ArrayList<SkinMarker> markerBlocks, SkinCubeData cubeData) {
-        this.partType = partType;
-        this.renderShape = cubeData.getRenderShape();
+    public SkinPart(int id, ISkinPartType partType, ArrayList<SkinMarker> markers, SkinCubes cubes) {
+        this.id = id;
 
-        this.transform = SkinTransform.IDENTIFIER;
-        this.cubeData = cubeData;
-        this.markerBlocks = markerBlocks;
+        this.partType = partType;
+        this.renderShape = cubes.getRenderShape();
+
+        this.cubeData = cubes;
+        this.markerBlocks = markers;
 
         this.setupPartBounds();
 
-        if (markerBlocks != null) {
-            cubeData.getUsedCounter().addMarkers(markerBlocks.size());
+        if (markers != null) {
+            cubes.getUsedCounter().addMarkers(markers.size());
         }
     }
 
@@ -59,16 +63,8 @@ public class SkinPart implements ISkinPart {
         this.properties = properties;
     }
 
-
     public int getModelCount() {
         return 0;
-    }
-
-    public OpenVoxelShape getRenderShape() {
-        if (getType() == SkinPartTypes.ITEM_ARROW) {
-            return OpenVoxelShape.empty();
-        }
-        return renderShape;
     }
 
     private void setupPartBounds() {
@@ -82,14 +78,6 @@ public class SkinPart implements ISkinPart {
     public void setSkinPart(ISkinPartType skinPart) {
         this.partType = skinPart;
         setupPartBounds();
-    }
-
-    public Rectangle3i getBlockBounds(int x, int y, int z) {
-        if (blockGrid != null) {
-            long key = BlockPos.asLong(x, y, z);
-            return blockGrid.get(key);
-        }
-        return null;
     }
 
     public HashMap<BlockPos, Rectangle3i> getBlockBounds() {
@@ -113,7 +101,7 @@ public class SkinPart implements ISkinPart {
         });
     }
 
-    public SkinCubeData getCubeData() {
+    public SkinCubes getCubeData() {
         return cubeData;
     }
 
@@ -121,18 +109,23 @@ public class SkinPart implements ISkinPart {
         cubeData = null;
     }
 
-    public Rectangle3i getPartBounds() {
-        return partBounds;
+    public void setParent(Integer id) {
+        this.parentId = id;
     }
 
-    public int getParent() {
-        return 0;
+    @Nullable
+    public Integer getParent() {
+        return this.parentId;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Nullable
     public String getName() {
-        return null;
+        return name;
     }
-
 
     public void setTransform(SkinTransform transform) {
         this.transform = transform;
@@ -146,13 +139,17 @@ public class SkinPart implements ISkinPart {
         return null;
     }
 
+    public Object getBlobs() {
+        return null;
+    }
+
     @Override
     public ISkinPartType getType() {
         return this.partType;
     }
 
     @Override
-    public List<SkinMarker> getMarkers() {
+    public ArrayList<SkinMarker> getMarkers() {
         return markerBlocks;
     }
 
@@ -163,11 +160,88 @@ public class SkinPart implements ISkinPart {
 
     public static class Empty extends SkinPart {
 
-        public Empty(ISkinPartType partType, Rectangle3i bounds, OpenVoxelShape renderShape) {
-            super(partType, new ArrayList<>(), new SkinCubeData(partType));
+        public Empty(int id, ISkinPartType partType, Rectangle3i bounds, OpenVoxelShape renderShape) {
+            super(id, partType, new ArrayList<>(), new SkinCubes());
             this.partBounds = bounds;
             this.renderShape = renderShape;
             this.setProperties(SkinProperties.create());
+        }
+    }
+
+    public static class Builder {
+
+        private final ISkinPartType partType;
+
+        private String name;
+        private SkinCubes cubes;
+        private SkinPaintData paintData;
+        private SkinTransform transform = SkinTransform.IDENTIFIER;
+        private ArrayList<SkinMarker> markers = new ArrayList<>();
+        private SkinProperties properties;
+        private Object blobs;
+
+        private int id = 0;
+        private Integer parentId;
+
+        public Builder(ISkinPartType partType) {
+            this.partType = partType;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder parent(Integer parentId) {
+            this.parentId = parentId;
+            return this;
+        }
+
+        public Builder transform(SkinTransform transform) {
+            if (transform != null) {
+                this.transform = transform;
+            }
+            return this;
+        }
+
+        public Builder cubes(SkinCubes cubes) {
+            this.cubes = cubes;
+            return this;
+        }
+
+        public Builder paintData(SkinPaintData paintData) {
+            this.paintData = paintData;
+            return this;
+        }
+
+        public Builder markers(ArrayList<SkinMarker> markers) {
+            if (markers != null) {
+                this.markers.addAll(markers);
+            }
+            return this;
+        }
+
+        public Builder properties(SkinProperties properties) {
+            this.properties = properties;
+            return this;
+        }
+
+        public Builder blobs(Object blobs) {
+            this.blobs = blobs;
+            return this;
+        }
+
+        public SkinPart build() {
+            SkinPart skinPart = new SkinPart(id, partType, markers, cubes);
+            skinPart.setName(name);
+            skinPart.setParent(parentId);
+            skinPart.setTransform(transform);
+            return skinPart;
         }
     }
 }

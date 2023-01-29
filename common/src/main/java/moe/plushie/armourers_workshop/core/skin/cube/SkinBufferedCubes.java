@@ -1,138 +1,75 @@
 package moe.plushie.armourers_workshop.core.skin.cube;
 
-import moe.plushie.armourers_workshop.api.skin.ISkinCube;
-import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
-import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.api.skin.*;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
-import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
+import moe.plushie.armourers_workshop.core.skin.data.base.IDataInputStream;
+import moe.plushie.armourers_workshop.core.skin.data.base.IDataOutputStream;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.LegacyCubeHelper;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
-import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
-import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.core.Direction;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class SkinCubeData {
+public class SkinBufferedCubes extends SkinCubes {
 
-    private int cubeCount = 0;
+    private int cubeCount;
     private BufferSlice bufferSlice;
-    private final SkinUsedCounter usedCounter = new SkinUsedCounter();
-    private final ISkinPartType partType;
 
-    public SkinCubeData(ISkinPartType partType) {
-        this.partType = partType;
+    public SkinBufferedCubes() {
     }
 
+    @Override
+    public void ensureCapacity(int size) {
+        bufferSlice = new BufferSlice(size);
+        cubeCount = size;
+        usedCounter.reset();
+    }
+
+    @Override
+    public SkinCube getCube(int index) {
+        return bufferSlice.at(index);
+    }
+
+    @Override
     public int getCubeCount() {
         return cubeCount;
     }
 
-    public void setCubeCount(int count) {
-        bufferSlice = new BufferSlice(count);
-        cubeCount = count;
-        usedCounter.reset();
-    }
-
-    public ISkinPartType getPartType() {
-        return partType;
-    }
-
-    public ISkinCube getCube(int index) {
-        return SkinCubes.byId(bufferSlice.at(index).getId());
-    }
-
-    public void forEach(ICubeConsumer consumer) {
-        for (int i = 0; i < cubeCount; ++i) {
-            BufferSlice slice = bufferSlice.at(i);
-            consumer.apply(i, slice.getX(), slice.getY(), slice.getZ());
+    public static void writeToStream(SkinCubes cubes, IDataOutputStream stream) throws IOException {
+        int count = cubes.getCubeCount();
+        stream.writeInt(cubes.getCubeCount());
+        if (cubes instanceof SkinBufferedCubes) {
+            stream.write(((SkinBufferedCubes) cubes).bufferSlice.getBuffers());
+            return;
         }
-    }
-
-    public byte getCubePosX(int index) {
-        return bufferSlice.at(index).getX();
-    }
-
-    public byte getCubePosY(int index) {
-        return bufferSlice.at(index).getY();
-    }
-
-    public byte getCubePosZ(int index) {
-        return bufferSlice.at(index).getZ();
-    }
-
-    public SkinCubeFace getCubeFace(int index, Direction dir) {
-        int side = dir.get3DDataValue();
-        BufferSlice slice = bufferSlice.at(index);
-        ISkinCube cube = SkinCubes.byId(slice.getId());
-        ISkinPaintType paintType = SkinPaintTypes.byId(slice.getPaintType(side));
-
-        int rgb = slice.getRGB(side);
-        int alpha = 255;
-        if (cube.isGlass()) {
-            alpha = 127;
-        }
-
-        int x = slice.getX();
-        int y = slice.getY();
-        int z = slice.getZ();
-
-        return new SkinCubeFace(x, y, z, PaintColor.of(rgb, paintType), alpha, dir, cube);
-    }
-
-    public OpenVoxelShape getRenderShape() {
-        if (bufferSlice == null) {
-            return OpenVoxelShape.empty();
-        }
-        OpenVoxelShape shape = OpenVoxelShape.empty();
-        int count = cubeCount;
-        if (count == 0) {
-            return shape;
-        }
+        // downgrade to old version.
+        IPaintColor[] paintColors = new IPaintColor[6];
         for (int i = 0; i < count; ++i) {
-            BufferSlice slice = bufferSlice.at(i);
-            shape.add(slice.getX(), slice.getY(), slice.getZ(), 1, 1, 1);
+            // id/x/y/z + r/g/b/t * 6
+            SkinCube cube = cubes.getCube(i);
+            Vector3i pos = cube.getPos();
+            stream.writeByte(cube.getType().getId());
+            stream.writeByte(pos.getX());
+            stream.writeByte(pos.getY());
+            stream.writeByte(pos.getZ());
+            for (Direction dir : Direction.values()) {
+                IPaintColor paintColor = cube.getPaintColor(dir);
+                paintColors[dir.get3DDataValue()] = paintColor;
+            }
+            for (int side = 0; side < 6; side++) {
+                IPaintColor paintColor = paintColors[side];
+                stream.writeInt(paintColor.getRawValue());
+            }
         }
-        shape.optimize();
-        return shape;
     }
 
-    public Rectangle3i getBounds() {
-        byte minX = 127;
-        byte minY = 127;
-        byte minZ = 127;
-        byte maxX = -127;
-        byte maxY = -127;
-        byte maxZ = -127;
-        for (int i = 0; i < cubeCount; ++i) {
-            BufferSlice slice = bufferSlice.at(i);
-            byte x = slice.getX();
-            byte y = slice.getY();
-            byte z = slice.getZ();
-            if (minX > x) minX = x;
-            if (minY > y) minY = y;
-            if (minZ > z) minZ = z;
-            if (maxX < x) maxX = x;
-            if (maxY < y) maxY = y;
-            if (maxZ < z) maxZ = z;
-        }
-        return new Rectangle3i(minX, minY, minZ, maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
-    }
-
-
-    public void writeToStream(DataOutputStream stream) throws IOException {
-        stream.writeInt(cubeCount);
-        stream.write(bufferSlice.getBuffers());
-    }
-
-    public void readFromStream(DataInputStream stream, int version, ISkinPartType skinPart) throws IOException, InvalidCubeTypeException {
+    public void readFromStream(IDataInputStream stream, int version, ISkinPartType skinPart) throws IOException, InvalidCubeTypeException {
         int size = stream.readInt();
-        setCubeCount(size);
+        ensureCapacity(size);
         if (version >= 10) {
             byte[] buffers = bufferSlice.getBuffers();
             stream.readFully(buffers, 0, size * bufferSlice.lineSize);
@@ -157,22 +94,11 @@ public class SkinCubeData {
         }
     }
 
-    public BufferSlice at(int index) {
-        return bufferSlice.at(index);
-    }
-
-    public SkinUsedCounter getUsedCounter() {
-        return usedCounter;
-    }
-
-    public interface ICubeConsumer {
-        void apply(int i, int x, int y, int z);
-    }
-
-    public static class BufferSlice {
+    public static class BufferSlice extends SkinCube {
 
         final int lineSize = 4 + 4 * 6; // id/x/y/z + r/g/b/t * 6
         final byte[] buffers;
+        final Vector3i pos = new Vector3i(0, 0, 0);
 
         int writerIndex = 0;
         int readerIndex = 0;
@@ -268,14 +194,52 @@ public class SkinCubeData {
             setB(side, (byte) b);
         }
 
-        public Vector3i getPos() {
-            return new Vector3i(getX(), getY(), getZ());
+        public int getColor(int side) {
+            int type = getPaintType(side);
+            int rgb = getRGB(side);
+            return (rgb & 0xffffff) | ((type & 0xff) << 24);
         }
 
+        @Override
         public void setPos(Vector3i pos) {
             setX((byte) pos.getX());
             setY((byte) pos.getY());
             setZ((byte) pos.getZ());
+        }
+
+        @Override
+        public Vector3i getPos() {
+            pos.setX(getX());
+            pos.setY(getY());
+            pos.setZ(getZ());
+            return pos;
+        }
+
+        @Override
+        public void setType(ISkinCubeType type) {
+            setId((byte) type.getId());
+        }
+
+        @Override
+        public ISkinCubeType getType() {
+            return SkinCubeTypes.byId(getId());
+        }
+
+        @Override
+        public void setPaintColor(Direction dir, IPaintColor paintColor) {
+            int side = dir.get3DDataValue();
+            int type = paintColor.getPaintType().getId();
+            int rgb = paintColor.getRGB();
+            setPaintType(side, (byte) type);
+            setRGB(side, rgb);
+        }
+
+        @Override
+        public IPaintColor getPaintColor(Direction dir) {
+            int side = dir.get3DDataValue();
+            int type = getPaintType(side);
+            int rgb = getRGB(side);
+            return PaintColor.of(rgb, SkinPaintTypes.byId(type));
         }
 
         public void setByte(int offset, byte value) {

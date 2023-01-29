@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public interface CommonNativeProvider {
 
@@ -30,7 +31,7 @@ public interface CommonNativeProvider {
 
     void willRegisterArgument(Consumer<ArgumentRegistry> consumer);
 
-    void willRegisterCustomDataPack(Consumer<Consumer<PreparableReloadListener>> consumer);
+    void willRegisterCustomDataPack(Supplier<PreparableReloadListener> provider);
 
     void willRegisterEntityAttributes(Consumer<EntityAttributesRegistry> consumer);
 

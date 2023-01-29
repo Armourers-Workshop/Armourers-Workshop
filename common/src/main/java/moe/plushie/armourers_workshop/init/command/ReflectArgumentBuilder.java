@@ -6,13 +6,13 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.CommandNode;
-import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.core.network.ExecuteCommandPacket;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -43,18 +43,18 @@ public class ReflectArgumentBuilder<S> extends LiteralArgumentBuilder<S> {
     }
 
     public static <R> ArgumentBuilder<CommandSourceStack, ?> argument(Pair<Object, Field> pair, ArgumentType<R> argumentType, BiFunction<CommandContext<?>, String, R> argumentParser) {
-        return Commands.literal(pair.getSecond().getName())
+        return Commands.literal(pair.getValue().getName())
                 .then(Commands.argument("value", argumentType).executes(context -> {
                     R value = argumentParser.apply(context, "value");
-                    String name = pair.getSecond().getName();
-                    Class<?> object = (Class<?>) pair.getFirst();
+                    String name = pair.getValue().getName();
+                    Class<?> object = (Class<?>) pair.getKey();
                     ServerPlayer player = context.getSource().getPlayerOrException();
                     NetworkManager.sendTo(ExecuteCommandPacket.set(object, name, value), player);
                     return 0;
                 }))
                 .executes(context -> {
-                    String name = pair.getSecond().getName();
-                    Class<?> object = (Class<?>) pair.getFirst();
+                    String name = pair.getValue().getName();
+                    Class<?> object = (Class<?>) pair.getKey();
                     ServerPlayer player = context.getSource().getPlayerOrException();
                     NetworkManager.sendTo(ExecuteCommandPacket.get(object, name), player);
                     return 0;

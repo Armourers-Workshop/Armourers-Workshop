@@ -142,6 +142,10 @@ public class ModConfig {
         public static int skinCacheExpireTime = 600;
         public static int skinCacheMaxSize = 2000;
 
+        // Global Skin Library
+        public static ArrayList<String> customGlobalSkinLibraryURLs = new ArrayList<>();
+        public static boolean enablePrivateGlobalSkinLibrary = false;
+
         // Overrides
         public static ArrayList<String> overrides = new ArrayList<>();
 

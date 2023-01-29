@@ -3,12 +3,14 @@ package moe.plushie.armourers_workshop.core.client.bake;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.transform.SkinWingsTransform;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
@@ -26,26 +28,16 @@ public class BakedSkinPart {
 
     private final SkinPart part;
     private final PackedQuad quads;
-    private final SkinTransform transform;
+    private final SkinPartTransform transform;
     private final ColorDescriptor descriptor;
     private final ArrayList<BakedSkinPart> children = new ArrayList<>();
 
     private int id = 0;
 
     public BakedSkinPart(SkinPart part, PackedQuad quads) {
-//        this(part, quads, SkinWingsTransform.build(part));
-//        SkinFixedTransform transform = new SkinFixedTransform();
-//        transform.rotation = new Vector3f(30, 0, 0);
-//        BakedSkinPart ps = new BakedSkinPart(part, quads, transform);
-//        ps.children.add(new BakedSkinPart(part, quads, transform));
-//        children.add(ps);
-//    }
-//
-//    protected BakedSkinPart(SkinPart part, PackedQuad quads, SkinTransform transform) {
-
         this.part = part;
         this.quads = quads;
-        this.transform = new SkinTransform.Mul(quads.getTransform(), SkinWingsTransform.build(part));
+        this.transform = new SkinPartTransform(part, quads.getTransform());
         this.descriptor = quads.getColorInfo();
     }
 
@@ -97,7 +89,7 @@ public class BakedSkinPart {
         return part.getType();
     }
 
-    public SkinTransform getTransform() {
+    public SkinPartTransform getTransform() {
         return transform;
     }
 

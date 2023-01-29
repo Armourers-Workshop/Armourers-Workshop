@@ -1,51 +1,54 @@
 package moe.plushie.armourers_workshop.core.skin.cube;
 
-import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
+import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
+import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
+import moe.plushie.armourers_workshop.utils.math.Vector3i;
+import net.minecraft.core.Direction;
 
 public class SkinCube implements ISkinCube {
 
-    protected final int id;
-    protected final boolean glass;
-    protected final boolean glowing;
-    protected final IRegistryKey<Block> block;
-    protected ResourceLocation registryName;
+    private ISkinCubeType type;
 
-    public SkinCube(int id, boolean glass, boolean glowing, IRegistryKey<Block> block) {
-        this.id = id;
-        this.glass = glass;
-        this.glowing = glowing;
-        this.block = block;
+    private Vector3i pos = Vector3i.ZERO;
+    private final IPaintColor[] paintColors = new IPaintColor[6];
+
+    public void setPos(Vector3i pos) {
+        this.pos = pos;
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
-        return registryName;
+    public Vector3i getPos() {
+        return pos;
     }
 
-    public void setRegistryName(ResourceLocation registryName) {
-        this.registryName = registryName;
-    }
-
-    @Override
-    public boolean isGlowing() {
-        return glowing;
+    public void setType(ISkinCubeType type) {
+        this.type = type;
     }
 
     @Override
-    public boolean isGlass() {
-        return glass;
+    public ISkinCubeType getType() {
+        return type;
+    }
+
+    public void setPaintColor(Direction dir, IPaintColor paintColor) {
+        paintColors[dir.get3DDataValue()] = paintColor;
     }
 
     @Override
-    public int getId() {
-        return id;
+    public IPaintColor getPaintColor(Direction dir) {
+        return paintColors[dir.get3DDataValue()];
     }
 
-    @Override
-    public Block getBlock() {
-        return block.get();
+    public SkinCubeFace getFace(Direction dir) {
+        Vector3i pos = getPos();
+        ISkinCubeType cubeType = getType();
+        IPaintColor paintColor = getPaintColor(dir);
+        int alpha = 255;
+        if (cubeType.isGlass()) {
+            alpha = 127;
+        }
+        return new SkinCubeFace(pos, paintColor, alpha, dir, cubeType);
     }
 }

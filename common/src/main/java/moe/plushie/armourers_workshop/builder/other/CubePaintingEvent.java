@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.builder.other;
 
-import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.blockentity.BoundingBoxBlockEntity;
@@ -16,6 +15,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -60,7 +60,7 @@ public class CubePaintingEvent {
         Action.writeBuffer(action, buffer);
         // sort and write actions.
         HashMap<BlockPos, HashMap<Direction, IPaintToolAction>> sorted = new HashMap<>();
-        this.overrides.forEach((pair, action) -> sorted.computeIfAbsent(pair.getFirst(), k -> new HashMap<>()).put(pair.getSecond(), action));
+        this.overrides.forEach((pair, action) -> sorted.computeIfAbsent(pair.getKey(), k -> new HashMap<>()).put(pair.getValue(), action));
         sorted.forEach((pos, items) -> {
             buffer.writeByte(items.size());
             buffer.writeBlockPos(pos);

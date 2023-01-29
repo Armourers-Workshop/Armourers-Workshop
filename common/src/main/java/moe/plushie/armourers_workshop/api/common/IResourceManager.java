@@ -13,5 +13,5 @@ public interface IResourceManager {
 
     InputStream readResource(ResourceLocation resourceLocation) throws IOException;
 
-    void readResources(String path, Predicate<String> validator, BiConsumer<ResourceLocation, InputStream> consumer);
+    void readResources(ResourceLocation target, Predicate<String> validator, BiConsumer<ResourceLocation, InputStream> consumer);
 }

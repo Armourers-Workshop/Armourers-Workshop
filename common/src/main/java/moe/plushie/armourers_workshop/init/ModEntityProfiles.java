@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.data.DataPackLoader;
+import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
@@ -32,32 +33,12 @@ public class ModEntityProfiles {
     private static final HashMap<ResourceLocation, EntityProfile> ALL_ENTITY_PROFILES = new HashMap<>();
     private static final HashMap<IEntityType<?>, EntityProfile> ALL_ENTITIES = new HashMap<>();
 
-    private static void clean() {
-    }
-
-    private static void freeze() {
-        //
-        ObjectUtils.difference(ALL_ENTITY_PROFILES, PENDING_ENTITY_PROFILES, (registryName, entityProfile) -> {
-            ModLog.debug("Unregistering Entity Profile '{}'", registryName);
-        }, (registryName, entityProfile) -> {
-            ModLog.debug("Registering Entity Profile '{}'", registryName);
-        });
-        ObjectUtils.difference(ALL_ENTITIES, PENDING_ENTITIES, dispatch(REMOVE_HANDLERS), dispatch(INSERT_HANDLERS));
-        // apply changes
-        ALL_ENTITIES.clear();
-        ALL_ENTITY_PROFILES.clear();
-        ALL_ENTITIES.putAll(PENDING_ENTITIES);
-        ALL_ENTITY_PROFILES.putAll(PENDING_ENTITY_PROFILES);
-        PENDING_ENTITIES.clear();
-        PENDING_ENTITY_PROFILES.clear();
-    }
-
     private static BiConsumer<IEntityType<?>, EntityProfile> dispatch(ArrayList<BiConsumer<IEntityType<?>, EntityProfile>> consumers) {
         return (entityType, entityProfile) -> consumers.forEach(consumer -> consumer.accept(entityType, entityProfile));
     }
 
     public static void init() {
-        DataPackManager.register(new DataPackLoader("skin/profiles", SimpleLoader::new, ModEntityProfiles::clean, ModEntityProfiles::freeze));
+        DataPackManager.register(DataPackType.JAR, new DataPackLoader("skin/profiles", SimpleLoader::new, SimpleLoader::clean, SimpleLoader::freeze));
     }
 
     public static void forEach(BiConsumer<IEntityType<?>, EntityProfile> consumer) {
@@ -131,6 +112,27 @@ public class ModEntityProfiles {
             EntityProfile profile = new EntityProfile(registryName, supports, entities, locked);
             entities.forEach(entityType -> PENDING_ENTITIES.put(entityType, profile));
             PENDING_ENTITY_PROFILES.put(registryName, profile);
+        }
+
+
+        private static void clean() {
+        }
+
+        private static void freeze() {
+            //
+            ObjectUtils.difference(ALL_ENTITY_PROFILES, PENDING_ENTITY_PROFILES, (registryName, entityProfile) -> {
+                ModLog.debug("Unregistering Entity Profile '{}'", registryName);
+            }, (registryName, entityProfile) -> {
+                ModLog.debug("Registering Entity Profile '{}'", registryName);
+            });
+            ObjectUtils.difference(ALL_ENTITIES, PENDING_ENTITIES, dispatch(REMOVE_HANDLERS), dispatch(INSERT_HANDLERS));
+            // apply changes
+            ALL_ENTITIES.clear();
+            ALL_ENTITY_PROFILES.clear();
+            ALL_ENTITIES.putAll(PENDING_ENTITIES);
+            ALL_ENTITY_PROFILES.putAll(PENDING_ENTITY_PROFILES);
+            PENDING_ENTITIES.clear();
+            PENDING_ENTITY_PROFILES.clear();
         }
     }
 }

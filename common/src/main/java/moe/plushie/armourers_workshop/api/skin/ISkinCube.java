@@ -1,26 +1,14 @@
 package moe.plushie.armourers_workshop.api.skin;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
+import moe.plushie.armourers_workshop.api.math.IVector3i;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import net.minecraft.core.Direction;
 
 public interface ISkinCube {
 
-    /**
-     * Get the cubes ID
-     */
-    int getId();
+    IVector3i getPos();
 
-    ResourceLocation getRegistryName();
+    ISkinCubeType getType();
 
-    Block getBlock();
-
-    /**
-     * Should this cube be rendered after the world?
-     */
-    boolean isGlass();
-
-    /**
-     * Will this cube glow in the dark?
-     */
-    boolean isGlowing();
+    IPaintColor getPaintColor(Direction dir);
 }

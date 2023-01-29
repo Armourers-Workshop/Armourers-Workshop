@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.face;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.api.skin.ISkinCube;
+import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
@@ -17,6 +17,7 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
@@ -36,15 +37,15 @@ public class SkinCubeFace {
 
     private final Direction direction;
     private final PaintColor color;
-    private final ISkinCube cube;
+    private final ISkinCubeType type;
 
-    public SkinCubeFace(int x, int y, int z, PaintColor color, int alpha, Direction direction, ISkinCube cube) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    public SkinCubeFace(Vector3i pos, IPaintColor color, int alpha, Direction direction, ISkinCubeType type) {
+        this.x = pos.getX();
+        this.y = pos.getY();
+        this.z = pos.getZ();
 
-        this.cube = cube;
-        this.color = color;
+        this.type = type;
+        this.color = PaintColor.of(color);
         this.direction = direction;
         this.alpha = alpha;
     }
@@ -106,8 +107,8 @@ public class SkinCubeFace {
         return null;
     }
 
-    public ISkinCube getCube() {
-        return cube;
+    public ISkinCubeType getType() {
+        return type;
     }
 
     public PaintColor getColor() {

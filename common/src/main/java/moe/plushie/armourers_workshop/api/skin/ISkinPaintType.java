@@ -1,8 +1,6 @@
 package moe.plushie.armourers_workshop.api.skin;
 
-import net.minecraft.resources.ResourceLocation;
-
-public interface ISkinPaintType {
+public interface ISkinPaintType extends ISkinRegistryEntry {
 
     int getId();
 
@@ -13,6 +11,4 @@ public interface ISkinPaintType {
     float getV();
 
     ISkinDyeType getDyeType();
-
-    ResourceLocation getRegistryName();
 }

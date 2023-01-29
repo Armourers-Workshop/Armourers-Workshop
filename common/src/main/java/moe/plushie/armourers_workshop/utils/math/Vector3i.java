@@ -77,7 +77,7 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
         return this.x;
     }
 
-    protected void setX(int x) {
+    public void setX(int x) {
         this.x = x;
     }
 
@@ -86,7 +86,7 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
         return this.y;
     }
 
-    protected void setY(int y) {
+    public void setY(int y) {
         this.y = y;
     }
 
@@ -95,7 +95,7 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
         return this.z;
     }
 
-    protected void setZ(int z) {
+    public void setZ(int z) {
         this.z = z;
     }
 

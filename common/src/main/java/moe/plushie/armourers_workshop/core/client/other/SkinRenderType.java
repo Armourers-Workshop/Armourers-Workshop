@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.client.IRenderTypeBuilder;
-import moe.plushie.armourers_workshop.api.skin.ISkinCube;
+import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.compatibility.AbstractRenderType;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import net.fabricmc.api.EnvType;
@@ -40,15 +40,15 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
 
     public static final RenderType[] RENDER_ORDERING_FACES = {FACE_SOLID, FACE_LIGHTING, FACE_TRANSLUCENT, FACE_LIGHTING_TRANSLUCENT};
 
-    public static RenderType by(ISkinCube cube) {
-        if (cube.isGlass()) {
-            if (cube.isGlowing()) {
+    public static RenderType by(ISkinCubeType cubeType) {
+        if (cubeType.isGlass()) {
+            if (cubeType.isGlowing()) {
                 return FACE_LIGHTING_TRANSLUCENT;
             } else {
                 return FACE_TRANSLUCENT;
             }
         }
-        if (cube.isGlowing()) {
+        if (cubeType.isGlowing()) {
             return FACE_LIGHTING;
         } else {
             return FACE_SOLID;

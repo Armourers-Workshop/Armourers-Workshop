@@ -17,22 +17,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public abstract class ServerSession {
 
     private static final ExecutorService POOL = Executors.newFixedThreadPool(1);
 
+    private static final ArrayList<String> DEFAULT_URLs = new ArrayList<>();
+    private static final Map<String, ServerRequest> REQUESTS = new HashMap<>();
+
     protected Executor notifier = Runnable::run;
-
-    protected final ArrayList<String> baseURLs = new ArrayList<>();
-    protected final Map<String, ServerRequest> loaded = new HashMap<>();
-
-    protected Map<String, Object> a2m(String m, Object o) {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put(m, o);
-        return map;
-    }
 
     protected <T> void request(String path, @Nullable Map<String, ?> parameters, Function<IDataPackObject, T> deserializer, IResultHandler<T> handlerIn) {
         // we need to switch to a background thread to make sure everything is running correctly.
@@ -79,7 +72,7 @@ public abstract class ServerSession {
         // when the request required authorization,
         // we will try to switch to the https channel.
         if (request.has("accessToken")) {
-            for (String baseURL : baseURLs) {
+            for (String baseURL : getBaseURLs()) {
                 if (baseURL.startsWith("https://")) {
                     return baseURL;
                 }
@@ -92,17 +85,26 @@ public abstract class ServerSession {
     }
 
     protected String defaultBaseURL() {
+        ArrayList<String> baseURLs = getBaseURLs();
         if (!baseURLs.isEmpty()) {
             return baseURLs.get(0);
         }
         return "";
     }
 
+    protected ArrayList<String> getBaseURLs() {
+        // must load once.
+        if (DEFAULT_URLs.isEmpty()) {
+            loadAPIs();
+        }
+        return DEFAULT_URLs;
+    }
+
     protected HashMap<String, Object> defaultParameters() {
         return new HashMap<>();
     }
 
-    protected  <T> void submit(IResultHandler<T> handler, Consumer<IResultHandler<T>> task) {
+    protected <T> void submit(IResultHandler<T> handler, Consumer<IResultHandler<T>> task) {
         POOL.submit(() -> task.accept((result, exception) -> notify(() -> handler.apply(result, exception))));
     }
 
@@ -118,9 +120,9 @@ public abstract class ServerSession {
         throw new RuntimeException("missing request from " + path);
     }
 
-    private Map<String, ServerRequest> loadAPIs() throws Exception {
-        if (!loaded.isEmpty()) {
-            return loaded;
+    private Map<String, ServerRequest> loadAPIs() {
+        if (!REQUESTS.isEmpty()) {
+            return REQUESTS;
         }
         InputStream inputStream = getClass().getResourceAsStream("/data/armourers_workshop/skin/library/gsl.json");
         JsonObject jsonObject = StreamUtils.fromJson(inputStream, JsonObject.class);
@@ -131,16 +133,16 @@ public abstract class ServerSession {
         IDataPackObject server = root.get("server");
         server.entrySet().forEach(it -> {
             if (it.getKey().equals("/host")) {
-                it.getValue().allValues().forEach(url -> baseURLs.add(url.stringValue()));
+                it.getValue().allValues().forEach(url -> DEFAULT_URLs.add(url.stringValue()));
                 return;
             }
             ServerRequest req = ServerRequest.fromJSON(it.getValue());
             if (req != null) {
                 req.setPermission(ServerPermission.byId(it.getKey()));
-                loaded.put(it.getKey(), req);
+                REQUESTS.put(it.getKey(), req);
             }
         });
-        return loaded;
+        return REQUESTS;
     }
 
     private Map<String, Object> m2m(Map<String, ?> m) {

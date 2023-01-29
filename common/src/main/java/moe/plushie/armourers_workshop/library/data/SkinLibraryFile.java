@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.library.data;
 
-import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
+import moe.plushie.armourers_workshop.api.skin.ISkinFileHeader;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
@@ -20,7 +20,7 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
     protected final String name;
     protected final String path;
     protected final DataDomain domain;
-    protected final Pair<ISkinType, ISkinProperties> header;
+    protected final ISkinFileHeader header;
     protected final boolean isDirectory;
     protected final boolean isPrivateDirectory;
 
@@ -35,7 +35,7 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
         this.isPrivateDirectory = domain.equals(DataDomain.DEDICATED_SERVER) && path.startsWith(Constants.PRIVATE);
     }
 
-    public SkinLibraryFile(DataDomain domain, String name, String path, Pair<ISkinType, ISkinProperties> header) {
+    public SkinLibraryFile(DataDomain domain, String name, String path, ISkinFileHeader header) {
         this.name = name;
         this.path = SkinFileUtils.normalize(path, true);
         this.domain = domain;
@@ -82,16 +82,23 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
         return path;
     }
 
+    public int getSkinVersion() {
+        if (header != null) {
+            return header.getVersion();
+        }
+        return 0;
+    }
+
     public ISkinType getSkinType() {
         if (header != null) {
-            return header.getFirst();
+            return header.getType();
         }
         return null;
     }
 
     public ISkinProperties getSkinProperties() {
         if (header != null) {
-            return header.getSecond();
+            return header.getProperties();
         }
         return null;
     }

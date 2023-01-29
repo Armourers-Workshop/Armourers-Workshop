@@ -2,11 +2,11 @@ package moe.plushie.armourers_workshop.core.skin.data;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinMarker;
 import moe.plushie.armourers_workshop.core.data.OptionalDirection;
+import moe.plushie.armourers_workshop.core.skin.data.base.IDataInputStream;
+import moe.plushie.armourers_workshop.core.skin.data.base.IDataOutputStream;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.core.Direction;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class SkinMarker implements ISkinMarker {
@@ -23,7 +23,7 @@ public class SkinMarker implements ISkinMarker {
         this.meta = meta;
     }
 
-    public SkinMarker(DataInputStream stream, int version) throws IOException {
+    public SkinMarker(IDataInputStream stream) throws IOException {
         this.x = stream.readByte();
         this.y = stream.readByte();
         this.z = stream.readByte();
@@ -52,7 +52,7 @@ public class SkinMarker implements ISkinMarker {
         return OptionalDirection.values()[meta].getDirection();
     }
 
-    public void writeToStream(DataOutputStream stream) throws IOException {
+    public void writeToStream(IDataOutputStream stream) throws IOException {
         stream.writeByte(x);
         stream.writeByte(y);
         stream.writeByte(z);

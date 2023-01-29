@@ -1,8 +1,6 @@
 package moe.plushie.armourers_workshop.utils;
 
-import com.mojang.datafixers.util.Pair;
-import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
+import moe.plushie.armourers_workshop.api.skin.ISkinFileHeader;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
@@ -174,13 +172,13 @@ public final class SkinIOUtils {
     }
 
     @Nullable
-    public static Pair<ISkinType, ISkinProperties> getTypeNameFromFile(File file) {
+    public static ISkinFileHeader readHeaderFromFile(File file) {
         DataInputStream stream = null;
-        Pair<ISkinType, ISkinProperties> skinType = null;
+        ISkinFileHeader header = null;
 
         try {
             stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
-            skinType = SkinSerializer.readSkinTypeNameFromStream(stream);
+            header = SkinSerializer.readSkinInfoFromStream(stream);
         } catch (IOException e) {
             ModLog.error("{} in {}", e, file.getName());
         } catch (NewerFileVersionException e) {
@@ -200,7 +198,7 @@ public final class SkinIOUtils {
 //            }
 //        }
 
-        return skinType;
+        return header;
     }
 
 //    public static void makeDatabaseDirectory() {

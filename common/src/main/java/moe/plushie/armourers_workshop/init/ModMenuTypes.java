@@ -1,9 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.api.common.IBlockMenuProvider;
-import moe.plushie.armourers_workshop.api.common.IMenuProvider;
-import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
-import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import moe.plushie.armourers_workshop.api.common.*;
 import moe.plushie.armourers_workshop.api.common.builder.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.builder.client.gui.ColorMixerWindow;
 import moe.plushie.armourers_workshop.builder.client.gui.OutfitMakerWindow;
@@ -28,7 +25,6 @@ import moe.plushie.armourers_workshop.library.menu.SkinLibraryMenu;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.Block;
 
@@ -56,12 +52,12 @@ public class ModMenuTypes {
         return BuilderManager.getInstance().createMenuTypeBuilder(factory, serializer);
     }
 
-    private static <T extends AbstractContainerMenu> IMenuTypeBuilder<T> block(IBlockMenuProvider<T, ? super ContainerLevelAccess> factory, IRegistryKey<Block> block) {
-        IMenuProvider<T, ContainerLevelAccess> factory1 = (menuType, containerId, inventory, object) -> factory.createMenu(menuType, block.get(), containerId, inventory, object);
+    private static <T extends AbstractContainerMenu> IMenuTypeBuilder<T> block(IBlockMenuProvider<T, ? super IContainerLevelAccess> factory, IRegistryKey<Block> block) {
+        IMenuProvider<T, IContainerLevelAccess> factory1 = (menuType, containerId, inventory, object) -> factory.createMenu(menuType, block.get(), containerId, inventory, object);
         return BuilderManager.getInstance().createMenuTypeBuilder(factory1, DataSerializers.WORLD_POS);
     }
 
-    private static <T extends AbstractContainerMenu> IMenuTypeBuilder<SkinLibraryMenu> library(IBlockMenuProvider<T, ? super ContainerLevelAccess> factory, IRegistryKey<Block> block) {
+    private static <T extends AbstractContainerMenu> IMenuTypeBuilder<SkinLibraryMenu> library(IBlockMenuProvider<T, ? super IContainerLevelAccess> factory, IRegistryKey<Block> block) {
         return ObjectUtils.unsafeCast(block(factory, block));
     }
 

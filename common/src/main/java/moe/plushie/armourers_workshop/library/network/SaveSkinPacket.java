@@ -193,7 +193,7 @@ public class SaveSkinPacket extends CustomPacket {
             GZIPOutputStream stream = new GZIPOutputStream(new ByteBufOutputStream(buffer));
             SkinIOUtils.saveSkinToStream(stream, skin);
             stream.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

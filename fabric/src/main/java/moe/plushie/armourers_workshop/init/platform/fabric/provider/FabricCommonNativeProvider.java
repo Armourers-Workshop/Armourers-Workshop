@@ -37,6 +37,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public interface FabricCommonNativeProvider extends CommonNativeProvider {
 
@@ -47,9 +48,10 @@ public interface FabricCommonNativeProvider extends CommonNativeProvider {
     }
 
     @Override
-    default void willRegisterCustomDataPack(Consumer<Consumer<PreparableReloadListener>> consumer) {
+    default void willRegisterCustomDataPack(Supplier<PreparableReloadListener> consumer) {
+        PreparableReloadListener listener = consumer.get();
         ResourceLocation registryName = ModConstants.key("custom-data-pack");
-        consumer.accept(listener -> ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new IdentifiableResourceReloadListener() {
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new IdentifiableResourceReloadListener() {
             @Override
             public ResourceLocation getFabricId() {
                 return registryName;
@@ -59,7 +61,7 @@ public interface FabricCommonNativeProvider extends CommonNativeProvider {
             public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller profilerFiller, ProfilerFiller profilerFiller2, Executor executor, Executor executor2) {
                 return listener.reload(preparationBarrier, resourceManager, profilerFiller, profilerFiller2, executor, executor2);
             }
-        }));
+        });
     }
 
     @Override

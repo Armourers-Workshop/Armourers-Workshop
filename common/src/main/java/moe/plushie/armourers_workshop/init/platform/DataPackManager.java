@@ -1,11 +1,14 @@
 package moe.plushie.armourers_workshop.init.platform;
 
-import com.google.gson.Gson;
 import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.core.data.DataPackLoader;
+import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,18 +20,53 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 public class DataPackManager {
 
-    private static final Gson GSON = new Gson();
-//    private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(1, r -> new Thread(r, "AW-PACK-LD"));
+    private static final InDataResourceManager IN_DATA_RESOURCE_MANAGER = new InDataResourceManager();
+    private static final InJarResourceManager IN_JAR_RESOURCE_MANAGER = new InJarResourceManager();
 
-    public static void register(DataPackLoader loader) {
-        IResourceManager resourceManager1 = new InJarResourceManager();
-        CompletableFuture<Map<ResourceLocation, IDataPackBuilder>> future = loader.prepare(resourceManager1, Runnable::run);
-        future.thenAccept(loader::load);
+    public static void register(DataPackType packType, DataPackLoader loader) {
+        switch (packType) {
+            case JAR: {
+                CompletableFuture<Map<ResourceLocation, IDataPackBuilder>> future = loader.prepare(IN_JAR_RESOURCE_MANAGER, Runnable::run);
+                future.thenAccept(loader::load);
+                break;
+            }
+            case DATA: {
+                IN_DATA_RESOURCE_MANAGER.loaders.add(loader);
+                break;
+            }
+            case ASSET: {
+                // no impl yet.
+                break;
+            }
+        }
+    }
+
+    public static InDataResourceManager getLoader() {
+        return IN_DATA_RESOURCE_MANAGER;
+    }
+
+    public static class InDataResourceManager implements PreparableReloadListener {
+
+        private final ArrayList<DataPackLoader> loaders = new ArrayList<>();
+
+        @Override
+        public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager resourceManager, ProfilerFiller profilerFiller, ProfilerFiller profilerFiller2, Executor executor, Executor executor2) {
+            ArrayList<Runnable> tasks = new ArrayList<>();
+            ArrayList<CompletableFuture<?>> entries = new ArrayList<>();
+            IResourceManager resourceManager1 = CommonNativeManager.createResourceManager(resourceManager);
+            loaders.forEach(loader -> {
+                CompletableFuture<Map<ResourceLocation, IDataPackBuilder>> future = loader.prepare(resourceManager1, executor);
+                entries.add(future);
+                tasks.add(() -> loader.load(future.join()));
+            });
+            return CompletableFuture.allOf(entries.toArray(new CompletableFuture[0])).thenCompose(barrier::wait).thenAcceptAsync(void_ -> tasks.forEach(Runnable::run), executor2);
+        }
     }
 
     public static class InJarResourceManager implements IResourceManager {
@@ -42,23 +80,23 @@ public class DataPackManager {
 
         @Override
         public boolean hasResource(ResourceLocation resourceLocation) {
-            return false;
+            return getFiles().contains(resolve(resourceLocation));
         }
 
         @Override
         public InputStream readResource(ResourceLocation resourceLocation) throws IOException {
-            return null;
+            return classLoader.getResourceAsStream(resolve(resourceLocation));
         }
 
         @Override
-        public void readResources(String path, Predicate<String> validator, BiConsumer<ResourceLocation, InputStream> consumer) {
-            String base = "data/" + ModConstants.MOD_ID + "/";
+        public void readResources(ResourceLocation target, Predicate<String> validator, BiConsumer<ResourceLocation, InputStream> consumer) {
+            String base = resolve(target.getNamespace(), "");
             getFiles().forEach(it -> {
                 if (!it.startsWith(base)) {
                     return;
                 }
                 String name = it.replace(base, "");
-                if (!name.startsWith(path) || !validator.test(name)) {
+                if (!name.startsWith(target.getPath()) || !validator.test(name)) {
                     return;
                 }
                 InputStream stream = classLoader.getResourceAsStream(it);
@@ -66,6 +104,14 @@ public class DataPackManager {
                     consumer.accept(ModConstants.key(name), stream);
                 }
             });
+        }
+
+        private String resolve(ResourceLocation location) {
+            return resolve(location.getNamespace(), location.getPath());
+        }
+
+        private String resolve(String namespace, String path) {
+            return  "data/" + namespace + "/" + path;
         }
 
         private Collection<String> getFiles() {
@@ -77,7 +123,7 @@ public class DataPackManager {
             if (inputStream != null) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
                 try {
-                    while (true){
+                    while (true) {
                         String file = reader.readLine();
                         if (file == null) {
                             break;

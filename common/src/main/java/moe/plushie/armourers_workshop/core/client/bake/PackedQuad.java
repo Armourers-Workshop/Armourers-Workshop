@@ -1,27 +1,24 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
-import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCuller;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
-import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
-import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
-import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
+import moe.plushie.armourers_workshop.utils.math.*;
 import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
 import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.utils.texture.SkyBox;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -50,7 +47,7 @@ public class PackedQuad {
 
     public static PackedQuads from(SkinPart part) {
         PackedQuads quads = new PackedQuads();
-        SkinCubeData data = part.getCubeData();
+        SkinCubes data = part.getCubeData();
         OpenVoxelShape renderShape = data.getRenderShape();
         Rectangle3i bounds = new Rectangle3i(renderShape.bounds());
         SkinCuller.cullFaces2(data, bounds, part.getType()).forEach(result -> {
@@ -81,7 +78,8 @@ public class PackedQuad {
                     return;
                 }
                 // in the vanilla's player textures are rendering without diffuse lighting.
-                quads.add(new SkinCubeFace(x, y, z, paintColor, 255, dir, SkinCubes.SOLID));
+                Vector3i pos = new Vector3i(x, y, z);
+                quads.add(new SkinCubeFace(pos, paintColor, 255, dir, SkinCubeTypes.SOLID));
             });
             if (quads.size() != 0) {
                 Rectangle3i bounds = box.getBounds();
@@ -101,7 +99,7 @@ public class PackedQuad {
             if (face.getPaintType() == SkinPaintTypes.NONE) {
                 continue;
             }
-            RenderType renderType = SkinRenderType.by(face.getCube());
+            RenderType renderType = SkinRenderType.by(face.getType());
             allFaces.computeIfAbsent(renderType, k -> new ArrayList<>()).add(face);
             colorInfo.add(face.getColor());
             faceTotal += 1;
@@ -140,7 +138,7 @@ public class PackedQuad {
         }
 
         public void forEach(BiConsumer<ISkinPartType, PackedQuad> consumer) {
-            quads.forEach(pair -> consumer.accept(pair.getFirst(), pair.getSecond()));
+            quads.forEach(pair -> consumer.accept(pair.getKey(), pair.getValue()));
         }
     }
 }

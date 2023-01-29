@@ -3,15 +3,16 @@ package moe.plushie.armourers_workshop.core.skin.exporter;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkin;
-import moe.plushie.armourers_workshop.api.skin.ISkinCube;
+import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.api.skin.ISkinExporter;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCuller;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
+import moe.plushie.armourers_workshop.core.skin.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.transform.SkinWingsTransform;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -93,7 +94,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         for (Task task : tasks) {
             PoseStack poseStack = new PoseStack();
             SkinPart skinPart = task.skinPart;
-            SkinTransform transform = SkinWingsTransform.build(skinPart);
+            SkinPartTransform transform = new SkinPartTransform(skinPart, SkinTransform.IDENTIFIER);
             // apply the render context matrix.
             poseStack.scale(scale, scale, scale);
             poseStack.scale(-1, -1, 1);
@@ -118,15 +119,15 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
     private void exportPart(IPoseStack poseStack, ArrayList<SkinCubeFace> allFaces, SkinPart skinPart, Skin skin, OutputStreamWriter os, TextureBuilder texture, int partIndex) throws IOException {
         // user maybe need apply some effects for the glass or glowing blocks,
         // so we need split the glass and glowing block into separate layers.
-        HashMap<ISkinCube, ArrayList<SkinCubeFace>> faces = new HashMap<>();
+        HashMap<ISkinCubeType, ArrayList<SkinCubeFace>> faces = new HashMap<>();
         for (SkinCubeFace face : allFaces) {
             if (face.getPaintType() != SkinPaintTypes.NONE) {
-                faces.computeIfAbsent(face.getCube(), k -> new ArrayList<>()).add(face);
+                faces.computeIfAbsent(face.getType(), k -> new ArrayList<>()).add(face);
             }
         }
         String[] layerNames = {"opaque", "glowing", "transparent", "transparent-glowing"};
-        for (int i = 0; i < SkinCubes.getTotalCubes(); ++i) {
-            ArrayList<SkinCubeFace> faces1 = faces.get(SkinCubes.byId(i));
+        for (int i = 0; i < SkinCubeTypes.getTotalCubes(); ++i) {
+            ArrayList<SkinCubeFace> faces1 = faces.get(SkinCubeTypes.byId(i));
             if (faces1 != null && !faces1.isEmpty()) {
                 exportLayer(poseStack, faces1, skinPart, skin, os, texture, layerNames[i], partIndex);
             }
@@ -230,7 +231,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         final ArrayList<SkinCubeFace> skinFaces;
 
         Task(Skin skin, SkinPart skinPart) {
-            SkinCubeData cubeData = skinPart.getCubeData();
+            SkinCubes cubeData = skinPart.getCubeData();
             Rectangle3i bounds = new Rectangle3i(cubeData.getRenderShape().bounds());
             this.skin = skin;
             this.skinPart = skinPart;

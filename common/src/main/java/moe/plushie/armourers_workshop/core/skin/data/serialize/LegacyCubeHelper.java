@@ -1,16 +1,16 @@
 package moe.plushie.armourers_workshop.core.skin.data.serialize;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinBufferedCubes;
+import moe.plushie.armourers_workshop.core.skin.data.base.IDataInputStream;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 
 public final class LegacyCubeHelper {
 
     // Used by file versions less than 10
-    public static void loadLegacyCubeData(SkinCubeData cubeData, SkinCubeData.BufferSlice slice, DataInputStream input, int version, ISkinPartType skinPart) throws IOException {
+    public static void loadLegacyCubeData(SkinBufferedCubes cubeData, SkinBufferedCubes.BufferSlice slice, IDataInputStream input, int version, ISkinPartType skinPart) throws IOException {
         if (version < 3) {
             loadLegacyCube(cubeData, slice, input, version, skinPart);
             return;
@@ -39,7 +39,7 @@ public final class LegacyCubeHelper {
     }
 
     // Used by file versions less than 3
-    public static void loadLegacyCube(SkinCubeData cubeData, SkinCubeData.BufferSlice slice, DataInputStream stream, int version, ISkinPartType skinPart) throws IOException {
+    public static void loadLegacyCube(SkinBufferedCubes cubeData, SkinBufferedCubes.BufferSlice slice, IDataInputStream stream, int version, ISkinPartType skinPart) throws IOException {
         byte x;
         byte y;
         byte z;

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.builder.client.gui.armourer.panel;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UISliderBox;
+import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.MathUtils;
@@ -33,7 +34,7 @@ public class ArmourerAdvancedSkinPanel extends ArmourerBaseSkinPanel {
         addSliderBox(0, 0, 154, 10, -180, 180, "\u00b0", SkinProperty.TRANSFORM_ROTATION_Z);
 
         addLabel(0, 0, new NSString("Scale"));
-        addSliderBox(0, 0, 154, 10, List.of(0.25, 0.5, 1.0, 2.0, 4.0), "", SkinProperty.TRANSFORM_SCALE);
+        addSliderBox(0, 0, 154, 10, Lists.newArrayList(0.25, 0.5, 1.0, 2.0, 4.0), "", SkinProperty.TRANSFORM_SCALE);
     }
 
     protected UISliderBox addSliderBox(int x, int y, int width, int height, List<Double> values, String suffix, SkinProperty<Double> property) {

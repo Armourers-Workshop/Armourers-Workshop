@@ -1,9 +1,7 @@
 package moe.plushie.armourers_workshop.library.data;
 
-import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
-import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
+import moe.plushie.armourers_workshop.api.skin.ISkinFileHeader;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.Constants;
@@ -13,8 +11,11 @@ import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class SkinLibraryLoader implements Runnable {
+
+    private static final HashMap<String, CachedFileHeader> CACHED_FILE_HEADERS = new HashMap<>();
 
     private final File libraryDirectory = EnvironmentManager.getSkinLibraryDirectory();
     private final File basePath;
@@ -50,7 +51,7 @@ public class SkinLibraryLoader implements Runnable {
             }
             if (filename.toLowerCase().endsWith(Constants.EXT)) {
                 String name = SkinFileUtils.getBaseName(filename);
-                Pair<ISkinType, ISkinProperties> header = SkinIOUtils.getTypeNameFromFile(file);
+                ISkinFileHeader header = getSkinFileHeader(file);
                 if (header == null) {
                     continue; // Armour file load fail.
                 }
@@ -70,6 +71,21 @@ public class SkinLibraryLoader implements Runnable {
         return fileList;
     }
 
+    private ISkinFileHeader getSkinFileHeader(File file) {
+        long modifiedTime = file.lastModified();
+        String key = file.getAbsolutePath();
+        CachedFileHeader cache = CACHED_FILE_HEADERS.get(key);
+        if (cache != null && cache.isValid(modifiedTime)) {
+            return cache.getHeader();
+        }
+        ISkinFileHeader header = SkinIOUtils.readHeaderFromFile(file);
+        if (header != null) {
+            CACHED_FILE_HEADERS.put(key, new CachedFileHeader(modifiedTime, header));
+            return header;
+        }
+        return null;
+    }
+
     @Override
     public void run() {
         long startTime = System.currentTimeMillis();
@@ -83,4 +99,22 @@ public class SkinLibraryLoader implements Runnable {
         }
     }
 
+    public static class CachedFileHeader {
+
+        private final long modifiedTime;
+        private final ISkinFileHeader header;
+
+        public CachedFileHeader(long modifiedTime, ISkinFileHeader header) {
+            this.modifiedTime = modifiedTime;
+            this.header = header;
+        }
+
+        public boolean isValid(long modifiedTime) {
+            return this.modifiedTime == modifiedTime;
+        }
+
+        public ISkinFileHeader getHeader() {
+            return header;
+        }
+    }
 }

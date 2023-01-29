@@ -2,11 +2,11 @@ package moe.plushie.armourers_workshop.core.skin.exporter;
 
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkin;
-import moe.plushie.armourers_workshop.api.skin.ISkinCube;
+import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.api.skin.ISkinExporter;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCuller;
@@ -48,19 +48,19 @@ public class SkinExporterPolygon implements ISkinExporter {
     }
 
     private void exportPart(SkinPart skinPart, Skin skin, File filePath, String filename, float scale, int partIndex) throws IOException {
-        SkinCubeData cubeData = skinPart.getCubeData();
+        SkinCubes cubeData = skinPart.getCubeData();
         Rectangle3i bounds = new Rectangle3i(cubeData.getRenderShape().bounds());
         // user maybe need apply some effects for the glass or glowing blocks,
         // so we need split the glass and glowing block into separate layers.
-        HashMap<ISkinCube, ArrayList<SkinCubeFace>> faces = new HashMap<>();
+        HashMap<ISkinCubeType, ArrayList<SkinCubeFace>> faces = new HashMap<>();
         for (SkinCubeFace face : SkinCuller.cullFaces(cubeData, bounds)) {
             if (face.getPaintType() != SkinPaintTypes.NONE) {
-                faces.computeIfAbsent(face.getCube(), k -> new ArrayList<>()).add(face);
+                faces.computeIfAbsent(face.getType(), k -> new ArrayList<>()).add(face);
             }
         }
         String[] layerNames = {"opaque", "glowing", "transparent", "transparent-glowing"};
-        for (int i = 0; i < SkinCubes.getTotalCubes(); ++i) {
-            ArrayList<SkinCubeFace> faces1 = faces.get(SkinCubes.byId(i));
+        for (int i = 0; i < SkinCubeTypes.getTotalCubes(); ++i) {
+            ArrayList<SkinCubeFace> faces1 = faces.get(SkinCubeTypes.byId(i));
             if (faces1 != null && !faces1.isEmpty()) {
                 exportLayer(faces1, skinPart, skin, filePath, filename, scale, layerNames[i], partIndex);
             }

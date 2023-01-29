@@ -11,12 +11,11 @@ import moe.plushie.armourers_workshop.core.data.OptionalDirection;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCube;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
-import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.exception.SkinSaveException;
-import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
@@ -88,7 +87,11 @@ public final class WorldUtils {
             paintData = resolvedPaintData;
         }
 
-        Skin skin = SkinSerializer.makeSkin(skinType, skinProps, paintData, parts);
+        Skin.Builder builder = new Skin.Builder(skinType);
+        builder.properties(skinProps);
+        builder.paintData(paintData);
+        builder.parts(parts);
+        Skin skin = builder.build();
 
         // check if there are any blocks in the build guides.
         if (skin.getParts().size() == 0 && skin.getPaintData() == null) {
@@ -127,19 +130,18 @@ public final class WorldUtils {
         return skin;
     }
 
-    private static SkinPart saveArmourPart(Level level, CubeTransform transform, ISkinPartType skinPart, boolean markerCheck) throws SkinSaveException {
+    private static SkinPart saveArmourPart(Level level, CubeTransform transform, ISkinPartType partType, boolean markerCheck) throws SkinSaveException {
 
-        int cubeCount = getNumberOfCubesInPart(level, transform, skinPart);
+        int cubeCount = getNumberOfCubesInPart(level, transform, partType);
         if (cubeCount < 1) {
             return null;
         }
-        SkinCubeData cubeData = new SkinCubeData(skinPart);
-        cubeData.setCubeCount(cubeCount);
-
+        SkinCubes cubeData = new SkinCubes();
         ArrayList<SkinMarker> markerBlocks = new ArrayList<>();
+        cubeData.ensureCapacity(cubeCount);
 
-        IRectangle3i buildSpace = skinPart.getBuildingSpace();
-        IVector3i offset = skinPart.getOffset();
+        IRectangle3i buildSpace = partType.getBuildingSpace();
+        IVector3i offset = partType.getOffset();
 
         int i = 0;
         for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
@@ -158,11 +160,13 @@ public final class WorldUtils {
 
                     BlockState targetState = level.getBlockState(target);
                     if (targetState.getBlock() instanceof SkinCubeBlock) {
+                        SkinCube cube = new SkinCube();
                         saveArmourBlockToList(level, transform, target,
                                 xOrigin - 1,
                                 yOrigin - 1,
                                 -zOrigin,
-                                cubeData.at(i), markerBlocks);
+                                cube, markerBlocks);
+                        cubeData.setCube(i, cube);
                         i++;
                     }
                 }
@@ -170,39 +174,36 @@ public final class WorldUtils {
         }
 
         if (markerCheck) {
-            if (skinPart.getMinimumMarkersNeeded() > markerBlocks.size()) {
-                throw new SkinSaveException("Missing marker for part " + skinPart.getRegistryName(), SkinSaveException.SkinSaveExceptionType.MARKER_ERROR);
+            if (partType.getMinimumMarkersNeeded() > markerBlocks.size()) {
+                throw new SkinSaveException("Missing marker for part " + partType.getRegistryName(), SkinSaveException.SkinSaveExceptionType.MARKER_ERROR);
             }
 
-            if (markerBlocks.size() > skinPart.getMaximumMarkersNeeded()) {
-                throw new SkinSaveException("Too many markers for part " + skinPart.getRegistryName(), SkinSaveException.SkinSaveExceptionType.MARKER_ERROR);
+            if (markerBlocks.size() > partType.getMaximumMarkersNeeded()) {
+                throw new SkinSaveException("Too many markers for part " + partType.getRegistryName(), SkinSaveException.SkinSaveExceptionType.MARKER_ERROR);
             }
         }
 
-        return new SkinPart(skinPart, markerBlocks, cubeData);
+        SkinPart.Builder builder = new SkinPart.Builder(partType);
+        builder.cubes(cubeData);
+        builder.markers(markerBlocks);
+        return builder.build();
     }
 
-    private static void saveArmourBlockToList(Level level, CubeTransform transform, BlockPos pos, int ix, int iy, int iz, SkinCubeData.BufferSlice slice, ArrayList<SkinMarker> markerBlocks) {
+    private static void saveArmourBlockToList(Level level, CubeTransform transform, BlockPos pos, int ix, int iy, int iz, SkinCube cube, ArrayList<SkinMarker> markerBlocks) {
         BlockEntity tileEntity = level.getBlockEntity(pos);
         if (!(tileEntity instanceof IPaintable)) {
             return;
         }
-        BlockState blockState = tileEntity.getBlockState();
         IPaintable target = (IPaintable) tileEntity;
-        ISkinCube cube = SkinCubes.byBlock(blockState.getBlock());
-
+        BlockState blockState = tileEntity.getBlockState();
         OptionalDirection marker = SkinCubeBlock.getMarker(blockState);
 
-        slice.setId((byte) cube.getId());
-        slice.setX((byte) ix);
-        slice.setY((byte) iy);
-        slice.setZ((byte) iz);
-
+        cube.setType(SkinCubeTypes.byBlock(blockState.getBlock()));
+        cube.setPos(new Vector3i(ix, iy, iz));
         for (Direction dir : Direction.values()) {
-            IPaintColor color = target.getColor(dir);
+            IPaintColor paintColor = target.getColor(dir);
             Direction resolvedDir = transform.invRotate(dir);
-            slice.setRGB(resolvedDir.ordinal(), color.getRGB());
-            slice.setPaintType(resolvedDir.ordinal(), (byte) color.getPaintType().getId());
+            cube.setPaintColor(resolvedDir, paintColor);
         }
         if (marker != OptionalDirection.NONE) {
             OptionalDirection resolvedMarker = OptionalDirection.of(transform.invRotate(marker.getDirection()));
@@ -227,12 +228,12 @@ public final class WorldUtils {
         ISkinPartType skinPart = partData.getType();
         IRectangle3i buildSpace = skinPart.getBuildingSpace();
         IVector3i offset = skinPart.getOffset();
-        SkinCubeData cubeData = partData.getCubeData();
+        SkinCubes cubeData = partData.getCubeData();
 
         for (int i = 0; i < cubeData.getCubeCount(); i++) {
-            SkinCubeData.BufferSlice slice = cubeData.at(i);
-            Vector3i cubePos = slice.getPos();
-            ISkinCube blockData = SkinCubes.byId(slice.getId());
+            ISkinCube cube = cubeData.getCube(i);
+            IVector3i cubePos = cube.getPos();
+            ISkinCubeType blockData = cube.getType();
             OptionalDirection markerFacing = OptionalDirection.NONE;
             for (ISkinMarker marker : partData.getMarkers()) {
                 if (cubePos.equals(marker.getPosition())) {
@@ -242,11 +243,11 @@ public final class WorldUtils {
                 }
             }
             BlockPos origin = new BlockPos(-offset.getX(), -offset.getY() + -buildSpace.getY(), offset.getZ());
-            loadSkinBlockIntoWorld(applier, transform, origin, blockData, cubePos, markerFacing, slice, mirror);
+            loadSkinBlockIntoWorld(applier, transform, origin, blockData, cubePos, markerFacing, cube, mirror);
         }
     }
 
-    private static void loadSkinBlockIntoWorld(CubeApplier applier, CubeTransform transform, BlockPos origin, ISkinCube blockData, Vector3i cubePos, OptionalDirection markerFacing, SkinCubeData.BufferSlice slice, boolean mirror) {
+    private static void loadSkinBlockIntoWorld(CubeApplier applier, CubeTransform transform, BlockPos origin, ISkinCubeType blockData, IVector3i cubePos, OptionalDirection markerFacing, ISkinCube cube, boolean mirror) {
         int shiftX = -cubePos.getX() - 1;
         int shiftY = cubePos.getY() + 1;
         int shiftZ = cubePos.getZ();
@@ -266,10 +267,9 @@ public final class WorldUtils {
 
         HashMap<Direction, IPaintColor> colors = new HashMap<>();
         for (Direction dir : Direction.values()) {
-            int rgb = slice.getRGB(dir.ordinal());
-            int type = slice.getPaintType(dir.ordinal());
+            IPaintColor paintColor = cube.getPaintColor(dir);
             Direction resolvedDir = getResolvedDirection(dir, mirror);
-            colors.put(transform.rotate(resolvedDir), PaintColor.of(rgb, SkinPaintTypes.byId(type)));
+            colors.put(transform.rotate(resolvedDir), paintColor);
         }
 
         wrapper.setBlockState(targetState, colors);

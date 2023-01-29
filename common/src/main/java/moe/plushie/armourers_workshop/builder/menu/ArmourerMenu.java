@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.menu;
 
 import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.other.CubeApplier;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
@@ -19,7 +20,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +33,7 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
     private final SimpleContainer inventory = new SimpleContainer(4);
     private Group group = null;
 
-    public ArmourerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, ContainerLevelAccess access) {
+    public ArmourerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess access) {
         super(menuType, block, containerId, access);
         this.addPlayerSlots(playerInventory, 8, 142, visibleSlotBuilder(this::shouldRenderInventory));
         this.addCustomSlot(inventory, 0, 64, 21);

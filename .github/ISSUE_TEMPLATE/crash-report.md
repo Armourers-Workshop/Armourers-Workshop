@@ -3,7 +3,7 @@ name: Crash report
 about: Create a crash report
 title: "[CRASH]"
 labels: crash
-assignees: RiskyKen
+assignees: ''
 
 ---
 

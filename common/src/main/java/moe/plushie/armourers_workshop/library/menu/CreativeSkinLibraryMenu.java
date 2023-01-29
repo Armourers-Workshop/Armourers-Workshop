@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.library.menu;
 
+import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.Block;
 
 public class CreativeSkinLibraryMenu extends SkinLibraryMenu {
 
-    public CreativeSkinLibraryMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, ContainerLevelAccess access) {
+    public CreativeSkinLibraryMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess access) {
         super(menuType, block, containerId, playerInventory, access);
     }
 

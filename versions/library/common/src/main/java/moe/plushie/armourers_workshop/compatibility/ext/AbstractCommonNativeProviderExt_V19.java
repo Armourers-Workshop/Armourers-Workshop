@@ -82,10 +82,13 @@ public interface AbstractCommonNativeProviderExt_V19 extends CommonNativeProvide
             }
 
             @Override
-            public void readResources(String path, Predicate<String> validator, BiConsumer<ResourceLocation, InputStream> consumer) {
-                resourceManager.listResources(path, rl -> validator.test(rl.toString())).forEach((key, resource) -> {
+            public void readResources(ResourceLocation target, Predicate<String> validator, BiConsumer<ResourceLocation, InputStream> consumer) {
+                resourceManager.listResources(target.getPath(), rl -> validator.test(rl.getPath())).forEach((key, resource) -> {
                     try {
                         try {
+                            if (!key.getNamespace().equals(target.getNamespace())) {
+                                return;
+                            }
                             InputStream inputStream = resource.open();
                             consumer.accept(key, inputStream);
                             inputStream.close();

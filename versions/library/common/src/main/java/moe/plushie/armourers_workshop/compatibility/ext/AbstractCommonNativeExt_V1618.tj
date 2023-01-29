@@ -59,13 +59,16 @@ public interface AbstractCommonNativeExt_V1618 extends CommonNativeProvider, Com
             }
 
             @Override
-            public void readResources(String path, Predicate<String> validator, BiConsumer<ResourceLocation, InputStream> consumer) {
-                for (ResourceLocation location : resourceManager.listResources(path, validator)) {
+            public void readResources(ResourceLocation target, Predicate<String> validator, BiConsumer<ResourceLocation, InputStream> consumer) {
+                for (ResourceLocation key : resourceManager.listResources(target.getPath(), validator)) {
                     try {
-                        for (Resource resource : resourceManager.getResources(location)) {
+                        if (!key.getNamespace().equals(target.getNamespace())) {
+                            return;
+                        }
+                        for (Resource resource : resourceManager.getResources(key)) {
                             try {
                                 InputStream inputStream = resource.getInputStream();
-                                consumer.accept(location, inputStream);
+                                consumer.accept(key, inputStream);
                                 inputStream.close();
                             } catch (Exception exception) {
                                 exception.printStackTrace();
