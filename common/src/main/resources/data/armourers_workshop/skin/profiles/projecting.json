@@ -6,6 +6,7 @@
   },
   "entities": [
     "minecraft:arrow",
-    "minecraft:trident"
+    "minecraft:trident",
+    "minecraft:spectral_arrow"
   ]
 }

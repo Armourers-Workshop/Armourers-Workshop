@@ -182,11 +182,9 @@ public final class SkinIOUtils {
             stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
             skinType = SkinSerializer.readSkinTypeNameFromStream(stream);
         } catch (IOException e) {
-            e.printStackTrace();
-            ModLog.error("File name: " + file.getName());
+            ModLog.error("{} in {}", e, file.getName());
         } catch (NewerFileVersionException e) {
-            e.printStackTrace();
-            ModLog.error("File name: " + file.getName());
+            ModLog.error("{} in {}", e, file.getName());
         } catch (Exception e) {
             ModLog.error("Unable to load skin name. Unknown error.");
             e.printStackTrace();

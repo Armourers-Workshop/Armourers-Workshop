@@ -32,7 +32,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -195,7 +195,7 @@ public class BakedSkin implements IBakedSkin {
         ISkinPartType partType = bakedPart.getType();
         if (partType == SkinPartTypes.ITEM_ARROW) {
             // arrow part only render in arrow entity
-            if (entity instanceof Arrow) {
+            if (entity instanceof AbstractArrow) {
                 return true;
             }
             // we have some old skin that only contain arrow part,
@@ -206,7 +206,7 @@ public class BakedSkin implements IBakedSkin {
             }
             return false;
         }
-        if (entity instanceof Arrow) {
+        if (entity instanceof AbstractArrow) {
             return false; // arrow entity only render arrow part
         }
         if (partType instanceof ICanUse && entity instanceof LivingEntity) {
