@@ -10,14 +10,21 @@ import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -91,6 +98,13 @@ public interface AbstractCommonNativeProviderExt_V19 extends CommonNativeProvide
                 });
             }
         };
+    }
+
+    @Override
+    default <T extends Entity> T createEntity(EntityType<T> entityType, ServerLevel level, BlockPos pos, @Nullable CompoundTag tag, MobSpawnType spawnType) {
+        T entity = entityType.create(level, null, null, pos, spawnType, true, true);
+        EntityType.updateCustomEntityTag(level, null, entity, tag);
+        return entity;
     }
 
     class ArgumentTypeInfo1920<A extends IArgumentType<?>> implements ArgumentTypeInfo<A, ArgumentTypeInfo1920.Template<A>> {

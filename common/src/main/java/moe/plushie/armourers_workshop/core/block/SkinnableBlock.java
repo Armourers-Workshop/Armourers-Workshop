@@ -15,11 +15,13 @@ import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.math.Vector3d;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -119,7 +121,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
                     return InteractionResult.CONSUME;
                 }
                 Vector3d seatPos = tileEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
-                SeatEntity seatEntity = getSeatEntity(level, tileEntity.getParentPos(), seatPos);
+                SeatEntity seatEntity = getSeatEntity((ServerLevel) level, tileEntity.getParentPos(), seatPos);
                 if (seatEntity == null) {
                     return InteractionResult.FAIL; // it is using
                 }
@@ -261,7 +263,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
     }
 
     @Nullable
-    private SeatEntity getSeatEntity(Level level, BlockPos blockPos, Vector3d pos) {
+    private SeatEntity getSeatEntity(ServerLevel level, BlockPos blockPos, Vector3d pos) {
         AABB searchRect = new AABB(pos.x, pos.y, pos.z, pos.x + 1, pos.y + 1, pos.z + 1);
         for (SeatEntity entity : level.getEntitiesOfClass(SeatEntity.class, searchRect)) {
             if (entity.isAlive() && blockPos.equals(entity.getBlockPos())) {
@@ -271,7 +273,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
                 return null; // is using
             }
         }
-        SeatEntity entity = new SeatEntity(ModEntityTypes.SEAT.get(), level);
+        SeatEntity entity = ModEntityTypes.SEAT.create(level, BlockPos.ZERO, null, MobSpawnType.SPAWN_EGG);
         entity.setPos(pos.x(), pos.y(), pos.z());
         entity.setBlockPos(blockPos);
         level.addFreshEntity(entity);

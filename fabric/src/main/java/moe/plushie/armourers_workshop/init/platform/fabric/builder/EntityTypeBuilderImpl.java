@@ -1,18 +1,25 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import moe.plushie.armourers_workshop.api.common.IEntityRendererProvider;
+import moe.plushie.armourers_workshop.api.common.IEntityTypeKey;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IEntityTypeBuilder;
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricEntityRenderers;
 import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.platform.fabric.CommonNativeManagerImpl;
+import moe.plushie.armourers_workshop.init.platform.fabric.proxy.CommonProxyImpl;
+import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -84,9 +91,24 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
     }
 
     @Override
-    public IRegistryKey<EntityType<T>> build(String name) {
+    public IEntityTypeKey<T> build(String name) {
         IRegistryKey<EntityType<T>> object = Registries.ENTITY_TYPE.register(name, () -> builder.build());
         EnvironmentExecutor.didInit(EnvironmentType.CLIENT, binder, object);
-        return object;
+        return new IEntityTypeKey<T>() {
+            @Override
+            public T create(ServerLevel level, BlockPos pos, @Nullable CompoundTag tag, MobSpawnType spawnType) {
+                return CommonNativeManagerImpl.INSTANCE.createEntity(object.get(), level, pos, tag, spawnType);
+            }
+
+            @Override
+            public ResourceLocation getRegistryName() {
+                return object.getRegistryName();
+            }
+
+            @Override
+            public EntityType<T> get() {
+                return object.get();
+            }
+        };
     }
 }
