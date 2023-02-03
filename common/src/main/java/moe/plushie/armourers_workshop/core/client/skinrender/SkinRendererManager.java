@@ -160,7 +160,6 @@ public class SkinRendererManager  {
         // but some mods(Custom NPC) generate dynamically models,
         // so we need to be compatible with that
         Storage<T, V, M> storage = Storage.of(entityRenderer);
-        // ..
         return storage.computeIfAbsent(entityModel, key -> createRenderer(entityType, entityRenderer, entityModel));
     }
 
@@ -168,6 +167,9 @@ public class SkinRendererManager  {
     @Nullable
     protected <T extends Entity, V extends Model, M extends IModelHolder<V>> SkinRenderer<T, V, M> createRenderer(EntityType<?> entityType, EntityRenderer<?> entityRenderer, Model entityModel) {
         EntityProfile entityProfile = ModEntityProfiles.getProfile(entityType);
+        if (entityProfile == null) {
+            return null;
+        }
         for (SkinRenderer.Factory<SkinRenderer<?, ?, ?>> builder : builders) {
             SkinRenderer<?, ?, ?> skinRenderer = builder.create(entityType, entityRenderer, entityModel, entityProfile);
             if (skinRenderer != null) {
@@ -198,7 +200,9 @@ public class SkinRendererManager  {
             return;
         }
         SkinRenderer<T, V, M> skinRenderer = getRenderer(entityType, livingRenderer.getModel(), livingRenderer);
-        livingRenderer.addLayer(new SkinWardrobeLayer<>(skinRenderer, livingRenderer));
+        if (skinRenderer != null) {
+            livingRenderer.addLayer(new SkinWardrobeLayer<>(skinRenderer, livingRenderer));
+        }
     }
 
 

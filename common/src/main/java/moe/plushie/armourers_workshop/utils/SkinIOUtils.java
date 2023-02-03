@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.init.ModLog;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.util.Strings;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -91,12 +92,12 @@ public final class SkinIOUtils {
             e.printStackTrace();
         }
 
-        if (skin == null) {
-            skin = loadSkinRecovery(file);
-            if (skin != null) {
-                ModLog.warn("Loaded skin with recovery system.");
-            }
-        }
+//        if (skin == null) {
+//            skin = loadSkinRecovery(file);
+//            if (skin != null) {
+//                ModLog.warn("Loaded skin with recovery system.");
+//            }
+//        }
 
         return skin;
     }
@@ -172,6 +173,7 @@ public final class SkinIOUtils {
         return false;
     }
 
+    @Nullable
     public static Pair<ISkinType, ISkinProperties> getTypeNameFromFile(File file) {
         DataInputStream stream = null;
         Pair<ISkinType, ISkinProperties> skinType = null;
@@ -179,9 +181,6 @@ public final class SkinIOUtils {
         try {
             stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
             skinType = SkinSerializer.readSkinTypeNameFromStream(stream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            ModLog.error("File name: " + file.getName());
         } catch (IOException e) {
             e.printStackTrace();
             ModLog.error("File name: " + file.getName());
@@ -195,13 +194,13 @@ public final class SkinIOUtils {
             StreamUtils.closeQuietly(stream);
         }
 
-        if (skinType == null) {
-            Skin skin = loadSkinRecovery(file);
-            if (skin != null) {
-                ModLog.warn("Loaded skin with recovery system.");
-                skinType = Pair.of(skin.getType(), SkinProperties.create());
-            }
-        }
+//        if (skinType == null) {
+//            Skin skin = loadSkinRecovery(file);
+//            if (skin != null) {
+//                ModLog.warn("Loaded skin with recovery system.");
+//                skinType = Pair.of(skin.getType(), SkinProperties.create());
+//            }
+//        }
 
         return skinType;
     }
