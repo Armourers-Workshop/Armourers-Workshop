@@ -40,6 +40,8 @@ public class ModDebugger {
     public static boolean spin = false;
 
     public static boolean tooltip = false;
+    public static boolean properties = false;
+
     public static boolean wireframeRender = false;
 
     public static boolean viewHierarchy = false;
@@ -54,17 +56,14 @@ public class ModDebugger {
     public static boolean skinRenderBounds;
     public static boolean sortOrderToolTip;
 
-    @Environment(value = EnvType.CLIENT)
     public static void rotate(IPoseStack poseStack) {
         poseStack.rotate(new Quaternionf(rx, ry, rz, true));
     }
 
-    @Environment(value = EnvType.CLIENT)
     public static void scale(IPoseStack poseStack) {
         poseStack.scale(sx, sy, sz);
     }
 
-    @Environment(value = EnvType.CLIENT)
     public static void translate(IPoseStack poseStack) {
         poseStack.translate(tx, ty, tz);
     }

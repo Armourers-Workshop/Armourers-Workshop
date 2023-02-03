@@ -73,16 +73,11 @@ public class LocalDataService {
                 continue;
             }
             try {
-                byte[] bytes = SkinFileUtils.readFileToByteArray(file);
-                FastByteArrayInputStream stream = new FastByteArrayInputStream(bytes);
-                Skin skin = SkinIOUtils.loadSkinFromStream2(stream);
-                if (skin == null) {
-                    continue;
+                Node node = generateNode(name, file);
+                if (node != null) {
+                    ModLog.info("data fixer -> upgrade {} node to new db", name);
+                    SkinFileUtils.deleteQuietly(file);
                 }
-                ModLog.info("data fixer -> upgrade {} node to new db", name);
-                Node node = new Node(name, skin.getType(), bytes, skin.getProperties());
-                node.save(bytes);
-                SkinFileUtils.deleteQuietly(file);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -91,31 +86,69 @@ public class LocalDataService {
         ModLog.info("data fixer for db {} completed", indexDB);
     }
 
-    protected void loadNodes() {
-        File[] files = SkinFileUtils.listFiles(rootPath.resolve("objects").toFile());
-        if (files == null) {
-            return;
-        }
-        for (File file : files) {
-            File indexFile = new File(file, "0");
-            try {
-                CompoundTag nbt = SkinFileUtils.readNBT(indexFile);
-                if (nbt != null) {
-                    Node node = new Node(nbt);
-                    nodes.put(node.id, node);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+    private void loadNodes() {
+        File[] files = SkinFileUtils.listFiles(getRootFile());
+        if (files != null) {
+            for (File file : files) {
+                loadNode(file);
             }
         }
     }
 
+    private Node loadNode(File parent) {
+        try {
+            File indexFile = new File(parent, "0");
+            CompoundTag nbt = SkinFileUtils.readNBT(indexFile);
+            if (nbt != null) {
+                Node node = new Node(nbt);
+                nodes.put(node.id, node);
+                return node;
+            }
+            Node node = generateNode(parent.getName(), new File(parent, "1"));
+            if (node != null) {
+                nodes.put(node.id, node);
+                return node;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private Node generateNode(String identifier, File skinFile) throws Exception {
+       if (!skinFile.isFile()) {
+            return null;
+        }
+        byte[] bytes = SkinFileUtils.readFileToByteArray(skinFile);
+        FastByteArrayInputStream stream = new FastByteArrayInputStream(bytes);
+        Skin skin = SkinIOUtils.loadSkinFromStream2(stream);
+        if (skin == null) {
+            return null;
+        }
+        Node node = new Node(identifier, skin.getType(), bytes, skin.getProperties());
+        node.save(bytes);
+        return node;
+    }
+
+    private File getRootFile() {
+        return rootPath.resolve("objects").toFile();
+    }
+
     public InputStream getFile(String identifier) throws IOException {
         Node node = nodes.get(identifier);
+        if (node == null) {
+            // when the identifier not found in the nodes,
+            // we will check the file once.
+            File parent = new File(getRootFile(), identifier);
+            if (parent.isDirectory()) {
+                node = loadNode(parent);
+            }
+        }
         if (node != null && node.isValid()) {
+            // we can safely access the node now.
             return new FileInputStream(node.getFile());
         }
-        throw new FileNotFoundException("invalid file path");
+        throw new FileNotFoundException("the node '" + identifier + "' not found!");
     }
 
     public String addFile(Skin skin) {

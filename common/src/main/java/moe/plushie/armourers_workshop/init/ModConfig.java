@@ -53,7 +53,6 @@ public class ModConfig {
         public static boolean tooltipSkinAuthor = true;
         public static boolean tooltipSkinType = true;
         public static boolean tooltipFlavour = true;
-        public static boolean tooltipProperties = false;
         public static boolean tooltipOpenWardrobe = true;
 
         // Debug

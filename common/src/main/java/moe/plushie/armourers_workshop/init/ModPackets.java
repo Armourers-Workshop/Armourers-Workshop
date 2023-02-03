@@ -21,6 +21,7 @@ public enum ModPackets {
     UPDATE_COLOUR_MIXER(0x06, UpdateColorMixerPacket.class, UpdateColorMixerPacket::new),
 
     EXECUTE_COMMAND(0x07, ExecuteCommandPacket.class, ExecuteCommandPacket::new),
+    // EXECUTE_ALERT(0x08, ExecuteAlertPacket.class, ExecuteAlertPacket::new),
 
     UPLOAD_FILE(0x40, SaveSkinPacket.class, SaveSkinPacket::new),
 
