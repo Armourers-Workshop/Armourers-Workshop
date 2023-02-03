@@ -28,9 +28,9 @@ public class ShaderPreprocessor {
 
 
     private String processIrisShader(String source) {
-        source = attribute(source, "ivec2", "iris_UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 0, 1))");
-        source = attribute(source, "vec2", "iris_UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 0, 1))");
-        // source = attribute(source, "vec3", "Normal", "mat3", "aw_NormalMatrix", "($1 * $2)");
+        source = uniform(source, "mat4", "iris_TextureMat", "mat4", "aw_TextureMatrix", "($1 * $2)");
+        source = uniform(source, "mat4", "iris_LightmapTextureMatrix", "mat4", "aw_LightmapTextureMatrix", "($1 * $2)");
+        source = uniform(source, "mat3", "iris_NormalMat", "mat3", "aw_NormalMatrix", "($1 * $2)");
         source = uniform(source, "mat4", "iris_ModelViewMat", "mat4", "aw_ModelViewMat", "($1 * $2)");
         ModLog.debug("process iris shader: \n{}", source);
         return source;
