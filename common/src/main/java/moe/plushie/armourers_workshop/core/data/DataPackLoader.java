@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.data;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
@@ -9,9 +8,6 @@ import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.resources.ResourceLocation;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;

@@ -95,7 +95,7 @@ public class ColorUtils {
         }
     }
 
-    public static int makeColourBighter(int rgb, int amount) {
+    public static int makeColorBighter(int rgb, int amount) {
         int r = getRed(rgb) + amount;
         int g = getGreen(rgb) + amount;
         int b = getBlue(rgb) + amount;
@@ -179,7 +179,7 @@ public class ColorUtils {
         return (type << 24) | (getPaletteColor(index).getRGB() & 0xffffff);
     }
 
-    /* Old pastel colours
+    /* Old pastel colors
     0xDDDDDD, 0xDB7D3E, 0xB350BC, 0x6B8AC9,
     0xB1A627, 0x41AE38, 0xD08499, 0x404040,
     0x9AA1A1, 0x2E6E89, 0x7E3DB5, 0x2E388D,

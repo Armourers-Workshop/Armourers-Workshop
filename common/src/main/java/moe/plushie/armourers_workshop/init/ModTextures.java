@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init;
 
+import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIImage;
-import com.apple.library.coregraphics.CGPoint;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +20,7 @@ public class ModTextures {
     public static final ResourceLocation DYE_TABLE = res("textures/gui/dye_table/dye-table.png");
     public static final ResourceLocation SKIN_LIBRARY = res("textures/gui/skin_library/armour-library.png");
     public static final ResourceLocation GLOBAL_SKIN_LIBRARY = res("textures/gui/global_library/global-library.png");
-    public static final ResourceLocation COLOUR_MIXER = res("textures/gui/colour_mixer/colour-mixer.png");
+    public static final ResourceLocation COLOR_MIXER = res("textures/gui/colour_mixer/colour-mixer.png");
     public static final ResourceLocation OUTFIT_MAKER = res("textures/gui/outfit_maker/outfit-maker.png");
     public static final ResourceLocation ARMOURER = res("textures/gui/armourer/armourer.png");
 

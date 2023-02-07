@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.skinrender.plugin;
 
 import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
-import moe.plushie.armourers_workshop.core.client.skinrender.plugin.ForwardingLayerPlugin;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;

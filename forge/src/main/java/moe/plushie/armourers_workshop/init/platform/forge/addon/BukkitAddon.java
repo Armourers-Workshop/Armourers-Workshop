@@ -1,8 +1,5 @@
 package moe.plushie.armourers_workshop.init.platform.forge.addon;
 
-import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.ToIntFunction;

@@ -12,7 +12,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 @Environment(value = EnvType.CLIENT)
 public class ConfirmDialog extends BaseDialog {

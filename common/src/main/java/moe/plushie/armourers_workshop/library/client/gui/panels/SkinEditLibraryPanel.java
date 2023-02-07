@@ -68,8 +68,8 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
     public void reloadData(ServerSkin entry, GlobalSkinLibraryWindow.Page returnPage) {
         this.entry = entry;
         this.returnPage = returnPage;
-        this.textName.setValue(entry.name);
-        this.textDescription.setValue(entry.description);
+        this.textName.setValue(entry.getName());
+        this.textDescription.setValue(entry.getDescription());
         this.textTags.setValue("");
     }
 
@@ -81,7 +81,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
             return;
         }
         // not change, ignore
-        if (name.equals(entry.name) && description.equals(entry.description)) {
+        if (name.equals(entry.getName()) && description.equals(entry.getDescription())) {
             backToPage(false);
             return;
         }
@@ -100,7 +100,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
         dialog.setMessageColor(new UIColor(0xffff5555));
         dialog.setConfirmText(getDisplayText("dialog.delete.ok"));
         dialog.setCancelText(getDisplayText("dialog.delete.cancel"));
-        dialog.setMessage(getDisplayText("dialog.delete.message", entry.name));
+        dialog.setMessage(getDisplayText("dialog.delete.message", entry.getName()));
         dialog.showInView(this, () -> {
             if (!dialog.isCancelled()) {
                 removeSkin(button);

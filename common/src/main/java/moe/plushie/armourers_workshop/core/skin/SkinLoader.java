@@ -54,6 +54,7 @@ public class SkinLoader {
             taskManager.put(DataDomain.DATABASE_LINK, local);
             taskManager.put(DataDomain.DEDICATED_SERVER, local);
             taskManager.put(DataDomain.GLOBAL_SERVER, download);
+            taskManager.put(DataDomain.GLOBAL_SERVER_PREVIEW, download);
         } else {
             ProxySession proxy = new ProxySession();
             taskManager.put(DataDomain.LOCAL, local);
@@ -61,6 +62,7 @@ public class SkinLoader {
             taskManager.put(DataDomain.DATABASE_LINK, proxy);
             taskManager.put(DataDomain.DEDICATED_SERVER, proxy);
             taskManager.put(DataDomain.GLOBAL_SERVER, proxy);
+            taskManager.put(DataDomain.GLOBAL_SERVER_PREVIEW, new DownloadSession());
         }
     }
 
@@ -613,7 +615,7 @@ public class SkinLoader {
                 throw new FileNotFoundException(request.identifier);
             }
             // global data no need decrypt/encrypt
-            if (DataDomain.GLOBAL_SERVER.matches(request.identifier)) {
+            if (isGlobalServer(request.identifier)) {
                 return new FileInputStream(cacheFile);
             }
             byte[] x0 = ModContext.x0();
@@ -633,20 +635,34 @@ public class SkinLoader {
             return new CipherInputStream(inputStream, aes);
         }
 
-        public File cachingFile(String identifier) {
+        private File cachingFile(String identifier) {
             File cacheFile = null;
             UUID t0 = ModContext.t0();
             String namespace = DataDomain.getNamespace(identifier);
-            if (DataDomain.GLOBAL_SERVER.matches(identifier)) {
+            if (isGlobalServer(identifier)) {
                 String path = DataDomain.getPath(identifier);
-                File rootPath = new File(EnvironmentManager.getSkinCacheDirectory(), "00000000-0000-0000-0000-000000000000");
-                cacheFile = new File(new File(rootPath, namespace), path + ".dat");
+                String domain = "00000000-0000-0000-0000-000000000000";
+                // for history reasons and performance optimization,
+                // when skin already downloaded we don't need preview skin.
+                cacheFile = cachingFile(domain, DataDomain.GLOBAL_SERVER.namespace(), path);
+                if (!cacheFile.exists()) {
+                    cacheFile = cachingFile(domain, namespace, path);
+                }
             } else if (t0 != null) {
                 String path = DataDomain.getPath(identifier);
-                File rootPath = new File(EnvironmentManager.getSkinCacheDirectory(), t0.toString());
-                cacheFile = new File(new File(rootPath, namespace), ModContext.md5(path) + ".dat");
+                cacheFile = cachingFile(t0.toString(), namespace, path);
             }
             return cacheFile;
+        }
+
+        private File cachingFile(String domain, String namespace, String identifier) {
+            File rootPath = new File(EnvironmentManager.getSkinCacheDirectory(), domain);
+            File localPath = new File(rootPath, namespace);
+            return new File(localPath, identifier + ".dat");
+        }
+
+        private boolean isGlobalServer(String identifier)  {
+            return DataDomain.GLOBAL_SERVER.matches(identifier) || DataDomain.GLOBAL_SERVER_PREVIEW.matches(identifier);
         }
     }
 }

@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.builder.client.threejs.controls;
 
-import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.builder.client.threejs.camera.Camera;
 import moe.plushie.armourers_workshop.builder.client.threejs.core.EventSource;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.math.*;
 
 public class OrbitControls {

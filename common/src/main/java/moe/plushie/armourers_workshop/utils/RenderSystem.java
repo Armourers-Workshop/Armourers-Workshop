@@ -137,7 +137,7 @@ public final class RenderSystem extends AbstractRenderSystem {
         resize(poseStack, x, y, u, v, width, height, sourceWidth, sourceHeight, texWidth, texHeight);
     }
 
-    public static int getPixelColour(int x, int y) {
+    public static int getPixelColor(int x, int y) {
         Window window = Minecraft.getInstance().getWindow();
         double guiScale = window.getGuiScale();
         int sx = (int) (x * guiScale);

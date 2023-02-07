@@ -13,9 +13,9 @@ import com.apple.library.uikit.UIView;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ReportDialog;
+import moe.plushie.armourers_workshop.core.client.gui.widget.Toast;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -23,12 +23,12 @@ import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.client.gui.widget.SkinRatingView;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
-import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.data.impl.ReportType;
 import moe.plushie.armourers_workshop.library.data.impl.ServerPermission;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
 import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
@@ -186,7 +186,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 
     public void drawPreviewBox(CGGraphicsContext context, CGRect rect) {
         context.fillRect(gradient, rect);
-        BakedSkin bakedSkin = BakedSkin.of(entry.descriptor);
+        BakedSkin bakedSkin = BakedSkin.of(entry.getDescriptor());
         if (bakedSkin != null) {
             MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
             ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, rect.x, rect.y, 100, rect.width, rect.height, 20, 45, 0, 0, 0xf000f0, context.poseStack, buffers);
@@ -250,21 +250,25 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void downloadSkin(UIControl button) {
-        String skinId = entry.id;
-        String idString = String.format("%04d", Integer.getInteger(skinId));
-        String skinName = entry.name;
+        String skinId = entry.getId();
+        String idString = leftZeroPadding(skinId, 5);
+        String skinName = entry.getName();
         File path = new File(EnvironmentManager.getSkinLibraryDirectory(), "downloads");
         File target = new File(path, SkinIOUtils.makeFileNameValid(idString + " - " + skinName + ".armour"));
         buttonDownload.setEnabled(false);
-        SkinLoader.getInstance().loadSkin(entry.descriptor.getIdentifier(), (skin, exception) -> {
+        // yep, we directly download and save in the local.
+        GlobalSkinLibrary.getInstance().downloadSkin(entry.getId(), ((inputStream, exception) -> {
             if (exception != null) {
-                exception.printStackTrace();
+                Toast.show(exception, this);
                 return;
             }
-            if (SkinIOUtils.saveSkinToFile(target, skin)) {
-                SkinLibraryManager.getClient().getLocalSkinLibrary().reload();
+            try {
+                SkinFileUtils.copyInputStreamToFile(inputStream, target);
+                Toast.show("Download Finished!!", this);
+            } catch (Exception exception1) {
+                Toast.show(exception1, this);
             }
-        });
+        }));
     }
 
     private void updateLikeButtons() {
@@ -283,6 +287,13 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
                 reloadUI(entry);
             }
         });
+    }
+
+    private String leftZeroPadding(String value, int len) {
+        if (value.length() < len) {
+            return String.valueOf('0').repeat(len - value.length()) + value;
+        }
+        return value;
     }
 
     private void setSkinRating(int rating) {
@@ -330,7 +341,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 
         message.append(getDisplayText("name"));
         message.append(" ");
-        message.append(entry.name);
+        message.append(entry.getName());
         message.append("\n\n");
 
         if (entry.showsDownloads) {
@@ -347,7 +358,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
             message.append("\n\n");
         }
 
-        BakedSkin bakedSkin = BakedSkin.of(entry.descriptor);
+        BakedSkin bakedSkin = BakedSkin.of(entry.getDescriptor());
         if (bakedSkin != null && bakedSkin.getSkin() != null) {
             message.append(getDisplayText("author"));
             message.append(" ");
@@ -358,14 +369,14 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         if (entry.showsGlobalId) {
             message.append(getDisplayText("global_id"));
             message.append(" ");
-            message.append("" + entry.id);
+            message.append("" + entry.getId());
             message.append("\n\n");
         }
 
-        if (Strings.isNotBlank(entry.description)) {
+        if (Strings.isNotBlank(entry.getDescription())) {
             message.append(getDisplayText("description"));
             message.append(" ");
-            message.append(entry.description);
+            message.append(entry.getDescription());
             message.append("\n\n");
         }
 

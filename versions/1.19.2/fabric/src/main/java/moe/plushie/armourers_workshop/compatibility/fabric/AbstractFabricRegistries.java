@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.compatibility.fabric;
 
-import moe.plushie.armourers_workshop.api.common.*;
+import moe.plushie.armourers_workshop.api.common.IItemTagKey;
+import moe.plushie.armourers_workshop.api.common.IItemTagRegistry;
+import moe.plushie.armourers_workshop.api.common.IRegistryProvider;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.core.Registry;
@@ -15,8 +17,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;

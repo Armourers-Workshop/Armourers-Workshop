@@ -107,7 +107,7 @@ public class ModConfig {
         public static boolean showWardrobeSkins = true;
         public static boolean showWardrobeOutfits = true;
         public static boolean showWardrobeDisplaySettings = true;
-        public static boolean showWardrobeColourSettings = true;
+        public static boolean showWardrobeColorSettings = true;
         public static boolean showWardrobeDyeSetting = true;
         public static boolean showWardrobeContributorSetting = true;
 
@@ -153,7 +153,7 @@ public class ModConfig {
                 return true;
             }
             // No wardrobe tabs are active.
-            return showWardrobeSkins || showWardrobeOutfits || showWardrobeDisplaySettings || showWardrobeColourSettings || showWardrobeDyeSetting;
+            return showWardrobeSkins || showWardrobeOutfits || showWardrobeDisplaySettings || showWardrobeColorSettings || showWardrobeDyeSetting;
         }
     }
 

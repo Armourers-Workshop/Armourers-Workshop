@@ -1,11 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import com.google.common.collect.Iterables;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.*;
-import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightContext;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -20,7 +17,6 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModCompatible;
 import moe.plushie.armourers_workshop.init.ModItems;
-import moe.plushie.armourers_workshop.init.platform.SkinModifierManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -33,7 +29,10 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.function.BiConsumer;
 
 @Environment(value = EnvType.CLIENT)

@@ -6,6 +6,7 @@ import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.TagParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 
@@ -110,6 +111,22 @@ public class SkinFileUtils {
         return FileUtils.readFileToByteArray(file);
     }
 
+    /**
+     * Copies bytes from an InputStream source to a file destination. The directories up to destination will be created if they don't already exist. destination will be overwritten if it already exists.
+     * The source stream is closed.
+     */
+    public static void copyInputStreamToFile(final InputStream inputStream, final File destination) throws IOException {
+        forceMkdirParent(destination);
+        OutputStream outputStream = new FileOutputStream(destination);
+
+        int bytesRead;
+        byte[] buffer = new byte[8 * 1024];
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        IOUtils.closeQuietly(inputStream);
+        IOUtils.closeQuietly(outputStream);
+    }
 
     public static void writeNBT(CompoundTag compoundTag, File file) throws IOException {
         try (FileOutputStream fileOutputStream = new FileOutputStream(file);

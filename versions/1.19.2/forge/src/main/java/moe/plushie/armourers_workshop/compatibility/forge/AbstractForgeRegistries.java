@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.common.IItemTagKey;
 import moe.plushie.armourers_workshop.api.common.IItemTagRegistry;
-import moe.plushie.armourers_workshop.api.common.IRegistry;
 import moe.plushie.armourers_workshop.api.common.IRegistryProvider;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import net.minecraft.core.NonNullList;

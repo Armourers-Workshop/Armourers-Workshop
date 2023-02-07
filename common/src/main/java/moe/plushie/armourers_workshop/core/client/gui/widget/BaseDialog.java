@@ -3,14 +3,11 @@ package moe.plushie.armourers_workshop.core.client.gui.widget;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
-import com.apple.library.impl.KeyboardManagerImpl;
 import com.apple.library.uikit.*;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.function.Consumer;
 
 @Environment(value = EnvType.CLIENT)
 public abstract class BaseDialog extends UIView {

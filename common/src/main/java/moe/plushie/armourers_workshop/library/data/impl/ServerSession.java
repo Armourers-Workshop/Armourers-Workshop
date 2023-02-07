@@ -3,12 +3,12 @@ package moe.plushie.armourers_workshop.library.data.impl;
 import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
-import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -22,9 +22,9 @@ public abstract class ServerSession {
 
     private static final ExecutorService POOL = Executors.newFixedThreadPool(1);
 
-    protected String baseURL = "";
     protected Executor notifier = Runnable::run;
 
+    protected final ArrayList<String> baseURLs = new ArrayList<>();
     protected final Map<String, ServerRequest> loaded = new HashMap<>();
 
     protected Map<String, Object> a2m(String m, Object o) {
@@ -70,11 +70,31 @@ public abstract class ServerSession {
 
     protected Callable<InputStream> buildTask(String path, @Nullable Map<String, ?> parameters) throws Exception {
         ServerRequest request = loadAPI(path);
-        authRequest(request, parameters);
-        return request.build(baseURL, m2m(parameters));
+        checkRequest(request, parameters);
+        return request.build(buildRequestURL(request), m2m(parameters));
     }
 
-    protected void authRequest(ServerRequest request, @Nullable Map<String, ?> parameters) throws Exception {
+    protected String buildRequestURL(ServerRequest request) {
+        // when the request required authorization,
+        // we will try to switch to the https channel.
+        if (request.has("accessToken")) {
+            for (String baseURL : baseURLs) {
+                if (baseURL.startsWith("https://")) {
+                    return baseURL;
+                }
+            }
+        }
+        return defaultBaseURL();
+    }
+
+    protected void checkRequest(ServerRequest request, @Nullable Map<String, ?> parameters) throws Exception {
+    }
+
+    protected String defaultBaseURL() {
+        if (!baseURLs.isEmpty()) {
+            return baseURLs.get(0);
+        }
+        return "";
     }
 
     protected HashMap<String, Object> defaultParameters() {
@@ -110,7 +130,7 @@ public abstract class ServerSession {
         IDataPackObject server = root.get("server");
         server.entrySet().forEach(it -> {
             if (it.getKey().equals("/host")) {
-                baseURL = it.getValue().stringValue();
+                baseURLs.addAll(it.getValue().allValues().stream().map(IDataPackObject::stringValue).toList());
                 return;
             }
             ServerRequest req = ServerRequest.fromJSON(it.getValue());

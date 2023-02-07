@@ -1,6 +1,9 @@
 {
   "server": {
-    "/host": "https://plushie.moe/armourers_workshop/",
+    "/host": [
+      "http://plushie.moe/armourers_workshop/",
+      "https://plushie.moe/armourers_workshop/"
+    ],
     "/connect": {
       "path": "beta-check.php",
       "query": [
@@ -37,6 +40,12 @@
       "path": "user-info.php",
       "query": [
         "userId"
+      ]
+    },
+    "/skin/preview": {
+      "path": "get-skin.php",
+      "query": [
+        "skinid"
       ]
     },
     "/skin/download": {
@@ -95,6 +104,8 @@
         "pageSize"
       ],
       "body": [
+        "searchOrderColumn",
+        "searchOrder",
         "searchTypes"
       ]
     },

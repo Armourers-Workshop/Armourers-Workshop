@@ -2,12 +2,9 @@ package moe.plushie.armourers_workshop.core.client.gui;
 
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
-import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.uikit.UIImage;
-import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
-import moe.plushie.armourers_workshop.core.client.gui.widget.PlayerInventoryView;
 import moe.plushie.armourers_workshop.core.client.gui.widget.SkinPreviewView;
 import moe.plushie.armourers_workshop.core.menu.DyeTableMenu;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;

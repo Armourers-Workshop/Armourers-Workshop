@@ -28,7 +28,9 @@ public class CommonProxy {
     }
 
     private static void setup() {
-        SkinLoader.getInstance().register(DataDomain.GLOBAL_SERVER, GlobalSkinLibrary.getInstance()::downloadSkin);
+        GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
+        SkinLoader.getInstance().register(DataDomain.GLOBAL_SERVER, library::downloadSkin);
+        SkinLoader.getInstance().register(DataDomain.GLOBAL_SERVER_PREVIEW, library::downloadPreviewSkin);
     }
 
     private static void register(CommonNativeProvider registries) {

@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.init.platform.SkinModifierManager;
 import moe.plushie.armourers_workshop.utils.DataStorageKey;
-import moe.plushie.armourers_workshop.utils.ModelHolder;
 import net.minecraft.world.entity.EntityType;
 
 import java.util.HashMap;

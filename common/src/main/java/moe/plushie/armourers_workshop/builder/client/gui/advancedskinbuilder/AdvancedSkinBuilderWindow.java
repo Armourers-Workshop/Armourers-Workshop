@@ -1,12 +1,10 @@
 package moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder;
 
-import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import moe.plushie.armourers_workshop.builder.menu.AdvancedSkinBuilderMenu;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 @Environment(value = EnvType.CLIENT)

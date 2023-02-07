@@ -11,7 +11,6 @@ import net.minecraft.world.entity.EntityType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 
 public abstract class ArmatureManager {
 

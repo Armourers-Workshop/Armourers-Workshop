@@ -1,7 +1,7 @@
 package com.apple.library.impl;
 
-import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.uikit.UIEdgeInsets;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;

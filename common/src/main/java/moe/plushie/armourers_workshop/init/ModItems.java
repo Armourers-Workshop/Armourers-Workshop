@@ -69,7 +69,7 @@ public class ModItems {
     public static final IRegistryKey<Item> BURN_TOOL = BUILDING.normal(BurnToolItem::new).build("burn-tool");
     public static final IRegistryKey<Item> DODGE_TOOL = BUILDING.normal(DodgeToolItem::new).build("dodge-tool");
     public static final IRegistryKey<Item> SHADE_NOISE_TOOL = BUILDING.normal(ShadeNoiseToolItem::new).build("shade-noise-tool");
-    public static final IRegistryKey<Item> COLOR_NOISE_TOOL = BUILDING.normal(ColourNoiseToolItem::new).build("colour-noise-tool");
+    public static final IRegistryKey<Item> COLOR_NOISE_TOOL = BUILDING.normal(ColorNoiseToolItem::new).build("colour-noise-tool");
     public static final IRegistryKey<Item> BLENDING_TOOL = BUILDING.normal(BlendingToolItem::new).build("blending-tool");
     public static final IRegistryKey<Item> HUE_TOOL = BUILDING.normal(HueToolItem::new).build("hue-tool");
     public static final IRegistryKey<Item> COLOR_PICKER = BUILDING.normal(ColorPickerItem::new).build("colour-picker");

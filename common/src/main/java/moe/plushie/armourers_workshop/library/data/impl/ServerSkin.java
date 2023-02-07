@@ -10,11 +10,10 @@ import java.util.HashMap;
 
 public class ServerSkin {
 
-    public String id;
-    public String userId;
-    public String name;
-    public String description = "";
-    public SkinDescriptor descriptor;
+    private String id;
+    private String userId;
+    private String name;
+    private String description;
 
     public int downloads = 0;
     public float rating = 0;
@@ -24,12 +23,14 @@ public class ServerSkin {
     public boolean showsRating = false;
     public boolean showsGlobalId = true;
 
+    private final SkinDescriptor descriptor;
+
     public ServerSkin(IDataPackObject object) {
         this.id = object.get("id").stringValue();
         this.userId = object.get("user_id").stringValue();
         this.name = object.get("name").stringValue();
         this.description = object.get("description").stringValue();
-        this.descriptor = new SkinDescriptor(DataDomain.GLOBAL_SERVER.namespace() + ":" + id);
+        this.descriptor = new SkinDescriptor(DataDomain.GLOBAL_SERVER_PREVIEW.normalize(id));
         this.showsDownloads = object.has("downloads");
         if (this.showsDownloads) {
             this.downloads = object.get("downloads").intValue();
@@ -98,6 +99,10 @@ public class ServerSkin {
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getId() {

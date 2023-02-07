@@ -235,7 +235,7 @@ public class CubePaintingEvent {
         @Override
         public IPaintColor resolve(BlockPos pos, Direction dir, IPaintColor sourceColor) {
             int rgb = sourceColor.getRGB();
-            rgb = ColorUtils.makeColourBighter(rgb, intensity);
+            rgb = ColorUtils.makeColorBighter(rgb, intensity);
             return PaintColor.of(rgb, sourceColor.getPaintType());
         }
     }

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import moe.plushie.armourers_workshop.compatibility.AbstractVertexBuilder;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.compatibility.AbstractVertexBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

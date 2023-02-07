@@ -119,8 +119,8 @@ public class PaletteManager {
                 if (jsonPalette.has("name") & jsonPalette.has("colours")) {
                     String name = jsonPalette.get("name").getAsString();
                     boolean locked = jsonPalette.get("locked").getAsBoolean();
-                    UIColor[] colours = jsonToIntArray(jsonPalette.get("colours").getAsJsonArray());
-                    Palette palette = new Palette(name, locked, colours);
+                    UIColor[] colors = jsonToIntArray(jsonPalette.get("colours").getAsJsonArray());
+                    Palette palette = new Palette(name, locked, colors);
                     paletteMap.put(palette.getName(), palette);
                 }
             }
@@ -134,7 +134,7 @@ public class PaletteManager {
     private JsonArray intToJsonArray(UIColor[] intArray) {
         JsonArray jsonArray = new JsonArray();
         for (int i = 0; i < intArray.length; i++) {
-            jsonArray.add(colourToHex(intArray[i]));
+            jsonArray.add(colorToHex(intArray[i]));
         }
         return jsonArray;
     }
@@ -142,9 +142,9 @@ public class PaletteManager {
     private UIColor[] jsonToIntArray(JsonArray jsonArray) {
         UIColor[] intArray = new UIColor[jsonArray.size()];
         for (int i = 0; i < jsonArray.size(); i++) {
-            String colourHex = jsonArray.get(i).getAsString();
-            if (isValidHex(colourHex)) {
-                intArray[i] = UIColor.decode(colourHex);
+            String colorHex = jsonArray.get(i).getAsString();
+            if (isValidHex(colorHex)) {
+                intArray[i] = UIColor.decode(colorHex);
             }
         }
         return intArray;
@@ -160,7 +160,7 @@ public class PaletteManager {
         return matcher.matches();
     }
 
-    private String colourToHex(UIColor c) {
+    private String colorToHex(UIColor c) {
         if (c == null) {
             return "";
         }

@@ -6,19 +6,19 @@ import java.util.Arrays;
 
 public class Palette {
 
-    public static final int MAX_COLOURS_PER_PALETTE = 32;
+    public static final int MAX_COLORS_PER_PALETTE = 32;
     private final boolean locked;
     private String name;
     private final UIColor[] colors;
 
-    public Palette(String name, boolean locked, UIColor[] colours) {
+    public Palette(String name, boolean locked, UIColor[] colors) {
         this.name = name;
         this.locked = locked;
-        this.colors = colours;
+        this.colors = colors;
     }
 
     public Palette(String name) {
-        this(name, false, new UIColor[MAX_COLOURS_PER_PALETTE]);
+        this(name, false, new UIColor[MAX_COLORS_PER_PALETTE]);
     }
 
     public String getName() {
@@ -37,8 +37,8 @@ public class Palette {
         return colors;
     }
 
-    public void setColor(int index, UIColor colour) {
-        colors[index] = colour;
+    public void setColor(int index, UIColor color) {
+        colors[index] = color;
     }
 
     public UIColor getColor(int index) {
@@ -47,7 +47,7 @@ public class Palette {
 
     @Override
     public String toString() {
-        return "Palette [name=" + name + ", colours=" + Arrays.toString(colors) + "]";
+        return "Palette [name=" + name + ", colors=" + Arrays.toString(colors) + "]";
     }
 
     @Override

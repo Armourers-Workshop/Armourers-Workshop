@@ -16,9 +16,9 @@ import net.minecraft.world.item.context.UseOnContext;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ColourNoiseToolItem extends AbstractPaintToolItem implements IBlockPaintViewer {
+public class ColorNoiseToolItem extends AbstractPaintToolItem implements IBlockPaintViewer {
 
-    public ColourNoiseToolItem(Properties properties) {
+    public ColorNoiseToolItem(Properties properties) {
         super(properties);
     }
 

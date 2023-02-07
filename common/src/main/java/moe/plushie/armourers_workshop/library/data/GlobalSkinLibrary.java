@@ -17,7 +17,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
@@ -50,7 +49,7 @@ public class GlobalSkinLibrary extends ServerSession {
         currentUser = new ServerUser(profile.getId(), profile.getName());
         if (!isValidJavaVersion()) {
             connected = true;
-            consumer.accept(new RuntimeException("invalid java version"));
+            // consumer.accept(new RuntimeException("invalid java version"));
             return;
         }
         connecting = true;
@@ -156,13 +155,34 @@ public class GlobalSkinLibrary extends ServerSession {
         request("/skin/upload", parameters, null, handler);
     }
 
+    public InputStream downloadPreviewSkin(String skinId) throws Exception {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("skinid", skinId);
+        parameters.put("skinFileName", "");
+        return buildTask("/skin/preview", parameters).call();
+    }
+
     public InputStream downloadSkin(String skinId) throws Exception {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("skinid", skinId);
         parameters.put("skinFileName", "");
-        Callable<InputStream> task = buildTask("/skin/download", parameters);
-        return task.call();
+        return buildTask("/skin/download", parameters).call();
     }
+
+    public void downloadSkin(String skinId, IResultHandler<InputStream> handlerIn) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("skinid", skinId);
+        parameters.put("skinFileName", "");
+        submit(handlerIn, handlerOut -> {
+            try {
+                InputStream inputStream = buildTask("/skin/download", parameters).call();
+                handlerOut.accept(inputStream);
+            } catch (Exception exception) {
+                handlerOut.reject(exception);
+            }
+        });
+    }
+
 
     public void getUser(String userId, IResultHandler<ServerUser> handler) {
         request("/user/info", a2m("userId", userId), ServerUser::fromJSON, handler);
@@ -181,7 +201,7 @@ public class GlobalSkinLibrary extends ServerSession {
     }
 
     @Override
-    protected void authRequest(ServerRequest request, @Nullable Map<String, ?> parameters) throws Exception {
+    protected void checkRequest(ServerRequest request, @Nullable Map<String, ?> parameters) throws Exception {
         ServerUser user = getUser();
         // when request permission is specified, we need to check it.
         ServerPermission permission = resolvePermission(request, parameters);
@@ -295,7 +315,7 @@ public class GlobalSkinLibrary extends ServerSession {
 
     private HashMap<String, Object> buildAuthFromMinecraft() {
         ServerUser user = getUser();
-        String serverId = String.valueOf(baseURL.hashCode());
+        String serverId = String.valueOf(defaultBaseURL().hashCode());
         if (!MinecraftAuth.checkAndRefeshAuth(serverId)) {
             ModLog.debug("Failed MC Auth");
             throw new RuntimeException("Failed MC Auth");

@@ -106,7 +106,7 @@ public class ModConfigSpec {
                 define("enableSkinTab", true, "Enable the wardrobe skins tab.").bind(v -> showWardrobeSkins = v, () -> showWardrobeSkins);
                 define("enableOutfitTab", true, "Enable the wardrobe outfits tab.").bind(v -> showWardrobeOutfits = v, () -> showWardrobeOutfits);
                 define("enableDisplayTab", true, "Enable the wardrobe display settings tab.").bind(v -> showWardrobeDisplaySettings = v, () -> showWardrobeDisplaySettings);
-                define("enableColourTab", true, "Enable the wardrobe colour settings tab.").bind(v -> showWardrobeColourSettings = v, () -> showWardrobeColourSettings);
+                define("enableColourTab", true, "Enable the wardrobe colour settings tab.").bind(v -> showWardrobeColorSettings = v, () -> showWardrobeColorSettings);
                 define("enableDyeTab", true, "Enable the wardrobe dyes tab.").bind(v -> showWardrobeDyeSetting = v, () -> showWardrobeDyeSetting);
                 defineInRange("mobStartingSlots", 3, 1, SkinSlotType.getMaxSlotSize(), "Number of slot columns the mob starts with for skins.").bind(v -> prefersWardrobeMobSlots = v, () -> prefersWardrobeMobSlots);
                 defineInRange("playerStartingSlots", 3, 1, SkinSlotType.getMaxSlotSize(), "Number of slot columns the player starts with for skins.").bind(v -> prefersWardrobePlayerSlots = v, () -> prefersWardrobePlayerSlots);

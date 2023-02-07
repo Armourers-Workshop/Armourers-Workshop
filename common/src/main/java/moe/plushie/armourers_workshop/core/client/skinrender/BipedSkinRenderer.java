@@ -1,8 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

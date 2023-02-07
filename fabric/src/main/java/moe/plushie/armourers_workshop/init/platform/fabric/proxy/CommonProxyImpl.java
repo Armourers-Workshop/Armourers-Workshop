@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.fabric.CommonNativeManagerImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.EnvironmentManagerImpl;
-import moe.plushie.armourers_workshop.init.platform.fabric.NetworkManagerImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.ConfigBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfig;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfigEvents;

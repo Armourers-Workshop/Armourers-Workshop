@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -52,7 +51,7 @@ public class UpdateColorMixerPacket extends CustomPacket {
 
     public enum Field {
 
-        COLOUR(DataSerializers.PAINT_COLOR, ColorMixerBlockEntity::getColor, ColorMixerBlockEntity::setColor);
+        COLOR(DataSerializers.PAINT_COLOR, ColorMixerBlockEntity::getColor, ColorMixerBlockEntity::setColor);
 
         private final AWDataAccessor<ColorMixerBlockEntity, ?> dataAccessor;
 

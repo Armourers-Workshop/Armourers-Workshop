@@ -18,7 +18,7 @@ public enum ModPackets {
     UPDATE_WARDROBE(0x04, UpdateWardrobePacket.class, UpdateWardrobePacket::new),
 
     UPDATE_HOLOGRAM_PROJECTOR(0x05, UpdateHologramProjectorPacket.class, UpdateHologramProjectorPacket::new),
-    UPDATE_COLOUR_MIXER(0x06, UpdateColorMixerPacket.class, UpdateColorMixerPacket::new),
+    UPDATE_COLOR_MIXER(0x06, UpdateColorMixerPacket.class, UpdateColorMixerPacket::new),
 
     EXECUTE_COMMAND(0x07, ExecuteCommandPacket.class, ExecuteCommandPacket::new),
     // EXECUTE_ALERT(0x08, ExecuteAlertPacket.class, ExecuteAlertPacket::new),

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.data;
 
 public enum DataDomain {
-    LOCAL("fs"), DEDICATED_SERVER("ws"), DATABASE("db"), DATABASE_LINK("ln"), GLOBAL_SERVER("ks");
+    LOCAL("fs"), DEDICATED_SERVER("ws"), DATABASE("db"), DATABASE_LINK("ln"), GLOBAL_SERVER("ks"), GLOBAL_SERVER_PREVIEW("kv");
 
     private final String namespace;
 

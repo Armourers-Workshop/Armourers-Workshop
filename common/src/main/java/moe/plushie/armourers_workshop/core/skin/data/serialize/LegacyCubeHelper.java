@@ -20,10 +20,10 @@ public final class LegacyCubeHelper {
         slice.setY(input.readByte());
         slice.setZ(input.readByte());
         if (version < 7) {
-            int colour = input.readInt();
-            byte r = (byte) (colour >> 16 & 0xff);
-            byte g = (byte) (colour >> 8 & 0xff);
-            byte b = (byte) (colour & 0xff);
+            int color = input.readInt();
+            byte r = (byte) (color >> 16 & 0xff);
+            byte g = (byte) (color >> 8 & 0xff);
+            byte b = (byte) (color & 0xff);
             for (int i = 0; i < 6; i++) {
                 slice.setR(i, r);
                 slice.setG(i, g);
@@ -43,13 +43,13 @@ public final class LegacyCubeHelper {
         byte x;
         byte y;
         byte z;
-        int colour;
+        int color;
         byte blockType;
 
         x = stream.readByte();
         y = stream.readByte();
         z = stream.readByte();
-        colour = stream.readInt();
+        color = stream.readInt();
         blockType = stream.readByte();
 
         if (version < 2) {
@@ -72,9 +72,9 @@ public final class LegacyCubeHelper {
         slice.setX(x);
         slice.setY(y);
         slice.setZ(z);
-        byte r = (byte) (colour >> 16 & 0xff);
-        byte g = (byte) (colour >> 8 & 0xff);
-        byte b = (byte) (colour & 0xff);
+        byte r = (byte) (color >> 16 & 0xff);
+        byte g = (byte) (color >> 8 & 0xff);
+        byte b = (byte) (color & 0xff);
         for (int i = 0; i < 6; i++) {
             slice.setR(i, r);
             slice.setG(i, g);

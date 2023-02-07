@@ -3,12 +3,12 @@ package moe.plushie.armourers_workshop.core.client.gui.wardrobe;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIImage;
-import moe.plushie.armourers_workshop.core.client.gui.widget.TabView;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.gui.widget.EntityPreviewView;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.client.gui.widget.PlayerInventoryView;
+import moe.plushie.armourers_workshop.core.client.gui.widget.TabView;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.menu.SkinWardrobeMenu;
@@ -77,7 +77,7 @@ public class SkinWardrobeWindow<M extends SkinWardrobeMenu> extends MenuWindow<M
         addTab(new SkinWardrobeColorSetting(wardrobe))
                 .setIcon(tabIcon(224, 0))
                 .setTarget(SkinWardrobeMenu.Group.COLORS)
-                .setActive(!isPlayer || ModConfig.Common.showWardrobeColourSettings || operator.isCreative());
+                .setActive(!isPlayer || ModConfig.Common.showWardrobeColorSettings || operator.isCreative());
 
         addTab(new SkinWardrobeDyeSetting(menu))
                 .setIcon(tabIcon(240, 0))

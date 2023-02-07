@@ -188,19 +188,19 @@ public class SkinItemList extends UIView {
     }
 
     public void renderItemBackground(int x, int y, int width, int height, boolean isHovered, ServerSkin entry, CGGraphicsContext context) {
-        int backgroundColour = 0x22AAAAAA;
-        int borderColour = 0x22FFFFFF;
+        int backgroundColor = 0x22AAAAAA;
+        int borderColor = 0x22FFFFFF;
 
         if (isHovered) {
-            backgroundColour = 0xC0777711;
-            borderColour = 0xCC888811;
+            backgroundColor = 0xC0777711;
+            borderColor = 0xCC888811;
         }
 
-        context.fillRect(x, y, x + width, y + height, backgroundColour);
-        context.fillRect(x, y + 1, x + 1, y + height, borderColour);
-        context.fillRect(x, y, x + width - 1, y + 1, borderColour);
-        context.fillRect(x + 1, y + height - 1, x + width, y + height, borderColour);
-        context.fillRect(x + width - 1, y, x + width, y + height - 1, borderColour);
+        context.fillRect(x, y, x + width, y + height, backgroundColor);
+        context.fillRect(x, y + 1, x + 1, y + height, borderColor);
+        context.fillRect(x, y, x + width - 1, y + 1, borderColor);
+        context.fillRect(x + 1, y + height - 1, x + width, y + height, borderColor);
+        context.fillRect(x + width - 1, y, x + width, y + height - 1, borderColor);
 
         RenderSystem.enableAlphaTest();
     }

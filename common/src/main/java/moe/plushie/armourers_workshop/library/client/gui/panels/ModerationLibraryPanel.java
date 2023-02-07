@@ -1,8 +1,7 @@
 package moe.plushie.armourers_workshop.library.client.gui.panels;
 
 import com.apple.library.coregraphics.CGRect;
-import com.apple.library.foundation.NSString;
-import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
+import moe.plushie.armourers_workshop.core.client.gui.widget.Toast;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.client.gui.widget.ReportList;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
@@ -48,7 +47,7 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
         Report report = skinReports.get(index);
         GlobalSkinLibrary.getInstance().getSkin(report.getSkinId(), (result, exception) -> {
             if (exception != null) {
-                showAlert(exception.getMessage());
+                Toast.show(exception, this);
                 return;
             }
             if (result != null) {
@@ -75,14 +74,6 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
             if (result != null) {
                 onPageLoad(pageIndex, result.getReports());
             }
-        });
-    }
-
-    private void showAlert(String message) {
-        ConfirmDialog alert = new ConfirmDialog();
-        alert.setTitle(new NSString("Error"));
-        alert.setMessage(new NSString(message));
-        alert.showInView(this, () -> {
         });
     }
 

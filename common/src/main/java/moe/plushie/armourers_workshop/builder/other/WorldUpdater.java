@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.builder.other;
 
 import moe.plushie.armourers_workshop.api.common.IWorldUpdateTask;
 import moe.plushie.armourers_workshop.init.ModConfig;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;

@@ -2,8 +2,6 @@ package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Quaternionf;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public class ModDebugger {
 

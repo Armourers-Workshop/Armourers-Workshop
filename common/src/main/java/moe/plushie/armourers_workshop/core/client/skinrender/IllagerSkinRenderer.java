@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
+import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.IllagerModel;

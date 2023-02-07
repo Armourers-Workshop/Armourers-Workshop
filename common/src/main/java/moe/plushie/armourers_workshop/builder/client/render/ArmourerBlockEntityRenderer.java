@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import me.sagesse.minecraft.client.renderer.BlockEntityRenderer;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideDataProvider;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideRenderer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
@@ -13,7 +14,6 @@ import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRendererManager;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
-import me.sagesse.minecraft.client.renderer.BlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinDynamicTexture;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;

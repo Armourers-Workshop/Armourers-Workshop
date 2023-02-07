@@ -131,7 +131,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
             }
             CGPoint point = event.locationInWindow();
             CGRect frame = window.frame();
-            int rgb = RenderSystem.getPixelColour(point.x + frame.x, point.y + frame.y);
+            int rgb = RenderSystem.getPixelColor(point.x + frame.x, point.y + frame.y);
             updateColor(PaintColor.of(rgb, SkinPaintTypes.NORMAL));
         }
 
