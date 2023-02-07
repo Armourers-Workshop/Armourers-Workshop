@@ -6,15 +6,13 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
-import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
-import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -39,8 +37,8 @@ public class SkinItemList extends UIView {
     protected CGSize itemSize = new CGSize(48, 48);
 
     protected Font font;
-    protected Consumer<Entry> itemSelector;
-    protected ArrayList<Entry> entries = new ArrayList<>();
+    protected Consumer<ServerSkin> itemSelector;
+    protected ArrayList<ServerSkin> entries = new ArrayList<>();
 
     protected int minimumLineSpacing = 1;
     protected int minimumInteritemSpacing = 1;
@@ -90,12 +88,12 @@ public class SkinItemList extends UIView {
         hoveredIndex = -1;
     }
 
-    public ArrayList<Entry> getEntries() {
+    public ArrayList<ServerSkin> getEntries() {
         return entries;
     }
 
-    public void setEntries(ArrayList<Entry> entries) {
-        this.entries = entries;
+    public void setEntries(ArrayList<ServerSkin> entries) {
+        this.entries = new ArrayList<>(entries);
     }
 
     public void reloadData() {
@@ -131,7 +129,7 @@ public class SkinItemList extends UIView {
         if (index >= entries.size()) {
             return;
         }
-        Entry entry = entries.get(index);
+        ServerSkin entry = entries.get(index);
         int row = index / colCount;
         int col = index % colCount;
         int ix = (itemSize.width + minimumInteritemSpacing) * col;
@@ -155,8 +153,8 @@ public class SkinItemList extends UIView {
         }
     }
 
-    public void renderItemContent(int x, int y, int width, int height, boolean isHovered, Entry entry, MultiBufferSource buffers, CGGraphicsContext context) {
-        BakedSkin bakedSkin = BakedSkin.of(entry.descriptor);
+    public void renderItemContent(int x, int y, int width, int height, boolean isHovered, ServerSkin entry, MultiBufferSource buffers, CGGraphicsContext context) {
+        BakedSkin bakedSkin = BakedSkin.of(entry.getDescriptor());
         if (bakedSkin == null) {
             int speed = 60;
             int frames = 18;
@@ -169,7 +167,7 @@ public class SkinItemList extends UIView {
         }
         Skin skin = bakedSkin.getSkin();
         if (showsName) {
-            String name = entry.name;
+            String name = entry.getName();
             List<FormattedText> properties = font.getSplitter().splitLines(name, width - 2, Style.EMPTY);
             int iy = y + height - properties.size() * font.lineHeight - 2;
             RenderSystem.drawText(context.poseStack, font, properties, x + 1, iy, width - 2, 0, false, 9, 0xffeeeeee);
@@ -189,7 +187,7 @@ public class SkinItemList extends UIView {
         ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx - dw / 2, dy - dw / 2, 100, dw, dh, 20, 45, 0, 0, 0xf000f0, context.poseStack, buffers);
     }
 
-    public void renderItemBackground(int x, int y, int width, int height, boolean isHovered, Entry entry, CGGraphicsContext context) {
+    public void renderItemBackground(int x, int y, int width, int height, boolean isHovered, ServerSkin entry, CGGraphicsContext context) {
         int backgroundColour = 0x22AAAAAA;
         int borderColour = 0x22FFFFFF;
 
@@ -232,11 +230,11 @@ public class SkinItemList extends UIView {
         this.showsName = showsName;
     }
 
-    public Consumer<Entry> getItemSelector() {
+    public Consumer<ServerSkin> getItemSelector() {
         return itemSelector;
     }
 
-    public void setItemSelector(Consumer<Entry> itemSelector) {
+    public void setItemSelector(Consumer<ServerSkin> itemSelector) {
         this.itemSelector = itemSelector;
     }
 
@@ -263,45 +261,5 @@ public class SkinItemList extends UIView {
             return -1;
         }
         return row * colCount + col;
-    }
-
-    public static class Entry {
-        public int id;
-        public int userId = 0;
-        public String name;
-        public String description = "";
-        public SkinDescriptor descriptor;
-
-        public int downloads = 0;
-        public float rating = 0;
-        public int ratingCount = 0;
-
-        public boolean showsDownloads = true;
-        public boolean showsRating = false;
-        public boolean showsGlobalId = true;
-
-        public Entry(JsonObject object) {
-            this.id = object.get("id").getAsInt();
-            this.name = object.get("name").getAsString();
-            this.descriptor = new SkinDescriptor(DataDomain.GLOBAL_SERVER.namespace() + ":" + id);
-            if (object.has("description")) {
-                this.description = object.get("description").getAsString();
-            }
-            this.showsDownloads = object.has("downloads");
-            if (this.showsDownloads) {
-                this.downloads = object.get("downloads").getAsInt();
-            }
-            if (object.has("rating")) {
-                this.rating = object.get("rating").getAsFloat();
-                this.showsRating = true;
-            }
-            if (object.has("rating_count")) {
-                this.ratingCount = object.get("rating_count").getAsInt();
-                this.showsRating = true;
-            }
-            if (object.has("user_id")) {
-                this.userId = object.get("user_id").getAsInt();
-            }
-        }
     }
 }

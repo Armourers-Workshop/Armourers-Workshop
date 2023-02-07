@@ -3,19 +3,13 @@ package moe.plushie.armourers_workshop.library.client.gui.panels;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.*;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
-import moe.plushie.armourers_workshop.library.client.gui.widget.SkinItemList;
-import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
-import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinDelete;
-import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinEdit;
+import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.function.BiConsumer;
@@ -30,7 +24,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
     private UIButton buttonUpdate;
     private UIButton buttonDelete;
 
-    private SkinItemList.Entry entry;
+    private ServerSkin entry;
     private GlobalSkinLibraryWindow.Page returnPage;
 
     public SkinEditLibraryPanel() {
@@ -71,7 +65,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
         }
     }
 
-    public void reloadData(SkinItemList.Entry entry, GlobalSkinLibraryWindow.Page returnPage) {
+    public void reloadData(ServerSkin entry, GlobalSkinLibraryWindow.Page returnPage) {
         this.entry = entry;
         this.returnPage = returnPage;
         this.textName.setValue(entry.name);
@@ -92,30 +86,10 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
             return;
         }
         buttonUpdate.setEnabled(false);
-        new GlobalTaskSkinEdit(entry.id, name, description, isModerator()).createTaskAndRun(new FutureCallback<JsonObject>() {
-            @Override
-            public void onSuccess(JsonObject result) {
-                Minecraft.getInstance().execute(() -> {
-                    buttonUpdate.setEnabled(true);
-                    if (result.has("valid") & result.has("action")) {
-                        String action = result.get("action").getAsString();
-                        boolean valid = result.get("valid").getAsBoolean();
-                        if (action.equals("user-skin-edit")) {
-                            entry.name = name;
-                            entry.description = description;
-                            backToPage(false);
-                        } else {
-                            ModLog.warn("Server send unknown action: " + action);
-                        }
-                    } else {
-                        ModLog.error("Server returned invalid responce.");
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                t.printStackTrace();
+        entry.update(name, description, (result, exception) -> {
+            buttonUpdate.setEnabled(true);
+            if (exception == null) {
+                backToPage(false);
             }
         });
     }
@@ -135,37 +109,18 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void removeSkin(UIControl button) {
-        new GlobalTaskSkinDelete(entry.id, isModerator()).createTaskAndRun(new FutureCallback<JsonObject>() {
-
-            @Override
-            public void onSuccess(JsonObject result) {
-                Minecraft.getInstance().execute(() -> {
-                    if (result.has("valid") & result.has("action")) {
-                        String action = result.get("action").getAsString();
-                        boolean valid = result.get("valid").getAsBoolean();
-                        if (action.equals("user-skin-delete")) {
-                            backToPage(true);
-                        } else {
-                            ModLog.warn("Server send unknown action: " + action);
-                        }
-                    } else {
-                        ModLog.error("Server returned invalid response.");
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                t.printStackTrace();
+        entry.remove((result, exception) -> {
+            if (exception == null) {
+                backToPage(true);
             }
         });
     }
 
     private void backToPage(boolean removed) {
         if (removed) {
-            router.skinDidChange(entry.id, null);
+            router.skinDidChange(entry.getId(), null);
         } else {
-            router.skinDidChange(entry.id, entry);
+            router.skinDidChange(entry.getId(), entry);
         }
         router.showPage(returnPage);
     }
@@ -204,12 +159,5 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
         button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, handler);
         addSubview(button);
         return button;
-    }
-
-    private boolean isModerator() {
-        if (entry != null) {
-            return !PlushieAuth.PLUSHIE_SESSION.isOwner(entry.userId);
-        }
-        return true;
     }
 }

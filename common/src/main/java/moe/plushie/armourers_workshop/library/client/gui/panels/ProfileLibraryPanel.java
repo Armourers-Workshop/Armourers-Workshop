@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.library.client.gui.panels;
 
-import moe.plushie.armourers_workshop.library.data.global.PlushieUser;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -9,7 +8,7 @@ public class ProfileLibraryPanel extends AbstractLibraryPanel {
 
 //    private final GuiScrollbar scrollbar;
 
-    private PlushieUser user = null;
+//    private PlushieUser user = null;
 //    private Rectangle recBio;
 //    private Rectangle recStats;
 
@@ -76,12 +75,12 @@ public class ProfileLibraryPanel extends AbstractLibraryPanel {
 //
 //    }
 
-    public void setProfileTarget(PlushieUser user) {
-        this.user = user;
-        if (superview() != null) {
-            updateProfileData();
-        }
-    }
+//    public void setProfileTarget(PlushieUser user) {
+//        this.user = user;
+//        if (superview() != null) {
+//            updateProfileData();
+//        }
+//    }
 
     private void updateProfileData() {
 

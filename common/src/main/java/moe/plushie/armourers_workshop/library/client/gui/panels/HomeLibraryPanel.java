@@ -6,25 +6,18 @@ import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.*;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.client.gui.widget.SkinItemList;
-import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils;
-import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch;
-import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchColumnType;
-import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchOrderType;
+import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
+import moe.plushie.armourers_workshop.library.data.impl.SearchColumnType;
+import moe.plushie.armourers_workshop.library.data.impl.SearchOrderType;
+import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Environment(value = EnvType.CLIENT)
 public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkinLibraryWindow.ISkinListListener {
@@ -38,6 +31,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
     private final SkinItemList skinPanelNeedRated = buildFileList(0, 0, 300, 307);
 
     private int lastRequestSize = 0;
+    private final GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
 
     public HomeLibraryPanel() {
         super("inventory.armourers_workshop.skin-library-global.home", GlobalSkinLibraryWindow.Page.HOME::equals);
@@ -98,91 +92,42 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         int requestSize = skinPanelRecentlyUploaded.getTotalCount();
         lastRequestSize = requestSize;
         ModLog.debug("refresh home skin list, page size: {}", lastRequestSize);
-        String searchTypes = GlobalSkinLibraryUtils.allSearchTypes();
 
-        GlobalTaskSkinSearch taskGetRecentlyUploaded = new GlobalTaskSkinSearch("", searchTypes, 0, requestSize);
-        taskGetRecentlyUploaded.setSearchOrderColumn(SearchColumnType.DATE_CREATED);
-        taskGetRecentlyUploaded.setSearchOrder(SearchOrderType.DESC);
-        taskGetRecentlyUploaded.createTaskAndRun(new FutureCallback<JsonObject>() {
-            @Override
-            public void onSuccess(JsonObject result) {
-                ArrayList<SkinItemList.Entry> entries = buildEntries(result);
-                Minecraft.getInstance().execute(() -> {
-                    skinPanelRecentlyUploaded.setEntries(entries);
-                    skinPanelRecentlyUploaded.reloadData();
-                });
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                t.printStackTrace();
-                // NO-OP
+        // get recently uploaded skins.
+        library.searchSkin("", 0, requestSize, SearchColumnType.DATE_CREATED, SearchOrderType.DESC, SkinTypes.UNKNOWN, (result, exception) -> {
+            if (result != null) {
+                skinPanelRecentlyUploaded.setEntries(result.getSkins());
+                skinPanelRecentlyUploaded.reloadData();
             }
         });
 
-        GlobalTaskSkinSearch taskGetMostDownloaded = new GlobalTaskSkinSearch("", searchTypes, 0, requestSize);
-        taskGetMostDownloaded.setSearchOrderColumn(SearchColumnType.DOWNLOADS);
-        taskGetMostDownloaded.setSearchOrder(SearchOrderType.DESC);
-        taskGetMostDownloaded.createTaskAndRun(new FutureCallback<JsonObject>() {
-            @Override
-            public void onSuccess(JsonObject result) {
-                ArrayList<SkinItemList.Entry> entries = buildEntries(result);
-                Minecraft.getInstance().execute(() -> {
-                    skinPanelMostDownloaded.setEntries(entries);
-                    skinPanelMostDownloaded.reloadData();
-                });
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                t.printStackTrace();
-                // NO-OP
+        // get most downloaded skins.
+        library.searchSkin("", 0, requestSize, SearchColumnType.DOWNLOADS, SearchOrderType.DESC, SkinTypes.UNKNOWN, (result, exception) -> {
+            if (result != null) {
+                skinPanelMostDownloaded.setEntries(result.getSkins());
+                skinPanelMostDownloaded.reloadData();
             }
         });
 
-        GlobalTaskSkinSearch taskGetTopRated = new GlobalTaskSkinSearch("", searchTypes, 0, requestSize);
-        taskGetTopRated.setSearchOrderColumn(SearchColumnType.RATING);
-        taskGetTopRated.setSearchOrder(SearchOrderType.DESC);
-        taskGetTopRated.createTaskAndRun(new FutureCallback<JsonObject>() {
-            @Override
-            public void onSuccess(JsonObject result) {
-                ArrayList<SkinItemList.Entry> entries = buildEntries(result);
-                Minecraft.getInstance().execute(() -> {
-                    skinPanelTopRated.setEntries(entries);
-                    skinPanelTopRated.reloadData();
-                });
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                t.printStackTrace();
-                // NO-OP
+        // get top rated skins.
+        library.searchSkin("", 0, requestSize, SearchColumnType.RATING, SearchOrderType.DESC, SkinTypes.UNKNOWN, (result, exception) -> {
+            if (result != null) {
+                skinPanelTopRated.setEntries(result.getSkins());
+                skinPanelTopRated.reloadData();
             }
         });
 
-        GlobalTaskSkinSearch taskNeedRated = new GlobalTaskSkinSearch("", searchTypes, 0, requestSize);
-        taskNeedRated.setSearchOrderColumn(SearchColumnType.RATING_COUNT);
-        taskNeedRated.setSearchOrder(SearchOrderType.ASC);
-        taskNeedRated.createTaskAndRun(new FutureCallback<JsonObject>() {
-            @Override
-            public void onSuccess(JsonObject result) {
-                ArrayList<SkinItemList.Entry> entries = buildEntries(result);
-                Minecraft.getInstance().execute(() -> {
-                    skinPanelNeedRated.setEntries(entries);
-                    skinPanelNeedRated.reloadData();
-                });
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                t.printStackTrace();
-                // NO-OP
+        // get need rated skins.
+        library.searchSkin("", 0, requestSize, SearchColumnType.RATING_COUNT, SearchOrderType.ASC, SkinTypes.UNKNOWN, (result, exception) -> {
+            if (result != null) {
+                skinPanelNeedRated.setEntries(result.getSkins());
+                skinPanelNeedRated.reloadData();
             }
         });
     }
 
     @Override
-    public void skinDidChange(int skinId, @Nullable SkinItemList.Entry newValue) {
+    public void skinDidChange(String skinId, @Nullable ServerSkin newValue) {
         // only update for remove
         if (newValue != null) {
             return;
@@ -200,7 +145,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         router.showSkinList("", SkinTypes.UNKNOWN, SearchColumnType.DATE_CREATED, SearchOrderType.DESC);
     }
 
-    private void showSkinInfo(SkinItemList.Entry sender) {
+    private void showSkinInfo(ServerSkin sender) {
         router.showSkinDetail(sender, GlobalSkinLibraryWindow.Page.HOME);
     }
 
@@ -212,18 +157,6 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         list.addSubview(label);
     }
 
-    private ArrayList<SkinItemList.Entry> buildEntries(JsonObject result) {
-        ArrayList<SkinItemList.Entry> entries = new ArrayList<>();
-        if (result.has("results")) {
-            JsonArray pageResults = result.get("results").getAsJsonArray();
-            for (int i = 0; i < pageResults.size(); i++) {
-                JsonObject skinJson = pageResults.get(i).getAsJsonObject();
-                entries.add(new SkinItemList.Entry(skinJson));
-            }
-        }
-        return entries;
-    }
-
     private SkinItemList buildFileList(int x, int y, int width, int height) {
         SkinItemList fileList = new SkinItemList(new CGRect(x, y, width ,height));
         fileList.setItemSize(new CGSize(50, 50));
@@ -233,8 +166,8 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         return fileList;
     }
 
-    private int indexOf(SkinItemList list, int skinId) {
-        return Iterables.indexOf(list.getEntries(), e -> e.id == skinId);
+    private int indexOf(SkinItemList list, String skinId) {
+        return Iterables.indexOf(list.getEntries(), e -> e.getId() == skinId);
     }
 
     private Iterable<SkinItemList> lists() {

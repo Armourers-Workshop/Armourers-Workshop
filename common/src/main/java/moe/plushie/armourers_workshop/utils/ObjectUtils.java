@@ -32,6 +32,12 @@ public class ObjectUtils {
         return (new StringBuilder(string)).replace(range.startIndex(), range.endIndex(), replacementString).toString();
     }
 
+    public static <K, V> Map<K, V> toMap(K key, V value) {
+        HashMap<K, V> map = new HashMap<>(1);
+        map.put(key, value);
+        return map;
+    }
+
     public static <K, V> void difference(Map<K, V> oldValue, Map<K, V> newValue, BiConsumer<K, V> removeHandler, BiConsumer<K, V> insertHandler) {
         HashMap<K, V> insertEntities = new HashMap<>();
         HashMap<K, V> removedEntities = new HashMap<>(oldValue);

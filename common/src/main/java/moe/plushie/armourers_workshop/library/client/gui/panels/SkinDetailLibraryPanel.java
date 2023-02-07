@@ -10,7 +10,6 @@ import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIView;
-import com.google.common.util.concurrent.FutureCallback;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ReportDialog;
@@ -22,17 +21,13 @@ import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
-import moe.plushie.armourers_workshop.library.client.gui.widget.SkinItemList;
 import moe.plushie.armourers_workshop.library.client.gui.widget.SkinRatingView;
+import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
-import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils;
-import moe.plushie.armourers_workshop.library.data.global.PlushieUser;
-import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
-import moe.plushie.armourers_workshop.library.data.global.permission.PermissionSystem;
-import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskResult;
-import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinReport;
-import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskUserSkinRate;
-import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskUserSkinRating;
+import moe.plushie.armourers_workshop.library.data.impl.ReportType;
+import moe.plushie.armourers_workshop.library.data.impl.ServerPermission;
+import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
+import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -58,7 +53,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     private UIButton buttonEditSkin;
     private UIButton buttonReportSkin;
 
-    private SkinRatingView buttonStarRating = new SkinRatingView(CGRect.ZERO);
+    private final SkinRatingView buttonStarRating = new SkinRatingView(CGRect.ZERO);
 
     private int userRating = 0;
     private boolean doneRatingCheck = false;
@@ -71,9 +66,11 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     private CGRect userFrame = CGRect.ZERO;
 
     private NSString message;
-    private SkinItemList.Entry entry;
+    private ServerSkin entry;
     private GlobalSkinLibraryWindow.Page returnPage;
     private PlayerTextureDescriptor playerTexture = PlayerTextureDescriptor.EMPTY;
+
+    private final GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
 
     public SkinDetailLibraryPanel() {
         super("inventory.armourers_workshop.skin-library-global.skinInfo", GlobalSkinLibraryWindow.Page.SKIN_DETAIL::equals);
@@ -126,28 +123,29 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         if (this.buttonUserSkins == null) {
             return;
         }
+        ServerUser user = GlobalSkinLibrary.getInstance().getUser();
         this.buttonEditSkin.setHidden(true);
-        if (isOwner()) {
-            this.buttonEditSkin.setHidden(!PlushieAuth.PLUSHIE_SESSION.hasPermission(PermissionSystem.PlushieAction.SKIN_OWNER_EDIT));
+        if (entry != null && user.equals(entry.getUser())) {
+            this.buttonEditSkin.setHidden(!user.hasPermission(ServerPermission.SKIN_OWNER_EDIT));
         } else {
-            this.buttonEditSkin.setHidden(!PlushieAuth.PLUSHIE_SESSION.hasPermission(PermissionSystem.PlushieAction.SKIN_MOD_EDIT));
+            this.buttonEditSkin.setHidden(!user.hasPermission(ServerPermission.SKIN_MOD_EDIT));
         }
-        this.buttonDownload.setHidden(!PlushieAuth.PLUSHIE_SESSION.hasPermission(PermissionSystem.PlushieAction.SKIN_DOWNLOAD));
+        this.buttonDownload.setHidden(!user.hasPermission(ServerPermission.SKIN_DOWNLOAD));
     }
 
-    public void reloadData(SkinItemList.Entry entry, GlobalSkinLibraryWindow.Page returnPage) {
+    public void reloadData(ServerSkin entry, GlobalSkinLibraryWindow.Page returnPage) {
         this.returnPage = returnPage;
         this.userRating = 0;
         this.doneRatingCheck = false;
         this.buttonDownload.setEnabled(true);
         this.reloadUI(entry);
         this.updateSkinJson();
-        if (PlushieAuth.isRemoteUser()) {
+        if (GlobalSkinLibrary.getInstance().getUser().isMember()) {
             this.checkIfLiked();
         }
     }
 
-    public void reloadUI(SkinItemList.Entry entry) {
+    public void reloadUI(ServerSkin entry) {
         this.entry = entry;
         this.message = getMessage();
         this.playerTexture = PlayerTextureDescriptor.EMPTY;
@@ -165,9 +163,9 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     public void drawUserbox(CGGraphicsContext context, CGRect rect) {
         context.fillRect(gradient, rect);
         if (playerTexture.isEmpty()) {
-            PlushieUser user = GlobalSkinLibraryUtils.getUserInfo(entry.userId);
-            if (user != null) {
-                playerTexture = new PlayerTextureDescriptor(new GameProfile(null, user.getUsername()));
+            ServerUser user = entry.getUser();
+            if (!user.getName().isEmpty()) {
+                playerTexture = new PlayerTextureDescriptor(new GameProfile(null, user.getName()));
             }
         }
         if (Strings.isNotBlank(playerTexture.getName())) {
@@ -215,10 +213,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void searchUser(UIControl button) {
-        PlushieUser plushieUser = GlobalSkinLibraryUtils.getUserInfo(entry.userId);
-        if (plushieUser != null) {
-            router.showSkinList(entry.userId);
-        }
+        router.showSkinList(entry.getUser());
     }
 
     private void editSkin(UIControl button) {
@@ -230,7 +225,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void reportSkinPre(UIControl button) {
-        GlobalTaskSkinReport.SkinReport.SkinReportType[] reportTypes = GlobalTaskSkinReport.SkinReport.SkinReportType.values();
+        ReportType[] reportTypes = ReportType.values();
         ReportDialog dialog = new ReportDialog();
         dialog.setTitle(getDisplayText("dialog.report_skin.title"));
         dialog.setMessageColor(new UIColor(0x7f0000));
@@ -239,33 +234,24 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         dialog.setReportTypes(Arrays.stream(reportTypes).map(t -> new NSString(TranslateUtils.title(t.getLangKey()))).collect(Collectors.toList()));
         dialog.showInView(this, () -> {
             if (!dialog.isCancelled()) {
-                GlobalTaskSkinReport.SkinReport.SkinReportType reportType = reportTypes[dialog.getReportType()];
-                GlobalTaskSkinReport.SkinReport report = new GlobalTaskSkinReport.SkinReport(entry.id, reportType, dialog.getText());
-                reportSkin(report);
+                ReportType reportType = reportTypes[dialog.getReportType()];
+                reportSkin(dialog.getText(), reportType);
             }
         });
     }
 
-    private void reportSkin(GlobalTaskSkinReport.SkinReport report) {
-        ModLog.debug("report skin: '{}', text: '{}', type: {}", report.getSkinId(), report.getMessage(), report.getReportType());
-        new GlobalTaskSkinReport(report).createTaskAndRun(new FutureCallback<GlobalTaskSkinReport.SkinReportResult>() {
-
-            @Override
-            public void onSuccess(GlobalTaskSkinReport.SkinReportResult result) {
+    private void reportSkin(String message, ReportType reportType) {
+        ModLog.debug("report skin: '{}', text: '{}', type: {}", entry.getId(), message, reportType);
+        entry.report(message, reportType, (result, exception) -> {
+            if (exception == null) {
                 ModLog.debug("skin report sent.");
-                // NO-OP
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                t.printStackTrace();
             }
         });
     }
 
     private void downloadSkin(UIControl button) {
-        int skinId = entry.id;
-        String idString = String.format("%04d", skinId);
+        String skinId = entry.id;
+        String idString = String.format("%04d", Integer.getInteger(skinId));
         String skinName = entry.name;
         File path = new File(EnvironmentManager.getSkinLibraryDirectory(), "downloads");
         File target = new File(path, SkinIOUtils.makeFileNameValid(idString + " - " + skinName + ".armour"));
@@ -290,24 +276,11 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void checkIfLiked() {
-        new GlobalTaskUserSkinRating(entry.id).createTaskAndRun(new FutureCallback<GlobalTaskUserSkinRating.UserSkinRatingResult>() {
-
-            @Override
-            public void onSuccess(GlobalTaskUserSkinRating.UserSkinRatingResult result) {
-                Minecraft.getInstance().execute(() -> {
-                    if (result.getResult() == GlobalTaskResult.SUCCESS) {
-                        userRating = result.getRating();
-                        doneRatingCheck = true;
-                        reloadUI(entry);
-                    } else {
-                        ModLog.warn(result.getMessage());
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                t.printStackTrace();
+        entry.getRate((result, exception) -> {
+            if (result != null) {
+                userRating = result;
+                doneRatingCheck = true;
+                reloadUI(entry);
             }
         });
     }
@@ -315,26 +288,12 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     private void setSkinRating(int rating) {
         boolean isNew = userRating == 0;
         userRating = rating;
-        new GlobalTaskUserSkinRate(entry.id, rating).createTaskAndRun(new FutureCallback<GlobalTaskUserSkinRate.UserSkinRateResult>() {
-
-            @Override
-            public void onSuccess(GlobalTaskUserSkinRate.UserSkinRateResult result) {
-                Minecraft.getInstance().execute(() -> {
-                    if (result.getResult() == GlobalTaskResult.SUCCESS) {
-                        if (isNew) {
-                            entry.ratingCount += 1;
-                        }
-                        entry.rating = result.getNewRating();
-                        reloadUI(entry);
-                    } else {
-                        ModLog.warn(result.getMessage());
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                t.printStackTrace();
+        entry.updateRate(rating, (result, exception) -> {
+            if (exception == null) {
+                if (isNew) {
+                    entry.ratingCount += 1;
+                }
+                reloadUI(entry);
             }
         });
     }
@@ -357,13 +316,6 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 //                t.printStackTrace();
 //            }
 //        });
-    }
-
-    private boolean isOwner() {
-        if (entry != null) {
-            return PlushieAuth.PLUSHIE_SESSION.isOwner(entry.userId);
-        }
-        return false;
     }
 
     private NSString getMessage() {

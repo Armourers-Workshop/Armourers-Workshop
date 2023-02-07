@@ -5,14 +5,11 @@ import com.apple.library.foundation.NSMutableString;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.uikit.*;
-import com.google.common.util.concurrent.FutureCallback;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
-import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils;
-import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskBetaJoin;
+import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
@@ -108,24 +105,11 @@ public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDel
     private void join(UIControl button) {
         joining = true;
         joinFailMessage = null;
-        new GlobalTaskBetaJoin().createTaskAndRun(new FutureCallback<GlobalTaskBetaJoin.BetaJoinResult>() {
-            @Override
-            public void onSuccess(GlobalTaskBetaJoin.BetaJoinResult result) {
-                switch (result.getJoinResult()) {
-                    case JOINED:
-                        onJoined();
-                        break;
-                    case ALREADY_JOINED:
-                    case MINECRAFT_AUTH_FAIL:
-                    case JOIN_FAILED:
-                        onJoinedFailed(result.getMessage());
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Minecraft.getInstance().execute(() -> onJoinedFailed(t.toString()));
+        GlobalSkinLibrary.getInstance().join((result, exception) -> {
+            if (exception != null) {
+                onJoinedFailed(exception.toString());
+            } else {
+                onJoined();
             }
         });
         refreshStatus();
@@ -159,8 +143,9 @@ public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDel
     private void remake() {
         pages.clear();
 
-        String[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();
-        boolean validJava = GlobalSkinLibraryUtils.isValidJavaVersion();
+        GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
+        String[] javaVersion = library.getJavaVersion();
+        boolean validJava = library.isValidJavaVersion();
 
         if (!validJava) {
             NSString urlWikiFaq = getURLText(URL_WIKI_FAQ);

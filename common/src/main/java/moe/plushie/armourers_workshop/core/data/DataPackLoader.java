@@ -21,8 +21,6 @@ import java.util.function.Function;
 
 public class DataPackLoader {
 
-    private static final Gson GSON = new Gson();
-
     private final String path;
     private final Function<ResourceLocation, IDataPackBuilder> provider;
     private final Runnable willLoadHandler;
@@ -40,8 +38,7 @@ public class DataPackLoader {
         return CompletableFuture.supplyAsync(() -> {
             HashMap<ResourceLocation, IDataPackBuilder> results = new HashMap<>();
             resourceManager.readResources(path, s -> s.endsWith(".json"), (location, inputStream) -> {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                JsonObject object = StreamUtils.fromJson(GSON, reader, JsonObject.class);
+                JsonObject object = StreamUtils.fromJson(inputStream, JsonObject.class);
                 if (object == null) {
                     return;
                 }

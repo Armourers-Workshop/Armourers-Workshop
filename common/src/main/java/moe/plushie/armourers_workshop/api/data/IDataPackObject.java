@@ -64,6 +64,13 @@ public interface IDataPackObject {
         return of(null);
     }
 
+    default boolean has(String key) {
+        if (type() == Type.DICTIONARY) {
+            return jsonValue().getAsJsonObject().has(key);
+        }
+        return false;
+    }
+
     default Collection<String> allKeys() {
         ArrayList<String> keys = new ArrayList<>();
         if (type() == Type.DICTIONARY) {
@@ -93,24 +100,60 @@ public interface IDataPackObject {
     }
 
     default boolean boolValue() {
-        if (type() == Type.BOOLEAN) {
-            return jsonValue().getAsBoolean();
+        switch (type()) {
+            case STRING:
+            case NUMBER: {
+                if (numberValue().intValue() != 0) {
+                    return true;
+                }
+                return false;
+            }
+            case BOOLEAN: {
+                return jsonValue().getAsBoolean();
+            }
+            default: {
+                return false;
+            }
         }
-        return false;
     }
 
     default Number numberValue() {
-        if (type() == Type.NUMBER) {
-            return jsonValue().getAsNumber();
+        switch (type()) {
+            case STRING:
+            case NUMBER: {
+                return jsonValue().getAsNumber();
+            }
+            case BOOLEAN: {
+                if (jsonValue().getAsBoolean()) {
+                    return 1;
+                }
+                return 0;
+            }
+            default: {
+                return 0;
+            }
         }
-        return 0;
+    }
+
+    default int intValue() {
+        return numberValue().intValue();
+    }
+
+    default float floatValue() {
+        return numberValue().floatValue();
     }
 
     default String stringValue() {
-        if (type() == Type.STRING) {
-            return jsonValue().getAsString();
+        switch (type()) {
+            case STRING:
+            case NUMBER:
+            case BOOLEAN: {
+                return jsonValue().getAsString();
+            }
+            default: {
+                return "";
+            }
         }
-        return "";
     }
 
     default void ifPresent(Consumer<IDataPackObject> consumer) {

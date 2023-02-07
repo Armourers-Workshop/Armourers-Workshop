@@ -6,12 +6,11 @@ import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UILabelDelegate;
-import com.google.common.util.concurrent.FutureCallback;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
-import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskInfo;
+import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
+import moe.plushie.armourers_workshop.library.data.impl.ServerStatus;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 
 import java.util.Map;
 
@@ -25,7 +24,7 @@ public class InfoLibraryPanel extends AbstractLibraryPanel implements UILabelDel
 
     private final UILabel label = new UILabel(CGRect.ZERO);
 
-    private GlobalTaskInfo.TaskData stats = null;
+    private ServerStatus stats = null;
     private String failMessage = null;
 
     public InfoLibraryPanel() {
@@ -49,25 +48,15 @@ public class InfoLibraryPanel extends AbstractLibraryPanel implements UILabelDel
         super.refresh();
         stats = null;
         failMessage = null;
-        new GlobalTaskInfo().createTaskAndRun(new FutureCallback<GlobalTaskInfo.TaskData>() {
-
-            @Override
-            public void onSuccess(GlobalTaskInfo.TaskData result) {
-                Minecraft.getInstance().execute(() -> {
-                    stats = result;
-                    reloadUI();
-                });
+        reloadUI();
+        GlobalSkinLibrary.getInstance().getServerStatus((results, exception) -> {
+            if (exception != null) {
+                failMessage = exception.getMessage();
+            } else {
+                stats = results;
             }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Minecraft.getInstance().execute(() -> {
-                    failMessage = t.getMessage();
-                    reloadUI();
-                });
-            }
+            reloadUI();
         });
-        this.reloadUI();
     }
 
     public void reloadUI() {

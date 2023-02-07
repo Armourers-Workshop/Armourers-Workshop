@@ -10,9 +10,9 @@ import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
-import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
-import moe.plushie.armourers_workshop.library.data.global.auth.PlushieSession;
-import moe.plushie.armourers_workshop.library.data.global.permission.PermissionSystem;
+import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
+import moe.plushie.armourers_workshop.library.data.impl.ServerPermission;
+import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,6 +35,8 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
     private final UIButton iconButtonJoin = addRightButton(0, 68, "join", redirect(GlobalSkinLibraryWindow.Page.LIBRARY_JOIN));
     private final UIButton iconButtonInfo = addRightButton(0, 17, "info", redirect(GlobalSkinLibraryWindow.Page.LIBRARY_INFO));
     private final UIButton iconButtonModeration = addRightButton(0, 119, "moderation", redirect(GlobalSkinLibraryWindow.Page.LIBRARY_MODERATION));
+
+    private final GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
 
     private PlayerTextureDescriptor playerTexture;
 
@@ -83,17 +85,18 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         CGRect rect = bounds();
         MutableComponent profile = Component.literal(" - ");
         profile.append(gameProfile.getName());
-        int colour = 0xFFFFFF;
+        int textColor = 0xFFFFFF;
         if (!gameProfile.isLegacy()) {
-            colour = 0xFFAAAA;
+            textColor = 0xFFAAAA;
         }
-        if (PlushieAuth.PLUSHIE_SESSION.hasServerId()) {
-            colour = 0xFFFFAA;
+        ServerUser user = library.getUser();
+        if (user.isMember()) {
+            textColor = 0xFFFFAA;
         }
-        if (PlushieAuth.PLUSHIE_SESSION.isAuthenticated()) {
-            colour = 0xAAFFAA;
+        if (user.isAuthenticated()) {
+            textColor = 0xAAFFAA;
         }
-        font.draw(poseStack.cast(), profile, 24, (rect.height - font.lineHeight) / 2f, colour);
+        font.draw(poseStack.cast(), profile, 24, (rect.height - font.lineHeight) / 2f, textColor);
     }
 
     private void betaCheckUpdate() {
@@ -104,19 +107,16 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         iconButtonInfo.setHidden(false);
         iconButtonModeration.setHidden(true);
 
-        boolean isRemoteUser = PlushieAuth.isRemoteUser();
-        boolean doneRemoteUserCheck = PlushieAuth.doneRemoteUserCheck();
-        PlushieSession session = PlushieAuth.PLUSHIE_SESSION;
-
-        if (doneRemoteUserCheck & !isRemoteUser) {
+        ServerUser user = library.getUser();
+        if (!user.isMember() && library.isConnected()) {
             iconButtonJoin.setHidden(false);
         }
 
-        if (session.hasServerId()) {
-            iconButtonMyFiles.setHidden(!isRemoteUser);
-            iconButtonUploadSkin.setHidden(!isRemoteUser);
-            iconButtonUploadSkin.setEnabled(session.hasPermission(PermissionSystem.PlushieAction.SKIN_UPLOAD));
-            if (session.hasPermission(PermissionSystem.PlushieAction.GET_REPORT_LIST)) {
+        if (user.isMember()) {
+            iconButtonMyFiles.setHidden(false);
+            iconButtonUploadSkin.setHidden(false);
+            iconButtonUploadSkin.setEnabled(user.hasPermission(ServerPermission.SKIN_UPLOAD));
+            if (user.hasPermission(ServerPermission.GET_REPORT_LIST)) {
                 iconButtonModeration.setHidden(false);
             }
         }
@@ -131,9 +131,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
                     self.router.showNewHome();
                     break;
                 case LIST_USER_SKINS:
-                    if (PlushieAuth.PLUSHIE_SESSION.hasServerId()) {
-                        self.router.showSkinList(PlushieAuth.PLUSHIE_SESSION.getServerId());
-                    }
+                    self.router.showSkinList(library.getUser());
                     break;
                 default:
                     self.router.showPage(page);

@@ -8,24 +8,23 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UILabel;
 import com.google.common.collect.Iterables;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.mojang.datafixers.util.Pair;
+import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.client.gui.widget.SkinItemList;
-import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils;
-import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch;
-import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchColumnType;
-import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchOrderType;
+import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
+import moe.plushie.armourers_workshop.library.data.impl.SearchColumnType;
+import moe.plushie.armourers_workshop.library.data.impl.SearchOrderType;
+import moe.plushie.armourers_workshop.library.data.impl.SearchResult;
+import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ import java.util.function.Predicate;
 public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements GlobalSkinLibraryWindow.ISkinListListener {
 
     private final HashSet<Integer> downloadingPages = new HashSet<>();
-    private final HashMap<Integer, ArrayList<SkinItemList.Entry>> downloadedPageList = new HashMap<>();
+    private final HashMap<Integer, ArrayList<ServerSkin>> downloadedPageList = new HashMap<>();
     private final UILabel resultTitle = new UILabel(CGRect.ZERO);
     private final SkinItemList skinPanelResults = new SkinItemList(CGRect.ZERO);
 
@@ -111,7 +110,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     }
 
     @Override
-    public void skinDidChange(int skinId, @Nullable SkinItemList.Entry newValue) {
+    public void skinDidChange(String skinId, @Nullable ServerSkin newValue) {
         // only update for remove
         if (newValue != null) {
             return;
@@ -120,18 +119,18 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         if (page != null) {
             // removed skin in here
             for (int key : downloadedPageList.keySet()) {
-                if (key >= page.getFirst()) {
+                if (key >= page.getKey()) {
                     downloadedPageList.remove(key);
                 }
             }
-            if (currentPage >= page.getFirst()) {
+            if (currentPage >= page.getKey()) {
                 fetchPage(currentPage);
                 onPageDidChange();
             }
         }
     }
 
-    protected void showSkinInfo(SkinItemList.Entry sender) {
+    protected void showSkinInfo(ServerSkin sender) {
         router.showSkinDetail(sender, GlobalSkinLibraryWindow.Page.LIST_SEARCH);
     }
 
@@ -213,14 +212,8 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         }
         lastRequestSize = skinPanelResults.getTotalCount();
         downloadingPages.add(pageIndex);
-        String searchTypes = "";
-        if (skinType != null && skinType != SkinTypes.UNKNOWN) {
-            searchTypes = skinType.getRegistryName().toString();
-        } else {
-            searchTypes = GlobalSkinLibraryUtils.allSearchTypes();
-        }
         ModLog.debug("request skin list {} of {}, page size: {}", pageIndex, totalPages, lastRequestSize);
-        doSearch(pageIndex, lastRequestSize, searchTypes, (result, exception) -> {
+        doSearch(pageIndex, lastRequestSize, skinType, (result, exception) -> {
             if (exception != null) {
                 exception.printStackTrace();
                 downloadingPages.remove(pageIndex);
@@ -231,39 +224,14 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         });
     }
 
-    protected void doSearch(int pageIndex, int pageSize, String searchTypes, BiConsumer<JsonObject, Throwable> handler) {
-        GlobalTaskSkinSearch taskSkinSearch = new GlobalTaskSkinSearch(keyword, searchTypes, pageIndex, pageSize);
-        taskSkinSearch.setSearchOrderColumn(columnType);
-        taskSkinSearch.setSearchOrder(orderType);
-        taskSkinSearch.createTaskAndRun(new FutureCallback<JsonObject>() {
-
-            @Override
-            public void onSuccess(JsonObject result) {
-                handler.accept(result, null);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                handler.accept(null, t);
-            }
-        });
+    protected void doSearch(int pageIndex, int pageSize, ISkinType searchType, IResultHandler<SearchResult> handler) {
+        GlobalSkinLibrary.getInstance().searchSkin(keyword, pageIndex, pageSize, columnType, orderType, searchType, handler);
     }
 
-    protected void onPageJsonDownload(int pageIndex, JsonObject result) {
-        ArrayList<SkinItemList.Entry> entries = new ArrayList<>();
-        if (result.has("results")) {
-            JsonArray pageResults = result.get("results").getAsJsonArray();
-            for (int i = 0; i < pageResults.size(); i++) {
-                JsonObject skinJson = pageResults.get(i).getAsJsonObject();
-                entries.add(new SkinItemList.Entry(skinJson));
-            }
-        }
-        if (result.has("totalPages")) {
-            totalPages = result.get("totalPages").getAsInt();
-        }
-        if (result.has("totalResults")) {
-            totalResults = result.get("totalResults").getAsInt();
-        }
+    protected void onPageJsonDownload(int pageIndex, SearchResult result) {
+        ArrayList<ServerSkin> entries = result.getSkins();
+        totalPages = result.getTotalPages();
+        totalResults = result.getTotalResults();
         downloadedPageList.put(pageIndex, entries);
         RenderSystem.recordRenderCall(() -> {
             ModLog.debug("receive skin list {} of {}", pageIndex, totalPages);
@@ -276,15 +244,15 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     }
 
     private void onPageDidChange() {
-        ArrayList<SkinItemList.Entry> entries = downloadedPageList.getOrDefault(currentPage, new ArrayList<>());
+        ArrayList<ServerSkin> entries = downloadedPageList.getOrDefault(currentPage, new ArrayList<>());
         skinPanelResults.setEntries(entries);
         skinPanelResults.reloadData();
         resultTitle.setText(getResultsTitle());
     }
 
-    private Pair<Integer, Integer> getPageBySkin(int skinId) {
-        for (Map.Entry<Integer, ArrayList<SkinItemList.Entry>> entry : downloadedPageList.entrySet()) {
-            int index = Iterables.indexOf(entry.getValue(), e -> e.id == skinId);
+    private Pair<Integer, Integer> getPageBySkin(String skinId) {
+        for (Map.Entry<Integer, ArrayList<ServerSkin>> entry : downloadedPageList.entrySet()) {
+            int index = Iterables.indexOf(entry.getValue(), e -> e.getId() == skinId);
             if (index != -1) {
                 return Pair.of(entry.getKey(), index);
             }

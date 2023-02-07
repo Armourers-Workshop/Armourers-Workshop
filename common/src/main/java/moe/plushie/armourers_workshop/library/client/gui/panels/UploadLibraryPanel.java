@@ -5,31 +5,21 @@ import com.apple.library.foundation.NSMutableString;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.uikit.*;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.gson.JsonObject;
-import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
-import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
-import moe.plushie.armourers_workshop.library.data.global.auth.PlushieSession;
-import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskResult;
-import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinUpload;
+import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.menu.GlobalSkinLibraryMenu;
 import moe.plushie.armourers_workshop.library.network.UploadSkinPacket;
 import moe.plushie.armourers_workshop.library.network.UploadSkinPrePacket;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
-import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.util.Strings;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
@@ -44,6 +34,8 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
 
     private String error = null;
     private boolean isUploading = false;
+
+    private final GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
 
     public UploadLibraryPanel() {
         super("inventory.armourers_workshop.skin-library-global.upload", GlobalSkinLibraryWindow.Page.SKIN_UPLOAD::equals);
@@ -169,50 +161,20 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
         // we need to check this user the global skin upload permission in the server first.
         NetworkManager.sendToServer(new UploadSkinPrePacket(), (result, exception) -> Minecraft.getInstance().execute(() -> {
             if (exception != null || result == null || !result) {
-                onUploadFailed("Authentication failed.");
+                onUploadFailed("You not permission to uploads skin in this server to global skin library.");
                 return;
             }
             // upload now
-            GameProfile gameProfile = Minecraft.getInstance().getUser().getGameProfile();
-            Thread thread = new Thread(() -> uploadSkin(gameProfile, bakedSkin.getSkin()));
-            thread.start();
+            library.uploadSkin(textName.value().trim(), textDescription.value().trim(), bakedSkin.getSkin(), (result1, exception1) -> {
+                if (exception1 != null) {
+                    onUploadFailed(exception1.toString());
+                } else {
+                    onUploadFinish();
+                }
+            });
         }));
     }
 
-    public void uploadSkin(GameProfile profile, Skin skin) {
-        PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
-        if (!plushieSession.isAuthenticated()) {
-            JsonObject jsonObject = PlushieAuth.authenticateUser(profile.getName(), profile.getId().toString());
-            plushieSession.authenticate(jsonObject);
-        }
-
-        if (!plushieSession.isAuthenticated()) {
-            Minecraft.getInstance().execute(() -> onUploadFailed("Authentication failed."));
-            return;
-        }
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        SkinIOUtils.saveSkinToStream(outputStream, skin);
-        byte[] fileBytes = outputStream.toByteArray();
-        StreamUtils.closeQuietly(outputStream);
-        new GlobalTaskSkinUpload(fileBytes, textName.value().trim(), textDescription.value().trim()).createTaskAndRun(new FutureCallback<GlobalTaskSkinUpload.Result>() {
-
-            @Override
-            public void onSuccess(GlobalTaskSkinUpload.Result result) {
-                Minecraft.getInstance().execute(() -> {
-                    if (result.getResult() == GlobalTaskResult.SUCCESS) {
-                        onUploadFinish();
-                    } else {
-                        onUploadFailed(result.getMessage());
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Minecraft.getInstance().execute(() -> onUploadFailed(t.toString()));
-            }
-        });
-    }
 
     private void onUploadFinish() {
         textName.setValue("");

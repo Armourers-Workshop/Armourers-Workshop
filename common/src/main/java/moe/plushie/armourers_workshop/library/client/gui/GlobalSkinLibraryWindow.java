@@ -6,20 +6,23 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UILabelDelegate;
+import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.library.client.gui.panels.*;
-import moe.plushie.armourers_workshop.library.client.gui.widget.SkinItemList;
-import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
-import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchColumnType;
-import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchOrderType;
+import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
+import moe.plushie.armourers_workshop.library.data.impl.SearchColumnType;
+import moe.plushie.armourers_workshop.library.data.impl.SearchOrderType;
+import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
+import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import moe.plushie.armourers_workshop.library.menu.GlobalSkinLibraryMenu;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +52,7 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
     private final SkinEditLibraryPanel skinEditPanel = addPanel(SkinEditLibraryPanel::new);
 
     private Page page = Page.HOME;
-    private boolean isInited = false;
+    private boolean didInit = false;
 
     public GlobalSkinLibraryWindow(GlobalSkinLibraryMenu container, Inventory inventory, NSString title) {
         super(container, inventory, title);
@@ -59,10 +62,11 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
     }
 
     private void setupLibrary() {
-        PlushieAuth.init();
-        if (!PlushieAuth.startedRemoteUserCheck()) {
-            PlushieAuth.doRemoteUserCheck();
-        }
+        // welcome to global library :p
+        Minecraft minecraft = Minecraft.getInstance();
+        GameProfile gameProfile = minecraft.getUser().getGameProfile();
+        GlobalSkinLibrary.getInstance().executor(minecraft);
+        GlobalSkinLibrary.getInstance().connect(gameProfile, null);
     }
 
     private void setupUI() {
@@ -84,8 +88,9 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
         setVisible();
 
         // refresh the home page the first time you enter. This will speed up the display
-        if (!isInited) {
-            isInited = true;
+        if (!didInit) {
+            didInit = true;
+            layoutIfNeeded();
             homePanel.reloadData();
         }
     }
@@ -113,10 +118,10 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
     @Override
     public void screenWillTick() {
         super.screenWillTick();
-        if (!isInited) {
+        if (!didInit) {
             return;
         }
-        PlushieAuth.updateAccessToken();
+        GlobalSkinLibrary.getInstance().auth2();
         panels.forEach(AbstractLibraryPanel::tick);
     }
 
@@ -159,7 +164,7 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
     }
 
     public interface ISkinListListener {
-        void skinDidChange(int skinId, @Nullable SkinItemList.Entry newValue);
+        void skinDidChange(String skinId, @Nullable ServerSkin newValue);
     }
 
     public class Router implements ISkinListListener, UILabelDelegate {
@@ -180,18 +185,21 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
             setPage(Page.LIST_SEARCH);
         }
 
-        public void showSkinList(int userId) {
+        public void showSkinList(ServerUser user) {
+            if (user == null || !user.isMember()) {
+                return;
+            }
             searchBoxPanel.reloadData("", SkinTypes.UNKNOWN, SearchColumnType.DATE_CREATED, SearchOrderType.DESC);
-            searchUserResultsPanel.reloadData(userId);
+            searchUserResultsPanel.reloadData(user);
             setPage(Page.LIST_USER_SKINS);
         }
 
-        public void showSkinDetail(SkinItemList.Entry entry, Page returnPage) {
+        public void showSkinDetail(ServerSkin entry, Page returnPage) {
             skinDetailPanel.reloadData(entry, returnPage);
             setPage(Page.SKIN_DETAIL);
         }
 
-        public void showSkinEdit(SkinItemList.Entry entry, Page returnPage) {
+        public void showSkinEdit(ServerSkin entry, Page returnPage) {
             skinEditPanel.reloadData(entry, returnPage);
             setPage(Page.SKIN_EDIT);
         }
@@ -219,7 +227,7 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
             return menu;
         }
 
-        public void skinDidChange(int skinId, @Nullable SkinItemList.Entry newValue) {
+        public void skinDidChange(String skinId, @Nullable ServerSkin newValue) {
             for (AbstractLibraryPanel panel : panels) {
                 if (panel instanceof ISkinListListener) {
                     ((ISkinListListener) panel).skinDidChange(skinId, newValue);

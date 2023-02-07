@@ -28,7 +28,7 @@ public class Skin implements ISkin {
 
     private final int id = COUNTER.incrementAndGet();
 
-    public int serverId = -1;
+    public String serverId;
     public int paintTextureId;
     //    public SkinModelTexture skinModelTexture;
     private final SkinPaintData paintData;

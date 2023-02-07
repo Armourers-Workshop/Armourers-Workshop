@@ -16,6 +16,8 @@ import java.nio.charset.StandardCharsets;
  */
 public final class StreamUtils {
 
+    private static final Gson GSON = new Gson();
+
     private StreamUtils() {
     }
 
@@ -62,22 +64,15 @@ public final class StreamUtils {
     }
 
     @Nullable
-    public static <T> T fromJson(Gson gson, Reader reader, Class<T> class_) {
+    public static <T> T fromJson(InputStream inputStream, Class<T> class_) {
         try {
-            JsonReader jsonReader = new JsonReader(reader);
+            JsonReader jsonReader = new JsonReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             jsonReader.setLenient(false);
-            return gson.getAdapter(class_).read(jsonReader);
+            return GSON.getAdapter(class_).read(jsonReader);
         }
-        catch (IOException iOException) {
-            throw new JsonParseException(iOException);
+        catch (Exception exception) {
+            throw new JsonParseException(exception);
         }
-    }
-
-    public static JsonArray getAsJsonArray(JsonObject jsonObject, String string) {
-        if (jsonObject.has(string)) {
-            return GsonHelper.convertToJsonArray(jsonObject.get(string), string);
-        }
-        throw new JsonSyntaxException("Missing " + string + ", expected to find a JsonArray");
     }
 
     public static byte[] toByteArray(final InputStream input) throws IOException {

@@ -171,15 +171,15 @@ public abstract class ArmatureBuilder {
                 if (object.size() != 3) {
                     break;
                 }
-                float f1 = object.at(0).numberValue().floatValue();
-                float f2 = object.at(1).numberValue().floatValue();
-                float f3 = object.at(2).numberValue().floatValue();
+                float f1 = object.at(0).floatValue();
+                float f2 = object.at(1).floatValue();
+                float f3 = object.at(2).floatValue();
                 return new Vector3f(f1, f2, f3);
             }
             case DICTIONARY: {
-                float f1 = object.get("x").numberValue().floatValue();
-                float f2 = object.get("y").numberValue().floatValue();
-                float f3 = object.get("z").numberValue().floatValue();
+                float f1 = object.get("x").floatValue();
+                float f2 = object.get("y").floatValue();
+                float f3 = object.get("z").floatValue();
                 return new Vector3f(f1, f2, f3);
             }
             default: {

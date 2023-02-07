@@ -1,0 +1,153 @@
+{
+  "server": {
+    "/host": "https://plushie.moe/armourers_workshop/",
+    "/connect": {
+      "path": "beta-check.php",
+      "query": [
+        "uuid"
+      ]
+    },
+    "/stats": {
+      "path": "stats.php"
+    },
+    "/user/auth": {
+      "path": "authentication.php",
+      "query": [
+        "username",
+        "uuid",
+        "serverId"
+      ]
+    },
+    "/user/auth2": {
+      "path": "user-token-update.php",
+      "query": [
+        "userId",
+        "accessToken"
+      ]
+    },
+    "/user/join": {
+      "path": "join.php",
+      "query": [
+        "username",
+        "uuid",
+        "serverId"
+      ]
+    },
+    "/user/info": {
+      "path": "user-info.php",
+      "query": [
+        "userId"
+      ]
+    },
+    "/skin/download": {
+      "path": "download-skin.php",
+      "query": [
+        "skinid",
+        "skinFileName"
+      ]
+    },
+    "/skin/upload": {
+      "path": "user-skin-upload.php",
+      "body": [
+        "userId",
+        "accessToken",
+        "name",
+        "description",
+        "fileToUpload"
+      ]
+    },
+    "/skin/edit": {
+      "path": "user-skin-edit.php",
+      "query": [
+        "userId",
+        "accessToken",
+        "skinId"
+      ],
+      "body": [
+        "name",
+        "description"
+      ]
+    },
+    "/skin/delete": {
+      "path": "user-skin-delete.php",
+      "query": [
+        "userId",
+        "accessToken",
+        "skinId"
+      ]
+    },
+    "/skin/info": {
+      "path": "skin-info.php",
+      "query": [
+        "skinid",
+        "maxFileVersion"
+      ],
+      "body": [
+        "searchTypes"
+      ]
+    },
+    "/skin/search": {
+      "path": "skin-search-page.php",
+      "query": [
+        "search",
+        "maxFileVersion",
+        "pageIndex",
+        "pageSize"
+      ],
+      "body": [
+        "searchTypes"
+      ]
+    },
+    "/skin/user": {
+      "path": "user-skins-page.php",
+      "query": [
+        "userId",
+        "maxFileVersion",
+        "pageIndex",
+        "pageSize"
+      ],
+      "body": [
+        "searchTypes"
+      ]
+    },
+    "/skin/reports": {
+      "path": "mod-get-skin-reports.php",
+      "body": [
+        "userId",
+        "accessToken",
+        "page",
+        "size",
+        "filter"
+      ]
+    },
+    "/skin/report": {
+      "path": "user-skin-report.php",
+      "body": [
+        "userId",
+        "accessToken",
+        "reportSkinId",
+        "reportType",
+        "reportMessage"
+      ]
+    },
+    "/skin/rate": {
+      "path": "user-skin-action.php",
+      "query": [
+        "userId",
+        "accessToken",
+        "action=rate",
+        "skinId",
+        "rating"
+      ]
+    },
+    "/skin/rating": {
+      "path": "user-skin-action.php",
+      "query": [
+        "userId",
+        "accessToken=",
+        "action=get_rating",
+        "skinId"
+      ]
+    }
+  }
+}

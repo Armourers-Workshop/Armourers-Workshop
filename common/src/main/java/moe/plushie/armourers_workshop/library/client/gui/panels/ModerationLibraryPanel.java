@@ -1,17 +1,15 @@
 package moe.plushie.armourers_workshop.library.client.gui.panels;
 
 import com.apple.library.coregraphics.CGRect;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.gson.JsonObject;
+import com.apple.library.foundation.NSString;
+import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.client.gui.widget.ReportList;
-import moe.plushie.armourers_workshop.library.client.gui.widget.SkinItemList;
-import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskGetSkinInfo;
-import moe.plushie.armourers_workshop.library.data.global.task.mod.GlobalTaskGetReportList;
-import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinReport;
+import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
+import moe.plushie.armourers_workshop.library.data.impl.Report;
+import moe.plushie.armourers_workshop.library.data.impl.ReportFilter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 
 import java.text.SimpleDateFormat;
@@ -21,10 +19,10 @@ import java.util.ArrayList;
 public class ModerationLibraryPanel extends AbstractLibraryPanel implements ReportList.IEventListener {
 
     private final ReportList listReports = buildReportList();
-    private final ArrayList<GlobalTaskSkinReport.SkinReport> skinReports = new ArrayList<>();
+    private final ArrayList<Report> skinReports = new ArrayList<>();
     private int pageIndex = 0;
     private boolean isRequesting = true;
-    private final GlobalTaskGetReportList.Filter filter = GlobalTaskGetReportList.Filter.OPEN;
+    private final ReportFilter filter = ReportFilter.OPEN;
 
     public ModerationLibraryPanel() {
         super("inventory.armourers_workshop.skin-library-global.panel.info", GlobalSkinLibraryWindow.Page.LIBRARY_MODERATION::equals);
@@ -47,20 +45,14 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
         if (index < 0 || index >= skinReports.size()) {
             return;
         }
-        GlobalTaskSkinReport.SkinReport report = skinReports.get(index);
-        new GlobalTaskGetSkinInfo(report.getSkinId()).createTaskAndRun(new FutureCallback<JsonObject>() {
-
-            @Override
-            public void onSuccess(JsonObject result) {
-                if (result != null) {
-                    SkinItemList.Entry entry = new SkinItemList.Entry(result);
-                    Minecraft.getInstance().execute(() -> router.showSkinDetail(entry, GlobalSkinLibraryWindow.Page.LIBRARY_MODERATION));
-                }
+        Report report = skinReports.get(index);
+        GlobalSkinLibrary.getInstance().getSkin(report.getSkinId(), (result, exception) -> {
+            if (exception != null) {
+                showAlert(exception.getMessage());
+                return;
             }
-
-            @Override
-            public void onFailure(Throwable t) {
-                t.printStackTrace();
+            if (result != null) {
+                router.showSkinDetail(result, GlobalSkinLibraryWindow.Page.LIBRARY_MODERATION);
             }
         });
     }
@@ -79,27 +71,28 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
     private void loadReportList() {
         int pageIndex = this.pageIndex;
         isRequesting = true;
-        new GlobalTaskGetReportList(pageIndex, getMaxPerPage(), filter).createTaskAndRun(new FutureCallback<GlobalTaskGetReportList.Result>() {
-
-            @Override
-            public void onSuccess(GlobalTaskGetReportList.Result result1) {
-                Minecraft.getInstance().execute(() -> onPageLoad(pageIndex, result1.getSkinReports()));
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                t.printStackTrace();
+        GlobalSkinLibrary.getInstance().getReportList(pageIndex, getMaxPerPage(), filter, (result, exception) -> {
+            if (result != null) {
+                onPageLoad(pageIndex, result.getReports());
             }
         });
     }
 
-    private void onPageLoad(int pageIndex, ArrayList<GlobalTaskSkinReport.SkinReport> reports) {
+    private void showAlert(String message) {
+        ConfirmDialog alert = new ConfirmDialog();
+        alert.setTitle(new NSString("Error"));
+        alert.setMessage(new NSString(message));
+        alert.showInView(this, () -> {
+        });
+    }
+
+    private void onPageLoad(int pageIndex, ArrayList<Report> reports) {
         if (pageIndex == 0) {
             listReports.clearItems();
         }
         ArrayList<String> names = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd MM:dd:HH");
-        for (GlobalTaskSkinReport.SkinReport skinReport : reports) {
+        for (Report skinReport : reports) {
             names.add(sdf.format(skinReport.getDate()));
             names.add(String.valueOf(skinReport.getUserId()));
             names.add(String.valueOf(skinReport.getSkinId()));

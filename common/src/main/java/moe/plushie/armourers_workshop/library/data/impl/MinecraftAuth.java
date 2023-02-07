@@ -1,9 +1,7 @@
-package moe.plushie.armourers_workshop.library.data.global.auth;
+package moe.plushie.armourers_workshop.library.data.impl;
 
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
-import net.minecraft.client.User;
-import org.apache.commons.lang3.Validate;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Supplier;
 
 public class MinecraftAuth {
 
@@ -22,15 +21,27 @@ public class MinecraftAuth {
     private static final Object MC_AUTH_LOCK = new Object();
     private static long lastAuthTime;
 
-    public static boolean checkAndRefeshAuth(User session, String serverId) {
+    private static Supplier<String> USER_ID_PROVIDER;
+    private static Supplier<String> USER_ACCESS_TOKEN_PROVIDER;
+
+    public static void init(Supplier<String> idProvider, Supplier<String> accessTokenProvider) {
+        USER_ID_PROVIDER = idProvider;
+        USER_ACCESS_TOKEN_PROVIDER = accessTokenProvider;
+    }
+
+    public static boolean checkAndRefeshAuth(String serverId) {
         synchronized (MC_AUTH_LOCK) {
             if (lastAuthTime + 30000L > System.currentTimeMillis()) {
                 ModLog.debug("skipping mc auth");
                 return true;
             }
+            if (USER_ID_PROVIDER == null || USER_ACCESS_TOKEN_PROVIDER == null) {
+                ModLog.debug("pls call init before!!!");
+                return false;
+            }
             ModLog.info("MC Auth start");
             HttpURLConnection conn = null;
-            String data = "{\"accessToken\":\"" + session.getAccessToken() + "\", \"serverId\":\"" + serverId + "\", \"selectedProfile\":\"" + session.getUuid() + "\"}";
+            String data = "{\"accessToken\":\"" + USER_ACCESS_TOKEN_PROVIDER.get() + "\", \"serverId\":\"" + serverId + "\", \"selectedProfile\":\"" + USER_ID_PROVIDER.get() + "\"}";
 
             try {
                 String result = performPostRequest(new URL(JOIN_URL), data, "application/json");
@@ -50,9 +61,6 @@ public class MinecraftAuth {
     }
 
     private static String performPostRequest(URL url, String post, String contentType) throws IOException {
-        Validate.notNull(url);
-        Validate.notNull(post);
-        Validate.notNull(contentType);
         HttpURLConnection connection = createUrlConnection(url);
         byte[] postAsBytes = post.getBytes(StandardCharsets.UTF_8);
 
@@ -88,7 +96,6 @@ public class MinecraftAuth {
     }
 
     private static HttpURLConnection createUrlConnection(URL url) throws IOException {
-        Validate.notNull(url);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setConnectTimeout(15000);
         connection.setReadTimeout(15000);

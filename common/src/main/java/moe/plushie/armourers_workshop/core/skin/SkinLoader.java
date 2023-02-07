@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin;
 
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
+import moe.plushie.armourers_workshop.api.library.ISkinLibraryLoader;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
@@ -21,7 +22,6 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
-import java.net.URL;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -34,6 +34,7 @@ public class SkinLoader {
 
     private final HashMap<String, Entry> entries = new HashMap<>();
     private final HashMap<String, IResultHandler<Skin>> waiting = new HashMap<>();
+    private final HashMap<String, ISkinLibraryLoader> loaders = new HashMap<>();
 
     private SkinLoader() {
         setup(null);
@@ -61,6 +62,10 @@ public class SkinLoader {
             taskManager.put(DataDomain.DEDICATED_SERVER, proxy);
             taskManager.put(DataDomain.GLOBAL_SERVER, proxy);
         }
+    }
+
+    public void register(DataDomain domain, ISkinLibraryLoader loader) {
+        this.loaders.put(domain.namespace(), loader);
     }
 
     @Nullable
@@ -510,10 +515,12 @@ public class SkinLoader {
 
         @Override
         public InputStream from(Request request) throws Exception {
-            String serverId = DataDomain.getPath(request.identifier);
-            String fileName = "";
-            String api = String.format("http://plushie.moe/armourers_workshop/download-skin.php?skinid=%s&skinFileName=%s", serverId, fileName);
-            return new URL(api).openStream();
+            String domain = DataDomain.getNamespace(request.identifier);
+            ISkinLibraryLoader loader = SkinLoader.getInstance().loaders.get(domain);
+            if (loader != null) {
+                return loader.loadSkin(DataDomain.getPath(request.identifier));
+            }
+            throw new RuntimeException("can't support the '" + domain + "' protocol");
         }
 
         @Override

@@ -117,7 +117,7 @@ public class ModEntityProfiles {
                 } else if (name.equals("default_player_slots")) {
                     supports.put(type, type1 -> ModConfig.Common.prefersWardrobePlayerSlots);
                 } else {
-                    int count = it.getValue().numberValue().intValue();
+                    int count = it.getValue().intValue();
                     supports.put(type, type1 -> count);
                 }
             });
