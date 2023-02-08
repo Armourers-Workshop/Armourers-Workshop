@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public abstract class ServerSession {
 
@@ -130,7 +131,7 @@ public abstract class ServerSession {
         IDataPackObject server = root.get("server");
         server.entrySet().forEach(it -> {
             if (it.getKey().equals("/host")) {
-                baseURLs.addAll(it.getValue().allValues().stream().map(IDataPackObject::stringValue).toList());
+                it.getValue().allValues().forEach(url -> baseURLs.add(url.stringValue()));
                 return;
             }
             ServerRequest req = ServerRequest.fromJSON(it.getValue());

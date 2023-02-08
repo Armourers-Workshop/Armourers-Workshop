@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.model.BakedModelStroage;
 import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
@@ -202,28 +203,20 @@ public class ClientWardrobeHandler {
                 if (descriptor.isEmpty()) {
                     return;
                 }
-                poseStack.pushPose();
-                TransformationProvider.handleTransforms(poseStack, BakedModelStroage.getSkinBakedModel(), transformType, leftHandHackery);
-                poseStack.translate(-0.5f, -0.5f, -0.5f);
-                SkinItemRenderer.getInstance().renderByItem(descriptor.sharedItemStack(), transformType, poseStack.cast(), buffers, packedLight, overlay);
+                renderEmbeddedSkinInBox(descriptor, transformType, leftHandHackery, poseStack, buffers, packedLight, overlay);
                 callback.cancel();
-                poseStack.popPose();
                 break;
             }
             case THIRD_PERSON_LEFT_HAND:
             case THIRD_PERSON_RIGHT_HAND:
             case FIRST_PERSON_LEFT_HAND:
             case FIRST_PERSON_RIGHT_HAND: {
-                // in special case, entity hold a item type skin.
+                // in special case, entity hold item type skin.
                 // so we need replace it to custom renderer.
                 SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-                if (!descriptor.isEmpty() && !(descriptor.getType() instanceof ISkinToolType)) {
-                    poseStack.pushPose();
-                    TransformationProvider.handleTransforms(poseStack, BakedModelStroage.getSkinBakedModel(), transformType, leftHandHackery);
-                    poseStack.translate(-0.5f, -0.5f, -0.5f);
-                    SkinItemRenderer.getInstance().renderByItem(descriptor.sharedItemStack(), transformType, poseStack.cast(), buffers, packedLight, overlay);
+                if (!descriptor.isEmpty() && shouldRenderInBox(itemStack, descriptor)) {
+                    renderEmbeddedSkinInBox(descriptor, transformType, leftHandHackery, poseStack, buffers, packedLight, overlay);
                     callback.cancel();
-                    poseStack.popPose();
                     return;
                 }
                 SkinRenderData renderData = SkinRenderData.of(entity);
@@ -249,6 +242,14 @@ public class ClientWardrobeHandler {
                 break;
             }
         }
+    }
+
+    public static void renderEmbeddedSkinInBox(SkinDescriptor descriptor, ItemTransforms.TransformType transformType, boolean leftHandHackery, IPoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
+        poseStack.pushPose();
+        TransformationProvider.handleTransforms(poseStack, BakedModelStroage.getSkinBakedModel(), transformType, leftHandHackery);
+        poseStack.translate(-0.5f, -0.5f, -0.5f);
+        SkinItemRenderer.getInstance().renderByItem(descriptor.sharedItemStack(), transformType, poseStack.cast(), buffers, packedLight, overlay);
+        poseStack.popPose();
     }
 
     public static void onRenderEntityInInventoryPre(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY) {
@@ -300,6 +301,19 @@ public class ClientWardrobeHandler {
             r += renderer.render(entity, modelHolder, entry.getBakedSkin(), entry.getBakedScheme(), context);
         }
         return r;
+    }
+
+    private static boolean shouldRenderInBox(ItemStack itemStack, SkinDescriptor descriptor) {
+        ISkinType skinType = descriptor.getType();
+        // for the tool type skin, don't render in the box.
+        if (skinType instanceof ISkinToolType) {
+            return false;
+        }
+        // for the item type skin, don't render in the box.
+        if (skinType == SkinTypes.ITEM) {
+            return false;
+        }
+        return true;
     }
 
     private static SkinRenderData.Entry getEntry(Iterable<SkinRenderData.Entry> entries, Predicate<BakedSkinPart> predicate) {

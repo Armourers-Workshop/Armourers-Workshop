@@ -78,7 +78,8 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void setup() {
-        font = Minecraft.getInstance().font;;
+        font = Minecraft.getInstance().font;
+        ;
         gradient = new CGGradient(UIColor.rgba(0x22888888), CGPoint.ZERO, UIColor.rgba(0x22CCCCCC), CGPoint.ZERO);
 
         CGRect bounds = bounds();
@@ -289,11 +290,16 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         });
     }
 
-    private String leftZeroPadding(String value, int len) {
-        if (value.length() < len) {
-            return String.valueOf('0').repeat(len - value.length()) + value;
+    private String leftZeroPadding(String inputString, int length) {
+        if (inputString.length() >= length) {
+            return inputString;
         }
-        return value;
+        StringBuilder sb = new StringBuilder();
+        while (sb.length() < length - inputString.length()) {
+            sb.append('0');
+        }
+        sb.append(inputString);
+        return sb.toString();
     }
 
     private void setSkinRating(int rating) {
