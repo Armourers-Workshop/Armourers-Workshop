@@ -1,12 +1,13 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import com.google.common.collect.Iterables;
+import moe.plushie.armourers_workshop.api.common.IItemStackProvider;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.*;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightContext;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.data.ItemStackProvider;
 import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
@@ -15,7 +16,6 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.init.ModCompatible;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -50,6 +50,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
     private final BitSet lastWardrobeFlags = new BitSet();
 
+    private final IItemStackProvider itemProvider = ItemStackProvider.getInstance();
     private final SkinOverriddenManager overriddenManager = new SkinOverriddenManager();
 
     private ColorScheme colorScheme = ColorScheme.EMPTY;
@@ -116,7 +117,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
     protected void loadEquipmentSlots(Entity entity) {
         int index = 0;
-        for (ItemStack itemStack : Iterables.concat(ModCompatible.getHandSlots(entity), ModCompatible.getArmorSlots(entity))) {
+        for (ItemStack itemStack : itemProvider.getAllSlots(entity)) {
             if (index >= lastEquipmentSlots.size()) {
                 lastEquipmentSlots.add(itemStack);
                 version += 1;
@@ -188,7 +189,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
     private void loadArmorSlots(Entity entity, ItemConsumer consumer) {
         int i = 0;
-        for (ItemStack itemStack : ModCompatible.getArmorSlots(entity)) {
+        for (ItemStack itemStack : itemProvider.getArmorSlots(entity)) {
             consumer.accept(itemStack, i, false);
         }
         if (!isActiveWardrobe) {
@@ -208,7 +209,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
     private void loadHandSlots(Entity entity, ItemConsumer consumer) {
         int i = 0;
-        for (ItemStack itemStack : ModCompatible.getHandSlots(entity)) {
+        for (ItemStack itemStack : itemProvider.getHandSlots(entity)) {
             consumer.accept(itemStack, i, true);
         }
     }

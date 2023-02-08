@@ -79,7 +79,6 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 
     private void setup() {
         font = Minecraft.getInstance().font;
-        ;
         gradient = new CGGradient(UIColor.rgba(0x22888888), CGPoint.ZERO, UIColor.rgba(0x22CCCCCC), CGPoint.ZERO);
 
         CGRect bounds = bounds();

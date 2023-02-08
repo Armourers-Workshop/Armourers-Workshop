@@ -48,6 +48,8 @@ dependencies {
     //modLocalRuntime "net.optifine:OptiFine:1.18.2_HD_U_H9_pre1"
 
     modOptionalCompileOnly project.epicfight_api_version
+    modOptionalCompileOnly project.curios_api_version
+
     // modOptionalApi 'curse.maven:mine-mine-no-mi-78726:4181345'
 }
 
