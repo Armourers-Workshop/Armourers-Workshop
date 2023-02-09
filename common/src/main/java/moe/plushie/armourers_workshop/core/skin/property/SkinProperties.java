@@ -131,10 +131,8 @@ public class SkinProperties implements ISkinProperties {
                 key = stream.readUTF();
             }
             int byteType = stream.readByte();
-            DataTypes type = DataTypes.STRING;
-            if (byteType >= 0 & byteType < DataTypes.values().length) {
-                type = DataTypes.values()[byteType];
-            } else {
+            DataTypes type = DataTypes.byId(byteType);
+            if (type == null) {
                 throw new IOException("Error loading skin properties " + byteType);
             }
 
@@ -214,7 +212,15 @@ public class SkinProperties implements ISkinProperties {
     }
 
     public enum DataTypes {
-        STRING, INT, DOUBLE, BOOLEAN
+        STRING, INT, DOUBLE, BOOLEAN;
+
+        @Nullable
+        public static DataTypes byId(int id) {
+            if (id >= 0 & id < DataTypes.values().length) {
+                return DataTypes.values()[id];
+            }
+            return null;
+        }
     }
 
     public static class Stub extends SkinProperties {

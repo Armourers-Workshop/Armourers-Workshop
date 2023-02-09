@@ -64,7 +64,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
         if (!context.shouldRenderPart(partType)) {
             return false;
         }
-        if (partType == SkinPartTypes.BLOCK || partType == SkinPartTypes.BLOCK_MULTI) {
+        if (partType == SkinPartTypes.BLOCK || partType == SkinPartTypes.BLOCK_MULTI || partType == SkinPartTypes.ADVANCED) {
             return true;
         }
         if (partType instanceof ICanHeld) {

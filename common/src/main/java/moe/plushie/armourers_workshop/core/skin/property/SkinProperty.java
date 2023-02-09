@@ -58,6 +58,14 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     public static final SkinProperty<String> WINGS_MOVMENT_TYPE = multiple("wingsMovmentType", MovementType.EASE.name());
     public static final SkinProperty<Boolean> WINGS_MATCHING_POSE = multiple("wingsMatchingPose", true);
 
+    public static final SkinProperty<Double> TRANSFORM_TRANSLATE_X = normal("transformTranslateX", 0D);
+    public static final SkinProperty<Double> TRANSFORM_TRANSLATE_Y = normal("transformTranslateY", 0D);
+    public static final SkinProperty<Double> TRANSFORM_TRANSLATE_Z = normal("transformTranslateZ", 0D);
+    public static final SkinProperty<Double> TRANSFORM_ROTATION_X = normal("transformRotationX", 0D);
+    public static final SkinProperty<Double> TRANSFORM_ROTATION_Y = normal("transformRotationY", 0D);
+    public static final SkinProperty<Double> TRANSFORM_ROTATION_Z = normal("transformRotationZ", 0D);
+    public static final SkinProperty<Double> TRANSFORM_SCALE = normal("transformScale", 1D);
+
     private final String key;
     private final T defaultValue;
     private final boolean multipleKey;

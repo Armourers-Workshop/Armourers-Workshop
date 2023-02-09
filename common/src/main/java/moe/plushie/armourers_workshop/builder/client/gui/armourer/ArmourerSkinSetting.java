@@ -27,6 +27,7 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
             .put(SkinTypes.ARMOR_FEET, ArmourerFeetSkinPanel::new)
             .put(SkinTypes.ARMOR_WINGS, ArmourerWingsSkinPanel::new)
             .put(SkinTypes.BLOCK, ArmourerBlockSkinPanel::new)
+            .put(SkinTypes.ADVANCED, ArmourerAdvancedSkinPanel::new)
             .build();
 
     protected final DifferenceSkinProperties skinProperties = new DifferenceSkinProperties();
