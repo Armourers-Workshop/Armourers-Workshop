@@ -48,7 +48,6 @@ public class SkinOverriddenManager {
 
     public void addModel(ISkinPartType partType) {
         disabledModels.add(partType);
-        disabledEquipmentSlotsByPart.add(getEquipmentSlot(partType));
     }
 
     public void addOverlay(ISkinPartType partType) {
