@@ -11,6 +11,7 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIView;
 import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ReportDialog;
 import moe.plushie.armourers_workshop.core.client.gui.widget.Toast;
@@ -23,6 +24,7 @@ import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.client.gui.widget.SkinRatingView;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
+import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.data.impl.ReportType;
 import moe.plushie.armourers_workshop.library.data.impl.ServerPermission;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
@@ -40,6 +42,7 @@ import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.util.Strings;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
@@ -257,16 +260,13 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         File target = new File(path, SkinIOUtils.makeFileNameValid(idString + " - " + skinName + ".armour"));
         buttonDownload.setEnabled(false);
         // yep, we directly download and save in the local.
-        GlobalSkinLibrary.getInstance().downloadSkin(entry.getId(), ((inputStream, exception) -> {
+        GlobalSkinLibrary.getInstance().downloadSkin(entry.getId(), target, ((result, exception) -> {
             if (exception != null) {
+                buttonDownload.setEnabled(true);
                 Toast.show(exception, this);
-                return;
-            }
-            try {
-                SkinFileUtils.copyInputStreamToFile(inputStream, target);
-                Toast.show("Download Finished!!", this);
-            } catch (Exception exception1) {
-                Toast.show(exception1, this);
+            } else {
+                SkinLibraryManager.getClient().getLocalSkinLibrary().reload();
+                Toast.show("Download Finished!", this);
             }
         }));
     }

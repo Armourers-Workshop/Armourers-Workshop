@@ -9,12 +9,14 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.library.data.impl.*;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.Executor;
@@ -169,14 +171,15 @@ public class GlobalSkinLibrary extends ServerSession {
         return buildTask("/skin/download", parameters).call();
     }
 
-    public void downloadSkin(String skinId, IResultHandler<InputStream> handlerIn) {
+    public void downloadSkin(String skinId, File target, IResultHandler<File> handlerIn) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("skinid", skinId);
         parameters.put("skinFileName", "");
         submit(handlerIn, handlerOut -> {
             try {
                 InputStream inputStream = buildTask("/skin/download", parameters).call();
-                handlerOut.accept(inputStream);
+                SkinFileUtils.copyInputStreamToFile(inputStream, target);
+                handlerOut.accept(target);
             } catch (Exception exception) {
                 handlerOut.reject(exception);
             }
