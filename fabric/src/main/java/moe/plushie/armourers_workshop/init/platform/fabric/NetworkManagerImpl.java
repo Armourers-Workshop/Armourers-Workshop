@@ -6,6 +6,7 @@ import io.netty.util.concurrent.GenericFutureListener;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
+import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
@@ -116,17 +117,19 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
         }
 
         public void startServerHandshake(ServerLoginPacketListenerImpl handler, MinecraftServer server, PacketSender sender, ServerLoginNetworking.LoginSynchronizer synchronizer) {
-            sender.sendPacket(channelName, PacketByteBufs.empty());
+            if (ModConfig.Common.enableProtocolCheck) {
+                sender.sendPacket(channelName, PacketByteBufs.empty());
+            }
         }
 
         public void onServerHandshake(MinecraftServer server, ServerLoginPacketListenerImpl handler, boolean understood, FriendlyByteBuf buf, ServerLoginNetworking.LoginSynchronizer synchronizer, PacketSender responseSender) {
-            if (understood) {
-                String version = buf.readUtf(Short.MAX_VALUE);
-                if (version.equals(channelVersion)) {
-                    return;
-                }
-            }
-            handler.disconnect(Component.literal("Please install correct Armourers Workshop to play on this server!"));
+//            if (understood) {
+//                String version = buf.readUtf(Short.MAX_VALUE);
+//                if (version.equals(channelVersion)) {
+//                    return;
+//                }
+//            }
+//            handler.disconnect(Component.literal("Please install correct Armourers Workshop to play on this server!"));
         }
 
         @Environment(value = EnvType.CLIENT)

@@ -97,6 +97,7 @@ public class ModConfig {
         public static int blockTaskRate = 10; // 10 blocks/t
         public static boolean lockDyesOnSkins = false;
         public static boolean instancedDyeTable = false;
+        public static boolean enableProtocolCheck = true;
         public static int serverSkinSendRate = 4000;
         public static boolean serverCompressesSkins = true;
         public static int enableEmbeddedSkinRenderer = 0;

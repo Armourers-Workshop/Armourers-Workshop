@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
+import moe.plushie.armourers_workshop.init.ModConfig;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +18,17 @@ public abstract class AbstractForgeNetworkManager extends NetworkEvent {
     }
 
     public static void register(ResourceLocation channelName, String channelVersion, Object dispatcher) {
-        EventNetworkChannel channel = NetworkRegistry.ChannelBuilder.named(channelName).networkProtocolVersion(() -> channelVersion).clientAcceptedVersions(cv -> true).serverAcceptedVersions(channelVersion::equals).eventNetworkChannel();
+        EventNetworkChannel channel = NetworkRegistry.ChannelBuilder
+                .named(channelName)
+                .networkProtocolVersion(() -> channelVersion)
+                .clientAcceptedVersions(sv -> true)
+                .serverAcceptedVersions(cv -> {
+                    if (ModConfig.Common.enableProtocolCheck) {
+                        return cv.equals(channelVersion);
+                    }
+                    return true;
+                })
+                .eventNetworkChannel();
         channel.registerObject(dispatcher);
     }
 
