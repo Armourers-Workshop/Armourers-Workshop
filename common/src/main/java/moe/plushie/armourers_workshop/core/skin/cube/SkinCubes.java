@@ -5,19 +5,9 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 
-import java.util.ArrayList;
+public abstract class SkinCubes implements ISkinCubeProvider {
 
-public class SkinCubes implements ISkinCubeProvider {
-
-    protected int cubeCount = 0;
-    protected final ArrayList<SkinCube> cubes = new ArrayList<>();
     protected final SkinUsedCounter usedCounter = new SkinUsedCounter();
-
-    public void ensureCapacity(int size) {
-        cubes.ensureCapacity(size);
-        cubeCount = size;
-        usedCounter.reset();
-    }
 
     public void forEach(ICubeConsumer consumer) {
         int count = getCubeCount();
@@ -46,22 +36,7 @@ public class SkinCubes implements ISkinCubeProvider {
     }
 
     @Override
-    public int getCubeCount() {
-        return cubeCount;
-    }
-
-    public void setCube(int index, SkinCube cube) {
-        if (index < cubes.size()) {
-            cubes.set(index, cube);
-        } else {
-            cubes.add(cube);
-        }
-    }
-
-    @Override
-    public SkinCube getCube(int index) {
-        return cubes.get(index);
-    }
+    public abstract SkinCube getCube(int index);
 
     public interface ICubeConsumer {
         void apply(int i, int x, int y, int z);

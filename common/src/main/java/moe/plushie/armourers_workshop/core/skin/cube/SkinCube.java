@@ -33,12 +33,12 @@ public class SkinCube implements ISkinCube {
     }
 
     public void setPaintColor(Direction dir, IPaintColor paintColor) {
-        paintColors[dir.get3DDataValue()] = paintColor;
+        paintColors[dir.ordinal()] = paintColor;
     }
 
     @Override
     public IPaintColor getPaintColor(Direction dir) {
-        return paintColors[dir.get3DDataValue()];
+        return paintColors[dir.ordinal()];
     }
 
     public SkinCubeFace getFace(Direction dir) {

@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
+import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV1;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.data.base.IDataInputStream;
 import moe.plushie.armourers_workshop.core.skin.data.base.IDataOutputStream;
@@ -23,13 +24,15 @@ import java.util.ArrayList;
 
 /**
  * file format:           | header(4b) | version(4b) | reserved data(8b) | skin type |[ chunk ]| crc32 |
- * chunk format:          | length(4b) | name(4b) | flag(2b) |[ chunk data ]|
+ * chunk format:          |< length(4b) | name(4b) | flag(2b) >[ chunk data ]|
  * skin properties :      | length | PPTS | flag |[ key/value ]|
- * color palette:         | length | PALE | flag |[ paint type(1b) | bytes(1b) |[ RRGGBB/AARRGGBB ]]|
- * texture paint data:    | length | TPDT | flag | version(1b) | slim(1b) |[ color index ]|
+ * color palette:         | length | PALE | flag |< paint type(1b) | bytes(1b) >[ RRGGBB/AARRGGBB ]]|
+ * texture paint data:    | length | TPDT | flag | version(1b) | slim(1b) |< empty >[ color index ]|
+ * cube data:             | length | CBDT | flag |< id(1b) >[ x(1b)/y(1b)/z(1b) |[ face(1b: 1|2|4|8|16|32) | color index ](1-6)]|
+ * skin preview:          | length | SKPV | flag |< matrix(64b) >[ cube sel(8b) ]|
  * skin part:             | length | SKPR | flag | id(2b) | skin part type |[ chunk ]|
- * skin part cubes:       | length | PRCB | flag |[ id(1b) |[ x(1b)/y(1b)/z(1b) |[ face(1b: 1|2|4|8|16|32) | color index ](1-6)]|]|
- * skin part markers:     | length | PRMK | flag |[           x(1b)/y(1b)/z(1b) | meta(1b) ]|
+ * skin part cubes:       | length | PRCB | flag |< empty >[ cube sel(8b) ]|
+ * skin part markers:     | length | PRMK | flag |< empty >[ x(1b)/y(1b)/z(1b) | meta(1b) ]|
  * skin part name         | length | PRNM | flag | part name |
  * skin part parent:      | length | PRPP | flag | parent part id(2b) |
  * skin part transform:   | length | PRTF | flag | postTranslate/postRotation/postScale/preTranslate/preRotation/preScale |
@@ -155,7 +158,7 @@ public class ChunkSerializers {
 
         @Override
         public SkinCubes read(ChunkInputStream stream, ChunkPalette palette) throws IOException {
-            SkinCubes cubes = new SkinCubes();
+            SkinCubes cubes = new SkinCubesV1(0);
             ChunkCubeData cubeData = new ChunkCubeData(palette, cubes);
             cubeData.readFromStream(stream);
             return cubes;

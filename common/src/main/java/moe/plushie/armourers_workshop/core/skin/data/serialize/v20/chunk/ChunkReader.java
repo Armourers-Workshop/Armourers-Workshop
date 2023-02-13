@@ -27,9 +27,11 @@ public class ChunkReader {
 
     protected void prepare() throws IOException {
         int header = 10;
-        int size = stream.readInt();
-        for (int i = 0; i < size; ++i) {
+        while (true) {
             int length = stream.readInt();
+            if (length == 0) {
+                break;
+            }
             String name = stream.readString(4);
             int flag = stream.readShort();
             if (chunkFilter != null && !chunkFilter.test(name)) {

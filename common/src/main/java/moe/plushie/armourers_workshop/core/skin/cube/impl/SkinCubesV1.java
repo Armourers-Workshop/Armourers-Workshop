@@ -1,32 +1,30 @@
-package moe.plushie.armourers_workshop.core.skin.cube;
+package moe.plushie.armourers_workshop.core.skin.cube.impl;
 
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.api.skin.*;
+import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCube;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.base.IDataInputStream;
 import moe.plushie.armourers_workshop.core.skin.data.base.IDataOutputStream;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.LegacyCubeHelper;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.core.Direction;
 
 import java.io.IOException;
 
-public class SkinBufferedCubes extends SkinCubes {
+public class SkinCubesV1 extends SkinCubes {
 
-    private int cubeCount;
-    private BufferSlice bufferSlice;
+    private final int cubeCount;
+    private final BufferSlice bufferSlice;
 
-    public SkinBufferedCubes() {
-    }
-
-    @Override
-    public void ensureCapacity(int size) {
-        bufferSlice = new BufferSlice(size);
-        cubeCount = size;
-        usedCounter.reset();
+    public SkinCubesV1(int count) {
+        this.bufferSlice = new BufferSlice(count);
+        this.cubeCount = count;
     }
 
     @Override
@@ -42,11 +40,11 @@ public class SkinBufferedCubes extends SkinCubes {
     public static void writeToStream(SkinCubes cubes, IDataOutputStream stream) throws IOException {
         int count = cubes.getCubeCount();
         stream.writeInt(cubes.getCubeCount());
-        if (cubes instanceof SkinBufferedCubes) {
-            stream.write(((SkinBufferedCubes) cubes).bufferSlice.getBuffers());
+        if (cubes instanceof SkinCubesV1) {
+            stream.write(((SkinCubesV1) cubes).bufferSlice.getBuffers());
             return;
         }
-        // downgrade to old version.
+        // convert to this version.
         IPaintColor[] paintColors = new IPaintColor[6];
         for (int i = 0; i < count; ++i) {
             // id/x/y/z + r/g/b/t * 6
@@ -67,9 +65,10 @@ public class SkinBufferedCubes extends SkinCubes {
         }
     }
 
-    public void readFromStream(IDataInputStream stream, int version, ISkinPartType skinPart) throws IOException, InvalidCubeTypeException {
+    public static SkinCubesV1 readFromStream(IDataInputStream stream, int version, ISkinPartType skinPart) throws IOException, InvalidCubeTypeException {
         int size = stream.readInt();
-        ensureCapacity(size);
+        SkinCubesV1 cubes = new SkinCubesV1(size);
+        BufferSlice bufferSlice = cubes.bufferSlice;
         if (version >= 10) {
             byte[] buffers = bufferSlice.getBuffers();
             stream.readFully(buffers, 0, size * bufferSlice.lineSize);
@@ -80,18 +79,19 @@ public class SkinBufferedCubes extends SkinCubes {
                         slice.setPaintType(side, (byte) 255);
                     }
                 }
-                usedCounter.addCube(slice.getId());
+                cubes.usedCounter.addCube(slice.getId());
             }
-            return;
+            return cubes;
         }
         // 1 - 9
         for (int i = 0; i < size; i++) {
             BufferSlice slice = bufferSlice.at(i);
-            LegacyCubeHelper.loadLegacyCubeData(this, slice, stream, version, skinPart);
+            LegacyCubeHelper.loadLegacyCubeData(cubes, slice, stream, version, skinPart);
             for (int side = 0; side < 6; side++) {
                 slice.setPaintType(side, (byte) 255);
             }
         }
+        return cubes;
     }
 
     public static class BufferSlice extends SkinCube {

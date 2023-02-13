@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPart;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
+import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV1;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
@@ -161,7 +162,7 @@ public class SkinPart implements ISkinPart {
     public static class Empty extends SkinPart {
 
         public Empty(int id, ISkinPartType partType, Rectangle3i bounds, OpenVoxelShape renderShape) {
-            super(id, partType, new ArrayList<>(), new SkinCubes());
+            super(id, partType, new ArrayList<>(), new SkinCubesV1(0));
             this.partBounds = bounds;
             this.renderShape = renderShape;
             this.setProperties(SkinProperties.create());

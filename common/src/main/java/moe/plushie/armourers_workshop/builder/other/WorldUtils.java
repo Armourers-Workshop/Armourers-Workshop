@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCube;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
+import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV0;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.exception.SkinSaveException;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
@@ -136,9 +136,8 @@ public final class WorldUtils {
         if (cubeCount < 1) {
             return null;
         }
-        SkinCubes cubeData = new SkinCubes();
+        SkinCubesV0 cubeData = new SkinCubesV0(cubeCount);
         ArrayList<SkinMarker> markerBlocks = new ArrayList<>();
-        cubeData.ensureCapacity(cubeCount);
 
         IRectangle3i buildSpace = partType.getBuildingSpace();
         IVector3i offset = partType.getOffset();
@@ -160,13 +159,11 @@ public final class WorldUtils {
 
                     BlockState targetState = level.getBlockState(target);
                     if (targetState.getBlock() instanceof SkinCubeBlock) {
-                        SkinCube cube = new SkinCube();
                         saveArmourBlockToList(level, transform, target,
                                 xOrigin - 1,
                                 yOrigin - 1,
                                 -zOrigin,
-                                cube, markerBlocks);
-                        cubeData.setCube(i, cube);
+                                cubeData.getCube(i), markerBlocks);
                         i++;
                     }
                 }
@@ -228,7 +225,7 @@ public final class WorldUtils {
         ISkinPartType skinPart = partData.getType();
         IRectangle3i buildSpace = skinPart.getBuildingSpace();
         IVector3i offset = skinPart.getOffset();
-        SkinCubes cubeData = partData.getCubeData();
+        ISkinCubeProvider cubeData = partData.getCubeData();
 
         for (int i = 0; i < cubeData.getCubeCount(); i++) {
             ISkinCube cube = cubeData.getCube(i);

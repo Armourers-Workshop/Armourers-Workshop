@@ -34,9 +34,8 @@ public class ChunkOutputStream implements IDataOutputStream {
     }
 
     public void writeChunk(ChunkConsumer<ChunkWriter> consumer) throws IOException {
-        Total total = new Total();
-        writeVariable(total);
-        consumer.accept(new ChunkWriter(this, total));
+        consumer.accept(new ChunkWriter(this));
+        writeInt(0);
     }
 
     public void writeVariable(ChunkVariable variable) throws IOException {
@@ -113,26 +112,6 @@ public class ChunkOutputStream implements IDataOutputStream {
         tailNode.next = node;
         tailNode = node;
         return node;
-    }
-
-    protected static class Total implements ChunkVariable, IntConsumer {
-
-        private int value = 0;
-
-        @Override
-        public void accept(int value) {
-            this.value += value;
-        }
-
-        @Override
-        public void writeToStream(IDataOutputStream stream) throws IOException {
-            stream.writeInt(value);
-        }
-
-        @Override
-        public boolean freeze() {
-            return true;
-        }
     }
 }
 

@@ -37,10 +37,11 @@ public class ChunkPalette implements ChunkVariable {
     }
 
     public void readFromStream(IDataInputStream stream) throws IOException {
-        int size = stream.readInt();
-        for (int i = 0; i < size; ++i) {
-            Section section = new Section(null, 0);
-            section.readFromStream(stream);
+        while (true) {
+            Section section = readSectionFromStream(stream);
+            if (section == null) {
+                break;
+            }
             sections.add(section);
             // only read
             for (int color : section.colors) {
@@ -51,10 +52,10 @@ public class ChunkPalette implements ChunkVariable {
 
     @Override
     public void writeToStream(IDataOutputStream stream) throws IOException {
-        stream.writeInt(sections.size());
         for (Section section : sections) {
-            section.writeToStream(stream);
+            writeSectionToStream(section, stream);
         }
+        writeSectionToStream(null, stream);
     }
 
     @Override
@@ -110,14 +111,42 @@ public class ChunkPalette implements ChunkVariable {
         stream.write(buffer, 4 - usedBytes, usedBytes);
     }
 
+
+    private Section readSectionFromStream(IDataInputStream stream) throws IOException {
+        int length = stream.readInt();
+        if (length == 0) {
+            return null;
+        }
+        ISkinPaintType paintType = SkinPaintTypes.byId(stream.readByte());
+        int usedBytes = stream.readByte();
+        Section section = new Section(paintType, usedBytes);
+        for (int i = 0; i < length; ++i) {
+            section.colors.add(_readFixedInt(usedBytes, stream));
+        }
+        return section;
+    }
+
+    private void writeSectionToStream(Section section, IDataOutputStream stream) throws IOException {
+        if (section == null) {
+            stream.writeInt(0);
+            return;
+        }
+        stream.writeInt(section.colors.size());
+        stream.writeByte(section.paintType.getId());
+        stream.writeByte(section.usedBytes);
+        for (int color : section.colors) {
+            _writeFixedInt(color, section.usedBytes, stream);
+        }
+    }
+
     public class Section {
 
         private final int[] offset = {0};
         private final ArrayList<Integer> colors = new ArrayList<>();
         private final HashMap<Integer, Index> fastColors = new HashMap<>();
 
-        private int usedBytes;
-        private ISkinPaintType paintType;
+        private final int usedBytes;
+        private final ISkinPaintType paintType;
 
         public Section(ISkinPaintType paintType, int usedBytes) {
             this.paintType = paintType;
@@ -134,24 +163,6 @@ public class ChunkPalette implements ChunkVariable {
                 colors.add(k);
                 return index;
             });
-        }
-
-        public void readFromStream(IDataInputStream stream) throws IOException {
-            paintType = SkinPaintTypes.byId(stream.readByte());
-            usedBytes = stream.readByte();
-            int length = stream.readInt();
-            for (int i = 0; i < length; ++i) {
-                colors.add(_readFixedInt(usedBytes, stream));
-            }
-        }
-
-        public void writeToStream(IDataOutputStream stream) throws IOException {
-            stream.writeByte(paintType.getId());
-            stream.writeByte(usedBytes);
-            stream.writeInt(colors.size());
-            for (int color : colors) {
-                _writeFixedInt(color, usedBytes, stream);
-            }
         }
     }
 

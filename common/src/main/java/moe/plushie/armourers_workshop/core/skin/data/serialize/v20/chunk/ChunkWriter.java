@@ -10,12 +10,10 @@ import java.util.function.IntConsumer;
 
 public class ChunkWriter {
 
-    private final IntConsumer handler;
     private final ChunkOutputStream stream;
 
-    public ChunkWriter(ChunkOutputStream stream, IntConsumer handler) {
+    public ChunkWriter(ChunkOutputStream stream) {
         this.stream = stream;
-        this.handler = handler;
     }
 
     public <V> void write(ChunkSerializer<V, Void> serializer, @Nullable V value) throws IOException {
@@ -29,7 +27,6 @@ public class ChunkWriter {
         }
         int flags = serializer.getChunkFlags(value, stream.context());
         Sum sum = new Sum();
-        handler.accept(1);
         stream.writeVariable(sum);
         stream.sumTask(sum, () -> {
             stream.writeString(serializer.getChunkType().getName(), 4);
