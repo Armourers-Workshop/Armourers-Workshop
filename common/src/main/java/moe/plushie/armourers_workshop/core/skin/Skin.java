@@ -111,14 +111,14 @@ public class Skin implements ISkin {
     }
 
     public boolean requiresAdvanceFeatures() {
-        for (SkinPart skinPart : getParts()) {
-            if (skinPart.getType() == SkinPartTypes.ADVANCED) {
-                return true;
-            }
-            if (skinPart.getTransform() != SkinTransform.IDENTIFIER) {
-                return true;
-            }
-        }
+//        for (SkinPart skinPart : getParts()) {
+//            if (skinPart.getType() == SkinPartTypes.ADVANCED) {
+//                return true;
+//            }
+//            if (skinPart.getTransform() != SkinTransform.IDENTIFIER) {
+//                return true;
+//            }
+//        }
         return false;
     }
 
