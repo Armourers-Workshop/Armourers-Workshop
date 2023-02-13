@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.core.skin.data.serialize.v20.chunk;
 public enum ChunkType {
     SKIN("SKIN"),
     PAINT_DATA("TPDT"),
+    CUBE_DATA("CBDT"),
     PROPERTIES("PPTS"),
-    CUBE("PRCB"),
     MARKER("PRMK"),
     TRANSFORM("PRTF"),
     PALETTE("PALE"),

@@ -14,38 +14,38 @@ public interface IDataOutputStream {
         return () -> stream;
     }
 
-    DataOutputStream stream();
+    DataOutputStream getOutputStream();
 
     default void write(byte[] bytes) throws IOException {
-        stream().write(bytes);
+        getOutputStream().write(bytes);
     }
 
     default void write(byte[] b, int off, int len) throws IOException {
-        stream().write(b, off, len);
+        getOutputStream().write(b, off, len);
     }
 
     default void writeByte(int v) throws IOException {
-        stream().writeByte(v);
+        getOutputStream().writeByte(v);
     }
 
     default void writeBoolean(boolean v) throws IOException {
-        stream().writeBoolean(v);
+        getOutputStream().writeBoolean(v);
     }
 
     default void writeShort(int v) throws IOException {
-        stream().writeShort(v);
+        getOutputStream().writeShort(v);
     }
 
     default void writeInt(int v) throws IOException {
-        stream().writeInt(v);
+        getOutputStream().writeInt(v);
     }
 
     default void writeLong(long v) throws IOException {
-        stream().writeLong(v);
+        getOutputStream().writeLong(v);
     }
 
     default void writeDouble(double v) throws IOException {
-        stream().writeDouble(v);
+        getOutputStream().writeDouble(v);
     }
 
     default void writeString(String v) throws IOException {
@@ -54,17 +54,17 @@ public interface IDataOutputStream {
         if (size > 65535) {
             throw new IOException("String is over the max length allowed.");
         }
-        stream().writeShort((short) size);
-        stream().write(bytes);
+        getOutputStream().writeShort((short) size);
+        getOutputStream().write(bytes);
     }
 
     default void writeString(String v, int len) throws IOException {
         byte[] bytes = v.getBytes(StandardCharsets.UTF_8);
-        stream().write(bytes, 0, len);
+        getOutputStream().write(bytes, 0, len);
     }
 
     default void writeVector3f(Vector3f vec) throws IOException {
-        DataOutputStream stream = stream();
+        DataOutputStream stream = getOutputStream();
         stream.writeFloat(vec.getX());
         stream.writeFloat(vec.getY());
         stream.writeFloat(vec.getZ());

@@ -113,9 +113,9 @@ public class ChunkNode {
 
         private void updateIfNeeded() throws IOException {
             if (stream != null && var != null) {
-                varStart = stream.buffer().writerIndex();
+                varStart = stream.getBuffer().writerIndex();
                 var.writeToStream(stream);
-                varEnd = stream.buffer().writerIndex();
+                varEnd = stream.getBuffer().writerIndex();
                 stream = null;
             }
         }
@@ -202,8 +202,8 @@ public class ChunkNode {
                 return;
             }
             buf = Unpooled.buffer(1024);
-            OutputStream outputStream = stream.context().createOutputStream(buf, flags);
-            byte[] bytes = stream.buffer().array();
+            OutputStream outputStream = stream.getContext().createOutputStream(buf, flags);
+            byte[] bytes = stream.getBuffer().array();
             ChunkNode node = start;
             while (node != null && node != this) {
                 node.write(bytes, outputStream);

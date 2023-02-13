@@ -5,7 +5,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.core.skin.data.base.IDataOutputStream;
-import moe.plushie.armourers_workshop.core.skin.data.serialize.v20.chunk.*;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -87,19 +86,19 @@ public class ChunkOutputStream implements IDataOutputStream {
         ChunkNode start = appendVariable(null);
         appendNode(start);
         runnable.run();
-        appendNode(new ChunkNode.Compressed(buffer().writerIndex(), start, flags, this));
+        appendNode(new ChunkNode.Compressed(getBuffer().writerIndex(), start, flags, this));
     }
 
     @Override
-    public DataOutputStream stream() {
+    public DataOutputStream getOutputStream() {
         return outputStream;
     }
 
-    protected ChunkContext context() {
+    protected ChunkContext getContext() {
         return context;
     }
 
-    protected ByteBuf buffer() {
+    protected ByteBuf getBuffer() {
         return buffer;
     }
 

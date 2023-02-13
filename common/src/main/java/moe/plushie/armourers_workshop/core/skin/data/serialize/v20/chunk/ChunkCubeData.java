@@ -20,10 +20,21 @@ public class ChunkCubeData {
 
     private final HashMap<ISkinCubeType, Section> sections = new HashMap<>();
 
+    public ChunkCubeData(ChunkPalette palette) {
+        this.data = null;
+        this.palette = palette;
+//        this.palette = palette;
+//        this.data = data;
+    }
+
     public ChunkCubeData(ChunkPalette palette, SkinCubes data) {
         this.palette = palette;
         this.data = data;
     }
+
+    public void add(SkinCubes cubes) {
+    }
+
 
     public void readFromStream(ChunkInputStream stream) throws IOException {
         while (true) {

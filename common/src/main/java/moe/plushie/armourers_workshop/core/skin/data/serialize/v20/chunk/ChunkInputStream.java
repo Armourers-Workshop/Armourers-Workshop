@@ -1,9 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.data.serialize.v20.chunk;
 
 import moe.plushie.armourers_workshop.core.skin.data.base.IDataInputStream;
-import moe.plushie.armourers_workshop.core.skin.data.serialize.v20.chunk.ChunkContext;
-import moe.plushie.armourers_workshop.core.skin.data.serialize.v20.chunk.ChunkFunction;
-import moe.plushie.armourers_workshop.core.skin.data.serialize.v20.chunk.ChunkReader;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -29,11 +26,11 @@ public class ChunkInputStream implements IDataInputStream {
     }
 
     @Override
-    public DataInputStream stream() {
+    public DataInputStream getInputStream() {
         return stream;
     }
 
-    public ChunkContext context() {
+    public ChunkContext getContext() {
         return context;
     }
 }

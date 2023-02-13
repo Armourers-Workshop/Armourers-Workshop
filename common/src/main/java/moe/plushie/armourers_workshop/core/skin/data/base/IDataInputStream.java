@@ -15,53 +15,53 @@ public interface IDataInputStream {
         return () -> stream;
     }
 
-    DataInputStream stream();
+    DataInputStream getInputStream();
 
     default void readFully(byte[] b) throws IOException {
-        stream().readFully(b);
+        getInputStream().readFully(b);
     }
 
     default void readFully(byte[] b, int off, int len) throws IOException {
-        stream().readFully(b, off, len);
+        getInputStream().readFully(b, off, len);
     }
 
     default byte readByte() throws IOException {
-        return stream().readByte();
+        return getInputStream().readByte();
     }
 
     default boolean readBoolean() throws IOException {
-        return stream().readBoolean();
+        return getInputStream().readBoolean();
     }
 
     default short readShort() throws IOException {
-        return stream().readShort();
+        return getInputStream().readShort();
     }
 
     default int readInt() throws IOException {
-        return stream().readInt();
+        return getInputStream().readInt();
     }
 
     default long readLong() throws IOException {
-        return stream().readLong();
+        return getInputStream().readLong();
     }
 
     default double readDouble() throws IOException {
-        return stream().readDouble();
+        return getInputStream().readDouble();
     }
 
     default String readString() throws IOException {
-        int size = stream().readUnsignedShort();
+        int size = getInputStream().readUnsignedShort();
         return readString(size);
     }
 
     default String readString(int len) throws IOException {
         byte[] bytes = new byte[len];
-        stream().readFully(bytes, 0, len);
+        getInputStream().readFully(bytes, 0, len);
         return new String(bytes, StandardCharsets.UTF_8);
     }
 
     default Vector3f readVector3f() throws IOException {
-        DataInputStream stream = stream();
+        DataInputStream stream = getInputStream();
         float x = stream.readFloat();
         float y = stream.readFloat();
         float z = stream.readFloat();

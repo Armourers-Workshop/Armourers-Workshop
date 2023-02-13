@@ -25,7 +25,7 @@ public class ChunkWriter {
         if (serializer.isChunkEmpty(value)) {
             return;
         }
-        int flags = serializer.getChunkFlags(value, stream.context());
+        int flags = serializer.getChunkFlags(value, stream.getContext());
         Sum sum = new Sum();
         stream.writeVariable(sum);
         stream.sumTask(sum, () -> {

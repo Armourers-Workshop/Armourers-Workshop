@@ -154,7 +154,7 @@ public class ChunkSerializers {
         }
     });
 
-    public static final ChunkSerializer<SkinCubes, ChunkPalette> SKIN_CUBE = register(new ChunkSerializer<SkinCubes, ChunkPalette>(ChunkType.CUBE) {
+    public static final ChunkSerializer<SkinCubes, ChunkPalette> SKIN_CUBE = register(new ChunkSerializer<SkinCubes, ChunkPalette>(ChunkType.CUBE_DATA) {
 
         @Override
         public SkinCubes read(ChunkInputStream stream, ChunkPalette palette) throws IOException {
@@ -266,19 +266,19 @@ public class ChunkSerializers {
     }
 
     public static void writeToStream(Skin skin, IDataOutputStream stream) throws IOException {
-        ChunkOutputStream stream1 = new ChunkOutputStream(stream.stream(), new ChunkContext());
+        ChunkOutputStream stream1 = new ChunkOutputStream(stream.getOutputStream(), new ChunkContext());
         SKIN.write(skin, null, stream1);
         stream1.flush();
     }
 
     public static Skin readFromStream(IDataInputStream stream) throws IOException {
-        ChunkInputStream stream1 = new ChunkInputStream(stream.stream(), new ChunkContext(), null);
+        ChunkInputStream stream1 = new ChunkInputStream(stream.getInputStream(), new ChunkContext(), null);
         return SKIN.read(stream1, null);
     }
 
     public static Pair<ISkinType, ISkinProperties> readInfoFromStream(IDataInputStream stream) throws IOException {
         ArrayList<String> allows = Lists.newArrayList(ChunkType.PROPERTIES.getName());
-        ChunkInputStream stream1 = new ChunkInputStream(stream.stream(), new ChunkContext(), allows::contains);
+        ChunkInputStream stream1 = new ChunkInputStream(stream.getInputStream(), new ChunkContext(), allows::contains);
         return SKIN_INFO.read(stream1, null);
     }
 }

@@ -35,13 +35,13 @@ public class ChunkReader {
             String name = stream.readString(4);
             int flag = stream.readShort();
             if (chunkFilter != null && !chunkFilter.test(name)) {
-                stream.stream().skipBytes(length - header);
+                stream.getInputStream().skipBytes(length - header);
                 continue;
             }
             ByteBuf buffer = Unpooled.buffer(length - header);
             stream.readFully(buffer.array(), 0, length - header);
             buffer.writerIndex(length - header);
-            entries.add(new Entry(name, flag, length, buffer, stream.context()));
+            entries.add(new Entry(name, flag, length, buffer, stream.getContext()));
         }
     }
 
