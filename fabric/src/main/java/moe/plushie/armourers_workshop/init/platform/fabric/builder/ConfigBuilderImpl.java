@@ -97,8 +97,7 @@ public class ConfigBuilderImpl {
                     value.setter.accept(object);
                 }
             });
-            // when the config did changes, we need notify to all listeners.
-            this.listeners.forEach(Runnable::run);
+            this.setChanged();
         }
 
         @Override
@@ -113,8 +112,7 @@ public class ConfigBuilderImpl {
                     value.setter.accept(value.read());
                 }
             });
-            // when the config did changes, we need notify to all listeners.
-            this.listeners.forEach(Runnable::run);
+            this.setChanged();
         }
 
         @Override
@@ -131,12 +129,18 @@ public class ConfigBuilderImpl {
             });
             if (this.spec != null) {
                 this.spec.save();
+                this.setChanged();
             }
         }
 
         @Override
         public void notify(Runnable action) {
             this.listeners.add(action);
+        }
+
+        private void setChanged() {
+            // when the config did changes, we need notify to all listeners.
+            this.listeners.forEach(Runnable::run);
         }
     }
 

@@ -209,11 +209,11 @@ public class ModConfigSpec {
     }
 
     public static void init() {
-        EnvironmentExecutor.didSetup(EnvironmentType.COMMON, () -> () -> {
+        EnvironmentExecutor.didSetup(EnvironmentType.COMMON, () -> () -> COMMON.notify(() -> {
             // when the server config is changes, we need to synchronize it again.
             if (EnvironmentManager.getServer() != null && EnvironmentManager.isDedicatedServer()) {
-                COMMON.notify(() -> NetworkManager.sendToAll(new UpdateContextPacket()));
+                NetworkManager.sendToAll(new UpdateContextPacket());
             }
-        });
+        }));
     }
 }
