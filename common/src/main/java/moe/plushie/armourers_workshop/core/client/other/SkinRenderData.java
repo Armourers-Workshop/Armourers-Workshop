@@ -16,6 +16,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -316,6 +317,10 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
     }
 
     public boolean isLimitLimbs() {
+        // use disable is the options.
+        if (ModConfig.Client.enableSkinLimitLimbs) {
+            return false;
+        }
         // in EF doesn't need to limit limbs.
         if (epicFlightContext != null) {
             return false;

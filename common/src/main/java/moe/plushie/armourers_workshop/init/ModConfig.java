@@ -27,6 +27,7 @@ public class ModConfig {
         // Misc
         public static int skinLoadAnimationTime;
         public static boolean enableEntityInInventoryClip = true;
+        public static boolean enableSkinLimitLimbs = true;
 
         // Cache
         public static int skinCacheExpireTime;

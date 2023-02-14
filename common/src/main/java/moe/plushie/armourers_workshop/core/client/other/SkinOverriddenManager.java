@@ -48,6 +48,7 @@ public class SkinOverriddenManager {
 
     public void addModel(ISkinPartType partType) {
         disabledModels.add(partType);
+        disabledOverlays.add(partType);
     }
 
     public void addOverlay(ISkinPartType partType) {

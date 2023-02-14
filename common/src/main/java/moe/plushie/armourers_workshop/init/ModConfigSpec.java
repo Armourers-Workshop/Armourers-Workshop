@@ -29,6 +29,8 @@ public class ModConfigSpec {
             });
             defineCategory("misc", "Miscellaneous settings.", () -> {
                 defineInRange("skinLoadAnimationTime", 200, 0, 10000, "How long skins will display their loading animation for in milliseconds", "Settings this to 0 will disable loading animations.").bind(v -> skinLoadAnimationTime = v, () -> skinLoadAnimationTime);
+                define("enableSkinLimitLimbs", true, "Whether allows skin to limit limbs of entities.").bind(v -> enableSkinLimitLimbs = v, () -> enableSkinLimitLimbs);
+                define("enableClipInInventory", true, "Whether clip the excess skin in the inventory gui.").bind(v -> enableEntityInInventoryClip = v, () -> enableEntityInInventoryClip);
             });
             defineCategory("performance", "Change (visual quality/performance) ratio by changing setting in this category.", () -> {
                 defineInRange("renderDistanceSkin", 128, 16, 512, "The max distance in blocks that skins will render.").bind(v -> renderDistanceSkin = v, () -> renderDistanceSkin);
