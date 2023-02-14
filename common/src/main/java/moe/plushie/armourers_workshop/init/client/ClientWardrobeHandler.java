@@ -1,13 +1,14 @@
 package moe.plushie.armourers_workshop.init.client;
 
-import com.google.common.collect.Iterables;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.model.BakedModelStroage;
 import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
+import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
@@ -21,10 +22,7 @@ import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.platform.TransformationProvider;
-import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.ModelHolder;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.TickUtils;
+import moe.plushie.armourers_workshop.utils.*;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -164,7 +162,8 @@ public class ClientWardrobeHandler {
         }
     }
 
-    public static boolean shouldRenderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, ItemTransforms.TransformType transformType) {
+    @Nullable
+    public static EmbeddedSkinStack getEmbeddedSkinStack(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, ItemTransforms.TransformType transformType) {
         // this a silly solution, but I don't want to depend more mixins.
         // in ground: level and entity is empty.
         // in gui: level is empty.
@@ -172,38 +171,42 @@ public class ClientWardrobeHandler {
             // when the wardrobe has override skin of the item,
             // we easily get a conclusion to needs embedded skin.
             SkinRenderData renderData = SkinRenderData.of(entity);
-            if (renderData != null && !Iterables.isEmpty(renderData.getItemSkins(itemStack, entity instanceof MannequinEntity))) {
-                return true;
+            if (renderData != null) {
+                for (SkinRenderData.Entry entry : renderData.getItemSkins(itemStack, entity instanceof MannequinEntity)) {
+                    return new EmbeddedSkinStack(entry);
+                }
             }
         }
         // when the item is a skin item itself,
         // we easily get a conclusion to no needs embedded skin
         if (itemStack.getItem() == ModItems.SKIN.get()) {
-            return false;
+            return null;
         }
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
-            return false;
+            return null;
         }
         // we allow server manually control the item whether to use the embedded renderer.
         if (descriptor.getOptions().getEmbeddedItemRenderer() != 0) {
-            return descriptor.getOptions().getEmbeddedItemRenderer() == 2;
+            if (descriptor.getOptions().getEmbeddedItemRenderer() == 2) {
+                return new EmbeddedSkinStack(descriptor, itemStack);
+            }
+            return null;
         }
         // when the skin item, we no required enable of embbed skin option in the config.
-        return ModConfig.enableEmbeddedSkinRenderer() || descriptor.getType() == SkinTypes.ITEM;
+        if (ModConfig.enableEmbeddedSkinRenderer() || descriptor.getType() == SkinTypes.ITEM) {
+            return new EmbeddedSkinStack(descriptor, itemStack);
+        }
+        return null;
     }
 
-    public static void renderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, ItemTransforms.TransformType transformType, boolean leftHandHackery, IPoseStack poseStack, MultiBufferSource buffers, BakedModel bakedModel, int packedLight, int overlay, CallbackInfo callback) {
+    public static void renderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, EmbeddedSkinStack embeddedStack, ItemTransforms.TransformType transformType, boolean leftHandHackery, IPoseStack poseStack, MultiBufferSource buffers, BakedModel bakedModel, int packedLight, int overlay, CallbackInfo callback) {
         int counter = 0;
         switch (transformType) {
             case GUI:
             case GROUND:
             case FIXED: {
-                SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-                if (descriptor.isEmpty()) {
-                    return;
-                }
-                renderEmbeddedSkinInBox(descriptor, transformType, leftHandHackery, poseStack, buffers, packedLight, overlay);
+                _renderEmbeddedSkinInBox(embeddedStack, transformType, leftHandHackery, poseStack, buffers, packedLight, overlay);
                 callback.cancel();
                 break;
             }
@@ -213,9 +216,12 @@ public class ClientWardrobeHandler {
             case FIRST_PERSON_RIGHT_HAND: {
                 // in special case, entity hold item type skin.
                 // so we need replace it to custom renderer.
-                SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-                if (!descriptor.isEmpty() && shouldRenderInBox(itemStack, descriptor)) {
-                    renderEmbeddedSkinInBox(descriptor, transformType, leftHandHackery, poseStack, buffers, packedLight, overlay);
+                if (embeddedStack.getEntry() == null) {
+                    if (shouldRenderInBox(embeddedStack)) {
+                        _renderEmbeddedSkinInBox(embeddedStack, transformType, leftHandHackery, poseStack, buffers, packedLight, overlay);
+                    } else {
+                        _renderEmbeddedSkin(embeddedStack, transformType, leftHandHackery, poseStack, buffers, packedLight, overlay);
+                    }
                     callback.cancel();
                     return;
                 }
@@ -225,10 +231,9 @@ public class ClientWardrobeHandler {
 //                    RenderUtils.drawPoint(poseStack, null, 2, buffers);
                     poseStack.pushPose();
                     poseStack.scale(-SCALE, -SCALE, SCALE);
-                    boolean replaceSkinItem = entity instanceof MannequinEntity;
                     SkinRenderContext context = SkinRenderContext.alloc(renderData, packedLight, TickUtils.ticks(), transformType, poseStack, buffers);
                     context.setItem(itemStack, 0);
-                    counter = render(entity, null, context, () -> renderData.getItemSkins(itemStack, replaceSkinItem));
+                    counter = render(entity, null, context, () -> Collections.singleton(embeddedStack.getEntry()));
                     if (counter != 0 && !ModDebugger.itemOverride) {
                         callback.cancel();
                     }
@@ -244,12 +249,39 @@ public class ClientWardrobeHandler {
         }
     }
 
-    public static void renderEmbeddedSkinInBox(SkinDescriptor descriptor, ItemTransforms.TransformType transformType, boolean leftHandHackery, IPoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
+    public static void _renderEmbeddedSkinInBox(EmbeddedSkinStack embeddedStack, ItemTransforms.TransformType transformType, boolean leftHandHackery, IPoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
+        SkinDescriptor descriptor = embeddedStack.getDescriptor();
         poseStack.pushPose();
         TransformationProvider.handleTransforms(poseStack, BakedModelStroage.getSkinBakedModel(), transformType, leftHandHackery);
         poseStack.translate(-0.5f, -0.5f, -0.5f);
         SkinItemRenderer.getInstance().renderByItem(descriptor.sharedItemStack(), transformType, poseStack.cast(), buffers, packedLight, overlay);
         poseStack.popPose();
+    }
+
+    public static int _renderEmbeddedSkin(EmbeddedSkinStack embeddedStack, ItemTransforms.TransformType transformType, boolean leftHandHackery, IPoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
+        int r = 0;
+        SkinDescriptor descriptor = embeddedStack.getDescriptor();
+        BakedSkin bakedSkin = BakedSkin.of(descriptor);
+        if (bakedSkin == null) {
+            return r;
+        }
+        LivingEntity entity = SkinItemRenderer.getInstance().getMannequinEntity();
+        MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
+        SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
+        SkinRenderData renderData = SkinRenderData.of(entity);
+        IModelHolder<Model> modelHolder = ModelHolder.of(model);
+        if (renderer == null || renderData == null || modelHolder == null) {
+            return r;
+        }
+        poseStack.pushPose();
+        poseStack.scale(-SCALE, -SCALE, SCALE);
+        SkinRenderContext context = SkinRenderContext.alloc(renderData, packedLight, 0, poseStack, buffers);
+        context.setItem(embeddedStack.getItemStack(), 0);
+        context.setTransforms(entity, renderer.getOverrideModel(modelHolder));
+        renderer.render(entity, modelHolder, bakedSkin, descriptor.getColorScheme(), context);
+        context.release();
+        poseStack.popPose();
+        return r;
     }
 
     public static void onRenderEntityInInventoryPre(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY) {
@@ -303,8 +335,8 @@ public class ClientWardrobeHandler {
         return r;
     }
 
-    private static boolean shouldRenderInBox(ItemStack itemStack, SkinDescriptor descriptor) {
-        ISkinType skinType = descriptor.getType();
+    private static boolean shouldRenderInBox(EmbeddedSkinStack embeddedStack) {
+        ISkinType skinType = embeddedStack.getDescriptor().getType();
         // for the tool type skin, don't render in the box.
         if (skinType instanceof ISkinToolType) {
             return false;

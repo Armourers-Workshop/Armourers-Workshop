@@ -56,7 +56,7 @@ public class SkinItemRenderer extends ItemEntityRenderer {
         Vector3f rotation = new Vector3f(-transform.rotation.x(), -transform.rotation.y(), transform.rotation.z());
         Vector3f scale = Vector3f.ONE;//new Vector3f(transform.scale.x(), transform.scale.y(), transform.scale.z());
         ColorScheme scheme = descriptor.getColorScheme();
-        ExtendedItemRenderer.renderSkin(bakedSkin, scheme, itemStack, rotation, scale, 1, 1, 1, 0, light, poseStack, renderTypeBuffer);
+        ExtendedItemRenderer.renderSkinInBox(bakedSkin, scheme, itemStack, rotation, scale, 1, 1, 1, 0, light, poseStack, renderTypeBuffer);
 
         poseStack.popPose();
     }

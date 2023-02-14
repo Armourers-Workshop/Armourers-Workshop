@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.model.BakedModelStroage;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
+import moe.plushie.armourers_workshop.utils.EmbeddedSkinStack;
 import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -29,8 +30,9 @@ public class ItemRendererMixin {
     //#endif
     {
         BakedModel bakedModel = cir.getReturnValue();
-        if (ClientWardrobeHandler.shouldRenderEmbeddedSkin(entity, level, itemStack, null)) {
-            cir.setReturnValue(BakedModelStroage.wrap(bakedModel, itemStack, entity, level));
+        EmbeddedSkinStack embeddedStack = ClientWardrobeHandler.getEmbeddedSkinStack(entity, level, itemStack, null);
+        if (embeddedStack != null) {
+            cir.setReturnValue(BakedModelStroage.wrap(bakedModel, itemStack, embeddedStack, entity, level));
         }
     }
 
@@ -44,6 +46,7 @@ public class ItemRendererMixin {
         LivingEntity entity = stroage.getEntity();
         Level level = stroage.getLevel();
         IPoseStack poseStack = MatrixUtils.of(poseStackIn);
-        ClientWardrobeHandler.renderEmbeddedSkin(entity, level, itemStack, transformType, p_229111_3_, poseStack, buffers, resolvedModel, packedLight, overlay, ci);
+        EmbeddedSkinStack embeddedStack = stroage.getEmbeddedStack();
+        ClientWardrobeHandler.renderEmbeddedSkin(entity, level, itemStack, embeddedStack, transformType, p_229111_3_, poseStack, buffers, resolvedModel, packedLight, overlay, ci);
     }
 }

@@ -32,14 +32,14 @@ import org.jetbrains.annotations.Nullable;
 @Environment(value = EnvType.CLIENT)
 public final class ExtendedItemRenderer {
 
-    public static void renderSkin(SkinDescriptor descriptor, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, IPoseStack poseStack, MultiBufferSource buffers) {
+    public static void renderSkinInBox(SkinDescriptor descriptor, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, IPoseStack poseStack, MultiBufferSource buffers) {
         BakedSkin bakedSkin = BakedSkin.of(descriptor);
         if (bakedSkin != null) {
-            renderSkin(bakedSkin, descriptor.getColorScheme(), itemStack, x, y, z, width, height, rx, ry, rz, 0, 0xf000f0, poseStack, buffers);
+            renderSkinInBox(bakedSkin, descriptor.getColorScheme(), itemStack, x, y, z, width, height, rx, ry, rz, 0, 0xf000f0, poseStack, buffers);
         }
     }
 
-    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, float partialTicks, int light, IPoseStack poseStack, MultiBufferSource buffers) {
+    public static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, float partialTicks, int light, IPoseStack poseStack, MultiBufferSource buffers) {
         if (bakedSkin != null) {
             int t = TickUtils.ticks();
             int si = Math.min(width, height);
@@ -51,12 +51,12 @@ public final class ExtendedItemRenderer {
             poseStack.rotate(Vector3f.YP.rotationDegrees(ry + (float) (t / 10 % 360)));
             poseStack.scale(0.625f, 0.625f, 0.625f);
             poseStack.scale(si, si, si);
-            renderSkin(bakedSkin, scheme, itemStack, null, Vector3f.ONE, 1, 1, 1, partialTicks, light, poseStack, buffers);
+            renderSkinInBox(bakedSkin, scheme, itemStack, null, Vector3f.ONE, 1, 1, 1, partialTicks, light, poseStack, buffers);
             poseStack.popPose();
         }
     }
 
-    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, IPoseStack poseStack, MultiBufferSource buffers) {
+    public static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, IPoseStack poseStack, MultiBufferSource buffers) {
         Entity entity = SkinItemRenderer.getInstance().getMannequinEntity();
         MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
         SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);

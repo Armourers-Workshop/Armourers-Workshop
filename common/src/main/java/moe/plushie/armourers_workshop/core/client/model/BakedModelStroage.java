@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.model;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.utils.EmbeddedSkinStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -20,12 +21,14 @@ public class BakedModelStroage {
     private static BakedModel SHARED_MODEL;
 
     final ItemStack itemStack;
+    final EmbeddedSkinStack embeddedStack;
     final Level level;
     final LivingEntity entity;
     final BakedModel bakedModel;
 
-    public BakedModelStroage(ItemStack itemStack, LivingEntity entity, @Nullable Level level, BakedModel bakedModel) {
+    public BakedModelStroage(ItemStack itemStack, EmbeddedSkinStack embeddedStack, LivingEntity entity, @Nullable Level level, BakedModel bakedModel) {
         this.itemStack = itemStack;
+        this.embeddedStack = embeddedStack;
         this.level = level;
         this.entity = entity;
         this.bakedModel = bakedModel;
@@ -39,14 +42,14 @@ public class BakedModelStroage {
         return null;
     }
 
-    public static BakedModel wrap(BakedModel bakedModel, ItemStack itemStack, LivingEntity entity, @Nullable Level level) {
+    public static BakedModel wrap(BakedModel bakedModel, ItemStack itemStack, EmbeddedSkinStack embeddedStack, LivingEntity entity, @Nullable Level level) {
         // when the world is empty, this means the model is rendering on the GUI.
         if (level == null) {
             bakedModel = getSkinBakedModel();
         }
         // we use a java proxy, which will forward all methods back to the original baked model.
         Class<?>[] classes = new Class[]{BakedModel.class, ISkinDataProvider.class};
-        BakedModelStroage stroage = new BakedModelStroage(itemStack, entity, level, bakedModel);
+        BakedModelStroage stroage = new BakedModelStroage(itemStack, embeddedStack, entity, level, bakedModel);
         return (BakedModel) Proxy.newProxyInstance(BakedModel.class.getClassLoader(), classes, (proxy, method, methodArgs) -> {
             if (method.getDeclaringClass() == ISkinDataProvider.class) {
                 return stroage;
@@ -72,5 +75,13 @@ public class BakedModelStroage {
 
     public Level getLevel() {
         return level;
+    }
+
+    public ItemStack getItemStack() {
+        return itemStack;
+    }
+
+    public EmbeddedSkinStack getEmbeddedStack() {
+        return embeddedStack;
     }
 }

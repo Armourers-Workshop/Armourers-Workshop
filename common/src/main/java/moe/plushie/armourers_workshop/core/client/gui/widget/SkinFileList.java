@@ -237,7 +237,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             }
             if (!getDescriptor().isEmpty()) {
                 MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-                ExtendedItemRenderer.renderSkin(getDescriptor(), ItemStack.EMPTY, x, y, 100, width, height - 1, 20, 45, 0, poseStack, buffers);
+                ExtendedItemRenderer.renderSkinInBox(getDescriptor(), ItemStack.EMPTY, x, y, 100, width, height - 1, 20, 45, 0, poseStack, buffers);
             }
         }
 
@@ -263,7 +263,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             RenderSystem.drawContinuousTexturedBox(poseStack, ModTextures.GUI_PREVIEW, dx, dy, 0, 0, size, size, 62, 62, 4, dz);
             RenderSystem.drawShadowText(poseStack, tooltips, dx + 4, dy + 4, size - 8, dz, font, 7, 0xffffff);
             MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx, dy, dz + 100, size, size, 30, 45, 0, 0, 0xf000f0, poseStack, buffers);
+            ExtendedItemRenderer.renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx, dy, dz + 100, size, size, 30, 45, 0, 0, 0xf000f0, poseStack, buffers);
             buffers.endBatch();
         }
 

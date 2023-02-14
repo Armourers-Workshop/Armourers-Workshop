@@ -11,7 +11,6 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIView;
 import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ReportDialog;
 import moe.plushie.armourers_workshop.core.client.gui.widget.Toast;
@@ -30,7 +29,6 @@ import moe.plushie.armourers_workshop.library.data.impl.ServerPermission;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
 import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
@@ -42,7 +40,6 @@ import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.util.Strings;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
@@ -192,7 +189,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         BakedSkin bakedSkin = BakedSkin.of(entry.getDescriptor());
         if (bakedSkin != null) {
             MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            ExtendedItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, rect.x, rect.y, 100, rect.width, rect.height, 20, 45, 0, 0, 0xf000f0, context.poseStack, buffers);
+            ExtendedItemRenderer.renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, rect.x, rect.y, 100, rect.width, rect.height, 20, 45, 0, 0, 0xf000f0, context.poseStack, buffers);
             buffers.endBatch();
         }
     }
