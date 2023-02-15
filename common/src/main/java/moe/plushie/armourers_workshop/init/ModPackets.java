@@ -1,8 +1,25 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.builder.network.*;
-import moe.plushie.armourers_workshop.core.network.*;
-import moe.plushie.armourers_workshop.library.network.*;
+import moe.plushie.armourers_workshop.builder.network.UndoActionPacket;
+import moe.plushie.armourers_workshop.builder.network.UpdateArmourerPacket;
+import moe.plushie.armourers_workshop.builder.network.UpdateBlockColorPacket;
+import moe.plushie.armourers_workshop.builder.network.UpdateColorMixerPacket;
+import moe.plushie.armourers_workshop.builder.network.UpdateColorPickerPacket;
+import moe.plushie.armourers_workshop.builder.network.UpdateOutfitMakerPacket;
+import moe.plushie.armourers_workshop.builder.network.UpdatePaintingToolPacket;
+import moe.plushie.armourers_workshop.core.network.CustomPacket;
+import moe.plushie.armourers_workshop.core.network.ExecuteCommandPacket;
+import moe.plushie.armourers_workshop.core.network.OpenWardrobePacket;
+import moe.plushie.armourers_workshop.core.network.RequestSkinPacket;
+import moe.plushie.armourers_workshop.core.network.ResponseSkinPacket;
+import moe.plushie.armourers_workshop.core.network.UpdateContextPacket;
+import moe.plushie.armourers_workshop.core.network.UpdateHologramProjectorPacket;
+import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
+import moe.plushie.armourers_workshop.library.network.SaveSkinPacket;
+import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilePacket;
+import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilesPacket;
+import moe.plushie.armourers_workshop.library.network.UploadSkinPacket;
+import moe.plushie.armourers_workshop.library.network.UploadSkinPrePacket;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.function.Function;

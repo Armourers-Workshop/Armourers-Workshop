@@ -2,7 +2,12 @@ package moe.plushie.armourers_workshop.library.client.gui.panels;
 
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
-import com.apple.library.uikit.*;
+import com.apple.library.uikit.UIButton;
+import com.apple.library.uikit.UIColor;
+import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UILabel;
+import com.apple.library.uikit.UITextField;
+import com.apple.library.uikit.UITextView;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;

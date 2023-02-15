@@ -2,7 +2,14 @@ package moe.plushie.armourers_workshop.core.client.gui.wardrobe;
 
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
-import com.apple.library.uikit.*;
+import com.apple.library.uikit.UIButton;
+import com.apple.library.uikit.UIColor;
+import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UIEvent;
+import com.apple.library.uikit.UIImage;
+import com.apple.library.uikit.UILabel;
+import com.apple.library.uikit.UIView;
+import com.apple.library.uikit.UIWindow;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;

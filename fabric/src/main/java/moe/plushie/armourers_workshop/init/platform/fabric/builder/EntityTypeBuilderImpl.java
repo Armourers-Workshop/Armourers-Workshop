@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import moe.plushie.armourers_workshop.api.common.IEntityRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeKey;
+import moe.plushie.armourers_workshop.api.common.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IEntityTypeBuilder;
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricEntityRenderers;
@@ -14,17 +15,20 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuilder<T> {
 
     private FabricEntityTypeBuilder<T> builder;
-    private Supplier<Consumer<EntityType<T>>> binder;
+    private IRegistryBinder<EntityType<T>> binder;
 
     public EntityTypeBuilderImpl(EntityType.EntityFactory<T> entityFactory, MobCategory mobCategory) {
         this.builder = FabricEntityTypeBuilder.create(mobCategory, entityFactory);
@@ -82,7 +86,7 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
     public IEntityTypeBuilder<T> bind(Supplier<IEntityRendererProvider<T>> provider) {
         this.binder = () -> entityType -> {
             // here is safe call client registry.
-            AbstractFabricEntityRenderers.register(entityType, provider.get());
+            AbstractFabricEntityRenderers.registerEntity(entityType, provider.get());
         };
         return this;
     }
@@ -90,7 +94,7 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
     @Override
     public IEntityTypeKey<T> build(String name) {
         IRegistryKey<EntityType<T>> object = Registries.ENTITY_TYPE.register(name, () -> builder.build());
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, binder, object);
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.of(binder, object));
         return new IEntityTypeKey<T>() {
             @Override
             public T create(ServerLevel level, BlockPos pos, @Nullable CompoundTag tag, MobSpawnType spawnType) {

@@ -7,8 +7,6 @@ import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.UUID;
-
 @Extension
 public class PlayerExt {
 

@@ -5,11 +5,21 @@ import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.core.skin.data.base.IDataInputStream;
 import moe.plushie.armourers_workshop.core.skin.data.base.IDataOutputStream;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public class SkinProperties implements ISkinProperties {
 

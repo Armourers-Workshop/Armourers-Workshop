@@ -4,7 +4,11 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FabricConfigTracker {

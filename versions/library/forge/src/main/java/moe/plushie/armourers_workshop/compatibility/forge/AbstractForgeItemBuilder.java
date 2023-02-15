@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.compatibility.forge;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.common.IItemStackRendererProvider;
+import moe.plushie.armourers_workshop.api.common.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
 import moe.plushie.armourers_workshop.core.registry.Registries;
@@ -11,7 +12,6 @@ import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.ClientNativeManagerImpl;
 import net.minecraft.world.item.Item;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemBuilder<T> {
 
     protected Item.Properties properties = new Item.Properties();
-    protected Supplier<Consumer<T>> binder;
+    protected IRegistryBinder<T> binder;
     protected IRegistryKey<IItemGroup> group;
     protected final Function<Item.Properties, T> supplier;
 
@@ -30,21 +30,22 @@ public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemB
     @Override
     public IItemBuilder<T> bind(Supplier<IItemStackRendererProvider> provider) {
         this.binder = () -> item -> {
-            ClientNativeManagerImpl.INSTANCE.willRegisterItemRenderer(registry -> registry.register(item, provider.get()));
+            ClientNativeManagerImpl.INSTANCE.willRegisterItemRenderer(registry -> registry.register(item.get(), provider.get()));
         };
         return this;
     }
 
     @Override
     public IRegistryKey<T> build(String name) {
-        return Registries.ITEM.register(name, () -> {
+        IRegistryKey<T> item = Registries.ITEM.register(name, () -> {
             T value = supplier.apply(properties);
             if (group != null) {
                 group.get().add(() -> value);
             }
-            EnvironmentExecutor.didInit(EnvironmentType.CLIENT, binder, () -> value);
             return value;
         });
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.of(binder, item));
+        return item;
     }
 }
 

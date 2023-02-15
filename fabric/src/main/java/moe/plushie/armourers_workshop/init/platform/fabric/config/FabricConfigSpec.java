@@ -1,8 +1,12 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.config;
 
-import com.electronwill.nightconfig.core.*;
+import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.ConfigSpec.CorrectionAction;
 import com.electronwill.nightconfig.core.ConfigSpec.CorrectionListener;
+import com.electronwill.nightconfig.core.EnumGetMethod;
+import com.electronwill.nightconfig.core.InMemoryFormat;
+import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.utils.UnmodifiableConfigWrapper;
 import com.google.common.base.Joiner;
@@ -15,13 +19,25 @@ import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.electronwill.nightconfig.core.ConfigSpec.CorrectionAction.*;
+import static com.electronwill.nightconfig.core.ConfigSpec.CorrectionAction.ADD;
+import static com.electronwill.nightconfig.core.ConfigSpec.CorrectionAction.REMOVE;
+import static com.electronwill.nightconfig.core.ConfigSpec.CorrectionAction.REPLACE;
 
 /*
  * Like {@link com.electronwill.nightconfig.core.ConfigSpec} except in builder format, and extended to accept comments, language keys,

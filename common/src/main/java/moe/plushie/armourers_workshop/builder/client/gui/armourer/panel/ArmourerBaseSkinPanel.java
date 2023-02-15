@@ -2,7 +2,11 @@ package moe.plushie.armourers_workshop.builder.client.gui.armourer.panel;
 
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
-import com.apple.library.uikit.*;
+import com.apple.library.uikit.UICheckBox;
+import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UILabel;
+import com.apple.library.uikit.UISliderBox;
+import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;

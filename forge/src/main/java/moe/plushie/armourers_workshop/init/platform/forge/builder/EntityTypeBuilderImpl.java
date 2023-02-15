@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
 import moe.plushie.armourers_workshop.api.common.IEntityRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeKey;
+import moe.plushie.armourers_workshop.api.common.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IEntityTypeBuilder;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeEntityRenderers;
@@ -20,13 +21,12 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuilder<T> {
 
     private EntityType.Builder<T> builder;
-    private Supplier<Consumer<EntityType<T>>> binder;
+    private IRegistryBinder<EntityType<T>> binder;
 
     public EntityTypeBuilderImpl(EntityType.EntityFactory<T> entityFactory, MobCategory mobCategory) {
         this.builder = EntityType.Builder.of(entityFactory, mobCategory);
@@ -83,7 +83,7 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
     public IEntityTypeBuilder<T> bind(Supplier<IEntityRendererProvider<T>> provider) {
         this.binder = () -> entityType -> {
             // here is safe call client registry.
-            AbstractForgeEntityRenderers.register(entityType, provider.get());
+            AbstractForgeEntityRenderers.registerEntity(entityType, provider.get());
         };
         return this;
     }
@@ -91,7 +91,7 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
     @Override
     public IEntityTypeKey<T> build(String name) {
         IRegistryKey<EntityType<T>> object = Registries.ENTITY_TYPE.register(name, () -> builder.build(name));
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, binder, object);
+        EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.of(binder, object));
         return new IEntityTypeKey<T>() {
             @Override
             public T create(ServerLevel level, BlockPos pos, @Nullable CompoundTag tag, MobSpawnType spawnType) {

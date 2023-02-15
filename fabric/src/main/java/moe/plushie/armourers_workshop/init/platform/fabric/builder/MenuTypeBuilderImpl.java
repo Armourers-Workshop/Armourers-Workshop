@@ -1,7 +1,12 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import com.apple.library.uikit.UIWindow;
-import moe.plushie.armourers_workshop.api.common.*;
+import moe.plushie.armourers_workshop.api.common.IMenuProvider;
+import moe.plushie.armourers_workshop.api.common.IMenuWindow;
+import moe.plushie.armourers_workshop.api.common.IMenuWindowProvider;
+import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
+import moe.plushie.armourers_workshop.api.common.IRegistryBinder;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricMenuType;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuScreen;
@@ -20,14 +25,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements IMenuTypeBuilder<T> {
 
     private final IMenuProvider<T, D> factory;
     private final IPlayerDataSerializer<D> serializer;
-    private Supplier<Consumer<MenuType<T>>> binder;
+    private IRegistryBinder<MenuType<T>> binder;
 
     public MenuTypeBuilderImpl(IMenuProvider<T, D> factory, IPlayerDataSerializer<D> serializer) {
         this.factory = factory;
@@ -38,7 +42,7 @@ public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements 
     public <U extends UIWindow & IMenuWindow<T>> IMenuTypeBuilder<T> bind(Supplier<IMenuWindowProvider<T, U>> provider) {
         this.binder = () -> menuType -> {
             // here is safe call client registry.
-            ScreenRegistry.register(menuType, MenuScreen.bind(provider.get())::createMenuScreen);
+            ScreenRegistry.register(menuType.get(), MenuScreen.bind(provider.get())::createMenuScreen);
         };
         return this;
     }
@@ -70,7 +74,7 @@ public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements 
             return true;
         });
         menuTypes[0] = menuType;
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, binder, object);
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.of(binder, object));
         return object;
     }
 }

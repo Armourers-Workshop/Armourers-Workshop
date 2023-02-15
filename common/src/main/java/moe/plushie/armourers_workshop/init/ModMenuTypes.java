@@ -1,6 +1,10 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.api.common.*;
+import moe.plushie.armourers_workshop.api.common.IBlockMenuProvider;
+import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
+import moe.plushie.armourers_workshop.api.common.IMenuProvider;
+import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.builder.client.gui.ColorMixerWindow;
 import moe.plushie.armourers_workshop.builder.client.gui.OutfitMakerWindow;
@@ -15,7 +19,12 @@ import moe.plushie.armourers_workshop.core.client.gui.SkinnableWindow;
 import moe.plushie.armourers_workshop.core.client.gui.SkinningTableWindow;
 import moe.plushie.armourers_workshop.core.client.gui.hologramprojector.HologramProjectorWindow;
 import moe.plushie.armourers_workshop.core.client.gui.wardrobe.SkinWardrobeWindow;
-import moe.plushie.armourers_workshop.core.menu.*;
+import moe.plushie.armourers_workshop.core.menu.DyeTableMenu;
+import moe.plushie.armourers_workshop.core.menu.HologramProjectorMenu;
+import moe.plushie.armourers_workshop.core.menu.SkinWardrobeMenu;
+import moe.plushie.armourers_workshop.core.menu.SkinWardrobeOpMenu;
+import moe.plushie.armourers_workshop.core.menu.SkinnableMenu;
+import moe.plushie.armourers_workshop.core.menu.SkinningTableMenu;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.client.gui.SkinLibraryWindow;

@@ -2,7 +2,11 @@ package moe.plushie.armourers_workshop.core.client.gui.widget;
 
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
-import com.apple.library.uikit.*;
+import com.apple.library.uikit.UIButton;
+import com.apple.library.uikit.UIColor;
+import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UILabel;
+import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;

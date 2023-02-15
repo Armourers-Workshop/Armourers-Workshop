@@ -14,7 +14,6 @@ import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
-import moe.plushie.armourers_workshop.core.skin.transform.SkinWingsTransform;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.math.PoseStack;

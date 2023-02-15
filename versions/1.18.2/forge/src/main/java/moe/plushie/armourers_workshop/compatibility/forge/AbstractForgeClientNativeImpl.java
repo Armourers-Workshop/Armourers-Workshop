@@ -18,7 +18,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.IItemRenderProperties;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.DrawSelectionEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
 
 import java.util.List;

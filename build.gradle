@@ -55,6 +55,7 @@ allprojects {
         // See https://docs.gradle.org/current/userguide/declaring_repositories.html
         // for more information about repositories.
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://api.modrinth.com/maven/" }
         maven { url "https://cursemaven.com/" }
     }
 

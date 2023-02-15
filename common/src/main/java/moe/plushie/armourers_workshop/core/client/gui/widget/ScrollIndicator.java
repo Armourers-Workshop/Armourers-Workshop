@@ -3,7 +3,11 @@ package moe.plushie.armourers_workshop.core.client.gui.widget;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.impl.SoundManagerImpl;
-import com.apple.library.uikit.*;
+import com.apple.library.uikit.UIButton;
+import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UIEvent;
+import com.apple.library.uikit.UIImage;
+import com.apple.library.uikit.UIImageView;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 

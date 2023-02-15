@@ -3,7 +3,12 @@ package moe.plushie.armourers_workshop.core.client.gui.widget;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.impl.WeakDispatcherImpl;
-import com.apple.library.uikit.*;
+import com.apple.library.uikit.UIButton;
+import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UIEvent;
+import com.apple.library.uikit.UIImage;
+import com.apple.library.uikit.UIImageView;
+import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import org.jetbrains.annotations.Nullable;
 

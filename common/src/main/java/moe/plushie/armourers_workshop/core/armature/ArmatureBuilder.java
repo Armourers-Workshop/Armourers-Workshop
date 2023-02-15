@@ -13,7 +13,11 @@ import moe.plushie.armourers_workshop.core.armature.core.DefaultWingJointModifie
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")

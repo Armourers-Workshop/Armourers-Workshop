@@ -37,7 +37,6 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
 
-    modApi "mezz.jei:jei-${project.jei_api_version}"
     //modCompileOnly "com.sk89q.worldedit:worldedit-core:7.2.5-SNAPSHOT"
 
     //modLocalRuntime "mezz.jei:jei-${rootProject.minecraft_version}-forge:${project.jei_version}"
@@ -47,6 +46,7 @@ dependencies {
     //modLocalRuntime "org.samo_lego:taterzens:1.9.6-forge"
     //modLocalRuntime "net.optifine:OptiFine:1.18.2_HD_U_H9_pre1"
 
+    modOptionalCompileOnly project.jei_api_version
     modOptionalCompileOnly project.epicfight_api_version
     modOptionalCompileOnly project.curios_api_version
 

@@ -1,7 +1,13 @@
 package moe.plushie.armourers_workshop.core.client.gui.wardrobe;
 
 import com.apple.library.coregraphics.CGRect;
-import com.apple.library.uikit.*;
+import com.apple.library.uikit.UIButton;
+import com.apple.library.uikit.UIColor;
+import com.apple.library.uikit.UIComboBox;
+import com.apple.library.uikit.UIComboItem;
+import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UITextField;
+import com.apple.library.uikit.UITextFieldDelegate;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;

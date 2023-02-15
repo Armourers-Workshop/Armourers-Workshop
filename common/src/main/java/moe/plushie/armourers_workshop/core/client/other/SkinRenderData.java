@@ -2,7 +2,11 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.common.IItemStackProvider;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.api.skin.*;
+import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightContext;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;

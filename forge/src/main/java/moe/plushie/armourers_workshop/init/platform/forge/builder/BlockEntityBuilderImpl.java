@@ -3,10 +3,11 @@ package moe.plushie.armourers_workshop.init.platform.forge.builder;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityKey;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IBlockEntitySupplier;
+import moe.plushie.armourers_workshop.api.common.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IBlockEntityBuilder;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeBlockEntity;
-import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeBlockEntityRenderers;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeEntityRenderers;
 import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
@@ -19,12 +20,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.LinkedList;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class BlockEntityBuilderImpl<T extends BlockEntity> implements IBlockEntityBuilder<T> {
 
-    private Supplier<Consumer<BlockEntityType<T>>> binder;
+    private IRegistryBinder<BlockEntityType<T>> binder;
     private final LinkedList<Supplier<Block>> blocks = new LinkedList<>();
     private final IBlockEntitySupplier<T> supplier;
 
@@ -42,7 +42,7 @@ public class BlockEntityBuilderImpl<T extends BlockEntity> implements IBlockEnti
     public IBlockEntityBuilder<T> bind(Supplier<IBlockEntityRendererProvider<T>> provider) {
         this.binder = () -> blockEntityType -> {
             // here is safe call client registry.
-            AbstractForgeBlockEntityRenderers.register(blockEntityType, provider.get());
+            AbstractForgeEntityRenderers.registerBlockEntity(blockEntityType, provider.get());
         };
         return this;
     }
@@ -53,7 +53,7 @@ public class BlockEntityBuilderImpl<T extends BlockEntity> implements IBlockEnti
             Block[] blocks1 = blocks.stream().map(Supplier::get).toArray(Block[]::new);
             return AbstractForgeBlockEntity.createType(supplier, blocks1);
         });
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, binder, object);
+        EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.of(binder, object));
         return new IBlockEntityKey<T>() {
             @Override
             public T create(BlockGetter level, BlockPos blockPos, BlockState blockState) {

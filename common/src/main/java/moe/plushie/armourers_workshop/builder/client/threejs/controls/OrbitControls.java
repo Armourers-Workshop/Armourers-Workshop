@@ -3,7 +3,11 @@ package moe.plushie.armourers_workshop.builder.client.threejs.controls;
 import moe.plushie.armourers_workshop.builder.client.threejs.camera.Camera;
 import moe.plushie.armourers_workshop.builder.client.threejs.core.EventSource;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.math.*;
+import moe.plushie.armourers_workshop.utils.math.Matrix4f;
+import moe.plushie.armourers_workshop.utils.math.Quaternionf;
+import moe.plushie.armourers_workshop.utils.math.Sphericalf;
+import moe.plushie.armourers_workshop.utils.math.Vector2f;
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
 
 public class OrbitControls {
 

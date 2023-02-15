@@ -18,6 +18,7 @@ public class CommonProxyImpl {
 
     public static void init() {
         EnvironmentExecutor.willInit(EnvironmentType.COMMON);
+        EnvironmentExecutor.willSetup(EnvironmentType.COMMON);
 
         CommonNativeManagerImpl.INSTANCE.didServerStart(EnvironmentManagerImpl::attach);
         CommonNativeManagerImpl.INSTANCE.didServerStop(EnvironmentManagerImpl::detach);

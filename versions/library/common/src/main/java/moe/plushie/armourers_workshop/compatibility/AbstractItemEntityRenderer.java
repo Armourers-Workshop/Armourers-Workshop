@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 public abstract class AbstractItemEntityRenderer extends BlockEntityWithoutLevelRenderer {
 
     public AbstractItemEntityRenderer() {
-        this(RendererManager.getBlockContext());
+        this(RendererManager.getBlockEntityContext());
     }
 
     protected AbstractItemEntityRenderer(AbstractBlockEntityRendererContext context) {

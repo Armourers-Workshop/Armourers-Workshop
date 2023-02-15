@@ -2,7 +2,12 @@ package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IBlockBuilder;
-import moe.plushie.armourers_workshop.builder.block.*;
+import moe.plushie.armourers_workshop.builder.block.AdvancedSkinBuilderBlock;
+import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
+import moe.plushie.armourers_workshop.builder.block.BoundingBoxBlock;
+import moe.plushie.armourers_workshop.builder.block.ColorMixerBlock;
+import moe.plushie.armourers_workshop.builder.block.OutfitMakerBlock;
+import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.core.block.DyeTableBlock;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;

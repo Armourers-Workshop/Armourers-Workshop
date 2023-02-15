@@ -7,7 +7,11 @@ import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSRange;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextPosition;
-import com.apple.library.impl.*;
+import com.apple.library.impl.AppearanceImpl;
+import com.apple.library.impl.DelegateImpl;
+import com.apple.library.impl.TextInputImpl;
+import com.apple.library.impl.TextInputTraits;
+import com.apple.library.impl.TextStorageImpl;
 
 public class UITextView extends UIScrollView implements TextInputTraits {
 

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.common.IItemStackRendererProvider;
+import moe.plushie.armourers_workshop.api.common.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
 import moe.plushie.armourers_workshop.core.registry.Registries;
@@ -12,14 +13,13 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
 
     private Item.Properties properties = new FabricItemSettings();
-    private Supplier<Consumer<T>> binder;
+    private IRegistryBinder<T> binder;
     private IRegistryKey<IItemGroup> group;
     private final Function<Item.Properties, T> supplier;
 
@@ -73,7 +73,7 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
     public IItemBuilder<T> bind(Supplier<IItemStackRendererProvider> provider) {
         this.binder = () -> item -> {
             // here is safe call client registry.
-            BuiltinItemRendererRegistry.INSTANCE.register(item, provider.get().getItemModelRenderer()::renderByItem);
+            BuiltinItemRendererRegistry.INSTANCE.register(item.get(), provider.get().getItemModelRenderer()::renderByItem);
         };
         return this;
     }
@@ -84,7 +84,7 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
         if (group != null) {
             group.get().add(object::get);
         }
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, binder, object);
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.of(binder, object));
         return object;
     }
 }

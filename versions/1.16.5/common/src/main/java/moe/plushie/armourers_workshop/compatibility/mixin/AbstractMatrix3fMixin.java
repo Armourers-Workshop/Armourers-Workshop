@@ -6,7 +6,11 @@ import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
 import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Implements;
+import org.spongepowered.asm.mixin.Interface;
+import org.spongepowered.asm.mixin.Intrinsic;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
 import java.nio.FloatBuffer;
 

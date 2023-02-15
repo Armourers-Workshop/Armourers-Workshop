@@ -22,7 +22,7 @@ public class RendererManager {
         SkinRendererManager.getInstance().init();
     }
 
-    public static AbstractBlockEntityRendererContext getBlockContext() {
+    public static AbstractBlockEntityRendererContext getBlockEntityContext() {
         if (BLOCK == null) {
             BLOCK = new AbstractBlockEntityRendererContext(Minecraft.getInstance());
         }

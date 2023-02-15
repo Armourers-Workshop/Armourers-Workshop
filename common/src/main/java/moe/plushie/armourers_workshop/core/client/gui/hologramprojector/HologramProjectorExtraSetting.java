@@ -1,7 +1,11 @@
 package moe.plushie.armourers_workshop.core.client.gui.hologramprojector;
 
 import com.apple.library.coregraphics.CGRect;
-import com.apple.library.uikit.*;
+import com.apple.library.uikit.UICheckBox;
+import com.apple.library.uikit.UIComboBox;
+import com.apple.library.uikit.UIComboItem;
+import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UILabel;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.network.UpdateHologramProjectorPacket;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;

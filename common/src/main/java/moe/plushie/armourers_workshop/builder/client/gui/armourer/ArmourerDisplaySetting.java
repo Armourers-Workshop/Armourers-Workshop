@@ -1,7 +1,15 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer;
 
 import com.apple.library.coregraphics.CGRect;
-import com.apple.library.uikit.*;
+import com.apple.library.uikit.UIButton;
+import com.apple.library.uikit.UICheckBox;
+import com.apple.library.uikit.UIColor;
+import com.apple.library.uikit.UIComboBox;
+import com.apple.library.uikit.UIComboItem;
+import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UILabel;
+import com.apple.library.uikit.UITextField;
+import com.apple.library.uikit.UITextFieldDelegate;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.ArmourerMenu;

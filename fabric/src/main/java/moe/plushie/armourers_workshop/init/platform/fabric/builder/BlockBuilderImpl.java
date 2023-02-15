@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
+import moe.plushie.armourers_workshop.api.common.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IBlockBuilder;
 import moe.plushie.armourers_workshop.core.registry.Registries;
@@ -15,7 +16,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
@@ -23,7 +23,7 @@ import java.util.function.ToIntFunction;
 public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
 
     private BlockBehaviour.Properties properties;
-    private Supplier<Consumer<T>> binder;
+    private IRegistryBinder<T> binder;
     private final Function<BlockBehaviour.Properties, T> supplier;
 
     public BlockBuilderImpl(Function<BlockBehaviour.Properties, T> supplier, Material material, MaterialColor materialColor) {
@@ -161,7 +161,7 @@ public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
     public IBlockBuilder<T> bind(Supplier<Supplier<RenderType>> provider) {
         this.binder = () -> block -> {
             // here is safe call client registry.
-            BlockRenderLayerMap.INSTANCE.putBlock(block, provider.get().get());
+            BlockRenderLayerMap.INSTANCE.putBlock(block.get(), provider.get().get());
         };
         return this;
     }
@@ -169,7 +169,7 @@ public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
     @Override
     public IRegistryKey<T> build(String name) {
         IRegistryKey<T> object = Registries.BLOCK.register(name, () -> supplier.apply(properties));
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, binder, object);
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.of(binder, object));
         return object;
     }
 }

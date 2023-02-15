@@ -2,7 +2,13 @@ package moe.plushie.armourers_workshop.library.client.gui.panels;
 
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSMutableString;
-import com.apple.library.uikit.*;
+import com.apple.library.uikit.UIButton;
+import com.apple.library.uikit.UIColor;
+import com.apple.library.uikit.UIComboBox;
+import com.apple.library.uikit.UIComboItem;
+import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UITextField;
+import com.apple.library.uikit.UITextFieldDelegate;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.gui.widget.SkinComboBox;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;

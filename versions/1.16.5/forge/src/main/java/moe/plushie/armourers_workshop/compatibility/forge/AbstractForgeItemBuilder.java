@@ -7,14 +7,12 @@ import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
 import moe.plushie.armourers_workshop.core.registry.Registries;
 import net.minecraft.world.item.Item;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemBuilder<T> {
 
     protected Item.Properties properties = new Item.Properties();
-    protected Supplier<Consumer<T>> binder;
     protected IRegistryKey<IItemGroup> group;
     protected final Function<Item.Properties, T> supplier;
 

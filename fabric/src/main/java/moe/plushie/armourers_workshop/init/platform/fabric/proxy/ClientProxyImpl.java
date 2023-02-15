@@ -38,6 +38,7 @@ public class ClientProxyImpl implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         EnvironmentExecutor.willInit(EnvironmentType.CLIENT);
+        EnvironmentExecutor.willSetup(EnvironmentType.CLIENT);
 
         WorldRenderEvents.BLOCK_OUTLINE.register(this::onDrawBlockHighlightEvent);
 

@@ -3,7 +3,17 @@ package moe.plushie.armourers_workshop.compatibility;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
-import net.minecraft.client.model.*;
+import net.minecraft.client.model.AgeableListModel;
+import net.minecraft.client.model.ChickenModel;
+import net.minecraft.client.model.CreeperModel;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.IllagerModel;
+import net.minecraft.client.model.IronGolemModel;
+import net.minecraft.client.model.ListModel;
+import net.minecraft.client.model.Model;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.VillagerModel;
 
 public abstract class AbstractModelPartRegistries {
 

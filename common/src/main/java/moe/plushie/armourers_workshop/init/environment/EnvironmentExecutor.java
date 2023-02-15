@@ -33,10 +33,18 @@ public class EnvironmentExecutor {
         DID_INIT.add(type, task);
     }
 
-    public synchronized static <T> void didInit(EnvironmentType type, Supplier<Consumer<T>> task, Supplier<T> value) {
+    public synchronized static <T> void didInit(EnvironmentType type, Supplier<Consumer<T>> task, T value) {
         if (task != null && value != null) {
-            didInit(type, () -> () -> task.get().accept(value.get()));
+            didInit(type, () -> () -> task.get().accept(value));
         }
+    }
+
+    public synchronized static void willSetup(EnvironmentType type) {
+        WILL_SETUP.run(type);
+    }
+
+    public synchronized static void willSetup(EnvironmentType type, Supplier<Runnable> task) {
+        WILL_SETUP.add(type, task);
     }
 
     public synchronized static void didSetup(EnvironmentType type) {
@@ -81,6 +89,9 @@ public class EnvironmentExecutor {
         private final HashMap<EnvironmentType, ArrayList<Supplier<Runnable>>> tasks = new HashMap<>();
 
         public synchronized void add(EnvironmentType type, Supplier<Runnable> task) {
+            if (task == null) {
+                return;
+            }
             // when the setup did complete, direct call the task.
             if (status.contains(type)) {
                 task.get().run();

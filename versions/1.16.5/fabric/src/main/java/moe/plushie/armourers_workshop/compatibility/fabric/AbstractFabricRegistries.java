@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.compatibility.fabric;
 
-import moe.plushie.armourers_workshop.api.common.*;
+import moe.plushie.armourers_workshop.api.common.IItemTagKey;
+import moe.plushie.armourers_workshop.api.common.IItemTagRegistry;
+import moe.plushie.armourers_workshop.api.common.IRegistryProvider;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.tag.TagRegistry;

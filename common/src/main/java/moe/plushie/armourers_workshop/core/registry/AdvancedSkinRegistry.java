@@ -4,7 +4,11 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.advanced.action.SkinActionRotate;
 import moe.plushie.armourers_workshop.core.skin.part.advanced.trigger.SkinTriggerAlways;
-import moe.plushie.armourers_workshop.core.skin.part.advanced.value.*;
+import moe.plushie.armourers_workshop.core.skin.part.advanced.value.SkinValueHealthPercentage;
+import moe.plushie.armourers_workshop.core.skin.part.advanced.value.SkinValueInWater;
+import moe.plushie.armourers_workshop.core.skin.part.advanced.value.SkinValueRaining;
+import moe.plushie.armourers_workshop.core.skin.part.advanced.value.SkinValueSneaking;
+import moe.plushie.armourers_workshop.core.skin.part.advanced.value.SkinValueTime;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 

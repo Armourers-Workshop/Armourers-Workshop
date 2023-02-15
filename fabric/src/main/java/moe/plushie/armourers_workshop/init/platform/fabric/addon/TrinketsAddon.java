@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.addon;
 
-import dev.emi.trinkets.api.TrinketComponent;
 import moe.plushie.armourers_workshop.api.common.IItemStackProvider;
 import moe.plushie.armourers_workshop.core.data.ItemStackProvider;
 import net.minecraft.world.entity.Entity;

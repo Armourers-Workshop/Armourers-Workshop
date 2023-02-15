@@ -28,6 +28,7 @@ public class ClientProxyImpl {
 
     public static void init() {
         EnvironmentExecutor.willInit(EnvironmentType.CLIENT);
+        EnvironmentExecutor.willSetup(EnvironmentType.CLIENT);
 
         // listen the fml events.
         NotificationCenterImpl.observer(FMLClientSetupEvent.class, event -> EnvironmentExecutor.didInit(EnvironmentType.CLIENT));

@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.skin.face;
 
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
-import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
@@ -12,7 +11,13 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.core.Direction;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 
 public class SkinCuller {
 

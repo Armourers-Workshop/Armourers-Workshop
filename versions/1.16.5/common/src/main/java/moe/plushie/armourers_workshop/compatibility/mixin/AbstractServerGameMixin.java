@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.compatibility.mixin;
 
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.utils.DataFixerUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;

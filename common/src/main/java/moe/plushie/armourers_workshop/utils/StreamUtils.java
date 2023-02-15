@@ -6,7 +6,12 @@ import com.google.gson.stream.JsonReader;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.Closeable;
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 

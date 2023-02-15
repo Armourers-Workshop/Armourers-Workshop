@@ -5,7 +5,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import moe.plushie.armourers_workshop.init.ModLog;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 public final class SerializeHelper {

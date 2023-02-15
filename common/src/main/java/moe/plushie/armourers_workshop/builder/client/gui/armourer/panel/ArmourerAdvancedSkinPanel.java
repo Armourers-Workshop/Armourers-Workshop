@@ -6,7 +6,6 @@ import com.apple.library.uikit.UISliderBox;
 import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
