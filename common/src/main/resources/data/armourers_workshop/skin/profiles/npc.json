@@ -16,6 +16,7 @@
     "shovel": 1
   },
   "entities": [
+    "guardvillagers:guard",
     "taterzens:npc",
     "customnpcs:customnpc"
   ]
