@@ -39,6 +39,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ThrownTrident;
+import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -201,7 +203,7 @@ public class BakedSkin implements IBakedSkin {
         ISkinPartType partType = bakedPart.getType();
         if (partType == SkinPartTypes.ITEM_ARROW) {
             // arrow part only render in arrow entity
-            if (entity instanceof AbstractArrow) {
+            if (isArrowEntity(entity)) {
                 return true;
             }
             // we have some old skin that only contain arrow part,
@@ -212,7 +214,7 @@ public class BakedSkin implements IBakedSkin {
             }
             return false;
         }
-        if (entity instanceof AbstractArrow) {
+        if (isArrowEntity(entity)) {
             return false; // arrow entity only render arrow part
         }
         if (partType instanceof ICanUse && entity instanceof LivingEntity) {
@@ -221,6 +223,15 @@ public class BakedSkin implements IBakedSkin {
             return useRange.contains(Math.min(useTick, maxUseTick));
         }
         return true;
+    }
+
+    private boolean isArrowEntity(Entity entity) {
+        // in vanilla considers trident to be a special arrow,
+        // but this no fits we definition of arrow skin.
+        if (entity instanceof ThrownTrident) {
+            return false;
+        }
+        return entity instanceof AbstractArrow;
     }
 
     private void loadBlockBounds() {

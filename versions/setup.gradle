@@ -44,8 +44,15 @@ static def parseVersionFromFile(file) {
     return null
 }
 
+static def parseMinecraftVersion(file) {
+    def properties = new Properties()
+    properties.load(file.newDataInputStream())
+    return properties.minecraft_version
+}
+
 // we needs convert the version to number, for example: 1.16.5 => 11605.
 def minecraft_version = rootDir.getName()
+def minecraft_version_last = parseMinecraftVersion(file("../../gradle.properties"))
 def minecraft_version_number = parseVersion(minecraft_version, 0)
 
 def targets = ["common", "forge", "fabric"]
@@ -113,7 +120,9 @@ task applyCoreProperties {
 
 task applyCoreConfigurations {
     doLast {
-        delete files("../../.idea/runConfigurations")
+        def target = "../../.idea/runConfigurations"
+        ant.move(file: file(target), tofile: file(target + "-${minecraft_version_last}"), failonerror: false, quiet: true)
+        ant.move(file: file(target + "-${minecraft_version}"), tofile: file(target), failonerror: false, quiet: true)
     }
 }
 
