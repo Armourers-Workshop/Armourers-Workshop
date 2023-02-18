@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModContext;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.ModKeyBindings;
@@ -28,6 +29,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 
 import java.util.stream.Stream;
@@ -61,6 +63,7 @@ public class ClientProxy {
             if (provider != null) {
                 provider.createModelProperties((key, property) -> registry.register(key, item, property));
             }
+            registry.register(ModConstants.key("type"), Items.CROSSBOW, ((itemStack, level, entity, id) -> 1));
         }));
 
         // register custom block color.

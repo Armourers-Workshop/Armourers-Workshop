@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -25,6 +26,7 @@ public class SkinModelManager {
     final ModelManager modelManager;
 
     final HashMap<ISkinPartType, BakedModel> cachedModels = new HashMap<>();
+    final HashMap<ISkinPartType, BakedModel> cachedItemModels = new HashMap<>();
 
     SkinModelManager() {
         modelManager = Minecraft.getInstance().getModelManager();
@@ -36,8 +38,8 @@ public class SkinModelManager {
 
     public BakedModel getModel(ISkinPartType partType, ItemStack itemStack, @Nullable Level level, @Nullable Entity entity) {
         BakedModel bakedModel = loadModel(partType);
-        ClientLevel clientWorld = cast(level, ClientLevel.class);
-        LivingEntity livingEntity = cast(entity, LivingEntity.class);
+        ClientLevel clientWorld = ObjectUtils.safeCast(level, ClientLevel.class);
+        LivingEntity livingEntity = ObjectUtils.safeCast(entity, LivingEntity.class);
         return bakedModel.getOverrides().resolve(bakedModel, itemStack, clientWorld, livingEntity, 0);
     }
 
@@ -54,11 +56,4 @@ public class SkinModelManager {
         return bakedModel;
     }
 
-    @Nullable
-    private <T> T cast(Object value, Class<T> type) {
-        if (type.isInstance(value)) {
-            return type.cast(value);
-        }
-        return null;
-    }
 }

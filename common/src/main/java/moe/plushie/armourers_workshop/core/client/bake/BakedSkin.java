@@ -21,6 +21,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.math.Matrix4f;
@@ -57,7 +58,7 @@ public class BakedSkin implements IBakedSkin {
     private final HashMap<Object, Rectangle3f> cachedBounds = new HashMap<>();
     private final HashMap<BlockPos, Rectangle3i> cachedBlockBounds = new HashMap<>();
 
-    private final int maxUseTick;
+    private final Range<Integer> useTickRange;
     private final List<BakedSkinPart> skinParts;
 
     private final ColorDescriptor colorDescriptor;
@@ -73,7 +74,7 @@ public class BakedSkin implements IBakedSkin {
         this.preference = preference;
         this.colorDescriptor = colorDescriptor;
         this.usedCounter = usedCounter;
-        this.maxUseTick = getMaxUseTick(bakedParts);
+        this.useTickRange = getUseTickRange(bakedParts);
         this.loadBlockBounds();
     }
 
@@ -220,7 +221,7 @@ public class BakedSkin implements IBakedSkin {
         if (partType instanceof ICanUse && entity instanceof LivingEntity) {
             int useTick = getUseTick((LivingEntity) entity, context.itemStack);
             Range<Integer> useRange = ((ICanUse) partType).getUseRange();
-            return useRange.contains(Math.min(useTick, maxUseTick));
+            return useRange.contains(MathUtils.clamp(useTick, useTickRange.lowerEndpoint(), useTickRange.upperEndpoint()));
         }
         return true;
     }
@@ -247,21 +248,34 @@ public class BakedSkin implements IBakedSkin {
     }
 
     private int getUseTick(LivingEntity entity, ItemStack itemStack) {
+        // the item is using.
         if (entity.getUseItem() == itemStack) {
             return entity.getTicksUsingItem();
+        }
+        // this item is charged (only crossbow).
+        if (CrossbowItem.isCharged(itemStack)) {
+            return 100;
         }
         return 0;
     }
 
-    private int getMaxUseTick(ArrayList<BakedSkinPart> bakedParts) {
-        int maxUseTick = 0;
+    private Range<Integer> getUseTickRange(ArrayList<BakedSkinPart> bakedParts) {
+        int count = 0;
+        int maxUseTick = Integer.MIN_VALUE;
+        int minUseTick = Integer.MAX_VALUE;
         for (BakedSkinPart bakedPart : bakedParts) {
             ISkinPartType partType = bakedPart.getType();
             if (partType instanceof ICanUse) {
-                maxUseTick = Math.max(maxUseTick, ((ICanUse) partType).getUseRange().upperEndpoint());
+                Range<Integer> range = ((ICanUse) partType).getUseRange();
+                maxUseTick = Math.max(maxUseTick, range.upperEndpoint());
+                minUseTick = Math.min(minUseTick, range.lowerEndpoint());
+                count += 1;
             }
         }
-        return maxUseTick;
+        if (count == 0) {
+            return Range.closed(0, 0);
+        }
+        return Range.closed(minUseTick, maxUseTick);
     }
 
     @Override
