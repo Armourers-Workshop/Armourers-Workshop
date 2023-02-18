@@ -61,9 +61,11 @@ public final class SkinPartTypes {
     public static final ISkinPartType TOOL_SHOVEL = register("shovel.base", new ItemPartType());
     public static final ISkinPartType TOOL_HOE = register("hoe.base", new ItemPartType());
 
-    public static final ISkinPartType ITEM_BOW1 = register("bow.frame1", new BowPartType(0));
-    public static final ISkinPartType ITEM_BOW2 = register("bow.frame2", new BowPartType(1));
-    public static final ISkinPartType ITEM_BOW3 = register("bow.frame3", new BowPartType(2));
+    public static final ISkinPartType ITEM_BOW0 = register("bow.frame0", new BowPartType(0));
+    public static final ISkinPartType ITEM_BOW1 = register("bow.frame1", new BowPartType(1));
+    public static final ISkinPartType ITEM_BOW2 = register("bow.frame2", new BowPartType(2));
+    public static final ISkinPartType ITEM_BOW3 = register("bow.frame3", new BowPartType(3));
+
     public static final ISkinPartType ITEM_ARROW = register("bow.arrow", new ArrowPartType());
     public static final ISkinPartType ITEM_SWORD = register("sword.base", new ItemPartType());
     public static final ISkinPartType ITEM_SHIELD = register("shield.base", new ShieldPartType());

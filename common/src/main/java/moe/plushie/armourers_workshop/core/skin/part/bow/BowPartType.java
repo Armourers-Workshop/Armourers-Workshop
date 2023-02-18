@@ -9,10 +9,12 @@ import moe.plushie.armourers_workshop.utils.math.Vector3i;
 
 public class BowPartType extends SkinPartType implements ICanHeld, ICanUse {
 
+    private final int frame;
     private final Range<Integer> useRange;
 
     public BowPartType(int frame) {
         super();
+        this.frame = frame;
         this.buildingSpace = new Rectangle3i(-12, -42, -46, 24, 84, 64);
         this.guideSpace = new Rectangle3i(-2, -2, 2, 4, 4, 8);
         this.offset = getFrameOffset(frame);
@@ -26,8 +28,10 @@ public class BowPartType extends SkinPartType implements ICanHeld, ICanUse {
         // pulling: 1, 0.9
         switch (frame) {
             case 0:
-                return Range.closed(0, 12);
+                return Range.closed(0, 0);
             case 1:
+                return Range.closed(1, 12);
+            case 2:
                 return Range.closed(13, 17);
             default:
                 return Range.closed(18, 30);
@@ -37,10 +41,12 @@ public class BowPartType extends SkinPartType implements ICanHeld, ICanUse {
     public static Vector3i getFrameOffset(int frame) {
         switch (frame) {
             case 0:
-                return new Vector3i(-25, 0, 0);
+                return new Vector3i(-50, 0, 0);
             case 1:
-                return new Vector3i(0, 0, 0);
+                return new Vector3i(-25, 0, 0);
             case 2:
+                return new Vector3i(0, 0, 0);
+            case 3:
                 return new Vector3i(25, 0, 0);
             default:
                 return null;
@@ -64,6 +70,7 @@ public class BowPartType extends SkinPartType implements ICanHeld, ICanUse {
 
     @Override
     public boolean isPartRequired() {
-        return true;
+        // frame 0 is not required.
+        return frame != 0;
     }
 }
