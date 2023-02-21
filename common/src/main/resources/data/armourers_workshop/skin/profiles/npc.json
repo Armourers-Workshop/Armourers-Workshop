@@ -16,8 +16,17 @@
     "shovel": 1
   },
   "entities": [
-    "guardvillagers:guard",
     "taterzens:npc",
-    "customnpcs:customnpc"
+    "customnpcs:customnpc",
+    "humancompanions:arbalist",
+    "humancompanions:archer",
+    "humancompanions:axeguard",
+    "humancompanions:knight",
+    "guardvillagers:guard",
+    "mca:female_villager",
+    "mca:male_villager",
+    "mca:female_zombie_villager",
+    "mca:male_zombie_villager",
+    "mca:grim_reaper"
   ]
 }
