@@ -21,13 +21,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/cache@v3
-      with:
-        key: cache-build-${{ matrix.version }}
-        path: |
-          .gradle
-          ~/.gradle
-
     - uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
