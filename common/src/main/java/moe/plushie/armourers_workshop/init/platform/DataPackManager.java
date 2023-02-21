@@ -95,7 +95,7 @@ public class DataPackManager {
                 if (!it.startsWith(base)) {
                     return;
                 }
-                String name = it.replace(base, "");
+                String name = it.replaceFirst(base, "");
                 if (!name.startsWith(target.getPath()) || !validator.test(name)) {
                     return;
                 }

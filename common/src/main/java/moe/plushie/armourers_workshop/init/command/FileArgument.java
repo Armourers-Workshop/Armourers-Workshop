@@ -31,7 +31,7 @@ public class FileArgument implements IArgumentType<String> {
 
     public static final SimpleCommandExceptionType ERROR_START = new SimpleCommandExceptionType(Component.literal("File must start with '/'"));
     public static final SimpleCommandExceptionType ERROR_NOT_FOUND = new SimpleCommandExceptionType(Component.literal("Not found any file"));
-    private static final Collection<String> EXAMPLES = Arrays.asList("/", "/file.armour", "\"<scheme>:<identifier>\"");
+    private static final Collection<String> EXAMPLES = Arrays.asList("/", "/file" + Constants.EXT, "\"<scheme>:<identifier>\"");
     private final File rootFile;
     private final ArrayList<String> fileList;
     private final StringArgumentType stringType = StringArgumentType.string();
@@ -68,9 +68,11 @@ public class FileArgument implements IArgumentType<String> {
             if (fileList.isEmpty()) {
                 throw ERROR_NOT_FOUND.createWithContext(reader);
             }
-            if (fileList.size() == 1 && inputPath.startsWith(fileList.get(0))) {
-                inputPath = fileList.get(0);
-            }
+//            if (fileList.stream().noneMatch(inputPath::equals)) {
+//                if (!inputPath.endsWith(Constants.EXT)) {
+//                    throw ERROR_NOT_FOUND.createWithContext(reader);
+//                }
+//            }
             reader.setCursor(reader.getCursor() + inputPath.length());
             return inputPath;
         }
@@ -83,7 +85,7 @@ public class FileArgument implements IArgumentType<String> {
         if (inputPath.startsWith("/")) {
             ArrayList<String> fileList = getFileList(inputPath);
             if (!fileList.isEmpty()) {
-                return SharedSuggestionProvider.suggest(fileList, builder);
+                return suggestFiles(fileList, inputPath, builder);
             }
         }
         return SharedSuggestionProvider.suggest(Arrays.asList("/", "\""), builder);
@@ -92,6 +94,18 @@ public class FileArgument implements IArgumentType<String> {
     @Override
     public Collection<String> getExamples() {
         return EXAMPLES;
+    }
+
+    private CompletableFuture<Suggestions> suggestFiles(ArrayList<String> fileList, String inputPath, SuggestionsBuilder builder) {
+        String parent = getParentPath(inputPath);
+        builder = builder.createOffset(builder.getStart() + parent.length());
+        for (String file : fileList) {
+            String name = file.replaceFirst(parent, "");
+            if (!name.isEmpty()) {
+                builder.suggest(name);
+            }
+        }
+        return builder.buildFuture();
     }
 
     private ArrayList<String> getFileList(String name) {
@@ -116,7 +130,7 @@ public class FileArgument implements IArgumentType<String> {
             return results;
         }
         for (File file : files) {
-            String rv = SkinFileUtils.normalize(file.getAbsolutePath().replace(rootFile.getAbsolutePath(), ""), true);
+            String rv = SkinFileUtils.normalize(file.getAbsolutePath().replaceFirst(rootFile.getAbsolutePath(), ""), true);
             if (file.isDirectory()) {
                 if (name.startsWith(rv)) {
                     results.addAll(getFileList(file, name));
@@ -146,7 +160,13 @@ public class FileArgument implements IArgumentType<String> {
         return results;
     }
 
-
+    private String getParentPath(String file) {
+        int index = file.lastIndexOf("/");
+        if (index <= 0) {
+            return "/";
+        }
+        return file.substring(0, index) + "/";
+    }
 
     public static class Serializer implements IArgumentSerializer<FileArgument> {
 

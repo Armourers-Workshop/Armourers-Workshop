@@ -43,7 +43,7 @@ public class SkinLibraryLoader implements Runnable {
         }
 
         for (File file : templateFiles) {
-            String path = file.getAbsolutePath().replace(libraryDirectory.getAbsolutePath(), "");
+            String path = file.getAbsolutePath().replaceFirst(libraryDirectory.getAbsolutePath(), "");
             String filename = file.getName();
             if (file.isDirectory()) {
                 fileList.add(new SkinLibraryFile(library.domain, filename, path));
