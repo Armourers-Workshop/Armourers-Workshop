@@ -563,7 +563,7 @@ public class SkinLoader {
                 return;
             }
             // global data no need decrypt/encrypt
-            if (DataDomain.GLOBAL_SERVER.matches(identifier)) {
+            if (isGlobalLibraryResource(identifier)) {
                 ModLog.debug("'{}' => add global skin cache", identifier);
                 executor.execute(() -> {
                     FileOutputStream outputStream = null;
