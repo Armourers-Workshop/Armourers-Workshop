@@ -12,10 +12,10 @@ import net.minecraft.world.entity.player.Inventory;
 @Environment(value = EnvType.CLIENT)
 public class SkinPreloadManager {
 
-    private static int lastInventoryVersion = 0;
+    private static Object lastInventoryVersion = null;
 
     public static void start() {
-        lastInventoryVersion = 0;
+        lastInventoryVersion = null;
     }
 
     public static void stop() {
@@ -27,13 +27,13 @@ public class SkinPreloadManager {
             return;
         }
         // we need to preload all skin in the current player's inventory.
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player != null) {
-            Inventory inventory = player.getInventory();
-            int inventoryVersion = inventory.getTimesChanged();
-            if (lastInventoryVersion != inventoryVersion) {
-                lastInventoryVersion = inventoryVersion;
+        if (lastInventoryVersion == null) {
+            LocalPlayer player = Minecraft.getInstance().player;
+            if (player != null) {
+                Inventory inventory = player.getInventory();
+                int inventoryVersion = inventory.getTimesChanged();
                 preloadInventory(inventory);
+                lastInventoryVersion = inventoryVersion;
             }
         }
         // we need to preload the server required the skins.

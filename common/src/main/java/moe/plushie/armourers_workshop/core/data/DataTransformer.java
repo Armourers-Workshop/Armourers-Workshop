@@ -46,6 +46,10 @@ public class DataTransformer<K, V, T> {
         this.maxTransformCount = maxTransformCount;
     }
 
+    public void remove(K key) {
+        allEntries.remove(key);
+    }
+
     @Nullable
     public Pair<V, Exception> get(K key) {
         Entry entry = getEntry(key);

@@ -1,10 +1,13 @@
 package moe.plushie.armourers_workshop.library.data;
 
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
+import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.skin.ISkinFileHeader;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
+import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.Constants;
@@ -55,6 +58,10 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
         return true;
     }
 
+    public boolean isSameFile(SkinLibraryFile other) {
+        return name.equals(other.name) && path.equals(other.path) && domain.equals(other.domain);
+    }
+
     @Override
     public int compareTo(SkinLibraryFile o) {
         if (isDirectory & !o.isDirectory) {
@@ -82,6 +89,13 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
         return path;
     }
 
+    public int getLastModified() {
+        if (header != null) {
+            return header.getLastModified();
+        }
+        return 0;
+    }
+
     public int getSkinVersion() {
         if (header != null) {
             return header.getVersion();
@@ -89,6 +103,12 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
         return 0;
     }
 
+    @Override
+    public String getSkinIdentifier() {
+        return getNamespace() + ":" + getPath();
+    }
+
+    @Override
     public ISkinType getSkinType() {
         if (header != null) {
             return header.getType();

@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
+import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
+import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
 import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.data.DataTransformer;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
@@ -13,6 +15,7 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
 @Environment(value = EnvType.CLIENT)
-public final class SkinBakery {
+public final class SkinBakery implements ISkinLibraryListener {
 
     private static SkinBakery BAKERY;
 
@@ -57,12 +60,14 @@ public final class SkinBakery {
     public static void start() {
         if (BAKERY == null) {
             BAKERY = new SkinBakery();
+            BAKERY.startListenLibraryChanges();
             ModLog.debug("start bakery");
         }
     }
 
     public static void stop() {
         if (BAKERY != null) {
+            BAKERY.stopListenLibraryChanges();
             BAKERY.manager.shutdown();
             BAKERY = null;
             SkinVertexBufferBuilder.clearAllCache();
@@ -116,6 +121,23 @@ public final class SkinBakery {
 
     public void loadSkin(String identifier, Ticket ticket, IResultHandler<BakedSkin> handler) {
         manager.load(identifier, ticket, handler);
+    }
+
+
+    private void startListenLibraryChanges() {
+        SkinLibraryManager.getClient().addListener(this);
+    }
+
+    private void stopListenLibraryChanges() {
+        SkinLibraryManager.getClient().removeListener(this);
+    }
+
+    @Override
+    public void libraryDidChanges(ISkinLibrary library, ISkinLibrary.Difference difference) {
+        RenderSystem.recordRenderCall(() -> {
+            difference.getRemovedChanges().forEach(it -> manager.remove(it.getSkinIdentifier()));
+            difference.getUpdatedChanges().forEach(it -> manager.remove(it.getKey().getSkinIdentifier()));
+        });
     }
 
     private void safeLoadSkin2(String identifier, IResultHandler<Skin> complete) {

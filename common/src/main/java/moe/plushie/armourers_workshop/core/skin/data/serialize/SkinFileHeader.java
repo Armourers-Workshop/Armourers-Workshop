@@ -10,6 +10,8 @@ public class SkinFileHeader implements ISkinFileHeader {
     private final ISkinType type;
     private final ISkinProperties properties;
 
+    private int lastModified = 0;
+
     public SkinFileHeader(int version, ISkinType type, ISkinProperties properties) {
         this.version = version;
         this.type = type;
@@ -33,5 +35,14 @@ public class SkinFileHeader implements ISkinFileHeader {
     @Override
     public ISkinProperties getProperties() {
         return properties;
+    }
+
+    public void setLastModified(int lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    @Override
+    public int getLastModified() {
+        return lastModified;
     }
 }

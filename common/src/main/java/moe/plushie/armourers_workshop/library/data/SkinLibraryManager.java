@@ -63,6 +63,11 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         listeners.forEach(listener -> listener.libraryDidReload(library));
     }
 
+    @Override
+    public void libraryDidChanges(ISkinLibrary library, ISkinLibrary.Difference difference) {
+        listeners.forEach(listener -> listener.libraryDidChanges(library, difference));
+    }
+
     public static class Client extends SkinLibraryManager {
 
         private static final Client INSTANCE = new Client();

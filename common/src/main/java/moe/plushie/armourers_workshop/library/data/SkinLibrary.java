@@ -10,10 +10,12 @@ import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilePacket;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -46,6 +48,7 @@ public class SkinLibrary implements ISkinLibrary {
     }
 
     public void reload() {
+        ModLog.debug("reload {} library", domain.namespace());
         if (basePath != null && !isLoading) {
             beginLoading();
             executor.execute(new SkinLibraryLoader(this, basePath, null));
@@ -136,13 +139,32 @@ public class SkinLibrary implements ISkinLibrary {
     }
 
     public void reloadFiles(ArrayList<SkinLibraryFile> files) {
+        ArrayList<SkinLibraryFile> oldFiles = this.files;
         ArrayList<ISkinLibraryListener> listeners;
         synchronized (this) {
             this.files = files;
             this.isReady = true;
             listeners = new ArrayList<>(this.listeners);
         }
+        // compare the file changes.
+        Difference difference = new Difference();
+        difference.added.addAll(files);
+        difference.removed.addAll(oldFiles);
+        for (SkinLibraryFile newFile : files) {
+            for (SkinLibraryFile oldFile : oldFiles) {
+                if (!oldFile.isSameFile(newFile)) {
+                    continue;
+                }
+                difference.added.remove(newFile);
+                difference.removed.remove(oldFile);
+                if (oldFile.getLastModified() != newFile.getLastModified()) {
+                    difference.changed.add(Pair.of(oldFile, newFile));
+                }
+                break;
+            }
+        }
         listeners.forEach(listener -> listener.libraryDidReload(this));
+        listeners.forEach(listener -> listener.libraryDidChanges(this, difference));
     }
 
     public ArrayList<SkinLibraryFile> search(String keyword, ISkinType skinType, String rootPath) {
@@ -243,6 +265,32 @@ public class SkinLibrary implements ISkinLibrary {
         private void send(UpdateLibraryFilePacket.Mode mode, String source, String destination) {
             UpdateLibraryFilePacket packet = new UpdateLibraryFilePacket(mode, source, destination);
             NetworkManager.sendToServer(packet);
+        }
+    }
+
+    public static class Difference implements ISkinLibrary.Difference {
+
+        final ArrayList<Entry> added = new ArrayList<>();
+        final ArrayList<Entry> removed = new ArrayList<>();
+        final ArrayList<Pair<Entry, Entry>> changed = new ArrayList<>();
+
+        public Difference() {
+
+        }
+
+        @Override
+        public Collection<Entry> getAddedChanges() {
+            return added;
+        }
+
+        @Override
+        public Collection<Entry> getRemovedChanges() {
+            return removed;
+        }
+
+        @Override
+        public Collection<Pair<Entry, Entry>> getUpdatedChanges() {
+            return changed;
         }
     }
 }

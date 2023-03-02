@@ -6,6 +6,8 @@ public interface ISkinFileHeader {
 
     int getVersion();
 
+    int getLastModified();
+
     ISkinType getType();
 
     ISkinProperties getProperties();

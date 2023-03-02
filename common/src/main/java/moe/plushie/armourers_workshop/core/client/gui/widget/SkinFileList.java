@@ -208,8 +208,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             this.font = Minecraft.getInstance().font;
             this.entry = entry;
             if (!entry.isDirectory()) {
-                String identifier = entry.getNamespace() + ":" + entry.getPath();
-                this.descriptor = new SkinDescriptor(identifier, entry.getSkinType(), ColorScheme.EMPTY);
+                this.descriptor = new SkinDescriptor(entry.getSkinIdentifier(), entry.getSkinType(), ColorScheme.EMPTY);
             }
             this.iconView.setFrame(new CGRect(0, 0, 16, 14));
             this.addSubview(iconView);

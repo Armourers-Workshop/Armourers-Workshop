@@ -134,6 +134,7 @@ public class SkinDescriptor implements ISkinDescriptor {
         return options;
     }
 
+    @Override
     public String getIdentifier() {
         return identifier;
     }

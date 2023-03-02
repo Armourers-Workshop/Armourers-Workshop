@@ -73,12 +73,15 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
                     values.add(properties.get(SkinProperty.ALL_CUSTOM_NAME));
                     values.add(properties.get(SkinProperty.ALL_AUTHOR_NAME));
                     values.add(properties.get(SkinProperty.ALL_FLAVOUR_TEXT));
-                    values.add(file.getSkinVersion() + "");
                 }
                 oo.writeUTF(file.getPath());
                 oo.writeByte(values.size());
                 for (String value : values) {
                     oo.writeUTF(value);
+                }
+                if (values.size() != 0) {
+                    oo.writeInt(file.getSkinVersion());
+                    oo.writeInt(file.getLastModified());
                 }
             }
             oo.close();
@@ -105,8 +108,11 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
                 properties.put(SkinProperty.ALL_CUSTOM_NAME, oi.readUTF());
                 properties.put(SkinProperty.ALL_AUTHOR_NAME, oi.readUTF());
                 properties.put(SkinProperty.ALL_FLAVOUR_TEXT, oi.readUTF());
-                int fileVersion = Integer.parseInt(oi.readUTF());
-                files.add(new SkinLibraryFile(DataDomain.DEDICATED_SERVER, basename, path, SkinFileHeader.of(fileVersion, skinType, properties)));
+                int fileVersion = oi.readInt();
+                int lastModified = oi.readInt();
+                SkinFileHeader header = SkinFileHeader.of(fileVersion, skinType, properties);
+                header.setLastModified(lastModified);
+                files.add(new SkinLibraryFile(DataDomain.DEDICATED_SERVER, basename, path, header));
             }
         } catch (Exception e) {
             e.printStackTrace();

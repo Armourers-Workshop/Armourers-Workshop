@@ -2,9 +2,11 @@ package moe.plushie.armourers_workshop.library.data;
 
 import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
 import moe.plushie.armourers_workshop.api.skin.ISkinFileHeader;
+import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinFileHeader;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 
@@ -80,6 +82,9 @@ public class SkinLibraryLoader implements Runnable {
         }
         ISkinFileHeader header = SkinIOUtils.readHeaderFromFile(file);
         if (header != null) {
+            if (header instanceof SkinFileHeader) {
+                ((SkinFileHeader) header).setLastModified((int) modifiedTime);
+            }
             CACHED_FILE_HEADERS.put(key, new CachedFileHeader(modifiedTime, header));
             return header;
         }

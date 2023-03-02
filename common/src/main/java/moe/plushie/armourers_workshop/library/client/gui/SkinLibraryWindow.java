@@ -513,7 +513,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
             source = DataDomain.DATABASE_LINK;
         }
         // check skin load status
-        String identifier = selectedFile.getNamespace() + ":" + selectedFile.getPath();
+        String identifier = selectedFile.getSkinIdentifier();
         SkinDescriptor descriptor = new SkinDescriptor(identifier, selectedFile.getSkinType(), ColorScheme.EMPTY);
         ModLog.debug("load skin of '{}'", identifier);
         BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
