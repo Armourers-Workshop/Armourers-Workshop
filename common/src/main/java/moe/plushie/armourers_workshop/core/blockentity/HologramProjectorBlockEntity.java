@@ -176,9 +176,14 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     }
 
     @Override
-    public void setItem(int p_70299_1_, ItemStack p_70299_2_) {
-        super.setItem(p_70299_1_, p_70299_2_);
+    protected void setContainerChanged() {
+        super.setContainerChanged();
         this.updateBlockStates();
+    }
+
+    @Override
+    public boolean canPlaceItem(int i, ItemStack itemStack) {
+        return !SkinDescriptor.of(itemStack).isEmpty();
     }
 
     @Override

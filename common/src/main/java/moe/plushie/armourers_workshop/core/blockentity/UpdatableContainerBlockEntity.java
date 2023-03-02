@@ -30,7 +30,7 @@ public abstract class UpdatableContainerBlockEntity extends UpdatableBlockEntity
     public ItemStack removeItem(int i, int j) {
         ItemStack itemStack = ContainerHelper.removeItem(this.getItems(), i, j);
         if (!itemStack.isEmpty()) {
-            this.setChanged();
+            this.setContainerChanged();
         }
         return itemStack;
     }
@@ -46,7 +46,7 @@ public abstract class UpdatableContainerBlockEntity extends UpdatableBlockEntity
         if (itemStack.getCount() > this.getMaxStackSize()) {
             itemStack.setCount(this.getMaxStackSize());
         }
-        this.setChanged();
+        this.setContainerChanged();
     }
 
     @Override
@@ -64,6 +64,10 @@ public abstract class UpdatableContainerBlockEntity extends UpdatableBlockEntity
     @Override
     public void clearContent() {
         this.getItems().clear();
+    }
+
+    protected void setContainerChanged() {
+        setChanged();
     }
 
     protected abstract NonNullList<ItemStack> getItems();
