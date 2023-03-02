@@ -140,10 +140,10 @@ public class SkinWardrobeWindow<M extends SkinWardrobeMenu> extends MenuWindow<M
     }
 
     private UIImage tabIcon(int u, int v) {
-        return UIImage.of(ModTextures.TAB_ICONS).uv(u, v).size(16, 16).build();
+        return UIImage.of(ModTextures.TAB_ICONS).uv(u, v).fixed(16, 16).build();
     }
 
     private UIImage tabIcon(int u, int v, int frame, int speed) {
-        return UIImage.of(ModTextures.TAB_ICONS).uv(u, v).size(16, 16).animation(frame, speed).build();
+        return UIImage.of(ModTextures.TAB_ICONS).uv(u, v).fixed(16, 16).animation(frame, speed).build();
     }
 }

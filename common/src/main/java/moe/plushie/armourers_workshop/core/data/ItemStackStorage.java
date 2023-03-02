@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +18,7 @@ public class ItemStackStorage {
     public Optional<BlockPaintColor> blockPaintColor;
 
     public static ItemStackStorage of(@NotNull ItemStack itemStack) {
-        ISkinDataProvider provider = (ISkinDataProvider) (Object) itemStack;
+        ISkinDataProvider provider = ObjectUtils.unsafeCast(itemStack);
         ItemStackStorage storage = provider.getSkinData();
         if (storage == null) {
             storage = new ItemStackStorage();

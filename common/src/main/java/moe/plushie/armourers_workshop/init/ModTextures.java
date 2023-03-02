@@ -56,7 +56,7 @@ public class ModTextures {
     }
 
     public static UIImage defaultWindowImage() {
-        return UIImage.of(COMMON).size(128, 128).clip(4, 4, 4, 4).build();
+        return UIImage.of(COMMON).fixed(128, 128).clip(4, 4, 4, 4).build();
     }
 
     public static UIImage defaultButtonImage() {
@@ -64,7 +64,7 @@ public class ModTextures {
         offsets.put(UIControl.State.DISABLED, new CGPoint(0, 0));
         offsets.put(UIControl.State.NORMAL, new CGPoint(0, 1));
         offsets.put(UIControl.State.HIGHLIGHTED, new CGPoint(0, 2));
-        return UIImage.of(WIDGETS).uv(0, 46).size(200, 20).clip(4, 4, 4, 4).unzip(offsets::get).build();
+        return UIImage.of(WIDGETS).uv(0, 46).fixed(200, 20).clip(4, 4, 4, 4).unzip(offsets::get).build();
     }
 
     public static UIImage defaultButtonImage(int u, int v) {
@@ -77,7 +77,7 @@ public class ModTextures {
         // 1. normal + highlighted + selected + selected and highlighted
         // 2. normal + highlighted + disabled
         offsets.put(UIControl.State.DISABLED, new CGPoint(3, 0));
-        return UIImage.of(ModTextures.BUTTONS).uv(u, v).size(16, 16).unzip(offsets::get).build();
+        return UIImage.of(ModTextures.BUTTONS).uv(u, v).fixed(16, 16).unzip(offsets::get).build();
     }
 
     public static UIImage buttonImage(int u, int v, ResourceLocation resource) {
@@ -90,7 +90,7 @@ public class ModTextures {
         // 1. normal + highlighted + selected + selected and highlighted
         // 2. normal + highlighted + disabled
         offsets.put(UIControl.State.DISABLED, new CGPoint(3, 0));
-        return UIImage.of(resource).uv(u, v).size(16, 16).unzip(offsets::get).build();
+        return UIImage.of(resource).uv(u, v).fixed(16, 16).unzip(offsets::get).build();
     }
 
     public static UIImage iconImage(int u, int v, int width, int height, ResourceLocation resource) {
@@ -98,14 +98,14 @@ public class ModTextures {
         offsets.put(UIControl.State.NORMAL, new CGPoint(0, 0));
         offsets.put(UIControl.State.HIGHLIGHTED, new CGPoint(1, 0));
         offsets.put(UIControl.State.DISABLED, new CGPoint(2, 0));
-        return UIImage.of(resource).uv(u, v).size(width, height).unzip(offsets::get).build();
+        return UIImage.of(resource).uv(u, v).fixed(width, height).unzip(offsets::get).build();
     }
 
     public static UIImage helpButtonImage() {
         HashMap<Integer, CGPoint> offsets = new HashMap<>();
         offsets.put(UIControl.State.NORMAL, new CGPoint(0, 0));
         offsets.put(UIControl.State.HIGHLIGHTED, new CGPoint(1, 0));
-        return UIImage.of(HELP).size(7, 8).unzip(offsets::get).build();
+        return UIImage.of(HELP).fixed(7, 8).unzip(offsets::get).build();
     }
 
     public static UIImage tabButtonImage() {
@@ -113,6 +113,6 @@ public class ModTextures {
         offsets.put(UIControl.State.DISABLED, new CGPoint(0, 0));
         offsets.put(UIControl.State.NORMAL, new CGPoint(0, 1));
         offsets.put(UIControl.State.HIGHLIGHTED, new CGPoint(0, 2));
-        return UIImage.of(WIDGETS).uv(0, 46).size(200, 20).clip(2, 3, 2, 2).unzip(offsets::get).build();
+        return UIImage.of(WIDGETS).uv(0, 46).fixed(200, 20).clip(2, 3, 2, 2).unzip(offsets::get).build();
     }
 }

@@ -106,6 +106,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         this.skinType = skinType;
         this.columnType = columnType;
         this.orderType = orderType;
+        this.skinPanelResults.reloadData();
         this.fetchPage(0);
     }
 

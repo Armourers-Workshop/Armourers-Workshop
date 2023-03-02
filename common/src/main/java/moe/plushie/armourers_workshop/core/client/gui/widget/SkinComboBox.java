@@ -34,7 +34,7 @@ public class SkinComboBox extends UIComboBox {
             ResourceLocation rl = ArmourersWorkshop.getItemIcon(skinType);
             UIImage image = null;
             if (rl != null) {
-                image = UIImage.of(rl).resize(9, 9, 16, 16).limit(16, 16).build();
+                image = UIImage.of(rl).resizable(16, 16).fixed(9, 9).limit(16, 16).build();
             }
             items.add(new UIComboItem(image, title));
         }

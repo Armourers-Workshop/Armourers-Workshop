@@ -54,7 +54,7 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
         offsets.put(UIControl.State.HIGHLIGHTED, new CGPoint(1, 0));
         offsets.put(UIControl.State.SELECTED | UIControl.State.NORMAL, new CGPoint(0, 1));
         offsets.put(UIControl.State.SELECTED | UIControl.State.HIGHLIGHTED, new CGPoint(1, 1));
-        saveButton.setImage(UIImage.of(ModTextures.OUTFIT_MAKER).uv(176, 224).size(16, 16).unzip(offsets::get).build(), UIControl.State.ALL);
+        saveButton.setImage(UIImage.of(ModTextures.OUTFIT_MAKER).uv(176, 224).fixed(16, 16).unzip(offsets::get).build(), UIControl.State.ALL);
         saveButton.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
         saveButton.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, OutfitMakerWindow::saveSkin);
         addSubview(saveButton);

@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
+import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.model.BakedModelStroage;
 import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
@@ -14,6 +15,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
+import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -265,7 +267,7 @@ public class ClientWardrobeHandler {
     public static int _renderEmbeddedSkin(EmbeddedSkinStack embeddedStack, ItemTransforms.TransformType transformType, boolean leftHandHackery, IPoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
         int r = 0;
         SkinDescriptor descriptor = embeddedStack.getDescriptor();
-        BakedSkin bakedSkin = BakedSkin.of(descriptor);
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
         if (bakedSkin == null) {
             return r;
         }

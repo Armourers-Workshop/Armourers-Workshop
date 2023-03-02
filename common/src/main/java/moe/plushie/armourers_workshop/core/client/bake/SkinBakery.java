@@ -1,10 +1,13 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
+import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferBuilder;
-import moe.plushie.armourers_workshop.core.data.DataLoader;
+import moe.plushie.armourers_workshop.core.data.DataTransformer;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
@@ -13,15 +16,14 @@ import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
-import java.util.function.Consumer;
 
 @Environment(value = EnvType.CLIENT)
 public final class SkinBakery {
@@ -32,10 +34,13 @@ public final class SkinBakery {
     private final AtomicIntegerArray bakeTimes = new AtomicIntegerArray(1000);
 
     private final ArrayList<IBakeListener> listeners = new ArrayList<>();
-
-    private final DataLoader<String, BakedSkin> manager = DataLoader.newBuilder()
-            .threadPool("AW-SKIN-BK", Thread.MIN_PRIORITY, ModConfig.Client.modelBakingThreadCount)
-            .build(this::loadAndBakeSkin);
+    private final DataTransformer<String, BakedSkin, Skin> manager = new DataTransformer.Builder<String, BakedSkin, Skin>()
+            .thread("AW-SKIN-BK", Thread.MIN_PRIORITY)
+            .loadCount(ModConfig.Client.modelBakingThreadCount)
+            .transformCount(ModConfig.Client.modelBakingThreadCount)
+            .loader(this::safeLoadSkin2)
+            .transformer(this::safeBakeSkin2)
+            .build();
 
     public SkinBakery() {
 //        skinBakeExecutor = Executors.newFixedThreadPool(ConfigHandlerClient.modelBakingThreadCount);
@@ -58,7 +63,7 @@ public final class SkinBakery {
 
     public static void stop() {
         if (BAKERY != null) {
-            BAKERY.manager.clear();
+            BAKERY.manager.shutdown();
             BAKERY = null;
             SkinVertexBufferBuilder.clearAllCache();
             ModLog.debug("stop bakery");
@@ -78,49 +83,55 @@ public final class SkinBakery {
         if (identifier.isEmpty()) {
             return null;
         }
-        Optional<BakedSkin> skin = manager.get(identifier);
-        if (skin != null && skin.isPresent()) {
-            return skin.get();
+        Pair<BakedSkin, Exception> pair = manager.get(identifier);
+        if (pair != null) {
+            return pair.getKey();
+        }
+//        Optional<BakedSkin> skin = manager.get(identifier);
+//        if (skin != null && skin.isPresent()) {
+//            return skin.get();
+//        }
+        return null;
+    }
+
+    @Nullable
+    public BakedSkin loadSkin(String identifier, Ticket ticket) {
+        if (identifier.isEmpty()) {
+            return null;
+        }
+        Pair<BakedSkin, Exception> pair = manager.getOrLoad(identifier, ticket);
+        if (pair != null) {
+            return pair.getKey();
         }
         return null;
     }
 
     @Nullable
-    public BakedSkin loadSkin(String identifier) {
-        if (identifier.isEmpty()) {
-            return null;
-        }
-        Optional<BakedSkin> skin = manager.getOrLoad(identifier);
-        if (skin != null && skin.isPresent()) {
-            return skin.get();
+    public BakedSkin loadSkin(SkinDescriptor descriptor, Ticket ticket) {
+        if (!descriptor.isEmpty()) {
+            return loadSkin(descriptor.getIdentifier(), ticket);
         }
         return null;
     }
 
-    public void loadSkin(String identifier, Consumer<Optional<BakedSkin>> consumer) {
-        manager.load(identifier, true, consumer);
+    public void loadSkin(String identifier, Ticket ticket, IResultHandler<BakedSkin> handler) {
+        manager.load(identifier, ticket, handler);
     }
 
-    private void loadAndBakeSkin(String identifier, Consumer<Optional<BakedSkin>> complete) {
-        SkinLoader.getInstance().loadSkin(identifier, (skin, exception) -> {
-            if (skin != null) {
-                manager.add(() -> safeBakeSkin(identifier, skin, complete));
-            } else {
-                complete.accept(Optional.empty());
-            }
-        });
+    private void safeLoadSkin2(String identifier, IResultHandler<Skin> complete) {
+        SkinLoader.getInstance().loadSkin(identifier, complete);
     }
 
-    private void safeBakeSkin(String identifier, Skin skin, Consumer<Optional<BakedSkin>> complete) {
+    private void safeBakeSkin2(String identifier, Skin skin, IResultHandler<BakedSkin> complete) {
         try {
             bakeSkin(identifier, skin, complete);
         } catch (Exception exception) {
             exception.printStackTrace();
-            complete.accept(Optional.empty());
+            complete.reject(exception);
         }
     }
 
-    private void bakeSkin(String identifier, Skin skin, Consumer<Optional<BakedSkin>> complete) {
+    private void bakeSkin(String identifier, Skin skin, IResultHandler<BakedSkin> complete) {
         ModLog.debug("'{}' => start baking skin", identifier);
         long startTime = System.currentTimeMillis();
 //            skin.lightHash();
@@ -185,7 +196,7 @@ public final class SkinBakery {
 
         BakedSkin bakedSkin = new BakedSkin(identifier, skin, scheme, usedCounter, colorInfo, bakedParts);
         ModLog.debug("'{}' => accept baked skin, time: {}ms", identifier, totalTime);
-        complete.accept(Optional.of(bakedSkin));
+        complete.accept(bakedSkin);
         RenderSystem.recordRenderCall(() -> notifyBake(identifier, bakedSkin));
 
         // if bake speed too fast, cause system I/O too high.

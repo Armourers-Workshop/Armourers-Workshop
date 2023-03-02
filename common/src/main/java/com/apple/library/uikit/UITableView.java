@@ -106,7 +106,7 @@ public class UITableView extends UIScrollView {
     }
 
     @Nullable
-    public NSIndexPath indexPathFOrSelectedRow() {
+    public NSIndexPath indexPathForSelectedRow() {
         return selectedIndexPaths.stream().findFirst().orElse(null);
     }
 

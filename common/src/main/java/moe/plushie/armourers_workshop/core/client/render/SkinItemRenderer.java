@@ -3,8 +3,10 @@ package moe.plushie.armourers_workshop.core.client.render;
 import me.sagesse.minecraft.client.renderer.ItemEntityRenderer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -43,7 +45,7 @@ public class SkinItemRenderer extends ItemEntityRenderer {
             return;
         }
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        BakedSkin bakedSkin = BakedSkin.of(descriptor);
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
         if (bakedSkin == null) {
             return;
         }

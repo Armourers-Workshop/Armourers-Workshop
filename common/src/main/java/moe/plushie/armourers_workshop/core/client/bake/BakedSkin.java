@@ -16,7 +16,6 @@ import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -76,22 +75,6 @@ public class BakedSkin implements IBakedSkin {
         this.usedCounter = usedCounter;
         this.useTickRange = getUseTickRange(bakedParts);
         this.loadBlockBounds();
-    }
-
-    @Nullable
-    public static BakedSkin of(ItemStack itemStack) {
-        if (!itemStack.isEmpty()) {
-            return of(SkinDescriptor.of(itemStack));
-        }
-        return null;
-    }
-
-    @Nullable
-    public static BakedSkin of(SkinDescriptor descriptor) {
-        if (!descriptor.isEmpty()) {
-            return SkinBakery.getInstance().loadSkin(descriptor.getIdentifier());
-        }
-        return null;
     }
 
     public ColorScheme resolve(Entity entity, ColorScheme scheme) {

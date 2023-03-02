@@ -32,11 +32,8 @@ import org.jetbrains.annotations.Nullable;
 @Environment(value = EnvType.CLIENT)
 public final class ExtendedItemRenderer {
 
-    public static void renderSkinInBox(SkinDescriptor descriptor, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, IPoseStack poseStack, MultiBufferSource buffers) {
-        BakedSkin bakedSkin = BakedSkin.of(descriptor);
-        if (bakedSkin != null) {
-            renderSkinInBox(bakedSkin, descriptor.getColorScheme(), itemStack, x, y, z, width, height, rx, ry, rz, 0, 0xf000f0, poseStack, buffers);
-        }
+    public static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, IPoseStack poseStack, MultiBufferSource buffers) {
+        renderSkinInBox(bakedSkin, scheme, itemStack, x, y, z, width, height, rx, ry, rz, 0, 0xf000f0, poseStack, buffers);
     }
 
     public static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, float partialTicks, int light, IPoseStack poseStack, MultiBufferSource buffers) {

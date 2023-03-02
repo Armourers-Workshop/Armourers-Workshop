@@ -18,6 +18,7 @@ import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
 import moe.plushie.armourers_workshop.core.client.gui.widget.InputDialog;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
@@ -25,6 +26,7 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.SkinComboBox;
 import moe.plushie.armourers_workshop.core.client.gui.widget.SkinFileList;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModConfig;
@@ -288,7 +290,8 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
         }
         this.lastInputItem = itemStack;
         String name = null;
-        BakedSkin bakedSkin = BakedSkin.of(itemStack);
+        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
         if (bakedSkin != null) {
             name = bakedSkin.getSkin().getCustomName();
         }
@@ -483,7 +486,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
     private void saveSkin(SkinDescriptor descriptor, String path) {
         // check skin load status
         ModLog.debug("save skin of '{}' to '{}'", descriptor.getIdentifier(), path);
-        BakedSkin bakedSkin = BakedSkin.of(descriptor);
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
         if (bakedSkin == null || !menu.shouldSaveStack()) {
             ModLog.debug("can't save unbaked skin of '{}'", descriptor);
             return; // skin not ready for using
@@ -513,7 +516,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
         String identifier = selectedFile.getNamespace() + ":" + selectedFile.getPath();
         SkinDescriptor descriptor = new SkinDescriptor(identifier, selectedFile.getSkinType(), ColorScheme.EMPTY);
         ModLog.debug("load skin of '{}'", identifier);
-        BakedSkin bakedSkin = BakedSkin.of(descriptor);
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
         if (bakedSkin == null) {
             ModLog.debug("can't load unbaked skin of '{}'", identifier);
             return; // skin not ready for using

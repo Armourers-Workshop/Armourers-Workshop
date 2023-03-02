@@ -5,7 +5,10 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIControl;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
+import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,6 +21,8 @@ public class SkinPreviewView extends UIControl {
 
     private SkinDescriptor descriptor = SkinDescriptor.EMPTY;
 
+    private final Ticket loadTicket = Ticket.wardrobe();
+
     public SkinPreviewView(CGRect frame) {
         super(frame);
         this.setClipBounds(true);
@@ -26,7 +31,8 @@ public class SkinPreviewView extends UIControl {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        if (descriptor.isEmpty()) {
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
+        if (bakedSkin == null) {
             return;
         }
         CGRect rect = bounds();
@@ -37,7 +43,7 @@ public class SkinPreviewView extends UIControl {
         int height = rect.height;
         IPoseStack poseStack = context.poseStack;
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        ExtendedItemRenderer.renderSkinInBox(descriptor, ItemStack.EMPTY, x, y, z, width, height, 20, 45, 0, poseStack, buffers);
+        ExtendedItemRenderer.renderSkinInBox(bakedSkin, descriptor.getColorScheme(), ItemStack.EMPTY, x, y, z, width, height, 20, 45, 0, poseStack, buffers);
         buffers.endBatch();
     }
 
@@ -46,6 +52,7 @@ public class SkinPreviewView extends UIControl {
     }
 
     public void setSkin(SkinDescriptor descriptor) {
+        this.loadTicket.invalidate();
         this.descriptor = descriptor;
     }
 }

@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.client.IBlockEntityExtendedRenderer;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
@@ -335,7 +337,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     @Environment(value = EnvType.CLIENT)
     @Override
     public Rectangle3f getRenderBoundingBox(BlockState blockState) {
-        BakedSkin bakedSkin = BakedSkin.of(getDescriptor());
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(getDescriptor(), Tickets.TEST);
         if (bakedSkin == null) {
             return null;
         }

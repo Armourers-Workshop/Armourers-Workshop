@@ -6,7 +6,9 @@ import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.client.bake.SkinPreloadManager;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
+import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -89,9 +91,12 @@ public class ClientProxy {
 
         registries.willPlayerLogin(player -> {
             SkinBakery.start();
+            SkinPreloadManager.start();
         });
         registries.willPlayerLogout(player -> {
+            SkinPreloadManager.stop();
             SkinBakery.stop();
+            Tickets.invalidateAll();
             SkinLoader.getInstance().clear();
             SkinLibraryManager.getClient().getPublicSkinLibrary().reset();
             SkinLibraryManager.getClient().getPrivateSkinLibrary().reset();
@@ -99,7 +104,10 @@ public class ClientProxy {
             ModConfigSpec.COMMON.apply(null);
         });
 
-        registries.willTick(TickUtils::tick);
+        registries.willTick(isPaused -> {
+            TickUtils.tick(isPaused);
+            SkinPreloadManager.tick(isPaused);
+        });
 
         registries.willGatherTooltip(ItemTooltipManager::gatherSkinTooltip);
         registries.willRenderTooltip(ItemTooltipManager::renderSkinTooltip);

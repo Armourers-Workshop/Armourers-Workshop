@@ -13,6 +13,8 @@ import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UITextField;
 import com.apple.library.uikit.UITextView;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
@@ -149,7 +151,8 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void upload(UIControl sender) {
-        BakedSkin bakedSkin = BakedSkin.of(getInputStack());
+        SkinDescriptor descriptor = SkinDescriptor.of(getInputStack());
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
         if (bakedSkin == null) {
             onUploadFailed("Skin missing.");
             return;

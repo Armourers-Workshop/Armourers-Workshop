@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,6 +37,7 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
@@ -49,9 +51,9 @@ public class SkinLoader {
 
     private final EnumMap<DataDomain, Session> taskManager = new EnumMap<>(DataDomain.class);
 
-    private final HashMap<String, Entry> entries = new HashMap<>();
     private final HashMap<String, IResultHandler<Skin>> waiting = new HashMap<>();
     private final HashMap<String, ISkinLibraryLoader> loaders = new HashMap<>();
+    private final ConcurrentHashMap<String, Entry> entries = new ConcurrentHashMap<>();
 
     private SkinLoader() {
         setup(null);
@@ -152,7 +154,7 @@ public class SkinLoader {
 
     public void removeSkin(String identifier) {
         Entry entry = removeEntry(identifier);
-        if (entry != null && !entry.status.isCompleted()) {
+        if (entry != null && !entry.isCompleted()) {
             entry.abort(new CancellationException("removed by user"));
         }
     }
@@ -164,21 +166,25 @@ public class SkinLoader {
         setup(null);
     }
 
-    private synchronized Entry getEntry(String identifier) {
+    private Entry getEntry(String identifier) {
         return entries.get(identifier);
     }
 
-    private synchronized Entry getOrCreateEntry(String identifier) {
+    private Entry getOrCreateEntry(String identifier) {
         return entries.computeIfAbsent(identifier, Entry::new);
     }
 
-    private synchronized Entry removeEntry(String identifier) {
+    private Entry removeEntry(String identifier) {
         return entries.remove(identifier);
     }
 
     private void resumeRequest(Entry entry, Method method) {
-        if (entry.status.isCompleted()) {
-            return;
+        // the task although loading is completed,
+        // but it is released for memory reasons,
+        if (entry.isCompleted()) {
+            if (!entry.isReleased()) {
+                return;
+            }
         }
         Session session = taskManager.get(DataDomain.byName(entry.identifier));
         if (session == null) {
@@ -206,7 +212,7 @@ public class SkinLoader {
 
         public final String identifier;
 
-        public Skin skin;
+        public SoftReference<Skin> skin;
         public Exception exception;
         public Status status = Status.PENDING;
 
@@ -218,7 +224,7 @@ public class SkinLoader {
 
         public void accept(Skin skin) {
             ModLog.debug("'{}' => finish skin loading", identifier);
-            this.skin = skin;
+            this.skin = new SoftReference<>(skin);
             this.exception = null;
             this.status = Status.FINISHED;
             this.invoke();
@@ -242,13 +248,13 @@ public class SkinLoader {
             }
             ArrayList<IResultHandler<Skin>> handlers = this.handlers;
             this.handlers = new ArrayList<>();
-            handlers.forEach(handler -> handler.apply(skin, exception));
+            handlers.forEach(handler -> handler.apply(get(), exception));
         }
 
         public void notify(@Nullable IResultHandler<Skin> handler) {
-            if (status.isCompleted()) {
+            if (isCompleted()) {
                 if (handler != null) {
-                    handler.apply(skin, exception);
+                    handler.apply(get(), exception);
                 }
                 return;
             }
@@ -257,8 +263,22 @@ public class SkinLoader {
             }
         }
 
+        public boolean isCompleted() {
+            return status.isCompleted();
+        }
+
+        public boolean isReleased() {
+            if (skin != null) {
+                return skin.get() == null;
+            }
+            return false;
+        }
+
         public Skin get() {
-            return skin;
+            if (skin != null) {
+                return skin.get();
+            }
+            return null;
         }
     }
 
@@ -266,8 +286,6 @@ public class SkinLoader {
 
         public final String identifier;
         public int level = 0;
-        public Skin skin;
-        public Exception exception;
         public Method method = Method.ASYNC;
         public Entry delegate;
 

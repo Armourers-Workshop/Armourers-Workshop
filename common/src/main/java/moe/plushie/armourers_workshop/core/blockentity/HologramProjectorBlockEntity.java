@@ -3,6 +3,8 @@ package moe.plushie.armourers_workshop.core.blockentity;
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
@@ -243,7 +245,8 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
         if (!isPowered()) {
             return null;
         }
-        BakedSkin bakedSkin = BakedSkin.of(getItem(0));
+        SkinDescriptor descriptor = SkinDescriptor.of(getItem(0));
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.TEST);
         if (bakedSkin == null) {
             return null;
         }

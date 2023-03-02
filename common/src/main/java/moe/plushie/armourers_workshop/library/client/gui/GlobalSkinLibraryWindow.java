@@ -99,8 +99,7 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
         setVisible();
 
         // refresh the home page the first time you enter. This will speed up the display
-        if (!didInit) {
-            didInit = true;
+        if (didInit) {
             layoutIfNeeded();
             homePanel.reloadData();
         }
@@ -111,6 +110,7 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
         super.init();
         setupLibrary();
         setupUI();
+        didInit = true;
     }
 
     @Override

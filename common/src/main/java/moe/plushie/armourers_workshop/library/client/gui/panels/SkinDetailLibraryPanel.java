@@ -12,10 +12,12 @@ import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIView;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ReportDialog;
 import moe.plushie.armourers_workshop.core.client.gui.widget.Toast;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -70,6 +72,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     private GlobalSkinLibraryWindow.Page returnPage;
     private PlayerTextureDescriptor playerTexture = PlayerTextureDescriptor.EMPTY;
 
+    private final Ticket loadTicket = Ticket.wardrobe();
     private final GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
 
     public SkinDetailLibraryPanel() {
@@ -146,6 +149,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     public void reloadUI(ServerSkin entry) {
+        this.loadTicket.invalidate();
         this.entry = entry;
         this.message = getMessage();
         this.playerTexture = PlayerTextureDescriptor.EMPTY;
@@ -186,7 +190,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 
     public void drawPreviewBox(CGGraphicsContext context, CGRect rect) {
         context.fillRect(gradient, rect);
-        BakedSkin bakedSkin = BakedSkin.of(entry.getDescriptor());
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(entry.getDescriptor(), loadTicket);
         if (bakedSkin != null) {
             MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
             ExtendedItemRenderer.renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, rect.x, rect.y, 100, rect.width, rect.height, 20, 45, 0, 0, 0xf000f0, context.poseStack, buffers);
@@ -360,7 +364,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
             message.append("\n\n");
         }
 
-        BakedSkin bakedSkin = BakedSkin.of(entry.getDescriptor());
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(entry.getDescriptor(), loadTicket);
         if (bakedSkin != null && bakedSkin.getSkin() != null) {
             message.append(getDisplayText("author"));
             message.append(" ");

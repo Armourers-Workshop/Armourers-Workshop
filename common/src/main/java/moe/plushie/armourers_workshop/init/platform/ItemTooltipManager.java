@@ -4,8 +4,11 @@ import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinEquipmentType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.other.SkinTooltipFlags;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
+import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
+import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -59,7 +62,7 @@ public class ItemTooltipManager {
             }
             return tooltip;
         }
-        BakedSkin bakedSkin = BakedSkin.of(descriptor);
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.TOOLTIP);
         if (bakedSkin == null) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skindownloading", descriptor.getIdentifier()));
             return tooltip;
@@ -165,7 +168,7 @@ public class ItemTooltipManager {
         if (!SkinTooltipFlags.PREVIEW.isEnabled(descriptor.getOptions())) {
             return;
         }
-        BakedSkin bakedSkin = BakedSkin.of(descriptor);
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.TOOLTIP);
         if (bakedSkin == null) {
             return;
         }
@@ -188,7 +191,7 @@ public class ItemTooltipManager {
             RenderSystem.drawContinuousTexturedBox(poseStack, ModTextures.GUI_PREVIEW, tx, ty, 0, 0, size, size, 62, 62, 4, 400);
         }
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        ExtendedItemRenderer.renderSkinInBox(descriptor, itemStack, tx, ty, 500, size, size, 30, 45, 0, poseStack, buffers);
+        ExtendedItemRenderer.renderSkinInBox(bakedSkin, descriptor.getColorScheme(), itemStack, tx, ty, 500, size, size, 30, 45, 0, poseStack, buffers);
         buffers.endBatch();
     }
 }

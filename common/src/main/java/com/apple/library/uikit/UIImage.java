@@ -146,8 +146,13 @@ public class UIImage {
             return this;
         }
 
-        public Builder size(int width, int height) {
+        public Builder fixed(int width, int height) {
             this.size = new CGSize(width, height);
+            return this;
+        }
+
+        public Builder resizable(int sourceWidth, int sourceHeight) {
+            this.source = new CGSize(sourceWidth, sourceHeight);
             return this;
         }
 

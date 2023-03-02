@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.core.data.ItemStackProvider;
 import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
+import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -55,6 +56,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
     private final BitSet lastWardrobeFlags = new BitSet();
 
+    private final Ticket loadTicket = Ticket.wardrobe();
     private final IItemStackProvider itemProvider = ItemStackProvider.getInstance();
     private final SkinOverriddenManager overriddenManager = new SkinOverriddenManager();
 
@@ -172,6 +174,8 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         armorSkins.clear();
         itemSkins.clear();
         overriddenManager.clear();
+
+        loadTicket.invalidate();
     }
 
     private void loadDyeSlots(Entity entity, BiConsumer<ISkinPaintType, ItemStack> consumer) {
@@ -246,7 +250,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         if (descriptor.isEmpty()) {
             return;
         }
-        BakedSkin bakedSkin = BakedSkin.of(descriptor);
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
         if (bakedSkin == null) {
             missingSkins.add(descriptor.getIdentifier());
             return;

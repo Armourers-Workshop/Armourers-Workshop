@@ -70,7 +70,7 @@ public class ScrollIndicator extends UIControl {
         UIImageView bg3 = new UIImageView(new CGRect(0, bg1.frame().getMaxY(), size, bg2.frame().getMinY() - bg1.frame().getMaxY()));
         bg1.setImage(makeImage(20, 20));
         bg2.setImage(makeImage(30, 20));
-        bg3.setImage(UIImage.of(ModTextures.SCROLLBAR).uv(246, 0).build());
+        bg3.setImage(UIImage.of(ModTextures.SCROLLBAR).uv(246, 0).resizable(10, 246).build());
         bg1.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
         bg2.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleTopMargin);
         bg3.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
@@ -89,7 +89,7 @@ public class ScrollIndicator extends UIControl {
         offsets.put(State.NORMAL, new CGPoint(0, 0));
         offsets.put(State.HIGHLIGHTED, new CGPoint(0, 1));
         offsets.put(State.SELECTED, new CGPoint(0, 1));
-        return UIImage.of(ModTextures.SCROLLBAR).uv(u, v).size(10, 10).unzip(offsets::get).build();
+        return UIImage.of(ModTextures.SCROLLBAR).uv(u, v).fixed(10, 10).unzip(offsets::get).build();
     }
 
     private void updateOffsetIfNeeded() {

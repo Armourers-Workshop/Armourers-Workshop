@@ -8,8 +8,10 @@ import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
@@ -39,6 +41,7 @@ public class SkinItemList extends UIView {
     protected Font font;
     protected Consumer<ServerSkin> itemSelector;
     protected ArrayList<ServerSkin> entries = new ArrayList<>();
+    protected Ticket loadTicket = Ticket.list();
 
     protected int minimumLineSpacing = 1;
     protected int minimumInteritemSpacing = 1;
@@ -88,11 +91,18 @@ public class SkinItemList extends UIView {
         hoveredIndex = -1;
     }
 
+    @Override
+    public void removeFromSuperview() {
+        super.removeFromSuperview();
+        this.loadTicket.invalidate();
+    }
+
     public ArrayList<ServerSkin> getEntries() {
         return entries;
     }
 
     public void setEntries(ArrayList<ServerSkin> entries) {
+        this.loadTicket.invalidate();
         this.entries = new ArrayList<>(entries);
     }
 
@@ -154,7 +164,7 @@ public class SkinItemList extends UIView {
     }
 
     public void renderItemContent(int x, int y, int width, int height, boolean isHovered, ServerSkin entry, MultiBufferSource buffers, CGGraphicsContext context) {
-        BakedSkin bakedSkin = BakedSkin.of(entry.getDescriptor());
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(entry.getDescriptor(), loadTicket);
         if (bakedSkin == null) {
             int speed = 60;
             int frames = 18;

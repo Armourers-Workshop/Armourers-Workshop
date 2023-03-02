@@ -20,8 +20,10 @@ import com.apple.library.uikit.UIWindow;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -47,7 +49,9 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
     private final EntryList tableView = new EntryList(CGRect.ZERO);
     private final EntryListIndicator scrollIndicator = new EntryListIndicator(new CGRect(0, 0, 10, 100));
 
+    private final Ticket loadTicket = Ticket.list();
     private final ArrayList<Entry> cells = new ArrayList<>();
+
     private Entry selectedItem;
 
     public SkinFileList(CGRect frame) {
@@ -59,7 +63,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
         CGRect bounds = bounds();
 
         UIImageView bg1 = new UIImageView(new CGRect(0, 0, bounds.width - 10, bounds.height));
-        bg1.setImage(UIImage.of(ModTextures.LIST).size(11, 11).clip(1, 1, 1, 1).build());
+        bg1.setImage(UIImage.of(ModTextures.LIST).fixed(11, 11).clip(1, 1, 1, 1).build());
         bg1.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
         addSubview(bg1);
 
@@ -79,11 +83,18 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
     }
 
     public void reloadData(Collection<ISkinLibrary.Entry> entries) {
+        loadTicket.invalidate();
         cells.clear();
         entries.forEach(entry -> cells.add(new Entry(entry)));
         tableView.reloadData();
         // Make sure cells in the visible rect.
         tableView.setContentOffset(tableView.contentOffset());
+    }
+
+    @Override
+    public void removeFromSuperview() {
+        super.removeFromSuperview();
+        this.loadTicket.invalidate();
     }
 
     @Override
@@ -183,13 +194,13 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
 
     public class Entry extends UITableViewCell {
 
-        final Font font;
-        final Component title;
-        final ISkinLibrary.Entry entry;
+        private final Font font;
+        private final Component title;
+        private final ISkinLibrary.Entry entry;
 
-        final UIView iconView = new UIView(CGRect.ZERO);
+        private final UIView iconView = new UIView(CGRect.ZERO);
 
-        SkinDescriptor descriptor = SkinDescriptor.EMPTY;
+        private SkinDescriptor descriptor = SkinDescriptor.EMPTY;
 
         public Entry(ISkinLibrary.Entry entry) {
             super(CGRect.ZERO);
@@ -245,10 +256,12 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
                 RenderSystem.blit(poseStack, x + (width - 12) / 2, y + (height - 12) / 2 - 1, u, 0, 12, 12, ModTextures.LIST);
                 return;
             }
-            if (!getDescriptor().isEmpty()) {
-                MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-                ExtendedItemRenderer.renderSkinInBox(getDescriptor(), ItemStack.EMPTY, x, y, 100, width, height - 1, 20, 45, 0, poseStack, buffers);
+            BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(getDescriptor(), loadTicket);
+            if (bakedSkin == null) {
+                return;
             }
+            MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+            ExtendedItemRenderer.renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, x, y, 100, width, height - 1, 20, 45, 0, poseStack, buffers);
         }
 
         public void renderTooltip(CGRect rect, CGGraphicsContext context) {
@@ -256,7 +269,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             if (window == null) {
                 return;
             }
-            BakedSkin bakedSkin = BakedSkin.of(descriptor);
+            BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(getDescriptor(), loadTicket);
             if (bakedSkin == null) {
                 return;
             }

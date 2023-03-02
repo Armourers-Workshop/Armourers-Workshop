@@ -277,7 +277,7 @@ public class TabView extends UIView {
             offsets.put(UIControl.State.SELECTED | UIControl.State.HIGHLIGHTED, new CGPoint(1, 0));
             int width = 26;
             int height = 30;
-            return UIImage.of(ModTextures.TABS).uv(width * alignment * 2, 0).size(width, height).unzip(offsets::get).build();
+            return UIImage.of(ModTextures.TABS).uv(width * alignment * 2, 0).fixed(width, height).unzip(offsets::get).build();
         }
     }
 }
