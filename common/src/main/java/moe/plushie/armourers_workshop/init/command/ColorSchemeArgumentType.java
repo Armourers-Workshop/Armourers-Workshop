@@ -19,11 +19,11 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class ColorSchemeArgument implements IArgumentType<ColorScheme> {
+public class ColorSchemeArgumentType implements IArgumentType<ColorScheme> {
 
     private static final Collection<String> EXAMPLES = Arrays.asList("<dyeIndex=[paintType:]#RRGGBB>", "<dyeIndex=[paintType:]R,G,B>");
 
-    public ColorSchemeArgument() {
+    public ColorSchemeArgumentType() {
         super();
     }
 
@@ -59,19 +59,19 @@ public class ColorSchemeArgument implements IArgumentType<ColorScheme> {
         return EXAMPLES;
     }
 
-    public static class Serializer implements IArgumentSerializer<ColorSchemeArgument> {
+    public static class Serializer implements IArgumentSerializer<ColorSchemeArgumentType> {
 
         @Override
-        public void serializeToNetwork(ColorSchemeArgument argument, FriendlyByteBuf buffer) {
+        public void serializeToNetwork(ColorSchemeArgumentType argument, FriendlyByteBuf buffer) {
         }
 
         @Override
-        public ColorSchemeArgument deserializeFromNetwork(FriendlyByteBuf buffer) {
-            return new ColorSchemeArgument();
+        public ColorSchemeArgumentType deserializeFromNetwork(FriendlyByteBuf buffer) {
+            return new ColorSchemeArgumentType();
         }
 
         @Override
-        public void serializeToJson(ColorSchemeArgument argument, JsonObject json) {
+        public void serializeToJson(ColorSchemeArgumentType argument, JsonObject json) {
         }
     }
 }

@@ -27,6 +27,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModBlocks;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
@@ -101,7 +102,7 @@ public final class WorldUtils {
 
         // check if there are any blocks in the build guides.
         if (skin.getParts().size() == 0 && skin.getPaintData() == null) {
-            throw new SkinSaveException("Nothing to save.", SkinSaveException.SkinSaveExceptionType.NO_DATA);
+            throw SkinSaveException.Type.NO_DATA.build("noting");
         }
 
         // check if the skin has all needed parts.
@@ -115,21 +116,21 @@ public final class WorldUtils {
                     }
                 }
                 if (!havePart) {
-                    throw new SkinSaveException("Skin is missing part " + partType.getRegistryName(), SkinSaveException.SkinSaveExceptionType.MISSING_PARTS);
+                    throw SkinSaveException.Type.MISSING_PARTS.build("missingPart", TranslateUtils.Name.of(partType));
                 }
             }
         }
 
         // check if the skin is not a seat and a bed.
         if (skinProps.get(SkinProperty.BLOCK_BED) && skinProps.get(SkinProperty.BLOCK_SEAT)) {
-            throw new SkinSaveException("Skin can not be a bed and a seat.", SkinSaveException.SkinSaveExceptionType.BED_AND_SEAT);
+            throw SkinSaveException.Type.BED_AND_SEAT.build("conflictBedSeat");
         }
 
         // check if multi-block is valid.
         if (skinType == SkinTypes.BLOCK && skinProps.get(SkinProperty.BLOCK_MULTIBLOCK)) {
             SkinPart testPart = saveArmourPart(level, transform, SkinPartTypes.BLOCK, true);
             if (testPart == null) {
-                throw new SkinSaveException("Multiblock has no blocks in the yellow area.", SkinSaveException.SkinSaveExceptionType.INVALID_MULTIBLOCK);
+                throw SkinSaveException.Type.INVALID_MULTIBLOCK.build("missingMainBlock");
             }
         }
 
@@ -178,11 +179,11 @@ public final class WorldUtils {
 
         if (markerCheck) {
             if (partType.getMinimumMarkersNeeded() > markerBlocks.size()) {
-                throw new SkinSaveException("Missing marker for part " + partType.getRegistryName(), SkinSaveException.SkinSaveExceptionType.MARKER_ERROR);
+                throw  SkinSaveException.Type.MARKER_ERROR.build("missingMarker", TranslateUtils.Name.of(partType));
             }
 
             if (markerBlocks.size() > partType.getMaximumMarkersNeeded()) {
-                throw new SkinSaveException("Too many markers for part " + partType.getRegistryName(), SkinSaveException.SkinSaveExceptionType.MARKER_ERROR);
+                throw SkinSaveException.Type.MARKER_ERROR.build("tooManyMarkers", TranslateUtils.Name.of(partType));
             }
         }
 

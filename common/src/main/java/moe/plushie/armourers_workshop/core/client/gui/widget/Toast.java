@@ -7,7 +7,10 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIView;
+import moe.plushie.armourers_workshop.core.client.gui.ServerAlertWindow;
+import moe.plushie.armourers_workshop.core.network.ExecuteAlertPacket;
 import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,6 +19,14 @@ import java.util.function.BiConsumer;
 
 @Environment(value = EnvType.CLIENT)
 public class Toast {
+
+    // show the message in to current screen.
+    public static void showAlertFromServer(ExecuteAlertPacket alertPacket) {
+        RenderSystem.recordRenderCall(() -> {
+            ServerAlertWindow window = new ServerAlertWindow(alertPacket);
+            window.showInScreen();
+        });
+    }
 
     public static void show(String message, UIView view) {
         showAlert("Info", message, null, view);

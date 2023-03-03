@@ -27,7 +27,7 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 // /path/name.armour
-public class FileArgument implements IArgumentType<String> {
+public class FileArgumentType implements IArgumentType<String> {
 
     public static final SimpleCommandExceptionType ERROR_START = new SimpleCommandExceptionType(Component.literal("File must start with '/'"));
     public static final SimpleCommandExceptionType ERROR_NOT_FOUND = new SimpleCommandExceptionType(Component.literal("Not found any file"));
@@ -39,14 +39,14 @@ public class FileArgument implements IArgumentType<String> {
     private String filteredName;
     private ArrayList<String> filteredFileList;
 
-    public FileArgument(File rootPath) {
+    public FileArgumentType(File rootPath) {
         super();
         this.rootFile = rootPath;
         this.fileList = null;
         ModLog.debug("setup root path: " + rootPath);
     }
 
-    FileArgument(ArrayList<String> fileList) {
+    FileArgumentType(ArrayList<String> fileList) {
         super();
         this.rootFile = null;
         this.fileList = fileList;
@@ -168,27 +168,27 @@ public class FileArgument implements IArgumentType<String> {
         return file.substring(0, index) + "/";
     }
 
-    public static class Serializer implements IArgumentSerializer<FileArgument> {
+    public static class Serializer implements IArgumentSerializer<FileArgumentType> {
 
         @Override
-        public void serializeToNetwork(FileArgument argument, FriendlyByteBuf buffer) {
+        public void serializeToNetwork(FileArgumentType argument, FriendlyByteBuf buffer) {
             ArrayList<String> lists = argument.getFileList("/");
             buffer.writeInt(lists.size());
             lists.forEach(buffer::writeUtf);
         }
 
         @Override
-        public FileArgument deserializeFromNetwork(FriendlyByteBuf buffer) {
+        public FileArgumentType deserializeFromNetwork(FriendlyByteBuf buffer) {
             int size = buffer.readInt();
             ArrayList<String> lists = new ArrayList<>(size);
             for (int i = 0; i < size; ++i) {
                 lists.add(buffer.readUtf(Short.MAX_VALUE));
             }
-            return new FileArgument(lists);
+            return new FileArgumentType(lists);
         }
 
         @Override
-        public void serializeToJson(FileArgument argument, JsonObject json) {
+        public void serializeToJson(FileArgumentType argument, JsonObject json) {
             JsonArray array = new JsonArray();
             ArrayList<String> lists = argument.getFileList("/");
             lists.forEach(array::add);

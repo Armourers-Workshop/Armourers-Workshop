@@ -6,16 +6,17 @@ import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.other.CubeApplier;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.builder.other.WorldUtils;
+import moe.plushie.armourers_workshop.core.data.Notification;
 import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
-import moe.plushie.armourers_workshop.core.skin.exception.SkinSaveException;
+import moe.plushie.armourers_workshop.core.skin.exception.SkinLoadException;
+import moe.plushie.armourers_workshop.core.skin.exception.TranslatableException;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,8 +26,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-
-import java.util.UUID;
 
 public class ArmourerMenu extends AbstractBlockContainerMenu {
 
@@ -71,10 +70,6 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
         }
 
         return !stackInput.isEmpty() && stackOutput.isEmpty();
-
-//        if (!(stackInput.getItem() instanceof ISkinHolder)) {
-//            return;
-//        }
     }
 
 
@@ -107,16 +102,16 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
             skinProps.put(SkinProperty.ALL_CUSTOM_NAME, customName);
         }
 
-        // we need signature to ensure that each make is a different skin,
-        // in the current version, we will not actually sign the content.
-        skinProps.put(SkinProperty.ALL_SIGNATURE, "none:" + UUID.randomUUID());
-
         try {
             Level level = tileEntity.getLevel();
             CubeTransform transform = tileEntity.getTransform();
             skin = WorldUtils.saveSkinFromWorld(level, transform, skinProps, tileEntity.getSkinType(), tileEntity.getPaintData());
-        } catch (SkinSaveException e) {
-            player.sendSystemMessage(Component.literal(e.getMessage()));
+        } catch (TranslatableException exception) {
+            player.sendSystemMessage(exception.getComponent());
+            Notification.sendErrorMessage(exception.getComponent(), player);
+        } catch (Exception exception) {
+            // we unknown why, pls report this.
+            exception.printStackTrace();
         }
 
         if (skin == null) {
@@ -147,21 +142,26 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
             return;
         }
 
-        Skin skin = SkinLoader.getInstance().loadSkin(descriptor.getIdentifier());
-        if (skin == null) {
-            return;
-        }
-
-        tileEntity.setSkinProperties(skin.getProperties());
-        tileEntity.setPaintData(skin.getPaintData());
-
         try {
+            Skin skin = SkinLoader.getInstance().loadSkin(descriptor.getIdentifier());
+            if (skin == null) {
+                throw SkinLoadException.Type.NOT_FOUND.build("notFound");
+            }
+
+            tileEntity.setSkinProperties(skin.getProperties());
+            tileEntity.setPaintData(skin.getPaintData());
+
             CubeApplier applier = new CubeApplier(tileEntity.getLevel());
             CubeTransform transform = tileEntity.getTransform();
             WorldUtils.loadSkinIntoWorld(applier, transform, skin);
             applier.submit(TranslateUtils.title("action.armourers_workshop.block.load"), player);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        } catch (TranslatableException exception) {
+            player.sendSystemMessage(exception.getComponent());
+            Notification.sendErrorMessage(exception.getComponent(), player);
+        } catch (Exception exception) {
+            // we unknown why, pls report this.
+            exception.printStackTrace();
         }
 
         inventory.setItem(0, ItemStack.EMPTY);

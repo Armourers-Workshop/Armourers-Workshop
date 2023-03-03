@@ -30,8 +30,8 @@ public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IM
     private final MenuWindow<?> menuWindow;
     private final UIWindowManager manager;
 
-    public MenuScreen(W window, M menu, Inventory inventory, Component component) {
-        super(menu, inventory, component);
+    public MenuScreen(W window, M menu, Inventory inventory, Component title) {
+        super(menu, inventory, title);
 
         this.window = window;
         this.menuWindow = ObjectUtils.safeCast(window, MenuWindow.class);
@@ -94,12 +94,12 @@ public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IM
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        return manager.mouseUp(mouseX, mouseY, button, super::mouseReleased);
+        return manager.mouseUp(mouseX, mouseY, button, this::_mouseReleased);
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        return manager.mouseWheel(mouseX, mouseY, delta, super::mouseScrolled);
+        return manager.mouseWheel(mouseX, mouseY, delta, this::_mouseScrolled);
     }
 
     @Override
@@ -149,11 +149,11 @@ public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IM
         return false;
     }
 
-    private void _render(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
+    protected void _render(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
         super.render(context.poseStack, mouseX, mouseY, partialTicks);
     }
 
-    private void _renderTooltip(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
+    protected void _renderTooltip(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
         IPoseStack poseStack = context.poseStack;
         poseStack.pushPose();
         poseStack.translate(0, 0, 400);
@@ -161,19 +161,19 @@ public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IM
         poseStack.popPose();
     }
 
-    private void _renderBackground(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
+    protected void _renderBackground(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
         // draw bg
         if (menuWindow != null && menuWindow.shouldRenderBackground()) {
             renderBackground(context.poseStack.cast());
         }
     }
 
-    private boolean _charTyped(int key, int i, int j) {
+    protected boolean _charTyped(int key, int i, int j) {
         super.charTyped((char) key, i);
         return true;
     }
 
-    private boolean _keyPressed(int key, int i, int j) {
+    protected boolean _keyPressed(int key, int i, int j) {
         // when input first responder is actived, the shortcut key events not allowed.
         if (manager.isTextEditing() && !_editingPassKey((char) key)) {
             return false;
@@ -181,17 +181,24 @@ public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IM
         return super.keyPressed(key, i, j);
     }
 
-    private boolean _mouseClicked(double mouseX, double mouseY, int button) {
+    protected boolean _mouseClicked(double mouseX, double mouseY, int button) {
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    private boolean _mouseMoved(double mouseX, double mouseY, int button) {
+    protected boolean _mouseMoved(double mouseX, double mouseY, int button) {
         super.mouseMoved(mouseX, mouseY);
         return true;
     }
 
+    protected boolean _mouseScrolled(double mouseX, double mouseY, double delta) {
+        return super.mouseScrolled(mouseX, mouseY, delta);
+    }
 
-    private boolean _editingPassKey(int key) {
+    protected boolean _mouseReleased(double mouseX, double mouseY, int button) {
+        return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    protected boolean _editingPassKey(int key) {
         switch (key) {
             case GLFW.GLFW_KEY_ESCAPE:
             case GLFW.GLFW_KEY_TAB:

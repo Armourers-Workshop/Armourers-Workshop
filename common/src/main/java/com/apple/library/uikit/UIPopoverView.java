@@ -15,11 +15,17 @@ public class UIPopoverView extends UIWindow {
     }
 
     public void dismiss() {
-        UIWindowManager.sharedManager().removeWindow(this);
+        UIWindowManager windowManager = getWindowManagerFromView(this);
+        if (windowManager != null) {
+            windowManager.removeWindow(this);
+        }
     }
 
     public void showInView(UIView view) {
-        UIWindowManager.sharedManager().addWindow(this);
+        UIWindowManager windowManager = getWindowManagerFromView(view);
+        if (windowManager != null) {
+            windowManager.addWindow(this);
+        }
     }
 
     @Override
@@ -75,5 +81,16 @@ public class UIPopoverView extends UIWindow {
             this.addSubview(this.contentView);
             this.setNeedsLayout();
         }
+    }
+
+    private UIWindowManager getWindowManagerFromView(UIView view) {
+        if (view instanceof UIWindow) {
+            return ((UIWindow) view).getWindowManager();
+        }
+        UIWindow window = view.window();
+        if (window != null) {
+            return window.getWindowManager();
+        }
+        return null;
     }
 }

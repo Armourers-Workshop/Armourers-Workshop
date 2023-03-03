@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.tooloption.BooleanToolProperty;
 import moe.plushie.armourers_workshop.builder.item.tooloption.IntegerToolProperty;
 import moe.plushie.armourers_workshop.builder.network.UpdatePaintingToolPacket;
-import moe.plushie.armourers_workshop.core.client.gui.widget.MenuScreen;
+import moe.plushie.armourers_workshop.core.client.gui.widget.ClientMenuScreen;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.menu.AbstractContainerMenu;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -19,12 +19,9 @@ import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -42,7 +39,7 @@ public class PaintingToolWindow extends MenuWindow<AbstractContainerMenu> {
     private int contentHeight = 24; // 24 + n + 8
 
     public PaintingToolWindow(Component title, ArrayList<IPaintingToolProperty<?>> properties, ItemStack itemStack, InteractionHand hand) {
-        super(createMenu(), getInventory(), new NSString(title));
+        super(ClientMenuScreen.getEmptyMenu(), ClientMenuScreen.getEmptyInventory(), new NSString(title));
         this.inventoryView.removeFromSuperview();
         this.setBackgroundView(ModTextures.defaultWindowImage());
         this.hand = hand;
@@ -58,25 +55,8 @@ public class PaintingToolWindow extends MenuWindow<AbstractContainerMenu> {
         this.setFrame(new CGRect(0, 0, 176, contentHeight));
     }
 
-    private static Inventory getInventory() {
-        Player player = Minecraft.getInstance().player;
-        if (player != null) {
-            return player.getInventory();
-        }
-        return null;
-    }
-
-    private static AbstractContainerMenu createMenu() {
-        return new AbstractContainerMenu(null, 0) {
-            @Override
-            public boolean stillValid(Player player) {
-                return false;
-            }
-        };
-    }
-
     public Screen asScreen() {
-        return new MenuScreen<>(this, menu, getInventory(), title.component());
+        return new ClientMenuScreen(this, title.component());
     }
 
     protected void sendToServer() {

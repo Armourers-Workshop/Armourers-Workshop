@@ -80,8 +80,8 @@ public class WindowManagerImpl {
         // we need reset mouse to impossible position to fool the original tooltip render.
         UIView tooltipResponder = firstTooltipResponder();
         if (tooltipResponder != null) {
-            mouseX = -999;
-            mouseY = -999;
+            mouseX = Integer.MIN_VALUE;
+            mouseY = Integer.MIN_VALUE;
         }
         for (WindowDispatcherImpl dispatcher : dispatchers) {
             dispatcher.render(context);

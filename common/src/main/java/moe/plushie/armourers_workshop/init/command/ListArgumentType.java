@@ -18,17 +18,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-public class ListArgument implements IArgumentType<String> {
+public class ListArgumentType implements IArgumentType<String> {
 
     private final Collection<String> list;
 
-    public ListArgument(Collection<String> list) {
+    public ListArgumentType(Collection<String> list) {
         super();
         this.list = list;
     }
 
-    public static ListArgument list(Iterable<String> values) {
-        return new ListArgument(Lists.newArrayList(values));
+    public static ListArgumentType list(Iterable<String> values) {
+        return new ListArgumentType(Lists.newArrayList(values));
     }
 
     public static String getString(CommandContext<CommandSourceStack> context, String name) {
@@ -52,27 +52,27 @@ public class ListArgument implements IArgumentType<String> {
         return SharedSuggestionProvider.suggest(list, builder);
     }
 
-    public static class Serializer implements IArgumentSerializer<ListArgument> {
+    public static class Serializer implements IArgumentSerializer<ListArgumentType> {
 
         @Override
-        public void serializeToNetwork(ListArgument argument, FriendlyByteBuf buffer) {
+        public void serializeToNetwork(ListArgumentType argument, FriendlyByteBuf buffer) {
             ArrayList<String> lists = new ArrayList<>(argument.list);
             buffer.writeInt(lists.size());
             lists.forEach(buffer::writeUtf);
         }
 
         @Override
-        public ListArgument deserializeFromNetwork(FriendlyByteBuf buffer) {
+        public ListArgumentType deserializeFromNetwork(FriendlyByteBuf buffer) {
             int size = buffer.readInt();
             ArrayList<String> lists = new ArrayList<>(size);
             for (int i = 0; i < size; ++i) {
                 lists.add(buffer.readUtf(Short.MAX_VALUE));
             }
-            return new ListArgument(lists);
+            return new ListArgumentType(lists);
         }
 
         @Override
-        public void serializeToJson(ListArgument argument, JsonObject json) {
+        public void serializeToJson(ListArgumentType argument, JsonObject json) {
             JsonArray array = new JsonArray();
             argument.list.forEach(array::add);
             json.add("items", array);

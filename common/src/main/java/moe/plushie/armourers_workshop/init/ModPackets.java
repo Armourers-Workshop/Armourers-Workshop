@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.builder.network.UpdateColorPickerPacket;
 import moe.plushie.armourers_workshop.builder.network.UpdateOutfitMakerPacket;
 import moe.plushie.armourers_workshop.builder.network.UpdatePaintingToolPacket;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
+import moe.plushie.armourers_workshop.core.network.ExecuteAlertPacket;
 import moe.plushie.armourers_workshop.core.network.ExecuteCommandPacket;
 import moe.plushie.armourers_workshop.core.network.OpenWardrobePacket;
 import moe.plushie.armourers_workshop.core.network.RequestSkinPacket;
@@ -38,7 +39,7 @@ public enum ModPackets {
     UPDATE_COLOR_MIXER(0x06, UpdateColorMixerPacket.class, UpdateColorMixerPacket::new),
 
     EXECUTE_COMMAND(0x07, ExecuteCommandPacket.class, ExecuteCommandPacket::new),
-    // EXECUTE_ALERT(0x08, ExecuteAlertPacket.class, ExecuteAlertPacket::new),
+    EXECUTE_ALERT(0x08, ExecuteAlertPacket.class, ExecuteAlertPacket::new),
 
     UPLOAD_FILE(0x40, SaveSkinPacket.class, SaveSkinPacket::new),
 

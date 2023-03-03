@@ -10,6 +10,7 @@ import com.apple.library.impl.WeakDispatcherImpl;
 import com.apple.library.impl.WindowDispatcherImpl;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -24,6 +25,8 @@ public class UIWindow extends UIView {
     private UIView focusedResponder;
 
     private final HashMap<UIControl.Event, WeakDispatcherImpl<UIEvent>> dispatchers = new HashMap<>();
+
+    private WeakReference<UIWindowManager> windowManager;
 
     public UIWindow(CGRect frame) {
         super(frame);
@@ -126,6 +129,19 @@ public class UIWindow extends UIView {
         firstInputResponder = view;
         _setFocusedResponder(view);
     }
+
+
+    public UIWindowManager getWindowManager() {
+        if (windowManager != null) {
+            return windowManager.get();
+        }
+        return null;
+    }
+
+    protected void setWindowManager(UIWindowManager manager) {
+        this.windowManager = new WeakReference<>(manager);
+    }
+
 
     protected boolean shouldPassEventToNextWindow(UIEvent event) {
         return true;

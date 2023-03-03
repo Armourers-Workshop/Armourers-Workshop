@@ -16,11 +16,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-public class ColorArgument implements IArgumentType<PaintColor> {
+public class ColorArgumentType implements IArgumentType<PaintColor> {
 
     private static final Collection<String> EXAMPLES = Arrays.asList("[paintType:]#RRGGBB", "[paintType:]R,G,B");
 
-    public ColorArgument() {
+    public ColorArgumentType() {
         super();
     }
 
@@ -52,19 +52,19 @@ public class ColorArgument implements IArgumentType<PaintColor> {
         return EXAMPLES;
     }
 
-    public static class Serializer implements IArgumentSerializer<ColorArgument> {
+    public static class Serializer implements IArgumentSerializer<ColorArgumentType> {
 
         @Override
-        public void serializeToNetwork(ColorArgument argument, FriendlyByteBuf buffer) {
+        public void serializeToNetwork(ColorArgumentType argument, FriendlyByteBuf buffer) {
         }
 
         @Override
-        public ColorArgument deserializeFromNetwork(FriendlyByteBuf buffer) {
-            return new ColorArgument();
+        public ColorArgumentType deserializeFromNetwork(FriendlyByteBuf buffer) {
+            return new ColorArgumentType();
         }
 
         @Override
-        public void serializeToJson(ColorArgument argument, JsonObject json) {
+        public void serializeToJson(ColorArgumentType argument, JsonObject json) {
         }
     }
 }
