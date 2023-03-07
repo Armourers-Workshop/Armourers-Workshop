@@ -178,6 +178,8 @@
   "inventory.armourers_workshop.common.button.ok": "确定",
   "inventory.armourers_workshop.common.button.previousPage": "上一页",
   "inventory.armourers_workshop.common.button.save": "保存",
+  "inventory.armourers_workshop.common.text.info": "信息",
+  "inventory.armourers_workshop.common.text.error": "错误",
   "inventory.armourers_workshop.doll": "玩偶",
   "inventory.armourers_workshop.dye-table": "配色工作台",
   "inventory.armourers_workshop.hologram-projector": "全息投影仪",

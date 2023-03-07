@@ -19,8 +19,6 @@ import java.util.HashMap;
 
 public class SkinPart implements ISkinPart {
 
-    protected int id;
-    protected Integer parentId;
     protected String name;
 
     protected ISkinPartType partType;
@@ -35,9 +33,7 @@ public class SkinPart implements ISkinPart {
     private SkinCubes cubeData;
     private final ArrayList<SkinMarker> markerBlocks;
 
-    public SkinPart(int id, ISkinPartType partType, ArrayList<SkinMarker> markers, SkinCubes cubes) {
-        this.id = id;
-
+    public SkinPart(ISkinPartType partType, ArrayList<SkinMarker> markers, SkinCubes cubes) {
         this.partType = partType;
         this.renderShape = cubes.getRenderShape();
 
@@ -49,10 +45,6 @@ public class SkinPart implements ISkinPart {
         if (markers != null) {
             cubes.getUsedCounter().addMarkers(markers.size());
         }
-    }
-
-    public int getId() {
-        return id;
     }
 
     public SkinProperties getProperties() {
@@ -109,15 +101,6 @@ public class SkinPart implements ISkinPart {
         cubeData = null;
     }
 
-    public void setParent(Integer id) {
-        this.parentId = id;
-    }
-
-    @Nullable
-    public Integer getParent() {
-        return this.parentId;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -160,8 +143,8 @@ public class SkinPart implements ISkinPart {
 
     public static class Empty extends SkinPart {
 
-        public Empty(int id, ISkinPartType partType, Rectangle3i bounds, OpenVoxelShape renderShape) {
-            super(id, partType, new ArrayList<>(), new SkinCubesV1(0));
+        public Empty(ISkinPartType partType, Rectangle3i bounds, OpenVoxelShape renderShape) {
+            super(partType, new ArrayList<>(), new SkinCubesV1(0));
             this.partBounds = bounds;
             this.renderShape = renderShape;
             this.setProperties(SkinProperties.create());
@@ -237,9 +220,8 @@ public class SkinPart implements ISkinPart {
         }
 
         public SkinPart build() {
-            SkinPart skinPart = new SkinPart(id, partType, markers, cubes);
+            SkinPart skinPart = new SkinPart(partType, markers, cubes);
             skinPart.setName(name);
-            skinPart.setParent(parentId);
             skinPart.setTransform(transform);
             return skinPart;
         }

@@ -29,7 +29,6 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
     protected final HashMap<RenderType, BufferBuilder> cachingBuilders2 = new HashMap<>();
 
     protected final HashMap<Skin, SkinRenderObjectBuilder> pendingBuilders = new HashMap<>();
-
     protected final HashMap<RenderType, BufferBuilder> pendingBuilders2 = new HashMap<>();
 
     public SkinVertexBufferBuilder() {
@@ -70,6 +69,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         SkinVertexBufferBuilder builder = getInstance();
         builder.cachingBuilders.clear();
         builder.cachingBuilders2.clear();
+        SkinRenderObjectBuilder.clearAllCache();
     }
 
     @NotNull

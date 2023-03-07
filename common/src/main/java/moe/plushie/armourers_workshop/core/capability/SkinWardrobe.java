@@ -234,7 +234,6 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         SkinWardrobeStorage.saveSkinSlots(skinSlots, nbt);
-//        SkinWardrobeStorage.saveVisibility(armourFlags, nbt);
         SkinWardrobeStorage.saveFlags(flags, nbt);
         SkinWardrobeStorage.saveInventoryItems(inventory, nbt);
         SkinWardrobeStorage.saveDataFixer(this, nbt);
@@ -244,7 +243,6 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         SkinWardrobeStorage.loadSkinSlots(skinSlots, nbt);
-//        SkinWardrobeStorage.loadVisibility(armourFlags, nbt);
         SkinWardrobeStorage.loadFlags(flags, nbt);
         SkinWardrobeStorage.loadInventoryItems(inventory, nbt);
         SkinWardrobeStorage.loadDataFixer(this, nbt);

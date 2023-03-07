@@ -181,7 +181,7 @@ public final class SkinBakery implements ISkinLibraryListener {
                 // for ensure data safety, we need create a blank skin part to manage data.
                 SkinPart usedPart = part;
                 if (usedPart.getType() != partType) {
-                    usedPart = new SkinPart.Empty(0, partType, quads.getBounds(), quads.getRenderShape());
+                    usedPart = new SkinPart.Empty(partType, quads.getBounds(), quads.getRenderShape());
                 }
                 BakedSkinPart bakedPart = new BakedSkinPart(usedPart, quads);
                 bakedParts.add(bakedPart);
@@ -192,7 +192,7 @@ public final class SkinBakery implements ISkinLibraryListener {
         });
 
         PackedQuad.from(skin.getPaintData()).forEach((partType, quads) -> {
-            SkinPart part = new SkinPart.Empty(0, partType, quads.getBounds(), quads.getRenderShape());
+            SkinPart part = new SkinPart.Empty(partType, quads.getBounds(), quads.getRenderShape());
             BakedSkinPart bakedPart = new BakedSkinPart(part, quads);
             bakedParts.add(bakedPart);
         });

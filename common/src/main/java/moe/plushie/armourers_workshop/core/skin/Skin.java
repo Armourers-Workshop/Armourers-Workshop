@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.utils.Counter;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import net.minecraft.core.BlockPos;
@@ -16,23 +17,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Skin implements ISkin {
 
-    private final static AtomicInteger COUNTER = new AtomicInteger();
+    private final int id = Counter.SKIN.incrementAndGet();
 
     private final SkinProperties properties;
     private final ISkinType skinType;
     private final ArrayList<SkinPart> parts;
 
-    private final int id = COUNTER.incrementAndGet();
-
-    public String serverId;
-    public int paintTextureId;
     //    public SkinModelTexture skinModelTexture;
     private final SkinPaintData paintData;
-    private int lightHash = 0;
 
     public Skin(ISkinType skinType, SkinProperties properties, SkinPaintData paintData, ArrayList<SkinPart> skinParts) {
         this.properties = properties;
@@ -73,13 +68,6 @@ public class Skin implements ISkin {
 
     public int getPartCount() {
         return parts.size();
-    }
-
-    public int lightHash() {
-        if (lightHash == 0) {
-            lightHash = this.hashCode();
-        }
-        return lightHash;
     }
 
     @Override

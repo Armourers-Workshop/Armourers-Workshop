@@ -119,11 +119,11 @@ public class ChunkSerializers {
 
         @Override
         public void write(SkinPart part, ChunkPalette palette, ChunkOutputStream stream) throws IOException {
-            stream.writeShort(part.getId());
+            stream.writeShort(0);
             stream.writeType(part.getType());
             stream.writeChunk(it -> {
                 it.write(SKIN_PART_NAME, part.getName());
-                it.write(SKIN_PART_PARENT, part.getParent());
+                it.write(SKIN_PART_PARENT, 0);
                 it.write(SKIN_TRANSFORM, part.getTransform());
                 it.write(SKIN_CUBE, part.getCubeData(), palette);
                 it.write(SKIN_PAINT_DATA, part.getPaintData(), palette);

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 import com.apple.library.uikit.UIColor;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalNotification;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
@@ -22,6 +23,7 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MatrixUtils;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.PoseStack;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -44,11 +46,12 @@ import java.util.function.Consumer;
 public class SkinRenderObjectBuilder {
 
     private static final ExecutorService executor = Executors.newFixedThreadPool(1, r -> new Thread(r, "AW-SKIN-VB"));
+    private static final Cache<Object, CachedTask> cachingTasks = CacheBuilder.newBuilder()
+            .expireAfterAccess(3, TimeUnit.SECONDS)
+            .removalListener(CachedTask::release)
+            .build();
 
     protected final Skin skin;
-    protected final Cache<Object, CachedTask> cachingTasks = CacheBuilder.newBuilder()
-            .expireAfterAccess(3, TimeUnit.SECONDS)
-            .build();
 
     protected final CachedRenderPipeline cachedRenderPipeline = new CachedRenderPipeline();
 
@@ -59,8 +62,13 @@ public class SkinRenderObjectBuilder {
         this.skin = skin;
     }
 
+    public static void clearAllCache() {
+        cachingTasks.invalidateAll();
+        cachingTasks.cleanUp();
+    }
+
     public void addPartData(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, boolean shouldRender, SkinRenderContext context) {
-        Object key = SkinCache.borrowKey(part.getId(), part.requirements(scheme));
+        Object key = SkinCache.borrowKey(bakedSkin.getId(), part.getId(), part.requirements(scheme));
         CachedTask cachedTask = cachingTasks.getIfPresent(key);
         if (cachedTask != null) {
             SkinCache.returnKey(key);
@@ -223,7 +231,13 @@ public class SkinRenderObjectBuilder {
         }
         mergedByteBuffer.rewind();
         vertexBuffer.upload(mergedByteBuffer);
-        RenderSystem.recordRenderCall(() -> qt.forEach(CachedTask::finish));
+        RenderSystem.recordRenderCall(() -> {
+            for (CachedTask cachedTask : qt) {
+                cachedTask.setRenderObject(vertexBuffer);
+                cachedTask.finish();
+            }
+            vertexBuffer.release();
+        });
     }
 
     static class CachedTask {
@@ -232,11 +246,30 @@ public class SkinRenderObjectBuilder {
         ArrayList<CompiledTask> mergedTasks;
         BakedSkinPart part;
         ColorScheme scheme;
+        SkinRenderObject renderObject;
 
         CachedTask(BakedSkinPart part, ColorScheme scheme) {
             this.part = part;
             this.scheme = scheme.copy();
         }
+
+        static void release(RemovalNotification<Object, Object> notification) {
+            CachedTask task = ObjectUtils.safeCast(notification.getValue(), CachedTask.class);
+            if (task != null) {
+                task.setRenderObject(null);
+            }
+        }
+
+        void setRenderObject(SkinRenderObject renderObject) {
+            if (this.renderObject != null) {
+                this.renderObject.release();
+            }
+            this.renderObject = renderObject;
+            if (this.renderObject != null) {
+                this.renderObject.retain();
+            }
+        }
+
 
         void finish() {
             isCompiled = true;
@@ -259,10 +292,6 @@ public class SkinRenderObjectBuilder {
             this.renderType = renderType;
             this.bufferBuilder = bufferBuilder;
             this.polygonOffset = polygonOffset;
-        }
-
-        void close() {
-            vertexBuffer.close();
         }
     }
 
