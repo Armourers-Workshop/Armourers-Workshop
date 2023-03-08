@@ -7,13 +7,13 @@ import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -83,7 +83,7 @@ public class CustomReplyPacket<R> extends CustomPacket {
     public static class Receiver<R> extends CustomPacket {
 
         private static final AtomicInteger COUNTER = new AtomicInteger(1000);
-        private static final ScheduledExecutorService TIMER = Executors.newSingleThreadScheduledExecutor();
+        private static final ScheduledExecutorService TIMER = ThreadUtils.newSingleThreadScheduledExecutor();
         private static final HashMap<Integer, Request<?>> REQUESTS = new HashMap<>();
 
         private final int id;

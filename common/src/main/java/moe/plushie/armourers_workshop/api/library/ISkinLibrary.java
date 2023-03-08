@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.api.library;
 
-import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import org.apache.commons.lang3.tuple.Pair;
 

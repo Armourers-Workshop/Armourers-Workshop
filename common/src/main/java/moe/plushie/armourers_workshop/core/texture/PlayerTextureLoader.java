@@ -7,6 +7,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -29,7 +30,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 @Environment(value = EnvType.CLIENT)
@@ -47,7 +47,7 @@ public class PlayerTextureLoader {
     private final HashMap<String, BakedEntityTexture> downloadedTextures = new HashMap<>();
     private final HashMap<ResourceLocation, Optional<PlayerTexture>> bakedTextures = new HashMap<>();
 
-    private final Executor executor = Executors.newFixedThreadPool(1);
+    private final Executor workThread = ThreadUtils.newFixedThreadPool(1, "AW-SKIN/T-LD");
 
     public static PlayerTextureLoader getInstance() {
         return LOADER;
@@ -177,7 +177,7 @@ public class PlayerTextureLoader {
             return; // not steve and alex
         }
         bakedTextures.put(location, Optional.empty());
-        executor.execute(() -> {
+        workThread.execute(() -> {
             PlayerTexture resolvedTexture = new PlayerTexture("", location, null);
             resolvedTexture.setTexture(new BakedEntityTexture(location, alex));
             bakedTextures.put(location, Optional.of(resolvedTexture));
@@ -206,7 +206,7 @@ public class PlayerTextureLoader {
     }
 
     private void loadVanillaGameProfile(GameProfile profile, Consumer<Optional<GameProfile>> complete) {
-        executor.execute(() -> {
+        workThread.execute(() -> {
             //#if MC >= 11800
             SkullBlockEntity.updateGameprofile(profile, resolvedProfile -> complete.accept(Optional.ofNullable(resolvedProfile)));
             //#else
@@ -249,7 +249,7 @@ public class PlayerTextureLoader {
         }
         NativeImage newImage = new NativeImage(image.format(), image.getWidth(), image.getHeight(), true);
         newImage.copyFrom(image);
-        executor.execute(() -> {
+        workThread.execute(() -> {
             BakedEntityTexture bakedTexture = getDownloadedTexture(url);
             if (bakedTexture.getModel() == null) {
                 bakedTexture.setModel("default");

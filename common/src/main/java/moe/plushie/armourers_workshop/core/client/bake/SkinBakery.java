@@ -20,17 +20,16 @@ import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
 @Environment(value = EnvType.CLIENT)
 public final class SkinBakery implements ISkinLibraryListener {
 
+    private static final SkinBakery EMPTY = new SkinBakery();
     private static SkinBakery BAKERY;
 
     private final AtomicInteger bakingQueue = new AtomicInteger(0);
@@ -46,15 +45,13 @@ public final class SkinBakery implements ISkinLibraryListener {
             .build();
 
     public SkinBakery() {
-//        skinBakeExecutor = Executors.newFixedThreadPool(ConfigHandlerClient.modelBakingThreadCount);
-//        skinDownloadExecutor = Executors.newFixedThreadPool(2);
-//        skinCompletion = new ExecutorCompletionService<BakedSkin>(skinBakeExecutor);
-//        FMLCommonHandler.instance().bus().register(this);
     }
 
-    @NotNull
     public static SkinBakery getInstance() {
-        return Objects.requireNonNull(BAKERY, "bakery not start");
+        if (BAKERY != null) {
+            return BAKERY;
+        }
+        return EMPTY;
     }
 
     public static void start() {

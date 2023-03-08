@@ -20,10 +20,10 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
-import moe.plushie.armourers_workshop.utils.Counter;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
+import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.Matrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Quaternionf;
@@ -53,7 +53,7 @@ import java.util.Objects;
 @Environment(value = EnvType.CLIENT)
 public class BakedSkin implements IBakedSkin {
 
-    private final int id = Counter.BAKED_SKIN.incrementAndGet();
+    private final int id = ThreadUtils.BAKED_SKIN_COUNTER.incrementAndGet();
 
     private final String identifier;
     private final Skin skin;

@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.utils.Counter;
+import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import net.minecraft.core.BlockPos;
@@ -20,7 +20,7 @@ import java.util.List;
 
 public class Skin implements ISkin {
 
-    private final int id = Counter.SKIN.incrementAndGet();
+    private final int id = ThreadUtils.SKIN_COUNTER.incrementAndGet();
 
     private final SkinProperties properties;
     private final ISkinType skinType;

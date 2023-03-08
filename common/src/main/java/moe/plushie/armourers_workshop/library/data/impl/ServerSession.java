@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
+import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
@@ -14,13 +15,12 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public abstract class ServerSession {
 
-    private static final ExecutorService POOL = Executors.newFixedThreadPool(1);
+    private static final ExecutorService workThread = ThreadUtils.newFixedThreadPool(1, "AW-NET/G-ED");
 
     private static final ArrayList<String> DEFAULT_URLs = new ArrayList<>();
     private static final Map<String, ServerRequest> REQUESTS = new HashMap<>();
@@ -105,7 +105,7 @@ public abstract class ServerSession {
     }
 
     protected <T> void submit(IResultHandler<T> handler, Consumer<IResultHandler<T>> task) {
-        POOL.submit(() -> task.accept((result, exception) -> notify(() -> handler.apply(result, exception))));
+        workThread.submit(() -> task.accept((result, exception) -> notify(() -> handler.apply(result, exception))));
     }
 
     private void notify(Runnable handler) {

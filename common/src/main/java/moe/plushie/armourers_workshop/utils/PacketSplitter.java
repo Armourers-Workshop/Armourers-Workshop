@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -22,13 +21,13 @@ public class PacketSplitter {
     private final int SPLIT_END_FLAG = -3;
 
     private final HashMap<UUID, ArrayList<ByteBuf>> receivedBuffers = new HashMap<>();
-    private final ExecutorService executor = Executors.newFixedThreadPool(2, r -> new Thread(r, "Network-Data-Coder"));
+    private final ExecutorService workThread = ThreadUtils.newFixedThreadPool(2, "AW-NET/N-ED");
 
     public PacketSplitter() {
     }
 
     public void split(final CustomPacket message, Function<FriendlyByteBuf, Packet<?>> builder, int partSize, Consumer<Packet<?>> consumer) {
-        executor.submit(() -> {
+        workThread.submit(() -> {
             FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
             writePacket(message, buffer);
             buffer.capacity(buffer.readableBytes());
@@ -71,7 +70,7 @@ public class PacketSplitter {
             buffer.skipBytes(4); // skip header
             playerReceivedBuffers.add(buffer.retainedDuplicate()); // we need to keep writer/reader index
             if (packetState == SPLIT_END_FLAG) {
-                executor.submit(() -> {
+                workThread.submit(() -> {
                     // ownership will transfer to full buffer, so don't call release again.
                     FriendlyByteBuf full = new FriendlyByteBuf(Unpooled.wrappedBuffer(playerReceivedBuffers.toArray(new ByteBuf[0])));
                     playerReceivedBuffers.clear();
@@ -86,7 +85,7 @@ public class PacketSplitter {
             return;
         }
         ByteBuf receivedBuf = buffer.retainedDuplicate(); // we need to keep writer/reader index
-        executor.submit(() -> {
+        workThread.submit(() -> {
             consumer.accept(readPacket(new FriendlyByteBuf(receivedBuf)));
             receivedBuf.release();
         });

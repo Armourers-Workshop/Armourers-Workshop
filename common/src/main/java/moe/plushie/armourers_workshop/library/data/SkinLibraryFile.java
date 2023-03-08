@@ -1,13 +1,10 @@
 package moe.plushie.armourers_workshop.library.data;
 
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
-import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.skin.ISkinFileHeader;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
-import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.Constants;

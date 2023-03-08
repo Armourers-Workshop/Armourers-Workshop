@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.data;
 
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
+import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -38,8 +38,8 @@ public class DataTransformer<K, V, T> {
     private final int maxTransformCount;
 
     public DataTransformer(ThreadFactory config, LoadHandler<K, T> loader, TransformHandler<K, T, V> transformer, int maxLoadCount, int maxTransformCount) {
-        this.mainThread = Executors.newFixedThreadPool(1, config);
-        this.transformThread = Executors.newFixedThreadPool(maxTransformCount, config);
+        this.mainThread = ThreadUtils.newFixedThreadPool(1, config);
+        this.transformThread = ThreadUtils.newFixedThreadPool(maxTransformCount, config);
         this.loader = loader;
         this.transformer = transformer;
         this.maxLoadCount = maxLoadCount;
@@ -76,7 +76,7 @@ public class DataTransformer<K, V, T> {
             return;
         }
         entry.elevate(ticket.priority(key));
-        mainThread.submit(() -> {
+        mainThread.execute(() -> {
             // check and add enqueue;
             if (!entry.isLoading) {
                 entry.isLoading = true;

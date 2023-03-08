@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.data;
 
-import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.Constants;
@@ -11,17 +10,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class DataManager {
 
     private static final DataManager INSTANCE = new DataManager();
-    private final ExecutorService executor = Executors.newFixedThreadPool(1, r -> {
-        Thread thread = new Thread(r, "AW-SKIN-DM");
-        thread.setPriority(Thread.MIN_PRIORITY);
-        return thread;
-    });
+//    private final ExecutorService executor = ThreadUtils.newFixedThreadPool(1, "AW-SKIN/D-DM", Thread.MIN_PRIORITY);
 
     public static DataManager getInstance() {
         return INSTANCE;
@@ -145,15 +138,15 @@ public class DataManager {
         }
     }
 
-    public void loadSkinData(String identifier, IResultHandler<InputStream> handler) {
-        executor.submit(() -> {
-            try {
-                handler.accept(loadSkinData(identifier));
-            } catch (Exception exception) {
-                handler.reject(exception);
-            }
-        });
-    }
+//    public void loadSkinData(String identifier, IResultHandler<InputStream> handler) {
+//        executor.submit(() -> {
+//            try {
+//                handler.accept(loadSkinData(identifier));
+//            } catch (Exception exception) {
+//                handler.reject(exception);
+//            }
+//        });
+//    }
 
     private InputStream loadStreamFromPath(String identifier) throws IOException {
         File file = new File(EnvironmentManager.getSkinLibraryDirectory(), identifier);

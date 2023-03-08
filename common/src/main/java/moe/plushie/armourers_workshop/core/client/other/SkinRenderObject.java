@@ -81,7 +81,7 @@ public class SkinRenderObject implements IRenderBufferObject, AutoCloseable {
             return;
         }
         int id = this.id;
-        Minecraft.getInstance().submit(() -> RenderSystem.glDeleteBuffers(id));
+        Minecraft.getInstance().execute(() -> RenderSystem.glDeleteBuffers(id));
         this.id = -1;
         this.refCount.set(0);
     }

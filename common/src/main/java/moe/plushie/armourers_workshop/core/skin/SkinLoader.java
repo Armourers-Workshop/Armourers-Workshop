@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
+import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -39,11 +40,9 @@ import java.util.UUID;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
 
 public class SkinLoader {
 
@@ -377,11 +376,7 @@ public class SkinLoader {
         }
 
         protected ExecutorService buildThreadPool(String name, int size) {
-            return Executors.newFixedThreadPool(size, r -> {
-                Thread thread = new Thread(r, name);
-                thread.setPriority(Thread.MIN_PRIORITY);
-                return thread;
-            });
+            return ThreadUtils.newFixedThreadPool(size, name, Thread.MIN_PRIORITY);
         }
 
         protected synchronized Request pollRequest() {

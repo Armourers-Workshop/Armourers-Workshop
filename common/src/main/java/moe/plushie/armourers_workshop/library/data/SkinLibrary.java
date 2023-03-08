@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilePacket;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
@@ -18,11 +19,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class SkinLibrary implements ISkinLibrary {
 
-    static Executor executor = Executors.newFixedThreadPool(1);
+    private static final Executor workThread = ThreadUtils.newFixedThreadPool(1, "AW-SKIN/L-LD");
 
     protected final File basePath;
     protected final DataDomain domain;
@@ -51,7 +51,7 @@ public class SkinLibrary implements ISkinLibrary {
         ModLog.debug("reload {} library", domain.namespace());
         if (basePath != null && !isLoading) {
             beginLoading();
-            executor.execute(new SkinLibraryLoader(this, basePath, null));
+            workThread.execute(new SkinLibraryLoader(this, basePath, null));
         }
     }
 

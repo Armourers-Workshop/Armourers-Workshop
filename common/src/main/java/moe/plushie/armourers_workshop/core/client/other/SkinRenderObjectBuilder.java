@@ -25,6 +25,7 @@ import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.PoseStack;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -38,14 +39,13 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 @Environment(value = EnvType.CLIENT)
 public class SkinRenderObjectBuilder {
 
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1, r -> new Thread(r, "AW-SKIN-VB"));
+    private static final ExecutorService workThread = ThreadUtils.newFixedThreadPool(1, "AW-SKIN-VB");
     private static final Cache<Object, CachedTask> cachingTasks = CacheBuilder.newBuilder()
             .expireAfterAccess(3, TimeUnit.SECONDS)
             .removalListener(CachedTask::release)
@@ -170,7 +170,7 @@ public class SkinRenderObjectBuilder {
             return;
         }
         isSent = true;
-        executor.execute(this::doCompile);
+        workThread.execute(this::doCompile);
     }
 
     private void doCompile() {
