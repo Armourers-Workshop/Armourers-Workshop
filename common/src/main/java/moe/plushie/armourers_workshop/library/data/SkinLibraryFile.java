@@ -31,7 +31,7 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
 
     public SkinLibraryFile(DataDomain domain, String name, String path) {
         this.name = name;
-        this.path = SkinFileUtils.normalize(path, true);
+        this.path = path;
         this.domain = domain;
         this.header = null;
         this.isDirectory = true;

@@ -100,7 +100,7 @@ public class FileArgumentType implements IArgumentType<String> {
         String parent = getParentPath(inputPath);
         builder = builder.createOffset(builder.getStart() + parent.length());
         for (String file : fileList) {
-            String name = file.replaceFirst(parent, "");
+            String name = SkinFileUtils.getRelativePath(file, parent);
             if (!name.isEmpty()) {
                 builder.suggest(name);
             }
@@ -130,7 +130,7 @@ public class FileArgumentType implements IArgumentType<String> {
             return results;
         }
         for (File file : files) {
-            String rv = SkinFileUtils.normalize(file.getAbsolutePath().replaceFirst(rootFile.getAbsolutePath(), ""), true);
+            String rv = SkinFileUtils.getRelativePath(file, rootFile, true);
             if (file.isDirectory()) {
                 if (name.startsWith(rv)) {
                     results.addAll(getFileList(file, name));

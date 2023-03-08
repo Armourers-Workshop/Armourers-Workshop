@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -95,7 +96,7 @@ public class DataPackManager {
                 if (!it.startsWith(base)) {
                     return;
                 }
-                String name = it.replaceFirst(base, "");
+                String name = SkinFileUtils.getRelativePath(it, base);
                 if (!name.startsWith(target.getPath()) || !validator.test(name)) {
                     return;
                 }

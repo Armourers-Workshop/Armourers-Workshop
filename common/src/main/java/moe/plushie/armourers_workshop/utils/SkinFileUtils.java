@@ -81,6 +81,28 @@ public class SkinFileUtils {
         return FilenameUtils.getExtension(filename);
     }
 
+    public static String getRelativePath(final String path, final String rootPath) {
+        if (path.equals(rootPath)) {
+            return "/";
+        }
+        if (path.startsWith(rootPath)) {
+            return path.substring(rootPath.length());
+        }
+        return path;
+    }
+
+    public static String getRelativePath(final String path, final String rootPath, final boolean unixSeparator) {
+        return normalize(getRelativePath(path, rootPath), unixSeparator);
+    }
+
+    public static String getRelativePath(final File path, final File rootPath) {
+        return getRelativePath(path.getAbsolutePath(), rootPath.getAbsolutePath());
+    }
+
+    public static String getRelativePath(final File path, final File rootPath, final boolean unixSeparator) {
+        return normalize(getRelativePath(path, rootPath), unixSeparator);
+    }
+
     /**
      * Makes a directory, including any necessary but nonexistent parent
      * directories. If a file already exists with specified name but it is

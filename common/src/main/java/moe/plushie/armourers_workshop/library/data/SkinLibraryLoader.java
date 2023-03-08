@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinFileHeader;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 
@@ -45,7 +44,7 @@ public class SkinLibraryLoader implements Runnable {
         }
 
         for (File file : templateFiles) {
-            String path = file.getAbsolutePath().replaceFirst(libraryDirectory.getAbsolutePath(), "");
+            String path = SkinFileUtils.getRelativePath(file, libraryDirectory, true);
             String filename = file.getName();
             if (file.isDirectory()) {
                 fileList.add(new SkinLibraryFile(library.domain, filename, path));
