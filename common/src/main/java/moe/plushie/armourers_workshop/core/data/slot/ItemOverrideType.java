@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.common.IItemTagKey;
 import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItemTags;
+import moe.plushie.armourers_workshop.utils.ItemMatcher;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -11,24 +12,26 @@ import org.jetbrains.annotations.Nullable;
 
 public enum ItemOverrideType {
 
-    SWORD("sword", ModItemTags.SWORDS),
-    SHIELD("shield", ModItemTags.SHIELDS),
-    BOW("bow", ModItemTags.BOWS),
-    TRIDENT("trident", ModItemTags.TRIDENTS),
+    SWORD("sword", "sword|tachi|katana|dagger", ModItemTags.SWORDS),
+    SHIELD("shield", null, ModItemTags.SHIELDS),
+    BOW("bow", null, ModItemTags.BOWS),
+    TRIDENT("trident", "trident|lance", ModItemTags.TRIDENTS),
 
-    PICKAXE("pickaxe", ModItemTags.PICKAXES),
-    AXE("axe", ModItemTags.AXES),
-    SHOVEL("shovel", ModItemTags.SHOVELS),
-    HOE("hoe", ModItemTags.HOES),
+    PICKAXE("pickaxe", null, ModItemTags.PICKAXES),
+    AXE("axe", "(?<!pick)axe", ModItemTags.AXES),
+    SHOVEL("shovel", null, ModItemTags.SHOVELS),
+    HOE("hoe", null, ModItemTags.HOES),
 
-    ITEM("item", null);
+    ITEM("item", null, null);
 
     private final IItemTagKey<Item> tag;
     private final String name;
+    private final ItemMatcher matcher;
 
-    ItemOverrideType(String name, IItemTagKey<Item> tag) {
+    ItemOverrideType(String name, String regex, IItemTagKey<Item> tag) {
         this.name = name;
         this.tag = tag;
+        this.matcher = new ItemMatcher(name, regex);
     }
 
     @Nullable
@@ -42,13 +45,21 @@ public enum ItemOverrideType {
     }
 
     public boolean isOverrideItem(ItemStack itemStack) {
-        // we first the using the config item overrides.
+        // yep, the item skin override all item stack.
+        if (this == ITEM) {
+            return true;
+        }
+        // test by overrides of the config system.
         ResourceLocation registryName = Registries.ITEM.getKey(itemStack.getItem());
         if (ModConfig.Common.overrides.contains(name + ":" + registryName)) {
             return true;
         }
-        // and then using vanilla's tag system.
-        return tag != null && tag.contains(itemStack);
+        // test by vanilla's tag system.
+        if (tag != null && tag.contains(itemStack)) {
+            return true;
+        }
+        // test by item id matching system.
+        return matcher.test(registryName);
     }
 
     public String getName() {

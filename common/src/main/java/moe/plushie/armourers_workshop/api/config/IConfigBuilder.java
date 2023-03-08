@@ -19,6 +19,10 @@ public interface IConfigBuilder {
         return builder().defineInRange(path, defaultValue, min, max, description);
     }
 
+    default <T> IConfigValue<List<? extends T>> defineList(String path, List<? extends T> defaultValue, String... description) {
+        return defineList(path, defaultValue, v -> true, description);
+    }
+
     default <T> IConfigValue<List<? extends T>> defineList(String path, List<? extends T> defaultValue, Predicate<Object> elementValidator, String... description) {
         return builder().defineList(path, defaultValue, elementValidator, description);
     }
