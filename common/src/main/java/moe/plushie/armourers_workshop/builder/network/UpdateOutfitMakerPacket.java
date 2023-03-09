@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.builder.blockentity.OutfitMakerBlockEntity
 import moe.plushie.armourers_workshop.builder.menu.OutfitMakerMenu;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModPermissions;
-import moe.plushie.armourers_workshop.utils.AWDataAccessor;
+import moe.plushie.armourers_workshop.utils.DataAccessor;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -84,23 +84,23 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
         ITEM_FLAVOUR(DataSerializers.STRING, OutfitMakerBlockEntity::getItemFlavour, OutfitMakerBlockEntity::setItemFlavour),
         ITEM_CRAFTING(DataSerializers.COMPOUND_TAG, null, null);
 
-        private final AWDataAccessor<OutfitMakerBlockEntity, ?> dataAccessor;
+        private final DataAccessor<OutfitMakerBlockEntity, ?> dataAccessor;
 
         <T> Field(IEntitySerializer<T> dataSerializer, Function<OutfitMakerBlockEntity, T> supplier, BiConsumer<OutfitMakerBlockEntity, T> applier) {
-            this.dataAccessor = AWDataAccessor.of(dataSerializer, supplier, applier);
+            this.dataAccessor = DataAccessor.of(dataSerializer, supplier, applier);
         }
 
         public <T> T get(OutfitMakerBlockEntity entity) {
-            AWDataAccessor<OutfitMakerBlockEntity, T> dataAccessor = getDataAccessor();
+            DataAccessor<OutfitMakerBlockEntity, T> dataAccessor = getDataAccessor();
             return dataAccessor.get(entity);
         }
 
         public <T> void set(OutfitMakerBlockEntity entity, T value) {
-            AWDataAccessor<OutfitMakerBlockEntity, T> dataAccessor = getDataAccessor();
+            DataAccessor<OutfitMakerBlockEntity, T> dataAccessor = getDataAccessor();
             dataAccessor.set(entity, value);
         }
 
-        public <T> AWDataAccessor<OutfitMakerBlockEntity, T> getDataAccessor() {
+        public <T> DataAccessor<OutfitMakerBlockEntity, T> getDataAccessor() {
             return ObjectUtils.unsafeCast(dataAccessor);
         }
     }

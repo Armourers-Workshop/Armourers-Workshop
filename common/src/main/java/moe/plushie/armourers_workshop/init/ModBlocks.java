@@ -18,6 +18,7 @@ import moe.plushie.armourers_workshop.library.block.SkinLibraryBlock;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -57,11 +58,11 @@ public class ModBlocks {
     }
 
     private static <T extends Block> IBlockBuilder<Block> create(Function<BlockBehaviour.Properties, T> supplier, Material material, MaterialColor materialColor) {
-        return ObjectUtils.unsafeCast(BuilderManager.getInstance().createBlockBuilder(supplier, material, materialColor));
+        return ObjectUtils.unsafeCast(BuilderManager.getInstance().createBlockBuilder(supplier, material, materialColor).strength(1.5f, 6.f));
     }
 
     private static <T extends Block> IBlockBuilder<Block> normal(Function<BlockBehaviour.Properties, T> supplier) {
-        return create(supplier, Material.STONE, MaterialColor.COLOR_RED).strength(1.5f, 6.f);
+        return create(supplier, Material.STONE, MaterialColor.NONE);
     }
 
     private static <T extends Block> IBlockBuilder<Block> half(Function<BlockBehaviour.Properties, T> supplier) {
@@ -69,7 +70,7 @@ public class ModBlocks {
     }
 
     private static <T extends Block> IBlockBuilder<Block> glass(Function<BlockBehaviour.Properties, T> supplier) {
-        return create(supplier, Material.GLASS, MaterialColor.COLOR_BLACK).strength(1.5f, 6.f).noOcclusion().bind(() -> RenderType::translucent);
+        return create(supplier, Material.GLASS, MaterialColor.NONE).noOcclusion().bind(() -> RenderType::translucent);
     }
 
     public static void init() {

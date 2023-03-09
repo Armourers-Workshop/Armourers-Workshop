@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
-import moe.plushie.armourers_workshop.utils.AWDataAccessor;
+import moe.plushie.armourers_workshop.utils.DataAccessor;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
@@ -53,23 +53,23 @@ public class UpdateColorMixerPacket extends CustomPacket {
 
         COLOR(DataSerializers.PAINT_COLOR, ColorMixerBlockEntity::getColor, ColorMixerBlockEntity::setColor);
 
-        private final AWDataAccessor<ColorMixerBlockEntity, ?> dataAccessor;
+        private final DataAccessor<ColorMixerBlockEntity, ?> dataAccessor;
 
         <T> Field(IEntitySerializer<T> dataSerializer, Function<ColorMixerBlockEntity, T> supplier, BiConsumer<ColorMixerBlockEntity, T> applier) {
-            this.dataAccessor = AWDataAccessor.of(dataSerializer, supplier, applier);
+            this.dataAccessor = DataAccessor.of(dataSerializer, supplier, applier);
         }
 
         public <T> T get(ColorMixerBlockEntity entity) {
-            AWDataAccessor<ColorMixerBlockEntity, T> dataAccessor = getDataAccessor();
+            DataAccessor<ColorMixerBlockEntity, T> dataAccessor = getDataAccessor();
             return dataAccessor.get(entity);
         }
 
         public <T> void set(ColorMixerBlockEntity entity, T value) {
-            AWDataAccessor<ColorMixerBlockEntity, T> dataAccessor = getDataAccessor();
+            DataAccessor<ColorMixerBlockEntity, T> dataAccessor = getDataAccessor();
             dataAccessor.set(entity, value);
         }
 
-        public <T> AWDataAccessor<ColorMixerBlockEntity, T> getDataAccessor() {
+        public <T> DataAccessor<ColorMixerBlockEntity, T> getDataAccessor() {
             return ObjectUtils.unsafeCast(dataAccessor);
         }
     }

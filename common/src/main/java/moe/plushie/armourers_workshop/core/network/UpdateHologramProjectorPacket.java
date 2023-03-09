@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.network;
 import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
-import moe.plushie.armourers_workshop.utils.AWDataAccessor;
+import moe.plushie.armourers_workshop.utils.DataAccessor;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
@@ -61,23 +61,23 @@ public class UpdateHologramProjectorPacket extends CustomPacket {
         ROTATION_OFFSET(DataSerializers.VECTOR_3F, HologramProjectorBlockEntity::getRotationOffset, HologramProjectorBlockEntity::setRotationOffset),
         ROTATION_SPEED(DataSerializers.VECTOR_3F, HologramProjectorBlockEntity::getRotationSpeed, HologramProjectorBlockEntity::setRotationSpeed);
 
-        private final AWDataAccessor<HologramProjectorBlockEntity, ?> dataAccessor;
+        private final DataAccessor<HologramProjectorBlockEntity, ?> dataAccessor;
 
         <T> Field(IEntitySerializer<T> dataSerializer, Function<HologramProjectorBlockEntity, T> supplier, BiConsumer<HologramProjectorBlockEntity, T> applier) {
-            this.dataAccessor = AWDataAccessor.of(dataSerializer, supplier, applier);
+            this.dataAccessor = DataAccessor.of(dataSerializer, supplier, applier);
         }
 
         public <T> T get(HologramProjectorBlockEntity entity) {
-            AWDataAccessor<HologramProjectorBlockEntity, T> dataAccessor = getDataAccessor();
+            DataAccessor<HologramProjectorBlockEntity, T> dataAccessor = getDataAccessor();
             return dataAccessor.get(entity);
         }
 
         public <T> void set(HologramProjectorBlockEntity entity, T value) {
-            AWDataAccessor<HologramProjectorBlockEntity, T> dataAccessor = getDataAccessor();
+            DataAccessor<HologramProjectorBlockEntity, T> dataAccessor = getDataAccessor();
             dataAccessor.set(entity, value);
         }
 
-        public <T> AWDataAccessor<HologramProjectorBlockEntity, T> getDataAccessor() {
+        public <T> DataAccessor<HologramProjectorBlockEntity, T> getDataAccessor() {
             return ObjectUtils.unsafeCast(dataAccessor);
         }
     }

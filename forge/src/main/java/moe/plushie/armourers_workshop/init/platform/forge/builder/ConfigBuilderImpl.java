@@ -174,6 +174,7 @@ public class ConfigBuilderImpl {
 
     public static class BuilderProxy implements IConfigBuilder {
 
+        String root = "";
         HashMap<String, ValueProxy<Object>> values = new HashMap<>();
         ForgeConfigSpec.Builder builder;
 
@@ -203,9 +204,12 @@ public class ConfigBuilderImpl {
 
         @Override
         public void defineCategory(String name, String description, Runnable runnable) {
+            String oldRoot = root;
             builder.comment(description);
             builder.push(name);
+            root = root + name + ".";
             runnable.run();
+            root = oldRoot;
             builder.pop();
         }
 
@@ -221,7 +225,7 @@ public class ConfigBuilderImpl {
 
         private <T> IConfigValue<T> put(String path, ForgeConfigSpec.ConfigValue<T> value) {
             ValueProxy<T> proxy = new ValueProxy<>(path, value);
-            values.put(path, ObjectUtils.unsafeCast(proxy));
+            values.put(root + path, ObjectUtils.unsafeCast(proxy));
             return proxy;
         }
     }

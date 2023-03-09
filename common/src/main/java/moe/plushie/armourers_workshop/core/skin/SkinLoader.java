@@ -475,6 +475,9 @@ public class SkinLoader {
                 caching.add(request.identifier, state.skin);
                 return state.skin;
             }
+            if (state.exception == null)  {
+                state.exception = new TimeoutException("request server skin");
+            }
             throw state.exception;
         }
 

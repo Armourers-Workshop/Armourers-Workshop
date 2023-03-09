@@ -4,7 +4,9 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModContext;
+import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -29,6 +31,7 @@ public class UpdateContextPacket extends CustomPacket {
     public UpdateContextPacket(FriendlyByteBuf buffer) {
         if (buffer.readBoolean()) {
             ModContext.init(buffer.readUUID(), buffer.readUUID());
+            checkNetworkVersion(buffer.readUtf());
         }
         readConfigSpec(buffer);
     }
@@ -39,6 +42,7 @@ public class UpdateContextPacket extends CustomPacket {
             buffer.writeBoolean(true);
             buffer.writeUUID(ModContext.t2(token));
             buffer.writeUUID(ModContext.t3(token));
+            buffer.writeUtf(ModConstants.MOD_NET_ID);
         } else {
             buffer.writeBoolean(false);
         }
@@ -89,6 +93,12 @@ public class UpdateContextPacket extends CustomPacket {
             ModConfigSpec.COMMON.apply(fields);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void checkNetworkVersion(String version) {
+        if (!version.equals(ModConstants.MOD_NET_ID)) {
+            ModLog.warn("network protocol conflict, server: {}, client: {}", version, ModConstants.MOD_NET_ID);
         }
     }
 }

@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.core.permission.BlockPermission;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModPermissions;
-import moe.plushie.armourers_workshop.utils.AWDataAccessor;
+import moe.plushie.armourers_workshop.utils.DataAccessor;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
@@ -163,24 +163,24 @@ public class UpdateArmourerPacket extends CustomPacket {
         ITEM_SAVE(DataSerializers.COMPOUND_TAG, null, null, ModPermissions.ARMOURER_SAVE);
 
         public final BlockPermission permission;
-        private final AWDataAccessor<ArmourerBlockEntity, ?> dataAccessor;
+        private final DataAccessor<ArmourerBlockEntity, ?> dataAccessor;
 
         <T> Field(IEntitySerializer<T> dataSerializer, Function<ArmourerBlockEntity, T> supplier, BiConsumer<ArmourerBlockEntity, T> applier, BlockPermission permission) {
             this.permission = permission;
-            this.dataAccessor = AWDataAccessor.of(dataSerializer, supplier, applier);
+            this.dataAccessor = DataAccessor.of(dataSerializer, supplier, applier);
         }
 
         public <T> T get(ArmourerBlockEntity entity) {
-            AWDataAccessor<ArmourerBlockEntity, T> dataAccessor = getDataAccessor();
+            DataAccessor<ArmourerBlockEntity, T> dataAccessor = getDataAccessor();
             return dataAccessor.get(entity);
         }
 
         public <T> void set(ArmourerBlockEntity entity, T value) {
-            AWDataAccessor<ArmourerBlockEntity, T> dataAccessor = getDataAccessor();
+            DataAccessor<ArmourerBlockEntity, T> dataAccessor = getDataAccessor();
             dataAccessor.set(entity, value);
         }
 
-        public <T> AWDataAccessor<ArmourerBlockEntity, T> getDataAccessor() {
+        public <T> DataAccessor<ArmourerBlockEntity, T> getDataAccessor() {
             return ObjectUtils.unsafeCast(dataAccessor);
         }
 
