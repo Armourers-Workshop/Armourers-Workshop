@@ -20,6 +20,7 @@ import java.util.UUID;
 public class UpdateContextPacket extends CustomPacket {
 
     private UUID token = null;
+    private FriendlyByteBuf buffer = null;
 
     public UpdateContextPacket() {
     }
@@ -29,11 +30,8 @@ public class UpdateContextPacket extends CustomPacket {
     }
 
     public UpdateContextPacket(FriendlyByteBuf buffer) {
-        if (buffer.readBoolean()) {
-            ModContext.init(buffer.readUUID(), buffer.readUUID());
-            checkNetworkVersion(buffer.readUtf());
-        }
-        readConfigSpec(buffer);
+        this.buffer = buffer;
+        this.buffer.retain();
     }
 
     @Override
@@ -51,6 +49,14 @@ public class UpdateContextPacket extends CustomPacket {
 
     @Override
     public void accept(IClientPacketHandler packetHandler, Player player) {
+        if (buffer != null) {
+            if (buffer.readBoolean()) {
+                ModContext.init(buffer.readUUID(), buffer.readUUID());
+                checkNetworkVersion(buffer.readUtf());
+            }
+            readConfigSpec(buffer);
+            buffer.release();
+        }
     }
 
     private void writeConfigSpec(FriendlyByteBuf buffer) {

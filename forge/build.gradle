@@ -51,6 +51,7 @@ dependencies {
     modOptionalCompileOnly project.curios_api_version
 
     // modOptionalApi 'curse.maven:mine-mine-no-mi-78726:4181345'
+    //modOptionalApi 'moe.plushie.armourers_workshop:armourersworkshop-plugin-mod:1.0.3'
 }
 
 processResources {
