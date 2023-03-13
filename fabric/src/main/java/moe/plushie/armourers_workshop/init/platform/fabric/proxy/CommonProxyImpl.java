@@ -43,11 +43,12 @@ public class CommonProxyImpl implements ModInitializer {
     @Override
     public void onInitialize() {
         ArmourersWorkshop.init();
+
+        CommonNativeManagerImpl.INSTANCE.willServerStart(EnvironmentManagerImpl::attach);
+        CommonNativeManagerImpl.INSTANCE.didServerStop(EnvironmentManagerImpl::detach);
+
         EnvironmentExecutor.willInit(EnvironmentType.COMMON);
         EnvironmentExecutor.willSetup(EnvironmentType.COMMON);
-
-        CommonNativeManagerImpl.INSTANCE.didServerStart(EnvironmentManagerImpl::attach);
-        CommonNativeManagerImpl.INSTANCE.didServerStop(EnvironmentManagerImpl::detach);
 
         AttackEntityCallback.EVENT.register(this::onAttackEntity);
         UseBlockCallback.EVENT.register(this::onUseItemFirst);

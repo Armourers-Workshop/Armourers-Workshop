@@ -100,7 +100,7 @@ public class ModConfig {
         public static boolean instancedDyeTable = false;
         public static boolean enableProtocolCheck = true;
         public static int serverSkinSendRate = 4000;
-        public static boolean serverCompressesSkins = true;
+        public static boolean enableServerCompressesSkins = true;
         public static int enableEmbeddedSkinRenderer = 0;
         public static int enableFirstPersonSkinRenderer = 0;
         public static boolean enableMatchingByItemId = true;

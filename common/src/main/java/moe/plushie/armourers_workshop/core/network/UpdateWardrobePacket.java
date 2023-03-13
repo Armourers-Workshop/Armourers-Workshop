@@ -4,8 +4,10 @@ import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.menu.SkinWardrobeMenu;
+import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.DataAccessor;
@@ -93,6 +95,10 @@ public class UpdateWardrobePacket extends CustomPacket {
             ModLog.info("the wardrobe {} operation rejected for '{}'", field, playerName);
             return;
         }
+        if (!checkSecurityByServer()) {
+            ModLog.info("the wardrobe {} operation rejected for '{}', for security reasons.", field, playerName);
+            return;
+        }
         ModLog.debug("the wardrobe {} operation accepted for '{}'", field, playerName);
         SkinWardrobe wardrobe = apply(player);
         if (wardrobe != null) {
@@ -132,6 +138,30 @@ public class UpdateWardrobePacket extends CustomPacket {
                 }
         }
         return null;
+    }
+
+    private boolean checkSecurityByServer() {
+        switch (mode) {
+            case SYNC: {
+                // the server side never accept sync request.
+                return false;
+            }
+            case SYNC_ITEM: {
+                int slot = compoundNBT.getInt("Slot");
+                // for security reasons we need to check the position of the slot.
+                int index = slot - SkinSlotType.DYE.getIndex();
+                if (index < 8 || index >= SkinSlotType.DYE.getMaxSize()) {
+                    return false;
+                }
+                // for security reasons we only allows the player upload the bottle item.
+                ItemStack itemStack = ItemStack.of(compoundNBT.getCompound("Item"));
+                return itemStack.getItem() == ModItems.BOTTLE.get();
+            }
+            case SYNC_OPTION: {
+                return true;
+            }
+        }
+        return true;
     }
 
     public enum Mode {

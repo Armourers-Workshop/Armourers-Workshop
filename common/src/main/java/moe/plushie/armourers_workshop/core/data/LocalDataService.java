@@ -1,26 +1,25 @@
 package moe.plushie.armourers_workshop.core.data;
 
-import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
-import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.SkinUUID;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
@@ -29,11 +28,11 @@ public class LocalDataService {
 
     private static LocalDataService RUNNING;
 
-    private final Path rootPath;
+    private final File rootPath;
     private final HashMap<String, Node> nodes = new HashMap<>();
     private String lastGenUUID = "";
 
-    public LocalDataService(Path rootPath) {
+    public LocalDataService(File rootPath) {
         this.rootPath = rootPath;
         // data migration for the internal-test version, and will be removed in later versions.
         this.loadLegacyNodes();
@@ -46,7 +45,7 @@ public class LocalDataService {
 
     public static void start(MinecraftServer server) {
         if (RUNNING == null) {
-            RUNNING = new LocalDataService(server.getWorldPath(Constants.Folder.LOCAL_DB));
+            RUNNING = new LocalDataService(EnvironmentManager.getSkinDatabaseDirectory());
             ModLog.info("start local service of '{}'", server.getWorldData().getLevelName());
         }
     }
@@ -63,11 +62,11 @@ public class LocalDataService {
     }
 
     protected void loadLegacyNodes() {
-        File indexDB = rootPath.resolve("index.dat").toFile();
+        File indexDB = new File(rootPath, "index.data");
         if (!indexDB.exists()) {
             return;
         }
-        File[] files = SkinFileUtils.listFiles(rootPath.toFile());
+        File[] files = SkinFileUtils.listFiles(rootPath);
         if (files == null) {
             return;
         }
@@ -121,11 +120,11 @@ public class LocalDataService {
     }
 
     private Node generateNode(String identifier, File skinFile) throws Exception {
-       if (!skinFile.isFile()) {
+        if (!skinFile.isFile()) {
             return null;
         }
         byte[] bytes = SkinFileUtils.readFileToByteArray(skinFile);
-        FastByteArrayInputStream stream = new FastByteArrayInputStream(bytes);
+        ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
         Skin skin = SkinIOUtils.loadSkinFromStream2(stream);
         if (skin == null) {
             return null;
@@ -136,7 +135,7 @@ public class LocalDataService {
     }
 
     private File getRootFile() {
-        return rootPath.resolve("objects").toFile();
+        return new File(rootPath, "objects");
     }
 
     public InputStream getFile(String identifier) throws IOException {
@@ -158,18 +157,19 @@ public class LocalDataService {
 
     public String addFile(Skin skin) {
         // save file first.
-        FastByteArrayOutputStream stream = new FastByteArrayOutputStream(5 * 1024);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream(5 * 1024);
         SkinIOUtils.saveSkinToStream(stream, skin);
+        byte[] bytes = stream.toByteArray();
         // check whether the files are the same as those in the db.
-        Node tmp = new Node(getFreeUUID(), skin.getType(), stream.array, skin.getProperties());
+        Node tmp = new Node(getFreeUUID(), skin.getType(), bytes, skin.getProperties());
         for (Node node : nodes.values()) {
-            if (node.isValid() && node.equals(tmp) && node.equalContents(stream.array)) {
+            if (node.isValid() && node.equals(tmp) && node.equalContents(bytes)) {
                 return node.id;
             }
         }
         ModLog.debug("Save skin into db {}", tmp.id);
         try {
-            tmp.save(stream.array);
+            tmp.save(bytes);
             nodes.put(tmp.id, tmp);
             return tmp.id;
         } catch (IOException exception) {
@@ -235,7 +235,7 @@ public class LocalDataService {
         public CompoundTag serializeNBT() {
             CompoundTag nbt = new CompoundTag();
             nbt.putString("UUID", id);
-            nbt.putString("Type", type.toString());
+            nbt.putString("Type", type.getRegistryName().toString());
             nbt.putInt("Version", version);
             // file
             nbt.putInt("FileSize", fileSize);
@@ -303,11 +303,11 @@ public class LocalDataService {
         }
 
         public File getFile() {
-            return rootPath.resolve("objects/" + id + "/1").toFile();
+            return new File(rootPath, "objects/" + id + "/1");
         }
 
         public File getIndexFile() {
-            return rootPath.resolve("objects/" + id + "/0").toFile();
+            return new File(rootPath, "objects/" + id + "/0");
         }
 
         public boolean isValid() {

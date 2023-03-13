@@ -31,7 +31,7 @@ public class ResponseSkinPacket extends CustomPacket {
         this.exp = exp;
         this.skin = skin;
         this.mode = skin != null ? Mode.STREAM : Mode.EXCEPTION;
-        this.compress = ModConfig.Common.serverCompressesSkins;
+        this.compress = ModConfig.Common.enableServerCompressesSkins;
     }
 
     public ResponseSkinPacket(FriendlyByteBuf buffer) {

@@ -17,11 +17,11 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 public class CommonProxyImpl {
 
     public static void init() {
+        CommonNativeManagerImpl.INSTANCE.willServerStart(EnvironmentManagerImpl::attach);
+        CommonNativeManagerImpl.INSTANCE.didServerStop(EnvironmentManagerImpl::detach);
+
         EnvironmentExecutor.willInit(EnvironmentType.COMMON);
         EnvironmentExecutor.willSetup(EnvironmentType.COMMON);
-
-        CommonNativeManagerImpl.INSTANCE.didServerStart(EnvironmentManagerImpl::attach);
-        CommonNativeManagerImpl.INSTANCE.didServerStop(EnvironmentManagerImpl::detach);
 
         // listen the fml events.
         NotificationCenterImpl.observer(FMLCommonSetupEvent.class, event -> EnvironmentExecutor.didInit(EnvironmentType.COMMON));

@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.skin.exception.NewerFileVersionExcept
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.util.Strings;
@@ -262,11 +263,6 @@ public final class SkinIOUtils {
 //        }
 //    }
 
-    public static File getSkinDatabaseDirectory() {
-        return null;
-//        return new File(DimensionManager.getCurrentSaveRootDirectory(), "skin-database");
-    }
-
     public static boolean createDirectory(File file) {
         if (!file.exists()) {
             return file.mkdirs();
@@ -276,7 +272,7 @@ public final class SkinIOUtils {
 
     public static void recoverSkins(Player player) {
         player.sendSystemMessage(Component.literal("Starting skin recovery."));
-        File skinDir = getSkinDatabaseDirectory();
+        File skinDir = EnvironmentManager.getSkinDatabaseDirectory();
         if (skinDir.exists() & skinDir.isDirectory()) {
             File recoverDir = new File(System.getProperty("user.dir"), "recovered-skins");
             if (!recoverDir.exists()) {

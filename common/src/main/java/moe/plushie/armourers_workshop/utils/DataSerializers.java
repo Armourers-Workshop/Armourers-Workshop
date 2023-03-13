@@ -131,7 +131,7 @@ public class DataSerializers {
             OutputStream outputStream = null;
             ObjectOutputStream objectOutputStream = null;
             try {
-                boolean compress = ModConfig.Common.serverCompressesSkins;
+                boolean compress = ModConfig.Common.enableServerCompressesSkins;
                 buffer.writeBoolean(compress);
                 outputStream = createOutputStream(buffer, compress);
                 objectOutputStream = new ObjectOutputStream(outputStream);
