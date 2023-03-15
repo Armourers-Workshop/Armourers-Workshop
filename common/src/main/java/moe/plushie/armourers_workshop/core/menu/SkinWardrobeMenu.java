@@ -127,8 +127,8 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        Slot slot = this.slots.get(index);
-        if (slot == null || !slot.hasItem()) {
+        Slot slot = slots.get(index);
+        if (!slot.hasItem()) {
             return ItemStack.EMPTY;
         }
         ItemStack itemStack = slot.getItem();
@@ -140,11 +140,14 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
             return itemStack.copy();
         }
         SkinSlotType slotType = SkinSlotType.of(itemStack);
-        int startIndex = getFreeSlot(slotType);
-        if (!moveItemStackTo(itemStack, startIndex, startIndex + 1, false)) {
-            return ItemStack.EMPTY;
+        if (slotType != null) {
+            int startIndex = getFreeSlot(slotType);
+            if (!moveItemStackTo(itemStack, startIndex, startIndex + 1, false)) {
+                return ItemStack.EMPTY;
+            }
+            slot.set(ItemStack.EMPTY);
+            return itemStack.copy();
         }
-        slot.set(ItemStack.EMPTY);
         return ItemStack.EMPTY;
     }
 

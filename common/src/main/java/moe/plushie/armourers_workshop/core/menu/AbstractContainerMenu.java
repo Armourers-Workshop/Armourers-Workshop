@@ -30,7 +30,7 @@ public abstract class AbstractContainerMenu extends net.minecraft.world.inventor
 
     public ItemStack quickMoveStack(Player player, int index, int slotSize) {
         Slot slot = this.slots.get(index);
-        if (slot == null || !slot.hasItem()) {
+        if (!slot.hasItem()) {
             return ItemStack.EMPTY;
         }
         ItemStack itemStack = slot.getItem();

@@ -42,18 +42,19 @@ public class SkinOverriddenManager {
     private final HashSet<ISkinPartType> disabledOverlays = new HashSet<>();
 
     private final HashSet<EquipmentSlot> disabledEquipmentSlots = new HashSet<>();
-    private final HashSet<EquipmentSlot> disabledEquipmentSlotsByPart = new HashSet<>();
+    private final HashSet<EquipmentSlot> disabledEquipmentSlotsByModel = new HashSet<>();
+    private final HashSet<EquipmentSlot> disabledEquipmentSlotsByOverlay = new HashSet<>();
 
     private final HashMap<EquipmentSlot, ItemStack> disabledEquipmentItems = new HashMap<>();
 
     public void addModel(ISkinPartType partType) {
         disabledModels.add(partType);
-        disabledOverlays.add(partType);
+        disabledEquipmentSlotsByModel.add(getEquipmentSlot(partType));
     }
 
     public void addOverlay(ISkinPartType partType) {
         disabledOverlays.add(partType);
-        disabledEquipmentSlotsByPart.add(getEquipmentSlot(partType));
+        disabledEquipmentSlotsByOverlay.add(getEquipmentSlot(partType));
     }
 
     public void addEquipment(EquipmentSlot slotType) {
@@ -77,8 +78,11 @@ public class SkinOverriddenManager {
 
     // if it returns true, it means equipment is overwritten.
     public boolean overrideEquipment(EquipmentSlot slotType) {
-        return disabledEquipmentSlotsByPart.contains(slotType)
-                || disabledEquipmentSlots.contains(slotType);
+        if (disabledEquipmentSlots.contains(slotType)) {
+            return true;
+        }
+        // we will auto hidden the equipment when model and overlay hidden.
+        return disabledEquipmentSlotsByModel.contains(slotType) && disabledEquipmentSlotsByOverlay.contains(slotType);
     }
 
     public boolean overrideAnyModel() {
@@ -89,7 +93,8 @@ public class SkinOverriddenManager {
         disabledModels.clear();
         disabledOverlays.clear();
         disabledEquipmentSlots.clear();
-        disabledEquipmentSlotsByPart.clear();
+        disabledEquipmentSlotsByModel.clear();
+        disabledEquipmentSlotsByOverlay.clear();
     }
 
     public void willRender(Entity entity) {

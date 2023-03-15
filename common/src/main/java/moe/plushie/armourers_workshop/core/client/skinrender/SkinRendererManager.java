@@ -41,6 +41,8 @@ public class SkinRendererManager  {
 
     private static final SkinRendererManager INSTANCE = new SkinRendererManager();
 
+    private boolean isReady = false;
+
     private final HashMap<IEntityType<?>, EntityProfile> entities = new HashMap<>();
 
     private final ArrayList<SkinRenderer.Factory<SkinRenderer<?, ?, ?>>> builders = new ArrayList<>();
@@ -76,20 +78,25 @@ public class SkinRendererManager  {
         });
 
         // execute the pending tasks.
-        entities.forEach((this::_bind));
+        entities.forEach(this::_bind);
+        isReady = true;
     }
 
     public void unbind(IEntityType<?> entityType, EntityProfile entityProfile) {
         ModLog.debug("Detach Entity Renderer '{}'", entityType.getRegistryName());
         entities.remove(entityType);
-        // TODO: remove layer in the entity renderer.
+        if (isReady) {
+            // TODO: remove layer in the entity renderer.
+        }
     }
 
     public void bind(IEntityType<?> entityType, EntityProfile entityProfile) {
         ModLog.debug("Attach Entity Renderer '{}'", entityType.getRegistryName());
         entities.put(entityType, entityProfile);
         // try call once _bind to avoid the bind method being called after init.
-        _bind(entityType, entityProfile);
+        if (isReady) {
+            _bind(entityType, entityProfile);
+        }
     }
 
     private void _bind(IEntityType<?> entityType, EntityProfile entityProfile) {

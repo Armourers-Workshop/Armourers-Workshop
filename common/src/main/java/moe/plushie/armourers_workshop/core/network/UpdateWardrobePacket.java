@@ -118,11 +118,11 @@ public class UpdateWardrobePacket extends CustomPacket {
             return null;
         }
         switch (mode) {
-            case SYNC:
+            case SYNC: {
                 wardrobe.deserializeNBT(compoundNBT);
                 return wardrobe;
-
-            case SYNC_ITEM:
+            }
+            case SYNC_ITEM: {
                 Container inventory = wardrobe.getInventory();
                 int slot = compoundNBT.getInt("Slot");
                 if (slot < inventory.getContainerSize()) {
@@ -130,12 +130,14 @@ public class UpdateWardrobePacket extends CustomPacket {
                     return wardrobe;
                 }
                 break;
-
-            case SYNC_OPTION:
+            }
+            case SYNC_OPTION: {
                 if (field != null) {
                     field.set(wardrobe, fieldValue);
                     return wardrobe;
                 }
+                break;
+            }
         }
         return null;
     }
