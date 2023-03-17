@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
@@ -103,6 +104,9 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
 
     public boolean canPlace(Part part) {
         if (skin.isEmpty()) {
+            return false;
+        }
+        if (skin.getType() != SkinTypes.BLOCK) {
             return false;
         }
         BlockPos pos = super.getClickedPos().offset(part.getOffset());

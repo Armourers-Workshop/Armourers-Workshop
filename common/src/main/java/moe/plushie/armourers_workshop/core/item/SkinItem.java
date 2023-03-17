@@ -74,16 +74,6 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
-        ItemStack itemStack = context.getItemInHand();
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        if (descriptor.getType() == SkinTypes.BLOCK) {
-            return place(new BlockPlaceContext(context));
-        }
-        return InteractionResult.FAIL;
-    }
-
-    @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
@@ -111,6 +101,11 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
 
     @Override
     public InteractionResult place(BlockPlaceContext context) {
+        ItemStack itemStack = context.getItemInHand();
+        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        if (descriptor.getType() != SkinTypes.BLOCK) {
+            return InteractionResult.PASS;
+        }
         // we need expand the context info.
         return super.place(new SkinBlockPlaceContext(context));
     }

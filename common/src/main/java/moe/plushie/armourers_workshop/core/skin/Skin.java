@@ -45,10 +45,10 @@ public class Skin implements ISkin {
     }
 
     public HashMap<BlockPos, Rectangle3i> getBlockBounds() {
-        if (skinType != SkinTypes.BLOCK) {
-            return null;
-        }
         HashMap<BlockPos, Rectangle3i> blockBounds = new HashMap<>();
+        if (skinType != SkinTypes.BLOCK) {
+            return blockBounds;
+        }
         for (SkinPart part : getParts()) {
             HashMap<BlockPos, Rectangle3i> partBlockBounds = part.getBlockBounds();
             if (partBlockBounds != null) {
