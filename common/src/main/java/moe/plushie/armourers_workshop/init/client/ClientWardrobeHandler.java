@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.init.client;
 
-import com.apple.library.impl.WindowManagerImpl;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.common.IItemTransformType;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
@@ -15,7 +14,6 @@ import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
-import moe.plushie.armourers_workshop.core.client.render.TransformDummyRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
@@ -159,9 +157,6 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderLivingPre(LivingEntity entity, float partialTicks, int packedLight, IPoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
-        if (TransformDummyRenderer.isDummy(entityRenderer)) {
-            return;
-        }
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
             SkinRendererManager.getInstance().willRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
@@ -169,9 +164,6 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderLiving(LivingEntity entity, float partialTicks, int packedLight, IPoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
-        if (TransformDummyRenderer.isDummy(entityRenderer)) {
-            return;
-        }
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
             SkinRendererManager.getInstance().willRenderModel(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
@@ -179,9 +171,6 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderLivingPost(LivingEntity entity, float partialTicks, int packedLight, IPoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
-        if (TransformDummyRenderer.isDummy(entityRenderer)) {
-            return;
-        }
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
             SkinRendererManager.getInstance().didRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));

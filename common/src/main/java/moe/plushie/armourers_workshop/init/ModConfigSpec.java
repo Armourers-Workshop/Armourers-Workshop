@@ -122,7 +122,7 @@ public class ModConfigSpec {
                 define("allowPreviewSkins", true, "Shows model previews in the library.", "Causes a lot of extra load on servers.", "Best to turn off on high population servers").bind(n -> allowLibraryPreviews = n, () -> allowLibraryPreviews);
                 define("allowManageSkins", false, "Allows clients to manage skins of the server computer library.", "Required permission level 5 or higher.").bind(v -> allowLibraryRemoteManage = v, () -> allowLibraryRemoteManage);
 
-                defineList("customGlobalServerURLs", new ArrayList<String>(), "We priority use https for the access token APIs.").bind(v -> customGlobalSkinLibraryURLs = new ArrayList<>(v), () -> new ArrayList<>(customGlobalSkinLibraryURLs));
+                defineList("customGlobalServerURLs", new ArrayList<String>(), this::allowsString, "We priority use https for the access token APIs.").bind(v -> customGlobalSkinLibraryURLs = new ArrayList<>(v), () -> new ArrayList<>(customGlobalSkinLibraryURLs));
                 define("privateGlobalServer", false, "For the private global servers, will have special handling for caching.").bind(v -> enablePrivateGlobalSkinLibrary = v, () -> enablePrivateGlobalSkinLibrary);
             });
             defineCategory("recipe", "Setting for mod recipes.", () -> {
@@ -203,12 +203,15 @@ public class ModConfigSpec {
 //                }
 //            }
             defineCategory("overrides", "Custom list of items that can be skinned.", () -> {
-                Predicate<Object> elementValidator = item -> Arrays.stream(ItemOverrideType.values()).anyMatch(t -> ((String) item).startsWith(t.getName()));
-                defineList("itemOverrides", new ArrayList<String>(), elementValidator, "Format [\"override type:mod id:item name\"]", "Valid override types are: sword, shield, bow, pickaxe, axe, shovel, hoe and item", "example [\"sword:minecraft:iron_sword\",\"sword:minecraft:gold_sword\"]").bind(n -> overrides = new ArrayList<>(n), () -> new ArrayList<>(overrides));
+                defineList("itemOverrides", new ArrayList<String>(), this::allowsString, "Format [\"override type:mod id:item name\"]", "Valid override types are: sword, shield, bow, pickaxe, axe, shovel, hoe and item", "example [\"sword:minecraft:iron_sword\",\"sword:minecraft:gold_sword\"]").bind(n -> overrides = new ArrayList<>(n), () -> new ArrayList<>(overrides));
 
                 define("enableMatchingByItemId", true, "Tries to automatically assign the correct type of skin type without config and tag.").bind(v -> enableMatchingByItemId = v, () -> enableMatchingByItemId);
-                defineList("matchingBlacklistByItemId", new ArrayList<String>(), "If the matching system wrong, you can add the item id here to this ignore it.").bind(v -> disableMatchingItems = new ArrayList<>(v), () -> new ArrayList<>(disableMatchingItems));
+                defineList("matchingBlacklistByItemId", new ArrayList<String>(), this::allowsString, "If the matching system wrong, you can add the item id here to this ignore it.").bind(v -> disableMatchingItems = new ArrayList<>(v), () -> new ArrayList<>(disableMatchingItems));
             });
+        }
+
+        public boolean allowsString(Object value) {
+            return value instanceof String;
         }
     }
 
