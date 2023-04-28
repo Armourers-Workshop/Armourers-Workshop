@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.block;
 
-import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.core.blockentity.DyeTableBlockEntity;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class DyeTableBlock extends AbstractHorizontalBlock implements IBlockEntityProvider {
+public class DyeTableBlock extends AbstractHorizontalBlock implements AbstractBlockEntityProvider {
 
     public DyeTableBlock(BlockBehaviour.Properties properties) {
         super(properties);

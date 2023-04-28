@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.init.client;
 
+import com.apple.library.impl.WindowManagerImpl;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.common.IItemTransformType;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -13,6 +15,7 @@ import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
+import moe.plushie.armourers_workshop.core.client.render.TransformDummyRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
@@ -34,7 +37,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.entity.Entity;
@@ -53,9 +55,18 @@ import java.util.function.Supplier;
 @Environment(value = EnvType.CLIENT)
 public class ClientWardrobeHandler {
 
-    public final static float SCALE = 1 / 16f;
+    public static ItemStack RENDERING_GUI_ITEM = null;
+    public static final float SCALE = 1 / 16f;
 
     public static void init() {
+    }
+
+    public static void startRenderGuiItem(ItemStack itemStack) {
+        RENDERING_GUI_ITEM = itemStack;
+    }
+
+    public static void endRenderGuiItem(ItemStack itemStack) {
+        RENDERING_GUI_ITEM = null;
     }
 
     public static void onRenderTrident(ThrownTrident entity, Model model, float partialTicks, int packedLight, IPoseStack poseStack, MultiBufferSource buffers, CallbackInfo callback) {
@@ -128,7 +139,7 @@ public class ClientWardrobeHandler {
         poseStack.popPose();
     }
 
-    public static void onRenderSpecificHand(LivingEntity entity, float partialTicks, int packedLight, ItemTransforms.TransformType transformType, IPoseStack poseStack, MultiBufferSource buffers, Runnable cancelHandler) {
+    public static void onRenderSpecificHand(LivingEntity entity, float partialTicks, int packedLight, IItemTransformType transformType, IPoseStack poseStack, MultiBufferSource buffers, Runnable cancelHandler) {
         FirstPersonPlayerModel<?> model = FirstPersonPlayerModel.getInstance();
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {
@@ -148,6 +159,9 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderLivingPre(LivingEntity entity, float partialTicks, int packedLight, IPoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
+        if (TransformDummyRenderer.isDummy(entityRenderer)) {
+            return;
+        }
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
             SkinRendererManager.getInstance().willRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
@@ -155,6 +169,9 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderLiving(LivingEntity entity, float partialTicks, int packedLight, IPoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
+        if (TransformDummyRenderer.isDummy(entityRenderer)) {
+            return;
+        }
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
             SkinRendererManager.getInstance().willRenderModel(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
@@ -162,6 +179,9 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderLivingPost(LivingEntity entity, float partialTicks, int packedLight, IPoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
+        if (TransformDummyRenderer.isDummy(entityRenderer)) {
+            return;
+        }
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
             SkinRendererManager.getInstance().didRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
@@ -169,11 +189,8 @@ public class ClientWardrobeHandler {
     }
 
     @Nullable
-    public static EmbeddedSkinStack getEmbeddedSkinStack(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, ItemTransforms.TransformType transformType) {
-        // this a silly solution, but I don't want to depend more mixins.
-        // in ground: level and entity is empty.
-        // in gui: level is empty.
-        if (level != null && entity != null) {
+    public static EmbeddedSkinStack getEmbeddedSkinStack(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, IItemTransformType transformType) {
+        if (RENDERING_GUI_ITEM != itemStack) {
             // when the wardrobe has override skin of the item,
             // we easily get a conclusion to needs embedded skin.
             SkinRenderData renderData = SkinRenderData.of(entity);
@@ -206,7 +223,7 @@ public class ClientWardrobeHandler {
         return null;
     }
 
-    public static void renderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, EmbeddedSkinStack embeddedStack, ItemTransforms.TransformType transformType, boolean leftHandHackery, IPoseStack poseStack, MultiBufferSource buffers, BakedModel bakedModel, int packedLight, int overlay, CallbackInfo callback) {
+    public static void renderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, EmbeddedSkinStack embeddedStack, IItemTransformType transformType, boolean leftHandHackery, IPoseStack poseStack, MultiBufferSource buffers, BakedModel bakedModel, int packedLight, int overlay, CallbackInfo callback) {
         int counter = 0;
         switch (transformType) {
             case GUI:
@@ -255,16 +272,16 @@ public class ClientWardrobeHandler {
         }
     }
 
-    public static void _renderEmbeddedSkinInBox(EmbeddedSkinStack embeddedStack, ItemTransforms.TransformType transformType, boolean leftHandHackery, IPoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
+    public static void _renderEmbeddedSkinInBox(EmbeddedSkinStack embeddedStack, IItemTransformType transformType, boolean leftHandHackery, IPoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
         SkinDescriptor descriptor = embeddedStack.getDescriptor();
         poseStack.pushPose();
         TransformationProvider.handleTransforms(poseStack, BakedModelStroage.getSkinBakedModel(), transformType, leftHandHackery);
         poseStack.translate(-0.5f, -0.5f, -0.5f);
-        SkinItemRenderer.getInstance().renderByItem(descriptor.sharedItemStack(), transformType, poseStack.cast(), buffers, packedLight, overlay);
+        SkinItemRenderer.getInstance().renderByItem(descriptor.sharedItemStack(), transformType, poseStack, buffers, packedLight, overlay);
         poseStack.popPose();
     }
 
-    public static int _renderEmbeddedSkin(EmbeddedSkinStack embeddedStack, ItemTransforms.TransformType transformType, boolean leftHandHackery, IPoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
+    public static int _renderEmbeddedSkin(EmbeddedSkinStack embeddedStack, IItemTransformType transformType, boolean leftHandHackery, IPoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
         int r = 0;
         SkinDescriptor descriptor = embeddedStack.getDescriptor();
         BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);

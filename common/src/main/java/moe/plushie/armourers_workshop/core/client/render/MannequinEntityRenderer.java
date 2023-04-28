@@ -1,16 +1,14 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
-import me.sagesse.minecraft.client.renderer.LivingEntityRenderer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
+import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractLivingEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,11 +17,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 
 @Environment(value = EnvType.CLIENT)
-public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingEntityRenderer<T, MannequinModel<T>> {
+public class MannequinEntityRenderer<T extends MannequinEntity> extends AbstractLivingEntityRenderer<T, MannequinModel<T>> {
 
     public static boolean enableLimitScale = false;
 
-    private final AbstractEntityRendererContext context;
+    private final Context context;
 
     private final MannequinModel<T> normalModel;
     private final MannequinModel<T> slimModel;
@@ -35,37 +33,37 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingEn
 
     private boolean enableChildRenderer = false;
 
-    public MannequinEntityRenderer(AbstractEntityRendererContext context) {
+    public MannequinEntityRenderer(Context context) {
         super(context, new MannequinModel<>(context, 0, false), 0.0f);
-        this.addLayer(ClientNativeManager.getFactory().createHumanoidArmorLayer(this, context, MannequinArmorModel.innerModel(context), MannequinArmorModel.outerModel(context)));
-        this.addLayer(ClientNativeManager.getFactory().createItemInHandLayer(this, context));
-        this.addLayer(ClientNativeManager.getFactory().createElytraLayer(this, context));
-        this.addLayer(ClientNativeManager.getFactory().createCustomHeadLayer(this, context));
+        this.addLayer(getLayerProvider().createHumanoidArmorLayer(context, MannequinArmorModel.innerModel(context), MannequinArmorModel.outerModel(context)));
+        this.addLayer(getLayerProvider().createItemInHandLayer(context));
+        this.addLayer(getLayerProvider().createElytraLayer(context));
+        this.addLayer(getLayerProvider().createCustomHeadLayer(context));
         // two models by mannequin, only deciding which model using when texture specified.
-        this.normalModel = this.model;
+        this.normalModel = super.getModel();
         this.slimModel = new MannequinModel<>(context, 0, true);
         this.context = context;
     }
 
     @Override
-    protected boolean shouldShowName(T entity) {
+    public boolean shouldShowName(T entity) {
         return entity.hasCustomName();
     }
 
     @Override
-    public void render(T entity, float p_225623_2_, float partialTicks, IPoseStack poseStack, MultiBufferSource buffers, int packedLightIn) {
+    public void render(T entity, float f, float partialTicks, IPoseStack poseStack, MultiBufferSource buffers, int packedLightIn) {
         // when mannequin holding mannequin recursive rendering occurs, and we will enable the child renderer.
         if (this.enableChildRenderer) {
-            this.getChildRenderer().render(entity, p_225623_2_, partialTicks, poseStack, buffers, packedLightIn);
+            this.getChildRenderer().render(entity, f, partialTicks, poseStack, buffers, packedLightIn);
             return;
         }
         PlayerTextureLoader textureLoader = PlayerTextureLoader.getInstance();
-        this.enableChildRenderer = true;
         this.texture = textureLoader.getTextureLocation(entity);
         this.bakedTexture = textureLoader.getTextureModel(texture);
-        this.model = getModel();
-        this.model.setAllVisible(entity.isModelVisible());
-        super.render(entity, p_225623_2_, partialTicks, poseStack, buffers, packedLightIn);
+        this.setModel(getModel());
+        super.getModel().setAllVisible(entity.isModelVisible());
+        this.enableChildRenderer = true;
+        super.render(entity, f, partialTicks, poseStack, buffers, packedLightIn);
         this.enableChildRenderer = false;
         if (ModDebugger.mannequinCulling) {
             poseStack.pushPose();
@@ -80,7 +78,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingEn
     }
 
     @Override
-    protected void scale(T entity, IPoseStack poseStack, float p_225620_3_) {
+    public void scale(T entity, IPoseStack poseStack, float p_225620_3_) {
         float f = 0.9375f; // from player renderer (maybe 15/16)
         if (!enableLimitScale) {
             f *= entity.getScale();

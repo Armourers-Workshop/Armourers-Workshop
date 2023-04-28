@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.builder.block;
 
-import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.api.common.IBlockHandler;
 import moe.plushie.armourers_workshop.builder.blockentity.BoundingBoxBlockEntity;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.Constants;
@@ -28,7 +28,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class BoundingBoxBlock extends Block implements IBlockEntityProvider, IBlockHandler {
+public class BoundingBoxBlock extends Block implements AbstractBlockEntityProvider, IBlockHandler {
 
     public BoundingBoxBlock(BlockBehaviour.Properties properties) {
         super(properties);

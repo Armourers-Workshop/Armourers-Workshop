@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.block;
 
-import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
-import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class OutfitMakerBlock extends AbstractHorizontalBlock implements IBlockEntityProvider {
+public class OutfitMakerBlock extends AbstractHorizontalBlock implements AbstractBlockEntityProvider {
 
     public OutfitMakerBlock(BlockBehaviour.Properties properties) {
         super(properties);

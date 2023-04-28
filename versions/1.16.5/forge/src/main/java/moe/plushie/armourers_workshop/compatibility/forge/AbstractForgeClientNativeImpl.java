@@ -4,6 +4,7 @@ import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractClientNativeImpl;
 import moe.plushie.armourers_workshop.compatibility.ext.AbstractClientNativeExt_V1618;
+import moe.plushie.armourers_workshop.compatibility.forge.ext.AbstractClientForgeExt_V16;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -21,7 +22,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 import java.util.function.Consumer;
 
-public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl implements AbstractForgeClientNativeProvider, AbstractClientNativeExt_V1618 {
+public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl implements AbstractForgeClientNativeProvider, AbstractClientForgeExt_V16, AbstractClientNativeExt_V1618 {
 
     private CGRect screenLayout = CGRect.ZERO;
 

@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.api.common.builder;
 
 import moe.plushie.armourers_workshop.api.common.IItemGroup;
-import moe.plushie.armourers_workshop.api.common.IItemStackRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractItemStackRendererProvider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
@@ -24,6 +24,6 @@ public interface IItemBuilder<T extends Item> extends IEntryBuilder<IRegistryKey
 
     IItemBuilder<T> fireResistant();
 
-    IItemBuilder<T> bind(Supplier<IItemStackRendererProvider> provider);
+    IItemBuilder<T> bind(Supplier<AbstractItemStackRendererProvider> provider);
 
 }

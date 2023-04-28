@@ -4,6 +4,7 @@ import com.google.common.collect.Range;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.common.IItemTransformType;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -24,9 +25,9 @@ import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
-import moe.plushie.armourers_workshop.utils.math.Matrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
-import moe.plushie.armourers_workshop.utils.math.Quaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -34,7 +35,6 @@ import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.Model;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -49,6 +49,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+
+;
 
 @Environment(value = EnvType.CLIENT)
 public class BakedSkin implements IBakedSkin {
@@ -135,10 +137,10 @@ public class BakedSkin implements IBakedSkin {
             SkinCache.returnKey(key);
             return bounds;
         }
-        Matrix4f matrix = Matrix4f.createScaleMatrix(1, 1, 1);
-        OpenVoxelShape shape = getRenderShape(entity, model, itemStack, ItemTransforms.TransformType.NONE);
+        OpenMatrix4f matrix = OpenMatrix4f.createScaleMatrix(1, 1, 1);
+        OpenVoxelShape shape = getRenderShape(entity, model, itemStack, IItemTransformType.NONE);
         if (rotation != null) {
-            matrix.rotate(new Quaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), true));
+            matrix.rotate(new OpenQuaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), true));
             shape.mul(matrix);
         }
         bounds = shape.bounds().copy();
@@ -154,7 +156,7 @@ public class BakedSkin implements IBakedSkin {
         return bounds;
     }
 
-    public OpenVoxelShape getRenderShape(Entity entity, Model model, ItemStack itemStack, ItemTransforms.TransformType transformType) {
+    public OpenVoxelShape getRenderShape(Entity entity, Model model, ItemStack itemStack, IItemTransformType transformType) {
         SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer != null) {
             return getRenderShape(entity, ModelHolder.ofNullable(model), itemStack, transformType, renderer);
@@ -162,7 +164,7 @@ public class BakedSkin implements IBakedSkin {
         return OpenVoxelShape.empty();
     }
 
-    public <T extends Entity, V extends Model, M extends IModelHolder<V>> OpenVoxelShape getRenderShape(T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, SkinRenderer<T, V, M> renderer) {
+    public <T extends Entity, V extends Model, M extends IModelHolder<V>> OpenVoxelShape getRenderShape(T entity, M model, ItemStack itemStack, IItemTransformType transformType, SkinRenderer<T, V, M> renderer) {
         SkinRenderContext context = new SkinRenderContext();
         context.init(null, 0, 0, transformType, MatrixUtils.stack(), null);
         context.setItem(itemStack, 0);
@@ -200,7 +202,7 @@ public class BakedSkin implements IBakedSkin {
             // we have some old skin that only contain arrow part,
             // so when it happens, we need to be compatible rendering it.
             // we use `NONE` to rendering the GUI/Ground/ItemFrame.
-            if (context.transformType == ItemTransforms.TransformType.NONE) {
+            if (context.transformType == IItemTransformType.NONE) {
                 return skinParts.size() == 1;
             }
             return false;

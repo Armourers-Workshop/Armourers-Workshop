@@ -13,7 +13,6 @@ import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfig;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfigEvents;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfigTracker;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityClimbingEvents;
-import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
@@ -31,11 +30,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class CommonProxyImpl implements ModInitializer {
@@ -128,17 +125,7 @@ public class CommonProxyImpl implements ModInitializer {
         BlockState state = level.getBlockState(sleepingPos);
         IBlockHandler handler = ObjectUtils.safeCast(state.getBlock(), IBlockHandler.class);
         if (handler != null && handler.isCustomBed(level, sleepingPos, state, entity)) {
-            level.setBlock(sleepingPos, state.setValue(BedBlock.OCCUPIED, false), 3);
-            float yRot = entity.getYRot();
-            Vec3 vector3d1 = BedBlock.findStandUpPosition(entity.getType(), level, sleepingPos, Direction.UP, yRot).orElseGet(() -> {
-                BlockPos blockpos = sleepingPos.above();
-                return new Vec3((double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.1D, (double) blockpos.getZ() + 0.5D);
-            });
-            Vec3 vector3d2 = Vec3.atBottomCenterOf(sleepingPos).subtract(vector3d1).normalize();
-            float f = (float) MathUtils.wrapDegrees(MathUtils.atan2(vector3d2.z, vector3d2.x) * (double) (180F / (float) Math.PI) - 90.0D);
-            entity.setPos(vector3d1.x, vector3d1.y, vector3d1.z);
-            entity.setYRot(f);
-            entity.setXRot(0);
+            entity.stopSleeping(sleepingPos);
         }
     }
 

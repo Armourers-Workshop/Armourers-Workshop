@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TextureUtils;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
@@ -23,7 +24,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -122,6 +122,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
             return color;
         }
         // when work in the client side, we try to get the texture color from the loaded texture.
+        Level level = getLevel();
         if (level != null && level.isClientSide()) {
             return getTextureColor(tileEntity, texturePos);
         }
@@ -141,7 +142,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
 
     public void clearArmourerTextureColors() {
         ArmourerBlockEntity tileEntity = getParentTileEntity();
-        if (tileEntity == null || level == null) {
+        if (tileEntity == null || getLevel() == null) {
             return;
         }
         for (Direction dir : Direction.values()) {
@@ -216,9 +217,10 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
         if (level == null || parent.equals(INVALID)) {
             return null;
         }
-        BlockEntity tileEntity = level.getBlockEntity(getBlockPos().subtract(parent));
-        if (tileEntity instanceof ArmourerBlockEntity) {
-            cachedParentBlockEntity = (ArmourerBlockEntity) tileEntity;
+        BlockPos target = getBlockPos().subtract(parent);
+        ArmourerBlockEntity blockEntity = ObjectUtils.safeCast(level.getBlockEntity(target), ArmourerBlockEntity.class);
+        if (blockEntity != null) {
+            cachedParentBlockEntity = blockEntity;
             return cachedParentBlockEntity;
         }
         return null;

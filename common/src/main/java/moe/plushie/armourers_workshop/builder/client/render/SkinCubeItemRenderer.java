@@ -1,10 +1,11 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import me.sagesse.minecraft.client.renderer.ItemEntityRenderer;
+import moe.plushie.armourers_workshop.api.common.IItemTransformType;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.builder.item.SkinCubeItem;
+import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractItemStackRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedFaceRenderer;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
@@ -14,13 +15,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
+
 @Environment(value = EnvType.CLIENT)
-public class SkinCubeItemRenderer extends ItemEntityRenderer {
+public class SkinCubeItemRenderer extends AbstractItemStackRenderer {
 
     private static SkinCubeItemRenderer INSTANCE;
 
@@ -32,7 +33,7 @@ public class SkinCubeItemRenderer extends ItemEntityRenderer {
     }
 
     @Override
-    public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, IPoseStack poseStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
+    public void renderByItem(ItemStack itemStack, IItemTransformType transformType, IPoseStack poseStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
         if (itemStack.isEmpty()) {
             return;
         }

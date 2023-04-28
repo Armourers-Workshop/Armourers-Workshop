@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.builder.block;
 
-import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
-import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class ArmourerBlock extends AbstractHorizontalBlock implements IBlockEntityProvider {
+public class ArmourerBlock extends AbstractHorizontalBlock implements AbstractBlockEntityProvider {
 
     public ArmourerBlock(BlockBehaviour.Properties properties) {
         super(properties);

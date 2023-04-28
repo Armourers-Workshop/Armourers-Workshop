@@ -1,10 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
-import me.sagesse.minecraft.client.renderer.BlockEntityRenderer;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
+import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
@@ -18,7 +17,7 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
-import moe.plushie.armourers_workshop.utils.math.Quaternionf;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.Model;
@@ -28,9 +27,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 
 @Environment(value = EnvType.CLIENT)
-public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extends BlockEntityRenderer<T> {
+public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extends AbstractBlockEntityRenderer<T> {
 
-    public SkinnableBlockEntityRenderer(AbstractBlockEntityRendererContext context) {
+    public SkinnableBlockEntityRenderer(Context context) {
         super(context);
     }
 
@@ -49,7 +48,7 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
         }
         float f = 1 / 16f;
         float partialTicks1 = TickUtils.ticks();
-        Quaternionf rotations = entity.getRenderRotations(blockState);
+        OpenQuaternionf rotations = entity.getRenderRotations(blockState);
 
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f);

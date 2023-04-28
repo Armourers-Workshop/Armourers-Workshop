@@ -1,12 +1,11 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import me.sagesse.minecraft.client.renderer.BlockEntityRenderer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
+import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedFaceRenderer;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -22,12 +21,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 @Environment(value = EnvType.CLIENT)
-public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> extends BlockEntityRenderer<T> {
+public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> extends AbstractBlockEntityRenderer<T> {
 
     private static float markerAlpha = 0F;
     private static long lastWorldTimeUpdate;
 
-    public SkinCubeBlockEntityRenderer(AbstractBlockEntityRendererContext context) {
+    public SkinCubeBlockEntityRenderer(Context context) {
         super(context);
     }
 

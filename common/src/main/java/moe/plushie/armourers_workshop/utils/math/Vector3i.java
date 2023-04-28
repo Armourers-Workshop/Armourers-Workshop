@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.utils.math;
 
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 
@@ -55,6 +56,10 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
         } else {
             return this.getY() - p_compareTo_1_.getY();
         }
+    }
+
+    public BlockPos asBlockPos() {
+        return new BlockPos(x, y, z);
     }
 
     @Override

@@ -29,6 +29,7 @@ import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
@@ -45,7 +46,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -386,13 +386,12 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
     }
 
     private void setupBoundingBox(Level level, BlockPos pos, Vector3i offset, ISkinPartType partType) {
-        BlockEntity tileEntity = level.getBlockEntity(pos);
-        if (tileEntity instanceof BoundingBoxBlockEntity) {
-            BoundingBoxBlockEntity box = (BoundingBoxBlockEntity) tileEntity;
-            box.setPartType(partType);
-            box.setGuide(offset);
-            box.setParent(pos.subtract(getBlockPos()));
-            BlockUtils.combine(box, box::sendBlockUpdates);
+        BoundingBoxBlockEntity blockEntity = ObjectUtils.safeCast(level.getBlockEntity(pos), BoundingBoxBlockEntity.class);
+        if (blockEntity != null) {
+            blockEntity.setPartType(partType);
+            blockEntity.setGuide(offset);
+            blockEntity.setParent(pos.subtract(getBlockPos()));
+            BlockUtils.combine(blockEntity, blockEntity::sendBlockUpdates);
         }
     }
 

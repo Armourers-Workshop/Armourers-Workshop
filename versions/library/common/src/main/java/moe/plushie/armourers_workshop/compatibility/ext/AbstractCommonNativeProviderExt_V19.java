@@ -50,21 +50,6 @@ public interface AbstractCommonNativeProviderExt_V19 extends CommonNativeProvide
     }
 
     @Override
-    default MutableComponent createTranslatableComponent(String key, Object... args) {
-        return MutableComponent.create(new TranslatableContents(key, args) {
-            @Override
-            public <T> Optional<T> visit(FormattedText.StyledContentConsumer<T> consumer, Style style) {
-                String[] lastStyle = {""};
-                return super.visit((style1, value) -> {
-                    String embeddedStyle = lastStyle[0];
-                    lastStyle[0] = embeddedStyle + TranslateUtils.getEmbeddedStyle(value);
-                    return consumer.accept(style1, embeddedStyle + TranslateUtils.getFormattedString(value));
-                }, style);
-            }
-        });
-    }
-
-    @Override
     default IResourceManager createResourceManager(ResourceManager resourceManager) {
         return new IResourceManager() {
             @Override
@@ -101,13 +86,6 @@ public interface AbstractCommonNativeProviderExt_V19 extends CommonNativeProvide
                 });
             }
         };
-    }
-
-    @Override
-    default <T extends Entity> T createEntity(EntityType<T> entityType, ServerLevel level, BlockPos pos, @Nullable CompoundTag tag, MobSpawnType spawnType) {
-        T entity = entityType.create(level, null, null, pos, spawnType, true, true);
-        EntityType.updateCustomEntityTag(level, null, entity, tag);
-        return entity;
     }
 
     class ArgumentTypeInfo1920<A extends IArgumentType<?>> implements ArgumentTypeInfo<A, ArgumentTypeInfo1920.Template<A>> {

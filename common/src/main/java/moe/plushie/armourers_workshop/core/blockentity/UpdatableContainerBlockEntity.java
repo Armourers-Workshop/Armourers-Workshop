@@ -7,6 +7,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -51,11 +52,12 @@ public abstract class UpdatableContainerBlockEntity extends UpdatableBlockEntity
 
     @Override
     public boolean stillValid(Player player) {
-        if (this.level == null) {
+        if (getLevel() == null) {
             return false;
         }
-        BlockPos pos = this.worldPosition;
-        if (this.level.getBlockEntity(pos) != this) {
+        BlockPos pos = getBlockPos();
+        BlockEntity blockEntity = getLevel().getBlockEntity(pos);
+        if (blockEntity != this) {
             return false;
         }
         return player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64.0;

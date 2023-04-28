@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.block;
 
-import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.api.common.IBlockHandler;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
@@ -47,7 +47,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements IBlockEntityProvider, IBlockHandler {
+public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements AbstractBlockEntityProvider, IBlockHandler {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 

@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.builder.block;
 
-import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
-import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class ColorMixerBlock extends AbstractHorizontalBlock implements IBlockEntityProvider, IBlockTintColorProvider {
+public class ColorMixerBlock extends AbstractHorizontalBlock implements AbstractBlockEntityProvider, IBlockTintColorProvider {
 
     public ColorMixerBlock(Properties properties) {
         super(properties);

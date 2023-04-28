@@ -1,16 +1,16 @@
 package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityKey;
-import moe.plushie.armourers_workshop.api.common.IBlockEntityRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IBlockEntitySupplier;
 import moe.plushie.armourers_workshop.api.common.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IBlockEntityBuilder;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBlockEntityRendererProvider;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeBlockEntity;
-import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeEntityRenderers;
 import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
@@ -39,10 +39,10 @@ public class BlockEntityBuilderImpl<T extends BlockEntity> implements IBlockEnti
     }
 
     @Override
-    public IBlockEntityBuilder<T> bind(Supplier<IBlockEntityRendererProvider<T>> provider) {
+    public IBlockEntityBuilder<T> bind(Supplier<AbstractBlockEntityRendererProvider<T>> provider) {
         this.binder = () -> blockEntityType -> {
             // here is safe call client registry.
-            AbstractForgeEntityRenderers.registerBlockEntity(blockEntityType, provider.get());
+            ClientNativeManager.getProvider().entityRendererRegistry(it -> it.registerBlockEntity(blockEntityType, provider.get()));
         };
         return this;
     }

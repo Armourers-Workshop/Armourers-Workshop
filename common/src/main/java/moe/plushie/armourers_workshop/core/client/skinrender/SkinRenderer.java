@@ -4,6 +4,7 @@ import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.api.client.IJoint;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.common.IItemTransformType;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
@@ -30,7 +31,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -235,17 +235,17 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
     public static class Transformer<T, M> {
 
         final HashMap<ISkinPartType, PartTransform<T, M>> armors = new HashMap<>();
-        final HashMap<ItemTransforms.TransformType, PartTransform<T, M>> items = new HashMap<>();
+        final HashMap<IItemTransformType, PartTransform<T, M>> items = new HashMap<>();
 
         public static <M> void none(IPoseStack poseStack, M model) {
         }
 
         public static <T extends Entity, M0 extends Model, M extends IModelHolder<M0>> void withModel(IPoseStack poseStack, T entity, M model, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinRenderContext context) {
             ItemStack itemStack = context.itemStack;
-            ItemTransforms.TransformType transformType = context.transformType;
+            IItemTransformType transformType = context.transformType;
             final float f1 = 16f;
             final float f2 = 1 / 16f;
-            final boolean flag = (transformType == ItemTransforms.TransformType.THIRD_PERSON_LEFT_HAND || transformType == ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND);
+            final boolean flag = (transformType == IItemTransformType.THIRD_PERSON_LEFT_HAND || transformType == IItemTransformType.FIRST_PERSON_LEFT_HAND);
             poseStack.scale(f1, f1, f1);
             BakedModel bakedModel = SkinModelManager.getInstance().getModel(bakedPart.getType(), itemStack, entity.level, entity);
             TransformationProvider.handleTransforms(poseStack, bakedModel, transformType, flag);
@@ -274,7 +274,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
             armors.put(partType, transformer);
         }
 
-        public void registerItem(ItemTransforms.TransformType transformType, PartTransform<T, M> transformer) {
+        public void registerItem(IItemTransformType transformType, PartTransform<T, M> transformer) {
             items.put(transformType, transformer);
         }
 

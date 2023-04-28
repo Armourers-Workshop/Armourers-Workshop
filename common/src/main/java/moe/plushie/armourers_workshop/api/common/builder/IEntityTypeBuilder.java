@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.api.common.builder;
 
-import moe.plushie.armourers_workshop.api.common.IEntityRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeKey;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Block;
 
@@ -25,5 +25,5 @@ public interface IEntityTypeBuilder<T extends Entity> extends IEntryBuilder<IEnt
 
     IEntityTypeBuilder<T> updateInterval(int i);
 
-    IEntityTypeBuilder<T> bind(Supplier<IEntityRendererProvider<T>> provider);
+    IEntityTypeBuilder<T> bind(Supplier<AbstractEntityRendererProvider<T>> provider);
 }

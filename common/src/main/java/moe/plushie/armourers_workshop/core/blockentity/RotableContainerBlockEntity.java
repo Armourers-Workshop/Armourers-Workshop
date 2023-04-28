@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.blockentity;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
-import moe.plushie.armourers_workshop.utils.math.Quaternionf;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3d;
 import net.fabricmc.api.EnvType;
@@ -26,7 +26,7 @@ public abstract class RotableContainerBlockEntity extends UpdatableContainerBloc
     }
 
     @Environment(value = EnvType.CLIENT)
-    public Quaternionf getRenderRotations(BlockState blockState) {
+    public OpenQuaternionf getRenderRotations(BlockState blockState) {
         return null;
     }
 
@@ -45,7 +45,7 @@ public abstract class RotableContainerBlockEntity extends UpdatableContainerBloc
         if (rect == null) {
             return ZERO_BOX;
         }
-        Quaternionf quaternion = getRenderRotations(blockState);
+        OpenQuaternionf quaternion = getRenderRotations(blockState);
         if (quaternion != null) {
             rect.mul(quaternion);
         }

@@ -6,9 +6,12 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
 import com.apple.library.uikit.UIWindow;
-import me.sagesse.minecraft.client.gui.ContainerMenuScreen;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.math.IVector2i;
+import moe.plushie.armourers_workshop.compatibility.client.gui.AbstractMenuScreen;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.math.Size2i;
+import moe.plushie.armourers_workshop.utils.math.Vector2i;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -48,7 +51,7 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         if (!isReady) {
             return;
         }
-        screen.render(context.poseStack.cast(), context.mouseX, context.mouseY, context.partialTicks);
+        screen.render(context.poseStack, context.mouseX, context.mouseY, context.partialTicks);
     }
 
     @Override
@@ -83,31 +86,31 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         return point;
     }
 
-    public static class DelegateScreen<M extends AbstractContainerMenu> extends ContainerMenuScreen<M> {
+    public static class DelegateScreen<M extends AbstractContainerMenu> extends AbstractMenuScreen<M> {
 
         private final Inventory inventory;
 
-        public DelegateScreen(M abstractContainerMenu, Inventory inventory, Component component) {
-            super(abstractContainerMenu, inventory, component);
+        public DelegateScreen(M menu, Inventory inventory, Component component) {
+            super(menu, inventory, component);
             this.inventory = inventory;
         }
 
         @Override
         public void onClose() {
+            // ignore
         }
 
         public void setup(CGRect rect, CGRect bounds) {
-            imageWidth = rect.width;
-            imageHeight = rect.height;
-            init(Minecraft.getInstance(), bounds.width, bounds.height);
-            leftPos = rect.x;
-            topPos = rect.y;
+            setContentSize(new Size2i(rect.width, rect.height));
+            resize(Minecraft.getInstance(), bounds.width, bounds.height);
+            setContentOffset(new Vector2i(rect.x, rect.y));
         }
 
         @Override
         public void render(IPoseStack poseStack, int i, int j, float f) {
+            IVector2i offset = getContentOffset();
             poseStack.pushPose();
-            poseStack.translate(-leftPos, -topPos, 0);
+            poseStack.translate(-offset.getX(), -offset.getY(), 0);
 
             IPoseStack modelViewStack = RenderSystem.getExtendedModelViewStack();
             modelViewStack.pushPose();
@@ -122,15 +125,11 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         }
 
         @Override
-        protected void renderBg(IPoseStack poseStack, float f, int i, int j) {
+        public void renderLabels(IPoseStack poseStack, int i, int j) {
         }
 
         @Override
-        protected void renderLabels(IPoseStack poseStack, int i, int j) {
-        }
-
-        @Override
-        protected void slotClicked(Slot slot, int i, int j, ClickType clickType) {
+        public void slotClicked(Slot slot, int i, int j, ClickType clickType) {
             if (slot != null) {
                 menu.clicked(slot.index, j, clickType, inventory.player);
             }

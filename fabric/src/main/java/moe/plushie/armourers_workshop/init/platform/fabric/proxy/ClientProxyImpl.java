@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.proxy;
 
 import moe.plushie.armourers_workshop.api.common.IEntityHandler;
+import moe.plushie.armourers_workshop.api.common.IItemTransformType;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.init.ModConfig;
@@ -23,7 +24,6 @@ import net.fabricmc.fabric.api.event.client.player.ClientPickBlockGatherCallback
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -128,9 +128,9 @@ public class ClientProxyImpl implements ClientModInitializer {
         if (!ModConfig.enableFirstPersonSkinRenderer()) {
             return true;
         }
-        ItemTransforms.TransformType transformType = ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND;
+        IItemTransformType transformType = IItemTransformType.FIRST_PERSON_LEFT_HAND;
         if (hand == InteractionHand.MAIN_HAND) {
-            transformType = ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
+            transformType = IItemTransformType.FIRST_PERSON_RIGHT_HAND;
         }
         boolean[] flags = {false};
         ClientWardrobeHandler.onRenderSpecificHand(player, 0, light, transformType, poseStack, buffers, () -> {

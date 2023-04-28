@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 
 @Environment(value = EnvType.CLIENT)
-public class ClientMenuScreen extends MenuScreen<AbstractContainerMenu, MenuWindow<AbstractContainerMenu>> {
+public class ClientMenuScreen extends ContainerMenuScreen<AbstractContainerMenu, MenuWindow<AbstractContainerMenu>> {
 
     public ClientMenuScreen(MenuWindow<AbstractContainerMenu> window, Component title) {
         super(window, window.menu, window.inventory, title);

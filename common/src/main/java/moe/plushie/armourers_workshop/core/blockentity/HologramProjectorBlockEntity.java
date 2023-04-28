@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.math.Quaternionf;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -20,6 +20,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
@@ -44,7 +45,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
     private NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
 
-    private Quaternionf renderRotations;
+    private OpenQuaternionf renderRotations;
 
     private int powerMode = 0;
     private float modelScale = 1.0f;
@@ -103,6 +104,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
         setChanged();
         setRenderChanged();
         boolean growing = isPowered && isGlowing;
+        Level level = getLevel();
         if (level != null && !level.isClientSide()) {
             if (state.getValue(HologramProjectorBlock.LIT) != growing) {
                 BlockState newState = state.setValue(HologramProjectorBlock.LIT, growing);
@@ -127,6 +129,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     }
 
     protected boolean isRunningForState(BlockState state) {
+        Level level = getLevel();
         if (level != null && !SkinDescriptor.of(items.get(0)).isEmpty()) {
             switch (powerMode) {
                 case 1:
@@ -233,14 +236,14 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public Quaternionf getRenderRotations(BlockState blockState) {
+    public OpenQuaternionf getRenderRotations(BlockState blockState) {
         if (renderRotations != null) {
             return renderRotations;
         }
         AttachFace face = blockState.getOptionalValue(HologramProjectorBlock.FACE).orElse(AttachFace.FLOOR);
         Direction facing = blockState.getOptionalValue(HologramProjectorBlock.FACING).orElse(Direction.NORTH);
         Vector3f rot = FACING_TO_ROT.getOrDefault(Pair.of(face, facing), Vector3f.ZERO);
-        renderRotations = new Quaternionf(rot.getX(), rot.getY(), rot.getZ(), true);
+        renderRotations = new OpenQuaternionf(rot.getX(), rot.getY(), rot.getZ(), true);
         return renderRotations;
     }
 

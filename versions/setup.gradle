@@ -29,7 +29,7 @@ static def parseVersion(version, undefined) {
 
 static def parseVersionFromFile(file) {
     // only process the source file.
-    if (file.name.endsWithAny(".java", ".tj")) {
+    if (file.name.matches(/.+\.(java|tj|jmc\d+|tj\d+)$/)) {
         // read version range in the file.
         def regex = ~/@Available\((\s*value\s*=)?\s*"(.+)"\s*\)/
         def results = file.getText("UTF-8") =~ regex
@@ -76,19 +76,50 @@ macroPreprocessorSettings {
 task switchCoreSource {
     sourceSets.forEach {
         def sourceSet = it
+        def allFiles = [:]
         sourceSet.allSource.forEach {
             def range = parseVersionFromFile(it)
             if (range != null) {
-                def name = it.name
-                if (minecraft_version_number >= range[0] && minecraft_version_number <= range[1]) {
-                    name = name.replaceAll(/\.tj/, /.java/)
+                def path = it.path.replaceAll(/^(.+)\.(.+?)$/, /$1/)
+                allFiles.computeIfAbsent(path, k -> []).add([range, it])
+            }
+        }
+        allFiles.each {
+            def path = it.key
+            def apply = new HashMap<File, File>()
+            def pending = new HashMap<File, File>()
+            def versions = []
+            it.value.sort().each {
+                def range = it[0]
+                if (minecraft_version_number < range[0] || minecraft_version_number > range[1]) {
+                    // disable the file
+                    def ver = "${range[0]}"
+                    if (range[0] >= 11903) {
+                        ver = "12000"
+                    }
+                    def suffix = ver.replaceAll(/(\d)(\d{2})(\d+)/, /$2/) // jmc18
+                    if (!versions.add(suffix)) {
+                        suffix = ver.replaceAll(/(\d)(\d{2})0*(\d*)/, /$2$3/) // jmc18x
+                    }
+                    pending.put(it[1] as File, new File("${path}.tj${suffix}"))
                 } else {
-                    name = name.replaceAll(/\.java$/, /.tj/)
+                    // enable the file
+                    pending.put(it[1] as File, new File("${path}.java"))
                 }
-                if (name != it.name) {
-                    def file = new File(it.parentFile, name)
-                    println "Switch ${it.name}"
-                    it.renameTo(file)
+            }
+            // change to tmp
+            pending.each {
+                def tmp = new File(it.value.path + ".tmp")
+                if (it.key != it.value && !tmp.exists()) {
+                    it.key.renameTo(tmp)
+                    apply.put(tmp, it.value)
+                }
+            }
+            // change to final
+            apply.each {
+                if (it.key != it.value && !it.value.exists()) {
+                    it.key.renameTo(it.value)
+                    println "Switch ${it.value.name}"
                 }
             }
         }

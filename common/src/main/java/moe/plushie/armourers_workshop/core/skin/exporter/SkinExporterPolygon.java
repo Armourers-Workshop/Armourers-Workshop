@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
-import moe.plushie.armourers_workshop.utils.math.PoseStack;
+import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
@@ -97,7 +97,7 @@ public class SkinExporterPolygon implements ISkinExporter {
         os.flush();
 
         // apply the render context matrix.
-        IPoseStack poseStack = new PoseStack();
+        IPoseStack poseStack = new OpenPoseStack();
         poseStack.scale(scale, scale, scale);
         poseStack.scale(-1, -1, 1);
         poseStack.rotate(Vector3f.YP.rotationDegrees(90));

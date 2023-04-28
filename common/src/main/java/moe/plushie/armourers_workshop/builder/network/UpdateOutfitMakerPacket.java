@@ -7,8 +7,8 @@ import moe.plushie.armourers_workshop.builder.blockentity.OutfitMakerBlockEntity
 import moe.plushie.armourers_workshop.builder.menu.OutfitMakerMenu;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModPermissions;
-import moe.plushie.armourers_workshop.utils.DataAccessor;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
+import moe.plushie.armourers_workshop.utils.DataAccessor;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;

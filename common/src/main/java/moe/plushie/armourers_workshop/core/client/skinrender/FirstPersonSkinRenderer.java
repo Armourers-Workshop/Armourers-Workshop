@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.utils.math.Quaternionf;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,11 +49,11 @@ public class FirstPersonSkinRenderer<T extends LivingEntity, V extends FirstPers
 
     public void setLeftArm(IPoseStack poseStack, M model) {
         poseStack.translate(-5, -2, 0);
-        poseStack.rotate(new Quaternionf(180, 180, -5, true));
+        poseStack.rotate(new OpenQuaternionf(180, 180, -5, true));
     }
 
     public void setRightArm(IPoseStack poseStack, M model) {
         poseStack.translate(5, -2, 0);
-        poseStack.rotate(new Quaternionf(180, 180, 5, true));
+        poseStack.rotate(new OpenQuaternionf(180, 180, 5, true));
     }
 }

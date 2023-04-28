@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.client.other.VertexIndexBuffer;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
-import moe.plushie.armourers_workshop.utils.math.Matrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
@@ -23,9 +23,9 @@ public abstract class Shader {
     private int lastMaxVertexCount = 0;
 
     private int lastLightmap = 0;
-    private Matrix4f lastLightmapMat;
+    private OpenMatrix4f lastLightmapMat;
 
-    private final Matrix4f noneLightmapMat = Matrix4f.createScaleMatrix(1, 1, 1);
+    private final OpenMatrix4f noneLightmapMat = OpenMatrix4f.createScaleMatrix(1, 1, 1);
 
     private final VertexArrayBuffer arrayBuffer = new VertexArrayBuffer();
     private final VertexIndexBuffer indexBuffer = new VertexIndexBuffer(4, 6, (builder, index) -> {
@@ -40,7 +40,7 @@ public abstract class Shader {
     public void begin() {
         RenderSystem.backupExtendedMatrix();
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        RenderSystem.setExtendedTextureMatrix(Matrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
+        RenderSystem.setExtendedTextureMatrix(OpenMatrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
         ShaderUniforms.begin();
 
         if (ModDebugger.wireframeRender) {
@@ -143,7 +143,7 @@ public abstract class Shader {
         vertexFormat.clearBufferState();
     }
 
-    private Matrix4f getLightmapTextureMatrix(ShaderVertexObject object) {
+    private OpenMatrix4f getLightmapTextureMatrix(ShaderVertexObject object) {
         if (object.isGrowing()) {
             return noneLightmapMat;
         }
@@ -153,7 +153,7 @@ public abstract class Shader {
             int u = lightmap & 0xffff;
             int v = (lightmap >> 16) & 0xffff;
             // a special matrix, function is reset location of the texture.
-            Matrix4f newValue = Matrix4f.createScaleMatrix(0, 0, 0);
+            OpenMatrix4f newValue = OpenMatrix4f.createScaleMatrix(0, 0, 0);
             newValue.m03 = u;
             newValue.m13 = v;
             lastLightmap = lightmap;

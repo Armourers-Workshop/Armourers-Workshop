@@ -142,10 +142,10 @@ public class TextStorageImpl {
         MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
         if (placeholder != null && cachedTextLines.isEmpty()) {
             int placeholderColor = defaultPlaceholderColor();
-            font.drawInBatch2(placeholder.chars(), 0, 0, placeholderColor, true, mat, buffers, false, 0, 15728880);
+            font.drawInBatch(placeholder.chars(), 0, 0, placeholderColor, true, mat, buffers, false, 0, 15728880);
         }
         for (TextLine line : cachedTextLines) {
-            font.drawInBatch2(line.chars, line.rect.x, line.rect.y, textColor, true, mat, buffers, false, 0, 15728880);
+            font.drawInBatch(line.chars, line.rect.x, line.rect.y, textColor, true, mat, buffers, false, 0, 15728880);
             context.strokeDebugRect(line.index, line.rect);
         }
         buffers.endBatch();

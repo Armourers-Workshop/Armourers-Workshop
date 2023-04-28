@@ -5,8 +5,6 @@
   "client": [
     "ArrowRendererMixin",
     "HttpTextureMixin",
-    "InventoryScreenMixin",
-    "ItemRendererMixin",
     "BlockEntityRenderDispatcherMixin",
     "ThrownTridentRendererMixin",
     "ClientDataAttachMixin"

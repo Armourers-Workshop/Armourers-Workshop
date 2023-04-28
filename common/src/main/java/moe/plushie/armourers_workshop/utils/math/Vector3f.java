@@ -188,10 +188,10 @@ public final class Vector3f implements IVector3f, Position {
         set(floats[0], floats[1], floats[2]);
     }
 
-    public void transform(Quaternionf value) {
-        Quaternionf quaternion = new Quaternionf(value);
-        quaternion.mul(new Quaternionf(x, y, z, 0.0F));
-        Quaternionf quaternion1 = new Quaternionf(value);
+    public void transform(OpenQuaternionf value) {
+        OpenQuaternionf quaternion = new OpenQuaternionf(value);
+        quaternion.mul(new OpenQuaternionf(x, y, z, 0.0F));
+        OpenQuaternionf quaternion1 = new OpenQuaternionf(value);
         quaternion1.conj();
         quaternion.mul(quaternion1);
         set(quaternion.x(), quaternion.y(), quaternion.z());
@@ -221,12 +221,12 @@ public final class Vector3f implements IVector3f, Position {
         return dx * dx + dy * dy + dz * dz;
     }
 
-    public Quaternionf rotation(float f) {
-        return new Quaternionf(this, f, false);
+    public OpenQuaternionf rotation(float f) {
+        return new OpenQuaternionf(this, f, false);
     }
 
-    public Quaternionf rotationDegrees(float f) {
-        return new Quaternionf(this, f, true);
+    public OpenQuaternionf rotationDegrees(float f) {
+        return new OpenQuaternionf(this, f, true);
     }
 
     public Vector3f copy() {

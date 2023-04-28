@@ -27,7 +27,7 @@ public class SeatEntity extends LivingEntity {
     public SeatEntity(EntityType<? extends SeatEntity> entityType, Level level) {
         super(entityType, level);
         this.setYRot(0.0f);
-        this.maxUpStep = 0.0f;
+        //this.maxUpStep = 0.0f;
         this.holdingTick = ModConfig.Client.prefersSeatHoldingTick;
     }
 

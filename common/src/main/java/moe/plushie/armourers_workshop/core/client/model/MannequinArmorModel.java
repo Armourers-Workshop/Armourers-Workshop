@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.model;
 
-import moe.plushie.armourers_workshop.compatibility.AbstractEntityRendererContext;
-import moe.plushie.armourers_workshop.compatibility.AbstractMannequinArmorModel;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererProvider;
+import moe.plushie.armourers_workshop.compatibility.client.model.AbstractMannequinArmorModel;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.fabricmc.api.EnvType;
@@ -10,15 +10,15 @@ import net.fabricmc.api.Environment;
 @Environment(value = EnvType.CLIENT)
 public class MannequinArmorModel<T extends MannequinEntity> extends AbstractMannequinArmorModel<T> {
 
-    public MannequinArmorModel(AbstractEntityRendererContext context, Type type) {
+    public MannequinArmorModel(AbstractEntityRendererProvider.Context context, Type type) {
         super(context, type);
     }
 
-    public static <T extends MannequinEntity> MannequinArmorModel<T> innerModel(AbstractEntityRendererContext context) {
+    public static <T extends MannequinEntity> MannequinArmorModel<T> innerModel(AbstractEntityRendererProvider.Context context) {
         return new MannequinArmorModel<>(context, Type.INNER);
     }
 
-    public static <T extends MannequinEntity> MannequinArmorModel<T> outerModel(AbstractEntityRendererContext context) {
+    public static <T extends MannequinEntity> MannequinArmorModel<T> outerModel(AbstractEntityRendererProvider.Context context) {
         return new MannequinArmorModel<>(context, Type.OUTER);
     }
 

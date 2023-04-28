@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform.forge.proxy;
 
+import moe.plushie.armourers_workshop.api.common.IItemTransformType;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.init.ModConfig;
@@ -12,7 +13,6 @@ import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl
 import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -72,9 +72,9 @@ public class ClientProxyImpl {
             Player player = Minecraft.getInstance().player;
             IPoseStack poseStack = MatrixUtils.of(event.getPoseStack());
             MultiBufferSource buffers = event.getMultiBufferSource();
-            ItemTransforms.TransformType transformType = ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND;
+            IItemTransformType transformType = IItemTransformType.FIRST_PERSON_LEFT_HAND;
             if (event.getArm() == HumanoidArm.RIGHT) {
-                transformType = ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
+                transformType = IItemTransformType.FIRST_PERSON_RIGHT_HAND;
             }
             ClientWardrobeHandler.onRenderSpecificHand(player, 0, light, transformType, poseStack, buffers, () -> {
                 event.setCanceled(true);

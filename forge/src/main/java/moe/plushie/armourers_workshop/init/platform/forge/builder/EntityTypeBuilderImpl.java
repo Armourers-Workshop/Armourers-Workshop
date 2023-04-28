@@ -1,15 +1,14 @@
 package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
-import moe.plushie.armourers_workshop.api.common.IEntityRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeKey;
 import moe.plushie.armourers_workshop.api.common.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IEntityTypeBuilder;
-import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeEntityRenderers;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererProvider;
 import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
-import moe.plushie.armourers_workshop.init.platform.forge.CommonNativeManagerImpl;
+import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -80,10 +79,10 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
     }
 
     @Override
-    public IEntityTypeBuilder<T> bind(Supplier<IEntityRendererProvider<T>> provider) {
+    public IEntityTypeBuilder<T> bind(Supplier<AbstractEntityRendererProvider<T>> provider) {
         this.binder = () -> entityType -> {
             // here is safe call client registry.
-            AbstractForgeEntityRenderers.registerEntity(entityType, provider.get());
+            ClientNativeManager.getProvider().entityRendererRegistry(it -> it.registerEntity(entityType, provider.get()));
         };
         return this;
     }
@@ -95,7 +94,7 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
         return new IEntityTypeKey<T>() {
             @Override
             public T create(ServerLevel level, BlockPos pos, @Nullable CompoundTag tag, MobSpawnType spawnType) {
-                return CommonNativeManagerImpl.INSTANCE.createEntity(object.get(), level, pos, tag, spawnType);
+                return object.get().create(level, pos, tag, spawnType);
             }
 
             @Override

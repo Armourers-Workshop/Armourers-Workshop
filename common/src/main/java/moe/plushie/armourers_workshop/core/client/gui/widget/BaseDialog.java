@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.gui.widget;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
+import com.apple.library.impl.InvokerResult;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIPopoverView;
@@ -44,6 +45,7 @@ public abstract class BaseDialog extends UIView {
         popoverView.showInView(view);
         popoverView.addGlobalTarget(this, UIControl.Event.KEY_DOWN, (self, event) -> {
             if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+                event.cancel(InvokerResult.SUCCESS);
                 self.dismiss();
             }
         });

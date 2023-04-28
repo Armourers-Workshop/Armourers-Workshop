@@ -227,7 +227,8 @@ public class ModCommands {
                     ItemEntity itemEntity = player.drop(itemStack, false);
                     if (itemEntity != null) {
                         itemEntity.setNoPickUpDelay();
-                        itemEntity.setOwner(player.getUUID());
+                        //itemEntity.setOwner(player.getUUID());
+                        itemEntity.setThrower(player.getUUID());
                     }
                 }
                 context.getSource().sendSuccess(Component.translatable("commands.give.success.single", 1, itemStack.getDisplayName(), player.getDisplayName()), true);

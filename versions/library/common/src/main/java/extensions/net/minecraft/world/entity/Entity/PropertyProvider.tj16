@@ -1,0 +1,27 @@
+package extensions.net.minecraft.world.entity.Entity;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.world.entity.Entity;
+
+@Extension
+@Available("[1.16, 1.18)")
+public class PropertyProvider {
+
+    public static void setYRot(@This Entity entity, float value) {
+        entity.yRot = value;
+    }
+
+    public static float getYRot(@This Entity entity) {
+        return entity.yRot;
+    }
+
+    public static void setXRot(@This Entity entity, float value) {
+        entity.xRot = value;
+    }
+
+    public static float getXRot(@This Entity entity) {
+        return entity.xRot;
+    }
+}

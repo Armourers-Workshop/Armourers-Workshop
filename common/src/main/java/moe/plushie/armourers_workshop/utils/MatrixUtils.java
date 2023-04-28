@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.utils;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.compatibility.AbstractMatrixUtils;
-import moe.plushie.armourers_workshop.utils.math.Matrix3f;
-import moe.plushie.armourers_workshop.utils.math.Matrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -14,13 +14,13 @@ import java.nio.FloatBuffer;
 public class MatrixUtils extends AbstractMatrixUtils {
 
     public static IMatrix4f mat4(FloatBuffer buffer) {
-        Matrix4f mat = new Matrix4f();
+        OpenMatrix4f mat = new OpenMatrix4f();
         mat.load(buffer);
         return mat;
     }
 
     public static IMatrix3f mat3(FloatBuffer buffer) {
-        Matrix3f mat = new Matrix3f();
+        OpenMatrix3f mat = new OpenMatrix3f();
         if (buffer.remaining() == 9) {
             mat.load(buffer);
         } else {

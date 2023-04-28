@@ -1,0 +1,68 @@
+package extensions.com.mojang.blaze3d.systems.RenderSystem;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.math.IMatrix4f;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
+
+import java.util.function.IntConsumer;
+import java.util.function.IntSupplier;
+
+@Available("[1.16, 1.18)")
+@Extension
+public class Fix16 {
+
+    public static void assertOnRenderThread(@ThisClass Class<?> clazz) {
+        RenderSystem.assertThread(RenderSystem::isOnGameThread);
+    }
+
+    public static void setShaderTexture(@ThisClass Class<?> clazz, int i, ResourceLocation texture) {
+        Minecraft.getInstance().getTextureManager().bind(texture);
+    }
+
+    public static void setShaderColor(@ThisClass Class<?> clazz, float r, float g, float b, float a) {
+        RenderSystem.color4f(r, g, b, a);
+    }
+
+
+    public static void glGenVertexArrays(@ThisClass Class<?> clazz, IntConsumer consumer) {
+        // ignored
+    }
+
+    public static void glBindVertexArray(@ThisClass Class<?> clazz, IntSupplier supplier) {
+        // ignored
+    }
+
+//    public static void disableAlphaTest(@ThisClass Class<?> clazz) {
+//        RenderSystem.assertThread(RenderSystem::isOnGameThread);
+//        GL11.glDisable(GL11.GL_ALPHA_TEST);
+//    }
+//
+//    public static void enableAlphaTest(@ThisClass Class<?> clazz) {
+//        RenderSystem.assertThread(RenderSystem::isOnGameThread);
+//        GL11.glEnable(GL11.GL_ALPHA_TEST);
+//    }
+//
+//    public static void disableRescaleNormal(@ThisClass Class<?> clazz) {
+//        RenderSystem.assertThread(RenderSystem::isOnGameThread);
+//        GL11.glDisable(GL15.GL_RESCALE_NORMAL);
+//    }
+//
+//    public static void enableRescaleNormal(@ThisClass Class<?> clazz) {
+//        RenderSystem.assertThread(RenderSystem::isOnGameThread);
+//        GL11.glEnable(GL15.GL_RESCALE_NORMAL);
+//    }
+
+    public static void applyModelViewMatrix(@ThisClass Class<?> clazz) {
+    }
+
+    public static void mulMatrix(@ThisClass Class<?> clazz, IMatrix4f matrix4f) {
+        RenderSystem.multMatrix(MatrixUtils.of(matrix4f));
+    }
+}

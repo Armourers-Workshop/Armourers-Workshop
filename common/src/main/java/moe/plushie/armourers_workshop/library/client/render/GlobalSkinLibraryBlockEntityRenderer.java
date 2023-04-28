@@ -1,13 +1,12 @@
 package moe.plushie.armourers_workshop.library.client.render;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import me.sagesse.minecraft.client.renderer.BlockEntityRenderer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
+import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.library.block.GlobalSkinLibraryBlock;
 import moe.plushie.armourers_workshop.utils.ModelPartBuilder;
-import moe.plushie.armourers_workshop.utils.math.Quaternionf;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
@@ -17,11 +16,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 @Environment(value = EnvType.CLIENT)
-public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends BlockEntityRenderer<T> {
+public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends AbstractBlockEntityRenderer<T> {
 
     private final ModelPart model = ModelPartBuilder.of(64, 32).cube(-8, -8, -8, 16, 16, 16).build();
 
-    public GlobalSkinLibraryBlockEntityRenderer(AbstractBlockEntityRendererContext context) {
+    public GlobalSkinLibraryBlockEntityRenderer(Context context) {
         super(context);
     }
 
@@ -47,7 +46,7 @@ public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends
 
         if (entity.getLevel() != null) {
             float angle = (entity.getLevel().getGameTime()) % 360 + partialTicks;
-            poseStack.rotate(new Quaternionf(angle * 4, angle, angle * 2, true));
+            poseStack.rotate(new OpenQuaternionf(angle * 4, angle, angle * 2, true));
         }
 
         VertexConsumer builder = buffers.getBuffer(SkinRenderType.IMAGE_EARTH);

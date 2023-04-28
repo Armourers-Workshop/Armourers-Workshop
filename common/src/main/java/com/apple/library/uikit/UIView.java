@@ -5,6 +5,7 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.impl.ReversedIteratorImpl;
 import com.apple.library.impl.ViewImpl;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -326,7 +327,7 @@ public class UIView extends UIResponder implements ViewImpl {
 
     @Override
     public String toString() {
-        return String.format("<%s: 0x%x; frame = %s>", this.getClass().getSimpleName(), System.identityHashCode(this), frame);
+        return ObjectUtils.makeDescription(this, "frame", frame);
     }
 
     public void setNeedsLayout() {

@@ -30,10 +30,7 @@ public abstract class AbstractBlockContainerMenu extends AbstractContainerMenu {
     public <T extends BlockEntity> T getTileEntity(Class<T> clazz) {
         BlockEntity[] tileEntities = {null};
         access.execute((level, pos) -> tileEntities[0] = level.getBlockEntity(pos));
-        if (clazz.isInstance(tileEntities[0])) {
-            return ObjectUtils.unsafeCast(tileEntities[0]);
-        }
-        return null;
+        return ObjectUtils.safeCast(tileEntities[0], clazz);
     }
 
     public <T extends BlockEntity> T getTileEntity() {

@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import me.sagesse.minecraft.client.renderer.BlockEntityRenderer;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideDataProvider;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideRenderer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
@@ -13,7 +12,7 @@ import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRendererManager;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
-import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
+import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinDynamicTexture;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -35,13 +34,13 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 @Environment(value = EnvType.CLIENT)
-public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends BlockEntityRenderer<T> {
+public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends AbstractBlockEntityRenderer<T> {
 
     private final PlayerTextureOverride override = new PlayerTextureOverride();
     private final Rectangle3f originBox = new Rectangle3f(-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f);
     private final GuideRendererManager rendererManager = new GuideRendererManager();
 
-    public ArmourerBlockEntityRenderer(AbstractBlockEntityRendererContext context) {
+    public ArmourerBlockEntityRenderer(Context context) {
         super(context);
     }
 

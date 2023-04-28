@@ -4,7 +4,7 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.handlers.IGuiProperties;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
-import moe.plushie.armourers_workshop.core.client.gui.widget.MenuScreen;
+import moe.plushie.armourers_workshop.core.client.gui.widget.ContainerMenuScreen;
 import moe.plushie.armourers_workshop.core.client.gui.widget.SlotListView;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import net.minecraft.client.gui.screens.Screen;
@@ -22,7 +22,7 @@ public class JEIAddon implements IModPlugin {
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
         registration.addGuiScreenHandler(SlotListView.DelegateScreen.class, screen -> null);
-        registration.addGuiScreenHandler(MenuScreen.class, screen -> {
+        registration.addGuiScreenHandler(ContainerMenuScreen.class, screen -> {
             if (screen.shouldDrawPluginScreen()) {
                 return new GuiProperties(screen);
             }

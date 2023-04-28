@@ -1,18 +1,16 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityKey;
-import moe.plushie.armourers_workshop.api.common.IBlockEntityRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IBlockEntitySupplier;
 import moe.plushie.armourers_workshop.api.common.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IBlockEntityBuilder;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBlockEntityRendererProvider;
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricBlockEntity;
-import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricEntityRenderers;
 import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
-import moe.plushie.armourers_workshop.init.platform.RendererManager;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
@@ -22,7 +20,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.LinkedList;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class BlockEntityBuilderImpl<T extends BlockEntity> implements IBlockEntityBuilder<T> {
@@ -35,10 +32,6 @@ public class BlockEntityBuilderImpl<T extends BlockEntity> implements IBlockEnti
         this.supplier = supplier;
     }
 
-    private static <T extends BlockEntity, R> Function<R, BlockEntityRenderer<T>> bindEntityRenderer(Supplier<IBlockEntityRendererProvider<T>> provider) {
-        return (context) -> provider.get().getBlockEntityRenderer(RendererManager.getBlockEntityContext());
-    }
-
     @Override
     public IBlockEntityBuilder<T> of(Supplier<Block> block) {
         this.blocks.add(block);
@@ -46,10 +39,10 @@ public class BlockEntityBuilderImpl<T extends BlockEntity> implements IBlockEnti
     }
 
     @Override
-    public IBlockEntityBuilder<T> bind(Supplier<IBlockEntityRendererProvider<T>> provider) {
+    public IBlockEntityBuilder<T> bind(Supplier<AbstractBlockEntityRendererProvider<T>> provider) {
         this.binder = () -> blockEntityType -> {
             // here is safe call client registry.
-            AbstractFabricEntityRenderers.registerBlockEntity(blockEntityType, provider.get());
+            ClientNativeManager.getProvider().entityRendererRegistry(it -> it.registerBlockEntity(blockEntityType, provider.get()));
         };
         return this;
     }

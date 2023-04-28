@@ -1,10 +1,11 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.common.IItemGroup;
-import moe.plushie.armourers_workshop.api.common.IItemStackRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractItemStackRendererProvider;
 import moe.plushie.armourers_workshop.core.registry.Registries;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.item.Item;
 
 import java.util.function.Function;
@@ -21,8 +22,8 @@ public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemB
     }
 
     @Override
-    public IItemBuilder<T> bind(Supplier<IItemStackRendererProvider> provider) {
-        this.properties = properties.setISTER(() -> provider.get()::getItemModelRenderer);
+    public IItemBuilder<T> bind(Supplier<AbstractItemStackRendererProvider> provider) {
+        this.properties = properties.setISTER(() -> () -> provider.get().create());
         return this;
     }
 

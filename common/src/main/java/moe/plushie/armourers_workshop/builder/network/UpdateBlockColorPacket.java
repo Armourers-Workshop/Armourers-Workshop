@@ -29,7 +29,7 @@ public class UpdateBlockColorPacket extends CustomPacket {
 
     public UpdateBlockColorPacket(FriendlyByteBuf buffer) {
         this.hand = buffer.readEnum(InteractionHand.class);
-        this.clickedPos = readGlobalPos(buffer);
+        this.clickedPos = buffer.readGlobalPos();
         this.traceResult = buffer.readBlockHitResult();
         this.paintingEvent = new CubePaintingEvent(buffer);
     }
@@ -43,14 +43,10 @@ public class UpdateBlockColorPacket extends CustomPacket {
 
     @Override
     public void encode(FriendlyByteBuf buffer) {
-        try {
-            buffer.writeEnum(hand);
-            buffer.writeWithCodec(GlobalPos.CODEC, clickedPos);
-            buffer.writeBlockHitResult(traceResult);
-            paintingEvent.encode(buffer);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        buffer.writeEnum(hand);
+        buffer.writeGlobalPos(clickedPos);
+        buffer.writeBlockHitResult(traceResult);
+        paintingEvent.encode(buffer);
     }
 
     @Override
@@ -88,14 +84,6 @@ public class UpdateBlockColorPacket extends CustomPacket {
         }
         if (item instanceof IItemParticleProvider) {
             ((IItemParticleProvider) item).playParticle(context);
-        }
-    }
-
-    private GlobalPos readGlobalPos(FriendlyByteBuf buffer) {
-        try {
-            return buffer.readWithCodec(GlobalPos.CODEC);
-        } catch (Exception e) {
-            return null;
         }
     }
 }

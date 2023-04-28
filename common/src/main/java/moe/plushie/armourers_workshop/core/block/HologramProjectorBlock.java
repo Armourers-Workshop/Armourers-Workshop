@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.block;
 
-import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock implements IBlockEntityProvider {
+public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock implements AbstractBlockEntityProvider {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 

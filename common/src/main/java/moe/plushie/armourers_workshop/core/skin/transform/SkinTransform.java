@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
 import moe.plushie.armourers_workshop.core.skin.data.base.IDataInputStream;
 import moe.plushie.armourers_workshop.core.skin.data.base.IDataOutputStream;
-import moe.plushie.armourers_workshop.utils.math.Quaternionf;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 
 import java.io.IOException;
@@ -92,7 +92,7 @@ public class SkinTransform implements ISkinTransform {
             poseStack.translate(preTranslate.getX(), preTranslate.getY(), preTranslate.getZ());
         }
         if (preRotation != Vector3f.ZERO) {
-            poseStack.rotate(new Quaternionf(preRotation.getX(), preRotation.getY(), preRotation.getZ(), true));
+            poseStack.rotate(new OpenQuaternionf(preRotation.getX(), preRotation.getY(), preRotation.getZ(), true));
         }
         if (preScale != Vector3f.ONE) {
             poseStack.scale(preScale.getX(), preScale.getY(), preScale.getZ());

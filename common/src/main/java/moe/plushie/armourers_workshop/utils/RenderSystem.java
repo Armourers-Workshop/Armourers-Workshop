@@ -12,8 +12,8 @@ import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
-import moe.plushie.armourers_workshop.compatibility.AbstractRenderSystem;
 import moe.plushie.armourers_workshop.compatibility.AbstractShaderTesselator;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractRenderSystem;
 import moe.plushie.armourers_workshop.core.armature.ModelBinder;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferBuilder;
@@ -21,8 +21,8 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.math.Matrix3f;
-import moe.plushie.armourers_workshop.utils.math.Matrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -54,10 +54,10 @@ public final class RenderSystem extends AbstractRenderSystem {
 
     private static final IPoseStack extendedModelViewStack = MatrixUtils.modelViewStack();
 
-    private static final Storage<IMatrix3f> extendedNormalMatrix = new Storage<>(Matrix3f.createScaleMatrix(1, 1, 1));
-    private static final Storage<IMatrix4f> extendedTextureMatrix = new Storage<>(Matrix4f.createScaleMatrix(1, 1, 1));
-    private static final Storage<IMatrix4f> extendedLightmapTextureMatrix = new Storage<>(Matrix4f.createScaleMatrix(1, 1, 1));
-    private static final Storage<IMatrix4f> extendedModelViewMatrix = new Storage<>(Matrix4f.createScaleMatrix(1, 1, 1));
+    private static final Storage<IMatrix3f> extendedNormalMatrix = new Storage<>(OpenMatrix3f.createScaleMatrix(1, 1, 1));
+    private static final Storage<IMatrix4f> extendedTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
+    private static final Storage<IMatrix4f> extendedLightmapTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
+    private static final Storage<IMatrix4f> extendedModelViewMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
 
     private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(3);
 
@@ -233,7 +233,7 @@ public final class RenderSystem extends AbstractRenderSystem {
 
         int dx = 0, dy = 0;
         for (FormattedText line : wrappedTextLines) {
-            int qx = font.drawInBatch2(Language.getInstance().getVisualOrder(line), dx, dy, textColor, shadow, mat, buffers, false, 0, 15728880);
+            int qx = font.drawInBatch(Language.getInstance().getVisualOrder(line), dx, dy, textColor, shadow, mat, buffers, false, 0, 15728880);
             if (qx == dx) {
                 dy += 7;
             } else {

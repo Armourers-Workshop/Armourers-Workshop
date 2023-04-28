@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.gui.wardrobe;
 
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.impl.InvokerResult;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
@@ -143,7 +144,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
         }
 
         public void end(UIEvent event) {
-            event.setCancelled(true);
+            event.cancel(InvokerResult.FAIL);
             setColor(color);
             UIWindow window = window();
             if (window != null) {

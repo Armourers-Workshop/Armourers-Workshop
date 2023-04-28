@@ -2,10 +2,10 @@ package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IItemGroup;
-import moe.plushie.armourers_workshop.api.common.IItemStackRendererProvider;
 import moe.plushie.armourers_workshop.api.common.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractItemStackRendererProvider;
 import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
@@ -28,7 +28,7 @@ public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemB
     }
 
     @Override
-    public IItemBuilder<T> bind(Supplier<IItemStackRendererProvider> provider) {
+    public IItemBuilder<T> bind(Supplier<AbstractItemStackRendererProvider> provider) {
         this.binder = () -> item -> {
             ClientNativeManagerImpl.INSTANCE.willRegisterItemRenderer(registry -> registry.register(item.get(), provider.get()));
         };

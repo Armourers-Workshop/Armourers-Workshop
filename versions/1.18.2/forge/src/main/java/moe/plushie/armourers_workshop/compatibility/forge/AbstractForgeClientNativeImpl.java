@@ -41,7 +41,7 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
     public void willRegisterItemRenderer(Consumer<ItemRendererRegistry> consumer) {
         consumer.accept((item, provider) -> {
             ISkinDataProvider provider1 = ObjectUtils.unsafeCast(item);
-            BlockEntityWithoutLevelRenderer renderer = provider.getItemModelRenderer();
+            BlockEntityWithoutLevelRenderer renderer = provider.create();
             provider1.setSkinData(new IItemRenderProperties() {
 
                 @Override

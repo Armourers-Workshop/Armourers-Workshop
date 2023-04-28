@@ -1,10 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
-import me.sagesse.minecraft.client.renderer.BlockEntityRenderer;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.AbstractBlockEntityRendererContext;
+import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
@@ -19,7 +18,7 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
-import moe.plushie.armourers_workshop.utils.math.Quaternionf;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -32,9 +31,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 @Environment(value = EnvType.CLIENT)
-public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlockEntity> extends BlockEntityRenderer<T> {
+public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlockEntity> extends AbstractBlockEntityRenderer<T> {
 
-    public HologramProjectorBlockEntityRenderer(AbstractBlockEntityRendererContext context) {
+    public HologramProjectorBlockEntityRenderer(Context context) {
         super(context);
     }
 
@@ -131,7 +130,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
             RenderSystem.drawPoint(poseStack, null, 128, buffers);
         }
 
-        poseStack.rotate(new Quaternionf(rotX, -rotY, rotZ, true));
+        poseStack.rotate(new OpenQuaternionf(rotX, -rotY, rotZ, true));
         poseStack.translate(rotationOffset.getX(), -rotationOffset.getY(), rotationOffset.getZ());
 
         if (ModDebugger.hologramProjectorBlock) {

@@ -3,13 +3,15 @@
   "package": "moe.plushie.armourers_workshop.compatibility.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "AbstractMatrix3fMixin",
-    "AbstractMatrix4fMixin",
-    "AbstractPoseStackMixin_V1619",
-    "AbstractRenderStateMixin"
+    "Matrix3fMixin",
+    "Matrix4fMixin",
+    "PoseStackMixin",
+    "RenderStateMixin",
+    "ItemRendererMixin",
+    "InventoryScreenMixin"
   ],
   "mixins": [
-    "AbstractServerGameMixin"
+    "ServerGameMixin"
   ],
   "injectors": {
     "defaultRequire": 1

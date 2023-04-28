@@ -125,7 +125,7 @@ public class CubeSelector implements IPaintToolSelector {
             case ALL: {
                 for (Rectangle3i rect : rects) {
                     for (Vector3i pos : rect.enumerateZYX()) {
-                        consumer.accept(new BlockPos(pos));
+                        consumer.accept(pos.asBlockPos());
                     }
                 }
                 break;

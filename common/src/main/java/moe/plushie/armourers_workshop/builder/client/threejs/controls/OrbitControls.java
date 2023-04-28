@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.builder.client.threejs.controls;
 import moe.plushie.armourers_workshop.builder.client.threejs.camera.Camera;
 import moe.plushie.armourers_workshop.builder.client.threejs.core.EventSource;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.math.Matrix4f;
-import moe.plushie.armourers_workshop.utils.math.Quaternionf;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Sphericalf;
 import moe.plushie.armourers_workshop.utils.math.Vector2f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -167,13 +167,13 @@ public class OrbitControls {
 
     }
 
-    public void panLeft(float distance, Matrix4f matrix) {
+    public void panLeft(float distance, OpenMatrix4f matrix) {
         Vector3f v = new Vector3f(matrix.m00, matrix.m01, matrix.m02);
         v.mul(-distance);
         panOffset.add(v);
     }
 
-    public void panUp(float distance, Matrix4f matrix) {
+    public void panUp(float distance, OpenMatrix4f matrix) {
         Vector3f v;
         if (screenSpacePanning) {
             v = new Vector3f(matrix.m10, matrix.m11, matrix.m12);
@@ -381,11 +381,11 @@ public class OrbitControls {
         private Vector3f offset = new Vector3f();
 
         private Vector3f lastPosition = new Vector3f();
-        private Quaternionf lastQuaternion = new Quaternionf();
+        private OpenQuaternionf lastQuaternion = new OpenQuaternionf();
 
         // so camera.up is the orbit axis
-        private Quaternionf quat = Quaternionf.fromUnitVectors(camera.up, new Vector3f(0, 1, 0));
-        private Quaternionf quatInverse = quat.copy().inverse();
+        private OpenQuaternionf quat = OpenQuaternionf.fromUnitVectors(camera.up, new Vector3f(0, 1, 0));
+        private OpenQuaternionf quatInverse = quat.copy().inverse();
 
         public boolean update() {
             Vector3f position = camera.position;

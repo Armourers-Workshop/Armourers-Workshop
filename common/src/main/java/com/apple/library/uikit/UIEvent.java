@@ -1,10 +1,11 @@
 package com.apple.library.uikit;
 
 import com.apple.library.coregraphics.CGPoint;
+import com.apple.library.impl.InvokerResult;
 
 public class UIEvent {
 
-    private boolean isCancelled = false;
+    private InvokerResult result = InvokerResult.PASS;
 
     protected final int key;
     protected final int keyModifier;
@@ -43,12 +44,16 @@ public class UIEvent {
         return location;
     }
 
-    public void setCancelled(boolean isCancelled) {
-        this.isCancelled = isCancelled;
+    public void cancel(InvokerResult result) {
+        this.result = result;
+    }
+
+    public InvokerResult result() {
+        return result;
     }
 
     public boolean isCancelled() {
-        return isCancelled;
+        return result.isDecided();
     }
 
     public enum Type {

@@ -1,0 +1,40 @@
+package moe.plushie.armourers_workshop.compatibility.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.world.level.block.entity.BlockEntity;
+
+@Available("[1.16, 1.18)")
+public interface AbstractBlockEntityRendererProviderImpl {
+
+    interface Provider<T extends BlockEntity> extends AbstractBlockEntityRendererProviderImpl {
+
+        BlockEntityRenderer<T> create(Context context);
+
+        @Environment(value = EnvType.CLIENT)
+        default BlockEntityRenderer<T> create(BlockEntityRenderDispatcher dispatcher) {
+            return create(new Context(dispatcher));
+        }
+    }
+
+    class Context {
+
+        private final BlockEntityRenderDispatcher blockEntityRenderDispatcher;
+
+        public Context() {
+            blockEntityRenderDispatcher = BlockEntityRenderDispatcher.instance;
+        }
+
+        public Context(BlockEntityRenderDispatcher dispatcher) {
+            this.blockEntityRenderDispatcher = dispatcher;
+        }
+
+        public BlockEntityRenderDispatcher getBlockEntityRenderDispatcher() {
+            return blockEntityRenderDispatcher;
+        }
+    }
+}

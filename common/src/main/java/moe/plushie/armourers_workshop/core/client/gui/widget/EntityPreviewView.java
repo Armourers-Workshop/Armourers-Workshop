@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.world.entity.LivingEntity;
 
 @Environment(value = EnvType.CLIENT)
@@ -44,7 +43,7 @@ public class EntityPreviewView extends UIControl {
         RenderSystem.applyModelViewMatrix();
 
         MannequinEntityRenderer.enableLimitScale = true;
-        InventoryScreen.renderEntityInInventory(0, 0, 45, 0, 0, entity);
+        RenderSystem.renderEntityInInventory(modelViewStack, 0, 0, 45, 0, 0, entity);
         MannequinEntityRenderer.enableLimitScale = false;
 
         modelViewStack.popPose();

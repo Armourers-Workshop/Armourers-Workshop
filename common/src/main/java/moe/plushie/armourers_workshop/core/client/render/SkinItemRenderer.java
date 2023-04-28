@@ -1,7 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
-import me.sagesse.minecraft.client.renderer.ItemEntityRenderer;
+import moe.plushie.armourers_workshop.api.common.IItemTransformType;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractItemStackRenderer;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
@@ -11,7 +12,6 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
-import moe.plushie.armourers_workshop.init.platform.RendererManager;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,7 +25,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
 
 @Environment(value = EnvType.CLIENT)
-public class SkinItemRenderer extends ItemEntityRenderer {
+public class SkinItemRenderer extends AbstractItemStackRenderer {
 
     private static SkinItemRenderer INSTANCE;
     private ItemStack playerMannequinItem;
@@ -40,7 +40,7 @@ public class SkinItemRenderer extends ItemEntityRenderer {
     }
 
     @Override
-    public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, IPoseStack poseStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
+    public void renderByItem(ItemStack itemStack, IItemTransformType transformType, IPoseStack poseStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
         if (itemStack.isEmpty()) {
             return;
         }
@@ -50,7 +50,7 @@ public class SkinItemRenderer extends ItemEntityRenderer {
             return;
         }
         BakedModel bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
-        ItemTransform transform = bakedModel.getTransforms().getTransform(transformType);
+        ItemTransform transform = bakedModel.getTransforms().getTransform(ItemTransforms.ofType(transformType));
 
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f); // reset to center
@@ -79,7 +79,7 @@ public class SkinItemRenderer extends ItemEntityRenderer {
     public MannequinModel<?> getMannequinModel() {
         MannequinEntity entity = getMannequinEntity();
         if (model == null && entity != null) {
-            model = new MannequinModel<>(RendererManager.getEntityContext(), 0, false);
+            model = new MannequinModel<>();
             model.young = false;
             model.crouching = false;
             model.riding = false;

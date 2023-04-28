@@ -13,7 +13,7 @@ public class ArmourersWorkshopImpl {
 
     public ArmourersWorkshopImpl() {
         ArmourersWorkshop.init();
-        // start event dispatcher
+      // start event dispatcher
         CommonProxyImpl.init();
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClientProxyImpl::init);
     }

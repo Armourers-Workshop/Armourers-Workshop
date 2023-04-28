@@ -153,11 +153,11 @@ public class Rectangle3f implements IRectangle3f {
         return new Rectangle3f(x + dx, y + dy, z + dz, width, height, depth);
     }
 
-    public void mul(Quaternionf quaternion) {
-        mul(new Matrix4f(quaternion));
+    public void mul(OpenQuaternionf quaternion) {
+        mul(new OpenMatrix4f(quaternion));
     }
 
-    public void mul(Matrix4f matrix) {
+    public void mul(OpenMatrix4f matrix) {
         List<Vector4f> vertexes = Arrays.asList(
                 new Vector4f(x, y, z, 1.0f),
                 new Vector4f(x + width, y, z, 1.0f),

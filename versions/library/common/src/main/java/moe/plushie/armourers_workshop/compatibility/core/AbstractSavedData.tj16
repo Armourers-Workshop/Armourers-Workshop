@@ -1,0 +1,64 @@
+package moe.plushie.armourers_workshop.compatibility.core;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.saveddata.SavedData;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+@Available("[1.16, 1.18)")
+public abstract class AbstractSavedData {
+
+    private boolean dirty;
+    private Consumer<Boolean> dirtyImpl;
+
+    final void init(Consumer<Boolean> dirtyImpl) {
+        this.dirtyImpl = dirtyImpl;
+        // lazy sync dirty status.
+        if (this.dirty) {
+            setDirty(true);
+        }
+    }
+
+    public void setDirty() {
+        setDirty(true);
+    }
+
+    public void setDirty(boolean bl) {
+        dirty = bl;
+        if (dirtyImpl != null) {
+            dirtyImpl.accept(bl);
+        }
+    }
+
+    public abstract void load(CompoundTag tag);
+
+    public abstract CompoundTag save(CompoundTag tag);
+
+    public static class Storage<T extends AbstractSavedData> extends SavedData {
+
+        private final T value;
+
+        public Storage(Supplier<T> provider, String name) {
+            super(name);
+            this.value = provider.get();
+            this.value.init(this::setDirty);
+        }
+
+        @Override
+        public void load(CompoundTag tag) {
+            this.value.load(tag);
+        }
+
+        @Override
+        public CompoundTag save(CompoundTag tag) {
+            return this.value.save(tag);
+        }
+
+        public T get() {
+            return value;
+        }
+    }
+
+}

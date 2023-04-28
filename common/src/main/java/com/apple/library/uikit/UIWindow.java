@@ -45,42 +45,42 @@ public class UIWindow extends UIView {
 
     @Override
     public void mouseDown(UIEvent event) {
-        event.setCancelled(true);
+        event.cancel(InvokerResult.FAIL);
     }
 
     @Override
     public void mouseUp(UIEvent event) {
-        event.setCancelled(true);
+        event.cancel(InvokerResult.FAIL);
     }
 
     @Override
     public void mouseDragged(UIEvent event) {
-        event.setCancelled(true);
+        event.cancel(InvokerResult.FAIL);
     }
 
     @Override
     public void mouseMoved(UIEvent event) {
-        event.setCancelled(true);
+        event.cancel(InvokerResult.FAIL);
     }
 
     @Override
     public void mouseExited(UIEvent event) {
-        event.setCancelled(true);
+        event.cancel(InvokerResult.FAIL);
     }
 
     @Override
     public void mouseEntered(UIEvent event) {
-        event.setCancelled(true);
+        event.cancel(InvokerResult.FAIL);
     }
 
     @Override
     public void keyUp(UIEvent event) {
-        event.setCancelled(true);
+        event.cancel(InvokerResult.FAIL);
     }
 
     @Override
     public void keyDown(UIEvent event) {
-        event.setCancelled(true);
+        event.cancel(InvokerResult.FAIL);
     }
 
     public void screenWillTick() {
@@ -360,7 +360,7 @@ public class UIWindow extends UIView {
             updateHoveredResponder((int) mouseX, (int) mouseY, event, false);
             if (window.hoveredResponder != null) {
                 window.hoveredResponder.mouseWheel(event);
-                if (!event.isCancelled()) {
+                if (!event.result().isDecided()) {
                     mouseMoved(mouseX, mouseY, 0);
                 }
                 return checkEvent(event);
@@ -445,7 +445,7 @@ public class UIWindow extends UIView {
             if (window.shouldPassEventToNextWindow(event)) {
                 return InvokerResult.PASS;
             }
-            return InvokerResult.FAIL;
+            return event.result();
         }
 
         private InvokerResult applyKeyEvent(UIEvent event, BiConsumer<UIResponder, UIEvent> consumer) {

@@ -12,8 +12,9 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
-import moe.plushie.armourers_workshop.utils.math.Matrix4f;
-import moe.plushie.armourers_workshop.utils.math.Quaternionf;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3d;
@@ -27,8 +28,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
@@ -72,7 +73,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     private SkinProperties properties;
     private SkinDescriptor descriptor = SkinDescriptor.EMPTY;
 
-    private Quaternionf renderRotations;
+    private OpenQuaternionf renderRotations;
     private AABB renderBoundingBox;
 
     private boolean isDropped = false;
@@ -127,6 +128,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     public void updateBlockStates() {
         setChanged();
+        Level level = getLevel();
         if (level != null && !level.isClientSide()) {
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
         }
@@ -177,12 +179,12 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public Quaternionf getRenderRotations(BlockState blockState) {
+    public OpenQuaternionf getRenderRotations(BlockState blockState) {
         if (renderRotations != null) {
             return renderRotations;
         }
         Vector3f r = getRotations(blockState);
-        renderRotations = new Quaternionf(r.getX(), r.getY(), r.getZ(), true);
+        renderRotations = new OpenQuaternionf(r.getX(), r.getY(), r.getZ(), true);
         return renderRotations;
     }
 
@@ -269,10 +271,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
             return this;
         }
         if (getLevel() != null && refer != INVALID) {
-            BlockEntity tileEntity = getLevel().getBlockEntity(getParentPos());
-            if (tileEntity instanceof SkinnableBlockEntity) {
-                return (SkinnableBlockEntity) tileEntity;
-            }
+            return ObjectUtils.safeCast(getLevel().getBlockEntity(getParentPos()), SkinnableBlockEntity.class);
         }
         return null;
     }
@@ -343,7 +342,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         }
         float f = 1 / 16f;
         Rectangle3f box = bakedSkin.getRenderBounds(null, null, null, ItemStack.EMPTY).copy();
-        box.mul(Matrix4f.createScaleMatrix(-f, -f, f));
+        box.mul(OpenMatrix4f.createScaleMatrix(-f, -f, f));
         return box;
     }
 

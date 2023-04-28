@@ -1,0 +1,22 @@
+package extensions.net.minecraft.world.entity.player.Player;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.world.entity.player.Abilities;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+
+@Extension
+@Available("[1.16, 1.18)")
+public class PropertyProvider {
+
+    public static Abilities getAbilities(@This Player player) {
+        return player.abilities;
+    }
+
+    public static Inventory getInventory(@This Player player) {
+        return player.inventory;
+    }
+
+}

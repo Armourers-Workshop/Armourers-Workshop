@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

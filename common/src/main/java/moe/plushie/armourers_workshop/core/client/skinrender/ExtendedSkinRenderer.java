@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import moe.plushie.armourers_workshop.api.client.IJoint;
 import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
+import moe.plushie.armourers_workshop.api.common.IItemTransformType;
 import moe.plushie.armourers_workshop.core.armature.Joints;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -12,8 +13,8 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.entity.LivingEntity;
+
 
 @Environment(value = EnvType.CLIENT)
 public abstract class ExtendedSkinRenderer<T extends LivingEntity, V extends EntityModel<T>, M extends IHumanoidModelHolder<V>> extends LivingSkinRenderer<T, V, M> {
@@ -43,14 +44,14 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, V extends Ent
         transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_LEG2, Joints.BIPPED_LEFT_LEG);
         transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_LEG2, Joints.BIPPED_RIGHT_LEG);
 
-        transformer.registerItem(ItemTransforms.TransformType.NONE, Transformer::withModel);
-        transformer.registerItem(ItemTransforms.TransformType.GUI, Transformer::withModel);
-        transformer.registerItem(ItemTransforms.TransformType.FIXED, Transformer::withModel);
-        transformer.registerItem(ItemTransforms.TransformType.GROUND, Transformer::withModel);
-        transformer.registerItem(ItemTransforms.TransformType.THIRD_PERSON_LEFT_HAND, Transformer::withModel);
-        transformer.registerItem(ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, Transformer::withModel);
-        transformer.registerItem(ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND, Transformer::withModel);
-        transformer.registerItem(ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, Transformer::withModel);
+        transformer.registerItem(IItemTransformType.NONE, Transformer::withModel);
+        transformer.registerItem(IItemTransformType.GUI, Transformer::withModel);
+        transformer.registerItem(IItemTransformType.FIXED, Transformer::withModel);
+        transformer.registerItem(IItemTransformType.GROUND, Transformer::withModel);
+        transformer.registerItem(IItemTransformType.THIRD_PERSON_LEFT_HAND, Transformer::withModel);
+        transformer.registerItem(IItemTransformType.THIRD_PERSON_RIGHT_HAND, Transformer::withModel);
+        transformer.registerItem(IItemTransformType.FIRST_PERSON_LEFT_HAND, Transformer::withModel);
+        transformer.registerItem(IItemTransformType.FIRST_PERSON_RIGHT_HAND, Transformer::withModel);
     }
 
     @Override
@@ -61,10 +62,7 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, V extends Ent
         // Limit the players limbs if they have a skirt equipped.
         // A proper lady should not swing her legs around!
         if (renderData.isLimitLimbs()) {
-            if (entity.animationSpeed > 0.25F) {
-                entity.animationSpeed = 0.25F;
-                entity.animationSpeedOld = 0.25F;
-            }
+            entity.applyLimitLimbs();
         }
     }
 

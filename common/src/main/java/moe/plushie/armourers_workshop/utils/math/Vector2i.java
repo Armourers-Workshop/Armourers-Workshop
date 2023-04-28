@@ -1,8 +1,9 @@
 package moe.plushie.armourers_workshop.utils.math;
 
+import moe.plushie.armourers_workshop.api.math.IVector2i;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 
-public class Vector2i {
+public class Vector2i implements IVector2i {
 
     public int x;
     public int y;
@@ -24,6 +25,7 @@ public class Vector2i {
         return this.y;
     }
 
+    @Override
     public int getX() {
         return this.x;
     }
@@ -32,6 +34,7 @@ public class Vector2i {
         this.x = x;
     }
 
+    @Override
     public int getY() {
         return this.y;
     }
