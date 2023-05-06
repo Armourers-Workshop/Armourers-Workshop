@@ -119,7 +119,7 @@ task switchCoreSource {
             apply.each {
                 if (it.key != it.value && !it.value.exists()) {
                     it.key.renameTo(it.value)
-                    println "Switch ${it.value.name}"
+                    println "Switch to ${it.value.name}"
                 }
             }
         }
@@ -157,4 +157,16 @@ task applyCoreConfigurations {
     }
 }
 
-defaultTasks("switchCoreSource", "applyCoreSources", "applyCoreConfigurations")
+task applyRunConfigurations {
+    doLast {
+        targets.forEach {
+            def target = file("../../${it}/run/server.properties")
+            if (target.exists()) {
+                def contents = target.getText("UTF-8")
+                target.setText(contents.replaceAll("(level-name)=(.+)", "\$1=world-${minecraft_version_number}"), "UTF-8")
+            }
+        }
+    }
+}
+
+defaultTasks("switchCoreSource", "applyCoreSources", "applyCoreConfigurations", "applyRunConfigurations")

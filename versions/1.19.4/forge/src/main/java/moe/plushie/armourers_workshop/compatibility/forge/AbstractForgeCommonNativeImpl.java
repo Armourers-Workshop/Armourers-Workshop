@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -29,7 +30,11 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.server.*;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.event.server.ServerLifecycleEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 
@@ -45,7 +50,7 @@ public class AbstractForgeCommonNativeImpl implements AbstractForgeCommonNativeP
             @Override
             public <T extends IArgumentType<?>> void register(ResourceLocation registryName, Class<T> argumentType, ArgumentTypeInfo<T, ?> argumentInfo) {
                 ArgumentTypeInfo<?, ?> info1 = ArgumentTypeInfos.registerByClass(argumentType, argumentInfo);
-                AbstractForgeRegistries.COMMAND_ARGUMENT_TYPES.register(registryName.getPath(), () -> info1);
+                Registry.registerCommandArgumentTypeFO(registryName.getPath(), () -> info1);
             }
         });
     }

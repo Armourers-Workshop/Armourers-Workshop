@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.api.common.IEntityType;
+import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -24,16 +24,16 @@ import java.util.function.Function;
 @SuppressWarnings("unused")
 public class ModEntityProfiles {
 
-    private static final ArrayList<BiConsumer<IEntityType<?>, EntityProfile>> INSERT_HANDLERS = new ArrayList<>();
-    private static final ArrayList<BiConsumer<IEntityType<?>, EntityProfile>> REMOVE_HANDLERS = new ArrayList<>();
+    private static final ArrayList<BiConsumer<IEntityTypeProvider<?>, EntityProfile>> INSERT_HANDLERS = new ArrayList<>();
+    private static final ArrayList<BiConsumer<IEntityTypeProvider<?>, EntityProfile>> REMOVE_HANDLERS = new ArrayList<>();
 
     private static final HashMap<ResourceLocation, EntityProfile> PENDING_ENTITY_PROFILES = new HashMap<>();
-    private static final HashMap<IEntityType<?>, EntityProfile> PENDING_ENTITIES = new HashMap<>();
+    private static final HashMap<IEntityTypeProvider<?>, EntityProfile> PENDING_ENTITIES = new HashMap<>();
 
     private static final HashMap<ResourceLocation, EntityProfile> ALL_ENTITY_PROFILES = new HashMap<>();
-    private static final HashMap<IEntityType<?>, EntityProfile> ALL_ENTITIES = new HashMap<>();
+    private static final HashMap<IEntityTypeProvider<?>, EntityProfile> ALL_ENTITIES = new HashMap<>();
 
-    private static BiConsumer<IEntityType<?>, EntityProfile> dispatch(ArrayList<BiConsumer<IEntityType<?>, EntityProfile>> consumers) {
+    private static BiConsumer<IEntityTypeProvider<?>, EntityProfile> dispatch(ArrayList<BiConsumer<IEntityTypeProvider<?>, EntityProfile>> consumers) {
         return (entityType, entityProfile) -> consumers.forEach(consumer -> consumer.accept(entityType, entityProfile));
     }
 
@@ -41,11 +41,11 @@ public class ModEntityProfiles {
         DataPackManager.register(DataPackType.JAR, new DataPackLoader("skin/profiles", SimpleLoader::new, SimpleLoader::clean, SimpleLoader::freeze));
     }
 
-    public static void forEach(BiConsumer<IEntityType<?>, EntityProfile> consumer) {
+    public static void forEach(BiConsumer<IEntityTypeProvider<?>, EntityProfile> consumer) {
         ALL_ENTITIES.forEach(consumer);
     }
 
-    public static void addListener(BiConsumer<IEntityType<?>, EntityProfile> removeHandler, BiConsumer<IEntityType<?>, EntityProfile> insertHandler) {
+    public static void addListener(BiConsumer<IEntityTypeProvider<?>, EntityProfile> removeHandler, BiConsumer<IEntityTypeProvider<?>, EntityProfile> insertHandler) {
         REMOVE_HANDLERS.add(removeHandler);
         INSERT_HANDLERS.add(insertHandler);
         // if it add listener after the loading, we need manual send a notification.
@@ -59,7 +59,7 @@ public class ModEntityProfiles {
 
     @Nullable
     public static <T extends Entity> EntityProfile getProfile(EntityType<T> entityType) {
-        return ObjectUtils.find(ALL_ENTITIES, entityType, IEntityType::get);
+        return ObjectUtils.find(ALL_ENTITIES, entityType, IEntityTypeProvider::get);
     }
 
     @Nullable
@@ -73,7 +73,7 @@ public class ModEntityProfiles {
 
         private final ResourceLocation registryName;
 
-        private final ArrayList<IEntityType<?>> entities = new ArrayList<>();
+        private final ArrayList<IEntityTypeProvider<?>> entities = new ArrayList<>();
         private final HashMap<ISkinType, Function<ISkinType, Integer>> supports = new HashMap<>();
 
         public SimpleLoader(ResourceLocation registryName) {
@@ -103,7 +103,7 @@ public class ModEntityProfiles {
                 }
             });
             object.get("entities").allValues().forEach(o -> {
-                entities.add(IEntityType.of(o.stringValue()));
+                entities.add(IEntityTypeProvider.of(o.stringValue()));
             });
         }
 

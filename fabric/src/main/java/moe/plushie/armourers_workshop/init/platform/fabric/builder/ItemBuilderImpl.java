@@ -1,15 +1,15 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import moe.plushie.armourers_workshop.api.common.IItemGroup;
-import moe.plushie.armourers_workshop.api.common.IRegistryBinder;
-import moe.plushie.armourers_workshop.api.common.IRegistryKey;
-import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
+import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IItemBuilder;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractItemStackRendererProvider;
-import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
@@ -80,11 +80,11 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
 
     @Override
     public IRegistryKey<T> build(String name) {
-        IRegistryKey<T> object = Registries.ITEM.register(name, () -> supplier.apply(properties));
+        IRegistryKey<T> object = Registry.registerItemFA(name, () -> supplier.apply(properties));
         if (group != null) {
             group.get().add(object::get);
         }
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.of(binder, object));
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
         return object;
     }
 }

@@ -33,7 +33,7 @@ public class ArmourerBlock extends AbstractHorizontalBlock implements AbstractBl
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntityTypes.ARMOURER.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.ARMOURER.get().create(level, blockPos, blockState);
     }
 
     @Override

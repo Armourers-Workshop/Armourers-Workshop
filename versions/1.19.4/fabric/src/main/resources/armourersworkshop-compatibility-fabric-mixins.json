@@ -3,9 +3,9 @@
   "package": "moe.plushie.armourers_workshop.compatibility.fabric.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "AbstractFabricScreenMixin",
-    "AbstractFabricCreativeScreenMixin",
-    "AbstractFabricTrinketsAddonMixin"
+    "FabricScreenMixin",
+    "FabricCreativeScreenMixin",
+    "FabricTrinketsAddonMixin"
   ],
   "mixins": [
   ],

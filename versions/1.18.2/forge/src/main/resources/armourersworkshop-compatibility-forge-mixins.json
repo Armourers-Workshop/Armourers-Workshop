@@ -3,9 +3,9 @@
   "package": "moe.plushie.armourers_workshop.compatibility.forge.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "AbstractForgeItemMixin",
-    "AbstractPatchedLivingEntityRendererMixin",
-    "AbstractForgeCuriosAddonMixin"
+    "ForgeItemRendererMixin",
+    "ForgeEpicFightRendererMixin",
+    "ForgeCuriosAddonMixin"
   ],
   "mixins": [
   ],

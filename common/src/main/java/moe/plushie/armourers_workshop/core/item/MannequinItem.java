@@ -88,7 +88,7 @@ public class MannequinItem extends FlavouredItem {
         ItemStack itemStack = context.getItemInHand();
         if (level instanceof ServerLevel) {
             ServerLevel serverWorld = (ServerLevel) level;
-            MannequinEntity entity = ModEntityTypes.MANNEQUIN.create(serverWorld, rayTraceResult.getBlockPos(), itemStack.getTag(), MobSpawnType.SPAWN_EGG);
+            MannequinEntity entity = ModEntityTypes.MANNEQUIN.get().create(serverWorld, rayTraceResult.getBlockPos(), itemStack.getTag(), MobSpawnType.SPAWN_EGG);
             if (entity == null) {
                 return InteractionResult.FAIL;
             }

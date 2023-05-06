@@ -29,7 +29,7 @@ public class ColorMixerBlock extends AbstractHorizontalBlock implements Abstract
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntityTypes.COLOR_MIXER.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.COLOR_MIXER.get().create(level, blockPos, blockState);
     }
 
     @Override

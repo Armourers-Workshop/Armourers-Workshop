@@ -2,14 +2,14 @@ package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IItemGroup;
-import moe.plushie.armourers_workshop.api.common.IRegistryBinder;
-import moe.plushie.armourers_workshop.api.common.IRegistryKey;
-import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
+import moe.plushie.armourers_workshop.api.registry.IItemBuilder;
+import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractItemStackRendererProvider;
-import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
-import moe.plushie.armourers_workshop.init.platform.forge.ClientNativeManagerImpl;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 
 import java.util.function.Function;
@@ -30,21 +30,22 @@ public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemB
     @Override
     public IItemBuilder<T> bind(Supplier<AbstractItemStackRendererProvider> provider) {
         this.binder = () -> item -> {
-            ClientNativeManagerImpl.INSTANCE.willRegisterItemRenderer(registry -> registry.register(item.get(), provider.get()));
+            // here is safe call client registry.
+            GameRenderer.registerItemRendererFO(item.get(), provider.get());
         };
         return this;
     }
 
     @Override
     public IRegistryKey<T> build(String name) {
-        IRegistryKey<T> item = Registries.ITEM.register(name, () -> {
+        IRegistryKey<T> item = Registry.registerItemFO(name, () -> {
             T value = supplier.apply(properties);
             if (group != null) {
                 group.get().add(() -> value);
             }
             return value;
         });
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.of(binder, item));
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, item));
         return item;
     }
 }

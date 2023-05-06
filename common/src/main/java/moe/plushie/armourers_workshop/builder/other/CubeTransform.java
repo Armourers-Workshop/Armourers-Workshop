@@ -1,10 +1,12 @@
 package moe.plushie.armourers_workshop.builder.other;
 
+import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 
@@ -80,7 +82,7 @@ public class CubeTransform {
         // we increase 0.5 offset to avoid down-cast incorrect by float accuracy problems.
         Vector4f off = new Vector4f(x + 0.5f, y + 0.5f, z + 0.5f, 1);
         off.transform(rotationDegrees);
-        return blockPos.offset((int) off.x(), (int) off.y(), (int) off.z());
+        return blockPos.offset(MathUtils.floor(off.x()), MathUtils.floor(off.y()), MathUtils.floor(off.z()));
     }
 
 }

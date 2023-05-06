@@ -1,8 +1,0 @@
-package moe.plushie.armourers_workshop.compatibility.forge.ext;
-
-import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeCommonNativeProvider;
-
-@Available("[1.16, 1.19)")
-public interface AbstractForgeCommonExt_V1618 extends AbstractForgeCommonNativeProvider {
-}

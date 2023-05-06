@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.core.data.slot;
 
-import moe.plushie.armourers_workshop.api.common.IItemTagKey;
-import moe.plushie.armourers_workshop.core.registry.Registries;
+import moe.plushie.armourers_workshop.api.common.IItemTag;
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItemTags;
+import moe.plushie.armourers_workshop.init.platform.RegistryManager;
 import moe.plushie.armourers_workshop.utils.ItemMatcher;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,11 +24,11 @@ public enum ItemOverrideType {
 
     ITEM("item", null, null);
 
-    private final IItemTagKey<Item> tag;
+    private final IRegistryKey<IItemTag> tag;
     private final String name;
     private final ItemMatcher matcher;
 
-    ItemOverrideType(String name, String regex, IItemTagKey<Item> tag) {
+    ItemOverrideType(String name, String regex, IRegistryKey<IItemTag> tag) {
         this.name = name;
         this.tag = tag;
         this.matcher = new ItemMatcher(name, regex);
@@ -50,12 +50,12 @@ public enum ItemOverrideType {
             return true;
         }
         // test by overrides of the config system.
-        ResourceLocation registryName = Registries.ITEM.getKey(itemStack.getItem());
+        ResourceLocation registryName = RegistryManager.getKey(itemStack.getItem());
         if (ModConfig.Common.overrides.contains(name + ":" + registryName)) {
             return true;
         }
         // test by vanilla's tag system.
-        if (tag != null && tag.contains(itemStack)) {
+        if (tag != null && tag.get().contains(itemStack)) {
             return true;
         }
         // test by item id matching system.

@@ -2,10 +2,9 @@ package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
 import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
-import moe.plushie.armourers_workshop.api.common.IRegistryKey;
-import moe.plushie.armourers_workshop.api.common.builder.IArgumentTypeBuilder;
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IArgumentTypeBuilder;
 import moe.plushie.armourers_workshop.init.ModConstants;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.CommonNativeManager;
 import net.minecraft.resources.ResourceLocation;
 
@@ -29,7 +28,7 @@ public class ArgumentTypeBuilderImpl<T extends IArgumentType<?>> implements IArg
     @Override
     public IRegistryKey<T> build(String name) {
         ResourceLocation registryName = ModConstants.key(name);
-        ModLog.debug("Registering Argument Type '{}'", registryName);
+//        ModLog.debug("Registering Argument Type '{}'", registryName);
         CommonNativeManager.getProvider().willRegisterArgument(registry -> registry.register(registryName, argumentType, argumentSerializer.get()));
         return new IRegistryKey<T>() {
             @Override

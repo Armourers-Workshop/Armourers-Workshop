@@ -1,0 +1,33 @@
+package extensions.net.minecraft.client.renderer.GameRenderer;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBlockEntityRendererProvider;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererProvider;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+
+@Available("[1.16, 1.18)")
+@Extension
+public class ForgeRegistry {
+
+    public static <T extends Entity> void registerEntityRendererFO(@ThisClass Class<?> clazz, IRegistryKey<EntityType<T>> entityType, AbstractEntityRendererProvider<T> provider) {
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, () -> () -> {
+            RenderingRegistry.registerEntityRenderingHandler(entityType.get(), provider::create);
+        });
+    }
+
+    public static <T extends BlockEntity> void registerBlockEntityRendererFO(@ThisClass Class<?> clazz, IRegistryKey<BlockEntityType<T>> entityType, AbstractBlockEntityRendererProvider<T> provider) {
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, () -> () -> {
+            ClientRegistry.bindTileEntityRenderer(entityType.get(), provider::create);
+        });
+    }
+}

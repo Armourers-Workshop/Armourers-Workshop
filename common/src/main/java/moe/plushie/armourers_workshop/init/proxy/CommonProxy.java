@@ -44,8 +44,8 @@ public class CommonProxy {
         registries.willRegisterCommand(ModCommands::init);
         registries.willRegisterCustomDataPack(DataPackManager::getLoader);
         registries.willRegisterEntityAttributes(registry -> {
-            registry.register(ModEntityTypes.MANNEQUIN.get(), MannequinEntity.createLivingAttributes());
-            registry.register(ModEntityTypes.SEAT.get(), SeatEntity.createLivingAttributes());
+            registry.register(ModEntityTypes.MANNEQUIN.get().get(), MannequinEntity.createLivingAttributes());
+            registry.register(ModEntityTypes.SEAT.get().get(), SeatEntity.createLivingAttributes());
         });
 
         registries.willServerTick(WorldUpdater.getInstance()::tick);

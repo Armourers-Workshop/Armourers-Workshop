@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
-import moe.plushie.armourers_workshop.api.common.IEntityType;
+import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.core.client.layer.SkinWardrobeLayer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -43,7 +43,7 @@ public class SkinRendererManager  {
 
     private boolean isReady = false;
 
-    private final HashMap<IEntityType<?>, EntityProfile> entities = new HashMap<>();
+    private final HashMap<IEntityTypeProvider<?>, EntityProfile> entities = new HashMap<>();
 
     private final ArrayList<SkinRenderer.Factory<SkinRenderer<?, ?, ?>>> builders = new ArrayList<>();
     private final ArrayList<Pair<Class<?>, SkinRenderer.Plugin<?, ?, ?>>> plugins = new ArrayList<>();
@@ -82,7 +82,7 @@ public class SkinRendererManager  {
         isReady = true;
     }
 
-    public void unbind(IEntityType<?> entityType, EntityProfile entityProfile) {
+    public void unbind(IEntityTypeProvider<?> entityType, EntityProfile entityProfile) {
         ModLog.debug("Detach Entity Renderer '{}'", entityType.getRegistryName());
         entities.remove(entityType);
         if (isReady) {
@@ -90,7 +90,7 @@ public class SkinRendererManager  {
         }
     }
 
-    public void bind(IEntityType<?> entityType, EntityProfile entityProfile) {
+    public void bind(IEntityTypeProvider<?> entityType, EntityProfile entityProfile) {
         ModLog.debug("Attach Entity Renderer '{}'", entityType.getRegistryName());
         entities.put(entityType, entityProfile);
         // try call once _bind to avoid the bind method being called after init.
@@ -99,7 +99,7 @@ public class SkinRendererManager  {
         }
     }
 
-    private void _bind(IEntityType<?> entityType, EntityProfile entityProfile) {
+    private void _bind(IEntityTypeProvider<?> entityType, EntityProfile entityProfile) {
         EntityType<?> resolvedEntityType = entityType.get();
         if (resolvedEntityType == null) {
             return;

@@ -1,0 +1,41 @@
+package moe.plushie.armourers_workshop.compatibility.fabric.mixin;
+
+import dev.emi.trinkets.api.TrinketsApi;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.init.platform.fabric.addon.TrinketsAddon;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Predicate;
+
+@Available("[1.16, 1.18)")
+@Pseudo
+@Mixin(TrinketsApi.class)
+public class FabricTrinketsAddonMixin {
+
+    static {
+        BiFunction<LivingEntity, Predicate<ItemStack>, List<ItemStack>> provider = (entity, filter) -> {
+            Container container = null;
+            if (entity instanceof Player) {
+                 container = TrinketsApi.getTrinketsInventory((Player) entity);
+            }
+            if (container == null || container.getContainerSize() == 0) {
+                return null;
+            }
+            int size = container.getContainerSize();
+            ArrayList<ItemStack> itemStacks = new ArrayList<>(size);
+            for (int i = 0; i < size; ++i) {
+                itemStacks.add(container.getItem(i));
+            }
+            return itemStacks;
+        };
+        TrinketsAddon.register(provider::apply, it -> it);
+    }
+}

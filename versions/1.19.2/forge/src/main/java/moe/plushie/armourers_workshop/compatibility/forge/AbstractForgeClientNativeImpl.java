@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.compatibility.AbstractClientNativeImpl;
 import moe.plushie.armourers_workshop.compatibility.ext.AbstractClientNativeProviderExt_V19;
-import moe.plushie.armourers_workshop.compatibility.forge.ext.AbstractClientForgeExt_V18;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
@@ -30,26 +29,11 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl implements AbstractForgeClientNativeProvider, AbstractClientNativeProviderExt_V19, AbstractClientForgeExt_V18 {
+public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl implements AbstractForgeClientNativeProvider, AbstractClientNativeProviderExt_V19 {
 
     @Override
     public void willRegisterItemColor(Consumer<ItemColorRegistry> consumer) {
         NotificationCenterImpl.observer(RegisterColorHandlersEvent.Item.class, consumer, event -> (provider, values) -> event.getItemColors().register(provider::getTintColor, values));
-    }
-
-    @Override
-    public void willRegisterItemRenderer(Consumer<ItemRendererRegistry> consumer) {
-        consumer.accept((item, provider) -> {
-            ISkinDataProvider provider1 = ObjectUtils.unsafeCast(item);
-            BlockEntityWithoutLevelRenderer renderer = provider.create();
-            provider1.setSkinData(new IClientItemExtensions() {
-
-                @Override
-                public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                    return renderer;
-                }
-            });
-        });
     }
 
     @Override

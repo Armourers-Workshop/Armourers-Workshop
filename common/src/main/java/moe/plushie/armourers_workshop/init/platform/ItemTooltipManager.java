@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.other.SkinTooltipFlags;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
-import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinOptions;
@@ -146,7 +145,7 @@ public class ItemTooltipManager {
             return;
         }
         if (flags.isAdvanced()) {
-            String registryName = Registries.ITEM.getKey(itemStack.getItem()).toString();
+            String registryName = RegistryManager.getKey(itemStack.getItem()).toString();
             for (int index = tooltips.size(); index > 0; --index) {
                 Component text = tooltips.get(index - 1);
                 // FIXME: @SAGESSE Test 1.16/1.18

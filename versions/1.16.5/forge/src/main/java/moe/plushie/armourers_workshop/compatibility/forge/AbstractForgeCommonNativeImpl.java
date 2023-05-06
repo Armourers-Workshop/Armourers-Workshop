@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.compatibility.ext.AbstractCommonNativeExt_V1618;
-import moe.plushie.armourers_workshop.compatibility.forge.ext.AbstractForgeCommonExt_V1618;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -38,7 +37,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class AbstractForgeCommonNativeImpl implements AbstractForgeCommonNativeProvider, AbstractCommonNativeExt_V1618, AbstractForgeCommonExt_V1618 {
+public class AbstractForgeCommonNativeImpl implements AbstractForgeCommonNativeProvider, AbstractCommonNativeExt_V1618 {
 
     @Override
     public void willServerTick(Consumer<ServerLevel> consumer) {

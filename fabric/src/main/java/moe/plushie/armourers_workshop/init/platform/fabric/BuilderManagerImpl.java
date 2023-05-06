@@ -2,28 +2,33 @@ package moe.plushie.armourers_workshop.init.platform.fabric;
 
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
-import moe.plushie.armourers_workshop.api.common.IBlockEntitySupplier;
+import moe.plushie.armourers_workshop.api.common.IBlockEntityType;
 import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.common.IEntityType;
 import moe.plushie.armourers_workshop.api.common.IItemGroup;
+import moe.plushie.armourers_workshop.api.common.IItemTag;
+import moe.plushie.armourers_workshop.api.common.ILootFunction;
 import moe.plushie.armourers_workshop.api.common.IMenuProvider;
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
-import moe.plushie.armourers_workshop.api.common.builder.IArgumentTypeBuilder;
-import moe.plushie.armourers_workshop.api.common.builder.IBlockBuilder;
-import moe.plushie.armourers_workshop.api.common.builder.IBlockEntityBuilder;
-import moe.plushie.armourers_workshop.api.common.builder.ICapabilityTypeBuilder;
-import moe.plushie.armourers_workshop.api.common.builder.IEntitySerializerBuilder;
-import moe.plushie.armourers_workshop.api.common.builder.IEntityTypeBuilder;
-import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
-import moe.plushie.armourers_workshop.api.common.builder.IItemGroupBuilder;
-import moe.plushie.armourers_workshop.api.common.builder.IItemTagBuilder;
-import moe.plushie.armourers_workshop.api.common.builder.IKeyBindingBuilder;
-import moe.plushie.armourers_workshop.api.common.builder.IMenuTypeBuilder;
-import moe.plushie.armourers_workshop.api.common.builder.IPermissionNodeBuilder;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
+import moe.plushie.armourers_workshop.api.registry.IArgumentTypeBuilder;
+import moe.plushie.armourers_workshop.api.registry.IBlockBuilder;
+import moe.plushie.armourers_workshop.api.registry.IBlockEntityTypeBuilder;
+import moe.plushie.armourers_workshop.api.registry.ICapabilityTypeBuilder;
+import moe.plushie.armourers_workshop.api.registry.IEntitySerializerBuilder;
+import moe.plushie.armourers_workshop.api.registry.IEntityTypeBuilder;
+import moe.plushie.armourers_workshop.api.registry.IItemBuilder;
+import moe.plushie.armourers_workshop.api.registry.IItemGroupBuilder;
+import moe.plushie.armourers_workshop.api.registry.IItemTagBuilder;
+import moe.plushie.armourers_workshop.api.registry.IKeyBindingBuilder;
+import moe.plushie.armourers_workshop.api.registry.ILootFunctionBuilder;
+import moe.plushie.armourers_workshop.api.registry.IMenuTypeBuilder;
+import moe.plushie.armourers_workshop.api.registry.IPermissionNodeBuilder;
+import moe.plushie.armourers_workshop.api.registry.ISoundEventBuilder;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.ArgumentTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.BlockBuilderImpl;
-import moe.plushie.armourers_workshop.init.platform.fabric.builder.BlockEntityBuilderImpl;
+import moe.plushie.armourers_workshop.init.platform.fabric.builder.BlockEntityTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.CapabilityTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.EntitySerializerBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.EntityTypeBuilderImpl;
@@ -31,10 +36,12 @@ import moe.plushie.armourers_workshop.init.platform.fabric.builder.ItemBuilderIm
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.ItemGroupBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.ItemTagBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.KeyBindingBuilderImpl;
+import moe.plushie.armourers_workshop.init.platform.fabric.builder.LootFunctionBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.MenuTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.PermissionNodeBuilderImpl;
+import moe.plushie.armourers_workshop.init.platform.fabric.builder.SoundEventBuilderImpl;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
@@ -46,6 +53,7 @@ import net.minecraft.world.level.material.MaterialColor;
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class BuilderManagerImpl implements BuilderManager.Impl {
@@ -62,7 +70,7 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     }
 
     @Override
-    public <T extends Item> IItemTagBuilder<T> createItemTagBuilder() {
+    public <T extends IItemTag> IItemTagBuilder<T> createItemTagBuilder() {
         return new ItemTagBuilderImpl<>();
     }
 
@@ -77,13 +85,13 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     }
 
     @Override
-    public <T extends BlockEntity> IBlockEntityBuilder<T> createBlockEntityBuilder(IBlockEntitySupplier<T> supplier) {
-        return new BlockEntityBuilderImpl<>(supplier);
+    public <T extends BlockEntity> IBlockEntityTypeBuilder<T> createBlockEntityTypeBuilder(IBlockEntityType.Serializer<T> serializer) {
+        return new BlockEntityTypeBuilderImpl<>(serializer);
     }
 
     @Override
-    public <T extends Entity> IEntityTypeBuilder<T> createEntityTypeBuilder(EntityType.EntityFactory<T> entityFactory, MobCategory mobCategory) {
-        return new EntityTypeBuilderImpl<>(entityFactory, mobCategory);
+    public <T extends Entity> IEntityTypeBuilder<T> createEntityTypeBuilder(IEntityType.Serializer<T> serializer, MobCategory mobCategory) {
+        return new EntityTypeBuilderImpl<>(serializer, mobCategory);
     }
 
     @Override
@@ -112,7 +120,17 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     }
 
     @Override
+    public <T extends ILootFunction> ILootFunctionBuilder<T> createLootFunctionBuilder(Supplier<ILootFunction.Serializer<T>> serializer) {
+        return new LootFunctionBuilderImpl<>(serializer);
+    }
+
+    @Override
     public <T extends IPermissionNode> IPermissionNodeBuilder<T> createPermissionBuilder() {
         return new PermissionNodeBuilderImpl<>();
+    }
+
+    @Override
+    public <T extends SoundEvent> ISoundEventBuilder<T> createSoundEventBuilder() {
+        return new SoundEventBuilderImpl<>();
     }
 }

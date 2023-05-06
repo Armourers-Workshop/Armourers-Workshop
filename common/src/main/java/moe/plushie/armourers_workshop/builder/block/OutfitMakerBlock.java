@@ -24,7 +24,7 @@ public class OutfitMakerBlock extends AbstractHorizontalBlock implements Abstrac
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntityTypes.OUTFIT_MAKER.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.OUTFIT_MAKER.get().create(level, blockPos, blockState);
     }
 
     @Override

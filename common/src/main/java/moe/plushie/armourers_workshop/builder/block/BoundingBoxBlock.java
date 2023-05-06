@@ -36,7 +36,7 @@ public class BoundingBoxBlock extends Block implements AbstractBlockEntityProvid
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntityTypes.BOUNDING_BOX.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.BOUNDING_BOX.get().create(level, blockPos, blockState);
     }
 
     @Override

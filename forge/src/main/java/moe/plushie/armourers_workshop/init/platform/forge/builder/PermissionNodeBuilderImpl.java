@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
-import moe.plushie.armourers_workshop.api.common.builder.IPermissionNodeBuilder;
+import moe.plushie.armourers_workshop.api.registry.IPermissionNodeBuilder;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgePermissionManager;
 import moe.plushie.armourers_workshop.init.ModConstants;

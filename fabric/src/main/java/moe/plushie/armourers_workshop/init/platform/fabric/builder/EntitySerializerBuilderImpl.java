@@ -1,13 +1,10 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
-import moe.plushie.armourers_workshop.api.common.builder.IEntitySerializerBuilder;
-import moe.plushie.armourers_workshop.init.ModConstants;
-import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.api.registry.IEntitySerializerBuilder;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.resources.ResourceLocation;
 
 public class EntitySerializerBuilderImpl<T> implements IEntitySerializerBuilder<T> {
 
@@ -19,25 +16,37 @@ public class EntitySerializerBuilderImpl<T> implements IEntitySerializerBuilder<
 
     @Override
     public EntityDataSerializer<T> build(String name) {
-        ResourceLocation registryName = ModConstants.key(name);
-        EntityDataSerializer<T> dataSerializer = new EntityDataSerializer<T>() {
-            @Override
-            public void write(FriendlyByteBuf friendlyByteBuf, T object) {
-                serializer.write(friendlyByteBuf, object);
-            }
+        Proxy<T> proxy = new Proxy<>(serializer);
+        Registry.registerEntityDataSerializerFA(name, () -> proxy);
+        return proxy;
+    }
 
-            @Override
-            public T read(FriendlyByteBuf friendlyByteBuf) {
-                return serializer.read(friendlyByteBuf);
-            }
+    public static class Proxy<T> implements EntityDataSerializer<T> {
 
-            @Override
-            public T copy(T object) {
-                return object;
-            }
-        };
-        EntityDataSerializers.registerSerializer(dataSerializer);
-        ModLog.debug("Registering '{}'", registryName);
-        return dataSerializer;
+        private final IEntitySerializer<T> serializer;
+
+        public Proxy(IEntitySerializer<T> serializer) {
+            this.serializer = serializer;
+        }
+
+        @Override
+        public void write(FriendlyByteBuf buf, T object) {
+            serializer.write(buf, object);
+        }
+
+        @Override
+        public T read(FriendlyByteBuf buf) {
+            return serializer.read(buf);
+        }
+
+        @Override
+        public T copy(T object) {
+            return object;
+        }
+
+        @Override
+        public String toString() {
+            return serializer.toString();
+        }
     }
 }

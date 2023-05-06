@@ -1,0 +1,28 @@
+package extensions.net.minecraft.client.renderer.GameRenderer;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractItemStackRendererProvider;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.client.IItemRenderProperties;
+
+@Available("[1.18, 1.19)")
+@Extension
+public class ForgeItemRegistry {
+
+    public static void registerItemRendererFO(@ThisClass Class<?> clazz, Item item, AbstractItemStackRendererProvider provider) {
+        ISkinDataProvider provider1 = ObjectUtils.unsafeCast(item);
+        BlockEntityWithoutLevelRenderer renderer = provider.create();
+        provider1.setSkinData(new IItemRenderProperties() {
+
+            @Override
+            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+                return renderer;
+            }
+        });
+    }
+}

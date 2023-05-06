@@ -26,7 +26,7 @@ public class DyeTableBlock extends AbstractHorizontalBlock implements AbstractBl
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntityTypes.DYE_TABLE.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.DYE_TABLE.get().create(level, blockPos, blockState);
     }
 
     @Override

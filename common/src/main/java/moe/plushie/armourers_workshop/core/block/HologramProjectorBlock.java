@@ -34,7 +34,7 @@ public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock impl
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntityTypes.HOLOGRAM_PROJECTOR.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.HOLOGRAM_PROJECTOR.get().create(level, blockPos, blockState);
     }
 
     @Override

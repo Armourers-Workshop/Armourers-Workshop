@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
-import moe.plushie.armourers_workshop.api.common.IRegistryProvider;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.compatibility.ext.AbstractCommonNativeProviderExt_V19;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
@@ -9,6 +8,7 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -37,7 +37,6 @@ import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -45,15 +44,13 @@ import java.util.function.Consumer;
 
 public class AbstractForgeCommonNativeImpl implements AbstractForgeCommonNativeProvider, AbstractCommonNativeProviderExt_V19 {
 
-    private static final IRegistryProvider<ArgumentTypeInfo<?, ?>> ARGUMENT_REGISTRY = AbstractForgeRegistries.wrap(ForgeRegistries.COMMAND_ARGUMENT_TYPES);
-
     @Override
     public void willRegisterArgumentInfo(Consumer<ArgumentInfoRegistry> consumer) {
         consumer.accept(new ArgumentInfoRegistry() {
             @Override
             public <T extends IArgumentType<?>> void register(ResourceLocation registryName, Class<T> argumentType, ArgumentTypeInfo<T, ?> argumentInfo) {
                 ArgumentTypeInfo<?, ?> info1 = ArgumentTypeInfos.registerByClass(argumentType, argumentInfo);
-                ARGUMENT_REGISTRY.register(registryName.getPath(), () -> info1);
+                Registry.registerCommandArgumentTypeFO(registryName.getPath(), () -> info1);
             }
         });
     }

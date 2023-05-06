@@ -24,7 +24,7 @@ public class GlobalSkinLibraryBlock extends AbstractHorizontalBlock implements A
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntityTypes.SKIN_LIBRARY_GLOBAL.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.SKIN_LIBRARY_GLOBAL.get().create(level, blockPos, blockState);
     }
 
     @Override

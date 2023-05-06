@@ -28,7 +28,7 @@ public class SkinLibraryBlock extends AbstractHorizontalBlock implements Abstrac
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntityTypes.SKIN_LIBRARY.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.SKIN_LIBRARY.get().create(level, blockPos, blockState);
     }
 
     @Override

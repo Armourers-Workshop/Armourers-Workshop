@@ -29,6 +29,10 @@ public class ObjectUtils {
         return null;
     }
 
+    public static String readableName(Class<?> clazz) {
+        return clazz.getSimpleName().replaceAll("([a-z]+)([A-Z]+)", "$1 $2");
+    }
+
     public static String replaceString(String string, NSRange range, String replacementString) {
         return (new StringBuilder(string)).replace(range.startIndex(), range.endIndex(), replacementString).toString();
     }

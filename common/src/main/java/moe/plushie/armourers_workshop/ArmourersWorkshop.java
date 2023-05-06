@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import moe.plushie.armourers_workshop.init.ModHolidays;
 import moe.plushie.armourers_workshop.init.ModItemGroups;
 import moe.plushie.armourers_workshop.init.ModItems;
+import moe.plushie.armourers_workshop.init.ModLootFunctions;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.ModPackets;
 import moe.plushie.armourers_workshop.init.ModPermissions;
@@ -42,6 +43,7 @@ public class ArmourersWorkshop {
         ModEntityProfiles.init();
         ModCapabilities.init();
         ModMenuTypes.init();
+        ModLootFunctions.init();
         ModSounds.init();
         ModConfig.init();
         ModArgumentTypes.init();

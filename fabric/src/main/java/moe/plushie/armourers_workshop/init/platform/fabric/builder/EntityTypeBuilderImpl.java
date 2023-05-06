@@ -1,18 +1,18 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
-import moe.plushie.armourers_workshop.api.common.IEntityTypeKey;
-import moe.plushie.armourers_workshop.api.common.IRegistryBinder;
-import moe.plushie.armourers_workshop.api.common.IRegistryKey;
-import moe.plushie.armourers_workshop.api.common.builder.IEntityTypeBuilder;
+import moe.plushie.armourers_workshop.api.common.IEntityType;
+import moe.plushie.armourers_workshop.api.registry.IEntityTypeBuilder;
+import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererProvider;
-import moe.plushie.armourers_workshop.core.registry.Registries;
+import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistryEntry;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
-import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -29,8 +29,8 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
     private FabricEntityTypeBuilder<T> builder;
     private IRegistryBinder<EntityType<T>> binder;
 
-    public EntityTypeBuilderImpl(EntityType.EntityFactory<T> entityFactory, MobCategory mobCategory) {
-        this.builder = FabricEntityTypeBuilder.create(mobCategory, entityFactory);
+    public EntityTypeBuilderImpl(IEntityType.Serializer<T> serializer, MobCategory mobCategory) {
+        this.builder = FabricEntityTypeBuilder.create(mobCategory, serializer::create);
     }
 
     @Override
@@ -85,30 +85,35 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
     public IEntityTypeBuilder<T> bind(Supplier<AbstractEntityRendererProvider<T>> provider) {
         this.binder = () -> entityType -> {
             // here is safe call client registry.
-            ClientNativeManager.getProvider().entityRendererRegistry(it -> it.registerEntity(entityType, provider.get()));
+            GameRenderer.registerEntityRendererFA(entityType, provider.get());
         };
         return this;
     }
 
     @Override
-    public IEntityTypeKey<T> build(String name) {
-        IRegistryKey<EntityType<T>> object = Registries.ENTITY_TYPE.register(name, () -> builder.build());
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.of(binder, object));
-        return new IEntityTypeKey<T>() {
-            @Override
-            public T create(ServerLevel level, BlockPos pos, @Nullable CompoundTag tag, MobSpawnType spawnType) {
-                return object.get().create(level, pos, tag, spawnType);
-            }
+    public IRegistryKey<IEntityType<T>> build(String name) {
+        IRegistryKey<EntityType<T>> object = Registry.registerEntityTypeFA(name, () -> builder.build());
+        Proxy<T> proxy = new Proxy<>(object);
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
+        return AbstractFabricRegistryEntry.of(object.getRegistryName(), proxy);
+    }
 
-            @Override
-            public ResourceLocation getRegistryName() {
-                return object.getRegistryName();
-            }
+    public static class Proxy<T extends Entity> implements IEntityType<T> {
 
-            @Override
-            public EntityType<T> get() {
-                return object.get();
-            }
-        };
+        private final IRegistryKey<EntityType<T>> object;
+
+        public Proxy(IRegistryKey<EntityType<T>> object) {
+            this.object = object;
+        }
+
+        @Override
+        public T create(ServerLevel level, BlockPos pos, @Nullable CompoundTag tag, MobSpawnType spawnType) {
+            return object.get().create(level, pos, tag, spawnType);
+        }
+
+        @Override
+        public EntityType<T> get() {
+            return object.get();
+        }
     }
 }

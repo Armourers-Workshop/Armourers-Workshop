@@ -53,7 +53,7 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements AbstractBl
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntityTypes.SKIN_CUBE.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.SKIN_CUBE.get().create(level, blockPos, blockState);
     }
 
     @Override

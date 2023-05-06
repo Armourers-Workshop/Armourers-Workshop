@@ -66,7 +66,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     @Override
     public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-        return ModBlockEntityTypes.SKINNABLE.create(level, blockPos, blockState);
+        return ModBlockEntityTypes.SKINNABLE.get().create(level, blockPos, blockState);
     }
 
     @Override
@@ -277,7 +277,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
                 return null; // is using
             }
         }
-        SeatEntity entity = ModEntityTypes.SEAT.create(level, BlockPos.ZERO, null, MobSpawnType.SPAWN_EGG);
+        SeatEntity entity = ModEntityTypes.SEAT.get().create(level, BlockPos.ZERO, null, MobSpawnType.SPAWN_EGG);
         entity.setPos(pos.x(), pos.y(), pos.z());
         entity.setBlockPos(blockPos);
         level.addFreshEntity(entity);

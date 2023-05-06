@@ -4,7 +4,7 @@ import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
-import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBlockEntityRendererProvider;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererProvider;
@@ -57,8 +57,6 @@ public interface ClientNativeProvider {
 
     void willRenderTooltip(RenderTooltip consumer);
 
-    void entityRendererRegistry(Consumer<MyEntityRendererRegistry> consumer);
-
     interface ItemColorRegistry {
         void register(IItemTintColorProvider arg, Item... args);
     }
@@ -81,13 +79,6 @@ public interface ClientNativeProvider {
 
     interface ModelRegistry {
         void register(ResourceLocation registryName);
-    }
-
-    interface MyEntityRendererRegistry {
-
-        <T extends Entity> void registerEntity(IRegistryKey<EntityType<T>> entityType, AbstractEntityRendererProvider<T> provider);
-
-        <T extends BlockEntity> void registerBlockEntity(IRegistryKey<BlockEntityType<T>> entityType, AbstractBlockEntityRendererProvider<T> provider);
     }
 
     interface GatherTooltip {

@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.common.IItemGroup;
-import moe.plushie.armourers_workshop.api.common.IRegistryKey;
-import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IItemBuilder;
 import moe.plushie.armourers_workshop.builder.client.render.SkinCubeItemRenderer;
 import moe.plushie.armourers_workshop.builder.item.BlendingToolItem;
 import moe.plushie.armourers_workshop.builder.item.BlockMarkerItem;

@@ -66,7 +66,7 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
     public MannequinEntity getMannequinEntity() {
         ClientLevel level = Minecraft.getInstance().level;
         if (entity == null) {
-            entity = new MannequinEntity(ModEntityTypes.MANNEQUIN.get(), level);
+            entity = new MannequinEntity(ModEntityTypes.MANNEQUIN.get().get(), level);
             entity.setId(MannequinEntity.PLACEHOLDER_ENTITY_ID);
             entity.setExtraRenderer(false); // never magic cir
         }

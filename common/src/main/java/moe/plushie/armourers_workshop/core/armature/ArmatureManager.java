@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.armature;
 
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
-import moe.plushie.armourers_workshop.api.common.IEntityType;
+import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -17,7 +17,7 @@ public abstract class ArmatureManager {
     private final HashMap<ResourceLocation, ArmatureBuilder> pendingBuilders = new HashMap<>();
 
     private final ArrayList<ArmatureBuilder> defaultBuilders = new ArrayList<>();
-    private final HashMap<IEntityType<?>, ArmatureBuilder> entityBuilders = new HashMap<>();
+    private final HashMap<IEntityTypeProvider<?>, ArmatureBuilder> entityBuilders = new HashMap<>();
 
     private int version = 0;
 
@@ -55,7 +55,7 @@ public abstract class ArmatureManager {
         });
         pendingBuilders.clear();
         builders1.forEach((name, builder) -> {
-            Collection<IEntityType<?>> entities = builder.getEntities();
+            Collection<IEntityTypeProvider<?>> entities = builder.getEntities();
             if (entities.isEmpty()) {
                 defaultBuilders.add(builder);
                 return;
@@ -66,7 +66,7 @@ public abstract class ArmatureManager {
     }
 
     public ITransformf[] getTransforms(EntityType<?> entityType, IModelHolder<?> model) {
-        ArmatureBuilder builder = ObjectUtils.find(entityBuilders, entityType, IEntityType::get);
+        ArmatureBuilder builder = ObjectUtils.find(entityBuilders, entityType, IEntityTypeProvider::get);
         if (builder == null && !defaultBuilders.isEmpty()) {
             builder = defaultBuilders.get(defaultBuilders.size() - 1);
         }

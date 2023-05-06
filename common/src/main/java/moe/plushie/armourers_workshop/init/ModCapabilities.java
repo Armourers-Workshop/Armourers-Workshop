@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.common.ICapabilityType;
-import moe.plushie.armourers_workshop.api.common.IRegistryKey;
-import moe.plushie.armourers_workshop.api.common.builder.IEntryBuilder;
+import moe.plushie.armourers_workshop.api.registry.IRegistryBuilder;
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import net.minecraft.world.entity.Entity;
@@ -15,7 +15,7 @@ public class ModCapabilities {
 
     public static final IRegistryKey<ICapabilityType<SkinWardrobe>> WARDROBE = normal(SkinWardrobe.class, SkinWardrobe::create).build("entity-skin-provider");
 
-    private static <T> IEntryBuilder<IRegistryKey<ICapabilityType<T>>> normal(Class<T> type, Function<Entity, Optional<T>> provider) {
+    private static <T> IRegistryBuilder<ICapabilityType<T>> normal(Class<T> type, Function<Entity, Optional<T>> provider) {
         return BuilderManager.getInstance().createCapabilityTypeBuilder(type, provider);
     }
 

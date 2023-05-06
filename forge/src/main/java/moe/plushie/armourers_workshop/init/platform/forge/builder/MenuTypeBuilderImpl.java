@@ -3,16 +3,16 @@ package moe.plushie.armourers_workshop.init.platform.forge.builder;
 import com.apple.library.uikit.UIWindow;
 import moe.plushie.armourers_workshop.api.common.IMenuProvider;
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
-import moe.plushie.armourers_workshop.api.common.IRegistryBinder;
-import moe.plushie.armourers_workshop.api.common.IRegistryKey;
-import moe.plushie.armourers_workshop.api.common.builder.IMenuTypeBuilder;
+import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractMenuWindowProvider;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeMenuType;
-import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.core.Registry;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -43,14 +43,14 @@ public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements 
     public IRegistryKey<MenuType<T>> build(String name) {
         MenuType<?>[] menuTypes = {null};
         MenuType<T> menuType = AbstractForgeMenuType.create((id, inv, buf) -> factory.createMenu(menuTypes[0], id, inv, serializer.read(buf, inv.player)));
-        IRegistryKey<MenuType<T>> object = Registries.MENU_TYPE.register(name, () -> menuType);
+        IRegistryKey<MenuType<T>> object = Registry.registerMenuTypeFO(name, () -> menuType);
         MenuManager.registerMenuOpener(menuType, serializer, (player, title, value) -> {
             SimpleMenuProvider menuProvider = new SimpleMenuProvider((window, inv, player2) -> factory.createMenu(menuTypes[0], window, inv, value), title);
             AbstractForgeMenuType.openMenu(player, menuProvider, buf -> serializer.write(buf, player, value));
             return true;
         });
         menuTypes[0] = menuType;
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.of(binder, object));
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
         return object;
     }
 }

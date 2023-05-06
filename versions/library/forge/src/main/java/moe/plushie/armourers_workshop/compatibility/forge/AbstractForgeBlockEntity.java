@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.common.IBlockEntitySupplier;
+import moe.plushie.armourers_workshop.api.common.IBlockEntityType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -17,7 +17,7 @@ public interface AbstractForgeBlockEntity extends IForgeBlockEntity {
         return entityType.create(blockPos, blockState);
     }
 
-    static <T extends BlockEntity> BlockEntityType<T> createType(IBlockEntitySupplier<T> supplier, Block... blocks) {
+    static <T extends BlockEntity> BlockEntityType<T> createType(IBlockEntityType.Serializer<T> supplier, Block... blocks) {
         BlockEntityType<?>[] entityTypes = {null};
         BlockEntityType<T> entityType = BlockEntityType.Builder.of((blockPos, blockState) -> supplier.create(entityTypes[0], blockPos, blockState), blocks).build(null);
         entityTypes[0] = entityType;
