@@ -33,10 +33,10 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
     public static final RenderType BLOCK_CUBE_GLASS = _block(ModTextures.BLOCK_CUBE_GLASS).transparency(Transparency.TRANSLUCENT).sortOnUpload().build("aw_block_cube_glass");
     public static final RenderType BLOCK_CUBE_GLASS_UNSORTED = _block(ModTextures.BLOCK_CUBE_GLASS).transparency(Transparency.TRANSLUCENT).build("aw_block_cube_glass_unsorted");
 
-    public static final RenderType FACE_SOLID = _cube(SkinRenderFormat.SKIN_FACE_SOLID).build("aw_face_sold");
-    public static final RenderType FACE_LIGHTING = _cube(SkinRenderFormat.SKIN_FACE_LIGHTING).build("aw_lighting_quad_face");
-    public static final RenderType FACE_TRANSLUCENT = _cube(SkinRenderFormat.SKIN_FACE_TRANSLUCENT).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build("aw_translucent_quad_face");
-    public static final RenderType FACE_LIGHTING_TRANSLUCENT = _cube(SkinRenderFormat.SKIN_FACE_LIGHTING_TRANSLUCENT).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build("aw_translucent_lighting_quad_face");
+    public static final RenderType FACE_SOLID = _cube(SkinRenderFormat.SKIN_FACE_SOLID).texture(ModTextures.CUBE).build("aw_face_sold");
+    public static final RenderType FACE_LIGHTING = _cube(SkinRenderFormat.SKIN_FACE_LIGHTING).texture(ModTextures.LIGHTING_CUBE).build("aw_lighting_quad_face");
+    public static final RenderType FACE_TRANSLUCENT = _cube(SkinRenderFormat.SKIN_FACE_TRANSLUCENT).texture(ModTextures.CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build("aw_translucent_quad_face");
+    public static final RenderType FACE_LIGHTING_TRANSLUCENT = _cube(SkinRenderFormat.SKIN_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.LIGHTING_CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build("aw_translucent_lighting_quad_face");
 
     public static final RenderType[] RENDER_ORDERING_FACES = {FACE_SOLID, FACE_LIGHTING, FACE_TRANSLUCENT, FACE_LIGHTING_TRANSLUCENT};
 
@@ -76,7 +76,7 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
     }
 
     private static IRenderTypeBuilder _cube(SkinRenderFormat format) {
-        return _builder(format).texture(ModTextures.CUBE);
+        return _builder(format);
     }
 
     private static IRenderTypeBuilder _texture(ResourceLocation texture) {

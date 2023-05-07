@@ -38,6 +38,7 @@ public class ModTextures {
     public static final ResourceLocation PLAYER_INVENTORY = res("textures/gui/player_inventory.png");
 
     public static final ResourceLocation CUBE = res("textures/armour/cube.png");
+    public static final ResourceLocation LIGHTING_CUBE = res("textures/armour/glowcube.png");
     public static final ResourceLocation CIRCLE = res("textures/other/nanoha-circle.png");
     public static final ResourceLocation EARTH = res("textures/blockentity/global-skin-library.png");
 
