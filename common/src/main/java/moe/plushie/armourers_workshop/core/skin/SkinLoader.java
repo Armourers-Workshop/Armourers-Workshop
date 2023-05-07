@@ -2,9 +2,11 @@ package moe.plushie.armourers_workshop.core.skin;
 
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.api.library.ISkinLibraryLoader;
+import moe.plushie.armourers_workshop.core.data.BackendExecutor;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
+import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.network.RequestSkinPacket;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModContext;
@@ -48,14 +50,17 @@ public class SkinLoader {
 
     private static final SkinLoader LOADER = new SkinLoader();
 
+    private final BackendExecutor backend = new BackendExecutor();
     private final EnumMap<DataDomain, Session> taskManager = new EnumMap<>(DataDomain.class);
 
     private final HashMap<String, IResultHandler<Skin>> waiting = new HashMap<>();
     private final HashMap<String, ISkinLibraryLoader> loaders = new HashMap<>();
     private final ConcurrentHashMap<String, Entry> entries = new ConcurrentHashMap<>();
+    private final ArrayList<IResultHandler<SkinDescriptor>> caches = new ArrayList<>();
 
     private SkinLoader() {
-        setup(null);
+        this.backend.pause();
+        this.setup(null);
     }
 
     public static SkinLoader getInstance() {
@@ -125,6 +130,29 @@ public class SkinLoader {
         resumeRequest(entry, Method.ASYNC);
     }
 
+    public SkinDescriptor loadSkinFromDB(String identifier, ColorScheme scheme, boolean needCopy) {
+        Skin skin = loadSkin(identifier);
+        if (skin != null) {
+            if (needCopy) {
+                identifier = saveSkin(identifier, skin);
+            }
+            return new SkinDescriptor(identifier, skin.getType(), scheme);
+        }
+        return SkinDescriptor.EMPTY;
+    }
+
+//    public void loadSkinFromDB(String identifier, ColorScheme scheme, boolean needCopy, IResultHandler<SkinDescriptor> handler) {
+//        backend.execute(() -> {
+//            try {
+//                ModLog.debug("'{}' => preload into database", identifier);
+//                handler.accept(loadSkinFromDB(identifier, scheme, needCopy));
+////                caches.add(handler);
+//            } catch (Exception exception) {
+//                handler.reject(exception);
+//            }
+//        });
+//    }
+
     public String saveSkin(String identifier, Skin skin) {
         if (DataDomain.isDatabase(identifier)) {
             return identifier;
@@ -158,11 +186,22 @@ public class SkinLoader {
         }
     }
 
-    public synchronized void clear() {
-        ModLog.debug("clear loader caches");
+    public synchronized void prepare(MinecraftServer server) {
+        ModLog.debug("prepare skin loader");
+        setup(server);
+    }
+
+    public synchronized void start() {
+        ModLog.debug("start skin loader");
+        backend.resume();
+    }
+
+    public synchronized void stop() {
+        ModLog.debug("stop skin loader");
         waiting.clear();
         entries.clear();
         setup(null);
+        backend.pause();
     }
 
     private Entry getEntry(String identifier) {
@@ -475,7 +514,7 @@ public class SkinLoader {
                 caching.add(request.identifier, state.skin);
                 return state.skin;
             }
-            if (state.exception == null)  {
+            if (state.exception == null) {
                 state.exception = new TimeoutException("request server skin");
             }
             throw state.exception;

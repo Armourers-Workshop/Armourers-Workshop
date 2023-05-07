@@ -42,7 +42,7 @@ public class ForgeProvider {
     public static final IRegistry<Item> ITEMS = new Proxy<>(Item.class, ForgeRegistries.ITEMS);
     public static final IRegistry<MenuType<?>> MENU_TYPES = new Proxy<>(MenuType.class, ForgeRegistries.CONTAINERS);
     public static final IRegistry<EntityType<?>> ENTITY_TYPES = new Proxy<>(EntityType.class, ForgeRegistries.ENTITIES);
-    public static final IRegistry<DataSerializerEntry> ENTITY_DATA_SERIALIZER = new Proxy<>(EntityDataSerializer.class, ForgeRegistries.DATA_SERIALIZERS, DeferredRegister.create(ForgeRegistries.Keys.DATA_SERIALIZERS, ModConstants.MOD_ID));
+    public static final IRegistry<DataSerializerEntry> ENTITY_DATA_SERIALIZER = new Proxy<>(EntityDataSerializer.class, null, DeferredRegister.create(ForgeRegistries.Keys.DATA_SERIALIZERS, ModConstants.MOD_ID));
     public static final IRegistry<BlockEntityType<?>> BLOCK_ENTITY_TYPES = new Proxy<>(BlockEntityType.class, ForgeRegistries.BLOCK_ENTITIES);
     public static final IRegistry<SoundEvent> SOUND_EVENTS = new Proxy<>(SoundEvent.class, ForgeRegistries.SOUND_EVENTS);
 

@@ -27,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -42,6 +43,7 @@ public class FabricProvider {
     public static final IRegistry<EntityType<?>> ENTITY_TYPES = new AbstractFabricRegistry<>(EntityType.class, Registry.ENTITY_TYPE);
     public static final IRegistry<BlockEntityType<?>> BLOCK_ENTITY_TYPES = new AbstractFabricRegistry<>(BlockEntityType.class, Registry.BLOCK_ENTITY_TYPE);
     public static final IRegistry<SoundEvent> SOUND_EVENTS = new AbstractFabricRegistry<>(SoundEvent.class, Registry.SOUND_EVENT);
+    public static final IRegistry<LootItemFunctionType> ITEM_LOOT_FUNCTIONS = new AbstractFabricRegistry<>(LootItemFunctionType.class, Registry.LOOT_FUNCTION_TYPE);
 
     public static <T extends Item> IRegistryKey<T> registerItemFA(@ThisClass Class<?> clazz, String name, Supplier<T> supplier) {
         return ITEMS.register(name, supplier);
@@ -62,6 +64,10 @@ public class FabricProvider {
                 .build();
         ModLog.debug("Registering Item Group '{}'", registryName);
         return AbstractFabricRegistryEntry.cast(registryName, tab);
+    }
+
+    public static <T extends LootItemFunctionType> IRegistryKey<T> registerItemLootFunctionFA(@ThisClass Class<?> clazz, String name, Supplier<T> supplier) {
+        return ITEM_LOOT_FUNCTIONS.register(name, supplier);
     }
 
     public static <T extends Block> IRegistryKey<T> registerBlockFA(@ThisClass Class<?> clazz, String name, Supplier<T> supplier) {

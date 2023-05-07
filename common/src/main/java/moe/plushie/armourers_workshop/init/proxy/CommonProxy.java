@@ -53,21 +53,22 @@ public class CommonProxy {
         registries.willServerStart(server -> {
             ModLog.debug("hello");
             LocalDataService.start(server);
-            SkinLoader.getInstance().setup(server);
+            SkinLoader.getInstance().prepare(server);
         });
         registries.didServerStart(server -> {
             ModLog.debug("init");
             ModContext.init(server);
+            SkinLoader.getInstance().start();
         });
 
         registries.willServerStop(server -> {
             ModLog.debug("wait");
-            // before server stopping, we need to sure that all data is saved.
+            // before server stopping, we need to sure that all data saved.
             for (ServerLevel level : server.getAllLevels()) {
                 WorldUpdater.getInstance().drain(level);
             }
             LocalDataService.stop();
-            SkinLoader.getInstance().clear();
+            SkinLoader.getInstance().stop();
         });
         registries.didServerStop(server -> {
             ModLog.debug("bye");

@@ -40,6 +40,10 @@ public interface IDataPackObject {
         return Type.NULL;
     }
 
+    default void add(Object value) {
+
+    }
+
     default IDataPackObject at(int index) {
         if (type() == Type.ARRAY) {
             return of(jsonValue().getAsJsonArray().get(index));
@@ -55,6 +59,10 @@ public interface IDataPackObject {
             return jsonValue().getAsJsonObject().size();
         }
         return 0;
+    }
+
+    default void set(String key, Object value) {
+
     }
 
     default IDataPackObject get(String key) {

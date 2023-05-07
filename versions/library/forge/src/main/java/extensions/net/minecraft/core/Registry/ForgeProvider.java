@@ -41,12 +41,11 @@ public class ForgeProvider {
     public static final IRegistry<Item> ITEMS = new Proxy<>(Item.class, ForgeRegistries.ITEMS);
     public static final IRegistry<MenuType<?>> MENU_TYPES = new Proxy<>(MenuType.class, ForgeRegistries.MENU_TYPES);
     public static final IRegistry<EntityType<?>> ENTITY_TYPES = new Proxy<>(EntityType.class, ForgeRegistries.ENTITY_TYPES);
-    public static final IRegistry<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZER = new Proxy<>(EntityDataSerializer.class, ForgeRegistries.ENTITY_DATA_SERIALIZERS, DeferredRegister.create(ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, ModConstants.MOD_ID));
+    public static final IRegistry<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZER = new Proxy<>(EntityDataSerializer.class, null, DeferredRegister.create(ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, ModConstants.MOD_ID));
     public static final IRegistry<BlockEntityType<?>> BLOCK_ENTITY_TYPES = new Proxy<>(BlockEntityType.class, ForgeRegistries.BLOCK_ENTITY_TYPES);
     public static final IRegistry<SoundEvent> SOUND_EVENTS = new Proxy<>(SoundEvent.class, ForgeRegistries.SOUND_EVENTS);
 
-    private static final IRegistry<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENT_TYPES = new Proxy<>(ArgumentTypeInfo.class, ForgeRegistries.COMMAND_ARGUMENT_TYPES);
-
+    public static final IRegistry<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENT_TYPES = new Proxy<>(ArgumentTypeInfo.class, ForgeRegistries.COMMAND_ARGUMENT_TYPES);
 
     public static <T extends Item> IRegistryKey<T> registerItemFO(@ThisClass Class<?> clazz, String name, Supplier<T> supplier) {
         return ITEMS.register(name, supplier);

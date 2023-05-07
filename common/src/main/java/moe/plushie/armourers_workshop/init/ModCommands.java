@@ -409,14 +409,7 @@ public class ModCommands {
                 identifier = DataDomain.DEDICATED_SERVER.normalize(identifier);
                 needCopy = true; // save the skin to the database
             }
-            Skin skin = SkinLoader.getInstance().loadSkin(identifier);
-            if (skin != null) {
-                if (needCopy) {
-                    identifier = SkinLoader.getInstance().saveSkin(identifier, skin);
-                }
-                return new SkinDescriptor(identifier, skin.getType(), scheme);
-            }
-            return SkinDescriptor.EMPTY;
+            return SkinLoader.getInstance().loadSkinFromDB(identifier, scheme, needCopy);
         }
     }
 }
