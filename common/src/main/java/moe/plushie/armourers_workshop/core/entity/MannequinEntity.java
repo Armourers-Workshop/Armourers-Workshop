@@ -187,11 +187,10 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
     }
 
     @Override
-    public void setYBodyRot(float rot) {
-        this.yRotO = rot;
-        this.setYRot(rot);
-        this.yBodyRotO = this.yBodyRot = 0;
-        this.yHeadRotO = this.yHeadRot = rot;
+    public void setYBodyRot(float f) {
+        super.setYBodyRot(f);
+        this.setYRot(f);
+        this.yBodyRot = f;
     }
 
     @Override

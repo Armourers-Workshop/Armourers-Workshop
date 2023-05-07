@@ -36,6 +36,15 @@ public abstract class AbstractLivingEntityRenderer<T extends LivingEntity, M ext
         this.scale(livingEntity, MatrixUtils.of(poseStack), f);
     }
 
+    public void setupRotations(T entity, IPoseStack poseStack, float f, float g, float h) {
+        super.setupRotations(entity, poseStack.cast(), f, g, h);
+    }
+
+    @Override
+    protected void setupRotations(T entity, PoseStack poseStack, float f, float g, float h) {
+        this.setupRotations(entity, MatrixUtils.of(poseStack), f, g, h);
+    }
+
     public void setModel(M model) {
         this.model = model;
     }

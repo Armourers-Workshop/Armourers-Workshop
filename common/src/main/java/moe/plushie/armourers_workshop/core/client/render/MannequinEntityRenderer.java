@@ -9,10 +9,13 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.Rotations;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 
@@ -75,6 +78,18 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
             RenderSystem.drawBoundingBox(poseStack, box, UIColor.YELLOW, buffers);
             poseStack.popPose();
         }
+    }
+
+    @Override
+    public void setupRotations(T entity, IPoseStack poseStack, float f, float g, float h) {
+        // when rendering in the GUI, we don't use body rotation
+        // to avoid display entity at weird angles.
+        if (MannequinEntityRenderer.enableLimitScale) {
+            return;
+        }
+        super.setupRotations(entity, poseStack, f, g, h);
+        Rotations mainPose = entity.getBodyPose();
+        poseStack.rotate(new OpenQuaternionf(-mainPose.getX(), -mainPose.getY(), mainPose.getZ(), true));
     }
 
     @Override
