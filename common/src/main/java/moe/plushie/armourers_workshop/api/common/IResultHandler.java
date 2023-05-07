@@ -2,13 +2,13 @@ package moe.plushie.armourers_workshop.api.common;
 
 public interface IResultHandler<T> {
 
-    void apply(T t, Exception e);
+    void apply(T value, Exception exception);
 
-    default void accept(T t) {
-        apply(t, null);
+    default void accept(T value) {
+        apply(value, null);
     }
 
-    default void reject(Exception e) {
-        apply(null, e);
+    default void reject(Exception exception) {
+        apply(null, exception);
     }
 }

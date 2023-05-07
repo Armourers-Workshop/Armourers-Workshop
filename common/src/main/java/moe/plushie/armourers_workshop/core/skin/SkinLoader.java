@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.skin;
 
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.api.library.ISkinLibraryLoader;
-import moe.plushie.armourers_workshop.core.data.BackendExecutor;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
@@ -17,6 +16,7 @@ import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
+import moe.plushie.armourers_workshop.utils.WorkQueue;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -45,21 +45,21 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Supplier;
 
 public class SkinLoader {
 
     private static final SkinLoader LOADER = new SkinLoader();
 
-    private final BackendExecutor backend = new BackendExecutor();
     private final EnumMap<DataDomain, Session> taskManager = new EnumMap<>(DataDomain.class);
 
+    private final WorkQueue workQueue = new WorkQueue();
     private final HashMap<String, IResultHandler<Skin>> waiting = new HashMap<>();
     private final HashMap<String, ISkinLibraryLoader> loaders = new HashMap<>();
     private final ConcurrentHashMap<String, Entry> entries = new ConcurrentHashMap<>();
-    private final ArrayList<IResultHandler<SkinDescriptor>> caches = new ArrayList<>();
+    private final ConcurrentHashMap<String, GlobalEntry> globalEntries = new ConcurrentHashMap<>();
 
     private SkinLoader() {
-        this.backend.pause();
         this.setup(null);
     }
 
@@ -141,6 +141,16 @@ public class SkinLoader {
         return SkinDescriptor.EMPTY;
     }
 
+    public void loadSkinFromDB(String identifier, ColorScheme scheme, IResultHandler<SkinDescriptor> handler) {
+        // merge all request into one.
+        getOrCreateGlobalEntry(identifier).resume((descriptor, exception) -> {
+            if (descriptor != null) {
+                descriptor = new SkinDescriptor(descriptor, scheme);
+            }
+            handler.apply(descriptor, exception);
+        });
+    }
+
 //    public void loadSkinFromDB(String identifier, ColorScheme scheme, boolean needCopy, IResultHandler<SkinDescriptor> handler) {
 //        backend.execute(() -> {
 //            try {
@@ -193,15 +203,20 @@ public class SkinLoader {
 
     public synchronized void start() {
         ModLog.debug("start skin loader");
-        backend.resume();
+        workQueue.resume();
     }
 
     public synchronized void stop() {
         ModLog.debug("stop skin loader");
+        workQueue.pause();
         waiting.clear();
         entries.clear();
+        globalEntries.clear();
         setup(null);
-        backend.pause();
+    }
+
+    public void submit(Runnable cmd) {
+        workQueue.submit(cmd);
     }
 
     private Entry getEntry(String identifier) {
@@ -210,6 +225,10 @@ public class SkinLoader {
 
     private Entry getOrCreateEntry(String identifier) {
         return entries.computeIfAbsent(identifier, Entry::new);
+    }
+
+    private GlobalEntry getOrCreateGlobalEntry(String identifier) {
+        return globalEntries.computeIfAbsent(identifier, GlobalEntry::new);
     }
 
     private Entry removeEntry(String identifier) {
@@ -317,6 +336,56 @@ public class SkinLoader {
                 return skin.get();
             }
             return null;
+        }
+    }
+
+    public static class GlobalEntry implements IResultHandler<Skin> {
+
+        private boolean isFinished = false;
+        private boolean isRequested = false;
+
+        private SkinDescriptor descriptor = SkinDescriptor.EMPTY;
+        private Exception exception;
+
+        private final String identifier;
+        private final ArrayList<IResultHandler<SkinDescriptor>> pending = new ArrayList<>();
+
+        public GlobalEntry(String identifier) {
+            this.identifier = identifier;
+        }
+
+        @Override
+        public void apply(Skin skin, Exception exception) {
+            this.isFinished = true;
+            this.exception = exception;
+            if (skin == null) {
+                sendNotify();
+                return;
+            }
+            String newIdentifier = SkinLoader.getInstance().saveSkin(identifier, skin);
+            ModLog.debug("'{}' => did load global skin into database, target: '{}'", newIdentifier);
+            descriptor = new SkinDescriptor(newIdentifier, skin.getType(), ColorScheme.EMPTY);
+            sendNotify();
+        }
+
+        public void resume(IResultHandler<SkinDescriptor> handler) {
+            if (isFinished) {
+                handler.apply(descriptor, exception);
+                return;
+            }
+            pending.add(handler);
+            if (!isRequested) {
+                isRequested = true;
+                ModLog.debug("'{}' => load global skin into database", identifier);
+                SkinLoader.getInstance().loadSkin(identifier, this);
+            }
+        }
+
+        private void sendNotify() {
+            for (IResultHandler<SkinDescriptor> handler : pending) {
+                handler.apply(descriptor, exception);
+            }
+            pending.clear();
         }
     }
 

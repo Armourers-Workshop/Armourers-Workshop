@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init.function;
 
 import com.google.common.collect.ImmutableList;
 import moe.plushie.armourers_workshop.api.common.ILootConditionalFunction;
+import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -58,18 +59,23 @@ public class SkinRandomlyFunction implements ILootConditionalFunction {
         return sources.stream().map(SkinSource::getParam).filter(Objects::nonNull).collect(Collectors.toSet());
     }
 
-    public static class SkinSource {
+    public static class SkinSource implements IResultHandler<SkinDescriptor> {
 
-        private String identifier;
+        private SkinDescriptor provider;
         private Function<LootContext, SkinDescriptor> searcher;
         private LootContextParam<?> param;
 
         public SkinSource(IDataPackObject object) {
             switch (object.type()) {
                 case STRING: {
-                    // "ks:10830"                   // direct
-                    // "ws:/path/to/skin.armour"    // direct
-                    identifier = object.stringValue();
+                    // "ks:10830"
+                    // "ws:/path/to/skin.armour"
+                    String identifier = object.stringValue();
+                    if (!identifier.isEmpty()) {
+                        // direct load will take a long time, so we need to preload.
+                        // during the loading, the current source is disabled.
+                        SkinLoader.getInstance().submit(() -> SkinLoader.getInstance().loadSkinFromDB(identifier, ColorScheme.EMPTY, this));
+                    }
                     break;
                 }
                 case DICTIONARY: {
@@ -90,13 +96,18 @@ public class SkinRandomlyFunction implements ILootConditionalFunction {
         }
 
         public SkinDescriptor apply(LootContext lootContext) {
-            if (identifier != null && !identifier.isEmpty()) {
-                return SkinLoader.getInstance().loadSkinFromDB(identifier, ColorScheme.EMPTY, true);
+            if (provider != null) {
+                return provider;
             }
             if (searcher != null) {
                 return searcher.apply(lootContext);
             }
             return SkinDescriptor.EMPTY;
+        }
+
+        @Override
+        public void apply(SkinDescriptor value, Exception exception) {
+            provider = value;
         }
 
         public SkinDescriptor search(LootContext lootContext, @Nullable SkinSlotType slotType, int index) {
@@ -143,40 +154,6 @@ public class SkinRandomlyFunction implements ILootConditionalFunction {
             return param;
         }
     }
-//
-//    public static class SkinHolder implements IResultHandler<SkinDescriptor> {
-//
-//        private SkinDescriptor value;
-//
-//        private final String identifier;
-//
-//        public SkinHolder(String identifier) {
-//            this.identifier = identifier;
-//            this.reset();
-//        }
-//
-//        public void reset() {
-//            // direct load will take a long time, so we need to preload.
-//            // during the loading, the current source is disabled.
-//            SkinLoader.getInstance().loadSkinFromDB(identifier, ColorScheme.EMPTY, true, this);
-//        }
-//
-//        @Override
-//        public void apply(SkinDescriptor value, Exception exception) {
-//            // ...
-//            this.value = value;
-//            if (exception instanceof SkinExpiredException) {
-//                this.reset();
-//            }
-//        }
-//
-//        public SkinDescriptor resolve() {
-//            if (value != null) {
-//                return value;
-//            }
-//            return SkinDescriptor.EMPTY;
-//        }
-//    }
 
     public static class Serializer implements ILootConditionalFunction.Serializer<SkinRandomlyFunction> {
 
@@ -185,15 +162,7 @@ public class SkinRandomlyFunction implements ILootConditionalFunction {
             if (function.sources.isEmpty()) {
                 return;
             }
-//                JsonArray jsonArray = new JsonArray();
-//                for (Enchantment enchantment : enchantRandomlyFunction.enchantments) {
-//                    ResourceLocation resourceLocation = Registry.ENCHANTMENT.getKey(enchantment);
-//                    if (resourceLocation == null) {
-//                        throw new IllegalArgumentException("Don't know how to serialize enchantment " + enchantment);
-//                    }
-//                    jsonArray.add(new JsonPrimitive(resourceLocation.toString()));
-//                }
-//                jsonObject.add("enchantments", jsonArray);
+            // TODO: why need serialize @SAGESSE
         }
 
         @Override
