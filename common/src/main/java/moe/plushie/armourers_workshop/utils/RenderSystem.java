@@ -48,12 +48,14 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Environment(value = EnvType.CLIENT)
 public final class RenderSystem extends AbstractRenderSystem {
 
     private static final IPoseStack extendedModelViewStack = MatrixUtils.modelViewStack();
 
+    private static final AtomicInteger extendedMatrixFlags = new AtomicInteger();
     private static final Storage<IMatrix3f> extendedNormalMatrix = new Storage<>(OpenMatrix3f.createScaleMatrix(1, 1, 1));
     private static final Storage<IMatrix4f> extendedTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
     private static final Storage<IMatrix4f> extendedLightmapTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
@@ -688,6 +690,14 @@ public final class RenderSystem extends AbstractRenderSystem {
 
     public static void setExtendedModelViewMatrix(IMatrix4f value) {
         extendedModelViewMatrix.set(value);
+    }
+
+    public static void setExtendedMatrixFlags(int options) {
+        extendedMatrixFlags.set(options);
+    }
+
+    public static int getExtendedMatrixFlags() {
+        return extendedMatrixFlags.get();
     }
 
     public static void backupExtendedMatrix() {

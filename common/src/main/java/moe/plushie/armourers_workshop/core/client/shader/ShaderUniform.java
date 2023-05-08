@@ -29,19 +29,53 @@ public abstract class ShaderUniform {
 
     public abstract void apply();
 
-    public abstract void push();
+    public void push() {
+    }
 
-    public abstract void pop();
+    public void pop() {
+    }
 
     public interface Factory<T> {
 
         ShaderUniform create(String name, int program, int location, Supplier<T> value);
     }
 
+    public static class Int extends ShaderUniform {
+
+        private final Supplier<Integer> value;
+        private final Stack<Integer> cachedValues = new Stack<>();
+        private int cachedValue = 0;
+
+        Int(String name, int program, int location, Supplier<Integer> value) {
+            super(name, program, location);
+            this.value = value;
+        }
+
+        @Override
+        public void apply() {
+            int newValue = value.get();
+            if (cachedValue != newValue) {
+                cachedValue = newValue;
+                GL20.glUniform1i(location, newValue);
+            }
+        }
+
+        @Override
+        public void push() {
+            cachedValues.push(cachedValue);
+        }
+
+        @Override
+        public void pop() {
+            int newValue = cachedValues.pop();
+            cachedValue = newValue;
+            GL20.glUniform1i(location, newValue);
+        }
+    }
+
     public static class Matrix4f extends ShaderUniform {
 
         private final FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-        private final Stack<FloatBuffer> cachedBuffers = new Stack<>();
         private final Supplier<IMatrix4f> value;
 
         private IMatrix4f cachedValue;
@@ -62,26 +96,11 @@ public abstract class ShaderUniform {
                 GL20.glUniformMatrix4fv(location, false, buffer);
             }
         }
-
-        @Override
-        public void push() {
-            FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-            GL20.glGetUniformfv(program, location, buffer);
-            cachedBuffers.push(buffer);
-        }
-
-        @Override
-        public void pop() {
-            FloatBuffer buffer = cachedBuffers.pop();
-            GL20.glUniformMatrix4fv(location, false, buffer);
-            cachedValue = null;
-        }
     }
 
     public static class Matrix3f extends ShaderUniform {
 
         private final FloatBuffer buffer = BufferUtils.createFloatBuffer(9);
-        private final Stack<FloatBuffer> cachedBuffers = new Stack<>();
         private final Supplier<IMatrix3f> value;
         private IMatrix3f cachedValue;
 
@@ -101,20 +120,6 @@ public abstract class ShaderUniform {
                 GL20.glUniformMatrix3fv(location, false, buffer);
             }
         }
-
-        @Override
-        public void push() {
-            FloatBuffer buffer = BufferUtils.createFloatBuffer(9);
-            GL20.glGetUniformfv(program, location, buffer);
-            cachedBuffers.push(buffer);
-        }
-
-        @Override
-        public void pop() {
-            FloatBuffer buffer = cachedBuffers.pop();
-            GL20.glUniformMatrix3fv(location, false, buffer);
-            cachedValue = null;
-        }
     }
 
     public static class Loader {
@@ -125,6 +130,7 @@ public abstract class ShaderUniform {
 
         public Loader(int programId) {
             this.programId = programId;
+            register("aw_MatrixFlags", RenderSystem::getExtendedMatrixFlags, Int::new);
             register("aw_LightmapTextureMatrix", RenderSystem::getExtendedLightmapTextureMatrix, Matrix4f::new);
             register("aw_TextureMatrix", RenderSystem::getExtendedTextureMatrix, Matrix4f::new);
             register("aw_NormalMatrix", RenderSystem::getExtendedNormalMatrix, Matrix3f::new);

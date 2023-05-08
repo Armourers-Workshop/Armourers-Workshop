@@ -40,6 +40,7 @@ public abstract class Shader {
     public void begin() {
         RenderSystem.backupExtendedMatrix();
         RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.setExtendedMatrixFlags(1);
         RenderSystem.setExtendedTextureMatrix(OpenMatrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
         ShaderUniforms.begin();
 
@@ -54,6 +55,7 @@ public abstract class Shader {
         }
 
         ShaderUniforms.end();
+        RenderSystem.setExtendedMatrixFlags(0);
         RenderSystem.restoreExtendedMatrix();
     }
 
