@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init.platform;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import moe.plushie.armourers_workshop.api.common.IItemTransformType;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resources.model.BakedModel;
@@ -11,7 +11,7 @@ import net.minecraft.client.resources.model.BakedModel;
 public class TransformationProvider {
 
     @ExpectPlatform
-    public static BakedModel handleTransforms(IPoseStack poseStack, BakedModel bakedModel, IItemTransformType transformType, boolean leftHandHackery) {
+    public static BakedModel handleTransforms(PoseStack poseStack, BakedModel bakedModel, IItemTransformType transformType, boolean leftHandHackery) {
         return bakedModel;
     }
 }

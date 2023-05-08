@@ -16,6 +16,9 @@ import java.util.function.Function;
 
 public class ObjectUtils {
 
+    private static final FloatBuffer BUFFER3x3 = BufferUtils.createFloatBuffer(9);
+    private static final FloatBuffer BUFFER4x4 = BufferUtils.createFloatBuffer(16);
+
     public static <S, T> T unsafeCast(S src) {
         // noinspection unchecked
         return (T) src;
@@ -78,17 +81,14 @@ public class ObjectUtils {
         }
     }
 
-
     public static void set(IMatrix3f matrixIn, IMatrix3f matrixOut) {
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(9);
-        matrixIn.store(buffer);
-        matrixOut.load(buffer);
+        matrixIn.store(BUFFER3x3);
+        matrixOut.load(BUFFER3x3);
     }
 
     public static void set(IMatrix4f matrixIn, IMatrix4f matrixOut) {
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-        matrixIn.store(buffer);
-        matrixOut.load(buffer);
+        matrixIn.store(BUFFER4x4);
+        matrixOut.load(BUFFER4x4);
     }
 
     // "<%s: 0x%x; arg1 = arg2; ...; argN-1 = argN>"

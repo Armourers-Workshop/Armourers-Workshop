@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.client.shader;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexArrayBuffer;
 import moe.plushie.armourers_workshop.core.client.other.VertexIndexBuffer;
@@ -10,6 +9,7 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
@@ -80,7 +80,7 @@ public abstract class Shader {
         int vertexes = toTriangleVertex(object.getVertexCount());
         int maxVertexes = toTriangleVertex(lastMaxVertexCount);
 
-        IPoseStack poseStack = object.getPoseStack();
+        OpenPoseStack poseStack = object.getPoseStack();
 
         // we need fast update the uniforms,
         // so we're never using from vanilla uniforms.

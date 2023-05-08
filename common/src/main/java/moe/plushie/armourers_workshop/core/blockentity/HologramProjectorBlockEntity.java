@@ -67,28 +67,28 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     @Override
     public void readFromNBT(CompoundTag nbt) {
         ContainerHelper.loadAllItems(nbt, items);
-        modelAngle = DataSerializers.getVector3f(nbt, Constants.Key.TILE_ENTITY_ANGLE);
-        modelOffset = DataSerializers.getVector3f(nbt, Constants.Key.TILE_ENTITY_OFFSET);
-        rotationSpeed = DataSerializers.getVector3f(nbt, Constants.Key.TILE_ENTITY_ROTATION_SPEED);
-        rotationOffset = DataSerializers.getVector3f(nbt, Constants.Key.TILE_ENTITY_ROTATION_OFFSET);
-        isGlowing = DataSerializers.getBoolean(nbt, Constants.Key.TILE_ENTITY_IS_GLOWING, true);
-        isPowered = DataSerializers.getBoolean(nbt, Constants.Key.TILE_ENTITY_IS_POWERED, false);
+        modelAngle = DataSerializers.getVector3f(nbt, Constants.Key.BLOCK_ENTITY_ANGLE);
+        modelOffset = DataSerializers.getVector3f(nbt, Constants.Key.BLOCK_ENTITY_OFFSET);
+        rotationSpeed = DataSerializers.getVector3f(nbt, Constants.Key.BLOCK_ENTITY_ROTATION_SPEED);
+        rotationOffset = DataSerializers.getVector3f(nbt, Constants.Key.BLOCK_ENTITY_ROTATION_OFFSET);
+        isGlowing = DataSerializers.getBoolean(nbt, Constants.Key.BLOCK_ENTITY_IS_GLOWING, true);
+        isPowered = DataSerializers.getBoolean(nbt, Constants.Key.BLOCK_ENTITY_IS_POWERED, false);
         modelScale = DataSerializers.getFloat(nbt, Constants.Key.ENTITY_SCALE, 1.0f);
-        powerMode = DataSerializers.getInt(nbt, Constants.Key.TILE_ENTITY_POWER_MODE, 0);
+        powerMode = DataSerializers.getInt(nbt, Constants.Key.BLOCK_ENTITY_POWER_MODE, 0);
         setRenderChanged();
     }
 
     @Override
     public void writeToNBT(CompoundTag nbt) {
         ContainerHelper.saveAllItems(nbt, items);
-        DataSerializers.putVector3f(nbt, Constants.Key.TILE_ENTITY_ANGLE, modelAngle);
-        DataSerializers.putVector3f(nbt, Constants.Key.TILE_ENTITY_OFFSET, modelOffset);
-        DataSerializers.putVector3f(nbt, Constants.Key.TILE_ENTITY_ROTATION_SPEED, rotationSpeed);
-        DataSerializers.putVector3f(nbt, Constants.Key.TILE_ENTITY_ROTATION_OFFSET, rotationOffset);
-        DataSerializers.putBoolean(nbt, Constants.Key.TILE_ENTITY_IS_GLOWING, isGlowing, true);
-        DataSerializers.putBoolean(nbt, Constants.Key.TILE_ENTITY_IS_POWERED, isPowered, false);
+        DataSerializers.putVector3f(nbt, Constants.Key.BLOCK_ENTITY_ANGLE, modelAngle);
+        DataSerializers.putVector3f(nbt, Constants.Key.BLOCK_ENTITY_OFFSET, modelOffset);
+        DataSerializers.putVector3f(nbt, Constants.Key.BLOCK_ENTITY_ROTATION_SPEED, rotationSpeed);
+        DataSerializers.putVector3f(nbt, Constants.Key.BLOCK_ENTITY_ROTATION_OFFSET, rotationOffset);
+        DataSerializers.putBoolean(nbt, Constants.Key.BLOCK_ENTITY_IS_GLOWING, isGlowing, true);
+        DataSerializers.putBoolean(nbt, Constants.Key.BLOCK_ENTITY_IS_POWERED, isPowered, false);
         DataSerializers.putFloat(nbt, Constants.Key.ENTITY_SCALE, modelScale, 1.0f);
-        DataSerializers.putInt(nbt, Constants.Key.TILE_ENTITY_POWER_MODE, powerMode, 0);
+        DataSerializers.putInt(nbt, Constants.Key.BLOCK_ENTITY_POWER_MODE, powerMode, 0);
     }
 
     public void updatePowerStats() {

@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.proxy;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.common.IEntityHandler;
 import moe.plushie.armourers_workshop.api.common.IItemTransformType;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfig;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfigTracker;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderSpecificArmEvents;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.ClientModInitializer;
@@ -81,7 +80,7 @@ public class ClientProxyImpl implements ClientModInitializer {
         //         return;
         //     }
         // }
-        IPoseStack poseStack = MatrixUtils.of(context.matrixStack());
+        PoseStack poseStack = context.matrixStack();
         ItemStack itemStack = player.getMainHandItem();
         Item item = itemStack.getItem();
         if (ModConfig.Client.enableEntityPlacementHighlight && item == ModItems.MANNEQUIN.get()) {
@@ -124,7 +123,7 @@ public class ClientProxyImpl implements ClientModInitializer {
 //            }
 //        }
 
-    public boolean onRenderSpecificFirstPersonHand(IPoseStack poseStack, MultiBufferSource buffers, int light, Player player, InteractionHand hand) {
+    public boolean onRenderSpecificFirstPersonHand(PoseStack poseStack, MultiBufferSource buffers, int light, Player player, InteractionHand hand) {
         if (!ModConfig.enableFirstPersonSkinRenderer()) {
             return true;
         }

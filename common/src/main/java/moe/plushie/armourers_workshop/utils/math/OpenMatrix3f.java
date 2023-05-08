@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.utils.math;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
@@ -17,9 +18,7 @@ public class OpenMatrix3f implements IMatrix3f {
     }
 
     public OpenMatrix3f(IMatrix3f matrix) {
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(9);
-        matrix.store(buffer);
-        load(buffer);
+        ObjectUtils.set(matrix, this);
     }
 
     public OpenMatrix3f(IMatrix4f matrix) {
@@ -51,6 +50,14 @@ public class OpenMatrix3f implements IMatrix3f {
         m02 = 2.0f * (o + q);
         m21 = 2.0f * (n + p);
         m12 = 2.0f * (n - p);
+    }
+
+    public OpenMatrix3f(FloatBuffer buffer) {
+        if (buffer.remaining() == 9) {
+            load(buffer);
+        } else {
+            import44(buffer);
+        }
     }
 
     public static OpenMatrix3f createScaleMatrix(float x, float y, float z) {

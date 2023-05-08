@@ -36,7 +36,7 @@ public class OutfitMakerMenu extends AbstractBlockContainerMenu {
 
     public OutfitMakerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess access) {
         super(menuType, block, containerId, access);
-        this.inventory = getTileInventory();
+        this.inventory = getBlockInventory();
         this.addPlayerSlots(playerInventory, 8, 158);
         this.addInputSlots(inventory, 0, inventory.getContainerSize() - 1, 36, 58);
         this.addOutputSlot(inventory, inventory.getContainerSize() - 1, 148, 88);
@@ -63,8 +63,8 @@ public class OutfitMakerMenu extends AbstractBlockContainerMenu {
 
     public void saveArmourItem(Player player, GameProfile profile) {
         // check again before crafting to avoid fake request.
-        OutfitMakerBlockEntity tileEntity = getTileEntity(OutfitMakerBlockEntity.class);
-        if (!shouldCrafting() || tileEntity == null) {
+        OutfitMakerBlockEntity blockEntity = getBlockEntity(OutfitMakerBlockEntity.class);
+        if (!shouldCrafting() || blockEntity == null) {
             return;
         }
         ArrayList<SkinPart> skinParts = new ArrayList<>();
@@ -124,8 +124,8 @@ public class OutfitMakerMenu extends AbstractBlockContainerMenu {
             if (profile.getId() != null) {
                 skinProperties.put(SkinProperty.ALL_AUTHOR_UUID, profile.getId().toString());
             }
-            skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, tileEntity.getItemName());
-            skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, tileEntity.getItemFlavour());
+            skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, blockEntity.getItemName());
+            skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, blockEntity.getItemFlavour());
             // build
             Skin.Builder builder = new Skin.Builder(SkinTypes.OUTFIT);
             builder.properties(skinProperties);

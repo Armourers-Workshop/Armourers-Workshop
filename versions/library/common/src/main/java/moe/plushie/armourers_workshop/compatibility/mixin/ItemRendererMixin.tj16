@@ -2,11 +2,9 @@ package moe.plushie.armourers_workshop.compatibility.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.model.BakedModelStroage;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.utils.EmbeddedSkinStack;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -35,7 +33,7 @@ public class ItemRendererMixin {
     }
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
-    private void aw2$render(ItemStack itemStack, ItemTransforms.TransformType transformType, boolean p_229111_3_, PoseStack poseStackIn, MultiBufferSource buffers, int packedLight, int overlay, BakedModel bakedModel, CallbackInfo ci) {
+    private void aw2$render(ItemStack itemStack, ItemTransforms.TransformType transformType, boolean p_229111_3_, PoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay, BakedModel bakedModel, CallbackInfo ci) {
         BakedModelStroage stroage = BakedModelStroage.unwrap(bakedModel);
         if (stroage == null) {
             return;
@@ -43,7 +41,6 @@ public class ItemRendererMixin {
         BakedModel resolvedModel = stroage.getOriginModel();
         LivingEntity entity = stroage.getEntity();
         Level level = stroage.getLevel();
-        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
         EmbeddedSkinStack embeddedStack = stroage.getEmbeddedStack();
         ClientWardrobeHandler.renderEmbeddedSkin(entity, level, itemStack, embeddedStack, ItemTransforms.ofType(transformType), p_229111_3_, poseStack, buffers, resolvedModel, packedLight, overlay, ci);
     }

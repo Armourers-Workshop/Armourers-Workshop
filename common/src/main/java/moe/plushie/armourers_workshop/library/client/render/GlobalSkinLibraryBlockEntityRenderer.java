@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.library.client.render;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.library.block.GlobalSkinLibraryBlock;
@@ -25,7 +25,7 @@ public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends
     }
 
     @Override
-    public void render(T entity, float partialTicks, IPoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T entity, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
         poseStack.pushPose();
         poseStack.translate(0.5f, 1.5f, 0.5f);
         poseStack.scale(-1, -1, 1);
@@ -46,11 +46,11 @@ public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends
 
         if (entity.getLevel() != null) {
             float angle = (entity.getLevel().getGameTime()) % 360 + partialTicks;
-            poseStack.rotate(new OpenQuaternionf(angle * 4, angle, angle * 2, true));
+            poseStack.mulPose(new OpenQuaternionf(angle * 4, angle, angle * 2, true));
         }
 
         VertexConsumer builder = buffers.getBuffer(SkinRenderType.IMAGE_EARTH);
-        model.render(poseStack.cast(), builder, light, overlay, 1.0f, 1.0f, 1.0f, 0.5f);
+        model.render(poseStack, builder, light, overlay, 1.0f, 1.0f, 1.0f, 0.5f);
 
         poseStack.popPose();
     }

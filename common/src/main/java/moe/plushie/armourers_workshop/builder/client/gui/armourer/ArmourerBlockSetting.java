@@ -32,11 +32,11 @@ import java.util.ArrayList;
 @Environment(value = EnvType.CLIENT)
 public class ArmourerBlockSetting extends ArmourerBaseSetting {
 
-    protected final ArmourerBlockEntity tileEntity;
+    protected final ArmourerBlockEntity blockEntity;
 
     protected ArmourerBlockSetting(ArmourerMenu container) {
         super("inventory.armourers_workshop.armourer.blockUtils");
-        this.tileEntity = container.getTileEntity();
+        this.blockEntity = container.getBlockEntity();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             nbt.putBoolean(Constants.Key.SKIN_MARKERS, dialog.isClearMarkers());
             nbt.putString(Constants.Key.SKIN_PART_TYPE, dialog.getSelectedPartType().getRegistryName().toString());
             UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.ITEM_CLEAR;
-            NetworkManager.sendToServer(new UpdateArmourerPacket(tileEntity, field, nbt));
+            NetworkManager.sendToServer(new UpdateArmourerPacket(blockEntity, field, nbt));
         });
     }
 
@@ -95,7 +95,7 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             nbt.putString(Constants.Key.SOURCE, dialog.getSourcePartType().getRegistryName().toString());
             nbt.putString(Constants.Key.DESTINATION, dialog.getDestinationPartType().getRegistryName().toString());
             UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.ITEM_COPY;
-            UpdateArmourerPacket packet = new UpdateArmourerPacket(tileEntity, field, nbt);
+            UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, nbt);
             NetworkManager.sendToServer(packet);
         });
     }
@@ -126,14 +126,14 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             nbt.putBoolean(Constants.Key.KEEP_COLOR, dialog.isKeepColor());
             nbt.putBoolean(Constants.Key.KEEP_PAINT_TYPE, dialog.isKeepPaintType());
             UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.ITEM_REPLACE;
-            UpdateArmourerPacket packet = new UpdateArmourerPacket(tileEntity, field, nbt);
+            UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, nbt);
             NetworkManager.sendToServer(packet);
         });
     }
 
     public ArrayList<ISkinPartType> getPartTypes(boolean usesAll) {
-        ISkinType skinType = tileEntity.getSkinType();
-        ISkinProperties skinProperties = tileEntity.getSkinProperties();
+        ISkinType skinType = blockEntity.getSkinType();
+        ISkinProperties skinProperties = blockEntity.getSkinProperties();
         ArrayList<ISkinPartType> partTypes = new ArrayList<>();
         if (usesAll) {
             partTypes.add(0, SkinPartTypes.UNKNOWN);

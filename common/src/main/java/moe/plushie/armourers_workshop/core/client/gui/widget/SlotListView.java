@@ -6,7 +6,7 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
 import com.apple.library.uikit.UIWindow;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.IVector2i;
 import moe.plushie.armourers_workshop.compatibility.client.gui.AbstractMenuScreen;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -107,12 +107,12 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         }
 
         @Override
-        public void render(IPoseStack poseStack, int i, int j, float f) {
+        public void render(PoseStack poseStack, int i, int j, float f) {
             IVector2i offset = getContentOffset();
             poseStack.pushPose();
             poseStack.translate(-offset.getX(), -offset.getY(), 0);
 
-            IPoseStack modelViewStack = RenderSystem.getExtendedModelViewStack();
+            PoseStack modelViewStack = RenderSystem.getModelViewStack();
             modelViewStack.pushPose();
             modelViewStack.translate(0, 0, 400);
             RenderSystem.applyModelViewMatrix();
@@ -125,7 +125,7 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         }
 
         @Override
-        public void renderLabels(IPoseStack poseStack, int i, int j) {
+        public void renderLabels(PoseStack poseStack, int i, int j) {
         }
 
         @Override

@@ -25,17 +25,17 @@ public class OutfitMakerBlockEntity extends UpdatableContainerBlockEntity {
 
     public void readFromNBT(CompoundTag nbt) {
         ContainerHelper.loadAllItems(nbt, items);
-        this.itemName = nbt.getString(Constants.Key.TILE_ENTITY_NAME);
-        this.itemFlavour = nbt.getString(Constants.Key.TILE_ENTITY_FLAVOUR);
+        this.itemName = nbt.getString(Constants.Key.BLOCK_ENTITY_NAME);
+        this.itemFlavour = nbt.getString(Constants.Key.BLOCK_ENTITY_FLAVOUR);
     }
 
     public void writeToNBT(CompoundTag nbt) {
         ContainerHelper.saveAllItems(nbt, items);
         if (Strings.isNotEmpty(itemName)) {
-            nbt.putString(Constants.Key.TILE_ENTITY_NAME, itemName);
+            nbt.putString(Constants.Key.BLOCK_ENTITY_NAME, itemName);
         }
         if (Strings.isNotEmpty(itemFlavour)) {
-            nbt.putString(Constants.Key.TILE_ENTITY_FLAVOUR, itemFlavour);
+            nbt.putString(Constants.Key.BLOCK_ENTITY_FLAVOUR, itemFlavour);
         }
     }
 

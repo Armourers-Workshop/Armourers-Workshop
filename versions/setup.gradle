@@ -119,7 +119,7 @@ task switchCoreSource {
             apply.each {
                 if (it.key != it.value && !it.value.exists()) {
                     it.key.renameTo(it.value)
-                    println "Switch to ${it.value.name}"
+                    println "Switch to ${it.value.parentFile.name}/${it.value.name}"
                 }
             }
         }

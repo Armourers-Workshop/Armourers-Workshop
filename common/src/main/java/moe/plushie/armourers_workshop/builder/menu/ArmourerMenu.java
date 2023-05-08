@@ -48,15 +48,15 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
     public boolean shouldLoadArmourItem(Player player) {
         ItemStack stackInput = inventory.getItem(0);
         ItemStack stackOuput = inventory.getItem(1);
-        ArmourerBlockEntity tileEntity = getTileEntity(ArmourerBlockEntity.class);
-        if (stackInput.isEmpty() || !stackOuput.isEmpty() || tileEntity == null) {
+        ArmourerBlockEntity blockEntity = getBlockEntity(ArmourerBlockEntity.class);
+        if (stackInput.isEmpty() || !stackOuput.isEmpty() || blockEntity == null) {
             return false;
         }
         SkinDescriptor descriptor = SkinDescriptor.of(stackInput);
         if (descriptor.isEmpty()) {
             return false;
         }
-        return descriptor.getType() == tileEntity.getSkinType();
+        return descriptor.getType() == blockEntity.getSkinType();
     }
 
     public boolean shouldSaveArmourItem(Player player) {
@@ -83,14 +83,14 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
         if (!shouldSaveArmourItem(player)) {
             return;
         }
-        ArmourerBlockEntity tileEntity = getTileEntity(ArmourerBlockEntity.class);
-        if (tileEntity == null || tileEntity.getLevel() == null || tileEntity.getLevel().isClientSide()) {
+        ArmourerBlockEntity blockEntity = getBlockEntity(ArmourerBlockEntity.class);
+        if (blockEntity == null || blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide()) {
             return;
         }
         ItemStack stackInput = inventory.getItem(0);
 
         Skin skin = null;
-        SkinProperties skinProps = SkinProperties.create(tileEntity.getSkinProperties());
+        SkinProperties skinProps = SkinProperties.create(blockEntity.getSkinProperties());
         skinProps.put(SkinProperty.ALL_AUTHOR_NAME, profile.getName());
 
         // in the offline server the `player.getStringUUID()` is not real player uuid.
@@ -103,9 +103,9 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
         }
 
         try {
-            Level level = tileEntity.getLevel();
-            CubeTransform transform = tileEntity.getTransform();
-            skin = WorldUtils.saveSkinFromWorld(level, transform, skinProps, tileEntity.getSkinType(), tileEntity.getPaintData());
+            Level level = blockEntity.getLevel();
+            CubeTransform transform = blockEntity.getTransform();
+            skin = WorldUtils.saveSkinFromWorld(level, transform, skinProps, blockEntity.getSkinType(), blockEntity.getPaintData());
         } catch (TranslatableException exception) {
             player.sendSystemMessage(exception.getComponent());
             Notification.sendErrorMessage(exception.getComponent(), player);
@@ -132,8 +132,8 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
      * @param player The player that pressed the load button.
      */
     public void loadArmourItem(Player player) {
-        ArmourerBlockEntity tileEntity = getTileEntity(ArmourerBlockEntity.class);
-        if (tileEntity == null || tileEntity.getLevel() == null || tileEntity.getLevel().isClientSide()) {
+        ArmourerBlockEntity blockEntity = getBlockEntity(ArmourerBlockEntity.class);
+        if (blockEntity == null || blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide()) {
             return;
         }
         ItemStack stackInput = inventory.getItem(0);
@@ -148,11 +148,11 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
                 throw SkinLoadException.Type.NOT_FOUND.build("notFound");
             }
 
-            tileEntity.setSkinProperties(skin.getProperties());
-            tileEntity.setPaintData(skin.getPaintData());
+            blockEntity.setSkinProperties(skin.getProperties());
+            blockEntity.setPaintData(skin.getPaintData());
 
-            CubeApplier applier = new CubeApplier(tileEntity.getLevel());
-            CubeTransform transform = tileEntity.getTransform();
+            CubeApplier applier = new CubeApplier(blockEntity.getLevel());
+            CubeTransform transform = blockEntity.getTransform();
             WorldUtils.loadSkinIntoWorld(applier, transform, skin);
             applier.submit(TranslateUtils.title("action.armourers_workshop.block.load"), player);
 

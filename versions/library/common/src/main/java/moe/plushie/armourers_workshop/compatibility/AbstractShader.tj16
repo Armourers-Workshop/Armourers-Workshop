@@ -1,17 +1,20 @@
 package moe.plushie.armourers_workshop.compatibility;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexIndexBuffer;
 import moe.plushie.armourers_workshop.core.client.shader.Shader;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexGroup;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 
+@Available("[1.16, 1.18)")
 @Environment(value = EnvType.CLIENT)
 public class AbstractShader extends Shader {
 
@@ -54,12 +57,11 @@ public class AbstractShader extends Shader {
         vertexFormat.setupBufferState(object.getVertexOffset());
         setupPolygonState(object);
 
-        IPoseStack poseStack = object.getPoseStack();
-        IPoseStack modelViewStack = RenderSystem.getExtendedModelViewStack();
-        modelViewStack.pushPose();
-        modelViewStack.multiply(poseStack.lastPose());
+        OpenPoseStack poseStack = object.getPoseStack();
+        RenderSystem.pushMatrix();
+        RenderSystem.multMatrix(PoseStack.convertMatrix(poseStack.lastPose()));
         RenderSystem.drawArrays(object.getType().mode(), 0, object.getVertexCount());
-        modelViewStack.popPose();
+        RenderSystem.popMatrix();
 
         cleanPolygonState(object);
         vertexFormat.clearBufferState();

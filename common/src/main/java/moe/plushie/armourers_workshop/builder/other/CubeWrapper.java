@@ -25,7 +25,7 @@ public class CubeWrapper implements IPaintable {
     private BlockPos pos;
 
     private Supplier<BlockState> state;
-    private Supplier<BlockEntity> tileEntity;
+    private Supplier<BlockEntity> blockEntity;
     private Supplier<IPaintable> target;
 
     private CubeChanges changes;
@@ -69,22 +69,22 @@ public class CubeWrapper implements IPaintable {
 
     @Nullable
     public BlockEntity getBlockEntity() {
-        if (this.tileEntity != null) {
-            return this.tileEntity.get();
+        if (this.blockEntity != null) {
+            return this.blockEntity.get();
         }
         if (this.pos != null) {
-            BlockEntity tileEntity = level.getBlockEntity(pos);
-            this.tileEntity = () -> tileEntity;
-            return tileEntity;
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            this.blockEntity = () -> blockEntity;
+            return blockEntity;
         }
         return null;
     }
 
     @Nullable
     public CompoundTag getBlockEntityNBT() {
-        BlockEntity tileEntity = getBlockEntity();
-        if (tileEntity != null) {
-            return tileEntity.saveWithFullMetadata();
+        BlockEntity blockEntity = getBlockEntity();
+        if (blockEntity != null) {
+            return blockEntity.saveWithFullMetadata();
         }
         return null;
     }
@@ -164,7 +164,7 @@ public class CubeWrapper implements IPaintable {
         }
         this.pos = null;
         this.state = null;
-        this.tileEntity = null;
+        this.blockEntity = null;
         this.target = null;
     }
 }

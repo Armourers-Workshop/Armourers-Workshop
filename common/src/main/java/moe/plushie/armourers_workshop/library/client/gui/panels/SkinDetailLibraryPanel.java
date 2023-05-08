@@ -173,7 +173,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
             }
         }
         if (Strings.isNotBlank(playerTexture.getName())) {
-            font.draw(context.poseStack.cast(), getDisplayText("uploader", playerTexture.getName()).chars(), rect.x + 32, rect.y + 12, 0xffeeeeee);
+            font.draw(context.poseStack, getDisplayText("uploader", playerTexture.getName()).chars(), rect.x + 32, rect.y + 12, 0xffeeeeee);
             RenderSystem.enableAlphaTest();
         }
     }

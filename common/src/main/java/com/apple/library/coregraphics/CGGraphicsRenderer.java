@@ -7,7 +7,7 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIView;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -95,9 +95,9 @@ public class CGGraphicsRenderer {
             color = AppearanceImpl.TEXT_COLOR;
         }
         if (shadowColor != null) {
-            font.font().drawShadow(context.poseStack.cast(), text.chars(), x, y, color.getRGB());
+            font.font().drawShadow(context.poseStack, text.chars(), x, y, color.getRGB());
         } else {
-            font.font().draw(context.poseStack.cast(), text.chars(), x, y, color.getRGB());
+            font.font().draw(context.poseStack, text.chars(), x, y, color.getRGB());
         }
     }
 
@@ -109,7 +109,7 @@ public class CGGraphicsRenderer {
         // and while we can't decide on the final tooltip size,
         // but we can to handle the break the newline
         List<? extends FormattedCharSequence> texts = context.font.font().split(text.component(), 100000);
-        context.screen.renderTooltip(context.poseStack.cast(), texts, context.mouseX, context.mouseY);
+        context.screen.renderTooltip(context.poseStack, texts, context.mouseX, context.mouseY);
     }
 
     public static void renderTooltipRender(TooltipRenderer renderer, CGRect rect, CGGraphicsContext context) {
@@ -126,7 +126,7 @@ public class CGGraphicsRenderer {
     }
 
     public static void renderColor(int x1, int y1, int x2, int y2, int color, CGGraphicsContext context) {
-        Screen.fill(context.poseStack.cast(), x1, y1, x2, y2, color);
+        Screen.fill(context.poseStack, x1, y1, x2, y2, color);
     }
 
     public static void renderGradient(CGGradient gradient, CGRect rect, CGGraphicsContext context) {
@@ -139,7 +139,7 @@ public class CGGraphicsRenderer {
         int l = rect.getMaxY();
         int m = gradient.startColor.getRGB();
         int n = gradient.endColor.getRGB();
-        InternalRenderer.INSTANCE.fillGradient(context.poseStack, i, j, k, l, m, n);
+        InternalRenderer.INSTANCE.fillGradient(context, i, j, k, l, m, n);
     }
 
     private static class InternalRenderer extends Screen {
@@ -150,8 +150,8 @@ public class CGGraphicsRenderer {
             super(new NSString("").component());
         }
 
-        public void fillGradient(IPoseStack poseStack, int i, int j, int k, int l, int m, int n) {
-            fillGradient(poseStack.cast(), i, j, k, l, m, n);
+        public void fillGradient(CGGraphicsContext context, int i, int j, int k, int l, int m, int n) {
+            fillGradient(context.poseStack, i, j, k, l, m, n);
         }
     }
 }

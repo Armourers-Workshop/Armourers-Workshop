@@ -1,12 +1,14 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
-import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Environment(value = EnvType.CLIENT)
 public class ShaderPreprocessor {
@@ -35,7 +37,8 @@ public class ShaderPreprocessor {
         builder.uniform("mat4", "iris_LightmapTextureMatrix", "mat4", "aw_LightmapTextureMatrix", "($1 * $2)");
         builder.uniform("mat3", "iris_NormalMat", "mat3", "aw_NormalMatrix", "($1 * $2)");
         builder.uniform("mat4", "iris_ModelViewMat", "mat4", "aw_ModelViewMat", "($1 * $2)");
-        return build("iris", builder);
+        ModLog.debug("process iris shader: \n{}", builder);
+        return builder.build();
     }
 
     private String processOptifineShader(Builder builder) {
@@ -43,7 +46,8 @@ public class ShaderPreprocessor {
         builder.uniform("mat4", "textureMatrix", "mat4", "aw_TextureMatrix", "($1 * $2)");
         builder.uniform("mat3", "normalMatrix", "mat3", "aw_NormalMatrix", "($1 * $2)");
         builder.uniform("mat4", "modelViewMatrix", "mat4", "aw_ModelViewMat", "($1 * $2)");
-        return build("optifine", builder);
+        ModLog.debug("process optifine shader: \n{}", builder);
+        return builder.build();
     }
 
     private String processVanillaShader(Builder builder) {
@@ -51,25 +55,27 @@ public class ShaderPreprocessor {
         builder.attribute("vec2", "UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 0, 1))");
         builder.attribute("vec3", "Normal", "mat3", "aw_NormalMatrix", "($1 * $2)");
         builder.uniform("mat4", "ModelViewMat", "mat4", "aw_ModelViewMat", "($1 * $2)");
-        return build("vanilla", builder);
-    }
-
-    private String build(String type, Builder builder) {
-        String source = builder.build();
-        if (ModConfig.Client.enableShaderDebug) {
-            ModLog.info("process {} shader: \n{}", type, source);
-        }
-        return source;
+        ModLog.debug("process vanilla shader: \n{}", builder);
+        return builder.build();
     }
 
     public static class Builder {
 
+        private final String evaluationFunction;
         private String source;
-        private final ArrayList<String> initializer1 = new ArrayList<>();
-        private final ArrayList<String> initializer2 = new ArrayList<>();
+        private int changes = 0;
 
         public Builder(String source) {
             this.source = source;
+            // compile evaluation function.
+            SourceBuilder builder = new SourceBuilder();
+            builder.append("<aw_MatrixFlags> ${varType} awrt_${var}() {\n");
+            builder.append("    if (aw_MatrixFlags == 0) {\n");
+            builder.append("        return ${var};\n");
+            builder.append("    }\n");
+            builder.append("    return ${expr};\n");
+            builder.append("}\n");
+            this.evaluationFunction = builder.build();
         }
 
         public Builder uniform(String varType, String var, String matrixType, String matrixVar, String expr) {
@@ -86,17 +92,19 @@ public class ShaderPreprocessor {
             // compile regular expressions.
             String[] texts = {
                     "(${category}\\s+${varType}\\s+)${var}(.*?;)", "$1__awrt_${var}_awrt__$2",
-                    "\\b${var}\\b", "awrt_${var}",
-                    "(${category}\\s+${varType}\\s+)__awrt_${var}_awrt__(.*?;)", "uniform ${matrixType} ${matrix};\n${varType} awrt_${var};\n$1${var}$2",
+                    "\\b${var}\\b", "awrt_${var}()",
+                    "(${category}\\s+${varType}\\s+)__awrt_${var}_awrt__(.*?;)", "$1${var}$2\nuniform ${matrixType} ${matrix};\n${eval}",
             };
             String[] regexes = new String[texts.length];
             for (int i = 0; i < texts.length; ++i) {
                 String tmp = texts[i];
+                tmp = tmp.replace("${eval}", evaluationFunction);
                 tmp = tmp.replace("${category}", category);
                 tmp = tmp.replace("${varType}", varType);
                 tmp = tmp.replace("${var}", var);
                 tmp = tmp.replace("${matrixType}", matrixType);
                 tmp = tmp.replace("${matrix}", matrix);
+                tmp = tmp.replace("${expr}", expr.replace("$1", var).replace("$2", matrix));
                 regexes[i] = tmp;
             }
             // we need to replace all the content correctly.
@@ -108,28 +116,17 @@ public class ShaderPreprocessor {
                 }
                 source = newValue;
             }
-            // the initializer must be relocation.
-            initializer1.add("awrt_" + var + " = " + var);
-            initializer2.add("awrt_" + var + " = " + expr.replace("$1", var).replace("$2", matrix));
+            changes += 1;
             return source;
         }
 
         public String build() {
             // when not any changes, ignore.
-            if (initializer1.isEmpty()) {
-                return source;
+            if (changes != 0) {
+                String regex = "<(aw_MatrixFlags)>\\s+";
+                return source.replaceFirst(regex, "uniform int $1;\n").replaceAll(regex, "");
             }
-            // NOTE: we can't support "type x = y;" in the global;
-            SourceBuilder builder = new SourceBuilder();
-            builder.append("uniform int aw_MatrixFlags;\n");
-            builder.append("void awrt_main_pre() {\n");
-            builder.append("    if (aw_MatrixFlags == 0) {\n");
-            builder.append("        ", initializer1, ";\n");
-            builder.append("    } else {\n");
-            builder.append("        ", initializer2, ";\n");
-            builder.append("    }\n");
-            builder.append("}\n");
-            return source.replaceAll("(void\\s+main\\s*\\(\\)\\s*\\{)", builder.build() + "\n$1\n    awrt_main_pre();\n");
+            return source;
         }
 
         @Override

@@ -1,13 +1,11 @@
 package moe.plushie.armourers_workshop.utils.math;
 
-import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
-import moe.plushie.armourers_workshop.compatibility.AbstractPoseStack;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 
-public class OpenPoseStack extends AbstractPoseStack {
+public class OpenPoseStack implements IPoseStack {
 
     private final OpenMatrix4f poseMatrix = OpenMatrix4f.createScaleMatrix(1, 1, 1);
     private final OpenMatrix3f normalMatrix = OpenMatrix3f.createScaleMatrix(1, 1, 1);
@@ -54,26 +52,20 @@ public class OpenPoseStack extends AbstractPoseStack {
     }
 
     @Override
-    public void multiply(IPoseStack poseStack) {
-        poseMatrix.multiply(poseStack.lastPose());
-        normalMatrix.multiply(poseStack.lastNormal());
-    }
-
-    @Override
-    public IMatrix4f lastPose() {
+    public OpenMatrix4f lastPose() {
         return poseMatrix;
     }
 
     @Override
-    public IMatrix3f lastNormal() {
+    public OpenMatrix3f lastNormal() {
         return normalMatrix;
     }
 
-    @Override
-    public IPoseStack copy() {
-        OpenPoseStack stack = new OpenPoseStack();
-        stack.poseMatrix.multiply(poseMatrix);
-        stack.normalMatrix.multiply(normalMatrix);
-        return stack;
-    }
+//    @Override
+//    public IPoseStack copy() {
+//        OpenPoseStack stack = new OpenPoseStack();
+//        stack.poseMatrix.multiply(poseMatrix);
+//        stack.normalMatrix.multiply(normalMatrix);
+//        return stack;
+//    }
 }

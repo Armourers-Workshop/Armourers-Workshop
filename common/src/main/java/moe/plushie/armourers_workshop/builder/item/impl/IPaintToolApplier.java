@@ -16,11 +16,11 @@ public interface IPaintToolApplier {
         if (!shouldUseTool(context)) {
             return InteractionResult.PASS;
         }
-        BlockEntity tileEntity = context.getLevel().getBlockEntity(context.getClickedPos());
-        if (tileEntity == null) {
+        BlockEntity blockEntity = context.getLevel().getBlockEntity(context.getClickedPos());
+        if (blockEntity == null) {
             return InteractionResult.PASS;
         }
-        IPaintToolSelector selector = createPaintToolSelector(tileEntity, context);
+        IPaintToolSelector selector = createPaintToolSelector(blockEntity, context);
         IPaintToolAction action = null;
         if (selector != null) {
             action = createPaintToolAction(context);
@@ -46,11 +46,11 @@ public interface IPaintToolApplier {
     IPaintToolSelector createPaintToolSelector(UseOnContext context);
 
     @Nullable
-    default IPaintToolSelector createPaintToolSelector(BlockEntity tileEntity, UseOnContext context) {
-        if (tileEntity instanceof IPaintToolSelector.Provider) {
-            return ((IPaintToolSelector.Provider) tileEntity).createPaintToolSelector(context);
+    default IPaintToolSelector createPaintToolSelector(BlockEntity blockEntity, UseOnContext context) {
+        if (blockEntity instanceof IPaintToolSelector.Provider) {
+            return ((IPaintToolSelector.Provider) blockEntity).createPaintToolSelector(context);
         }
-        if (tileEntity instanceof IPaintable) {
+        if (blockEntity instanceof IPaintable) {
             return createPaintToolSelector(context);
         }
         return null;

@@ -47,9 +47,9 @@ public class SkinLibraryBlock extends AbstractHorizontalBlock implements Abstrac
         if (state.is(newState.getBlock())) {
             return;
         }
-        SkinLibraryBlockEntity tileEntity = ObjectUtils.safeCast(level.getBlockEntity(pos), SkinLibraryBlockEntity.class);
-        if (tileEntity != null) {
-            DataSerializers.dropContents(level, pos, tileEntity.getInventory());
+        SkinLibraryBlockEntity blockEntity = ObjectUtils.safeCast(level.getBlockEntity(pos), SkinLibraryBlockEntity.class);
+        if (blockEntity != null) {
+            DataSerializers.dropContents(level, pos, blockEntity.getInventory());
         }
         super.onRemove(state, level, pos, newState, p_196243_5_);
     }

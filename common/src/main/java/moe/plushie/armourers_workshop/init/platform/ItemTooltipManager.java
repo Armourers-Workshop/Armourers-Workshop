@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform;
 
 import com.apple.library.coregraphics.CGRect;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinEquipmentType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
@@ -158,7 +158,7 @@ public class ItemTooltipManager {
         tooltips.addAll(newTooltips);
     }
 
-    public static void renderSkinTooltip(ItemStack itemStack, CGRect frame, int mouseX, int mouseY, int screenWidth, int screenHeight, IPoseStack poseStack) {
+    public static void renderSkinTooltip(ItemStack itemStack, CGRect frame, int mouseX, int mouseY, int screenWidth, int screenHeight, PoseStack poseStack) {
         if (!ModConfig.Client.skinPreEnabled) {
             return;
         }

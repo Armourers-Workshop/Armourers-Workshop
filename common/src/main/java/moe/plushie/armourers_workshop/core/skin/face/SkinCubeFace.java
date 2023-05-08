@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.face;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
@@ -90,7 +90,7 @@ public class SkinCubeFace {
     }
 
     @Environment(value = EnvType.CLIENT)
-    public void render(BakedSkinPart part, ColorScheme scheme, int light, int overlay, IPoseStack poseStack, VertexConsumer builder) {
+    public void render(BakedSkinPart part, ColorScheme scheme, int light, int overlay, PoseStack poseStack, VertexConsumer builder) {
         PaintColor resolvedColor = resolve(color, scheme, part.getColorInfo(), part.getType(), 0);
         if (resolvedColor.getPaintType() == SkinPaintTypes.NONE) {
             return;

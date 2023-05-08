@@ -91,18 +91,18 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     @Override
     public void readFromNBT(CompoundTag nbt) {
-        refer = DataSerializers.getBlockPos(nbt, Constants.Key.TILE_ENTITY_REFER, INVALID);
-        shape = DataSerializers.getRectangle3i(nbt, Constants.Key.TILE_ENTITY_SHAPE, Rectangle3i.ZERO);
+        refer = DataSerializers.getBlockPos(nbt, Constants.Key.BLOCK_ENTITY_REFER, INVALID);
+        shape = DataSerializers.getRectangle3i(nbt, Constants.Key.BLOCK_ENTITY_SHAPE, Rectangle3i.ZERO);
         isParent = BlockPos.ZERO.equals(refer);
         if (!isParent()) {
             return;
         }
         SkinProperties oldProperties = properties;
-        refers = DataSerializers.getBlockPosList(nbt, Constants.Key.TILE_ENTITY_REFERS);
-        markers = DataSerializers.getMarkerList(nbt, Constants.Key.TILE_ENTITY_MARKERS);
-        descriptor = DataSerializers.getSkinDescriptor(nbt, Constants.Key.TILE_ENTITY_SKIN, SkinDescriptor.EMPTY);
-        properties = DataSerializers.getSkinProperties(nbt, Constants.Key.TILE_ENTITY_SKIN_PROPERTIES);
-        linkedBlockPos = DataSerializers.getBlockPos(nbt, Constants.Key.TILE_ENTITY_LINKED_POS, null);
+        refers = DataSerializers.getBlockPosList(nbt, Constants.Key.BLOCK_ENTITY_REFERS);
+        markers = DataSerializers.getMarkerList(nbt, Constants.Key.BLOCK_ENTITY_MARKERS);
+        descriptor = DataSerializers.getSkinDescriptor(nbt, Constants.Key.BLOCK_ENTITY_SKIN, SkinDescriptor.EMPTY);
+        properties = DataSerializers.getSkinProperties(nbt, Constants.Key.BLOCK_ENTITY_SKIN_PROPERTIES);
+        linkedBlockPos = DataSerializers.getBlockPos(nbt, Constants.Key.BLOCK_ENTITY_LINKED_POS, null);
         if (oldProperties != null) {
             oldProperties.copyFrom(properties);
             properties = oldProperties;
@@ -112,16 +112,16 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     @Override
     public void writeToNBT(CompoundTag nbt) {
-        DataSerializers.putBlockPos(nbt, Constants.Key.TILE_ENTITY_REFER, refer, INVALID);
-        DataSerializers.putRectangle3i(nbt, Constants.Key.TILE_ENTITY_SHAPE, shape, Rectangle3i.ZERO);
+        DataSerializers.putBlockPos(nbt, Constants.Key.BLOCK_ENTITY_REFER, refer, INVALID);
+        DataSerializers.putRectangle3i(nbt, Constants.Key.BLOCK_ENTITY_SHAPE, shape, Rectangle3i.ZERO);
         if (!isParent()) {
             return;
         }
-        DataSerializers.putBlockPosList(nbt, Constants.Key.TILE_ENTITY_REFERS, refers);
-        DataSerializers.putMarkerList(nbt, Constants.Key.TILE_ENTITY_MARKERS, markers);
-        DataSerializers.putSkinDescriptor(nbt, Constants.Key.TILE_ENTITY_SKIN, descriptor, SkinDescriptor.EMPTY);
-        DataSerializers.putSkinProperties(nbt, Constants.Key.TILE_ENTITY_SKIN_PROPERTIES, properties);
-        DataSerializers.putBlockPos(nbt, Constants.Key.TILE_ENTITY_LINKED_POS, linkedBlockPos, null);
+        DataSerializers.putBlockPosList(nbt, Constants.Key.BLOCK_ENTITY_REFERS, refers);
+        DataSerializers.putMarkerList(nbt, Constants.Key.BLOCK_ENTITY_MARKERS, markers);
+        DataSerializers.putSkinDescriptor(nbt, Constants.Key.BLOCK_ENTITY_SKIN, descriptor, SkinDescriptor.EMPTY);
+        DataSerializers.putSkinProperties(nbt, Constants.Key.BLOCK_ENTITY_SKIN_PROPERTIES, properties);
+        DataSerializers.putBlockPos(nbt, Constants.Key.BLOCK_ENTITY_LINKED_POS, linkedBlockPos, null);
 
         ContainerHelper.saveAllItems(nbt, getOrCreateItems());
     }
@@ -167,10 +167,10 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     public void setLinkedBlockPos(BlockPos linkedBlockPos) {
-        SkinnableBlockEntity tileEntity = getParent();
-        if (tileEntity != null) {
-            tileEntity.linkedBlockPos = linkedBlockPos;
-            tileEntity.updateBlockStates();
+        SkinnableBlockEntity blockEntity = getParent();
+        if (blockEntity != null) {
+            blockEntity.linkedBlockPos = linkedBlockPos;
+            blockEntity.updateBlockStates();
         }
     }
 
@@ -356,9 +356,9 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     @Nullable
     private <V> V getValueFromParent(Function<SkinnableBlockEntity, V> getter) {
-        SkinnableBlockEntity tileEntity = getParent();
-        if (tileEntity != null) {
-            return getter.apply(tileEntity);
+        SkinnableBlockEntity blockEntity = getParent();
+        if (blockEntity != null) {
+            return getter.apply(blockEntity);
         }
         return null;
     }

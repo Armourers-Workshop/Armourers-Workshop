@@ -5,7 +5,7 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIWindow;
 import com.apple.library.uikit.UIWindowManager;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.ISize2i;
 import moe.plushie.armourers_workshop.compatibility.client.gui.AbstractMenuScreen;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -68,19 +68,19 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
     }
 
     @Override
-    public void render(IPoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         CGGraphicsContext context = new CGGraphicsContext(poseStack, mouseX, mouseY, partialTicks, font, this);
         manager.tick();
         manager.render(context, this::_render, this::_renderBackground, this::_renderTooltip);
     }
 
     @Override
-    public void renderLabels(IPoseStack poseStack, int mouseX, int mouseY) {
+    public void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
         // ignored
     }
 
     @Override
-    public void renderTooltip(IPoseStack poseStack, int mouseX, int mouseY) {
+    public void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         super.renderTooltip(poseStack, mouseX, mouseY);
     }
 
@@ -151,7 +151,7 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
     }
 
     protected void _renderTooltip(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
-        IPoseStack poseStack = context.poseStack;
+        PoseStack poseStack = context.poseStack;
         poseStack.pushPose();
         poseStack.translate(0, 0, 400);
         renderTooltip(context.poseStack, mouseX, mouseY);
@@ -161,7 +161,7 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
     protected void _renderBackground(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
         // draw bg
         if (menuWindow != null && menuWindow.shouldRenderBackground()) {
-            renderBackground(context.poseStack.cast());
+            renderBackground(context.poseStack);
         }
     }
 

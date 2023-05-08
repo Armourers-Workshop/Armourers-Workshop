@@ -27,7 +27,7 @@ public class SkinLibraryMenu extends AbstractBlockContainerMenu {
 
     public SkinLibraryMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess access) {
         super(menuType, block, containerId, access);
-        this.inventory = getTileInventory();
+        this.inventory = getBlockInventory();
         this.playerInventory = playerInventory;
         this.reload(0, 0, 240, 240);
     }

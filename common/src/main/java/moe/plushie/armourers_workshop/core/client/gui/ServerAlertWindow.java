@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.gui;
 
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIColor;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ClientMenuScreen;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.client.gui.widget.NotificationDialog;
@@ -76,10 +76,10 @@ public class ServerAlertWindow extends MenuWindow<AbstractContainerMenu> {
         }
 
         @Override
-        public void render(IPoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
             // we need reset mouse to impossible position to fool the original tooltip render.
             if (targetScreen != null) {
-                targetScreen.render(poseStack.cast(), Integer.MIN_VALUE, Integer.MIN_VALUE, partialTicks);
+                targetScreen.render(poseStack, Integer.MIN_VALUE, Integer.MIN_VALUE, partialTicks);
             }
             poseStack.pushPose();
             poseStack.translate(0, 0, 500);

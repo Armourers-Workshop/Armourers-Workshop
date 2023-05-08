@@ -38,13 +38,13 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
             .build();
 
     protected final DifferenceSkinProperties skinProperties = new DifferenceSkinProperties();
-    protected final ArmourerBlockEntity tileEntity;
+    protected final ArmourerBlockEntity blockEntity;
 
     protected ArmourerBaseSkinPanel screen;
 
     public ArmourerSkinSetting(ArmourerMenu container) {
         super("inventory.armourers_workshop.armourer.skinSettings");
-        this.tileEntity = container.getTileEntity();
+        this.blockEntity = container.getBlockEntity();
     }
 
     @Override
@@ -57,8 +57,8 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
 
     @Override
     public void reloadData() {
-        ISkinType skinType = tileEntity.getSkinType();
-        skinProperties.copyFrom(tileEntity.getSkinProperties());
+        ISkinType skinType = blockEntity.getSkinType();
+        skinProperties.copyFrom(blockEntity.getSkinProperties());
         Function<SkinProperties, ArmourerBaseSkinPanel> supplier = REGISTERED.get(skinType);
         if (supplier != null) {
             updateScreen(supplier.apply(skinProperties));
@@ -77,15 +77,15 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
     }
 
     private void updateSkinProperties(SkinProperties skinProperties) {
-        SkinProperties skinProperties1 = SkinProperties.create(tileEntity.getSkinProperties());
+        SkinProperties skinProperties1 = SkinProperties.create(blockEntity.getSkinProperties());
         this.skinProperties.applyTo(skinProperties1);
-        if (skinProperties1.equals(tileEntity.getSkinProperties())) {
+        if (skinProperties1.equals(blockEntity.getSkinProperties())) {
             return; // no changes
         }
         this.skinProperties.copyFrom(skinProperties1);
-        this.tileEntity.setSkinProperties(skinProperties);
+        this.blockEntity.setSkinProperties(skinProperties);
         UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.SKIN_PROPERTIES;
-        UpdateArmourerPacket packet = new UpdateArmourerPacket(tileEntity, field, skinProperties);
+        UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, skinProperties);
         NetworkManager.sendToServer(packet);
     }
 

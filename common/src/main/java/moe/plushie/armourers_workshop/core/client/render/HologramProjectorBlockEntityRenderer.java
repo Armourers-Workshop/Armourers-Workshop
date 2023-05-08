@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -38,7 +38,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
     }
 
     @Override
-    public void render(T entity, float partialTicks, IPoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T entity, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
         if (!entity.isPowered()) {
             return;
         }
@@ -64,7 +64,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
 
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f);
-        poseStack.rotate(entity.getRenderRotations(blockState));
+        poseStack.mulPose(entity.getRenderRotations(blockState));
         poseStack.translate(0.0f, 0.5f, 0.0f);
 
         poseStack.scale(f, f, f);
@@ -91,7 +91,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         }
     }
 
-    private void apply(T entity, Rectangle3f rect, float partialTicks, IPoseStack poseStack, MultiBufferSource buffers) {
+    private void apply(T entity, Rectangle3f rect, float partialTicks, PoseStack poseStack, MultiBufferSource buffers) {
         Vector3f angle = entity.getModelAngle();
         Vector3f offset = entity.getModelOffset();
         Vector3f rotationOffset = entity.getRotationOffset();
@@ -130,7 +130,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
             RenderSystem.drawPoint(poseStack, null, 128, buffers);
         }
 
-        poseStack.rotate(new OpenQuaternionf(rotX, -rotY, rotZ, true));
+        poseStack.mulPose(new OpenQuaternionf(rotX, -rotY, rotZ, true));
         poseStack.translate(rotationOffset.getX(), -rotationOffset.getY(), rotationOffset.getZ());
 
         if (ModDebugger.hologramProjectorBlock) {

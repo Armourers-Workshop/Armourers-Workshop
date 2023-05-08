@@ -48,6 +48,10 @@ public class OpenMatrix4f implements IMatrix4f {
         m12 = 2.0f * (n - p);
     }
 
+    public OpenMatrix4f(FloatBuffer buffer) {
+        load(buffer);
+    }
+
     public static OpenMatrix4f createScaleMatrix(float x, float y, float z) {
         OpenMatrix4f matrix = new OpenMatrix4f();
         matrix.m00 = x;

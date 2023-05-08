@@ -26,7 +26,7 @@ public class DyeTableMenu extends AbstractBlockContainerMenu {
 
     public DyeTableMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess access) {
         super(menuType, block, containerId, access);
-        this.inventory = getTileInventory();
+        this.inventory = getBlockInventory();
         this.addPlayerSlots(playerInventory, 8, 108);
         this.addCustomSlots(inventory, 68, 36, 22, 22);
         this.addInputSlot(inventory, 8, 26, 23);

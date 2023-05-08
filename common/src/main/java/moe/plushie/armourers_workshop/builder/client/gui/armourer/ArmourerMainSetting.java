@@ -43,7 +43,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
     private final SkinComboBox skinTypeBox = new SkinComboBox(new CGRect(7, 21, 50, 16));
 
     protected final ArmourerMenu container;
-    protected final ArmourerBlockEntity tileEntity;
+    protected final ArmourerBlockEntity blockEntity;
     protected final String modVersion;
 
     protected ISkinType skinType = SkinTypes.ARMOR_HEAD;
@@ -52,9 +52,9 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
         super("inventory.armourers_workshop.armourer.main");
         this.modVersion = EnvironmentManager.getVersion();
         this.container = container;
-        this.tileEntity = container.getTileEntity();
-        if (this.tileEntity != null) {
-            this.skinType = tileEntity.getSkinType();
+        this.blockEntity = container.getBlockEntity();
+        if (this.blockEntity != null) {
+            this.skinType = blockEntity.getSkinType();
         }
     }
 
@@ -139,10 +139,10 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
 
     @Override
     public void reloadData() {
-        SkinProperties skinProperties = tileEntity.getSkinProperties();
+        SkinProperties skinProperties = blockEntity.getSkinProperties();
         nameTextField.setValue(skinProperties.get(SkinProperty.ALL_CUSTOM_NAME));
         flavorTextField.setValue(skinProperties.get(SkinProperty.ALL_FLAVOUR_TEXT));
-        skinTypeBox.setSelectedSkin(tileEntity.getSkinType());
+        skinTypeBox.setSelectedSkin(blockEntity.getSkinType());
     }
 
     private void setupLabel(int x, int y, NSString text) {
@@ -165,25 +165,25 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
             return; // no changes
         }
         this.skinType = skinType;
-        if (this.tileEntity == null) {
+        if (this.blockEntity == null) {
             return;
         }
-        this.tileEntity.setSkinType(skinType);
+        this.blockEntity.setSkinType(skinType);
         UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.SKIN_TYPE;
-        UpdateArmourerPacket packet = new UpdateArmourerPacket(tileEntity, field, skinType);
+        UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, skinType);
         NetworkManager.sendToServer(packet);
     }
 
     private void updateSkinProperties() {
-        SkinProperties skinProperties = SkinProperties.create(tileEntity.getSkinProperties());
+        SkinProperties skinProperties = SkinProperties.create(blockEntity.getSkinProperties());
         skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, nameTextField.value());
         skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, flavorTextField.value());
-        if (skinProperties.equals(tileEntity.getSkinProperties())) {
+        if (skinProperties.equals(blockEntity.getSkinProperties())) {
             return; // not any changes.
         }
-        this.tileEntity.setSkinProperties(skinProperties);
+        this.blockEntity.setSkinProperties(skinProperties);
         UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.SKIN_PROPERTIES;
-        UpdateArmourerPacket packet = new UpdateArmourerPacket(tileEntity, field, skinProperties);
+        UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, skinProperties);
         NetworkManager.sendToServer(packet);
     }
 
@@ -193,7 +193,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
             return;
         }
         UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.ITEM_LOAD;
-        UpdateArmourerPacket packet = new UpdateArmourerPacket(tileEntity, field, new CompoundTag());
+        UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, new CompoundTag());
         NetworkManager.sendToServer(packet);
     }
 
@@ -205,7 +205,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
         GameProfile origin = Minecraft.getInstance().getUser().getGameProfile();
         CompoundTag nbt = DataSerializers.writeGameProfile(new CompoundTag(), origin);
         UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.ITEM_SAVE;
-        UpdateArmourerPacket packet = new UpdateArmourerPacket(tileEntity, field, nbt);
+        UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, nbt);
         NetworkManager.sendToServer(packet);
     }
 

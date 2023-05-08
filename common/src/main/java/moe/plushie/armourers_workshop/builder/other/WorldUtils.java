@@ -194,12 +194,12 @@ public final class WorldUtils {
     }
 
     private static void saveArmourBlockToList(Level level, CubeTransform transform, BlockPos pos, int ix, int iy, int iz, SkinCube cube, ArrayList<SkinMarker> markerBlocks) {
-        BlockEntity tileEntity = level.getBlockEntity(pos);
-        if (!(tileEntity instanceof IPaintable)) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (!(blockEntity instanceof IPaintable)) {
             return;
         }
-        IPaintable target = (IPaintable) tileEntity;
-        BlockState blockState = tileEntity.getBlockState();
+        IPaintable target = (IPaintable) blockEntity;
+        BlockState blockState = blockEntity.getBlockState();
         OptionalDirection marker = SkinCubeBlock.getMarker(blockState);
 
         cube.setType(SkinCubeTypes.byBlock(blockState.getBlock()));

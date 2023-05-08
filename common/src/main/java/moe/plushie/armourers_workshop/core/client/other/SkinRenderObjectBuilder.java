@@ -5,12 +5,10 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalNotification;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
-import moe.plushie.armourers_workshop.api.math.IMatrix3f;
-import moe.plushie.armourers_workshop.api.math.IMatrix4f;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.armature.ModelBinder;
@@ -22,10 +20,11 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -84,7 +83,7 @@ public class SkinRenderObjectBuilder {
 //        _addPartData(part, scheme, light, partialTicks, slotIndex, poseStack, shouldRender);
     }
 
-    private void _addPartData(BakedSkinPart part, ColorScheme scheme, int light, float partialTicks, int slotIndex, IPoseStack poseStack, boolean shouldRender) {
+    private void _addPartData(BakedSkinPart part, ColorScheme scheme, int light, float partialTicks, int slotIndex, PoseStack poseStack, boolean shouldRender) {
 //        RenderSystem.backupExtendedMatrix();
 //
 //        RenderSystem.backupExtendedMatrix();
@@ -103,8 +102,8 @@ public class SkinRenderObjectBuilder {
 //        AbstractShaderExecutor.getInstance().setup();
 //        MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 ////        MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-////        IPoseStack matrixStack1 = new PoseStack();
-//        IPoseStack matrixStack1 = poseStack;
+////        PoseStack matrixStack1 = new PoseStack();
+//        PoseStack matrixStack1 = poseStack;
 //        part.forEach((renderType, quads) -> {
 //            VertexConsumer builder = buffers.getBuffer(renderType);
 ////            BufferBuilder builder = new BufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
@@ -112,7 +111,7 @@ public class SkinRenderObjectBuilder {
 //            quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, OverlayTexture.NO_OVERLAY, matrixStack1, builder));
 //
 //
-////            IPoseStack modelPoseStack = RenderSystem.getExtendedModelViewStack();
+////            PoseStack modelPoseStack = RenderSystem.getExtendedModelViewStack();
 ////            modelPoseStack.pushPose();
 ////            modelPoseStack.multiply(poseStack.lastPose());
 //            RenderSystem.setExtendedModelViewMatrix(matrixStack1.lastPose());
@@ -142,7 +141,7 @@ public class SkinRenderObjectBuilder {
         if (transforms == null) {
             return;
         }
-        IPoseStack poseStack = context.poseStack;
+        PoseStack poseStack = context.poseStack;
         MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         ModelBinder.BIPPED_BOXES.forEach((joint, rect) -> {
             ITransformf transform = transforms[joint.getId()];
@@ -184,7 +183,7 @@ public class SkinRenderObjectBuilder {
             return;
         }
 //        long startTime = System.currentTimeMillis();
-        IPoseStack matrixStack1 = MatrixUtils.stack();
+        PoseStack matrixStack1 = new PoseStack();
         ArrayList<CompiledTask> buildingTasks = new ArrayList<>();
         for (CachedTask task : tasks) {
             BakedSkinPart part = task.part;
@@ -299,17 +298,17 @@ public class SkinRenderObjectBuilder {
 
         protected final ArrayList<CompiledPass> tasks = new ArrayList<>();
 
-        void render(CachedTask task, IPoseStack poseStack, int lightmap, float partialTicks, int slotIndex) {
-            IPoseStack modelViewStack = RenderSystem.getExtendedModelViewStack();
-            IPoseStack fixedPostStack = new OpenPoseStack();
-            IMatrix4f lastPose = fixedPostStack.lastPose();
+        void render(CachedTask task, PoseStack poseStack, int lightmap, float partialTicks, int slotIndex) {
+            PoseStack modelViewStack = RenderSystem.getModelViewStack();
+            OpenPoseStack finalPostStack = new OpenPoseStack();
+            OpenMatrix4f lastPose = finalPostStack.lastPose();
+            OpenMatrix3f lastNormal = finalPostStack.lastNormal();
             lastPose.multiply(modelViewStack.lastPose());
             lastPose.multiply(poseStack.lastPose());
-            IMatrix3f lastNormal = fixedPostStack.lastNormal();
 //            lastNormal.multiply(modelViewStack.lastNormal());
             lastNormal.multiply(poseStack.lastNormal());
             lastNormal.invert();
-            task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, fixedPostStack, lightmap, partialTicks, slotIndex)));
+            task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, finalPostStack, lightmap, partialTicks, slotIndex)));
         }
 
         void commit(Consumer<ShaderVertexObject> consumer) {
@@ -327,10 +326,10 @@ public class SkinRenderObjectBuilder {
 
         float additionalPolygonOffset;
 
-        IPoseStack poseStack;
+        OpenPoseStack poseStack;
         CompiledTask compiledTask;
 
-        CompiledPass(CompiledTask compiledTask, IPoseStack poseStack, int lightmap, float partialTicks, int slotIndex) {
+        CompiledPass(CompiledTask compiledTask, OpenPoseStack poseStack, int lightmap, float partialTicks, int slotIndex) {
             super();
             this.compiledTask = compiledTask;
             this.poseStack = poseStack;
@@ -365,7 +364,7 @@ public class SkinRenderObjectBuilder {
         }
 
         @Override
-        public IPoseStack getPoseStack() {
+        public OpenPoseStack getPoseStack() {
             return poseStack;
         }
 

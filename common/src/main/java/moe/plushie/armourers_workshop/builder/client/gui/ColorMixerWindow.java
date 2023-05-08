@@ -101,11 +101,11 @@ public class ColorMixerWindow extends MenuWindow<ColorMixerMenu> implements UITe
     }
 
     private void reloadStatus() {
-        ColorMixerBlockEntity tileEntity = menu.getTileEntity(ColorMixerBlockEntity.class);
-        if (tileEntity == null) {
+        ColorMixerBlockEntity blockEntity = menu.getBlockEntity(ColorMixerBlockEntity.class);
+        if (blockEntity == null) {
             return;
         }
-        IPaintColor paintColor = tileEntity.getColor();
+        IPaintColor paintColor = blockEntity.getColor();
         UIColor selectedColor = new UIColor(paintColor.getRGB());
         ISkinPaintType selectedPaintType = paintColor.getPaintType();
         paintColorView.setColor(selectedColor);
@@ -142,16 +142,16 @@ public class ColorMixerWindow extends MenuWindow<ColorMixerMenu> implements UITe
     }
 
     private void onSubmit(UIControl button) {
-        ColorMixerBlockEntity tileEntity = menu.getTileEntity(ColorMixerBlockEntity.class);
-        if (tileEntity == null) {
+        ColorMixerBlockEntity blockEntity = menu.getBlockEntity(ColorMixerBlockEntity.class);
+        if (blockEntity == null) {
             return;
         }
         PaintColor paintColor = paintColorView.paintColor();
         UpdateColorMixerPacket.Field field = UpdateColorMixerPacket.Field.COLOR;
-        if (paintColor.equals(field.get(tileEntity))) {
+        if (paintColor.equals(field.get(blockEntity))) {
             return;
         }
-        NetworkManager.sendToServer(new UpdateColorMixerPacket(tileEntity, field, paintColor));
+        NetworkManager.sendToServer(new UpdateColorMixerPacket(blockEntity, field, paintColor));
     }
 
     private void showNewPaletteDialog(UIControl button) {

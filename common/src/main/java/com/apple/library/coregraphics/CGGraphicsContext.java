@@ -5,7 +5,7 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIView;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -20,14 +20,14 @@ public class CGGraphicsContext {
     public final Screen screen;
     public final UIFont font;
 
-    public final IPoseStack poseStack;
+    public final PoseStack poseStack;
 
     public final float partialTicks;
 
     public final int mouseX;
     public final int mouseY;
 
-    public CGGraphicsContext(IPoseStack poseStack, int mouseX, int mouseY, float partialTicks, UIFont font, Screen screen) {
+    public CGGraphicsContext(PoseStack poseStack, int mouseX, int mouseY, float partialTicks, UIFont font, Screen screen) {
         this.poseStack = poseStack;
         this.partialTicks = partialTicks;
         this.mouseX = mouseX;
@@ -64,11 +64,11 @@ public class CGGraphicsContext {
     }
 
     public void drawText(String text, int x, int y, int color) {
-        font.font().draw(poseStack.cast(), text, x, y, color);
+        font.font().draw(poseStack, text, x, y, color);
     }
 
     public void drawText(FormattedCharSequence text, int x, int y, int color) {
-        font.font().draw(poseStack.cast(), text, x, y, color);
+        font.font().draw(poseStack, text, x, y, color);
     }
 
     public void drawTooltip(Object tooltip, CGRect rect) {

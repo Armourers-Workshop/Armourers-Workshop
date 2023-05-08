@@ -1,18 +1,13 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
 import com.apple.library.coregraphics.CGRect;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.compatibility.AbstractClientNativeImpl;
 import moe.plushie.armourers_workshop.compatibility.ext.AbstractClientNativeProviderExt_V19;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -24,7 +19,6 @@ import net.minecraftforge.client.event.RenderHighlightEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -80,24 +74,21 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
     @Override
     public void willRenderBlockHighlight(RenderBlockHighlight renderer) {
         NotificationCenterImpl.observer(RenderHighlightEvent.Block.class, event -> {
-            IPoseStack poseStack = MatrixUtils.of(event.getPoseStack());
-            renderer.render(event.getTarget(), event.getCamera(), poseStack, event.getMultiBufferSource());
+            renderer.render(event.getTarget(), event.getCamera(), event.getPoseStack(), event.getMultiBufferSource());
         });
     }
 
     @Override
     public void willRenderLivingEntity(RenderLivingEntity renderer) {
         NotificationCenterImpl.observer(RenderLivingEvent.Pre.class, event -> {
-            IPoseStack poseStack = MatrixUtils.of(event.getPoseStack());
-            renderer.render(event.getEntity(), event.getPartialTick(), event.getPackedLight(), poseStack, event.getMultiBufferSource(), event.getRenderer());
+            renderer.render(event.getEntity(), event.getPartialTick(), event.getPackedLight(), event.getPoseStack(), event.getMultiBufferSource(), event.getRenderer());
         });
     }
 
     @Override
     public void didRenderLivingEntity(RenderLivingEntity renderer) {
         NotificationCenterImpl.observer(RenderLivingEvent.Post.class, event -> {
-            IPoseStack poseStack = MatrixUtils.of(event.getPoseStack());
-            renderer.render(event.getEntity(), event.getPartialTick(), event.getPackedLight(), poseStack, event.getMultiBufferSource(), event.getRenderer());
+            renderer.render(event.getEntity(), event.getPartialTick(), event.getPackedLight(), event.getPoseStack(), event.getMultiBufferSource(), event.getRenderer());
         });
     }
 
@@ -128,8 +119,7 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
                 k2 = screenHeight - j - 6;
             }
             CGRect frame = new CGRect(j2, k2, i, j);
-            IPoseStack poseStack = MatrixUtils.of(event.getPoseStack());
-            consumer.render(event.getItemStack(), frame, mouseX, mouseY, screenWidth, screenHeight, poseStack);
+            consumer.render(event.getItemStack(), frame, mouseX, mouseY, screenWidth, screenHeight, event.getPoseStack());
         });
     }
 }

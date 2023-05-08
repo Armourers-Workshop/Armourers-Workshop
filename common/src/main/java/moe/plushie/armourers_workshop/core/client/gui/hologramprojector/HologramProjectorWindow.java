@@ -23,13 +23,13 @@ public class HologramProjectorWindow extends MenuWindow<HologramProjectorMenu> {
 
     private final TabView tabView = new TabView(CGRect.ZERO);
 
-    private final HologramProjectorBlockEntity tileEntity;
+    private final HologramProjectorBlockEntity blockEntity;
 
     public HologramProjectorWindow(HologramProjectorMenu container, Inventory inventory, NSString title) {
         super(container, inventory, title);
         this.titleView.setFrame(titleView.bounds().offset(0, 5));
         this.inventoryView.setStyle(PlayerInventoryView.Style.NORMAL);
-        this.tileEntity = container.getTileEntity();
+        this.blockEntity = container.getBlockEntity();
     }
 
     @Override
@@ -50,23 +50,23 @@ public class HologramProjectorWindow extends MenuWindow<HologramProjectorMenu> {
     }
 
     private void setupTabView() {
-        addTab(new HologramProjectorInventorySetting(tileEntity))
+        addTab(new HologramProjectorInventorySetting(blockEntity))
                 .setIcon(tabIcon(64, 0, 8, 150))
                 .setTarget(1);
 
-        addTab(new HologramProjectorOffsetSetting(tileEntity))
+        addTab(new HologramProjectorOffsetSetting(blockEntity))
                 .setIcon(tabIcon(96, 0, 8, 150));
 
-        addTab(new HologramProjectorAngleSetting(tileEntity))
+        addTab(new HologramProjectorAngleSetting(blockEntity))
                 .setIcon(tabIcon(176, 0, 8, 150));
 
-        addTab(new HologramProjectorRotationOffsetSetting(tileEntity))
+        addTab(new HologramProjectorRotationOffsetSetting(blockEntity))
                 .setIcon(tabIcon(80, 0, 8, 150));
 
-        addTab(new HologramProjectorRotationSpeedSetting(tileEntity))
+        addTab(new HologramProjectorRotationSpeedSetting(blockEntity))
                 .setIcon(tabIcon(160, 0, 4, 150));
 
-        addTab(new HologramProjectorExtraSetting(tileEntity))
+        addTab(new HologramProjectorExtraSetting(blockEntity))
                 .setIcon(tabIcon(144, 0, 8, 150));
 
         tabView.addTarget(this, HologramProjectorWindow::switchTab);

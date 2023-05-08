@@ -1,11 +1,12 @@
 package moe.plushie.armourers_workshop.compatibility.mixin;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix3f;
+import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import org.spongepowered.asm.mixin.Implements;
 import org.spongepowered.asm.mixin.Interface;
@@ -35,13 +36,13 @@ public abstract class Matrix3fMixin {
     }
 
     @Intrinsic(displace = true)
-    public void aw$rotate(IQuaternionf quaternion) {
-        _aw$self().mul(MatrixUtils.of(quaternion));
+    public void aw$rotate(IQuaternionf q) {
+        _aw$self().mul(new Quaternion(q.x(), q.y(), q.z(), q.w()));
     }
 
     @Intrinsic(displace = true)
     public void aw$multiply(IMatrix3f matrix) {
-        _aw$self().mul(MatrixUtils.of(matrix));
+        _aw$self().mul(PoseStack.convertMatrix(matrix));
     }
 
     @Intrinsic(displace = true)
@@ -56,11 +57,6 @@ public abstract class Matrix3fMixin {
     @Intrinsic(displace = true)
     public void aw$invert() {
         _aw$self().invert();
-    }
-
-    @Intrinsic(displace = true)
-    public IMatrix3f aw$copy() {
-        return ObjectUtils.unsafeCast(_aw$self().copy());
     }
 
     private Matrix3f _aw$self() {

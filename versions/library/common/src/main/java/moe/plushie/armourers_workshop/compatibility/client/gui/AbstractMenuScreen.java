@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.compatibility.client.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.ISize2i;
 import moe.plushie.armourers_workshop.api.math.IVector2i;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.math.Size2i;
 import moe.plushie.armourers_workshop.utils.math.Vector2i;
 import net.fabricmc.api.EnvType;
@@ -21,26 +19,14 @@ public  class AbstractMenuScreen<T extends AbstractContainerMenu> extends Abstra
         super(menu, inventory, component);
     }
 
-    public void render(IPoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(poseStack.cast(), mouseX, mouseY, partialTicks);
-    }
-
-    public void renderLabels(IPoseStack poseStack, int mouseX, int mouseY) {
-        super.renderLabels(poseStack.cast(), mouseX, mouseY);
-    }
-
-    public void renderTooltip(IPoseStack poseStack, int mouseX, int mouseY) {
-        super.renderTooltip(poseStack.cast(), mouseX, mouseY);
-    }
-
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        render(MatrixUtils.of(poseStack), mouseX, mouseY, partialTicks);
+        super.render(poseStack, mouseX, mouseY, partialTicks);
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
-        renderLabels(MatrixUtils.of(poseStack), mouseX, mouseY);
+    public void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
+        super.renderLabels(poseStack, mouseX, mouseY);
     }
 
     @Override
@@ -48,8 +34,9 @@ public  class AbstractMenuScreen<T extends AbstractContainerMenu> extends Abstra
         // ignored
     }
 
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        renderTooltip(MatrixUtils.of(poseStack), mouseX, mouseY);
+    @Override
+    public void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+        super.renderTooltip(poseStack, mouseX, mouseY);
     }
 
     public void onClose() {

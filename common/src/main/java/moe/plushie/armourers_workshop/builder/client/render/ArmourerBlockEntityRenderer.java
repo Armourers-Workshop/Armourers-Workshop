@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideDataProvider;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideRenderer;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
@@ -45,7 +45,7 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
     }
 
     @Override
-    public void render(T entity, float partialTicks, IPoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T entity, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
         ISkinType skinType = entity.getSkinType();
         ISkinProperties skinProperties = entity.getSkinProperties();
 
@@ -136,9 +136,9 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
         override.setBuffers(null);
     }
 
-    public void transform(IPoseStack poseStack, T entity) {
+    public void transform(PoseStack poseStack, T entity) {
         poseStack.translate(0, 1, 0); // apply height offset
-        poseStack.rotate(CubeTransform.getRotationDegrees(entity.getFacing())); // apply facing rotation
+        poseStack.mulPose(CubeTransform.getRotationDegrees(entity.getFacing())); // apply facing rotation
     }
 
     @Override
@@ -183,30 +183,30 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
 
     public static class RenderData implements IGuideDataProvider {
 
-        protected final ArmourerBlockEntity tileEntity;
+        protected final ArmourerBlockEntity blockEntity;
         protected final SkinDynamicTexture displayTexture;
         protected final ResourceLocation displayTextureLocation;
         protected int lastVersion;
         protected boolean shouldRenderOverlay = false;
 
-        public RenderData(ArmourerBlockEntity tileEntity) {
-            this.tileEntity = tileEntity;
+        public RenderData(ArmourerBlockEntity blockEntity) {
+            this.blockEntity = blockEntity;
             this.displayTexture = new SkinDynamicTexture();
-            this.displayTextureLocation = Minecraft.getInstance().getTextureManager().register(identifier(tileEntity), displayTexture);
+            this.displayTextureLocation = Minecraft.getInstance().getTextureManager().register(identifier(blockEntity), displayTexture);
         }
 
-        public static RenderData of(ArmourerBlockEntity tileEntity) {
-            Object renderData = tileEntity.getRenderData();
+        public static RenderData of(ArmourerBlockEntity blockEntity) {
+            Object renderData = blockEntity.getRenderData();
             if (renderData instanceof RenderData) {
                 return (RenderData) renderData;
             }
-            RenderData renderData1 = new RenderData(tileEntity);
-            tileEntity.setRenderData(renderData1);
+            RenderData renderData1 = new RenderData(blockEntity);
+            blockEntity.setRenderData(renderData1);
             return renderData1;
         }
 
-        public static String identifier(ArmourerBlockEntity tileEntity) {
-            BlockPos pos = tileEntity.getBlockPos();
+        public static String identifier(ArmourerBlockEntity blockEntity) {
+            BlockPos pos = blockEntity.getBlockPos();
             return String.format("aw-armourer-%d-%d-%d", pos.getX(), pos.getY(), pos.getZ());
         }
 
@@ -217,8 +217,8 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
         }
 
         public void tick() {
-            this.displayTexture.setRefer(TextureUtils.getPlayerTextureLocation(tileEntity.getTextureDescriptor()));
-            this.displayTexture.setPaintData(tileEntity.getPaintData());
+            this.displayTexture.setRefer(TextureUtils.getPlayerTextureLocation(blockEntity.getTextureDescriptor()));
+            this.displayTexture.setPaintData(blockEntity.getPaintData());
         }
 
         @Override

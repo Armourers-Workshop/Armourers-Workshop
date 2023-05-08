@@ -1,9 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.layer;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
-import moe.plushie.armourers_workshop.api.math.IMatrix4f;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.compatibility.AbstractRenderLayer;
 import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
@@ -37,8 +36,8 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
     }
 
     @Override
-    public void render(IPoseStack poseStack, MultiBufferSource buffers, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        IPoseStack poseStack1 = poseStack;
+    public void render(PoseStack poseStack, MultiBufferSource buffers, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        PoseStack poseStack1 = poseStack;
         M model = ModelHolder.of(getParentModel());
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {
@@ -78,7 +77,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         poseStack.popPose();
     }
 
-    public void renderMagicCircle(IPoseStack poseStack, MultiBufferSource buffers, int ticks, float partialTickTime, int offset, int color, int lightmap, int overlay) {
+    public void renderMagicCircle(PoseStack poseStack, MultiBufferSource buffers, int ticks, float partialTickTime, int offset, int color, int lightmap, int overlay) {
         poseStack.pushPose();
         poseStack.translate(0, offset / 16.0f, 0);
 
@@ -87,18 +86,18 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         int blue = color & 0xff;
         float circleScale = 2;
         float rotation = (float) (ticks / 0.8D % 360D) + partialTickTime;
-        poseStack.rotate(Vector3f.YP.rotationDegrees(rotation));
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(rotation));
         poseStack.scale(circleScale, circleScale, circleScale);
-        IMatrix4f mat = poseStack.lastPose();
+        PoseStack.Pose pose = poseStack.last();
         VertexConsumer builder = buffers.getBuffer(SkinRenderType.IMAGE_MAGIC);
-        builder.vertex(mat, -1, 0, -1).color(red, green, blue, 0xff).uv(1, 0).overlayCoords(overlay).uv2(lightmap).endVertex();
-        builder.vertex(mat, 1, 0, -1).color(red, green, blue, 0xff).uv(0, 0).overlayCoords(overlay).uv2(lightmap).endVertex();
-        builder.vertex(mat, 1, 0, 1).color(red, green, blue, 0xff).uv(0, 1).overlayCoords(overlay).uv2(lightmap).endVertex();
-        builder.vertex(mat, -1, 0, 1).color(red, green, blue, 0xff).uv(1, 1).overlayCoords(overlay).uv2(lightmap).endVertex();
+        builder.vertex(pose, -1, 0, -1).color(red, green, blue, 0xff).uv(1, 0).overlayCoords(overlay).uv2(lightmap).endVertex();
+        builder.vertex(pose, 1, 0, -1).color(red, green, blue, 0xff).uv(0, 0).overlayCoords(overlay).uv2(lightmap).endVertex();
+        builder.vertex(pose, 1, 0, 1).color(red, green, blue, 0xff).uv(0, 1).overlayCoords(overlay).uv2(lightmap).endVertex();
+        builder.vertex(pose, -1, 0, 1).color(red, green, blue, 0xff).uv(1, 1).overlayCoords(overlay).uv2(lightmap).endVertex();
         poseStack.popPose();
     }
 
-    protected void applyModelScale(IPoseStack poseStack, M model) {
+    protected void applyModelScale(PoseStack poseStack, M model) {
         if (model.isBaby()) {
             float scale = 1 / model.getBabyScale();
             IVector3f offset = model.getBabyOffset();

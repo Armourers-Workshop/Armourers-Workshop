@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.guide;
 
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
@@ -31,7 +31,7 @@ public class AdvancedChestGuideRenderer extends AbstractAdvancedGuideRenderer {
     }
 
     @Override
-    public void render(IPoseStack poseStack, int light, int overlay, float r, float g, float b, float alpha, MultiBufferSource buffers) {
+    public void render(PoseStack poseStack, int light, int overlay, float r, float g, float b, float alpha, MultiBufferSource buffers) {
 //        VertexConsumer builder = buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL);
 //        body.render(poseStack, builder, light, overlay, r, g, b, alpha);
 //        leftArm.render(poseStack, builder, light, overlay, r, g, b, alpha);

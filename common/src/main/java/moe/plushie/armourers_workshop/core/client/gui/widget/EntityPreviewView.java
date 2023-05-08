@@ -5,7 +5,7 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIEvent;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.client.render.MannequinEntityRenderer;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -33,12 +33,12 @@ public class EntityPreviewView extends UIControl {
         }
         CGRect bounds = bounds();
         CGPoint pos = convertPointToView(new CGPoint(bounds.width / 2, bounds.height - 8), null);
-        IPoseStack modelViewStack = RenderSystem.getExtendedModelViewStack();
+        PoseStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushPose();
         modelViewStack.translate(0, 0, 300);
         modelViewStack.translate(pos.x, pos.y, 50);
-        modelViewStack.rotate(Vector3f.XP.rotationDegrees(-20));
-        modelViewStack.rotate(Vector3f.YP.rotationDegrees(playerRotation));
+        modelViewStack.mulPose(Vector3f.XP.rotationDegrees(-20));
+        modelViewStack.mulPose(Vector3f.YP.rotationDegrees(playerRotation));
         modelViewStack.translate(0, 0, -50);
         RenderSystem.applyModelViewMatrix();
 

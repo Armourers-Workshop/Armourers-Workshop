@@ -2,11 +2,9 @@ package moe.plushie.armourers_workshop.compatibility.forge.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.init.client.EpicFlightWardrobeHandler;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -38,9 +36,8 @@ public abstract class ForgeEpicFightRendererMixin {
     private static final FloatBuffer AW_MAT_BUFFER4 = BufferUtils.createFloatBuffer(16);
 
     @Inject(method = "renderLayer", at = @At("HEAD"), remap = false)
-    public void aw$renderLayerPre(LivingEntityRenderer<?, ?> renderer, LivingEntityPatch<?> entityPatch, LivingEntity entityIn, OpenMatrix4f[] poses, MultiBufferSource buffers, PoseStack poseStackIn, int packedLightIn, float partialTicks, CallbackInfo callbackInfo) {
+    public void aw$renderLayerPre(LivingEntityRenderer<?, ?> renderer, LivingEntityPatch<?> entityPatch, LivingEntity entityIn, OpenMatrix4f[] poses, MultiBufferSource buffers, PoseStack poseStack, int packedLightIn, float partialTicks, CallbackInfo callbackInfo) {
         Armature armature = entityPatch.getEntityModel(ClientModels.LOGICAL_CLIENT).getArmature();
-        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
         boolean isFirstPersonRenderer = ObjectUtils.safeCast(this, FirstPersonRenderer.class) != null;
         EpicFlightWardrobeHandler.onRenderLivingPre(entityIn, partialTicks, packedLightIn, poseStack, buffers, renderer, isFirstPersonRenderer, name -> {
             Joint joint = armature.searchJointByName(name);
@@ -54,15 +51,13 @@ public abstract class ForgeEpicFightRendererMixin {
                 jointNormalMatrix.store(AW_MAT_BUFFER3);
                 AW_MAT_BUFFER3.position(0);
                 AW_MAT_BUFFER4.position(0);
-                poseStack1.lastPose().multiply(MatrixUtils.mat4(AW_MAT_BUFFER4));
-                poseStack1.lastNormal().multiply(MatrixUtils.mat3(AW_MAT_BUFFER3));
+                EpicFlightWardrobeHandler.applyPoseFromBuffer(poseStack1, AW_MAT_BUFFER4, AW_MAT_BUFFER3);
             };
         });
     }
 
     @Inject(method = "renderLayer", at = @At("RETURN"), remap = false)
-    public void aw$renderLayerPost(LivingEntityRenderer<?, ?> renderer, LivingEntityPatch<?> entityPatch, LivingEntity entityIn, OpenMatrix4f[] poses, MultiBufferSource buffers, PoseStack poseStackIn, int packedLightIn, float partialTicks, CallbackInfo callbackInfo) {
-        IPoseStack poseStack = MatrixUtils.of(poseStackIn);
+    public void aw$renderLayerPost(LivingEntityRenderer<?, ?> renderer, LivingEntityPatch<?> entityPatch, LivingEntity entityIn, OpenMatrix4f[] poses, MultiBufferSource buffers, PoseStack poseStack, int packedLightIn, float partialTicks, CallbackInfo callbackInfo) {
         EpicFlightWardrobeHandler.onRenderLivingPost(entityIn, partialTicks, packedLightIn, poseStack, buffers, renderer);
     }
 

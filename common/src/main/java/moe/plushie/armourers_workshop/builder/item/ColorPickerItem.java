@@ -48,13 +48,13 @@ public class ColorPickerItem extends AbstractConfigurableToolItem implements IIt
     }
 
     @Override
-    public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity tileEntity, UseOnContext context) {
+    public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity blockEntity, UseOnContext context) {
         ItemStack itemStack = context.getItemInHand();
-        if (tileEntity instanceof IPaintable) {
+        if (blockEntity instanceof IPaintable) {
             if (!level.isClientSide()) {
                 return InteractionResult.CONSUME;
             }
-            IPaintColor color = ((IPaintable) tileEntity).getColor(dir);
+            IPaintColor color = ((IPaintable) blockEntity).getColor(dir);
             ColorUtils.setColor(itemStack, color);
             UpdateColorPickerPacket packet = new UpdateColorPickerPacket(context.getHand(), itemStack);
             NetworkManager.sendToServer(packet);
@@ -62,12 +62,12 @@ public class ColorPickerItem extends AbstractConfigurableToolItem implements IIt
             playSound(context);
             return InteractionResult.SUCCESS;
         }
-        if (tileEntity instanceof IPaintProvider) {
+        if (blockEntity instanceof IPaintProvider) {
             Player player = context.getPlayer();
             if (player != null && !player.isShiftKeyDown()) {
                 return InteractionResult.PASS;
             }
-            IPaintProvider provider = (IPaintProvider) tileEntity;
+            IPaintProvider provider = (IPaintProvider) blockEntity;
             IPaintColor newColor = getItemColor(itemStack);
             if (newColor == null) {
                 // this is an empty color picker, we don't need to do anything.

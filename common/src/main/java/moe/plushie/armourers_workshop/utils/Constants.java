@@ -72,27 +72,27 @@ public final class Constants {
         public static final String ENTITY_TEXTURE = "Texture";
         public static final String ENTITY_POSE = "Pose";
 
-        public static final String TILE_ENTITY_NAME = "Name";
-        public static final String TILE_ENTITY_FLAVOUR = "Flavour";
+        public static final String BLOCK_ENTITY_NAME = "Name";
+        public static final String BLOCK_ENTITY_FLAVOUR = "Flavour";
 
-        public static final String TILE_ENTITY_ANGLE = "Angle";
-        public static final String TILE_ENTITY_OFFSET = "Offset";
-        public static final String TILE_ENTITY_ROTATION_SPEED = "RotSpeed";
-        public static final String TILE_ENTITY_ROTATION_OFFSET = "RotOffset";
+        public static final String BLOCK_ENTITY_ANGLE = "Angle";
+        public static final String BLOCK_ENTITY_OFFSET = "Offset";
+        public static final String BLOCK_ENTITY_ROTATION_SPEED = "RotSpeed";
+        public static final String BLOCK_ENTITY_ROTATION_OFFSET = "RotOffset";
 
-        public static final String TILE_ENTITY_POWER_MODE = "PowerMode";
-        public static final String TILE_ENTITY_IS_GLOWING = "Glowing";
-        public static final String TILE_ENTITY_IS_POWERED = "Powered";
+        public static final String BLOCK_ENTITY_POWER_MODE = "PowerMode";
+        public static final String BLOCK_ENTITY_IS_GLOWING = "Glowing";
+        public static final String BLOCK_ENTITY_IS_POWERED = "Powered";
 
-        public static final String TILE_ENTITY_REFER = "Refer";
-        public static final String TILE_ENTITY_REFERS = "Refers";
-        public static final String TILE_ENTITY_MARKERS = "Markers";
-        public static final String TILE_ENTITY_LINKED_POS = "LinkedPos";
+        public static final String BLOCK_ENTITY_REFER = "Refer";
+        public static final String BLOCK_ENTITY_REFERS = "Refers";
+        public static final String BLOCK_ENTITY_MARKERS = "Markers";
+        public static final String BLOCK_ENTITY_LINKED_POS = "LinkedPos";
 
-        public static final String TILE_ENTITY_SHAPE = "Shape";
+        public static final String BLOCK_ENTITY_SHAPE = "Shape";
 
-        public static final String TILE_ENTITY_SKIN = "Skin";
-        public static final String TILE_ENTITY_SKIN_PROPERTIES = "SkinProperties";
+        public static final String BLOCK_ENTITY_SKIN = "Skin";
+        public static final String BLOCK_ENTITY_SKIN_PROPERTIES = "SkinProperties";
     }
 
     /**

@@ -19,7 +19,7 @@ public interface IPaintToolPicker {
         return InteractionResult.PASS;
     }
 
-    InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity tileEntity, UseOnContext context);
+    InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity blockEntity, UseOnContext context);
 
     default boolean shouldUsePickTool(UseOnContext context) {
         return true;

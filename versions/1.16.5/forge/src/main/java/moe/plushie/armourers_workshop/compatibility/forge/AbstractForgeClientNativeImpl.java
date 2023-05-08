@@ -1,11 +1,9 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
 import com.apple.library.coregraphics.CGRect;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractClientNativeImpl;
 import moe.plushie.armourers_workshop.compatibility.ext.AbstractClientNativeExt_V1618;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -70,8 +68,7 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
             int screenWidth = screenLayout.getWidth();
             int screenHeight = screenLayout.getHeight();
             CGRect frame = new CGRect(event.getX(), event.getY(), event.getWidth(), event.getHeight());
-            IPoseStack poseStack = MatrixUtils.of(event.getMatrixStack());
-            consumer.render(event.getStack(), frame, mouseX, mouseY, screenWidth, screenHeight, poseStack);
+            consumer.render(event.getStack(), frame, mouseX, mouseY, screenWidth, screenHeight, event.getMatrixStack());
         });
     }
 
@@ -88,24 +85,21 @@ public class AbstractForgeClientNativeImpl extends AbstractClientNativeImpl impl
     @Override
     public void willRenderBlockHighlight(RenderBlockHighlight renderer) {
         NotificationCenterImpl.observer(DrawHighlightEvent.HighlightBlock.class, event -> {
-            IPoseStack poseStack = MatrixUtils.of(event.getMatrix());
-            renderer.render(event.getTarget(), event.getInfo(), poseStack, event.getBuffers());
+            renderer.render(event.getTarget(), event.getInfo(), event.getMatrix(), event.getBuffers());
         });
     }
 
     @Override
     public void willRenderLivingEntity(RenderLivingEntity renderer) {
         NotificationCenterImpl.observer(RenderLivingEvent.Pre.class, event -> {
-            IPoseStack poseStack = MatrixUtils.of(event.getMatrixStack());
-            renderer.render(event.getEntity(), event.getPartialRenderTick(), event.getLight(), poseStack, event.getBuffers(), event.getRenderer());
+            renderer.render(event.getEntity(), event.getPartialRenderTick(), event.getLight(), event.getMatrixStack(), event.getBuffers(), event.getRenderer());
         });
     }
 
     @Override
     public void didRenderLivingEntity(RenderLivingEntity renderer) {
         NotificationCenterImpl.observer(RenderLivingEvent.Post.class, event -> {
-            IPoseStack poseStack = MatrixUtils.of(event.getMatrixStack());
-            renderer.render(event.getEntity(), event.getPartialRenderTick(), event.getLight(), poseStack, event.getBuffers(), event.getRenderer());
+            renderer.render(event.getEntity(), event.getPartialRenderTick(), event.getLight(), event.getMatrixStack(), event.getBuffers(), event.getRenderer());
         });
     }
 }

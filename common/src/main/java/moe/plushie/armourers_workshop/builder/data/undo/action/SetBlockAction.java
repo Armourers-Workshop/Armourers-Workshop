@@ -29,16 +29,16 @@ public class SetBlockAction extends BlockUndoAction {
     public IUndoCommand apply() {
         BlockState oldState = level.getBlockState(blockPos);
         CompoundTag oldNBT = null;
-        BlockEntity oldTileEntity = level.getBlockEntity(blockPos);
-        if (oldTileEntity != null) {
-            oldNBT = oldTileEntity.saveWithFullMetadata();
+        BlockEntity oldBlockEntity = level.getBlockEntity(blockPos);
+        if (oldBlockEntity != null) {
+            oldNBT = oldBlockEntity.saveWithFullMetadata();
         }
         SetBlockAction oldChanges = new SetBlockAction(level, blockPos, oldState, oldNBT);
         level.setBlock(blockPos, newValue, Constants.BlockFlags.DEFAULT_AND_RERENDER);
         if (newValueNBT != null) {
-            BlockEntity tileEntity = level.getBlockEntity(blockPos);
-            if (tileEntity != null) {
-                tileEntity.load(newValueNBT);
+            BlockEntity blockEntity = level.getBlockEntity(blockPos);
+            if (blockEntity != null) {
+                blockEntity.load(newValueNBT);
             }
         }
         return oldChanges;

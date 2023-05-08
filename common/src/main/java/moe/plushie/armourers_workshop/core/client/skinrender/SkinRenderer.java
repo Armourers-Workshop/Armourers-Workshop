@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import com.apple.library.uikit.UIColor;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.api.client.IJoint;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.common.IItemTransformType;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
@@ -25,6 +25,7 @@ import moe.plushie.armourers_workshop.core.skin.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.platform.TransformationProvider;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -86,9 +87,9 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
         if (partTransform != null && model1 != null) {
             SkinPartTransform transform = bakedPart.getTransform();
             transform.setup(context.partialTicks, entity);
-            transform.pre(context.poseStack);
+            transform.pre(context.poseStack1);
             partTransform.apply(context.poseStack, entity, model1, bakedPart, bakedSkin, context);
-            transform.post(context.poseStack);
+            transform.post(context.poseStack1);
         }
     }
 
@@ -164,7 +165,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
         for (BakedSkinPart bakedPart : parentPart.getChildren()) {
             context.pushPose();
             SkinPartTransform transform = bakedPart.getTransform();
-            transform.apply(context.poseStack);
+            transform.apply(context.poseStack1);
             builder.addPartData(bakedPart, bakedSkin, scheme, shouldRenderPart, context);
             counter += renderChildPart(bakedPart, bakedSkin, scheme, shouldRenderPart, builder, context);
             if (shouldRenderPart && ModDebugger.skinPartBounds) {
@@ -229,7 +230,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
 
     @FunctionalInterface
     public interface PartTransform<T, M> {
-        void apply(IPoseStack poseStack, T entity, M model, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinRenderContext context);
+        void apply(PoseStack poseStack, T entity, M model, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinRenderContext context);
     }
 
     public static class Transformer<T, M> {
@@ -237,10 +238,10 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
         final HashMap<ISkinPartType, PartTransform<T, M>> armors = new HashMap<>();
         final HashMap<IItemTransformType, PartTransform<T, M>> items = new HashMap<>();
 
-        public static <M> void none(IPoseStack poseStack, M model) {
+        public static <M> void none(PoseStack poseStack, M model) {
         }
 
-        public static <T extends Entity, M0 extends Model, M extends IModelHolder<M0>> void withModel(IPoseStack poseStack, T entity, M model, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinRenderContext context) {
+        public static <T extends Entity, M0 extends Model, M extends IModelHolder<M0>> void withModel(PoseStack poseStack, T entity, M model, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinRenderContext context) {
             ItemStack itemStack = context.itemStack;
             IItemTransformType transformType = context.transformType;
             final float f1 = 16f;
@@ -254,7 +255,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
                 // we must reverse x-axis the direction of drawing,
                 // but we should not change the normalMatrix,
                 // because the normal direction is correct.
-                poseStack.lastPose().scale(-1, 1, 1);
+                poseStack.mulPoseMatrix(OpenMatrix4f.createScaleMatrix(-1, 1, 1));
             }
         }
 
@@ -266,7 +267,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
             registerArmor(partType, (poseStack, entity, model, bakedPart, bakedSkin, context) -> apply(poseStack, joint, context));
         }
 
-        public void registerArmor(ISkinPartType partType, BiConsumer<IPoseStack, M> transformer) {
+        public void registerArmor(ISkinPartType partType, BiConsumer<PoseStack, M> transformer) {
             registerArmor(partType, (poseStack, entity, model, bakedPart, bakedSkin, context) -> transformer.accept(poseStack, model));
         }
 
@@ -278,7 +279,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
             items.put(transformType, transformer);
         }
 
-        public void apply(IPoseStack poseStack, IJoint joint, SkinRenderContext context) {
+        public void apply(PoseStack poseStack, IJoint joint, SkinRenderContext context) {
             ITransformf[] transforms = context.getTransforms();
             if (transforms != null) {
                 ITransformf transform = transforms[joint.getId()];
@@ -288,19 +289,19 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
             }
         }
 
-        public void apply(IPoseStack poseStack, ModelPart modelRenderer) {
+        public void apply(PoseStack poseStack, ModelPart modelRenderer) {
             if (modelRenderer == null) {
                 return;
             }
             poseStack.translate(modelRenderer.x, modelRenderer.y, modelRenderer.z);
             if (modelRenderer.zRot != 0) {
-                poseStack.rotate(Vector3f.ZP.rotation(modelRenderer.zRot));
+                poseStack.mulPose(Vector3f.ZP.rotation(modelRenderer.zRot));
             }
             if (modelRenderer.yRot != 0) {
-                poseStack.rotate(Vector3f.YP.rotation(modelRenderer.yRot));
+                poseStack.mulPose(Vector3f.YP.rotation(modelRenderer.yRot));
             }
             if (modelRenderer.xRot != 0) {
-                poseStack.rotate(Vector3f.XP.rotation(modelRenderer.xRot));
+                poseStack.mulPose(Vector3f.XP.rotation(modelRenderer.xRot));
             }
         }
     }

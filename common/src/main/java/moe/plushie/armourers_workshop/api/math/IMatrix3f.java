@@ -17,6 +17,4 @@ public interface IMatrix3f {
     void multiply(float[] values);
 
     void invert();
-
-    IMatrix3f copy();
 }

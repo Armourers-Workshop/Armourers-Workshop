@@ -40,10 +40,10 @@ public class BottleItem extends FlavouredItem implements IItemTintColorProvider,
     }
 
     @Override
-    public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity tileEntity, UseOnContext context) {
+    public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity blockEntity, UseOnContext context) {
         ItemStack itemStack = context.getItemInHand();
-        if (tileEntity instanceof IPaintProvider) {
-            setItemColor(itemStack, ((IPaintProvider) tileEntity).getColor());
+        if (blockEntity instanceof IPaintProvider) {
+            setItemColor(itemStack, ((IPaintProvider) blockEntity).getColor());
             return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.PASS;

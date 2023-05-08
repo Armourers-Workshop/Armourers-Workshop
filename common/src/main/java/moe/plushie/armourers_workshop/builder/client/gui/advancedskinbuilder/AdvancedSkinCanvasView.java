@@ -6,7 +6,7 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.guide.AdvancedChestGuideRenderer;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -40,7 +40,7 @@ public class AdvancedSkinCanvasView extends UIView {
     public void render(CGPoint point, CGGraphicsContext context) {
         CGRect rect = bounds();
 
-        IPoseStack poseStack = context.poseStack;
+        PoseStack poseStack = context.poseStack;
         poseStack.pushPose();
 
         poseStack.translate(rect.getWidth() / 2f, rect.getHeight() / 2f, 500f);

@@ -30,14 +30,14 @@ public final class BlockUtils {
         }
     }
 
-    public static <T extends BlockEntity> void combine(T tileEntity, Runnable handler) {
+    public static <T extends BlockEntity> void combine(T blockEntity, Runnable handler) {
         Map<BlockEntity, Runnable> queue = pending.get();
         if (queue == null) {
             handler.run();
-            tileEntity.setChanged();
+            blockEntity.setChanged();
             return;
         }
-        queue.put(tileEntity, handler);
+        queue.put(blockEntity, handler);
     }
 
     public static void snapshot(LevelAccessor level, BlockPos blockPos, BlockState blockState, CompoundTag tag, Player player, Component reason) {
@@ -113,8 +113,8 @@ public final class BlockUtils {
 //        return EnumFacing.getFront(determineOrientationSide(entity));
 //    }
 //
-//    public static ICubeColour getColourFromTileEntity(Level world, BlockPos pos) {
-//        BlockEntity te = world.getTileEntity(pos);
+//    public static ICubeColour getColourFromBlockEntity(Level world, BlockPos pos) {
+//        BlockEntity te = world.getBlockEntity(pos);
 //        if (te != null & te instanceof IPantable) {
 //            return ((IPantable)te).getColour();
 //        }
@@ -122,7 +122,7 @@ public final class BlockUtils {
 //    }
 //
 //    public static void dropInventoryBlocks(Level world, BlockPos pos) {
-//        BlockEntity te = world.getTileEntity(pos);
+//        BlockEntity te = world.getBlockEntity(pos);
 //        if (te != null & te instanceof Container) {
 //            dropInventoryBlocks(world, (Container)te, pos);
 //        }
@@ -152,8 +152,8 @@ public final class BlockUtils {
 
         while (!openList.isEmpty()) {
             BlockPos loc = openList.remove(0);
-            BlockEntity tileEntity = level.getBlockEntity(loc);
-            if (tileEntity instanceof IPaintable) {
+            BlockEntity blockEntity = level.getBlockEntity(loc);
+            if (blockEntity instanceof IPaintable) {
                 if (!restrictPlane) {
                     blockFaces.add(loc);
                 } else if (samePlane(loc, pos, facing)) {

@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Inventory;
 @Environment(value = EnvType.CLIENT)
 public class ArmourerWindow extends MenuWindow<ArmourerMenu> {
 
-    private final ArmourerBlockEntity tileEntity;
+    private final ArmourerBlockEntity blockEntity;
 
     private final TabView tabView = new TabView(new CGRect(0, 0, 176, 224));
 
@@ -29,7 +29,7 @@ public class ArmourerWindow extends MenuWindow<ArmourerMenu> {
         this.setBackgroundView(ModTextures.defaultWindowImage());
         this.inventoryView.setStyle(PlayerInventoryView.Style.COMPACT);
         this.inventoryView.setUserInteractionEnabled(false);
-        this.tileEntity = container.getTileEntity();
+        this.blockEntity = container.getBlockEntity();
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ArmourerWindow extends MenuWindow<ArmourerMenu> {
     @Override
     public void screenWillTick() {
         super.screenWillTick();
-        int lastVersion = tileEntity.getVersion();
+        int lastVersion = blockEntity.getVersion();
         if (this.lastVersion != lastVersion) {
             tabView.tabs().forEach(tab -> {
                 ArmourerBaseSetting setting = ObjectUtils.safeCast(tab.contentView(), ArmourerBaseSetting.class);

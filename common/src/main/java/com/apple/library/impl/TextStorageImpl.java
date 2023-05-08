@@ -10,6 +10,7 @@ import com.apple.library.foundation.NSTextPosition;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIFont;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.compatibility.AbstractShaderTesselator;
@@ -138,14 +139,14 @@ public class TextStorageImpl {
         context.saveGraphicsState();
         context.translateCTM(offset.x, offset.y, 0);
 
-        IMatrix4f mat = context.poseStack.lastPose();
+        PoseStack.Pose pose = context.poseStack.last();
         MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
         if (placeholder != null && cachedTextLines.isEmpty()) {
             int placeholderColor = defaultPlaceholderColor();
-            font.drawInBatch(placeholder.chars(), 0, 0, placeholderColor, true, mat, buffers, false, 0, 15728880);
+            font.drawInBatch(placeholder.chars(), 0, 0, placeholderColor, true, pose, buffers, false, 0, 15728880);
         }
         for (TextLine line : cachedTextLines) {
-            font.drawInBatch(line.chars, line.rect.x, line.rect.y, textColor, true, mat, buffers, false, 0, 15728880);
+            font.drawInBatch(line.chars, line.rect.x, line.rect.y, textColor, true, pose, buffers, false, 0, 15728880);
             context.strokeDebugRect(line.index, line.rect);
         }
         buffers.endBatch();
@@ -171,15 +172,15 @@ public class TextStorageImpl {
         if (!isFocused || highlightedRects == null || highlightedRects.isEmpty()) {
             return;
         }
-        IMatrix4f mat = context.poseStack.lastPose();
+        PoseStack.Pose pose = context.poseStack.last();
         AbstractShaderTesselator tesselator = AbstractShaderTesselator.getInstance();
         BufferBuilder builder = tesselator.begin(SkinRenderType.GUI_HIGHLIGHTED_TEXT);
         RenderSystem.setShaderColor(AppearanceImpl.TEXT_HIGHLIGHTED_COLOR);
         for (CGRect rect : highlightedRects) {
-            builder.vertex(mat, rect.getMinX(), rect.getMaxY(), 0).endVertex();
-            builder.vertex(mat, rect.getMaxX(), rect.getMaxY(), 0).endVertex();
-            builder.vertex(mat, rect.getMaxX(), rect.getMinY(), 0).endVertex();
-            builder.vertex(mat, rect.getMinX(), rect.getMinY(), 0).endVertex();
+            builder.vertex(pose, rect.getMinX(), rect.getMaxY(), 0).endVertex();
+            builder.vertex(pose, rect.getMaxX(), rect.getMaxY(), 0).endVertex();
+            builder.vertex(pose, rect.getMaxX(), rect.getMinY(), 0).endVertex();
+            builder.vertex(pose, rect.getMinX(), rect.getMinY(), 0).endVertex();
         }
         tesselator.end();
         RenderSystem.setShaderColor(UIColor.WHITE);

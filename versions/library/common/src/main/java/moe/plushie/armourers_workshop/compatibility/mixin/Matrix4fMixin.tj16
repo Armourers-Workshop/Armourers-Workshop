@@ -1,11 +1,12 @@
 package moe.plushie.armourers_workshop.compatibility.mixin;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
 import com.mojang.math.Vector4f;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import org.spongepowered.asm.mixin.Implements;
 import org.spongepowered.asm.mixin.Interface;
@@ -74,12 +75,12 @@ public abstract class Matrix4fMixin {
 
     @Intrinsic(displace = true)
     public void aw$rotate(IQuaternionf q) {
-        _aw$self().multiply(MatrixUtils.of(q));
+        _aw$self().multiply(new Quaternion(q.x(), q.y(), q.z(), q.w()));
     }
 
     @Intrinsic(displace = true)
     public void aw$multiply(IMatrix4f matrix) {
-        _aw$self().multiply(MatrixUtils.of(matrix));
+        _aw$self().multiply(PoseStack.convertMatrix(matrix));
     }
 
     @Intrinsic(displace = true)
@@ -95,11 +96,6 @@ public abstract class Matrix4fMixin {
     @Intrinsic(displace = true)
     public void aw$invert() {
         _aw$self().invert();
-    }
-
-    @Intrinsic(displace = true)
-    public IMatrix4f aw$copy() {
-        return ObjectUtils.unsafeCast(_aw$self().copy());
     }
 
     private Matrix4f _aw$self() {

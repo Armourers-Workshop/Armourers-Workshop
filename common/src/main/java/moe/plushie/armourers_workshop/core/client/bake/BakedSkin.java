@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
 import com.google.common.collect.Range;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.common.IItemTransformType;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -22,7 +22,6 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
@@ -166,7 +165,7 @@ public class BakedSkin implements IBakedSkin {
 
     public <T extends Entity, V extends Model, M extends IModelHolder<V>> OpenVoxelShape getRenderShape(T entity, M model, ItemStack itemStack, IItemTransformType transformType, SkinRenderer<T, V, M> renderer) {
         SkinRenderContext context = new SkinRenderContext();
-        context.init(null, 0, 0, transformType, MatrixUtils.stack(), null);
+        context.init(null, 0, 0, transformType, new PoseStack(), null);
         context.setItem(itemStack, 0);
         context.setTransforms(entity, model);
         OpenVoxelShape shape = OpenVoxelShape.empty();
@@ -180,7 +179,7 @@ public class BakedSkin implements IBakedSkin {
         if (!renderer.prepare(entity, model, part, this, context)) {
             return;
         }
-        IPoseStack poseStack = context.poseStack;
+        PoseStack poseStack = context.poseStack;
         OpenVoxelShape shape1 = part.getRenderShape().copy();
         poseStack.pushPose();
         renderer.apply(entity, model, part, this, context);

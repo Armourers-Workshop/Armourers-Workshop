@@ -25,9 +25,9 @@ public class BlockPermission extends Permission {
         return getNodes().stream().allMatch(node -> eval(node, player, new PlayerPermissionContext(player)));
     }
 
-    public boolean accept(BlockEntity tileEntity, Player player) {
-        BlockState state = tileEntity.getBlockState();
+    public boolean accept(BlockEntity blockEntity, Player player) {
+        BlockState state = blockEntity.getBlockState();
         IPermissionNode node = get(RegistryManager.getKey(state.getBlock()));
-        return eval(node, player, new BlockPermissionContext(player, tileEntity.getBlockPos(), state, null));
+        return eval(node, player, new BlockPermissionContext(player, blockEntity.getBlockPos(), state, null));
     }
 }

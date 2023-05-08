@@ -33,21 +33,21 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
     private final UITextField nameTextField = new UITextField(new CGRect(8, 18, 158, 16));
     private final UITextField flavourTextField = new UITextField(new CGRect(8, 38, 158, 16));
 
-    private final OutfitMakerBlockEntity tileEntity;
+    private final OutfitMakerBlockEntity blockEntity;
 
     public OutfitMakerWindow(OutfitMakerMenu container, Inventory inventory, NSString title) {
         super(container, inventory, title);
         this.setBackgroundView(UIImage.of(ModTextures.OUTFIT_MAKER).build());
         this.setFrame(new CGRect(0, 0, 176, 240));
-        this.tileEntity = container.getTileEntity();
+        this.blockEntity = container.getBlockEntity();
     }
 
     @Override
     public void init() {
         super.init();
 
-        setupTextField(nameTextField, tileEntity.getItemName(), "skinName");
-        setupTextField(flavourTextField, tileEntity.getItemFlavour(), "skinFlavour");
+        setupTextField(nameTextField, blockEntity.getItemName(), "skinName");
+        setupTextField(flavourTextField, blockEntity.getItemFlavour(), "skinFlavour");
 
         HashMap<Integer, CGPoint> offsets = new HashMap<>();
         offsets.put(UIControl.State.NORMAL, new CGPoint(0, 0));
@@ -67,7 +67,7 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
         GameProfile origin = Minecraft.getInstance().getUser().getGameProfile();
         CompoundTag nbt = DataSerializers.writeGameProfile(new CompoundTag(), origin);
         UpdateOutfitMakerPacket.Field field = UpdateOutfitMakerPacket.Field.ITEM_CRAFTING;
-        NetworkManager.sendToServer(new UpdateOutfitMakerPacket(tileEntity, field, nbt));
+        NetworkManager.sendToServer(new UpdateOutfitMakerPacket(blockEntity, field, nbt));
     }
 
     private void saveSkinInfo(UIControl textField) {
@@ -77,10 +77,10 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
             field = UpdateOutfitMakerPacket.Field.ITEM_FLAVOUR;
             value = flavourTextField.value();
         }
-        if (Objects.equals(value, field.get(tileEntity))) {
+        if (Objects.equals(value, field.get(blockEntity))) {
             return; // ignore when value not changes
         }
-        NetworkManager.sendToServer(new UpdateOutfitMakerPacket(tileEntity, field, value));
+        NetworkManager.sendToServer(new UpdateOutfitMakerPacket(blockEntity, field, value));
     }
 
     private void setupTextField(UITextField textField, String value, String placeholderKey) {

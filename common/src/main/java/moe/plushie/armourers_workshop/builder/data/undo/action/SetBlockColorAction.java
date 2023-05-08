@@ -24,7 +24,7 @@ public class SetBlockColorAction extends BlockUndoAction {
 
     @Override
     public IUndoCommand apply() throws CommandRuntimeException {
-        IPaintable target = (IPaintable) getTileEntity();
+        IPaintable target = (IPaintable) getBlockEntity();
         HashMap<Direction, IPaintColor> oldValue = new HashMap<>();
         for (Direction direction : newValue.keySet()) {
             IPaintColor paintColor = target.getColor(direction);
@@ -39,10 +39,10 @@ public class SetBlockColorAction extends BlockUndoAction {
     }
 
     @Override
-    public BlockEntity getTileEntity() {
-        BlockEntity tileEntity = super.getTileEntity();
-        if (tileEntity instanceof IPaintable) {
-            return tileEntity;
+    public BlockEntity getBlockEntity() {
+        BlockEntity blockEntity = super.getBlockEntity();
+        if (blockEntity instanceof IPaintable) {
+            return blockEntity;
         }
         return null;
     }

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
@@ -47,13 +47,13 @@ public class FirstPersonSkinRenderer<T extends LivingEntity, V extends FirstPers
         return super.prepare(entity, model, bakedPart, bakedSkin, context);
     }
 
-    public void setLeftArm(IPoseStack poseStack, M model) {
+    public void setLeftArm(PoseStack poseStack, M model) {
         poseStack.translate(-5, -2, 0);
-        poseStack.rotate(new OpenQuaternionf(180, 180, -5, true));
+        poseStack.mulPose(new OpenQuaternionf(180, 180, -5, true));
     }
 
-    public void setRightArm(IPoseStack poseStack, M model) {
+    public void setRightArm(PoseStack poseStack, M model) {
         poseStack.translate(5, -2, 0);
-        poseStack.rotate(new OpenQuaternionf(180, 180, 5, true));
+        poseStack.mulPose(new OpenQuaternionf(180, 180, 5, true));
     }
 }

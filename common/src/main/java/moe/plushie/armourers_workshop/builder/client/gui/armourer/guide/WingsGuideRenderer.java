@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideDataProvider;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,7 +26,7 @@ public class WingsGuideRenderer extends AbstractGuideRenderer {
     }
 
 
-    public void render(IPoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
+    public void render(PoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
         float f = 1 / 16f;
         poseStack.pushPose();
         poseStack.translate(0, 0, -2 * f);

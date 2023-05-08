@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.skin.exporter;
 
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
@@ -115,7 +114,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         createMtlFile(filePath, filename);
     }
 
-    private void exportPart(IPoseStack poseStack, ArrayList<SkinCubeFace> allFaces, SkinPart skinPart, Skin skin, OutputStreamWriter os, TextureBuilder texture, int partIndex) throws IOException {
+    private void exportPart(OpenPoseStack poseStack, ArrayList<SkinCubeFace> allFaces, SkinPart skinPart, Skin skin, OutputStreamWriter os, TextureBuilder texture, int partIndex) throws IOException {
         // user maybe need apply some effects for the glass or glowing blocks,
         // so we need split the glass and glowing block into separate layers.
         HashMap<ISkinCubeType, ArrayList<SkinCubeFace>> faces = new HashMap<>();
@@ -133,7 +132,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         }
     }
 
-    private void exportLayer(IPoseStack poseStack, ArrayList<SkinCubeFace> faces, SkinPart skinPart, Skin skin, OutputStreamWriter os, TextureBuilder texture, String layer, int partIndex) throws IOException {
+    private void exportLayer(OpenPoseStack poseStack, ArrayList<SkinCubeFace> faces, SkinPart skinPart, Skin skin, OutputStreamWriter os, TextureBuilder texture, String layer, int partIndex) throws IOException {
         ModLog.debug("export {} layer of {}:{}, faces: {}", layer, partIndex, skinPart.getType(), faces.size());
 
         os.write("o " + partIndex + "-" + skinPart.getType().getRegistryName().getPath() + "-" + layer + CRLF);
@@ -179,13 +178,13 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         }
     }
 
-    private void writeVert(IPoseStack poseStack, OutputStreamWriter os, float x, float y, float z) throws IOException {
+    private void writeVert(OpenPoseStack poseStack, OutputStreamWriter os, float x, float y, float z) throws IOException {
         Vector4f v = new Vector4f(x, y, z, 1);
         v.transform(poseStack.lastPose());
         os.write(String.format("v %s %s %s", f2s(v.x()), f2s(v.y()), f2s(v.z())) + CRLF);
     }
 
-    private void writeNormal(IPoseStack poseStack, OutputStreamWriter os, float x, float y, float z) throws IOException {
+    private void writeNormal(OpenPoseStack poseStack, OutputStreamWriter os, float x, float y, float z) throws IOException {
         Vector3f v = new Vector3f(x, y, z);
         v.transform(poseStack.lastNormal());
         os.write(String.format("vn %s %s %s", f2s(v.x()), f2s(v.y()), f2s(v.z())) + CRLF);

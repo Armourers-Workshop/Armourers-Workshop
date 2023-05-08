@@ -54,11 +54,11 @@ public class BlendingToolItem extends AbstractPaintToolItem implements IBlockPai
     }
 
     @Override
-    public IPaintToolSelector createPaintToolSelector(BlockEntity tileEntity, UseOnContext context) {
-        if (tileEntity instanceof ArmourerBlockEntity) {
+    public IPaintToolSelector createPaintToolSelector(BlockEntity blockEntity, UseOnContext context) {
+        if (blockEntity instanceof ArmourerBlockEntity) {
             return null;
         }
-        return super.createPaintToolSelector(tileEntity, context);
+        return super.createPaintToolSelector(blockEntity, context);
     }
 
     @Override

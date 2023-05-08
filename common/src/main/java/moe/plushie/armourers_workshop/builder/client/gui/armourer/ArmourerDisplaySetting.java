@@ -28,7 +28,7 @@ import java.util.HashMap;
 @Environment(value = EnvType.CLIENT)
 public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITextFieldDelegate {
 
-    protected final ArmourerBlockEntity tileEntity;
+    protected final ArmourerBlockEntity blockEntity;
     private final HashMap<PlayerTextureDescriptor.Source, String> defaultValues = new HashMap<>();
 
     private final UIComboBox comboList = new UIComboBox(new CGRect(10, 30, 80, 14));
@@ -45,7 +45,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
 
     public ArmourerDisplaySetting(ArmourerMenu container) {
         super("inventory.armourers_workshop.armourer.displaySettings");
-        this.tileEntity = container.getTileEntity();
+        this.blockEntity = container.getBlockEntity();
         this.reloadData();
     }
 
@@ -106,10 +106,10 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         if (checkShowGuides == null) {
             return;
         }
-        checkShowGuides.setSelected(tileEntity.isShowGuides());
-        checkShowModelGuides.setSelected(tileEntity.isShowModelGuides());
-        checkShowHelper.setSelected(tileEntity.isShowHelper());
-        checkShowHelper.setHidden(!tileEntity.usesHelper());
+        checkShowGuides.setSelected(blockEntity.isShowGuides());
+        checkShowModelGuides.setSelected(blockEntity.isShowModelGuides());
+        checkShowHelper.setSelected(blockEntity.isShowHelper());
+        checkShowHelper.setHidden(!blockEntity.usesHelper());
         // update input type
         if (lastSource == PlayerTextureDescriptor.Source.URL) {
             inputType.setText(getDisplayText("label.url"));
@@ -120,8 +120,8 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
 
     private void prepareDefaultValue() {
         defaultValues.clear();
-        if (tileEntity != null) {
-            lastDescriptor = tileEntity.getTextureDescriptor();
+        if (blockEntity != null) {
+            lastDescriptor = blockEntity.getTextureDescriptor();
         }
         lastSource = lastDescriptor.getSource();
         if (lastSource == PlayerTextureDescriptor.Source.USER) {
@@ -169,9 +169,9 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
             }
             lastSource = PlayerTextureDescriptor.Source.NONE;
             lastDescriptor = newValue;
-            tileEntity.setTextureDescriptor(newValue);
+            blockEntity.setTextureDescriptor(newValue);
             UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.TEXTURE_DESCRIPTOR;
-            UpdateArmourerPacket packet = new UpdateArmourerPacket(tileEntity, field, newValue);
+            UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, newValue);
             NetworkManager.sendToServer(packet);
             // update to use
             defaultValues.put(newValue.getSource(), newValue.getValue());
@@ -180,17 +180,17 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
     }
 
     private void updateFlagValue(UIControl sender) {
-        int oldFlags = tileEntity.getFlags();
-        tileEntity.setShowGuides(checkShowGuides.isSelected());
-        tileEntity.setShowModelGuides(checkShowModelGuides.isSelected());
-        tileEntity.setShowHelper(checkShowHelper.isSelected());
-        int flags = tileEntity.getFlags();
+        int oldFlags = blockEntity.getFlags();
+        blockEntity.setShowGuides(checkShowGuides.isSelected());
+        blockEntity.setShowModelGuides(checkShowModelGuides.isSelected());
+        blockEntity.setShowHelper(checkShowHelper.isSelected());
+        int flags = blockEntity.getFlags();
         if (flags == oldFlags) {
             return;
         }
-        tileEntity.setFlags(flags);
+        blockEntity.setFlags(flags);
         UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.FLAGS;
-        UpdateArmourerPacket packet = new UpdateArmourerPacket(tileEntity, field, flags);
+        UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, flags);
         NetworkManager.sendToServer(packet);
     }
 

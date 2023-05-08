@@ -79,10 +79,10 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
         context.getParts().forEach(p -> {
             BlockPos target = blockPos.offset(p.getOffset());
             level.setBlock(target, blockState, 11);
-            SkinnableBlockEntity tileEntity = getTileEntity(level, target);
-            if (tileEntity != null) {
-                tileEntity.readFromNBT(p.getEntityTag());
-                tileEntity.updateBlockStates();
+            SkinnableBlockEntity blockEntity = getBlockEntity(level, target);
+            if (blockEntity != null) {
+                blockEntity.readFromNBT(p.getEntityTag());
+                blockEntity.updateBlockStates();
             }
         });
         super.setPlacedBy(level, blockPos, blockState, entity, itemStack);
@@ -105,27 +105,27 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult traceResult) {
-        SkinnableBlockEntity tileEntity = getTileEntity(level, blockPos);
-        if (tileEntity == null) {
+        SkinnableBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        if (blockEntity == null) {
             return InteractionResult.FAIL;
         }
-        if (tileEntity.isLinked()) {
-            BlockPos linkedPos = tileEntity.getLinkedBlockPos();
+        if (blockEntity.isLinked()) {
+            BlockPos linkedPos = blockEntity.getLinkedBlockPos();
             BlockState linkedState = level.getBlockState(linkedPos);
             return linkedState.getBlock().use(linkedState, level, linkedPos, player, hand, traceResult);
         }
-        if (tileEntity.isBed() && !player.isShiftKeyDown()) {
-            if (ModPermissions.SKINNABLE_SLEEP.accept(tileEntity, player)) {
-                return Blocks.RED_BED.use(blockState, level, tileEntity.getBedPos(), player, hand, traceResult);
+        if (blockEntity.isBed() && !player.isShiftKeyDown()) {
+            if (ModPermissions.SKINNABLE_SLEEP.accept(blockEntity, player)) {
+                return Blocks.RED_BED.use(blockState, level, blockEntity.getBedPos(), player, hand, traceResult);
             }
         }
-        if (tileEntity.isSeat() && !player.isShiftKeyDown()) {
-            if (ModPermissions.SKINNABLE_SIT.accept(tileEntity, player)) {
+        if (blockEntity.isSeat() && !player.isShiftKeyDown()) {
+            if (ModPermissions.SKINNABLE_SIT.accept(blockEntity, player)) {
                 if (level.isClientSide()) {
                     return InteractionResult.CONSUME;
                 }
-                Vector3d seatPos = tileEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
-                SeatEntity seatEntity = getSeatEntity((ServerLevel) level, tileEntity.getParentPos(), seatPos);
+                Vector3d seatPos = blockEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
+                SeatEntity seatEntity = getSeatEntity((ServerLevel) level, blockEntity.getParentPos(), seatPos);
                 if (seatEntity == null) {
                     return InteractionResult.FAIL; // it is using
                 }
@@ -133,7 +133,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
                 return InteractionResult.SUCCESS;
             }
         }
-        if (tileEntity.isInventory()) {
+        if (blockEntity.isInventory()) {
             InteractionResult result = MenuManager.openMenu(ModMenuTypes.SKINNABLE, level.getBlockEntity(blockPos), player);
             if (result.consumesAction()) {
                 player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
@@ -157,27 +157,27 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     @Override
     public ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState) {
-        SkinnableBlockEntity tileEntity = getParentTileEntity(blockGetter, blockPos);
-        if (tileEntity != null) {
-            return tileEntity.getDescriptor().asItemStack();
+        SkinnableBlockEntity blockEntity = getParentBlockEntity(blockGetter, blockPos);
+        if (blockEntity != null) {
+            return blockEntity.getDescriptor().asItemStack();
         }
         return ItemStack.EMPTY;
     }
 
     @Override
     public boolean isCustomBed(BlockGetter level, BlockPos blockPos, BlockState blockState, @Nullable Entity player) {
-        SkinnableBlockEntity tileEntity = getTileEntity(level, blockPos);
-        if (tileEntity != null) {
-            return tileEntity.isBed();
+        SkinnableBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        if (blockEntity != null) {
+            return blockEntity.isBed();
         }
         return false;
     }
 
     @Override
     public boolean isCustomLadder(BlockGetter level, BlockPos blockPos, BlockState blockState, LivingEntity entity) {
-        SkinnableBlockEntity tileEntity = getTileEntity(level, blockPos);
-        if (tileEntity != null) {
-            return tileEntity.isLadder();
+        SkinnableBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        if (blockEntity != null) {
+            return blockEntity.isLadder();
         }
         return false;
     }
@@ -189,29 +189,29 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     @Override
     public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
-        SkinnableBlockEntity tileEntity = getTileEntity(blockGetter, blockPos);
-        if (tileEntity != null) {
-            return tileEntity.getShape();
+        SkinnableBlockEntity blockEntity = getBlockEntity(blockGetter, blockPos);
+        if (blockEntity != null) {
+            return blockEntity.getShape();
         }
         return Shapes.empty();
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
-        SkinnableBlockEntity tileEntity = getTileEntity(blockGetter, blockPos);
-        if (tileEntity != null && tileEntity.noCollision()) {
+        SkinnableBlockEntity blockEntity = getBlockEntity(blockGetter, blockPos);
+        if (blockEntity != null && blockEntity.noCollision()) {
             return Shapes.empty();
         }
         return super.getCollisionShape(blockState, blockGetter, blockPos, collisionContext);
     }
 
     public void forEach(Level level, BlockPos pos, Consumer<BlockPos> consumer) {
-        SkinnableBlockEntity tileEntity = getParentTileEntity(level, pos);
-        if (tileEntity == null) {
+        SkinnableBlockEntity blockEntity = getParentBlockEntity(level, pos);
+        if (blockEntity == null) {
             return;
         }
-        BlockPos parentPos = tileEntity.getBlockPos();
-        for (BlockPos offset : tileEntity.getRefers()) {
+        BlockPos parentPos = blockEntity.getBlockPos();
+        for (BlockPos offset : blockEntity.getRefers()) {
             BlockPos targetPos = parentPos.offset(offset);
             if (!targetPos.equals(pos)) {
                 consumer.accept(targetPos);
@@ -227,41 +227,41 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     public void killSeatEntities(Level level, BlockPos blockPos) {
-        SkinnableBlockEntity tileEntity = getParentTileEntity(level, blockPos);
-        if (tileEntity != null) {
-            Vector3d seatPos = tileEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
-            killSeatEntity(level, tileEntity.getParentPos(), seatPos);
+        SkinnableBlockEntity blockEntity = getParentBlockEntity(level, blockPos);
+        if (blockEntity != null) {
+            Vector3d seatPos = blockEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
+            killSeatEntity(level, blockEntity.getParentPos(), seatPos);
         }
     }
 
     public boolean dropItems(Level level, BlockPos blockPos, @Nullable Player player) {
-        SkinnableBlockEntity tileEntity = getParentTileEntity(level, blockPos);
-        if (tileEntity == null || tileEntity.isDropped()) {
+        SkinnableBlockEntity blockEntity = getParentBlockEntity(level, blockPos);
+        if (blockEntity == null || blockEntity.isDropped()) {
             return false;
         }
         // anyway, we only drop all items once.
-        tileEntity.setDropped(true);
+        blockEntity.setDropped(true);
         if (player == null || !player.getAbilities().instabuild) {
-            DataSerializers.dropItemStack(level, blockPos, tileEntity.getDescriptor().asItemStack());
+            DataSerializers.dropItemStack(level, blockPos, blockEntity.getDescriptor().asItemStack());
         }
-        if (tileEntity.isInventory()) {
-            DataSerializers.dropContents(level, blockPos, tileEntity);
+        if (blockEntity.isInventory()) {
+            DataSerializers.dropContents(level, blockPos, blockEntity);
         }
         return true;
     }
 
-    private SkinnableBlockEntity getTileEntity(BlockGetter level, BlockPos pos) {
-        BlockEntity tileEntity = level.getBlockEntity(pos);
-        if (tileEntity instanceof SkinnableBlockEntity) {
-            return (SkinnableBlockEntity) tileEntity;
+    private SkinnableBlockEntity getBlockEntity(BlockGetter level, BlockPos pos) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof SkinnableBlockEntity) {
+            return (SkinnableBlockEntity) blockEntity;
         }
         return null;
     }
 
-    private SkinnableBlockEntity getParentTileEntity(BlockGetter level, BlockPos blockPos) {
-        SkinnableBlockEntity tileEntity = getTileEntity(level, blockPos);
-        if (tileEntity != null) {
-            return tileEntity.getParent();
+    private SkinnableBlockEntity getParentBlockEntity(BlockGetter level, BlockPos blockPos) {
+        SkinnableBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        if (blockEntity != null) {
+            return blockEntity.getParent();
         }
         return null;
     }

@@ -77,8 +77,8 @@ public class CubeChanges implements IUndoCommand, IWorldUpdateTask {
         if (blockState != null) {
             return;
         }
-        BlockEntity tileEntity = level.getBlockEntity(blockPos);
-        if (tileEntity == null) {
+        BlockEntity blockEntity = level.getBlockEntity(blockPos);
+        if (blockEntity == null) {
             String value = String.format("x=%d, y=%d, z=%d", blockPos.getX(), blockPos.getY(), blockPos.getZ());
             throw new CommandRuntimeException(TranslateUtils.title("chat.armourers_workshop.undo.missingBlock", value));
         }
@@ -101,9 +101,9 @@ public class CubeChanges implements IUndoCommand, IWorldUpdateTask {
                 changes.setCompoundTag(newTag);
             });
         } else if (colors != null) {
-            BlockEntity tileEntity = level.getBlockEntity(blockPos);
-            if (tileEntity instanceof IPaintable) {
-                IPaintable target = (IPaintable) tileEntity;
+            BlockEntity blockEntity = level.getBlockEntity(blockPos);
+            if (blockEntity instanceof IPaintable) {
+                IPaintable target = (IPaintable) blockEntity;
                 HashMap<Direction, IPaintColor> oldValue = new HashMap<>();
                 for (Direction direction : colors.keySet()) {
                     IPaintColor paintColor = target.getColor(direction);
@@ -134,19 +134,19 @@ public class CubeChanges implements IUndoCommand, IWorldUpdateTask {
             level.setBlock(blockPos, blockState, Constants.BlockFlags.DEFAULT);
             changes += 1;
         }
-        BlockEntity tileEntity = null;
+        BlockEntity blockEntity = null;
         if (isChangeNBT()) {
-            tileEntity = level.getBlockEntity(blockPos);
+            blockEntity = level.getBlockEntity(blockPos);
         }
         if (nbt != null) {
-            if (tileEntity != null) {
-                tileEntity.load(nbt);
+            if (blockEntity != null) {
+                blockEntity.load(nbt);
                 changes += 1;
             }
         }
         if (colors != null) {
-            if (tileEntity instanceof IPaintable) {
-                ((IPaintable) tileEntity).setColors(colors);
+            if (blockEntity instanceof IPaintable) {
+                ((IPaintable) blockEntity).setColors(colors);
                 changes += 1;
             }
         }

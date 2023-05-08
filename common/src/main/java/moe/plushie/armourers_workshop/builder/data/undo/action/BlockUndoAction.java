@@ -20,14 +20,14 @@ public abstract class BlockUndoAction implements IUndoCommand {
 
     @Override
     public void prepare() throws CommandRuntimeException {
-        BlockEntity tileEntity = getTileEntity();
-        if (tileEntity == null) {
+        BlockEntity blockEntity = getBlockEntity();
+        if (blockEntity == null) {
             String pos = String.format("x=%d, y=%d, z=%d", blockPos.getX(), blockPos.getY(), blockPos.getZ());
             throw new CommandRuntimeException(TranslateUtils.title("chat.armourers_workshop.undo.missingBlock", pos));
         }
     }
 
-    public BlockEntity getTileEntity() {
+    public BlockEntity getBlockEntity() {
         if (level != null) {
             return level.getBlockEntity(blockPos);
         }

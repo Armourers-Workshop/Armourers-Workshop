@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightContext;
@@ -12,12 +12,15 @@ import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
 
+import java.nio.FloatBuffer;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -31,7 +34,7 @@ public class EpicFlightWardrobeHandler {
         ModConfig.Client.enablePartSubdivide = true;
     }
 
-    public static void onRenderLivingPre(LivingEntity entity, float partialTicks, int packedLight, IPoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer, boolean isFirstPersonRenderer, EpicFlightTransformProvider transformProvider) {
+    public static void onRenderLivingPre(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer, boolean isFirstPersonRenderer, EpicFlightTransformProvider transformProvider) {
         IModelHolder<?> model = ModelHolder.ofNullable(entityRenderer.getModel());
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {
@@ -47,13 +50,14 @@ public class EpicFlightWardrobeHandler {
         context.overrideParts = overrideParts;
         context.overridePostStack = poseStack.copy();
         context.overrideTransformModifier = model.getExtraData(JointTransformModifier.EPICFIGHT);;
+        context.isLimitLimbs = false;
 
         renderData.epicFlightContext = context;
 
         SkinRendererManager.getInstance().willRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
     }
 
-    public static void onRenderLivingPost(LivingEntity entity, float partialTicks, int packedLight, IPoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
+    public static void onRenderLivingPost(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
         IModelHolder<?> model = ModelHolder.ofNullable(entityRenderer.getModel());
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {
@@ -64,9 +68,15 @@ public class EpicFlightWardrobeHandler {
         context.overrideParts = null;
         context.overridePostStack = null;
         context.overrideTransformModifier = null;
+        context.isLimitLimbs = true;
 
         renderData.epicFlightContext = null;
 
         SkinRendererManager.getInstance().didRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
+    }
+
+    public static void applyPoseFromBuffer(PoseStack poseStack, FloatBuffer pose, FloatBuffer normal) {
+        poseStack.lastPose().multiply(new OpenMatrix4f(pose));
+        poseStack.lastNormal().multiply(new OpenMatrix3f(normal));
     }
 }

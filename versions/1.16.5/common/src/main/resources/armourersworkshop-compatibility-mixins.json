@@ -5,7 +5,6 @@
   "client": [
     "Matrix3fMixin",
     "Matrix4fMixin",
-    "PoseStackMixin",
     "RenderStateMixin",
     "ItemRendererMixin",
     "InventoryScreenMixin"

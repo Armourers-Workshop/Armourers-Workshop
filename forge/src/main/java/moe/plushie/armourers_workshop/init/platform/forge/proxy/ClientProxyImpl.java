@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.forge.proxy;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.common.IItemTransformType;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.ClientNativeManagerImpl;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.HumanoidArm;
@@ -70,7 +69,7 @@ public class ClientProxyImpl {
             }
             int light = event.getPackedLight();
             Player player = Minecraft.getInstance().player;
-            IPoseStack poseStack = MatrixUtils.of(event.getPoseStack());
+            PoseStack poseStack = event.getPoseStack();
             MultiBufferSource buffers = event.getMultiBufferSource();
             IItemTransformType transformType = IItemTransformType.FIRST_PERSON_LEFT_HAND;
             if (event.getArm() == HumanoidArm.RIGHT) {

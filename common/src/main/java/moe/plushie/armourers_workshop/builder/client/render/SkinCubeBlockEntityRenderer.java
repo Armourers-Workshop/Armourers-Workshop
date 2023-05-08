@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
@@ -30,8 +30,8 @@ public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> ext
         super(context);
     }
 
-    public static void updateAlpha(BlockEntity tileEntity) {
-        Level level = tileEntity.getLevel();
+    public static void updateAlpha(BlockEntity blockEntity) {
+        Level level = blockEntity.getLevel();
         if (level == null || lastWorldTimeUpdate == level.getGameTime()) {
             return;
         }
@@ -64,7 +64,7 @@ public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> ext
     }
 
     @Override
-    public void render(T entity, float partialTicks, IPoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T entity, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
         updateAlpha(entity);
         if (!(markerAlpha > 0)) {
             return;

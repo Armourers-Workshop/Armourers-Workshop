@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
-import moe.plushie.armourers_workshop.api.math.IMatrix3f;
-import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.lwjgl.BufferUtils;
@@ -76,11 +76,11 @@ public abstract class ShaderUniform {
     public static class Matrix4f extends ShaderUniform {
 
         private final FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-        private final Supplier<IMatrix4f> value;
+        private final Supplier<OpenMatrix4f> value;
 
-        private IMatrix4f cachedValue;
+        private OpenMatrix4f cachedValue;
 
-        Matrix4f(String name, int program, int location, Supplier<IMatrix4f> value) {
+        Matrix4f(String name, int program, int location, Supplier<OpenMatrix4f> value) {
             super(name, program, location);
             this.cachedValue = null;
             this.value = value;
@@ -88,7 +88,7 @@ public abstract class ShaderUniform {
 
         @Override
         public void apply() {
-            IMatrix4f newValue = value.get();
+            OpenMatrix4f newValue = value.get();
             if (!newValue.equals(cachedValue)) {
                 cachedValue = newValue.copy();
                 cachedValue.store(buffer);
@@ -101,10 +101,10 @@ public abstract class ShaderUniform {
     public static class Matrix3f extends ShaderUniform {
 
         private final FloatBuffer buffer = BufferUtils.createFloatBuffer(9);
-        private final Supplier<IMatrix3f> value;
-        private IMatrix3f cachedValue;
+        private final Supplier<OpenMatrix3f> value;
+        private OpenMatrix3f cachedValue;
 
-        Matrix3f(String name, int program, int location, Supplier<IMatrix3f> value) {
+        Matrix3f(String name, int program, int location, Supplier<OpenMatrix3f> value) {
             super(name, program, location);
             this.cachedValue = null;
             this.value = value;
@@ -112,7 +112,7 @@ public abstract class ShaderUniform {
 
         @Override
         public void apply() {
-            IMatrix3f newValue = value.get();
+            OpenMatrix3f newValue = value.get();
             if (!newValue.equals(cachedValue)) {
                 cachedValue = newValue.copy();
                 cachedValue.store(buffer);

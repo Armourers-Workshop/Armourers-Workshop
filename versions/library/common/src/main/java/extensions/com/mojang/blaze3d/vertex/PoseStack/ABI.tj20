@@ -1,74 +1,55 @@
-package moe.plushie.armourers_workshop.compatibility.ext;
+package extensions.com.mojang.blaze3d.vertex.PoseStack;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
+import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import org.joml.*;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 
 @Available("[1.19.3, )")
-@Environment(value = EnvType.CLIENT)
-public abstract class AbstractMatrixUtilsExt_V19 {
+@Extension
+public class ABI {
 
     private static final Matrix3f CONVERTER_MAT3 = new Matrix3f();
     private static final Matrix4f CONVERTER_MAT4 = new Matrix4f();
 
-    private static final FloatBuffer CONVERTER_BUFFER3 = BufferUtils.createFloatBuffer(9);
-    private static final FloatBuffer CONVERTER_BUFFER4 = BufferUtils.createFloatBuffer(16);
+    private static final FloatBuffer BUFFER3x3 = BufferUtils.createFloatBuffer(9);
+    private static final FloatBuffer BUFFER4x4 = BufferUtils.createFloatBuffer(16);
 
-    public static Matrix3f of(IMatrix3f mat) {
-        if (mat instanceof Matrix3f) {
-            return (Matrix3f) mat;
-        }
-        if (mat instanceof Mat3) {
-            return ((Mat3) mat).mat;
-        }
-        IMatrix3f accessor = ObjectUtils.unsafeCast(CONVERTER_MAT3);
-        mat.store(CONVERTER_BUFFER3);
-        accessor.load(CONVERTER_BUFFER3);
-        return CONVERTER_MAT3;
+    public static PoseStack copy(@This PoseStack poseStack) {
+        PoseStack poseStack1 = new PoseStack();
+        poseStack1.last().pose().set(poseStack.last().pose());
+        poseStack1.last().normal().set(poseStack.last().normal());
+        return poseStack1;
     }
 
-    public static Matrix4f of(IMatrix4f mat) {
-        if (mat instanceof Matrix4f) {
-            return (Matrix4f) mat;
-        }
-        if (mat instanceof Mat4) {
-            return ((Mat4) mat).mat;
-        }
-        mat.store(CONVERTER_BUFFER4);
-        CONVERTER_MAT4.set(CONVERTER_BUFFER4);
-        return CONVERTER_MAT4;
+    public static void mulPose(@This PoseStack poseStack, IQuaternionf q) {
+        poseStack.mulPose(new Quaternionf(q.x(), q.y(), q.z(), q.w()));
     }
 
-    public static Quaternionf of(IQuaternionf qat) {
-        return new Quaternionf(qat.x(), qat.y(), qat.z(), qat.w());
+    public static void mulPoseMatrix(@This PoseStack poseStack, IMatrix4f matrix) {
+        poseStack.lastPose().multiply(matrix);
     }
 
-    public static IMatrix3f of(Matrix3f mat) {
-        return new Mat3(mat);
+    public static IMatrix4f lastPose(@This PoseStack poseStack) {
+        return new Mat4(poseStack.last().pose());
     }
 
-    public static IMatrix4f of(Matrix4f mat) {
-        return new Mat4(mat);
+    public static IMatrix3f lastNormal(@This PoseStack poseStack) {
+        return new Mat3(poseStack.last().normal());
     }
-
-    public static IPoseStack of(PoseStack poseStack) {
-        return (IPoseStack) poseStack;
-    }
-
-    public static IPoseStack stack() {
-        return of(new PoseStack());
-    }
-
 
     public static class Mat3 implements IMatrix3f {
 
@@ -94,13 +75,13 @@ public abstract class AbstractMatrixUtilsExt_V19 {
         }
 
         @Override
-        public void rotate(IQuaternionf quaternion) {
-            mat.rotate(new Quaternionf(quaternion.x(), quaternion.y(), quaternion.z(), quaternion.w()));
+        public void rotate(IQuaternionf q) {
+            mat.rotate(new Quaternionf(q.x(), q.y(), q.z(), q.w()));
         }
 
         @Override
         public void multiply(IMatrix3f matrix) {
-            mat.mul(of(matrix));
+            mat.mul(convertMatrix(matrix));
         }
 
         @Override
@@ -118,11 +99,6 @@ public abstract class AbstractMatrixUtilsExt_V19 {
         }
 
         @Override
-        public IMatrix3f copy() {
-            return new Mat3(new Matrix3f(mat));
-        }
-
-        @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (!(o instanceof Mat3 that)) return false;
@@ -132,6 +108,16 @@ public abstract class AbstractMatrixUtilsExt_V19 {
         @Override
         public int hashCode() {
             return mat.hashCode();
+        }
+
+        public static Matrix3f convertMatrix(IMatrix3f mat) {
+            Matrix3f newValue = ObjectUtils.safeCast(mat, Matrix3f.class);
+            if (newValue != null) {
+                return newValue;
+            }
+            mat.store(BUFFER3x3);
+            CONVERTER_MAT3.set(BUFFER3x3);
+            return CONVERTER_MAT3;
         }
     }
 
@@ -164,13 +150,13 @@ public abstract class AbstractMatrixUtilsExt_V19 {
         }
 
         @Override
-        public void rotate(IQuaternionf quaternion) {
-            mat.rotate(new Quaternionf(quaternion.x(), quaternion.y(), quaternion.z(), quaternion.w()));
+        public void rotate(IQuaternionf q) {
+            mat.rotate(new Quaternionf(q.x(), q.y(), q.z(), q.w()));
         }
 
         @Override
         public void multiply(IMatrix4f matrix) {
-            mat.mul(of(matrix));
+            mat.mul(convertMatrix(matrix));
         }
 
         @Override
@@ -189,11 +175,6 @@ public abstract class AbstractMatrixUtilsExt_V19 {
         }
 
         @Override
-        public IMatrix4f copy() {
-            return new Mat4(new Matrix4f(mat));
-        }
-
-        @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (!(o instanceof Mat4 that)) return false;
@@ -204,12 +185,16 @@ public abstract class AbstractMatrixUtilsExt_V19 {
         public int hashCode() {
             return mat.hashCode();
         }
-    }
 
-    public interface Pose {
 
-        IMatrix4f aw$getPose();
-
-        IMatrix3f aw$getNormal();
+        public Matrix4f convertMatrix(IMatrix4f mat) {
+            Matrix4f newValue = ObjectUtils.safeCast(mat, Matrix4f.class);
+            if (newValue != null) {
+                return newValue;
+            }
+            mat.store(BUFFER4x4);
+            CONVERTER_MAT4.set(BUFFER4x4);
+            return CONVERTER_MAT4;
+        }
     }
 }

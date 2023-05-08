@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -34,7 +34,7 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
     }
 
     @Override
-    public void render(T entity, float partialTicks, IPoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T entity, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
         BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(entity.getDescriptor(), Tickets.RENDERER);
         if (bakedSkin == null) {
             return;
@@ -52,7 +52,7 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
 
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f);
-        poseStack.rotate(rotations);
+        poseStack.mulPose(rotations);
 
         poseStack.scale(f, f, f);
         poseStack.scale(-1, -1, 1);
@@ -70,7 +70,7 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
                 poseStack.pushPose();
                 poseStack.translate(0.5f, 0.5f, 0.5f);
                 poseStack.scale(f, f, f);
-                poseStack.rotate(rotations);
+                poseStack.mulPose(rotations);
                 poseStack.translate(pos.getX() * 16f, pos.getY() * 16f, pos.getZ() * 16f);
                 RenderSystem.drawBoundingBox(poseStack, rect, UIColor.RED, buffers);
                 poseStack.popPose();

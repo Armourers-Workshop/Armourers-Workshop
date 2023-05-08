@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.common.IItemTransformType;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.builder.item.SkinCubeItem;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractItemStackRenderer;
@@ -33,7 +33,7 @@ public class SkinCubeItemRenderer extends AbstractItemStackRenderer {
     }
 
     @Override
-    public void renderByItem(ItemStack itemStack, IItemTransformType transformType, IPoseStack poseStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
+    public void renderByItem(ItemStack itemStack, IItemTransformType transformType, PoseStack poseStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
         if (itemStack.isEmpty()) {
             return;
         }
@@ -66,7 +66,7 @@ public class SkinCubeItemRenderer extends AbstractItemStackRenderer {
         renderCube(blockPaintColor, light, overlay, poseStack, builder1);
     }
 
-    public void renderCube(BlockPaintColor blockPaintColor, int light, int overlay, IPoseStack poseStack, VertexConsumer builder) {
+    public void renderCube(BlockPaintColor blockPaintColor, int light, int overlay, PoseStack poseStack, VertexConsumer builder) {
         for (Direction dir : Direction.values()) {
             IPaintColor paintColor = blockPaintColor.getOrDefault(dir, PaintColor.WHITE);
             ExtendedFaceRenderer.render2(0, 0, 0, dir, paintColor, 255, light, overlay, poseStack, builder);

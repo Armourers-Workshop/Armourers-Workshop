@@ -22,17 +22,17 @@ public class SkinnableMenu extends AbstractBlockContainerMenu {
 
     public SkinnableMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess worldPos) {
         super(menuType, block, containerId, worldPos);
-        SkinnableBlockEntity tileEntity = getTileEntity();
-        this.title = tileEntity.getInventoryName();
+        SkinnableBlockEntity blockEntity = getBlockEntity();
+        this.title = blockEntity.getInventoryName();
 
         row = 3;
         column = 9;
         inventory = playerInventory.player.getEnderChestInventory();
 
-        if (!tileEntity.isEnderInventory()) {
-            row = tileEntity.getInventoryHeight();
-            column = tileEntity.getInventoryWidth();
-            inventory = tileEntity.getInventory();
+        if (!blockEntity.isEnderInventory()) {
+            row = blockEntity.getInventoryHeight();
+            column = blockEntity.getInventoryWidth();
+            inventory = blockEntity.getInventory();
         }
 
         // guiHeight = top + row * 18 + middle + 98 = row * 18 + 124

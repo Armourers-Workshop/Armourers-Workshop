@@ -146,8 +146,8 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         }
 
         public CompoundTag writeToNBT(CompoundTag nbt) {
-            DataSerializers.putBlockPos(nbt, Constants.Key.TILE_ENTITY_REFER, offset, null);
-            DataSerializers.putRectangle3i(nbt, Constants.Key.TILE_ENTITY_SHAPE, shape, null);
+            DataSerializers.putBlockPos(nbt, Constants.Key.BLOCK_ENTITY_REFER, offset, null);
+            DataSerializers.putRectangle3i(nbt, Constants.Key.BLOCK_ENTITY_SHAPE, shape, null);
             return nbt;
         }
 
@@ -200,10 +200,10 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         @Override
         public CompoundTag writeToNBT(CompoundTag nbt) {
             nbt = super.writeToNBT(nbt);
-            DataSerializers.putBlockPosList(nbt, Constants.Key.TILE_ENTITY_REFERS, blockPosList);
-            DataSerializers.putMarkerList(nbt, Constants.Key.TILE_ENTITY_MARKERS, markerList);
-            DataSerializers.putSkinDescriptor(nbt, Constants.Key.TILE_ENTITY_SKIN, descriptor, SkinDescriptor.EMPTY);
-            DataSerializers.putSkinProperties(nbt, Constants.Key.TILE_ENTITY_SKIN_PROPERTIES, properties);
+            DataSerializers.putBlockPosList(nbt, Constants.Key.BLOCK_ENTITY_REFERS, blockPosList);
+            DataSerializers.putMarkerList(nbt, Constants.Key.BLOCK_ENTITY_MARKERS, markerList);
+            DataSerializers.putSkinDescriptor(nbt, Constants.Key.BLOCK_ENTITY_SKIN, descriptor, SkinDescriptor.EMPTY);
+            DataSerializers.putSkinProperties(nbt, Constants.Key.BLOCK_ENTITY_SKIN_PROPERTIES, properties);
             return nbt;
         }
 

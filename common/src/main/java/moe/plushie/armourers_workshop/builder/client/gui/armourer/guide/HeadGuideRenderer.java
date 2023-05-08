@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideDataProvider;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.utils.ModelPartBuilder;
@@ -26,10 +26,10 @@ public class HeadGuideRenderer extends AbstractGuideRenderer {
         rendererManager.register(SkinPartTypes.BIPPED_HEAD, this::render);
     }
 
-    public void render(IPoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
-        head.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
+    public void render(PoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
+        head.render(poseStack, buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
         if (provider.shouldRenderOverlay()) {
-            hat.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
+            hat.render(poseStack, buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
         }
     }
 }

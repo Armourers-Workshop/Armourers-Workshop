@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
@@ -31,7 +31,7 @@ public class SlimeSkinRenderer<T extends LivingEntity, V extends SlimeModel<T>, 
         }
     }
 
-    private void offset(IPoseStack poseStack, M model) {
+    private void offset(PoseStack poseStack, M model) {
         poseStack.translate(0.0f, 24.0f, 0.0f);
     }
 }

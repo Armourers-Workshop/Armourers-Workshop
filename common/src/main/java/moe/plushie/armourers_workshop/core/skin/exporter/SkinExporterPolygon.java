@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.skin.exporter;
 
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.api.skin.ISkinExporter;
@@ -97,7 +96,7 @@ public class SkinExporterPolygon implements ISkinExporter {
         os.flush();
 
         // apply the render context matrix.
-        IPoseStack poseStack = new OpenPoseStack();
+        OpenPoseStack poseStack = new OpenPoseStack();
         poseStack.scale(scale, scale, scale);
         poseStack.scale(-1, -1, 1);
         poseStack.rotate(Vector3f.YP.rotationDegrees(90));
@@ -118,7 +117,7 @@ public class SkinExporterPolygon implements ISkinExporter {
         outputStream.close();
     }
 
-    private void writeVert(IPoseStack poseStack, OutputStreamWriter os, float x, float y, float z, PaintColor color) throws IOException {
+    private void writeVert(OpenPoseStack poseStack, OutputStreamWriter os, float x, float y, float z, PaintColor color) throws IOException {
         Vector4f q = new Vector4f(x, y, z, 1);
         q.transform(poseStack.lastPose());
         os.write(String.format("%s %s %s %d %d %d", f2s(q.x()), f2s(q.y()), f2s(q.z()), color.getRed(), color.getGreen(), color.getBlue()) + CRLF);

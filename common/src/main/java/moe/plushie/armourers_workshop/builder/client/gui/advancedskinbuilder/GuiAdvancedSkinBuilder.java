@@ -29,7 +29,7 @@
 //import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 //import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 //import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-//import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder;
+//import moe.plushie.armourers_workshop.common.tileentities.BlockEntityAdvancedSkinBuilder;
 //import moe.plushie.armourers_workshop.utils.ArrayUtils;
 //import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 //import net.minecraft.client.gui.GuiButton;
@@ -59,7 +59,7 @@
 //    private static final int INVENTORY_HEIGHT = 76;
 //    private static final int INVENTORY_WIDTH = 162;
 //
-//    private final TileEntityAdvancedSkinBuilder tileEntity;
+//    private final BlockEntityAdvancedSkinBuilder blockEntity;
 //
 //    public GuiAdvancedSkinBuilderPanelSettings panelSettings;
 //
@@ -85,9 +85,9 @@
 //
 //    private ArrayList<ISkinIdentifier> skinIdentifiers = new ArrayList<ISkinIdentifier>();
 //
-//    public GuiAdvancedSkinBuilder(EntityPlayer player, TileEntityAdvancedSkinBuilder tileEntity) {
-//        super(new ContainerAdvancedSkinBuilder(player.inventory, tileEntity));
-//        this.tileEntity = tileEntity;
+//    public GuiAdvancedSkinBuilder(EntityPlayer player, BlockEntityAdvancedSkinBuilder blockEntity) {
+//        super(new ContainerAdvancedSkinBuilder(player.inventory, blockEntity));
+//        this.blockEntity = blockEntity;
 //    }
 //
 //    @Override
@@ -149,7 +149,7 @@
 //                String skinRegistryName = skinType.getRegistryName();
 //                DropDownItemSkin item = new DropDownItemSkin(skinLocalizedName, skinRegistryName, skinType.enabled(), skinType);
 //                dropDownSkinType.addListItem(item);
-//                // if (skinType == tileEntity.getSkinType()) {
+//                // if (skinType == blockEntity.getSkinType()) {
 //                // dropDownSkinType.setListSelectedIndex(skinCount);
 //                // }
 //                skinCount++;

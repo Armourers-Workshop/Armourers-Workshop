@@ -84,7 +84,7 @@ public final class SkinUtils {
 //        return null;
 //    }
 
-//    public static void apply(IPoseStack poseStack, SkinPart skinPart, float partialTicks, @Nullable Entity entity) {
+//    public static void apply(PoseStack poseStack, SkinPart skinPart, float partialTicks, @Nullable Entity entity) {
 //        ISkinPartType partType = skinPart.getType();
 //        if (!(partType instanceof ICanRotation)) {
 //            return;

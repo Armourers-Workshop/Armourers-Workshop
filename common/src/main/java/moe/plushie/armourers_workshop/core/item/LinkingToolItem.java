@@ -28,14 +28,14 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
     }
 
     public static void setLinkedBlockPos(ItemStack itemStack, BlockPos pos) {
-        DataSerializers.putBlockPos(itemStack.getOrCreateTag(), Constants.Key.TILE_ENTITY_LINKED_POS, pos, null);
+        DataSerializers.putBlockPos(itemStack.getOrCreateTag(), Constants.Key.BLOCK_ENTITY_LINKED_POS, pos, null);
     }
 
     @Nullable
     public static BlockPos getLinkedBlockPos(ItemStack itemStack) {
         CompoundTag tag = itemStack.getTag();
         if (tag != null) {
-            return DataSerializers.getBlockPos(tag, Constants.Key.TILE_ENTITY_LINKED_POS, null);
+            return DataSerializers.getBlockPos(tag, Constants.Key.BLOCK_ENTITY_LINKED_POS, null);
         }
         return null;
     }
@@ -44,7 +44,7 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
         builder.accept(ModConstants.key("empty"), (itemStack, level, entity, id) -> {
             CompoundTag tag = itemStack.getTag();
-            if (tag != null && tag.contains(Constants.Key.TILE_ENTITY_LINKED_POS)) {
+            if (tag != null && tag.contains(Constants.Key.BLOCK_ENTITY_LINKED_POS)) {
                 return 0;
             }
             return 1;
@@ -59,23 +59,23 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
             return InteractionResult.SUCCESS;
         }
         BlockPos linkedBlockPos = getLinkedBlockPos(itemStack);
-        SkinnableBlockEntity tileEntity = getTitleEntity(level, context.getClickedPos());
-        if (tileEntity != null && player.isShiftKeyDown()) {
-            tileEntity.setLinkedBlockPos(null);
+        SkinnableBlockEntity blockEntity = getTitleEntity(level, context.getClickedPos());
+        if (blockEntity != null && player.isShiftKeyDown()) {
+            blockEntity.setLinkedBlockPos(null);
             player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.clear"));
             return InteractionResult.SUCCESS;
         }
         if (linkedBlockPos != null) {
             setLinkedBlockPos(itemStack, null);
-            if (tileEntity != null) {
-                tileEntity.setLinkedBlockPos(linkedBlockPos);
+            if (blockEntity != null) {
+                blockEntity.setLinkedBlockPos(linkedBlockPos);
                 player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.finish"));
                 return InteractionResult.SUCCESS;
             }
             player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.fail"));
             return InteractionResult.SUCCESS;
         }
-        if (tileEntity != null) {
+        if (blockEntity != null) {
             player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.linkedToSkinnable"));
             return InteractionResult.FAIL;
         }
@@ -85,9 +85,9 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
     }
 
     private SkinnableBlockEntity getTitleEntity(Level level, BlockPos blockPos) {
-        BlockEntity tileEntity = level.getBlockEntity(blockPos);
-        if (tileEntity instanceof SkinnableBlockEntity) {
-            return (SkinnableBlockEntity) tileEntity;
+        BlockEntity blockEntity = level.getBlockEntity(blockPos);
+        if (blockEntity instanceof SkinnableBlockEntity) {
+            return (SkinnableBlockEntity) blockEntity;
         }
         return null;
     }

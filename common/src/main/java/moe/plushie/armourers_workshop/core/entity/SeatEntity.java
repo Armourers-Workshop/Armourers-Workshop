@@ -34,13 +34,13 @@ public class SeatEntity extends LivingEntity {
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
-        this.blockPos = DataSerializers.getBlockPos(nbt, Constants.Key.TILE_ENTITY_REFER, BlockPos.ZERO);
+        this.blockPos = DataSerializers.getBlockPos(nbt, Constants.Key.BLOCK_ENTITY_REFER, BlockPos.ZERO);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        DataSerializers.putBlockPos(nbt, Constants.Key.TILE_ENTITY_REFER, blockPos, BlockPos.ZERO);
+        DataSerializers.putBlockPos(nbt, Constants.Key.BLOCK_ENTITY_REFER, blockPos, BlockPos.ZERO);
     }
 
     @Override

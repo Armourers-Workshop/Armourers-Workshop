@@ -58,17 +58,17 @@ public class UpdateArmourerPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
-        BlockEntity tileEntity = player.level.getBlockEntity(pos);
-        if (tileEntity instanceof ArmourerBlockEntity && player.containerMenu instanceof ArmourerMenu) {
+        BlockEntity blockEntity = player.level.getBlockEntity(pos);
+        if (blockEntity instanceof ArmourerBlockEntity && player.containerMenu instanceof ArmourerMenu) {
             BlockUtils.beginCombiner();
-            acceptFieldUpdate(player, (ArmourerBlockEntity) tileEntity, (ArmourerMenu) player.containerMenu);
+            acceptFieldUpdate(player, (ArmourerBlockEntity) blockEntity, (ArmourerMenu) player.containerMenu);
             BlockUtils.endCombiner();
         }
     }
 
-    private void acceptFieldUpdate(Player player, ArmourerBlockEntity tileEntity, ArmourerMenu container) {
+    private void acceptFieldUpdate(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container) {
         String playerName = player.getDisplayName().getString();
-        if (!field.permission.accept(tileEntity, player)) {
+        if (!field.permission.accept(blockEntity, player)) {
             return;
         }
         switch (field) {
@@ -86,16 +86,16 @@ public class UpdateArmourerPacket extends CustomPacket {
             case ITEM_CLEAR: {
                 CompoundTag nbt = (CompoundTag) fieldValue;
                 ModLog.info("accept clear action of the {}, nbt: {}", playerName, nbt);
-                CubeApplier applier = new CubeApplier(tileEntity.getLevel());
+                CubeApplier applier = new CubeApplier(blockEntity.getLevel());
                 ISkinPartType partType = SkinPartTypes.byName(nbt.getString(Constants.Key.SKIN_PART_TYPE));
                 if (nbt.getBoolean(Constants.Key.SKIN_CUBES)) {
-                    tileEntity.clearCubes(applier, partType);
+                    blockEntity.clearCubes(applier, partType);
                 }
                 if (nbt.getBoolean(Constants.Key.SKIN_PAINTS)) {
-                    tileEntity.clearPaintData(applier, partType);
+                    blockEntity.clearPaintData(applier, partType);
                 }
                 if (nbt.getBoolean(Constants.Key.SKIN_MARKERS) && !nbt.getBoolean(Constants.Key.SKIN_CUBES)) {
-                    tileEntity.clearMarkers(applier, partType);
+                    blockEntity.clearMarkers(applier, partType);
                 }
                 applier.submit(TranslateUtils.title("action.armourers_workshop.block.clear"), player);
                 break;
@@ -108,10 +108,10 @@ public class UpdateArmourerPacket extends CustomPacket {
                     boolean isCopyPaintData = nbt.getBoolean(Constants.Key.SKIN_PAINTS);
                     ISkinPartType sourcePartType = SkinPartTypes.byName(nbt.getString(Constants.Key.SOURCE));
                     ISkinPartType destinationPartType = SkinPartTypes.byName(nbt.getString(Constants.Key.DESTINATION));
-                    CubeApplier applier = new CubeApplier(tileEntity.getLevel());
-                    tileEntity.copyCubes(applier, sourcePartType, destinationPartType, isMirror);
+                    CubeApplier applier = new CubeApplier(blockEntity.getLevel());
+                    blockEntity.copyCubes(applier, sourcePartType, destinationPartType, isMirror);
                     if (isCopyPaintData) {
-                        tileEntity.copyPaintData(applier, sourcePartType, destinationPartType, isMirror);
+                        blockEntity.copyPaintData(applier, sourcePartType, destinationPartType, isMirror);
                     }
                     applier.submit(TranslateUtils.title("action.armourers_workshop.block.copy"), player);
                 } catch (Exception e) {
@@ -131,8 +131,8 @@ public class UpdateArmourerPacket extends CustomPacket {
                     if (event.isEmptySource && event.isEmptyDestination) {
                         return;
                     }
-                    CubeApplier applier = new CubeApplier(tileEntity.getLevel());
-                    tileEntity.replaceCubes(applier, SkinPartTypes.UNKNOWN, event);
+                    CubeApplier applier = new CubeApplier(blockEntity.getLevel());
+                    blockEntity.replaceCubes(applier, SkinPartTypes.UNKNOWN, event);
                     applier.submit(TranslateUtils.title("action.armourers_workshop.block.replace"), player);
                     player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.replace.success", applier.getChanges()));
                 } catch (Exception e) {
@@ -141,7 +141,7 @@ public class UpdateArmourerPacket extends CustomPacket {
                 break;
             }
             default: {
-                field.set(tileEntity, fieldValue);
+                field.set(blockEntity, fieldValue);
                 break;
             }
         }

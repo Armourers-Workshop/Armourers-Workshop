@@ -326,12 +326,14 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
     public boolean isLimitLimbs() {
         // use disable is the options.
-        if (ModConfig.Client.enableSkinLimitLimbs) {
+        if (!ModConfig.Client.enableSkinLimitLimbs) {
             return false;
         }
         // in EF doesn't need to limit limbs.
         if (epicFlightContext != null) {
-            return false;
+            if (!epicFlightContext.isLimitLimbs) {
+                return false;
+            }
         }
         return isLimitLimbs;
     }

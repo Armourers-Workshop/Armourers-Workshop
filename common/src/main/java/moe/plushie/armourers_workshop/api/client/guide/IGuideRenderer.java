@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.api.client.guide;
 
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public interface IGuideRenderer {
 
-    void render(IPoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource multiBufferSource);
+    void render(PoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource multiBufferSource);
 }

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideDataProvider;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.utils.ModelPartBuilder;
@@ -34,7 +34,7 @@ public class FeetGuideRenderer extends AbstractGuideRenderer {
         rendererManager.register(SkinPartTypes.BIPPED_RIGHT_FOOT, this::renderRightLeg);
     }
 
-    public void render(IPoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
+    public void render(PoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
         float f = 1 / 16f;
         poseStack.pushPose();
         poseStack.translate(2 * f, 0, 0);
@@ -44,17 +44,17 @@ public class FeetGuideRenderer extends AbstractGuideRenderer {
         poseStack.popPose();
     }
 
-    public void renderLeftLeg(IPoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
-        legLeft.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
+    public void renderLeftLeg(PoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
+        legLeft.render(poseStack, buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
         if (provider.shouldRenderOverlay()) {
-            leftPants.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
+            leftPants.render(poseStack, buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
         }
     }
 
-    public void renderRightLeg(IPoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
-        legRight.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
+    public void renderRightLeg(PoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
+        legRight.render(poseStack, buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
         if (provider.shouldRenderOverlay()) {
-            rightPants.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
+            rightPants.render(poseStack, buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
         }
     }
 }

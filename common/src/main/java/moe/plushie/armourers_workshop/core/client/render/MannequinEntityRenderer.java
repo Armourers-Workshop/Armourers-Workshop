@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractLivingEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.fabricmc.api.EnvType;
@@ -54,7 +53,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
     }
 
     @Override
-    public void render(T entity, float f, float partialTicks, IPoseStack poseStack, MultiBufferSource buffers, int packedLightIn) {
+    public void render(T entity, float f, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int packedLightIn) {
         // when mannequin holding mannequin recursive rendering occurs, and we will enable the child renderer.
         if (this.enableChildRenderer) {
             this.getChildRenderer().render(entity, f, partialTicks, poseStack, buffers, packedLightIn);
@@ -81,7 +80,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
     }
 
     @Override
-    public void setupRotations(T entity, IPoseStack poseStack, float f, float g, float h) {
+    public void setupRotations(T entity, PoseStack poseStack, float f, float g, float h) {
         // when rendering in the GUI, we don't use body rotation
         // to avoid display entity at weird angles.
         if (MannequinEntityRenderer.enableLimitScale) {
@@ -89,11 +88,11 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
         }
         super.setupRotations(entity, poseStack, f, g, h);
         Rotations mainPose = entity.getBodyPose();
-        poseStack.rotate(new OpenQuaternionf(-mainPose.getX(), -mainPose.getY(), mainPose.getZ(), true));
+        poseStack.mulPose(new OpenQuaternionf(-mainPose.getX(), -mainPose.getY(), mainPose.getZ(), true));
     }
 
     @Override
-    public void scale(T entity, IPoseStack poseStack, float p_225620_3_) {
+    public void scale(T entity, PoseStack poseStack, float p_225620_3_) {
         float f = 0.9375f; // from player renderer (maybe 15/16)
         if (!enableLimitScale) {
             f *= entity.getScale();

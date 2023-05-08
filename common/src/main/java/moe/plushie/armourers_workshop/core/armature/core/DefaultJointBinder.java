@@ -26,13 +26,13 @@ public class DefaultJointBinder extends ArmatureModifier {
                 poseStack.translate(part.x, part.y, part.z);
             }
             if (part.zRot != 0) {
-                poseStack.rotate(Vector3f.ZP.rotation(part.zRot));
+                poseStack.mulPose(Vector3f.ZP.rotation(part.zRot));
             }
             if (part.yRot != 0) {
-                poseStack.rotate(Vector3f.YP.rotation(part.yRot));
+                poseStack.mulPose(Vector3f.YP.rotation(part.yRot));
             }
             if (part.xRot != 0) {
-                poseStack.rotate(Vector3f.XP.rotation(part.xRot));
+                poseStack.mulPose(Vector3f.XP.rotation(part.xRot));
             }
         };
     }

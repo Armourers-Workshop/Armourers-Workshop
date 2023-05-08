@@ -17,8 +17,8 @@ import com.apple.library.uikit.UITableViewDataSource;
 import com.apple.library.uikit.UITableViewDelegate;
 import com.apple.library.uikit.UIView;
 import com.apple.library.uikit.UIWindow;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
@@ -249,7 +249,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             renderIcon(context.poseStack, left, top - 1, 16, 16);
         }
 
-        public void renderIcon(IPoseStack poseStack, int x, int y, int width, int height) {
+        public void renderIcon(PoseStack poseStack, int x, int y, int width, int height) {
             if (entry.isDirectory()) {
                 int u = entry.isPrivateDirectory() ? 32 : 16;
                 RenderSystem.blit(poseStack, x + (width - 12) / 2, y + (height - 12) / 2 - 1, u, 0, 12, 12, ModTextures.LIST);
@@ -280,7 +280,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             int dx = point.x - size - 5;
             int dy = MathUtils.clamp(mouseY - size / 2, 0, bounds.height - size);
             Font font = context.font.font();
-            IPoseStack poseStack = context.poseStack;
+            PoseStack poseStack = context.poseStack;
             ArrayList<FormattedText> tooltips = new ArrayList<>(ItemTooltipManager.createSkinInfo(bakedSkin));
             RenderSystem.drawContinuousTexturedBox(poseStack, ModTextures.GUI_PREVIEW, dx, dy, 0, 0, size, size, 62, 62, 4, dz);
             RenderSystem.drawShadowText(poseStack, tooltips, dx + 4, dy + 4, size - 8, dz, font, 7, 0xffffff);

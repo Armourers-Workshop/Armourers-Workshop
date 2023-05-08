@@ -9,8 +9,8 @@ import net.minecraft.world.phys.AABB;
 public interface IBlockEntityHandler {
 
     /**
-     * Called when you receive a TileEntityData packet for the location this
-     * TileEntity is currently in. On the client, the NetworkManager will always
+     * Called when you receive a BlockEntityData packet for the location this
+     * BlockEntity is currently in. On the client, the NetworkManager will always
      * be the remote server. On the server, it will be whomever is responsible for
      * sending the packet.
      */

@@ -19,6 +19,4 @@ public interface IMatrix4f {
     void multiply(float[] values);
 
     void invert();
-
-    IMatrix4f copy();
 }

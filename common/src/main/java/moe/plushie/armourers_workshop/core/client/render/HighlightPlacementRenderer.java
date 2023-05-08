@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 @Environment(value = EnvType.CLIENT)
 public class HighlightPlacementRenderer {
 
-    public static void renderBlock(ItemStack itemStack, Player player, BlockHitResult traceResult, Camera renderInfo, IPoseStack poseStack, MultiBufferSource buffers) {
+    public static void renderBlock(ItemStack itemStack, Player player, BlockHitResult traceResult, Camera renderInfo, PoseStack poseStack, MultiBufferSource buffers) {
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.getType() != SkinTypes.BLOCK) {
             return;
@@ -65,7 +65,7 @@ public class HighlightPlacementRenderer {
         poseStack.popPose();
     }
 
-    public static void renderEntity(Player player, BlockHitResult traceResult, Camera renderInfo, IPoseStack poseStack, MultiBufferSource buffers) {
+    public static void renderEntity(Player player, BlockHitResult traceResult, Camera renderInfo, PoseStack poseStack, MultiBufferSource buffers) {
         Vector3f origin = new Vector3f(renderInfo.getPosition());
         MannequinHitResult target = MannequinHitResult.test(player, origin, traceResult.getLocation(), traceResult.getBlockPos());
         poseStack.pushPose();
@@ -73,7 +73,7 @@ public class HighlightPlacementRenderer {
         Vector3f location = new Vector3f(target.getLocation());
 
         poseStack.translate(location.getX() - origin.getX(), location.getY() - origin.getY(), location.getZ() - origin.getZ());
-        poseStack.rotate(Vector3f.YP.rotationDegrees(-target.getRotation()));
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(-target.getRotation()));
 
         MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
         if (model != null) {
@@ -83,21 +83,21 @@ public class HighlightPlacementRenderer {
             poseStack.scale(f, f, f);
             poseStack.scale(-1, -1, 1);
             poseStack.translate(0.0f, -1.501f, 0.0f);
-            model.renderToBuffer(poseStack.cast(), vertexBuilder, 0, 0, 1, 1, 1, 1);  // m,vb,l,p,r,g,b,a
+            model.renderToBuffer(poseStack, vertexBuilder, 0, 0, 1, 1, 1, 1);  // m,vb,l,p,r,g,b,a
             poseStack.popPose();
         }
 
         poseStack.popPose();
     }
 
-    public static void renderPaintTool(ItemStack itemStack, Player player, BlockHitResult traceResult, Camera renderInfo, IPoseStack poseStack, MultiBufferSource buffers) {
+    public static void renderPaintTool(ItemStack itemStack, Player player, BlockHitResult traceResult, Camera renderInfo, PoseStack poseStack, MultiBufferSource buffers) {
         Level level = player.level;
         BlockPos pos = traceResult.getBlockPos();
         Direction direction = traceResult.getDirection();
-        BlockEntity tileEntity = level.getBlockEntity(pos);
+        BlockEntity blockEntity = level.getBlockEntity(pos);
 
         // must select a paintable block to preview.
-        if (!(tileEntity instanceof IPaintable)) {
+        if (!(blockEntity instanceof IPaintable)) {
             return;
         }
 

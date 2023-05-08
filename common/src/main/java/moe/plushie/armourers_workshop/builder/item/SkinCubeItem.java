@@ -38,10 +38,10 @@ public class SkinCubeItem extends BlockItem implements IItemColorProvider, IPain
     }
 
     @Override
-    public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity tileEntity, UseOnContext context) {
+    public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity blockEntity, UseOnContext context) {
         ItemStack itemStack = context.getItemInHand();
-        if (tileEntity instanceof IPaintProvider) {
-            setItemColor(itemStack, ((IPaintProvider) tileEntity).getColor());
+        if (blockEntity instanceof IPaintProvider) {
+            setItemColor(itemStack, ((IPaintProvider) blockEntity).getColor());
             return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.PASS;
@@ -50,12 +50,12 @@ public class SkinCubeItem extends BlockItem implements IItemColorProvider, IPain
     @Override
     protected boolean updateCustomBlockEntityTag(BlockPos pos, Level level, @Nullable Player player, ItemStack itemStack, BlockState blockState) {
         // sync the all faced color into block.
-        BlockEntity tileEntity = level.getBlockEntity(pos);
+        BlockEntity blockEntity = level.getBlockEntity(pos);
         CompoundTag nbt = itemStack.getTagElement(Constants.Key.BLOCK_ENTITY);
-        if (nbt != null && tileEntity != null) {
-            CompoundTag newNBT = tileEntity.saveWithFullMetadata();
+        if (nbt != null && blockEntity != null) {
+            CompoundTag newNBT = blockEntity.saveWithFullMetadata();
             newNBT.put(Constants.Key.COLOR, nbt.getCompound(Constants.Key.COLOR));
-            tileEntity.load(newNBT);
+            blockEntity.load(newNBT);
         }
         return super.updateCustomBlockEntityTag(pos, level, player, itemStack, blockState);
     }

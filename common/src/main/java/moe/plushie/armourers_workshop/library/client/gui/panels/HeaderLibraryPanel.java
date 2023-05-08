@@ -6,7 +6,7 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIControl;
 import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
@@ -72,7 +72,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         this.renderPlayerProfile(context.poseStack, context.font.font(), Minecraft.getInstance().getUser().getGameProfile());
     }
 
-    private void renderPlayerProfile(IPoseStack poseStack, Font font, GameProfile gameProfile) {
+    private void renderPlayerProfile(PoseStack poseStack, Font font, GameProfile gameProfile) {
         if (playerTexture == null) {
             playerTexture = new PlayerTextureDescriptor(gameProfile);
         }
@@ -96,7 +96,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         if (user.isAuthenticated()) {
             textColor = 0xAAFFAA;
         }
-        font.draw(poseStack.cast(), profile, 24, (rect.height - font.lineHeight) / 2f, textColor);
+        font.draw(poseStack, profile, 24, (rect.height - font.lineHeight) / 2f, textColor);
     }
 
     private void betaCheckUpdate() {

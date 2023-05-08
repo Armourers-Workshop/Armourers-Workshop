@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideDataProvider;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.utils.ModelPartBuilder;
@@ -38,13 +38,13 @@ public class HeldItemGuideRenderer extends AbstractGuideRenderer {
         rendererManager.register(SkinPartTypes.ITEM, this::render);
     }
 
-    public void render(IPoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
+    public void render(PoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
         float f = 1 / 16f;
         poseStack.pushPose();
-        poseStack.rotate(Vector3f.XP.rotationDegrees(-90));
-        armSolid.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
+        poseStack.mulPose(Vector3f.XP.rotationDegrees(-90));
+        armSolid.render(poseStack, buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
         poseStack.translate(0, -0.001f * f, 0);
-        armTransparent.render(poseStack.cast(), buffers.getBuffer(SkinRenderType.PLAYER_TRANSLUCENT), light, overlay, 1, 1, 1, 0.75f);
+        armTransparent.render(poseStack, buffers.getBuffer(SkinRenderType.PLAYER_TRANSLUCENT), light, overlay, 1, 1, 1, 0.75f);
         poseStack.popPose();
     }
 }

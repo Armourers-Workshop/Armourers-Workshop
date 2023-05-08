@@ -18,7 +18,7 @@ public class HologramProjectorMenu extends AbstractBlockContainerMenu {
     public HologramProjectorMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess worldPos) {
         super(menuType, block, containerId, worldPos);
         this.playerInventory = playerInventory;
-        this.inventory = getTileInventory();
+        this.inventory = getBlockInventory();
         this.reload(0, 0, 240, 240);
     }
 

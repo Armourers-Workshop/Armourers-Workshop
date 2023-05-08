@@ -1,15 +1,14 @@
 package extensions.com.mojang.blaze3d.systems.RenderSystem;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.math.IMatrix4f;
-import moe.plushie.armourers_workshop.utils.MatrixUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
 
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
@@ -17,6 +16,8 @@ import java.util.function.IntSupplier;
 @Available("[1.16, 1.18)")
 @Extension
 public class Fix16 {
+
+    public static PoseStack modelViewStack = new Proxy();
 
     public static void assertOnRenderThread(@ThisClass Class<?> clazz) {
         RenderSystem.assertThread(RenderSystem::isOnGameThread);
@@ -62,7 +63,35 @@ public class Fix16 {
     public static void applyModelViewMatrix(@ThisClass Class<?> clazz) {
     }
 
-    public static void mulMatrix(@ThisClass Class<?> clazz, IMatrix4f matrix4f) {
-        RenderSystem.multMatrix(MatrixUtils.of(matrix4f));
+    public static PoseStack getModelViewStack(@ThisClass Class<?> clazz) {
+        return modelViewStack;
+    }
+
+    public static class Proxy extends PoseStack {
+
+        @Override
+        public void pushPose() {
+            RenderSystem.pushMatrix();
+        }
+
+        @Override
+        public void popPose() {
+            RenderSystem.popMatrix();
+        }
+
+        @Override
+        public void translate(double x, double y, double z) {
+            RenderSystem.translated(x, y, z);
+        }
+
+        @Override
+        public void scale(float x, float y, float z) {
+            RenderSystem.scalef(x, y, z);
+        }
+
+        @Override
+        public void mulPose(Quaternion quaternion) {
+            RenderSystem.multMatrix(new Matrix4f(quaternion));
+        }
     }
 }

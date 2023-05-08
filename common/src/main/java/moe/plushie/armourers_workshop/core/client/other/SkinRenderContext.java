@@ -1,13 +1,14 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import com.google.common.collect.Iterators;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.common.IItemTransformType;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.utils.math.OpenPoseStackC;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -17,15 +18,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-;
-
 public class SkinRenderContext {
 
     private static final Iterator<SkinRenderContext> POOL = Iterators.cycle(make(32));
 
     public int light;
     public float partialTicks;
-    public IPoseStack poseStack;
+    public PoseStack poseStack;
     public SkinRenderData renderData;
     public MultiBufferSource buffers;
     public IItemTransformType transformType;
@@ -35,13 +34,15 @@ public class SkinRenderContext {
     public int slotIndex;
     public ItemStack itemStack;
 
-    public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, IItemTransformType transformType, IPoseStack poseStack, MultiBufferSource buffers) {
+    public final OpenPoseStackC poseStack1 = new OpenPoseStackC(new PoseStack());
+
+    public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, IItemTransformType transformType, PoseStack poseStack, MultiBufferSource buffers) {
         SkinRenderContext context = POOL.next();
         context.init(renderData, light, partialTick, transformType, poseStack, buffers);
         return context;
     }
 
-    public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, IPoseStack poseStack, MultiBufferSource buffers) {
+    public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, PoseStack poseStack, MultiBufferSource buffers) {
         return alloc(renderData, light, partialTick, IItemTransformType.NONE, poseStack, buffers);
     }
 
@@ -53,12 +54,13 @@ public class SkinRenderContext {
         return contexts;
     }
 
-    public void init(SkinRenderData renderData, int light, float partialTick, IItemTransformType transformType, IPoseStack poseStack, MultiBufferSource buffers) {
+    public void init(SkinRenderData renderData, int light, float partialTick, IItemTransformType transformType, PoseStack poseStack, MultiBufferSource buffers) {
         this.renderData = renderData;
         this.light = light;
         this.partialTicks = partialTick;
         this.transformType = transformType;
         this.poseStack = poseStack;
+        this.poseStack1.reset(poseStack);
         this.buffers = buffers;
         // ig
         this.itemStack = ItemStack.EMPTY;
