@@ -347,7 +347,7 @@
     {
       "__comment": "Box34",
       "from": [ 12.5, 12.5, 5.5 ],
-      "to": [ 17, 12.501, 10.5 ],
+      "to": [ 17, 12.51, 10.5 ],
       "faces": {
         "down": { "uv": [ 0, 5, 4.5, 0 ], "texture": "#skinningtable1" },
         "up": { "uv": [ 4.5, 5, 0, 0 ], "texture": "#skinningtable1" },
