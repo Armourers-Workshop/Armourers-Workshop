@@ -85,9 +85,9 @@ public class ShaderPreprocessor {
         private String register(String category, String source, String varType, String var, String matrixType, String matrix, String expr) {
             // compile regular expressions.
             String[] texts = {
-                    "(${category}\\s+${varType}\\s+)${var}(.*?;)", "$1__awrt_${var}_awrt__$2",
+                    "(${category}\\s+${varType}\\s+)(\\b${var}\\b)(.*?;)", "$1__awrt_${var}_awrt__$3",
                     "\\b${var}\\b", "awrt_${var}",
-                    "(${category}\\s+${varType}\\s+)__awrt_${var}_awrt__(.*?;)", "uniform ${matrixType} ${matrix};\n${varType} awrt_${var};\n$1${var}$2",
+                    "(${category}\\s+${varType}\\s+)(\\b__awrt_${var}_awrt__)\\b(.*?;)", "uniform ${matrixType} ${matrix};\n${varType} awrt_${var};\n$1${var}$3",
             };
             String[] regexes = new String[texts.length];
             for (int i = 0; i < texts.length; ++i) {
