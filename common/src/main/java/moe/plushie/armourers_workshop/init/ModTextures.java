@@ -41,6 +41,7 @@ public class ModTextures {
     public static final ResourceLocation LIGHTING_CUBE = res("textures/armour/glowcube.png");
     public static final ResourceLocation CIRCLE = res("textures/other/nanoha-circle.png");
     public static final ResourceLocation EARTH = res("textures/blockentity/global-skin-library.png");
+    public static final ResourceLocation MANNEQUIN_HIGHLIGHT = res("textures/entity/mannequin_h.png");
 
     public static final ResourceLocation GUI_PREVIEW = res("textures/gui/skin-preview.png");
     public static final ResourceLocation SKIN_PANEL = res("textures/gui/controls/skin-panel.png");

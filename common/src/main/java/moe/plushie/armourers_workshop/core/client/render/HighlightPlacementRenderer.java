@@ -6,7 +6,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
-import moe.plushie.armourers_workshop.core.client.other.QuadToLineVertexBuilder;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.data.MannequinHitResult;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
@@ -18,7 +17,9 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -78,12 +79,12 @@ public class HighlightPlacementRenderer {
         MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
         if (model != null) {
             float f = target.getScale() * 0.9375f; // base scale from player model
-            VertexConsumer vertexBuilder = new QuadToLineVertexBuilder(buffers.getBuffer(SkinRenderType.HIGHLIGHTED_ENTITY_LINES));
+            VertexConsumer builder = buffers.getBuffer(SkinRenderType.HIGHLIGHTED_ENTITY_LINES);
             poseStack.pushPose();
             poseStack.scale(f, f, f);
             poseStack.scale(-1, -1, 1);
             poseStack.translate(0.0f, -1.501f, 0.0f);
-            model.renderToBuffer(poseStack, vertexBuilder, 0, 0, 1, 1, 1, 1);  // m,vb,l,p,r,g,b,a
+            model.renderToBuffer(poseStack, builder, 0xf000f0, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);  // m,vb,l,p,r,g,b,a
             poseStack.popPose();
         }
 

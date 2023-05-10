@@ -23,7 +23,7 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
     public static final RenderType IMAGE_MARKER = _texture2(ModTextures.MARKERS).polygonOffset(-1, -10).cull().build("aw_image_marker");
 
     public static final RenderType HIGHLIGHTED_LINES = _line().depthTest(DepthTest.NONE).build("aw_lines");
-    public static final RenderType HIGHLIGHTED_ENTITY_LINES = _line().build("aw_entity_lines");
+    public static final RenderType HIGHLIGHTED_ENTITY_LINES = _entityHighlight(ModTextures.MANNEQUIN_HIGHLIGHT).build("aw_entity_lines");
 
     public static final RenderType PLAYER_CUTOUT = entityCutout(DefaultPlayerSkin.getDefaultSkin());
     public static final RenderType PLAYER_CUTOUT_NO_CULL = entityCutoutNoCull(DefaultPlayerSkin.getDefaultSkin());
@@ -73,6 +73,10 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
 
     private static IRenderTypeBuilder _entity(SkinRenderFormat format, ResourceLocation texture) {
         return _builder(format).texture(texture).polygonOffset(0, 30).overlay().lightmap().sortOnUpload().crumbling().outline();
+    }
+
+    private static IRenderTypeBuilder _entityHighlight(ResourceLocation texture) {
+        return _builder(SkinRenderFormat.ENTITY_ALPHA).texture(texture).overlay().lightmap();
     }
 
     private static IRenderTypeBuilder _cube(SkinRenderFormat format) {
