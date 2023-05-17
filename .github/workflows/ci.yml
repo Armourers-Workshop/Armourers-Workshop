@@ -54,7 +54,7 @@ jobs:
       with:
         name: armourersworkshop-fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}.jar
         version: fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
-        version-type: alpha
+        version-type: beta
 
         files-primary: fabric/build/libs/!(*-@(dev-shadow|sources|javadoc|)).jar
         files-secondary: ""

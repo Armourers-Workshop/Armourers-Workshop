@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 
@@ -22,7 +21,7 @@ public class OpenMatrix3f implements IMatrix3f {
     }
 
     public OpenMatrix3f(IMatrix4f matrix) {
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+        FloatBuffer buffer = ObjectUtils.createFloatBuffer(16);
         matrix.store(buffer);
         import44(buffer);
     }

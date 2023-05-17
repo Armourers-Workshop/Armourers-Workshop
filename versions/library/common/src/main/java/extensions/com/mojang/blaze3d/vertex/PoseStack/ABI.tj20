@@ -14,7 +14,6 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 
@@ -25,8 +24,8 @@ public class ABI {
     private static final Matrix3f CONVERTER_MAT3 = new Matrix3f();
     private static final Matrix4f CONVERTER_MAT4 = new Matrix4f();
 
-    private static final FloatBuffer BUFFER3x3 = BufferUtils.createFloatBuffer(9);
-    private static final FloatBuffer BUFFER4x4 = BufferUtils.createFloatBuffer(16);
+    private static final FloatBuffer BUFFER3x3 = ObjectUtils.createFloatBuffer(9);
+    private static final FloatBuffer BUFFER4x4 = ObjectUtils.createFloatBuffer(16);
 
     public static PoseStack copy(@This PoseStack poseStack) {
         PoseStack poseStack1 = new PoseStack();

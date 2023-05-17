@@ -4,8 +4,9 @@ import com.apple.library.foundation.NSRange;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.BufferUtils;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,8 +17,8 @@ import java.util.function.Function;
 
 public class ObjectUtils {
 
-    private static final FloatBuffer BUFFER3x3 = BufferUtils.createFloatBuffer(9);
-    private static final FloatBuffer BUFFER4x4 = BufferUtils.createFloatBuffer(16);
+    private static final FloatBuffer BUFFER3x3 = createFloatBuffer(9);
+    private static final FloatBuffer BUFFER4x4 = createFloatBuffer(16);
 
     public static <S, T> T unsafeCast(S src) {
         // noinspection unchecked
@@ -131,5 +132,17 @@ public class ObjectUtils {
             return ((String) value).isEmpty();
         }
         return false;
+    }
+
+    public static ByteBuffer createByteBuffer(int capacity) {
+        return ByteBuffer.allocateDirect(capacity).order(ByteOrder.nativeOrder());
+    }
+
+    public static FloatBuffer createFloatBuffer(int capacity) {
+        return createByteBuffer(getAllocationSize(capacity, 2)).asFloatBuffer();
+    }
+
+    public static int getAllocationSize(int elements, int elementShift) {
+        return elements << elementShift;
     }
 }

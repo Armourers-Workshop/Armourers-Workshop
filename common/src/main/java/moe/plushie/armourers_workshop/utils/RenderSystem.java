@@ -39,7 +39,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.FloatBuffer;
@@ -58,7 +57,7 @@ public final class RenderSystem extends AbstractRenderSystem {
     private static final Storage<OpenMatrix4f> extendedLightmapTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
     private static final Storage<OpenMatrix4f> extendedModelViewMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
 
-    private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(3);
+    private static final FloatBuffer BUFFER = ObjectUtils.createFloatBuffer(3);
 
     private static final byte[][][] FACE_MARK_TEXTURES = {
             // 0, 1(w), 2(h), 3(d)
