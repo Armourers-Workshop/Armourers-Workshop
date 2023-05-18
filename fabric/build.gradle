@@ -43,11 +43,13 @@ dependencies {
 
 // The architectury-loom 1.1 can't launch the 1.16.5 fabric,
 // force specifed version to solve this problem.
-//configurations.configureEach {
-//    resolutionStrategy {
-//        force "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
-//    }
-//}
+if (rootProject.minecraft_version == "1.16.5") {
+    configurations.configureEach {
+        resolutionStrategy {
+            force "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
+        }
+    }
+}
 
 processResources {
     inputs.property "version", project.version
