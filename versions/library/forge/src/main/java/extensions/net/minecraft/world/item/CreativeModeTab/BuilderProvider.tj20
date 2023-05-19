@@ -16,16 +16,15 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@Available("[1.19.4, )")
+@Available("[1.19.3, )")
 @Extension
 public class BuilderProvider {
 
-    public static Supplier<CreativeModeTab> createCreativeModeTab(@ThisClass Class<?> clazz, ResourceLocation registryName, Supplier<Supplier<ItemStack>> icon, Consumer<List<ItemStack>> itemProvider) {
+    public static Supplier<CreativeModeTab> createCreativeModeTabFO(@ThisClass Class<?> clazz, ResourceLocation registryName, Supplier<Supplier<ItemStack>> icon, Consumer<List<ItemStack>> itemProvider) {
         CreativeModeTab[] tabs = {null};
         NotificationCenterImpl.observer(CreativeModeTabEvent.Register.class, event -> tabs[0] = event.registerCreativeModeTab(registryName, configurator -> {
             configurator.title(Component.translatable("itemGroup." + registryName.getNamespace() + "." + registryName.getPath()));
             configurator.icon(() -> icon.get().get());
-            //configurator.displayItems((features, output, flag) -> {
             configurator.displayItems((features, output) -> {
                 ArrayList<ItemStack> list = new ArrayList<>();
                 itemProvider.accept(list);

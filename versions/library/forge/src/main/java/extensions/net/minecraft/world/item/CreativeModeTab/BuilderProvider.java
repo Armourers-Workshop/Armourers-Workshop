@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@Available("[1.16, 1.19.4)")
+@Available("[1.16, 1.19.3)")
 @Extension
 public class BuilderProvider {
 
-    public static Supplier<CreativeModeTab> createCreativeModeTab(@ThisClass Class<?> clazz, ResourceLocation registryName, Supplier<Supplier<ItemStack>> icon, Consumer<List<ItemStack>> itemProvider) {
+    public static Supplier<CreativeModeTab> createCreativeModeTabFO(@ThisClass Class<?> clazz, ResourceLocation registryName, Supplier<Supplier<ItemStack>> icon, Consumer<List<ItemStack>> itemProvider) {
         CreativeModeTab tab = new CreativeModeTab(registryName.getNamespace() + "." + registryName.getPath()) {
             @Override
             public ItemStack makeIcon() {

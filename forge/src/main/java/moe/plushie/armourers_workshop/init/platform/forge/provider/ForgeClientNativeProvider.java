@@ -1,13 +1,10 @@
 package moe.plushie.armourers_workshop.init.platform.forge.provider;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.Registry;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
@@ -15,19 +12,9 @@ import java.util.function.Consumer;
 
 public interface ForgeClientNativeProvider extends ClientNativeProvider {
 
-    void willPlayerEnter(Consumer<Player> consumer);
-
-    void willPlayerLeave(Consumer<Player> consumer);
-
-    void willRenderBlockHighlight(RenderBlockHighlight renderer);
-
-    void willRenderLivingEntity(RenderLivingEntity renderer);
-
-    void didRenderLivingEntity(RenderLivingEntity renderer);
-
     @Override
     default void willPlayerLogin(Consumer<Player> consumer) {
-        willPlayerEnter(player -> {
+        Registry.willPlayerEnterFO(player -> {
             if (player != null && player.equals(Minecraft.getInstance().player)) {
                 consumer.accept(player);
             }
@@ -36,7 +23,7 @@ public interface ForgeClientNativeProvider extends ClientNativeProvider {
 
     @Override
     default void willPlayerLogout(Consumer<Player> consumer) {
-        willPlayerLeave(player -> {
+        Registry.willPlayerLeaveFO(player -> {
             if (player == null || player.equals(Minecraft.getInstance().player)) {
                 consumer.accept(player);
             }
@@ -66,7 +53,38 @@ public interface ForgeClientNativeProvider extends ClientNativeProvider {
         NotificationCenterImpl.observer(ItemTooltipEvent.class, event -> consumer.gather(event.getItemStack(), event.getToolTip(), event.getFlags()));
     }
 
-    interface RenderBlockHighlight {
-        void render(BlockHitResult traceResult, Camera renderInfo, PoseStack poseStack, MultiBufferSource buffers);
+    @Override
+    default void willRenderTooltip(RenderTooltip consumer) {
+        Registry.willRenderTooltipFO(consumer);
+    }
+
+    @Override
+    default void willRegisterItemColor(Consumer<ItemColorRegistry> consumer) {
+        Registry.willRegisterItemColorFO(consumer);
+    }
+
+    @Override
+    default void willRegisterBlockColor(Consumer<BlockColorRegistry> consumer) {
+        Registry.willRegisterBlockColorFO(consumer);
+    }
+
+    @Override
+    default void willRegisterModel(Consumer<ModelRegistry> consumer) {
+        Registry.willRegisterModelFO(consumer);
+    }
+
+    @Override
+    default void willRegisterKeyMapping(Consumer<KeyMappingRegistry> consumer) {
+        Registry.willRegisterKeyMappingFO(consumer);
+    }
+
+    @Override
+    default void willRegisterItemProperty(Consumer<ItemPropertyRegistry> consumer) {
+        Registry.willRegisterItemPropertyFO(consumer);
+    }
+
+    @Override
+    default void willRegisterTexture(Consumer<TextureRegistry> consumer) {
+        Registry.willRegisterTextureFO(consumer);
     }
 }

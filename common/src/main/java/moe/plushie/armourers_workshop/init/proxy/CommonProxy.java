@@ -101,7 +101,7 @@ public class CommonProxy {
             }
         });
 
-        registries.didPlayerTacking((entity, player) -> {
+        registries.didTackingEntity((entity, player) -> {
             EntityProfile entityProfile = ModEntityProfiles.getProfile(entity);
             if (entityProfile != null) {
                 NetworkManager.sendWardrobeTo(entity, (ServerPlayer) player);

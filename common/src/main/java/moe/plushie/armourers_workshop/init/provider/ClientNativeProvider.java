@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Camera;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -86,5 +88,10 @@ public interface ClientNativeProvider {
 
     interface RenderLivingEntity {
         void render(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer);
+    }
+
+
+    interface RenderBlockHighlight {
+        void render(BlockHitResult traceResult, Camera renderInfo, PoseStack poseStack, MultiBufferSource buffers);
     }
 }

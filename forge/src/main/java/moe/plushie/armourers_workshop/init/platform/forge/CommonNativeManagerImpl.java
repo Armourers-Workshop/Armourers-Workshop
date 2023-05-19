@@ -1,18 +1,13 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
-import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeCommonNativeImpl;
-import moe.plushie.armourers_workshop.init.provider.CommonNativeFactory;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeCommonNativeProvider;
 import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
 
-public class CommonNativeManagerImpl {
+public class CommonNativeManagerImpl implements AbstractForgeCommonNativeProvider {
 
-    public static final AbstractForgeCommonNativeImpl INSTANCE = new AbstractForgeCommonNativeImpl();
+    public static final CommonNativeManagerImpl INSTANCE = new CommonNativeManagerImpl();
 
     public static CommonNativeProvider getProvider() {
-        return INSTANCE;
-    }
-
-    public static CommonNativeFactory getFactory() {
         return INSTANCE;
     }
 }

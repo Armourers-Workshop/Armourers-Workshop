@@ -6,6 +6,4 @@ import net.fabricmc.api.Environment;
 
 @Environment(value = EnvType.CLIENT)
 public interface ClientNativeFactory {
-
-    IBufferBuilder createBuilderBuffer(int size);
 }

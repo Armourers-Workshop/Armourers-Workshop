@@ -1,0 +1,32 @@
+package extensions.net.minecraft.world.item.CreativeModeTab;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+@Available("[1.19.3, )")
+@Extension
+public class BuilderProvider {
+
+    public static CreativeModeTab createCreativeModeTabFA(@ThisClass Class<?> clazz, ResourceLocation registryName, Supplier<Supplier<ItemStack>> icon, Consumer<List<ItemStack>> itemProvider) {
+        return FabricItemGroup.builder(registryName)
+                .title(Component.translatable("itemGroup." + registryName.getNamespace() + "." + registryName.getPath()))
+                .icon(() -> icon.get().get())
+                .displayItems((set, out) -> {
+                    ArrayList<ItemStack> results = new ArrayList<>();
+                    itemProvider.accept(results);
+                    out.acceptAll(results);
+                })
+                .build();
+    }
+}

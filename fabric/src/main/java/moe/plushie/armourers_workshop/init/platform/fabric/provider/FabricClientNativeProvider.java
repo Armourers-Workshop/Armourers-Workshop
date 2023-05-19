@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.provider;
 
 import com.apple.library.coregraphics.CGRect;
-import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderTooltipCallback;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderTooltipEvents;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Registry;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.function.Consumer;
@@ -65,12 +66,22 @@ public interface FabricClientNativeProvider extends ClientNativeProvider {
 
     @Override
     default void willRenderTooltip(RenderTooltip consumer) {
-        RenderTooltipCallback.EVENT.register((poseStack, itemStack, x, y, width, height, mouseX, mouseY, screenWidth, screenHeight) -> {
+        RenderTooltipEvents.BEFORE.register((poseStack, itemStack, x, y, width, height, mouseX, mouseY, screenWidth, screenHeight) -> {
             if (itemStack.isEmpty()) {
                 return;
             }
             CGRect frame = new CGRect(x, y, width, height);
             consumer.render(itemStack, frame, mouseX, mouseY, screenWidth, screenHeight, poseStack);
         });
+    }
+
+    @Override
+    default void willRegisterItemProperty(Consumer<ItemPropertyRegistry> consumer) {
+        Registry.willRegisterItemPropertyFA(consumer);
+    }
+
+    @Override
+    default void willRegisterTexture(Consumer<TextureRegistry> consumer) {
+        Registry.willRegisterTextureFA(consumer);
     }
 }

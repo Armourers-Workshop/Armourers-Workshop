@@ -17,8 +17,4 @@ public class CommonNativeManager {
     public static CommonNativeProvider getProvider() {
         throw new AssertionError();
     }
-
-    public static IResourceManager createResourceManager(ResourceManager resourceManager) {
-        return getFactory().createResourceManager(resourceManager);
-    }
 }

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.fabric.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderTooltipCallback;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderTooltipEvents;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Available("[1.18, 1.19.4)")
+@Available("[1.18, 1.19.3)")
 @Mixin(Screen.class)
 public class FabricScreenMixin {
 
@@ -59,6 +59,6 @@ public class FabricScreenMixin {
         if (k2 + j + 6 > screenHeight) {
             k2 = screenHeight - j - 6;
         }
-        RenderTooltipCallback.EVENT.invoker().onRenderTooltip(poseStack, aw$tooltipStack, j2, k2, i, j, mouseX, mouseY, screenWidth, screenHeight);
+        RenderTooltipEvents.BEFORE.invoker().onRenderTooltip(poseStack, aw$tooltipStack, j2, k2, i, j, mouseX, mouseY, screenWidth, screenHeight);
     }
 }

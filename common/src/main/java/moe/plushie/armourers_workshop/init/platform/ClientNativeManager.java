@@ -23,10 +23,6 @@ public class ClientNativeManager {
     }
 
     public static IResourceManager getResourceManager() {
-        return CommonNativeManager.createResourceManager(Minecraft.getInstance().getResourceManager());
-    }
-
-    public static IBufferBuilder createBuilderBuffer(int size) {
-        return getFactory().createBuilderBuffer(size);
+        return Minecraft.getInstance().getResourceManager().asResourceManager();
     }
 }

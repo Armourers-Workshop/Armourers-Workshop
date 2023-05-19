@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
 @Extension
-@Available("[1.16, 1.19.4)")
+@Available("[1.16, 1.19.3)")
 public abstract class Constructor {
 
     public static @Self SoundEvent createVariableRangeEvent(@ThisClass Class<?> clazz, ResourceLocation registryName) {

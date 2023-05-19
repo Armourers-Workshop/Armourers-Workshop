@@ -60,7 +60,7 @@ public class DataPackManager {
         public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager resourceManager, ProfilerFiller profilerFiller, ProfilerFiller profilerFiller2, Executor executor, Executor executor2) {
             ArrayList<Runnable> tasks = new ArrayList<>();
             ArrayList<CompletableFuture<?>> entries = new ArrayList<>();
-            IResourceManager resourceManager1 = CommonNativeManager.createResourceManager(resourceManager);
+            IResourceManager resourceManager1 = resourceManager.asResourceManager();
             loaders.forEach(loader -> {
                 CompletableFuture<Map<ResourceLocation, IDataPackBuilder>> future = loader.prepare(resourceManager1, executor);
                 entries.add(future);

@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.provider;
 
+import com.mojang.brigadier.CommandDispatcher;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.PlayerBlockPlaceEvents;
@@ -15,7 +16,9 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -105,7 +108,7 @@ public interface FabricCommonNativeProvider extends CommonNativeProvider {
     }
 
     @Override
-    default void didPlayerTacking(BiConsumer<Entity, Player> consumer) {
+    default void didTackingEntity(BiConsumer<Entity, Player> consumer) {
         EntityTrackingEvents.START_TRACKING.register(consumer::accept);
     }
 
@@ -150,5 +153,24 @@ public interface FabricCommonNativeProvider extends CommonNativeProvider {
             }
             return true;
         });
+    }
+
+    @Override
+    default void willPlayerDrop(Consumer<Player> consumer) {
+        Registry.willDropEntityFA(entity -> {
+            if (entity instanceof Player) {
+                consumer.accept((Player) entity);
+            }
+        });
+    }
+
+    @Override
+    default void willRegisterCommand(Consumer<CommandDispatcher<CommandSourceStack>> consumer) {
+        Registry.willRegisterCommandFA(consumer);
+    }
+
+    @Override
+    default void willRegisterArgument(Consumer<ArgumentRegistry> consumer) {
+        Registry.willRegisterArgumentFA(consumer);
     }
 }

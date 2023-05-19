@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.19.3, )")
+@Available("[1.19.4, )")
 @Extension
 public class Transformer {
 

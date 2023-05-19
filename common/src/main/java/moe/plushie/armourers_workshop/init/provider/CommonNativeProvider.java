@@ -53,7 +53,7 @@ public interface CommonNativeProvider {
 
     void willPlayerDrop(Consumer<Player> consumer);
 
-    void didPlayerTacking(BiConsumer<Entity, Player> consumer);
+    void didTackingEntity(BiConsumer<Entity, Player> consumer);
 
     void didEntityJoin(Consumer<Entity> consumer);
 

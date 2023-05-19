@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.init.platform.forge.ClientNativeManagerImp
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.Registry;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -34,7 +35,7 @@ public class ClientProxyImpl {
         NotificationCenterImpl.observer(FMLLoadCompleteEvent.class, event -> event.enqueueWork(() -> EnvironmentExecutor.didSetup(EnvironmentType.CLIENT)));
 
         // listen the block highlight events.
-        ClientNativeManagerImpl.INSTANCE.willRenderBlockHighlight((traceResult, camera, poseStack, buffers) -> {
+        Registry.willRenderBlockHighlightFO((traceResult, camera, poseStack, buffers) -> {
             Player player = Minecraft.getInstance().player;
             if (player == null) {
                 return;
@@ -60,8 +61,8 @@ public class ClientProxyImpl {
             }
         });
 
-        ClientNativeManagerImpl.INSTANCE.willRenderLivingEntity(ClientWardrobeHandler::onRenderLivingPre);
-        ClientNativeManagerImpl.INSTANCE.didRenderLivingEntity(ClientWardrobeHandler::onRenderLivingPost);
+        Registry.willRenderLivingEntityFO(ClientWardrobeHandler::onRenderLivingPre);
+        Registry.didRenderLivingEntityFO(ClientWardrobeHandler::onRenderLivingPost);
 
         NotificationCenterImpl.observer(RenderArmEvent.class, event -> {
             if (!ModConfig.enableFirstPersonSkinRenderer()) {

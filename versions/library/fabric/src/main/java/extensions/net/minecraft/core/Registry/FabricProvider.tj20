@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@Available("[1.19.4, )")
+@Available("[1.19.3, )")
 @Extension
 public class FabricProvider {
 
@@ -61,15 +61,7 @@ public class FabricProvider {
 
     public static <T extends CreativeModeTab> IRegistryKey<T> registerItemGroupFA(@ThisClass Class<?> clazz, String name, Supplier<Supplier<ItemStack>> icon, Consumer<List<ItemStack>> consumer) {
         ResourceLocation registryName = ModConstants.key(name);
-        CreativeModeTab tab = FabricItemGroup.builder(registryName)
-                .title(Component.translatable("itemGroup." + registryName.getNamespace() + "." + registryName.getPath()))
-                .icon(() -> icon.get().get())
-                .displayItems((set, out) -> {
-                    ArrayList<ItemStack> results = new ArrayList<>();
-                    consumer.accept(results);
-                    out.acceptAll(results);
-                })
-                .build();
+        CreativeModeTab tab = CreativeModeTab.createCreativeModeTabFA(registryName, icon, consumer);
         ModLog.debug("Registering Item Group '{}'", registryName);
         return AbstractFabricRegistryEntry.cast(registryName, tab);
     }

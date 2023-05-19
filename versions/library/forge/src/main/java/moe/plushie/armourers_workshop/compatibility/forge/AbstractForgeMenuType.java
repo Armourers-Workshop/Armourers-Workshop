@@ -12,7 +12,7 @@ import net.minecraftforge.network.NetworkHooks;
 
 import java.util.function.Consumer;
 
-@Available("[1.18, )")
+@Available("[1.19, )")
 public interface AbstractForgeMenuType {
 
     static <T extends AbstractContainerMenu> MenuType<T> create(IContainerFactory<T> factory) {

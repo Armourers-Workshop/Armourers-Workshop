@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistr
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistryEntry;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -33,7 +32,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@Available("[1.18, 1.19.4)")
+@Available("[1.18, 1.19.3)")
 @Extension
 public class FabricProvider {
 
@@ -58,10 +57,7 @@ public class FabricProvider {
 
     public static <T extends CreativeModeTab> IRegistryKey<T> registerItemGroupFA(@ThisClass Class<?> clazz, String name, Supplier<Supplier<ItemStack>> icon, Consumer<List<ItemStack>> results) {
         ResourceLocation registryName = ModConstants.key(name);
-        CreativeModeTab tab = FabricItemGroupBuilder.create(registryName)
-                .icon(() -> icon.get().get())
-                .appendItems(results)
-                .build();
+        CreativeModeTab tab = CreativeModeTab.createCreativeModeTabFA(registryName, icon, results);
         ModLog.debug("Registering Item Group '{}'", registryName);
         return AbstractFabricRegistryEntry.cast(registryName, tab);
     }

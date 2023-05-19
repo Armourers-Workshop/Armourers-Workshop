@@ -14,7 +14,7 @@ import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
-@Available("[1.18, 1.19.4)")
+@Available("[1.18, 1.19.3)")
 @Extension
 public class LootFunction {
 

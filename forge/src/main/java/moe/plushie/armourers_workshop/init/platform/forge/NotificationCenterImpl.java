@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import net.minecraft.core.Registry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -26,7 +27,7 @@ public class NotificationCenterImpl {
             ArrayList<Consumer<T>> queue = new ArrayList<>();
             Consumer<E> listener = event -> queue.forEach(element -> element.accept(transform.apply(event)));
             MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, clazz, listener);
-            if (MinecraftForge.getModEventBusClass().isAssignableFrom(clazz)) {
+            if (Registry.isModEvent(clazz)) {
                 FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.NORMAL, false, clazz, listener);
             }
             return queue;
@@ -43,7 +44,7 @@ public class NotificationCenterImpl {
             ArrayList<Consumer<T>> queue = new ArrayList<>();
             Consumer<E> listener = event -> queue.forEach(element -> element.accept(transform.apply(event)));
             MinecraftForge.EVENT_BUS.addGenericListener(genericClazz, EventPriority.NORMAL, false, clazz, listener);
-            if (MinecraftForge.getModEventBusClass().isAssignableFrom(clazz)) {
+            if (Registry.isModEvent(clazz)) {
                 FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(genericClazz, EventPriority.NORMAL, false, clazz, listener);
             }
             return queue;

@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.init.platform.forge.EnvironmentManagerImpl
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.ConfigBuilderImpl;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import net.minecraft.core.Registry;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -28,11 +29,11 @@ public class CommonProxyImpl {
         NotificationCenterImpl.observer(FMLLoadCompleteEvent.class, event -> event.enqueueWork(() -> EnvironmentExecutor.didSetup(EnvironmentType.COMMON)));
 
         // listen the config changes events.
-        CommonNativeManagerImpl.INSTANCE.willConfigReload(spec -> {
+        Registry.willConfigReloadFO(spec -> {
             ConfigBuilderImpl.reloadSpec(ModConfigSpec.CLIENT, spec);
             ConfigBuilderImpl.reloadSpec(ModConfigSpec.COMMON, spec);
         });
-        CommonNativeManagerImpl.INSTANCE.shouldAttackEntity((entity, player) -> {
+        Registry.shouldAttackEntityFO((entity, player) -> {
             if (player.isSpectator()) {
                 return InteractionResult.PASS;
             }
