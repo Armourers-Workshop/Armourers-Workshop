@@ -121,12 +121,16 @@ public class ShaderPreprocessor {
             }
             // NOTE: we can't support "type x = y;" in the global;
             SourceBuilder builder = new SourceBuilder();
-            builder.append("uniform int aw_MatrixFlags;\n");
+            builder.append("#ifdef GL_ES\n");
+            builder.append("  uniform bool aw_MatrixFlags;\n");
+            builder.append("#else\n");
+            builder.append("  uniform bool aw_MatrixFlags = false;\n");
+            builder.append("#endif\n");
             builder.append("void awrt_main_pre() {\n");
-            builder.append("    if (aw_MatrixFlags == 0) {\n");
-            builder.append("        ", initializer1, ";\n");
-            builder.append("    } else {\n");
+            builder.append("    if (aw_MatrixFlags) {\n");
             builder.append("        ", initializer2, ";\n");
+            builder.append("    } else {\n");
+            builder.append("        ", initializer1, ";\n");
             builder.append("    }\n");
             builder.append("}\n");
             return source.replaceAll("(void\\s+main\\s*\\(\\)\\s*\\{)", builder.build() + "\n$1\n    awrt_main_pre();\n");

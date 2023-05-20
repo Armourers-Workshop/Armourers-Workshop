@@ -54,8 +54,8 @@ public abstract class Shader {
             RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
         }
 
-        ShaderUniforms.end();
         RenderSystem.setExtendedMatrixFlags(0);
+        ShaderUniforms.end();
         RenderSystem.restoreExtendedMatrix();
     }
 
