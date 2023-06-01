@@ -2,10 +2,8 @@ package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.core.permission.BlockPermission;
 import moe.plushie.armourers_workshop.core.permission.ContainerPermission;
-import moe.plushie.armourers_workshop.core.registry.Registries;
 import moe.plushie.armourers_workshop.init.platform.RegistryManager;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.level.block.Block;
 
 @SuppressWarnings("unused")
 public class ModPermissions {

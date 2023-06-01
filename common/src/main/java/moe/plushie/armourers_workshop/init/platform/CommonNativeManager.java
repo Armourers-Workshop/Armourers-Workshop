@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.init.platform;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.init.provider.CommonNativeFactory;
 import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
-import net.minecraft.server.packs.resources.ResourceManager;
 
 public class CommonNativeManager {
 

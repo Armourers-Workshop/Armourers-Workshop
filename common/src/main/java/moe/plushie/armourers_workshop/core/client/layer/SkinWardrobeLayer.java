@@ -37,6 +37,10 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource buffers, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        // respect invisibility potions etc.
+        if (entity.isInvisible()) {
+            return;
+        }
         PoseStack poseStack1 = poseStack;
         M model = ModelHolder.of(getParentModel());
         SkinRenderData renderData = SkinRenderData.of(entity);

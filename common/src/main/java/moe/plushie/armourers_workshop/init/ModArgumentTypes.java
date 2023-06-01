@@ -1,15 +1,14 @@
 package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.api.registry.IArgumentTypeBuilder;
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.init.command.ColorArgumentType;
 import moe.plushie.armourers_workshop.init.command.ColorSchemeArgumentType;
 import moe.plushie.armourers_workshop.init.command.ComponentArgumentType;
 import moe.plushie.armourers_workshop.init.command.FileArgumentType;
 import moe.plushie.armourers_workshop.init.command.ListArgumentType;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
-
 
 @SuppressWarnings("unused")
 public class ModArgumentTypes {

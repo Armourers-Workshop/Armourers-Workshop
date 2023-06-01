@@ -27,6 +27,9 @@ public class ShaderPreprocessor {
         if (prefix.equals("iris_")) {
             return processIrisShader(new Builder(source));
         }
+        if (prefix.equals("frx_")) {
+            return processCanvasShader(new Builder(source));
+        }
         return source;
     }
 
@@ -44,6 +47,14 @@ public class ShaderPreprocessor {
         builder.uniform("mat3", "normalMatrix", "mat3", "aw_NormalMatrix", "($1 * $2)");
         builder.uniform("mat4", "modelViewMatrix", "mat4", "aw_ModelViewMat", "($1 * $2)");
         return build("optifine", builder);
+    }
+
+    private String processCanvasShader(Builder builder) {
+//        builder.uniform("mat4", "in_vertex", "mat4", "aw_TextureMatrix", "($1 * $2)");
+//        builder.uniform("mat4", "iris_LightmapTextureMatrix", "mat4", "aw_LightmapTextureMatrix", "($1 * $2)");
+//        builder.uniform("mat3", "iris_NormalMat", "mat3", "aw_NormalMatrix", "($1 * $2)");
+//        builder.uniform("mat4", "iris_ModelViewMat", "mat4", "aw_ModelViewMat", "($1 * $2)");
+        return build("canvas", builder);
     }
 
     private String processVanillaShader(Builder builder) {

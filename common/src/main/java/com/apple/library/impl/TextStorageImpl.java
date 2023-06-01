@@ -12,7 +12,6 @@ import com.apple.library.uikit.UIFont;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
-import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.compatibility.AbstractShaderTesselator;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.RenderSystem;

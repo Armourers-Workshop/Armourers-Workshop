@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.permission;
 
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.init.platform.RegistryManager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;

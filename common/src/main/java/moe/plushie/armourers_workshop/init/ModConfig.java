@@ -62,7 +62,7 @@ public class ModConfig {
         public static float ploOffset = -0.01f;
 
         public static boolean enablePartSubdivide = false;
-        public static boolean enableShaderDebug = false;
+        public static boolean enableShaderDebug = true;
 
         public static boolean enableEntityPlacementHighlight = true;
         public static boolean enableBlockPlacementHighlight = true;
