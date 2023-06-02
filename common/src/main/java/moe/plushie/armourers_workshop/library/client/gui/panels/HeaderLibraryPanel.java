@@ -6,20 +6,19 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIControl;
 import com.mojang.authlib.GameProfile;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.impl.ServerPermission;
 import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
@@ -69,14 +68,15 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        this.renderPlayerProfile(context.poseStack, context.font.font(), Minecraft.getInstance().getUser().getGameProfile());
+        this.renderPlayerProfile(context, Minecraft.getInstance().getUser().getGameProfile());
     }
 
-    private void renderPlayerProfile(PoseStack poseStack, Font font, GameProfile gameProfile) {
+    private void renderPlayerProfile(CGGraphicsContext context, GameProfile gameProfile) {
         if (playerTexture == null) {
             playerTexture = new PlayerTextureDescriptor(gameProfile);
         }
-        RenderSystem.drawPlayerHead(poseStack, 5, 5, 16, 16, playerTexture);
+        ResourceLocation texture = PlayerTextureLoader.getInstance().loadTextureLocation(playerTexture);
+        context.drawAvatarContents(texture, 5, 5, 16, 16);
 
         // White - not a member.
         // Yellow - Member not authenticated.
@@ -96,7 +96,8 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         if (user.isAuthenticated()) {
             textColor = 0xAAFFAA;
         }
-        font.draw(poseStack, profile, 24, (rect.height - font.lineHeight) / 2f, textColor);
+        float lineHeight = context.state().font().lineHeight();
+        context.drawText(profile, 24, (rect.height - lineHeight) / 2f, textColor);
     }
 
     private void betaCheckUpdate() {

@@ -19,14 +19,14 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.LivingEntity;
 
 @Extension
-@Available("[1.19, 1.19.4)")
+@Available("[1.20, )")
 public class EntityLayerProvider {
 
     public static <E extends LivingEntity, Q extends EntityModel<E>> AbstractEntityRendererLayerProvider createLayerProvider(@ThisClass Class<?> clazz, LivingEntityRenderer<E, Q> renderer) {
         return new AbstractEntityRendererLayerProvider() {
             @Override
             public <T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>> RenderLayer<T, M> createHumanoidArmorLayer(Context context, A innerModel, A outerModel) {
-                return new HumanoidArmorLayer<>(ObjectUtils.unsafeCast(renderer), innerModel, outerModel);
+                return new HumanoidArmorLayer<>(ObjectUtils.unsafeCast(renderer), innerModel, outerModel, context.getModelManager());
             }
 
             @Override

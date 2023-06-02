@@ -1,8 +1,10 @@
 package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
+import moe.plushie.armourers_workshop.api.registry.IBlockBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
-import moe.plushie.armourers_workshop.api.registry.IBlockBuilder;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterial;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterialColor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -13,8 +15,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -26,7 +26,7 @@ public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
     private IRegistryBinder<T> binder;
     private final Function<BlockBehaviour.Properties, T> supplier;
 
-    public BlockBuilderImpl(Function<BlockBehaviour.Properties, T> supplier, Material material, MaterialColor materialColor) {
+    public BlockBuilderImpl(Function<BlockBehaviour.Properties, T> supplier, AbstractBlockMaterial material, AbstractBlockMaterialColor materialColor) {
         this.properties = BlockBehaviour.Properties.of(material, materialColor);
         this.supplier = supplier;
     }

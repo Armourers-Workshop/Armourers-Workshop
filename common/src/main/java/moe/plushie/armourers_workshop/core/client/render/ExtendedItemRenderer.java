@@ -56,7 +56,7 @@ public final class ExtendedItemRenderer {
         Entity entity = SkinItemRenderer.getInstance().getMannequinEntity();
         MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
         SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
-        if (renderer == null || entity == null || entity.level == null) {
+        if (renderer == null || entity == null || entity.getLevel() == null) {
             return;
         }
         poseStack.pushPose();
@@ -83,7 +83,7 @@ public final class ExtendedItemRenderer {
 
     public static void renderMannequin(PlayerTextureDescriptor descriptor, Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, PoseStack poseStack, MultiBufferSource buffers) {
         MannequinEntity entity = SkinItemRenderer.getInstance().getMannequinEntity();
-        if (entity == null || entity.level == null) {
+        if (entity == null || entity.getLevel() == null) {
             return;
         }
         poseStack.pushPose();

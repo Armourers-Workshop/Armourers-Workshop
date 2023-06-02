@@ -45,7 +45,7 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
     }
 
     public SkinBlockPlaceContext(Player player, InteractionHand hand, ItemStack itemStack, BlockHitResult traceResult) {
-        super(player.level, player, hand, itemStack, traceResult);
+        super(player.getLevel(), player, hand, itemStack, traceResult);
         this.loadElements(SkinLoader.getInstance()::getSkin);
     }
 

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.common.IItemTransformType;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -17,7 +17,7 @@ public abstract class AbstractItemStackRendererImpl extends BlockEntityWithoutLe
     public AbstractItemStackRendererImpl() {
     }
 
-    public void renderByItem(ItemStack itemStack, IItemTransformType transformType, PoseStack poseStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
+    public void renderByItem(ItemStack itemStack, AbstractItemTransformType transformType, PoseStack poseStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
         super.renderByItem(itemStack, ItemTransforms.ofType(transformType), poseStack, renderTypeBuffer, light, overlay);
     }
 

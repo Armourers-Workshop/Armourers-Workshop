@@ -75,7 +75,7 @@ public class UIButton extends UIControl {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        remakeContentLayoutIfNeeded(context.font);
+        remakeContentLayoutIfNeeded(context.state().font());
         context.drawImage(backgroundImageContainer.currentValue(), bounds());
     }
 

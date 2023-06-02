@@ -51,7 +51,12 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         if (!isReady) {
             return;
         }
-        screen.render(context.poseStack, context.mouseX, context.mouseY, context.partialTicks);
+        CGPoint mousePos = context.state().mousePos();
+        IVector2i offset = screen.getContentOffset();
+        context.saveGraphicsState();
+        context.translateCTM(-offset.getX(), -offset.getY(), 0);
+        screen.renderInView(this, 400, mousePos.x, mousePos.y, context.state().partialTicks(), context);
+        context.restoreGraphicsState();
     }
 
     @Override
@@ -93,6 +98,8 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         public DelegateScreen(M menu, Inventory inventory, Component component) {
             super(menu, inventory, component);
             this.inventory = inventory;
+            // yep, we need init it.
+            this.init(Minecraft.getInstance(), 640, 480);
         }
 
         @Override
@@ -107,25 +114,8 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         }
 
         @Override
-        public void render(PoseStack poseStack, int i, int j, float f) {
-            IVector2i offset = getContentOffset();
-            poseStack.pushPose();
-            poseStack.translate(-offset.getX(), -offset.getY(), 0);
-
-            PoseStack modelViewStack = RenderSystem.getModelViewStack();
-            modelViewStack.pushPose();
-            modelViewStack.translate(0, 0, 400);
-            RenderSystem.applyModelViewMatrix();
-            super.render(poseStack, i, j, f);
-            modelViewStack.popPose();
-            RenderSystem.applyModelViewMatrix();
-
-            super.renderTooltip(poseStack, i, j);
-            poseStack.popPose();
-        }
-
-        @Override
-        public void renderLabels(PoseStack poseStack, int i, int j) {
+        public void renderLabels(CGGraphicsContext context, int mouseX, int mouseY) {
+            // ignored
         }
 
         @Override

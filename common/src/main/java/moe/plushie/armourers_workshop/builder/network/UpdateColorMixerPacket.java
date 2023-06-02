@@ -43,7 +43,7 @@ public class UpdateColorMixerPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
-        BlockEntity entity = player.level.getBlockEntity(pos);
+        BlockEntity entity = player.getLevel().getBlockEntity(pos);
         if (entity instanceof ColorMixerBlockEntity) {
             field.set((ColorMixerBlockEntity) entity, fieldValue);
         }

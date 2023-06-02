@@ -155,7 +155,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
     public void broadcastChanges() {
         super.broadcastChanges();
         // no need listen slot changes for client side.
-        if (player.level == null || player.level.isClientSide()) {
+        if (player.getLevel().isClientSide()) {
             return;
         }
         // in normal, the size is inconsistent this will only happen when the container is first loaded.

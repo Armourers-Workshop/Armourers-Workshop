@@ -14,7 +14,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import moe.plushie.armourers_workshop.compatibility.AbstractShaderTesselator;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -138,7 +137,7 @@ public class TextStorageImpl {
         context.saveGraphicsState();
         context.translateCTM(offset.x, offset.y, 0);
 
-        PoseStack.Pose pose = context.poseStack.last();
+        PoseStack.Pose pose = context.state().ctm().last();
         MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
         if (placeholder != null && cachedTextLines.isEmpty()) {
             int placeholderColor = defaultPlaceholderColor();
@@ -171,18 +170,18 @@ public class TextStorageImpl {
         if (!isFocused || highlightedRects == null || highlightedRects.isEmpty()) {
             return;
         }
-        PoseStack.Pose pose = context.poseStack.last();
+        PoseStack.Pose pose = context.state().ctm().last();
         AbstractShaderTesselator tesselator = AbstractShaderTesselator.getInstance();
         BufferBuilder builder = tesselator.begin(SkinRenderType.GUI_HIGHLIGHTED_TEXT);
-        RenderSystem.setShaderColor(AppearanceImpl.TEXT_HIGHLIGHTED_COLOR);
+        context.setTintColor(AppearanceImpl.TEXT_HIGHLIGHTED_COLOR);
         for (CGRect rect : highlightedRects) {
-            builder.vertex(pose, rect.getMinX(), rect.getMaxY(), 0).endVertex();
-            builder.vertex(pose, rect.getMaxX(), rect.getMaxY(), 0).endVertex();
-            builder.vertex(pose, rect.getMaxX(), rect.getMinY(), 0).endVertex();
-            builder.vertex(pose, rect.getMinX(), rect.getMinY(), 0).endVertex();
+            builder.vertex(pose.pose(), rect.getMinX(), rect.getMaxY(), 0).endVertex();
+            builder.vertex(pose.pose(), rect.getMaxX(), rect.getMaxY(), 0).endVertex();
+            builder.vertex(pose.pose(), rect.getMaxX(), rect.getMinY(), 0).endVertex();
+            builder.vertex(pose.pose(), rect.getMinX(), rect.getMinY(), 0).endVertex();
         }
         tesselator.end();
-        RenderSystem.setShaderColor(UIColor.WHITE);
+        context.setTintColor(UIColor.WHITE);
     }
 
     public String value() {

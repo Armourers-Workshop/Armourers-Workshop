@@ -19,7 +19,7 @@ public class WandOfStyleItem extends FlavouredItem implements IItemHandler {
 
     @Override
     public InteractionResult attackLivingEntity(ItemStack itemStack, Player player, Entity entity) {
-        if (!player.level.isClientSide()) {
+        if (!player.getLevel().isClientSide()) {
             openGUI(player, entity);
         }
         return InteractionResult.SUCCESS;
@@ -27,10 +27,10 @@ public class WandOfStyleItem extends FlavouredItem implements IItemHandler {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack itemStack, Player player, LivingEntity entity, InteractionHand hand) {
-        if (!player.level.isClientSide()) {
+        if (!player.getLevel().isClientSide()) {
             openGUI(player, entity);
         }
-        return InteractionResult.sidedSuccess(player.level.isClientSide());
+        return InteractionResult.sidedSuccess(player.getLevel().isClientSide());
     }
 
     private void openGUI(Player player, Entity entity) {

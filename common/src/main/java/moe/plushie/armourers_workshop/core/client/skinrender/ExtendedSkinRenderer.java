@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import moe.plushie.armourers_workshop.api.client.IJoint;
 import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
-import moe.plushie.armourers_workshop.api.common.IItemTransformType;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.armature.Joints;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -44,14 +44,14 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, V extends Ent
         transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_LEG2, Joints.BIPPED_LEFT_LEG);
         transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_LEG2, Joints.BIPPED_RIGHT_LEG);
 
-        transformer.registerItem(IItemTransformType.NONE, Transformer::withModel);
-        transformer.registerItem(IItemTransformType.GUI, Transformer::withModel);
-        transformer.registerItem(IItemTransformType.FIXED, Transformer::withModel);
-        transformer.registerItem(IItemTransformType.GROUND, Transformer::withModel);
-        transformer.registerItem(IItemTransformType.THIRD_PERSON_LEFT_HAND, Transformer::withModel);
-        transformer.registerItem(IItemTransformType.THIRD_PERSON_RIGHT_HAND, Transformer::withModel);
-        transformer.registerItem(IItemTransformType.FIRST_PERSON_LEFT_HAND, Transformer::withModel);
-        transformer.registerItem(IItemTransformType.FIRST_PERSON_RIGHT_HAND, Transformer::withModel);
+        transformer.registerItem(AbstractItemTransformType.NONE, Transformer::withModel);
+        transformer.registerItem(AbstractItemTransformType.GUI, Transformer::withModel);
+        transformer.registerItem(AbstractItemTransformType.FIXED, Transformer::withModel);
+        transformer.registerItem(AbstractItemTransformType.GROUND, Transformer::withModel);
+        transformer.registerItem(AbstractItemTransformType.THIRD_PERSON_LEFT_HAND, Transformer::withModel);
+        transformer.registerItem(AbstractItemTransformType.THIRD_PERSON_RIGHT_HAND, Transformer::withModel);
+        transformer.registerItem(AbstractItemTransformType.FIRST_PERSON_LEFT_HAND, Transformer::withModel);
+        transformer.registerItem(AbstractItemTransformType.FIRST_PERSON_RIGHT_HAND, Transformer::withModel);
     }
 
     @Override

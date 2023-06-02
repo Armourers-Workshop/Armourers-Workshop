@@ -113,7 +113,7 @@ public class UpdateWardrobePacket extends CustomPacket {
 
     @Nullable
     private SkinWardrobe apply(Player player) {
-        SkinWardrobe wardrobe = SkinWardrobe.of(player.level.getEntity(entityId));
+        SkinWardrobe wardrobe = SkinWardrobe.of(player.getLevel().getEntity(entityId));
         if (wardrobe == null) {
             return null;
         }

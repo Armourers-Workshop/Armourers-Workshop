@@ -7,18 +7,18 @@ import moe.plushie.armourers_workshop.api.registry.IRegistry;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeRegistry;
 import moe.plushie.armourers_workshop.init.ModConstants;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
-@Available("[1.18, 1.19.3)")
+@Available("[1.20, )")
 @Extension
 public class LootFunction {
 
-    public static final IRegistry<LootItemFunctionType> ITEM_LOOT_FUNCTIONS = new Proxy<>(LootItemFunctionType.class, DeferredRegister.create(Registry.LOOT_FUNCTION_REGISTRY, ModConstants.MOD_ID));
+    public static final IRegistry<LootItemFunctionType> ITEM_LOOT_FUNCTIONS = new Proxy<>(LootItemFunctionType.class, DeferredRegister.create(Registries.LOOT_FUNCTION_TYPE, ModConstants.MOD_ID));
 
     public static <T extends LootItemFunctionType> IRegistryKey<T> registerItemLootFunctionFO(@ThisClass Class<?> clazz, String name, Supplier<T> supplier) {
         return ITEM_LOOT_FUNCTIONS.register(name, supplier);

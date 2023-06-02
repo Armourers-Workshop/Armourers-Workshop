@@ -31,12 +31,12 @@ public class ExtendedFaceRenderer {
 //        int[] indexes = {0,1,2,0,2,3};
 //        for (int i : indexes) {
         for (int i = 0; i < 4; ++i) {
-            builder.vertex(pose, x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
+            builder.vertex(pose.pose(), x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
                     .color(color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff, alpha & 0xff)
                     .uv(paintType.getU() / 256f, paintType.getV() / 256f)
                     .overlayCoords(overlay)
                     .uv2(light)
-                    .normal(pose, vertexes[4][0], vertexes[4][1], vertexes[4][2])
+                    .normal(pose.normal(), vertexes[4][0], vertexes[4][1], vertexes[4][2])
                     .endVertex();
         }
     }
@@ -46,35 +46,35 @@ public class ExtendedFaceRenderer {
             return;
         }
 
-        PoseStack.Pose pose = poseStack.last();
+        PoseStack.Pose last = poseStack.last();
         ISkinPaintType paintType = paintColor.getPaintType();
         int u = paintType.getIndex() % 8;
         int v = paintType.getIndex() / 8;
         byte[][] vertexes = FACE_MARK_VERTEXES[direction.get3DDataValue()];
         for (int i = 0; i < 4; ++i) {
-            builder.vertex(pose, x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
+            builder.vertex(last.pose(), x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
                     .color(255, 255, 255, alpha & 0xff)
                     .uv((u + FACE_MARK_TEXTURES[i][0]) / 8f, (v + FACE_MARK_TEXTURES[i][1]) / 8f)
                     .overlayCoords(overlay)
                     .uv2(light)
-                    .normal(pose, vertexes[4][0], vertexes[4][1], vertexes[4][2])
+                    .normal(last.normal(), vertexes[4][0], vertexes[4][1], vertexes[4][2])
                     .endVertex();
         }
     }
 
     public static void render2(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, PoseStack poseStack, VertexConsumer builder) {
-        PoseStack.Pose pose = poseStack.last();
+        PoseStack.Pose last = poseStack.last();
         int u = 0;
         int v = 0;
         int color = paintColor.getRGB();
         byte[][] vertexes = FACE_MARK_VERTEXES[direction.get3DDataValue()];
         for (int i = 0; i < 4; ++i) {
-            builder.vertex(pose, x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
+            builder.vertex(last.pose(), x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
                     .color(color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff, alpha & 0xff)
                     .uv((u + FACE_MARK_TEXTURES[i][0]), (v + FACE_MARK_TEXTURES[i][1]))
                     .overlayCoords(overlay)
                     .uv2(light)
-                    .normal(pose, vertexes[4][0], vertexes[4][1], vertexes[4][2])
+                    .normal(last.normal(), vertexes[4][0], vertexes[4][1], vertexes[4][2])
                     .endVertex();
         }
     }

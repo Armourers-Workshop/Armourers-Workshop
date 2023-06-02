@@ -27,7 +27,7 @@ public class OpenWardrobePacket extends CustomPacket {
 
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
-        Entity entity = player.level.getEntity(entityId);
+        Entity entity = player.getLevel().getEntity(entityId);
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe != null && wardrobe.isEditable(player)) {
             MenuManager.openMenu(ModMenuTypes.WARDROBE, player, wardrobe);

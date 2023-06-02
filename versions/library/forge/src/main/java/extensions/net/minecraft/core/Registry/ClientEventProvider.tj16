@@ -1,6 +1,5 @@
 package extensions.net.minecraft.core.Registry;
 
-import com.apple.library.coregraphics.CGRect;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
@@ -9,13 +8,7 @@ import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.client.event.DrawHighlightEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
@@ -24,22 +17,6 @@ import java.util.function.Consumer;
 @Available("[1.16, 1.18)")
 @Extension
 public class ClientEventProvider {
-
-    private static CGRect screenLayout = CGRect.ZERO;
-
-    public static void willRenderTooltipFO(@ThisClass Class<?> clazz, ClientNativeProvider.RenderTooltip consumer) {
-        NotificationCenterImpl.observer(RenderTooltipEvent.Pre.class, event -> {
-            screenLayout = new CGRect(event.getX(), event.getY(), event.getScreenWidth(), event.getScreenHeight());
-        });
-        NotificationCenterImpl.observer(RenderTooltipEvent.PostText.class, event -> {
-            int mouseX = screenLayout.getX();
-            int mouseY = screenLayout.getY();
-            int screenWidth = screenLayout.getWidth();
-            int screenHeight = screenLayout.getHeight();
-            CGRect frame = new CGRect(event.getX(), event.getY(), event.getWidth(), event.getHeight());
-            consumer.render(event.getStack(), frame, mouseX, mouseY, screenWidth, screenHeight, event.getMatrixStack());
-        });
-    }
 
     public static void willRenderBlockHighlightFO(@ThisClass Class<?> clazz, ClientNativeProvider.RenderBlockHighlight renderer) {
         NotificationCenterImpl.observer(DrawHighlightEvent.HighlightBlock.class, event -> {

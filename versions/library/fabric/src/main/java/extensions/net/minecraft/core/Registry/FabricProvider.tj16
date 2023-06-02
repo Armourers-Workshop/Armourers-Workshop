@@ -59,7 +59,7 @@ public class FabricProvider {
     public static <T extends CreativeModeTab> IRegistryKey<T> registerItemGroupFA(@ThisClass Class<?> clazz, String name, Supplier<Supplier<ItemStack>> icon, Consumer<List<ItemStack>> results) {
         ResourceLocation registryName = ModConstants.key(name);
         CreativeModeTab tab = CreativeModeTab.createCreativeModeTabFA(registryName, icon, results);
-        ModLog.debug("Registering Item Group '{}'", registryName);
+        ModLog.debug("Registering Creative Mode Tab '{}'", registryName);
         return AbstractFabricRegistryEntry.cast(registryName, tab);
     }
 

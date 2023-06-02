@@ -5,7 +5,6 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.inventory.Slot;
@@ -35,10 +34,9 @@ public class SlotGridView extends UIView {
         if (slots == null) {
             return;
         }
-        RenderSystem.setShaderTexture(0, ModTextures.COMMON);
         for (int i = startIndex; i < endIndex; ++i) {
             Slot slot = slots.get(i);
-            RenderSystem.blit(context.poseStack, slot.x - 1, slot.y - 1, 238, 0, 18, 18);
+            context.drawImage(ModTextures.COMMON, slot.x - 1, slot.y - 1, 238, 0, 18, 18, 256, 256);
         }
     }
 }

@@ -53,7 +53,7 @@ public class UILabel extends UIView {
         if (text == null) {
             return;
         }
-        UIFont font = this.font != null ? this.font : context.font;
+        UIFont font = this.font != null ? this.font : context.state().font();
         CGRect rect = bounds();
         remakeTextLineIfNeeded(text, font, rect);
         if (cachedTextLines == null || cachedTextLines.isEmpty()) {
@@ -63,7 +63,7 @@ public class UILabel extends UIView {
         for (TextLine line : cachedTextLines) {
             CGPoint offset = line.offset;
             int dx = sel(rect, line.size.width, textHorizontalAlignment);
-            context.drawText(line.text, font, textColor, shadowColor, offset.x + dx, offset.y + dy);
+            context.drawText(line.text, offset.x + dx, offset.y + dy, font, textColor, shadowColor);
         }
     }
 

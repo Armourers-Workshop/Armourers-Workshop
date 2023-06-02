@@ -42,7 +42,7 @@ public class UpdateHologramProjectorPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
-        BlockEntity entity = player.level.getBlockEntity(pos);
+        BlockEntity entity = player.getLevel().getBlockEntity(pos);
         if (entity instanceof HologramProjectorBlockEntity) {
             field.set((HologramProjectorBlockEntity) entity, fieldValue);
         }

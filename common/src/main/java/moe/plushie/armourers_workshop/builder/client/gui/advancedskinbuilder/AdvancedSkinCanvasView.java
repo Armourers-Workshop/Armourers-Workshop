@@ -40,7 +40,7 @@ public class AdvancedSkinCanvasView extends UIView {
     public void render(CGPoint point, CGGraphicsContext context) {
         CGRect rect = bounds();
 
-        PoseStack poseStack = context.poseStack;
+        PoseStack poseStack = context.state().ctm();
         poseStack.pushPose();
 
         poseStack.translate(rect.getWidth() / 2f, rect.getHeight() / 2f, 500f);
@@ -53,7 +53,7 @@ public class AdvancedSkinCanvasView extends UIView {
 
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         RenderSystem.drawPoint(poseStack, buffers);
-        RenderSystem.drawBoundingBox(context.poseStack, -1, -1, -1, 1, 1, 1, UIColor.RED, buffers);
+        RenderSystem.drawBoundingBox(poseStack, -1, -1, -1, 1, 1, 1, UIColor.RED, buffers);
 
         buffers.endBatch();
 

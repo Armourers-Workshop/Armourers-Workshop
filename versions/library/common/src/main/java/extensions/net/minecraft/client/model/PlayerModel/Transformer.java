@@ -6,9 +6,10 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.16, 1.19.4)")
+@Available("[1.20, )")
 @Extension
 public class Transformer {
 
@@ -38,10 +39,10 @@ public class Transformer {
             k = j - h;
         }
         float m = MathUtils.lerp(g, entity.xRotO, entity.getXRot());
-//        if (LivingEntityRenderer.isEntityUpsideDown(entity)) {
-//            m *= -1.0f;
-//            k *= -1.0f;
-//        }
+        if (LivingEntityRenderer.isEntityUpsideDown(entity)) {
+            m *= -1.0f;
+            k *= -1.0f;
+        }
 //        if (entity.hasPose(Pose.SLEEPING) && (direction = entity.getBedOrientation()) != null) {
 //            n = entity.getEyeHeight(Pose.STANDING) - 0.1f;
 //        }
@@ -53,8 +54,8 @@ public class Transformer {
         float n = 0.0f;
         float o = 0.0f;
         if (!entity.isPassenger() && entity.isAlive()) {
-            n = MathUtils.lerp(g, entity.animationSpeedOld, entity.animationSpeed);
-            o = entity.animationPosition - entity.animationSpeed * (1.0f - g);
+            n = entity.walkAnimation.speed(g);
+            o = entity.walkAnimation.position(g);
             if (entity.isBaby()) {
                 o *= 3.0f;
             }

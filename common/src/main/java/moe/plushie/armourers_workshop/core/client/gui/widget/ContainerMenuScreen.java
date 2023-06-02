@@ -23,8 +23,6 @@ import org.lwjgl.glfw.GLFW;
 @Environment(value = EnvType.CLIENT)
 public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWindow> extends AbstractMenuScreen<M> {
 
-    private UIFont font;
-
     private final W window;
     private final MenuWindow<?> menuWindow;
     private final UIWindowManager manager;
@@ -43,7 +41,6 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
     @Override
     public void init() {
         ISize2i screenSize = getScreenSize();
-        font = new UIFont(getFont());
         manager.layout(screenSize.getWidth(), screenSize.getHeight());
         CGRect rect = window.bounds();
         setContentSize(new Size2i(rect.width, rect.height));
@@ -68,20 +65,14 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        CGGraphicsContext context = new CGGraphicsContext(poseStack, mouseX, mouseY, partialTicks, font, this);
+    public void render(CGGraphicsContext context, int mouseX, int mouseY, float partialTicks) {
         manager.tick();
         manager.render(context, this::_render, this::_renderBackground, this::_renderTooltip);
     }
 
     @Override
-    public void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
+    public void renderLabels(CGGraphicsContext context, int mouseX, int mouseY) {
         // ignored
-    }
-
-    @Override
-    public void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        super.renderTooltip(poseStack, mouseX, mouseY);
     }
 
     @Override
@@ -147,21 +138,20 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
     }
 
     protected void _render(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
-        super.render(context.poseStack, mouseX, mouseY, partialTicks);
+        super.render(context, mouseX, mouseY, partialTicks);
     }
 
     protected void _renderTooltip(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
-        PoseStack poseStack = context.poseStack;
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 400);
-        renderTooltip(context.poseStack, mouseX, mouseY);
-        poseStack.popPose();
+        context.saveGraphicsState();
+        context.translateCTM(0, 0, 400);
+        renderTooltip(context, mouseX, mouseY);
+        context.restoreGraphicsState();
     }
 
     protected void _renderBackground(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
         // draw bg
         if (menuWindow != null && menuWindow.shouldRenderBackground()) {
-            renderBackground(context.poseStack);
+            renderBackground(context);
         }
     }
 

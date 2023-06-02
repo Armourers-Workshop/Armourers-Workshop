@@ -53,7 +53,7 @@ if (rootProject.minecraft_version == "1.16.5") {
 
 processResources {
     inputs.property "version", project.version
-    inputs.property "minecraft_version", project.minecraft_version
+    inputs.property "minecraft_version", project.minecraft_version.replaceAll(/rc(\d+)/, /rc.$1/)
 
     filesMatching("fabric.mod.json") {
         expand inputs.properties

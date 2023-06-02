@@ -3,21 +3,16 @@ package moe.plushie.armourers_workshop.utils;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
-import moe.plushie.armourers_workshop.compatibility.AbstractShaderTesselator;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractRenderSystem;
 import moe.plushie.armourers_workshop.core.armature.ModelBinder;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferBuilder;
-import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
@@ -28,10 +23,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.core.Direction;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.FormattedText;
@@ -92,57 +85,34 @@ public final class RenderSystem extends AbstractRenderSystem {
     }
 
 
-    public static void blit(PoseStack poseStack, int x, int y, int u, int v, int width, int height) {
-        Screen.blit(poseStack, x, y, 0, u, v, width, height, 256, 256);
-    }
-
-    public static void blit(PoseStack poseStack, int x, int y, int u, int v, int width, int height, ResourceLocation texture) {
-        setShaderTexture(0, texture);
-        Screen.blit(poseStack, x, y, 0, u, v, width, height, 256, 256);
-    }
-
-    public static void blit(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, ResourceLocation texture) {
-        setShaderTexture(0, texture);
-        Screen.blit(poseStack, x, y, 0, u, v, width, height, texWidth, texHeight);
-    }
-
-    public static void tile(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, int r0, int r1, int r2, int r3) {
-        drawContinuousTexturedBox(poseStack, x, y, u, v, width, height, texWidth, texHeight, r0, r1, r2, r3, 0);
-    }
-
-    public static void tile(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, int r0, int r1, int r2, int r3, ResourceLocation texture) {
-        setShaderTexture(0, texture);
-        drawContinuousTexturedBox(poseStack, x, y, u, v, width, height, texWidth, texHeight, r0, r1, r2, r3, 0);
-    }
-
-    public static void resize(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int targetWidth, int targetHeight) {
-        resize(poseStack, x, y, u, v, width, height, targetWidth, targetHeight, 256, 256);
-    }
-
-    public static void resize(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, int texWidth, int texHeight) {
-        float f = 1.0f / texWidth;
-        float f1 = 1.0f / texHeight;
-
-        PoseStack.Pose pose = poseStack.last();
-        AbstractShaderTesselator tessellator = AbstractShaderTesselator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.begin(SkinRenderType.GUI_IMAGE);
-        bufferbuilder.vertex(pose, x, y + height, 0).uv(u * f, (v + sourceHeight) * f1).endVertex();
-        bufferbuilder.vertex(pose, x + width, y + height, 0).uv((u + sourceWidth) * f, (v + sourceHeight) * f1).endVertex();
-        bufferbuilder.vertex(pose, x + width, y, 0).uv((u + sourceWidth) * f, v * f1).endVertex();
-        bufferbuilder.vertex(pose, x, y, 0).uv(u * f, v * f1).endVertex();
-        tessellator.end();
-    }
-
-
-    public static void resize(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, ResourceLocation texture) {
-        setShaderTexture(0, texture);
-        resize(poseStack, x, y, u, v, width, height, sourceWidth, sourceHeight);
-    }
-
-    public static void resize(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, int texWidth, int texHeight, ResourceLocation texture) {
-        setShaderTexture(0, texture);
-        resize(poseStack, x, y, u, v, width, height, sourceWidth, sourceHeight, texWidth, texHeight);
-    }
+//    public static void resize(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int targetWidth, int targetHeight) {
+//        resize(poseStack, x, y, u, v, width, height, targetWidth, targetHeight, 256, 256);
+//    }
+//
+//    public static void resize(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, int texWidth, int texHeight) {
+//        float f = 1.0f / texWidth;
+//        float f1 = 1.0f / texHeight;
+//
+//        PoseStack.Pose pose = poseStack.last();
+//        AbstractShaderTesselator tessellator = AbstractShaderTesselator.getInstance();
+//        BufferBuilder bufferbuilder = tessellator.begin(SkinRenderType.GUI_IMAGE);
+//        bufferbuilder.vertex(pose, x, y + height, 0).uv(u * f, (v + sourceHeight) * f1).endVertex();
+//        bufferbuilder.vertex(pose, x + width, y + height, 0).uv((u + sourceWidth) * f, (v + sourceHeight) * f1).endVertex();
+//        bufferbuilder.vertex(pose, x + width, y, 0).uv((u + sourceWidth) * f, v * f1).endVertex();
+//        bufferbuilder.vertex(pose, x, y, 0).uv(u * f, v * f1).endVertex();
+//        tessellator.end();
+//    }
+//
+//
+//    public static void resize(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, ResourceLocation texture) {
+//        setShaderTexture(0, texture);
+//        resize(poseStack, x, y, u, v, width, height, sourceWidth, sourceHeight);
+//    }
+//
+//    public static void resize(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, int texWidth, int texHeight, ResourceLocation texture) {
+//        setShaderTexture(0, texture);
+//        resize(poseStack, x, y, u, v, width, height, sourceWidth, sourceHeight, texWidth, texHeight);
+//    }
 
     public static int getPixelColor(int x, int y) {
         Window window = Minecraft.getInstance().getWindow();
@@ -246,18 +216,6 @@ public final class RenderSystem extends AbstractRenderSystem {
         enableAlphaTest();
     }
 
-    public static void drawPlayerHead(PoseStack poseStack, int x, int y, int width, int height, PlayerTextureDescriptor descriptor) {
-        ResourceLocation texture = DefaultPlayerSkin.getDefaultSkin();
-        if (!descriptor.isEmpty()) {
-            PlayerTexture texture1 = PlayerTextureLoader.getInstance().loadTexture(descriptor);
-            if (texture1 != null) {
-                texture = texture1.getLocation();
-            }
-        }
-        setShaderTexture(0, texture);
-        resize(poseStack, x, y, 8, 8, width, height, 8, 8, 64, 64);
-        resize(poseStack, x - 1, y - 1, 40, 8, width + 2, height + 2, 8, 8, 64, 64);
-    }
 
     private static void drawLine(PoseStack.Pose pose, float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, VertexConsumer builder) {
         float nx = 0, ny = 0, nz = 0;
@@ -270,8 +228,8 @@ public final class RenderSystem extends AbstractRenderSystem {
         if (z0 != z1) {
             nz = 1;
         }
-        builder.vertex(pose, x0, y0, z0).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).normal(pose, nx, ny, nz).endVertex();
-        builder.vertex(pose, x1, y1, z1).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).normal(pose, nx, ny, nz).endVertex();
+        builder.vertex(pose.pose(), x0, y0, z0).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).normal(pose.normal(), nx, ny, nz).endVertex();
+        builder.vertex(pose.pose(), x1, y1, z1).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).normal(pose.normal(), nx, ny, nz).endVertex();
     }
 
     public static void drawBoundingBox(PoseStack poseStack, float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, VertexConsumer builder) {
@@ -437,7 +395,7 @@ public final class RenderSystem extends AbstractRenderSystem {
         byte[][] textures = FACE_MARK_TEXTURES[dir.get3DDataValue()];
         float[] values = {0, w, h, d};
         for (int i = 0; i < 4; ++i) {
-            builder.vertex(pose, x + vertexes[i][0] * w, y + vertexes[i][1] * h, z + vertexes[i][2] * d)
+            builder.vertex(pose.pose(), x + vertexes[i][0] * w, y + vertexes[i][1] * h, z + vertexes[i][2] * d)
                     .color(r, g, b, a)
                     .uv(u + values[textures[i][0]], v + values[textures[i][1]])
                     .overlayCoords(OverlayTexture.NO_OVERLAY)
@@ -446,100 +404,16 @@ public final class RenderSystem extends AbstractRenderSystem {
         }
     }
 
-    /**
-     * Draws a textured box of any size (smallest size is borderSize * 2 square) based on a fixed size textured box with continuous borders
-     * and filler. It is assumed that the desired texture ResourceLocation object has been bound using
-     * Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation).
-     *
-     * @param poseStack   the gui matrix stack
-     * @param x             x axis offset
-     * @param y             y axis offset
-     * @param u             bound resource location image x offset
-     * @param v             bound resource location image y offset
-     * @param width         the desired box width
-     * @param height        the desired box height
-     * @param textureWidth  the width of the box texture in the resource location image
-     * @param textureHeight the height of the box texture in the resource location image
-     * @param borderSize    the size of the box's borders
-     * @param zLevel        the zLevel to draw at
-     */
-    public static void drawContinuousTexturedBox(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
-                                                 int borderSize, float zLevel) {
-        drawContinuousTexturedBox(poseStack, x, y, u, v, width, height, textureWidth, textureHeight, borderSize, borderSize, borderSize, borderSize, zLevel);
+    public static void drawImage(ResourceLocation texture, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, int texWidth, int texHeight, PoseStack poseStack) {
+        setShaderTexture(0, texture);
+        RectangleTesselator tesselator = new RectangleTesselator(poseStack);
+        tesselator.begin(SkinRenderType.GUI_IMAGE, texWidth, texHeight);
+        tesselator.add(x, y, width, height, u, v, sourceWidth, sourceHeight, 0);
+        tesselator.end();
     }
 
-    /**
-     * Draws a textured box of any size (smallest size is borderSize * 2 square) based on a fixed size textured box with continuous borders
-     * and filler. The provided ResourceLocation object will be bound using
-     * Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation).
-     *
-     * @param poseStack   the gui matrix stack
-     * @param res           the ResourceLocation object that contains the desired image
-     * @param x             x axis offset
-     * @param y             y axis offset
-     * @param u             bound resource location image x offset
-     * @param v             bound resource location image y offset
-     * @param width         the desired box width
-     * @param height        the desired box height
-     * @param textureWidth  the width of the box texture in the resource location image
-     * @param textureHeight the height of the box texture in the resource location image
-     * @param borderSize    the size of the box's borders
-     * @param zLevel        the zLevel to draw at
-     */
-    public static void drawContinuousTexturedBox(PoseStack poseStack, ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
-                                                 int borderSize, float zLevel) {
-        drawContinuousTexturedBox(poseStack, res, x, y, u, v, width, height, textureWidth, textureHeight, borderSize, borderSize, borderSize, borderSize, zLevel);
-    }
-
-    /**
-     * Draws a textured box of any size (smallest size is borderSize * 2 square) based on a fixed size textured box with continuous borders
-     * and filler. The provided ResourceLocation object will be bound using
-     * Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation).
-     *
-     * @param poseStack   the gui matrix stack
-     * @param res           the ResourceLocation object that contains the desired image
-     * @param x             x axis offset
-     * @param y             y axis offset
-     * @param u             bound resource location image x offset
-     * @param v             bound resource location image y offset
-     * @param width         the desired box width
-     * @param height        the desired box height
-     * @param textureWidth  the width of the box texture in the resource location image
-     * @param textureHeight the height of the box texture in the resource location image
-     * @param topBorder     the size of the box's top border
-     * @param bottomBorder  the size of the box's bottom border
-     * @param leftBorder    the size of the box's left border
-     * @param rightBorder   the size of the box's right border
-     * @param zLevel        the zLevel to draw at
-     */
-    public static void drawContinuousTexturedBox(PoseStack poseStack, ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
-                                                 int topBorder, int bottomBorder, int leftBorder, int rightBorder, float zLevel) {
+    public static void drawClipImage(ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, int topBorder, int bottomBorder, int leftBorder, int rightBorder, float zLevel, PoseStack poseStack) {
         setShaderTexture(0, res);
-        drawContinuousTexturedBox(poseStack, x, y, u, v, width, height, textureWidth, textureHeight, topBorder, bottomBorder, leftBorder, rightBorder, zLevel);
-    }
-
-    /**
-     * Draws a textured box of any size (smallest size is borderSize * 2 square) based on a fixed size textured box with continuous borders
-     * and filler. It is assumed that the desired texture ResourceLocation object has been bound using
-     * Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation).
-     *
-     * @param poseStack   the gui matrix stack
-     * @param x             x axis offset
-     * @param y             y axis offset
-     * @param u             bound resource location image x offset
-     * @param v             bound resource location image y offset
-     * @param width         the desired box width
-     * @param height        the desired box height
-     * @param textureWidth  the width of the box texture in the resource location image
-     * @param textureHeight the height of the box texture in the resource location image
-     * @param topBorder     the size of the box's top border
-     * @param bottomBorder  the size of the box's bottom border
-     * @param leftBorder    the size of the box's left border
-     * @param rightBorder   the size of the box's right border
-     * @param zLevel        the zLevel to draw at
-     */
-    public static void drawContinuousTexturedBox(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight,
-                                                 int topBorder, int bottomBorder, int leftBorder, int rightBorder, float zLevel) {
         setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         enableBlend();
         defaultBlendFunc();
@@ -553,50 +427,84 @@ public final class RenderSystem extends AbstractRenderSystem {
         int yPasses = canvasHeight / fillerHeight;
         int remainderHeight = canvasHeight % fillerHeight;
 
-        PoseStack.Pose pose = poseStack.last();
-        AbstractShaderTesselator tesselator = AbstractShaderTesselator.getInstance();
-        BufferBuilder bufferBuilder = tesselator.begin(SkinRenderType.GUI_IMAGE);
+        RectangleTesselator tesselator = new RectangleTesselator(poseStack);
+        tesselator.begin(SkinRenderType.GUI_IMAGE, 256, 256);
 
         // Draw Border
         // Top Left
-        _drawTexturedModalRect(pose, x, y, u, v, leftBorder, topBorder, zLevel, bufferBuilder);
+        tesselator.add(
+                x, y,
+                leftBorder, topBorder,
+                u, v,
+                zLevel);
         // Top Right
-        _drawTexturedModalRect(pose, x + leftBorder + canvasWidth, y, u + leftBorder + fillerWidth, v, rightBorder, topBorder, zLevel, bufferBuilder);
+        tesselator.add(x + leftBorder + canvasWidth, y,
+                rightBorder, topBorder,
+                u + leftBorder + fillerWidth, v,
+                zLevel);
         // Bottom Left
-        _drawTexturedModalRect(pose, x, y + topBorder + canvasHeight, u, v + topBorder + fillerHeight, leftBorder, bottomBorder, zLevel, bufferBuilder);
+        tesselator.add(
+                x, y + topBorder + canvasHeight,
+                leftBorder, bottomBorder,
+                u, v + topBorder + fillerHeight,
+                zLevel);
         // Bottom Right
-        _drawTexturedModalRect(pose, x + leftBorder + canvasWidth, y + topBorder + canvasHeight, u + leftBorder + fillerWidth, v + topBorder + fillerHeight, rightBorder, bottomBorder, zLevel, bufferBuilder);
+        tesselator.add(x + leftBorder + canvasWidth, y + topBorder + canvasHeight,
+                rightBorder, bottomBorder,
+                u + leftBorder + fillerWidth, v + topBorder + fillerHeight,
+                zLevel);
 
         for (int i = 0; i < xPasses + (remainderWidth > 0 ? 1 : 0); i++) {
             // Top Border
-            _drawTexturedModalRect(pose, x + leftBorder + (i * fillerWidth), y, u + leftBorder, v, (i == xPasses ? remainderWidth : fillerWidth), topBorder, zLevel, bufferBuilder);
+            tesselator.add(
+                    x + leftBorder + (i * fillerWidth), y,
+                    (i == xPasses ? remainderWidth : fillerWidth), topBorder,
+                    u + leftBorder, v,
+                    zLevel);
             // Bottom Border
-            _drawTexturedModalRect(pose, x + leftBorder + (i * fillerWidth), y + topBorder + canvasHeight, u + leftBorder, v + topBorder + fillerHeight, (i == xPasses ? remainderWidth : fillerWidth), bottomBorder, zLevel, bufferBuilder);
+            tesselator.add(
+                    x + leftBorder + (i * fillerWidth), y + topBorder + canvasHeight,
+                    (i == xPasses ? remainderWidth : fillerWidth), bottomBorder,
+                    u + leftBorder, v + topBorder + fillerHeight,
+                    zLevel);
+
 
             // Throw in some filler for good measure
             for (int j = 0; j < yPasses + (remainderHeight > 0 ? 1 : 0); j++)
-                _drawTexturedModalRect(pose, x + leftBorder + (i * fillerWidth), y + topBorder + (j * fillerHeight), u + leftBorder, v + topBorder, (i == xPasses ? remainderWidth : fillerWidth), (j == yPasses ? remainderHeight : fillerHeight), zLevel, bufferBuilder);
+                tesselator.add(
+                        x + leftBorder + (i * fillerWidth), y + topBorder + (j * fillerHeight),
+                        (i == xPasses ? remainderWidth : fillerWidth), (j == yPasses ? remainderHeight : fillerHeight),
+                        u + leftBorder, v + topBorder,
+                        zLevel);
         }
 
         // Side Borders
         for (int j = 0; j < yPasses + (remainderHeight > 0 ? 1 : 0); j++) {
             // Left Border
-            _drawTexturedModalRect(pose, x, y + topBorder + (j * fillerHeight), u, v + topBorder, leftBorder, (j == yPasses ? remainderHeight : fillerHeight), zLevel, bufferBuilder);
+            tesselator.add(
+                    x, y + topBorder + (j * fillerHeight),
+                    leftBorder, (j == yPasses ? remainderHeight : fillerHeight),
+                    u, v + topBorder,
+                    zLevel);
             // Right Border
-            _drawTexturedModalRect(pose, x + leftBorder + canvasWidth, y + topBorder + (j * fillerHeight), u + leftBorder + fillerWidth, v + topBorder, rightBorder, (j == yPasses ? remainderHeight : fillerHeight), zLevel, bufferBuilder);
+            tesselator.add(
+                    x + leftBorder + canvasWidth, y + topBorder + (j * fillerHeight),
+                    rightBorder, (j == yPasses ? remainderHeight : fillerHeight),
+                    u + leftBorder + fillerWidth, v + topBorder,
+                    zLevel);
         }
 
         tesselator.end();
     }
 
-    private static void _drawTexturedModalRect(PoseStack.Pose pose, int x, int y, int u, int v, int width, int height, float zLevel, BufferBuilder bufferBuilder) {
-        final float uScale = 1f / 0x100;
-        final float vScale = 1f / 0x100;
-        bufferBuilder.vertex(pose, x, y + height, zLevel).uv(u * uScale, ((v + height) * vScale)).endVertex();
-        bufferBuilder.vertex(pose, x + width, y + height, zLevel).uv((u + width) * uScale, ((v + height) * vScale)).endVertex();
-        bufferBuilder.vertex(pose, x + width, y, zLevel).uv((u + width) * uScale, (v * vScale)).endVertex();
-        bufferBuilder.vertex(pose, x, y, zLevel).uv(u * uScale, (v * vScale)).endVertex();
-    }
+//    private static void _drawTexturedModalRect(PoseStack.Pose pose, int x, int y, int u, int v, int width, int height, float zLevel, BufferBuilder bufferBuilder) {
+//        final float uScale = 1f / 0x100;
+//        final float vScale = 1f / 0x100;
+//        bufferBuilder.vertex(pose, x, y + height, zLevel).uv(u * uScale, ((v + height) * vScale)).endVertex();
+//        bufferBuilder.vertex(pose, x + width, y + height, zLevel).uv((u + width) * uScale, ((v + height) * vScale)).endVertex();
+//        bufferBuilder.vertex(pose, x + width, y, zLevel).uv((u + width) * uScale, (v * vScale)).endVertex();
+//        bufferBuilder.vertex(pose, x, y, zLevel).uv(u * uScale, (v * vScale)).endVertex();
+//    }
 
 //    public static void disableLighting() {
 //        net.minecraft.client.GameSettings

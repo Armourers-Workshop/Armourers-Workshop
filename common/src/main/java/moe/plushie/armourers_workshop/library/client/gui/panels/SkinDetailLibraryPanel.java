@@ -19,6 +19,7 @@ import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
@@ -38,6 +39,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.util.Strings;
 
@@ -173,7 +175,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
             }
         }
         if (Strings.isNotBlank(playerTexture.getName())) {
-            font.draw(context.poseStack, getDisplayText("uploader", playerTexture.getName()).chars(), rect.x + 32, rect.y + 12, 0xffeeeeee);
+            context.drawText(getDisplayText("uploader", playerTexture.getName()).chars(), rect.x + 32, rect.y + 12, 0xffeeeeee);
             RenderSystem.enableAlphaTest();
         }
     }
@@ -184,7 +186,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
             return;
         }
         RenderSystem.addClipRect(convertRectToView(rect, null));
-        RenderSystem.drawText(context.poseStack, font, message.component(), rect.x + 2, rect.y + 2, rect.width - 4, 0, 0xffeeeeee);
+        RenderSystem.drawText(context.state().ctm(), font, message.component(), rect.x + 2, rect.y + 2, rect.width - 4, 0, 0xffeeeeee);
         RenderSystem.removeClipRect();
     }
 
@@ -193,7 +195,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(entry.getDescriptor(), loadTicket);
         if (bakedSkin != null) {
             MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            ExtendedItemRenderer.renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, rect.x, rect.y, 100, rect.width, rect.height, 20, 45, 0, 0, 0xf000f0, context.poseStack, buffers);
+            ExtendedItemRenderer.renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, rect.x, rect.y, 100, rect.width, rect.height, 20, 45, 0, 0, 0xf000f0, context.state().ctm(), buffers);
             buffers.endBatch();
         }
     }
@@ -398,8 +400,8 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         @Override
         public void render(CGPoint point, CGGraphicsContext context) {
             super.render(point, context);
-            RenderSystem.enableAlphaTest();
-            RenderSystem.drawPlayerHead(context.poseStack, 0, 0, 16, 16, playerTexture);
+            ResourceLocation texture = PlayerTextureLoader.getInstance().loadTextureLocation(playerTexture);
+            context.drawAvatarContents(texture, 0, 0, 16, 16);
         }
     }
 }

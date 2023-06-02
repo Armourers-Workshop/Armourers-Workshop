@@ -34,13 +34,13 @@ public class MannequinToolItem extends FlavouredItem {
                 ((MannequinEntity) entity).addExtendedData(config);
                 newItemStack.addTagElement(Constants.Key.ENTITY, config);
                 player.setItemInHand(hand, newItemStack);
-                return InteractionResult.sidedSuccess(player.level.isClientSide());
+                return InteractionResult.sidedSuccess(player.getLevel().isClientSide());
             } else {
                 CompoundTag tag = itemStack.getTag();
                 if (tag != null && tag.contains(Constants.Key.ENTITY, Constants.TagFlags.COMPOUND)) {
                     CompoundTag config = tag.getCompound(Constants.Key.ENTITY);
                     ((MannequinEntity) entity).readExtendedData(config);
-                    return InteractionResult.sidedSuccess(player.level.isClientSide());
+                    return InteractionResult.sidedSuccess(player.getLevel().isClientSide());
                 }
                 return InteractionResult.FAIL;
             }

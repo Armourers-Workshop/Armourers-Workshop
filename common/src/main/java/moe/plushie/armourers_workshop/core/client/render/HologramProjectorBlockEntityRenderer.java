@@ -52,7 +52,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         Entity mannequin = SkinItemRenderer.getInstance().getMannequinEntity();
         MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
         SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(mannequin, model, null);
-        if (renderer == null || mannequin == null || mannequin.level == null) {
+        if (renderer == null || mannequin == null || mannequin.getLevel() == null) {
             return;
         }
         float f = 1 / 16f;

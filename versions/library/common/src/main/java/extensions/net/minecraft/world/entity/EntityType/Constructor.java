@@ -12,10 +12,12 @@ import net.minecraft.world.entity.MobSpawnType;
 import org.jetbrains.annotations.Nullable;
 
 @Extension
-@Available("[1.16, 1.19.3)")
+@Available("[1.20, )")
 public class Constructor {
 
     public static <T extends Entity> T create(@This EntityType<T> entityType, ServerLevel level, BlockPos pos, @Nullable CompoundTag tag, MobSpawnType spawnType) {
-        return entityType.create(level, tag, null, null, pos, spawnType, true, true);
+        T entity = entityType.create(level);
+        EntityType.updateCustomEntityTag(level, null, entity, tag);
+        return entity;
     }
 }

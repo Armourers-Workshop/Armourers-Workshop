@@ -8,11 +8,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Available("[1.18, )")
+@Available("[1.20, )")
 @Mixin(GlStateManager.class)
 public class GlStateManagerMixin {
 
-    @Inject(method = "_drawElements", at = @At("RETURN"))
+    @Inject(method = "_drawElements", at = @At("RETURN"), remap = false)
     private static void aw$drawElements(int i, int j, int k, long l, CallbackInfo ci) {
         SkinRenderExecutor.resume();
     }

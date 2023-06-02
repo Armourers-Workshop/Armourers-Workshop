@@ -13,7 +13,7 @@ public class UICheckBox extends UIControl {
 
     public UICheckBox(CGRect frame) {
         super(frame);
-        // TODO: Using image and NSImageView to replace marker
+        // TODO: Using image and UIImageView to replace marker
         UIImageView imageView = new UIImageView(new CGRect(0, 0, 9, 9));
         imageView.setImage(AppearanceImpl.BUTTON_IMAGE.imageAtIndex(State.DISABLED));
         this.addSubview(imageView);

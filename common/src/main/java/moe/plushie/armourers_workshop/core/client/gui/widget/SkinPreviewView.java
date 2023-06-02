@@ -41,7 +41,7 @@ public class SkinPreviewView extends UIControl {
         int z = 200;
         int width = rect.width;
         int height = rect.height;
-        PoseStack poseStack = context.poseStack;
+        PoseStack poseStack = context.state().ctm();
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         ExtendedItemRenderer.renderSkinInBox(bakedSkin, descriptor.getColorScheme(), ItemStack.EMPTY, x, y, z, width, height, 20, 45, 0, poseStack, buffers);
         buffers.endBatch();

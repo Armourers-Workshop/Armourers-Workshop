@@ -106,7 +106,7 @@ public class CommonProxyImpl implements ModInitializer {
             return InteractionResult.PASS;
         }
         IBlockHandler handler = ObjectUtils.safeCast(blockState.getBlock(), IBlockHandler.class);
-        if (handler != null && handler.isCustomLadder(entity.level, blockPos, blockState, entity)) {
+        if (handler != null && handler.isCustomLadder(entity.getLevel(), blockPos, blockState, entity)) {
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
@@ -114,14 +114,14 @@ public class CommonProxyImpl implements ModInitializer {
 
     public InteractionResult onAllowBed(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
         IBlockHandler handler = ObjectUtils.safeCast(state.getBlock(), IBlockHandler.class);
-        if (handler != null && handler.isCustomBed(entity.level, sleepingPos, state, entity)) {
+        if (handler != null && handler.isCustomBed(entity.getLevel(), sleepingPos, state, entity)) {
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
     }
 
     public void onStopSleep(LivingEntity entity, BlockPos sleepingPos) {
-        Level level = entity.level;
+        Level level = entity.getLevel();
         BlockState state = level.getBlockState(sleepingPos);
         IBlockHandler handler = ObjectUtils.safeCast(state.getBlock(), IBlockHandler.class);
         if (handler != null && handler.isCustomBed(level, sleepingPos, state, entity)) {

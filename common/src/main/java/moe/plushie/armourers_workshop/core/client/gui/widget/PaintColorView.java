@@ -32,12 +32,11 @@ public class PaintColorView extends UIView {
         int dv = (cv + (int)TickUtils.getPaintTextureOffset()) % 256;
 
         if (paintType != SkinPaintTypes.RAINBOW) {
-            RenderSystem.setShaderColor(color);
+            context.setTintColor(color);
         }
 
         CGRect rect = bounds();
-        RenderSystem.resize(context.poseStack, 0, 0, cu, dv, rect.width, rect.height, 1, 1, ModTextures.CUBE);
-
+        context.drawImage(ModTextures.CUBE, 0, 0, cu, dv, rect.width, rect.height, 1, 1, 256, 256);
         if (paintType != SkinPaintTypes.RAINBOW) {
             RenderSystem.setShaderColor(UIColor.WHITE);
         }

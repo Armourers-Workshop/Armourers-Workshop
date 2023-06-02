@@ -31,36 +31,6 @@ import java.util.function.Consumer;
 @Extension
 public class ClientEventProvider {
 
-    public static void willRenderTooltipFO(@ThisClass Class<?> clazz, ClientNativeProvider.RenderTooltip consumer) {
-        NotificationCenterImpl.observer(RenderTooltipEvent.Pre.class, event -> {
-            Font font = event.getFont();
-            List<ClientTooltipComponent> tooltips = event.getComponents();
-            int mouseX = event.getX();
-            int mouseY = event.getY();
-            int screenWidth = event.getScreenWidth();
-            int screenHeight = event.getScreenHeight();
-            int i = 0;
-            int j = tooltips.size() == 1 ? -2 : 0;
-            for (ClientTooltipComponent tooltip : tooltips) {
-                int k = tooltip.getWidth(font);
-                if (k > i) {
-                    i = k;
-                }
-                j += tooltip.getHeight();
-            }
-            int j2 = mouseX + 12;
-            int k2 = mouseY - 12;
-            if (j2 + i > screenWidth) {
-                j2 -= 28 + i;
-            }
-            if (k2 + j + 6 > screenHeight) {
-                k2 = screenHeight - j - 6;
-            }
-            CGRect frame = new CGRect(j2, k2, i, j);
-            consumer.render(event.getItemStack(), frame, mouseX, mouseY, screenWidth, screenHeight, event.getPoseStack());
-        });
-    }
-
     public static void willRenderBlockHighlightFO(@ThisClass Class<?> clazz, ClientNativeProvider.RenderBlockHighlight renderer) {
         NotificationCenterImpl.observer(DrawSelectionEvent.HighlightBlock.class, event -> {
             renderer.render(event.getTarget(), event.getCamera(), event.getPoseStack(), event.getMultiBufferSource());

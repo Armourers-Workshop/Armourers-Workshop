@@ -58,7 +58,7 @@ public class UpdateArmourerPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
-        BlockEntity blockEntity = player.level.getBlockEntity(pos);
+        BlockEntity blockEntity = player.getLevel().getBlockEntity(pos);
         if (blockEntity instanceof ArmourerBlockEntity && player.containerMenu instanceof ArmourerMenu) {
             BlockUtils.beginCombiner();
             acceptFieldUpdate(player, (ArmourerBlockEntity) blockEntity, (ArmourerMenu) player.containerMenu);

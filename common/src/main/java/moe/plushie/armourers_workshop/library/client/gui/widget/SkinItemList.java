@@ -157,9 +157,9 @@ public class SkinItemList extends UIView {
         renderItemBackground(ix, iy, iw, ih, isHovered, entry, context);
         renderItemContent(ix, iy, iw, ih, isHovered, entry, buffers, context);
         if (isHovered) {
-            RenderSystem.addClipRect(clipBox.insetBy(1, 1, 1, 1));
+            context.addClipRect(clipBox.insetBy(1, 1, 1, 1));
             buffers.endBatch();
-            RenderSystem.removeClipRect();
+            context.removeClipRect();
         }
     }
 
@@ -172,7 +172,7 @@ public class SkinItemList extends UIView {
             int frame = (int) ((System.currentTimeMillis() / speed) % frames);
             int u = MathUtils.floor(frame / 9f);
             int v = frame - u * 9;
-            RenderSystem.resize(context.poseStack, x + 8, y + 8, u * 28, v * 28, width - 16, height - 16, 27, 27, ModTextures.SKIN_PANEL);
+            context.drawImage(ModTextures.SKIN_PANEL, x + 8, y + 8, u * 28, v * 28, width - 16, height - 16, 27, 27, 256, 256);
             return;
         }
         Skin skin = bakedSkin.getSkin();
@@ -180,12 +180,12 @@ public class SkinItemList extends UIView {
             String name = entry.getName();
             List<FormattedText> properties = font.getSplitter().splitLines(name, width - 2, Style.EMPTY);
             int iy = y + height - properties.size() * font.lineHeight - 2;
-            RenderSystem.drawText(context.poseStack, font, properties, x + 1, iy, width - 2, 0, false, 9, 0xffeeeeee);
+            RenderSystem.drawText(context.state().ctm(), font, properties, x + 1, iy, width - 2, 0, false, 9, 0xffeeeeee);
         }
 
         ResourceLocation texture = ArmourersWorkshop.getItemIcon(skin.getType());
         if (texture != null) {
-            RenderSystem.resize(context.poseStack, x + 1, y + 1, 0, 0, width / 4, height / 4, 16, 16, 16, 16, texture);
+            context.drawImage(texture, x + 1, y + 1, 0, 0, width / 4, height / 4, 16, 16, 16, 16);
         }
 
         int dx = x + width / 2, dy = y + height / 2, dw = width, dh = height;
@@ -194,7 +194,7 @@ public class SkinItemList extends UIView {
             dh *= 1.5f;
         }
 
-        ExtendedItemRenderer.renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx - dw / 2, dy - dw / 2, 100, dw, dh, 20, 45, 0, 0, 0xf000f0, context.poseStack, buffers);
+        ExtendedItemRenderer.renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx - dw / 2, dy - dw / 2, 100, dw, dh, 20, 45, 0, 0, 0xf000f0, context.state().ctm(), buffers);
     }
 
     public void renderItemBackground(int x, int y, int width, int height, boolean isHovered, ServerSkin entry, CGGraphicsContext context) {

@@ -9,10 +9,8 @@ import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIEvent;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
 
 @Environment(value = EnvType.CLIENT)
 public class InventoryBox extends UIControl {
@@ -47,8 +45,6 @@ public class InventoryBox extends UIControl {
         // TODO: Refactoring
         int u = 176;
         int v = 0;
-        ResourceLocation texture = ModTextures.ARMOURER;
-        RenderSystem.setShaderTexture(0, texture);
         int width = bounds().width;
         int height = bounds().height;
         int hoverWidth = MathUtils.clamp(mouseOffset.x, 0, width);
@@ -63,7 +59,7 @@ public class InventoryBox extends UIControl {
                 if (ix <= hoverWidth && iy <= hoverHeight && isHighlighted()) {
                     iv += itemSize.height;
                 }
-                RenderSystem.blit(context.poseStack, ix, iy, iu, iv, itemSize.width, itemSize.height);
+                context.drawImage(ModTextures.ARMOURER, ix, iy, iu, iv, itemSize.width, itemSize.height, 256, 256);
             }
         }
     }

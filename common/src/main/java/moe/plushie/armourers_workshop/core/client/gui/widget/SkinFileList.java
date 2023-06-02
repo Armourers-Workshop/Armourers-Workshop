@@ -246,13 +246,13 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
                 context.fillRect(left, top, left + width, top + height, backgroundColor);
             }
             context.drawText(title.getVisualOrderText(), left + iconOffset + 2, top + 3, textColor);
-            renderIcon(context.poseStack, left, top - 1, 16, 16);
+            renderIcon(context, left, top - 1, 16, 16);
         }
 
-        public void renderIcon(PoseStack poseStack, int x, int y, int width, int height) {
+        public void renderIcon(CGGraphicsContext context, int x, int y, int width, int height) {
             if (entry.isDirectory()) {
                 int u = entry.isPrivateDirectory() ? 32 : 16;
-                RenderSystem.blit(poseStack, x + (width - 12) / 2, y + (height - 12) / 2 - 1, u, 0, 12, 12, ModTextures.LIST);
+                context.drawImage(ModTextures.LIST, x + (width - 12) / 2, y + (height - 12) / 2 - 1, u, 0, 12, 12, 256, 256);
                 return;
             }
             BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(getDescriptor(), loadTicket);
@@ -260,7 +260,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
                 return;
             }
             MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            ExtendedItemRenderer.renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, x, y, 100, width, height - 1, 20, 45, 0, poseStack, buffers);
+            ExtendedItemRenderer.renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, x, y, 100, width, height - 1, 20, 45, 0, context.state().ctm(), buffers);
         }
 
         public void renderTooltip(CGRect rect, CGGraphicsContext context) {
@@ -275,14 +275,14 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             CGRect bounds = window.bounds();
             CGPoint point = convertPointToView(CGPoint.ZERO, null);
             int size = 144;
-            int mouseY = context.mouseY;
+            int mouseY = context.state().mousePos().y;
             int dz = 0;
             int dx = point.x - size - 5;
             int dy = MathUtils.clamp(mouseY - size / 2, 0, bounds.height - size);
-            Font font = context.font.font();
-            PoseStack poseStack = context.poseStack;
+            Font font = context.state().font().font();
+            PoseStack poseStack = context.state().ctm();
             ArrayList<FormattedText> tooltips = new ArrayList<>(ItemTooltipManager.createSkinInfo(bakedSkin));
-            RenderSystem.drawContinuousTexturedBox(poseStack, ModTextures.GUI_PREVIEW, dx, dy, 0, 0, size, size, 62, 62, 4, dz);
+            RenderSystem.drawClipImage(ModTextures.GUI_PREVIEW, dx, dy, 0, 0, size, size, 62, 62, 4, 4, 4, 4, dz, poseStack);
             RenderSystem.drawShadowText(poseStack, tooltips, dx + 4, dy + 4, size - 8, dz, font, 7, 0xffffff);
             MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
             ExtendedItemRenderer.renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx, dy, dz + 100, size, size, 30, 45, 0, 0, 0xf000f0, poseStack, buffers);

@@ -186,13 +186,13 @@ public class DataSerializers {
         }
 
         public SkinWardrobe read(FriendlyByteBuf buffer, Player player) {
-            if (player == null || player.level == null) {
+            if (player == null || player.getLevel() == null) {
                 return null;
             }
             int entityId = buffer.readInt();
-            Entity entity = player.level.getEntity(entityId);
+            Entity entity = player.getLevel().getEntity(entityId);
             if (entity == null) {
-                for (Player player1 : player.level.players()) {
+                for (Player player1 : player.getLevel().players()) {
                     if (player1.getId() == entityId) {
                         entity = player1;
                         break;
@@ -219,12 +219,12 @@ public class DataSerializers {
         }
 
         public IContainerLevelAccess read(FriendlyByteBuf buffer, Player player) {
-            if (player == null || player.level == null) {
+            if (player == null || player.getLevel() == null) {
                 return null;
             }
             BlockPos blockPos = buffer.readBlockPos();
             // CompoundTag extraNBT = buffer.readNbt(); 
-            return IContainerLevelAccess.create(player.level, blockPos, null);
+            return IContainerLevelAccess.create(player.getLevel(), blockPos, null);
         }
     };
 

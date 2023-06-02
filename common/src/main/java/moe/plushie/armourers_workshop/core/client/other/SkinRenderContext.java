@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 import com.google.common.collect.Iterators;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
-import moe.plushie.armourers_workshop.api.common.IItemTransformType;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
@@ -27,7 +27,7 @@ public class SkinRenderContext {
     public PoseStack poseStack;
     public SkinRenderData renderData;
     public MultiBufferSource buffers;
-    public IItemTransformType transformType;
+    public AbstractItemTransformType transformType;
 
     private ITransformf[] transforms;
 
@@ -36,14 +36,14 @@ public class SkinRenderContext {
 
     public final OpenPoseStackC poseStack1 = new OpenPoseStackC(new PoseStack());
 
-    public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, IItemTransformType transformType, PoseStack poseStack, MultiBufferSource buffers) {
+    public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, AbstractItemTransformType transformType, PoseStack poseStack, MultiBufferSource buffers) {
         SkinRenderContext context = POOL.next();
         context.init(renderData, light, partialTick, transformType, poseStack, buffers);
         return context;
     }
 
     public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, PoseStack poseStack, MultiBufferSource buffers) {
-        return alloc(renderData, light, partialTick, IItemTransformType.NONE, poseStack, buffers);
+        return alloc(renderData, light, partialTick, AbstractItemTransformType.NONE, poseStack, buffers);
     }
 
     private static Collection<SkinRenderContext> make(int size) {
@@ -54,7 +54,7 @@ public class SkinRenderContext {
         return contexts;
     }
 
-    public void init(SkinRenderData renderData, int light, float partialTick, IItemTransformType transformType, PoseStack poseStack, MultiBufferSource buffers) {
+    public void init(SkinRenderData renderData, int light, float partialTick, AbstractItemTransformType transformType, PoseStack poseStack, MultiBufferSource buffers) {
         this.renderData = renderData;
         this.light = light;
         this.partialTicks = partialTick;

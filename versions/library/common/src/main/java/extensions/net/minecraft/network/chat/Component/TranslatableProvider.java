@@ -12,11 +12,11 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 import java.util.Optional;
 
 @Extension
-@Available("[1.19, 1.19.4)")
+@Available("[1.20, )")
 public class TranslatableProvider {
 
     public static MutableComponent translatable(@ThisClass Class<?> clazz, TextFormatter formatter, String key, Object... args) {
-        return MutableComponent.create(new TranslatableContents(key, args) {
+        return MutableComponent.create(new TranslatableContents(key, null, args) {
             @Override
             public <T> Optional<T> visit(FormattedText.StyledContentConsumer<T> consumer, Style style) {
                 String[] lastStyle = {""};

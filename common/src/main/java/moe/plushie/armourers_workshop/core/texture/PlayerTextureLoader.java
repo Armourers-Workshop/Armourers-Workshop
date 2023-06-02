@@ -6,6 +6,7 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.platform.NativeImage;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import net.fabricmc.api.EnvType;
@@ -15,7 +16,6 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.HttpTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -77,7 +77,17 @@ public class PlayerTextureLoader {
         if (entity instanceof AbstractClientPlayer) {
             return ((AbstractClientPlayer) entity).getSkinTextureLocation();
         }
-        return DefaultPlayerSkin.getDefaultSkin();
+        return ModTextures.MANNEQUIN_DEFAULT;
+    }
+
+    public ResourceLocation loadTextureLocation(PlayerTextureDescriptor descriptor) {
+        if (!descriptor.isEmpty()) {
+            PlayerTexture texture1 = loadTexture(descriptor);
+            if (texture1 != null) {
+                return texture1.getLocation();
+            }
+        }
+        return ModTextures.MANNEQUIN_DEFAULT;
     }
 
     @Nullable
@@ -236,7 +246,7 @@ public class PlayerTextureLoader {
         }
         String sub = identifier.length() > 2 ? identifier.substring(0, 2) : "xx";
         File path = new File(EnvironmentManager.getRootDirectory() + "/skin-textures/" + sub + "/" + identifier);
-        HttpTexture downloadingTexture = new HttpTexture(path, url, DefaultPlayerSkin.getDefaultSkin(), true, () -> {
+        HttpTexture downloadingTexture = new HttpTexture(path, url, ModTextures.MANNEQUIN_DEFAULT, true, () -> {
             ModLog.debug("receive player texture from custom loader => {}", location);
             receivePlayerTexture(descriptor, location, url, null);
         });

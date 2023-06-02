@@ -19,7 +19,7 @@ public abstract class ShaderVanillaMixin {
     private static ResourceProvider aw$createVanillaShader(ResourceProvider arg1, ResourceProvider arg2, String arg3, VertexFormat arg4) {
         ShaderUniforms.clear();
         // We just need to rewrite the used shader.
-        if (arg3.equals("rendertype_entity_solid") || arg3.equals("new_entity")) {
+        if (arg3.equals("rendertype_entity_solid") || arg3.equals("rendertype_crumbling")) {
             return new AbstractProgramProvider("vsh", new ShaderPreprocessor(""), arg1);
         }
         return arg1;

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.api.client.IJoint;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
-import moe.plushie.armourers_workshop.api.common.IItemTransformType;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
@@ -236,19 +236,19 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
     public static class Transformer<T, M> {
 
         final HashMap<ISkinPartType, PartTransform<T, M>> armors = new HashMap<>();
-        final HashMap<IItemTransformType, PartTransform<T, M>> items = new HashMap<>();
+        final HashMap<AbstractItemTransformType, PartTransform<T, M>> items = new HashMap<>();
 
         public static <M> void none(PoseStack poseStack, M model) {
         }
 
         public static <T extends Entity, M0 extends Model, M extends IModelHolder<M0>> void withModel(PoseStack poseStack, T entity, M model, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinRenderContext context) {
             ItemStack itemStack = context.itemStack;
-            IItemTransformType transformType = context.transformType;
+            AbstractItemTransformType transformType = context.transformType;
             final float f1 = 16f;
             final float f2 = 1 / 16f;
-            final boolean flag = (transformType == IItemTransformType.THIRD_PERSON_LEFT_HAND || transformType == IItemTransformType.FIRST_PERSON_LEFT_HAND);
+            final boolean flag = (transformType == AbstractItemTransformType.THIRD_PERSON_LEFT_HAND || transformType == AbstractItemTransformType.FIRST_PERSON_LEFT_HAND);
             poseStack.scale(f1, f1, f1);
-            BakedModel bakedModel = SkinModelManager.getInstance().getModel(bakedPart.getType(), itemStack, entity.level, entity);
+            BakedModel bakedModel = SkinModelManager.getInstance().getModel(bakedPart.getType(), itemStack, entity.getLevel(), entity);
             TransformationProvider.handleTransforms(poseStack, bakedModel, transformType, flag);
             poseStack.scale(f2, f2, f2);
             if (flag) {
@@ -275,7 +275,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
             armors.put(partType, transformer);
         }
 
-        public void registerItem(IItemTransformType transformType, PartTransform<T, M> transformer) {
+        public void registerItem(AbstractItemTransformType transformType, PartTransform<T, M> transformer) {
             items.put(transformType, transformer);
         }
 

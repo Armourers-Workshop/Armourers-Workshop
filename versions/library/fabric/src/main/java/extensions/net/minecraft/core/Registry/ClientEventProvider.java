@@ -4,13 +4,11 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.world.inventory.InventoryMenu;
 
 import java.util.function.Consumer;
 
-@Available("[1.18, 1.19.3)")
+@Available("[1.20, )")
 @Extension
 public class ClientEventProvider {
 
@@ -19,10 +17,6 @@ public class ClientEventProvider {
     }
 
     public static void willRegisterTextureFA(@ThisClass Class<?> clazz, Consumer<ClientNativeProvider.TextureRegistry> consumer) {
-        ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register((atlas, registry) -> {
-            if (atlas.location().equals(InventoryMenu.BLOCK_ATLAS)) {
-                consumer.accept(registry::register);
-            }
-        });
+        // everything in the block, item, particle and a few other folders is now stitched automatically.
     }
 }

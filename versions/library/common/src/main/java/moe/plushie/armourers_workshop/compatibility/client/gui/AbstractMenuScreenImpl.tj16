@@ -1,17 +1,41 @@
 package moe.plushie.armourers_workshop.compatibility.client.gui;
 
+import com.apple.library.coregraphics.CGGradient;
+import com.apple.library.coregraphics.CGGraphicsContext;
+import com.apple.library.coregraphics.CGGraphicsRenderer;
+import com.apple.library.coregraphics.CGGraphicsState;
+import com.apple.library.coregraphics.CGPoint;
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSString;
+import com.apple.library.uikit.UIFont;
+import com.apple.library.uikit.UIView;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 @Available("[1.16, 1.18)")
 @Environment(value = EnvType.CLIENT)
 public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
+
+    private final RendererImpl impl = new RendererImpl();
+    private final CGGraphicsContext context = new CGGraphicsContext(impl, impl);
 
     public AbstractMenuScreenImpl(T menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
@@ -24,5 +48,151 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
     @Override
     public final void tick() {
         containerTick();
+    }
+
+    public void renderInView(UIView view, int zLevel, int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
+        PoseStack modelViewStack = RenderSystem.getModelViewStack();
+        modelViewStack.pushPose();
+        modelViewStack.translate(0, 0, zLevel);
+        RenderSystem.applyModelViewMatrix();
+        super.render(from(context), mouseX, mouseY, partialTicks);
+        modelViewStack.popPose();
+        RenderSystem.applyModelViewMatrix();
+        super.renderTooltip(from(context), mouseX, mouseY);
+    }
+
+    public void render(CGGraphicsContext context, int mouseX, int mouseY, float partialTicks) {
+        super.render(from(context), mouseX, mouseY, partialTicks);
+    }
+
+    public void renderLabels(CGGraphicsContext context, int mouseX, int mouseY) {
+        super.renderLabels(from(context), mouseX, mouseY);
+    }
+
+    public void renderTooltip(CGGraphicsContext context, int mouseX, int mouseY) {
+        super.renderTooltip(from(context), mouseX, mouseY);
+    }
+
+    public void renderBackground(CGGraphicsContext context) {
+        super.renderBackground(from(context));
+    }
+
+    public void renderBackground(CGGraphicsContext context, Screen screen, int mouseX, int mouseY, float partialTicks) {
+        screen.render(from(context), mouseX, mouseY, partialTicks);
+    }
+
+    @Override
+    public final void render(PoseStack poseStack, int i, int j, float f) {
+        impl.mousePos.x = i;
+        impl.mousePos.y = j;
+        impl.partialTicks = f;
+        this.render(from(poseStack), i, j, f);
+    }
+
+    @Override
+    protected final void renderLabels(PoseStack poseStack, int i, int j) {
+        this.renderLabels(from(poseStack), i, j);
+    }
+
+    @Override
+    protected final void renderTooltip(PoseStack poseStack, int i, int j) {
+        this.renderTooltip(from(poseStack), i, j);
+    }
+
+    @Override
+    protected final void renderBg(PoseStack poseStack, float f, int i, int j) {
+        // ignored
+    }
+
+    private PoseStack from(CGGraphicsContext context) {
+        RendererImpl impl = ObjectUtils.unsafeCast(context.state());
+        return impl.poseStack;
+    }
+
+    private CGGraphicsContext from(PoseStack poseStack) {
+        impl.poseStack = poseStack;
+        return context;
+    }
+
+    public class RendererImpl implements CGGraphicsRenderer, CGGraphicsState {
+
+        UIFont uifont;
+        PoseStack poseStack;
+        CGPoint mousePos = new CGPoint(0, 0);
+        float partialTicks = 0;
+
+        public void renderText(FormattedCharSequence text, float x, float y, int textColor, boolean shadow, boolean bl2, int j, int k, UIFont font, CGGraphicsContext context) {
+            if (font == null) {
+                font = context.state().font();
+            }
+            MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+            font.font().drawInBatch(text, x, y, textColor, shadow, poseStack.last().pose(), bufferSource, bl2, j, k);
+            bufferSource.endBatch();
+        }
+
+        @Override
+        public void renderTooltip(NSString text, CGRect rect, @Nullable UIFont font, CGGraphicsContext context) {
+            if (font == null) {
+                font = context.state().font();
+            }
+            // there are some versions of tooltip that don't split normally,
+            // and while we can't decide on the final tooltip size,
+            // but we can to handle the break the newline
+            List<? extends FormattedCharSequence> texts = font.font().split(text.component(), 100000);
+            AbstractMenuScreenImpl.this.renderTooltip(from(context), texts, mousePos.x, mousePos.y);
+        }
+
+        @Override
+        public void renderImage(ResourceLocation texture, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, CGGraphicsContext context) {
+            RenderSystem.setShaderTexture(0, texture);
+            Screen.blit(poseStack, x, y, 0, u, v, width, height, texWidth, texHeight);
+        }
+
+        @Override
+        public void renderColor(int x1, int y1, int x2, int y2, int color, CGGraphicsContext context) {
+            Screen.fill(from(context), x1, y1, x2, y2, color);
+        }
+
+        @Override
+        public void renderGradient(CGGradient gradient, CGRect rect, CGGraphicsContext context) {
+            int i = rect.x;
+            int j = rect.y;
+            int k = rect.getMaxX();
+            int l = rect.getMaxY();
+            int m = gradient.startColor.getRGB();
+            int n = gradient.endColor.getRGB();
+            AbstractMenuScreenImpl.super.fillGradient(from(context), i, j, k, l, m, n);
+        }
+
+        @Override
+        public void renderEntity(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY) {
+            RenderSystem.pushMatrix();
+            RenderSystem.multMatrix(poseStack.last().pose());
+            InventoryScreen.renderEntityInInventory(x, y, scale, mouseX, mouseY, entity);
+            RenderSystem.popMatrix();
+        }
+
+        @Override
+        public PoseStack ctm() {
+            return poseStack;
+        }
+
+        @Override
+        public UIFont font() {
+            if (uifont == null) {
+                uifont = new UIFont(font);
+            }
+            return uifont;
+        }
+
+        @Override
+        public CGPoint mousePos() {
+            return mousePos;
+        }
+
+        @Override
+        public float partialTicks() {
+            return partialTicks;
+        }
     }
 }

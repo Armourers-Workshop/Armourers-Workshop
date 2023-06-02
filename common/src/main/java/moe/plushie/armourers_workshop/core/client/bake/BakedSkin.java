@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
-import moe.plushie.armourers_workshop.api.common.IItemTransformType;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -137,7 +137,7 @@ public class BakedSkin implements IBakedSkin {
             return bounds;
         }
         OpenMatrix4f matrix = OpenMatrix4f.createScaleMatrix(1, 1, 1);
-        OpenVoxelShape shape = getRenderShape(entity, model, itemStack, IItemTransformType.NONE);
+        OpenVoxelShape shape = getRenderShape(entity, model, itemStack, AbstractItemTransformType.NONE);
         if (rotation != null) {
             matrix.rotate(new OpenQuaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), true));
             shape.mul(matrix);
@@ -155,7 +155,7 @@ public class BakedSkin implements IBakedSkin {
         return bounds;
     }
 
-    public OpenVoxelShape getRenderShape(Entity entity, Model model, ItemStack itemStack, IItemTransformType transformType) {
+    public OpenVoxelShape getRenderShape(Entity entity, Model model, ItemStack itemStack, AbstractItemTransformType transformType) {
         SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer != null) {
             return getRenderShape(entity, ModelHolder.ofNullable(model), itemStack, transformType, renderer);
@@ -163,7 +163,7 @@ public class BakedSkin implements IBakedSkin {
         return OpenVoxelShape.empty();
     }
 
-    public <T extends Entity, V extends Model, M extends IModelHolder<V>> OpenVoxelShape getRenderShape(T entity, M model, ItemStack itemStack, IItemTransformType transformType, SkinRenderer<T, V, M> renderer) {
+    public <T extends Entity, V extends Model, M extends IModelHolder<V>> OpenVoxelShape getRenderShape(T entity, M model, ItemStack itemStack, AbstractItemTransformType transformType, SkinRenderer<T, V, M> renderer) {
         SkinRenderContext context = new SkinRenderContext();
         context.init(null, 0, 0, transformType, new PoseStack(), null);
         context.setItem(itemStack, 0);
@@ -201,7 +201,7 @@ public class BakedSkin implements IBakedSkin {
             // we have some old skin that only contain arrow part,
             // so when it happens, we need to be compatible rendering it.
             // we use `NONE` to rendering the GUI/Ground/ItemFrame.
-            if (context.transformType == IItemTransformType.NONE) {
+            if (context.transformType == AbstractItemTransformType.NONE) {
                 return skinParts.size() == 1;
             }
             return false;

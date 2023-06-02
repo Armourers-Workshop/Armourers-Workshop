@@ -172,7 +172,7 @@ public final class SkinUtils {
         if (keep == 2) {
             return false;
         }
-        return entity.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY);
+        return entity.getLevel().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY);
     }
 
     public static void dropAll(Player player) {

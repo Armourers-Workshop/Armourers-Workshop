@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.api.common.IItemTransformType;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractItemStackRenderer;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
@@ -40,7 +40,7 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
     }
 
     @Override
-    public void renderByItem(ItemStack itemStack, IItemTransformType transformType, PoseStack poseStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
+    public void renderByItem(ItemStack itemStack, AbstractItemTransformType transformType, PoseStack poseStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
         if (itemStack.isEmpty()) {
             return;
         }
@@ -70,8 +70,8 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
             entity.setId(MannequinEntity.PLACEHOLDER_ENTITY_ID);
             entity.setExtraRenderer(false); // never magic cir
         }
-        if (entity.level != level) {
-            entity.level = level;
+        if (entity.getLevel() != level) {
+            entity.changeLevel(level);
         }
         return entity;
     }

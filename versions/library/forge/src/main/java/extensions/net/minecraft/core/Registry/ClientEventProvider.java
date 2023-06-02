@@ -1,6 +1,5 @@
 package extensions.net.minecraft.core.Registry;
 
-import com.apple.library.coregraphics.CGRect;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
@@ -8,56 +7,15 @@ import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.client.event.RenderHighlightEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.event.*;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 @Available("[1.19, )")
 @Extension
 public class ClientEventProvider {
-
-    public static void willRenderTooltipFO(@ThisClass Class<?> clazz, ClientNativeProvider.RenderTooltip consumer) {
-        NotificationCenterImpl.observer(RenderTooltipEvent.Pre.class, event -> {
-            Font font = event.getFont();
-            List<ClientTooltipComponent> tooltips = event.getComponents();
-            int mouseX = event.getX();
-            int mouseY = event.getY();
-            int screenWidth = event.getScreenWidth();
-            int screenHeight = event.getScreenHeight();
-            int i = 0;
-            int j = tooltips.size() == 1 ? -2 : 0;
-            for (ClientTooltipComponent tooltip : tooltips) {
-                int k = tooltip.getWidth(font);
-                if (k > i) {
-                    i = k;
-                }
-                j += tooltip.getHeight();
-            }
-            int j2 = mouseX + 12;
-            int k2 = mouseY - 12;
-            if (j2 + i > screenWidth) {
-                j2 -= 28 + i;
-            }
-            if (k2 + j + 6 > screenHeight) {
-                k2 = screenHeight - j - 6;
-            }
-            CGRect frame = new CGRect(j2, k2, i, j);
-            consumer.render(event.getItemStack(), frame, mouseX, mouseY, screenWidth, screenHeight, event.getPoseStack());
-        });
-    }
 
     public static void willRenderBlockHighlightFO(@ThisClass Class<?> clazz, ClientNativeProvider.RenderBlockHighlight renderer) {
         NotificationCenterImpl.observer(RenderHighlightEvent.Block.class, event -> {

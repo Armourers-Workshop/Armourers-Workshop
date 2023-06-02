@@ -379,7 +379,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
         });
         applyBoundingBoxes(newBoxes, (partType, pos, offset) -> {
             WorldBlockUpdateTask task = new WorldBlockUpdateTask(level, pos, ModBlocks.BOUNDING_BOX.get().defaultBlockState());
-            task.setValidator(state -> state.getMaterial().isReplaceable() || state.is(ModBlocks.BOUNDING_BOX.get()));
+            task.setValidator(state -> state.isReplaceable() || state.is(ModBlocks.BOUNDING_BOX.get()));
             task.setModifier(state -> setupBoundingBox(level, pos, offset, partType));
             return task;
         });

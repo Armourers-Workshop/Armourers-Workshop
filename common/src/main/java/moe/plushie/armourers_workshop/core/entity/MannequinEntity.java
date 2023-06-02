@@ -199,6 +199,11 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
         this.boundingBoxForCulling = null;
     }
 
+    public void changeLevel(Level level) {
+        // because setLevel change to protected in 1.20.
+        this.setLevel(level);
+    }
+
     @Override
     public boolean hurt(DamageSource source, float amount) {
         isDropEquipment = false;
@@ -215,7 +220,6 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
         if (isMarker()) {
             return InteractionResult.PASS;
         }
-        Level level = player.level;
         ItemStack itemStack = player.getItemInHand(hand);
         if (itemStack.getItem() == ModItems.MANNEQUIN_TOOL.get()) {
             return InteractionResult.PASS;
@@ -226,19 +230,19 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
                 customName = itemStack.getHoverName();
             }
             setCustomName(customName);
-            return InteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.sidedSuccess(getLevel().isClientSide());
         }
         if (player.isShiftKeyDown()) {
             double ry = TrigUtils.getAngleDegrees(player.getX(), player.getZ(), getX(), getZ()) + 90.0;
             Rotations rotations = getBodyPose();
             float yRot = this.getYRot();
             setBodyPose(new Rotations(rotations.getX(), (float) ry - yRot, rotations.getZ()));
-            return InteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.sidedSuccess(getLevel().isClientSide());
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(this);
         if (wardrobe != null && wardrobe.isEditable(player)) {
             MenuManager.openMenu(ModMenuTypes.WARDROBE, player, wardrobe);
-            return InteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.sidedSuccess(getLevel().isClientSide());
         }
         return InteractionResult.PASS;
     }
@@ -250,7 +254,7 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
             player = (Player) source.getEntity();
         }
         if (player != null && !player.getAbilities().instabuild) {
-            Block.popResource(this.level, this.blockPosition(), createMannequinStack());
+            Block.popResource(this.getLevel(), this.blockPosition(), createMannequinStack());
         }
         this.brokenByAnything(source);
     }

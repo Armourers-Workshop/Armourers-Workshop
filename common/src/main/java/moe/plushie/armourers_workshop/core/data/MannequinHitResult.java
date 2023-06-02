@@ -27,7 +27,7 @@ public class MannequinHitResult extends BlockHitResult {
     }
 
     public static MannequinHitResult test(Player player, Vector3f origin, Vec3 target, BlockPos pos) {
-        Level level = player.level;
+        Level level = player.getLevel();
         ItemStack itemStack = player.getMainHandItem();
         float scale = MannequinItem.getScale(itemStack);
         float rotation = (float) TrigUtils.getAngleDegrees(origin.x(), origin.z(), target.x(), target.z()) + 90.0f;

@@ -91,7 +91,7 @@ public class HighlightPlacementRenderer {
     }
 
     public static void renderPaintTool(ItemStack itemStack, Player player, BlockHitResult traceResult, Camera renderInfo, PoseStack poseStack, MultiBufferSource buffers) {
-        Level level = player.level;
+        Level level = player.getLevel();
         BlockPos pos = traceResult.getBlockPos();
         Direction direction = traceResult.getDirection();
         BlockEntity blockEntity = level.getBlockEntity(pos);

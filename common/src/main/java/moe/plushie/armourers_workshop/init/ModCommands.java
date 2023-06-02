@@ -221,7 +221,7 @@ public class ModCommands {
                     if (itemEntity1 != null) {
                         itemEntity1.makeFakeItem();
                     }
-                    player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                    player.getLevel().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
                     player.inventoryMenu.broadcastChanges();
                 } else {
                     ItemEntity itemEntity = player.drop(itemStack, false);

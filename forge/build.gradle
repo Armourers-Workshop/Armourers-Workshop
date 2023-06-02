@@ -39,8 +39,6 @@ dependencies {
 
     //modCompileOnly "com.sk89q.worldedit:worldedit-core:7.2.5-SNAPSHOT"
 
-    //modLocalRuntime "mezz.jei:jei-${rootProject.minecraft_version}-forge:${project.jei_version}"
-    //modLocalRuntime "mezz.jei:jei-${rootProject.minecraft_version}:${project.jei_version}"
     //modLocalRuntime "com.sk89q.worldedit:worldedit-mod:7.2.5-dist"
     //modApi "noppes.npcs:CustomNPCs:1.16.5.20220622snapshot"
     //modLocalRuntime "org.samo_lego:taterzens:1.9.6-forge"

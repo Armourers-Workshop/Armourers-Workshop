@@ -25,6 +25,8 @@ import moe.plushie.armourers_workshop.api.registry.ILootFunctionBuilder;
 import moe.plushie.armourers_workshop.api.registry.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IPermissionNodeBuilder;
 import moe.plushie.armourers_workshop.api.registry.ISoundEventBuilder;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterial;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterialColor;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.ArgumentTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.BlockBuilderImpl;
@@ -48,8 +50,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -80,7 +80,7 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     }
 
     @Override
-    public <T extends Block> IBlockBuilder<T> createBlockBuilder(Function<BlockBehaviour.Properties, T> supplier, Material material, MaterialColor materialColor) {
+    public <T extends Block> IBlockBuilder<T> createBlockBuilder(Function<BlockBehaviour.Properties, T> supplier, AbstractBlockMaterial material, AbstractBlockMaterialColor materialColor) {
         return new BlockBuilderImpl<>(supplier, material, materialColor);
     }
 

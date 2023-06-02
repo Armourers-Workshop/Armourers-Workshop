@@ -186,7 +186,7 @@ public class ItemTooltipManager {
 
         if (ModConfig.Client.skinPreDrawBackground) {
             RenderSystem.enableDepthTest();
-            RenderSystem.drawContinuousTexturedBox(poseStack, ModTextures.GUI_PREVIEW, tx, ty, 0, 0, size, size, 62, 62, 4, 400);
+            RenderSystem.drawClipImage(ModTextures.GUI_PREVIEW, tx, ty, 0, 0, size, size, 62, 62, 4, 4, 4, 4, 400, poseStack);
         }
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         ExtendedItemRenderer.renderSkinInBox(bakedSkin, descriptor.getColorScheme(), itemStack, tx, ty, 500, size, size, 30, 45, 0, poseStack, buffers);

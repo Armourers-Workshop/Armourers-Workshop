@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.init.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
-import moe.plushie.armourers_workshop.api.common.IItemTransformType;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -137,7 +137,7 @@ public class ClientWardrobeHandler {
         poseStack.popPose();
     }
 
-    public static void onRenderSpecificHand(LivingEntity entity, float partialTicks, int packedLight, IItemTransformType transformType, PoseStack poseStack, MultiBufferSource buffers, Runnable cancelHandler) {
+    public static void onRenderSpecificHand(LivingEntity entity, float partialTicks, int packedLight, AbstractItemTransformType transformType, PoseStack poseStack, MultiBufferSource buffers, Runnable cancelHandler) {
         FirstPersonPlayerModel<?> model = FirstPersonPlayerModel.getInstance();
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {
@@ -190,7 +190,7 @@ public class ClientWardrobeHandler {
     }
 
     @Nullable
-    public static EmbeddedSkinStack getEmbeddedSkinStack(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, IItemTransformType transformType) {
+    public static EmbeddedSkinStack getEmbeddedSkinStack(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, AbstractItemTransformType transformType) {
         if (RENDERING_GUI_ITEM != itemStack) {
             // when the wardrobe has override skin of the item,
             // we easily get a conclusion to needs embedded skin.
@@ -224,7 +224,7 @@ public class ClientWardrobeHandler {
         return null;
     }
 
-    public static void renderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, EmbeddedSkinStack embeddedStack, IItemTransformType transformType, boolean leftHandHackery, PoseStack poseStack, MultiBufferSource buffers, BakedModel bakedModel, int packedLight, int overlay, CallbackInfo callback) {
+    public static void renderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStack, MultiBufferSource buffers, BakedModel bakedModel, int packedLight, int overlay, CallbackInfo callback) {
         int counter = 0;
         switch (transformType) {
             case GUI:
@@ -273,7 +273,7 @@ public class ClientWardrobeHandler {
         }
     }
 
-    public static void _renderEmbeddedSkinInBox(EmbeddedSkinStack embeddedStack, IItemTransformType transformType, boolean leftHandHackery, PoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
+    public static void _renderEmbeddedSkinInBox(EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
         SkinDescriptor descriptor = embeddedStack.getDescriptor();
         poseStack.pushPose();
         TransformationProvider.handleTransforms(poseStack, BakedModelStroage.getSkinBakedModel(), transformType, leftHandHackery);
@@ -282,7 +282,7 @@ public class ClientWardrobeHandler {
         poseStack.popPose();
     }
 
-    public static int _renderEmbeddedSkin(EmbeddedSkinStack embeddedStack, IItemTransformType transformType, boolean leftHandHackery, PoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
+    public static int _renderEmbeddedSkin(EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
         int r = 0;
         SkinDescriptor descriptor = embeddedStack.getDescriptor();
         BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);

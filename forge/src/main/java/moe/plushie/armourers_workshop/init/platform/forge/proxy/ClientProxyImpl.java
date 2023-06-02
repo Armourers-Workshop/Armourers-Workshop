@@ -1,14 +1,13 @@
 package moe.plushie.armourers_workshop.init.platform.forge.proxy;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.api.common.IItemTransformType;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
-import moe.plushie.armourers_workshop.init.platform.forge.ClientNativeManagerImpl;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -72,9 +71,9 @@ public class ClientProxyImpl {
             Player player = Minecraft.getInstance().player;
             PoseStack poseStack = event.getPoseStack();
             MultiBufferSource buffers = event.getMultiBufferSource();
-            IItemTransformType transformType = IItemTransformType.FIRST_PERSON_LEFT_HAND;
+            AbstractItemTransformType transformType = AbstractItemTransformType.FIRST_PERSON_LEFT_HAND;
             if (event.getArm() == HumanoidArm.RIGHT) {
-                transformType = IItemTransformType.FIRST_PERSON_RIGHT_HAND;
+                transformType = AbstractItemTransformType.FIRST_PERSON_RIGHT_HAND;
             }
             ClientWardrobeHandler.onRenderSpecificHand(player, 0, light, transformType, poseStack, buffers, () -> {
                 event.setCanceled(true);

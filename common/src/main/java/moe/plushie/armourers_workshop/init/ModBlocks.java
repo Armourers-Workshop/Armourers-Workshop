@@ -8,6 +8,8 @@ import moe.plushie.armourers_workshop.builder.block.BoundingBoxBlock;
 import moe.plushie.armourers_workshop.builder.block.ColorMixerBlock;
 import moe.plushie.armourers_workshop.builder.block.OutfitMakerBlock;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterial;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterialColor;
 import moe.plushie.armourers_workshop.core.block.DyeTableBlock;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
@@ -21,8 +23,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
 
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
@@ -56,12 +56,12 @@ public class ModBlocks {
         return state -> state.getValue(BlockStateProperties.LIT) ? level : 0;
     }
 
-    private static <T extends Block> IBlockBuilder<Block> create(Function<BlockBehaviour.Properties, T> supplier, Material material, MaterialColor materialColor) {
+    private static <T extends Block> IBlockBuilder<Block> create(Function<BlockBehaviour.Properties, T> supplier, AbstractBlockMaterial material, AbstractBlockMaterialColor materialColor) {
         return ObjectUtils.unsafeCast(BuilderManager.getInstance().createBlockBuilder(supplier, material, materialColor).strength(1.5f, 6.f));
     }
 
     private static <T extends Block> IBlockBuilder<Block> normal(Function<BlockBehaviour.Properties, T> supplier) {
-        return create(supplier, Material.STONE, MaterialColor.NONE);
+        return create(supplier, AbstractBlockMaterial.STONE, AbstractBlockMaterialColor.NONE);
     }
 
     private static <T extends Block> IBlockBuilder<Block> half(Function<BlockBehaviour.Properties, T> supplier) {
@@ -69,7 +69,7 @@ public class ModBlocks {
     }
 
     private static <T extends Block> IBlockBuilder<Block> glass(Function<BlockBehaviour.Properties, T> supplier) {
-        return create(supplier, Material.GLASS, MaterialColor.NONE).noOcclusion().bind(() -> RenderType::translucent);
+        return create(supplier, AbstractBlockMaterial.GLASS, AbstractBlockMaterialColor.NONE).noOcclusion().bind(() -> RenderType::translucent);
     }
 
     public static void init() {

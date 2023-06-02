@@ -10,10 +10,9 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
-@Available("[1.19, 1.19.3)")
+@Available("[1.20, )")
 public abstract class AbstractProgramProviderImpl implements ResourceProvider {
 
     private final ResourceProvider impl;
@@ -32,7 +31,7 @@ public abstract class AbstractProgramProviderImpl implements ResourceProvider {
             return results;
         }
         Resource resource = results.get();
-        return Optional.of(new Resource(resource.sourcePackId(), () -> {
+        return Optional.of(new Resource(resource.source(), () -> {
             InputStream inputStream = resource.open();
             try {
                 String source = StreamUtils.toString(inputStream, StandardCharsets.UTF_8);

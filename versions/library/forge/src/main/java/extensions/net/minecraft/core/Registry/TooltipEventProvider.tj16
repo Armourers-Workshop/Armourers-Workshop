@@ -1,0 +1,30 @@
+package extensions.net.minecraft.core.Registry;
+
+import com.apple.library.coregraphics.CGRect;
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
+import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
+import net.minecraftforge.client.event.RenderTooltipEvent;
+
+@Available("[1.16, 1.18)")
+@Extension
+public class TooltipEventProvider {
+
+    private static CGRect screenLayout = CGRect.ZERO;
+
+    public static void willRenderTooltipFO(@ThisClass Class<?> clazz, ClientNativeProvider.RenderTooltip consumer) {
+        NotificationCenterImpl.observer(RenderTooltipEvent.Pre.class, event -> {
+            screenLayout = new CGRect(event.getX(), event.getY(), event.getScreenWidth(), event.getScreenHeight());
+        });
+        NotificationCenterImpl.observer(RenderTooltipEvent.PostText.class, event -> {
+            int mouseX = screenLayout.getX();
+            int mouseY = screenLayout.getY();
+            int screenWidth = screenLayout.getWidth();
+            int screenHeight = screenLayout.getHeight();
+            CGRect frame = new CGRect(event.getX(), event.getY(), event.getWidth(), event.getHeight());
+            consumer.render(event.getStack(), frame, mouseX, mouseY, screenWidth, screenHeight, event.getMatrixStack());
+        });
+    }
+}

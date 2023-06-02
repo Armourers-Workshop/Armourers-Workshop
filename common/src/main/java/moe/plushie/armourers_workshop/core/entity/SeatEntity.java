@@ -46,7 +46,7 @@ public class SeatEntity extends LivingEntity {
     @Override
     public void tick() {
         super.tick();
-        if (this.level != null && !this.level.isClientSide()) {
+        if (!this.getLevel().isClientSide()) {
             this.autoKill();
         }
     }
@@ -87,7 +87,7 @@ public class SeatEntity extends LivingEntity {
         if (getPassengers().isEmpty()) {
             return false;
         }
-        return level != null && blockPos != null && level.getBlockEntity(blockPos) instanceof SkinnableBlockEntity;
+        return getLevel() != null && blockPos != null && getLevel().getBlockEntity(blockPos) instanceof SkinnableBlockEntity;
     }
 
     @Override

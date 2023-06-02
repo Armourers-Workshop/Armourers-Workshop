@@ -68,7 +68,7 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
             }
             case ITEM_NAME:
             case ITEM_FLAVOUR: {
-                BlockEntity entity = player.level.getBlockEntity(pos);
+                BlockEntity entity = player.getLevel().getBlockEntity(pos);
                 if (entity instanceof OutfitMakerBlockEntity) {
                     field.set((OutfitMakerBlockEntity) entity, fieldValue);
                 }

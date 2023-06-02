@@ -6,10 +6,8 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIEvent;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -59,11 +57,8 @@ public class SkinRatingView extends UIControl {
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
 
-        PoseStack poseStack = context.poseStack;
-        RenderSystem.setShaderTexture(0, ModTextures.RATING);
-
         for (int i = 0; i < (getMaxValue() / 2); i++) {
-            RenderSystem.blit(poseStack, i * 16, 0, 32, 0, 16, 16);
+            context.drawImage(ModTextures.RATING, i * 16, 0, 32, 0, 16, 16, 256, 256);
         }
 
         int rating = getValue();
@@ -74,10 +69,10 @@ public class SkinRatingView extends UIControl {
         int stars = MathUtils.floor(rating / 2F);
         int halfStar = rating % 2;
         for (int i = 0; i < stars; i++) {
-            RenderSystem.blit(poseStack, i * 16, 0, 0, 0, 16, 16);
+            context.drawImage(ModTextures.RATING, i * 16, 0, 0, 0, 16, 16, 256, 256);
         }
         if (halfStar == 1) {
-            RenderSystem.blit(poseStack, stars * 16, 0, 0, 0, 8, 16);
+            context.drawImage(ModTextures.RATING, stars * 16, 0, 0, 0, 8, 16, 256, 256);
         }
     }
 

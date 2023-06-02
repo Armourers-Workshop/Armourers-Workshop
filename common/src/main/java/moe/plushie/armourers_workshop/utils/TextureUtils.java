@@ -5,11 +5,11 @@ import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +22,7 @@ public final class TextureUtils {
         if (entity instanceof AbstractClientPlayer) {
             return ((AbstractClientPlayer) entity).getSkinTextureLocation();
         }
-        return DefaultPlayerSkin.getDefaultSkin();
+        return ModTextures.MANNEQUIN_DEFAULT;
     }
 
     public static ResourceLocation getPlayerTextureLocation(PlayerTextureDescriptor descriptor) {
@@ -34,7 +34,7 @@ public final class TextureUtils {
 //        if (player != null) {
 //            return player.getSkinTextureLocation();
 //        }
-        return DefaultPlayerSkin.getDefaultSkin();
+        return ModTextures.MANNEQUIN_DEFAULT;
     }
 
     @Nullable
