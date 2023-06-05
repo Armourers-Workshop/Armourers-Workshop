@@ -49,7 +49,7 @@ public class EpicFlightWardrobeHandler {
 
         context.overrideParts = overrideParts;
         context.overridePostStack = poseStack.copy();
-        context.overrideTransformModifier = model.getExtraData(JointTransformModifier.EPICFIGHT);;
+        context.overrideTransformModifier = model.getExtraData(JointTransformModifier.EPICFIGHT);
         context.isLimitLimbs = false;
 
         renderData.epicFlightContext = context;

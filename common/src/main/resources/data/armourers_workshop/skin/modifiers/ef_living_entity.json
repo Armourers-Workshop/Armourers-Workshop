@@ -44,6 +44,8 @@
 
     "minecraft:villager",
     "minecraft:witch",
-    "minecraft:wandering_trader"
+    "minecraft:wandering_trader",
+
+    "customnpcs:customnpc"
   ]
 }
