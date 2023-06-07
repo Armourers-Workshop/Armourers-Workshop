@@ -11,15 +11,7 @@ public class SkirtPartType extends SkinPartType {
         this.buildingSpace = new Rectangle3i(-16, -16, -16, 32, 32, 32);
         this.guideSpace = new Rectangle3i(-4, -12, -2, 8, 12, 4);
         this.offset = new Vector3i(0, -1, 36);
-    }
-
-    @Override
-    public Vector3i getRenderOffset() {
-        return new Vector3i(0, 12, 0);
-    }
-
-    @Override
-    public float getRenderPolygonOffset() {
-        return 6;
+        this.renderOffset = new Vector3i(0, 12, 0);
+        this.renderPolygonOffset = 6;
     }
 }

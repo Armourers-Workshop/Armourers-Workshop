@@ -13,10 +13,7 @@ public class ItemPartType extends SkinPartType implements ICanHeld {
         this.guideSpace = new Rectangle3i(-2, -2, 2, 4, 4, 8);
         //Offset -1 to match old skin system.
         this.offset = new Vector3i(0, -1, 0);
-    }
-
-    @Override
-    public float getRenderPolygonOffset() {
-        return 10;
+        this.renderOffset = Vector3i.ZERO;
+        this.renderPolygonOffset = 10;
     }
 }

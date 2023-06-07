@@ -17,6 +17,8 @@ public class LeftArmPartType extends SkinPartType implements ISkinPartTypeTextur
         this.buildingSpace = new Rectangle3i(-19, -28, -16, 24, 44, 32);
         this.guideSpace = new Rectangle3i(-3, -10, -2, 4, 12, 4);
         this.offset = new Vector3i(30, -1, 0);
+        this.renderOffset = new Vector3i(5, 2, 0);
+        this.renderPolygonOffset = 4;
     }
 
     @Override
@@ -42,16 +44,6 @@ public class LeftArmPartType extends SkinPartType implements ISkinPartTypeTextur
     @Override
     public IVector3i getTextureModelSize() {
         return new Vector3i(4, 12, 4);
-    }
-
-    @Override
-    public Vector3i getRenderOffset() {
-        return new Vector3i(5, 2, 0);
-    }
-
-    @Override
-    public float getRenderPolygonOffset() {
-        return 4;
     }
 
     @Override

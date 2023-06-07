@@ -18,7 +18,8 @@ import moe.plushie.armourers_workshop.core.skin.part.item.ShieldPartType;
 import moe.plushie.armourers_workshop.core.skin.part.legs.LeftLegPartType;
 import moe.plushie.armourers_workshop.core.skin.part.legs.RightLegPartType;
 import moe.plushie.armourers_workshop.core.skin.part.legs.SkirtPartType;
-import moe.plushie.armourers_workshop.core.skin.part.unknown.UnknownPartType;
+import moe.plushie.armourers_workshop.core.skin.part.other.PartitionPartType;
+import moe.plushie.armourers_workshop.core.skin.part.other.UnknownPartType;
 import moe.plushie.armourers_workshop.core.skin.part.wings.LeftWingPartType;
 import moe.plushie.armourers_workshop.core.skin.part.wings.RightWingPartType;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -49,12 +50,12 @@ public final class SkinPartTypes {
     public static final ISkinPartType BIPPED_LEFT_WING = register("wings.leftWing", new LeftWingPartType());
     public static final ISkinPartType BIPPED_RIGHT_WING = register("wings.rightWing", new RightWingPartType());
 
-    public static final ISkinPartType BIPPED_CHEST2 = register("chest.base2", new UnknownPartType());
-    public static final ISkinPartType BIPPED_LEFT_ARM2 = register("chest.leftArm2", new UnknownPartType());
-    public static final ISkinPartType BIPPED_RIGHT_ARM2 = register("chest.rightArm2", new UnknownPartType());
-    // public static final ISkinPartType BIPPED_SKIRT2 = register("legs.skirt2", new UnknownPartType());
-    public static final ISkinPartType BIPPED_LEFT_LEG2 = register("legs.leftLeg2", new UnknownPartType());
-    public static final ISkinPartType BIPPED_RIGHT_LEG2 = register("legs.rightLeg2", new UnknownPartType());
+    public static final ISkinPartType BIPPED_CHEST2 = register("chest.base2", new PartitionPartType(BIPPED_CHEST));
+    public static final ISkinPartType BIPPED_LEFT_ARM2 = register("chest.leftArm2", new PartitionPartType(BIPPED_LEFT_ARM));
+    public static final ISkinPartType BIPPED_RIGHT_ARM2 = register("chest.rightArm2", new PartitionPartType(BIPPED_RIGHT_ARM));
+    //public static final ISkinPartType BIPPED_SKIRT2 = register("legs.skirt2", new PartitionPartType(BIPPED_SKIRT));
+    public static final ISkinPartType BIPPED_LEFT_LEG2 = register("legs.leftLeg2", new PartitionPartType(BIPPED_LEFT_LEG));
+    public static final ISkinPartType BIPPED_RIGHT_LEG2 = register("legs.rightLeg2", new PartitionPartType(BIPPED_RIGHT_LEG));
 
     public static final ISkinPartType TOOL_PICKAXE = register("pickaxe.base", new ItemPartType());
     public static final ISkinPartType TOOL_AXE = register("axe.base", new ItemPartType());

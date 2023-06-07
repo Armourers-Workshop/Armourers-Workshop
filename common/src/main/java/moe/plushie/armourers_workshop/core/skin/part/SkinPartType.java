@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.part;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +17,9 @@ public abstract class SkinPartType implements ISkinPartType {
     protected Rectangle3i buildingSpace;
     protected Rectangle3i guideSpace;
     protected Vector3i offset;
+
+    protected Vector3i renderOffset = Vector3i.ZERO;
+    protected float renderPolygonOffset = 0;
 
     public SkinPartType() {
     }
@@ -67,7 +71,12 @@ public abstract class SkinPartType implements ISkinPartType {
 
     @Override
     public Vector3i getRenderOffset() {
-        return Vector3i.ZERO;
+        return renderOffset;
+    }
+
+    @Override
+    public float getRenderPolygonOffset() {
+        return renderPolygonOffset;
     }
 
     @Override
@@ -95,6 +104,6 @@ public abstract class SkinPartType implements ISkinPartType {
 
     @Override
     public String toString() {
-        return registryName.toString();
+        return ObjectUtils.makeDescription(this, "name", registryName);
     }
 }

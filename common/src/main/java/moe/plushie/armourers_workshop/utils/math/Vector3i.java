@@ -29,6 +29,10 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
         this(pos.x(), pos.y(), pos.z());
     }
 
+    public Vector3i(IVector3i pos) {
+        this(pos.getX(), pos.getY(), pos.getZ());
+    }
+
     public boolean equals(Object other) {
         if (this == other) {
             return true;

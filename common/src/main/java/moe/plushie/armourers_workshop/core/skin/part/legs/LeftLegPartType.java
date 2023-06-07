@@ -17,6 +17,8 @@ public class LeftLegPartType extends SkinPartType implements ISkinPartTypeTextur
         this.buildingSpace = new Rectangle3i(-18, -16, -16, 24, 32, 32);
         this.guideSpace = new Rectangle3i(-2, -12, -2, 4, 12, 4);
         this.offset = new Vector3i(9, -1, 0);
+        this.renderOffset = new Vector3i(2, 12, 0);
+        this.renderPolygonOffset = 2;
     }
 
     @Override
@@ -42,16 +44,6 @@ public class LeftLegPartType extends SkinPartType implements ISkinPartTypeTextur
     @Override
     public IVector3i getTextureModelSize() {
         return new Vector3i(4, 12, 4);
-    }
-
-    @Override
-    public Vector3i getRenderOffset() {
-        return new Vector3i(2, 12, 0);
-    }
-
-    @Override
-    public float getRenderPolygonOffset() {
-        return 2;
     }
 
     @Override

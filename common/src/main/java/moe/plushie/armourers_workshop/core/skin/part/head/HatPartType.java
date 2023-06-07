@@ -11,16 +11,8 @@ public class HatPartType extends SkinPartType {
         this.buildingSpace = new Rectangle3i(-32, -24, -32, 64, 56, 64);
         this.guideSpace = new Rectangle3i(-4, 0, -4, 8, 8, 8);
         this.offset = new Vector3i(0, 0, 0);
-    }
-
-    @Override
-    public Vector3i getRenderOffset() {
-        return new Vector3i(0, 0, 0);
-    }
-
-    @Override
-    public float getRenderPolygonOffset() {
-        return 8;
+        this.renderOffset = Vector3i.ZERO;
+        this.renderPolygonOffset = 8;
     }
 
     //    @Override

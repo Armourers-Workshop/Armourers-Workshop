@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.skin.part.unknown;
+package moe.plushie.armourers_workshop.core.skin.part.other;
 
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;

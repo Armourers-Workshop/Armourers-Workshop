@@ -12,16 +12,8 @@ public class RightWingPartType extends SkinPartType implements ICanRotation {
         this.buildingSpace = new Rectangle3i(0, -27, -28, 48, 64, 64);
         this.guideSpace = new Rectangle3i(-4, -12, -4, 8, 12, 4);
         this.offset = new Vector3i(0, -1, 2);
-    }
-
-    @Override
-    public Vector3i getRenderOffset() {
-        return new Vector3i(0, 0, 2);
-    }
-
-    @Override
-    public float getRenderPolygonOffset() {
-        return 1;
+        this.renderOffset = new Vector3i(0, 0, 2);
+        this.renderPolygonOffset = 1;
     }
 
     @Override

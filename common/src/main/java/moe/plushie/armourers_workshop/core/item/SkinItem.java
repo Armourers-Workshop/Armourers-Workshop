@@ -134,7 +134,7 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
             if (bakedSkin != null) {
                 return 0;
             }
-            return descriptor.getType().getId();
+            return descriptor.getType().getId() / 1000f;
         });
     }
 }

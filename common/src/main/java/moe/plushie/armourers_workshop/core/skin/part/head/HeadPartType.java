@@ -17,6 +17,8 @@ public class HeadPartType extends SkinPartType implements ISkinPartTypeTextured 
         this.buildingSpace = new Rectangle3i(-32, -24, -32, 64, 56, 64);
         this.guideSpace = new Rectangle3i(-4, 0, -4, 8, 8, 8);
         this.offset = new Vector3i(0, 0, 0);
+        this.renderOffset = Vector3i.ZERO;
+        this.renderPolygonOffset = 6;
     }
 
     @Override
@@ -26,12 +28,12 @@ public class HeadPartType extends SkinPartType implements ISkinPartTypeTextured 
 
     @Override
     public ITexturePos getTextureSkinPos() {
-        return new TexturePos(0, 0);
+        return TexturePos.ZERO;
     }
 
     @Override
     public ITexturePos getTextureBasePos() {
-        return new TexturePos(0, 0);
+        return TexturePos.ZERO;
     }
 
     @Override
@@ -42,16 +44,6 @@ public class HeadPartType extends SkinPartType implements ISkinPartTypeTextured 
     @Override
     public IVector3i getTextureModelSize() {
         return new Vector3i(8, 8, 8);
-    }
-
-    @Override
-    public Vector3i getRenderOffset() {
-        return new Vector3i(0, 0, 0);
-    }
-
-    @Override
-    public float getRenderPolygonOffset() {
-        return 6;
     }
 
     @Override
