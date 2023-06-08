@@ -35,7 +35,7 @@ import java.util.Objects;
 public class ArmourerReplaceDialog extends ConfirmDialog {
 
     private final Inventory playerInventory;
-    private final  Container inventory;
+    private final Container inventory;
 
     private final UICheckBox keepPaintBox = new UICheckBox(CGRect.ZERO);
     private final UICheckBox keepColorBox = new UICheckBox(CGRect.ZERO);
@@ -199,12 +199,7 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         @Override
         public void removed(Player player) {
             super.removed(player);
-            Inventory playerInventory = player.getInventory();
-            //#if MC >= 11800
-            playerInventory.setPickedItem(ItemStack.EMPTY);
-            //#else
-            //# playerInventory.setCarried(ItemStack.EMPTY);
-            //#endif
+            player.getInventory().setCarried(ItemStack.EMPTY);
         }
 
         @Override

@@ -5,6 +5,7 @@
   "client": [
     "FabricScreenMixin",
     "FabricGuiGraphicsMixin",
+    "FabricRecipeComponentMixin",
     "FabricTrinketsAddonMixin"
   ],
   "mixins": [

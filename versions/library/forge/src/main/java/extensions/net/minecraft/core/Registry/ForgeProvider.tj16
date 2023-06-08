@@ -56,8 +56,8 @@ public class ForgeProvider {
 
     public static <T extends CreativeModeTab> IRegistryKey<T> registerItemGroupFO(@ThisClass Class<?> clazz, String name, Supplier<Supplier<ItemStack>> icon, Consumer<List<ItemStack>> itemProvider) {
         ResourceLocation registryName = ModConstants.key(name);
-        Supplier<CreativeModeTab> tab = CreativeModeTab.createCreativeModeTabFO(registryName, icon, itemProvider);
-        ModLog.debug("Registering Item Group '{}'", registryName);
+        Supplier<CreativeModeTab> tab = CreativeModeTab.createCreativeModeTabFO(name, icon, itemProvider);
+        ModLog.debug("Registering Creative Mode Tab '{}'", registryName);
         return AbstractForgeRegistryEntry.cast(registryName, tab);
     }
 
