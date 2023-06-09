@@ -51,11 +51,12 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         if (!isReady) {
             return;
         }
-        CGPoint mousePos = context.state().mousePos();
+        int mouseX = context.state().mouseX();
+        int mouseY = context.state().mouseY();
         IVector2i offset = screen.getContentOffset();
         context.saveGraphicsState();
         context.translateCTM(-offset.getX(), -offset.getY(), 0);
-        screen.renderInView(this, 400, mousePos.x, mousePos.y, context.state().partialTicks(), context);
+        screen.renderInView(this, 400, mouseX, mouseY, context.state().partialTicks(), context);
         context.restoreGraphicsState();
     }
 

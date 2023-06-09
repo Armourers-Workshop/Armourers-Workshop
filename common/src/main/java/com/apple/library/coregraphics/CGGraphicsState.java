@@ -10,7 +10,9 @@ public interface CGGraphicsState {
 
     UIFont font();
 
-    CGPoint mousePos();
+    int mouseX();
+
+    int mouseY();
 
     float partialTicks();
 

@@ -4,7 +4,6 @@ import com.apple.library.coregraphics.CGGradient;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGGraphicsRenderer;
 import com.apple.library.coregraphics.CGGraphicsState;
-import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIFont;
@@ -33,9 +32,6 @@ import java.util.List;
 @Available("[1.16, 1.18)")
 @Environment(value = EnvType.CLIENT)
 public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
-
-    private final RendererImpl impl = new RendererImpl();
-    private final CGGraphicsContext context = new CGGraphicsContext(impl, impl);
 
     public AbstractMenuScreenImpl(T menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
@@ -83,20 +79,17 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
 
     @Override
     public final void render(PoseStack poseStack, int i, int j, float f) {
-        impl.mousePos.x = i;
-        impl.mousePos.y = j;
-        impl.partialTicks = f;
-        this.render(from(poseStack), i, j, f);
+        this.render(from(poseStack, i, j, f), i, j, f);
     }
 
     @Override
     protected final void renderLabels(PoseStack poseStack, int i, int j) {
-        this.renderLabels(from(poseStack), i, j);
+        this.renderLabels(from(poseStack, i, j, 0), i, j);
     }
 
     @Override
     protected final void renderTooltip(PoseStack poseStack, int i, int j) {
-        this.renderTooltip(from(poseStack), i, j);
+        this.renderTooltip(from(poseStack, i, j, 0), i, j);
     }
 
     @Override
@@ -109,17 +102,26 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
         return impl.poseStack;
     }
 
-    private CGGraphicsContext from(PoseStack poseStack) {
-        impl.poseStack = poseStack;
-        return context;
+    private CGGraphicsContext from(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        RendererImpl impl = new RendererImpl(poseStack, mouseX, mouseY, partialTicks);
+        return new CGGraphicsContext(impl, impl);
     }
 
     public class RendererImpl implements CGGraphicsRenderer, CGGraphicsState {
 
-        UIFont uifont;
-        PoseStack poseStack;
-        CGPoint mousePos = new CGPoint(0, 0);
-        float partialTicks = 0;
+        private final PoseStack poseStack;
+        private final int mouseX;
+        private final int mouseY;
+        private final float partialTicks;
+
+        private UIFont uifont;
+
+        RendererImpl(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+            this.poseStack = poseStack;
+            this.mouseX = mouseX;
+            this.mouseY = mouseY;
+            this.partialTicks = partialTicks;
+        }
 
         public void renderText(FormattedCharSequence text, float x, float y, int textColor, boolean shadow, boolean bl2, int j, int k, UIFont font, CGGraphicsContext context) {
             if (font == null) {
@@ -139,7 +141,7 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
             // and while we can't decide on the final tooltip size,
             // but we can to handle the break the newline
             List<? extends FormattedCharSequence> texts = font.font().split(text.component(), 100000);
-            AbstractMenuScreenImpl.this.renderTooltip(from(context), texts, mousePos.x, mousePos.y);
+            AbstractMenuScreenImpl.this.renderTooltip(poseStack, texts, mouseX, mouseY);
         }
 
         @Override
@@ -150,7 +152,7 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
 
         @Override
         public void renderColor(int x1, int y1, int x2, int y2, int color, CGGraphicsContext context) {
-            Screen.fill(from(context), x1, y1, x2, y2, color);
+            Screen.fill(poseStack, x1, y1, x2, y2, color);
         }
 
         @Override
@@ -186,8 +188,13 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
         }
 
         @Override
-        public CGPoint mousePos() {
-            return mousePos;
+        public int mouseX() {
+            return mouseX;
+        }
+
+        @Override
+        public int mouseY() {
+            return mouseY;
         }
 
         @Override

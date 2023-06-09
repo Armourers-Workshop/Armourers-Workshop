@@ -4,7 +4,6 @@ import com.apple.library.coregraphics.CGGradient;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGGraphicsRenderer;
 import com.apple.library.coregraphics.CGGraphicsState;
-import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIFont;
@@ -40,17 +39,15 @@ import java.util.List;
 @Environment(value = EnvType.CLIENT)
 public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
 
-    private final RendererImpl impl = new RendererImpl();
-    private final CGGraphicsContext context = new CGGraphicsContext(impl, impl);
-
     public AbstractMenuScreenImpl(T menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
         addWidget(new TabEventProxy());
     }
 
     public void renderInView(UIView view, int zLevel, int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
-        super.render(from(context), mouseX, mouseY, partialTicks);
-        super.renderTooltip(from(context), mouseX, mouseY);
+        GuiGraphics graphics = from(context);
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        super.renderTooltip(graphics, mouseX, mouseY);
     }
 
     public void render(CGGraphicsContext context, int mouseX, int mouseY, float partialTicks) {
@@ -74,21 +71,18 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
     }
 
     @Override
-    public final void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        impl.mousePose.x = mouseX;
-        impl.mousePose.y = mouseY;
-        impl.partialTicks = partialTicks;
-        this.render(from(graphics), mouseX, mouseY, partialTicks);
+    public final void render(GuiGraphics context, int mouseX, int mouseY, float partialTicks) {
+        this.render(from(context, mouseX, mouseY, partialTicks), mouseX, mouseY, partialTicks);
     }
 
     @Override
     public final void renderLabels(GuiGraphics context, int mouseX, int mouseY) {
-        this.renderLabels(from(context), mouseX, mouseY);
+        this.renderLabels(from(context, mouseX, mouseY, 0), mouseX, mouseY);
     }
 
     @Override
     public final void renderTooltip(GuiGraphics context, int mouseX, int mouseY) {
-        this.renderTooltip(from(context), mouseX, mouseY);
+        this.renderTooltip(from(context, mouseX, mouseY, 0), mouseX, mouseY);
     }
 
     @Override
@@ -105,9 +99,9 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
         return impl.graphics;
     }
 
-    private CGGraphicsContext from(GuiGraphics graphics) {
-        impl.graphics = graphics;
-        return context;
+    private CGGraphicsContext from(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        RendererImpl impl = new RendererImpl(graphics, mouseX, mouseY, partialTicks);
+        return new CGGraphicsContext(impl, impl);
     }
 
     /**
@@ -150,10 +144,19 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
 
     public class RendererImpl implements CGGraphicsRenderer, CGGraphicsState {
 
-        UIFont uifont;
-        GuiGraphics graphics;
-        CGPoint mousePose = new CGPoint(0, 0);
-        float partialTicks = 0;
+        private final GuiGraphics graphics;
+        private final int mouseX;
+        private final int mouseY;
+        private final float partialTicks;
+
+        private UIFont uifont;
+
+        RendererImpl(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+            this.graphics = graphics;
+            this.mouseX = mouseX;
+            this.mouseY = mouseY;
+            this.partialTicks = partialTicks;
+        }
 
         @Override
         public void renderText(FormattedCharSequence text, float x, float y, int textColor, boolean shadow, boolean bl2, int j, int k, UIFont font, CGGraphicsContext context) {
@@ -174,9 +177,9 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
             // there are some versions of tooltip that don't split normally,
             // and while we can't decide on the final tooltip size,
             // but we can to handle the break the newline
-            CGPoint pos = context.state().mousePos();
-            List<? extends FormattedCharSequence> texts = font.font().split(text.component(), 100000);
-            graphics.renderTooltip(font.font(), texts, pos.x, pos.y);
+            Font font1 = font.font();
+            List<? extends FormattedCharSequence> texts = font1.split(text.component(), 100000);
+            graphics.renderTooltip(font1, texts, mouseX, mouseY);
         }
 
         @Override
@@ -206,13 +209,18 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
         }
 
         @Override
-        public float partialTicks() {
-            return partialTicks;
+        public int mouseX() {
+            return mouseX;
         }
 
         @Override
-        public CGPoint mousePos() {
-            return mousePose;
+        public int mouseY() {
+            return mouseY;
+        }
+
+        @Override
+        public float partialTicks() {
+            return partialTicks;
         }
 
         @Override

@@ -261,8 +261,9 @@ public class UIWindow extends UIView {
                 context.saveGraphicsState();
                 context.translateCTM(0, 0, level);
             }
-            CGPoint mousePos = context.state().mousePos();
-            applyRender(mousePos.x, mousePos.y, 0, window, context);
+            int mouseX = context.state().mouseX();
+            int mouseY = context.state().mouseY();
+            applyRender(mouseX, mouseY, 0, window, context);
             if (level != 0) {
                 context.restoreGraphicsState();
             }

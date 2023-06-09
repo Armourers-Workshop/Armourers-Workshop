@@ -1,7 +1,6 @@
 package com.apple.library.impl;
 
 import com.apple.library.coregraphics.CGGraphicsContext;
-import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIView;
 import com.apple.library.uikit.UIWindow;
@@ -75,9 +74,8 @@ public class WindowManagerImpl {
 
     public void render(CGGraphicsContext context, RenderInvoker foreground, RenderInvoker background, RenderInvoker overlay) {
         float partialTicks = context.state().partialTicks();
-        CGPoint mousePos = context.state().mousePos();
-        int mouseX = mousePos.x;
-        int mouseY = mousePos.y;
+        int mouseX = context.state().mouseX();
+        int mouseY = context.state().mouseY();
         // we need to display a custom tooltip, so must cancel the original tooltip render,
         // we need reset mouse to impossible position to fool the original tooltip render.
         UIView tooltipResponder = firstTooltipResponder();
@@ -98,8 +96,8 @@ public class WindowManagerImpl {
                 renderTooltip(tooltipResponder, context);
             }
         }
-        lastMouseX = mousePos.x;
-        lastMouseY = mousePos.y;
+        lastMouseX = context.state().mouseX();
+        lastMouseY = context.state().mouseY();
     }
 
     private void renderTooltip(UIView tooltipResponder, CGGraphicsContext context) {

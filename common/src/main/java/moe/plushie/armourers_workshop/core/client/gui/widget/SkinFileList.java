@@ -275,7 +275,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             CGRect bounds = window.bounds();
             CGPoint point = convertPointToView(CGPoint.ZERO, null);
             int size = 144;
-            int mouseY = context.state().mousePos().y;
+            int mouseY = context.state().mouseY();
             int dz = 0;
             int dx = point.x - size - 5;
             int dy = MathUtils.clamp(mouseY - size / 2, 0, bounds.height - size);
