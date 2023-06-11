@@ -1,8 +1,12 @@
 package moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder;
 
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSString;
 import moe.plushie.armourers_workshop.builder.menu.AdvancedSkinBuilderMenu;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
+import moe.plushie.armourers_workshop.core.client.gui.widget.TreeNode;
+import moe.plushie.armourers_workshop.core.client.gui.widget.TreeView;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,6 +21,28 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
         AdvancedSkinCanvasView canvasView = new AdvancedSkinCanvasView(bounds());
         canvasView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
         addSubview(canvasView);
+
+        TreeNode rootNode = new TreeNode(new NSString("Root"));
+        TreeView treeView =  new TreeView(rootNode, bounds());
+        treeView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
+        addSubview(treeView);
+
+        addToNode(rootNode, "Root", 10);
+        addToNode(rootNode.nodeAtIndex(0), "First", 10);
+        addToNode(rootNode.nodeAtIndex(1), "Second", 10);
+        addToNode(rootNode.nodeAtIndex(3), "Thriii", 10);
+        addToNode(rootNode.nodeAtIndex(0).nodeAtIndex(0), "Children", 10);
+    }
+
+    @Override
+    public void screenWillResize(CGSize size) {
+        setFrame(new CGRect(0, 0, size.width, size.height));
+    }
+
+    private void addToNode(TreeNode node, String prefix, int count) {
+        for (int i = 0; i < count; ++i) {
+            node.add(new TreeNode(new NSString(prefix + " - " + i)));
+        }
     }
 
 //    @Override

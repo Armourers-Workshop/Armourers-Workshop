@@ -173,7 +173,7 @@ public class TextStorageImpl {
         PoseStack.Pose pose = context.state().ctm().last();
         AbstractShaderTesselator tesselator = AbstractShaderTesselator.getInstance();
         BufferBuilder builder = tesselator.begin(SkinRenderType.GUI_HIGHLIGHTED_TEXT);
-        context.setTintColor(AppearanceImpl.TEXT_HIGHLIGHTED_COLOR);
+        context.setBlendColor(AppearanceImpl.TEXT_HIGHLIGHTED_COLOR);
         for (CGRect rect : highlightedRects) {
             builder.vertex(pose.pose(), rect.getMinX(), rect.getMaxY(), 0).endVertex();
             builder.vertex(pose.pose(), rect.getMaxX(), rect.getMaxY(), 0).endVertex();
@@ -181,7 +181,7 @@ public class TextStorageImpl {
             builder.vertex(pose.pose(), rect.getMinX(), rect.getMinY(), 0).endVertex();
         }
         tesselator.end();
-        context.setTintColor(UIColor.WHITE);
+        context.setBlendColor(UIColor.WHITE);
     }
 
     public String value() {
@@ -562,7 +562,7 @@ public class TextStorageImpl {
 
         TextTokenizer CHAR_AFTER = (value, index, step) -> {
             int length = value.length();
-            for (int j = 0; index < length && j < step; ++j) {
+            for (int k = 0; index < length && k < step; ++k) {
                 if (Character.isHighSurrogate(value.charAt(index++)) && index < length && Character.isLowSurrogate(value.charAt(index))) {
                     ++index;
                 }
@@ -571,7 +571,7 @@ public class TextStorageImpl {
         };
 
         TextTokenizer CHAR_BEFORE = (value, index, step) -> {
-            for (int k = -step; index > 0 && k < 0; ++k) {
+            for (int k = 0; index > 0 && k < step; ++k) {
                 --index;
                 if (Character.isLowSurrogate(value.charAt(index)) && index > 0 && Character.isHighSurrogate(value.charAt(index - 1))) {
                     --index;

@@ -32,7 +32,7 @@ public class ScrollIndicator extends UIControl {
         super.mouseDown(event);
         SoundManagerImpl.click();
         middleButton.setSelected(true);
-        updateValue(valueAtPoint(convertPointFromView(event.locationInWindow(), null)));
+        updateValue(valueAtPoint(event.locationInView(this)));
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ScrollIndicator extends UIControl {
     @Override
     public void mouseDragged(UIEvent event) {
         super.mouseDragged(event);
-        updateValue(valueAtPoint(convertPointFromView(event.locationInWindow(), null)));
+        updateValue(valueAtPoint(event.locationInView(this)));
     }
 
     private void setup() {

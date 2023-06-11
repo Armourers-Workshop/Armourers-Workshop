@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,13 +31,13 @@ public class PaintColorView extends UIView {
         int dv = (cv + (int)TickUtils.getPaintTextureOffset()) % 256;
 
         if (paintType != SkinPaintTypes.RAINBOW) {
-            context.setTintColor(color);
+            context.setBlendColor(color);
         }
 
         CGRect rect = bounds();
         context.drawImage(ModTextures.CUBE, 0, 0, cu, dv, rect.width, rect.height, 1, 1, 256, 256);
         if (paintType != SkinPaintTypes.RAINBOW) {
-            RenderSystem.setShaderColor(UIColor.WHITE);
+            context.setBlendColor(UIColor.WHITE);
         }
     }
 

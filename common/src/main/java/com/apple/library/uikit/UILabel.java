@@ -42,7 +42,7 @@ public class UILabel extends UIView {
     @Override
     public void mouseDown(UIEvent event) {
         super.mouseDown(event);
-        Map<String, ?> attributes = attributesAtPoint(convertPointFromView(event.locationInWindow(), null));
+        Map<String, ?> attributes = attributesAtPoint(event.locationInView(this));
         if (attributes != null) {
             delegate.invoker().labelWillClickAttributes(this, attributes);
         }

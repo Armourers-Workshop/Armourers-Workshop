@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
@@ -35,6 +36,7 @@ public class AdvancedSkinCanvasView extends UIView {
         orbitControls.clientWidth = rect.getWidth();
         orbitControls.clientHeight = rect.getHeight();
     }
+
 
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {

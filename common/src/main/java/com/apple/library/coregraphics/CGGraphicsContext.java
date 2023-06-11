@@ -185,11 +185,11 @@ public class CGGraphicsContext {
         state.save();
     }
 
-    public void translateCTM(int x, int y, int z) {
+    public void translateCTM(float x, float y, float z) {
         state.translate(x, y, z);
     }
 
-    public void rotateCTM(int x, int y, int z) {
+    public void rotateCTM(float x, float y, float z) {
         state.rotate(x, y, z);
     }
 
@@ -203,7 +203,7 @@ public class CGGraphicsContext {
         RenderSystem.defaultBlendFunc();
     }
 
-    public void setTintColor(UIColor color) {
+    public void setBlendColor(UIColor color) {
         RenderSystem.setShaderColor(color);
     }
 

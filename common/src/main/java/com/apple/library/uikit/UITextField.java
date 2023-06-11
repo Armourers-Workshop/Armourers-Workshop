@@ -43,7 +43,7 @@ public class UITextField extends UIControl implements TextInputTraits {
             becomeFirstResponder();
         }
         if (shouldInputText()) {
-            input.mouseDown(convertPointFromView(event.locationInWindow(), null));
+            input.mouseDown(event.locationInView(this));
         }
     }
 

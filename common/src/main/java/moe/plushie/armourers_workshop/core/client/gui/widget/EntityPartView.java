@@ -35,7 +35,7 @@ public class EntityPartView extends UIControl {
     @Override
     public void mouseDown(UIEvent event) {
         super.mouseDown(event);
-        Part part = getPart(convertPointFromView(event.locationInWindow(), null));
+        Part part = getPart(event.locationInView(this));
         if (part != null) {
             selectedPart = part;
             sendEvent(Event.VALUE_CHANGED);
@@ -45,7 +45,7 @@ public class EntityPartView extends UIControl {
     @Override
     public void mouseMoved(UIEvent event) {
         super.mouseMoved(event);
-        highlightedPart = getPart(convertPointFromView(event.locationInWindow(), null));
+        highlightedPart = getPart(event.locationInView(this));
     }
 
     @Override

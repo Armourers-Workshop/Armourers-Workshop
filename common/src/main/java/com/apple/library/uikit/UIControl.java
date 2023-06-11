@@ -45,7 +45,7 @@ public class UIControl extends UIView implements HighlightedDisplayable {
 
     @Override
     public void mouseEntered(UIEvent event) {
-        CGPoint point = convertPointFromView(event.locationInWindow(), null);
+        CGPoint point = event.locationInView(this);
         this.setHighlighted(shouldBeHighlight(point, event));
     }
 

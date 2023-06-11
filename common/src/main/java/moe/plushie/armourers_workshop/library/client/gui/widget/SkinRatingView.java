@@ -28,13 +28,13 @@ public class SkinRatingView extends UIControl {
     @Override
     public void mouseEntered(UIEvent event) {
         super.mouseEntered(event);
-        hoveredValue = getRatingAtPos(convertPointFromView(event.locationInWindow(), null));
+        hoveredValue = getRatingAtPos(event.locationInView(this));
     }
 
     @Override
     public void mouseMoved(UIEvent event) {
         super.mouseMoved(event);
-        hoveredValue = getRatingAtPos(convertPointFromView(event.locationInWindow(), null));
+        hoveredValue = getRatingAtPos(event.locationInView(this));
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SkinRatingView extends UIControl {
     @Override
     public void mouseDown(UIEvent event) {
         super.mouseDown(event);
-        int value = getRatingAtPos(convertPointFromView(event.locationInWindow(), null));
+        int value = getRatingAtPos(event.locationInView(this));
         if (value >= 0 && value <= getMaxValue()) {
             setValue(value);
             sendEvent(Event.VALUE_CHANGED);

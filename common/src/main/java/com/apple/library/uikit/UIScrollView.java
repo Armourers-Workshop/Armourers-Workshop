@@ -72,6 +72,12 @@ public class UIScrollView extends UIView {
         this.contentSize = contentSize;
         this.updateIndicatorIfNeeded();
         this.setNeedsLayout();
+        // when the content size did changes,
+        // we needs check the content offset is still valid.
+        CGPoint newContentOffset = clamp(contentOffset);
+        if (!newContentOffset.equals(contentOffset)) {
+            setContentOffset(newContentOffset);
+        }
     }
 
     public UIEdgeInsets contentInsets() {

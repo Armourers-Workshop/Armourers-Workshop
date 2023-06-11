@@ -29,14 +29,14 @@ public class InventoryBox extends UIControl {
     @Override
     public void mouseDown(UIEvent event) {
         super.mouseDown(event);
-        offset = convertPointFromView(event.locationInWindow(), null);
+        offset = event.locationInView(this);
         sendEvent(Event.VALUE_CHANGED);
     }
 
     @Override
     public void mouseMoved(UIEvent event) {
         super.mouseMoved(event);
-        mouseOffset = convertPointFromView(event.locationInWindow(), null);
+        mouseOffset = event.locationInView(this);
     }
 
     @Override

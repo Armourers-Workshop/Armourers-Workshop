@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.compatibility;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.annotation.Available;
@@ -25,22 +24,13 @@ import java.util.function.Supplier;
 @Environment(value = EnvType.CLIENT)
 public class AbstractRenderType extends RenderType {
 
-    private static final TexturingStateShard OR_REVERSE = new TexturingStateShard("aw_or_reverse", () -> {
-        RenderSystem.disableTexture();
-        RenderSystem.enableColorLogicOp();
-        RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-    }, () -> {
-        RenderSystem.disableColorLogicOp();
-        RenderSystem.enableTexture();
-    });
-
     private static final Map<SkinRenderFormat, Supplier<IRenderTypeBuilder>> MAPPER = _make(it -> {
 
         it.put(SkinRenderFormat.LINE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_NORMAL, VertexFormat.Mode.LINES, RENDERTYPE_LINES_SHADER));
         it.put(SkinRenderFormat.IMAGE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, POSITION_COLOR_TEX_LIGHTMAP_SHADER).overlay().lightmap());
 
         it.put(SkinRenderFormat.GUI_IMAGE, () -> _builder(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, POSITION_TEX_SHADER));
-        it.put(SkinRenderFormat.GUI_HIGHLIGHTED_TEXT, () -> _builder(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, POSITION_SHADER).or(builder -> builder.setTexturingState(OR_REVERSE)));
+        it.put(SkinRenderFormat.GUI_HIGHLIGHTED_TEXT, () -> _builder(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, POSITION_SHADER));
 
         it.put(SkinRenderFormat.BLOCK, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_SOLID_SHADER));
         it.put(SkinRenderFormat.BLOCK_CUTOUT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_CUTOUT_SHADER));
@@ -168,6 +158,12 @@ public class AbstractRenderType extends RenderType {
         @Override
         public IRenderTypeBuilder depthTest(DepthTest test) {
             this.stateBuilder = stateBuilder.setDepthTestState(TABLE_DEPTH_TEST.getOrDefault(test, NO_DEPTH_TEST));
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder colorLogic(ColorLogic state) {
+            this.stateBuilder = stateBuilder.setColorLogicState(state);
             return this;
         }
 

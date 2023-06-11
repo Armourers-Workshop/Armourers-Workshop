@@ -8,7 +8,6 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIImage;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -70,11 +69,11 @@ public class HSBSliderBox extends UIControl {
         RenderSystem.setShaderTexture(0, ModTextures.HUE);
 
         if (type == Type.SATURATION) {
-            context.setTintColor(hueColor);
+            context.setBlendColor(hueColor);
             context.drawImage(ModTextures.HUE, cx, cy, 0, 176, cw, ch, 256, 20, 256, 256);
-            context.setTintColor(brightnessColor);
+            context.setBlendColor(brightnessColor);
             context.drawImage(ModTextures.HUE, cx, cy, type.u, type.v, cw, ch, type.texWidth, type.texHeight, 256, 256);
-            context.setTintColor(UIColor.WHITE);
+            context.setBlendColor(UIColor.WHITE);
         } else {
             context.drawImage(ModTextures.HUE, cx, cy, type.u, type.v, cw, ch, type.texWidth, type.texHeight, 256, 256);
         }
@@ -98,7 +97,7 @@ public class HSBSliderBox extends UIControl {
     }
 
     private void updateValueWithEvent(UIEvent event) {
-        CGPoint point = convertPointFromView(event.locationInWindow(), null);
+        CGPoint point = event.locationInView(this);
         CGRect rect = bounds().insetBy(1, 1, 1, 1);
         double value = ((double) point.x - rect.x) / rect.width;
         values[type.ordinal()] = MathUtils.clamp((float) value, 0f, 1f);

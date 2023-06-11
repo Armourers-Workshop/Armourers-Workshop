@@ -24,6 +24,8 @@ public interface IRenderTypeBuilder {
 
     IRenderTypeBuilder depthTest(DepthTest state);
 
+    IRenderTypeBuilder colorLogic(ColorLogic state);
+
     IRenderTypeBuilder polygonOffset(float factor, float units);
 
     IRenderTypeBuilder stroke(float width);
@@ -61,5 +63,9 @@ public interface IRenderTypeBuilder {
 
     enum DepthTest {
         NONE, EQUAL, LESS_EQUAL
+    }
+
+    enum ColorLogic {
+        NONE, OR_REVERSE
     }
 }

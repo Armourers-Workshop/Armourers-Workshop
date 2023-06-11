@@ -13,6 +13,10 @@ public class CGRect {
     public int width;
     public int height;
 
+    public CGRect(CGRect rect) {
+        this(rect.x, rect.y, rect.width, rect.height);
+    }
+
     public CGRect(CGPoint point, CGSize size) {
         this(point.x, point.y, size.width, size.height);
     }

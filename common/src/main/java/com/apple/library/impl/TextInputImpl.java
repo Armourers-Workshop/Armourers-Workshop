@@ -90,13 +90,13 @@ public class TextInputImpl {
             }
             case GLFW.GLFW_KEY_DOWN: {
                 if (storage.isMultipleLineMode()) {
-                    moveToNextLine(userCursorRect, 1);
+                    moveToNextLine(userCursorRect, 1, hasShiftDown);
                 }
                 return false;
             }
             case GLFW.GLFW_KEY_UP: {
                 if (storage.isMultipleLineMode()) {
-                    moveToNextLine(userCursorRect, -1);
+                    moveToNextLine(userCursorRect, -1, hasShiftDown);
                 }
                 return false;
             }
@@ -154,8 +154,7 @@ public class TextInputImpl {
         isEditable = editable;
     }
 
-    private void moveToNextLine(CGRect userCursorRect, int step) {
-        boolean isSelectedMode = KeyboardManagerImpl.hasShiftDown();
+    private void moveToNextLine(CGRect userCursorRect, int step, boolean selectMode) {
         CGRect rect = storage.cursorRect();
         if (userCursorRect == null) {
             userCursorRect = rect;
@@ -170,7 +169,7 @@ public class TextInputImpl {
             pos = storage.positionAtPoint(new CGPoint(userCursorRect.x, ty));
         }
         if (pos != null) {
-            storage.moveCursorTo(pos, isSelectedMode);
+            storage.moveCursorTo(pos, selectMode);
         }
     }
 }

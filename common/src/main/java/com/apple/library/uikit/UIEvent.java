@@ -44,6 +44,10 @@ public class UIEvent {
         return location;
     }
 
+    public CGPoint locationInView(UIView view) {
+        return view.convertPointFromView(location, null);
+    }
+
     public void cancel(InvokerResult result) {
         this.result = result;
     }

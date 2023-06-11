@@ -83,19 +83,6 @@ public class ModTextures {
         return UIImage.of(ModTextures.BUTTONS).uv(u, v).fixed(16, 16).unzip(offsets::get).build();
     }
 
-    public static UIImage buttonImage(int u, int v, ResourceLocation resource) {
-        HashMap<Integer, CGPoint> offsets = new HashMap<>();
-        offsets.put(UIControl.State.NORMAL, new CGPoint(0, 0));
-        offsets.put(UIControl.State.HIGHLIGHTED, new CGPoint(1, 0));
-        offsets.put(UIControl.State.SELECTED | UIControl.State.NORMAL, new CGPoint(2, 0));
-        offsets.put(UIControl.State.SELECTED | UIControl.State.HIGHLIGHTED, new CGPoint(3, 0));
-        // a strange design, there are multiple paths:
-        // 1. normal + highlighted + selected + selected and highlighted
-        // 2. normal + highlighted + disabled
-        offsets.put(UIControl.State.DISABLED, new CGPoint(3, 0));
-        return UIImage.of(resource).uv(u, v).fixed(16, 16).unzip(offsets::get).build();
-    }
-
     public static UIImage iconImage(int u, int v, int width, int height, ResourceLocation resource) {
         HashMap<Integer, CGPoint> offsets = new HashMap<>();
         offsets.put(UIControl.State.NORMAL, new CGPoint(0, 0));

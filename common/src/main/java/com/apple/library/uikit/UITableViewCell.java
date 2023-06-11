@@ -27,7 +27,7 @@ public class UITableViewCell extends UIView implements HighlightedDisplayable {
 
     @Override
     public void mouseEntered(UIEvent event) {
-        CGPoint point = convertPointFromView(event.locationInWindow(), null);
+        CGPoint point = event.locationInView(this);
         boolean newHighlighted = pointInside(point, event);
         UITableView tableView = _tableView();
         if (tableView != null && isHighlighted != newHighlighted) {

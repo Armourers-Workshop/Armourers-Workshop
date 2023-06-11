@@ -206,6 +206,12 @@ public class AbstractRenderType extends RenderType {
         }
 
         @Override
+        public IRenderTypeBuilder colorLogic(ColorLogic state) {
+            this.stateBuilder = stateBuilder.setColorLogicState(state);
+            return this;
+        }
+
+        @Override
         public IRenderTypeBuilder polygonOffset(float factor, float units) {
             this.stateBuilder = stateBuilder.setLayeringState(new LayeringStateShard("aw_polygon_offset_" + units, () -> {
                 RenderSystem.enablePolygonOffset();

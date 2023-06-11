@@ -32,7 +32,7 @@ public class PaletteBox extends UIControl {
 
     @Override
     public void mouseDown(UIEvent event) {
-        this.updateSelectedIndex(convertPointFromView(event.locationInWindow(), null));
+        this.updateSelectedIndex(event.locationInView(this));
         super.mouseDown(event);
     }
 

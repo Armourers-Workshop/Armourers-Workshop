@@ -16,18 +16,17 @@ public interface CGGraphicsState {
 
     float partialTicks();
 
-
     default void save() {
         ctm().pushPose();
     }
 
-    default void translate(int x, int y, int z) {
+    default void translate(float x, float y, float z) {
         if (x != 0 || y != 0 || z != 0) {
             ctm().translate(x, y, z);
         }
     }
 
-    default void rotate(int x, int y, int z) {
+    default void rotate(float x, float y, float z) {
         if (x != 0) {
             ctm().mulPose(Vector3f.XP.rotationDegrees(x));
         }

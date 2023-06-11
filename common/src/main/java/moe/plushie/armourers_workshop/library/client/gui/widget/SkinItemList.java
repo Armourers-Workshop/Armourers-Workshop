@@ -67,7 +67,7 @@ public class SkinItemList extends UIView {
         if (itemSelector == null) {
             return;
         }
-        int index = indexAtPoint(convertPointFromView(event.locationInWindow(), null));
+        int index = indexAtPoint(event.locationInView(this));
         if (index >= 0 && index < entries.size()) {
             itemSelector.accept(entries.get(index));
         }
@@ -261,7 +261,7 @@ public class SkinItemList extends UIView {
     }
 
     private void applyHovered(UIEvent event) {
-        hoveredIndex = indexAtPoint(convertPointFromView(event.locationInWindow(), null));
+        hoveredIndex = indexAtPoint(event.locationInView(this));
     }
 
     private int indexAtPoint(CGPoint point) {

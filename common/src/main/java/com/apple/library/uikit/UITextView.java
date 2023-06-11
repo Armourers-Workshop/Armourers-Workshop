@@ -50,7 +50,7 @@ public class UITextView extends UIScrollView implements TextInputTraits {
             becomeFirstResponder();
         }
         if (shouldInputText()) {
-            input.mouseDown(convertPointFromView(event.locationInWindow(), null));
+            input.mouseDown(event.locationInView(this));
         }
     }
 

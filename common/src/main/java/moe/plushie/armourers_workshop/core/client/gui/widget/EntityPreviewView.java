@@ -38,9 +38,9 @@ public class EntityPreviewView extends UIControl {
         MannequinEntityRenderer.enableLimitScale = true;
         context.saveGraphicsState();
         context.translateCTM(0, 0, 300);
-        context.translateCTM(bounds.width / 2, bounds.height - 8, 50);
+        context.translateCTM(bounds.width / 2f, bounds.height - 8, 50);
         context.rotateCTM(-20, 0, 0);
-        context.rotateCTM(0, (int) playerRotation, 0);
+        context.rotateCTM(0, playerRotation, 0);
         context.translateCTM(0, 0, -50);
         context.drawEntity(entity, 0, 0, 45, 0, 0);
 

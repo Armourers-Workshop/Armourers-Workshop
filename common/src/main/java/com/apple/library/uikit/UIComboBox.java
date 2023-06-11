@@ -8,6 +8,7 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.impl.AppearanceImpl;
 import com.apple.library.impl.SoundManagerImpl;
+import moe.plushie.armourers_workshop.init.ModTextures;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -33,8 +34,8 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
         this.setBackgroundImage(AppearanceImpl.BUTTON_IMAGE.imageAtIndex(UIControl.State.DISABLED));
         this.handleView.setBackgroundImage(AppearanceImpl.BUTTON_IMAGE, State.ALL);
         this.handleView.setUserInteractionEnabled(false);
-        this.handleView.setTitle(new NSString("⋁"), State.NORMAL);
-        this.handleView.setTitle(new NSString("⋀"), State.SELECTED);
+        this.handleView.setImage(UIImage.of(ModTextures.LIST).uv(0, 248).fixed(8, 8).build(), State.NORMAL);
+        this.handleView.setImage(UIImage.of(ModTextures.LIST).uv(0, 240).fixed(8, 8).build(), State.SELECTED);
         this.handleView.setTitleColor(UIColor.WHITE, State.ALL);
         this.handleView.setCanBecomeFocused(false);
         this.titleView.titleView.setEnabled(false);
@@ -205,7 +206,7 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
         if (window != null) {
             window.addGlobalTarget(this, Event.MOUSE_LEFT_DOWN, (self, event) -> {
                 self.removeGlobalClickListener();
-                CGPoint point = self.convertPointFromView(event.locationInWindow(), null);
+                CGPoint point = event.locationInView(self);
                 if (!self.pointInside(point, event)) {
                     self.setSelected(false);
                 }
