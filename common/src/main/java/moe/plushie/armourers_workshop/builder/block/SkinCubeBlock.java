@@ -98,7 +98,9 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements AbstractBl
         BlockEntity blockEntity = reader.getBlockEntity(blockPos);
         if (blockEntity instanceof IPaintable) {
             IPaintColor paintColor = ((IPaintable) blockEntity).getColor(direction);
-            return paintColor.getRGB() | 0xff000000;
+            if (paintColor != null) {
+                return paintColor.getRGB() | 0xff000000;
+            }
         }
         return 0xffffffff;
     }

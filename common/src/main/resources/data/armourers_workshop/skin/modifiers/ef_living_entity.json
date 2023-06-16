@@ -23,29 +23,7 @@
       "Phalanx_R": [ 0, 24, 2 ]
     }
   },
-  "entities": [
-    "minecraft:player",
-
-    "minecraft:skeleton",
-    "minecraft:stray",
-    "minecraft:wither_skeleton",
-    "minecraft:zombie",
-    "minecraft:husk",
-    "minecraft:zombie_villager",
-    "minecraft:drowned",
-    "minecraft:evoker",
-    "minecraft:illusioner",
-    "minecraft:pillager",
-    "minecraft:vindicator",
-    "minecraft:vex",
-    "minecraft:piglin",
-    "minecraft:piglin_brute",
-    "minecraft:zombified_piglin",
-
-    "minecraft:villager",
-    "minecraft:witch",
-    "minecraft:wandering_trader",
-
-    "customnpcs:customnpc"
+  "models": [
+    "*"
   ]
 }

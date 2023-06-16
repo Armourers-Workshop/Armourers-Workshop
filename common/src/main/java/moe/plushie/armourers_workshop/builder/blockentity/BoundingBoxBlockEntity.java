@@ -140,6 +140,12 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
         colors.forEach((dir, color) -> setArmourerTextureColor(blockEntity, getTexturePos(blockEntity, dir), color));
     }
 
+    @Override
+    public boolean hasColor(Direction direction) {
+        // bounding box can't support none paint type.
+        return getColor(direction) != PaintColor.CLEAR;
+    }
+
     public void clearArmourerTextureColors() {
         ArmourerBlockEntity blockEntity = getParentBlockEntity();
         if (blockEntity == null || getLevel() == null) {

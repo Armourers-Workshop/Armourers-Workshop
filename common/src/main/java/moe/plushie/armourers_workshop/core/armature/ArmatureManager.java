@@ -17,6 +17,7 @@ public abstract class ArmatureManager {
     private final HashMap<ResourceLocation, ArmatureBuilder> pendingBuilders = new HashMap<>();
 
     private final ArrayList<ArmatureBuilder> defaultBuilders = new ArrayList<>();
+    private final HashMap<String, ArrayList<ArmatureBuilder>> modelBuilders = new HashMap<>();
     private final HashMap<IEntityTypeProvider<?>, ArmatureBuilder> entityBuilders = new HashMap<>();
 
     private int version = 0;
@@ -55,20 +56,28 @@ public abstract class ArmatureManager {
         });
         pendingBuilders.clear();
         builders1.forEach((name, builder) -> {
+            int used = 0;
             Collection<IEntityTypeProvider<?>> entities = builder.getEntities();
-            if (entities.isEmpty()) {
-                defaultBuilders.add(builder);
-                return;
+            if (!entities.isEmpty()) {
+                entities.forEach(entityType -> entityBuilders.put(entityType, builder));
+                used += 1;
             }
-            entities.forEach(entityType -> entityBuilders.put(entityType, builder));
+            Collection<String> models = builder.getModels();
+            if (!models.isEmpty()) {
+                models.forEach(model -> modelBuilders.computeIfAbsent(model, k -> new ArrayList<>()).add(builder));
+                used += 1;
+            }
+            if (used == 0) {
+                defaultBuilders.add(builder);
+            }
         });
         version += 1;
     }
 
     public ITransformf[] getTransforms(EntityType<?> entityType, IModelHolder<?> model) {
         ArmatureBuilder builder = ObjectUtils.find(entityBuilders, entityType, IEntityTypeProvider::get);
-        if (builder == null && !defaultBuilders.isEmpty()) {
-            builder = defaultBuilders.get(defaultBuilders.size() - 1);
+        if (builder == null) {
+            builder = getDefaultBuilder("*");
         }
         if (builder != null) {
             return builder.build(model);
@@ -78,5 +87,18 @@ public abstract class ArmatureManager {
 
     public int getVersion() {
         return version;
+    }
+
+
+
+    private ArmatureBuilder getDefaultBuilder(String model) {
+        ArrayList<ArmatureBuilder> builders = modelBuilders.get(model);
+        if (builders == null) {
+            builders = defaultBuilders;
+        }
+        if (builders.size() != 0) {
+            return builders.get(builders.size() - 1);
+        }
+        return null;
     }
 }

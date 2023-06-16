@@ -35,6 +35,7 @@ public abstract class ArmatureBuilder {
     protected ResourceLocation parent;
 
     protected final ResourceLocation name;
+    protected final ArrayList<String> models = new ArrayList<>();
     protected final ArrayList<IEntityTypeProvider<?>> entities = new ArrayList<>();
     protected final HashMap<IJoint, Collection<ArmatureModifier>> jointModifiers = new HashMap<>();
     protected final HashMap<IJoint, Collection<ArmatureModifier>> transformModifiers = new HashMap<>();
@@ -53,6 +54,7 @@ public abstract class ArmatureBuilder {
             // the entities should not be inherited.
             entities.clear();
             entities.addAll(builder.entities);
+            models.addAll(builder.models);
         });
     }
 
@@ -69,6 +71,7 @@ public abstract class ArmatureBuilder {
             it.get("scale").entrySet().forEach(it2 -> _parseScaleModifiers(it2.getKey(), it2.getValue()));
             it.get("rotate").entrySet().forEach(it2 -> _parseRotateModifiers(it2.getKey(), it2.getValue()));
         });
+        object.get("models").allValues().forEach(it -> models.add(it.stringValue()));
         object.get("entities").allValues().forEach(it -> entities.add(IEntityTypeProvider.of(it.stringValue())));
         object.get("parent").ifPresent(it -> {
             parent = new ResourceLocation(it.stringValue());
@@ -93,6 +96,10 @@ public abstract class ArmatureBuilder {
     }
 
     public abstract Collection<ArmatureModifier> getTargets(IDataPackObject object);
+
+    public ArrayList<String> getModels() {
+        return models;
+    }
 
     public List<IEntityTypeProvider<?>> getEntities() {
         return entities;
