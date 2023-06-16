@@ -123,14 +123,6 @@ public class ModConfigSpec {
                 defineList("customGlobalServerURLs", new ArrayList<String>(), this::allowsString, "We priority use https for the access token APIs.").bind(v -> customGlobalSkinLibraryURLs = new ArrayList<>(v), () -> new ArrayList<>(customGlobalSkinLibraryURLs));
                 define("privateGlobalServer", false, "For the private global servers, will have special handling for caching.").bind(v -> enablePrivateGlobalSkinLibrary = v, () -> enablePrivateGlobalSkinLibrary);
             });
-            defineCategory("recipe", "Setting for mod recipes.", () -> {
-                define("disableRecipes", false, "Disable vanilla recipes. Use if you want to manually add recipes for a mod pack.").bind(v -> disableRecipes = v, () -> disableRecipes);
-                define("disableDollRecipe", false, "Disable hidden in world doll recipe.").bind(v -> disableDollRecipe = v, () -> disableDollRecipe);
-                define("disableSkinningRecipes", false, "Disable skinning table recipes.").bind(v -> disableSkinningRecipes = v, () -> disableSkinningRecipes);
-                define("hideDollFromCreativeTabs", true, "Hides the doll block from the creative tab and NEI.").bind(v -> hideDollFromCreativeTabs = v, () -> hideDollFromCreativeTabs);
-                define("hideGiantFromCreativeTabs", true, "Hides the giant block from the creative tab and NEI.").bind(v -> hideGiantFromCreativeTabs = v, () -> hideGiantFromCreativeTabs);
-                define("enableRecoveringSkins", false, "Enable copying the skin off an item in the skinning table").bind(v -> enableRecoveringSkins = v, () -> enableRecoveringSkins);
-            });
 
             defineCategory("holiday-events", "Enable/disable holiday events.", () -> {
                 define("disableAllHolidayEvents", false, "Setting to true will disable all holiday events. What's wrong with you!").bind(v -> disableAllHolidayEvents = v, () -> disableAllHolidayEvents);
@@ -174,15 +166,6 @@ public class ModConfigSpec {
 //                    holiday.setStartDate(startDate);
 //                    holiday.setEndDate(endDate);
 //                }
-            });
-
-            defineCategory("entity-skins", "Control how/if entities spawm with skin on them.", () -> {
-                defineInRange("enitiySpawnWithSkinsChance", 0, 0, 100, "Percentage change that entities will spawn with skins equipped.").bind(v -> enitiySpawnWithSkinsChance = v, () -> enitiySpawnWithSkinsChance);
-                defineInRange("entityDropSkinChance", 0, 0, 100, "Percentage change that entities will drop equipped skins when killed.").bind(v -> entityDropSkinChance = v, () -> entityDropSkinChance);
-//            enitiySpawnSkinTargetPath = "/" + config.getString("enitiySpawnSkinTargetPath", "",
-//                    "Target library path for skin spawned on entities.\n"
-//                            + "Examples: 'official/' for only skins in the official folder or 'downloads/' for skins in the downloads folder.\n"
-//                            + "Leave black for all skins.");
             });
 
             defineCategory("cache", "Change (memory use/IO access) ratio by category setting in this category.", () -> {

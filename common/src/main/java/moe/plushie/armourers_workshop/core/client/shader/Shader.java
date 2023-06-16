@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.shader;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderObject;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderState;
 import moe.plushie.armourers_workshop.core.client.other.VertexArrayBuffer;
 import moe.plushie.armourers_workshop.core.client.other.VertexIndexBuffer;
 import moe.plushie.armourers_workshop.init.ModDebugger;
@@ -27,6 +28,7 @@ public abstract class Shader {
 
     private final OpenMatrix4f noneLightmapMat = OpenMatrix4f.createScaleMatrix(1, 1, 1);
 
+    private final SkinRenderState renderState = new SkinRenderState();
     private final VertexArrayBuffer arrayBuffer = new VertexArrayBuffer();
     private final VertexIndexBuffer indexBuffer = new VertexIndexBuffer(4, 6, (builder, index) -> {
         builder.accept(index);
@@ -60,6 +62,7 @@ public abstract class Shader {
     }
 
     protected void prepare(ShaderVertexGroup group) {
+        renderState.push();
         lastMaxVertexCount = group.maxVertexCount;
         arrayBuffer.bind();
     }
@@ -68,6 +71,7 @@ public abstract class Shader {
         SkinRenderObject.unbind();
         indexBuffer.unbind();
         arrayBuffer.unbind();
+        renderState.pop();
     }
 
     public void apply(ShaderVertexGroup group, Runnable action) {

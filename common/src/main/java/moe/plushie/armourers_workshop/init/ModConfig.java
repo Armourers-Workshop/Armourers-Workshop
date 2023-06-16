@@ -126,21 +126,8 @@ public class ModConfig {
         public static boolean allowUploadingSkins = true;
         public static boolean allowLibraryRemoteManage = false;
 
-        // Recipes
-        public static boolean disableRecipes = false;
-        public static boolean disableDollRecipe = false;
-        public static boolean disableSkinningRecipes = false;
-        public static boolean hideDollFromCreativeTabs = true;
-        public static boolean hideGiantFromCreativeTabs = true;
-        public static boolean enableRecoveringSkins = false;
-
         // Holiday events
         public static boolean disableAllHolidayEvents = false;
-
-        // Entity skins
-        public static int enitiySpawnWithSkinsChance = 75;
-        public static int entityDropSkinChance = 10;
-        public static String enitiySpawnSkinTargetPath = "/";
 
         // Cache
         public static int skinCacheExpireTime = 600;

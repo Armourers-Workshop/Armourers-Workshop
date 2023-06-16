@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import org.lwjgl.opengl.GL30;
 
 public class SkinRenderExecutor {
 
@@ -35,20 +34,6 @@ public class SkinRenderExecutor {
     }
 
     private static void callout(Runnable action) {
-        int vao = GL30.glGetInteger(GL30.GL_VERTEX_ARRAY_BINDING);
-        int vbo = GL30.glGetInteger(GL30.GL_ARRAY_BUFFER_BINDING);
-        int ibo = GL30.glGetInteger(GL30.GL_ELEMENT_ARRAY_BUFFER_BINDING);
-
         action.run();
-
-        if (vao != 0) {
-            GL30.glBindVertexArray(vao);
-        }
-        if (vbo != 0) {
-            GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vbo);
-        }
-        if (ibo != 0) {
-            GL30.glBindBuffer(GL30.GL_ELEMENT_ARRAY_BUFFER, ibo);
-        }
     }
 }

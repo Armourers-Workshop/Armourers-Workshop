@@ -71,6 +71,7 @@ public abstract class ShaderUniform {
             cachedValue = newValue;
             GL20.glUniform1i(location, convert(newValue));
         }
+
         private int convert(int newValue) {
             if (newValue != 0) {
                 return GL20.GL_TRUE;
