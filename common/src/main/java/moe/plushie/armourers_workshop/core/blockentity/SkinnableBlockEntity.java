@@ -75,6 +75,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     private OpenQuaternionf renderRotations;
     private AABB renderBoundingBox;
+    private VoxelShape renderVoxelShape = null;
 
     private boolean isDropped = false;
     private boolean isParent = false;
@@ -93,6 +94,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     public void readFromNBT(CompoundTag nbt) {
         refer = DataSerializers.getBlockPos(nbt, Constants.Key.BLOCK_ENTITY_REFER, INVALID);
         shape = DataSerializers.getRectangle3i(nbt, Constants.Key.BLOCK_ENTITY_SHAPE, Rectangle3i.ZERO);
+        renderVoxelShape = null;
         isParent = BlockPos.ZERO.equals(refer);
         if (!isParent()) {
             return;
@@ -146,20 +148,26 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     public VoxelShape getShape() {
-        if (!shape.equals(Rectangle3i.ZERO)) {
-            float minX = shape.getMinX() / 16f + 0.5f;
-            float minY = shape.getMinY() / 16f + 0.5f;
-            float minZ = shape.getMinZ() / 16f + 0.5f;
-            float maxX = shape.getMaxX() / 16f + 0.5f;
-            float maxY = shape.getMaxY() / 16f + 0.5f;
-            float maxZ = shape.getMaxZ() / 16f + 0.5f;
-            return Shapes.box(minX, minY, minZ, maxX, maxY, maxZ);
+        if (renderVoxelShape != null) {
+            return renderVoxelShape;
         }
-        return Shapes.block();
+        if (shape.equals(Rectangle3i.ZERO)) {
+            renderVoxelShape = Shapes.block();
+            return renderVoxelShape;
+        }
+        float minX = shape.getMinX() / 16f + 0.5f;
+        float minY = shape.getMinY() / 16f + 0.5f;
+        float minZ = shape.getMinZ() / 16f + 0.5f;
+        float maxX = shape.getMaxX() / 16f + 0.5f;
+        float maxY = shape.getMaxY() / 16f + 0.5f;
+        float maxZ = shape.getMaxZ() / 16f + 0.5f;
+        renderVoxelShape = Shapes.box(minX, minY, minZ, maxX, maxY, maxZ);
+        return renderVoxelShape;
     }
 
     public void setShape(Rectangle3i shape) {
         this.shape = shape;
+        this.renderVoxelShape = null;
     }
 
     public BlockPos getLinkedBlockPos() {

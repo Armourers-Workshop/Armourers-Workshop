@@ -31,7 +31,7 @@ import java.util.function.ToIntFunction;
 public class ModBlocks {
 
     public static final IRegistryKey<Block> HOLOGRAM_PROJECTOR = normal(HologramProjectorBlock::new).lightLevel(lit(13)).strength(5f, 1200f).noOcclusion().build("hologram-projector");
-    public static final IRegistryKey<Block> SKINNABLE = half(SkinnableBlock::new).lightLevel(lit(15)).build("skinnable");
+    public static final IRegistryKey<Block> SKINNABLE = half(SkinnableBlock::new).dynamicShape().lightLevel(lit(15)).build("skinnable");
 
     public static final IRegistryKey<Block> DYE_TABLE = half(DyeTableBlock::new).build("dye-table");
     public static final IRegistryKey<Block> SKINNING_TABLE = half(SkinningTableBlock::new).build("skinning-table");
