@@ -17,7 +17,7 @@ Minecraft armour customization mod.
 [[dependencies.armourers_workshop]]
 modId = "forge"
 mandatory = true
-versionRange = "[36,)"
+versionRange = "[${forge_api_version},)"
 ordering = "NONE"
 side = "BOTH"
 

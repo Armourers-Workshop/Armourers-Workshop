@@ -14,6 +14,7 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     public static final SkinProperty<String> ALL_KEY_TAGS = normal("tags", "");
 
     public static final SkinProperty<String> ALL_SIGNATURE = normal("signature", "");
+    public static final SkinProperty<String> ALL_FILE_NAME = normal("fileName", "");
 
     // Properties.
     @Deprecated

@@ -25,6 +25,33 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * <code>
+ * {
+ *   "pools": [{
+ *     "conditions": [{
+ *       "condition": "killed_by_player"
+ *     }],
+ *     "rolls": 1,
+ *     "entries": [{
+ *       "type": "item",
+ *       "name": "armourers_workshop:skin",
+ *       "weight": 1,
+ *       "functions": [{
+ *         "function": "armourers_workshop:skin_randomly",
+ *         "skins": [
+ *           "ks:10830", // direct access global skin library
+ *           "ws:/path/to/file.armour", // direct access server skin-library
+ *           {"type": "any"}, // any type, any slot
+ *           {"type": "outfit"}, // in outfit, any slot
+ *           {"type": "sword", "slot": 1} // in sword, first slot
+ *         ]
+ *       }]
+ *     }]
+ *   }]
+ * }
+ * </code>
+ */
 public class SkinRandomlyFunction implements ILootConditionalFunction {
 
     public final List<SkinSource> sources;

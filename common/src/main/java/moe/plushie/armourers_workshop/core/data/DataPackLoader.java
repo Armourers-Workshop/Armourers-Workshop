@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.data;
 
-import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
@@ -37,13 +36,13 @@ public class DataPackLoader {
         return CompletableFuture.supplyAsync(() -> {
             HashMap<ResourceLocation, IDataPackBuilder> results = new HashMap<>();
             resourceManager.readResources(target, s -> s.endsWith(".json"), (location, inputStream) -> {
-                JsonObject object = StreamUtils.fromJson(inputStream, JsonObject.class);
+                IDataPackObject object = StreamUtils.fromPackObject(inputStream);
                 if (object == null) {
                     return;
                 }
                 String path = SkinFileUtils.removeExtension(location.getPath());
                 ResourceLocation location1 = new ResourceLocation(location.getNamespace(), path);
-                results.computeIfAbsent(location1, provider).append(IDataPackObject.of(object), location);
+                results.computeIfAbsent(location1, provider).append(object, location);
             });
             return results;
         }, executor);

@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.library.data.impl;
 
-import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
@@ -43,11 +42,10 @@ public abstract class ServerSession {
         try {
             Callable<InputStream> task = buildTask(path, parameters);
             byte[] bytes = StreamUtils.toByteArray(task.call());
-            JsonObject object = StreamUtils.fromJson(new ByteArrayInputStream(bytes), JsonObject.class);
-            if (object == null) {
+            IDataPackObject responseData = StreamUtils.fromPackObject(new ByteArrayInputStream(bytes));
+            if (responseData == null) {
                 throw new RuntimeException("can't parse the object from json");
             }
-            IDataPackObject responseData = IDataPackObject.of(object);
             ServerResponse response = new ServerResponse(responseData);
             if (!response.isValid()) {
                 throw new RuntimeException(response.getMessage());
@@ -125,11 +123,10 @@ public abstract class ServerSession {
             return REQUESTS;
         }
         InputStream inputStream = getClass().getResourceAsStream("/data/armourers_workshop/skin/library/gsl.json");
-        JsonObject jsonObject = StreamUtils.fromJson(inputStream, JsonObject.class);
-        if (jsonObject == null) {
+        IDataPackObject root = StreamUtils.fromPackObject(inputStream);
+        if (root == null) {
             throw new RuntimeException("missing gsl.json in data pack!");
         }
-        IDataPackObject root = IDataPackObject.of(jsonObject);
         IDataPackObject server = root.get("server");
         server.entrySet().forEach(it -> {
             if (it.getKey().equals("/host")) {

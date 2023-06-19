@@ -2,28 +2,36 @@ package moe.plushie.armourers_workshop.core.client.gui.wardrobe;
 
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
+import com.apple.library.impl.KeyboardManagerImpl;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UISliderBox;
+import moe.plushie.armourers_workshop.api.common.IResourceManager;
+import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.gui.widget.EntityPartView;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Rotations;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.function.BiConsumer;
 
 @Environment(value = EnvType.CLIENT)
 public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
+
 
     private final SkinWardrobe wardrobe;
     private final Entity entity;
@@ -34,11 +42,18 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
     private UISliderBox sliderY;
     private UISliderBox sliderZ;
 
+    private static int RANDOMLY_INDEX = 0;
+    private static ArrayList<HashMap<EntityPartView.Part, Rotations>> RANDOMLY_ROTATIONS;
+
     public SkinWardrobeRotationSetting(SkinWardrobe wardrobe, Entity entity) {
         super("inventory.armourers_workshop.wardrobe.man_rotations");
         this.wardrobe = wardrobe;
         this.entity = entity;
         this.setup();
+        if (RANDOMLY_ROTATIONS == null) {
+            RANDOMLY_ROTATIONS = new ArrayList<>();
+            loadRandomlyRotations();
+        }
     }
 
     private void setup() {
@@ -108,7 +123,40 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
     }
 
     private void randomRotation(UIControl button) {
+        HashMap<EntityPartView.Part, Rotations> parts = getRandomParts();
+        for (EntityPartView.Part part : EntityPartView.Part.values()) {
+            Rotations rotations = parts.get(part);
+            if (rotations != null) {
+                part.setValue(entity, rotations);
+            }
+        }
+        setSelectedPart(selectedPart());
+        didUpdateValue(sliderX);
+    }
+
+    private void resetRotation(UIControl button) {
+        boolean isCtrl = KeyboardManagerImpl.hasControlDown();
+        for (EntityPartView.Part part : EntityPartView.Part.values()) {
+            if (isCtrl) {
+                part.setValue(entity, new Rotations(0, 0, 0));
+            } else {
+                part.setValue(entity, part.defaultValue);
+            }
+        }
+        setSelectedPart(selectedPart());
+        didUpdateValue(sliderX);
+    }
+
+    private HashMap<EntityPartView.Part, Rotations> getRandomParts() {
         Random random = new Random();
+        // we get rotations from pre-defined json.
+        if (KeyboardManagerImpl.hasControlDown() && !RANDOMLY_ROTATIONS.isEmpty()) {
+            int index = RANDOMLY_INDEX;
+            RANDOMLY_INDEX = (RANDOMLY_INDEX + 1) % RANDOMLY_ROTATIONS.size();
+            return RANDOMLY_ROTATIONS.get(index);
+        }
+        // we get rotations from generator.
+        HashMap<EntityPartView.Part, Rotations> parts = new HashMap<>();
         for (EntityPartView.Part part : EntityPartView.Part.values()) {
             if (part == EntityPartView.Part.BODY) {
                 continue;
@@ -121,23 +169,9 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
                 y += random.nextFloat() * 60.0f - 30.0f;
                 z += random.nextFloat() * 60.0f - 30.0f;
             }
-            part.setValue(entity, new Rotations(x, y, z));
+            parts.put(part, new Rotations(x, y, z));
         }
-        setSelectedPart(selectedPart());
-        didUpdateValue(sliderX);
-    }
-
-    private void resetRotation(UIControl button) {
-        boolean isCtrl = Screen.hasControlDown();
-        for (EntityPartView.Part part : EntityPartView.Part.values()) {
-            if (isCtrl) {
-                part.setValue(entity, new Rotations(0, 0, 0));
-            } else {
-                part.setValue(entity, part.defaultValue);
-            }
-        }
-        setSelectedPart(selectedPart());
-        didUpdateValue(sliderX);
+        return parts;
     }
 
     private double getAngle(double degree) {
@@ -145,5 +179,25 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
             return degree;
         }
         return degree - 360;
+    }
+
+    private void loadRandomlyRotations() {
+        IResourceManager resourceManager = ClientNativeManager.getResourceManager();
+        resourceManager.readResources(ModConstants.key("models/entity/mannequin"), s -> s.endsWith(".json"), (location, inputStream) -> {
+            IDataPackObject object = StreamUtils.fromPackObject(inputStream);
+            if (object == null) {
+                return;
+            }
+            HashMap<EntityPartView.Part, Rotations> parts = new HashMap<>();
+            for (EntityPartView.Part part : EntityPartView.Part.values()) {
+                object.get(part.name).ifPresent(it -> {
+                    float x = it.at(0).floatValue();
+                    float y = it.at(1).floatValue();
+                    float z = it.at(2).floatValue();
+                    parts.put(part, new Rotations(x, y, z));
+                });
+            }
+            RANDOMLY_ROTATIONS.add(parts);
+        });
     }
 }

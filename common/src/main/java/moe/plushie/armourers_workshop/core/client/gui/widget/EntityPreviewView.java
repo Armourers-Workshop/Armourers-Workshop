@@ -36,6 +36,7 @@ public class EntityPreviewView extends UIControl {
         }
         CGRect bounds = bounds();
         MannequinEntityRenderer.enableLimitScale = true;
+        MannequinEntityRenderer.enableLimitYRot = true;
         context.saveGraphicsState();
         context.translateCTM(0, 0, 300);
         context.translateCTM(bounds.width / 2f, bounds.height - 8, 50);
@@ -45,6 +46,7 @@ public class EntityPreviewView extends UIControl {
         context.drawEntity(entity, 0, 0, 45, 0, 0);
 
         context.restoreGraphicsState();
+        MannequinEntityRenderer.enableLimitYRot = false;
         MannequinEntityRenderer.enableLimitScale = false;
     }
 

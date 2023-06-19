@@ -1,8 +1,10 @@
 package moe.plushie.armourers_workshop.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonReader;
+import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,6 +97,16 @@ public final class StreamUtils {
             throw new JsonParseException(exception);
         }
     }
+
+    @Nullable
+    public static IDataPackObject fromPackObject(InputStream inputStream) {
+        JsonObject object = fromJson(inputStream, JsonObject.class);
+        if (object != null) {
+            return IDataPackObject.of(object);
+        }
+        return null;
+    }
+
 
     public static byte[] toByteArray(final InputStream input) throws IOException {
         return IOUtils.toByteArray(input);

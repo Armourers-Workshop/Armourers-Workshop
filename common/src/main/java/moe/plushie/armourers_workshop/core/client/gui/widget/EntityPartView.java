@@ -10,6 +10,7 @@ import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIImage;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Rotations;
@@ -90,18 +91,20 @@ public class EntityPartView extends UIControl {
     }
 
     public enum Part {
-        HEAD(MannequinEntity.DATA_HEAD_POSE, MannequinEntity.DEFAULT_HEAD_POSE, 8, 3, 8, 8),
-        BODY(MannequinEntity.DATA_BODY_POSE, MannequinEntity.DEFAULT_BODY_POSE, 8, 12, 8, 12),
-        RIGHT_ARM(MannequinEntity.DATA_RIGHT_ARM_POSE, MannequinEntity.DEFAULT_RIGHT_ARM_POSE, 3, 12, 4, 12),
-        LEFT_ARM(MannequinEntity.DATA_LEFT_ARM_POSE, MannequinEntity.DEFAULT_LEFT_ARM_POSE, 17, 12, 4, 12),
-        RIGHT_LEG(MannequinEntity.DATA_RIGHT_LEG_POSE, MannequinEntity.DEFAULT_RIGHT_LEG_POSE, 7, 25, 4, 12),
-        LEFT_LEG(MannequinEntity.DATA_LEFT_LEG_POSE, MannequinEntity.DEFAULT_LEFT_LEG_POSE, 13, 25, 4, 12);
+        HEAD("Head", MannequinEntity.DATA_HEAD_POSE, MannequinEntity.DEFAULT_HEAD_POSE, 8, 3, 8, 8),
+        BODY("Body", MannequinEntity.DATA_BODY_POSE, MannequinEntity.DEFAULT_BODY_POSE, 8, 12, 8, 12),
+        RIGHT_ARM("RightArm", MannequinEntity.DATA_RIGHT_ARM_POSE, MannequinEntity.DEFAULT_RIGHT_ARM_POSE, 3, 12, 4, 12),
+        LEFT_ARM("LeftArm", MannequinEntity.DATA_LEFT_ARM_POSE, MannequinEntity.DEFAULT_LEFT_ARM_POSE, 17, 12, 4, 12),
+        RIGHT_LEG("RightLeg", MannequinEntity.DATA_RIGHT_LEG_POSE, MannequinEntity.DEFAULT_RIGHT_LEG_POSE, 7, 25, 4, 12),
+        LEFT_LEG("LeftLeg", MannequinEntity.DATA_LEFT_LEG_POSE, MannequinEntity.DEFAULT_LEFT_LEG_POSE, 13, 25, 4, 12);
 
+        public final String name;
         public final CGRect bounds;
         public final Rotations defaultValue;
         public final EntityDataAccessor<Rotations> dataParameter;
 
-        Part(EntityDataAccessor<Rotations> dataParameter, Rotations defaultValue, int x, int y, int width, int height) {
+        Part(String name, EntityDataAccessor<Rotations> dataParameter, Rotations defaultValue, int x, int y, int width, int height) {
+            this.name = name;
             this.bounds = new CGRect(x, y, width, height);
             this.dataParameter = dataParameter;
             this.defaultValue = defaultValue;

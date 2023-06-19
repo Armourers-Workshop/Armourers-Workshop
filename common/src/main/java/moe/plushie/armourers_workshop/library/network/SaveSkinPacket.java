@@ -83,7 +83,7 @@ public class SaveSkinPacket extends CustomPacket {
         }
         Skin skin = getSkin();
         if (skin == null) {
-            error(player, "load", "missing from skin loader");
+            abort(player, "load", "missing from skin loader");
             return;
         }
         SkinLibrary library = SkinLibraryManager.getClient().getLocalSkinLibrary();
@@ -94,24 +94,24 @@ public class SaveSkinPacket extends CustomPacket {
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // this is an unauthorized operation, ignore it
         if (!isAuthorized(source, player) || !isAuthorized(destination, player) || !(player.containerMenu instanceof SkinLibraryMenu)) {
-            error(player, "unauthorized", "user status is incorrect or the path is invalid");
+            abort(player, "unauthorized", "user status is incorrect or the path is invalid");
             return;
         }
         SkinLibraryManager.Server server = SkinLibraryManager.getServer();
         if (DataDomain.isLocal(source) && !server.shouldUploadFile(player)) {
-            error(player, "upload", "uploading prohibited in the config file");
+            abort(player, "upload", "uploading prohibited in the config file");
             return;
         }
         SkinLibraryMenu container = (SkinLibraryMenu) player.containerMenu;
         // load: fs -> db/ln/ws -> db/ln
         if (DataDomain.isDatabase(destination)) {
             if (!ModPermissions.SKIN_LIBRARY_SKIN_LOAD.accept(player)) {
-                error(player, "load", "load prohibited in the config file");
+                abort(player, "load", "load prohibited in the config file");
                 return;
             }
             Skin skin = getSkin();
             if (skin == null) {
-                error(player, "load", "missing from skin loader");
+                abort(player, "load", "missing from skin loader");
                 return;
             }
             if (container.shouldLoadStack()) {
@@ -125,12 +125,12 @@ public class SaveSkinPacket extends CustomPacket {
         // save: fs -> ws/db -> ws/ws -> ws
         if (DataDomain.isServer(destination)) {
             if (!ModPermissions.SKIN_LIBRARY_SKIN_SAVE.accept(player)) {
-                error(player, "save", "save prohibited in the config file");
+                abort(player, "save", "save prohibited in the config file");
                 return;
             }
             Skin skin = getSkin();
             if (skin == null) {
-                error(player, "save", "missing from skin loader");
+                abort(player, "save", "missing from skin loader");
                 return;
             }
             if (container.shouldSaveStack()) {
@@ -143,7 +143,7 @@ public class SaveSkinPacket extends CustomPacket {
         // download: ws -> fs/db -> fs/fs -> fs
         if (DataDomain.isLocal(destination)) {
             if (!DataDomain.isLocal(source) && !server.shouldDownloadFile(player)) {
-                error(player, "download", "downloading prohibited in the config file");
+                abort(player, "download", "downloading prohibited in the config file");
                 return;
             }
             if (!DataDomain.isLocal(source)) {
@@ -158,7 +158,7 @@ public class SaveSkinPacket extends CustomPacket {
             }
             return;
         }
-        error(player, "unknown", "dangerous operation");
+        abort(player, "unknown", "dangerous operation");
     }
 
     public boolean isReady(Player player) {
@@ -178,7 +178,7 @@ public class SaveSkinPacket extends CustomPacket {
         ModLog.info("accept {} request of the '{}', from: '{}', to: '{}'", op, playerName, source, destination);
     }
 
-    private void error(Player player, String op, String reason) {
+    private void abort(Player player, String op, String reason) {
         String playerName = player.getScoreboardName();
         ModLog.info("abort {} request of the '{}', reason: '{}', from: '{}', to: '{}'", op, playerName, reason, source, destination);
     }
