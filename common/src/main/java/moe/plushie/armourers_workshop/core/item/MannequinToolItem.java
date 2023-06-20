@@ -1,10 +1,13 @@
 package moe.plushie.armourers_workshop.core.item;
 
+import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
+import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.core.item.option.MannequinToolOptions;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -12,14 +15,11 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-public class MannequinToolItem extends FlavouredItem {
+public class MannequinToolItem extends ConfigurableToolItem {
 
     public MannequinToolItem(Properties properties) {
         super(properties);
@@ -31,15 +31,14 @@ public class MannequinToolItem extends FlavouredItem {
             if (player.isShiftKeyDown()) {
                 CompoundTag config = new CompoundTag();
                 ItemStack newItemStack = itemStack.copy();
-                ((MannequinEntity) entity).addExtendedData(config);
+                ((MannequinEntity) entity).saveMannequinToolData(config);
                 newItemStack.addTagElement(Constants.Key.ENTITY, config);
                 player.setItemInHand(hand, newItemStack);
                 return InteractionResult.sidedSuccess(player.getLevel().isClientSide());
             } else {
-                CompoundTag tag = itemStack.getTag();
-                if (tag != null && tag.contains(Constants.Key.ENTITY, Constants.TagFlags.COMPOUND)) {
-                    CompoundTag config = tag.getCompound(Constants.Key.ENTITY);
-                    ((MannequinEntity) entity).readExtendedData(config);
+                CompoundTag entityTag = itemStack.getTagElement(Constants.Key.ENTITY);
+                if (entityTag != null && !entityTag.isEmpty()) {
+                    ((MannequinEntity) entity).readMannequinToolData(entityTag, itemStack);
                     return InteractionResult.sidedSuccess(player.getLevel().isClientSide());
                 }
                 return InteractionResult.FAIL;
@@ -49,20 +48,22 @@ public class MannequinToolItem extends FlavouredItem {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext useOnContext) {
-        // to air clear.
-        return super.useOn(useOnContext);
+    public void createToolProperties(Consumer<IConfigurableToolProperty<?>> builder) {
+        builder.accept(MannequinToolOptions.MIRROR_MODE);
+        builder.accept(MannequinToolOptions.CHANGE_SCALE);
+        builder.accept(MannequinToolOptions.CHANGE_ROTATION);
+        builder.accept(MannequinToolOptions.CHANGE_TEXTURE);
+        builder.accept(MannequinToolOptions.CHANGE_OPTION);
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltips, TooltipFlag flag) {
-        super.appendHoverText(itemStack, level, tooltips, flag);
+    public void appendSettingHoverText(ItemStack itemStack, List<Component> tooltips) {
         CompoundTag tag = itemStack.getTag();
         if (tag != null && tag.contains(Constants.Key.ENTITY, Constants.TagFlags.COMPOUND)) {
             tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.settingsSaved"));
         } else {
             tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.noSettingsSaved"));
         }
+        super.appendSettingHoverText(itemStack, tooltips);
     }
 }

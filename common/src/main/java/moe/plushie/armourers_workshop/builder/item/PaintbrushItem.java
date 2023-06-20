@@ -6,10 +6,10 @@ import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
+import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
-import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
+import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class PaintbrushItem extends AbstractPaintToolItem implements IItemTintColorProvider, IItemPropertiesProvider, IItemColorProvider, IBlockPaintViewer, IPaintToolPicker {
+public class PaintbrushItem extends AbstractColoredToolItem implements IItemTintColorProvider, IItemPropertiesProvider, IItemColorProvider, IBlockPaintViewer, IPaintToolPicker {
 
     public PaintbrushItem(Properties properties) {
         super(properties);
@@ -58,8 +58,8 @@ public class PaintbrushItem extends AbstractPaintToolItem implements IItemTintCo
     }
 
     @Override
-    public void createToolProperties(Consumer<IPaintingToolProperty<?>> builder) {
-        builder.accept(ToolOptions.FULL_BLOCK_MODE);
+    public void createToolProperties(Consumer<IConfigurableToolProperty<?>> builder) {
+        builder.accept(PaintingToolOptions.FULL_BLOCK_MODE);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class PaintbrushItem extends AbstractPaintToolItem implements IItemTintCo
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ModConstants.key("small"), (itemStack, level, entity, id) -> ToolOptions.FULL_BLOCK_MODE.get(itemStack) ? 0 : 1);
+        builder.accept(ModConstants.key("small"), (itemStack, level, entity, id) -> PaintingToolOptions.FULL_BLOCK_MODE.get(itemStack) ? 0 : 1);
     }
 
     @Override

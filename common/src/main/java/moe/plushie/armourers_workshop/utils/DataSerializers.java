@@ -452,6 +452,12 @@ public class DataSerializers {
         return defaultValue;
     }
 
+    public static void mirrorRotations(CompoundTag source, String sourceKey, Rotations sourceDefaultValue, CompoundTag target, String targetKey, Rotations targetDefaultValue) {
+        Rotations rot = getRotations(source, sourceKey, sourceDefaultValue);
+        rot = new Rotations(rot.getX(), -rot.getY(), -rot.getZ());
+        putRotations(target, targetKey, rot, targetDefaultValue);
+    }
+
     public static void putSkinProperties(CompoundTag nbt, String key, SkinProperties properties) {
         if (properties == null || properties.isEmpty()) {
             return;

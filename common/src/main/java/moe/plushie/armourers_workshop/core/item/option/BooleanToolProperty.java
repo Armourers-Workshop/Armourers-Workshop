@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.builder.item.tooloption;
+package moe.plushie.armourers_workshop.core.item.option;
 
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.nbt.CompoundTag;

@@ -72,6 +72,13 @@ public final class Constants {
         public static final String ENTITY_TEXTURE = "Texture";
         public static final String ENTITY_POSE = "Pose";
 
+        public static final String ENTITY_POSE_HEAD = "Head";
+        public static final String ENTITY_POSE_BODY = "Body";
+        public static final String ENTITY_POSE_LEFT_ARM = "LeftArm";
+        public static final String ENTITY_POSE_RIGHT_ARM = "RightArm";
+        public static final String ENTITY_POSE_LEFT_LEG = "LeftLeg";
+        public static final String ENTITY_POSE_RIGHT_LEG = "RightLeg";
+
         public static final String BLOCK_ENTITY_NAME = "Name";
         public static final String BLOCK_ENTITY_FLAVOUR = "Flavour";
 

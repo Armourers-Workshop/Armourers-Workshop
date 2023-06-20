@@ -1,8 +1,8 @@
-package moe.plushie.armourers_workshop.builder.item.tooloption;
+package moe.plushie.armourers_workshop.core.item.option;
 
-import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
+import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
 
-public abstract class ToolProperty<T> implements IPaintingToolProperty<T> {
+public abstract class ToolProperty<T> implements IConfigurableToolProperty<T> {
 
     protected final String name;
     protected final T defaultValue;

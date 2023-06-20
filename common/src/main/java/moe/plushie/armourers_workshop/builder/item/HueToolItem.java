@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
+import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
-import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
+import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.init.ModSounds;
@@ -24,11 +24,11 @@ public class HueToolItem extends PaintbrushItem {
     }
 
     @Override
-    public void createToolProperties(Consumer<IPaintingToolProperty<?>> builder) {
-        builder.accept(ToolOptions.CHANGE_HUE);
-        builder.accept(ToolOptions.CHANGE_SATURATION);
-        builder.accept(ToolOptions.CHANGE_BRIGHTNESS);
-        builder.accept(ToolOptions.CHANGE_PAINT_TYPE);
+    public void createToolProperties(Consumer<IConfigurableToolProperty<?>> builder) {
+        builder.accept(PaintingToolOptions.CHANGE_HUE);
+        builder.accept(PaintingToolOptions.CHANGE_SATURATION);
+        builder.accept(PaintingToolOptions.CHANGE_BRIGHTNESS);
+        builder.accept(PaintingToolOptions.CHANGE_PAINT_TYPE);
         super.createToolProperties(builder);
     }
 
@@ -36,10 +36,10 @@ public class HueToolItem extends PaintbrushItem {
     public IPaintToolAction createPaintToolAction(UseOnContext context) {
         ItemStack itemStack = context.getItemInHand();
         IPaintColor paintColor = getItemColor(itemStack, PaintColor.WHITE);
-        boolean hue = ToolOptions.CHANGE_HUE.get(itemStack);
-        boolean saturation = ToolOptions.CHANGE_SATURATION.get(itemStack);
-        boolean brightness = ToolOptions.CHANGE_BRIGHTNESS.get(itemStack);
-        boolean paintType = ToolOptions.CHANGE_PAINT_TYPE.get(itemStack);
+        boolean hue = PaintingToolOptions.CHANGE_HUE.get(itemStack);
+        boolean saturation = PaintingToolOptions.CHANGE_SATURATION.get(itemStack);
+        boolean brightness = PaintingToolOptions.CHANGE_BRIGHTNESS.get(itemStack);
+        boolean paintType = PaintingToolOptions.CHANGE_PAINT_TYPE.get(itemStack);
         return new CubePaintingEvent.HueAction(paintColor, hue, saturation, brightness, paintType);
     }
 

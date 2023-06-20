@@ -1,9 +1,9 @@
-package moe.plushie.armourers_workshop.api.painting;
+package moe.plushie.armourers_workshop.api.common;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
-public interface IPaintingToolProperty<T> {
+public interface IConfigurableToolProperty<T> {
 
     String getName();
 
@@ -21,7 +21,7 @@ public interface IPaintingToolProperty<T> {
         return empty();
     }
 
-    default void setValue(ItemStack itemStack, T value) {
+    default void set(ItemStack itemStack, T value) {
         CompoundTag newNBT = null;
         CompoundTag nbt = itemStack.getTag();
         if (nbt != null) {

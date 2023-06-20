@@ -1,24 +1,23 @@
-package moe.plushie.armourers_workshop.builder.network;
+package moe.plushie.armourers_workshop.core.network;
 
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
-import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
-public class UpdatePaintingToolPacket extends CustomPacket {
+public class UpdateConfigurableToolPacket extends CustomPacket {
 
     private final InteractionHand hand;
     private final ItemStack itemStack;
 
-    public UpdatePaintingToolPacket(FriendlyByteBuf buffer) {
+    public UpdateConfigurableToolPacket(FriendlyByteBuf buffer) {
         this.hand = buffer.readEnum(InteractionHand.class);
         this.itemStack = buffer.readItem();
     }
 
-    public UpdatePaintingToolPacket(InteractionHand hand, ItemStack itemStack) {
+    public UpdateConfigurableToolPacket(InteractionHand hand, ItemStack itemStack) {
         this.hand = hand;
         this.itemStack = itemStack;
     }

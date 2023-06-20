@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.builder.network.UpdateBlockColorPacket;
 import moe.plushie.armourers_workshop.builder.network.UpdateColorMixerPacket;
 import moe.plushie.armourers_workshop.builder.network.UpdateColorPickerPacket;
 import moe.plushie.armourers_workshop.builder.network.UpdateOutfitMakerPacket;
-import moe.plushie.armourers_workshop.builder.network.UpdatePaintingToolPacket;
+import moe.plushie.armourers_workshop.core.network.UpdateConfigurableToolPacket;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.network.ExecuteAlertPacket;
 import moe.plushie.armourers_workshop.core.network.ExecuteCommandPacket;
@@ -52,7 +52,7 @@ public enum ModPackets {
     UPDATE_BLOCK_COLOR(0x80, UpdateBlockColorPacket.class, UpdateBlockColorPacket::new),
 
     UPDATE_COLOR_PICKER(0x81, UpdateColorPickerPacket.class, UpdateColorPickerPacket::new),
-    UPDATE_PAINTING_TOOL(0x82, UpdatePaintingToolPacket.class, UpdatePaintingToolPacket::new),
+    UPDATE_PAINTING_TOOL(0x82, UpdateConfigurableToolPacket.class, UpdateConfigurableToolPacket::new),
 
     UNDO_ACTION(0x83, UndoActionPacket.class, UndoActionPacket::new),
 

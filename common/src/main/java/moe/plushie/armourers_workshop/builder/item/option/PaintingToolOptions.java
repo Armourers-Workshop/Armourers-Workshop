@@ -1,6 +1,9 @@
-package moe.plushie.armourers_workshop.builder.item.tooloption;
+package moe.plushie.armourers_workshop.builder.item.option;
 
-public class ToolOptions {
+import moe.plushie.armourers_workshop.core.item.option.BooleanToolProperty;
+import moe.plushie.armourers_workshop.core.item.option.IntegerToolProperty;
+
+public class PaintingToolOptions {
 
     public static final BooleanToolProperty FULL_BLOCK_MODE = new BooleanToolProperty("fullBlockMode", true);
     public static final BooleanToolProperty CHANGE_HUE = new BooleanToolProperty("changeHue", false);

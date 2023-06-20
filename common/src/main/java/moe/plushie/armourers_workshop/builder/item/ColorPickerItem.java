@@ -7,9 +7,9 @@ import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
+import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
-import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
+import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.builder.network.UpdateColorPickerPacket;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class ColorPickerItem extends AbstractConfigurableToolItem implements IItemTintColorProvider, IItemPropertiesProvider, IItemColorProvider, IPaintToolPicker, IBlockPaintViewer {
+public class ColorPickerItem extends AbstractPaintToolItem implements IItemTintColorProvider, IItemPropertiesProvider, IItemColorProvider, IPaintToolPicker, IBlockPaintViewer {
 
     public ColorPickerItem(Properties properties) {
         super(properties);
@@ -73,7 +73,7 @@ public class ColorPickerItem extends AbstractConfigurableToolItem implements IIt
                 // this is an empty color picker, we don't need to do anything.
                 return InteractionResult.CONSUME;
             }
-            if (!ToolOptions.CHANGE_PAINT_TYPE.get(itemStack)) {
+            if (!PaintingToolOptions.CHANGE_PAINT_TYPE.get(itemStack)) {
                 newColor = PaintColor.of(newColor.getRGB(), provider.getColor().getPaintType());
             }
             provider.setColor(newColor);
@@ -88,8 +88,8 @@ public class ColorPickerItem extends AbstractConfigurableToolItem implements IIt
     }
 
     @Override
-    public void createToolProperties(Consumer<IPaintingToolProperty<?>> builder) {
-        builder.accept(ToolOptions.CHANGE_PAINT_TYPE);
+    public void createToolProperties(Consumer<IConfigurableToolProperty<?>> builder) {
+        builder.accept(PaintingToolOptions.CHANGE_PAINT_TYPE);
     }
 
     @Override

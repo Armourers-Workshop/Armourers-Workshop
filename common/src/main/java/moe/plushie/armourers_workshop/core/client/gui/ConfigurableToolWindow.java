@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.builder.client.gui;
+package moe.plushie.armourers_workshop.core.client.gui;
 
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSMutableString;
@@ -7,13 +7,13 @@ import com.apple.library.uikit.UICheckBox;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UISliderBox;
 import com.apple.library.uikit.UIView;
-import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
-import moe.plushie.armourers_workshop.builder.item.tooloption.BooleanToolProperty;
-import moe.plushie.armourers_workshop.builder.item.tooloption.IntegerToolProperty;
-import moe.plushie.armourers_workshop.builder.network.UpdatePaintingToolPacket;
+import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ClientMenuScreen;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
+import moe.plushie.armourers_workshop.core.item.option.BooleanToolProperty;
+import moe.plushie.armourers_workshop.core.item.option.IntegerToolProperty;
 import moe.plushie.armourers_workshop.core.menu.AbstractContainerMenu;
+import moe.plushie.armourers_workshop.core.network.UpdateConfigurableToolPacket;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -28,9 +28,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.ArrayList;
 
 @Environment(value = EnvType.CLIENT)
-public class PaintingToolWindow extends MenuWindow<AbstractContainerMenu> {
+public class ConfigurableToolWindow extends MenuWindow<AbstractContainerMenu> {
 
-    private final ArrayList<Pair<IPaintingToolProperty<?>, UIView>> properties = new ArrayList<>();
+    private final ArrayList<Pair<IConfigurableToolProperty<?>, UIView>> properties = new ArrayList<>();
 
     private final InteractionHand hand;
     private final ItemStack itemStack;
@@ -38,7 +38,7 @@ public class PaintingToolWindow extends MenuWindow<AbstractContainerMenu> {
     private int contentWidth = 176;
     private int contentHeight = 24; // 24 + n + 8
 
-    public PaintingToolWindow(Component title, ArrayList<IPaintingToolProperty<?>> properties, ItemStack itemStack, InteractionHand hand) {
+    public ConfigurableToolWindow(Component title, ArrayList<IConfigurableToolProperty<?>> properties, ItemStack itemStack, InteractionHand hand) {
         super(ClientMenuScreen.getEmptyMenu(), ClientMenuScreen.getEmptyInventory(), new NSString(title));
         this.inventoryView.removeFromSuperview();
         this.setBackgroundView(ModTextures.defaultWindowImage());
@@ -60,14 +60,14 @@ public class PaintingToolWindow extends MenuWindow<AbstractContainerMenu> {
     }
 
     protected void sendToServer() {
-        NetworkManager.sendToServer(new UpdatePaintingToolPacket(hand, itemStack));
+        NetworkManager.sendToServer(new UpdateConfigurableToolPacket(hand, itemStack));
     }
 
     protected NSString getOptionText(String key) {
         return new NSString(TranslateUtils.title("tooloption.armourers_workshop" + "." + key));
     }
 
-    private UIView createOptionView(IPaintingToolProperty<?> property) {
+    private UIView createOptionView(IConfigurableToolProperty<?> property) {
         if (property instanceof BooleanToolProperty) {
             BooleanToolProperty property1 = (BooleanToolProperty) property;
             UICheckBox checkBox = new UICheckBox(new CGRect(8, contentHeight, contentWidth - 16, 9));
@@ -75,7 +75,7 @@ public class PaintingToolWindow extends MenuWindow<AbstractContainerMenu> {
             checkBox.setSelected(property1.get(itemStack));
             checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, sender) -> {
                 boolean value = sender.isSelected();
-                property1.setValue(itemStack, value);
+                property1.set(itemStack, value);
                 sendToServer();
             });
             return checkBox;
@@ -97,7 +97,7 @@ public class PaintingToolWindow extends MenuWindow<AbstractContainerMenu> {
             slider.setValue(property1.get(itemStack));
             slider.addTarget(this, UIControl.Event.EDITING_DID_END, (self, sender) -> {
                 int value = (int) ((UISliderBox) sender).value();
-                property1.setValue(itemStack, value);
+                property1.set(itemStack, value);
                 sendToServer();
             });
             return slider;

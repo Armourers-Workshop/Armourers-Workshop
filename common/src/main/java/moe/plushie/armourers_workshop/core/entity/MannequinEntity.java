@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.entity;
 
 import moe.plushie.armourers_workshop.api.common.IEntityHandler;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.item.option.MannequinToolOptions;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModEntitySerializers;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -325,21 +326,57 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
 
     public CompoundTag saveCustomPose() {
         CompoundTag nbt = new CompoundTag();
-        DataSerializers.putRotations(nbt, "Head", entityData.get(DATA_HEAD_POSE), DEFAULT_HEAD_POSE);
-        DataSerializers.putRotations(nbt, "Body", entityData.get(DATA_BODY_POSE), DEFAULT_BODY_POSE);
-        DataSerializers.putRotations(nbt, "LeftArm", entityData.get(DATA_LEFT_ARM_POSE), DEFAULT_LEFT_ARM_POSE);
-        DataSerializers.putRotations(nbt, "RightArm", entityData.get(DATA_RIGHT_ARM_POSE), DEFAULT_RIGHT_ARM_POSE);
-        DataSerializers.putRotations(nbt, "LeftLeg", entityData.get(DATA_LEFT_LEG_POSE), DEFAULT_LEFT_LEG_POSE);
-        DataSerializers.putRotations(nbt, "RightLeg", entityData.get(DATA_RIGHT_LEG_POSE), DEFAULT_RIGHT_LEG_POSE);
+        DataSerializers.putRotations(nbt, Constants.Key.ENTITY_POSE_HEAD, entityData.get(DATA_HEAD_POSE), DEFAULT_HEAD_POSE);
+        DataSerializers.putRotations(nbt, Constants.Key.ENTITY_POSE_BODY, entityData.get(DATA_BODY_POSE), DEFAULT_BODY_POSE);
+        DataSerializers.putRotations(nbt, Constants.Key.ENTITY_POSE_LEFT_ARM, entityData.get(DATA_LEFT_ARM_POSE), DEFAULT_LEFT_ARM_POSE);
+        DataSerializers.putRotations(nbt, Constants.Key.ENTITY_POSE_RIGHT_ARM, entityData.get(DATA_RIGHT_ARM_POSE), DEFAULT_RIGHT_ARM_POSE);
+        DataSerializers.putRotations(nbt, Constants.Key.ENTITY_POSE_LEFT_LEG, entityData.get(DATA_LEFT_LEG_POSE), DEFAULT_LEFT_LEG_POSE);
+        DataSerializers.putRotations(nbt, Constants.Key.ENTITY_POSE_RIGHT_LEG, entityData.get(DATA_RIGHT_LEG_POSE), DEFAULT_RIGHT_LEG_POSE);
         return nbt;
     }
 
     public void readCustomPose(CompoundTag nbt) {
-        this.setHeadPose(DataSerializers.getRotations(nbt, "Head", DEFAULT_HEAD_POSE));
-        this.setBodyPose(DataSerializers.getRotations(nbt, "Body", DEFAULT_BODY_POSE));
-        this.setLeftArmPose(DataSerializers.getRotations(nbt, "LeftArm", DEFAULT_LEFT_ARM_POSE));
-        this.setRightArmPose(DataSerializers.getRotations(nbt, "RightArm", DEFAULT_RIGHT_ARM_POSE));
-        this.setLeftLegPose(DataSerializers.getRotations(nbt, "LeftLeg", DEFAULT_LEFT_LEG_POSE));
-        this.setRightLegPose(DataSerializers.getRotations(nbt, "RightLeg", DEFAULT_RIGHT_LEG_POSE));
+        this.setHeadPose(DataSerializers.getRotations(nbt, Constants.Key.ENTITY_POSE_HEAD, DEFAULT_HEAD_POSE));
+        this.setBodyPose(DataSerializers.getRotations(nbt, Constants.Key.ENTITY_POSE_BODY, DEFAULT_BODY_POSE));
+        this.setLeftArmPose(DataSerializers.getRotations(nbt, Constants.Key.ENTITY_POSE_LEFT_ARM, DEFAULT_LEFT_ARM_POSE));
+        this.setRightArmPose(DataSerializers.getRotations(nbt, Constants.Key.ENTITY_POSE_RIGHT_ARM, DEFAULT_RIGHT_ARM_POSE));
+        this.setLeftLegPose(DataSerializers.getRotations(nbt, Constants.Key.ENTITY_POSE_LEFT_LEG, DEFAULT_LEFT_LEG_POSE));
+        this.setRightLegPose(DataSerializers.getRotations(nbt, Constants.Key.ENTITY_POSE_RIGHT_LEG, DEFAULT_RIGHT_LEG_POSE));
+    }
+
+    public void saveMannequinToolData(CompoundTag entityTag) {
+        addExtendedData(entityTag);
+    }
+
+    public void readMannequinToolData(CompoundTag entityTag, ItemStack itemStack) {
+        CompoundTag newEntityTag = new CompoundTag();
+        if (MannequinToolOptions.CHANGE_OPTION.get(itemStack)) {
+            newEntityTag.merge(entityTag);
+            newEntityTag.remove(Constants.Key.ENTITY_SCALE);
+            newEntityTag.remove(Constants.Key.ENTITY_POSE);
+            newEntityTag.remove(Constants.Key.ENTITY_TEXTURE);
+        }
+        if (MannequinToolOptions.CHANGE_SCALE.get(itemStack)) {
+            newEntityTag.put(Constants.Key.ENTITY_SCALE, entityTag.get(Constants.Key.ENTITY_SCALE));
+        }
+        if (MannequinToolOptions.CHANGE_ROTATION.get(itemStack)) {
+            CompoundTag poseTag = entityTag.getCompound(Constants.Key.ENTITY_POSE);
+            if (MannequinToolOptions.MIRROR_MODE.get(itemStack) && !poseTag.isEmpty()) {
+                CompoundTag newPoseTag = poseTag.copy();
+                DataSerializers.mirrorRotations(poseTag, Constants.Key.ENTITY_POSE_HEAD, DEFAULT_HEAD_POSE, newPoseTag, Constants.Key.ENTITY_POSE_HEAD, DEFAULT_HEAD_POSE);
+                DataSerializers.mirrorRotations(poseTag, Constants.Key.ENTITY_POSE_BODY, DEFAULT_BODY_POSE, newPoseTag, Constants.Key.ENTITY_POSE_BODY, DEFAULT_BODY_POSE);
+                DataSerializers.mirrorRotations(poseTag, Constants.Key.ENTITY_POSE_RIGHT_ARM, DEFAULT_RIGHT_ARM_POSE, newPoseTag, Constants.Key.ENTITY_POSE_LEFT_ARM, DEFAULT_LEFT_ARM_POSE);
+                DataSerializers.mirrorRotations(poseTag, Constants.Key.ENTITY_POSE_LEFT_ARM, DEFAULT_LEFT_ARM_POSE, newPoseTag, Constants.Key.ENTITY_POSE_RIGHT_ARM, DEFAULT_RIGHT_ARM_POSE);
+                DataSerializers.mirrorRotations(poseTag, Constants.Key.ENTITY_POSE_RIGHT_LEG, DEFAULT_RIGHT_LEG_POSE, newPoseTag, Constants.Key.ENTITY_POSE_LEFT_LEG, DEFAULT_LEFT_LEG_POSE);
+                DataSerializers.mirrorRotations(poseTag, Constants.Key.ENTITY_POSE_LEFT_LEG, DEFAULT_LEFT_LEG_POSE, newPoseTag, Constants.Key.ENTITY_POSE_RIGHT_LEG, DEFAULT_RIGHT_LEG_POSE);
+                poseTag = newPoseTag;
+            }
+            newEntityTag.put(Constants.Key.ENTITY_POSE, poseTag);
+        }
+        if (MannequinToolOptions.CHANGE_TEXTURE.get(itemStack)) {
+            newEntityTag.put(Constants.Key.ENTITY_TEXTURE, entityTag.get(Constants.Key.ENTITY_TEXTURE));
+        }
+        // load into entity
+        readExtendedData(newEntityTag);
     }
 }

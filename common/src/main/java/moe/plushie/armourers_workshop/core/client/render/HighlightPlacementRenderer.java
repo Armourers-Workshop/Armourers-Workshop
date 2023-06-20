@@ -4,7 +4,7 @@ import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
+import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.data.MannequinHitResult;
@@ -101,9 +101,9 @@ public class HighlightPlacementRenderer {
             return;
         }
 
-        int radiusSample = ToolOptions.RADIUS_SAMPLE.get(itemStack);
-        int radiusEffect = ToolOptions.RADIUS_EFFECT.get(itemStack);
-        boolean restrictPlane = ToolOptions.PLANE_RESTRICT.get(itemStack);
+        int radiusSample = PaintingToolOptions.RADIUS_SAMPLE.get(itemStack);
+        int radiusEffect = PaintingToolOptions.RADIUS_EFFECT.get(itemStack);
+        boolean restrictPlane = PaintingToolOptions.PLANE_RESTRICT.get(itemStack);
 
         ArrayList<BlockPos> blockSamples = BlockUtils.findTouchingBlockFaces(level, pos, direction, radiusSample, restrictPlane);
         ArrayList<BlockPos> blockEffects = BlockUtils.findTouchingBlockFaces(level, pos, direction, radiusEffect, restrictPlane);
