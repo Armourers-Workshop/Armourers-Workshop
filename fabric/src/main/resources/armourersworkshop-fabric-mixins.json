@@ -5,7 +5,8 @@
   "client": [
     "FabricClientPacketListenerMixin",
     "FabricLivingRendererMixin",
-    "FabricPlayerRendererMixin"
+    "FabricPlayerRendererMixin",
+    "FabricScreenREIMixin"
   ],
   "mixins": [
     "FabricBlockItemMixin",

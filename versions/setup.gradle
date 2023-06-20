@@ -140,7 +140,7 @@ task applyCoreProperties {
         def properties = new Properties()
         properties.load(it.newDataInputStream())
         properties.forEach { key, value ->
-            contents = contents.replaceAll("${key}=[^#\\n]*", "${key}=${value}")
+            contents = contents.replaceAll("\\b${key}\\b=[^#\\n]*", "${key}=${value}")
         }
         target.write(contents, "UTF-8")
     }

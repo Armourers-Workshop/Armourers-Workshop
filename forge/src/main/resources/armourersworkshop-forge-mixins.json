@@ -3,7 +3,8 @@
   "package": "moe.plushie.armourers_workshop.init.mixin.forge",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "ForgeLivingRendererMixin"
+    "ForgeLivingRendererMixin",
+    "ForgeScreenREIMixin"
   ],
   "mixins": [
     "ForgeBlockEntityHandlerMixin",
