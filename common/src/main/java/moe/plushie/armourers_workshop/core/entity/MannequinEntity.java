@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModEntitySerializers;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutorIO;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
@@ -183,7 +184,14 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
 
     @Override
     public ItemStack getCustomPickResult(HitResult target) {
-        return new ItemStack(ModItems.MANNEQUIN.get());
+        ItemStack itemStack = new ItemStack(ModItems.MANNEQUIN.get());
+        // yep, we need copy the fully model info when ctrl down.
+        if (EnvironmentExecutorIO.hasControlDown()) {
+            CompoundTag entityTag = new CompoundTag();
+            addAdditionalSaveData(entityTag);
+            itemStack.getOrCreateTag().put(Constants.Key.ENTITY, entityTag);
+        }
+        return itemStack;
     }
 
     @Override
