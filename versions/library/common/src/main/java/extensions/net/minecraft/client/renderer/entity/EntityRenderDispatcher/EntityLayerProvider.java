@@ -4,7 +4,6 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererLayerProvider;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererProvider;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;

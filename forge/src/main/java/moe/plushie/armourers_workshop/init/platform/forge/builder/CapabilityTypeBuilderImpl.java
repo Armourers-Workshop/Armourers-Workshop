@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
 import moe.plushie.armourers_workshop.api.common.ICapabilityType;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.api.registry.ICapabilityTypeBuilder;
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeCapabilityManager;
 import net.minecraft.world.entity.Entity;
 

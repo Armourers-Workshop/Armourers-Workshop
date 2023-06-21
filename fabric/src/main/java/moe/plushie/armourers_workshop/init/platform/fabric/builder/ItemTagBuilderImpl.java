@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import moe.plushie.armourers_workshop.api.common.IItemTag;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.api.registry.IItemTagBuilder;
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import net.minecraft.core.Registry;
 
 public class ItemTagBuilderImpl<T extends IItemTag> implements IItemTagBuilder<T> {

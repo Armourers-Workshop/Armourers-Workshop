@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.utils.math.Size2i;
 import moe.plushie.armourers_workshop.utils.math.Vector2i;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;

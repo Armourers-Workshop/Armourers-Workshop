@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.menu;
 
+import moe.plushie.armourers_workshop.compatibility.core.AbstractContainerMenuImpl;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
@@ -9,18 +10,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BooleanSupplier;
 
-public abstract class AbstractContainerMenu extends net.minecraft.world.inventory.AbstractContainerMenu {
+public abstract class AbstractContainerMenu extends AbstractContainerMenuImpl {
 
     public AbstractContainerMenu(@Nullable MenuType<?> containerType, int containerId) {
         super(containerType, containerId);
-    }
-
-    protected void clearContainer(Player player, Container container) {
-        //#if MC >= 11800
-        super.clearContainer(player, container);
-        //#else
-        //# this.clearContainer(player, player.level, container);
-        //#endif
     }
 
     public ItemStack quickMoveStack(Player player, int i) {

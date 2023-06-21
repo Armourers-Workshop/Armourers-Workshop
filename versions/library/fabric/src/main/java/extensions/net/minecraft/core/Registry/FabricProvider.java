@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistr
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistryEntry;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;

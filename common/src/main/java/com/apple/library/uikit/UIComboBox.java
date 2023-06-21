@@ -4,7 +4,6 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSIndexPath;
-import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.impl.AppearanceImpl;
 import com.apple.library.impl.SoundManagerImpl;

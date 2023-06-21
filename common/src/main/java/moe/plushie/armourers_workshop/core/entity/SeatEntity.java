@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.entity;
 
+import moe.plushie.armourers_workshop.compatibility.core.AbstractLivingEntity;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.Constants;
@@ -12,21 +13,20 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Collections;
 
-public class SeatEntity extends LivingEntity {
+public class SeatEntity extends AbstractLivingEntity {
 
     private int holdingTick;
     private BlockPos blockPos;
 
     public SeatEntity(EntityType<? extends SeatEntity> entityType, Level level) {
         super(entityType, level);
-        this.setYRot(0.0f);
+        this.setYBodyRot(0.0f);
         //this.maxUpStep = 0.0f;
         this.holdingTick = ModConfig.Client.prefersSeatHoldingTick;
     }
@@ -55,17 +55,13 @@ public class SeatEntity extends LivingEntity {
     public void travel(Vec3 p_213352_1_) {
         if (isAlive() && !getPassengers().isEmpty()) {
             Entity passenger = getPassengers().get(0);
-            this.setYRot(passenger.getYRot());
+            this.setYBodyRot(passenger.getYRot());
         }
     }
 
     @Override
     public void kill() {
-        //#if MC >= 11800
         this.remove(RemovalReason.KILLED);
-        //#else
-        //# this.remove();
-        //#endif
     }
 
     public void autoKill() {
@@ -90,11 +86,12 @@ public class SeatEntity extends LivingEntity {
         return getLevel() != null && blockPos != null && getLevel().getBlockEntity(blockPos) instanceof SkinnableBlockEntity;
     }
 
+
     @Override
-    public void setYRot(float f) {
-        super.setYRot(f);
+    public void setYBodyRot(float f) {
+        super.setYBodyRot(f);
+        this.setYRot(f);
         this.yRotO = f;
-        this.yBodyRot = f;
         this.yHeadRot = f;
     }
 

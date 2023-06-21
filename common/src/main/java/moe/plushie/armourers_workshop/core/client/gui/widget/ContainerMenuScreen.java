@@ -2,10 +2,8 @@ package moe.plushie.armourers_workshop.core.client.gui.widget;
 
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGRect;
-import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIWindow;
 import com.apple.library.uikit.UIWindowManager;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.ISize2i;
 import moe.plushie.armourers_workshop.compatibility.client.gui.AbstractMenuScreen;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;

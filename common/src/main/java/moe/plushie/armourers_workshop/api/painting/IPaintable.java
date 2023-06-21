@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.api.painting;
 
 import net.minecraft.core.Direction;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 

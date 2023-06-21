@@ -9,7 +9,12 @@ import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.event.RenderHighlightEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 
 import java.util.function.Consumer;
 

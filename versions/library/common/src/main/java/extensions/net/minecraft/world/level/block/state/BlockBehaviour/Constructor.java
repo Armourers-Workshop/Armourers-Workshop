@@ -6,8 +6,6 @@ import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterial;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterialColor;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;

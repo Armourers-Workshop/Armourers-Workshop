@@ -1,7 +1,6 @@
 package com.apple.library.impl;
 
 import com.apple.library.uikit.UIColor;
-import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIImage;
 import moe.plushie.armourers_workshop.init.ModTextures;
 

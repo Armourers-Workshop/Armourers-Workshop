@@ -10,7 +10,6 @@ import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIImage;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Rotations;
