@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin;
 
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
-import moe.plushie.armourers_workshop.api.library.ISkinLibraryLoader;
+import moe.plushie.armourers_workshop.api.skin.ISkinFileProvider;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
@@ -54,7 +54,7 @@ public class SkinLoader {
 
     private final WorkQueue workQueue = new WorkQueue();
     private final HashMap<String, IResultHandler<Skin>> waiting = new HashMap<>();
-    private final HashMap<String, ISkinLibraryLoader> loaders = new HashMap<>();
+    private final HashMap<String, ISkinFileProvider> loaders = new HashMap<>();
     private final ConcurrentHashMap<String, Entry> entries = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, GlobalEntry> globalEntries = new ConcurrentHashMap<>();
 
@@ -88,7 +88,7 @@ public class SkinLoader {
         }
     }
 
-    public void register(DataDomain domain, ISkinLibraryLoader loader) {
+    public void register(DataDomain domain, ISkinFileProvider loader) {
         this.loaders.put(domain.namespace(), loader);
     }
 
@@ -661,7 +661,7 @@ public class SkinLoader {
         @Override
         public InputStream from(Request request) throws Exception {
             String domain = DataDomain.getNamespace(request.identifier);
-            ISkinLibraryLoader loader = SkinLoader.getInstance().loaders.get(domain);
+            ISkinFileProvider loader = SkinLoader.getInstance().loaders.get(domain);
             if (loader != null) {
                 return loader.loadSkin(DataDomain.getPath(request.identifier));
             }

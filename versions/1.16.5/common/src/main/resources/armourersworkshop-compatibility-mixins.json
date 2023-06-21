@@ -7,7 +7,8 @@
     "Matrix4fMixin",
     "RenderStateMixin",
     "ItemRendererMixin",
-    "InventoryScreenMixin"
+    "InventoryScreenMixin",
+    "HttpTextureMixin"
   ],
   "mixins": [
     "ServerGameMixin"

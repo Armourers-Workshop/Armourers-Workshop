@@ -24,7 +24,7 @@ public class ItemMatcher {
             return false;
         }
         // the item id in the blacklist?
-        if (!ModConfig.Common.disableMatchingItems.contains(registryName.toString())) {
+        if (ModConfig.Common.disableMatchingItems.contains(registryName.toString())) {
             return false;
         }
         // we only check the path part, to avoid keywords exists in the mod id.

@@ -12,7 +12,8 @@
     "RenderStateMixin",
     "ItemRendererMixin",
     "InventoryScreenMixin",
-    "GuiGraphicsMixin"
+    "GuiGraphicsMixin",
+    "HttpTextureMixin"
   ],
   "mixins": [
   ],

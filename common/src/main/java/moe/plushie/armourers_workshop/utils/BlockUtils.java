@@ -49,18 +49,6 @@ public final class BlockUtils {
         UndoManager.of(player.getUUID()).push(group);
     }
 
-    public static void endCombiner2() {
-        Map<BlockEntity, Runnable> queue = pending.get();
-        if (queue == null) {
-            return;
-        }
-//        queue.forEach((k, v) -> {
-//            v.run();
-//            k.setChanged();
-//        });
-        pending.set(null);
-    }
-
     public static void endCombiner() {
         Map<BlockEntity, Runnable> queue = pending.get();
         if (queue == null) {

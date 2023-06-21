@@ -613,5 +613,9 @@
   "tooloption.armourers_workshop.intensity": "强度",
   "tooloption.armourers_workshop.planeRestrict": "限制于平面",
   "tooloption.armourers_workshop.radius": "半径",
-  "tooloption.armourers_workshop.sampleRadius": "采样半径"
-}
+  "tooloption.armourers_workshop.sampleRadius": "采样半径",
+  "tooloption.armourers_workshop.mirrorMode": "镜像模式",
+  "tooloption.armourers_workshop.changeTexture": "复制皮肤配置",
+  "tooloption.armourers_workshop.changeScale": "复制缩放配置",
+  "tooloption.armourers_workshop.changeRotation": "复制旋转配置",
+  "tooloption.armourers_workshop.changeOption": "复制选项配置"}

@@ -13,7 +13,8 @@
     "ShaderIrisMixin",
     "RenderStateMixin",
     "ItemRendererMixin",
-    "InventoryScreenMixin"
+    "InventoryScreenMixin",
+    "HttpTextureMixin"
   ],
   "mixins": [
   ],

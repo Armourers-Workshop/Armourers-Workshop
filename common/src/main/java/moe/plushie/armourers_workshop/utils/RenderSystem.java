@@ -84,36 +84,6 @@ public final class RenderSystem extends AbstractRenderSystem {
         }
     }
 
-
-//    public static void resize(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int targetWidth, int targetHeight) {
-//        resize(poseStack, x, y, u, v, width, height, targetWidth, targetHeight, 256, 256);
-//    }
-//
-//    public static void resize(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, int texWidth, int texHeight) {
-//        float f = 1.0f / texWidth;
-//        float f1 = 1.0f / texHeight;
-//
-//        PoseStack.Pose pose = poseStack.last();
-//        AbstractShaderTesselator tessellator = AbstractShaderTesselator.getInstance();
-//        BufferBuilder bufferbuilder = tessellator.begin(SkinRenderType.GUI_IMAGE);
-//        bufferbuilder.vertex(pose, x, y + height, 0).uv(u * f, (v + sourceHeight) * f1).endVertex();
-//        bufferbuilder.vertex(pose, x + width, y + height, 0).uv((u + sourceWidth) * f, (v + sourceHeight) * f1).endVertex();
-//        bufferbuilder.vertex(pose, x + width, y, 0).uv((u + sourceWidth) * f, v * f1).endVertex();
-//        bufferbuilder.vertex(pose, x, y, 0).uv(u * f, v * f1).endVertex();
-//        tessellator.end();
-//    }
-//
-//
-//    public static void resize(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, ResourceLocation texture) {
-//        setShaderTexture(0, texture);
-//        resize(poseStack, x, y, u, v, width, height, sourceWidth, sourceHeight);
-//    }
-//
-//    public static void resize(PoseStack poseStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, int texWidth, int texHeight, ResourceLocation texture) {
-//        setShaderTexture(0, texture);
-//        resize(poseStack, x, y, u, v, width, height, sourceWidth, sourceHeight, texWidth, texHeight);
-//    }
-
     public static int getPixelColor(int x, int y) {
         Window window = Minecraft.getInstance().getWindow();
         double guiScale = window.getGuiScale();
@@ -497,71 +467,12 @@ public final class RenderSystem extends AbstractRenderSystem {
         tesselator.end();
     }
 
-//    private static void _drawTexturedModalRect(PoseStack.Pose pose, int x, int y, int u, int v, int width, int height, float zLevel, BufferBuilder bufferBuilder) {
-//        final float uScale = 1f / 0x100;
-//        final float vScale = 1f / 0x100;
-//        bufferBuilder.vertex(pose, x, y + height, zLevel).uv(u * uScale, ((v + height) * vScale)).endVertex();
-//        bufferBuilder.vertex(pose, x + width, y + height, zLevel).uv((u + width) * uScale, ((v + height) * vScale)).endVertex();
-//        bufferBuilder.vertex(pose, x + width, y, zLevel).uv((u + width) * uScale, (v * vScale)).endVertex();
-//        bufferBuilder.vertex(pose, x, y, zLevel).uv(u * uScale, (v * vScale)).endVertex();
-//    }
-
-//    public static void disableLighting() {
-//        net.minecraft.client.GameSettings
-//        lightX = OpenGlHelper.lastBrightnessX;
-//        lightY = OpenGlHelper.lastBrightnessY;
-//        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-//    }
-
-//    public static void enableLighting() {
-//        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightX, lightY);
-//    }
-
-//    public static void setLightingForBlock(Level world, BlockPos pos) {
-//        int i = world.getCombinedLight(pos, 0);
-//        int j = i % 65536;
-//        int k = i / 65536;
-//        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
-//    }
-
     public static void setShaderColor(UIColor color) {
         setShaderColor(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, color.getAlpha() / 255f);
     }
 
     public static void setShaderColor(float f, float g, float h) {
         setShaderColor(f, g, h, 1.0f);
-    }
-
-    public static class Storage<T> {
-
-        private T value;
-        private T backup;
-
-        public Storage(T value) {
-            this.value = value;
-            this.backup = value;
-        }
-
-        public void save() {
-            backup = value;
-        }
-
-        public void load() {
-            value = backup;
-        }
-
-        public void set(T value) {
-            if (!isOnRenderThread()) {
-                recordRenderCall(() -> this.value = value);
-            } else {
-                this.value = value;
-            }
-        }
-
-        public T get() {
-            assertOnRenderThread();
-            return value;
-        }
     }
 
     public static OpenMatrix3f getExtendedNormalMatrix() {
@@ -616,5 +527,37 @@ public final class RenderSystem extends AbstractRenderSystem {
         extendedNormalMatrix.load();
         extendedLightmapTextureMatrix.load();
         extendedModelViewMatrix.load();
+    }
+
+    public static class Storage<T> {
+
+        private T value;
+        private T backup;
+
+        public Storage(T value) {
+            this.value = value;
+            this.backup = value;
+        }
+
+        public void save() {
+            backup = value;
+        }
+
+        public void load() {
+            value = backup;
+        }
+
+        public void set(T value) {
+            if (!isOnRenderThread()) {
+                recordRenderCall(() -> this.value = value);
+            } else {
+                this.value = value;
+            }
+        }
+
+        public T get() {
+            assertOnRenderThread();
+            return value;
+        }
     }
 }

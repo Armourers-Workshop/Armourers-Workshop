@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.client.gui.widget;
+package moe.plushie.armourers_workshop.builder.client.gui.widget;
 
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;

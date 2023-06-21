@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.forge.proxy;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.builder.client.render.PaintingHighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.init.ModConfig;
@@ -56,7 +57,7 @@ public class ClientProxyImpl {
                 HighlightPlacementRenderer.renderBlock(itemStack, player, traceResult, camera, poseStack, buffers);
             }
             if (ModConfig.Client.enablePaintToolPlacementHighlight && item == ModItems.BLENDING_TOOL.get()) {
-                HighlightPlacementRenderer.renderPaintTool(itemStack, player, traceResult, camera, poseStack, buffers);
+                PaintingHighlightPlacementRenderer.renderPaintTool(itemStack, player, traceResult, camera, poseStack, buffers);
             }
         });
 

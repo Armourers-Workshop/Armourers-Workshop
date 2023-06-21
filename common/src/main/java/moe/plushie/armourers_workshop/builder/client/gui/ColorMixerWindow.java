@@ -25,7 +25,7 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.HSBSliderBox;
 import moe.plushie.armourers_workshop.core.client.gui.widget.InputDialog;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.client.gui.widget.PaintColorView;
-import moe.plushie.armourers_workshop.core.client.gui.widget.PaletteBox;
+import moe.plushie.armourers_workshop.builder.client.gui.widget.PaletteBox;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.ModTextures;
