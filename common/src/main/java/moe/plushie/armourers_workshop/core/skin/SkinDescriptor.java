@@ -73,9 +73,14 @@ public class SkinDescriptor implements ISkinDescriptor {
     }
 
     public static void setDescriptor(ItemStack itemStack, SkinDescriptor descriptor) {
-        if (!itemStack.isEmpty()) {
-            itemStack.addTagElement(Constants.Key.SKIN, descriptor.serializeNBT());
+        if (itemStack.isEmpty()) {
+            return;
         }
+        if (descriptor.isEmpty()) {
+            itemStack.removeTagKey(Constants.Key.SKIN);
+            return;
+        }
+        itemStack.addTagElement(Constants.Key.SKIN, descriptor.serializeNBT());
     }
 
     public boolean accept(ItemStack itemStack) {

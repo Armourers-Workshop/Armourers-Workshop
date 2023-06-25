@@ -12,8 +12,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Objects;
-import java.util.function.Predicate;
 
 public enum SkinSlotType {
 
@@ -48,22 +48,29 @@ public enum SkinSlotType {
         this.index = index;
         this.size = size;
         this.skinType = skinType;
-        Helper.totalSize = Math.max(Helper.totalSize, index + size);
+        Helper.TOTAL_SIZE = Math.max(Helper.TOTAL_SIZE, index + size);
+        Helper.NAMED_SLOTS.put(name, this);
+        Helper.INDEXED_SLOTS.put(id, this);
     }
 
     @Nullable
     public static SkinSlotType by(int id) {
-        return find(type -> type.id == id);
+        return Helper.INDEXED_SLOTS.get(id);
     }
 
     @Nullable
     public static SkinSlotType of(String name) {
-        return find(type -> Objects.equals(type.name, name));
+        return Helper.NAMED_SLOTS.get(name);
     }
 
     @Nullable
     public static SkinSlotType of(ISkinType skinType) {
-        return find(type -> Objects.equals(type.skinType, skinType));
+        for (SkinSlotType slotType : SkinSlotType.values()) {
+            if (Objects.equals(slotType.skinType, skinType)) {
+                return slotType;
+            }
+        }
+        return null;
     }
 
     @Nullable
@@ -86,7 +93,7 @@ public enum SkinSlotType {
     }
 
     public static int getTotalSize() {
-        return Helper.totalSize;
+        return Helper.TOTAL_SIZE;
     }
 
     public static ISkinPaintType[] getSupportedPaintTypes() {
@@ -101,15 +108,6 @@ public enum SkinSlotType {
             }
         }
         return DYE.getIndex() + i;
-    }
-
-    private static SkinSlotType find(Predicate<SkinSlotType> predicate) {
-        for (SkinSlotType slotType : SkinSlotType.values()) {
-            if (predicate.test(slotType)) {
-                return slotType;
-            }
-        }
-        return null;
     }
 
     public ResourceLocation getIconSprite() {
@@ -145,6 +143,8 @@ public enum SkinSlotType {
     }
 
     private static class Helper {
+        static final HashMap<Integer, SkinSlotType> INDEXED_SLOTS = new HashMap<>();
+        static final HashMap<String, SkinSlotType> NAMED_SLOTS = new HashMap<>();
         static final ISkinPaintType[] SLOT_TO_TYPES = {
                 SkinPaintTypes.DYE_1,
                 SkinPaintTypes.DYE_2,
@@ -162,6 +162,6 @@ public enum SkinSlotType {
                 SkinPaintTypes.MISC_3,
                 SkinPaintTypes.MISC_4
         };
-        static int totalSize = 0;
+        static int TOTAL_SIZE = 0;
     }
 }

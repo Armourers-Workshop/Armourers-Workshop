@@ -16,6 +16,7 @@
     "HttpTextureMixin"
   ],
   "mixins": [
+    "EntityJSMixin"
   ],
   "injectors": {
     "defaultRequire": 1

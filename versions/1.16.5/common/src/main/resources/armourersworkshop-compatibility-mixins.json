@@ -11,7 +11,8 @@
     "HttpTextureMixin"
   ],
   "mixins": [
-    "ServerGameMixin"
+    "ServerGameMixin",
+    "EntityJSMixin"
   ],
   "injectors": {
     "defaultRequire": 1
