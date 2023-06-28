@@ -19,7 +19,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SlotListView<M extends AbstractContainerMenu> extends UIView {
 
     protected final M menu;

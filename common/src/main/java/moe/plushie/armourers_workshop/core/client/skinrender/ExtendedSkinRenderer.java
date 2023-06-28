@@ -16,7 +16,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.world.entity.LivingEntity;
 
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class ExtendedSkinRenderer<T extends LivingEntity, V extends EntityModel<T>, M extends IHumanoidModelHolder<V>> extends LivingSkinRenderer<T, V, M> {
 
     public ExtendedSkinRenderer(EntityProfile profile) {

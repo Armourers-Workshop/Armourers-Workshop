@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class MannequinEntityRenderer<T extends MannequinEntity> extends AbstractLivingEntityRenderer<T, MannequinModel<T>> {
 
     public static boolean enableLimitScale = false;

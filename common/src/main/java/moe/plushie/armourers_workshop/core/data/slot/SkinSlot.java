@@ -38,7 +38,7 @@ public class SkinSlot extends Slot {
     }
 
     @Nullable
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
         if (backgroundPairs == null) {
             backgroundPairs = new ArrayList<>();

@@ -20,7 +20,7 @@ public class DataManager {
         return INSTANCE;
     }
 
-//    @Environment(value = EnvType.CLIENT)
+//    @Environment(EnvType.CLIENT)
 //    public void addCache(String identifier, Skin skin) {
 //        File cachedFile = getSkinCacheFile(identifier);
 //        byte[] x0 = ModContext.x0();
@@ -55,7 +55,7 @@ public class DataManager {
 //        });
 //    }
 //
-//    @Environment(value = EnvType.CLIENT)
+//    @Environment(EnvType.CLIENT)
 //    public Skin getCache(String identifier) {
 //        File cachedFile = getSkinCacheFile(identifier);
 //        if (cachedFile == null || !cachedFile.exists()) {
@@ -89,7 +89,7 @@ public class DataManager {
 //        return skin;
 //    }
 //
-//    @Environment(value = EnvType.CLIENT)
+//    @Environment(EnvType.CLIENT)
 //    public void removeCache(String identifier) {
 //        File cachedFile = getSkinCacheFile(identifier);
 //        if (cachedFile == null || !cachedFile.exists()) {

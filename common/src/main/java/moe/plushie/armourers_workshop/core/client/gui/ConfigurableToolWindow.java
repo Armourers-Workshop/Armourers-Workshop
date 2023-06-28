@@ -27,7 +27,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ConfigurableToolWindow extends MenuWindow<AbstractContainerMenu> {
 
     private final ArrayList<Pair<IConfigurableToolProperty<?>, UIView>> properties = new ArrayList<>();

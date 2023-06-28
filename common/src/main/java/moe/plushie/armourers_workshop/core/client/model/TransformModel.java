@@ -6,7 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.LivingEntity;
 
-@Environment(value= EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class TransformModel<T extends LivingEntity> extends AbstractPlayerModel<T> {
 
     public TransformModel(float scale) {

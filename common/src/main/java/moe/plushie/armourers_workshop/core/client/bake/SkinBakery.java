@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public final class SkinBakery implements ISkinLibraryListener {
 
     private static final SkinBakery EMPTY = new SkinBakery();
@@ -252,7 +252,7 @@ public final class SkinBakery implements ISkinLibraryListener {
         return bakingQueue.get();
     }
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     @FunctionalInterface
     public interface IBakeListener {
         void didBake(String identifier, BakedSkin bakedSkin);

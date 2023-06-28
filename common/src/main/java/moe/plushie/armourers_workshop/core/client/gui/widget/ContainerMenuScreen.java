@@ -18,7 +18,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import org.lwjgl.glfw.GLFW;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWindow> extends AbstractMenuScreen<M> {
 
     private final W window;

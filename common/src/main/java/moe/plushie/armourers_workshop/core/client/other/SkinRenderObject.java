@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL15;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinRenderObject implements IRenderBufferObject, AutoCloseable {
 
     protected int id = -1;

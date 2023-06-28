@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.core.client.model.BakedModelStroage;
+import moe.plushie.armourers_workshop.core.client.model.BakedModelStorage;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.utils.EmbeddedSkinStack;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -28,20 +28,20 @@ public class ItemRendererMixin {
         BakedModel bakedModel = cir.getReturnValue();
         EmbeddedSkinStack embeddedStack = ClientWardrobeHandler.getEmbeddedSkinStack(entity, level, itemStack, null);
         if (embeddedStack != null) {
-            cir.setReturnValue(BakedModelStroage.wrap(bakedModel, itemStack, embeddedStack, entity, level));
+            cir.setReturnValue(BakedModelStorage.wrap(bakedModel, itemStack, embeddedStack, entity, level));
         }
     }
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void aw2$render(ItemStack itemStack, ItemDisplayContext transformType, boolean p_229111_3_, PoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay, BakedModel bakedModel, CallbackInfo ci) {
-        BakedModelStroage stroage = BakedModelStroage.unwrap(bakedModel);
-        if (stroage == null) {
+        BakedModelStorage storage = BakedModelStorage.unwrap(bakedModel);
+        if (storage == null) {
             return;
         }
-        BakedModel resolvedModel = stroage.getOriginModel();
-        LivingEntity entity = stroage.getEntity();
-        Level level = stroage.getLevel();
-        EmbeddedSkinStack embeddedStack = stroage.getEmbeddedStack();
+        BakedModel resolvedModel = storage.getOriginModel();
+        LivingEntity entity = storage.getEntity();
+        Level level = storage.getLevel();
+        EmbeddedSkinStack embeddedStack = storage.getEmbeddedStack();
         ClientWardrobeHandler.renderEmbeddedSkin(entity, level, itemStack, embeddedStack, ItemTransforms.ofType(transformType), p_229111_3_, poseStack, buffers, resolvedModel, packedLight, overlay, ci);
     }
 }

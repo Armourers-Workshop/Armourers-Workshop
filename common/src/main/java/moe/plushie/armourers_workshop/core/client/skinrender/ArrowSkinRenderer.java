@@ -11,7 +11,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.Model;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ArrowSkinRenderer<T extends AbstractArrow, V extends Model, M extends IModelHolder<V>> extends SkinRenderer<T, V, M> {
 
     public ArrowSkinRenderer(EntityProfile profile) {

@@ -10,7 +10,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.world.entity.LivingEntity;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class PlayerSkinRenderer<T extends LivingEntity, V extends PlayerModel<T>, M extends IPlayerModelHolder<V>> extends BipedSkinRenderer<T, V, M> {
 
     public PlayerSkinRenderer(EntityProfile profile) {

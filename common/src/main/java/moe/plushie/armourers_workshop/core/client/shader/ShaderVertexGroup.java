@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.RenderType;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ShaderVertexGroup {
 
     public int maxVertexCount;

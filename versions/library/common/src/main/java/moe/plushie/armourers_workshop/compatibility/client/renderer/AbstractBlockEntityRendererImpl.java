@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 @Available("[1.18, )")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class AbstractBlockEntityRendererImpl<T extends BlockEntity> implements BlockEntityRenderer<T>, AbstractBlockEntityRendererProviderImpl {
 
     public AbstractBlockEntityRendererImpl(Context context) {

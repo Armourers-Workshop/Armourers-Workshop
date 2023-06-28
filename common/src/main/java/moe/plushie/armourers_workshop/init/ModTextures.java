@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ModTextures {
 
     public static final ResourceLocation WARDROBE_1 = res("textures/gui/wardrobe/wardrobe-1.png");

@@ -34,7 +34,7 @@ import org.apache.logging.log4j.util.Strings;
 import java.util.ArrayList;
 import java.util.List;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ItemTooltipManager {
 
     public static ArrayList<Component> createSkinInfo(BakedSkin bakedSkin) {

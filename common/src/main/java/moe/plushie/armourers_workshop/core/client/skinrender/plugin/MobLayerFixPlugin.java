@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.layers.DrownedOuterLayer;
 import net.minecraft.client.renderer.entity.layers.StrayClothingLayer;
 import net.minecraft.world.entity.LivingEntity;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class MobLayerFixPlugin<T extends LivingEntity, V extends EntityModel<T>, M extends IHumanoidModelHolder<V>> extends ForwardingLayerPlugin<T, V, M> {
 
     public MobLayerFixPlugin() {

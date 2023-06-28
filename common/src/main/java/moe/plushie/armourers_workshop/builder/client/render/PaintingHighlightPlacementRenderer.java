@@ -23,7 +23,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.ArrayList;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class PaintingHighlightPlacementRenderer {
 
     public static void renderPaintTool(ItemStack itemStack, Player player, BlockHitResult traceResult, Camera renderInfo, PoseStack poseStack, MultiBufferSource buffers) {

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.utils.math;
 
 import moe.plushie.armourers_workshop.api.math.ITexturePos;
 
+@SuppressWarnings("unused")
 public class TexturePos implements ITexturePos {
 
     public static final TexturePos ZERO = new TexturePos(0, 0);

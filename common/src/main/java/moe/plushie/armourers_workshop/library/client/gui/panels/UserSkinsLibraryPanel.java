@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class UserSkinsLibraryPanel extends SearchResultsLibraryPanel {
 
     private ServerUser user;

@@ -5,7 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class AbstractAdvancedGuideRenderer {
 
     public abstract void render(PoseStack poseStack, int light, int overlay, float r, float g, float b, float alpha, MultiBufferSource buffers);

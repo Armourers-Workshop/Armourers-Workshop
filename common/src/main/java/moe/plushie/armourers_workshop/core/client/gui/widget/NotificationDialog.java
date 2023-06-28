@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class NotificationDialog extends ConfirmDialog {
 
     public NotificationDialog() {

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
@@ -11,7 +11,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ChickenModel;
 import net.minecraft.world.entity.LivingEntity;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ChickenSkinRenderer<T extends LivingEntity, V extends ChickenModel<T>, M extends IModelHolder<V>> extends LivingSkinRenderer<T, V, M> {
 
     public ChickenSkinRenderer(EntityProfile profile) {
@@ -33,7 +33,7 @@ public class ChickenSkinRenderer<T extends LivingEntity, V extends ChickenModel<
         }
     }
 
-    private void offset(PoseStack poseStack, M model) {
+    private void offset(IPoseStack poseStack, M model) {
         transformer.apply(poseStack, model.getPart("head"));
         poseStack.translate(0.0f, -2.0f, -1.0f);
         poseStack.scale(0.5f, 0.5f, 0.5f);

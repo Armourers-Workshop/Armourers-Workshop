@@ -7,7 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.world.entity.LivingEntity;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class FirstPersonPlayerModel<T extends LivingEntity> extends EntityModel<T> {
 
     private static FirstPersonPlayerModel<?> INSTANCE;

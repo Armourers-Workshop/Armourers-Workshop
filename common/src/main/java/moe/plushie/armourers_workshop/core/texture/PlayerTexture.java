@@ -16,7 +16,7 @@ public class PlayerTexture {
 
     private String model;
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     private BakedEntityTexture texture;
 
     public PlayerTexture(String url, ResourceLocation location, String model) {
@@ -43,12 +43,12 @@ public class PlayerTexture {
         return url;
     }
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public boolean isDownloaded() {
         return texture != null && texture.isLoaded();
     }
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public BakedEntityTexture getTexture() {
         if (texture != null && texture.isLoaded()) {
             return texture;
@@ -56,7 +56,7 @@ public class PlayerTexture {
         return null;
     }
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void setTexture(BakedEntityTexture texture) {
         this.texture = texture;
     }

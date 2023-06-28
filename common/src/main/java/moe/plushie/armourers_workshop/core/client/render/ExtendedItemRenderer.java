@@ -1,17 +1,12 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
-import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
-import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
@@ -21,14 +16,12 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public final class ExtendedItemRenderer {
 
     public static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, PoseStack poseStack, MultiBufferSource buffers) {
@@ -53,16 +46,20 @@ public final class ExtendedItemRenderer {
     }
 
     public static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, PoseStack poseStack, MultiBufferSource buffers) {
-        Entity entity = SkinItemRenderer.getInstance().getMannequinEntity();
-        MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
-        SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
-        if (renderer == null || entity == null || entity.getLevel() == null) {
+        SkinRenderTesselator context = SkinRenderTesselator.create(bakedSkin);
+        if (context == null) {
             return;
         }
         poseStack.pushPose();
         poseStack.scale(-1, -1, 1);
 
-        Rectangle3f rect = bakedSkin.getRenderBounds(entity, model, rotation, itemStack);
+        context.setLightmap(light);
+        context.setPartialTicks(partialTicks);
+        context.setRenderData(SkinRenderData.of(context.getMannequin()));
+        context.setReference(9, itemStack, rotation);
+        context.setColorScheme(scheme);
+
+        Rectangle3f rect = context.getBakedRenderBounds();
         float newScale = Math.min(targetWidth / rect.getWidth(), targetHeight / rect.getHeight());
         newScale = Math.min(newScale, targetDepth / rect.getDepth());
         RenderSystem.drawTargetBox(poseStack, targetWidth, targetHeight, targetDepth, buffers);
@@ -70,13 +67,7 @@ public final class ExtendedItemRenderer {
         poseStack.scale(newScale / scale.getX(), newScale / scale.getY(), newScale / scale.getZ());
         poseStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
 
-        SkinRenderData renderData = SkinRenderData.of(entity);
-        IModelHolder<Model> modelHolder = ModelHolder.of(model);
-        SkinRenderContext context = SkinRenderContext.alloc(renderData, light, partialTicks, poseStack, buffers);
-        context.setItem(itemStack, 9);
-        context.setTransforms(entity, renderer.getOverrideModel(modelHolder));
-        renderer.render(entity, modelHolder, bakedSkin, scheme, context);
-        context.release();
+        context.draw(poseStack, buffers);
 
         poseStack.popPose();
     }

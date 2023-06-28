@@ -34,7 +34,7 @@ public class SkinDataStorage {
         return Optional.empty();
     }
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static Optional<SkinRenderData> getRenderData(Entity entity) {
         SkinDataStorage storage = getDataStore(entity);
         if (storage.renderData == null) {

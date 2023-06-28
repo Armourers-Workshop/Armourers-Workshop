@@ -8,7 +8,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
 
 @Available("[1.16, 1.18)")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class AbstractModelPartBuilderImpl extends ModelPartBuilder {
 
     public AbstractModelPartBuilderImpl(int width, int texHeight) {

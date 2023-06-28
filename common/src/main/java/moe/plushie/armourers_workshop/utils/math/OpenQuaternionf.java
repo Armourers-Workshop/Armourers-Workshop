@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.utils.math;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 
+@SuppressWarnings("unused")
 public class OpenQuaternionf implements IQuaternionf {
 
     public static final OpenQuaternionf ONE = new OpenQuaternionf();
@@ -27,11 +28,11 @@ public class OpenQuaternionf implements IQuaternionf {
         if (bl) {
             f *= (float) Math.PI / 180;
         }
-        float g = sin(f / 2.0f);
+        float g = MathUtils.sin(f / 2.0f);
         this.x = vec.getX() * g;
         this.y = vec.getY() * g;
         this.z = vec.getZ() * g;
-        this.w = cos(f / 2.0f);
+        this.w = MathUtils.cos(f / 2.0f);
     }
 
     public OpenQuaternionf(float f, float g, float h, boolean bl) {
@@ -59,91 +60,133 @@ public class OpenQuaternionf implements IQuaternionf {
         this.w = other.w();
     }
 
-    public static OpenQuaternionf fromYXZ(float f, float g, float h) {
-        OpenQuaternionf quaternion = ONE.copy();
-        quaternion.mul(new OpenQuaternionf(0.0f, (float) Math.sin(f / 2.0f), 0.0f, (float) Math.cos(f / 2.0f)));
-        quaternion.mul(new OpenQuaternionf((float) Math.sin(g / 2.0f), 0.0f, 0.0f, (float) Math.cos(g / 2.0f)));
-        quaternion.mul(new OpenQuaternionf(0.0f, 0.0f, (float) Math.sin(h / 2.0f), (float) Math.cos(h / 2.0f)));
-        return quaternion;
+    public static OpenQuaternionf fromXYZ(float angleX, float angleY, float angleZ) {
+        float sx = MathUtils.sin(angleX * 0.5f);
+        float cx = MathUtils.cosFromSin(sx, angleX * 0.5f);
+        float sy = MathUtils.sin(angleY * 0.5f);
+        float cy = MathUtils.cosFromSin(sy, angleY * 0.5f);
+        float sz = MathUtils.sin(angleZ * 0.5f);
+        float cz = MathUtils.cosFromSin(sz, angleZ * 0.5f);
+        float cycz = cy * cz;
+        float sysz = sy * sz;
+        float sycz = sy * cz;
+        float cysz = cy * sz;
+        return new OpenQuaternionf(sx * cycz + cx * sysz, cx * sycz - sx * cysz, cx * cysz + sx * sycz, cx * cycz - sx * sysz);
     }
 
-    public static OpenQuaternionf fromXYZDegrees(Vector3f vector3f) {
-        return fromXYZ((float) Math.toRadians(vector3f.x()), (float) Math.toRadians(vector3f.y()), (float) Math.toRadians(vector3f.z()));
+    public static OpenQuaternionf fromZYX(float angleZ, float angleY, float angleX) {
+        float sx = MathUtils.sin(angleX * 0.5f);
+        float cx = MathUtils.cosFromSin(sx, angleX * 0.5f);
+        float sy = MathUtils.sin(angleY * 0.5f);
+        float cy = MathUtils.cosFromSin(sy, angleY * 0.5f);
+        float sz = MathUtils.sin(angleZ * 0.5f);
+        float cz = MathUtils.cosFromSin(sz, angleZ * 0.5f);
+        float cycz = cy * cz;
+        float sysz = sy * sz;
+        float sycz = sy * cz;
+        float cysz = cy * sz;
+        return new OpenQuaternionf(sx * cycz - cx * sysz, cx * sycz + sx * cysz, cx * cysz - sx * sycz, cx * cycz + sx * sysz);
     }
 
-    public static OpenQuaternionf fromXYZ(Vector3f vector3f) {
-        return fromXYZ(vector3f.getX(), vector3f.getY(), vector3f.getZ());
+    public static OpenQuaternionf fromYXZ(float angleY, float angleX, float angleZ) {
+        float sx = MathUtils.sin(angleX * 0.5f);
+        float cx = MathUtils.cosFromSin(sx, angleX * 0.5f);
+        float sy = MathUtils.sin(angleY * 0.5f);
+        float cy = MathUtils.cosFromSin(sy, angleY * 0.5f);
+        float sz = MathUtils.sin(angleZ * 0.5f);
+        float cz = MathUtils.cosFromSin(sz, angleZ * 0.5f);
+        float x = cy * sx;
+        float y = sy * cx;
+        float z = sy * sx;
+        float w = cy * cx;
+        return new OpenQuaternionf(x * cz + y * sz, y * cz - x * sz, w * sz - z * cz, w * cz + z * sz);
     }
 
-    public static OpenQuaternionf fromUnitVectors(Vector3f from, Vector3f to) {
-        // assumes direction vectors vFrom and vTo are normalized
-        float EPS = 0.000001f;
-        float x, y, z, r = from.dot(to) + 1;
-        if (r < EPS) {
-            r = 0f;
-            if (Math.abs(from.getX()) > Math.abs(from.getZ())) {
-                x = -from.getY();
-                y = from.getX();
-                z = 0f;
-            } else {
-                x = 0f;
-                y = -from.getZ();
-                z = from.getY();
-            }
-        } else {
-            // crossVectors( vFrom, vTo ); // inlined to avoid cyclic dependency on Vector3
-            x = from.getY() * to.getZ() - from.getZ() * to.getY();
-            y = from.getZ() * to.getX() - from.getX() * to.getZ();
-            z = from.getX() * to.getY() - from.getY() * to.getX();
-        }
-        return new OpenQuaternionf(x, y, z, r).normalize();
-    }
-
-    public static OpenQuaternionf fromXYZ(float f, float g, float h) {
-        OpenQuaternionf quaternion = ONE.copy();
-        quaternion.mul(new OpenQuaternionf((float) Math.sin(f / 2.0f), 0.0f, 0.0f, (float) Math.cos(f / 2.0f)));
-        quaternion.mul(new OpenQuaternionf(0.0f, (float) Math.sin(g / 2.0f), 0.0f, (float) Math.cos(g / 2.0f)));
-        quaternion.mul(new OpenQuaternionf(0.0f, 0.0f, (float) Math.sin(h / 2.0f), (float) Math.cos(h / 2.0f)));
-        return quaternion;
-    }
-
-    public Vector3f toXYZ() {
-        float f = this.w() * this.w();
-        float g = this.x() * this.x();
-        float h = this.y() * this.y();
-        float i = this.z() * this.z();
-        float j = f + g + h + i;
-        float k = 2.0f * this.w() * this.x() - 2.0f * this.y() * this.z();
-        float l = (float) Math.asin(k / j);
-        if (Math.abs(k) > 0.999f * j) {
-            return new Vector3f(2.0f * (float) Math.atan2(this.x(), this.w()), l, 0.0f);
-        }
-        return new Vector3f((float) Math.atan2(2.0f * this.y() * this.z() + 2.0f * this.x() * this.w(), f - g - h + i), l, (float) Math.atan2(2.0f * this.x() * this.y() + 2.0f * this.w() * this.z(), f + g - h - i));
-    }
-
-    public Vector3f toXYZDegrees() {
-        Vector3f vector3f = this.toXYZ();
-        return new Vector3f((float) Math.toDegrees(vector3f.x()), (float) Math.toDegrees(vector3f.y()), (float) Math.toDegrees(vector3f.z()));
-    }
-
-    public Vector3f toYXZ() {
-        float f = this.w() * this.w();
-        float g = this.x() * this.x();
-        float h = this.y() * this.y();
-        float i = this.z() * this.z();
-        float j = f + g + h + i;
-        float k = 2.0f * this.w() * this.x() - 2.0f * this.y() * this.z();
-        float l = (float) Math.asin(k / j);
-        if (Math.abs(k) > 0.999f * j) {
-            return new Vector3f(l, 2.0f * (float) Math.atan2(this.y(), this.w()), 0.0f);
-        }
-        return new Vector3f(l, (float) Math.atan2(2.0f * this.x() * this.z() + 2.0f * this.y() * this.w(), f - g - h + i), (float) Math.atan2(2.0f * this.x() * this.y() + 2.0f * this.w() * this.z(), f - g + h - i));
-    }
-
-    public Vector3f toYXZDegrees() {
-        Vector3f vector3f = this.toYXZ();
-        return new Vector3f((float) Math.toDegrees(vector3f.x()), (float) Math.toDegrees(vector3f.y()), (float) Math.toDegrees(vector3f.z()));
-    }
+//    public static OpenQuaternionf fromYXZ(float f, float g, float h) {
+//        OpenQuaternionf quaternion = ONE.copy();
+//        quaternion.mul(new OpenQuaternionf(0.0f, (float) Math.sin(f / 2.0f), 0.0f, (float) Math.cos(f / 2.0f)));
+//        quaternion.mul(new OpenQuaternionf((float) Math.sin(g / 2.0f), 0.0f, 0.0f, (float) Math.cos(g / 2.0f)));
+//        quaternion.mul(new OpenQuaternionf(0.0f, 0.0f, (float) Math.sin(h / 2.0f), (float) Math.cos(h / 2.0f)));
+//        return quaternion;
+//    }
+//
+//    public static OpenQuaternionf fromXYZDegrees(Vector3f vector3f) {
+//        return fromXYZ((float) Math.toRadians(vector3f.x()), (float) Math.toRadians(vector3f.y()), (float) Math.toRadians(vector3f.z()));
+//    }
+//
+//    public static OpenQuaternionf fromXYZ(Vector3f vector3f) {
+//        return fromXYZ(vector3f.getX(), vector3f.getY(), vector3f.getZ());
+//    }
+//
+//    public static OpenQuaternionf fromUnitVectors(Vector3f from, Vector3f to) {
+//        // assumes direction vectors vFrom and vTo are normalized
+//        float EPS = 0.000001f;
+//        float x, y, z, r = from.dot(to) + 1;
+//        if (r < EPS) {
+//            r = 0f;
+//            if (Math.abs(from.getX()) > Math.abs(from.getZ())) {
+//                x = -from.getY();
+//                y = from.getX();
+//                z = 0f;
+//            } else {
+//                x = 0f;
+//                y = -from.getZ();
+//                z = from.getY();
+//            }
+//        } else {
+//            // crossVectors( vFrom, vTo ); // inlined to avoid cyclic dependency on Vector3
+//            x = from.getY() * to.getZ() - from.getZ() * to.getY();
+//            y = from.getZ() * to.getX() - from.getX() * to.getZ();
+//            z = from.getX() * to.getY() - from.getY() * to.getX();
+//        }
+//        return new OpenQuaternionf(x, y, z, r).normalize();
+//    }
+//
+//    public static OpenQuaternionf fromXYZ(float f, float g, float h) {
+//        OpenQuaternionf quaternion = ONE.copy();
+//        quaternion.mul(new OpenQuaternionf((float) Math.sin(f / 2.0f), 0.0f, 0.0f, (float) Math.cos(f / 2.0f)));
+//        quaternion.mul(new OpenQuaternionf(0.0f, (float) Math.sin(g / 2.0f), 0.0f, (float) Math.cos(g / 2.0f)));
+//        quaternion.mul(new OpenQuaternionf(0.0f, 0.0f, (float) Math.sin(h / 2.0f), (float) Math.cos(h / 2.0f)));
+//        return quaternion;
+//    }
+//
+//    public Vector3f toXYZ() {
+//        float f = this.w() * this.w();
+//        float g = this.x() * this.x();
+//        float h = this.y() * this.y();
+//        float i = this.z() * this.z();
+//        float j = f + g + h + i;
+//        float k = 2.0f * this.w() * this.x() - 2.0f * this.y() * this.z();
+//        float l = (float) Math.asin(k / j);
+//        if (Math.abs(k) > 0.999f * j) {
+//            return new Vector3f(2.0f * (float) Math.atan2(this.x(), this.w()), l, 0.0f);
+//        }
+//        return new Vector3f((float) Math.atan2(2.0f * this.y() * this.z() + 2.0f * this.x() * this.w(), f - g - h + i), l, (float) Math.atan2(2.0f * this.x() * this.y() + 2.0f * this.w() * this.z(), f + g - h - i));
+//    }
+//
+//    public Vector3f toXYZDegrees() {
+//        Vector3f vector3f = this.toXYZ();
+//        return new Vector3f((float) Math.toDegrees(vector3f.x()), (float) Math.toDegrees(vector3f.y()), (float) Math.toDegrees(vector3f.z()));
+//    }
+//
+//    public Vector3f toYXZ() {
+//        float f = this.w() * this.w();
+//        float g = this.x() * this.x();
+//        float h = this.y() * this.y();
+//        float i = this.z() * this.z();
+//        float j = f + g + h + i;
+//        float k = 2.0f * this.w() * this.x() - 2.0f * this.y() * this.z();
+//        float l = (float) Math.asin(k / j);
+//        if (Math.abs(k) > 0.999f * j) {
+//            return new Vector3f(l, 2.0f * (float) Math.atan2(this.y(), this.w()), 0.0f);
+//        }
+//        return new Vector3f(l, (float) Math.atan2(2.0f * this.x() * this.z() + 2.0f * this.y() * this.w(), f - g - h + i), (float) Math.atan2(2.0f * this.x() * this.y() + 2.0f * this.w() * this.z(), f - g + h - i));
+//    }
+//
+//    public Vector3f toYXZDegrees() {
+//        Vector3f vector3f = this.toYXZ();
+//        return new Vector3f((float) Math.toDegrees(vector3f.x()), (float) Math.toDegrees(vector3f.y()), (float) Math.toDegrees(vector3f.z()));
+//    }
 
     public boolean equals(Object object) {
         if (this == object) {
@@ -182,31 +225,35 @@ public class OpenQuaternionf implements IQuaternionf {
         return stringBuilder.toString();
     }
 
+    @Override
     public float x() {
         return this.x;
     }
 
+    @Override
     public float y() {
         return this.y;
     }
 
+    @Override
     public float z() {
         return this.z;
     }
 
+    @Override
     public float w() {
         return this.w;
     }
 
-    public void mul(OpenQuaternionf quaternion) {
-        float f = this.x();
-        float g = this.y();
-        float h = this.z();
-        float i = this.w();
-        float j = quaternion.x();
-        float k = quaternion.y();
-        float l = quaternion.z();
-        float m = quaternion.w();
+    public void mul(OpenQuaternionf other) {
+        float f = x;
+        float g = y;
+        float h = z;
+        float i = w;
+        float j = other.x;
+        float k = other.y;
+        float l = other.z;
+        float m = other.w;
         this.x = i * j + f * m + g * l - h * k;
         this.y = i * k - f * l + g * m + h * j;
         this.z = i * l + f * k - g * j + h * m;

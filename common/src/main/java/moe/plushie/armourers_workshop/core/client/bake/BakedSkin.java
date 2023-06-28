@@ -51,7 +51,7 @@ import java.util.Objects;
 
 ;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class BakedSkin implements IBakedSkin {
 
     private final int id = ThreadUtils.BAKED_SKIN_COUNTER.incrementAndGet();
@@ -164,9 +164,9 @@ public class BakedSkin implements IBakedSkin {
     }
 
     public <T extends Entity, V extends Model, M extends IModelHolder<V>> OpenVoxelShape getRenderShape(T entity, M model, ItemStack itemStack, AbstractItemTransformType transformType, SkinRenderer<T, V, M> renderer) {
-        SkinRenderContext context = new SkinRenderContext();
-        context.init(null, 0, 0, transformType, new PoseStack(), null);
-        context.setItem(itemStack, 0);
+        SkinRenderContext context = new SkinRenderContext(new PoseStack());
+        context.setTransformType(transformType);
+        context.setReference(0, itemStack);
         context.setTransforms(entity, model);
         OpenVoxelShape shape = OpenVoxelShape.empty();
         for (BakedSkinPart bakedPart : skinParts) {
@@ -179,16 +179,15 @@ public class BakedSkin implements IBakedSkin {
         if (!renderer.prepare(entity, model, part, this, context)) {
             return;
         }
-        PoseStack poseStack = context.poseStack;
         OpenVoxelShape shape1 = part.getRenderShape().copy();
-        poseStack.pushPose();
+        context.pushPose();
         renderer.apply(entity, model, part, this, context);
-        shape1.mul(poseStack.lastPose());
+        shape1.mul(context.pose().lastPose());
         shape.add(shape1);
         for (BakedSkinPart childPart : part.getChildren()) {
             addRenderShape(shape, entity, model, childPart, renderer, context);
         }
-        poseStack.popPose();
+        context.popPose();
     }
 
     public <T extends Entity, V extends Model, M extends IModelHolder<V>> boolean shouldRenderPart(T entity, M model, BakedSkinPart bakedPart, SkinRenderContext context) {
@@ -201,7 +200,7 @@ public class BakedSkin implements IBakedSkin {
             // we have some old skin that only contain arrow part,
             // so when it happens, we need to be compatible rendering it.
             // we use `NONE` to rendering the GUI/Ground/ItemFrame.
-            if (context.transformType == AbstractItemTransformType.NONE) {
+            if (context.getTransformType() == AbstractItemTransformType.NONE) {
                 return skinParts.size() == 1;
             }
             return false;
@@ -210,7 +209,7 @@ public class BakedSkin implements IBakedSkin {
             return false; // arrow entity only render arrow part
         }
         if (partType instanceof ICanUse && entity instanceof LivingEntity) {
-            int useTick = getUseTick((LivingEntity) entity, context.itemStack);
+            int useTick = getUseTick((LivingEntity) entity, context.getReference());
             Range<Integer> useRange = ((ICanUse) partType).getUseRange();
             return useRange.contains(MathUtils.clamp(useTick, useTickRange.lowerEndpoint(), useTickRange.upperEndpoint()));
         }

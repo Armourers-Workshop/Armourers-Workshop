@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ArmourerBlockSkinPanel extends ArmourerBaseSkinPanel {
 
     protected UICheckBox blockBed;

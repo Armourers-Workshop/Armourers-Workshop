@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.armature.ModelBinder;
@@ -25,7 +26,7 @@ import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
-import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
+import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -40,8 +41,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-@Environment(value = EnvType.CLIENT)
-public class SkinRenderObjectBuilder {
+@Environment(EnvType.CLIENT)
+public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBuilder {
 
     private static final ExecutorService workThread = ThreadUtils.newFixedThreadPool(1, "AW-SKIN-VB");
     private static final Cache<Object, CachedTask> cachingTasks = CacheBuilder.newBuilder()
@@ -65,13 +66,14 @@ public class SkinRenderObjectBuilder {
         cachingTasks.cleanUp();
     }
 
-    public void addPartData(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, boolean shouldRender, SkinRenderContext context) {
+    @Override
+    public void addPart(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, boolean shouldRender, SkinRenderContext context) {
         Object key = SkinCache.borrowKey(bakedSkin.getId(), part.getId(), part.requirements(scheme));
         CachedTask cachedTask = cachingTasks.getIfPresent(key);
         if (cachedTask != null) {
             SkinCache.returnKey(key);
             if (shouldRender && cachedTask.isCompiled) {
-                cachedRenderPipeline.render(cachedTask, context.poseStack, context.light, context.partialTicks, context.slotIndex);
+                cachedRenderPipeline.render(cachedTask, context.pose(), context.getLightmap(), context.getPartialTicks(), context.getReferenceSlot());
                 //cachedTask.mergedTasks.forEach(compiledTask -> pendingTasks.add(new CompiledPass(compiledTask, poseStack, light, partialTicks)));
             }
             return;
@@ -125,36 +127,38 @@ public class SkinRenderObjectBuilder {
 //        RenderSystem.restoreExtendedMatrix();
     }
 
-    public void addShapePoint(Vector3f origin, SkinRenderContext context) {
+    @Override
+    public void addShape(Vector3f origin, SkinRenderContext context) {
         MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
 //        RenderUtils.drawBoundingBox(poseStack, box, color, SkinRenderBuffer.getInstance());
-        RenderSystem.drawPoint(context.poseStack, origin, 16, buffers);
+        RenderSystem.drawPoint(context.pose().pose(), origin, 16, buffers);
     }
 
-    public void addShapeBox(Rectangle3f box, UIColor color, SkinRenderContext context) {
+    @Override
+    public void addShape(OpenVoxelShape shape, UIColor color, SkinRenderContext context) {
         MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        RenderSystem.drawBoundingBox(context.poseStack, box, color, buffers);
+        RenderSystem.drawBoundingBox(context.pose().pose(), shape.bounds(), color, buffers);
     }
 
-    public void addArmatureBox(ITransformf[] transforms, SkinRenderContext context) {
+    @Override
+    public void addArmatureShape(ITransformf[] transforms, SkinRenderContext context) {
         if (transforms == null) {
             return;
         }
-        PoseStack poseStack = context.poseStack;
         MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         ModelBinder.BIPPED_BOXES.forEach((joint, rect) -> {
             ITransformf transform = transforms[joint.getId()];
             if (transform == null) {
                 return;
             }
-            poseStack.pushPose();
+            context.pushPose();
 
-            transform.apply(poseStack);
+            transform.apply(context.pose());
 
 //			poseStack.translate(box.o.getX(), box.o.getY(), box.o.getZ());
-            RenderSystem.drawBoundingBox(poseStack, rect, ColorUtils.getPaletteColor(joint.getId()), buffers);
-            RenderSystem.drawPoint(poseStack, Vector3f.ZERO, 4, 4, 4, buffers);
-            poseStack.popPose();
+            RenderSystem.drawBoundingBox(context.pose().pose(), rect, ColorUtils.getPaletteColor(joint.getId()), buffers);
+            RenderSystem.drawPoint(context.pose().pose(), Vector3f.ZERO, 4, 4, 4, buffers);
+            context.popPose();
         });
     }
 
@@ -211,7 +215,7 @@ public class SkinRenderObjectBuilder {
 
         for (CompiledTask compiledTask : buildingTasks) {
             BufferBuilder.DrawState drawState = compiledTask.bufferBuilder.drawState();
-            VertexFormat format = drawState.format();//compiledTask.renderType.format();
+            VertexFormat format = drawState.format();
             ByteBuffer byteBuffer = compiledTask.bufferBuilder.vertexBuffer();
             compiledTask.vertexBuffer = vertexBuffer;
             compiledTask.vertexCount = drawState.vertexCount();
@@ -297,7 +301,7 @@ public class SkinRenderObjectBuilder {
 
         protected final ArrayList<CompiledPass> tasks = new ArrayList<>();
 
-        void render(CachedTask task, PoseStack poseStack, int lightmap, float partialTicks, int slotIndex) {
+        void render(CachedTask task, IPoseStack poseStack, int lightmap, float partialTicks, int slotIndex) {
             PoseStack modelViewStack = RenderSystem.getModelViewStack();
             OpenPoseStack finalPostStack = new OpenPoseStack();
             OpenMatrix4f lastPose = finalPostStack.lastPose();

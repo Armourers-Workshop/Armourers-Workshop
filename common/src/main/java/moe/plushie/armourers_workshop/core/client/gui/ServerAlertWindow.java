@@ -15,7 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ServerAlertWindow extends MenuWindow<AbstractContainerMenu> {
 
     private final ExecuteAlertPacket alertPacket;

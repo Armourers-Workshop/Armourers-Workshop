@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.world.entity.Entity;
 
 @Available("[1.16, 1.18)")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class AbstractEntityRendererImpl<T extends Entity> extends EntityRenderer<T> implements AbstractEntityRendererProviderImpl {
 
     public AbstractEntityRendererImpl(Context context) {

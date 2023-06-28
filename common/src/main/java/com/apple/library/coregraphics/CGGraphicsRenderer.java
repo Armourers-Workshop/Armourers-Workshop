@@ -9,7 +9,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public interface CGGraphicsRenderer {
 
     void renderText(FormattedCharSequence text, float x, float y, int textColor, boolean shadow, boolean bl2, int j, int k, UIFont font, CGGraphicsContext context);

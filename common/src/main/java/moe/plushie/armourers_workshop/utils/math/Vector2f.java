@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.utils.math;
 
+@SuppressWarnings("unused")
 public class Vector2f {
 
     public static Vector2f ZERO = new Vector2f();

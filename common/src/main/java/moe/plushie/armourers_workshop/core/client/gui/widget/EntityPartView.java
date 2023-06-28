@@ -16,7 +16,7 @@ import net.minecraft.core.Rotations;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Entity;
 
-@Environment(value= EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class EntityPartView extends UIControl {
 
     private final StateValueImpl<UIColor> partColor = new StateValueImpl<>();

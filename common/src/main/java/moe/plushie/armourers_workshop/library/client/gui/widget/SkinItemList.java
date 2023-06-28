@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinItemList extends UIView {
 
     protected Insets contentInset = new Insets(0, 0, 0, 0);

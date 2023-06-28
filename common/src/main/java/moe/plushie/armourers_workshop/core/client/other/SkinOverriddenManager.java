@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.HashMap;
 import java.util.HashSet;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinOverriddenManager {
 
     // Convert the part to equipment slot

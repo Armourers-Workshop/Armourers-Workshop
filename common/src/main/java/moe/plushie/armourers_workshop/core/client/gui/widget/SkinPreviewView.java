@@ -16,7 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.ItemStack;
 
-@Environment(value= EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinPreviewView extends UIControl {
 
     private SkinDescriptor descriptor = SkinDescriptor.EMPTY;

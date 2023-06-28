@@ -1,13 +1,16 @@
 package moe.plushie.armourers_workshop.utils;
 
 import com.apple.library.foundation.NSRange;
+import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,6 +93,15 @@ public class ObjectUtils {
     public static void set(IMatrix4f matrixIn, IMatrix4f matrixOut) {
         matrixIn.store(BUFFER4x4);
         matrixOut.load(BUFFER4x4);
+    }
+
+    public static <T> Collection<T> makeItems(int size, Function<Integer, T> builder) {
+        ArrayList<T> results = new ArrayList<>();
+        results.ensureCapacity(size);
+        for (int i = 0; i < size; ++i) {
+            results.add(builder.apply(i));
+        }
+        return results;
     }
 
     // "<%s: 0x%x; arg1 = arg2; ...; argN-1 = argN>"

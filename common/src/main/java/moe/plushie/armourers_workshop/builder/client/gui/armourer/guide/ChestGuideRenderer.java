@@ -10,7 +10,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ChestGuideRenderer extends AbstractGuideRenderer {
 
     protected final ModelPart body;

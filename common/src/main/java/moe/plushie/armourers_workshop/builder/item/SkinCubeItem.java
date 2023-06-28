@@ -61,7 +61,7 @@ public class SkinCubeItem extends BlockItem implements IItemColorProvider, IPain
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltips, TooltipFlag flags) {
         super.appendHoverText(itemStack, level, tooltips, flags);
         BlockPaintColor paintColor = getItemColors(itemStack);

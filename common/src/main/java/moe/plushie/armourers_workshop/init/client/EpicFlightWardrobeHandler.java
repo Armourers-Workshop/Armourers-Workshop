@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightContext;
@@ -24,7 +25,7 @@ import java.nio.FloatBuffer;
 import java.util.Collection;
 import java.util.Collections;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class EpicFlightWardrobeHandler {
 
     private static final EpicFlightContext context = new EpicFlightContext();
@@ -75,7 +76,7 @@ public class EpicFlightWardrobeHandler {
         SkinRendererManager.getInstance().didRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
     }
 
-    public static void applyPoseFromBuffer(PoseStack poseStack, FloatBuffer pose, FloatBuffer normal) {
+    public static void applyPoseFromBuffer(IPoseStack poseStack, FloatBuffer pose, FloatBuffer normal) {
         poseStack.lastPose().multiply(new OpenMatrix4f(pose));
         poseStack.lastNormal().multiply(new OpenMatrix3f(normal));
     }

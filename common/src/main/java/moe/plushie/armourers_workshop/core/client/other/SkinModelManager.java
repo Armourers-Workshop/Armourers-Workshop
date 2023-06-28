@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinModelManager {
 
     final static SkinModelManager INSTANCE = new SkinModelManager();

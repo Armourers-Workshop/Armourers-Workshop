@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ArmourerSkinSetting extends ArmourerBaseSetting {
 
     public static final ImmutableMap<ISkinType, Function<SkinProperties, ArmourerBaseSkinPanel>> REGISTERED = ImmutableMap.<ISkinType, Function<SkinProperties, ArmourerBaseSkinPanel>>builder()

@@ -11,7 +11,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SeatEntityRenderer<T extends SeatEntity> extends AbstractEntityRenderer<T> {
 
     public SeatEntityRenderer(Context context) {

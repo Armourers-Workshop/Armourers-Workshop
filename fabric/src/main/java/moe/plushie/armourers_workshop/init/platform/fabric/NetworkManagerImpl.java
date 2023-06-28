@@ -88,7 +88,7 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void sendToServer(final CustomPacket message) {
         ClientPacketListener connection = Minecraft.getInstance().getConnection();
         if (connection != null) {
@@ -136,7 +136,7 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
 //            handler.disconnect(Component.literal("Please install correct Armourers Workshop to play on this server!"));
         }
 
-        @Environment(value = EnvType.CLIENT)
+        @Environment(EnvType.CLIENT)
         public CompletableFuture<@Nullable FriendlyByteBuf> onClientHandshake(Minecraft client, ClientHandshakePacketListenerImpl handler, FriendlyByteBuf buf, Consumer<GenericFutureListener<? extends Future<? super Void>>> listenerAdder) {
             FriendlyByteBuf responseBuffer = new FriendlyByteBuf(Unpooled.buffer());
             responseBuffer.writeUtf(channelVersion);
@@ -148,13 +148,13 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
             merge(player.getUUID(), buf, packet -> server.execute(() -> packet.accept(packetHandler, player)));
         }
 
-        @Environment(value = EnvType.CLIENT)
+        @Environment(EnvType.CLIENT)
         public void onClientEvent(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender responseSender) {
             IClientPacketHandler packetHandler = this;
             merge(clientUUID, buf, packet -> client.execute(() -> packet.accept(packetHandler, getClientPlayer())));
         }
 
-        @Environment(value = EnvType.CLIENT)
+        @Environment(EnvType.CLIENT)
         public Player getClientPlayer() {
             // a better solution is use the player directly, but it's a trap.
             // java will generate an anonymous lambda for we source code,

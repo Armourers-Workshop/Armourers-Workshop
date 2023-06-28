@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class BakedEntityTexture {
 
     private final HashMap<Integer, PaintColor> allColors = new HashMap<>();

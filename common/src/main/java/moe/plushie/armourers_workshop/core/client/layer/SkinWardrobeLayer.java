@@ -23,7 +23,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.Entity;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M extends IModelHolder<V>> extends AbstractRenderLayer<T, V> {
 
     protected final SkinRenderer<T, V, M> skinRenderer;
@@ -73,7 +73,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         SkinRenderContext context = SkinRenderContext.alloc(renderData, packedLightIn, TickUtils.ticks(), null, poseStack, buffers);
         context.setTransforms(transformModifier, entity, skinRenderer.getOverrideModel(model));
         for (SkinRenderData.Entry entry : renderData.getArmorSkins()) {
-            context.setItem(entry.getItemStack(), entry.getSlotIndex());
+            context.setReference(entry.getSlotIndex(), entry.getItemStack());
             skinRenderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), context);
         }
         context.release();

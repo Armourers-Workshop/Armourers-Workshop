@@ -11,7 +11,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.Model;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class TridentSkinRenderer<T extends ThrownTrident, V extends Model, M extends IModelHolder<V>> extends SkinRenderer<T, V, M> {
 
     public TridentSkinRenderer(EntityProfile profile) {

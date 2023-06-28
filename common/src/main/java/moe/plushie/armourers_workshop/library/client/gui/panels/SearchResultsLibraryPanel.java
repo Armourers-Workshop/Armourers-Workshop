@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements GlobalSkinLibraryWindow.ISkinListListener {
 
     private final HashSet<Integer> downloadingPages = new HashSet<>();

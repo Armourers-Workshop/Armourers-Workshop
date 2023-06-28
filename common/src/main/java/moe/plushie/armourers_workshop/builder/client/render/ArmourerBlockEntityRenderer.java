@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends AbstractBlockEntityRenderer<T> {
 
     private final PlayerTextureOverride override = new PlayerTextureOverride();

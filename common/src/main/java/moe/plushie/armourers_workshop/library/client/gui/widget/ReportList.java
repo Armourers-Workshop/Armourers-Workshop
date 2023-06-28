@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ReportList extends UIScrollView {
 
     private final ArrayList<GuiDetailListColumn> columns = new ArrayList<>();

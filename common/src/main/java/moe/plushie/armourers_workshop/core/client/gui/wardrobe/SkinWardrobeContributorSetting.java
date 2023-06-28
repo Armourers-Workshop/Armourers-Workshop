@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinWardrobeContributorSetting extends SkinWardrobeBaseSetting {
 
     private final UILabel label = new UILabel(new CGRect(85, 26, 185, 100));

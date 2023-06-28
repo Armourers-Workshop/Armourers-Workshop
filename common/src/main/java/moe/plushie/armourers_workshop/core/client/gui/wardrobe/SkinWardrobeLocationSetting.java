@@ -17,7 +17,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinWardrobeLocationSetting extends SkinWardrobeBaseSetting {
 
     private final float[] steps = {1.0f, 1.0f / 8.0f, 1.0f / 16.0f};

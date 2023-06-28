@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import java.util.Iterator;
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class Rectangle3i implements IRectangle3i {
 
     public final static Rectangle3i ZERO = new Rectangle3i(0, 0, 0, 0, 0, 0);

@@ -45,9 +45,9 @@ public class AfterTransformModifier extends ArmatureModifier {
         IQuaternionf zRot = Vector3f.XP.rotation(rotate.getZ());
         return poseStack -> {
             transform.apply(poseStack);
-            poseStack.mulPose(xRot);
-            poseStack.mulPose(yRot);
-            poseStack.mulPose(zRot);
+            poseStack.rotate(xRot);
+            poseStack.rotate(yRot);
+            poseStack.rotate(zRot);
         };
     }
 

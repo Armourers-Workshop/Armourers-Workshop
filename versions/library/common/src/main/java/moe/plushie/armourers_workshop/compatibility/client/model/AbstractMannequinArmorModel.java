@@ -10,7 +10,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 
 @Available("[1.18, )")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class AbstractMannequinArmorModel<T extends MannequinEntity> extends HumanoidModel<T> {
 
     public AbstractMannequinArmorModel(AbstractEntityRendererProvider.Context context, Type type) {

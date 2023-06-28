@@ -43,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinFileList extends UIControl implements UITableViewDataSource, UITableViewDelegate {
 
     private final EntryList tableView = new EntryList(CGRect.ZERO);

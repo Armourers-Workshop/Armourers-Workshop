@@ -12,7 +12,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Rotations;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class MannequinModel<T extends MannequinEntity> extends AbstractPlayerModel<T> {
 
     private Rotations mainPose;

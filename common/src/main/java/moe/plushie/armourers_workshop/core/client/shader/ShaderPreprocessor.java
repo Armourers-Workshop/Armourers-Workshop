@@ -8,7 +8,7 @@ import net.fabricmc.api.Environment;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ShaderPreprocessor {
 
     private final String prefix;

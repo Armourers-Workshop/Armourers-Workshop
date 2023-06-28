@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinRendererManager  {
 
     private static final SkinRendererManager INSTANCE = new SkinRendererManager();

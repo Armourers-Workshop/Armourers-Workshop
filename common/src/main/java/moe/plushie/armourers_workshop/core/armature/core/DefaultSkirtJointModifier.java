@@ -22,11 +22,11 @@ public class DefaultSkirtJointModifier extends ArmatureModifier {
             float z = (leg1.z + leg2.z) / 2;
             poseStack.translate(body.x, leg1.y, z);
             if (body.yRot != 0) {
-                poseStack.mulPose(Vector3f.YP.rotation(body.yRot));
+                poseStack.rotate(Vector3f.YP.rotation(body.yRot));
             }
             float xRot = (ort(leg1.xRot) + ort(leg2.xRot)) / 2;
             if (Float.compare(xRot, 0) != 0) {
-                poseStack.mulPose(Vector3f.XP.rotation(xRot));
+                poseStack.rotate(Vector3f.XP.rotation(xRot));
             }
             // yep, we intentionally discard part binding result.
             // because, correct binding need to calculate from multiple parts.

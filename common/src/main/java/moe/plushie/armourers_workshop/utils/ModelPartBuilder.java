@@ -10,7 +10,7 @@ import net.minecraft.client.model.geom.ModelPart;
 
 import java.util.ArrayList;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class ModelPartBuilder {
 
     protected int texU = 0;

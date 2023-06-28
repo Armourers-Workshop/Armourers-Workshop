@@ -20,7 +20,7 @@ import org.apache.logging.log4j.util.Strings;
 import java.util.ArrayList;
 import java.util.Map;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDelegate {
 
     private static final String URL_DISCORD = "https://discord.gg/5Z3KKvU";

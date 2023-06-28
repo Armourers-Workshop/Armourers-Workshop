@@ -7,7 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 
 @SuppressWarnings("unused")
-public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
+public class Vector3i implements Comparable<Vector3i>, IVector3i, Position {
 
     public static final Vector3i ZERO = new Vector3i(0, 0, 0);
 
@@ -36,17 +36,17 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
     public boolean equals(Object other) {
         if (this == other) {
             return true;
-        } else if (!(other instanceof Vector3i)) {
+        }
+        if (!(other instanceof Vector3i)) {
+            return false;
+        }
+        Vector3i v = (Vector3i) other;
+        if (this.getX() != v.getX()) {
+            return false;
+        } else if (this.getY() != v.getY()) {
             return false;
         } else {
-            Vector3i vector3i = (Vector3i) other;
-            if (this.getX() != vector3i.getX()) {
-                return false;
-            } else if (this.getY() != vector3i.getY()) {
-                return false;
-            } else {
-                return this.getZ() == vector3i.getZ();
-            }
+            return this.getZ() == v.getZ();
         }
     }
 
@@ -54,11 +54,11 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
         return (this.getY() + this.getZ() * 31) * 31 + this.getX();
     }
 
-    public int compareTo(Vector3i p_compareTo_1_) {
-        if (this.getY() == p_compareTo_1_.getY()) {
-            return this.getZ() == p_compareTo_1_.getZ() ? this.getX() - p_compareTo_1_.getX() : this.getZ() - p_compareTo_1_.getZ();
+    public int compareTo(Vector3i v) {
+        if (this.getY() == v.getY()) {
+            return this.getZ() == v.getZ() ? this.getX() - v.getX() : this.getZ() - v.getZ();
         } else {
-            return this.getY() - p_compareTo_1_.getY();
+            return this.getY() - v.getY();
         }
     }
 
@@ -128,24 +128,24 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
         return i == 0 ? this : new Vector3i(this.getX() + dir.getStepX() * i, this.getY() + dir.getStepY() * i, this.getZ() + dir.getStepZ() * i);
     }
 
-    public Vector3i cross(Vector3i v) {
-        return new Vector3i(this.getY() * v.getZ() - this.getZ() * v.getY(), this.getZ() * v.getX() - this.getX() * v.getZ(), this.getX() * v.getY() - this.getY() * v.getX());
+    public Vector3i cross(Vector3i pos) {
+        return new Vector3i(this.getY() * pos.getZ() - this.getZ() * pos.getY(), this.getZ() * pos.getX() - this.getX() * pos.getZ(), this.getX() * pos.getY() - this.getY() * pos.getX());
     }
 
-    public boolean closerThan(Vector3i v, double d) {
-        return this.distSqr(v.getX(), v.getY(), v.getZ(), false) < d * d;
+    public boolean closerThan(Vector3i pos, double d) {
+        return this.distSqr(pos.getX(), pos.getY(), pos.getZ(), false) < d * d;
     }
 
-    public boolean closerThan(Position p_218137_1_, double p_218137_2_) {
-        return this.distSqr(p_218137_1_.x(), p_218137_1_.y(), p_218137_1_.z(), true) < p_218137_2_ * p_218137_2_;
+    public boolean closerThan(Position v, double f) {
+        return this.distSqr(v.x(), v.y(), v.z(), true) < f * f;
     }
 
-    public double distSqr(Vector3i p_177951_1_) {
-        return this.distSqr(p_177951_1_.getX(), p_177951_1_.getY(), p_177951_1_.getZ(), true);
+    public double distSqr(Vector3i v) {
+        return this.distSqr(v.getX(), v.getY(), v.getZ(), true);
     }
 
-    public double distSqr(Position p_218138_1_, boolean p_218138_2_) {
-        return this.distSqr(p_218138_1_.x(), p_218138_1_.y(), p_218138_1_.z(), p_218138_2_);
+    public double distSqr(Position v, boolean fl) {
+        return this.distSqr(v.x(), v.y(), v.z(), fl);
     }
 
     public double distSqr(double p_218140_1_, double p_218140_3_, double p_218140_5_, boolean p_218140_7_) {
@@ -167,11 +167,8 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
         return axis.choose(this.x, this.y, this.z);
     }
 
+    @Override
     public String toString() {
         return String.format("(%d %d %d)", x, y, z);
-    }
-
-    public String toShortString() {
-        return "" + this.getX() + ", " + this.getY() + ", " + this.getZ();
     }
 }

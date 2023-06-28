@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class RendererManager {
 
     public static void init() {

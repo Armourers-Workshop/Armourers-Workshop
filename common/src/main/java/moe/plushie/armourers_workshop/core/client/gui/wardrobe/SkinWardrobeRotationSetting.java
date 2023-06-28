@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.function.BiConsumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
 
 

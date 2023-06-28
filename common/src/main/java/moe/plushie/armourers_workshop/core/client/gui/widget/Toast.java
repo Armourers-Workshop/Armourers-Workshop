@@ -17,7 +17,7 @@ import net.fabricmc.api.Environment;
 
 import java.util.function.BiConsumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class Toast {
 
     // show the message in to current screen.

@@ -15,8 +15,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Proxy;
 
-@Environment(value = EnvType.CLIENT)
-public class BakedModelStroage {
+@Environment(EnvType.CLIENT)
+public class BakedModelStorage {
 
     private static BakedModel SHARED_MODEL;
 
@@ -26,7 +26,7 @@ public class BakedModelStroage {
     final LivingEntity entity;
     final BakedModel bakedModel;
 
-    public BakedModelStroage(ItemStack itemStack, EmbeddedSkinStack embeddedStack, LivingEntity entity, @Nullable Level level, BakedModel bakedModel) {
+    public BakedModelStorage(ItemStack itemStack, EmbeddedSkinStack embeddedStack, LivingEntity entity, @Nullable Level level, BakedModel bakedModel) {
         this.itemStack = itemStack;
         this.embeddedStack = embeddedStack;
         this.level = level;
@@ -35,7 +35,7 @@ public class BakedModelStroage {
     }
 
     @Nullable
-    public static BakedModelStroage unwrap(BakedModel bakedModel) {
+    public static BakedModelStorage unwrap(BakedModel bakedModel) {
         if (bakedModel instanceof ISkinDataProvider) {
             return ((ISkinDataProvider) bakedModel).getSkinData();
         }
@@ -49,12 +49,12 @@ public class BakedModelStroage {
         }
         // we use a java proxy, which will forward all methods back to the original baked model.
         Class<?>[] classes = new Class[]{BakedModel.class, ISkinDataProvider.class};
-        BakedModelStroage stroage = new BakedModelStroage(itemStack, embeddedStack, entity, level, bakedModel);
+        BakedModelStorage storage = new BakedModelStorage(itemStack, embeddedStack, entity, level, bakedModel);
         return (BakedModel) Proxy.newProxyInstance(BakedModel.class.getClassLoader(), classes, (proxy, method, methodArgs) -> {
             if (method.getDeclaringClass() == ISkinDataProvider.class) {
-                return stroage;
+                return storage;
             }
-            return method.invoke(stroage.bakedModel, methodArgs);
+            return method.invoke(storage.bakedModel, methodArgs);
         });
     }
 

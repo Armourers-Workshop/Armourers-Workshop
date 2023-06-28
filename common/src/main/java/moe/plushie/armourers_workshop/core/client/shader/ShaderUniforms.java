@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL20;
 import java.util.Collection;
 import java.util.HashMap;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ShaderUniforms {
 
     private static ShaderUniforms INSTANCE = new ShaderUniforms();

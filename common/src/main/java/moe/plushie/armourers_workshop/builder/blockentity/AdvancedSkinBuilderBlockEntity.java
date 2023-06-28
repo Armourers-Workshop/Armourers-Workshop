@@ -2,12 +2,37 @@ package moe.plushie.armourers_workshop.builder.blockentity;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 public class AdvancedSkinBuilderBlockEntity extends UpdatableBlockEntity implements IBlockEntityHandler {
+
+    private AABB renderBoundingBox;
+
+    public Vector3f carmeOffset = Vector3f.ZERO;
+    public Vector3f carmeRot = Vector3f.ZERO;
+
+    //public SkinDescriptor descriptor = new SkinDescriptor("db:QoTHtJTeeZ");
+    public SkinDescriptor descriptor = new SkinDescriptor("ks:10830");
+    public Vector3f offset = new Vector3f(0, 10, 0);
+    public float scale = 1f;
+
+    public Vector3f getRenderOrigin() {
+        BlockPos pos = getBlockPos();
+        return new Vector3f(
+                pos.getX() + offset.getX() + 0.5f,
+                pos.getY() + offset.getY() + 0.5f,
+                pos.getZ() + offset.getZ() + 0.5f
+        );
+    }
 
     public AdvancedSkinBuilderBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -19,5 +44,26 @@ public class AdvancedSkinBuilderBlockEntity extends UpdatableBlockEntity impleme
 
     @Override
     public void writeToNBT(CompoundTag nbt) {
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public AABB getCustomRenderBoundingBox(BlockState blockState) {
+        if (renderBoundingBox != null) {
+            return renderBoundingBox;
+        }
+        float s = 16;
+        Vector3f q = getRenderOrigin();
+        Rectangle3f rect = new Rectangle3f(q.getX() - s / 2, q.getY() - s / 2, q.getZ() - s / 2, s, s, s);
+//        Rectangle3f rect = getRenderBoundingBox(blockState);
+//        if (rect == null) {
+//            return ZERO_BOX;
+//        }
+//        OpenQuaternionf quaternion = getRenderRotations(blockState);
+//        if (quaternion != null) {
+//            rect.mul(quaternion);
+//        }
+        renderBoundingBox = rect.asAABB();
+        return renderBoundingBox;
     }
 }

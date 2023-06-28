@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 import java.util.function.Supplier;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class ShaderUniform {
 
     protected final String name;

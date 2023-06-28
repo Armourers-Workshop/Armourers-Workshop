@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.utils.math.OpenRay;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,8 +20,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class BakedSkinPart {
 
     private final SkinPart part;
@@ -40,6 +42,10 @@ public class BakedSkinPart {
 
     public void forEach(BiConsumer<RenderType, ArrayList<SkinCubeFace>> action) {
         quads.forEach(action);
+    }
+
+    public void forEach(OpenRay ray, Consumer<SkinCubeFace> recorder) {
+        quads.forEach(ray, recorder);
     }
 
     @Nullable

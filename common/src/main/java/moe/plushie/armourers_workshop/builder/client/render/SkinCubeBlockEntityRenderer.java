@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> extends AbstractBlockEntityRenderer<T> {
 
     private static float markerAlpha = 0F;

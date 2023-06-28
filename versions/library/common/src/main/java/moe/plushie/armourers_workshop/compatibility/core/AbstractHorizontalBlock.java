@@ -50,7 +50,7 @@ public abstract class AbstractHorizontalBlock extends HorizontalDirectionalBlock
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void appendHoverText(ItemStack itemStack, BlockGetter blockGetter, List<Component> tooltips, TooltipFlag tooltipFlag) {
         super.appendHoverText(itemStack, blockGetter, tooltips, tooltipFlag);
         tooltips.addAll(TranslateUtils.subtitles(getDescriptionId() + ".flavour"));

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 @Available("[1.16, 1.18)")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class AbstractLightBufferObject extends SkinRenderObject {
 
     public static final RenderType TYPE = RenderType.create("", createDefaultFormat(), GL11.GL_QUADS, 256, false, false, RenderType.CompositeState.builder().createCompositeState(false));

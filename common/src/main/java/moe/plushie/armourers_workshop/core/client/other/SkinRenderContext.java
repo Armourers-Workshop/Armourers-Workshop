@@ -7,38 +7,59 @@ import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
+import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.utils.math.OpenPoseStackC;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.PoseStackWrapper;
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 
+@Environment(EnvType.CLIENT)
 public class SkinRenderContext {
 
-    private static final Iterator<SkinRenderContext> POOL = Iterators.cycle(make(32));
+    private static final Iterator<SkinRenderContext> POOL = Iterators.cycle(ObjectUtils.makeItems(100, i -> new SkinRenderContext(new PoseStack())));
 
-    public int light;
-    public float partialTicks;
-    public PoseStack poseStack;
-    public SkinRenderData renderData;
-    public MultiBufferSource buffers;
-    public AbstractItemTransformType transformType;
+    private int lightmap = 0xf000f0;
+    private float partialTicks = 0;
+
+    private MultiBufferSource buffers;
+
+    private SkinRenderData renderData;
+    private SkinRenderBufferSource outlineBuffers;
+
+    private int itemFromSlotIndex = 0;
+    private Vector3f itemRotation;
+    private ItemStack itemReference = ItemStack.EMPTY;
+
+    private ColorScheme colorScheme = ColorScheme.EMPTY;
+    private AbstractItemTransformType transformType = AbstractItemTransformType.NONE;
 
     private ITransformf[] transforms;
 
-    public int slotIndex;
-    public ItemStack itemStack;
+    private final PoseStack defaultPoseStack;
+    private final PoseStackWrapper usingPoseStack;
 
-    public final OpenPoseStackC poseStack1 = new OpenPoseStackC(new PoseStack());
+    public SkinRenderContext(PoseStack poseStack) {
+        this.defaultPoseStack = poseStack;
+        this.usingPoseStack = new PoseStackWrapper(poseStack);
+    }
 
     public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, AbstractItemTransformType transformType, PoseStack poseStack, MultiBufferSource buffers) {
         SkinRenderContext context = POOL.next();
-        context.init(renderData, light, partialTick, transformType, poseStack, buffers);
+        context.setRenderData(renderData);
+        context.setLightmap(light);
+        context.setPartialTicks(partialTick);
+        context.setTransformType(transformType);
+        context.setPose(poseStack);
+        context.setBuffers(buffers);
         return context;
     }
 
@@ -46,37 +67,24 @@ public class SkinRenderContext {
         return alloc(renderData, light, partialTick, AbstractItemTransformType.NONE, poseStack, buffers);
     }
 
-    private static Collection<SkinRenderContext> make(int size) {
-        ArrayList<SkinRenderContext> contexts = new ArrayList<>();
-        for (int i = 0; i < size; ++i) {
-            contexts.add(new SkinRenderContext());
-        }
-        return contexts;
-    }
-
-    public void init(SkinRenderData renderData, int light, float partialTick, AbstractItemTransformType transformType, PoseStack poseStack, MultiBufferSource buffers) {
-        this.renderData = renderData;
-        this.light = light;
-        this.partialTicks = partialTick;
-        this.transformType = transformType;
-        this.poseStack = poseStack;
-        this.poseStack1.reset(poseStack);
-        this.buffers = buffers;
-        // ig
-        this.itemStack = ItemStack.EMPTY;
-        this.slotIndex = 0;
-        this.transforms = null;
-    }
-
     public void release() {
-    }
+        this.lightmap = 0xf000f0;
+        this.partialTicks = 0;
 
-    public void pushPose() {
-        poseStack.pushPose();
-    }
+        this.itemReference = ItemStack.EMPTY;
+        this.itemFromSlotIndex = 0;
+        this.itemRotation = null;
 
-    public void popPose() {
-        poseStack.popPose();
+        this.colorScheme = ColorScheme.EMPTY;
+        this.transformType = AbstractItemTransformType.NONE;
+
+        this.usingPoseStack.set(defaultPoseStack);
+
+        this.outlineBuffers = null;
+        this.renderData = null;
+        this.buffers = null;
+
+        this.transforms = null;
     }
 
     public boolean shouldRenderPart(ISkinPartType partType) {
@@ -86,9 +94,48 @@ public class SkinRenderContext {
         return true;
     }
 
-    public void setItem(ItemStack itemStack, int slotIndex) {
-        this.itemStack = itemStack;
-        this.slotIndex = slotIndex;
+    public void pushPose() {
+        usingPoseStack.pushPose();
+    }
+
+    public void popPose() {
+        usingPoseStack.popPose();
+    }
+
+    public PoseStackWrapper pose() {
+        return usingPoseStack;
+    }
+
+    public void setLightmap(int lightmap) {
+        this.lightmap = lightmap;
+    }
+
+    public int getLightmap() {
+        return lightmap;
+    }
+
+    public void setPartialTicks(float partialTicks) {
+        this.partialTicks = partialTicks;
+    }
+
+    public float getPartialTicks() {
+        return partialTicks;
+    }
+
+    public void setColorScheme(ColorScheme colorScheme) {
+        this.colorScheme = colorScheme;
+    }
+
+    public ColorScheme getColorScheme() {
+        return colorScheme;
+    }
+
+    public void setTransformType(AbstractItemTransformType transformType) {
+        this.transformType = transformType;
+    }
+
+    public AbstractItemTransformType getTransformType() {
+        return transformType;
     }
 
     public void setTransforms(Entity entity, IModelHolder<?> model) {
@@ -109,9 +156,61 @@ public class SkinRenderContext {
         return transforms;
     }
 
-    public SkinRenderObjectBuilder getBuffer(@NotNull Skin skin) {
+    public void setReference(int fromSlotIndex, ItemStack reference) {
+        setReference(fromSlotIndex, reference, null);
+    }
+
+    public void setReference(int fromSlotIndex, ItemStack reference, @Nullable Vector3f rotation) {
+        this.itemReference = reference;
+        this.itemFromSlotIndex = fromSlotIndex;
+        this.itemRotation = rotation;
+    }
+
+    public ItemStack getReference() {
+        return itemReference;
+    }
+
+    public int getReferenceSlot() {
+        return itemFromSlotIndex;
+    }
+
+    public Vector3f getReferenceRotation() {
+        return itemRotation;
+    }
+
+    public void setRenderData(SkinRenderData renderData) {
+        this.renderData = renderData;
+    }
+
+    public SkinRenderData getRenderData() {
+        return renderData;
+    }
+
+    public void setPose(PoseStack pose) {
+        this.usingPoseStack.set(pose);
+    }
+
+    public void setBuffers(MultiBufferSource buffers) {
+        this.buffers = buffers;
+    }
+
+    public MultiBufferSource getBuffers() {
+        return buffers;
+    }
+
+    public void setOutlineBuffers(SkinRenderBufferSource outlineBuffers) {
+        this.outlineBuffers = outlineBuffers;
+    }
+
+    public SkinRenderBufferSource getOutlineBuffers() {
+        return outlineBuffers;
+    }
+
+    public SkinRenderBufferSource.ObjectBuilder getBuffer(@NotNull Skin skin) {
+        if (outlineBuffers != null) {
+            return outlineBuffers.getBuffer(skin);
+        }
         SkinVertexBufferBuilder bufferBuilder = SkinVertexBufferBuilder.getBuffer(buffers);
         return bufferBuilder.getBuffer(skin);
     }
-
 }

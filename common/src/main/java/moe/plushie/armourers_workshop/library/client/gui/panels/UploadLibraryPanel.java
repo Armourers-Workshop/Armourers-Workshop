@@ -32,7 +32,7 @@ import org.apache.logging.log4j.util.Strings;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class UploadLibraryPanel extends AbstractLibraryPanel {
 
     private UILabel warningLabel;

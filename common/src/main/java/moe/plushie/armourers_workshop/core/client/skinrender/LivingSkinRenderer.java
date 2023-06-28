@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiFunction;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class LivingSkinRenderer<T extends LivingEntity, V extends EntityModel<T>, M extends IModelHolder<V>> extends SkinRenderer<T, V, M> {
 
     protected final HashMap<Class<?>, BiFunction<RenderLayerParent<T, V>, RenderLayer<T, V>, RenderLayer<T, V>>> mappers = new HashMap<>();

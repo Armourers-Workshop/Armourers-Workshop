@@ -173,7 +173,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
         }
     }
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     private IPaintColor getTextureColor(ArmourerBlockEntity blockEntity, TexturePos texturePos) {
         if (texturePos != null && blockEntity != null) {
             IPaintColor color = TextureUtils.getPlayerTextureModelColor(blockEntity.getTextureDescriptor(), texturePos);

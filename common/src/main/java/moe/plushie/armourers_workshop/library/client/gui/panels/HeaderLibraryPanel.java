@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class HeaderLibraryPanel extends AbstractLibraryPanel {
 
     private final ArrayList<UIButton> rightButtons = new ArrayList<>();

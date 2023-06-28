@@ -14,7 +14,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.lwjgl.glfw.GLFW;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class BaseDialog extends UIView {
 
     private Runnable completeHandler;

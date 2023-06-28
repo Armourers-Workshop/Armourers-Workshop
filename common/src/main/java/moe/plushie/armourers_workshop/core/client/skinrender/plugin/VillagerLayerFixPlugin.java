@@ -7,7 +7,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.layers.VillagerProfessionLayer;
 import net.minecraft.world.entity.LivingEntity;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class VillagerLayerFixPlugin<T extends LivingEntity, V extends EntityModel<T>, M extends IHumanoidModelHolder<V>> extends ForwardingLayerPlugin<T, V, M> {
 
     public VillagerLayerFixPlugin() {

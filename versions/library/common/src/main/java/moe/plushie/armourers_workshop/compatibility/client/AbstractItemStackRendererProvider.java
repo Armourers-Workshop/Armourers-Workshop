@@ -6,6 +6,6 @@ import net.fabricmc.api.Environment;
 
 public interface AbstractItemStackRendererProvider {
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     AbstractItemStackRenderer create();
 }

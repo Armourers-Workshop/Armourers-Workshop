@@ -41,7 +41,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinRenderData implements SkinBakery.IBakeListener {
 
     private final ArrayList<String> missingSkins = new ArrayList<>();

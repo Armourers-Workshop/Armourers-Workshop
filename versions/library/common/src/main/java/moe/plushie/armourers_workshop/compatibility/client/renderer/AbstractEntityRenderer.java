@@ -6,7 +6,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class AbstractEntityRenderer<T extends Entity> extends AbstractEntityRendererImpl<T>  {
 
     public AbstractEntityRenderer(Context context) {

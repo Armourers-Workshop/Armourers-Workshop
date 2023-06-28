@@ -20,7 +20,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Available("[1.18, )")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class AbstractRenderType extends RenderType {
 
     private static final Map<SkinRenderFormat, Supplier<IRenderTypeBuilder>> MAPPER = _make(it -> {

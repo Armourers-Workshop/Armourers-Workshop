@@ -15,7 +15,7 @@ import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class HologramProjectorExtraSetting extends HologramProjectorBaseSetting {
 
     private final HologramProjectorBlockEntity entity;

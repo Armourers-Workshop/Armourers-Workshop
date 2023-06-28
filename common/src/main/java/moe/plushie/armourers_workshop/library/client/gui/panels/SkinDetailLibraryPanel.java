@@ -48,7 +48,7 @@ import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 
     private UIButton buttonBack;

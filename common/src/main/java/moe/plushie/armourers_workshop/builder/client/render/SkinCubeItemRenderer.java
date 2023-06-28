@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinCubeItemRenderer extends AbstractItemStackRenderer {
 
     private static SkinCubeItemRenderer INSTANCE;

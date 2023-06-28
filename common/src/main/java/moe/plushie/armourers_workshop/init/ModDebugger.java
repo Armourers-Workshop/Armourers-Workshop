@@ -22,9 +22,9 @@ public class ModDebugger {
     public static boolean flag3 = false;
     public static boolean flag4 = false;
 
-
     public static boolean skinnableBlock = false;
     public static boolean hologramProjectorBlock = false;
+    public static boolean advancedSkinBuilderBlock = true;
 
     public static boolean skinBounds = false;
     public static boolean skinOrigin = false;
@@ -62,17 +62,17 @@ public class ModDebugger {
     public static boolean skinRenderBounds;
     public static boolean sortOrderToolTip;
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void rotate(PoseStack poseStack) {
         poseStack.mulPose(new OpenQuaternionf(rx, ry, rz, true));
     }
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void scale(PoseStack poseStack) {
         poseStack.scale(sx, sy, sz);
     }
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void translate(PoseStack poseStack) {
         poseStack.translate(tx, ty, tz);
     }

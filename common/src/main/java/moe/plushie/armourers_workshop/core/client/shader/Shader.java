@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class Shader {
 
     private int lastMaxVertexCount = 0;

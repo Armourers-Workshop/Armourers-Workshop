@@ -235,7 +235,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public OpenQuaternionf getRenderRotations(BlockState blockState) {
         if (renderRotations != null) {
             return renderRotations;
@@ -248,7 +248,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public Rectangle3f getRenderBoundingBox(BlockState blockState) {
         if (!isPowered()) {
             return null;

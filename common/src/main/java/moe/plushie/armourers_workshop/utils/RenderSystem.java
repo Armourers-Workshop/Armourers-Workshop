@@ -40,7 +40,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public final class RenderSystem extends AbstractRenderSystem {
 
     private static final AtomicInteger extendedMatrixFlags = new AtomicInteger();
@@ -187,6 +187,12 @@ public final class RenderSystem extends AbstractRenderSystem {
     }
 
 
+    public static void drawLine(PoseStack poseStack, float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, MultiBufferSource buffers) {
+        PoseStack.Pose pose = poseStack.last();
+        VertexConsumer builder = buffers.getBuffer(SkinRenderType.lines());
+        drawLine(pose, x0, y0, z0, x1, y1, z1, color, builder);
+    }
+
     private static void drawLine(PoseStack.Pose pose, float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, VertexConsumer builder) {
         float nx = 0, ny = 0, nz = 0;
         if (x0 != x1) {
@@ -303,30 +309,17 @@ public final class RenderSystem extends AbstractRenderSystem {
         drawBoundingBox(poseStack, x0, y0, z0, x1, y1, z1, color, renderTypeBuffer);
     }
 
-    public static void drawArmatureBox(PoseStack poseStack, ITransformf[] transforms) {
-        if (transforms == null) {
-            return;
-        }
-        float f1 = 1 / 16.f;
-        poseStack.pushPose();
-        poseStack.scale(f1, f1, f1);
-        MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        ModelBinder.BIPPED_BOXES.forEach((joint, rect) -> {
-            ITransformf transform = transforms[joint.getId()];
-            if (transform == null) {
-                return;
-            }
-            poseStack.pushPose();
-
-            transform.apply(poseStack);
-
-//			poseStack.translate(box.o.getX(), box.o.getY(), box.o.getZ());
-            RenderSystem.drawBoundingBox(poseStack, rect, ColorUtils.getPaletteColor(joint.getId()), buffers);
-            RenderSystem.drawPoint(poseStack, Vector3f.ZERO, 4, 4, 4, buffers);
-            poseStack.popPose();
-        });
-        poseStack.popPose();
-    }
+//    public static void drawShape(PoseStack poseStack, OpenVoxelShape shape, UIColor color, MultiBufferSource buffers) {
+//        VertexConsumer builder = buffers.getBuffer(SkinRenderType.lines());
+//        PoseStack.Pose pose = poseStack.last();
+////        Vector4f pt1 = null;
+////        for (Vector4f pt2 : shape) {
+////            if (pt1 != null) {
+////                drawLine(pose, pt1.x(), pt1.y(), pt1.z(), pt2.x(), pt2.y(), pt2.z(), color, builder);
+////            }
+////            pt1 = pt2;
+////        }
+//    }
 
     public static void drawCube(PoseStack poseStack, IRectangle3i rect, float r, float g, float b, float a, MultiBufferSource buffers) {
         float x = rect.getMinX();

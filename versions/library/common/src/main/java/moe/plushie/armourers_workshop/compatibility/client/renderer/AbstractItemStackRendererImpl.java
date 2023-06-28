@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 @Available("[1.20, )")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class AbstractItemStackRendererImpl extends BlockEntityWithoutLevelRenderer {
 
     public AbstractItemStackRendererImpl() {

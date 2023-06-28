@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.LivingEntity;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class AbstractLivingEntityRenderer<T extends LivingEntity, M extends EntityModel<T>> extends AbstractLivingEntityRendererImpl<T, M> {
 
     public AbstractLivingEntityRenderer(Context context, M entityModel, float f) {

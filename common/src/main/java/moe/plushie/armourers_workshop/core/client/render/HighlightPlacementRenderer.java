@@ -22,7 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class HighlightPlacementRenderer {
 
     public static void renderBlock(ItemStack itemStack, Player player, BlockHitResult traceResult, Camera renderInfo, PoseStack poseStack, MultiBufferSource buffers) {

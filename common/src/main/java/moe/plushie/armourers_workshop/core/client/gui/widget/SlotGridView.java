@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.Slot;
 
 import java.util.List;
 
-@Environment(value= EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SlotGridView extends UIView {
 
     private int startIndex = 0;

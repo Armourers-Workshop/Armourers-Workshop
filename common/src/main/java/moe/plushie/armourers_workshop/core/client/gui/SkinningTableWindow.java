@@ -10,7 +10,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Inventory;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinningTableWindow extends MenuWindow<SkinningTableMenu> {
 
     public SkinningTableWindow(SkinningTableMenu container, Inventory inventory, NSString title) {

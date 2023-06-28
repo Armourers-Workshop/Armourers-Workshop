@@ -15,7 +15,7 @@ public class UIFont {
         this.lineHeight = font.lineHeight;
     }
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static UIFont system() {
         return new UIFont(Minecraft.getInstance().font);
     }

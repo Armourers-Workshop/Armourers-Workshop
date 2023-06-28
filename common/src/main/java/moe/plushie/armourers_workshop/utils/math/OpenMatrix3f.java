@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 
 import java.nio.FloatBuffer;
 
+@SuppressWarnings("unused")
 public class OpenMatrix3f implements IMatrix3f {
 
     public float m00, m01, m02;
@@ -240,10 +241,10 @@ public class OpenMatrix3f implements IMatrix3f {
     }
 
     public float determinant() {
-        float f = this.m11 * this.m22 - this.m12 * this.m21;
-        float g = -(this.m10 * this.m22 - this.m12 * this.m20);
-        float h = this.m10 * this.m21 - this.m11 * this.m20;
-        return this.m00 * f + this.m01 * g + this.m02 * h;
+        float f = m11 * m22 - m12 * m21;
+        float g = -(m10 * m22 - m12 * m20);
+        float h = m10 * m21 - m11 * m20;
+        return m00 * f + m01 * g + m02 * h;
     }
 
     @Override

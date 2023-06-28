@@ -65,7 +65,7 @@ public class ModContributors {
         return null;
     }
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static Contributor by(Entity entity) {
         if (entity instanceof MannequinEntity) {
             MannequinEntity mannequin = (MannequinEntity) entity;
@@ -80,7 +80,7 @@ public class ModContributors {
         return null;
     }
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static Contributor getCurrentContributor() {
         if (EnvironmentManager.isDevelopmentEnvironment()) {
             return dev;

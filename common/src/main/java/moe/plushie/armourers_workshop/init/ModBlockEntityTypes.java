@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.builder.blockentity.BoundingBoxBlockEntity
 import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
 import moe.plushie.armourers_workshop.builder.blockentity.OutfitMakerBlockEntity;
 import moe.plushie.armourers_workshop.builder.blockentity.SkinCubeBlockEntity;
+import moe.plushie.armourers_workshop.builder.client.render.AdvancedSkinBuilderBlockEntityRenderer;
 import moe.plushie.armourers_workshop.builder.client.render.ArmourerBlockEntityRenderer;
 import moe.plushie.armourers_workshop.builder.client.render.SkinCubeBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.blockentity.DyeTableBlockEntity;
@@ -31,7 +32,7 @@ public final class ModBlockEntityTypes {
 
     public static final IRegistryKey<IBlockEntityType<ColorMixerBlockEntity>> COLOR_MIXER = create(ColorMixerBlockEntity::new).of(ModBlocks.COLOR_MIXER).build(ModConstants.BLOCK_COLOR_MIXER);
     public static final IRegistryKey<IBlockEntityType<ArmourerBlockEntity>> ARMOURER = create(ArmourerBlockEntity::new).of(ModBlocks.ARMOURER).bind(() -> ArmourerBlockEntityRenderer::new).build(ModConstants.BLOCK_ARMOURER);
-    public static final IRegistryKey<IBlockEntityType<AdvancedSkinBuilderBlockEntity>> ADVANCED_SKIN_BUILDER = create(AdvancedSkinBuilderBlockEntity::new).of(ModBlocks.ADVANCED_SKIN_BUILDER).build(ModConstants.BLOCK_ADVANCED_SKIN_BUILDER);
+    public static final IRegistryKey<IBlockEntityType<AdvancedSkinBuilderBlockEntity>> ADVANCED_SKIN_BUILDER = create(AdvancedSkinBuilderBlockEntity::new).of(ModBlocks.ADVANCED_SKIN_BUILDER).bind(() -> AdvancedSkinBuilderBlockEntityRenderer::new).build(ModConstants.BLOCK_ADVANCED_SKIN_BUILDER);
 
     public static final IRegistryKey<IBlockEntityType<SkinLibraryBlockEntity>> SKIN_LIBRARY = create(SkinLibraryBlockEntity::new).of(ModBlocks.SKIN_LIBRARY).build(ModConstants.BLOCK_SKIN_LIBRARY);
     public static final IRegistryKey<IBlockEntityType<GlobalSkinLibraryBlockEntity>> SKIN_LIBRARY_GLOBAL = create(GlobalSkinLibraryBlockEntity::new).of(ModBlocks.SKIN_LIBRARY_GLOBAL).bind(() -> GlobalSkinLibraryBlockEntityRenderer::new).build(ModConstants.BLOCK_SKIN_LIBRARY_GLOBAL);

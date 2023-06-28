@@ -22,7 +22,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import java.util.stream.Collectors;
 
 @Available("[1.18, )")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class AbstractModelPartRegistries {
 
     public static void init() {

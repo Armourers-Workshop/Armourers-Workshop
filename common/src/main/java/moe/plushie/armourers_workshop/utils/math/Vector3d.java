@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.utils.math;
 
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
-import net.minecraft.core.Vec3i;
 
 import java.util.EnumSet;
 
@@ -33,19 +33,19 @@ public class Vector3d implements Position {
         return new Vector3d(d0, d1, d2);
     }
 
-    public static Vector3d atCenterOf(Vec3i pos) {
+    public static Vector3d atCenterOf(BlockPos pos) {
         return new Vector3d((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D);
     }
 
-    public static Vector3d atLowerCornerOf(Vec3i pos) {
+    public static Vector3d atLowerCornerOf(BlockPos pos) {
         return new Vector3d(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    public static Vector3d atBottomCenterOf(Vec3i pos) {
+    public static Vector3d atBottomCenterOf(BlockPos pos) {
         return new Vector3d((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D);
     }
 
-    public static Vector3d upFromBottomCenterOf(Vec3i pos, double offset) {
+    public static Vector3d upFromBottomCenterOf(BlockPos pos, double offset) {
         return new Vector3d((double) pos.getX() + 0.5D, (double) pos.getY() + offset, (double) pos.getZ() + 0.5D);
     }
 
@@ -66,16 +66,16 @@ public class Vector3d implements Position {
         return d0 < 1.0E-4D ? ZERO : new Vector3d(this.x / d0, this.y / d0, this.z / d0);
     }
 
-    public double dot(Vector3d p_72430_1_) {
-        return this.x * p_72430_1_.x + this.y * p_72430_1_.y + this.z * p_72430_1_.z;
+    public double dot(Vector3d vec) {
+        return this.x * vec.x + this.y * vec.y + this.z * vec.z;
     }
 
-    public Vector3d cross(Vector3d p_72431_1_) {
-        return new Vector3d(this.y * p_72431_1_.z - this.z * p_72431_1_.y, this.z * p_72431_1_.x - this.x * p_72431_1_.z, this.x * p_72431_1_.y - this.y * p_72431_1_.x);
+    public Vector3d cross(Vector3d vec) {
+        return new Vector3d(this.y * vec.z - this.z * vec.y, this.z * vec.x - this.x * vec.z, this.x * vec.y - this.y * vec.x);
     }
 
-    public Vector3d subtract(Vector3d p_178788_1_) {
-        return this.subtract(p_178788_1_.x, p_178788_1_.y, p_178788_1_.z);
+    public Vector3d subtract(Vector3d vec) {
+        return this.subtract(vec.x, vec.y, vec.z);
     }
 
     public Vector3d subtract(double p_178786_1_, double p_178786_3_, double p_178786_5_) {
@@ -213,15 +213,15 @@ public class Vector3d implements Position {
         return axis.choose(x, y, z);
     }
 
-    public final double x() {
+    public double x() {
         return this.x;
     }
 
-    public final double y() {
+    public double y() {
         return this.y;
     }
 
-    public final double z() {
+    public double z() {
         return this.z;
     }
 }

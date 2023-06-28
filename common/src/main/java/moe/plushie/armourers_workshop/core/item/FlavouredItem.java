@@ -18,7 +18,7 @@ public class FlavouredItem extends AbstractItem {
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void appendHoverText(ItemStack itemStack, Level level, List<Component> list, TooltipFlag tooltipFlag) {
         super.appendHoverText(itemStack, level, list, tooltipFlag);
         list.addAll(TranslateUtils.subtitles(getDescriptionId(itemStack) + ".flavour"));

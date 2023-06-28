@@ -36,7 +36,7 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.stream.Stream;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ClientProxy {
 
     public static void init() {

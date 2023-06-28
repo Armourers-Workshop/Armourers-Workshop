@@ -186,7 +186,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public OpenQuaternionf getRenderRotations(BlockState blockState) {
         if (renderRotations != null) {
             return renderRotations;
@@ -341,7 +341,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         return isParent;
     }
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     @Override
     public Rectangle3f getRenderBoundingBox(BlockState blockState) {
         BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(getDescriptor(), Tickets.TEST);

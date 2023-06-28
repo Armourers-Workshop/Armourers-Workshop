@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class MannequinItemRenderer extends AbstractItemStackRenderer {
 
     private static MannequinItemRenderer INSTANCE;

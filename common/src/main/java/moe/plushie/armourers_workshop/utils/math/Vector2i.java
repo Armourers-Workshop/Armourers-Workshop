@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.utils.math;
 import moe.plushie.armourers_workshop.api.math.IVector2i;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 
+@SuppressWarnings("unused")
 public class Vector2i implements IVector2i {
 
     public int x;

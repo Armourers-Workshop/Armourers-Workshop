@@ -8,7 +8,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 
 @Available("[1.16, 1.18)")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class AbstractShaderTesselator {
 
     private static final AbstractShaderTesselator INSTANCE = new AbstractShaderTesselator();

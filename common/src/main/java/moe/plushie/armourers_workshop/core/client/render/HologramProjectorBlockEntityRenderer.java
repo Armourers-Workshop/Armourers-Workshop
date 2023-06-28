@@ -2,20 +2,12 @@ package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
-import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
-import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
-import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
-import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
@@ -23,14 +15,12 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlockEntity> extends AbstractBlockEntityRenderer<T> {
 
     public HologramProjectorBlockEntityRenderer(Context context) {
@@ -42,17 +32,11 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         if (!entity.isPowered()) {
             return;
         }
+        BlockState blockState = entity.getBlockState();
         ItemStack itemStack = entity.getItem(0);
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
-        if (bakedSkin == null) {
-            return;
-        }
-        BlockState blockState = entity.getBlockState();
-        Entity mannequin = SkinItemRenderer.getInstance().getMannequinEntity();
-        MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
-        SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(mannequin, model, null);
-        if (renderer == null || mannequin == null || mannequin.getLevel() == null) {
+        SkinRenderTesselator context = SkinRenderTesselator.create(descriptor, Tickets.RENDERER);
+        if (context == null) {
             return;
         }
         float f = 1 / 16f;
@@ -70,15 +54,14 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         poseStack.scale(f, f, f);
         poseStack.scale(-1, -1, 1);
 
-        Rectangle3f rect = bakedSkin.getRenderBounds(mannequin, model, null, itemStack);
+        context.setLightmap(overLight);
+        context.setPartialTicks(partialTicks1);
+        context.setReference(0, itemStack);
+
+        Rectangle3f rect = context.getBakedRenderBounds();
         apply(entity, rect, partialTicks1, poseStack, buffers);
 
-        IModelHolder<Model> modelHolder = ModelHolder.of(model);
-        SkinRenderContext context = SkinRenderContext.alloc(null, overLight, partialTicks1, poseStack, buffers);
-        context.setItem(itemStack, 0);
-        context.setTransforms(mannequin, renderer.getOverrideModel(modelHolder));
-        renderer.render(mannequin, modelHolder, bakedSkin, ColorScheme.EMPTY, context);
-        context.release();
+        context.draw(poseStack, buffers);
 
         poseStack.popPose();
 

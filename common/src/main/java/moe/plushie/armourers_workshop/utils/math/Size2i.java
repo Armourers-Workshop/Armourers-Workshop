@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.utils.math;
 
 import moe.plushie.armourers_workshop.api.math.ISize2i;
 
+@SuppressWarnings("unused")
 public class Size2i implements ISize2i {
 
     public int width;

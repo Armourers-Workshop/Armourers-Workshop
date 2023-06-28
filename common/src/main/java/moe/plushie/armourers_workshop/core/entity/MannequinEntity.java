@@ -288,7 +288,7 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public AABB getBoundingBoxForCulling() {
         if (boundingBoxForCulling != null) {
             return boundingBoxForCulling;

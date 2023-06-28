@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.init.ModTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinWardrobeDyeSetting extends SkinWardrobeBaseSetting {
 
     private final SkinWardrobeMenu container;

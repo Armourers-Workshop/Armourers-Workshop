@@ -25,18 +25,18 @@ public abstract class RotableContainerBlockEntity extends UpdatableContainerBloc
         renderBoundingBox = null;
     }
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public OpenQuaternionf getRenderRotations(BlockState blockState) {
         return null;
     }
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public Rectangle3f getRenderBoundingBox(BlockState blockState) {
         return null;
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public AABB getCustomRenderBoundingBox(BlockState blockState) {
         if (renderBoundingBox != null) {
             return renderBoundingBox;

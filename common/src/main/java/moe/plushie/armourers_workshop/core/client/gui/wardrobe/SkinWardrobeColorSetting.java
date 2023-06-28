@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
 
     private final SkinWardrobe wardrobe;

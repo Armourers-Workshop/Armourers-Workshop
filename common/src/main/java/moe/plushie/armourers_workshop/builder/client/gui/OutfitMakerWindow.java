@@ -25,7 +25,7 @@ import net.minecraft.world.entity.player.Inventory;
 import java.util.HashMap;
 import java.util.Objects;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
 
     private final UIButton saveButton = new UIButton(new CGRect(146, 120, 20, 20));

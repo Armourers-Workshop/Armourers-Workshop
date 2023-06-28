@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public interface IRenderTypeBuilder {
 
     default IRenderTypeBuilder texture(ResourceLocation texture) {

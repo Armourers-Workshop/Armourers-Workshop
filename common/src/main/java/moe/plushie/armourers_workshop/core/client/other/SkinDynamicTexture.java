@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.Objects;
 import java.util.Optional;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinDynamicTexture extends DynamicTexture {
 
     private final TextureManager textureManager;

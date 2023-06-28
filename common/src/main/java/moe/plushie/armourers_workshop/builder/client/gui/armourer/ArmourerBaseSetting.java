@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ArmourerBaseSetting extends UIView {
 
     private final String baseKey;

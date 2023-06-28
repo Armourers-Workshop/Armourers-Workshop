@@ -24,7 +24,7 @@ import org.apache.logging.log4j.util.Strings;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implements UITextFieldDelegate {
 
     private final SkinWardrobe wardrobe;

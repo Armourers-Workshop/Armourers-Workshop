@@ -15,7 +15,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 
 @Available("[1.16, 1.18)")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class AbstractShader extends Shader {
 
     private int lastMaxVertexCount = 0;

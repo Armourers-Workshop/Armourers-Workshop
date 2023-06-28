@@ -24,7 +24,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Available("[1.16, 1.18)")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class AbstractRenderType extends RenderType {
 
     private static final VertexFormat SKIN_NORMAL_FORMAT = new VertexFormat(ImmutableList.<VertexFormatElement>builder().add(DefaultVertexFormat.ELEMENT_POSITION).add(DefaultVertexFormat.ELEMENT_COLOR).add(DefaultVertexFormat.ELEMENT_UV0).add(DefaultVertexFormat.ELEMENT_UV1).add(DefaultVertexFormat.ELEMENT_NORMAL).add(DefaultVertexFormat.ELEMENT_PADDING).build());

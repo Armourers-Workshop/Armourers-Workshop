@@ -15,7 +15,7 @@ public interface AbstractEntityRendererProviderImpl {
 
         EntityRenderer<T> create(Context context);
 
-        @Environment(value = EnvType.CLIENT)
+        @Environment(EnvType.CLIENT)
         default EntityRenderer<T> create(EntityRendererProvider.Context context) {
             return create(new Context(context));
         }

@@ -42,7 +42,7 @@ public abstract class ConfigurableToolItem extends FlavouredItem implements ICon
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltips, TooltipFlag flags) {
         super.appendHoverText(itemStack, level, tooltips, flags);
         appendColorHoverText(itemStack, tooltips);

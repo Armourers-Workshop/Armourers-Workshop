@@ -38,13 +38,13 @@ public class NSString {
         this.sequence = sequence;
     }
 
-    @Environment(value= EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public CGRect boundingRectWithFont(UIFont font) {
         int width = font.font().width(chars());
         return new CGRect(0, 0, width, font.lineHeight());
     }
 
-    @Environment(value=EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public List<NSString> split(int width, UIFont font) {
         Component contents = component();
         if (contents != null) {
@@ -53,7 +53,7 @@ public class NSString {
         return new ArrayList<>();
     }
 
-    @Environment(value=EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public Map<String, ?> attributes(int width, UIFont font) {
         Style style = font.font().getSplitter().componentStyleAtWidth(chars(), width);
         if (style == null) {

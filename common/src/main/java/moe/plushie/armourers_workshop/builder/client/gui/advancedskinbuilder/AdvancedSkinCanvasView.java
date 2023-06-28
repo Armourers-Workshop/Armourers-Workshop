@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.gui
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class AdvancedSkinCanvasView extends UIView {
 
 //    private final GuideRendererManager rendererManager = new GuideRendererManager();

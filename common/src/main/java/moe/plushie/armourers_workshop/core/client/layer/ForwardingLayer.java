@@ -15,7 +15,7 @@ import net.minecraft.world.entity.Entity;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ForwardingLayer<T extends Entity, M extends EntityModel<T>> extends AbstractRenderLayer<T, M> {
 
     private final RenderLayer<T, M> target;

@@ -15,7 +15,7 @@ import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.LivingEntity;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class VillagerSkinRenderer<T extends LivingEntity, V extends VillagerModel<T>, M extends IHumanoidModelHolder<V>> extends ExtendedSkinRenderer<T, V, M> {
 
     private final TransformModel<T> transformModel = new TransformModel<>(0.0f);
@@ -28,7 +28,7 @@ public class VillagerSkinRenderer<T extends LivingEntity, V extends VillagerMode
     @Override
     public void willRender(T entity, M model, SkinRenderData renderData, SkinRenderContext context) {
         super.willRender(entity, model, renderData, context);
-        transformModel.setup(entity, context.light, context.partialTicks);
+        transformModel.setup(entity, context.getLightmap(), context.getPartialTicks());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.utils.math;
 
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
+import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.AABB;
 
@@ -8,6 +9,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class Rectangle3f implements IRectangle3f {
 
     public final static Rectangle3f ZERO = new Rectangle3f(0, 0, 0, 0, 0, 0);
@@ -152,6 +154,27 @@ public class Rectangle3f implements IRectangle3f {
     public Rectangle3f offset(float dx, float dy, float dz) {
         return new Rectangle3f(x + dx, y + dy, z + dz, width, height, depth);
     }
+
+    public Rectangle3f inflate(float value) {
+        if (value == 0) {
+            return this;
+        }
+        float v2 = value + value;
+        return new Rectangle3f(x - value, y - value, z - value, width + v2, height + v2, depth + v2);
+    }
+
+
+//    public boolean intersects(AABB aABB) {
+//        return this.intersects(aABB.minX, aABB.minY, aABB.minZ, aABB.maxX, aABB.maxY, aABB.maxZ);
+//    }
+//
+//    public boolean intersects(double d, double e, double f, double g, double h, double i) {
+//        return this.minX < g && this.maxX > d && this.minY < h && this.maxY > e && this.minZ < i && this.maxZ > f;
+//    }
+//
+//    public boolean intersects(Vec3 vec3, Vec3 vec32) {
+//        return this.intersects(Math.min(vec3.x, vec32.x), Math.min(vec3.y, vec32.y), Math.min(vec3.z, vec32.z), Math.max(vec3.x, vec32.x), Math.max(vec3.y, vec32.y), Math.max(vec3.z, vec32.z));
+//    }
 
     public void mul(OpenQuaternionf quaternion) {
         mul(new OpenMatrix4f(quaternion));

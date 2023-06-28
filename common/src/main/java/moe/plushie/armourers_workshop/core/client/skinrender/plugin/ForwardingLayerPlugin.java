@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ForwardingLayerPlugin<T extends LivingEntity, V extends EntityModel<T>, M extends IModelHolder<V>> implements SkinRenderer.Plugin<T, V, M> {
 
     private final ArrayList<Entry> entries = new ArrayList<>();

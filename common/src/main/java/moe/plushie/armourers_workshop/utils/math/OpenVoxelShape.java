@@ -8,8 +8,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-public class OpenVoxelShape {
+@SuppressWarnings("unused")
+public class OpenVoxelShape implements Iterable<Vector4f> {
 
+    private OpenAABB aabb;
     private Rectangle3f box;
     private ArrayList<Vector4f> vertexes;
 
@@ -24,6 +26,14 @@ public class OpenVoxelShape {
         OpenVoxelShape shape = new OpenVoxelShape();
         shape.box = bounds;
         return shape;
+    }
+
+    public OpenAABB aabb() {
+        if (aabb != null) {
+            return aabb;
+        }
+        aabb = new OpenAABB(bounds());
+        return aabb;
     }
 
     public Rectangle3f bounds() {
@@ -55,12 +65,7 @@ public class OpenVoxelShape {
             vector.transform(matrix);
         }
         box = null;
-    }
-
-    public void add(Vector4f vector) {
-        List<Vector4f> list = getVertexes();
-        list.add(vector);
-        box = null;
+        aabb = null;
     }
 
     public void add(float x, float y, float z, float width, float height, float depth) {
@@ -68,12 +73,13 @@ public class OpenVoxelShape {
         list.add(new Vector4f(x, y, z, 1.0f));
         list.add(new Vector4f(x + width, y, z, 1.0f));
         list.add(new Vector4f(x + width, y + height, z, 1.0f));
-        list.add(new Vector4f(x + width, y + height, z + depth, 1.0f));
-        list.add(new Vector4f(x + width, y, z + depth, 1.0f));
         list.add(new Vector4f(x, y + height, z, 1.0f));
-        list.add(new Vector4f(x, y + height, z + depth, 1.0f));
         list.add(new Vector4f(x, y, z + depth, 1.0f));
+        list.add(new Vector4f(x + width, y, z + depth, 1.0f));
+        list.add(new Vector4f(x + width, y + height, z + depth, 1.0f));
+        list.add(new Vector4f(x, y + height, z + depth, 1.0f));
         box = null;
+        aabb = null;
     }
 
     public void add(OpenVoxelShape shape1) {
@@ -83,13 +89,13 @@ public class OpenVoxelShape {
     }
 
     public void add(Rectangle3f rect) {
-        List<Vector4f> list = getVertexes();
-        list.addAll(getVertexes(rect));
-        box = null;
+        add(rect.getX(), rect.getY(), rect.getZ(), rect.getWidth(), rect.getHeight(), rect.getDepth());
     }
 
-
     public void optimize() {
+        if (vertexes == null || vertexes.size() <= 8) {
+            return;
+        }
         List<Vector4f> list = getVertexes();
         HashSet<Vector4f> addVertexes = new HashSet<>(list.size());
         HashSet<Vector4f> uniquesVertexes = new HashSet<>(list.size());
@@ -107,18 +113,24 @@ public class OpenVoxelShape {
 
     public OpenVoxelShape copy() {
         OpenVoxelShape shape = new OpenVoxelShape();
-        if (box != null) {
-            shape.box = box;
-        }
+        shape.box = box;
+        shape.aabb = aabb;
         if (vertexes != null) {
             ArrayList<Vector4f> newVertexes = new ArrayList<>();
             newVertexes.ensureCapacity(vertexes.size());
             for (Vector4f vector : vertexes) {
-                newVertexes.add(new Vector4f(vector.x(), vector.y(), vector.z(), vector.w()));
+                newVertexes.add(vector.copy());
             }
             shape.vertexes = newVertexes;
         }
         return shape;
+    }
+
+    public Iterator<Vector4f> iterator() {
+        if (vertexes != null) {
+            return vertexes.iterator();
+        }
+        return getVertexes(box).iterator();
     }
 
     private List<Vector4f> getVertexes() {

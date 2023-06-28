@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 
+@SuppressWarnings("unused")
 public class OpenPoseStack implements IPoseStack {
 
     private final OpenMatrix4f poseMatrix = OpenMatrix4f.createScaleMatrix(1, 1, 1);

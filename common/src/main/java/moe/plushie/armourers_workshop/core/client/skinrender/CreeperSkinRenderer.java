@@ -11,7 +11,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.CreeperModel;
 import net.minecraft.world.entity.LivingEntity;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class CreeperSkinRenderer<T extends LivingEntity, V extends CreeperModel<T>, M extends IModelHolder<V>> extends LivingSkinRenderer<T, V, M> {
 
     public CreeperSkinRenderer(EntityProfile profile) {

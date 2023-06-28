@@ -7,7 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class WingsGuideRenderer extends AbstractGuideRenderer {
 
     private final ChestGuideRenderer chestGuideRenderer = new ChestGuideRenderer();

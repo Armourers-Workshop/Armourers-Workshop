@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinComboBox extends UIComboBox {
 
     protected final ArrayList<ISkinType> skinTypes = new ArrayList<>();

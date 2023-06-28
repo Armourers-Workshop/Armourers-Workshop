@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class HologramProjectorRotationOffsetSetting extends HologramProjectorBaseSetting {
 
     private UISliderBox sliderX;

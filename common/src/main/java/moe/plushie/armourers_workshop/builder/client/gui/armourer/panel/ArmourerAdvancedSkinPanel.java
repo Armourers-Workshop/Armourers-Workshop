@@ -12,7 +12,7 @@ import net.fabricmc.api.Environment;
 import java.util.List;
 import java.util.function.Function;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ArmourerAdvancedSkinPanel extends ArmourerBaseSkinPanel {
 
     public ArmourerAdvancedSkinPanel(SkinProperties skinProperties) {

@@ -22,7 +22,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinWardrobeWindow<M extends SkinWardrobeMenu> extends MenuWindow<M> {
 
     private final Entity entity;

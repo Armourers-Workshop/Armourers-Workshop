@@ -5,14 +5,12 @@ import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
-import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
-import moe.plushie.armourers_workshop.core.client.model.BakedModelStroage;
+import moe.plushie.armourers_workshop.core.client.model.BakedModelStorage;
 import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
-import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
@@ -50,7 +48,7 @@ import java.util.Collections;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ClientWardrobeHandler {
 
     public static ItemStack RENDERING_GUI_ITEM = null;
@@ -256,7 +254,7 @@ public class ClientWardrobeHandler {
                     poseStack.pushPose();
                     poseStack.scale(-SCALE, -SCALE, SCALE);
                     SkinRenderContext context = SkinRenderContext.alloc(renderData, packedLight, TickUtils.ticks(), transformType, poseStack, buffers);
-                    context.setItem(itemStack, 9);
+                    context.setReference(9, itemStack);
                     counter = render(entity, null, context, () -> Collections.singleton(embeddedStack.getEntry()));
                     if (counter != 0 && !ModDebugger.itemOverride) {
                         callback.cancel();
@@ -276,36 +274,32 @@ public class ClientWardrobeHandler {
     public static void _renderEmbeddedSkinInBox(EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
         SkinDescriptor descriptor = embeddedStack.getDescriptor();
         poseStack.pushPose();
-        TransformationProvider.handleTransforms(poseStack, BakedModelStroage.getSkinBakedModel(), transformType, leftHandHackery);
+        TransformationProvider.handleTransforms(poseStack, BakedModelStorage.getSkinBakedModel(), transformType, leftHandHackery);
         poseStack.translate(-0.5f, -0.5f, -0.5f);
         SkinItemRenderer.getInstance().renderByItem(descriptor.sharedItemStack(), transformType, poseStack, buffers, packedLight, overlay);
         poseStack.popPose();
     }
 
     public static int _renderEmbeddedSkin(EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
-        int r = 0;
+        int counter = 0;
         SkinDescriptor descriptor = embeddedStack.getDescriptor();
-        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
-        if (bakedSkin == null) {
-            return r;
-        }
-        LivingEntity entity = SkinItemRenderer.getInstance().getMannequinEntity();
-        MannequinModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
-        SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
-        SkinRenderData renderData = SkinRenderData.of(entity);
-        IModelHolder<Model> modelHolder = ModelHolder.of(model);
-        if (renderer == null || renderData == null || modelHolder == null) {
-            return r;
+        SkinRenderTesselator context = SkinRenderTesselator.create(descriptor, Tickets.INVENTORY);
+        if (context == null) {
+            return counter;
         }
         poseStack.pushPose();
         poseStack.scale(-SCALE, -SCALE, SCALE);
-        SkinRenderContext context = SkinRenderContext.alloc(renderData, packedLight, 0, poseStack, buffers);
-        context.setItem(embeddedStack.getItemStack(), 9);
-        context.setTransforms(entity, renderer.getOverrideModel(modelHolder));
-        renderer.render(entity, modelHolder, bakedSkin, descriptor.getColorScheme(), context);
-        context.release();
+
+        context.setRenderData(SkinRenderData.of(context.getMannequin()));
+        context.setLightmap(packedLight);
+        context.setPartialTicks(0);
+        context.setReference(9, embeddedStack.getItemStack(), null);
+        context.setColorScheme(descriptor.getColorScheme());
+
+        counter = context.draw(poseStack, buffers);
+
         poseStack.popPose();
-        return r;
+        return counter;
     }
 
     public static void onRenderEntityInInventoryPre(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY) {
@@ -349,10 +343,7 @@ public class ClientWardrobeHandler {
         }
         IModelHolder<Model> modelHolder = ModelHolder.ofNullable(model);
         for (SkinRenderData.Entry entry : provider.get()) {
-            context.slotIndex = entry.getSlotIndex();
-            if (context.itemStack == ItemStack.EMPTY) {
-                context.itemStack = entry.getItemStack();
-            }
+            context.setReference(entry.getSlotIndex(), entry.getItemStack());
             context.setTransforms(entity, renderer.getOverrideModel(modelHolder));
             r += renderer.render(entity, modelHolder, entry.getBakedSkin(), entry.getBakedScheme(), context);
         }

@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.init.ModTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class PaletteBox extends UIControl {
 
     private int row = 4;

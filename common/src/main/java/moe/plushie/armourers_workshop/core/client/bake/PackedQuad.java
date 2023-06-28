@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.skin.face.SkinCuller;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
+import moe.plushie.armourers_workshop.utils.math.OpenRay;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
@@ -22,6 +23,7 @@ import moe.plushie.armourers_workshop.utils.texture.SkyBox;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.Direction;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -29,11 +31,13 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class PackedQuad {
 
-    private final HashMap<RenderType, ArrayList<SkinCubeFace>> allFaces = new HashMap<>();
+    private final HashMap<Direction, ArrayList<SkinCubeFace>> dirFaces = new HashMap<>();
+    private final HashMap<RenderType, ArrayList<SkinCubeFace>> splitFaces = new HashMap<>();
 
     private final Rectangle3i bounds;
     private final SkinTransform transform;
@@ -95,7 +99,20 @@ public class PackedQuad {
     }
 
     public void forEach(BiConsumer<RenderType, ArrayList<SkinCubeFace>> action) {
-        allFaces.forEach(action);
+        splitFaces.forEach(action);
+    }
+
+    public void forEach(OpenRay ray, Consumer<SkinCubeFace> recorder) {
+        if (dirFaces.isEmpty()) {
+            loadDirFaces();
+        }
+        dirFaces.forEach((dir, faces) -> {
+            for (SkinCubeFace face : faces) {
+                if (face.intersects(ray)) {
+                    recorder.accept(face);
+                }
+            }
+        });
     }
 
     private void loadFaces(ArrayList<SkinCubeFace> faces) {
@@ -104,13 +121,19 @@ public class PackedQuad {
                 continue;
             }
             RenderType renderType = SkinRenderType.by(face.getType());
-            allFaces.computeIfAbsent(renderType, k -> new ArrayList<>()).add(face);
+            splitFaces.computeIfAbsent(renderType, k -> new ArrayList<>()).add(face);
             colorInfo.add(face.getColor());
             faceTotal += 1;
         }
-        for (ArrayList<SkinCubeFace> filteredFaces : allFaces.values()) {
+        for (ArrayList<SkinCubeFace> filteredFaces : splitFaces.values()) {
             filteredFaces.sort(Comparator.comparingInt(f -> f.getDirection().get3DDataValue()));
         }
+    }
+
+    private void loadDirFaces() {
+        splitFaces.values().forEach(faces -> faces.forEach(face -> {
+            dirFaces.computeIfAbsent(face.getDirection(), k -> new ArrayList<>()).add(face);
+        }));
     }
 
     public ColorDescriptor getColorInfo() {

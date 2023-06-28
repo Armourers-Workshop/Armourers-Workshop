@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL15;
 import java.nio.ByteBuffer;
 import java.util.function.IntConsumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class VertexIndexBuffer {
 
     private final int vertexStride;

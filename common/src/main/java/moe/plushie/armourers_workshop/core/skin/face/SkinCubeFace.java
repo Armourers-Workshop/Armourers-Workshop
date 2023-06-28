@@ -17,6 +17,7 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenRay;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -89,7 +90,7 @@ public class SkinCubeFace {
         return paintColor;
     }
 
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void render(BakedSkinPart part, ColorScheme scheme, int light, int overlay, PoseStack poseStack, VertexConsumer builder) {
         PaintColor resolvedColor = resolve(color, scheme, part.getColorInfo(), part.getType(), 0);
         if (resolvedColor.getPaintType() == SkinPaintTypes.NONE) {
@@ -98,7 +99,11 @@ public class SkinCubeFace {
         ExtendedFaceRenderer.render(x, y, z, direction, resolvedColor, alpha, light, overlay, poseStack, builder);
     }
 
-    @Environment(value = EnvType.CLIENT)
+    public boolean intersects(OpenRay ray) {
+        return ray.intersects(x, y, z, x + 1, y + 1, z + 1);
+    }
+
+    @Environment(EnvType.CLIENT)
     public PaintColor getTextureColor(ResourceLocation texture, ISkinPartType partType) {
         BakedEntityTexture bakedTexture = PlayerTextureLoader.getInstance().getTextureModel(texture);
         if (bakedTexture != null) {

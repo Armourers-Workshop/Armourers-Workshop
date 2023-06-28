@@ -1,8 +1,14 @@
 package moe.plushie.armourers_workshop.utils;
 
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
+
 public class MathUtils {
 
+    public static final float SCALE = 0.0625f; // 1 / 16f;
+
     public static final float PI = (float) Math.PI;
+    public static final float PI_D2 = (float) Math.PI * 0.5f;
+    public static final float PI_M2 = (float) Math.PI * 2.0f;
 
     private static final double FRAC_BIAS = Double.longBitsToDouble(4805340802404319232L);
     private static final double[] ASIN_TAB = new double[257];
@@ -76,6 +82,19 @@ public class MathUtils {
         return SIN[(int) (f * 10430.378F + 16384.0F) & '\uffff'];
     }
 
+    public static float cosFromSin(float sin, float angle) {
+//        if (Options.FASTMATH)
+//            return sin(angle + PIHalf_f);
+        // sin(x)^2 + cos(x)^2 = 1
+        float cos = sqrt(1.0f - sin * sin);
+        float a = angle + PI_D2;
+        float b = a - (int)(a / PI_M2) * PI_M2;
+        if (b < 0.0)
+            b = PI_M2 + b;
+        if (b >= PI)
+            return -cos;
+        return cos;
+    }
 
     public static double absMax(double a, double b) {
         if (a < 0.0D) {
@@ -227,6 +246,11 @@ public class MathUtils {
         return (float) Math.toRadians((value + 360) % 360);
     }
 
+    public static float fma(float a, float b, float c) {
+//        if (Runtime.HAS_Math_fma)
+//            return java.lang.Math.fma(a, b, c);
+        return a * b + c;
+    }
 
     public static int roundToward(int i, int j) {
         return positiveCeilDiv(i, j) * j;

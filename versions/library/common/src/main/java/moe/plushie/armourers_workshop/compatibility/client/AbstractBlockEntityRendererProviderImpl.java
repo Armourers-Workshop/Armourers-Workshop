@@ -14,7 +14,7 @@ public interface AbstractBlockEntityRendererProviderImpl {
 
         BlockEntityRenderer<T> create(Context context);
 
-        @Environment(value = EnvType.CLIENT)
+        @Environment(EnvType.CLIENT)
         default BlockEntityRenderer<T> create(BlockEntityRendererProvider.Context context) {
             return create(new Context());
         }

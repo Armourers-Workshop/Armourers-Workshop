@@ -126,13 +126,13 @@ public class SeatEntity extends AbstractLivingEntity {
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public boolean shouldRender(double p_145770_1_, double p_145770_3_, double p_145770_5_) {
         return false;
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public boolean shouldRenderAtSqrDistance(double p_70112_1_) {
         return false;
     }

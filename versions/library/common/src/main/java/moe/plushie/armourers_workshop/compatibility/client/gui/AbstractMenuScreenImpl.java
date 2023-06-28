@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 @Available("[1.20, )")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
 
     public AbstractMenuScreenImpl(T menu, Inventory inventory, Component component) {

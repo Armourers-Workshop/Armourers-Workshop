@@ -8,7 +8,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.layers.SlimeOuterLayer;
 import net.minecraft.world.entity.LivingEntity;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SlimeOuterFixPlugin<T extends LivingEntity, V extends EntityModel<T>, M extends IModelHolder<V>> extends ForwardingLayerPlugin<T, V, M> {
 
     public SlimeOuterFixPlugin() {

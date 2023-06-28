@@ -332,7 +332,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public AABB getCustomRenderBoundingBox(BlockState blockState) {
         if (renderBoundingBox == null) {
             renderBoundingBox = new AABB(-32, -32, -44, 64, 64, 64);

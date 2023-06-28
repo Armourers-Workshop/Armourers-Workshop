@@ -1,5 +1,6 @@
 package com.apple.library.impl;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyboardHandler;
@@ -7,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import org.lwjgl.glfw.GLFW;
 
-@Environment(value= EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class KeyboardManagerImpl {
 
     public static boolean hasControlDown() {
@@ -20,6 +21,10 @@ public class KeyboardManagerImpl {
 
     public static boolean hasAltDown() {
         return Screen.hasAltDown();
+    }
+
+    public static boolean hasSpaceDown() {
+        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_SPACE);
     }
 
     public static boolean isCut(int i) {

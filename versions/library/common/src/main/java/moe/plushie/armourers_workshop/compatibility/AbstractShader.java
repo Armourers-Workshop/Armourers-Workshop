@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.RenderType;
 import org.lwjgl.opengl.GL15;
 
 @Available("[1.18, )")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class AbstractShader extends Shader {
 
     @Override

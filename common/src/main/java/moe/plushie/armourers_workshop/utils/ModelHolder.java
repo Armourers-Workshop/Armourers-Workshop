@@ -22,7 +22,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ModelHolder<T extends Model> implements IModelHolder<T> {
 
     private static final HashMap<Class<?>, Entry<?, ?>> ENTRIES = new HashMap<>();

@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
 
 @Available("[1.18, )")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class AbstractLivingEntityRendererImpl<T extends LivingEntity, M extends EntityModel<T>> extends LivingEntityRenderer<T, M> implements AbstractEntityRendererProviderImpl {
 
     public AbstractLivingEntityRendererImpl(Context context, M entityModel, float f) {

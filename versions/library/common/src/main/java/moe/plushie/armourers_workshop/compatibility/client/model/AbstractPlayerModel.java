@@ -9,7 +9,7 @@ import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.world.entity.LivingEntity;
 
 @Available("[1.18, )")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class AbstractPlayerModel<T extends LivingEntity> extends PlayerModel<T> {
 
     public AbstractPlayerModel(AbstractEntityRendererProvider.Context context, float scale, boolean slim) {

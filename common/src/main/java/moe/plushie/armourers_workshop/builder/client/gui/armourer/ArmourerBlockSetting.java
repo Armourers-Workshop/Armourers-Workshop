@@ -29,7 +29,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ArmourerBlockSetting extends ArmourerBaseSetting {
 
     protected final ArmourerBlockEntity blockEntity;

@@ -2,10 +2,12 @@ package moe.plushie.armourers_workshop.utils.math;
 
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
+import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 
 import java.nio.FloatBuffer;
 
+@SuppressWarnings("unused")
 public class OpenMatrix4f implements IMatrix4f {
 
     public float m00, m01, m02, m03;
@@ -369,10 +371,11 @@ public class OpenMatrix4f implements IMatrix4f {
 
     @Override
     public void invert() {
-        float f = adjugateAndDet();
-        if (Math.abs(f) > 1.0E-6f) {
-            multiply(f);
-        }
+//        float f = adjugateAndDet();
+//        if (Math.abs(f) > 1.0E-6f) {
+//            multiply(f);
+//        }
+        invertGeneric(this, this);
     }
 
     @Override
@@ -421,6 +424,55 @@ public class OpenMatrix4f implements IMatrix4f {
 
     private static int bufferIndex(int i, int j) {
         return j * 4 + i;
+    }
+
+    private static void invertGeneric(OpenMatrix4f in, OpenMatrix4f ret) {
+        float a = in.m00 * in.m11 - in.m01 * in.m10;
+        float b = in.m00 * in.m12 - in.m02 * in.m10;
+        float c = in.m00 * in.m13 - in.m03 * in.m10;
+        float d = in.m01 * in.m12 - in.m02 * in.m11;
+        float e = in.m01 * in.m13 - in.m03 * in.m11;
+        float f = in.m02 * in.m13 - in.m03 * in.m12;
+        float g = in.m20 * in.m31 - in.m21 * in.m30;
+        float h = in.m20 * in.m32 - in.m22 * in.m30;
+        float i = in.m20 * in.m33 - in.m23 * in.m30;
+        float j = in.m21 * in.m32 - in.m22 * in.m31;
+        float k = in.m21 * in.m33 - in.m23 * in.m31;
+        float l = in.m22 * in.m33 - in.m23 * in.m32;
+        float det = a * l - b * k + c * j + d * i - e * h + f * g;
+        det = 1.0f / det;
+        float m00 = MathUtils.fma( in.m11, l, MathUtils.fma(-in.m12, k,  in.m13 * j)) * det;
+        float m01 = MathUtils.fma(-in.m01, l, MathUtils.fma( in.m02, k, -in.m03 * j)) * det;
+        float m02 = MathUtils.fma( in.m31, f, MathUtils.fma(-in.m32, e,  in.m33 * d)) * det;
+        float m03 = MathUtils.fma(-in.m21, f, MathUtils.fma( in.m22, e, -in.m23 * d)) * det;
+        float m10 = MathUtils.fma(-in.m10, l, MathUtils.fma( in.m12, i, -in.m13 * h)) * det;
+        float m11 = MathUtils.fma( in.m00, l, MathUtils.fma(-in.m02, i,  in.m03 * h)) * det;
+        float m12 = MathUtils.fma(-in.m30, f, MathUtils.fma( in.m32, c, -in.m33 * b)) * det;
+        float m13 = MathUtils.fma( in.m20, f, MathUtils.fma(-in.m22, c,  in.m23 * b)) * det;
+        float m20 = MathUtils.fma( in.m10, k, MathUtils.fma(-in.m11, i,  in.m13 * g)) * det;
+        float m21 = MathUtils.fma(-in.m00, k, MathUtils.fma( in.m01, i, -in.m03 * g)) * det;
+        float m22 = MathUtils.fma( in.m30, e, MathUtils.fma(-in.m31, c,  in.m33 * a)) * det;
+        float m23 = MathUtils.fma(-in.m20, e, MathUtils.fma( in.m21, c, -in.m23 * a)) * det;
+        float m30 = MathUtils.fma(-in.m10, j, MathUtils.fma( in.m11, h, -in.m12 * g)) * det;
+        float m31 = MathUtils.fma( in.m00, j, MathUtils.fma(-in.m01, h,  in.m02 * g)) * det;
+        float m32 = MathUtils.fma(-in.m30, d, MathUtils.fma( in.m31, b, -in.m32 * a)) * det;
+        float m33 = MathUtils.fma( in.m20, d, MathUtils.fma(-in.m21, b,  in.m22 * a)) * det;
+        ret.m00 = m00;
+        ret.m01 = m01;
+        ret.m02 = m02;
+        ret.m03 = m03;
+        ret.m10 = m10;
+        ret.m11 = m11;
+        ret.m12 = m12;
+        ret.m13 = m13;
+        ret.m20 = m20;
+        ret.m21 = m21;
+        ret.m22 = m22;
+        ret.m23 = m23;
+        ret.m30 = m30;
+        ret.m31 = m31;
+        ret.m32 = m32;
+        ret.m33 = m33;
     }
 
     private static void multiply(OpenMatrix4f lhs, OpenMatrix4f rhs, OpenMatrix4f ret) {

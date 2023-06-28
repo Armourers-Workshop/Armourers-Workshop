@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFieldDelegate {
 
     private final UITextField nameTextField = new UITextField(new CGRect(8, 58, 158, 16));

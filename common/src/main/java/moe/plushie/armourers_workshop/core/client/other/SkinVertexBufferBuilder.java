@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBufferSource {
 
     private static SkinVertexBufferBuilder MERGED_VERTEX_BUILDER;

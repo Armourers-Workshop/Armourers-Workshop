@@ -53,7 +53,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UITextFieldDelegate, ISkinLibraryListener {
 
     private final UICheckBox trackCheckBox = new UICheckBox(CGRect.ZERO);

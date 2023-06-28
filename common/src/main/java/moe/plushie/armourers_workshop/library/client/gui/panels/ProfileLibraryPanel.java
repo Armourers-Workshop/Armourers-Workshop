@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.library.client.gui.panels;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ProfileLibraryPanel extends AbstractLibraryPanel {
 
 //    private final GuiScrollbar scrollbar;

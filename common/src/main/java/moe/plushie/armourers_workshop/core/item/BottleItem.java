@@ -82,7 +82,7 @@ public class BottleItem extends FlavouredItem implements IItemTintColorProvider,
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltips, TooltipFlag flags) {
         super.appendHoverText(itemStack, level, tooltips, flags);
         IPaintColor paintColor = getItemColor(itemStack);

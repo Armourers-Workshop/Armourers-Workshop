@@ -13,7 +13,7 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
 @Available("[1.18, )")
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class AbstractModelPartBuilderImpl extends ModelPartBuilder {
 
     public AbstractModelPartBuilderImpl(int width, int texHeight) {

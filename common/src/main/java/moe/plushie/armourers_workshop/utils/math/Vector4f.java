@@ -7,6 +7,8 @@ import net.minecraft.core.Position;
 @SuppressWarnings("unused")
 public class Vector4f {
 
+    public static final Vector4f ZERO = new Vector4f(0, 0, 0, 0);
+
     private float x;
     private float y;
     private float z;
@@ -22,6 +24,10 @@ public class Vector4f {
         this.w = w;
     }
 
+    public Vector4f(Vector4f pos) {
+        this(pos.x, pos.y, pos.z, pos.w);
+    }
+
     public Vector4f(Position pos) {
         this((float) pos.x(), (float) pos.y(), (float) pos.z(), 1.0F);
     }
@@ -30,7 +36,8 @@ public class Vector4f {
     public boolean equals(Object other) {
         if (this == other) {
             return true;
-        } else if (other != null && this.getClass() == other.getClass()) {
+        }
+        if (other != null && this.getClass() == other.getClass()) {
             Vector4f vector4f = (Vector4f) other;
             if (Float.compare(vector4f.x, this.x) != 0) {
                 return false;
@@ -41,9 +48,8 @@ public class Vector4f {
             } else {
                 return Float.compare(vector4f.w, this.w) == 0;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     @Override
@@ -70,42 +76,20 @@ public class Vector4f {
         return this.w;
     }
 
-    public float getX() {
-        return x;
-    }
-
     public void setX(float x) {
         this.x = x;
-    }
-
-    public float getY() {
-        return y;
     }
 
     public void setY(float y) {
         this.y = y;
     }
 
-    public float getZ() {
-        return z;
-    }
-
     public void setZ(float z) {
         this.z = z;
     }
 
-    public float getW() {
-        return w;
-    }
-
     public void setW(float w) {
         this.w = w;
-    }
-
-    public void mul(Position pos) {
-        this.x *= pos.x();
-        this.y *= pos.y();
-        this.z *= pos.z();
     }
 
     public void set(float x, float y, float z, float w) {
@@ -115,6 +99,63 @@ public class Vector4f {
         this.w = w;
     }
 
+    public void add(float tx, float ty, float tz, float tw) {
+        x += tx;
+        y += ty;
+        z += tz;
+        w += tw;
+    }
+
+    public void add(Vector4f pos) {
+        x += pos.x;
+        y += pos.y;
+        z += pos.z;
+        w += pos.w;
+    }
+
+    public void subtract(float tx, float ty, float tz, float tw) {
+        x -= tx;
+        y -= ty;
+        z -= tz;
+        w += tw;
+    }
+
+    public void subtract(Vector4f pos) {
+        x -= pos.x;
+        y -= pos.y;
+        z -= pos.z;
+        w -= pos.w;
+    }
+
+    public void scale(float scale) {
+        x *= scale;
+        y *= scale;
+        z *= scale;
+        w *= scale;
+    }
+
+    public void scale(float sx, float sy, float sz, float sw) {
+        x *= sx;
+        y *= sy;
+        z *= sz;
+        w *= sw;
+    }
+
+    public void transform(IMatrix4f matrix) {
+        float[] floats = {x, y, z, w};
+        matrix.multiply(floats);
+        set(floats[0], floats[1], floats[2], floats[3]);
+    }
+
+    public void transform(OpenQuaternionf q) {
+        OpenQuaternionf quaternion = new OpenQuaternionf(q);
+        quaternion.mul(new OpenQuaternionf(x, y, z, 0.0F));
+        OpenQuaternionf quaternion1 = new OpenQuaternionf(q);
+        quaternion1.conj();
+        quaternion.mul(quaternion1);
+        set(quaternion.x(), quaternion.y(), quaternion.z(), w);
+    }
+    
     public float dot(Vector4f pos) {
         return x * pos.x + y * pos.y + z * pos.z + w * pos.w;
     }
@@ -132,31 +173,67 @@ public class Vector4f {
         return true;
     }
 
-    public void transform(IMatrix4f matrix) {
-        float[] floats = {x, y, z, w};
-        matrix.multiply(floats);
-        set(floats[0], floats[1], floats[2], floats[3]);
+    public Vector4f scaling(float scale) {
+        Vector4f ret = copy();
+        ret.scale(scale);
+        return ret;
     }
 
-    public void transform(OpenQuaternionf q) {
-        OpenQuaternionf quaternion = new OpenQuaternionf(q);
-        quaternion.mul(new OpenQuaternionf(x, y, z, 0.0F));
-        OpenQuaternionf quaternion1 = new OpenQuaternionf(q);
-        quaternion1.conj();
-        quaternion.mul(quaternion1);
-        set(quaternion.x(), quaternion.y(), quaternion.z(), this.w());
+    public Vector4f scaling(float sx, float sy, float sz, float sw) {
+        Vector4f ret = copy();
+        ret.scale(sx, sy, sz, sw);
+        return ret;
     }
 
-    public void perspectiveDivide() {
-        this.x /= this.w;
-        this.y /= this.w;
-        this.z /= this.w;
-        this.w = 1.0F;
+    public Vector4f adding(float tx, float ty, float tz, float tw) {
+        Vector4f ret = copy();
+        ret.add(tx, ty, tz, tw);
+        return ret;
+    }
+
+    public Vector4f adding(Vector4f pos) {
+        Vector4f ret = copy();
+        ret.add(pos);
+        return ret;
+    }
+
+    public Vector4f subtracting(float tx, float ty, float tz, float tw) {
+        Vector4f ret = copy();
+        ret.subtract(tx, ty, tz, tw);
+        return ret;
+    }
+
+    public Vector4f subtracting(Vector4f pos) {
+        Vector4f ret = copy();
+        ret.subtract(pos);
+        return ret;
+    }
+
+    public Vector4f transforming(IMatrix4f mat) {
+        Vector4f ret = copy();
+        ret.transform(mat);
+        return ret;
+    }
+
+    public Vector4f transforming(OpenQuaternionf value) {
+        Vector4f ret = copy();
+        ret.transform(value);
+        return ret;
+    }
+
+    public Vector4f normalizing() {
+        Vector4f ret = copy();
+        ret.normalize();
+        return ret;
+    }
+
+    public Vector4f copy() {
+        return new Vector4f(x, y, z, w);
     }
 
     @Override
     public String toString() {
-        return "[" + this.x + ", " + this.y + ", " + this.z + ", " + this.w + "]";
+        return String.format("(%g %g %g %g)", x, y, z, w);
     }
 }
 

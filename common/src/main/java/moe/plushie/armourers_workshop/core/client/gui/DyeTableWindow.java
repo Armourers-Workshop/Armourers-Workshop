@@ -14,7 +14,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Inventory;
 
 @SuppressWarnings({"unused"})
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class DyeTableWindow extends MenuWindow<DyeTableMenu> {
 
     private final SkinPreviewView previewView = new SkinPreviewView(new CGRect(174, 23, 148, 159));

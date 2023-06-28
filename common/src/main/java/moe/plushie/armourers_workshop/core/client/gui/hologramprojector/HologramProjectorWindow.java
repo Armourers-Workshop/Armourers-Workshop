@@ -18,7 +18,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.Nullable;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class HologramProjectorWindow extends MenuWindow<HologramProjectorMenu> {
 
     private final TabView tabView = new TabView(CGRect.ZERO);

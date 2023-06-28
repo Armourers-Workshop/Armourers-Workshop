@@ -25,7 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import java.util.List;
 import java.util.function.Consumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public interface ClientNativeProvider {
 
     void willRegisterItemColor(Consumer<ItemColorRegistry> consumer);

@@ -13,7 +13,7 @@ import net.fabricmc.api.Environment;
 
 import java.util.function.BiConsumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ConfirmDialog extends BaseDialog {
 
     protected final UILabel messageLabel = new UILabel(new CGRect(0, 8, 240, 20));

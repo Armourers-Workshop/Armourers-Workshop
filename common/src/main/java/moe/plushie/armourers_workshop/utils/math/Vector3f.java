@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.utils.math;
 
-import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
+import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.minecraft.core.Position;
@@ -89,44 +89,25 @@ public final class Vector3f implements IVector3f, Position {
         return x;
     }
 
-    public void setX(float x) {
-        this.x = x;
-    }
-
     @Override
     public float getY() {
         return y;
+    }
+    @Override
+    public float getZ() {
+        return z;
+    }
+
+    public void setX(float x) {
+        this.x = x;
     }
 
     public void setY(float y) {
         this.y = y;
     }
 
-    @Override
-    public float getZ() {
-        return z;
-    }
-
     public void setZ(float z) {
         this.z = z;
-    }
-
-    public void mul(float scale) {
-        this.x *= scale;
-        this.y *= scale;
-        this.z *= scale;
-    }
-
-    public void mul(float x, float y, float z) {
-        this.x *= x;
-        this.y *= y;
-        this.z *= z;
-    }
-
-    public void clamp(float minValue, float maxValue) {
-        this.x = MathUtils.clamp(this.x, minValue, maxValue);
-        this.y = MathUtils.clamp(this.y, minValue, maxValue);
-        this.z = MathUtils.clamp(this.z, minValue, maxValue);
     }
 
     public void set(float x, float y, float z) {
@@ -135,55 +116,62 @@ public final class Vector3f implements IVector3f, Position {
         this.z = z;
     }
 
-    public void add(float x, float y, float z) {
-        this.x += x;
-        this.y += y;
-        this.z += z;
+    public void set(Vector3f pos) {
+        this.x = pos.x;
+        this.y = pos.y;
+        this.z = pos.z;
     }
 
-    public void add(Vector3f vec) {
-        this.x += vec.x;
-        this.y += vec.y;
-        this.z += vec.z;
+    public void set(float[] values) {
+        this.x = values[0];
+        this.y = values[1];
+        this.z = values[2];
     }
 
-    public void sub(Vector3f vec) {
-        this.x -= vec.x;
-        this.y -= vec.y;
-        this.z -= vec.z;
+    public void add(float tx, float ty, float tz) {
+        x += tx;
+        y += ty;
+        z += tz;
     }
 
-    public float dot(Vector3f vec) {
-        return this.x * vec.x + this.y * vec.y + this.z * vec.z;
+    public void add(Vector3f pos) {
+        x += pos.x;
+        y += pos.y;
+        z += pos.z;
     }
 
-    public boolean normalize() {
-        float f = this.x * this.x + this.y * this.y + this.z * this.z;
-        if ((double) f < 1.0E-5D) {
-            return false;
-        } else {
-            float f1 = MathUtils.fastInvSqrt(f);
-            this.x *= f1;
-            this.y *= f1;
-            this.z *= f1;
-            return true;
-        }
+    public void subtract(float tx, float ty, float tz) {
+        x -= tx;
+        y -= ty;
+        z -= tz;
     }
 
-    public void cross(Vector3f vec) {
-        float ax = this.x;
-        float ay = this.y;
-        float az = this.z;
-        float bx = vec.getX();
-        float by = vec.getY();
-        float bz = vec.getZ();
-        this.x = ay * bz - az * by;
-        this.y = az * bx - ax * bz;
-        this.z = ax * by - ay * bx;
+    public void subtract(Vector3f pos) {
+        x -= pos.x;
+        y -= pos.y;
+        z -= pos.z;
+    }
+
+    public void scale(float scale) {
+        x *= scale;
+        y *= scale;
+        z *= scale;
+    }
+
+    public void scale(float sx, float sy, float sz) {
+        x *= sx;
+        y *= sy;
+        z *= sz;
     }
 
     public void transform(IMatrix3f mat) {
         float[] floats = {x, y, z};
+        mat.multiply(floats);
+        set(floats[0], floats[1], floats[2]);
+    }
+
+    public void transform(IMatrix4f mat) {
+        float[] floats = {x, y, z, 1f};
         mat.multiply(floats);
         set(floats[0], floats[1], floats[2]);
     }
@@ -197,27 +185,64 @@ public final class Vector3f implements IVector3f, Position {
         set(quaternion.x(), quaternion.y(), quaternion.z());
     }
 
-    public void lerp(Vector3f vec, float f) {
+    public void normalize() {
+        float f = x * x + y * y + z * z;
+        if (f < 1.0E-5D) {
+            return;
+        }
+        float f1 = MathUtils.fastInvSqrt(f);
+        this.x *= f1;
+        this.y *= f1;
+        this.z *= f1;
+    }
+
+    public void cross(Vector3f pos) {
+        float ax = this.x;
+        float ay = this.y;
+        float az = this.z;
+        float bx = pos.getX();
+        float by = pos.getY();
+        float bz = pos.getZ();
+        this.x = ay * bz - az * by;
+        this.y = az * bx - ax * bz;
+        this.z = ax * by - ay * bx;
+    }
+
+    public void clamp(float minValue, float maxValue) {
+        x = MathUtils.clamp(x, minValue, maxValue);
+        y = MathUtils.clamp(y, minValue, maxValue);
+        z = MathUtils.clamp(z, minValue, maxValue);
+    }
+
+    public void lerp(Vector3f pos, float f) {
         float f1 = 1.0F - f;
-        this.x = this.x * f1 + vec.x * f;
-        this.y = this.y * f1 + vec.y * f;
-        this.z = this.z * f1 + vec.z * f;
+        this.x = this.x * f1 + pos.x * f;
+        this.y = this.y * f1 + pos.y * f;
+        this.z = this.z * f1 + pos.z * f;
+    }
+
+    public float dot(Vector3f pos) {
+        return x * pos.x + y * pos.y + z * pos.z;
+    }
+
+    public float length() {
+        return MathUtils.sqrt(x * x + y * y + z * z);
     }
 
     /**
-     * Computes distance of Vector3 vector to v.
+     * Computes distance of Vector3 vector to pos.
      */
-   public float distanceTo(Vector3f v) {
-        return MathUtils.sqrt(distanceToSquared(v));
+   public float distanceTo(Vector3f pos) {
+        return MathUtils.sqrt(distanceToSquared(pos));
     }
 
     /**
      * Computes squared distance of Vector3 vector to v.
      */
-    public float distanceToSquared(Vector3f v) {
-        float dx = x - v.x;
-        float dy = y - v.y;
-        float dz = z - v.z;
+    public float distanceToSquared(Vector3f pos) {
+        float dx = x - pos.x;
+        float dy = y - pos.y;
+        float dz = z - pos.z;
         return dx * dx + dy * dy + dz * dz;
     }
 
@@ -229,43 +254,85 @@ public final class Vector3f implements IVector3f, Position {
         return new OpenQuaternionf(this, f, true);
     }
 
-    public Vector3f copy() {
-        return new Vector3f(this.x, this.y, this.z);
+    public Vector3f adding(float tx, float ty, float tz) {
+        Vector3f ret = copy();
+        ret.add(tx, ty, tz);
+        return ret;
     }
 
-    public void map(Float2FloatFunction transform) {
-        this.x = transform.get(this.x);
-        this.y = transform.get(this.y);
-        this.z = transform.get(this.z);
+    public Vector3f adding(Vector3f pos) {
+        Vector3f ret = copy();
+        ret.add(pos);
+        return ret;
+    }
+
+    public Vector3f subtracting(float tx, float ty, float tz) {
+        Vector3f ret = copy();
+        ret.subtract(tx, ty, tz);
+        return ret;
+    }
+
+    public Vector3f subtracting(Vector3f pos) {
+        Vector3f ret = copy();
+        ret.subtract(pos);
+        return ret;
+    }
+
+    public Vector3f scaling(float scale) {
+        Vector3f ret = copy();
+        ret.scale(scale);
+        return ret;
+    }
+
+    public Vector3f scaling(float sx, float sy, float sz) {
+        Vector3f ret = copy();
+        ret.scale(sx, sy, sz);
+        return ret;
+    }
+
+    public Vector3f transforming(IMatrix3f mat) {
+        Vector3f ret = copy();
+        ret.transform(mat);
+        return ret;
+    }
+
+    public Vector3f transforming(IMatrix4f mat) {
+        Vector3f ret = copy();
+        ret.transform(mat);
+        return ret;
+    }
+
+    public Vector3f transforming(OpenQuaternionf value) {
+        Vector3f ret = copy();
+        ret.transform(value);
+        return ret;
+    }
+
+    public Vector3f normalizing() {
+        Vector3f ret = copy();
+        ret.normalize();
+        return ret;
+    }
+
+    public Vector3f crossing(Vector3f pos) {
+        Vector3f ret = copy();
+        ret.cross(pos);
+        return ret;
+    }
+
+    public Vector3f clamping(float minValue, float maxValue) {
+        Vector3f ret = copy();
+        ret.clamp(minValue, maxValue);
+        return ret;
+    }
+
+    public Vector3f copy() {
+        return new Vector3f(this.x, this.y, this.z);
     }
 
     @Override
     public String toString() {
         return String.format("(%g %g %g)", x, y, z);
-    }
-
-    public void set(Vector3f vec) {
-        this.x = vec.x;
-        this.y = vec.y;
-        this.z = vec.z;
-    }
-
-    public void set(float[] values) {
-        this.x = values[0];
-        this.y = values[1];
-        this.z = values[2];
-    }
-
-    public void setFromSpherical(Sphericalf s) {
-        this.setFromSphericalCoords(s.radius, s.phi, s.theta);
-
-    }
-
-    public void setFromSphericalCoords(float radius, float phi, float theta) {
-        float sinPhiRadius = MathUtils.sin(phi) * radius;
-        this.x = sinPhiRadius * MathUtils.sin(theta);
-        this.y = MathUtils.cos(phi) * radius;
-        this.z = sinPhiRadius * MathUtils.cos(theta);
     }
 }
 

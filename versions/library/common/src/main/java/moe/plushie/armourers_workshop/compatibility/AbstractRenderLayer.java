@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.Entity;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class AbstractRenderLayer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
     public AbstractRenderLayer(RenderLayerParent<T, M> renderLayerParent) {

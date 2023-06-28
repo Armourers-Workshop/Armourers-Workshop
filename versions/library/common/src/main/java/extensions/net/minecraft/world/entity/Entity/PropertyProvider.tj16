@@ -29,4 +29,18 @@ public class PropertyProvider {
     public static Level getLevel(@This Entity entity) {
         return entity.level;
     }
+
+    public static void setOldPosAndRot(@This Entity entity) {
+        double d = entity.getX();
+        double e = entity.getY();
+        double f = entity.getZ();
+        entity.xo = d;
+        entity.yo = e;
+        entity.zo = f;
+        entity.xOld = d;
+        entity.yOld = e;
+        entity.zOld = f;
+        entity.xRotO = entity.xRot;
+        entity.yRotO = entity.yRot;
+    }
 }

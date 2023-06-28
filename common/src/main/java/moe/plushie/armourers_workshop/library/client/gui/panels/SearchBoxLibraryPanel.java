@@ -22,7 +22,7 @@ import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SearchBoxLibraryPanel extends AbstractLibraryPanel implements UITextFieldDelegate {
 
     private final SearchOrderType[] orderTypes = {SearchOrderType.DESC, SearchOrderType.ASC};

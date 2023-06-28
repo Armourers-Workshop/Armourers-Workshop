@@ -18,7 +18,7 @@ import net.minecraft.network.chat.Style;
 
 import java.util.function.Predicate;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class AbstractLibraryPanel extends UIView {
 
     public String baseKey;

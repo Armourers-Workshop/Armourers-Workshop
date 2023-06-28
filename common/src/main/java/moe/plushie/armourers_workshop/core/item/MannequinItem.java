@@ -118,7 +118,7 @@ public class MannequinItem extends FlavouredItem {
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltips, TooltipFlag flag) {
         super.appendHoverText(itemStack, level, tooltips, flag);
         PlayerTextureDescriptor descriptor = PlayerTextureDescriptor.of(itemStack);

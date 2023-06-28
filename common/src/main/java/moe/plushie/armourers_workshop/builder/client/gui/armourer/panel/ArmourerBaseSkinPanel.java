@@ -17,7 +17,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ArmourerBaseSkinPanel extends UIView {
 
     protected final SkinProperties skinProperties;

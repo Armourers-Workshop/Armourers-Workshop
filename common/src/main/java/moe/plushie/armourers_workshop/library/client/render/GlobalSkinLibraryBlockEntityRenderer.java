@@ -15,7 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends AbstractBlockEntityRenderer<T> {
 
     private final ModelPart model = ModelPartBuilder.of(64, 32).cube(-8, -8, -8, 16, 16, 16).build();

@@ -19,7 +19,7 @@ import org.apache.logging.log4j.util.Strings;
 
 import java.util.function.BiConsumer;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SkinEditLibraryPanel extends AbstractLibraryPanel {
 
     private UITextField textName;

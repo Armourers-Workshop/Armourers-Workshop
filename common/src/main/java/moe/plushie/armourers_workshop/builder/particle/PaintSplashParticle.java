@@ -9,7 +9,7 @@
 //import net.minecraftforge.api.distmarker.Dist;
 //import net.minecraftforge.api.distmarker.OnlyIn;
 //
-//@Environment(value = EnvType.CLIENT)
+//@Environment(EnvType.CLIENT)
 //public class PaintSplashParticle extends RainParticle {
 //
 //    private PaintSplashParticle(ClientLevel world, double x, double y, double z, double xd, double yd, double zd, Direction dir) {
@@ -70,7 +70,7 @@
 //        return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 //    }
 //
-//    @Environment(value = EnvType.CLIENT)
+//    @Environment(EnvType.CLIENT)
 //    public static class Factory implements IParticleFactory<PaintSplashParticleData> {
 //        private final IAnimatedSprite sprite;
 //

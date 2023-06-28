@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
 
     private final Router router = new Router();

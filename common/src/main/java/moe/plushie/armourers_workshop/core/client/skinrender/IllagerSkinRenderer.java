@@ -10,7 +10,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.IllagerModel;
 import net.minecraft.world.entity.monster.AbstractIllager;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class IllagerSkinRenderer<T extends AbstractIllager, V extends IllagerModel<T>, M extends IHumanoidModelHolder<V>> extends ExtendedSkinRenderer<T, V, M> {
 
     public IllagerSkinRenderer(EntityProfile profile) {

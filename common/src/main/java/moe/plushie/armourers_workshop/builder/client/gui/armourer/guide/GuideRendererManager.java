@@ -7,7 +7,7 @@ import net.fabricmc.api.Environment;
 
 import java.util.HashMap;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class GuideRendererManager {
 
     private final HashMap<ISkinPartType, IGuideRenderer> renderers = new HashMap<>();

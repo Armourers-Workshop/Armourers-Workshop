@@ -14,7 +14,7 @@ import net.fabricmc.api.Environment;
 
 import java.util.Map;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class InfoLibraryPanel extends AbstractLibraryPanel implements UILabelDelegate {
 
     private static final String URL_DISCORD = "https://discord.gg/5Z3KKvU";

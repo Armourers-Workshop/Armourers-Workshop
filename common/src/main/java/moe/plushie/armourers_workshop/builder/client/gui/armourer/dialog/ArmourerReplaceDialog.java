@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ArmourerReplaceDialog extends ConfirmDialog {
 
     private final Inventory playerInventory;

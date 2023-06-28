@@ -10,7 +10,7 @@ import net.fabricmc.api.Environment;
 
 import java.util.function.Predicate;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class InputDialog extends ConfirmDialog implements UITextFieldDelegate {
 
     protected final UITextField textField = new UITextField(new CGRect(10, 30, 100, 20));

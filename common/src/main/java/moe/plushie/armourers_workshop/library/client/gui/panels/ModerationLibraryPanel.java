@@ -14,7 +14,7 @@ import net.minecraft.client.resources.language.I18n;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-@Environment(value = EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ModerationLibraryPanel extends AbstractLibraryPanel implements ReportList.IEventListener {
 
     private final ReportList listReports = buildReportList();
