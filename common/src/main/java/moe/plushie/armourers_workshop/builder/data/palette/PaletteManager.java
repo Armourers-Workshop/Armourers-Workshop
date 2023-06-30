@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.SerializeHelper;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -23,6 +24,7 @@ public class PaletteManager {
     private final File paletteFile;
     private final LinkedHashMap<String, Palette> paletteMap = new LinkedHashMap<>();
     private boolean dirty = false;
+    private Palette currentPalette = null;
 
     public PaletteManager() {
         paletteFile = new File(EnvironmentManager.getRootDirectory(), "palettes.json");
@@ -59,6 +61,15 @@ public class PaletteManager {
 
     public Collection<Palette> getPalettes() {
         return paletteMap.values();
+    }
+
+    public void setCurrentPalette(@Nullable Palette palette) {
+        currentPalette = palette;
+    }
+
+    @Nullable
+    public Palette getCurrentPalette() {
+        return currentPalette;
     }
 
     public void deletePalette(String paletteName) {

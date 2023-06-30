@@ -5,6 +5,7 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIView;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
@@ -43,6 +44,11 @@ public class PaintColorView extends UIView {
 
     public PaintColor paintColor() {
         return PaintColor.of(color.getRGB(), paintType);
+    }
+
+    public void setPaintColor(IPaintColor color) {
+        setColor(new UIColor(color.getRGB()));
+        setPaintType(color.getPaintType());
     }
 
     public ISkinPaintType paintType() {

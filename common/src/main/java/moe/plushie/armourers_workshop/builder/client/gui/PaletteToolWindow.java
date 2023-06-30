@@ -3,46 +3,56 @@ package moe.plushie.armourers_workshop.builder.client.gui;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIButton;
-import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIComboBox;
 import com.apple.library.uikit.UIComboItem;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIEdgeInsets;
 import com.apple.library.uikit.UIImage;
+import com.apple.library.uikit.UIImageView;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UITextFieldDelegate;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
-import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.widget.PaletteEditingWindow;
-import moe.plushie.armourers_workshop.builder.menu.ColorMixerMenu;
-import moe.plushie.armourers_workshop.builder.network.UpdateColorMixerPacket;
+import moe.plushie.armourers_workshop.core.client.gui.widget.ClientMenuScreen;
 import moe.plushie.armourers_workshop.core.client.gui.widget.HSBSliderBox;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
+import moe.plushie.armourers_workshop.core.menu.AbstractContainerMenu;
+import moe.plushie.armourers_workshop.core.network.UpdateConfigurableToolPacket;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
+import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
 @Environment(EnvType.CLIENT)
-public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> implements UITextFieldDelegate {
+public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMenu> implements UITextFieldDelegate {
 
-    public ColorMixerWindow(ColorMixerMenu container, Inventory inventory, NSString title) {
-        super(container, inventory, title);
-        this.setFrame(new CGRect(0, 0, 256, 240));
-        this.reloadStatus();
+    private final InteractionHand hand;
+    private final ItemStack itemStack;
+
+    public PaletteToolWindow(Component title, ItemStack itemStack, InteractionHand hand) {
+        super(ClientMenuScreen.getEmptyMenu(), ClientMenuScreen.getEmptyInventory(), new NSString(title));
+        this.hand = hand;
+        this.itemStack = itemStack;
+        this.paintColorView.setPaintColor(getItemColor(itemStack));
+        this.inventoryView.removeFromSuperview();
+        this.setFrame(new CGRect(0, 0, 256, 151));
     }
 
     @Override
     public void init() {
         super.init();
-        setupLayout();
+        setupLayout();;
         setupBackgroundView();
         setupPaletteViews();
         setupPickerViews();
@@ -53,43 +63,10 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
     }
 
     @Override
-    public void menuDidChange() {
-        super.menuDidChange();
-        reloadStatus();
-    }
-
-    protected void reloadStatus() {
-        ColorMixerBlockEntity blockEntity = menu.getBlockEntity(ColorMixerBlockEntity.class);
-        if (blockEntity == null) {
-            return;
-        }
-        IPaintColor paintColor = blockEntity.getColor();
-        UIColor selectedColor = new UIColor(paintColor.getRGB());
-        ISkinPaintType selectedPaintType = paintColor.getPaintType();
-        paintColorView.setColor(selectedColor);
-        paintColorView.setPaintType(selectedPaintType);
-        if (paintComboBox == null || paintTypes == null) {
-            return;
-        }
-        setSelectedColor(selectedColor);
-        int selectedIndex = paintTypes.indexOf(selectedPaintType);
-        if (selectedIndex >= 0) {
-            paintComboBox.setSelectedIndex(selectedIndex);
-        }
-    }
-
-    @Override
     protected void submitColorChange(UIControl control) {
-        ColorMixerBlockEntity blockEntity = menu.getBlockEntity(ColorMixerBlockEntity.class);
-        if (blockEntity == null) {
-            return;
-        }
         PaintColor paintColor = paintColorView.paintColor();
-        UpdateColorMixerPacket.Field field = UpdateColorMixerPacket.Field.COLOR;
-        if (paintColor.equals(field.get(blockEntity))) {
-            return;
-        }
-        NetworkManager.sendToServer(new UpdateColorMixerPacket(blockEntity, field, paintColor));
+        ColorUtils.setColor(itemStack, paintColor);
+        NetworkManager.sendToServer(new UpdateConfigurableToolPacket(hand, itemStack));
     }
 
     private void setupLayout() {
@@ -101,7 +78,12 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
     }
 
     private void setupBackgroundView() {
-        setBackgroundView(UIImage.of(ModTextures.COLOR_MIXER).build());
+        setBackgroundView(ModTextures.defaultWindowImage());
+
+        UIImageView bg = new UIImageView(new CGRect(107, 101, 15, 15));
+        bg.setImage(UIImage.of(ModTextures.COLOR_MIXER).uv(107, 101).build());
+        bg.setAutoresizingMask(AutoresizingMask.flexibleBottomMargin | AutoresizingMask.flexibleRightMargin);
+        addSubview(bg);
 
         setupLabel(5, 21, "label.hue");
         setupLabel(5, 46, "label.saturation");
@@ -127,12 +109,12 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
     }
 
     private void setupPaletteViews() {
-        paletteBox.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, ColorMixerWindow::applyPaletteChange);
+        paletteBox.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, PaletteToolWindow::applyPaletteChange);
         addSubview(paletteBox);
         setupHelpButton(186, 130);
-        setupButton(232, 126, 208, 176, "button.add_palette", ColorMixerWindow::showNewPaletteDialog);
-        setupButton(214, 126, 208, 160, "button.remove_palette", ColorMixerWindow::showRemovePaletteDialog);
-        setupButton(196, 126, 208, 192, "button.rename_palette", ColorMixerWindow::showRenamePaletteDialog);
+        setupButton(232, 126, 208, 176, "button.add_palette", PaletteToolWindow::showNewPaletteDialog);
+        setupButton(214, 126, 208, 160, "button.remove_palette", PaletteToolWindow::showRemovePaletteDialog);
+        setupButton(196, 126, 208, 192, "button.rename_palette", PaletteToolWindow::showRenamePaletteDialog);
         setupPaletteList();
     }
 
@@ -142,7 +124,7 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
         addSubview(label);
     }
 
-    private void setupButton(int x, int y, int u, int v, String key, BiConsumer<ColorMixerWindow, UIControl> consumer) {
+    private void setupButton(int x, int y, int u, int v, String key, BiConsumer<PaletteToolWindow, UIControl> consumer) {
         UIButton button = new UIButton(new CGRect(x, y, 16, 16));
         button.setTooltip(getDisplayText(key));
         button.setBackgroundImage(ModTextures.defaultButtonImage(u, v), UIControl.State.ALL);
@@ -160,8 +142,8 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
 
     private HSBSliderBox setupHSBSlider(int x, int y, HSBSliderBox.Type type) {
         HSBSliderBox slider = new HSBSliderBox(type, new CGRect(x, y, 150, 10));
-        slider.addTarget(this, UIControl.Event.VALUE_CHANGED, ColorMixerWindow::applyColorChange);
-        slider.addTarget(this, UIControl.Event.EDITING_DID_END, ColorMixerWindow::submitColorChange);
+        slider.addTarget(this, UIControl.Event.VALUE_CHANGED, PaletteToolWindow::applyColorChange);
+        slider.addTarget(this, UIControl.Event.EDITING_DID_END, PaletteToolWindow::submitColorChange);
         addSubview(slider);
         return slider;
     }
@@ -205,5 +187,17 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
     @Override
     protected NSString getDisplayText(String key) {
         return new NSString(TranslateUtils.title("inventory.armourers_workshop.colour-mixer" + "." + key));
+    }
+
+    protected IPaintColor getItemColor(ItemStack itemStack) {
+        IPaintColor paintColor = ColorUtils.getColor(itemStack);
+        if (paintColor != null) {
+            return paintColor;
+        }
+        return PaintColor.WHITE;
+    }
+
+    public Screen asScreen() {
+        return new ClientMenuScreen(this, title.component());
     }
 }

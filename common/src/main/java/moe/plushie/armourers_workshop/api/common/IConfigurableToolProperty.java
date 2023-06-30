@@ -5,6 +5,8 @@ import net.minecraft.world.item.ItemStack;
 
 public interface IConfigurableToolProperty<T> {
 
+    String OPTIONS_KEY = "Options";
+
     String getName();
 
     T empty();
@@ -15,8 +17,8 @@ public interface IConfigurableToolProperty<T> {
 
     default T get(ItemStack itemStack) {
         CompoundTag nbt = itemStack.getTag();
-        if (nbt != null && nbt.contains("Options", 10)) {
-            return get(nbt.getCompound("Options"));
+        if (nbt != null && nbt.contains(OPTIONS_KEY, 10)) {
+            return get(nbt.getCompound(OPTIONS_KEY));
         }
         return empty();
     }
@@ -25,16 +27,16 @@ public interface IConfigurableToolProperty<T> {
         CompoundTag newNBT = null;
         CompoundTag nbt = itemStack.getTag();
         if (nbt != null) {
-            newNBT = nbt.getCompound("Options");
+            newNBT = nbt.getCompound(OPTIONS_KEY);
         }
         if (newNBT == null) {
             newNBT = new CompoundTag();
         }
         set(newNBT, value);
         if (newNBT.size() != 0) {
-            itemStack.getOrCreateTag().put("Options", newNBT);
+            itemStack.getOrCreateTag().put(OPTIONS_KEY, newNBT);
         } else if (nbt != null) {
-            nbt.remove("Options");
+            nbt.remove(OPTIONS_KEY);
         }
     }
 }

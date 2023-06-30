@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.builder.client.gui.PaletteToolWindow;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
@@ -17,13 +18,19 @@ import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModSounds;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutorIO;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -80,6 +87,22 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
     }
 
     @Override
+    public boolean openContainer(Level level, Player player, InteractionHand hand, ItemStack itemStack) {
+        // when the play hold ctrl, we need to open the built-in palette.
+        if (level.isClientSide() && EnvironmentExecutorIO.hasControlDown()) {
+            openPaletteGUI(level, player, hand, itemStack);
+            return true;
+        }
+        return super.openContainer(level, player, hand, itemStack);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void openPaletteGUI(Level level, Player player, InteractionHand hand, ItemStack itemStack) {
+        PaletteToolWindow window = new PaletteToolWindow(itemStack.getHoverName(), itemStack, hand);
+        Minecraft.getInstance().setScreen(window.asScreen());
+    }
+
+    @Override
     public void setItemColor(ItemStack itemStack, IPaintColor paintColor) {
         ColorUtils.setColor(itemStack, paintColor);
     }
@@ -98,13 +121,13 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
     }
 
     @Override
-    public boolean isFoil(ItemStack itemStack) {
-        IPaintColor paintColor = getItemColor(itemStack, PaintColor.WHITE);
-        return paintColor.getPaintType() != SkinPaintTypes.NORMAL;
+    public IRegistryKey<SoundEvent> getItemSoundEvent(UseOnContext context) {
+        return ModSounds.PAINT;
     }
 
     @Override
-    public IRegistryKey<SoundEvent> getItemSoundEvent(UseOnContext context) {
-        return ModSounds.PAINT;
+    public boolean isFoil(ItemStack itemStack) {
+        IPaintColor paintColor = getItemColor(itemStack, PaintColor.WHITE);
+        return paintColor.getPaintType() != SkinPaintTypes.NORMAL;
     }
 }

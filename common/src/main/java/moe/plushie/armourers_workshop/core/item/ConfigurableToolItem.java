@@ -55,12 +55,12 @@ public abstract class ConfigurableToolItem extends FlavouredItem implements ICon
         if (properties.isEmpty()) {
             return false;
         }
-        openGUI(getName(itemStack), properties, hand, itemStack);
+        openContainerGUI(getName(itemStack), properties, hand, itemStack);
         return true;
     }
 
-    @Environment(value = EnvType.CLIENT)
-    public void openGUI(Component title, ArrayList<IConfigurableToolProperty<?>> properties, InteractionHand hand, ItemStack itemStack) {
+    @Environment(EnvType.CLIENT)
+    public void openContainerGUI(Component title, ArrayList<IConfigurableToolProperty<?>> properties, InteractionHand hand, ItemStack itemStack) {
         ConfigurableToolWindow window = new ConfigurableToolWindow(title, properties, itemStack, hand);
         Minecraft.getInstance().setScreen(window.asScreen());
     }
