@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.client.gui.wardrobe;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIButton;
-import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UILabel;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
@@ -53,7 +52,6 @@ public class SkinWardrobeLocationSetting extends SkinWardrobeBaseSetting {
     private void setupLabel(int x, int y, String text) {
         UILabel label = new UILabel(new CGRect(x, y, 10, 9));
         label.setText(new NSString(text));
-        label.setTextColor(new UIColor(0x333333));
         addSubview(label);
     }
 

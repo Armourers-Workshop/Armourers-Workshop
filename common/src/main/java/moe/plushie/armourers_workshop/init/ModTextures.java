@@ -15,7 +15,6 @@ public class ModTextures {
     public static final ResourceLocation WARDROBE_1 = res("textures/gui/wardrobe/wardrobe-1.png");
     public static final ResourceLocation WARDROBE_2 = res("textures/gui/wardrobe/wardrobe-2.png");
 
-    public static final ResourceLocation HOLOGRAM_PROJECTOR = res("textures/gui/hologram_projector/hologram-projector.png");
     public static final ResourceLocation SKINNING_TABLE = res("textures/gui/skinning_table/skinning-table.png");
     public static final ResourceLocation DYE_TABLE = res("textures/gui/dye_table/dye-table.png");
     public static final ResourceLocation SKIN_LIBRARY = res("textures/gui/skin_library/armour-library.png");

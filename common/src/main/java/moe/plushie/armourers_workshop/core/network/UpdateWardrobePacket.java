@@ -92,14 +92,14 @@ public class UpdateWardrobePacket extends CustomPacket {
         // We can't allow wardrobe updates without container.
         String playerName = player.getDisplayName().getString();
         if (!(player.containerMenu instanceof SkinWardrobeMenu)) {
-            ModLog.info("the wardrobe {} operation rejected for '{}'", field, playerName);
+            ModLog.info("the wardrobe {} operation rejected for '{}'", getOperator(), playerName);
             return;
         }
         if (!checkSecurityByServer()) {
-            ModLog.info("the wardrobe {} operation rejected for '{}', for security reasons.", field, playerName);
+            ModLog.info("the wardrobe {} operation rejected for '{}', for security reasons.", getOperator(), playerName);
             return;
         }
-        ModLog.debug("the wardrobe {} operation accepted for '{}'", field, playerName);
+        ModLog.debug("the wardrobe {} operation accepted for '{}'", getOperator(), playerName);
         SkinWardrobe wardrobe = apply(player);
         if (wardrobe != null) {
             NetworkManager.sendToTracking(this, player);
@@ -157,6 +157,9 @@ public class UpdateWardrobePacket extends CustomPacket {
                 }
                 // for security reasons we only allows the player upload the bottle item.
                 ItemStack itemStack = ItemStack.of(compoundNBT.getCompound("Item"));
+                if (itemStack.isEmpty()) {
+                    return true;
+                }
                 return itemStack.getItem() == ModItems.BOTTLE.get();
             }
             case SYNC_OPTION: {
@@ -164,6 +167,13 @@ public class UpdateWardrobePacket extends CustomPacket {
             }
         }
         return true;
+    }
+
+    private Object getOperator() {
+        if (field != null) {
+            return field;
+        }
+        return mode;
     }
 
     public enum Mode {

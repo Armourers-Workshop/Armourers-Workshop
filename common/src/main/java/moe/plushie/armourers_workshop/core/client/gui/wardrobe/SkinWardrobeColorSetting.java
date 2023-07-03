@@ -165,6 +165,8 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
             BakedEntityTexture texture = PlayerTextureLoader.getInstance().getTextureModel(location);
             if (texture != null) {
                 setColor(getColorFromTexture(texture));
+            } else {
+                setColor(PaintColor.WHITE);
             }
         }
 
