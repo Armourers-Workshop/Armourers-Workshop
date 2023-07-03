@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.network.UpdateContextPacket;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.core.skin.data.SkinServerType;
 import moe.plushie.armourers_workshop.init.ModCommands;
 import moe.plushie.armourers_workshop.init.ModContext;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
@@ -17,7 +18,9 @@ import moe.plushie.armourers_workshop.init.ModHolidays;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.CommonNativeManager;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
+import moe.plushie.armourers_workshop.init.platform.ReplayManager;
 import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
@@ -37,6 +40,7 @@ public class CommonProxy {
         GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
         SkinLoader.getInstance().register(DataDomain.GLOBAL_SERVER, library::downloadSkin);
         SkinLoader.getInstance().register(DataDomain.GLOBAL_SERVER_PREVIEW, library::downloadPreviewSkin);
+        ReplayManager.init();
     }
 
     private static void register(CommonNativeProvider registries) {
@@ -52,8 +56,8 @@ public class CommonProxy {
 
         registries.willServerStart(server -> {
             ModLog.debug("hello");
-            LocalDataService.start(server);
-            SkinLoader.getInstance().prepare(server);
+            LocalDataService.start(EnvironmentManager.getSkinDatabaseDirectory());
+            SkinLoader.getInstance().prepare(SkinServerType.of(server));
         });
         registries.didServerStart(server -> {
             ModLog.debug("init");
@@ -81,11 +85,13 @@ public class CommonProxy {
         registries.willPlayerLogin(player -> {
             // when the player login, check and give gifts for holiday
             ModLog.debug("welcome back {}", player.getScoreboardName());
+            ReplayManager.startRecording(player.getServer(), player);
             ModHolidays.welcome(player);
         });
         registries.willPlayerLogout(player -> {
             ModLog.debug("good bye {}", player.getScoreboardName());
             SkinLibraryManager.getServer().remove(player);
+            ReplayManager.stopRecording(player.getServer(), player);
         });
         registries.willPlayerDrop(player -> {
             ModLog.debug("keep careful {}", player.getScoreboardName());

@@ -6,7 +6,8 @@
     "FabricClientPacketListenerMixin",
     "FabricLivingRendererMixin",
     "FabricPlayerRendererMixin",
-    "FabricScreenREIMixin"
+    "FabricScreenREIMixin",
+    "FabricReplayMixin"
   ],
   "mixins": [
     "FabricBlockItemMixin",

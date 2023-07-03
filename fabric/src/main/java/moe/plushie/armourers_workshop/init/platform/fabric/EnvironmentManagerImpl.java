@@ -59,4 +59,8 @@ public class EnvironmentManagerImpl {
     public static void detach(MinecraftServer server) {
         CURRENT_SERVER = null;
     }
+
+    public static boolean isInstalled(String modId) {
+        return FabricLoader.getInstance().isModLoaded(modId);
+    }
 }

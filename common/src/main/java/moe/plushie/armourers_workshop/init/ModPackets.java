@@ -16,6 +16,7 @@ import moe.plushie.armourers_workshop.core.network.UpdateConfigurableToolPacket;
 import moe.plushie.armourers_workshop.core.network.UpdateContextPacket;
 import moe.plushie.armourers_workshop.core.network.UpdateHologramProjectorPacket;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
+import moe.plushie.armourers_workshop.init.network.ServerReplayPacket;
 import moe.plushie.armourers_workshop.library.network.SaveSkinPacket;
 import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilePacket;
 import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilesPacket;
@@ -57,7 +58,9 @@ public enum ModPackets {
     UNDO_ACTION(0x83, UndoActionPacket.class, UndoActionPacket::new),
 
     UPDATE_OUTFIT_MAKER(0x84, UpdateOutfitMakerPacket.class, UpdateOutfitMakerPacket::new),
-    UPDATE_ARMOURER(0x85, UpdateArmourerPacket.class, UpdateArmourerPacket::new);
+    UPDATE_ARMOURER(0x85, UpdateArmourerPacket.class, UpdateArmourerPacket::new),
+
+    REPLAY_EVENT(0xf0, ServerReplayPacket.class, ServerReplayPacket::new);
 
     ModPackets(int index, Class<? extends CustomPacket> packetClass, Function<FriendlyByteBuf, CustomPacket> factory) {
         CustomPacket.register(index, packetClass, factory);

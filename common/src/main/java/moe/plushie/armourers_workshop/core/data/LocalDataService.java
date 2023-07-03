@@ -5,12 +5,10 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.SkinUUID;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.MinecraftServer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -43,10 +41,10 @@ public class LocalDataService {
         return Objects.requireNonNull(RUNNING);
     }
 
-    public static void start(MinecraftServer server) {
+    public static void start(File path) {
         if (RUNNING == null) {
-            RUNNING = new LocalDataService(EnvironmentManager.getSkinDatabaseDirectory());
-            ModLog.info("start local service of '{}'", server.getWorldData().getLevelName());
+            RUNNING = new LocalDataService(path);
+            ModLog.info("start local service of '{}'", path.getParentFile().getName());
         }
     }
 

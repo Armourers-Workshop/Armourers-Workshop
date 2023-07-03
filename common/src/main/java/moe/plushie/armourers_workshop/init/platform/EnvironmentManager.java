@@ -52,6 +52,11 @@ public class EnvironmentManager {
     }
 
     @ExpectPlatform
+    public static boolean isInstalled(String modId) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static IConfigSpec getClientConfigSpec() {
         throw new AssertionError();
     }

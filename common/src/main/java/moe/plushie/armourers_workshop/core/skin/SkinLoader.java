@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.network.RequestSkinPacket;
+import moe.plushie.armourers_workshop.core.skin.data.SkinServerType;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModContext;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -17,7 +18,6 @@ import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.WorkQueue;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,32 +59,32 @@ public class SkinLoader {
     private final ConcurrentHashMap<String, GlobalEntry> globalEntries = new ConcurrentHashMap<>();
 
     private SkinLoader() {
-        this.setup(null);
+        this.setup(SkinServerType.CLIENT);
     }
 
     public static SkinLoader getInstance() {
         return LOADER;
     }
 
-    public void setup(@Nullable MinecraftServer server) {
+    public void setup(SkinServerType type) {
         taskManager.values().forEach(Session::shutdown);
         LocalDataSession local = new LocalDataSession();
-        if (server != null) {
-            DownloadSession download = new DownloadSession();
-            taskManager.put(DataDomain.LOCAL, local);
-            taskManager.put(DataDomain.DATABASE, local);
-            taskManager.put(DataDomain.DATABASE_LINK, local);
-            taskManager.put(DataDomain.DEDICATED_SERVER, local);
-            taskManager.put(DataDomain.GLOBAL_SERVER, download);
-            taskManager.put(DataDomain.GLOBAL_SERVER_PREVIEW, download);
-        } else {
+        DownloadSession download = new DownloadSession();
+        if (type == SkinServerType.CLIENT) {
             ProxySession proxy = new ProxySession();
             taskManager.put(DataDomain.LOCAL, local);
             taskManager.put(DataDomain.DATABASE, proxy);
             taskManager.put(DataDomain.DATABASE_LINK, proxy);
             taskManager.put(DataDomain.DEDICATED_SERVER, proxy);
             taskManager.put(DataDomain.GLOBAL_SERVER, proxy);
-            taskManager.put(DataDomain.GLOBAL_SERVER_PREVIEW, new DownloadSession());
+            taskManager.put(DataDomain.GLOBAL_SERVER_PREVIEW, download);
+        } else {
+            taskManager.put(DataDomain.LOCAL, local);
+            taskManager.put(DataDomain.DATABASE, local);
+            taskManager.put(DataDomain.DATABASE_LINK, local);
+            taskManager.put(DataDomain.DEDICATED_SERVER, local);
+            taskManager.put(DataDomain.GLOBAL_SERVER, download);
+            taskManager.put(DataDomain.GLOBAL_SERVER_PREVIEW, download);
         }
     }
 
@@ -195,9 +195,9 @@ public class SkinLoader {
         }
     }
 
-    public synchronized void prepare(MinecraftServer server) {
+    public synchronized void prepare(SkinServerType type) {
         ModLog.debug("prepare skin loader");
-        setup(server);
+        setup(type);
     }
 
     public synchronized void start() {
@@ -211,7 +211,7 @@ public class SkinLoader {
         waiting.clear();
         entries.clear();
         globalEntries.clear();
-        setup(null);
+        setup(SkinServerType.CLIENT);
     }
 
     public void submit(Runnable cmd) {
@@ -361,7 +361,7 @@ public class SkinLoader {
                 sendNotify();
                 return;
             }
-            String newIdentifier = SkinLoader.getInstance().saveSkin(identifier, skin);
+            String newIdentifier = LOADER.saveSkin(identifier, skin);
             ModLog.debug("'{}' => did load global skin into database, target: '{}'", newIdentifier);
             descriptor = new SkinDescriptor(newIdentifier, skin.getType(), ColorScheme.EMPTY);
             sendNotify();
@@ -376,7 +376,7 @@ public class SkinLoader {
             if (!isRequested) {
                 isRequested = true;
                 ModLog.debug("'{}' => load global skin into database", identifier);
-                SkinLoader.getInstance().loadSkin(identifier, this);
+                LOADER.loadSkin(identifier, this);
             }
         }
 
@@ -575,7 +575,7 @@ public class SkinLoader {
 
         public Skin await(Request request) throws Exception {
             LockState state = new LockState(available);
-            SkinLoader.getInstance().waiting.put(request.identifier, (skin, exception) -> receive(request, state, skin, exception));
+            LOADER.waiting.put(request.identifier, (skin, exception) -> receive(request, state, skin, exception));
             boolean ignored = available.tryAcquire(30, TimeUnit.SECONDS);
             state.timeout();
             if (state.skin != null) {
@@ -661,7 +661,7 @@ public class SkinLoader {
         @Override
         public InputStream from(Request request) throws Exception {
             String domain = DataDomain.getNamespace(request.identifier);
-            ISkinFileProvider loader = SkinLoader.getInstance().loaders.get(domain);
+            ISkinFileProvider loader = LOADER.loaders.get(domain);
             if (loader != null) {
                 return loader.loadSkin(DataDomain.getPath(request.identifier));
             }

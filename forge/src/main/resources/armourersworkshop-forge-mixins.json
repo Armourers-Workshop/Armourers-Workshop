@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "ForgeLivingRendererMixin",
-    "ForgeScreenREIMixin"
+    "ForgeScreenREIMixin",
+    "ForgeReplayMixin"
   ],
   "mixins": [
     "ForgeBlockEntityHandlerMixin",
