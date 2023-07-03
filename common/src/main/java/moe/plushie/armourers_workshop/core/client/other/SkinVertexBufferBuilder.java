@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
 import moe.plushie.armourers_workshop.compatibility.AbstractShader;
-import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexGroup;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexMerger;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 @Environment(EnvType.CLIENT)
@@ -112,44 +111,23 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
     public static class Pipeline {
 
         private final AbstractShader shader = new AbstractShader();
-        private final ArrayList<ShaderVertexGroup> groups = new ArrayList<>();
-        private final HashMap<RenderType, ShaderVertexGroup> pending = new HashMap<>();
-
-        private int maxVertexCount = 0;
+        private final ShaderVertexMerger merger = new ShaderVertexMerger();
 
         public void add(ShaderVertexObject pass) {
-            pending.computeIfAbsent(pass.getType(), ShaderVertexGroup::new).add(pass);
-            maxVertexCount = Math.max(maxVertexCount, pass.getVertexCount());
+            merger.add(pass);
         }
 
         public void end() {
-            if (maxVertexCount == 0) {
+            if (merger.isEmpty()) {
                 return;
             }
-            setupVertexGroups();
+            merger.prepare();
 
             shader.begin();
-            groups.forEach(group -> shader.apply(group, () -> group.forEach(shader::render)));
+            merger.forEach(group -> shader.apply(group, () -> group.forEach(shader::render)));
             shader.end();
 
-            clearVertexGroups();
-        }
-
-        private void setupVertexGroups() {
-            for (RenderType renderType : SkinRenderType.RENDER_ORDERING_FACES) {
-                ShaderVertexGroup group = pending.get(renderType);
-                if (group == null || group.isEmpty()) {
-                    continue;
-                }
-                group.maxVertexCount = maxVertexCount;
-                groups.add(group);
-            }
-        }
-
-        private void clearVertexGroups() {
-            groups.forEach(ShaderVertexGroup::clear);
-            groups.clear();
-            maxVertexCount = 0;
+            merger.reset();
         }
     }
 }

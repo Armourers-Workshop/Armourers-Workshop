@@ -320,6 +320,10 @@ public class ColorUtils {
         return tooltips;
     }
 
+    public static int mix(int a, int b, float q) {
+        return (int)(a * (1 - q) + b * q);
+    }
+
     // #[A]RGB or 0x[A]RGB
     public static UIColor parseColor(String colorString) {
         try {

@@ -65,7 +65,7 @@ public class AdvancedSkinBuilderBlockEntityRenderer<T extends AdvancedSkinBuilde
         tesselator.setLightmap(0xf000f0);
         //tesselator.setPartialTicks(TickUtils.ticks());
         tesselator.setPartialTicks(0);
-        tesselator.setOutlineBuffers(OutlineObjectBuilder.immediate(buffers));
+        tesselator.setBuffer(OutlineObjectBuilder.immediate(buffers));
 
         tesselator.draw(poseStack, buffers);
 
@@ -108,8 +108,6 @@ public class AdvancedSkinBuilderBlockEntityRenderer<T extends AdvancedSkinBuilde
 
     }
 
-
-
     @Override
     public int getViewDistance() {
         return 272;
@@ -129,14 +127,24 @@ public class AdvancedSkinBuilderBlockEntityRenderer<T extends AdvancedSkinBuilde
         }
 
         @Override
-        public void addPart(BakedSkinPart bakedPart, BakedSkin bakedSkin, ColorScheme scheme, boolean shouldRender, SkinRenderContext context) {
-            builder.addPart(bakedPart, bakedSkin, scheme, shouldRender, context);
-
+        public int addPart(BakedSkinPart bakedPart, BakedSkin bakedSkin, ColorScheme scheme, boolean shouldRender, SkinRenderContext context) {
+            int total = 0;
+            // note we will rebuild a new cache by overlay,
+            // because we can't mix colors in the shader (1.16 + rendertype_entity_shadow).
             if (RESULTS.contains(bakedPart)) {
-                builder.addShape(bakedPart.getRenderShape(), UIColor.GREEN, context);
-            } else {
-                builder.addShape(bakedPart.getRenderShape(), UIColor.ORANGE, context);
+                context.setOverlay(0x38ffffff);
+                total = builder.addPart(bakedPart, bakedSkin, scheme, shouldRender, context);
+                context.setOverlay(0);
             }
+            // when we rendered the highlighted version,
+            // so we don't need to render original version,
+            // but we still keep the original cache to next render.
+            // and a special case when the highlighted version cache not compiled yet,
+            // we still need to display the original cache.
+            if (total != 0) {
+                shouldRender = false;
+            }
+            return builder.addPart(bakedPart, bakedSkin, scheme, shouldRender, context);
         }
 
         @Override
@@ -150,8 +158,8 @@ public class AdvancedSkinBuilderBlockEntityRenderer<T extends AdvancedSkinBuilde
         }
 
         @Override
-        public void addArmatureShape(ITransformf[] transforms, SkinRenderContext context) {
-            builder.addArmatureShape(transforms, context);
+        public void addShape(ITransformf[] transforms, SkinRenderContext context) {
+            builder.addShape(transforms, context);
         }
     }
 }

@@ -250,12 +250,13 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
 
         tesselator.setLightmap(0xf000f0);
         tesselator.setPartialTicks(0);
-        tesselator.setOutlineBuffers(skin -> (bakedPart, bakedSkin, scheme, shouldRender, context) -> {
+        tesselator.setBuffer(skin -> (bakedPart, bakedSkin, scheme, shouldRender, context) -> {
             if (shouldRender) {
                 OpenMatrix4f mat = new OpenMatrix4f(context.pose().lastPose());
                 mat.invert();
                 allNodes.add(new Node(bakedPart, mat));
             }
+            return 0;
         });
 
         tesselator.draw(poseStack, null);

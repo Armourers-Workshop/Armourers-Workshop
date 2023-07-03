@@ -28,12 +28,13 @@ public class SkinRenderContext {
     private static final Iterator<SkinRenderContext> POOL = Iterators.cycle(ObjectUtils.makeItems(100, i -> new SkinRenderContext(new PoseStack())));
 
     private int lightmap = 0xf000f0;
+    private int overlay = 0;
     private float partialTicks = 0;
 
     private MultiBufferSource buffers;
 
     private SkinRenderData renderData;
-    private SkinRenderBufferSource outlineBuffers;
+    private SkinRenderBufferSource bufferProvider;
 
     private int itemFromSlotIndex = 0;
     private Vector3f itemRotation;
@@ -80,7 +81,7 @@ public class SkinRenderContext {
 
         this.usingPoseStack.set(defaultPoseStack);
 
-        this.outlineBuffers = null;
+        this.bufferProvider = null;
         this.renderData = null;
         this.buffers = null;
 
@@ -112,6 +113,14 @@ public class SkinRenderContext {
 
     public int getLightmap() {
         return lightmap;
+    }
+
+    public void setOverlay(int overlay) {
+        this.overlay = overlay;
+    }
+
+    public int getOverlay() {
+        return overlay;
     }
 
     public void setPartialTicks(float partialTicks) {
@@ -198,17 +207,13 @@ public class SkinRenderContext {
         return buffers;
     }
 
-    public void setOutlineBuffers(SkinRenderBufferSource outlineBuffers) {
-        this.outlineBuffers = outlineBuffers;
-    }
-
-    public SkinRenderBufferSource getOutlineBuffers() {
-        return outlineBuffers;
+    public void setBuffer(SkinRenderBufferSource bufferProvider) {
+        this.bufferProvider = bufferProvider;
     }
 
     public SkinRenderBufferSource.ObjectBuilder getBuffer(@NotNull Skin skin) {
-        if (outlineBuffers != null) {
-            return outlineBuffers.getBuffer(skin);
+        if (bufferProvider != null) {
+            return bufferProvider.getBuffer(skin);
         }
         SkinVertexBufferBuilder bufferBuilder = SkinVertexBufferBuilder.getBuffer(buffers);
         return bufferBuilder.getBuffer(skin);

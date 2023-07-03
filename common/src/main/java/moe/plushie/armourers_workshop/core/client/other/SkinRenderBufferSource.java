@@ -24,18 +24,12 @@ public interface SkinRenderBufferSource {
 
     interface ObjectBuilder {
 
-        void addPart(BakedSkinPart bakedPart, BakedSkin bakedSkin, ColorScheme scheme, boolean shouldRender, SkinRenderContext context);
+        int addPart(BakedSkinPart bakedPart, BakedSkin bakedSkin, ColorScheme scheme, boolean shouldRender, SkinRenderContext context);
 
-        default void addShape(Vector3f origin, SkinRenderContext context) {
-            // ignored
-        }
+        default void addShape(Vector3f origin, SkinRenderContext context) {}
 
-        default void addShape(OpenVoxelShape shape, UIColor color, SkinRenderContext context) {
-            // ignored
-        }
+        default void addShape(OpenVoxelShape shape, UIColor color, SkinRenderContext context) {}
 
-        default void addArmatureShape(ITransformf[] transforms, SkinRenderContext context) {
-            // ignored
-        }
+        default void addShape(ITransformf[] transforms, SkinRenderContext context) {}
     }
 }

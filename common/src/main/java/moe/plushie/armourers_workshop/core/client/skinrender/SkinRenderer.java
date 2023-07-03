@@ -164,7 +164,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
             builder.addShape(Vector3f.ZERO, context);
         }
         if (ModDebugger.armature && skin.getType() instanceof ISkinArmorType) {
-            builder.addArmatureShape(context.getTransforms(), context);
+            builder.addShape(context.getTransforms(), context);
         }
 
         return counter;

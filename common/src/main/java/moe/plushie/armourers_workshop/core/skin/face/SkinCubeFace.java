@@ -91,12 +91,12 @@ public class SkinCubeFace {
     }
 
     @Environment(EnvType.CLIENT)
-    public void render(BakedSkinPart part, ColorScheme scheme, int light, int overlay, PoseStack poseStack, VertexConsumer builder) {
+    public void render(BakedSkinPart part, ColorScheme scheme, int lightmap, int overlay, PoseStack poseStack, VertexConsumer builder) {
         PaintColor resolvedColor = resolve(color, scheme, part.getColorInfo(), part.getType(), 0);
         if (resolvedColor.getPaintType() == SkinPaintTypes.NONE) {
             return;
         }
-        ExtendedFaceRenderer.render(x, y, z, direction, resolvedColor, alpha, light, overlay, poseStack, builder);
+        ExtendedFaceRenderer.render(x, y, z, direction, resolvedColor, alpha, lightmap, overlay, poseStack, builder);
     }
 
     public boolean intersects(OpenRay ray) {

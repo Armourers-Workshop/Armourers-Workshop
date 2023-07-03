@@ -33,7 +33,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -67,64 +67,16 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
     }
 
     @Override
-    public void addPart(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, boolean shouldRender, SkinRenderContext context) {
-        Object key = SkinCache.borrowKey(bakedSkin.getId(), part.getId(), part.requirements(scheme));
-        CachedTask cachedTask = cachingTasks.getIfPresent(key);
+    public int addPart(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, boolean shouldRender, SkinRenderContext context) {
+        CachedTask cachedTask = compile(part, bakedSkin, scheme, context.getOverlay());
         if (cachedTask != null) {
-            SkinCache.returnKey(key);
-            if (shouldRender && cachedTask.isCompiled) {
-                cachedRenderPipeline.render(cachedTask, context.pose(), context.getLightmap(), context.getPartialTicks(), context.getReferenceSlot());
-                //cachedTask.mergedTasks.forEach(compiledTask -> pendingTasks.add(new CompiledPass(compiledTask, poseStack, light, partialTicks)));
+            // we need compile the skin part, but does not render now.
+            if (!shouldRender) {
+                return 0;
             }
-            return;
+            return cachedRenderPipeline.draw(cachedTask, context);
         }
-        CachedTask task = new CachedTask(part, scheme);
-        cachingTasks.put(key, task);
-        addCompileTask(task);
-//        _addPartData(part, scheme, light, partialTicks, slotIndex, poseStack, shouldRender);
-    }
-
-    private void _addPartData(BakedSkinPart part, ColorScheme scheme, int light, float partialTicks, int slotIndex, PoseStack poseStack, boolean shouldRender) {
-//        RenderSystem.backupExtendedMatrix();
-//
-//        RenderSystem.backupExtendedMatrix();
-//        RenderSystem.getModelViewStack().pushPose();
-//        RenderSystem.getModelViewStack().last().pose().setIdentity();
-//        RenderSystem.applyModelViewMatrix();
-//
-////        Matrix3f normalMatrix = poseStack.last().normal().copy();
-////        normalMatrix.invert();
-//
-//        RenderSystem.setShaderColor(1, 1, 1, 1);
-////            RenderSystem.setShaderLight(light);
-////        RenderSystem.setExtendedNormalMatrix(normalMatrix);
-//        RenderSystem.setExtendedTextureMatrix(OpenMatrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
-//
-//        AbstractShaderExecutor.getInstance().setup();
-//        MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-////        MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-////        PoseStack matrixStack1 = new PoseStack();
-//        PoseStack matrixStack1 = poseStack;
-//        part.forEach((renderType, quads) -> {
-//            VertexConsumer builder = buffers.getBuffer(renderType);
-////            BufferBuilder builder = new BufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
-////            builder.begin(renderType.mode(), renderType.format());
-//            quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, OverlayTexture.NO_OVERLAY, matrixStack1, builder));
-//
-//
-////            PoseStack modelPoseStack = RenderSystem.getExtendedModelViewStack();
-////            modelPoseStack.pushPose();
-////            modelPoseStack.multiply(poseStack.lastPose());
-//            RenderSystem.setExtendedModelViewMatrix(matrixStack1.lastPose());
-////            RenderSystem.applyModelViewMatrix();
-//            buffers.endBatch();
-////            modelPoseStack.popPose();
-//        });
-//        AbstractShaderExecutor.getInstance().clean();
-//
-//        RenderSystem.getModelViewStack().popPose();
-//        RenderSystem.applyModelViewMatrix();
-//        RenderSystem.restoreExtendedMatrix();
+        return 0;
     }
 
     @Override
@@ -141,7 +93,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
     }
 
     @Override
-    public void addArmatureShape(ITransformf[] transforms, SkinRenderContext context) {
+    public void addShape(ITransformf[] transforms, SkinRenderContext context) {
         if (transforms == null) {
             return;
         }
@@ -164,6 +116,24 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
     public void endBatch(SkinVertexBufferBuilder.Pipeline pipeline) {
         cachedRenderPipeline.commit(pipeline::add);
+    }
+
+    @Nullable
+    public CachedTask compile(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, int overlay) {
+        Object key = SkinCache.borrowKey(bakedSkin.getId(), part.getId(), part.requirements(scheme), overlay);
+        CachedTask cachedTask = cachingTasks.getIfPresent(key);
+        if (cachedTask != null) {
+            SkinCache.returnKey(key);
+            if (cachedTask.isCompiled) {
+                return cachedTask;
+            }
+            return null; // wait compile
+
+        }
+        CachedTask task = new CachedTask(part, scheme, overlay);
+        cachingTasks.put(key, task);
+        addCompileTask(task);
+        return null;
     }
 
     private synchronized void addCompileTask(CachedTask cachedTask) {
@@ -189,13 +159,14 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         PoseStack matrixStack1 = new PoseStack();
         ArrayList<CompiledTask> buildingTasks = new ArrayList<>();
         for (CachedTask task : tasks) {
+            int overlay = task.overlay;
             BakedSkinPart part = task.part;
             ColorScheme scheme = task.scheme;
             ArrayList<CompiledTask> mergedTasks = new ArrayList<>();
             part.forEach((renderType, quads) -> {
                 IBufferBuilder builder = BufferBuilder.createBuilderBuffer(quads.size() * 8 * renderType.format().getVertexSize());
                 builder.begin(renderType);
-                quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, OverlayTexture.NO_OVERLAY, matrixStack1, builder.asBufferBuilder()));
+                quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, overlay, matrixStack1, builder.asBufferBuilder()));
                 IRenderedBuffer renderedBuffer = builder.end();
                 CompiledTask compiledTask = new CompiledTask(renderType, renderedBuffer, part.getRenderPolygonOffset(), part.getType());
                 mergedTasks.add(compiledTask);
@@ -244,15 +215,18 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
     static class CachedTask {
 
+        int totalTask;
         boolean isCompiled = false;
         ArrayList<CompiledTask> mergedTasks;
         BakedSkinPart part;
         ColorScheme scheme;
+        int overlay;
         SkinRenderObject renderObject;
 
-        CachedTask(BakedSkinPart part, ColorScheme scheme) {
+        CachedTask(BakedSkinPart part, ColorScheme scheme, int overlay) {
             this.part = part;
             this.scheme = scheme.copy();
+            this.overlay = overlay;
         }
 
         static void release(RemovalNotification<Object, Object> notification) {
@@ -275,6 +249,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
         void finish() {
             isCompiled = true;
+            totalTask = mergedTasks.size();
         }
     }
 
@@ -301,7 +276,11 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
         protected final ArrayList<CompiledPass> tasks = new ArrayList<>();
 
-        void render(CachedTask task, IPoseStack poseStack, int lightmap, float partialTicks, int slotIndex) {
+        int draw(CachedTask task, SkinRenderContext context) {
+            int lightmap = context.getLightmap();
+            float partialTicks = context.getPartialTicks();
+            int slotIndex = context.getReferenceSlot();
+            IPoseStack poseStack = context.pose();
             PoseStack modelViewStack = RenderSystem.getModelViewStack();
             OpenPoseStack finalPostStack = new OpenPoseStack();
             OpenMatrix4f lastPose = finalPostStack.lastPose();
@@ -312,6 +291,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
             lastNormal.multiply(poseStack.lastNormal());
             lastNormal.invert();
             task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, finalPostStack, lightmap, partialTicks, slotIndex)));
+            return task.totalTask;
         }
 
         void commit(Consumer<ShaderVertexObject> consumer) {

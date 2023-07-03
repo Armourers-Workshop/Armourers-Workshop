@@ -8,11 +8,10 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractRenderSystem;
-import moe.plushie.armourers_workshop.core.armature.ModelBinder;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferBuilder;
+import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
@@ -49,6 +48,7 @@ public final class RenderSystem extends AbstractRenderSystem {
     private static final Storage<OpenMatrix4f> extendedTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
     private static final Storage<OpenMatrix4f> extendedLightmapTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
     private static final Storage<OpenMatrix4f> extendedModelViewMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
+    private static final Storage<PaintColor> extendedTintColor = new Storage<>(PaintColor.WHITE);
 
     private static final FloatBuffer BUFFER = ObjectUtils.createFloatBuffer(3);
 
@@ -464,6 +464,10 @@ public final class RenderSystem extends AbstractRenderSystem {
         setShaderColor(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, color.getAlpha() / 255f);
     }
 
+    public static void setShaderColor(PaintColor color) {
+        setShaderColor(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 1.0f);
+    }
+
     public static void setShaderColor(float f, float g, float h) {
         setShaderColor(f, g, h, 1.0f);
     }
@@ -508,11 +512,20 @@ public final class RenderSystem extends AbstractRenderSystem {
         return extendedMatrixFlags.get();
     }
 
+    public static void setExtendedTintColor(PaintColor tintColor) {
+        extendedTintColor.set(tintColor);
+    }
+
+    public static PaintColor getExtendedTintColor() {
+        return extendedTintColor.get();
+    }
+
     public static void backupExtendedMatrix() {
         extendedTextureMatrix.save();
         extendedNormalMatrix.save();
         extendedLightmapTextureMatrix.save();
         extendedModelViewMatrix.save();
+        extendedTintColor.save();
     }
 
     public static void restoreExtendedMatrix() {
@@ -520,6 +533,7 @@ public final class RenderSystem extends AbstractRenderSystem {
         extendedNormalMatrix.load();
         extendedLightmapTextureMatrix.load();
         extendedModelViewMatrix.load();
+        extendedTintColor.load();
     }
 
     public static class Storage<T> {
