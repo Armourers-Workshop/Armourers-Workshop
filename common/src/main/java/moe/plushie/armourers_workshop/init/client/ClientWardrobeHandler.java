@@ -155,10 +155,6 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderLivingPre(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
-        // respect invisibility potions etc.
-        if (entity.isInvisible()) {
-            return;
-        }
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
             SkinRendererManager.getInstance().willRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
@@ -166,10 +162,6 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderLiving(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
-        // respect invisibility potions etc.
-        if (entity.isInvisible()) {
-            return;
-        }
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
             SkinRendererManager.getInstance().willRenderModel(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
@@ -177,10 +169,6 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderLivingPost(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
-        // respect invisibility potions etc.
-        if (entity.isInvisible()) {
-            return;
-        }
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
             SkinRendererManager.getInstance().didRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
