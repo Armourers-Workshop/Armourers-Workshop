@@ -23,6 +23,14 @@ public class KeyboardManagerImpl {
         return Screen.hasAltDown();
     }
 
+    public static boolean hasSprintDown() {
+        return Minecraft.getInstance().options.keySprint.isDown();
+    }
+
+    public static boolean hasSneakDown() {
+        return Minecraft.getInstance().options.keyShift.isDown();
+    }
+
     public static boolean hasSpaceDown() {
         return InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_SPACE);
     }

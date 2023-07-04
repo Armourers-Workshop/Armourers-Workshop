@@ -185,8 +185,8 @@ public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMen
     }
 
     @Override
-    protected NSString getDisplayText(String key) {
-        return new NSString(TranslateUtils.title("inventory.armourers_workshop.colour-mixer" + "." + key));
+    protected NSString getDisplayText(String key, Object... args) {
+        return new NSString(TranslateUtils.title("inventory.armourers_workshop.colour-mixer" + "." + key, args));
     }
 
     protected IPaintColor getItemColor(ItemStack itemStack) {

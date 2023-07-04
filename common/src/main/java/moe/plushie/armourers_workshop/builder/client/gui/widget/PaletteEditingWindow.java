@@ -72,7 +72,7 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
         setColorComponents(new float[]{sliders[0].getValue(), sliders[1].getValue(), sliders[2].getValue()});
     }
 
-    protected abstract NSString getDisplayText(String key);
+    protected abstract NSString getDisplayText(String key, Object... args);
 
     protected void showNewPaletteDialog(UIControl button) {
         InputDialog alert = new InputDialog();
@@ -111,7 +111,7 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
         }
         ConfirmDialog alert = new ConfirmDialog();
         alert.setTitle(getDisplayText("remove_palette.title"));
-        alert.setMessage(getDisplayText("remove_palette.message"));
+        alert.setMessage(getDisplayText("remove_palette.message", palette.getName()));
         alert.showInView(this, () -> {
             if (!alert.isCancelled()) {
                 String name = palette.getName();

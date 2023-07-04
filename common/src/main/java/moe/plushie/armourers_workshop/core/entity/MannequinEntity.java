@@ -187,7 +187,7 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
     public ItemStack getCustomPickResult(HitResult target) {
         ItemStack itemStack = new ItemStack(ModItems.MANNEQUIN.get());
         // yep, we need copy the fully model info when ctrl down.
-        if (EnvironmentExecutorIO.hasControlDown()) {
+        if (EnvironmentExecutorIO.hasSprintDown()) {
             CompoundTag entityTag = new CompoundTag();
             addAdditionalSaveData(entityTag);
             itemStack.getOrCreateTag().put(Constants.Key.ENTITY, entityTag);

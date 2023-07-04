@@ -12,4 +12,11 @@ public class EnvironmentExecutorIO {
         return EnvironmentExecutor.call(() -> KeyboardManagerImpl::hasControlDown, () -> () -> false);
     }
 
+    public static boolean hasSprintDown() {
+        return EnvironmentExecutor.call(() -> KeyboardManagerImpl::hasSprintDown, () -> () -> false);
+    }
+
+    public static boolean hasSneakDown() {
+        return EnvironmentExecutor.call(() -> KeyboardManagerImpl::hasSneakDown, () -> () -> false);
+    }
 }

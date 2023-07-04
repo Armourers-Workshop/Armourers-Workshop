@@ -89,7 +89,7 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
     @Override
     public boolean openContainer(Level level, Player player, InteractionHand hand, ItemStack itemStack) {
         // when the play hold ctrl, we need to open the built-in palette.
-        if (level.isClientSide() && EnvironmentExecutorIO.hasControlDown()) {
+        if (level.isClientSide() && EnvironmentExecutorIO.hasSprintDown()) {
             openPaletteGUI(level, player, hand, itemStack);
             return true;
         }
