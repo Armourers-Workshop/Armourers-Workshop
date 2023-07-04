@@ -24,7 +24,7 @@ public class ShaderVertexMerger {
         for (RenderType renderType : SkinRenderType.RENDER_ORDERING_FACES) {
             ShaderVertexGroup group = pending.get(renderType);
             if (group == null || group.isEmpty()) {
-                return;
+                continue;
             }
             group.maxVertexCount = maxVertexCount;
             consumer.accept(group);
