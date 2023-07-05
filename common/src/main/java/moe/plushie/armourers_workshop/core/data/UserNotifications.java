@@ -8,18 +8,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-public class Notification {
+public class UserNotifications {
 
     public static void sendErrorMessage(Component message, Player player) {
         Component title = TranslateUtils.title("inventory.armourers_workshop.common.text.error");
         Component confirm = TranslateUtils.title("inventory.armourers_workshop.common.button.ok");
-        sendToPlayer(new ExecuteAlertPacket(title, message, confirm, 1), player);
+        sendToPlayer(new ExecuteAlertPacket(title, message, confirm, 1, null), player);
     }
 
     public static void sendSystemMessage(Component message, Player player) {
         Component title = TranslateUtils.title("inventory.armourers_workshop.common.text.info");
         Component confirm = TranslateUtils.title("inventory.armourers_workshop.common.button.ok");
-        sendToPlayer(new ExecuteAlertPacket(title, message, confirm, 0), player);
+        sendToPlayer(new ExecuteAlertPacket(title, message, confirm, 0, null), player);
     }
 
     private static void sendToPlayer(ExecuteAlertPacket packet, Player player) {

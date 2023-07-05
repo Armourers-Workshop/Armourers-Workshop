@@ -47,7 +47,6 @@
   "colourFamily.armourers_workshop.shades": "음영",
   "commands.armourers.fileNotFound": "해당 파일 %1$s 을(를) 찾을 수 없습니다.",
   "commands.armourers.invalidDyeFormat": "%1$s 은(는) 유효한 염료 형식이 아닙니다.",
-  "death.attack.victorious": "%1$s Vic의 왕관에 찔려 죽었어요",
   "inventory.armourers_workshop.admin-panel.clear_cache": "캐시 지우기",
   "inventory.armourers_workshop.admin-panel.recover_skins": "스킨 복구",
   "inventory.armourers_workshop.admin-panel.reload_library": "라이브러리 다시 불러오기",

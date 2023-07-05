@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.client.gui.widget;
+package moe.plushie.armourers_workshop.core.client.gui.notification;
 
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
@@ -8,44 +8,69 @@ import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.core.client.gui.ServerAlertWindow;
+import moe.plushie.armourers_workshop.core.client.gui.ServerToastWindow;
+import moe.plushie.armourers_workshop.core.client.gui.widget.BaseDialog;
+import moe.plushie.armourers_workshop.core.client.gui.widget.ContainerMenuToast;
+import moe.plushie.armourers_workshop.core.client.gui.widget.ToastWindow;
 import moe.plushie.armourers_workshop.core.network.ExecuteAlertPacket;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
 @Environment(EnvType.CLIENT)
-public class Toast {
+public class UserNotificationCenter {
 
     // show the message in to current screen.
     public static void showAlertFromServer(ExecuteAlertPacket alertPacket) {
         RenderSystem.recordRenderCall(() -> {
-            ServerAlertWindow window = new ServerAlertWindow(alertPacket);
-            window.showInScreen();
+            if ((alertPacket.getType() & 0x80000000) != 0) {
+                ServerToastWindow window = new ServerToastWindow(alertPacket);
+                window.showInScreen();
+            } else {
+                ServerAlertWindow window = new ServerAlertWindow(alertPacket);
+                window.showInScreen();
+            }
         });
     }
 
-    public static void show(String message, UIView view) {
-        showAlert("Info", message, null, view);
-    }
-
-    public static void show(Exception exception, UIView view) {
-        exception.printStackTrace();
-        showAlert("Error", exception.getMessage(), UIColor.RED, view);
-    }
-
-    private static void showAlert(String title, String message, UIColor messageColor, UIView view) {
+    public static void showAlert(NSString title, NSString message, UIColor messageColor, UIView view) {
         Impl alert = new Impl();
-        alert.setTitle(new NSString(title));
-        alert.setMessage(new NSString(message));
+        alert.setTitle(title);
+        alert.setMessage(message);
         if (messageColor != null) {
             alert.setMessageColor(messageColor);
         }
         alert.showInView(view, () -> {
         });
+    }
+
+    public static void showToast(NSString message, @Nullable UIColor messageColor, NSString title, Object icon) {
+        ToastWindow window = new ToastWindow(new CGRect(0, 0, 160, 32));
+        window.setTitle(title);
+        window.setTitleColor(new UIColor(0xff88ff));
+        window.setMessage(message);
+        window.setMessageColor(messageColor);
+        window.setIcon(icon);
+        Minecraft.getInstance().getToasts().addToast(new ContainerMenuToast<>(window));
+    }
+
+    public static void showToast(NSString message, String title, Object icon) {
+        showToast(message, UIColor.WHITE, new NSString(title), icon);
+    }
+
+    public static void showToast(String message, String title, Object icon) {
+        showToast(new NSString(message), UIColor.WHITE, new NSString(title), icon);
+    }
+
+    public static void showToast(Exception exception, String title, Object icon) {
+        exception.printStackTrace();
+        showToast(new NSString(exception.getMessage()), UIColor.RED, new NSString(title), icon);
     }
 
     private static class Impl extends BaseDialog {
@@ -59,7 +84,7 @@ public class Toast {
             super();
             this.messageLabel.setNumberOfLines(0);
             this.addSubview(messageLabel);
-            this.setConfirmText(new NSString(TranslateUtils.title("inventory.armourers_workshop.common.button.ok")));
+            this.setConfirmText(new NSString(TranslateUtils.title("commands.armourers_workshop.notify.confirm")));
             this.setup();
         }
 

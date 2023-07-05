@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
@@ -22,6 +23,8 @@ public interface CGGraphicsRenderer {
 
     void renderGradient(CGGradient gradient, CGRect rect, CGGraphicsContext context);
 
-    void renderEntity(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY);
+    void renderEntity(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY, CGGraphicsContext context);
+
+    void renderItem(ItemStack itemStack, int x, int y, CGGraphicsContext context);
 }
 

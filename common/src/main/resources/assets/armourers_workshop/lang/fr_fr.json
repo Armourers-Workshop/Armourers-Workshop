@@ -47,7 +47,6 @@
   "colourFamily.armourers_workshop.shades": "Shades",
   "commands.armourers.fileNotFound": "Le fichier %1$s est introuvable.",
   "commands.armourers.invalidDyeFormat": "%1$s n'est pas un format de teinte valide.",
-  "death.attack.victorious": "%1$s a ete tuer par la couronne de Vic.",
   "inventory.armourers_workshop.admin-panel.clear_cache": "Clear Cache",
   "inventory.armourers_workshop.admin-panel.recover_skins": "Recover Skins",
   "inventory.armourers_workshop.admin-panel.reload_library": "Reload Library",

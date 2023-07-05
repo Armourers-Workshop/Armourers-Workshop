@@ -41,7 +41,9 @@ import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -101,8 +103,16 @@ public class ModCommands {
                 .then(Commands.literal("rsyncWardrobe").then(players().executes(Executor::resyncWardrobe)))
                 .then(Commands.literal("openWardrobe").then(entities().executes(Executor::openWardrobe)))
                 .then(Commands.literal("itemSkinnable").then(addOrRemote().then(overrideTypes().executes(Executor::setItemSkinnable))))
-                .then(Commands.literal("alert").then(players().then(textInput("message").then(textInput("title").then(textInput("confirm").executes(Executor::sendNotify)).executes(Executor::sendNotify)).executes(Executor::sendNotify))))
+                .then(Commands.literal("notify").then(alertNotify()).then(toastNotify()))
                 .then(Commands.literal("setUnlockedSlots").then(entities().then(resizableSlotNames().then(resizableSlotAmounts().executes(Executor::setUnlockedWardrobeSlots)))));
+    }
+
+    public static LiteralArgumentBuilder<CommandSourceStack> alertNotify() {
+        return Commands.literal("alert").then(players().then(textInput("message").then(textInput("title").then(textInput("confirm").executes(Executor::sendAlertNotify)).executes(Executor::sendAlertNotify)).executes(Executor::sendAlertNotify)));
+    }
+
+    public static LiteralArgumentBuilder<CommandSourceStack> toastNotify() {
+        return Commands.literal("toast").then(players().then(textInput("message").then(textInput("title").then(nbtInput("icon").executes(Executor::sendToastNotify)).executes(Executor::sendToastNotify)).executes(Executor::sendToastNotify)));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> players() {
@@ -135,6 +145,10 @@ public class ModCommands {
 
     static ArgumentBuilder<CommandSourceStack, ?> textInput(String key) {
         return Commands.argument(key, ComponentArgumentType.textComponent());
+    }
+
+    static ArgumentBuilder<CommandSourceStack, ?> nbtInput(String key) {
+        return Commands.argument(key, CompoundTagArgument.compoundTag());
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> scale() {
@@ -361,19 +375,31 @@ public class ModCommands {
             return 1;
         }
 
-        static int sendNotify(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        static int sendToastNotify(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+            return sendUserNotify(context, 0x80000000);
+        }
+
+        static int sendAlertNotify(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+            return sendUserNotify(context, 0x00000000);
+        }
+
+        static int sendUserNotify(CommandContext<CommandSourceStack> context, int type) throws CommandSyntaxException {
             // read context from command
             Component message1 = ComponentArgumentType.getComponent(context, "message");
-            Component title1 = TranslateUtils.title("inventory.armourers_workshop.common.text.info");
-            Component confirm1 = TranslateUtils.title("inventory.armourers_workshop.common.button.ok");
+            Component title1 = TranslateUtils.title("commands.armourers_workshop.notify.title");
+            Component confirm1 = TranslateUtils.title("commands.armourers_workshop.notify.confirm");
+            CompoundTag icon1 = null;
             if (containsNode(context, "title")) {
                 title1 = ComponentArgumentType.getComponent(context, "title");
             }
             if (containsNode(context, "confirm")) {
                 confirm1 = ComponentArgumentType.getComponent(context, "confirm");
             }
+            if (containsNode(context, "icon")) {
+                icon1 = CompoundTagArgument.getCompoundTag(context, "icon");
+            }
             for (ServerPlayer player : EntityArgument.getPlayers(context, "targets")) {
-                NetworkManager.sendTo(new ExecuteAlertPacket(title1, message1, confirm1, 0), player);
+                NetworkManager.sendTo(new ExecuteAlertPacket(title1, message1, confirm1, type, icon1), player);
             }
             return 1;
         }

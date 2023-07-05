@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.compatibility.client;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.world.level.block.entity.BlockEntity;

@@ -47,7 +47,6 @@
   "colourFamily.armourers_workshop.shades": "Schattierungen",
   "commands.armourers.fileNotFound": "Die Datei %1$s konnte nicht gefunden werden.",
   "commands.armourers.invalidDyeFormat": "%1$s ist kein korrektes Farbformat.",
-  "death.attack.victorious": "%1$s wurde von Vics Krone erdolcht.",
   "inventory.armourers_workshop.admin-panel.clear_cache": "Cache löschen",
   "inventory.armourers_workshop.admin-panel.recover_skins": "Skins wiederherstellen",
   "inventory.armourers_workshop.admin-panel.reload_library": "Bibiliothek neu laden",

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.library.client.gui.panels;
 
 import com.apple.library.coregraphics.CGRect;
-import moe.plushie.armourers_workshop.core.client.gui.widget.Toast;
+import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.client.gui.widget.ReportList;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
@@ -47,7 +47,7 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
         Report report = skinReports.get(index);
         GlobalSkinLibrary.getInstance().getSkin(report.getSkinId(), (result, exception) -> {
             if (exception != null) {
-                Toast.show(exception, this);
+                UserNotificationCenter.showToast(exception, "Error", null);
                 return;
             }
             if (result != null) {

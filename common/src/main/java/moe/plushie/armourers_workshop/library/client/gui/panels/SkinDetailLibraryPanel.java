@@ -13,11 +13,12 @@ import com.apple.library.uikit.UIView;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ReportDialog;
-import moe.plushie.armourers_workshop.core.client.gui.widget.Toast;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -261,15 +262,16 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         String skinName = entry.getName();
         File path = new File(EnvironmentManager.getSkinLibraryDirectory(), "downloads");
         File target = new File(path, SkinIOUtils.makeFileNameValid(idString + " - " + skinName + ".armour"));
+        SkinDescriptor skinDescriptor = entry.getDescriptor();
         buttonDownload.setEnabled(false);
         // yep, we directly download and save in the local.
         GlobalSkinLibrary.getInstance().downloadSkin(entry.getId(), target, ((result, exception) -> {
             if (exception != null) {
                 buttonDownload.setEnabled(true);
-                Toast.show(exception, this);
+                UserNotificationCenter.showToast(exception, skinName, skinDescriptor.asItemStack());
             } else {
                 SkinLibraryManager.getClient().getLocalSkinLibrary().reload();
-                Toast.show("Download Finished!", this);
+                UserNotificationCenter.showToast(getDisplayText("downloadFinished"), skinName, skinDescriptor.asItemStack());
             }
         }));
     }

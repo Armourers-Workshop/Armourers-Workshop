@@ -47,7 +47,6 @@
   "colourFamily.armourers_workshop.shades": "Оттенки",
   "commands.armourers.fileNotFound": "Файл %1$s не Был Найден.",
   "commands.armourers.invalidDyeFormat": "%1$s - неправильный формат цвета.",
-  "death.attack.victorious": "%1$s был зарезан короной Vic'а.",
   "inventory.armourers_workshop.admin-panel.clear_cache": "Очистить кэш",
   "inventory.armourers_workshop.admin-panel.recover_skins": "Восстановить скины",
   "inventory.armourers_workshop.admin-panel.reload_library": "Перезагрузить бибилиотеку",

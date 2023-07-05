@@ -169,6 +169,9 @@ public class UIView extends UIResponder implements ViewImpl {
     public void focusesDidChange() {
     }
 
+    public void sizeToFit() {
+    }
+
     @Override
     public UIResponder nextResponder() {
         return superview();

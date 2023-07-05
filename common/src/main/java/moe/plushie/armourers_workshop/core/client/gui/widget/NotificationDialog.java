@@ -27,6 +27,7 @@ public class NotificationDialog extends ConfirmDialog {
         cancelButton.removeFromSuperview();
     }
 
+    @Override
     public void sizeToFit() {
         CGRect bounding = message().boundingRectWithFont(UIFont.system());
         int minWidth = MathUtils.clamp(bounding.width, 120, 280) + 40;

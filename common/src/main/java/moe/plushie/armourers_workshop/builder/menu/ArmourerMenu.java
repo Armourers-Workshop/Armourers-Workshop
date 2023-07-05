@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.other.CubeApplier;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.builder.other.WorldUtils;
-import moe.plushie.armourers_workshop.core.data.Notification;
+import moe.plushie.armourers_workshop.core.data.UserNotifications;
 import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -108,7 +108,7 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
             skin = WorldUtils.saveSkinFromWorld(level, transform, skinProps, blockEntity.getSkinType(), blockEntity.getPaintData());
         } catch (TranslatableException exception) {
             player.sendSystemMessage(exception.getComponent());
-            Notification.sendErrorMessage(exception.getComponent(), player);
+            UserNotifications.sendErrorMessage(exception.getComponent(), player);
         } catch (Exception exception) {
             // we unknown why, pls report this.
             exception.printStackTrace();
@@ -158,7 +158,7 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
 
         } catch (TranslatableException exception) {
             player.sendSystemMessage(exception.getComponent());
-            Notification.sendErrorMessage(exception.getComponent(), player);
+            UserNotifications.sendErrorMessage(exception.getComponent(), player);
         } catch (Exception exception) {
             // we unknown why, pls report this.
             exception.printStackTrace();

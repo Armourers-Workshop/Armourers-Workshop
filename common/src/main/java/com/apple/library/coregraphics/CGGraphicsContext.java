@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
@@ -145,7 +146,11 @@ public class CGGraphicsContext {
     }
 
     public void drawEntity(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY) {
-        renderer.renderEntity(entity, x, y, scale, mouseX, mouseY);
+        renderer.renderEntity(entity, x, y, scale, mouseX, mouseY, this);
+    }
+
+    public void drawItem(ItemStack itemStack, int x, int y) {
+        renderer.renderItem(itemStack, x, y, this);
     }
 
     public void drawAvatarContents(ResourceLocation texture, int x, int y, int width, int height) {

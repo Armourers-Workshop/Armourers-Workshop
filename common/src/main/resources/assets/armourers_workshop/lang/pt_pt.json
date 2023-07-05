@@ -47,7 +47,6 @@
   "colourFamily.armourers_workshop.shades": "Tons de sombra",
   "commands.armourers.fileNotFound": "O arquivo %1$s não foi encontrando.",
   "commands.armourers.invalidDyeFormat": "%1$s não é um formato de tintura válido.",
-  "death.attack.victorious": "%1$s foi esfaqueado até a morte pela coroa de Vic.",
   "inventory.armourers_workshop.admin-panel.clear_cache": "Limpar Cach",
   "inventory.armourers_workshop.admin-panel.recover_skins": "Recuperar visuais",
   "inventory.armourers_workshop.admin-panel.reload_library": "Recarregar biblioteca",
