@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.InputConstants;
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
+import moe.plushie.armourers_workshop.api.client.key.IKeyScopeProvider;
 import moe.plushie.armourers_workshop.api.registry.IKeyBindingBuilder;
 import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -12,7 +13,6 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.settings.IKeyConflictContext;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import org.apache.commons.lang3.tuple.Pair;
@@ -42,6 +42,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
     private final String key;
     private IKeyModifier modifier = OpenKeyModifier.NONE;
     private String category = "";
+    private String scope = "";
     private Supplier<Runnable> handler;
 
     public KeyBindingBuilderImpl(String key) {
@@ -61,6 +62,12 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
     }
 
     @Override
+    public IKeyBindingBuilder<T> scope(String scope) {
+        this.scope = scope;
+        return this;
+    }
+
+    @Override
     public IKeyBindingBuilder<T> bind(Supplier<Runnable> handler) {
         this.handler = handler;
         return this;
@@ -72,7 +79,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         String categoryKey = "keys.armourers_workshop." + category;
         InputConstants.Key input = InputConstants.getKey(key);
         KeyModifier modifier1 = MODIFIERS1.getOrDefault(modifier, KeyModifier.NONE);
-        KeyMapping binding = new OnceKeyBinding(nameKey, KeyConflictContext.IN_GAME, modifier1, input, categoryKey);
+        KeyMapping binding = new OnceKeyBinding(nameKey, scope, modifier1, input, categoryKey);
         if (handler != null) {
             INPUTS.add(Pair.of(binding, handler));
         }
@@ -92,13 +99,15 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         return ObjectUtils.unsafeCast(binding1);
     }
 
-    public static class OnceKeyBinding extends KeyMapping {
+    public static class OnceKeyBinding extends KeyMapping implements IKeyScopeProvider {
 
         // Once consumed, must need to release the key to reset this flags.
         private boolean canConsumeClick = true;
+        private final String scope;
 
-        public OnceKeyBinding(String description, IKeyConflictContext keyConflictContext, net.minecraftforge.client.settings.KeyModifier keyModifier, InputConstants.Key keyCode, String category) {
-            super(description, keyConflictContext, keyModifier, keyCode, category);
+        public OnceKeyBinding(String description, String scope, net.minecraftforge.client.settings.KeyModifier keyModifier, InputConstants.Key keyCode, String category) {
+            super(description, KeyConflictContext.IN_GAME, keyModifier, keyCode, category);
+            this.scope = scope;
         }
 
         @Override
@@ -116,6 +125,11 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
             if (!isDown) {
                 canConsumeClick = true;
             }
+        }
+
+        @Override
+        public String getScope() {
+            return scope;
         }
     }
 

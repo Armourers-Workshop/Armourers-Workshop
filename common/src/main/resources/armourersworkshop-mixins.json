@@ -6,7 +6,8 @@
     "ArrowRendererMixin",
     "BlockEntityRenderDispatcherMixin",
     "ThrownTridentRendererMixin",
-    "ClientDataAttachMixin"
+    "ClientDataAttachMixin",
+    "KeyMappingMixin"
   ],
   "mixins": [
     "DataFixMixin",

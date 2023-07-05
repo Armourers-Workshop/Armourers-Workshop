@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 import com.mojang.blaze3d.platform.InputConstants;
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
+import moe.plushie.armourers_workshop.api.client.key.IKeyScopeProvider;
 import moe.plushie.armourers_workshop.api.registry.IKeyBindingBuilder;
 import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -23,6 +24,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
 
     private IKeyModifier modifier = OpenKeyModifier.NONE;
     private String category = "";
+    private String scope;
     private Supplier<Runnable> handler;
     private final String key;
 
@@ -43,6 +45,12 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
     }
 
     @Override
+    public IKeyBindingBuilder<T> scope(String scope) {
+        this.scope = scope;
+        return this;
+    }
+
+    @Override
     public IKeyBindingBuilder<T> bind(Supplier<Runnable> handler) {
         this.handler = handler;
         return this;
@@ -53,7 +61,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         String nameKey = "keys.armourers_workshop." + name;
         String categoryKey = "keys.armourers_workshop." + category;
         InputConstants.Key input = InputConstants.getKey(key);
-        KeyMapping binding = new OnceKeyBinding(nameKey, InputConstants.Type.KEYSYM, input.getValue(), categoryKey);
+        KeyMapping binding = new OnceKeyBinding(nameKey, scope, InputConstants.Type.KEYSYM, input.getValue(), categoryKey);
         if (handler != null) {
             INPUTS.add(Pair.of(binding, handler));
         }
@@ -73,13 +81,15 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         return ObjectUtils.unsafeCast(binding1);
     }
 
-    public static class OnceKeyBinding extends KeyMapping {
+    public static class OnceKeyBinding extends KeyMapping implements IKeyScopeProvider {
 
         // Once consumed, must need to release the key to reset this flags.
         private boolean canConsumeClick = true;
+        private final String scope;
 
-        public OnceKeyBinding(String string, InputConstants.Type type, int i, String string2) {
+        public OnceKeyBinding(String string, String scope, InputConstants.Type type, int i, String string2) {
             super(string, type, i, string2);
+            this.scope = scope;
         }
 
         @Override
@@ -97,6 +107,11 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
             if (!isDown) {
                 canConsumeClick = true;
             }
+        }
+
+        @Override
+        public String getScope() {
+            return scope;
         }
     }
 

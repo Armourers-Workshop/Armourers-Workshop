@@ -66,14 +66,6 @@ public class ObjectUtils {
         return null;
     }
 
-    @Nullable
-    public static <S, T> T flatMap(@Nullable S src, Function<S, T> consumer) {
-        if (src != null) {
-            return consumer.apply(src);
-        }
-        return null;
-    }
-
     public static <S, T> ArrayList<T> map(S[] in, Function<? super S, T> transform) {
         ArrayList<T> results = new ArrayList<>(in.length);
         for (S value : in) {
@@ -111,6 +103,24 @@ public class ObjectUtils {
         }
         return results;
     }
+
+    @Nullable
+    public static <S, T> T flatMap(@Nullable S src, Function<S, T> consumer) {
+        if (src != null) {
+            return consumer.apply(src);
+        }
+        return null;
+    }
+
+    public static <S, V> V flatMap(@Nullable S obj, Function<S, V> getter, V defaultValue) {
+        if (obj != null) {
+            V value = getter.apply(obj);
+            if (value != null) {
+                return value;
+            }
+		}
+		return defaultValue;
+	}
 
     public static <T> ArrayList<T> filter(T[] in, Predicate<? super T> predicate) {
         ArrayList<T> results = new ArrayList<>(in.length);
