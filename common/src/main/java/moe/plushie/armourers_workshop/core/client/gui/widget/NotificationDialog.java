@@ -16,9 +16,9 @@ public class NotificationDialog extends ConfirmDialog {
 
     private void setup() {
         CGRect rect = bounds();
-        int w = 100;
-        int sp = (rect.width - w) / 2;
-        int bottom = rect.height - 30;
+        float w = 100;
+        float sp = (rect.width - w) / 2;
+        float bottom = rect.height - 30;
 
         confirmButton.setFrame(new CGRect(sp, bottom, w, 20));
         confirmButton.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleRightMargin | AutoresizingMask.flexibleTopMargin);
@@ -29,8 +29,8 @@ public class NotificationDialog extends ConfirmDialog {
 
     @Override
     public void sizeToFit() {
-        CGRect bounding = message().boundingRectWithFont(UIFont.system());
-        int minWidth = MathUtils.clamp(bounding.width, 120, 280) + 40;
+        CGRect bounding = message().boundingRectWithFont(UIFont.systemFont());
+        float minWidth = MathUtils.clamp(bounding.width, 120, 280) + 40;
         CGRect bounds = bounds();
         bounds = new CGRect(0, 0, minWidth, bounds.height);
         setBounds(bounds);

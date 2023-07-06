@@ -4,7 +4,6 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
@@ -21,21 +20,15 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
-import net.minecraft.locale.Language;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -84,7 +77,7 @@ public final class RenderSystem extends AbstractRenderSystem {
         }
     }
 
-    public static int getPixelColor(int x, int y) {
+    public static int getPixelColor(float x, float y) {
         Window window = Minecraft.getInstance().getWindow();
         double guiScale = window.getGuiScale();
         int sx = (int) (x * guiScale);
@@ -148,44 +141,6 @@ public final class RenderSystem extends AbstractRenderSystem {
         }
         return true;
     }
-
-    public static void drawText(PoseStack poseStack, Font font, FormattedText text, int x, int y, int width, int zLevel, int textColor) {
-        drawText(poseStack, font, Collections.singleton(text), x, y, width, zLevel, false, 9, textColor);
-    }
-
-    public static void drawShadowText(PoseStack poseStack, Iterable<FormattedText> lines, int x, int y, int width, int zLevel, Font font, int fontSize, int textColor) {
-        drawText(poseStack, font, lines, x, y, width, zLevel, true, fontSize, textColor);
-    }
-
-    public static void drawText(PoseStack poseStack, Font font, Iterable<FormattedText> lines, int x, int y, int width, int zLevel, boolean shadow, int fontSize, int textColor) {
-        float f = fontSize / 9f;
-        ArrayList<FormattedText> wrappedTextLines = new ArrayList<>();
-        for (FormattedText line : lines) {
-            wrappedTextLines.addAll(font.getSplitter().splitLines(line, (int) (width / f), Style.EMPTY));
-        }
-        poseStack.pushPose();
-        poseStack.translate(x, y, zLevel);
-        poseStack.scale(f, f, f);
-        PoseStack.Pose pose = poseStack.last();
-        MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-
-        int dx = 0, dy = 0;
-        for (FormattedText line : wrappedTextLines) {
-            int qx = font.drawInBatch(Language.getInstance().getVisualOrder(line), dx, dy, textColor, shadow, pose, buffers, false, 0, 15728880);
-            if (qx == dx) {
-                dy += 7;
-            } else {
-                dy += 10;
-            }
-        }
-
-        buffers.endBatch();
-        poseStack.popPose();
-
-        // drawing text causes the Alpha test to reset
-        enableAlphaTest();
-    }
-
 
     public static void drawLine(PoseStack poseStack, float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, MultiBufferSource buffers) {
         PoseStack.Pose pose = poseStack.last();
@@ -365,99 +320,6 @@ public final class RenderSystem extends AbstractRenderSystem {
                     .uv2(0xf000f0)
                     .endVertex();
         }
-    }
-
-    public static void drawImage(ResourceLocation texture, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, int texWidth, int texHeight, PoseStack poseStack) {
-        setShaderTexture(0, texture);
-        RectangleTesselator tesselator = new RectangleTesselator(poseStack);
-        tesselator.begin(SkinRenderType.GUI_IMAGE, texWidth, texHeight);
-        tesselator.add(x, y, width, height, u, v, sourceWidth, sourceHeight, 0);
-        tesselator.end();
-    }
-
-    public static void drawClipImage(ResourceLocation res, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, int topBorder, int bottomBorder, int leftBorder, int rightBorder, float zLevel, PoseStack poseStack) {
-        setShaderTexture(0, res);
-        setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        enableBlend();
-        defaultBlendFunc();
-
-        int fillerWidth = textureWidth - leftBorder - rightBorder;
-        int fillerHeight = textureHeight - topBorder - bottomBorder;
-        int canvasWidth = width - leftBorder - rightBorder;
-        int canvasHeight = height - topBorder - bottomBorder;
-        int xPasses = canvasWidth / fillerWidth;
-        int remainderWidth = canvasWidth % fillerWidth;
-        int yPasses = canvasHeight / fillerHeight;
-        int remainderHeight = canvasHeight % fillerHeight;
-
-        RectangleTesselator tesselator = new RectangleTesselator(poseStack);
-        tesselator.begin(SkinRenderType.GUI_IMAGE, 256, 256);
-
-        // Draw Border
-        // Top Left
-        tesselator.add(
-                x, y,
-                leftBorder, topBorder,
-                u, v,
-                zLevel);
-        // Top Right
-        tesselator.add(x + leftBorder + canvasWidth, y,
-                rightBorder, topBorder,
-                u + leftBorder + fillerWidth, v,
-                zLevel);
-        // Bottom Left
-        tesselator.add(
-                x, y + topBorder + canvasHeight,
-                leftBorder, bottomBorder,
-                u, v + topBorder + fillerHeight,
-                zLevel);
-        // Bottom Right
-        tesselator.add(x + leftBorder + canvasWidth, y + topBorder + canvasHeight,
-                rightBorder, bottomBorder,
-                u + leftBorder + fillerWidth, v + topBorder + fillerHeight,
-                zLevel);
-
-        for (int i = 0; i < xPasses + (remainderWidth > 0 ? 1 : 0); i++) {
-            // Top Border
-            tesselator.add(
-                    x + leftBorder + (i * fillerWidth), y,
-                    (i == xPasses ? remainderWidth : fillerWidth), topBorder,
-                    u + leftBorder, v,
-                    zLevel);
-            // Bottom Border
-            tesselator.add(
-                    x + leftBorder + (i * fillerWidth), y + topBorder + canvasHeight,
-                    (i == xPasses ? remainderWidth : fillerWidth), bottomBorder,
-                    u + leftBorder, v + topBorder + fillerHeight,
-                    zLevel);
-
-
-            // Throw in some filler for good measure
-            for (int j = 0; j < yPasses + (remainderHeight > 0 ? 1 : 0); j++)
-                tesselator.add(
-                        x + leftBorder + (i * fillerWidth), y + topBorder + (j * fillerHeight),
-                        (i == xPasses ? remainderWidth : fillerWidth), (j == yPasses ? remainderHeight : fillerHeight),
-                        u + leftBorder, v + topBorder,
-                        zLevel);
-        }
-
-        // Side Borders
-        for (int j = 0; j < yPasses + (remainderHeight > 0 ? 1 : 0); j++) {
-            // Left Border
-            tesselator.add(
-                    x, y + topBorder + (j * fillerHeight),
-                    leftBorder, (j == yPasses ? remainderHeight : fillerHeight),
-                    u, v + topBorder,
-                    zLevel);
-            // Right Border
-            tesselator.add(
-                    x + leftBorder + canvasWidth, y + topBorder + (j * fillerHeight),
-                    rightBorder, (j == yPasses ? remainderHeight : fillerHeight),
-                    u + leftBorder + fillerWidth, v + topBorder,
-                    zLevel);
-        }
-
-        tesselator.end();
     }
 
     public static void setShaderColor(UIColor color) {

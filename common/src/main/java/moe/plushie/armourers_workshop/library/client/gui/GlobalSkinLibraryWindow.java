@@ -81,8 +81,8 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
     }
 
     private void setupUI() {
-        int width = bounds().getWidth();
-        int height = bounds().getHeight();
+        float width = bounds().getWidth();
+        float height = bounds().getHeight();
 
         headerPanel.setFrame(new CGRect(0, 0, width, 26));
         searchBoxPanel.setFrame(new CGRect(0, 27, width, 23));
@@ -122,7 +122,7 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
     @Override
     public void screenWillResize(CGSize size) {
         setFrame(new CGRect(0, 0, size.width, size.height));
-        menu.reload(0, 0, size.width, size.height);
+        menu.reload(0, 0, (int) size.width, (int) size.height);
         setupUI();
     }
 

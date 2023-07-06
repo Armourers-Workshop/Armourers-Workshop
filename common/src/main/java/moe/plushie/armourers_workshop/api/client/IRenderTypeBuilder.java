@@ -51,7 +51,7 @@ public interface IRenderTypeBuilder {
     }
 
     enum Transparency {
-        NONE, TRANSLUCENT
+        NONE, DEFAULT, TRANSLUCENT
     }
 
     enum Texturing {

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.event;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.apple.library.coregraphics.CGGraphicsContext;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.Event;
@@ -12,13 +12,13 @@ public class RenderTooltipEvents {
 
     public static ItemStack TOOLTIP_ITEM_STACK = ItemStack.EMPTY;
 
-    public static final Event<Before> BEFORE = EventFactory.createArrayBacked(Before.class, callbacks -> (poseStack, itemStack, x, y, width, height, mouseX, mouseY, screenWidth, screenHeight) -> {
+    public static final Event<Before> BEFORE = EventFactory.createArrayBacked(Before.class, callbacks -> (itemStack, x, y, width, height, screenWidth, screenHeight, context) -> {
         for (Before callback : callbacks) {
-            callback.onRenderTooltip(poseStack, itemStack, x, y, width, height, mouseX, mouseY, screenWidth, screenHeight);
+            callback.onRenderTooltip(itemStack, x, y, width, height, screenWidth, screenHeight, context);
         }
     });
 
     public interface Before {
-        void onRenderTooltip(PoseStack poseStack, ItemStack itemStack, int x, int y, int width, int height, int mouseX, int mouseY, int screenWidth, int screenHeight);
+        void onRenderTooltip(ItemStack itemStack, int x, int y, int width, int height, int screenWidth, int screenHeight, CGGraphicsContext context);
     }
 }

@@ -12,8 +12,9 @@ import net.minecraft.resources.ResourceLocation;
 @Environment(EnvType.CLIENT)
 public abstract class SkinRenderType implements IRenderTypeBuilder {
 
-    public static final RenderType GUI_IMAGE = _builder(SkinRenderFormat.GUI_IMAGE).transparency(Transparency.TRANSLUCENT).build("aw_image_gui");
+    public static final RenderType GUI_IMAGE = _builder(SkinRenderFormat.GUI_IMAGE).transparency(Transparency.TRANSLUCENT).build("aw_gui_image");
     public static final RenderType GUI_HIGHLIGHTED_TEXT = _builder(SkinRenderFormat.GUI_HIGHLIGHTED_TEXT).transparency(Transparency.TRANSLUCENT).colorLogic(ColorLogic.OR_REVERSE).depthTest(DepthTest.NONE).build("aw_highlighted_text");
+    public static final RenderType GUI_COLOR = _builder(SkinRenderFormat.GUI_COLOR).transparency(Transparency.DEFAULT).build("aw_gui_color");
 
     public static final RenderType IMAGE_MAGIC = _texture(ModTextures.CIRCLE).writeMask(WriteMask.COLOR_WRITE).sortOnUpload().build("aw_image_magic");
     public static final RenderType IMAGE_EARTH = _texture(ModTextures.EARTH).build("aw_image_earth");

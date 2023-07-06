@@ -22,7 +22,7 @@ public class ServerToastWindow extends ToastWindow {
         }
         this.setIcon(alertPacket.getIcon());
         if (this.getIcon() == null) {
-            int width = frame().getWidth();
+            float width = frame().getWidth();
             this.titleLabel.setFrame(new CGRect(8, 7, width - 8 - 5, 9));
             this.messageLabel.setFrame(new CGRect(8, 18, width - 8 - 5, 9));
         }

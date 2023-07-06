@@ -77,14 +77,14 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         addSubview(skinPanelResults);
         setItemSize(itemSize);
 
-        int iconX = rect.width - 4;
+        float iconX = rect.width - 4;
 
-        addIconButton(iconX - 52, 2, 48, 0, 16, 16, "small", buildItemSizeUpdater(32));
-        addIconButton(iconX - 34, 2, 48, 17, 16, 16, "medium", buildItemSizeUpdater(48));
-        addIconButton(iconX - 16, 2, 48, 34, 16, 16, "large", buildItemSizeUpdater(80));
+        addIconButton(iconX - 52, 2, 16, 16, 48, 0, "small", buildItemSizeUpdater(32));
+        addIconButton(iconX - 34, 2, 16, 16, 48, 17, "medium", buildItemSizeUpdater(48));
+        addIconButton(iconX - 16, 2, 16, 16, 48, 34, "large", buildItemSizeUpdater(80));
 
-        UIButton btn1 = addCommonButton(4, rect.height - 20, 208, 80, 16, 16, "button.previousPage", buildPageUpdater(-1));
-        UIButton btn2 = addCommonButton(rect.width - 20, rect.height - 20, 208, 96, 16, 16, "button.nextPage", buildPageUpdater(1));
+        UIButton btn1 = addCommonButton(4, rect.height - 20, 16, 16, 208, 80, "button.previousPage", buildPageUpdater(-1));
+        UIButton btn2 = addCommonButton(rect.width - 20, rect.height - 20, 16, 16, 208, 96, "button.nextPage", buildPageUpdater(1));
         btn1.setAutoresizingMask(AutoresizingMask.flexibleRightMargin | AutoresizingMask.flexibleTopMargin);
         btn2.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleTopMargin);
     }
@@ -145,7 +145,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         return getDisplayText("results", currentPage + 1, totalPages, totalResults);
     }
 
-    private void addIconButton(int x, int y, int u, int v, int width, int height, String key, BiConsumer<SearchResultsLibraryPanel, UIControl> handler) {
+    private void addIconButton(float x, float y, float width, float height, float u, float v, String key, BiConsumer<SearchResultsLibraryPanel, UIControl> handler) {
         UIButton button = new UIButton(new CGRect(x, y, width, height));
         button.setImage(ModTextures.iconImage(u, v, width, height, ModTextures.GLOBAL_SKIN_LIBRARY), UIControl.State.ALL);
         button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
@@ -155,7 +155,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         addSubview(button);
     }
 
-    private UIButton addCommonButton(int x, int y, int u, int v, int width, int height, String key, BiConsumer<SearchResultsLibraryPanel, UIControl> handler) {
+    private UIButton addCommonButton(float x, float y, float width, float height, int u, int v, String key, BiConsumer<SearchResultsLibraryPanel, UIControl> handler) {
         UIButton button = new UIButton(new CGRect(x, y, width, height));
         button.setImage(ModTextures.iconImage(u, v, width, height, ModTextures.BUTTONS), UIControl.State.ALL);
         button.setTooltip(getCommonDisplayText(key));

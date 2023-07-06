@@ -5,20 +5,19 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
+import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIScrollView;
 import com.apple.library.uikit.UIView;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.locale.Language;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.Style;
-import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class ReportList extends UIScrollView {
@@ -32,17 +31,17 @@ public class ReportList extends UIScrollView {
     protected UIFont font;
     protected IEventListener listener;
 
-    private int lastWidth;
+    private float lastWidth;
 
     public ReportList(CGRect frame) {
         super(frame);
-        this.font = UIFont.system();
+        this.font = UIFont.systemFont();
     }
 
     @Override
     public void layoutSubviews() {
         super.layoutSubviews();
-        int width = bounds().getWidth();
+        float width = bounds().getWidth();
         if (lastWidth != width) {
             lastWidth = width;
             this.contentHeight = 0;
@@ -74,7 +73,7 @@ public class ReportList extends UIScrollView {
     }
 
     public void addItem(String... names) {
-        int width = bounds().width;
+        float width = bounds().width;
         GuiDetailListItem item = new GuiDetailListItem(names);
         item.layout(0, contentHeight, width - 2, 10);
         items.add(item);
@@ -167,7 +166,7 @@ public class ReportList extends UIScrollView {
     protected void didScroll() {
         super.didScroll();
         if (this.listener != null) {
-            this.listener.listDidScroll(this, contentOffset.y);
+            this.listener.listDidScroll(this, contentOffset);
         }
     }
 
@@ -191,15 +190,15 @@ public class ReportList extends UIScrollView {
 
         void listDidSelect(ReportList reportList, int index);
 
-        void listDidScroll(ReportList reportList, int contentOffset);
+        void listDidScroll(ReportList reportList, CGPoint contentOffset);
     }
 
     public class GuiDetailListColumn {
 
         private final String name;
-        private final int width;
+        private final float width;
 
-        public GuiDetailListColumn(String name, int width) {
+        public GuiDetailListColumn(String name, float width) {
             this.name = name;
             this.width = width;
         }
@@ -208,23 +207,23 @@ public class ReportList extends UIScrollView {
             return name;
         }
 
-        public int getWidth(int listWidth) {
+        public float getWidth(float listWidth) {
             return width;
         }
     }
 
     public class GuiDetailListItem extends UIView {
 
-        public String[] names;
+        public List<NSString> names;
 
-        public HashMap<Integer, List<FormattedText>> wrappedTextLines = new HashMap<>();
+        public HashMap<Integer, List<NSString>> wrappedTextLines = new HashMap<>();
 
-        public int contentWidth = 0;
-        public int contentHeight = 0;
+        public float contentWidth = 0;
+        public float contentHeight = 0;
 
         public GuiDetailListItem(String[] names) {
             super(CGRect.ZERO);
-            this.names = names;
+            this.names = Arrays.stream(names).map(NSString::new).collect(Collectors.toList());
         }
 
         @Override
@@ -235,20 +234,20 @@ public class ReportList extends UIScrollView {
             }
         }
 
-        public void layout(int x, int y, int itemWidth, int itemHeight) {
+        public void layout(float x, float y, float itemWidth, float itemHeight) {
             wrappedTextLines.clear();
             int xOffset = 0;
-            for (int i = 0; i < names.length; i++) {
-                int columnWidth = 10;
-                String name = names[i];
+            for (int i = 0; i < names.size(); i++) {
+                float columnWidth = 10;
+                NSString name = names.get(i);
                 GuiDetailListColumn column = getColumn(i);
                 if (column != null) {
                     columnWidth = column.getWidth(itemWidth);
                     if (columnWidth == -1) {
                         columnWidth = itemWidth - 2 - xOffset;
                     }
-                    if (Strings.isNotBlank(name)) {
-                        List<FormattedText> lines = font.font().getSplitter().splitLines(name, columnWidth, Style.EMPTY);
+                    if (!name.isEmpty()) {
+                        List<NSString> lines = name.split(columnWidth, font);
                         itemHeight = Math.max(itemHeight, lines.size() * 10);
                         wrappedTextLines.put(i, lines);
                     }
@@ -265,8 +264,8 @@ public class ReportList extends UIScrollView {
         public void render(CGPoint point, CGGraphicsContext context) {
             super.render(point, context);
             int xOffset = 0;
-            for (int i = 0; i < names.length; i++) {
-                int columnWidth = 10;
+            for (int i = 0; i < names.size(); i++) {
+                float columnWidth = 10;
                 GuiDetailListColumn column = getColumn(i);
                 if (column != null) {
                     columnWidth = column.getWidth(contentWidth);
@@ -274,15 +273,15 @@ public class ReportList extends UIScrollView {
                         columnWidth = contentWidth - 2 - xOffset;
                     }
                     context.fillRect(xOffset, 0, xOffset + columnWidth, contentHeight, 0xCC808080);
-                    List<FormattedText> lines = wrappedTextLines.get(i);
+                    List<NSString> lines = wrappedTextLines.get(i);
                     if (lines != null) {
                         int dy = 0;
-                        for (FormattedText line : lines) {
-                            context.drawText(Language.getInstance().getVisualOrder(line), 1 + xOffset, 1 + dy, 0xffffff);
+                        for (NSString line : lines) {
+                            context.drawText(line, 1 + xOffset, 1 + dy, 0xffffff);
                             dy += 10;
                         }
                     } else {
-                        context.drawText(names[i], 1 + xOffset, 1, 0xffffff);
+                        context.drawText(names.get(i), 1 + xOffset, 1, 0xffffff);
                     }
                     xOffset += columnWidth + 1;
                 }

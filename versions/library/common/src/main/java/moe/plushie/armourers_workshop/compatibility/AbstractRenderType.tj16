@@ -51,7 +51,7 @@ public class AbstractRenderType extends RenderType {
     });
 
     // unlike vanilla, we do not modify any opengl options.
-    private static final TextureStateShard NO_TEXTURE = new TextureStateShard() {
+    private static final TextureStateShard NO_TEXTURE_UNCHANGED = new TextureStateShard() {
         @Override
         public void setupRenderState() {
         }
@@ -61,13 +61,21 @@ public class AbstractRenderType extends RenderType {
         }
     };
 
+    private static final TransparencyStateShard DEFAULT_TRANSPARENCY = new TransparencyStateShard("aw_defaul_transparency", () -> {
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+    }, () -> {
+        RenderSystem.disableBlend();
+    });
+
     private static final Map<SkinRenderFormat, Supplier<IRenderTypeBuilder>> MAPPER = _make(it -> {
 
         it.put(SkinRenderFormat.LINE, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_LINES, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
         it.put(SkinRenderFormat.IMAGE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
 
-        it.put(SkinRenderFormat.GUI_IMAGE, () -> _builder(DefaultVertexFormat.POSITION_TEX, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTextureState(NO_TEXTURE)));
+        it.put(SkinRenderFormat.GUI_IMAGE, () -> _builder(DefaultVertexFormat.POSITION_TEX, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTextureState(NO_TEXTURE_UNCHANGED)));
         it.put(SkinRenderFormat.GUI_HIGHLIGHTED_TEXT, () -> _builder(DefaultVertexFormat.POSITION, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTexturingState(OR_REVERSE)));
+        it.put(SkinRenderFormat.GUI_COLOR, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_QUADS, builder -> builder.setTransparencyState(DEFAULT_TRANSPARENCY)));
 
         it.put(SkinRenderFormat.BLOCK, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING)));
         it.put(SkinRenderFormat.BLOCK_CUTOUT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING)));
@@ -122,6 +130,7 @@ public class AbstractRenderType extends RenderType {
         });
 
         private static final Map<Transparency, TransparencyStateShard> TABLE_TRANSPARENCY = _make(it -> {
+            it.put(Transparency.DEFAULT, DEFAULT_TRANSPARENCY);
             it.put(Transparency.TRANSLUCENT, TRANSLUCENT_TRANSPARENCY);
             it.put(Transparency.NONE, NO_TRANSPARENCY);
         });

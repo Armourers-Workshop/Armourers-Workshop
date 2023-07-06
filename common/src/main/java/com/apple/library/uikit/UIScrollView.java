@@ -40,11 +40,14 @@ public class UIScrollView extends UIView {
 
     @Override
     public void mouseWheel(UIEvent event) {
+        if (isVerticalScrollable()) {
+            double delta = event.delta() * bounds().getHeight() / 5;
+            float tx = contentOffset.x;
+            float ty = contentOffset.y - (float) delta; // revert
+            this.setContentOffset(new CGPoint(tx, ty));
+            return;
+        }
         super.mouseWheel(event);
-        double delta = event.delta() * bounds().getHeight() / 5;
-        int tx = contentOffset.x;
-        int ty = contentOffset.y - (int) delta; // revert
-        this.setContentOffset(new CGPoint(tx, ty));
     }
 
     public void flashScrollIndicators() {
@@ -145,11 +148,15 @@ public class UIScrollView extends UIView {
         super.insertViewAtIndex(view, Math.min(index, subviews().size() - 2));
     }
 
+    private boolean isVerticalScrollable() {
+        return bounds().getHeight() < contentSize.height;
+    }
+
     private CGPoint clamp(CGPoint point) {
         CGRect rect = bounds();
         UIEdgeInsets edg = contentInsets;
-        int tx = Math.max(Math.min(point.x, contentSize.width - rect.width + edg.right), -edg.left);
-        int ty = Math.max(Math.min(point.y, contentSize.height - rect.height + edg.bottom), -edg.top);
+        float tx = Math.max(Math.min(point.x, contentSize.width - rect.width + edg.right), -edg.left);
+        float ty = Math.max(Math.min(point.y, contentSize.height - rect.height + edg.bottom), -edg.top);
         if (point.x == tx && point.y == ty) {
             return point;
         }
@@ -169,15 +176,15 @@ public class UIScrollView extends UIView {
 
     protected static class Indicator extends UIView {
 
-        protected int size = 3;
+        protected float size = 3;
         protected float radio = 0;
 
         protected boolean allowsDisplay = true;
         protected boolean enabled = true;
 
-        private final BiFunction<Integer, Integer, Integer> selector;
+        private final BiFunction<Float, Float, Float> selector;
 
-        public Indicator(BiFunction<Integer, Integer, Integer> selector) {
+        public Indicator(BiFunction<Float, Float, Float> selector) {
             super(CGRect.   ZERO);
             this.selector = selector;
             this.setBackgroundColor(new UIColor(0x7f000000, true));
@@ -206,10 +213,10 @@ public class UIScrollView extends UIView {
             float v = eval(offset, maxSize) * m * (1 - radio);
             float p = clamp(v, 0, m);
             float q = clamp(v + m * radio, 0, m);
-            int x = selector.apply(rect.getMinX() + (int) p, rect.getMaxX() - size);
-            int y = selector.apply(rect.getMaxY() - size, rect.getMinY() + (int) p);
-            int width = selector.apply((int) (q - p), size);
-            int height = selector.apply(size, (int) (q - p));
+            float x = selector.apply(rect.getMinX() + (int) p, rect.getMaxX() - size);
+            float y = selector.apply(rect.getMaxY() - size, rect.getMinY() + (int) p);
+            float width = selector.apply(q - p, size);
+            float height = selector.apply(size, q - p);
             setFrame(new CGRect(x, y, width, height));
             flash();
         }

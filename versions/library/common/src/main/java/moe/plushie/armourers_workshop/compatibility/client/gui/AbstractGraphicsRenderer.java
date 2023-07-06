@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.compatibility.client.gui;
 
-import com.apple.library.coregraphics.CGGradient;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGGraphicsRenderer;
 import com.apple.library.coregraphics.CGGraphicsState;
@@ -8,7 +7,6 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIFont;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
@@ -17,7 +15,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -56,17 +53,6 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     }
 
     @Override
-    public void renderText(FormattedCharSequence text, float x, float y, int textColor, boolean shadow, boolean bl2, int j, int k, UIFont font, CGGraphicsContext context) {
-        if (font == null) {
-            font = context.state().font();
-        }
-        PoseStack poseStack = graphics.pose();
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-        font.font().drawInBatch(text, x, y, textColor, shadow, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, j, k);
-        bufferSource.endBatch();
-    }
-
-    @Override
     public void renderTooltip(NSString text, CGRect rect, @Nullable UIFont font, CGGraphicsContext context) {
         if (font == null) {
             font = context.state().font();
@@ -80,27 +66,6 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     }
 
     @Override
-    public void renderImage(ResourceLocation texture, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, CGGraphicsContext context) {
-        graphics.blit(texture, x, y, 0, u, v, width, height, texWidth, texHeight);
-    }
-
-    @Override
-    public void renderColor(int x1, int y1, int x2, int y2, int color, CGGraphicsContext context) {
-        graphics.fill(x1, y1, x2, y2, color);
-    }
-
-    @Override
-    public void renderGradient(CGGradient gradient, CGRect rect, CGGraphicsContext context) {
-        int i = rect.x;
-        int j = rect.y;
-        int k = rect.getMaxX();
-        int l = rect.getMaxY();
-        int m = gradient.startColor.getRGB();
-        int n = gradient.endColor.getRGB();
-        graphics.fillGradient(i, j, k, l, m, n);
-    }
-
-    @Override
     public void renderEntity(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY, CGGraphicsContext context) {
         InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, x, y, scale, mouseX, mouseY, entity);
     }
@@ -111,12 +76,17 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     }
 
     @Override
-    public int mouseX() {
+    public void flush() {
+        graphics.flush();
+    }
+
+    @Override
+    public float mouseX() {
         return mouseX;
     }
 
     @Override
-    public int mouseY() {
+    public float mouseY() {
         return mouseY;
     }
 
@@ -128,9 +98,14 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     @Override
     public UIFont font() {
         if (uifont == null) {
-            uifont = new UIFont(font);
+            uifont = new UIFont(font, 9);
         }
         return uifont;
+    }
+
+    @Override
+    public MultiBufferSource buffers() {
+        return graphics.bufferSource();
     }
 
     @Override

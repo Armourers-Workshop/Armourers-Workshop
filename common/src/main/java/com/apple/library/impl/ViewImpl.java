@@ -45,7 +45,7 @@ public interface ViewImpl {
         return false;
     }
 
-    default int[] _applyAutoresizingMask(int offset, int size, int newValue, int oldValue, int mask) {
+    default float[] _applyAutoresizingMask(float offset, float size, float newValue, float oldValue, int mask) {
         float newOffset = offset;
         float newSize = size;
         switch (mask & 7) {
@@ -66,7 +66,7 @@ public interface ViewImpl {
                 if (offset != 0 || size != 0) {
                     usage = (offset / (float) (offset + size));
                 }
-                int dx = oldValue - offset - size;
+                float dx = oldValue - offset - size;
                 newOffset = (newValue - dx) * usage;
                 newSize = (newValue - dx) - newOffset;
                 break;
@@ -109,6 +109,6 @@ public interface ViewImpl {
                 break;
             }
         }
-        return new int[]{Math.round(newOffset), Math.max(Math.round(newSize), 0)};
+        return new float[]{newOffset, Math.max(newSize, 0)};
     }
 }

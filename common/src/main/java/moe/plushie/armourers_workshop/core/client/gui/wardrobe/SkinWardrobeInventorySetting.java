@@ -19,6 +19,6 @@ public class SkinWardrobeInventorySetting extends SkinWardrobeBaseSetting {
 
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
-        container.forEachCustomSlots(slot -> context.drawImage(ModTextures.WARDROBE_2, slot.x - 1, slot.y - 1, 238, 194, 18, 18, 256, 256));
+        container.forEachCustomSlots(slot -> context.drawImage(ModTextures.WARDROBE_2, slot.x - 1, slot.y - 1, 18, 18, 238, 194, 256, 256));
     }
 }

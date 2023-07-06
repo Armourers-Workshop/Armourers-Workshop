@@ -40,12 +40,12 @@ public class LayoutManagerImpl {
                 contentWidth += edg.left + rect.width + edg.right;
             }
         }
-        int dx = bounds.x + sel(bounds.width, contentWidth, horizontalAlignment);
+        float dx = bounds.x + sel(bounds.width, contentWidth, horizontalAlignment);
         for (Pair<CGRect, UIEdgeInsets> pair : rects) {
             if (pair != null) {
                 CGRect rect = pair.getKey();
                 UIEdgeInsets edg = pair.getValue();
-                int dy = bounds.y + sel(bounds.height - edg.top - edg.bottom, rect.height, verticalAlignment);
+                float dy = bounds.y + sel(bounds.height - edg.top - edg.bottom, rect.height, verticalAlignment);
                 results.add(new CGRect(dx + edg.left + rect.x, dy + edg.top + rect.y, rect.width, rect.height));
                 dx += rect.width + edg.left + edg.right;
             } else {
@@ -64,12 +64,12 @@ public class LayoutManagerImpl {
                 contentHeight += edg.top + rect.height + edg.bottom;
             }
         }
-        int dy = bounds.y + sel(bounds.height, contentHeight, verticalAlignment);
+        float dy = bounds.y + sel(bounds.height, contentHeight, verticalAlignment);
         for (Pair<CGRect, UIEdgeInsets> pair : rects) {
             if (pair != null) {
                 CGRect rect = pair.getKey();
                 UIEdgeInsets edg = pair.getValue();
-                int dx = bounds.x + sel(bounds.width - edg.left - edg.right, rect.width, horizontalAlignment);
+                float dx = bounds.x + sel(bounds.width - edg.left - edg.right, rect.width, horizontalAlignment);
                 results.add(new CGRect(dx + edg.left + rect.x, dy + edg.top + rect.y, rect.width, rect.height));
                 dy += rect.height + edg.top + edg.bottom;
             } else {
@@ -89,7 +89,7 @@ public class LayoutManagerImpl {
         return defaultValue;
     }
 
-    private int sel(int height, int value, NSTextAlignment.Vertical alignment) {
+    private float sel(float height, float value, NSTextAlignment.Vertical alignment) {
         switch (alignment) {
             case BOTTOM:
                 return height - value;
@@ -102,7 +102,7 @@ public class LayoutManagerImpl {
         }
     }
 
-    private int sel(int width, int value, NSTextAlignment.Horizontal alignment) {
+    private float sel(float width, float value, NSTextAlignment.Horizontal alignment) {
         switch (alignment) {
             case RIGHT:
                 return width - value;

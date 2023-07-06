@@ -31,7 +31,7 @@ public class UITableView extends UIScrollView {
         }
     });
 
-    private int cachedWidth = 0;
+    private float cachedWidth = 0;
     private final HashSet<NSIndexPath> selectedIndexPaths = new HashSet<>();
 
     private ArrayList<Entry> entries;
@@ -44,7 +44,7 @@ public class UITableView extends UIScrollView {
     @Override
     public void layoutSubviews() {
         super.layoutSubviews();
-        int width = bounds().getWidth();
+        float width = bounds().getWidth();
         if (width != cachedWidth) {
             cachedWidth = width;
             reloadData();
@@ -169,11 +169,6 @@ public class UITableView extends UIScrollView {
     protected void _unhighlightRow(NSIndexPath indexPath) {
         apply(UITableViewCell::setHighlighted, indexPath, false);
         delegate.invoker().tableViewDidUnhighlightRow(this, indexPath);
-    }
-
-    @Override
-    public int[] _applyAutoresizingMask(int offset, int size, int newValue, int oldValue, int mask) {
-        return super._applyAutoresizingMask(offset, size, newValue, oldValue, mask);
     }
 
     private Entry entryForRow(NSIndexPath indexPath) {

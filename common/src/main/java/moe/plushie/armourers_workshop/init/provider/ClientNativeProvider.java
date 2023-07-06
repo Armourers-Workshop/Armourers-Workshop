@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init.provider;
 
+import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGRect;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
@@ -83,7 +84,7 @@ public interface ClientNativeProvider {
 
     interface RenderTooltip {
 
-        void render(ItemStack itemStack, CGRect frame, int mouseX, int mouseY, int screenWidth, int screenHeight, PoseStack poseStack);
+        void render(ItemStack itemStack, CGRect frame, float screenWidth, float screenHeight, CGGraphicsContext context);
     }
 
     interface RenderLivingEntity {

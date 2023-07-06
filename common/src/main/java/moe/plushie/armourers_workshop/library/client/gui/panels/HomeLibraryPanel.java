@@ -72,9 +72,9 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
     @Override
     public void layoutSubviews() {
         super.layoutSubviews();
-        int listTop = 20;
-        int listLeft = 4;
-        int width = bounds().getWidth();
+        float listTop = 20;
+        float listLeft = 4;
+        float width = bounds().getWidth();
         for (SkinItemList fileList : lists()) {
             fileList.setFrame(new CGRect(listLeft, listTop + 20, width, 307));
             fileList.setItemSize(new CGSize(50, 50));

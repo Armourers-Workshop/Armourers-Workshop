@@ -99,7 +99,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
     @Override
     public void screenWillResize(CGSize size) {
         setFrame(new CGRect(0, 0, size.width, size.height));
-        menu.reload(0, 0, size.width, size.height);
+        menu.reload(0, 0, (int) size.width, (int) size.height);
     }
 
     @Override
@@ -219,7 +219,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
     }
 
     private void setupFileView(CGRect rect) {
-        int width = rect.getWidth();
+        float width = rect.getWidth();
 
         UIView group1 = new UIView(new CGRect(rect.getMinX(), rect.getMinY(), width, 20));
         group1.setAutoresizingMask(AutoresizingMask.flexibleWidth);
@@ -340,8 +340,8 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
     }
 
     private void addFolder(UIControl sender) {
-       InputDialog dialog = new InputDialog();
-       dialog.setTitle(getDisplayText("dialog.newFolder.title"));
+        InputDialog dialog = new InputDialog();
+        dialog.setTitle(getDisplayText("dialog.newFolder.title"));
         dialog.setMessageColor(new UIColor(0xff5555));
         dialog.setPlaceholder(getDisplayText("dialog.newFolder.enterFolderName"));
         dialog.setMessage(getDisplayText("dialog.newFolder.invalidFolderName"));

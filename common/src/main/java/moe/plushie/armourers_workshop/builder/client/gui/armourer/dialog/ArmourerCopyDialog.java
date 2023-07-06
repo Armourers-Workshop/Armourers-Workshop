@@ -35,10 +35,10 @@ public class ArmourerCopyDialog extends ConfirmDialog {
 
     private void setup() {
         layoutIfNeeded();
-        int width = bounds().width - 30;
-        int left = confirmButton.frame().getX() + 1;
-        int right = cancelButton.frame().getMaxX() - 1;
-        int bottom = confirmButton.frame().getY() - 4;
+        float width = bounds().width - 30;
+        float left = confirmButton.frame().getX() + 1;
+        float right = cancelButton.frame().getMaxX() - 1;
+        float bottom = confirmButton.frame().getY() - 4;
 
         mirrorCheckBox.setFrame(new CGRect(left, bottom - 22, width, 9));
         mirrorCheckBox.setTitle(getText("mirror"));

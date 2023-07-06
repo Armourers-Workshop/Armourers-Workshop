@@ -151,7 +151,7 @@ public class UIWindow extends UIView {
         if (firstResponder == view) {
             firstResponder = null;
         }
-        if (focusedResponder == view)  {
+        if (focusedResponder == view) {
             _setFocusedResponder(null);
         }
         if (firstInputResponder == view) {
@@ -249,8 +249,8 @@ public class UIWindow extends UIView {
         }
 
         @Override
-        public void layout(int width, int height) {
-            window.screenWillResize(new CGSize(width, height));
+        public void layout(CGSize size) {
+            window.screenWillResize(size);
             window.layoutIfNeeded();
         }
 
@@ -261,8 +261,8 @@ public class UIWindow extends UIView {
                 context.saveGraphicsState();
                 context.translateCTM(0, 0, level);
             }
-            int mouseX = context.state().mouseX();
-            int mouseY = context.state().mouseY();
+            float mouseX = context.state().mouseX();
+            float mouseY = context.state().mouseY();
             applyRender(mouseX, mouseY, 0, window, context);
             if (level != 0) {
                 context.restoreGraphicsState();
@@ -302,7 +302,7 @@ public class UIWindow extends UIView {
             if (!window._sendGlobalEvent(UIControl.Event.of(event), event)) {
                 return checkEvent(event);
             }
-            window.firstResponder = findFirstResponder((int) mouseX, (int) mouseY, event, window);
+            window.firstResponder = findFirstResponder((float) mouseX, (float) mouseY, event, window);
             // auto resign the input first responder if needed.
             if (window.focusedResponder != window.firstResponder) {
                 window._setFocusedResponder(null);
@@ -327,7 +327,7 @@ public class UIWindow extends UIView {
             if (!window._sendGlobalEvent(UIControl.Event.MOUSE_MOVED, event)) {
                 return checkEvent(event);
             }
-            updateHoveredResponder((int) mouseX, (int) mouseY, event, true);
+            updateHoveredResponder((float) mouseX, (float) mouseY, event, true);
             if (window.firstResponder != null) {
                 window.firstResponder.mouseDragged(event);
             }
@@ -359,7 +359,7 @@ public class UIWindow extends UIView {
             if (!window._sendGlobalEvent(UIControl.Event.of(event), event)) {
                 return checkEvent(event);
             }
-            updateHoveredResponder((int) mouseX, (int) mouseY, event, false);
+            updateHoveredResponder((float) mouseX, (float) mouseY, event, false);
             if (window.hoveredResponder != null) {
                 window.hoveredResponder.mouseWheel(event);
                 if (!event.result().isDecided()) {
@@ -375,7 +375,7 @@ public class UIWindow extends UIView {
         public InvokerResult mouseIsInside(double mouseX, double mouseY, int button) {
             UIEvent event = makeMouseEvent(mouseX, mouseY, button, 0, MOUSE_BUTTONS[(button % 3)]);
             CGRect frame = window.frame();
-            UIView view = window.hitTest(new CGPoint((int) mouseX - frame.x, (int) mouseY - frame.y), event);
+            UIView view = window.hitTest(new CGPoint((float) mouseX - frame.x, (float) mouseY - frame.y), event);
             if (view != null && view != window) {
                 return InvokerResult.SUCCESS;
             }
@@ -418,7 +418,7 @@ public class UIWindow extends UIView {
             return window.level();
         }
 
-        private void updateHoveredResponder(int mouseX, int mouseY, UIEvent event, boolean force) {
+        private void updateHoveredResponder(float mouseX, float mouseY, UIEvent event, boolean force) {
             window._setHoveredResponder(findFirstResponder(mouseX, mouseY, event, window), event);
         }
 
@@ -432,7 +432,7 @@ public class UIWindow extends UIView {
 
         private UIEvent makeEvent(double mouseX, double mouseY, int key, int keyModifier, double delta, UIEvent.Type type) {
             CGRect frame = window.frame();
-            CGPoint location = new CGPoint((int) mouseX - frame.x, (int) mouseY - frame.y);
+            CGPoint location = new CGPoint((float) mouseX - frame.x, (float) mouseY - frame.y);
             return new UIEvent(type, key, keyModifier, delta, location);
         }
 
@@ -461,14 +461,14 @@ public class UIWindow extends UIView {
             return checkEvent(event);
         }
 
-        private static void applyRender(int mouseX, int mouseY, int depth, UIView view, CGGraphicsContext context) {
+        private static void applyRender(float mouseX, float mouseY, int depth, UIView view, CGGraphicsContext context) {
             if (view.isHidden()) {
                 return;
             }
             CGRect frame = view.frame();
             CGRect bounds = view.bounds();
-            int ix = mouseX - frame.x;
-            int iy = mouseY - frame.y;
+            float ix = mouseX - frame.x;
+            float iy = mouseY - frame.y;
             boolean needClips = view.isClipBounds();
             if (needClips) {
                 context.addClipRect(view.convertRectToView(bounds, null));
@@ -500,7 +500,7 @@ public class UIWindow extends UIView {
             }
         }
 
-        private static UIView findFirstResponder(int mouseX, int mouseY, UIEvent event, UIView view) {
+        private static UIView findFirstResponder(float mouseX, float mouseY, UIEvent event, UIView view) {
             CGRect frame = view.frame();
             CGPoint point = new CGPoint(mouseX - frame.x, mouseY - frame.y);
             return view.hitTest(point, event);

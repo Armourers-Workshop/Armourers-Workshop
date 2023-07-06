@@ -3,18 +3,23 @@ package com.apple.library.coregraphics;
 import com.apple.library.uikit.UIFont;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 public interface CGGraphicsState {
 
     PoseStack ctm();
 
+    MultiBufferSource buffers();
+
     UIFont font();
 
-    int mouseX();
+    float mouseX();
 
-    int mouseY();
+    float mouseY();
 
     float partialTicks();
+
+    void flush();
 
     default void save() {
         ctm().pushPose();

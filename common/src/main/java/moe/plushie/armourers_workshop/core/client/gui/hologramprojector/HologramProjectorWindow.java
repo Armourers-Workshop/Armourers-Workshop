@@ -46,7 +46,7 @@ public class HologramProjectorWindow extends MenuWindow<HologramProjectorMenu> {
         setFrame(new CGRect(0, 0, size.width, size.height));
         tabView.setFrame(bounds());
         CGRect inv = inventoryView.frame();
-        menu.reload(inv.x, inv.y, size.width, size.height);
+        menu.reload((int) inv.x, (int) inv.y, (int) size.width, (int) size.height);
     }
 
     private void setupTabView() {
@@ -79,7 +79,7 @@ public class HologramProjectorWindow extends MenuWindow<HologramProjectorMenu> {
         int group = 0;
         Object value = entry.tag();
         if (value != null) {
-            group = (int)value;
+            group = (int) value;
         }
         menu.setGroup(group);
         inventoryView.setHidden(!menu.shouldRenderInventory());

@@ -38,9 +38,9 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void setup() {
-        int width = bounds().getWidth();
-        int height = bounds().getHeight();
-        int inputWidth = width - 15 - 162;
+        float width = bounds().getWidth();
+        float height = bounds().getHeight();
+        float inputWidth = width - 15 - 162;
         textName = addTextField(5, 15, inputWidth, 12, "enterName");
         textName.setMaxLength(80);
 
@@ -130,7 +130,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
         router.showPage(returnPage);
     }
 
-    private UITextField addTextField(int x, int y, int width, int height, String key) {
+    private UITextField addTextField(float x, float y, float width, float height, String key) {
         UITextField textField = new UITextField(new CGRect(x, y, width, height));
         textField.setPlaceholder(getDisplayText(key));
         textField.setMaxLength(255);
@@ -139,7 +139,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
         return textField;
     }
 
-    private UITextView addTextView(int x, int y, int width, int height, String key) {
+    private UITextView addTextView(float x, float y, float width, float height, String key) {
         UITextView textField = new UITextView(new CGRect(x, y, width, height));
         textField.setPlaceholder(getDisplayText(key));
         textField.setMaxLength(255);
@@ -147,7 +147,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
         return textField;
     }
 
-    protected UILabel addLabel(int x, int y, int width, int height, NSString message) {
+    protected UILabel addLabel(float x, float y, float width, float height, NSString message) {
         UILabel label = new UILabel(new CGRect(x, y, width, height));
         label.setText(message);
         label.setTextColor(UIColor.WHITE);
@@ -156,7 +156,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
         return label;
     }
 
-    private UIButton addTextButton(int x, int y, int width, int height, String key, BiConsumer<SkinEditLibraryPanel, UIControl> handler) {
+    private UIButton addTextButton(float x, float y, float width, float height, String key, BiConsumer<SkinEditLibraryPanel, UIControl> handler) {
         UIButton button = new UIButton(new CGRect(x, y, width, height));
         button.setTitle(getDisplayText(key), UIControl.State.NORMAL);
         button.setTitleColor(UIColor.WHITE, UIControl.State.NORMAL);

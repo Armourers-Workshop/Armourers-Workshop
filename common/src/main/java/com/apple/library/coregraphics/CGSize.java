@@ -4,16 +4,24 @@ public class CGSize {
 
     public static final CGSize ZERO = new CGSize(0, 0);
 
-    public int width;
-    public int height;
+    public float width;
+    public float height;
 
-    public CGSize(int width, int height) {
+    public CGSize(float width, float height) {
         this.width = width;
         this.height = height;
     }
 
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
     @Override
     public String toString() {
-        return String.format("(%d %d)", width, height);
+        return String.format("(%f %f)", width, height);
     }
 }

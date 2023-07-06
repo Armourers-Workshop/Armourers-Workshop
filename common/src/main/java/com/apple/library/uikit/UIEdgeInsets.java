@@ -6,12 +6,12 @@ public class UIEdgeInsets {
 
     public static final UIEdgeInsets ZERO = new UIEdgeInsets(0, 0, 0, 0);
 
-    public final int top;
-    public final int left;
-    public final int right;
-    public final int bottom;
+    public final float top;
+    public final float left;
+    public final float right;
+    public final float bottom;
 
-    public UIEdgeInsets(int top, int left, int bottom, int right) {
+    public UIEdgeInsets(float top, float left, float bottom, float right) {
         this.top = top;
         this.left = left;
         this.right = right;

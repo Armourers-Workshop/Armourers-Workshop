@@ -1,12 +1,13 @@
 package moe.plushie.armourers_workshop.init.platform;
 
+import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGRect;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinEquipmentType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.other.SkinTooltipFlags;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
+import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -19,7 +20,6 @@ import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModKeyBindings;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -158,7 +158,7 @@ public class ItemTooltipManager {
         tooltips.addAll(newTooltips);
     }
 
-    public static void renderSkinTooltip(ItemStack itemStack, CGRect frame, int mouseX, int mouseY, int screenWidth, int screenHeight, PoseStack poseStack) {
+    public static void renderSkinTooltip(ItemStack itemStack, CGRect frame, float screenWidth, float screenHeight, CGGraphicsContext context) {
         if (!ModConfig.Client.skinPreEnabled) {
             return;
         }
@@ -170,26 +170,27 @@ public class ItemTooltipManager {
         if (bakedSkin == null) {
             return;
         }
-        int tx, ty;
+        float dx, dy;
         int size = ModConfig.Client.skinPreSize;
         if (ModConfig.Client.skinPreLocFollowMouse) {
-            tx = frame.getX() - 28 - size;
-            ty = frame.getY() - 4;
-            if (frame.getX() < mouseX) {
-                tx = frame.getX() + frame.getWidth() + 28;
+            dx = frame.getX() - 28 - size;
+            dy = frame.getY() - 4;
+            if (frame.getX() < context.state().mouseX()) {
+                dx = frame.getX() + frame.getWidth() + 28;
             }
-            ty = MathUtils.clamp(ty, 0, screenHeight - size);
+            dy = MathUtils.clamp(dy, 0, screenHeight - size);
         } else {
-            tx = MathUtils.ceil((screenWidth - size) * ModConfig.Client.skinPreLocHorizontal);
-            ty = MathUtils.ceil((screenHeight - size) * ModConfig.Client.skinPreLocVertical);
+            dx = MathUtils.ceil((screenWidth - size) * ModConfig.Client.skinPreLocHorizontal);
+            dy = MathUtils.ceil((screenHeight - size) * ModConfig.Client.skinPreLocVertical);
         }
-
         if (ModConfig.Client.skinPreDrawBackground) {
-            RenderSystem.enableDepthTest();
-            RenderSystem.drawClipImage(ModTextures.GUI_PREVIEW, tx, ty, 0, 0, size, size, 62, 62, 4, 4, 4, 4, 400, poseStack);
+            context.drawTilableImage(ModTextures.GUI_PREVIEW, dx, dy, size, size, 0, 0, 62, 62, 4, 4, 4, 4, 400);
         }
+        int tx = (int) dx;
+        int ty = (int) dy;
+        ColorScheme colorScheme = descriptor.getColorScheme();
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        ExtendedItemRenderer.renderSkinInBox(bakedSkin, descriptor.getColorScheme(), itemStack, tx, ty, 500, size, size, 30, 45, 0, poseStack, buffers);
+        ExtendedItemRenderer.renderSkinInBox(bakedSkin, colorScheme, itemStack, tx, ty, 500, size, size, 30, 45, 0, 0, 0xf000f0, context.state().ctm(), buffers);
         buffers.endBatch();
     }
 }

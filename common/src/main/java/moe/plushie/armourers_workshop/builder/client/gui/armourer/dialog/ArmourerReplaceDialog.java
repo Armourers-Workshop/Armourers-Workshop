@@ -55,11 +55,11 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
 
     private void setup() {
         layoutIfNeeded();
-        int left = confirmButton.frame().getX() + 1;
-        int centerX = cancelButton.frame().getX() + 1;
-        int bottom = confirmButton.frame().getY() - 4;
-        int width = bounds().width - 30;
-        int height = bounds().getHeight() + 10 + 98;
+        float left = confirmButton.frame().getX() + 1;
+        float centerX = cancelButton.frame().getX() + 1;
+        float bottom = confirmButton.frame().getY() - 4;
+        float width = bounds().width - 30;
+        float height = bounds().getHeight() + 10 + 98;
 
         setupBackgroundView(left, centerX, height);
 
@@ -81,7 +81,7 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         addSubview(listView);
     }
 
-    private void setupBackgroundView(int left, int center, int height) {
+    private void setupBackgroundView(float left, float center, float height) {
         UILabel label1 = new UILabel(new CGRect(left + 8, 25, 100, 9));
         UILabel label2 = new UILabel(new CGRect(center + 8, 25, 100, 9));
         label1.setText(getText("srcBlock"));
@@ -89,8 +89,8 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         addSubview(label1);
         addSubview(label2);
 
-        int placeholderX = left + 32;
-        int placeholderY = 44;
+        float placeholderX = left + 32;
+        float placeholderY = 44;
         UIImageView slot1 = new UIImageView(new CGRect(placeholderX - 5, placeholderY - 5, 26, 26));
         UIImageView slot2 = new UIImageView(new CGRect(placeholderX - 5 + 110, placeholderY - 5, 26, 26));
         slot1.setImage(UIImage.of(ModTextures.ARMOURER).uv(230, 18).build());
@@ -175,7 +175,7 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         }
     }
 
-    private void addHelpButton(int x, int y, String key) {
+    private void addHelpButton(float x, float y, String key) {
         UIButton button = new UIButton(new CGRect(x, y, 7, 8));
         button.setBackgroundImage(ModTextures.helpButtonImage(), UIControl.State.ALL);
         button.setTooltip(getText(key));
@@ -214,8 +214,8 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
 
         protected void reloadSlots(CGRect inventoryRect, CGRect placeholderRect) {
             slots.clear();
-            addPlayerSlots(inventory, inventoryRect.x + 8, inventoryRect.y + 16);
-            addPlaceholderSlots(inventory, inventory.getContainerSize() - 2, placeholderRect.x, placeholderRect.y);
+            addPlayerSlots(inventory, (int) inventoryRect.x + 8, (int) inventoryRect.y + 16);
+            addPlaceholderSlots(inventory, inventory.getContainerSize() - 2, (int) placeholderRect.x, (int) placeholderRect.y);
         }
 
         protected void addPlaceholderSlots(Container inventory, int offset, int placeholderX, int placeholderY) {

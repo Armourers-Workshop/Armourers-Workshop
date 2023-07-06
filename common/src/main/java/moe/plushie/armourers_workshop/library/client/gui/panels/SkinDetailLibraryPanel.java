@@ -16,7 +16,6 @@ import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ReportDialog;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
-import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
@@ -38,10 +37,8 @@ import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.util.Strings;
 
 import java.io.File;
@@ -63,7 +60,6 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     private int userRating = 0;
     private boolean doneRatingCheck = false;
 
-    private Font font;
     private CGGradient gradient;
 
     private CGRect skinInfoFrame = CGRect.ZERO;
@@ -84,13 +80,12 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void setup() {
-        font = Minecraft.getInstance().font;
         gradient = new CGGradient(UIColor.rgba(0x22888888), CGPoint.ZERO, UIColor.rgba(0x22CCCCCC), CGPoint.ZERO);
 
         CGRect bounds = bounds();
-        int minX = 2;
-        int maxX = bounds.width - 2;
-        int midX = minX + 185 + 2;
+        float minX = 2;
+        float maxX = bounds.width - 2;
+        float midX = minX + 185 + 2;
 
         buttonUserSkins = addTextButton(minX + 2, 4, 26, 26, "", SkinDetailLibraryPanel::searchUser);
         buttonUserSkins.addSubview(new HeadView(new CGRect(5, 5, 16, 16)));
@@ -176,7 +171,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
             }
         }
         if (Strings.isNotBlank(playerTexture.getName())) {
-            context.drawText(getDisplayText("uploader", playerTexture.getName()).chars(), rect.x + 32, rect.y + 12, 0xffeeeeee);
+            context.drawText(getDisplayText("uploader", playerTexture.getName()), rect.x + 32, rect.y + 12, 0xffeeeeee);
             RenderSystem.enableAlphaTest();
         }
     }
@@ -186,22 +181,26 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         if (message == null) {
             return;
         }
-        RenderSystem.addClipRect(convertRectToView(rect, null));
-        RenderSystem.drawText(context.state().ctm(), font, message.component(), rect.x + 2, rect.y + 2, rect.width - 4, 0, 0xffeeeeee);
-        RenderSystem.removeClipRect();
+        context.addClipRect(convertRectToView(rect, null));
+        context.drawMultilineText(message, rect.x + 2, rect.y + 2, rect.width - 4, 0xffeeeeee, null);
+        context.removeClipRect();
     }
 
     public void drawPreviewBox(CGGraphicsContext context, CGRect rect) {
         context.fillRect(gradient, rect);
         BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(entry.getDescriptor(), loadTicket);
         if (bakedSkin != null) {
+            int tx = (int) rect.x;
+            int ty = (int) rect.y;
+            int tw = (int) rect.width;
+            int th = (int) rect.height;
             MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            ExtendedItemRenderer.renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, rect.x, rect.y, 100, rect.width, rect.height, 20, 45, 0, 0, 0xf000f0, context.state().ctm(), buffers);
+            ExtendedItemRenderer.renderSkinInBox(bakedSkin, tx, ty, 100, tw, th, 20, 45, 0, context.state().ctm(), buffers);
             buffers.endBatch();
         }
     }
 
-    private UIButton addTextButton(int x, int y, int width, int height, String key, BiConsumer<SkinDetailLibraryPanel, UIControl> handler) {
+    private UIButton addTextButton(float x, float y, float width, float height, String key, BiConsumer<SkinDetailLibraryPanel, UIControl> handler) {
         NSString title = new NSString("");
         if (!key.isEmpty()) {
             title = getDisplayText(key);
@@ -403,7 +402,8 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         public void render(CGPoint point, CGGraphicsContext context) {
             super.render(point, context);
             ResourceLocation texture = PlayerTextureLoader.getInstance().loadTextureLocation(playerTexture);
-            context.drawAvatarContents(texture, 0, 0, 16, 16);
+            context.drawResizableImage(texture, 0, 0, 16, 16, 8, 8, 8, 8, 64, 64, 0);
+            context.drawResizableImage(texture, -1, -1, 16 + 2, 16 + 2, 40, 8, 8, 8, 64, 64, 0);
         }
     }
 }

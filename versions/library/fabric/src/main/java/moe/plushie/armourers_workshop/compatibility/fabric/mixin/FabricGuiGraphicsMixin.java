@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.compatibility.fabric.mixin;
 
+import com.apple.library.coregraphics.CGGraphicsContext;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compatibility.client.gui.AbstractGraphicsRenderer;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderTooltipEvents;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.gui.Font;
@@ -48,7 +50,8 @@ public class FabricGuiGraphicsMixin {
         if (k2 + j + 6 > screenHeight) {
             k2 = screenHeight - j - 6;
         }
-        RenderTooltipEvents.BEFORE.invoker().onRenderTooltip(graphics.pose(), itemStack, j2, k2, i, j, mouseX, mouseY, screenWidth, screenHeight);
+        CGGraphicsContext context = AbstractGraphicsRenderer.of(font, graphics, mouseX, mouseY, 0);
+        RenderTooltipEvents.BEFORE.invoker().onRenderTooltip(itemStack, j2, k2, i, j, screenWidth, screenHeight, context);
     }
 
     @Inject(method = "renderTooltip(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V", at = @At("HEAD"))

@@ -8,10 +8,10 @@ public class CGRect {
 
     public static final CGRect ZERO = new CGRect(0, 0, 0, 0);
 
-    public int x;
-    public int y;
-    public int width;
-    public int height;
+    public float x;
+    public float y;
+    public float width;
+    public float height;
 
     public CGRect(CGRect rect) {
         this(rect.x, rect.y, rect.width, rect.height);
@@ -21,50 +21,50 @@ public class CGRect {
         this(point.x, point.y, size.width, size.height);
     }
 
-    public CGRect(int x, int y, int width, int height) {
+    public CGRect(float x, float y, float width, float height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
     }
 
-    public int getX() {
+    public float getX() {
         return x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 
-    public int getMinX() {
+    public float getMinX() {
         return x;
     }
 
-    public int getWidth() {
+    public float getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public float getHeight() {
         return height;
     }
 
-    public int getMinY() {
+    public float getMinY() {
         return y;
     }
 
-    public int getMidX() {
+    public float getMidX() {
         return x + width / 2;
     }
 
-    public int getMidY() {
+    public float getMidY() {
         return y + height / 2;
     }
 
-    public int getMaxX() {
+    public float getMaxX() {
         return x + width;
     }
 
-    public int getMaxY() {
+    public float getMaxY() {
         return y + height;
     }
 
@@ -82,17 +82,17 @@ public class CGRect {
     }
 
     public CGRect intersection(CGRect r) {
-        int tx1 = this.x;
-        int ty1 = this.y;
-        int rx1 = r.x;
-        int ry1 = r.y;
-        long tx2 = tx1;
+        float tx1 = this.x;
+        float ty1 = this.y;
+        float rx1 = r.x;
+        float ry1 = r.y;
+        double tx2 = tx1;
         tx2 += this.width;
-        long ty2 = ty1;
+        double ty2 = ty1;
         ty2 += this.height;
-        long rx2 = rx1;
+        double rx2 = rx1;
         rx2 += r.width;
-        long ry2 = ry1;
+        double ry2 = ry1;
         ry2 += r.height;
         if (tx1 < rx1) tx1 = rx1;
         if (ty1 < ry1) ty1 = ry1;
@@ -105,7 +105,7 @@ public class CGRect {
         // they might underflow, though...
         if (tx2 < Integer.MIN_VALUE) tx2 = Integer.MIN_VALUE;
         if (ty2 < Integer.MIN_VALUE) ty2 = Integer.MIN_VALUE;
-        return new CGRect(tx1, ty1, (int) tx2, (int) ty2);
+        return new CGRect(tx1, ty1, (float) tx2, (float) ty2);
     }
 
     public boolean intersects(CGRect rect) {
@@ -125,7 +125,7 @@ public class CGRect {
         return offset(point.x, point.y);
     }
 
-    public CGRect offset(int dx, int dy) {
+    public CGRect offset(float dx, float dy) {
         return new CGRect(x + dx, y + dy, width, height);
     }
 
@@ -133,11 +133,11 @@ public class CGRect {
         return insetBy(insets.top, insets.left, insets.bottom, insets.right);
     }
 
-    public CGRect insetBy(int top, int left, int bottom, int right) {
-        int x0 = x + left;
-        int x1 = x + width - right;
-        int y0 = y + top;
-        int y1 = y + height - bottom;
+    public CGRect insetBy(float top, float left, float bottom, float right) {
+        float x0 = x + left;
+        float x1 = x + width - right;
+        float y0 = y + top;
+        float y1 = y + height - bottom;
         return new CGRect(x0, y0, Math.max(x1 - x0, 0), Math.max(y1 - y0, 0));
     }
 
@@ -151,14 +151,14 @@ public class CGRect {
         return (x >= x0 && y >= y0 && x <= x0 + getWidth() && y <= y0 + getHeight());
     }
 
-    private boolean contains(int x, int y) {
-        int x0 = getX();
-        int y0 = getY();
+    private boolean contains(float x, float y) {
+        float x0 = getX();
+        float y0 = getY();
         return (x >= x0 && y >= y0 && x < x0 + getWidth() && y < y0 + getHeight());
     }
 
     @Override
     public String toString() {
-        return String.format("(%d %d; %d %d)", x, y, width, height);
+        return String.format("(%f %f; %f %f)", x, y, width, height);
     }
 }

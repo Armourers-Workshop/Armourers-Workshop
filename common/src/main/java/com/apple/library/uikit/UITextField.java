@@ -221,15 +221,15 @@ public class UITextField extends UIControl implements TextInputTraits {
     private void sizeDidChange(CGRect rect, CGSize size) {
         CGRect bounds = bounds().insetBy(contentInsets);
         CGRect cursorRect = rect.insetBy(0, 0, 0, -5);
-        int offsetX = storage.offset.x;
-        int offsetY = (bounds.height - size.height) / 2;
-        int contentWidth = size.width + cursorRect.width;
+        float offsetX = storage.offset.x;
+        float offsetY = (bounds.height - size.height) / 2;
+        float contentWidth = size.width + cursorRect.width;
         CGRect visibleRect = bounds.offset(-offsetX, 0);
         // 1. when the cursor pos not in the visible rect.
         // 2. when the display width exceeds the actual width.
         if (visibleRect.getMaxX() > contentWidth || !isSameRange(visibleRect, cursorRect)) {
-            int x1 = Math.min(cursorRect.x + visibleRect.width / 2, contentWidth);
-            int x0 = Math.max(x1 - visibleRect.width, 0);
+            float x1 = Math.min(cursorRect.x + visibleRect.width / 2, contentWidth);
+            float x0 = Math.max(x1 - visibleRect.width, 0);
             offsetX = contentInsets.left - x0;
         }
         storage.offset = new CGPoint(offsetX, contentInsets.top + offsetY + 1);

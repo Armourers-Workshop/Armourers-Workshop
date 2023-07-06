@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.gui.widget;
 
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIWindow;
 import com.apple.library.uikit.UIWindowManager;
 import moe.plushie.armourers_workshop.api.math.ISize2i;
@@ -38,10 +39,10 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
 
     @Override
     public void init() {
-        ISize2i screenSize = getScreenSize();
+        CGSize screenSize = getScreenSize();
         manager.layout(screenSize.getWidth(), screenSize.getHeight());
         CGRect rect = window.bounds();
-        setContentSize(new Size2i(rect.width, rect.height));
+        setContentSize(new CGSize(rect.width, rect.height));
         super.init();
     }
 

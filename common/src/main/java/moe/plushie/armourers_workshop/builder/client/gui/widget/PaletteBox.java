@@ -17,8 +17,8 @@ public class PaletteBox extends UIControl {
     private int row = 4;
     private int column = 8;
 
-    private int cellWidth = 0;
-    private int cellHeight = 0;
+    private float cellWidth = 0;
+    private float cellHeight = 0;
 
     private int selectedIndex = 0;
 
@@ -99,8 +99,8 @@ public class PaletteBox extends UIControl {
             return;
         }
         CGRect rect = bounds();
-        int i = (point.x - rect.x - 1) / cellWidth;
-        int j = (point.y - rect.y - 1) / cellHeight;
+        int i = (int) ((point.x - rect.x - 1) / cellWidth);
+        int j = (int) ((point.y - rect.y - 1) / cellHeight);
         if (i < 0 || j < 0 || i >= column || j >= row) {
             return;
         }

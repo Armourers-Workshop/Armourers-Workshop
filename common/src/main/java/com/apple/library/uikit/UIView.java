@@ -1,5 +1,6 @@
 package com.apple.library.uikit;
 
+import com.apple.library.coregraphics.CGAffineTransform;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
@@ -28,6 +29,7 @@ public class UIView extends UIResponder implements ViewImpl {
     private CGPoint origin = CGPoint.ZERO;
     private CGRect bounds = CGRect.ZERO;
     private CGRect frame = CGRect.ZERO;
+    private CGAffineTransform transform = CGAffineTransform.IDENTITY;
 
     private int zIndex = 0;
     private int autoresizingMask = 0;
@@ -221,6 +223,10 @@ public class UIView extends UIResponder implements ViewImpl {
         return frame;
     }
 
+    public CGAffineTransform transform() {
+        return transform;
+    }
+
    public boolean canBecomeFocused() {
         return false;
    }
@@ -262,6 +268,10 @@ public class UIView extends UIResponder implements ViewImpl {
         CGRect oldBounds = bounds();
         this.setBounds(new CGRect(oldBounds.x, oldBounds.y, frame.width, frame.height));
         this.setOrigin(new CGPoint(frame.x + frame.width / 2, frame.y + frame.height / 2));
+    }
+
+    public void setTransform(CGAffineTransform transform) {
+        this.transform = transform;
     }
 
     public void setContents(Object contents) {
@@ -386,8 +396,8 @@ public class UIView extends UIResponder implements ViewImpl {
             return;
         }
         CGRect frame = frame();
-        int[] h = _applyAutoresizingMask(frame.x, frame.width, newParentValue.width, oldParentValue.width, mask);
-        int[] v = _applyAutoresizingMask(frame.y, frame.height, newParentValue.height, oldParentValue.height, mask >> 3);
+        float[] h = _applyAutoresizingMask(frame.x, frame.width, newParentValue.width, oldParentValue.width, mask);
+        float[] v = _applyAutoresizingMask(frame.y, frame.height, newParentValue.height, oldParentValue.height, mask >> 3);
         CGRect newFrame = new CGRect(h[0], v[0], h[1], v[1]);
         if (!newFrame.equals(frame)) {
             setFrame(newFrame);
@@ -443,8 +453,8 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     private void _remakeFrame() {
-        int x = origin.x - bounds.width / 2;
-        int y = origin.y - bounds.height / 2;
+        float x = origin.x - bounds.width / 2;
+        float y = origin.y - bounds.height / 2;
         this.frame = new CGRect(x, y, bounds.width, bounds.height);
     }
 

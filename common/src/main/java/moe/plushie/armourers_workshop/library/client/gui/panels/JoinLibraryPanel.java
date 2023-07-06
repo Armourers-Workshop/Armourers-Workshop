@@ -62,7 +62,7 @@ public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDel
         contentView.addSubview(label);
 
         CGRect frame = label.frame();
-        int buttonBottom = frame.getMaxY() - 16;
+        float buttonBottom = frame.getMaxY() - 16;
 
         buttonPrevious.setFrame(new CGRect(frame.getMinX(), buttonBottom, 16, 16));
         buttonPrevious.setTooltip(getCommonDisplayText("button.previousPage"));

@@ -3,13 +3,11 @@ package moe.plushie.armourers_workshop.core.client.gui.widget;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
 import com.apple.library.uikit.UIWindow;
-import moe.plushie.armourers_workshop.api.math.IVector2i;
 import moe.plushie.armourers_workshop.compatibility.client.gui.AbstractMenuScreen;
-import moe.plushie.armourers_workshop.utils.math.Size2i;
-import moe.plushie.armourers_workshop.utils.math.Vector2i;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -49,9 +47,9 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         if (!isReady) {
             return;
         }
-        int mouseX = context.state().mouseX();
-        int mouseY = context.state().mouseY();
-        IVector2i offset = screen.getContentOffset();
+        int mouseX = (int) context.state().mouseX();
+        int mouseY = (int) context.state().mouseY();
+        CGPoint offset = screen.getContentOffset();
         context.saveGraphicsState();
         context.translateCTM(-offset.getX(), -offset.getY(), 0);
         screen.renderInView(this, 400, mouseX, mouseY, context.state().partialTicks(), context);
@@ -107,9 +105,9 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         }
 
         public void setup(CGRect rect, CGRect bounds) {
-            setContentSize(new Size2i(rect.width, rect.height));
-            resize(Minecraft.getInstance(), bounds.width, bounds.height);
-            setContentOffset(new Vector2i(rect.x, rect.y));
+            setContentSize(new CGSize(rect.width, rect.height));
+            resize(Minecraft.getInstance(), (int) bounds.width, (int) bounds.height);
+            setContentOffset(new CGPoint(rect.x, rect.y));
         }
 
         @Override

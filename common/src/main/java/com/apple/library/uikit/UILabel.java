@@ -21,7 +21,8 @@ public class UILabel extends UIView {
     private NSTextAlignment.Horizontal textHorizontalAlignment = NSTextAlignment.Horizontal.LEFT;
     private NSTextAlignment.Vertical textVerticalAlignment = NSTextAlignment.Vertical.CENTER;
 
-    protected final DelegateImpl<UILabelDelegate> delegate = DelegateImpl.of(new UILabelDelegate() {});
+    protected final DelegateImpl<UILabelDelegate> delegate = DelegateImpl.of(new UILabelDelegate() {
+    });
 
     private int numberOfLines = 1;
     private int lineSpacing = 0;
@@ -29,8 +30,8 @@ public class UILabel extends UIView {
     private NSString text;
     private List<TextLine> cachedTextLines;
 
-    private int cachedTextWidth;
-    private int cachedTextHeight;
+    private float cachedTextWidth;
+    private float cachedTextHeight;
 
     private UIFont font;
 
@@ -59,10 +60,10 @@ public class UILabel extends UIView {
         if (cachedTextLines == null || cachedTextLines.isEmpty()) {
             return;
         }
-        int dy = sel(rect, cachedTextHeight, textVerticalAlignment);
+        float dy = sel(rect, cachedTextHeight, textVerticalAlignment);
         for (TextLine line : cachedTextLines) {
             CGPoint offset = line.offset;
-            int dx = sel(rect, line.size.width, textHorizontalAlignment);
+            float dx = sel(rect, line.size.width, textHorizontalAlignment);
             context.drawText(line.text, offset.x + dx, offset.y + dy, font, textColor, shadowColor);
         }
     }
@@ -149,18 +150,19 @@ public class UILabel extends UIView {
             return null;
         }
         CGRect rect = bounds();
-        int dy = sel(rect, cachedTextHeight, textVerticalAlignment);
+        float dy = sel(rect, cachedTextHeight, textVerticalAlignment);
         for (TextLine line : cachedTextLines) {
             CGPoint offset = line.offset;
-            int dx = sel(rect, line.size.width, textHorizontalAlignment);
+            float dx = sel(rect, line.size.width, textHorizontalAlignment);
             if (point.y >= offset.y + dy && point.y <= offset.y + dy + line.size.height) {
-                return line.text.attributes(point.x - dx, line.font);
+                float ptx = point.x - dx;
+                return line.text.attributes((int) ptx, line.font);
             }
         }
         return null;
     }
 
-    private int sel(CGRect rect, int value, NSTextAlignment.Vertical alignment) {
+    private float sel(CGRect rect, float value, NSTextAlignment.Vertical alignment) {
         switch (alignment) {
             case BOTTOM:
                 return rect.height - value;
@@ -173,7 +175,7 @@ public class UILabel extends UIView {
         }
     }
 
-    private int sel(CGRect rect, int value, NSTextAlignment.Horizontal alignment) {
+    private float sel(CGRect rect, float value, NSTextAlignment.Horizontal alignment) {
         switch (alignment) {
             case RIGHT:
                 return rect.width - value;
@@ -192,7 +194,7 @@ public class UILabel extends UIView {
 
     private void remakeTextLineIfNeeded(NSString title, UIFont font, CGRect bounds) {
         // if the cache is still valid, we continue to use it.
-        int width = bounds.width;
+        float width = bounds.width;
         if (cachedTextLines != null && cachedTextWidth == width) {
             return;
         }
@@ -201,7 +203,7 @@ public class UILabel extends UIView {
         if (numberOfLines == 1) {
             lines.add(title);
         } else {
-            lines.addAll(title.split(width, font));
+            lines.addAll(title.split((int) width, font));
         }
         // remove all excess lines.
         while (numberOfLines != 0 && lines.size() > numberOfLines) {

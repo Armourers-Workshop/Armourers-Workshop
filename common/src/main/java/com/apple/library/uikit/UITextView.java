@@ -229,7 +229,7 @@ public class UITextView extends UIScrollView implements TextInputTraits {
     }
 
     private void sizeDidChange(CGRect rect, CGSize size) {
-        int height = size.height + contentInsets.top + contentInsets.bottom;
+        float height = size.height + contentInsets.top + contentInsets.bottom;
         if (contentSize.height != height) {
             storage.offset = new CGPoint(contentInsets.left, contentInsets.top);
             setContentSize(new CGSize(0, height));

@@ -22,6 +22,8 @@ public class ModTextures {
     public static final ResourceLocation COLOR_MIXER = res("textures/gui/colour_mixer/colour-mixer.png");
     public static final ResourceLocation OUTFIT_MAKER = res("textures/gui/outfit_maker/outfit-maker.png");
     public static final ResourceLocation ARMOURER = res("textures/gui/armourer/armourer.png");
+    public static final ResourceLocation ADVANCED_SKIN_BUILDER = res("textures/gui/advanced_skin_builder/advanced-skin-builder.png");
+
 
     public static final ResourceLocation TABS = res("textures/gui/controls/tabs.png");
     public static final ResourceLocation COMMON = res("textures/gui/common.png");
@@ -69,7 +71,11 @@ public class ModTextures {
         return UIImage.of(WIDGETS).uv(0, 46).fixed(200, 20).clip(4, 4, 4, 4).unzip(offsets::get).build();
     }
 
-    public static UIImage defaultButtonImage(int u, int v) {
+    public static UIImage defaultButtonImage(float u, float v) {
+        return buttonImage(ModTextures.BUTTONS, u, v, 16, 16);
+    }
+
+    public static UIImage buttonImage(ResourceLocation texture, float u, float v, float width, float height) {
         HashMap<Integer, CGPoint> offsets = new HashMap<>();
         offsets.put(UIControl.State.NORMAL, new CGPoint(0, 0));
         offsets.put(UIControl.State.HIGHLIGHTED, new CGPoint(1, 0));
@@ -79,10 +85,10 @@ public class ModTextures {
         // 1. normal + highlighted + selected + selected and highlighted
         // 2. normal + highlighted + disabled
         offsets.put(UIControl.State.DISABLED, new CGPoint(3, 0));
-        return UIImage.of(ModTextures.BUTTONS).uv(u, v).fixed(16, 16).unzip(offsets::get).build();
+        return UIImage.of(texture).uv(u, v).fixed(width, height).unzip(offsets::get).build();
     }
 
-    public static UIImage iconImage(int u, int v, int width, int height, ResourceLocation resource) {
+    public static UIImage iconImage(float u, float v, float width, float height, ResourceLocation resource) {
         HashMap<Integer, CGPoint> offsets = new HashMap<>();
         offsets.put(UIControl.State.NORMAL, new CGPoint(0, 0));
         offsets.put(UIControl.State.HIGHLIGHTED, new CGPoint(1, 0));

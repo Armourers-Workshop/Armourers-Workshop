@@ -1,9 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.client.gui;
 
-import moe.plushie.armourers_workshop.api.math.ISize2i;
-import moe.plushie.armourers_workshop.api.math.IVector2i;
-import moe.plushie.armourers_workshop.utils.math.Size2i;
-import moe.plushie.armourers_workshop.utils.math.Vector2i;
+import com.apple.library.coregraphics.CGPoint;
+import com.apple.library.coregraphics.CGSize;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -21,26 +19,31 @@ public class AbstractMenuScreen<T extends AbstractContainerMenu> extends Abstrac
         super.onClose();
     }
 
-    public void setContentOffset(IVector2i offset) {
-        leftPos = offset.getX();
-        topPos = offset.getY();
+    public void setContentOffset(CGPoint offset) {
+        leftPos = (int) offset.getX();
+        topPos = (int) offset.getY();
     }
 
-    public IVector2i getContentOffset() {
-        return new Vector2i(leftPos, topPos);
+    public CGPoint getContentOffset() {
+        return new CGPoint(leftPos, topPos);
     }
 
-    public void setContentSize(ISize2i size) {
-        imageWidth = size.getWidth();
-        imageHeight = size.getHeight();
+    public void setContentSize(CGSize size) {
+        imageWidth = (int) size.getWidth();
+        imageHeight = (int) size.getHeight();
     }
 
-    public ISize2i getContentSize() {
-        return new Size2i(imageWidth, imageHeight);
+    public CGSize getContentSize() {
+        return new CGSize(imageWidth, imageHeight);
     }
 
-    public ISize2i getScreenSize() {
-        return new Size2i(width, height);
+    public CGSize getScreenSize() {
+        return new CGSize(width, height);
+    }
+
+    public void setScreenSize(CGSize size) {
+        width = (int) size.getWidth();
+        height = (int) size.getHeight();
     }
 }
 

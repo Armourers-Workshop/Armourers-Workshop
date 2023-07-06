@@ -1,27 +1,34 @@
 package com.apple.library.uikit;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
+import com.apple.library.impl.FontImpl;
 import net.minecraft.client.gui.Font;
 
-public class UIFont {
+public class UIFont implements FontImpl {
 
-    private final int lineHeight;
+    private final float lineHeight;
     private final Font font;
+    private final float fontSize;
 
-    public UIFont(Font font) {
+    public UIFont(Font font, float size) {
         this.font = font;
+        this.fontSize = size;
         this.lineHeight = font.lineHeight;
     }
 
-    @Environment(EnvType.CLIENT)
-    public static UIFont system() {
-        return new UIFont(Minecraft.getInstance().font);
+    public UIFont(UIFont font, float size) {
+        this(font.font, size);
     }
 
-    public int lineHeight() {
+    public static UIFont systemFont() {
+        return SYSTEM_FONT;
+    }
+
+    public float lineHeight() {
         return lineHeight;
+    }
+
+    public float fontSize() {
+        return fontSize;
     }
 
     public Font font() {

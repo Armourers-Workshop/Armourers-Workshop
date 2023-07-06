@@ -21,8 +21,8 @@ public class TextInputImpl {
     }
 
     public boolean mouseDown(CGPoint point) {
-        int tx = Math.max(point.x - storage.offset.x, 0);
-        int ty = Math.max(point.y - storage.offset.y, 0);
+        float tx = Math.max(point.x - storage.offset.x, 0);
+        float ty = Math.max(point.y - storage.offset.y, 0);
         NSTextPosition pos = storage.positionAtPoint(new CGPoint(tx, ty));
         if (pos != null) {
             storage.moveCursorTo(pos, KeyboardManagerImpl.hasShiftDown());
@@ -164,7 +164,7 @@ public class TextInputImpl {
         }
         lastUserCursorRect = userCursorRect;
         NSTextPosition pos = storage.beginOfDocument();
-        int ty = rect.getMidY() + rect.height * step;
+        float ty = rect.getMidY() + rect.height * step;
         if (ty >= 0) {
             pos = storage.positionAtPoint(new CGPoint(userCursorRect.x, ty));
         }

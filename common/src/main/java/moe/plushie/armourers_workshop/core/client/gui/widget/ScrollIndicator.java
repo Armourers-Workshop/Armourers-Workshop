@@ -93,10 +93,10 @@ public class ScrollIndicator extends UIControl {
     }
 
     private void updateOffsetIfNeeded() {
-        int minY = topButton.frame().getMaxY();
-        int maxY = bottomButton.frame().getMinY();
         CGRect frame = middleButton.frame();
-        int y = (int) (((maxY - minY) - frame.height) * value);
+        float minY = topButton.frame().getMaxY();
+        float maxY = bottomButton.frame().getMinY();
+        float y = ((maxY - minY) - frame.height) * value;
         middleButton.setFrame(new CGRect(frame.x, minY + y, frame.width, frame.height));
     }
 
@@ -106,9 +106,9 @@ public class ScrollIndicator extends UIControl {
     }
 
     private float valueAtPoint(CGPoint point) {
-        int minY = topButton.frame().getMaxY();
-        int maxY = bottomButton.frame().getMinY();
-        int y = point.y;
+        float minY = topButton.frame().getMaxY();
+        float maxY = bottomButton.frame().getMinY();
+        float y = point.y;
         if (y < minY) {
             return 0;
         }

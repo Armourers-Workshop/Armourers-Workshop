@@ -1,14 +1,13 @@
 package moe.plushie.armourers_workshop.compatibility.client.gui;
 
-import com.apple.library.coregraphics.CGGradient;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGGraphicsRenderer;
 import com.apple.library.coregraphics.CGGraphicsState;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIFont;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -16,10 +15,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -31,16 +28,18 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsState {
 
+    private static final MultiBufferSource.BufferSource SHARED_BUFFERS = MultiBufferSource.immediate(new BufferBuilder(256));
+
     private final PoseStack poseStack;
-    private final int mouseX;
-    private final int mouseY;
+    private final float mouseX;
+    private final float mouseY;
     private final float partialTicks;
 
     private final AbstractMenuScreenImpl<?> screen;
     private final Font font;
     private UIFont uifont;
 
-    public AbstractGraphicsRenderer(AbstractMenuScreenImpl<?> screen, Font font, PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public AbstractGraphicsRenderer(AbstractMenuScreenImpl<?> screen, Font font, PoseStack poseStack, float mouseX, float mouseY, float partialTicks) {
         this.screen = screen;
         this.font = font;
         this.poseStack = poseStack;
@@ -54,18 +53,9 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
         return impl.poseStack;
     }
 
-    public static CGGraphicsContext of(AbstractMenuScreenImpl<?> screen, Font font, PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public static CGGraphicsContext of(AbstractMenuScreenImpl<?> screen, Font font, PoseStack poseStack, float mouseX, float mouseY, float partialTicks) {
         AbstractGraphicsRenderer impl = new AbstractGraphicsRenderer(screen, font, poseStack, mouseX, mouseY, partialTicks);
         return new CGGraphicsContext(impl, impl);
-    }
-
-    public void renderText(FormattedCharSequence text, float x, float y, int textColor, boolean shadow, boolean bl2, int j, int k, UIFont font, CGGraphicsContext context) {
-        if (font == null) {
-            font = context.state().font();
-        }
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-        font.font().drawInBatch(text, x, y, textColor, shadow, poseStack.last().pose(), bufferSource, bl2, j, k);
-        bufferSource.endBatch();
     }
 
     @Override
@@ -77,29 +67,7 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
         // and while we can't decide on the final tooltip size,
         // but we can to handle the break the newline
         List<? extends FormattedCharSequence> texts = font.font().split(text.component(), 100000);
-        screen._renderTooltip(poseStack, texts, mouseX, mouseY);
-    }
-
-    @Override
-    public void renderImage(ResourceLocation texture, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, CGGraphicsContext context) {
-        RenderSystem.setShaderTexture(0, texture);
-        Screen.blit(poseStack, x, y, 0, u, v, width, height, texWidth, texHeight);
-    }
-
-    @Override
-    public void renderColor(int x1, int y1, int x2, int y2, int color, CGGraphicsContext context) {
-        Screen.fill(poseStack, x1, y1, x2, y2, color);
-    }
-
-    @Override
-    public void renderGradient(CGGradient gradient, CGRect rect, CGGraphicsContext context) {
-        int i = rect.x;
-        int j = rect.y;
-        int k = rect.getMaxX();
-        int l = rect.getMaxY();
-        int m = gradient.startColor.getRGB();
-        int n = gradient.endColor.getRGB();
-        screen._fillGradient(poseStack, i, j, k, l, m, n);
+        screen._renderTooltip(poseStack, texts, (int) mouseX, (int) mouseY);
     }
 
     @Override
@@ -119,26 +87,36 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     }
 
     @Override
+    public void flush() {
+        SHARED_BUFFERS.endBatch();
+    }
+
+    @Override
     public UIFont font() {
         if (uifont == null) {
-            uifont = new UIFont(font);
+            uifont = new UIFont(font, 9);
         }
         return uifont;
     }
 
     @Override
-    public int mouseX() {
+    public float mouseX() {
         return mouseX;
     }
 
     @Override
-    public int mouseY() {
+    public float mouseY() {
         return mouseY;
     }
 
     @Override
     public float partialTicks() {
         return partialTicks;
+    }
+
+    @Override
+    public MultiBufferSource buffers() {
+        return SHARED_BUFFERS;
     }
 
     @Override

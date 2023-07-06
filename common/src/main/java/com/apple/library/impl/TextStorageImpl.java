@@ -260,7 +260,7 @@ public class TextStorageImpl {
         }
         for (TextLine line : selectedLines) {
             if (line.insideAtX(point.x)) {
-                String value = cachedFont.plainSubstrByWidth(line.text, point.x - line.rect.x);
+                String value = cachedFont.plainSubstrByWidth(line.text, (int) (point.x - line.rect.x));
                 int index = line.range.startIndex() + value.length();
                 return NSTextPosition.forward(index);
             }
@@ -370,7 +370,7 @@ public class TextStorageImpl {
         }
         ArrayList<CGRect> rects = new ArrayList<>();
         rects.add(new CGRect(startPoint.x, startPoint.y, boundingSize.width - startPoint.x, lastLineRect.height));
-        int my = startPoint.y + lastLineRect.height;
+        float my = startPoint.y + lastLineRect.height;
         if (my != endPoint.y) {
             rects.add(new CGRect(0, my, boundingSize.width, endPoint.y - my));
         }
@@ -442,7 +442,7 @@ public class TextStorageImpl {
         return Minecraft.getInstance().font;
     }
 
-    private List<TextLine> split(String value, Font font, int maxWidth) {
+    private List<TextLine> split(String value, Font font, float maxWidth) {
         if (value.isEmpty()) {
             return Collections.emptyList();
         }
@@ -450,13 +450,13 @@ public class TextStorageImpl {
             return Collections.singletonList(new TextLine(0, 0, value.length(), value));
         }
         ArrayList<TextLine> lines = new ArrayList<>();
-        font.getSplitter().splitLines(value, maxWidth, Style.EMPTY, false, (style, startIndex, endIndex) -> {
+        font.getSplitter().splitLines(value, (int) maxWidth, Style.EMPTY, false, (style, startIndex, endIndex) -> {
             lines.add(new TextLine(lines.size(), startIndex, endIndex, value.substring(startIndex, endIndex)));
         });
         return lines;
     }
 
-    private ArrayList<TextLine> split(String value, NSRange selection, Font font, int maxWidth) {
+    private ArrayList<TextLine> split(String value, NSRange selection, Font font, float maxWidth) {
         List<TextLine> wrappedTextLines = split(value, font, maxWidth);
         if (wrappedTextLines.isEmpty()) {
             return new ArrayList<>();
@@ -595,22 +595,23 @@ public class TextStorageImpl {
 
         TextLine(int index, int startIndex, int endIndex, String text) {
             this.text = text;
-            this.chars = FormattedCharSequence.forward(text, Style.EMPTY);;
+            this.chars = FormattedCharSequence.forward(text, Style.EMPTY);
             this.index = index;
             this.range = new NSRange(startIndex, endIndex - startIndex);
         }
 
-        boolean insideAtX(int x) {
+        boolean insideAtX(float x) {
             return rect.getMinX() <= x && x < rect.getMaxX();
         }
 
-        boolean insideAtY(int y) {
+        boolean insideAtY(float y) {
             return rect.getMinY() <= y && y < rect.getMaxY();
         }
 
         CGPoint startPoint() {
             return new CGPoint(rect.x, rect.y);
         }
+
         CGPoint endPoint() {
             return new CGPoint(rect.x + rect.width, rect.y);
         }

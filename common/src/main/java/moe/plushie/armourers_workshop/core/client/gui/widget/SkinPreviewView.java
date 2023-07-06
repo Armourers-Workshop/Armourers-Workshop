@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
+import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import net.fabricmc.api.EnvType;
@@ -36,14 +37,16 @@ public class SkinPreviewView extends UIControl {
             return;
         }
         CGRect rect = bounds();
-        int x = rect.x;
-        int y = rect.y;
+        int x = (int) rect.x;
+        int y = (int) rect.y;
         int z = 200;
-        int width = rect.width;
-        int height = rect.height;
+        int width = (int) rect.width;
+        int height = (int) rect.height;
         PoseStack poseStack = context.state().ctm();
+        ColorScheme colorScheme = descriptor.getColorScheme();
+        ItemStack itemStack = ItemStack.EMPTY;
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        ExtendedItemRenderer.renderSkinInBox(bakedSkin, descriptor.getColorScheme(), ItemStack.EMPTY, x, y, z, width, height, 20, 45, 0, poseStack, buffers);
+        ExtendedItemRenderer.renderSkinInBox(bakedSkin, colorScheme, itemStack, x, y, z, width, height, 20, 45, 0, 0, 0xf000f0, poseStack, buffers);
         buffers.endBatch();
     }
 

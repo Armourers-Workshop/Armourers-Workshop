@@ -69,7 +69,7 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
     public void layoutSubviews() {
         super.layoutSubviews();
         CGRect rect = bounds();
-        int h = rect.height;
+        float h = rect.height;
         titleView.setFrame(rect.insetBy(1, 1, 1, h + 1));
         handleView.setFrame(new CGRect(rect.width - h, 0, h, h));
         applyTableViewSize();
@@ -188,7 +188,7 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
 
     private void applyTableViewSize() {
         CGRect rect = bounds();
-        int popoverHeight = 0;
+        float popoverHeight = 0;
         if (maxRows != 0) {
             popoverHeight = maxRows * popoverContentView.rowHeight();
         }

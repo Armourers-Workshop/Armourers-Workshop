@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
@@ -24,8 +24,8 @@ import org.jetbrains.annotations.Nullable;
 @Environment(EnvType.CLIENT)
 public final class ExtendedItemRenderer {
 
-    public static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, PoseStack poseStack, MultiBufferSource buffers) {
-        renderSkinInBox(bakedSkin, scheme, itemStack, x, y, z, width, height, rx, ry, rz, 0, 0xf000f0, poseStack, buffers);
+    public static void renderSkinInBox(BakedSkin bakedSkin, int x, int y, int z, int width, int height, int rx, int ry, int rz, PoseStack poseStack, MultiBufferSource buffers) {
+        renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, x, y, z, width, height, rx, ry, rz, 0, 0xf000f0, poseStack, buffers);
     }
 
     public static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, float partialTicks, int light, PoseStack poseStack, MultiBufferSource buffers) {

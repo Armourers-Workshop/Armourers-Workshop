@@ -1,9 +1,11 @@
 package extensions.net.minecraft.core.Registry;
 
+import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGRect;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compatibility.client.gui.AbstractGraphicsRenderer;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
 import net.minecraft.client.gui.Font;
@@ -42,7 +44,8 @@ public class TooltipEventProvider {
                 k2 = screenHeight - j - 6;
             }
             CGRect frame = new CGRect(j2, k2, i, j);
-            consumer.render(event.getItemStack(), frame, mouseX, mouseY, screenWidth, screenHeight, event.getGraphics().pose());
+            CGGraphicsContext context = AbstractGraphicsRenderer.of(font, event.getGraphics(), mouseX, mouseY, 0);
+            consumer.render(event.getItemStack(), frame, screenWidth, screenHeight, context);
         });
     }
 }

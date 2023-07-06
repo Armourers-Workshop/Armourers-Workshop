@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.library.client.gui.panels;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSMutableString;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIControl;
 import com.mojang.authlib.GameProfile;
@@ -16,8 +17,6 @@ import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
     public void layoutSubviews() {
         super.layoutSubviews();
         CGRect bounds = bounds();
-        int x2 = bounds.width - 4;
+        float x2 = bounds.width - 4;
         for (UIButton button : rightButtons) {
             if (button.isHidden()) {
                 continue;
@@ -75,15 +74,19 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         if (playerTexture == null) {
             playerTexture = new PlayerTextureDescriptor(gameProfile);
         }
+        float tx = 5;
+        float ty = 5;
         ResourceLocation texture = PlayerTextureLoader.getInstance().loadTextureLocation(playerTexture);
-        context.drawAvatarContents(texture, 5, 5, 16, 16);
+        context.drawResizableImage(texture, tx, ty, 16, 16, 8, 8, 8, 8, 64, 64, 0);
+        context.drawResizableImage(texture, tx - 1, ty - 1, 16 + 2, 16 + 2, 40, 8, 8, 8, 64, 64, 0);
+
 
         // White - not a member.
         // Yellow - Member not authenticated.
         // Green - Authenticated member.
         // Red - Missing profile info.
         CGRect rect = bounds();
-        MutableComponent profile = Component.literal(" - ");
+        NSMutableString profile = new NSMutableString(" - ");
         profile.append(gameProfile.getName());
         int textColor = 0xFFFFFF;
         if (!gameProfile.isLegacy()) {

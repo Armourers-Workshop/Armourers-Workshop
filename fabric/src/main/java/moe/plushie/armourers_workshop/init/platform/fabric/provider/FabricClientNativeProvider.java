@@ -66,12 +66,12 @@ public interface FabricClientNativeProvider extends ClientNativeProvider {
 
     @Override
     default void willRenderTooltip(RenderTooltip consumer) {
-        RenderTooltipEvents.BEFORE.register((poseStack, itemStack, x, y, width, height, mouseX, mouseY, screenWidth, screenHeight) -> {
+        RenderTooltipEvents.BEFORE.register((itemStack, x, y, width, height, screenWidth, screenHeight, context) -> {
             if (itemStack.isEmpty()) {
                 return;
             }
             CGRect frame = new CGRect(x, y, width, height);
-            consumer.render(itemStack, frame, mouseX, mouseY, screenWidth, screenHeight, poseStack);
+            consumer.render(itemStack, frame, screenWidth, screenHeight, context);
         });
     }
 

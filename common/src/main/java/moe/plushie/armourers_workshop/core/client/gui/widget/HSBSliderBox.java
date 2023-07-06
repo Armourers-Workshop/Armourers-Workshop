@@ -60,27 +60,27 @@ public class HSBSliderBox extends UIControl {
         CGRect fixedBounds = bounds.insetBy(1, 1, 1, 1);
         context.drawImage(backgroundImage, bounds);
         // TODO: Refactoring
-        int cx = fixedBounds.x;
-        int cy = fixedBounds.y;
-        int cw = fixedBounds.width;
-        int ch = fixedBounds.height;
+        float cx = fixedBounds.x;
+        float cy = fixedBounds.y;
+        float cw = fixedBounds.width;
+        float ch = fixedBounds.height;
         float value = values[type.ordinal()];
 
         RenderSystem.setShaderTexture(0, ModTextures.HUE);
 
         if (type == Type.SATURATION) {
             context.setBlendColor(hueColor);
-            context.drawImage(ModTextures.HUE, cx, cy, 0, 176, cw, ch, 256, 20, 256, 256);
+            context.drawResizableImage(ModTextures.HUE, cx, cy, cw, ch, 0, 176, 256, 20, 256, 256);
             context.setBlendColor(brightnessColor);
-            context.drawImage(ModTextures.HUE, cx, cy, type.u, type.v, cw, ch, type.texWidth, type.texHeight, 256, 256);
+            context.drawResizableImage(ModTextures.HUE, cx, cy, cw, ch, type.u, type.v, type.texWidth, type.texHeight, 256, 256);
             context.setBlendColor(UIColor.WHITE);
         } else {
-            context.drawImage(ModTextures.HUE, cx, cy, type.u, type.v, cw, ch, type.texWidth, type.texHeight, 256, 256);
+            context.drawResizableImage(ModTextures.HUE, cx, cy, cw, ch, type.u, type.v, type.texWidth, type.texHeight, 256, 256);
         }
 
         context.addClipRect(convertRectToView(fixedBounds, null));
-        context.drawImage(ModTextures.HUE, (int) ((bounds.width - 3) * value) - 2, 0, 0, 0, 7, 4, 256, 256);
-        context.drawImage(ModTextures.HUE, (int) ((bounds.width - 3) * value) - 2, bounds.height - 4, 7, 0, 7, 4, 256, 256);
+        context.drawImage(ModTextures.HUE, ((bounds.width - 3) * value) - 2, 0, 7, 4, 0, 0, 256, 256);
+        context.drawImage(ModTextures.HUE, ((bounds.width - 3) * value) - 2, bounds.height - 4, 7, 4, 7, 0, 256, 256);
         context.removeClipRect();
     }
 

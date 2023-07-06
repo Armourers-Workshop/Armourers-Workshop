@@ -201,9 +201,9 @@ public class UISliderBox extends UIControl {
 
     private CGRect getCursorRect() {
         CGRect rect = contentView.bounds();
-        int width = rect.width;
-        int height = rect.height;
-        int valueWidth = middleView.frame().width;
+        float width = rect.width;
+        float height = rect.height;
+        float valueWidth = middleView.frame().width;
         double progress = (value - minValue) / (maxValue - minValue);
         int x = (int)((width - valueWidth) * progress);
         return new CGRect(x, 0, valueWidth, height);

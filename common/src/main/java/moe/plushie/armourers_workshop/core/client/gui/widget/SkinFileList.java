@@ -5,8 +5,10 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSIndexPath;
+import com.apple.library.foundation.NSString;
 import com.apple.library.impl.TooltipRenderer;
 import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIImageView;
 import com.apple.library.uikit.UIResponder;
@@ -29,19 +31,16 @@ import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class SkinFileList extends UIControl implements UITableViewDataSource, UITableViewDelegate {
@@ -158,9 +157,9 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
         CGPoint offset = tableView.contentOffset();
         CGSize size = tableView.contentSize();
         float value = 0;
-        int height = size.height - tableView.frame().getHeight();
+        float height = size.height - tableView.frame().getHeight();
         if (offset.y != 0 && height > 0) {
-            value = offset.y / (float) height;
+            value = offset.y / height;
         }
         scrollIndicator.setValue(value);
     }
@@ -194,8 +193,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
 
     public class Entry extends UITableViewCell {
 
-        private final Font font;
-        private final Component title;
+        private final NSString title;
         private final ISkinLibrary.Entry entry;
 
         private final UIView iconView = new UIView(CGRect.ZERO);
@@ -204,8 +202,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
 
         public Entry(ISkinLibrary.Entry entry) {
             super(CGRect.ZERO);
-            this.title = Component.literal(entry.getName());
-            this.font = Minecraft.getInstance().font;
+            this.title = new NSString(entry.getName());
             this.entry = entry;
             if (!entry.isDirectory()) {
                 this.descriptor = new SkinDescriptor(entry.getSkinIdentifier(), entry.getSkinType(), ColorScheme.EMPTY);
@@ -218,8 +215,8 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
         public void render(CGPoint point, CGGraphicsContext context) {
             int left = 0;
             int top = 0;
-            int width = bounds().getWidth();
-            int height = bounds().getHeight();
+            float width = bounds().getWidth();
+            float height = bounds().getHeight();
 
             int textColor = 0xffaaaaaa;
             int backgroundColor = 0;
@@ -245,14 +242,14 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             if (backgroundColor != 0) {
                 context.fillRect(left, top, left + width, top + height, backgroundColor);
             }
-            context.drawText(title.getVisualOrderText(), left + iconOffset + 2, top + 3, textColor);
+            context.drawText(title, left + iconOffset + 2, top + 3, textColor);
             renderIcon(context, left, top - 1, 16, 16);
         }
 
         public void renderIcon(CGGraphicsContext context, int x, int y, int width, int height) {
             if (entry.isDirectory()) {
                 int u = entry.isPrivateDirectory() ? 32 : 16;
-                context.drawImage(ModTextures.LIST, x + (width - 12) / 2, y + (height - 12) / 2 - 1, u, 0, 12, 12, 256, 256);
+                context.drawImage(ModTextures.LIST, x + (width - 12) / 2f, y + (height - 12) / 2f - 1, 12, 12, u, 0, 256, 256);
                 return;
             }
             BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(getDescriptor(), loadTicket);
@@ -260,7 +257,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
                 return;
             }
             MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            ExtendedItemRenderer.renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, x, y, 100, width, height - 1, 20, 45, 0, context.state().ctm(), buffers);
+            ExtendedItemRenderer.renderSkinInBox(bakedSkin, x, y, 100, width, height - 1, 20, 45, 0, context.state().ctm(), buffers);
         }
 
         public void renderTooltip(CGRect rect, CGGraphicsContext context) {
@@ -275,17 +272,19 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             CGRect bounds = window.bounds();
             CGPoint point = convertPointToView(CGPoint.ZERO, null);
             int size = 144;
-            int mouseY = context.state().mouseY();
-            int dz = 0;
-            int dx = point.x - size - 5;
-            int dy = MathUtils.clamp(mouseY - size / 2, 0, bounds.height - size);
-            Font font = context.state().font().font();
+            float dx = point.x - size - 5;
+            float dy = MathUtils.clamp(context.state().mouseY() - size / 2f, 0, bounds.height - size);
+            context.drawTilableImage(ModTextures.GUI_PREVIEW, dx, dy, size, size, 0, 0, 62, 62, 4, 4, 4, 4);
+
+            UIFont font = new UIFont(context.state().font(), 7);
             PoseStack poseStack = context.state().ctm();
-            ArrayList<FormattedText> tooltips = new ArrayList<>(ItemTooltipManager.createSkinInfo(bakedSkin));
-            RenderSystem.drawClipImage(ModTextures.GUI_PREVIEW, dx, dy, 0, 0, size, size, 62, 62, 4, 4, 4, 4, dz, poseStack);
-            RenderSystem.drawShadowText(poseStack, tooltips, dx + 4, dy + 4, size - 8, dz, font, 7, 0xffffff);
+            List<NSString> tooltips = ItemTooltipManager.createSkinInfo(bakedSkin).stream().map(NSString::new).collect(Collectors.toList());
+            context.drawMultilineText(tooltips, dx + 4, dy + 4, size - 8, 0xffffffff, true, font, 0);
+
+            int tx = (int) dx;
+            int ty = (int) dy;
             MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            ExtendedItemRenderer.renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx, dy, dz + 100, size, size, 30, 45, 0, 0, 0xf000f0, poseStack, buffers);
+            ExtendedItemRenderer.renderSkinInBox(bakedSkin, tx, ty, 100, size, size, 30, 45, 0, poseStack, buffers);
             buffers.endBatch();
         }
 

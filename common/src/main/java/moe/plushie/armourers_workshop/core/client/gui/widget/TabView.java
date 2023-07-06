@@ -122,7 +122,7 @@ public class TabView extends UIView {
         this.fullscreenMode = fullscreenMode;
     }
 
-    private void initNormalWidgets(int x, int y, int width, int height) {
+    private void initNormalWidgets(float x, float y, float width, float height) {
         int ly = 5, ry = 5, spacing = -5;
         for (Entry tab : entries) {
             if (tab.isHidden()) {
@@ -145,7 +145,7 @@ public class TabView extends UIView {
         }
     }
 
-    private void initFullscreenWidgets(int x, int y, int width, int height) {
+    private void initFullscreenWidgets(float x, float y, float width, float height) {
         int ly = 0, ry = 0, spacing = -2;
         for (Entry tab : entries) {
             if (tab.isHidden()) {
@@ -166,9 +166,9 @@ public class TabView extends UIView {
                 ly += spacing;
             }
         }
-        int mly = (height - (ly - spacing)) / 2, mry = (height - (ry - spacing)) / 2;
+        float mly = (height - (ly - spacing)) / 2, mry = (height - (ry - spacing)) / 2;
         for (Entry tab : entries) {
-            int dy = mry;
+            float dy = mry;
             if (tab.alignment1 == 1) {
                 dy = mly;
             }
@@ -261,8 +261,8 @@ public class TabView extends UIView {
             }
             CGRect rect = bounds();
             CGRect iconRect = iconView.bounds();
-            int ix = (rect.width - iconRect.width) / 2 + (alignment - 1); // patch: 0: -1, 1: 0
-            int iy = (rect.height - iconRect.height) / 2;
+            float ix = (rect.width - iconRect.width) / 2 + (alignment - 1); // patch: 0: -1, 1: 0
+            float iy = (rect.height - iconRect.height) / 2;
             this.alignment1 = alignment;
             this.setBackgroundImage(_tabButtonImages(alignment), State.ALL);
             this.iconView.setFrame(new CGRect(ix, iy, iconRect.width, iconRect.height));

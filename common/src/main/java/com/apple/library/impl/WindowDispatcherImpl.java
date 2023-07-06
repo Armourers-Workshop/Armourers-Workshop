@@ -1,6 +1,7 @@
 package com.apple.library.impl;
 
 import com.apple.library.coregraphics.CGGraphicsContext;
+import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIView;
 
 public class WindowDispatcherImpl {
@@ -27,7 +28,7 @@ public class WindowDispatcherImpl {
     public void tick() {
     }
 
-    public void layout(int width, int height) {
+    public void layout(CGSize size) {
     }
 
     public void render(CGGraphicsContext context) {

@@ -6,10 +6,10 @@ public class CGPoint {
 
     public static final CGPoint ZERO = new CGPoint(0, 0);
 
-    public int x;
-    public int y;
+    public float x;
+    public float y;
 
-    public CGPoint(int x, int y) {
+    public CGPoint(float x, float y) {
         this.x = x;
         this.y = y;
     }
@@ -22,6 +22,14 @@ public class CGPoint {
         return x == point2i.x && y == point2i.y;
     }
 
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
@@ -29,7 +37,7 @@ public class CGPoint {
 
     @Override
     public String toString() {
-        return String.format("(%d %d)", x, y);
+        return String.format("(%f %f)", x, y);
     }
 }
 

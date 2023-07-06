@@ -88,8 +88,4 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
     public void _renderTooltip(PoseStack poseStack, List<? extends FormattedCharSequence> texts, int mouseX, int mouseY) {
         this.renderTooltip(poseStack, texts, mouseX, mouseY);
     }
-
-    public void _fillGradient(PoseStack poseStack, int i, int j, int k, int l, int m, int n) {
-        this.fillGradient(poseStack, i, j, k, l, m, n);
-    }
 }

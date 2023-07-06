@@ -81,7 +81,7 @@ public class TreeView extends UIScrollView {
         });
     }
 
-    private void buildEntry(String key, int x, int y, CGSize itemSize, CGSize contentSize, TreeNode node, HashMap<String, Entry> removedEntries) {
+    private void buildEntry(String key, float x, float y, CGSize itemSize, CGSize contentSize, TreeNode node, HashMap<String, Entry> removedEntries) {
         // add a entry if needed, but except root.
         if (!key.isEmpty()) {
             CGRect rect = new CGRect(0, y, itemSize.width, itemSize.height);
@@ -92,7 +92,7 @@ public class TreeView extends UIScrollView {
                 addSubview(entry);
             }
             // update the entry content.
-            int iconSize = itemSize.height;
+            float iconSize = itemSize.height;
             entry.setup(node, rect, x, iconSize);
             entry.setSelected(node == selectedNode);
             // update the all content size.
@@ -136,7 +136,7 @@ public class TreeView extends UIScrollView {
             this.setHighlighted(false);
         }
 
-        public void setup(TreeNode node, CGRect rect, int offset, int size) {
+        public void setup(TreeNode node, CGRect rect, float offset, float size) {
             this.setFrame(rect);
             if (this.node == node) {
                 return;

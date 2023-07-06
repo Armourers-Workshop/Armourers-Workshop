@@ -32,9 +32,9 @@ public class ArmourerClearDialog extends ConfirmDialog {
 
     private void setup() {
         layoutIfNeeded();
-        int width = bounds().width - 30;
-        int left = confirmButton.frame().getX() + 1;
-        int bottom = confirmButton.frame().getY() - 4;
+        float width = bounds().width - 30;
+        float left = confirmButton.frame().getX() + 1;
+        float bottom = confirmButton.frame().getY() - 4;
 
         blockCheckBox.setFrame(new CGRect(left, bottom - 22, width, 9));
         blockCheckBox.setTitle(getText("clearBlocks"));

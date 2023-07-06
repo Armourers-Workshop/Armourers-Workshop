@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.library.client.gui.panels;
 
+import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
@@ -57,11 +58,11 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
     }
 
     @Override
-    public void listDidScroll(ReportList reportList, int contentOffset) {
+    public void listDidScroll(ReportList reportList, CGPoint contentOffset) {
         if (isRequesting) {
             return;
         }
-        if (contentOffset + reportList.frame().getHeight() * 1.5f >= reportList.getContentHeight()) {
+        if (contentOffset.getY() + reportList.frame().getHeight() * 1.5f >= reportList.getContentHeight()) {
             pageIndex += getMaxPerPage();
             loadReportList();
         }

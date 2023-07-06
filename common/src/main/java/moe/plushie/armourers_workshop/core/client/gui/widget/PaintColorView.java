@@ -29,14 +29,14 @@ public class PaintColorView extends UIView {
         super.render(point, context);
         int cu = (int) paintType.getU();
         int cv = (int) paintType.getV();
-        int dv = (cv + (int)TickUtils.getPaintTextureOffset()) % 256;
+        int dv = (cv + (int) TickUtils.getPaintTextureOffset()) % 256;
 
         if (paintType != SkinPaintTypes.RAINBOW) {
             context.setBlendColor(color);
         }
 
         CGRect rect = bounds();
-        context.drawImage(ModTextures.CUBE, 0, 0, cu, dv, rect.width, rect.height, 1, 1, 256, 256);
+        context.drawResizableImage(ModTextures.CUBE, 0, 0, rect.width, rect.height, cu, dv, 1, 1, 256, 256);
         if (paintType != SkinPaintTypes.RAINBOW) {
             context.setBlendColor(UIColor.WHITE);
         }

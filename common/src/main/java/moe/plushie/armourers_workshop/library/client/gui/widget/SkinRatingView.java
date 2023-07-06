@@ -58,7 +58,7 @@ public class SkinRatingView extends UIControl {
         super.render(point, context);
 
         for (int i = 0; i < (getMaxValue() / 2); i++) {
-            context.drawImage(ModTextures.RATING, i * 16, 0, 32, 0, 16, 16, 256, 256);
+            context.drawImage(ModTextures.RATING, i * 16, 0, 16, 16, 32, 0, 256, 256);
         }
 
         int rating = getValue();
@@ -69,10 +69,10 @@ public class SkinRatingView extends UIControl {
         int stars = MathUtils.floor(rating / 2F);
         int halfStar = rating % 2;
         for (int i = 0; i < stars; i++) {
-            context.drawImage(ModTextures.RATING, i * 16, 0, 0, 0, 16, 16, 256, 256);
+            context.drawImage(ModTextures.RATING, i * 16, 0, 16, 16, 0, 0, 256, 256);
         }
         if (halfStar == 1) {
-            context.drawImage(ModTextures.RATING, stars * 16, 0, 0, 0, 8, 16, 256, 256);
+            context.drawImage(ModTextures.RATING, stars * 16, 0, 8, 16, 0, 0, 256, 256);
         }
     }
 

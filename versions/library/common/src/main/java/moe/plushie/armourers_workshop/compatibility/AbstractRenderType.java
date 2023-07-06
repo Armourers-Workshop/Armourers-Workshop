@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderFormat;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -30,6 +31,7 @@ public class AbstractRenderType extends RenderType {
 
         it.put(SkinRenderFormat.GUI_IMAGE, () -> _builder(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, POSITION_TEX_SHADER));
         it.put(SkinRenderFormat.GUI_HIGHLIGHTED_TEXT, () -> _builder(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, POSITION_SHADER));
+        it.put(SkinRenderFormat.GUI_COLOR, () -> _builder(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, POSITION_COLOR_SHADER));
 
         it.put(SkinRenderFormat.BLOCK, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_SOLID_SHADER));
         it.put(SkinRenderFormat.BLOCK_CUTOUT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_CUTOUT_SHADER));
@@ -88,6 +90,7 @@ public class AbstractRenderType extends RenderType {
         });
 
         private static final Map<Transparency, TransparencyStateShard> TABLE_TRANSPARENCY = _make(it -> {
+            it.put(Transparency.DEFAULT, TRANSLUCENT_TRANSPARENCY);
             it.put(Transparency.TRANSLUCENT, TRANSLUCENT_TRANSPARENCY);
             it.put(Transparency.NONE, NO_TRANSPARENCY);
         });

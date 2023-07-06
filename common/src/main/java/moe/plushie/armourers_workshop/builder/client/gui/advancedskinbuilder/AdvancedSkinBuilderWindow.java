@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder;
 
+import com.apple.library.coregraphics.CGAffineTransform;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
@@ -8,6 +9,7 @@ import com.apple.library.impl.KeyboardManagerImpl;
 import com.apple.library.uikit.UIEvent;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedSkinBuilderBlockEntity;
+import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.SidebarView;
 import moe.plushie.armourers_workshop.builder.client.render.AdvancedSkinBuilderBlockEntityRenderer;
 import moe.plushie.armourers_workshop.builder.entity.CameraEntity;
 import moe.plushie.armourers_workshop.builder.menu.AdvancedSkinBuilderMenu;
@@ -52,6 +54,14 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
         super(container, inventory, title);
         this.blockEntity = container.getBlockEntity(AdvancedSkinBuilderBlockEntity.class);
         this.inventoryView.setHidden(true);
+
+        SidebarView sidebarView = new SidebarView(new CGRect(bounds().width - 180, 0, 180, bounds().height));
+        sidebarView.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleHeight);
+        sidebarView.setTransform(CGAffineTransform.scale(0.5f, 0.5f));
+        addSubview(sidebarView);
+
+        sidebarView.reloadData();
+
 
 //        AdvancedSkinCanvasView canvasView = new AdvancedSkinCanvasView(bounds());
 //        canvasView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
@@ -222,8 +232,8 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
             AdvancedSkinBuilderBlockEntityRenderer.setResult(Collections.singleton(results.get(0).part));
         }
 
-        AdvancedSkinBuilderBlockEntityRenderer.setOutput(0, origin);
-        AdvancedSkinBuilderBlockEntityRenderer.setOutput(1, origin.adding(direction.scaling(50)));
+//        AdvancedSkinBuilderBlockEntityRenderer.setOutput(0, origin);
+//        AdvancedSkinBuilderBlockEntityRenderer.setOutput(1, origin.adding(direction.scaling(50)));
 
         ModLog.debug("{}/{}/({} {}) ", mousePos, window, deltaX, deltaY);
     }

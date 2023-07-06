@@ -7,6 +7,7 @@ public enum SkinRenderFormat {
     IMAGE,
 
     GUI_IMAGE,
+    GUI_COLOR,
     GUI_HIGHLIGHTED_TEXT,
 
     BLOCK,

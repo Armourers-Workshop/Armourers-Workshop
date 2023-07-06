@@ -90,9 +90,9 @@ public class UserNotificationCenter {
 
         private void setup() {
             CGRect rect = bounds();
-            int w = 100;
-            int sp = (rect.width - w) / 2;
-            int bottom = rect.height - 30;
+            float w = 100;
+            float sp = (rect.width - w) / 2;
+            float bottom = rect.height - 30;
 
             messageLabel.setFrame(new CGRect(10, 30, rect.width - 20, 20));
             messageLabel.setAutoresizingMask(AutoresizingMask.flexibleWidth);

@@ -44,7 +44,7 @@ public class WindowManagerImpl {
             dispatcher.init();
         }
         if (lastLayoutSize != null) {
-            dispatcher.layout(lastLayoutSize.width, lastLayoutSize.height);
+            dispatcher.layout(lastLayoutSize);
         }
     }
 
@@ -67,15 +67,16 @@ public class WindowManagerImpl {
         dispatchers.forEach(WindowDispatcherImpl::tick);
     }
 
-    public void layout(int width, int height) {
-        dispatchers.forEach(dispatcher -> dispatcher.layout(width, height));
-        lastLayoutSize = new CGSize(width, height);
+    public void layout(float width, float height) {
+        CGSize size = new CGSize(width, height);
+        dispatchers.forEach(dispatcher -> dispatcher.layout(size));
+        lastLayoutSize = size;
     }
 
     public void render(CGGraphicsContext context, RenderInvoker foreground, RenderInvoker background, RenderInvoker overlay) {
         float partialTicks = context.state().partialTicks();
-        int mouseX = context.state().mouseX();
-        int mouseY = context.state().mouseY();
+        int mouseX = (int) context.state().mouseX();
+        int mouseY = (int) context.state().mouseY();
         // we need to display a custom tooltip, so must cancel the original tooltip render,
         // we need reset mouse to impossible position to fool the original tooltip render.
         UIView tooltipResponder = firstTooltipResponder();

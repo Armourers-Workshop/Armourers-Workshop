@@ -45,10 +45,10 @@ public class InventoryBox extends UIControl {
         // TODO: Refactoring
         int u = 176;
         int v = 0;
-        int width = bounds().width;
-        int height = bounds().height;
-        int hoverWidth = MathUtils.clamp(mouseOffset.x, 0, width);
-        int hoverHeight = MathUtils.clamp(mouseOffset.y, 0, height);
+        float width = bounds().width;
+        float height = bounds().height;
+        float hoverWidth = MathUtils.clamp(mouseOffset.x, 0, width);
+        float hoverHeight = MathUtils.clamp(mouseOffset.y, 0, height);
         for (int iy = 0; iy < height; iy += itemSize.height) {
             for (int ix = 0; ix < width; ix += itemSize.width) {
                 int iu = u;
@@ -59,7 +59,7 @@ public class InventoryBox extends UIControl {
                 if (ix <= hoverWidth && iy <= hoverHeight && isHighlighted()) {
                     iv += itemSize.height;
                 }
-                context.drawImage(ModTextures.ARMOURER, ix, iy, iu, iv, itemSize.width, itemSize.height, 256, 256);
+                context.drawImage(ModTextures.ARMOURER, ix, iy, itemSize.width, itemSize.height, iu, iv, 256, 256);
             }
         }
     }

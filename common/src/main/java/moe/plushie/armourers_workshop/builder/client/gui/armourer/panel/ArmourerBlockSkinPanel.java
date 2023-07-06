@@ -36,8 +36,8 @@ public class ArmourerBlockSkinPanel extends ArmourerBaseSkinPanel {
 
     public void applySlot(UIControl sender) {
         CGPoint offset = inventoryBox.getOffset();
-        int width = (offset.x / 10) + 1;
-        int height = (offset.y / 10) + 1;
+        int width = (int) (offset.x / 10) + 1;
+        int height = (int) (offset.y / 10) + 1;
         skinProperties.put(SkinProperty.BLOCK_INVENTORY_WIDTH, width);
         skinProperties.put(SkinProperty.BLOCK_INVENTORY_HEIGHT, height);
         apply();

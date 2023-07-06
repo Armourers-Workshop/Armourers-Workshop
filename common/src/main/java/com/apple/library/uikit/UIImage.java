@@ -42,13 +42,13 @@ public class UIImage {
             if (point == null) {
                 return this;
             }
-            int u = point.x * size.width;
-            int v = point.y * size.height;
+            float u = point.x * size.width;
+            float v = point.y * size.height;
             if (uv != null) {
                 u += uv.x;
                 v += uv.y;
             }
-            return Builder.of(this).uv(u, v).unzip(null).build();
+            return Builder.of(this).uv((int) u, (int) v).unzip(null).build();
         }
         ModLog.warn("Unable generate status image, because missing the image size.");
         return this;
@@ -141,33 +141,33 @@ public class UIImage {
             return builder;
         }
 
-        public Builder uv(int u, int v) {
+        public Builder uv(float u, float v) {
             this.uv = new CGPoint(u, v);
             return this;
         }
 
-        public Builder fixed(int width, int height) {
+        public Builder fixed(float width, float height) {
             this.size = new CGSize(width, height);
             return this;
         }
 
-        public Builder resizable(int sourceWidth, int sourceHeight) {
+        public Builder resizable(float sourceWidth, float sourceHeight) {
             this.source = new CGSize(sourceWidth, sourceHeight);
             return this;
         }
 
-        public Builder resize(int targetWidth, int targetHeight, int sourceWidth, int sourceHeight) {
+        public Builder resize(float targetWidth, float targetHeight, float sourceWidth, float sourceHeight) {
             this.source = new CGSize(sourceWidth, sourceHeight);
             this.size = new CGSize(targetWidth, targetHeight);
             return this;
         }
 
-        public Builder limit(int width, int height) {
+        public Builder limit(float width, float height) {
             this.limit = new CGSize(width, height);
             return this;
         }
 
-        public Builder clip(int top, int left, int bottom, int right) {
+        public Builder clip(float top, float left, float bottom, float right) {
             this.clipData = new ClipData(new UIEdgeInsets(top, left, bottom, right));
             return this;
         }

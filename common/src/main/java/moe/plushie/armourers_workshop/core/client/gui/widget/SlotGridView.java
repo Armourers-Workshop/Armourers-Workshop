@@ -36,7 +36,7 @@ public class SlotGridView extends UIView {
         }
         for (int i = startIndex; i < endIndex; ++i) {
             Slot slot = slots.get(i);
-            context.drawImage(ModTextures.COMMON, slot.x - 1, slot.y - 1, 238, 0, 18, 18, 256, 256);
+            context.drawImage(ModTextures.COMMON, slot.x - 1, slot.y - 1, 18, 18, 238, 0, 256, 256);
         }
     }
 }

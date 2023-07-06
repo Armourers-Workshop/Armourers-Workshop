@@ -27,7 +27,7 @@ public class ReportDialog extends ConfirmDialog {
     }
 
     private void setup() {
-        int width = bounds().width;
+        float width = bounds().width;
 
         textView.setFrame(new CGRect(10, 45, width - 20, 80));
         addSubview(textView);
