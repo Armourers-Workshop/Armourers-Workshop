@@ -4,36 +4,40 @@ import com.apple.library.coregraphics.CGAffineTransform;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.coregraphics.CGSize;
+import com.apple.library.impl.ObjectUtilsImpl;
 import com.apple.library.impl.ReversedIteratorImpl;
 import com.apple.library.impl.ViewImpl;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class UIView extends UIResponder implements ViewImpl {
 
     protected final Flags _flags = new Flags();
     protected final ArrayList<UIView> _subviews = new ArrayList<>();
 
-    private WeakReference<UIView> superview;
-    private WeakReference<UIWindow> window;
+    private WeakReference<UIView> _superview;
+    private WeakReference<UIWindow> _window;
 
-    private Object tooltip;
-    private Object contents;
+    private Object _tooltip;
+    private Object _contents;
 
-    private UIColor backgroundColor;
+    private UIColor _backgroundColor;
 
-    private CGPoint origin = CGPoint.ZERO;
-    private CGRect bounds = CGRect.ZERO;
-    private CGRect frame = CGRect.ZERO;
-    private CGAffineTransform transform = CGAffineTransform.IDENTITY;
+    private CGPoint _center = CGPoint.ZERO;
+    private CGRect _bounds = CGRect.ZERO;
+    private CGRect _frame = CGRect.ZERO;
+    private CGAffineTransform _transform = CGAffineTransform.IDENTITY;
+    private CGAffineTransform _invertedTransform = CGAffineTransform.IDENTITY;
 
-    private int zIndex = 0;
-    private int autoresizingMask = 0;
-    private boolean isOpaque = true;
+    private int _zIndex = 0;
+    private int _autoresizingMask = 0;
+    private boolean _isOpaque = true;
 
     public UIView(CGRect frame) {
         this.setFrame(frame);
@@ -103,7 +107,7 @@ public class UIView extends UIResponder implements ViewImpl {
         if (!pointInside(point, event)) {
             return null;
         }
-        for (UIView subview : _subviewsForRev()) {
+        for (UIView subview : _invertedSubviews()) {
             UIView hitView = subview.hitTest(convertPointToView(point, subview), event);
             if (hitView != null) {
                 return hitView;
@@ -113,41 +117,35 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     public CGPoint convertPointFromView(CGPoint point, @Nullable UIView view) {
-        if (view == null) {
-            view = window();
-        }
-        CGPoint offset = _offsetInViewHierarchy(view, true);
-        if (offset != null) {
-            return new CGPoint(point.x - offset.x, point.y - offset.y);
+        CGAffineTransform transform = _hierarchyConverterInView(view, false);
+        if (transform != null) {
+            return point.applying(transform);
         }
         return point;
     }
 
     public CGPoint convertPointToView(CGPoint point, @Nullable UIView view) {
-        if (this == view) {
-            return point;
-        }
-        CGPoint offset = _offsetInViewHierarchy(view, true);
-        if (offset != null) {
-            return new CGPoint(point.x + offset.x, point.y + offset.y);
+        CGAffineTransform transform = _hierarchyConverterInView(view, true);
+        if (transform != null) {
+            return point.applying(transform);
         }
         return point;
     }
 
     public CGRect convertRectFromView(CGRect rect, @Nullable UIView view) {
-        if (this == view) {
-            return rect;
+        CGAffineTransform transform = _hierarchyConverterInView(view, false);
+        if (transform != null) {
+            return rect.applying(transform);
         }
-        CGPoint resolvedPoint = convertPointFromView(new CGPoint(rect.x, rect.y), view);
-        return new CGRect(resolvedPoint.x, resolvedPoint.y, rect.width, rect.height);
+        return rect;
     }
 
     public CGRect convertRectToView(CGRect rect, @Nullable UIView view) {
-        if (this == view) {
-            return rect;
+        CGAffineTransform transform = _hierarchyConverterInView(view, true);
+        if (transform != null) {
+            return rect.applying(transform);
         }
-        CGPoint resolvedPoint = convertPointToView(new CGPoint(rect.x, rect.y), view);
-        return new CGRect(resolvedPoint.x, resolvedPoint.y, rect.width, rect.height);
+        return rect;
     }
 
     public void willMoveToSuperview(UIView newSuperview) {
@@ -174,116 +172,141 @@ public class UIView extends UIResponder implements ViewImpl {
     public void sizeToFit() {
     }
 
+    public boolean isDescendantOfView(UIView superview) {
+        UIView searchingView = this;
+        while (searchingView != null) {
+            if (searchingView == superview) {
+                return true;
+            }
+            searchingView = searchingView.superview();
+        }
+        return false;
+    }
+
     @Override
     public UIResponder nextResponder() {
         return superview();
     }
 
     public Object contents() {
-        return this.contents;
+        return _contents;
     }
 
     public Object tooltip() {
-        return tooltip;
+        return _tooltip;
     }
 
     @Nullable
     public final UIView superview() {
-        if (this.superview != null) {
-            return this.superview.get();
+        if (_superview != null) {
+            return _superview.get();
         }
         return null;
     }
 
     @Nullable
     public final UIWindow window() {
-        if (this.window != null) {
-            return this.window.get();
+        if (_window != null) {
+            return _window.get();
         }
         return null;
     }
 
     public final List<UIView> subviews() {
-        return this._subviews;
+        return _subviews;
     }
 
     public UIColor backgroundColor() {
-        return backgroundColor;
+        return _backgroundColor;
     }
 
-    public CGPoint origin() {
-        return origin;
+    public CGPoint center() {
+        return _center;
     }
 
     public CGRect bounds() {
-        return bounds;
+        return _bounds;
     }
 
     public CGRect frame() {
-        return frame;
+        if (_frame == null) {
+            _frame = _remakeFrame();
+        }
+        return _frame;
     }
 
     public CGAffineTransform transform() {
-        return transform;
+        return _transform;
     }
 
-   public boolean canBecomeFocused() {
+    public boolean canBecomeFocused() {
         return false;
-   }
+    }
 
     public boolean isFocused() {
         return _flags.isFocused;
     }
 
-    @Override
-    public UIView self() {
-        return this;
-    }
-
-    public void setOrigin(CGPoint origin) {
-        if (this.origin.equals(origin)) {
+    public void setCenter(CGPoint newValue) {
+        if (_center.equals(newValue)) {
             return;
         }
-        this.origin = origin;
-        this._remakeFrame();
+        _frame = null;
+        _center = newValue;
     }
 
-    public void setBounds(CGRect newValue) {
+    public void setBounds(CGRect bounds) {
         CGRect oldValue = bounds();
-        if (oldValue.equals(newValue)) {
+        if (oldValue.equals(bounds)) {
             return;
         }
-        this.bounds = newValue;
-        this._remakeFrame();
-        if (this._flags.needsAutoresizing) {
-            this._resizeSubviewsWithOldSize(oldValue, bounds());
+        _frame = null;
+        _bounds = bounds;
+        if (_flags.needsAutoresizing) {
+            _resizeSubviewsWithOldSize(oldValue, bounds());
         }
-        this.sizeDidChange();
+        _sizeDidChange();
     }
 
     public void setFrame(CGRect frame) {
-        if (this.frame.equals(frame)) {
+        if (frame().equals(frame)) {
             return;
         }
-        CGRect oldBounds = bounds();
-        this.setBounds(new CGRect(oldBounds.x, oldBounds.y, frame.width, frame.height));
-        this.setOrigin(new CGPoint(frame.x + frame.width / 2, frame.y + frame.height / 2));
+        CGRect bounds = bounds().copy();
+        CGPoint center = new CGPoint(frame.x + frame.width * 0.5f, frame.y + frame.height * 0.5f);
+        bounds.width = frame.width;
+        bounds.height = frame.height;
+        // we don't need fully checks of the identity transform,
+        // just needs to reduce transform apply calls.
+        if (_transform != CGAffineTransform.IDENTITY) {
+            CGSize size = frame.size();
+            size.apply(_invertedTransform());
+            bounds.width = size.width;
+            bounds.height = size.height;
+        }
+        setCenter(center);
+        setBounds(bounds);
     }
 
     public void setTransform(CGAffineTransform transform) {
-        this.transform = transform;
+        if (_transform.equals(transform)) {
+            return;
+        }
+        _transform = transform;
+        _invertedTransform = null;
+        _frame = null;
     }
 
     public void setContents(Object contents) {
-        this.contents = contents;
+        _contents = contents;
     }
 
     public void setTooltip(Object tooltip) {
-        this.tooltip = tooltip;
+        _tooltip = tooltip;
     }
 
     public void setBackgroundColor(UIColor backgroundColor) {
-        this.backgroundColor = backgroundColor;
+        _backgroundColor = backgroundColor;
     }
 
     public boolean isHidden() {
@@ -295,19 +318,19 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     public boolean isOpaque() {
-        return isOpaque;
+        return _isOpaque;
     }
 
     public void setOpaque(boolean opaque) {
-        isOpaque = opaque;
+        _isOpaque = opaque;
     }
 
     public int zIndex() {
-        return zIndex;
+        return _zIndex;
     }
 
     public void setZIndex(int zIndex) {
-        this.zIndex = zIndex;
+        _zIndex = zIndex;
     }
 
     public boolean isClipBounds() {
@@ -327,20 +350,15 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     public int autoresizingMask() {
-        return autoresizingMask;
+        return _autoresizingMask;
     }
 
     public void setAutoresizingMask(int autoresizingMask) {
-        this.autoresizingMask = autoresizingMask;
+        _autoresizingMask = autoresizingMask;
         UIView superview = superview();
         if (superview != null) {
             superview._setAutoresizingFlagsDirty();
         }
-    }
-
-    @Override
-    public String toString() {
-        return ObjectUtils.makeDescription(this, "frame", frame);
     }
 
     public void setNeedsLayout() {
@@ -348,18 +366,19 @@ public class UIView extends UIResponder implements ViewImpl {
         _setDirty();
     }
 
-    private void sizeDidChange() {
-        // when the size changes, we need call the this.layoutSubview() and superview.layoutSubviews()
-        setNeedsLayout();
-        UIView superview = this.superview();
-        if (superview != null) {
-            superview.setNeedsLayout();
-        }
+    @Override
+    public UIView self() {
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return ObjectUtilsImpl.makeDescription(this, "frame", frame(), "transform", _transform);
     }
 
     private void _setDirty() {
         _flags.isDirty = true;
-        UIView superview = this.superview();
+        UIView superview = superview();
         if (superview != null && !superview._flags.isDirty) {
             superview._setDirty();
         }
@@ -373,7 +392,7 @@ public class UIView extends UIResponder implements ViewImpl {
         if (this == view) {
             throw new RuntimeException("Can't add self");
         }
-        if (view.superview != null) {
+        if (view._superview != null) {
             view.removeFromSuperview();
         }
         if (index < _subviews.size()) {
@@ -404,21 +423,30 @@ public class UIView extends UIResponder implements ViewImpl {
         }
     }
 
+    private void _sizeDidChange() {
+        // when the size changes, we need call the this.layoutSubview() and superview.layoutSubviews()
+        setNeedsLayout();
+        UIView superview = superview();
+        if (superview != null) {
+            superview.setNeedsLayout();
+        }
+    }
+
     private void _setSuperview(UIView newSuperview) {
         if (this.superview() == newSuperview) {
             return;
         }
-        this.willMoveToSuperview(newSuperview);
-        this.superview = new WeakReference<>(newSuperview);
-        this.setNeedsLayout();
-        this.didMoveToSuperview();
+        willMoveToSuperview(newSuperview);
+        _superview = new WeakReference<>(newSuperview);
+        setNeedsLayout();
+        didMoveToSuperview();
         if (newSuperview == null) {
             _setWindow(null);
             return;
         }
         newSuperview._setAutoresizingFlagsDirty();
         if (newSuperview.window() != null) {
-            _setWindow(newSuperview.window);
+            _setWindow(newSuperview._window);
         }
         if (newSuperview instanceof UIWindow) {
             UIWindow window = (UIWindow) newSuperview;
@@ -426,19 +454,19 @@ public class UIView extends UIResponder implements ViewImpl {
         }
     }
 
-    private void _setWindow(WeakReference<UIWindow> window) {
-        if (this.window == window) {
+    private void _setWindow(WeakReference<UIWindow> newValue) {
+        if (_window == newValue) {
             return;
         }
         UIWindow oldWindow = window();
         UIWindow newWindow = null;
-        if (window != null) {
-            newWindow = window.get();
+        if (newValue != null) {
+            newWindow = newValue.get();
         }
-        this.willMoveToWindow(newWindow);
-        this.window = window;
-        this._subviews.forEach(subview -> subview._setWindow(window));
-        this.didMoveToWindow();
+        willMoveToWindow(newWindow);
+        _window = newValue;
+        _subviews.forEach(subview -> subview._setWindow(newValue));
+        didMoveToWindow();
         // when a view is remove from window, the window needs additional processing.
         if (oldWindow != null && newWindow == null) {
             oldWindow._didRemoveFromWindow(this);
@@ -452,13 +480,97 @@ public class UIView extends UIResponder implements ViewImpl {
         return 0;
     }
 
-    private void _remakeFrame() {
-        float x = origin.x - bounds.width / 2;
-        float y = origin.y - bounds.height / 2;
-        this.frame = new CGRect(x, y, bounds.width, bounds.height);
+    @Nullable
+    private CGAffineTransform _hierarchyConverterInView(@Nullable UIView searchedView, boolean reversed) {
+        // yep, pass null to find window.
+        if (searchedView == null) {
+            searchedView = window();
+        }
+        // is self, not any convert changes.
+        if (searchedView == this) {
+            return null;
+        }
+        Iterable<UIView> enumerator = null;
+        LinkedList<UIView> results = _searchInViewHierarchy(searchedView); // child -> parent
+        if (results != null) {
+            enumerator = results::descendingIterator;
+        }
+        if (enumerator == null && searchedView != null) {
+            results = searchedView._searchInViewHierarchy(this); // parent -> child
+            if (results == null) {
+                return null;
+            }
+            results.removeFirst(); // ignore self.
+            results.add(searchedView); // attach target view.
+            reversed = !reversed;
+            enumerator = results;
+        }
+        if (enumerator == null) {
+            return null;
+        }
+        float tx = 0, ty = 0;
+        CGAffineTransform translate = CGAffineTransform.createScale(1, 1);
+        for (UIView view : enumerator) {
+            CGAffineTransform transform = view.transform();
+            CGPoint center = view.center();
+            CGRect bounds = view.bounds();
+            tx += center.x;
+            ty += center.y;
+            // TODO: the bounds origin need apply transform?
+            tx -= bounds.x;
+            ty -= bounds.y;
+            if (transform.isIdentity()) {
+                tx -= bounds.width * 0.5f;
+                ty -= bounds.height * 0.5f;
+                continue;
+            }
+            // calculate transformed view size
+            CGSize size = bounds.size();
+            size.apply(transform);
+            tx -= size.width * 0.5f;
+            ty -= size.height * 0.5f;
+            CGAffineTransform tmp = CGAffineTransform.createTranslation(-tx, -ty);
+            tmp.concat(view._invertedTransform());
+            translate.concat(tmp);
+            tx = 0;
+            ty = 0;
+        }
+        if (tx != 0 || ty != 0) {
+            translate.concat(CGAffineTransform.createTranslation(-tx, -ty));
+        }
+        if (reversed) {
+            translate.invert();
+        }
+        return translate;
     }
 
-    protected Iterable<UIView> _subviewsForRev() {
+    private CGRect _remakeFrame() {
+        CGRect rect = _bounds.copy();
+        // when transform is anything other than the identity transform,
+        // the frame is undefined and should be ignored.
+        if (_transform != CGAffineTransform.IDENTITY) {
+            rect.apply(_transform);
+        }
+        rect.x = _center.x - rect.width * 0.5f;
+        rect.y = _center.y - rect.height * 0.5f;
+        return rect;
+    }
+
+    private CGAffineTransform _remakeInvertedTransform() {
+        if (_transform.isIdentity()) {
+            return CGAffineTransform.IDENTITY;
+        }
+        return _transform.inverted();
+    }
+
+    protected CGAffineTransform _invertedTransform() {
+        if (_invertedTransform == null) {
+            _invertedTransform = _remakeInvertedTransform();
+        }
+        return _invertedTransform;
+    }
+
+    protected Iterable<UIView> _invertedSubviews() {
         List<UIView> subviews = subviews();
         ReversedIteratorImpl<UIView> iterator = new ReversedIteratorImpl<>(subviews.listIterator(subviews.size()));
         return () -> iterator;

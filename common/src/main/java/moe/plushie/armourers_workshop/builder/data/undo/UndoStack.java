@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.builder.data.undo;
 
 import moe.plushie.armourers_workshop.api.action.IUndoCommand;
 import moe.plushie.armourers_workshop.init.ModConfig;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.commands.CommandRuntimeException;
+import net.minecraft.network.chat.Component;
 
 import java.util.Stack;
 
@@ -14,7 +14,7 @@ public class UndoStack {
 
     public IUndoCommand undo() throws Exception {
         if (undoStack.isEmpty()) {
-            throw new CommandRuntimeException(TranslateUtils.title("chat.armourers_workshop.undo.outOfUndos"));
+            throw new CommandRuntimeException(Component.translatable("chat.armourers_workshop.undo.outOfUndos"));
         }
         IUndoCommand changes = undoStack.peek();
         redoStack.push(changes.apply());
@@ -24,7 +24,7 @@ public class UndoStack {
 
     public IUndoCommand redo() throws Exception {
         if (redoStack.isEmpty()) {
-            throw new CommandRuntimeException(TranslateUtils.title("chat.armourers_workshop.undo.outOfRedos"));
+            throw new CommandRuntimeException(Component.translatable("chat.armourers_workshop.undo.outOfRedos"));
         }
         IUndoCommand changes = redoStack.peek();
         undoStack.push(changes.apply());

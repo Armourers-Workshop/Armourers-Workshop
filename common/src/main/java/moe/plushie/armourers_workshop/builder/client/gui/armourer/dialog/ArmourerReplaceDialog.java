@@ -151,7 +151,7 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         if (!pointInside(point, event)) {
             return null;
         }
-        for (UIView subview : _subviewsForRev()) {
+        for (UIView subview : _invertedSubviews()) {
             if (subview != listView) {
                 UIView hitView = subview.hitTest(convertPointToView(point, subview), event);
                 if (hitView != null) {
@@ -167,9 +167,9 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
     }
 
     @Override
-    public void setOrigin(CGPoint origin) {
+    public void setCenter(CGPoint newValue) {
         int extendHeight = 98 + 10;
-        super.setOrigin(new CGPoint(origin.x, origin.y - extendHeight / 2));
+        super.setCenter(new CGPoint(newValue.x, newValue.y - extendHeight / 2));
         if (listView != null) {
             listView.setNeedsLayout();
         }

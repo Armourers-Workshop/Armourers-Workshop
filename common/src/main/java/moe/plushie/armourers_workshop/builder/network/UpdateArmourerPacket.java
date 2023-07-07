@@ -18,10 +18,10 @@ import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataAccessor;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -97,7 +97,7 @@ public class UpdateArmourerPacket extends CustomPacket {
                 if (nbt.getBoolean(Constants.Key.SKIN_MARKERS) && !nbt.getBoolean(Constants.Key.SKIN_CUBES)) {
                     blockEntity.clearMarkers(applier, partType);
                 }
-                applier.submit(TranslateUtils.title("action.armourers_workshop.block.clear"), player);
+                applier.submit(Component.translatable("action.armourers_workshop.block.clear"), player);
                 break;
             }
             case ITEM_COPY: {
@@ -113,7 +113,7 @@ public class UpdateArmourerPacket extends CustomPacket {
                     if (isCopyPaintData) {
                         blockEntity.copyPaintData(applier, sourcePartType, destinationPartType, isMirror);
                     }
-                    applier.submit(TranslateUtils.title("action.armourers_workshop.block.copy"), player);
+                    applier.submit(Component.translatable("action.armourers_workshop.block.copy"), player);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -133,8 +133,8 @@ public class UpdateArmourerPacket extends CustomPacket {
                     }
                     CubeApplier applier = new CubeApplier(blockEntity.getLevel());
                     blockEntity.replaceCubes(applier, SkinPartTypes.UNKNOWN, event);
-                    applier.submit(TranslateUtils.title("action.armourers_workshop.block.replace"), player);
-                    player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.replace.success", applier.getChanges()));
+                    applier.submit(Component.translatable("action.armourers_workshop.block.replace"), player);
+                    player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.armourer.dialog.replace.success", applier.getChanges()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

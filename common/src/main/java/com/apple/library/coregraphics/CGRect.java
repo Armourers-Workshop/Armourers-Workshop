@@ -28,57 +28,29 @@ public class CGRect {
         this.height = height;
     }
 
-    public float getX() {
-        return x;
+    public void apply(CGAffineTransform t) {
+        CGPoint tl = new CGPoint(getMinX(), getMinY());
+        CGPoint tr = new CGPoint(getMaxX(), getMinY());
+        CGPoint bl = new CGPoint(getMinX(), getMaxY());
+        CGPoint br = new CGPoint(getMaxX(), getMaxY());
+        tl.apply(t);
+        tr.apply(t);
+        bl.apply(t);
+        br.apply(t);
+        float minX = Math.min(Math.min(tl.x, tr.x), Math.min(bl.x, br.x));
+        float minY = Math.min(Math.min(tl.y, tr.y), Math.min(bl.y, br.y));
+        float maxX = Math.max(Math.max(tl.x, tr.x), Math.max(bl.x, br.x));
+        float maxY = Math.max(Math.max(tl.y, tr.y), Math.max(bl.y, br.y));
+        this.x = minX;
+        this.y = minY;
+        this.width = maxX - minX;
+        this.height = maxY - minY;
     }
 
-    public float getY() {
-        return y;
-    }
-
-    public float getMinX() {
-        return x;
-    }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public float getMinY() {
-        return y;
-    }
-
-    public float getMidX() {
-        return x + width / 2;
-    }
-
-    public float getMidY() {
-        return y + height / 2;
-    }
-
-    public float getMaxX() {
-        return x + width;
-    }
-
-    public float getMaxY() {
-        return y + height;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CGRect)) return false;
-        CGRect that = (CGRect) o;
-        return x == that.x && y == that.y && width == that.width && height == that.height;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y, width, height);
+    public CGRect applying(CGAffineTransform t) {
+        CGRect rect = copy();
+        rect.apply(t);
+        return rect;
     }
 
     public CGRect intersection(CGRect r) {
@@ -157,8 +129,73 @@ public class CGRect {
         return (x >= x0 && y >= y0 && x < x0 + getWidth() && y < y0 + getHeight());
     }
 
+    public CGRect copy() {
+        return new CGRect(x, y, width, height);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CGRect rect = (CGRect) o;
+        return Float.compare(rect.x, x) == 0 && Float.compare(rect.y, y) == 0 && Float.compare(rect.width, width) == 0 && Float.compare(rect.height, height) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, width, height);
+    }
+
     @Override
     public String toString() {
         return String.format("(%f %f; %f %f)", x, y, width, height);
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getMinX() {
+        return x;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public float getMinY() {
+        return y;
+    }
+
+    public float getMidX() {
+        return x + width / 2;
+    }
+
+    public float getMidY() {
+        return y + height / 2;
+    }
+
+    public float getMaxX() {
+        return x + width;
+    }
+
+    public float getMaxY() {
+        return y + height;
+    }
+
+    public CGSize size() {
+        return new CGSize(width, height);
+    }
+
+    public CGPoint origin() {
+        return new CGPoint(x, y);
     }
 }

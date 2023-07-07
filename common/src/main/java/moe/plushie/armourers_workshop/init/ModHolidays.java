@@ -6,7 +6,8 @@ import moe.plushie.armourers_workshop.core.holiday.Holiday;
 import moe.plushie.armourers_workshop.core.holiday.HolidayTracker;
 import moe.plushie.armourers_workshop.core.holiday.ValentinesHandler;
 import moe.plushie.armourers_workshop.core.item.GiftSackItem;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public final class ModHolidays {
@@ -51,7 +51,7 @@ public final class ModHolidays {
     }
 
     public static Collection<Holiday> getActiveHolidays() {
-        return HOLIDAY_LIST.stream().filter(Holiday::isHolidayActive).collect(Collectors.toList());
+        return ObjectUtils.filter(HOLIDAY_LIST, Holiday::isHolidayActive);
     }
 
     @Nullable
@@ -81,7 +81,7 @@ public final class ModHolidays {
             if (player.getInventory().add(itemStack)) {
                 storage.add(player, holiday1);
             } else {
-                player.sendSystemMessage(TranslateUtils.title("chat.armourers_workshop.inventoryGiftFail"));
+                player.sendSystemMessage(Component.translatable("chat.armourers_workshop.inventoryGiftFail"));
             }
         }
     }

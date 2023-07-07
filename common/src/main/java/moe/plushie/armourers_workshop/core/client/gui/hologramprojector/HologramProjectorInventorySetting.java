@@ -25,6 +25,6 @@ public class HologramProjectorInventorySetting extends HologramProjectorBaseSett
     public void layoutSubviews() {
         super.layoutSubviews();
         CGRect rect = bounds();
-        slotView.setOrigin(new CGPoint(rect.width / 2, 15 + slotView.bounds().height / 2));
+        slotView.setCenter(new CGPoint(rect.width / 2, 15 + slotView.bounds().height / 2));
     }
 }

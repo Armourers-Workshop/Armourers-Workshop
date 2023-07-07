@@ -38,7 +38,19 @@ public class ABI {
     }
 
     public static void mulPoseMatrix(@This PoseStack poseStack, IMatrix4f matrix) {
-        poseStack.lastPose().multiply(matrix);
+        poseStack.mulPoseMatrix(Mat4.convertMatrix(matrix));
+    }
+
+//    public static void mulPoseMatrix(@This PoseStack poseStack, Matrix4f matrix) {
+//        poseStack.last().pose().mul(matrix);
+//    }
+
+    public static void mulNormalMatrix(@This PoseStack poseStack, IMatrix3f matrix) {
+        poseStack.mulNormalMatrix(Mat3.convertMatrix(matrix));
+    }
+
+    public static void mulNormalMatrix(@This PoseStack poseStack, Matrix3f matrix) {
+        poseStack.last().normal().mul(matrix);
     }
 
     public static IMatrix4f lastPose(@This PoseStack poseStack) {
@@ -184,8 +196,7 @@ public class ABI {
             return mat.hashCode();
         }
 
-
-        public Matrix4f convertMatrix(IMatrix4f mat) {
+        public static Matrix4f convertMatrix(IMatrix4f mat) {
             Matrix4f newValue = ObjectUtils.safeCast(mat, Matrix4f.class);
             if (newValue != null) {
                 return newValue;

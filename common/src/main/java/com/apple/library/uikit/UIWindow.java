@@ -1,5 +1,6 @@
 package com.apple.library.uikit;
 
+import com.apple.library.coregraphics.CGAffineTransform;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
@@ -87,7 +88,7 @@ public class UIWindow extends UIView {
     }
 
     public void screenWillResize(CGSize size) {
-        setOrigin(new CGPoint(size.width / 2, size.height / 2));
+        setCenter(new CGPoint(size.width / 2, size.height / 2));
     }
 
     public int level() {
@@ -471,10 +472,14 @@ public class UIWindow extends UIView {
             float iy = mouseY - frame.y;
             boolean needClips = view.isClipBounds();
             if (needClips) {
-                context.addClipRect(view.convertRectToView(bounds, null));
+                context.addClipRect(UIScreen.convertRectFromView(bounds, view));
             }
             context.saveGraphicsState();
             context.translateCTM(frame.x - bounds.x, frame.y - bounds.y, view.zIndex());
+            CGAffineTransform transform = view.transform();
+            if (!transform.isIdentity()) {
+                context.concatenateCTM(transform);
+            }
             context.strokeDebugRect(depth, bounds);
             view.layerWillDraw(context);
             UIColor backgroundColor = view.backgroundColor();
@@ -558,7 +563,6 @@ public class UIWindow extends UIView {
                 view.focusesDidChange();
             }
         }
-
     }
 }
 

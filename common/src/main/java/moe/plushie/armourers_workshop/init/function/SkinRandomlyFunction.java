@@ -19,36 +19,35 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * <code>
  * {
- *   "pools": [{
- *     "conditions": [{
- *       "condition": "killed_by_player"
- *     }],
- *     "rolls": 1,
- *     "entries": [{
- *       "type": "item",
- *       "name": "armourers_workshop:skin",
- *       "weight": 1,
- *       "functions": [{
- *         "function": "armourers_workshop:skin_randomly",
- *         "skins": [
- *           "ks:10830", // direct access global skin library
- *           "ws:/path/to/file.armour", // direct access server skin-library
- *           {"type": "any"}, // any type, any slot
- *           {"type": "outfit"}, // in outfit, any slot
- *           {"type": "sword", "slot": 1} // in sword, first slot
- *         ]
- *       }]
- *     }]
- *   }]
+ * "pools": [{
+ * "conditions": [{
+ * "condition": "killed_by_player"
+ * }],
+ * "rolls": 1,
+ * "entries": [{
+ * "type": "item",
+ * "name": "armourers_workshop:skin",
+ * "weight": 1,
+ * "functions": [{
+ * "function": "armourers_workshop:skin_randomly",
+ * "skins": [
+ * "ks:10830", // direct access global skin library
+ * "ws:/path/to/file.armour", // direct access server skin-library
+ * {"type": "any"}, // any type, any slot
+ * {"type": "outfit"}, // in outfit, any slot
+ * {"type": "sword", "slot": 1} // in sword, first slot
+ * ]
+ * }]
+ * }]
+ * }]
  * }
  * </code>
  */
@@ -83,7 +82,7 @@ public class SkinRandomlyFunction implements ILootConditionalFunction {
 
     @Override
     public Set<LootContextParam<?>> getReferencedContextParams() {
-        return sources.stream().map(SkinSource::getParam).filter(Objects::nonNull).collect(Collectors.toSet());
+        return new HashSet<>(ObjectUtils.compactMap(sources, SkinSource::getParam));
     }
 
     public static class SkinSource implements IResultHandler<SkinDescriptor> {

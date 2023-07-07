@@ -57,7 +57,7 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
 
         SidebarView sidebarView = new SidebarView(new CGRect(bounds().width - 180, 0, 180, bounds().height));
         sidebarView.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleHeight);
-        sidebarView.setTransform(CGAffineTransform.scale(0.5f, 0.5f));
+        sidebarView.setTransform(CGAffineTransform.createScale(0.5f, 0.5f));
         addSubview(sidebarView);
 
         sidebarView.reloadData();

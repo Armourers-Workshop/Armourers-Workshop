@@ -33,7 +33,7 @@ public class UIPopoverView extends UIWindow {
         super.layoutSubviews();
         CGRect rect = bounds();
         if (contentView != null) {
-            contentView.setOrigin(new CGPoint(rect.width / 2, rect.height / 2));
+            contentView.setCenter(new CGPoint(rect.width / 2, rect.height / 2));
         }
     }
 

@@ -8,8 +8,8 @@ import moe.plushie.armourers_workshop.init.ModHolidays;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -66,7 +66,7 @@ public class GiftSackItem extends FlavouredItem implements IItemGroupProvider, I
             if (player.getInventory().add(giftStack)) {
                 itemStack.shrink(1);
             } else {
-                player.sendSystemMessage(TranslateUtils.title("chat.armourers_workshop.inventoryFull"));
+                player.sendSystemMessage(Component.translatable("chat.armourers_workshop.inventoryFull"));
             }
         }
         return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());

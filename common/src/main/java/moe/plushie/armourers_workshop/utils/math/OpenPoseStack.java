@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.utils.math;
 
+import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
@@ -47,9 +48,13 @@ public class OpenPoseStack implements IPoseStack {
     }
 
     @Override
+    public void multiply(IMatrix3f matrix) {
+        normalMatrix.multiply(OpenMatrix3f.of(matrix));
+    }
+
+    @Override
     public void multiply(IMatrix4f matrix) {
         poseMatrix.multiply(OpenMatrix4f.of(matrix));
-        normalMatrix.multiply(OpenMatrix3f.of(matrix));
     }
 
     @Override
@@ -61,12 +66,4 @@ public class OpenPoseStack implements IPoseStack {
     public OpenMatrix3f lastNormal() {
         return normalMatrix;
     }
-
-//    @Override
-//    public IPoseStack copy() {
-//        OpenPoseStack stack = new OpenPoseStack();
-//        stack.poseMatrix.multiply(poseMatrix);
-//        stack.normalMatrix.multiply(normalMatrix);
-//        return stack;
-//    }
 }

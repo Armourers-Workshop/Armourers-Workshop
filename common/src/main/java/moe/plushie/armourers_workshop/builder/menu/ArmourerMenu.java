@@ -16,7 +16,7 @@ import moe.plushie.armourers_workshop.core.skin.exception.TranslatableException;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModItems;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -154,7 +154,7 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
             CubeApplier applier = new CubeApplier(blockEntity.getLevel());
             CubeTransform transform = blockEntity.getTransform();
             WorldUtils.loadSkinIntoWorld(applier, transform, skin);
-            applier.submit(TranslateUtils.title("action.armourers_workshop.block.load"), player);
+            applier.submit(Component.translatable("action.armourers_workshop.block.load"), player);
 
         } catch (TranslatableException exception) {
             player.sendSystemMessage(exception.getComponent());

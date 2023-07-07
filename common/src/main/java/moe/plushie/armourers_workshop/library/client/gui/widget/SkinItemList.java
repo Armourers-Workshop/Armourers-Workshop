@@ -7,6 +7,7 @@ import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIFont;
+import com.apple.library.uikit.UIScreen;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -146,7 +147,7 @@ public class SkinItemList extends UIView {
         if (isHovered != allowsHovered) {
             return;
         }
-        CGRect clipBox = convertRectToView(new CGRect(ix, iy, iw, ih), null);
+        CGRect clipBox = UIScreen.convertRectFromView(new CGRect(ix, iy, iw, ih), this);
         if (!RenderSystem.inScissorRect(clipBox)) {
             return;
         }
@@ -190,11 +191,9 @@ public class SkinItemList extends UIView {
             dh *= 1.5f;
         }
 
-        int tx = (int) (dx - dw / 2);
-        int ty = (int) (dy - dh / 2);
-        int tw = (int) (dw);
-        int th = (int) (dh);
-        ExtendedItemRenderer.renderSkinInBox(bakedSkin, tx, ty, 100, tw, th, 20, 45, 0, context.state().ctm(), buffers);
+        float tx = dx - dw / 2;
+        float ty = dy - dh / 2;
+        ExtendedItemRenderer.renderSkinInBox(bakedSkin, tx, ty, 100, dw, dh, 20, 45, 0, context.state().ctm(), buffers);
     }
 
     public void renderItemBackground(float x, float y, float width, float height, boolean isHovered, ServerSkin entry, CGGraphicsContext context) {

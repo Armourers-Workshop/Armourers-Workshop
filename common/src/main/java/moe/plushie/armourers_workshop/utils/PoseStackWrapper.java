@@ -22,8 +22,8 @@ public class PoseStackWrapper implements IPoseStack {
             return ((PoseStackWrapper) poseStack).pose();
         }
         PoseStack poseStack1 = new PoseStack();
-        poseStack1.lastPose().multiply(poseStack1.lastPose());
-        poseStack1.lastNormal().multiply(poseStack1.lastNormal());
+        poseStack1.mulPoseMatrix(poseStack.lastPose());
+        poseStack1.mulNormalMatrix(poseStack.lastNormal());
         return poseStack1;
     }
 
@@ -45,6 +45,11 @@ public class PoseStackWrapper implements IPoseStack {
 
     public void rotate(IQuaternionf quaternion) {
         stack.mulPose(quaternion);
+    }
+
+    @Override
+    public void multiply(IMatrix3f matrix) {
+        stack.mulNormalMatrix(matrix);
     }
 
     public void multiply(IMatrix4f matrix) {

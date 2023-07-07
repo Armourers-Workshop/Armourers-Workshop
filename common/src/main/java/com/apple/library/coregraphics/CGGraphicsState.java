@@ -1,5 +1,6 @@
 package com.apple.library.coregraphics;
 
+import com.apple.library.impl.ObjectUtilsImpl;
 import com.apple.library.uikit.UIFont;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -41,6 +42,12 @@ public interface CGGraphicsState {
         if (z != 0) {
             ctm().mulPose(Vector3f.ZP.rotationDegrees(z));
         }
+    }
+
+    default void concatenate(CGAffineTransform transform) {
+        PoseStack ctm = ctm();
+        ctm.mulNormalMatrix(ObjectUtilsImpl.convertToMatrix3x3(transform));
+        ctm.mulPoseMatrix(ObjectUtilsImpl.convertToMatrix4x4(transform));
     }
 
     default void restore() {

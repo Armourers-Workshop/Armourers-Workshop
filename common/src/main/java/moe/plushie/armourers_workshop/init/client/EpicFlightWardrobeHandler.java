@@ -77,7 +77,7 @@ public class EpicFlightWardrobeHandler {
     }
 
     public static void applyPoseFromBuffer(IPoseStack poseStack, FloatBuffer pose, FloatBuffer normal) {
-        poseStack.lastPose().multiply(new OpenMatrix4f(pose));
-        poseStack.lastNormal().multiply(new OpenMatrix3f(normal));
+        poseStack.multiply(new OpenMatrix3f(normal));
+        poseStack.multiply(new OpenMatrix4f(pose));
     }
 }

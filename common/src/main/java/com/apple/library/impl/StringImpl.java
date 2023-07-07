@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public interface StringImpl {
@@ -21,20 +20,20 @@ public interface StringImpl {
     FormattedCharSequence chars();
 
     default CGRect boundingRectWithFont(UIFont font) {
-        int width = font.font().width(chars());
+        int width = font.impl().width(chars());
         return new CGRect(0, 0, width, font.lineHeight());
     }
 
     default List<NSString> split(float width, UIFont font) {
         Component contents = component();
         if (contents != null) {
-            return font.font().split(contents, (int) width).stream().map(NSString::new).collect(Collectors.toList());
+            return ObjectUtilsImpl.map(font.impl().split(contents, (int) width), NSString::new);
         }
         return new ArrayList<>();
     }
 
     default Map<String, ?> attributes(int width, UIFont font) {
-        Style style = font.font().getSplitter().componentStyleAtWidth(chars(), width);
+        Style style = font.impl().getSplitter().componentStyleAtWidth(chars(), width);
         if (style == null) {
             return null;
         }

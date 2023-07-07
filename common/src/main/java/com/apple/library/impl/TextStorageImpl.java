@@ -437,7 +437,7 @@ public class TextStorageImpl {
 
     private Font defaultFont() {
         if (font != null) {
-            return font.font();
+            return font.impl();
         }
         return Minecraft.getInstance().font;
     }

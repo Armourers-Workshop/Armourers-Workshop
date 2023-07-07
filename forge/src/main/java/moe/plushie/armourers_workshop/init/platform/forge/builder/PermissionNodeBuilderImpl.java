@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgePermissio
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -43,12 +42,12 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
 
         @Override
         public Component getName() {
-            return TranslateUtils.title("permission." + key);
+            return Component.translatable("permission." + key);
         }
 
         @Override
         public Component getDescription() {
-            return TranslateUtils.title("permission." + key + ".desc");
+            return Component.translatable("permission." + key + ".desc");
         }
 
         @Override

@@ -10,14 +10,13 @@ import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIScrollView;
 import com.apple.library.uikit.UIView;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class ReportList extends UIScrollView {
@@ -223,7 +222,7 @@ public class ReportList extends UIScrollView {
 
         public GuiDetailListItem(String[] names) {
             super(CGRect.ZERO);
-            this.names = Arrays.stream(names).map(NSString::new).collect(Collectors.toList());
+            this.names = ObjectUtils.map(names, NSString::new);
         }
 
         @Override

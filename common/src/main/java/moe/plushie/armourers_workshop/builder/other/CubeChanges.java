@@ -7,11 +7,11 @@ import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -80,7 +80,7 @@ public class CubeChanges implements IUndoCommand, IWorldUpdateTask {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity == null) {
             String value = String.format("x=%d, y=%d, z=%d", blockPos.getX(), blockPos.getY(), blockPos.getZ());
-            throw new CommandRuntimeException(TranslateUtils.title("chat.armourers_workshop.undo.missingBlock", value));
+            throw new CommandRuntimeException(Component.translatable("chat.armourers_workshop.undo.missingBlock", value));
         }
     }
 

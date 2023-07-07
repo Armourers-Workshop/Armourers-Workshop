@@ -9,6 +9,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.RectangleTesselator;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
@@ -19,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @SuppressWarnings("unused")
+@Environment(EnvType.CLIENT)
 public interface GraphicsContextImpl {
 
     CGGraphicsState state();
@@ -48,7 +51,7 @@ public interface GraphicsContextImpl {
 
         PoseStack.Pose pose = poseStack.last();
         MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-        Font renderer = font.font();
+        Font renderer = font.impl();
 
         int dx = 0, dy = 0;
         for (NSString line : lines) {

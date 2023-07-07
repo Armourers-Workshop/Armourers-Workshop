@@ -7,9 +7,9 @@ import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -62,25 +62,25 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
         SkinnableBlockEntity blockEntity = getTitleEntity(level, context.getClickedPos());
         if (blockEntity != null && player.isShiftKeyDown()) {
             blockEntity.setLinkedBlockPos(null);
-            player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.clear"));
+            player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.linking-tool.clear"));
             return InteractionResult.SUCCESS;
         }
         if (linkedBlockPos != null) {
             setLinkedBlockPos(itemStack, null);
             if (blockEntity != null) {
                 blockEntity.setLinkedBlockPos(linkedBlockPos);
-                player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.finish"));
+                player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.linking-tool.finish"));
                 return InteractionResult.SUCCESS;
             }
-            player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.fail"));
+            player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.linking-tool.fail"));
             return InteractionResult.SUCCESS;
         }
         if (blockEntity != null) {
-            player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.linkedToSkinnable"));
+            player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.linking-tool.linkedToSkinnable"));
             return InteractionResult.FAIL;
         }
         setLinkedBlockPos(itemStack, context.getClickedPos());
-        player.sendSystemMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.start"));
+        player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.linking-tool.start"));
         return InteractionResult.SUCCESS;
     }
 

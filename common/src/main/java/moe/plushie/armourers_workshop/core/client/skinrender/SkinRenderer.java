@@ -265,7 +265,7 @@ public class SkinRenderer<T extends Entity, V extends Model, M extends IModelHol
                 // we must reverse x-axis the direction of drawing,
                 // but we should not change the normalMatrix,
                 // because the normal direction is correct.
-                poseStack.lastPose().multiply(OpenMatrix4f.createScaleMatrix(-1, 1, 1));
+                poseStack.multiply(OpenMatrix4f.createScaleMatrix(-1, 1, 1));
             }
         }
 

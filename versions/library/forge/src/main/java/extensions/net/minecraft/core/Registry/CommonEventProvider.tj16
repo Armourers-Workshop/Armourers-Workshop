@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.compatibility.AbstractArgumentTypeInfo;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -123,7 +122,7 @@ public class CommonEventProvider {
                 LevelAccessor level = event.getWorld();
                 BlockState oldState = event.getBlockSnapshot().getReplacedBlock();
                 CompoundTag oldTag = event.getBlockSnapshot().getNbt();
-                Component reason = TranslateUtils.title("chat.armourers_workshop.undo.placeBlock");
+                Component reason = Component.translatable("chat.armourers_workshop.undo.placeBlock");
                 consumer.snapshot(level, event.getPos(), oldState, oldTag, player, reason);
             }
         });
@@ -139,7 +138,7 @@ public class CommonEventProvider {
                 if (blockEntity != null) {
                     oldNBT = blockEntity.saveWithFullMetadata();
                 }
-                Component reason = TranslateUtils.title("chat.armourers_workshop.undo.breakBlock");
+                Component reason = Component.translatable("chat.armourers_workshop.undo.breakBlock");
                 consumer.snapshot(level, event.getPos(), event.getState(), oldNBT, event.getPlayer(), reason);
             }
         });

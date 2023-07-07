@@ -9,6 +9,7 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UIScreen;
 import com.apple.library.uikit.UIView;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -31,6 +32,7 @@ import moe.plushie.armourers_workshop.library.data.impl.ReportType;
 import moe.plushie.armourers_workshop.library.data.impl.ServerPermission;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
 import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -42,9 +44,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.util.Strings;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
@@ -181,7 +181,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         if (message == null) {
             return;
         }
-        context.addClipRect(convertRectToView(rect, null));
+        context.addClipRect(UIScreen.convertRectFromView(rect, this));
         context.drawMultilineText(message, rect.x + 2, rect.y + 2, rect.width - 4, 0xffeeeeee, null);
         context.removeClipRect();
     }
@@ -190,10 +190,10 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         context.fillRect(gradient, rect);
         BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(entry.getDescriptor(), loadTicket);
         if (bakedSkin != null) {
-            int tx = (int) rect.x;
-            int ty = (int) rect.y;
-            int tw = (int) rect.width;
-            int th = (int) rect.height;
+            float tx = rect.x;
+            float ty = rect.y;
+            float tw = rect.width;
+            float th = rect.height;
             MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
             ExtendedItemRenderer.renderSkinInBox(bakedSkin, tx, ty, 100, tw, th, 20, 45, 0, context.state().ctm(), buffers);
             buffers.endBatch();
@@ -237,7 +237,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         dialog.setMessageColor(new UIColor(0x7f0000));
         dialog.setMessage(getDisplayText("dialog.report_skin.label.report_warning"));
         dialog.setPlaceholder(getDisplayText("dialog.report_skin.optional_message"));
-        dialog.setReportTypes(Arrays.stream(reportTypes).map(t -> new NSString(TranslateUtils.title(t.getLangKey()))).collect(Collectors.toList()));
+        dialog.setReportTypes(ObjectUtils.map(reportTypes, t -> new NSString(TranslateUtils.title(t.getLangKey()))));
         dialog.showInView(this, () -> {
             if (!dialog.isCancelled()) {
                 ReportType reportType = reportTypes[dialog.getReportType()];

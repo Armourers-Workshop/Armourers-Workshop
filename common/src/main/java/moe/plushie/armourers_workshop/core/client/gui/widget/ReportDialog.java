@@ -6,12 +6,11 @@ import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.uikit.UIComboBox;
 import com.apple.library.uikit.UIComboItem;
 import com.apple.library.uikit.UITextView;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class ReportDialog extends ConfirmDialog {
@@ -66,8 +65,7 @@ public class ReportDialog extends ConfirmDialog {
     }
 
     public void setReportTypes(Collection<NSString> types) {
-        List<UIComboItem> items = types.stream().map(UIComboItem::new).collect(Collectors.toList());
-        comboBox.reloadData(items);
+        comboBox.reloadData(ObjectUtils.map(types, UIComboItem::new));
     }
 
     private UIComboBox buildComboBox(int x, int y, int width, int height) {

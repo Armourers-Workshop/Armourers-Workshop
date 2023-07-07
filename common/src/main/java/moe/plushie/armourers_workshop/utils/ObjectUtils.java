@@ -1,10 +1,7 @@
 package moe.plushie.armourers_workshop.utils;
 
-import com.apple.library.foundation.NSRange;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
@@ -17,7 +14,9 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
+@SuppressWarnings("unused")
 public class ObjectUtils {
 
     private static final FloatBuffer BUFFER3x3 = createFloatBuffer(9);
@@ -38,10 +37,6 @@ public class ObjectUtils {
 
     public static String readableName(Class<?> clazz) {
         return clazz.getSimpleName().replaceAll("([a-z]+)([A-Z]+)", "$1 $2");
-    }
-
-    public static String replaceString(String string, NSRange range, String replacementString) {
-        return (new StringBuilder(string)).replace(range.startIndex(), range.endIndex(), replacementString).toString();
     }
 
     public static <K, V> Map<K, V> toMap(K key, V value) {
@@ -72,11 +67,111 @@ public class ObjectUtils {
     }
 
     @Nullable
-    public static <S, T> T compactMap(@Nullable S src, Function<S, T> consumer) {
+    public static <S, T> T flatMap(@Nullable S src, Function<S, T> consumer) {
         if (src != null) {
             return consumer.apply(src);
         }
         return null;
+    }
+
+    public static <S, T> ArrayList<T> map(S[] in, Function<? super S, T> transform) {
+        ArrayList<T> results = new ArrayList<>(in.length);
+        for (S value : in) {
+            results.add(transform.apply(value));
+        }
+        return results;
+    }
+
+    public static <S, T> ArrayList<T> map(Collection<S> in, Function<S, T> transform) {
+        ArrayList<T> results = new ArrayList<>(in.size());
+        for (S value : in) {
+            results.add(transform.apply(value));
+        }
+        return results;
+    }
+
+    public static <S, T> ArrayList<T> compactMap(S[] in, Function<? super S, @Nullable T> transform) {
+        ArrayList<T> results = new ArrayList<>(in.length);
+        for (S value : in) {
+            T res = transform.apply(value);
+            if (res != null) {
+                results.add(res);
+            }
+        }
+        return results;
+    }
+
+    public static <S, T> ArrayList<T> compactMap(Collection<S> in, Function<? super S, @Nullable T> transform) {
+        ArrayList<T> results = new ArrayList<>(in.size());
+        for (S value : in) {
+            T res = transform.apply(value);
+            if (res != null) {
+                results.add(res);
+            }
+        }
+        return results;
+    }
+
+    public static <T> ArrayList<T> filter(T[] in, Predicate<? super T> predicate) {
+        ArrayList<T> results = new ArrayList<>(in.length);
+        for (T value : in) {
+            if (predicate.test(value)) {
+                results.add(value);
+            }
+        }
+        return results;
+    }
+
+    public static <T> ArrayList<T> filter(Collection<T> in, Predicate<? super T> predicate) {
+        ArrayList<T> results = new ArrayList<>(in.size());
+        for (T value : in) {
+            if (predicate.test(value)) {
+                results.add(value);
+            }
+        }
+        return results;
+    }
+
+    // "<%s: 0x%x; arg1 = arg2; ...; argN-1 = argN>"
+    public static String makeDescription(Object obj, Object... arguments) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("<");
+        builder.append(getClassName(obj.getClass()));
+        builder.append(": ");
+        builder.append(String.format("0x%x", System.identityHashCode(obj)));
+        for (int i = 0; i < arguments.length; i += 2) {
+            if (isEmptyOrNull(arguments[i + 1])) {
+                continue;
+            }
+            builder.append("; ");
+            builder.append(arguments[i]);
+            builder.append(" = ");
+            builder.append(arguments[i + 1]);
+        }
+        builder.append(">");
+        return builder.toString();
+    }
+
+    public static boolean isEmptyOrNull(Object value) {
+        if (value == null) {
+            return true;
+        }
+        if (value instanceof Collection<?>) {
+            return ((Collection<?>) value).isEmpty();
+        }
+        if (value instanceof String) {
+            return ((String) value).isEmpty();
+        }
+        return false;
+    }
+
+    public static String getClassName(Class<?> clazz) {
+        String name = clazz.getTypeName();
+        Package pkg = clazz.getPackage();
+        if (pkg != null) {
+            return name.replace(pkg.getName() + ".", "");
+        }
+        return clazz.getSimpleName();
     }
 
     public static <S> void ifPresent(@Nullable S src, Consumer<S> consumer) {
@@ -102,48 +197,6 @@ public class ObjectUtils {
             results.add(builder.apply(i));
         }
         return results;
-    }
-
-    // "<%s: 0x%x; arg1 = arg2; ...; argN-1 = argN>"
-    public static String makeDescription(Object obj, Object... arguments) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("<");
-        builder.append(getClassName(obj.getClass()));
-        builder.append(": ");
-        builder.append(String.format("0x%x", System.identityHashCode(obj)));
-        for (int i = 0; i < arguments.length; i += 2) {
-            if (isEmptyOrNull(arguments[i + 1])) {
-                continue;
-            }
-            builder.append("; ");
-            builder.append(arguments[i]);
-            builder.append(" = ");
-            builder.append(arguments[i + 1]);
-        }
-        builder.append(">");
-        return builder.toString();
-    }
-
-    public static String getClassName(Class<?> clazz) {
-        String name = clazz.getTypeName();
-        Package pkg = clazz.getPackage();
-        if (pkg != null) {
-            return name.replace(pkg.getName() + ".", "");
-        }
-        return clazz.getSimpleName();
-    }
-
-    public static boolean isEmptyOrNull(Object value) {
-        if (value == null) {
-            return true;
-        }
-        if (value instanceof Collection<?>) {
-            return ((Collection<?>) value).isEmpty();
-        }
-        if (value instanceof String) {
-            return ((String) value).isEmpty();
-        }
-        return false;
     }
 
     public static ByteBuffer createByteBuffer(int capacity) {

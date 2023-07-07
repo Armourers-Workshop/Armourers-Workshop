@@ -24,14 +24,14 @@ import org.jetbrains.annotations.Nullable;
 @Environment(EnvType.CLIENT)
 public final class ExtendedItemRenderer {
 
-    public static void renderSkinInBox(BakedSkin bakedSkin, int x, int y, int z, int width, int height, int rx, int ry, int rz, PoseStack poseStack, MultiBufferSource buffers) {
+    public static void renderSkinInBox(BakedSkin bakedSkin, float x, float y, float z, float width, float height, float rx, float ry, float rz, PoseStack poseStack, MultiBufferSource buffers) {
         renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, x, y, z, width, height, rx, ry, rz, 0, 0xf000f0, poseStack, buffers);
     }
 
-    public static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, float partialTicks, int light, PoseStack poseStack, MultiBufferSource buffers) {
+    public static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, float x, float y, float z, float width, float height, float rx, float ry, float rz, float partialTicks, int light, PoseStack poseStack, MultiBufferSource buffers) {
         if (bakedSkin != null) {
             int t = TickUtils.ticks();
-            int si = Math.min(width, height);
+            float si = Math.min(width, height);
             poseStack.pushPose();
             poseStack.translate(x + width / 2f, y + height / 2f, z);
             // we need do a vertical mirror, but normal matrix no needs.

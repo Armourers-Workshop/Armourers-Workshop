@@ -1,37 +1,26 @@
 package com.apple.library.uikit;
 
 import com.apple.library.impl.FontImpl;
-import net.minecraft.client.gui.Font;
 
-public class UIFont implements FontImpl {
+public class UIFont extends FontImpl {
 
-    private final float lineHeight;
-    private final Font font;
+    private static final UIFont DEFAULT = new UIFont(FontImpl.defaultFont(), 9);
     private final float fontSize;
 
-    public UIFont(Font font, float size) {
-        this.font = font;
+    public UIFont(Object impl, float size) {
+        super(impl);
         this.fontSize = size;
-        this.lineHeight = font.lineHeight;
     }
 
     public UIFont(UIFont font, float size) {
-        this(font.font, size);
+        this(font.impl(), size);
     }
 
     public static UIFont systemFont() {
-        return SYSTEM_FONT;
-    }
-
-    public float lineHeight() {
-        return lineHeight;
+        return DEFAULT;
     }
 
     public float fontSize() {
         return fontSize;
-    }
-
-    public Font font() {
-        return font;
     }
 }

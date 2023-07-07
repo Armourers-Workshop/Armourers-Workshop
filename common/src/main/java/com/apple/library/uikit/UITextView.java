@@ -78,7 +78,7 @@ public class UITextView extends UIScrollView implements TextInputTraits {
             context.fillRect(getBorderColor(), bounds);
             context.fillRect(getFillColor(), fixedBounds);
         }
-        context.addClipRect(convertRectToView(fixedBounds, null));
+        context.addClipRect(UIScreen.convertRectFromView(fixedBounds, this));
         storage.render(point, context);
         context.removeClipRect();
     }

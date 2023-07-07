@@ -171,7 +171,7 @@ public class ItemTooltipManager {
             return;
         }
         float dx, dy;
-        int size = ModConfig.Client.skinPreSize;
+        float size = ModConfig.Client.skinPreSize;
         if (ModConfig.Client.skinPreLocFollowMouse) {
             dx = frame.getX() - 28 - size;
             dy = frame.getY() - 4;
@@ -186,11 +186,9 @@ public class ItemTooltipManager {
         if (ModConfig.Client.skinPreDrawBackground) {
             context.drawTilableImage(ModTextures.GUI_PREVIEW, dx, dy, size, size, 0, 0, 62, 62, 4, 4, 4, 4, 400);
         }
-        int tx = (int) dx;
-        int ty = (int) dy;
         ColorScheme colorScheme = descriptor.getColorScheme();
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        ExtendedItemRenderer.renderSkinInBox(bakedSkin, colorScheme, itemStack, tx, ty, 500, size, size, 30, 45, 0, 0, 0xf000f0, context.state().ctm(), buffers);
+        ExtendedItemRenderer.renderSkinInBox(bakedSkin, colorScheme, itemStack, dx, dy, 500, size, size, 30, 45, 0, 0, 0xf000f0, context.state().ctm(), buffers);
         buffers.endBatch();
     }
 }

@@ -14,20 +14,33 @@ public class CGPoint {
         this.y = y;
     }
 
+    public void apply(CGAffineTransform t) {
+        float tx = t.a * x + t.c * y + t.tx;
+        float ty = t.b * x + t.d * y + t.ty;
+        this.x = tx;
+        this.y = ty;
+    }
+
+    public CGPoint applying(CGAffineTransform t) {
+        CGPoint pos = copy();
+        pos.apply(t);
+        return pos;
+    }
+
+    public CGPoint copy() {
+        return new CGPoint(x, y);
+    }
+
+    public boolean isZero() {
+        return x == 0 && y == 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof CGPoint)) return false;
-        CGPoint point2i = (CGPoint) o;
-        return x == point2i.x && y == point2i.y;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
+        if (o == null || getClass() != o.getClass()) return false;
+        CGPoint pos = (CGPoint) o;
+        return Float.compare(pos.x, x) == 0 && Float.compare(pos.y, y) == 0;
     }
 
     @Override
@@ -38,6 +51,14 @@ public class CGPoint {
     @Override
     public String toString() {
         return String.format("(%f %f)", x, y);
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
     }
 }
 

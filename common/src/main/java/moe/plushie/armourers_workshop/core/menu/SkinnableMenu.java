@@ -75,7 +75,7 @@ public class SkinnableMenu extends AbstractBlockContainerMenu {
         if (Strings.isNotBlank(title)) {
             return TranslateUtils.formatted(title);
         }
-        return TranslateUtils.title("inventory.armourers_workshop.skinnable");
+        return Component.translatable("inventory.armourers_workshop.skinnable");
     }
 
     public int getRow() {

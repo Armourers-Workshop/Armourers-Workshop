@@ -112,7 +112,7 @@ public class HologramProjectorWindow extends MenuWindow<HologramProjectorMenu> {
         @Override
         public void layoutSubviews() {
             super.layoutSubviews();
-            setting.setOrigin(new CGPoint(bounds().getWidth() / 2, setting.bounds().getHeight() / 2));
+            setting.setCenter(new CGPoint(bounds().getWidth() / 2, setting.bounds().getHeight() / 2));
         }
 
         @Nullable

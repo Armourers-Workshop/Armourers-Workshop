@@ -1,36 +1,24 @@
 package com.apple.library.impl;
 
-import com.apple.library.coregraphics.CGPoint;
-import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIView;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.LinkedList;
 
 public interface ViewImpl {
 
     UIView self();
 
     @Nullable
-    default CGPoint _offsetInViewHierarchy(@Nullable UIView searchedView, boolean isAutoReverse) {
-        int dx = 0;
-        int dy = 0;
+    default LinkedList<UIView> _searchInViewHierarchy(UIView searchedView) {
+        LinkedList<UIView> results = new LinkedList<>();
         UIView searchingView = self();
         while (searchingView != searchedView && searchingView != null) {
-            CGRect frame = searchingView.frame();
-            dx += frame.x;
-            dy += frame.y;
-            CGRect bounds = searchingView.bounds();
-            dx -= bounds.x;
-            dy -= bounds.y;
+            results.add(searchingView);
             searchingView = searchingView.superview();
         }
         if (searchingView == searchedView) {
-            return new CGPoint(dx, dy);
-        }
-        if (isAutoReverse) {
-            CGPoint point = searchedView._offsetInViewHierarchy(self(), false);
-            if (point != null) {
-                return new CGPoint(-point.x, -point.y);
-            }
+            return results;
         }
         return null;
     }

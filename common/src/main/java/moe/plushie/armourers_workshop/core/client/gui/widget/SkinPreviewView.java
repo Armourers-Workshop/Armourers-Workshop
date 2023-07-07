@@ -37,16 +37,15 @@ public class SkinPreviewView extends UIControl {
             return;
         }
         CGRect rect = bounds();
-        int x = (int) rect.x;
-        int y = (int) rect.y;
-        int z = 200;
-        int width = (int) rect.width;
-        int height = (int) rect.height;
+        float tx = rect.x;
+        float ty = rect.y;
+        float tw = rect.width;
+        float th = rect.height;
         PoseStack poseStack = context.state().ctm();
         ColorScheme colorScheme = descriptor.getColorScheme();
         ItemStack itemStack = ItemStack.EMPTY;
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        ExtendedItemRenderer.renderSkinInBox(bakedSkin, colorScheme, itemStack, x, y, z, width, height, 20, 45, 0, 0, 0xf000f0, poseStack, buffers);
+        ExtendedItemRenderer.renderSkinInBox(bakedSkin, colorScheme, itemStack, tx, ty, 200, tw, th, 20, 45, 0, 0, 0xf000f0, poseStack, buffers);
         buffers.endBatch();
     }
 

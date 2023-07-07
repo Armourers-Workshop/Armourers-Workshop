@@ -12,6 +12,8 @@ public interface IPoseStack {
 
     void rotate(IQuaternionf quaternion);
 
+    void multiply(IMatrix3f matrix);
+
     void multiply(IMatrix4f matrix);
 
     IMatrix4f lastPose();

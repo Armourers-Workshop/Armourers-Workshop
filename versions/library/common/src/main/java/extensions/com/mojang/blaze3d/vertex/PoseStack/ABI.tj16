@@ -40,8 +40,8 @@ public class ABI {
 
     public static PoseStack copy(@This PoseStack poseStack) {
         PoseStack poseStack1 = new PoseStack();
-        poseStack1.lastPose().multiply(poseStack.lastPose());
-        poseStack1.lastNormal().multiply(poseStack.lastNormal());
+        poseStack1.mulPoseMatrix(poseStack.lastPose());
+        poseStack1.mulNormalMatrix(poseStack.lastNormal());
         return poseStack1;
     }
 
@@ -50,7 +50,19 @@ public class ABI {
     }
 
     public static void mulPoseMatrix(@This PoseStack poseStack, IMatrix4f matrix) {
-        poseStack.lastPose().multiply(matrix);
+        poseStack.mulPoseMatrix(PoseStack.convertMatrix(matrix));
+    }
+
+    public static void mulPoseMatrix(@This PoseStack poseStack, Matrix4f matrix) {
+        poseStack.last().pose().multiply(matrix);
+    }
+
+    public static void mulNormalMatrix(@This PoseStack poseStack, IMatrix3f matrix) {
+        poseStack.mulNormalMatrix(PoseStack.convertMatrix(matrix));
+    }
+
+    public static void mulNormalMatrix(@This PoseStack poseStack, Matrix3f matrix) {
+        poseStack.last().normal().mul(matrix);
     }
 
     public static IMatrix4f lastPose(@This PoseStack poseStack) {

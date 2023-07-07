@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.PlayerBlockPlaceEvents;
 import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -131,7 +130,7 @@ public interface FabricCommonNativeProvider extends CommonNativeProvider {
                 if (oldBlockEntity != null) {
                     oldNBT = oldBlockEntity.saveWithFullMetadata();
                 }
-                Component reason = TranslateUtils.title("chat.armourers_workshop.undo.placeBlock");
+                Component reason = Component.translatable("chat.armourers_workshop.undo.placeBlock");
                 consumer.snapshot(level, blockPos, oldState, oldNBT, player, reason);
             }
             return true;
@@ -148,7 +147,7 @@ public interface FabricCommonNativeProvider extends CommonNativeProvider {
                 if (oldBlockEntity != null) {
                     oldNBT = oldBlockEntity.saveWithFullMetadata();
                 }
-                Component reason = TranslateUtils.title("chat.armourers_workshop.undo.breakBlock");
+                Component reason = Component.translatable("chat.armourers_workshop.undo.breakBlock");
                 consumer.snapshot(level, pos, state, oldNBT, player, reason);
             }
             return true;

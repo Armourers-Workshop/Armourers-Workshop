@@ -8,6 +8,7 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIEdgeInsets;
 import com.apple.library.uikit.UIImage;
+import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIScrollView;
 import com.apple.library.uikit.UIScrollViewDelegate;
 import com.apple.library.uikit.UIView;
@@ -68,6 +69,15 @@ public class SidebarView extends UIView implements UIScrollViewDelegate {
             }
         }
         sidebarView.setContentSize(new CGSize(0, y));
+
+        float top = 4;
+        for (int j = 0; j < 100; ++j) {
+            UILabel lb = new UILabel(new CGRect(4, top, 180 - 8, 10));
+            lb.setText(new NSString("Hello World!!"));
+            containerView.addSubview(lb);
+            top += 10 + 2;
+        }
+        containerView.setContentSize(new CGSize(0, top));
     }
 
     public void addEntry(Entry entry) {

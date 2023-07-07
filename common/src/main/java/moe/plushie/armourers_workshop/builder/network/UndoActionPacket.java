@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.builder.data.undo.UndoManager;
 import moe.plushie.armourers_workshop.builder.data.undo.UndoStack;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModPermissions;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -40,13 +39,13 @@ public class UndoActionPacket extends CustomPacket {
                     return;
                 }
                 IUndoCommand command = stack.redo();
-                message = TranslateUtils.title("chat.armourers_workshop.undo.redoing", command.name());
+                message = Component.translatable("chat.armourers_workshop.undo.redoing", command.name());
             } else {
                 if (!ModPermissions.UNDO.accept(player)) {
                     return;
                 }
                 IUndoCommand command = stack.undo();
-                message = TranslateUtils.title("chat.armourers_workshop.undo.undoing", command.name());
+                message = Component.translatable("chat.armourers_workshop.undo.undoing", command.name());
             }
             player.sendSystemMessage(message);
         } catch (CommandRuntimeException exception) {

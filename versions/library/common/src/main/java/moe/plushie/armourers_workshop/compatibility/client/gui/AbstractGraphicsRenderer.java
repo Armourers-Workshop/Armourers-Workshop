@@ -60,7 +60,7 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
         // there are some versions of tooltip that don't split normally,
         // and while we can't decide on the final tooltip size,
         // but we can to handle the break the newline
-        Font font1 = font.font();
+        Font font1 = font.impl();
         List<? extends FormattedCharSequence> texts = font1.split(text.component(), 100000);
         graphics.renderTooltip(font1, texts, mouseX, mouseY);
     }

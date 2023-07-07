@@ -8,7 +8,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-@Environment(EnvType.CLIENT)
 public interface CGGraphicsRenderer {
 
     void renderTooltip(NSString text, CGRect rect, @Nullable UIFont font, CGGraphicsContext context);

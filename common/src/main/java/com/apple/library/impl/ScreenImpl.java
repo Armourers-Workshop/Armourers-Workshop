@@ -3,10 +3,13 @@ package com.apple.library.impl;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.mojang.blaze3d.platform.Window;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 
 @SuppressWarnings("unused")
-public class ScreenManagerImpl {
+@Environment(EnvType.CLIENT)
+public class ScreenImpl {
 
     public static CGRect nativeBounds() {
         Window w = Minecraft.getInstance().getWindow();

@@ -31,6 +31,7 @@ import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -40,7 +41,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class SkinFileList extends UIControl implements UITableViewDataSource, UITableViewDelegate {
@@ -213,8 +213,8 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
 
         @Override
         public void render(CGPoint point, CGGraphicsContext context) {
-            int left = 0;
-            int top = 0;
+            float left = 0;
+            float top = 0;
             float width = bounds().getWidth();
             float height = bounds().getHeight();
 
@@ -246,7 +246,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             renderIcon(context, left, top - 1, 16, 16);
         }
 
-        public void renderIcon(CGGraphicsContext context, int x, int y, int width, int height) {
+        public void renderIcon(CGGraphicsContext context, float x, float y, float width, float height) {
             if (entry.isDirectory()) {
                 int u = entry.isPrivateDirectory() ? 32 : 16;
                 context.drawImage(ModTextures.LIST, x + (width - 12) / 2f, y + (height - 12) / 2f - 1, 12, 12, u, 0, 256, 256);
@@ -271,20 +271,18 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             }
             CGRect bounds = window.bounds();
             CGPoint point = convertPointToView(CGPoint.ZERO, null);
-            int size = 144;
+            float size = 144;
             float dx = point.x - size - 5;
             float dy = MathUtils.clamp(context.state().mouseY() - size / 2f, 0, bounds.height - size);
             context.drawTilableImage(ModTextures.GUI_PREVIEW, dx, dy, size, size, 0, 0, 62, 62, 4, 4, 4, 4);
 
             UIFont font = new UIFont(context.state().font(), 7);
             PoseStack poseStack = context.state().ctm();
-            List<NSString> tooltips = ItemTooltipManager.createSkinInfo(bakedSkin).stream().map(NSString::new).collect(Collectors.toList());
+            List<NSString> tooltips = ObjectUtils.map(ItemTooltipManager.createSkinInfo(bakedSkin), NSString::new);
             context.drawMultilineText(tooltips, dx + 4, dy + 4, size - 8, 0xffffffff, true, font, 0);
 
-            int tx = (int) dx;
-            int ty = (int) dy;
             MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            ExtendedItemRenderer.renderSkinInBox(bakedSkin, tx, ty, 100, size, size, 30, 45, 0, poseStack, buffers);
+            ExtendedItemRenderer.renderSkinInBox(bakedSkin, dx, dy, 100, size, size, 30, 45, 0, poseStack, buffers);
             buffers.endBatch();
         }
 

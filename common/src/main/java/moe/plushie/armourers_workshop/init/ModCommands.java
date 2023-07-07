@@ -14,6 +14,7 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
+import moe.plushie.armourers_workshop.core.data.UserNotifications;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.slot.ItemOverrideType;
@@ -37,6 +38,7 @@ import moe.plushie.armourers_workshop.init.platform.RegistryManager;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
@@ -55,10 +57,8 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.List;
 
 public class ModCommands {
 
@@ -73,15 +73,15 @@ public class ModCommands {
     });
 
     private static final DynamicCommandExceptionType ERROR_MISSING_DYE_SLOT = new DynamicCommandExceptionType(ob -> {
-        return TranslateUtils.title("commands.armourers_workshop.armourers.error.missingSkin", ob);
+        return Component.translatable("commands.armourers_workshop.armourers.error.missingSkin", ob);
     });
 
     private static final DynamicCommandExceptionType ERROR_MISSING_SKIN = new DynamicCommandExceptionType(ob -> {
-        return TranslateUtils.title("commands.armourers_workshop.armourers.error.missingSkin", ob);
+        return Component.translatable("commands.armourers_workshop.armourers.error.missingSkin", ob);
     });
 
     private static final DynamicCommandExceptionType ERROR_MISSING_ITEM_STACK = new DynamicCommandExceptionType(ob -> {
-        return TranslateUtils.title("commands.armourers_workshop.armourers.error.missingItemSkinnable", ob);
+        return Component.translatable("commands.armourers_workshop.armourers.error.missingItemSkinnable", ob);
     });
 
     public static void init(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -103,16 +103,16 @@ public class ModCommands {
                 .then(Commands.literal("rsyncWardrobe").then(players().executes(Executor::resyncWardrobe)))
                 .then(Commands.literal("openWardrobe").then(entities().executes(Executor::openWardrobe)))
                 .then(Commands.literal("itemSkinnable").then(addOrRemote().then(overrideTypes().executes(Executor::setItemSkinnable))))
-                .then(Commands.literal("notify").then(alertNotify()).then(toastNotify()))
+                .then(Commands.literal("notify").then(Commands.literal("alert").then(alertNotifyArgs())).then(Commands.literal("toast").then(toastNotifyArgs())))
                 .then(Commands.literal("setUnlockedSlots").then(entities().then(resizableSlotNames().then(resizableSlotAmounts().executes(Executor::setUnlockedWardrobeSlots)))));
     }
 
-    public static LiteralArgumentBuilder<CommandSourceStack> alertNotify() {
-        return Commands.literal("alert").then(players().then(textInput("message").then(textInput("title").then(textInput("confirm").executes(Executor::sendAlertNotify)).executes(Executor::sendAlertNotify)).executes(Executor::sendAlertNotify)));
+    public static ArgumentBuilder<CommandSourceStack, ?> alertNotifyArgs() {
+        return players().then(textInput("message").then(textInput("title").then(textInput("confirm").executes(Executor::sendAlertNotify)).executes(Executor::sendAlertNotify)).executes(Executor::sendAlertNotify));
     }
 
-    public static LiteralArgumentBuilder<CommandSourceStack> toastNotify() {
-        return Commands.literal("toast").then(players().then(textInput("message").then(textInput("title").then(nbtInput("icon").executes(Executor::sendToastNotify)).executes(Executor::sendToastNotify)).executes(Executor::sendToastNotify)));
+    public static ArgumentBuilder<CommandSourceStack, ?> toastNotifyArgs() {
+        return players().then(textInput("message").then(textInput("title").then(nbtInput("icon").executes(Executor::sendToastNotify)).executes(Executor::sendToastNotify)).executes(Executor::sendToastNotify));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> players() {
@@ -164,16 +164,20 @@ public class ModCommands {
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> resizableSlotNames() {
-        Stream<SkinSlotType> slotTypes = Arrays.stream(SkinSlotType.values()).filter(SkinSlotType::isResizable);
-        return Commands.argument("slot_name", new ListArgumentType(slotTypes.map(SkinSlotType::getName).collect(Collectors.toList())));
+        return Commands.argument("slot_name", new ListArgumentType(ObjectUtils.compactMap(SkinSlotType.values(), slotType -> {
+            if (slotType.isResizable()) {
+                return slotType.getName();
+            }
+            return null;
+        })));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> slotNames() {
-        return Commands.argument("slot_name", new ListArgumentType(Arrays.stream(SkinSlotType.values()).map(SkinSlotType::getName).collect(Collectors.toList())));
+        return Commands.argument("slot_name", new ListArgumentType(ObjectUtils.map(SkinSlotType.values(), SkinSlotType::getName)));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> overrideTypes() {
-        return Commands.argument("skin_type", new ListArgumentType(Arrays.stream(ItemOverrideType.values()).map(ItemOverrideType::getName).collect(Collectors.toList())));
+        return Commands.argument("skin_type", new ListArgumentType(ObjectUtils.map(ItemOverrideType.values(), ItemOverrideType::getName)));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> skins() {
@@ -309,13 +313,18 @@ public class ModCommands {
                 throw ERROR_MISSING_SKIN.create(identifier);
             }
             float resolvedScale = scale;
-            player.sendSystemMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.processing", filename));
+            CompoundTag tag = new CompoundTag();
+            tag.putString("Skin", identifier);
+            player.sendSystemMessage(Component.translatable("commands.armourers_workshop.armourers.exportSkin.processing", filename));
+            UserNotifications.sendSystemToast(Component.translatable("commands.armourers_workshop.notify.exportSkin.processing"), tag, player);
             Util.backgroundExecutor().execute(() -> {
                 try {
                     SkinExportManager.exportSkin(skin, format, filename, resolvedScale);
-                    player.sendSystemMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.success", filename));
+                    player.sendSystemMessage(Component.translatable("commands.armourers_workshop.armourers.exportSkin.success", filename));
+                    UserNotifications.sendSystemToast(Component.translatable("commands.armourers_workshop.notify.exportSkin.success"), tag, player);
                 } catch (Exception e) {
-                    player.sendSystemMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.failure", filename));
+                    player.sendSystemMessage(Component.translatable("commands.armourers_workshop.armourers.exportSkin.failure", filename));
+                    UserNotifications.sendSystemToast(Component.translatable("commands.armourers_workshop.notify.exportSkin.failure"), tag, player);
                     e.printStackTrace();
                 }
             });
@@ -349,7 +358,7 @@ public class ModCommands {
             // notify the user of what happened
             String messageKey = "commands.armourers_workshop.armourers.setItemSkinnable." + operator;
             Component overrideTypeName = TranslateUtils.Name.of(overrideType);
-            player.sendSystemMessage(TranslateUtils.title(messageKey, itemStack.getDisplayName(), overrideTypeName));
+            player.sendSystemMessage(Component.translatable(messageKey, itemStack.getDisplayName(), overrideTypeName));
             return 1;
         }
 
@@ -386,8 +395,8 @@ public class ModCommands {
         static int sendUserNotify(CommandContext<CommandSourceStack> context, int type) throws CommandSyntaxException {
             // read context from command
             Component message1 = ComponentArgumentType.getComponent(context, "message");
-            Component title1 = TranslateUtils.title("commands.armourers_workshop.notify.title");
-            Component confirm1 = TranslateUtils.title("commands.armourers_workshop.notify.confirm");
+            Component title1 = Component.translatable("commands.armourers_workshop.notify.title");
+            Component confirm1 = Component.translatable("commands.armourers_workshop.notify.confirm");
             CompoundTag icon1 = null;
             if (containsNode(context, "title")) {
                 title1 = ComponentArgumentType.getComponent(context, "title");

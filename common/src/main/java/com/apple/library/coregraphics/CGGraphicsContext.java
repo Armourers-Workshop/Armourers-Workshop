@@ -3,6 +3,7 @@ package com.apple.library.coregraphics;
 import com.apple.library.foundation.NSString;
 import com.apple.library.impl.AppearanceImpl;
 import com.apple.library.impl.GraphicsContextImpl;
+import com.apple.library.impl.ObjectUtilsImpl;
 import com.apple.library.impl.TooltipRenderer;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIFont;
@@ -10,15 +11,11 @@ import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-@Environment(EnvType.CLIENT)
 public class CGGraphicsContext implements GraphicsContextImpl {
 
     private final CGGraphicsState state;
@@ -91,12 +88,12 @@ public class CGGraphicsContext implements GraphicsContextImpl {
         if (tooltip == null) {
             return;
         }
-        NSString text = ObjectUtils.safeCast(tooltip, NSString.class);
+        NSString text = ObjectUtilsImpl.safeCast(tooltip, NSString.class);
         if (text != null) {
             renderer.renderTooltip(text, rect, null, this);
             return;
         }
-        TooltipRenderer view = ObjectUtils.safeCast(tooltip, TooltipRenderer.class);
+        TooltipRenderer view = ObjectUtilsImpl.safeCast(tooltip, TooltipRenderer.class);
         if (view != null) {
             view.render(rect, this);
             return;
@@ -171,6 +168,10 @@ public class CGGraphicsContext implements GraphicsContextImpl {
 
     public void rotateCTM(float x, float y, float z) {
         state.rotate(x, y, z);
+    }
+
+    public void concatenateCTM(CGAffineTransform transform) {
+        state.concatenate(transform);
     }
 
     public void restoreGraphicsState() {

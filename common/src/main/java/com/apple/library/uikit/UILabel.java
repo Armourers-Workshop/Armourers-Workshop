@@ -6,12 +6,12 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.impl.DelegateImpl;
+import com.apple.library.impl.ObjectUtilsImpl;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class UILabel extends UIView {
 
@@ -210,7 +210,7 @@ public class UILabel extends UIView {
             lines.removeLast();
         }
         // transform the char sequence to text line.
-        cachedTextLines = lines.stream().map(text -> new TextLine(text, font)).collect(Collectors.toList());
+        cachedTextLines = ObjectUtilsImpl.map(lines, text -> new TextLine(text, font));
         cachedTextWidth = width;
 
         int textHeight = 0;
