@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
-import moe.plushie.armourers_workshop.core.network.UpdateContextPacket;
+import moe.plushie.armourers_workshop.init.network.UpdateContextPacket;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.data.SkinServerType;
 import moe.plushie.armourers_workshop.init.ModCommands;

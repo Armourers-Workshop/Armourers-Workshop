@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.compatibility.client.gui;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGGraphicsRenderer;
 import com.apple.library.coregraphics.CGGraphicsState;
+import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIFont;
@@ -31,8 +32,7 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     private static final MultiBufferSource.BufferSource SHARED_BUFFERS = MultiBufferSource.immediate(new BufferBuilder(256));
 
     private final PoseStack poseStack;
-    private final float mouseX;
-    private final float mouseY;
+    private final CGPoint mousePos;
     private final float partialTicks;
 
     private final AbstractMenuScreenImpl<?> screen;
@@ -43,8 +43,7 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
         this.screen = screen;
         this.font = font;
         this.poseStack = poseStack;
-        this.mouseX = mouseX;
-        this.mouseY = mouseY;
+        this.mousePos = new CGPoint(mouseX, mouseY);
         this.partialTicks = partialTicks;
     }
 
@@ -67,7 +66,7 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
         // and while we can't decide on the final tooltip size,
         // but we can to handle the break the newline
         List<? extends FormattedCharSequence> texts = font.impl().split(text.component(), 100000);
-        screen._renderTooltip(poseStack, texts, (int) mouseX, (int) mouseY);
+        screen._renderTooltip(poseStack, texts, (int) mousePos.getX(), (int) mousePos.getY());
     }
 
     @Override
@@ -97,13 +96,8 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     }
 
     @Override
-    public float mouseX() {
-        return mouseX;
-    }
-
-    @Override
-    public float mouseY() {
-        return mouseY;
+    public CGPoint mousePos() {
+        return mousePos;
     }
 
     @Override

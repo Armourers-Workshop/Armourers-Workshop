@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.function.BiConsumer;
 
+@SuppressWarnings("unused")
 public class UITableView extends UIScrollView {
 
     private int rowHeight = 24;

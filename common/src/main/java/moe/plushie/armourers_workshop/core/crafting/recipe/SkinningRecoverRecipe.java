@@ -72,7 +72,7 @@ public class SkinningRecoverRecipe extends SkinningRecipe {
 
     @Override
     protected boolean isValidTarget(ItemStack itemStack) {
-        return itemStack.getItem() == ModItems.SKIN_TEMPLATE.get();
+        return itemStack.is(ModItems.SKIN_TEMPLATE.get());
     }
 
     protected boolean isValidSkin(ItemStack itemStack) {

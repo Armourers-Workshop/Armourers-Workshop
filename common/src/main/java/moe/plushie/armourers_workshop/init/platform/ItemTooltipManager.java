@@ -34,6 +34,8 @@ import org.apache.logging.log4j.util.Strings;
 import java.util.ArrayList;
 import java.util.List;
 
+import manifold.ext.rt.api.auto;
+
 @Environment(EnvType.CLIENT)
 public class ItemTooltipManager {
 
@@ -51,7 +53,7 @@ public class ItemTooltipManager {
     }
 
     public static ArrayList<Component> createSkinTooltip(ItemStack itemStack) {
-        boolean isItemOwner = itemStack.getItem() == ModItems.SKIN.get();
+        boolean isItemOwner = itemStack.is(ModItems.SKIN.get());
         ArrayList<Component> tooltip = new ArrayList<>();
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
@@ -175,7 +177,7 @@ public class ItemTooltipManager {
         if (ModConfig.Client.skinPreLocFollowMouse) {
             dx = frame.getX() - 28 - size;
             dy = frame.getY() - 4;
-            if (frame.getX() < context.state().mouseX()) {
+            if (frame.getX() < context.state().mousePos().getX()) {
                 dx = frame.getX() + frame.getWidth() + 28;
             }
             dy = MathUtils.clamp(dy, 0, screenHeight - size);
@@ -187,7 +189,7 @@ public class ItemTooltipManager {
             context.drawTilableImage(ModTextures.GUI_PREVIEW, dx, dy, size, size, 0, 0, 62, 62, 4, 4, 4, 4, 400);
         }
         ColorScheme colorScheme = descriptor.getColorScheme();
-        MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+        auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         ExtendedItemRenderer.renderSkinInBox(bakedSkin, colorScheme, itemStack, dx, dy, 500, size, size, 30, 45, 0, 0, 0xf000f0, context.state().ctm(), buffers);
         buffers.endBatch();
     }

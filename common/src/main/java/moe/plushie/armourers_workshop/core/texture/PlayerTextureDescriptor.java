@@ -59,7 +59,7 @@ public class PlayerTextureDescriptor {
     }
 
     public static PlayerTextureDescriptor of(ItemStack itemStack) {
-        if (itemStack.getItem() != ModItems.MANNEQUIN.get()) {
+        if (!itemStack.is(ModItems.MANNEQUIN.get())) {
             return EMPTY;
         }
         CompoundTag entityTag = itemStack.getTagElement(Constants.Key.ENTITY);

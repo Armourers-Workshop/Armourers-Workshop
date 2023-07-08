@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderObject;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderState;
 import moe.plushie.armourers_workshop.core.client.other.VertexArrayBuffer;
@@ -16,7 +15,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 import org.lwjgl.opengl.GL11;
 
-import java.util.List;
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public abstract class Shader {
@@ -137,9 +136,9 @@ public abstract class Shader {
 
     private void setupVertexFormat(VertexFormat format, int offset) {
         int strict = format.getVertexSize();
-        List<VertexFormatElement> elements = format.getElements();
+        auto elements = format.getElements();
         for (int index = 0; index < elements.size(); ++index) {
-            VertexFormatElement element = elements.get(index);
+            auto element = elements.get(index);
             element.setupBufferState(index, offset, strict);
             offset += element.getByteSize();
         }

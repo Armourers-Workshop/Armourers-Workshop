@@ -14,7 +14,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.AABB;
+
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class MannequinEntityRenderer<T extends MannequinEntity> extends AbstractLivingEntityRenderer<T, MannequinModel<T>> {
@@ -58,7 +59,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
             this.getChildRenderer().render(entity, f, partialTicks, poseStack, buffers, packedLightIn);
             return;
         }
-        PlayerTextureLoader textureLoader = PlayerTextureLoader.getInstance();
+        auto textureLoader = PlayerTextureLoader.getInstance();
         this.texture = textureLoader.getTextureLocation(entity);
         this.bakedTexture = textureLoader.getTextureModel(texture);
         this.setModel(getModel());
@@ -68,7 +69,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
         this.enableChildRenderer = false;
         if (ModDebugger.mannequinCulling) {
             poseStack.pushPose();
-            AABB box = entity.getBoundingBoxForCulling();
+            auto box = entity.getBoundingBoxForCulling();
             double tx = -box.minX - (box.maxX - box.minX) / 2;
             double ty = -box.minY;
             double tz = -box.minZ - (box.maxZ - box.minZ) / 2;

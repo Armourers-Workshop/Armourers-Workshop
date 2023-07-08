@@ -75,8 +75,8 @@ public class WindowManagerImpl {
 
     public void render(CGGraphicsContext context, RenderInvoker foreground, RenderInvoker background, RenderInvoker overlay) {
         float partialTicks = context.state().partialTicks();
-        int mouseX = (int) context.state().mouseX();
-        int mouseY = (int) context.state().mouseY();
+        int mouseX = (int) context.state().mousePos().getX();
+        int mouseY = (int) context.state().mousePos().getY();
         // we need to display a custom tooltip, so must cancel the original tooltip render,
         // we need reset mouse to impossible position to fool the original tooltip render.
         UIView tooltipResponder = firstTooltipResponder();
@@ -97,8 +97,8 @@ public class WindowManagerImpl {
                 renderTooltip(tooltipResponder, context);
             }
         }
-        lastMouseX = context.state().mouseX();
-        lastMouseY = context.state().mouseY();
+        lastMouseX = context.state().mousePos().getX();
+        lastMouseY = context.state().mousePos().getY();
     }
 
     private void renderTooltip(UIView tooltipResponder, CGGraphicsContext context) {

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.compatibility.client.gui;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGGraphicsRenderer;
 import com.apple.library.coregraphics.CGGraphicsState;
+import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIFont;
@@ -15,20 +16,18 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import manifold.ext.rt.api.auto;
 
 @Available("[1.20, )")
 @Environment(EnvType.CLIENT)
 public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsState {
 
     private final GuiGraphics graphics;
-    private final int mouseX;
-    private final int mouseY;
+    private final CGPoint mousePos;
     private final float partialTicks;
 
     private final Font font;
@@ -37,8 +36,7 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     public AbstractGraphicsRenderer(Font font, GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         this.font = font;
         this.graphics = graphics;
-        this.mouseX = mouseX;
-        this.mouseY = mouseY;
+        this.mousePos = new CGPoint(mouseX, mouseY);
         this.partialTicks = partialTicks;
     }
 
@@ -60,9 +58,9 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
         // there are some versions of tooltip that don't split normally,
         // and while we can't decide on the final tooltip size,
         // but we can to handle the break the newline
-        Font font1 = font.impl();
-        List<? extends FormattedCharSequence> texts = font1.split(text.component(), 100000);
-        graphics.renderTooltip(font1, texts, mouseX, mouseY);
+        auto font1 = font.impl();
+        auto texts = font1.split(text.component(), 100000);
+        graphics.renderTooltip(font1, texts, (int) mousePos.getX(), (int) mousePos.getY());
     }
 
     @Override
@@ -81,13 +79,8 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     }
 
     @Override
-    public float mouseX() {
-        return mouseX;
-    }
-
-    @Override
-    public float mouseY() {
-        return mouseY;
+    public CGPoint mousePos() {
+        return mousePos;
     }
 
     @Override

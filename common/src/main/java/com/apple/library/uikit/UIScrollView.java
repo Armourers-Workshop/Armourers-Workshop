@@ -7,6 +7,7 @@ import com.apple.library.impl.DelegateImpl;
 
 import java.util.function.BiFunction;
 
+@SuppressWarnings("unused")
 public class UIScrollView extends UIView {
 
     protected CGPoint contentOffset = CGPoint.ZERO;

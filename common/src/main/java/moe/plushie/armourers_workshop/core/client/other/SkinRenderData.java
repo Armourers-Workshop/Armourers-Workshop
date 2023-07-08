@@ -41,6 +41,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 
+import manifold.ext.rt.api.auto;
+
 @Environment(EnvType.CLIENT)
 public class SkinRenderData implements SkinBakery.IBakeListener {
 
@@ -250,7 +252,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         if (descriptor.isEmpty()) {
             return;
         }
-        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
+        auto bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
         if (bakedSkin == null) {
             missingSkins.add(descriptor.getIdentifier());
             return;
@@ -285,7 +287,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
     private SkinDescriptor getEmbeddedSkin(ItemStack itemStack, boolean replaceSkinItem) {
         // for skin item, we don't consider it an embedded skin.
-        if (!replaceSkinItem && itemStack.getItem() == ModItems.SKIN.get()) {
+        if (!replaceSkinItem && itemStack.is(ModItems.SKIN.get())) {
             return SkinDescriptor.EMPTY;
         }
         return SkinDescriptor.of(itemStack);

@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractItemStackRenderer;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -16,13 +15,11 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
+
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class SkinItemRenderer extends AbstractItemStackRenderer {
@@ -44,13 +41,13 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
         if (itemStack.isEmpty()) {
             return;
         }
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
+        auto descriptor = SkinDescriptor.of(itemStack);
+        auto bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
         if (bakedSkin == null) {
             return;
         }
-        BakedModel bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
-        ItemTransform transform = bakedModel.getTransforms().getTransform(ItemTransforms.ofType(transformType));
+        auto bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
+        auto transform = bakedModel.getTransforms().getTransform(ItemTransforms.ofType(transformType));
 
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f); // reset to center
@@ -64,7 +61,7 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
     }
 
     public MannequinEntity getMannequinEntity() {
-        ClientLevel level = Minecraft.getInstance().level;
+        auto level = Minecraft.getInstance().level;
         if (entity == null) {
             entity = new MannequinEntity(ModEntityTypes.MANNEQUIN.get().get(), level);
             entity.setId(MannequinEntity.PLACEHOLDER_ENTITY_ID);
@@ -77,7 +74,7 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
     }
 
     public MannequinModel<?> getMannequinModel() {
-        MannequinEntity entity = getMannequinEntity();
+        auto entity = getMannequinEntity();
         if (model == null && entity != null) {
             model = new MannequinModel<>();
             model.young = false;
@@ -91,7 +88,7 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
 
     public ItemStack getPlayerMannequinItem() {
         if (playerMannequinItem == null) {
-            LocalPlayer player = Minecraft.getInstance().player;
+            auto player = Minecraft.getInstance().player;
             if (player == null) {
                 return ItemStack.EMPTY;
             }

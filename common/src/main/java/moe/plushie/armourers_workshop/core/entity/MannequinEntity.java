@@ -230,10 +230,10 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
             return InteractionResult.PASS;
         }
         ItemStack itemStack = player.getItemInHand(hand);
-        if (itemStack.getItem() == ModItems.MANNEQUIN_TOOL.get()) {
+        if (itemStack.is(ModItems.MANNEQUIN_TOOL.get())) {
             return InteractionResult.PASS;
         }
-        if (itemStack.getItem() == Items.NAME_TAG) {
+        if (itemStack.is(Items.NAME_TAG)) {
             Component customName = null;
             if (itemStack.hasCustomHoverName() && !player.isShiftKeyDown()) {
                 customName = itemStack.getHoverName();

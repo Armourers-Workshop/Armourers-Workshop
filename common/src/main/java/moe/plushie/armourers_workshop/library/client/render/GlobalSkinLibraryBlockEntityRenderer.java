@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.library.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.library.block.GlobalSkinLibraryBlock;
@@ -14,6 +13,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends AbstractBlockEntityRenderer<T> {
@@ -49,7 +50,7 @@ public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends
             poseStack.mulPose(new OpenQuaternionf(angle * 4, angle, angle * 2, true));
         }
 
-        VertexConsumer builder = buffers.getBuffer(SkinRenderType.IMAGE_EARTH);
+        auto builder = buffers.getBuffer(SkinRenderType.IMAGE_EARTH);
         model.render(poseStack, builder, light, overlay, 1.0f, 1.0f, 1.0f, 0.5f);
 
         poseStack.popPose();

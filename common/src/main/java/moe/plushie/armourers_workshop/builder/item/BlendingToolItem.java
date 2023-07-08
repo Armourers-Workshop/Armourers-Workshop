@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.builder.other.CubeApplier;
 import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
 import moe.plushie.armourers_workshop.builder.other.CubeSelector;
-import moe.plushie.armourers_workshop.builder.other.CubeWrapper;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.ModSounds;
@@ -26,6 +25,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+
+import manifold.ext.rt.api.auto;
 
 public class BlendingToolItem extends AbstractColoredToolItem implements IBlockPaintViewer {
 
@@ -76,7 +77,7 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
         ArrayList<Integer> colors = new ArrayList<>();
         CubeApplier applier = new CubeApplier(context.getLevel());
         createColorApplierSelector(radiusSample, context).forEach(context, (targetPos, dir) -> {
-            CubeWrapper wrapper = applier.wrap(targetPos);
+            auto wrapper = applier.wrap(targetPos);
             if (wrapper.shouldChangeColor(dir)) {
                 IPaintColor paintColor = wrapper.getColor(dir);
                 if (paintColor != null) {

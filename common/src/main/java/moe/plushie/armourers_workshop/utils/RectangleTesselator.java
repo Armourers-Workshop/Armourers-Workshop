@@ -11,9 +11,10 @@ import net.minecraft.client.renderer.RenderType;
 @Environment(EnvType.CLIENT)
 public class RectangleTesselator {
 
-    private final PoseStack.Pose pose;
     private final MultiBufferSource bufferSource;
     private final CGGraphicsState state;
+
+    private final PoseStack.Pose pose;
 
     private float uScale;
     private float vScale;

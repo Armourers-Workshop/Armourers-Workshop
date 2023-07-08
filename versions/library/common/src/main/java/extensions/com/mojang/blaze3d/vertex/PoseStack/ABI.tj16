@@ -4,14 +4,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.This;
-import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+import manifold.ext.rt.api.ThisClass;
 
 @Available("[1.16, 1.20)")
 @Extension
@@ -50,19 +51,11 @@ public class ABI {
     }
 
     public static void mulPoseMatrix(@This PoseStack poseStack, IMatrix4f matrix) {
-        poseStack.mulPoseMatrix(PoseStack.convertMatrix(matrix));
-    }
-
-    public static void mulPoseMatrix(@This PoseStack poseStack, Matrix4f matrix) {
-        poseStack.last().pose().multiply(matrix);
+        poseStack.lastPose().multiply(matrix);
     }
 
     public static void mulNormalMatrix(@This PoseStack poseStack, IMatrix3f matrix) {
-        poseStack.mulNormalMatrix(PoseStack.convertMatrix(matrix));
-    }
-
-    public static void mulNormalMatrix(@This PoseStack poseStack, Matrix3f matrix) {
-        poseStack.last().normal().mul(matrix);
+        poseStack.lastNormal().multiply(matrix);
     }
 
     public static IMatrix4f lastPose(@This PoseStack poseStack) {

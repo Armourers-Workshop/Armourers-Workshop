@@ -44,6 +44,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import manifold.ext.rt.api.auto;
+
 /**
  * Helper class for converting back and forth from
  * in world blocks to skin classes.
@@ -259,8 +261,8 @@ public final class WorldUtils {
             shiftX = cubePos.getX();
         }
 
-        BlockPos target = transform.mul(shiftX + origin.getX(), origin.getY() - shiftY, shiftZ + origin.getZ());
-        CubeWrapper wrapper = applier.wrap(target);
+        auto target = transform.mul(shiftX + origin.getX(), origin.getY() - shiftY, shiftZ + origin.getZ());
+        auto wrapper = applier.wrap(target);
 
         if (wrapper.is(ModBlocks.BOUNDING_BOX.get())) {
             wrapper.setBlockState(Blocks.AIR.defaultBlockState(), (CompoundTag) null);
@@ -323,7 +325,7 @@ public final class WorldUtils {
     }
 
     public static void replaceCube(CubeApplier applier, BlockPos pos, CubeReplacingEvent event) {
-        CubeWrapper wrapper = applier.wrap(pos);
+        auto wrapper = applier.wrap(pos);
         if (event.accept(wrapper)) {
             event.apply(wrapper);
         }
@@ -363,9 +365,8 @@ public final class WorldUtils {
     private static int clearMarkersForSkinPart(CubeApplier applier, CubeTransform transform, ISkinPartType skinPart) {
         int blockCount = 0;
         for (Vector3i offset : getResolvedBuildingSpace2(skinPart)) {
-            BlockPos target = transform.mul(offset);
-            CubeWrapper wrapper = applier.wrap(target);
-            BlockState targetState = wrapper.getBlockState();
+            auto wrapper = applier.wrap(transform.mul(offset));
+            auto targetState = wrapper.getBlockState();
             if (targetState.hasProperty(SkinCubeBlock.MARKER) && SkinCubeBlock.getMarker(targetState) != OptionalDirection.NONE) {
                 wrapper.setBlockState(SkinCubeBlock.setMarker(targetState, OptionalDirection.NONE));
                 blockCount++;
@@ -400,8 +401,7 @@ public final class WorldUtils {
     private static int clearEquipmentCubesForSkinPart(CubeApplier applier, CubeTransform transform, ISkinPartType skinPart) {
         int blockCount = 0;
         for (Vector3i offset : getResolvedBuildingSpace2(skinPart)) {
-            BlockPos target = transform.mul(offset);
-            CubeWrapper wrapper = applier.wrap(target);
+            auto wrapper = applier.wrap(transform.mul(offset));
             if (wrapper.is(SkinCubeBlock.class)) {
                 wrapper.setBlockState(Blocks.AIR.defaultBlockState(), (CompoundTag) null);
                 blockCount++;

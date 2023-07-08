@@ -46,6 +46,8 @@ import org.apache.logging.log4j.util.Strings;
 import java.io.File;
 import java.util.function.BiConsumer;
 
+import manifold.ext.rt.api.auto;
+
 @Environment(EnvType.CLIENT)
 public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 
@@ -194,7 +196,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
             float ty = rect.y;
             float tw = rect.width;
             float th = rect.height;
-            MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+            auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
             ExtendedItemRenderer.renderSkinInBox(bakedSkin, tx, ty, 100, tw, th, 20, 45, 0, context.state().ctm(), buffers);
             buffers.endBatch();
         }

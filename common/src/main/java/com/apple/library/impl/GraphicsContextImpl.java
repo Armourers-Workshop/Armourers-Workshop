@@ -5,7 +5,6 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIFont;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.RectangleTesselator;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -19,6 +18,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+
+import manifold.ext.rt.api.auto;
 
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
@@ -49,8 +50,8 @@ public interface GraphicsContextImpl {
         poseStack.translate(x, y, zLevel);
         poseStack.scale(scale, scale, scale);
 
-        PoseStack.Pose pose = poseStack.last();
-        MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+        auto pose = poseStack.last().pose();
+        auto buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
         Font renderer = font.impl();
 
         int dx = 0, dy = 0;
@@ -122,7 +123,7 @@ public interface GraphicsContextImpl {
 
     default void drawTilableImage(ResourceLocation rl, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight, float topBorder, float bottomBorder, float leftBorder, float rightBorder, float zLevel) {
         RenderSystem.setShaderTexture(0, rl);
-        RectangleTesselator tesselator = new RectangleTesselator(state());
+        auto tesselator = new RectangleTesselator(state());
         tesselator.begin(SkinRenderType.GUI_IMAGE, texWidth, texHeight);
 
         float x0 = x + 0;
@@ -167,13 +168,13 @@ public interface GraphicsContextImpl {
         int r2 = color2 >> 16 & 0xff;
         int g2 = color2 >> 8 & 0xff;
         int b2 = color2 & 0xff;
-        CGGraphicsState state = state();
-        PoseStack.Pose pose = state.ctm().last();
-        VertexConsumer buffer = state.buffers().getBuffer(SkinRenderType.GUI_COLOR);
-        buffer.vertex(pose.pose(), minX, minY, zLevel).color(r1, g1, b1, a1).endVertex();
-        buffer.vertex(pose.pose(), minX, maxY, zLevel).color(r2, g2, b2, a2).endVertex();
-        buffer.vertex(pose.pose(), maxX, maxY, zLevel).color(r2, g2, b2, a2).endVertex();
-        buffer.vertex(pose.pose(), maxX, minY, zLevel).color(r1, g1, b1, a1).endVertex();
+        auto state = state();
+        auto pose = state.ctm().last().pose();
+        auto buffer = state.buffers().getBuffer(SkinRenderType.GUI_COLOR);
+        buffer.vertex(pose, minX, minY, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, minX, maxY, zLevel).color(r2, g2, b2, a2).endVertex();
+        buffer.vertex(pose, maxX, maxY, zLevel).color(r2, g2, b2, a2).endVertex();
+        buffer.vertex(pose, maxX, minY, zLevel).color(r1, g1, b1, a1).endVertex();
         state.flush();
     }
 }

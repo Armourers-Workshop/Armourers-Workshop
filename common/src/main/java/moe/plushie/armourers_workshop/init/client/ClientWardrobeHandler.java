@@ -189,7 +189,7 @@ public class ClientWardrobeHandler {
         }
         // when the item is a skin item itself,
         // we easily get a conclusion to no needs embedded skin
-        if (itemStack.getItem() == ModItems.SKIN.get()) {
+        if (itemStack.is(ModItems.SKIN.get())) {
             return null;
         }
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
@@ -331,7 +331,11 @@ public class ClientWardrobeHandler {
         }
         IModelHolder<Model> modelHolder = ModelHolder.ofNullable(model);
         for (SkinRenderData.Entry entry : provider.get()) {
-            context.setReference(entry.getSlotIndex(), entry.getItemStack());
+            ItemStack itemStack = context.getReference();
+            if (itemStack.isEmpty()) {
+                itemStack = entry.getItemStack();
+            }
+            context.setReference(entry.getSlotIndex(), itemStack);
             context.setTransforms(entity, renderer.getOverrideModel(modelHolder));
             r += renderer.render(entity, modelHolder, entry.getBakedSkin(), entry.getBakedScheme(), context);
         }

@@ -17,9 +17,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
+
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public final class ExtendedItemRenderer {
@@ -94,7 +95,7 @@ public final class ExtendedItemRenderer {
         poseStack.scale(newScale, newScale, newScale);
         poseStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
 
-        EntityRenderDispatcher rendererManager = Minecraft.getInstance().getEntityRenderDispatcher();
+        auto rendererManager = Minecraft.getInstance().getEntityRenderDispatcher();
         RenderSystem.runAsFancy(() -> rendererManager.render(entity, 0.0d, 0.0d, 0.0d, 0.0f, 1.0f, poseStack, buffers, light));
 
         poseStack.popPose();

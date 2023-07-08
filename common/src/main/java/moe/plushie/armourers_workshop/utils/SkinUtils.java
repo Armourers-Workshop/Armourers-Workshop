@@ -15,7 +15,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrownTrident;
+import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -225,7 +227,7 @@ public final class SkinUtils {
     public static ItemStack getSkin(Entity entity, SkinSlotType slotType, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
         if (entity instanceof LivingEntity) {
-            itemStack = ((LivingEntity) entity).getUseItem();
+            itemStack = getUsingItem((LivingEntity) entity);
         }
         // embedded skin is the highest priority
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
@@ -239,6 +241,18 @@ public final class SkinUtils {
             if (Objects.equals(slotType.getSkinType(), descriptor.getType())) {
                 return itemStack1;
             }
+        }
+        return ItemStack.EMPTY;
+    }
+
+    private static ItemStack getUsingItem(LivingEntity entity) {
+        ItemStack itemStack = entity.getUseItem();
+        if (!itemStack.isEmpty()) {
+            return itemStack;
+        }
+        itemStack = entity.getMainHandItem();
+        if (itemStack.is(Items.CROSSBOW) && CrossbowItem.isCharged(itemStack)) {
+            return itemStack;
         }
         return ItemStack.EMPTY;
     }

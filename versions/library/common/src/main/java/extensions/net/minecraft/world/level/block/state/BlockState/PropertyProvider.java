@@ -1,9 +1,10 @@
 package extensions.net.minecraft.world.level.block.state.BlockState;
 
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.This;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import net.minecraft.world.level.block.state.BlockState;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
 
 @Extension
 @Available("[1.20, )")

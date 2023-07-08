@@ -49,8 +49,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-;
-
 @Environment(EnvType.CLIENT)
 public class BakedSkin implements IBakedSkin {
 

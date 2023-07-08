@@ -160,7 +160,7 @@ public class UpdateWardrobePacket extends CustomPacket {
                 if (itemStack.isEmpty()) {
                     return true;
                 }
-                return itemStack.getItem() == ModItems.BOTTLE.get();
+                return itemStack.is(ModItems.BOTTLE.get());
             }
             case SYNC_OPTION: {
                 return true;

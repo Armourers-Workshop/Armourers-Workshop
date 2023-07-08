@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.compatibility.AbstractRenderLayer;
@@ -22,6 +21,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.Entity;
+
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M extends IModelHolder<V>> extends AbstractRenderLayer<T, V> {
@@ -92,12 +93,12 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         float rotation = (float) (ticks / 0.8D % 360D) + partialTickTime;
         poseStack.mulPose(Vector3f.YP.rotationDegrees(rotation));
         poseStack.scale(circleScale, circleScale, circleScale);
-        PoseStack.Pose pose = poseStack.last();
-        VertexConsumer builder = buffers.getBuffer(SkinRenderType.IMAGE_MAGIC);
-        builder.vertex(pose.pose(), -1, 0, -1).color(red, green, blue, 0xff).uv(1, 0).overlayCoords(overlay).uv2(lightmap).endVertex();
-        builder.vertex(pose.pose(), 1, 0, -1).color(red, green, blue, 0xff).uv(0, 0).overlayCoords(overlay).uv2(lightmap).endVertex();
-        builder.vertex(pose.pose(), 1, 0, 1).color(red, green, blue, 0xff).uv(0, 1).overlayCoords(overlay).uv2(lightmap).endVertex();
-        builder.vertex(pose.pose(), -1, 0, 1).color(red, green, blue, 0xff).uv(1, 1).overlayCoords(overlay).uv2(lightmap).endVertex();
+        auto pose = poseStack.last().pose();
+        auto builder = buffers.getBuffer(SkinRenderType.IMAGE_MAGIC);
+        builder.vertex(pose, -1, 0, -1).color(red, green, blue, 0xff).uv(1, 0).overlayCoords(overlay).uv2(lightmap).endVertex();
+        builder.vertex(pose, 1, 0, -1).color(red, green, blue, 0xff).uv(0, 0).overlayCoords(overlay).uv2(lightmap).endVertex();
+        builder.vertex(pose, 1, 0, 1).color(red, green, blue, 0xff).uv(0, 1).overlayCoords(overlay).uv2(lightmap).endVertex();
+        builder.vertex(pose, -1, 0, 1).color(red, green, blue, 0xff).uv(1, 1).overlayCoords(overlay).uv2(lightmap).endVertex();
         poseStack.popPose();
     }
 

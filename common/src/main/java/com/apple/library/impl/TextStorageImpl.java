@@ -9,8 +9,6 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextPosition;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIFont;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import moe.plushie.armourers_workshop.compatibility.AbstractShaderTesselator;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
@@ -28,6 +26,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
+
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class TextStorageImpl {
@@ -137,8 +137,8 @@ public class TextStorageImpl {
         context.saveGraphicsState();
         context.translateCTM(offset.x, offset.y, 0);
 
-        PoseStack.Pose pose = context.state().ctm().last();
-        MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+        auto pose = context.state().ctm().last().pose();
+        auto buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
         if (placeholder != null && cachedTextLines.isEmpty()) {
             int placeholderColor = defaultPlaceholderColor();
             font.drawInBatch(placeholder.chars(), 1, 0, placeholderColor, true, pose, buffers, false, 0, 15728880);
@@ -170,16 +170,16 @@ public class TextStorageImpl {
         if (!isFocused || highlightedRects == null || highlightedRects.isEmpty()) {
             return;
         }
-        PoseStack.Pose pose = context.state().ctm().last();
-        AbstractShaderTesselator tesselator = AbstractShaderTesselator.getInstance();
-        BufferBuilder builder = tesselator.begin(SkinRenderType.GUI_HIGHLIGHTED_TEXT);
-        context.setBlendColor(AppearanceImpl.TEXT_HIGHLIGHTED_COLOR);
+        auto pose = context.state().ctm().last().pose();
+        auto tesselator = AbstractShaderTesselator.getInstance();
+        auto builder = tesselator.begin(SkinRenderType.GUI_HIGHLIGHTED_TEXT);
         for (CGRect rect : highlightedRects) {
-            builder.vertex(pose.pose(), rect.getMinX(), rect.getMaxY(), 0).endVertex();
-            builder.vertex(pose.pose(), rect.getMaxX(), rect.getMaxY(), 0).endVertex();
-            builder.vertex(pose.pose(), rect.getMaxX(), rect.getMinY(), 0).endVertex();
-            builder.vertex(pose.pose(), rect.getMinX(), rect.getMinY(), 0).endVertex();
+            builder.vertex(pose, rect.getMinX(), rect.getMaxY(), 0).endVertex();
+            builder.vertex(pose, rect.getMaxX(), rect.getMaxY(), 0).endVertex();
+            builder.vertex(pose, rect.getMaxX(), rect.getMinY(), 0).endVertex();
+            builder.vertex(pose, rect.getMinX(), rect.getMinY(), 0).endVertex();
         }
+        context.setBlendColor(AppearanceImpl.TEXT_HIGHLIGHTED_COLOR);
         tesselator.end();
         context.setBlendColor(UIColor.WHITE);
     }

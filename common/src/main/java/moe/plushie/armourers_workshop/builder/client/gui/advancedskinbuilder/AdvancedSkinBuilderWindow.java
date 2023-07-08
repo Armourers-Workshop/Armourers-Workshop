@@ -20,11 +20,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenAABB;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
-import moe.plushie.armourers_workshop.utils.math.OpenNearPlane;
-import moe.plushie.armourers_workshop.utils.math.OpenRay;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
+import moe.plushie.armourers_workshop.utils.math.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -55,10 +51,37 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
         this.blockEntity = container.getBlockEntity(AdvancedSkinBuilderBlockEntity.class);
         this.inventoryView.setHidden(true);
 
-        SidebarView sidebarView = new SidebarView(new CGRect(bounds().width - 180, 0, 180, bounds().height));
+        SidebarView sidebarView = new SidebarView(new CGRect(0, 0, 100, 240));
         sidebarView.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleHeight);
         sidebarView.setTransform(CGAffineTransform.createScale(0.5f, 0.5f));
+        sidebarView.setFrame(new CGRect(bounds().width - 100, 0, 100, bounds().height));
         addSubview(sidebarView);
+
+        // /----------------------\
+        // | v []root             |
+        // | | > []child          |
+        // | | v []child          |
+        // | |     []child        |
+        // \----------------------/
+        // /----------------------\
+        // |[v] [ name ]          |
+        // |                      |
+        // | properties           |
+        // |  [x] mirror          |
+        // |  [x] enabled         |
+        // |                      |
+        // | transform            |
+        // |   location x [ - ]   |
+        // |            y [ - ]   |
+        // |            z [ - ]   |
+        // |   rotation x [ - ]   |
+        // |            y [ - ]   |
+        // |            z [ - ]   |
+        // |      scale x [ 1 ]   |
+        // |            y [ 1 ]   |
+        // |            z [ 1 ]   |
+        // \----------------------/
+        //
 
         sidebarView.reloadData();
 

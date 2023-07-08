@@ -8,6 +8,7 @@ import com.apple.library.impl.KeyboardManagerImpl;
 
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 public class UISliderBox extends UIControl {
 
     private final UIButton leftView = getShareStateButton();

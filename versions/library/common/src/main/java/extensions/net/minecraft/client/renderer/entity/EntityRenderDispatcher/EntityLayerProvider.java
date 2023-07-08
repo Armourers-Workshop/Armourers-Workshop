@@ -1,7 +1,5 @@
 package extensions.net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererLayerProvider;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -16,6 +14,9 @@ import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.LivingEntity;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
 
 @Extension
 @Available("[1.20, )")

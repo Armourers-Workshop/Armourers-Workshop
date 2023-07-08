@@ -47,8 +47,8 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         if (!isReady) {
             return;
         }
-        int mouseX = (int) context.state().mouseX();
-        int mouseY = (int) context.state().mouseY();
+        int mouseX = (int) context.state().mousePos().getX();
+        int mouseY = (int) context.state().mousePos().getY();
         CGPoint offset = screen.getContentOffset();
         context.saveGraphicsState();
         context.translateCTM(-offset.getX(), -offset.getY(), 0);

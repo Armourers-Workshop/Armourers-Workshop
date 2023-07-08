@@ -26,7 +26,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -83,14 +82,13 @@ public class ClientProxyImpl implements ClientModInitializer {
         // }
         PoseStack poseStack = context.matrixStack();
         ItemStack itemStack = player.getMainHandItem();
-        Item item = itemStack.getItem();
-        if (ModConfig.Client.enableEntityPlacementHighlight && item == ModItems.MANNEQUIN.get()) {
+        if (ModConfig.Client.enableEntityPlacementHighlight && itemStack.is(ModItems.MANNEQUIN.get())) {
             HighlightPlacementRenderer.renderEntity(player, target, context.camera(), poseStack, context.consumers());
         }
-        if (ModConfig.Client.enableBlockPlacementHighlight && item == ModItems.SKIN.get()) {
+        if (ModConfig.Client.enableBlockPlacementHighlight && itemStack.is(ModItems.SKIN.get())) {
             HighlightPlacementRenderer.renderBlock(itemStack, player, target, context.camera(), poseStack, context.consumers());
         }
-        if (ModConfig.Client.enablePaintToolPlacementHighlight && item == ModItems.BLENDING_TOOL.get()) {
+        if (ModConfig.Client.enablePaintToolPlacementHighlight && itemStack.is(ModItems.BLENDING_TOOL.get())) {
             PaintingHighlightPlacementRenderer.renderPaintTool(itemStack, player, target, context.camera(), poseStack, context.consumers());
         }
         return true;

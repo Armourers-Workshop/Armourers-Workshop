@@ -7,7 +7,6 @@ import com.google.common.cache.RemovalNotification;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
@@ -31,7 +30,6 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,6 +38,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBuilder {
@@ -81,14 +81,14 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
     @Override
     public void addShape(Vector3f origin, SkinRenderContext context) {
-        MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+        auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
 //        RenderUtils.drawBoundingBox(poseStack, box, color, SkinRenderBuffer.getInstance());
         RenderSystem.drawPoint(context.pose().pose(), origin, 16, buffers);
     }
 
     @Override
     public void addShape(OpenVoxelShape shape, UIColor color, SkinRenderContext context) {
-        MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+        auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         RenderSystem.drawBoundingBox(context.pose().pose(), shape.bounds(), color, buffers);
     }
 
@@ -97,7 +97,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         if (transforms == null) {
             return;
         }
-        MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+        auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         ModelBinder.BIPPED_BOXES.forEach((joint, rect) -> {
             ITransformf transform = transforms[joint.getId()];
             if (transform == null) {
@@ -121,7 +121,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
     @Nullable
     public CachedTask compile(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, int overlay) {
         Object key = SkinCache.borrowKey(bakedSkin.getId(), part.getId(), part.requirements(scheme), overlay);
-        CachedTask cachedTask = cachingTasks.getIfPresent(key);
+        auto cachedTask = cachingTasks.getIfPresent(key);
         if (cachedTask != null) {
             SkinCache.returnKey(key);
             if (cachedTask.isCompiled) {
@@ -130,10 +130,10 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
             return null; // wait compile
 
         }
-        CachedTask task = new CachedTask(part, scheme, overlay);
-        cachingTasks.put(key, task);
-        addCompileTask(task);
-        return null;
+        cachedTask = new CachedTask(part, scheme, overlay);
+        cachingTasks.put(key, cachedTask);
+        addCompileTask(cachedTask);
+        return null; // wait compile
     }
 
     private synchronized void addCompileTask(CachedTask cachedTask) {
@@ -164,7 +164,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
             ColorScheme scheme = task.scheme;
             ArrayList<CompiledTask> mergedTasks = new ArrayList<>();
             part.forEach((renderType, quads) -> {
-                IBufferBuilder builder = BufferBuilder.createBuilderBuffer(quads.size() * 8 * renderType.format().getVertexSize());
+                auto builder = BufferBuilder.createBuilderBuffer(quads.size() * 8 * renderType.format().getVertexSize());
                 builder.begin(renderType);
                 quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, overlay, matrixStack1, builder.asBufferBuilder()));
                 IRenderedBuffer renderedBuffer = builder.end();
@@ -185,9 +185,9 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         ArrayList<ByteBuffer> byteBuffers = new ArrayList<>();
 
         for (CompiledTask compiledTask : buildingTasks) {
-            BufferBuilder.DrawState drawState = compiledTask.bufferBuilder.drawState();
-            VertexFormat format = drawState.format();
-            ByteBuffer byteBuffer = compiledTask.bufferBuilder.vertexBuffer();
+            auto drawState = compiledTask.bufferBuilder.drawState();
+            auto format = drawState.format();
+            auto byteBuffer = compiledTask.bufferBuilder.vertexBuffer();
             compiledTask.vertexBuffer = vertexBuffer;
             compiledTask.vertexCount = drawState.vertexCount();
             compiledTask.vertexOffset = totalRenderedBytes;

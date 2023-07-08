@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+@SuppressWarnings("unused")
 public class UIWindow extends UIView {
 
     private int level = 0;
@@ -262,8 +263,8 @@ public class UIWindow extends UIView {
                 context.saveGraphicsState();
                 context.translateCTM(0, 0, level);
             }
-            float mouseX = context.state().mouseX();
-            float mouseY = context.state().mouseY();
+            float mouseX = context.state().mousePos().getX();
+            float mouseY = context.state().mousePos().getY();
             applyRender(mouseX, mouseY, 0, window, context);
             if (level != 0) {
                 context.restoreGraphicsState();

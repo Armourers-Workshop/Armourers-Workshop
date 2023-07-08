@@ -7,12 +7,13 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
-import moe.plushie.armourers_workshop.utils.texture.SkyBox;
 import net.minecraft.core.Direction;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+
+import manifold.ext.rt.api.auto;
 
 public class BoundingBox extends Rectangle3i {
 
@@ -26,14 +27,14 @@ public class BoundingBox extends Rectangle3i {
     }
 
     public static void setColor(ISkinPartType partType, Vector3i offset, Direction dir, IPaintColor color, BiConsumer<TexturePos, IPaintColor> applier) {
-        TexturePos texturePos = getTexturePos(partType, offset, dir);
+        auto texturePos = getTexturePos(partType, offset, dir);
         if (texturePos != null) {
             applier.accept(texturePos, color);
         }
     }
 
     public static IPaintColor getColor(ISkinPartType partType, Vector3i offset, Direction dir, Function<TexturePos, IPaintColor> supplier) {
-        TexturePos texturePos = getTexturePos(partType, offset, dir);
+        auto texturePos = getTexturePos(partType, offset, dir);
         if (texturePos != null) {
             return supplier.apply(texturePos);
         }
@@ -41,7 +42,7 @@ public class BoundingBox extends Rectangle3i {
     }
 
     public static TexturePos getTexturePos(ISkinPartType partType, Vector3i offset, Direction dir) {
-        SkyBox box = MODEL.get(partType);
+        auto box = MODEL.get(partType);
         if (box == null) {
             return null;
         }

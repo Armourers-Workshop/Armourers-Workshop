@@ -10,11 +10,9 @@ import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIScreen;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
-import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
 import moe.plushie.armourers_workshop.utils.MathUtils;
@@ -29,6 +27,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class SkinItemList extends UIView {
@@ -122,7 +122,7 @@ public class SkinItemList extends UIView {
         if ((backgroundColor & 0xff000000) != 0) {
             context.fillRect(x, y, x + width, y + height, backgroundColor);
         }
-        MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+        auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         for (int i = 0; i < totalCount; ++i) {
             renderItem(context, i, false, buffers);
         }
@@ -161,7 +161,7 @@ public class SkinItemList extends UIView {
     }
 
     public void renderItemContent(float x, float y, float width, float height, boolean isHovered, ServerSkin entry, MultiBufferSource buffers, CGGraphicsContext context) {
-        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(entry.getDescriptor(), loadTicket);
+        auto bakedSkin = SkinBakery.getInstance().loadSkin(entry.getDescriptor(), loadTicket);
         if (bakedSkin == null) {
             int speed = 60;
             int frames = 18;
@@ -172,7 +172,7 @@ public class SkinItemList extends UIView {
             context.drawResizableImage(ModTextures.SKIN_PANEL, x + 8, y + 8, width - 16, height - 16, u * 28, v * 28, 27, 27, 256, 256);
             return;
         }
-        Skin skin = bakedSkin.getSkin();
+        auto skin = bakedSkin.getSkin();
         if (showsName) {
             NSString name = new NSString(entry.getName());
             List<NSString> properties = name.split(width - 2, font);

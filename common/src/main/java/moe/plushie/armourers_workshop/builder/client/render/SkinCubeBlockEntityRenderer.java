@@ -15,7 +15,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -54,13 +53,14 @@ public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> ext
         if (player == null) {
             return false;
         }
-        ItemStack stack = player.getMainHandItem();
-        Item item = stack.getItem();
-        if (item instanceof IBlockPaintViewer) {
+        ItemStack itemStack = player.getMainHandItem();
+        if (itemStack.getItem() instanceof IBlockPaintViewer) {
             return true;
-        } else if (item == ModItems.COLOR_PICKER.get()) {
+        }
+        if (itemStack.is(ModItems.COLOR_PICKER.get())) {
             return true;
-        } else return item == ModItems.SOAP.get();
+        }
+        return itemStack.is(ModItems.SOAP.get());
     }
 
     @Override

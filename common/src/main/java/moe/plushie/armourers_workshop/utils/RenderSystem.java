@@ -32,6 +32,8 @@ import java.nio.FloatBuffer;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import manifold.ext.rt.api.auto;
+
 @Environment(EnvType.CLIENT)
 public final class RenderSystem extends AbstractRenderSystem {
 
@@ -219,7 +221,7 @@ public final class RenderSystem extends AbstractRenderSystem {
     }
 
     public static void drawBoundingBox(PoseStack poseStack, CGRect rect, UIColor color) {
-        MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+        auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         drawBoundingBox(poseStack, rect.x, rect.y, 0, rect.x + rect.width, rect.y + rect.height, 0, color, buffers);
         buffers.endBatch();
     }

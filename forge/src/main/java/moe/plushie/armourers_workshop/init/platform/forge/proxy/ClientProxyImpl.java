@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.init.platform.forge.proxy;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.builder.client.render.PaintingHighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
@@ -11,17 +10,17 @@ import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Registry;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderArmEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+
+import manifold.ext.rt.api.auto;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientProxyImpl {
@@ -49,14 +48,13 @@ public class ClientProxyImpl {
             //     }
             // }
             ItemStack itemStack = player.getMainHandItem();
-            Item item = itemStack.getItem();
-            if (ModConfig.Client.enableEntityPlacementHighlight && item == ModItems.MANNEQUIN.get()) {
+            if (ModConfig.Client.enableEntityPlacementHighlight && itemStack.is(ModItems.MANNEQUIN.get())) {
                 HighlightPlacementRenderer.renderEntity(player, traceResult, camera, poseStack, buffers);
             }
-            if (ModConfig.Client.enableBlockPlacementHighlight && item == ModItems.SKIN.get()) {
+            if (ModConfig.Client.enableBlockPlacementHighlight && itemStack.is(ModItems.SKIN.get())) {
                 HighlightPlacementRenderer.renderBlock(itemStack, player, traceResult, camera, poseStack, buffers);
             }
-            if (ModConfig.Client.enablePaintToolPlacementHighlight && item == ModItems.BLENDING_TOOL.get()) {
+            if (ModConfig.Client.enablePaintToolPlacementHighlight && itemStack.is(ModItems.BLENDING_TOOL.get())) {
                 PaintingHighlightPlacementRenderer.renderPaintTool(itemStack, player, traceResult, camera, poseStack, buffers);
             }
         });
@@ -69,10 +67,10 @@ public class ClientProxyImpl {
                 return;
             }
             int light = event.getPackedLight();
-            Player player = Minecraft.getInstance().player;
-            PoseStack poseStack = event.getPoseStack();
-            MultiBufferSource buffers = event.getMultiBufferSource();
-            AbstractItemTransformType transformType = AbstractItemTransformType.FIRST_PERSON_LEFT_HAND;
+            auto player = Minecraft.getInstance().player;
+            auto poseStack = event.getPoseStack();
+            auto buffers = event.getMultiBufferSource();
+            auto transformType = AbstractItemTransformType.FIRST_PERSON_LEFT_HAND;
             if (event.getArm() == HumanoidArm.RIGHT) {
                 transformType = AbstractItemTransformType.FIRST_PERSON_RIGHT_HAND;
             }

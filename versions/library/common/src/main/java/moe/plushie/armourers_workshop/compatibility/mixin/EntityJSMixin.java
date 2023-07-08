@@ -10,12 +10,12 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(Entity.class)
 public class EntityJSMixin {
 
-    private SkinWardrobeJS aw$wardrobe;
+    private SkinWardrobeJS aw$skinWardrobe;
 
     public SkinWardrobeJS getWardrobe() {
-        if (aw$wardrobe == null) {
-            aw$wardrobe = new SkinWardrobeJS(ObjectUtils.unsafeCast(this));
+        if (aw$skinWardrobe == null) {
+            aw$skinWardrobe = new SkinWardrobeJS(ObjectUtils.unsafeCast(this));
         }
-        return aw$wardrobe;
+        return aw$skinWardrobe;
     }
 }

@@ -18,7 +18,7 @@ public class SkinningClearRecipe extends SkinningRecipe {
 
     @Override
     protected boolean isValidTarget(ItemStack targetStack) {
-        return ModItems.SOAP.get() == targetStack.getItem();
+        return targetStack.is(ModItems.SOAP.get());
     }
 
     @Override

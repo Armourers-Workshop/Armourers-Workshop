@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
 import moe.plushie.armourers_workshop.compatibility.AbstractShader;
-import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexMerger;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
@@ -42,7 +42,6 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
 
     private static void attach(MultiBufferSource buffers, RenderType renderType, Runnable action) {
         VertexConsumer ignored = buffers.getBuffer(renderType);
-
         IRenderAttachable builder = ObjectUtils.safeCast(renderType, IRenderAttachable.class);
         if (builder != null) {
             builder.attachRenderTask(action);

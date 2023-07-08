@@ -1,8 +1,9 @@
 package extensions.com.mojang.blaze3d.systems.RenderSystem;
 
+import moe.plushie.armourers_workshop.api.annotation.Available;
+
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
-import moe.plushie.armourers_workshop.api.annotation.Available;
 
 @Available("[1.18, )")
 @Extension

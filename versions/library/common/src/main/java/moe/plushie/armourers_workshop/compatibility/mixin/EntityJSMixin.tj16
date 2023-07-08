@@ -16,16 +16,16 @@ import org.spongepowered.asm.mixin.Shadow;
 })
 public class EntityJSMixin {
 
-    private SkinWardrobeJS aw$wardrobe;
+    private SkinWardrobeJS aw$skinWardrobe;
 
     @Shadow
     @Final
     public Entity minecraftEntity;
 
     public SkinWardrobeJS getWardrobe() {
-        if (aw$wardrobe == null) {
-            aw$wardrobe = new SkinWardrobeJS(minecraftEntity);
+        if (aw$skinWardrobe == null) {
+            aw$skinWardrobe = new SkinWardrobeJS(minecraftEntity);
         }
-        return aw$wardrobe;
+        return aw$skinWardrobe;
     }
 }

@@ -13,6 +13,7 @@ import com.apple.library.impl.TextInputImpl;
 import com.apple.library.impl.TextInputTraits;
 import com.apple.library.impl.TextStorageImpl;
 
+@SuppressWarnings("unused")
 public class UITextView extends UIScrollView implements TextInputTraits {
 
     private final TextStorageImpl storage = new TextStorageImpl();

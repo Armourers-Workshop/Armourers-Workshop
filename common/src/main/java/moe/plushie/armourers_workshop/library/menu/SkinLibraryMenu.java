@@ -62,7 +62,7 @@ public class SkinLibraryMenu extends AbstractBlockContainerMenu {
         addSlot(new Slot(inventory, slot, x, y) {
             @Override
             public boolean mayPlace(ItemStack itemStack) {
-                return itemStack.getItem() == ModItems.SKIN_TEMPLATE.get() || !SkinDescriptor.of(itemStack).isEmpty();
+                return itemStack.is(ModItems.SKIN_TEMPLATE.get()) || !SkinDescriptor.of(itemStack).isEmpty();
             }
         });
     }
@@ -93,7 +93,7 @@ public class SkinLibraryMenu extends AbstractBlockContainerMenu {
     }
 
     public boolean shouldLoadStack() {
-        return getOutputStack().isEmpty() && !getInputStack().isEmpty() && getInputStack().getItem() == ModItems.SKIN_TEMPLATE.get();
+        return getOutputStack().isEmpty() && !getInputStack().isEmpty() && getInputStack().is(ModItems.SKIN_TEMPLATE.get());
     }
 
     public void crafting(SkinDescriptor descriptor) {
@@ -103,7 +103,7 @@ public class SkinLibraryMenu extends AbstractBlockContainerMenu {
         if (descriptor != null) {
             // only consumes the template
             newItemStack = SkinItem.replace(itemStack.copy(), descriptor);
-            consume = itemStack.getItem() == ModItems.SKIN_TEMPLATE.get();
+            consume = itemStack.is(ModItems.SKIN_TEMPLATE.get());
         }
         inventory.setItem(1, newItemStack);
         if (consume) {

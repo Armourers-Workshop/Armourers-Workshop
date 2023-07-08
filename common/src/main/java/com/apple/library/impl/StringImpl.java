@@ -4,13 +4,14 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIFont;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import manifold.ext.rt.api.auto;
 
 @SuppressWarnings("unused")
 public interface StringImpl {
@@ -33,7 +34,7 @@ public interface StringImpl {
     }
 
     default Map<String, ?> attributes(int width, UIFont font) {
-        Style style = font.impl().getSplitter().componentStyleAtWidth(chars(), width);
+        auto style = font.impl().getSplitter().componentStyleAtWidth(chars(), width);
         if (style == null) {
             return null;
         }

@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.item;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
@@ -32,6 +31,8 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.function.BiConsumer;
 
+import manifold.ext.rt.api.auto;
+
 public class SkinItem extends BlockItem implements IItemPropertiesProvider {
 
     public SkinItem(Block block, Item.Properties properties) {
@@ -58,7 +59,7 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
         if (targetStack.isEmpty()) {
             return descriptor.asItemStack();
         }
-        if (targetStack.getItem() == ModItems.SKIN_TEMPLATE.get()) {
+        if (targetStack.is(ModItems.SKIN_TEMPLATE.get())) {
             return descriptor.asItemStack();
         }
         if (descriptor.isEmpty()) {
@@ -129,8 +130,8 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
         builder.accept(ModConstants.key("loading"), (itemStack, level, entity, id) -> {
-            SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-            BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
+            auto descriptor = SkinDescriptor.of(itemStack);
+            auto bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
             if (bakedSkin != null) {
                 return 0;
             }

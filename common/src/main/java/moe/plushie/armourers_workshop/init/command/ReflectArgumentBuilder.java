@@ -11,7 +11,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.CommandNode;
-import moe.plushie.armourers_workshop.core.network.ExecuteCommandPacket;
+import moe.plushie.armourers_workshop.init.network.ExecuteCommandPacket;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.commands.CommandSourceStack;

@@ -6,8 +6,9 @@ import moe.plushie.armourers_workshop.init.ModLog;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Inventory;
+
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class SkinPreloadManager {
@@ -28,7 +29,7 @@ public class SkinPreloadManager {
         }
         // we need to preload all skin in the current player's inventory.
         if (lastInventoryVersion == null) {
-            LocalPlayer player = Minecraft.getInstance().player;
+            auto player = Minecraft.getInstance().player;
             if (player != null) {
                 Inventory inventory = player.getInventory();
                 int inventoryVersion = inventory.getTimesChanged();
