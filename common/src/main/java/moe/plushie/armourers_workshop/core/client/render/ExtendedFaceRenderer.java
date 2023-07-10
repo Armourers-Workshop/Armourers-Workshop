@@ -30,8 +30,8 @@ public class ExtendedFaceRenderer {
         auto pose = poseStack.last().pose();
         auto normal = poseStack.last().normal();
         auto paintType = paintColor.getPaintType();
-        float u = paintType.getU() / 256f;
-        float v = paintType.getV() / 256f;
+        float u = paintType.getU();
+        float v = paintType.getV();
         int color = paintColor.getRGB();
         int r = color >> 16 & 0xff;
         int g = color >> 8 & 0xff;
@@ -47,7 +47,7 @@ public class ExtendedFaceRenderer {
         for (int i = 0; i < 4; ++i) {
             builder.vertex(pose, x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
                     .color(r, g, b, a)
-                    .uv(u, v)
+                    .uv((u + FACE_MARK_TEXTURES[i][0]) / 256f, (v + FACE_MARK_TEXTURES[i][1]) / 256f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(lightmap)
                     .normal(normal, vertexes[4][0], vertexes[4][1], vertexes[4][2])
