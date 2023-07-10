@@ -87,6 +87,11 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         IKeyBinding binding1 = new IKeyBinding() {
 
             @Override
+            public boolean matches(int key1, int key2) {
+                return binding.matches(key1, key2) && binding.getKeyModifier().isActive(null);
+            }
+
+            @Override
             public Component getKeyName() {
                 return binding.getTranslatedKeyMessage();
             }

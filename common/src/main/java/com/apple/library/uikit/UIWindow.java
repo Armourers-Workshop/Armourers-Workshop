@@ -7,6 +7,7 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.impl.InvokerResult;
 import com.apple.library.impl.LBSIterator;
+import com.apple.library.impl.ObjectUtilsImpl;
 import com.apple.library.impl.WeakDispatcherImpl;
 import com.apple.library.impl.WindowDispatcherImpl;
 import org.jetbrains.annotations.Nullable;
@@ -265,7 +266,7 @@ public class UIWindow extends UIView {
             }
             float mouseX = context.state().mousePos().getX();
             float mouseY = context.state().mousePos().getY();
-            applyRender(mouseX, mouseY, 0, window, context);
+            applyRender(mouseX, mouseY, 0, ObjectUtilsImpl.currentMediaTime(), window, context);
             if (level != 0) {
                 context.restoreGraphicsState();
             }
@@ -463,21 +464,34 @@ public class UIWindow extends UIView {
             return checkEvent(event);
         }
 
-        private static void applyRender(float mouseX, float mouseY, int depth, UIView view, CGGraphicsContext context) {
+        private static void applyRender(float mouseX, float mouseY, int depth, double tp, UIView view, CGGraphicsContext context) {
             if (view.isHidden()) {
                 return;
             }
-            CGRect frame = view.frame();
-            CGRect bounds = view.bounds();
-            float ix = mouseX - frame.x;
-            float iy = mouseY - frame.y;
+            UIView.Presentation presentation = applyAnimation(view, tp);
+            CGPoint center = presentation.center();
+            CGRect bounds = presentation.bounds();
+            CGAffineTransform transform = presentation.transform();
+            float x = center.x;
+            float y = center.y;
+            float width = bounds.width;
+            float height = bounds.height;
+            if (transform != CGAffineTransform.IDENTITY) {
+                CGSize size = new CGSize(width, height);
+                size.apply(transform);
+                width = size.width;
+                height = size.height;
+            }
+            x -= width * 0.5f;
+            y -= height * 0.5f;
+            float ix = mouseX - x;
+            float iy = mouseY - y;
             boolean needClips = view.isClipBounds();
             if (needClips) {
                 context.addClipRect(UIScreen.convertRectFromView(bounds, view));
             }
             context.saveGraphicsState();
-            context.translateCTM(frame.x - bounds.x, frame.y - bounds.y, view.zIndex());
-            CGAffineTransform transform = view.transform();
+            context.translateCTM(x - bounds.x, y - bounds.y, view.zIndex());
             if (!transform.isIdentity()) {
                 context.concatenateCTM(transform);
             }
@@ -497,13 +511,19 @@ public class UIWindow extends UIView {
                 if (needClips && !bounds.intersects(subview.frame())) {
                     continue;
                 }
-                applyRender(ix, iy, depth + 1, subview, context);
+                applyRender(ix, iy, depth + 1, tp, subview, context);
             }
             view.layerDidDraw(context);
             context.restoreGraphicsState();
             if (needClips) {
                 context.removeClipRect();
             }
+        }
+
+        private static UIView.Presentation applyAnimation(UIView view, double tp) {
+            UIView.Presentation presentation = view.presentation();
+            presentation.tick(tp);
+            return presentation;
         }
 
         private static UIView findFirstResponder(float mouseX, float mouseY, UIEvent event, UIView view) {

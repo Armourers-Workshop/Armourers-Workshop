@@ -69,6 +69,19 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         IKeyBinding binding1 = new IKeyBinding() {
 
             @Override
+            public boolean matches(int key1, int key2) {
+                if (binding.matches(key1, key2)) {
+                    // some mod will mixin it for add key modifier.
+                    boolean originValue = binding.isDown();
+                    binding.setDown(true);
+                    boolean modifiedValue = binding.isDown();
+                    binding.setDown(originValue);
+                    return modifiedValue;
+                }
+                return false;
+            }
+
+            @Override
             public Component getKeyName() {
                 return binding.getTranslatedKeyMessage();
             }

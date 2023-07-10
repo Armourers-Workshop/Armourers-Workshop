@@ -12,6 +12,11 @@ import manifold.ext.rt.api.auto;
 @Environment(EnvType.CLIENT)
 public class ScreenImpl {
 
+    public static CGRect bounds() {
+        auto w = Minecraft.getInstance().getWindow();
+        return new CGRect(w.getX(), w.getY(), w.getGuiScaledWidth(), w.getGuiScaledHeight());
+    }
+
     public static CGRect nativeBounds() {
         auto w = Minecraft.getInstance().getWindow();
         return new CGRect(w.getX(), w.getY(), w.getWidth(), w.getHeight());

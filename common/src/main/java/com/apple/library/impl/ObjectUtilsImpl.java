@@ -1,8 +1,11 @@
 package com.apple.library.impl;
 
 import com.apple.library.coregraphics.CGAffineTransform;
+import com.apple.library.coregraphics.CGPoint;
+import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSRange;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 
@@ -38,5 +41,9 @@ public class ObjectUtilsImpl extends ObjectUtils {
 
     public static String replaceString(String string, NSRange range, String replacementString) {
         return (new StringBuilder(string)).replace(range.startIndex(), range.endIndex(), replacementString).toString();
+    }
+
+    public static double currentMediaTime() {
+        return TickUtils.ticks() / 1000.0;
     }
 }

@@ -17,6 +17,8 @@ public class ModDebugger {
     public static float sy = 1;
     public static float sz = 1;
 
+    public static float textureOffset = -1;
+
     public static boolean flag1 = false;
     public static boolean flag2 = false;
     public static boolean flag3 = false;

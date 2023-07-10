@@ -1,8 +1,10 @@
 package com.apple.library.coregraphics;
 
+import com.apple.library.impl.InterpolableImpl;
+
 import java.util.Objects;
 
-public class CGPoint {
+public class CGPoint implements InterpolableImpl<CGPoint> {
 
     public static final CGPoint ZERO = new CGPoint(0, 0);
 
@@ -31,8 +33,18 @@ public class CGPoint {
         return new CGPoint(x, y);
     }
 
-    public boolean isZero() {
-        return x == 0 && y == 0;
+    @Override
+    public CGPoint interpolating(CGPoint in, float t) {
+        if (t <= 0) {
+            return this;
+        }
+        if (t >= 1) {
+            return in;
+        }
+        float v = 1 - t;
+        float x = v * this.x + t * in.x;
+        float y = v * this.y + t * in.y;
+        return new CGPoint(x, y);
     }
 
     @Override

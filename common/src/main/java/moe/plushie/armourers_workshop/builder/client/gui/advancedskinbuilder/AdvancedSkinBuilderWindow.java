@@ -6,21 +6,34 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSString;
 import com.apple.library.impl.KeyboardManagerImpl;
+import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIEvent;
+import com.apple.library.uikit.UIImage;
+import com.apple.library.uikit.UIScreen;
+import com.apple.library.uikit.UIView;
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedSkinBuilderBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.SidebarView;
 import moe.plushie.armourers_workshop.builder.client.render.AdvancedSkinBuilderBlockEntityRenderer;
 import moe.plushie.armourers_workshop.builder.entity.CameraEntity;
 import moe.plushie.armourers_workshop.builder.menu.AdvancedSkinBuilderMenu;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractMenuWindowProvider;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.client.gui.widget.TreeNode;
+import moe.plushie.armourers_workshop.core.client.gui.widget.TreeView;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
+import moe.plushie.armourers_workshop.init.ModKeyBindings;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.math.*;
+import moe.plushie.armourers_workshop.utils.math.OpenAABB;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenNearPlane;
+import moe.plushie.armourers_workshop.utils.math.OpenRay;
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -30,32 +43,37 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMenu> {
 
     public final AdvancedSkinBuilderBlockEntity blockEntity;
-//    private final NSWindow window = new NSWindow(new Rectangle2i(0, 0, 320, 240));
+    //    private final NSWindow window = new NSWindow(new Rectangle2i(0, 0, 320, 240));
+    private final HashMap<IKeyBinding, Runnable> shortcuts = new HashMap<>();
 
-//    public static AbstractMenuWindowProvider<AdvancedSkinBuilderMenu, AdvancedSkinBuilderWindow> PROVIDER;
-//    public static AdvancedSkinBuilderWindow create(AdvancedSkinBuilderMenu container, Inventory inventory, NSString title) {
-//        if (PROVIDER != null) {
-//            return PROVIDER.create(container, inventory, title);
-//        }
-//        return new AdvancedSkinBuilderWindow(container, inventory, title);
-//    }
+    public static AbstractMenuWindowProvider<AdvancedSkinBuilderMenu, AdvancedSkinBuilderWindow> PROVIDER;
+
+    public static AdvancedSkinBuilderWindow create(AdvancedSkinBuilderMenu container, Inventory inventory, NSString title) {
+        if (PROVIDER != null) {
+            return PROVIDER.create(container, inventory, title);
+        }
+        return new AdvancedSkinBuilderWindow(container, inventory, title);
+    }
 
     public AdvancedSkinBuilderWindow(AdvancedSkinBuilderMenu container, Inventory inventory, NSString title) {
         super(container, inventory, title);
         this.blockEntity = container.getBlockEntity(AdvancedSkinBuilderBlockEntity.class);
         this.inventoryView.setHidden(true);
+        setup();
 
-        SidebarView sidebarView = new SidebarView(new CGRect(0, 0, 100, 240));
-        sidebarView.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleHeight);
-        sidebarView.setTransform(CGAffineTransform.createScale(0.5f, 0.5f));
-        sidebarView.setFrame(new CGRect(bounds().width - 100, 0, 100, bounds().height));
-        addSubview(sidebarView);
+//        SidebarView sidebarView = new SidebarView(new CGRect(0, 0, 100, 240));
+//        sidebarView.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleHeight);
+//        sidebarView.setTransform(CGAffineTransform.createScale(0.5f, 0.5f));
+//        sidebarView.setFrame(new CGRect(bounds().width - 100, 0, 100, bounds().height));
+//        addSubview(sidebarView);
+//        sidebarView.reloadData();
 
         // /----------------------\
         // | v []root             |
@@ -82,8 +100,6 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
         // |            z [ 1 ]   |
         // \----------------------/
         //
-
-        sidebarView.reloadData();
 
 
 //        AdvancedSkinCanvasView canvasView = new AdvancedSkinCanvasView(bounds());
@@ -113,7 +129,111 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
         applyCameraChanges();
     }
 
-    private void addToNode(TreeNode node, String prefix, int count) {
+    UIView testView;
+
+    protected void setup() {
+        CGRect bounds = UIScreen.bounds();
+        this.setFrame(bounds);
+
+
+        float w = 200f;
+        float h = bounds.height * 2f;
+
+        float h1 = h * 0.3f;
+        float h2 = h * 0.7f;
+
+
+        UIView card = new UIView(new CGRect(0, 0, w, h));
+        card.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleHeight);
+        card.setBackgroundColor(new UIColor(0x1d1d1d));
+//        card.setTransform(CGAffineTransform.createScale(0.5f, 0.5f));
+//        card.setFrame(cardRect);
+        addSubview(card);
+
+        UIImage image = UIImage.of(ModTextures.ADVANCED_SKIN_BUILDER).uv(24, 24).fixed(24, 24).clip(4, 4, 4, 4).build();
+
+        UIView bg1 = new UIView(card.bounds().insetBy(4, 4, h2, 4));
+        bg1.setContents(image);
+        bg1.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
+        card.addSubview(bg1);
+
+        UIView bg2 = new UIView(card.bounds().insetBy(h1 + 4, 4, 4, 4));
+        bg2.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
+        bg2.setContents(image);
+        card.addSubview(bg2);
+
+        TreeNode rootNode = new TreeNode(new NSString("Hello"));
+        addToNode(rootNode, "Root", 10);
+        addToNode(rootNode.nodeAtIndex(0), "First", 10);
+        addToNode(rootNode.nodeAtIndex(1), "Second", 10);
+        addToNode(rootNode.nodeAtIndex(3), "Thriii", 10);
+        addToNode(rootNode.nodeAtIndex(0).nodeAtIndex(0), "Children", 10);
+
+        TreeView tree = new TreeView(rootNode, bg1.bounds());
+        //tree.setContentInsets(new UIEdgeInsets(4, 4, 4, 4));
+        tree.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
+        bg1.addSubview(tree);
+
+        SidebarView sidebarView = new SidebarView(bg2.bounds().insetBy(0, 0, 0, 0));
+        sidebarView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
+        bg2.addSubview(sidebarView);
+        sidebarView.reloadData();
+
+        card.setTransform(CGAffineTransform.createScale(0.5f, 0.5f));
+        card.setFrame(new CGRect(bounds.width - 100, 0, 100, bounds.height));
+
+        this.testView = card;
+
+
+        // /----------------------\
+        // | v []root             |
+        // | | > []child          |
+        // | | v []child          |
+        // | |     []child        |
+        // \----------------------/
+        // /----------------------\
+        // | [ name ]             |
+        // |                      |
+        // | properties           |
+        // |  [x] mirror          |
+        // |  [x] enabled         |
+        // |                      |
+        // | transform            |
+        // |   location x [ - ]   |
+        // |            y [ - ]   |
+        // |            z [ - ]   |
+        // |   rotation x [ - ]   |
+        // |            y [ - ]   |
+        // |            z [ - ]   |
+        // |      scale x [ 1 ]   |
+        // |            y [ 1 ]   |
+        // |            z [ 1 ]   |
+        // \----------------------/
+        //
+
+
+        shortcuts.put(ModKeyBindings.GUI_TOGGLE_LEFT_KEY, this::toggleLeftCard);
+        shortcuts.put(ModKeyBindings.GUI_TOGGLE_RIGHT_KEY, this::toggleRightCard);
+    }
+
+    protected void toggleLeftCard() {
+        ModLog.debug("{}", "show left card");
+    }
+
+    int offset = 100;
+
+    protected void toggleRightCard() {
+        ModLog.debug("{}", "show right card");
+
+        CGPoint center = testView.center();
+        float tx = center.x + offset;
+        UIView.animationWithDuration(0.35, () -> {
+            testView.setCenter(new CGPoint(tx, center.y));
+        });
+        offset = -offset;
+    }
+
+    protected void addToNode(TreeNode node, String prefix, int count) {
         for (int i = 0; i < count; ++i) {
             node.add(new TreeNode(new NSString(prefix + " - " + i)));
         }
@@ -172,8 +292,8 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
         CGRect window = bounds();
         CGPoint mousePos = event.locationInWindow();
         if (rotationMode) {
-            float dx = (float) (mousePos.y - startMousePos.y) / (float) window.height;
-            float dy = (float) (mousePos.x - startMousePos.x) / (float) window.width;
+            float dx = (mousePos.y - startMousePos.y) / window.height;
+            float dy = (mousePos.x - startMousePos.x) / window.width;
             float rx = oldCameraRot.getX() + dx * 360;
             float ry = oldCameraRot.getY() + dy * 360;
             lastCameraRot.set(rx, ry, 0);
@@ -221,6 +341,18 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
     public void mouseMoved(UIEvent event) {
         super.mouseMoved(event);
         raycast(event);
+    }
+
+    @Override
+    public void keyDown(UIEvent event) {
+        super.keyDown(event);
+        int key1 = event.key();
+        int key2 = event.keyModifier();
+        shortcuts.forEach((key, handler) -> {
+            if (key.matches(key1, key2)) {
+                handler.run();
+            }
+        });
     }
 
     @Override
@@ -313,7 +445,7 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
     public static class Result {
 
         final BakedSkinPart part;
-         float distance;
+        float distance;
 
         Result(BakedSkinPart part, float distance) {
             this.part = part;

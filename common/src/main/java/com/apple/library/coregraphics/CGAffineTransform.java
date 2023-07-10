@@ -1,15 +1,17 @@
 package com.apple.library.coregraphics;
 
+import com.apple.library.impl.InterpolableImpl;
+
 import java.util.Objects;
 
 /**
- * >             |------------------ CGAffineTransformComponents ----------------|
+ *               |------------------ CGAffineTransformComponents ----------------|
  * | a  b  0 |   | sx  0  0 |   |  1  0  0 |   | cos(t)  sin(t)  0 |   | 1  0  0 |
  * | c  d  0 | = |  0 sy  0 | * | sh  1  0 | * |-sin(t)  cos(t)  0 | * | 0  1  0 |
  * | tx ty 1 |   |  0  0  0 |   |  0  0  1 |   |   0       0     1 |   | tx ty 1 |
  * CGAffineTransform    scale           shear            rotation          translation
  */
-public class CGAffineTransform {
+public class CGAffineTransform implements InterpolableImpl<CGAffineTransform> {
 
     public static final CGAffineTransform IDENTITY = new CGAffineTransform(1, 0, 1, 0, 0, 0);
 
@@ -112,6 +114,24 @@ public class CGAffineTransform {
     }
 
     @Override
+    public CGAffineTransform interpolating(CGAffineTransform in, float t) {
+        if (t <= 0) {
+            return this;
+        }
+        if (t >= 1) {
+            return in;
+        }
+        float v = 1 - t;
+        float a = v * this.a + t * in.c;
+        float b = v * this.a + t * in.d;
+        float c = v * this.c + t * in.c;
+        float d = v * this.c + t * in.d;
+        float tx = v * this.tx + t * in.tx;
+        float ty = v * this.tx + t * in.ty;
+        return new CGAffineTransform(a, b, c, d, tx, ty);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -130,17 +150,17 @@ public class CGAffineTransform {
     }
 
     private static void multiply(CGAffineTransform t1, CGAffineTransform t2, CGAffineTransform ret) {
-        float na = t1.a * t2.a + t1.b * t2.c;
-        float nb = t1.a * t2.b + t1.b * t2.d;
-        float nc = t1.c * t2.a + t1.d * t2.c;
-        float nd = t1.c * t2.b + t1.d * t2.d;
-        float ntx = t1.tx * t2.a + t1.ty * t2.c + t2.tx;
-        float nty = t1.tx * t2.b + t1.ty * t2.d + t2.ty;
-        ret.a = na;
-        ret.b = nb;
-        ret.c = nc;
-        ret.d = nd;
-        ret.tx = ntx;
-        ret.ty = nty;
+        float a = t1.a * t2.a + t1.b * t2.c;
+        float b = t1.a * t2.b + t1.b * t2.d;
+        float c = t1.c * t2.a + t1.d * t2.c;
+        float d = t1.c * t2.b + t1.d * t2.d;
+        float tx = t1.tx * t2.a + t1.ty * t2.c + t2.tx;
+        float ty = t1.tx * t2.b + t1.ty * t2.d + t2.ty;
+        ret.a = a;
+        ret.b = b;
+        ret.c = c;
+        ret.d = d;
+        ret.tx = tx;
+        ret.ty = ty;
     }
 }

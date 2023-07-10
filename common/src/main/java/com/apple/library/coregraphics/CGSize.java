@@ -1,8 +1,10 @@
 package com.apple.library.coregraphics;
 
+import com.apple.library.impl.InterpolableImpl;
+
 import java.util.Objects;
 
-public class CGSize {
+public class CGSize implements InterpolableImpl<CGSize> {
 
     public static final CGSize ZERO = new CGSize(0, 0);
 
@@ -29,6 +31,20 @@ public class CGSize {
 
     public CGSize copy() {
         return new CGSize(width, height);
+    }
+
+    @Override
+    public CGSize interpolating(CGSize in, float t) {
+        if (t <= 0) {
+            return this;
+        }
+        if (t >= 1) {
+            return in;
+        }
+        float v = 1 - t;
+        float w = v * this.width + t * in.width;
+        float h = v * this.height + t * in.height;
+        return new CGSize(w, h);
     }
 
     @Override

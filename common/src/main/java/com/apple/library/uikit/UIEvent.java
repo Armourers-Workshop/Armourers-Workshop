@@ -25,7 +25,7 @@ public class UIEvent {
     }
 
     public int key() {
-        return this.key;
+        return key;
     }
 
     public int keyModifier() {
@@ -33,7 +33,7 @@ public class UIEvent {
     }
 
     public Type type() {
-        return this.type;
+        return type;
     }
 
     public double delta() {

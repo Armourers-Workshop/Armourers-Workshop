@@ -5,20 +5,27 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
+import com.apple.library.impl.InterpolableImpl;
 import com.apple.library.impl.ObjectUtilsImpl;
 import com.apple.library.impl.ReversedIteratorImpl;
 import com.apple.library.impl.ViewImpl;
+import com.apple.library.quartzcore.CAAnimation;
+import com.apple.library.quartzcore.CAMediaTimingFunction;
+import com.apple.library.quartzcore.CATransaction;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class UIView extends UIResponder implements ViewImpl {
 
     protected final Flags _flags = new Flags();
+    protected final Presentation _presentation;
     protected final ArrayList<UIView> _subviews = new ArrayList<>();
 
     private WeakReference<UIView> _superview;
@@ -40,7 +47,26 @@ public class UIView extends UIResponder implements ViewImpl {
     private boolean _isOpaque = true;
 
     public UIView(CGRect frame) {
+        this._presentation = new Presentation(this);
         this.setFrame(frame);
+    }
+
+    public static void animationWithDuration(double duration, Runnable animations) {
+        animationWithDuration(duration, 0, animations, null);
+    }
+
+    public static void animationWithDuration(double duration, Runnable animations, @Nullable Consumer<Boolean> completion) {
+        animationWithDuration(duration, 0, animations, completion);
+    }
+
+    public static void animationWithDuration(double duration, int options, Runnable animations, @Nullable Consumer<Boolean> completion) {
+        CATransaction.begin();
+        CATransaction.setAnimationDuration(duration);
+        if (completion != null) {
+            CATransaction.setCompletionBlock(() -> completion.accept(true));
+        }
+        animations.run();
+        CATransaction.commit();
     }
 
     public void addSubview(UIView view) {
@@ -116,37 +142,6 @@ public class UIView extends UIResponder implements ViewImpl {
         return this;
     }
 
-    public CGPoint convertPointFromView(CGPoint point, @Nullable UIView view) {
-        CGAffineTransform transform = _hierarchyConverterInView(view, false);
-        if (transform != null) {
-            return point.applying(transform);
-        }
-        return point;
-    }
-
-    public CGPoint convertPointToView(CGPoint point, @Nullable UIView view) {
-        CGAffineTransform transform = _hierarchyConverterInView(view, true);
-        if (transform != null) {
-            return point.applying(transform);
-        }
-        return point;
-    }
-
-    public CGRect convertRectFromView(CGRect rect, @Nullable UIView view) {
-        CGAffineTransform transform = _hierarchyConverterInView(view, false);
-        if (transform != null) {
-            return rect.applying(transform);
-        }
-        return rect;
-    }
-
-    public CGRect convertRectToView(CGRect rect, @Nullable UIView view) {
-        CGAffineTransform transform = _hierarchyConverterInView(view, true);
-        if (transform != null) {
-            return rect.applying(transform);
-        }
-        return rect;
-    }
 
     public void willMoveToSuperview(UIView newSuperview) {
     }
@@ -196,6 +191,11 @@ public class UIView extends UIResponder implements ViewImpl {
         return _tooltip;
     }
 
+
+    public Presentation presentation() {
+        return _presentation;
+    }
+
     @Nullable
     public final UIView superview() {
         if (_superview != null) {
@@ -220,10 +220,12 @@ public class UIView extends UIResponder implements ViewImpl {
         return _backgroundColor;
     }
 
+    @Override
     public CGPoint center() {
         return _center;
     }
 
+    @Override
     public CGRect bounds() {
         return _bounds;
     }
@@ -235,6 +237,7 @@ public class UIView extends UIResponder implements ViewImpl {
         return _frame;
     }
 
+    @Override
     public CGAffineTransform transform() {
         return _transform;
     }
@@ -247,12 +250,14 @@ public class UIView extends UIResponder implements ViewImpl {
         return _flags.isFocused;
     }
 
-    public void setCenter(CGPoint newValue) {
-        if (_center.equals(newValue)) {
+    public void setCenter(CGPoint center) {
+        CGPoint oldValue = _center;
+        if (_center.equals(center)) {
             return;
         }
         _frame = null;
-        _center = newValue;
+        _center = center;
+        CATransaction._addAnimation("center", oldValue, center, _presentation);
     }
 
     public void setBounds(CGRect bounds) {
@@ -266,6 +271,7 @@ public class UIView extends UIResponder implements ViewImpl {
             _resizeSubviewsWithOldSize(oldValue, bounds());
         }
         _sizeDidChange();
+        CATransaction._addAnimation("bounds", oldValue, bounds, _presentation);
     }
 
     public void setFrame(CGRect frame) {
@@ -289,12 +295,14 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     public void setTransform(CGAffineTransform transform) {
+        CGAffineTransform oldValue = _transform;
         if (_transform.equals(transform)) {
             return;
         }
         _transform = transform;
         _invertedTransform = null;
         _frame = null;
+        CATransaction._addAnimation("transform", oldValue, transform, _presentation);
     }
 
     public void setContents(Object contents) {
@@ -480,70 +488,6 @@ public class UIView extends UIResponder implements ViewImpl {
         return 0;
     }
 
-    @Nullable
-    private CGAffineTransform _hierarchyConverterInView(@Nullable UIView searchedView, boolean reversed) {
-        // yep, pass null to find window.
-        if (searchedView == null) {
-            searchedView = window();
-        }
-        // is self, not any convert changes.
-        if (searchedView == this) {
-            return null;
-        }
-        Iterable<UIView> enumerator = null;
-        LinkedList<UIView> results = _searchInViewHierarchy(searchedView); // child -> parent
-        if (results != null) {
-            enumerator = results::descendingIterator;
-        }
-        if (enumerator == null && searchedView != null) {
-            results = searchedView._searchInViewHierarchy(this); // parent -> child
-            if (results == null) {
-                return null;
-            }
-            results.removeFirst(); // ignore self.
-            results.add(searchedView); // attach target view.
-            reversed = !reversed;
-            enumerator = results;
-        }
-        if (enumerator == null) {
-            return null;
-        }
-        float tx = 0, ty = 0;
-        CGAffineTransform translate = CGAffineTransform.createScale(1, 1);
-        for (UIView view : enumerator) {
-            CGAffineTransform transform = view.transform();
-            CGPoint center = view.center();
-            CGRect bounds = view.bounds();
-            tx += center.x;
-            ty += center.y;
-            // TODO: the bounds origin need apply transform?
-            tx -= bounds.x;
-            ty -= bounds.y;
-            if (transform.isIdentity()) {
-                tx -= bounds.width * 0.5f;
-                ty -= bounds.height * 0.5f;
-                continue;
-            }
-            // calculate transformed view size
-            CGSize size = bounds.size();
-            size.apply(transform);
-            tx -= size.width * 0.5f;
-            ty -= size.height * 0.5f;
-            CGAffineTransform tmp = CGAffineTransform.createTranslation(-tx, -ty);
-            tmp.concat(view._invertedTransform());
-            translate.concat(tmp);
-            tx = 0;
-            ty = 0;
-        }
-        if (tx != 0 || ty != 0) {
-            translate.concat(CGAffineTransform.createTranslation(-tx, -ty));
-        }
-        if (reversed) {
-            translate.invert();
-        }
-        return translate;
-    }
-
     private CGRect _remakeFrame() {
         CGRect rect = _bounds.copy();
         // when transform is anything other than the identity transform,
@@ -563,30 +507,158 @@ public class UIView extends UIResponder implements ViewImpl {
         return _transform.inverted();
     }
 
-    protected CGAffineTransform _invertedTransform() {
+    @Override
+    public CGAffineTransform _invertedTransform() {
         if (_invertedTransform == null) {
             _invertedTransform = _remakeInvertedTransform();
         }
         return _invertedTransform;
     }
 
-    protected Iterable<UIView> _invertedSubviews() {
+    public Iterable<UIView> _invertedSubviews() {
         List<UIView> subviews = subviews();
         ReversedIteratorImpl<UIView> iterator = new ReversedIteratorImpl<>(subviews.listIterator(subviews.size()));
         return () -> iterator;
     }
 
-    protected static class Flags {
+    public static class Flags {
 
-        boolean isHidden = false;
-        boolean isClipBounds = false;
-        boolean isHovered = false;
-        boolean isFocused = false;
-        boolean isUserInteractionEnabled = true;
-        boolean isDirty = false;
+        public boolean isHidden = false;
+        public boolean isClipBounds = false;
+        public boolean isHovered = false;
+        public boolean isFocused = false;
+        public boolean isUserInteractionEnabled = true;
+        public boolean isDirty = false;
 
-        boolean needsLayout = false;
-        boolean needsAutoresizing = false;
+        public boolean needsLayout = false;
+        public boolean needsAutoresizing = false;
+    }
+
+    public static class Presentation implements ViewImpl {
+
+        protected double tp;
+        protected final UIView view;
+        protected HashMap<String, CAAnimation> animations;
+
+        public Presentation(UIView view) {
+            this.view = view;
+        }
+
+        @Override
+        public UIView self() {
+            return view;
+        }
+
+        @Override
+        public CGPoint center() {
+            return _valueForKeyPath("center", view, UIView::center);
+        }
+
+        @Override
+        public CGRect bounds() {
+            return _valueForKeyPath("bounds", view, UIView::bounds);
+        }
+
+        @Override
+        public CGAffineTransform transform() {
+            return _valueForKeyPath("transform", view, UIView::transform);
+        }
+
+        public CAAnimation animationForKey(String key) {
+            if (animations != null) {
+                return animations.get(key);
+            }
+            return null;
+        }
+
+        public void addAnimationForKey(CAAnimation animation, String key) {
+            if (!CATransaction.isEnabled()) {
+                return;
+            }
+            removeAnimationForKey(key);
+            if (animations == null) {
+                animations = new HashMap<>();
+            }
+            animations.put(key, animation);
+        }
+
+        public void removeAnimationForKey(String key) {
+            if (animations == null) {
+                return;
+            }
+            CAAnimation oldValue = animations.remove(key);
+            if (oldValue != null) {
+                CATransaction._completeAnimation(key, oldValue);
+            }
+            if (animations.isEmpty()) {
+                animations = null;
+            }
+        }
+
+        public void tick(double tp) {
+            this.tp = tp;
+            if (animations == null) {
+                return;
+            }
+            ArrayList<String> removedKeys = null;
+            for (String key : animations.keySet()) {
+                CAAnimation ani = animations.get(key);
+                double t = _getAnimationTime(ani);
+                if (t >= ani.duration()) {
+                    if (removedKeys == null) {
+                        removedKeys = new ArrayList<>();
+                    }
+                    removedKeys.add(key);
+                }
+            }
+            if (removedKeys != null) {
+                removedKeys.forEach(this::removeAnimationForKey);
+            }
+        }
+
+        @Override
+        public CGAffineTransform _invertedTransform() {
+            CGAffineTransform transform = transform();
+            if (transform != view.transform()) {
+                return transform.inverted();
+            }
+            return view._invertedTransform();
+        }
+
+        public <T extends InterpolableImpl<T>> T _valueForKeyPath(String keyPath, UIView view, Function<UIView, T> getter) {
+            CAAnimation animation = animationForKey(keyPath);
+            if (animation != null) {
+
+                double t = _getAnimationTime(animation);
+                double dur = animation.duration();
+                if (t < 0 || t >= dur) {
+                    return getter.apply(view);
+                }
+
+                T fromValue = ObjectUtilsImpl.unsafeCast(animation.fromValue());
+                T toValue = ObjectUtilsImpl.unsafeCast(animation.toValue());
+
+                CAMediaTimingFunction f = animation.timingFunction();
+                return fromValue.interpolating(toValue, f.applying((float) (t / dur)));
+            }
+            return getter.apply(view);
+        }
+
+        public double _getAnimationTime(CAAnimation animation) {
+            double begin = animation.beginTime();
+            double speed = animation.speed();
+            double offset = animation.timeOffset();
+            return (tp - begin) * speed + offset;
+        }
+
+        @Override
+        public ViewImpl _superviewInViewHierarchy(ViewImpl searchingView) {
+            UIView superview = searchingView.self().superview();
+            if (superview != null) {
+                return superview.presentation();
+            }
+            return null;
+        }
     }
 
     public static class AutoresizingMask {

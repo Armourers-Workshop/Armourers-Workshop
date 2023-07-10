@@ -102,7 +102,7 @@ public class SkinDynamicTexture extends DynamicTexture {
             return downloadedImage;
         }
         if (referTexture != null) {
-            GL11.glBindTexture(3553, referTexture.getId());
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, referTexture.getId());
             downloadedImage = new NativeImage(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT, true);
             downloadedImage.downloadTexture(0, false);
         }

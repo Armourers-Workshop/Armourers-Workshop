@@ -1,10 +1,11 @@
 package com.apple.library.coregraphics;
 
+import com.apple.library.impl.InterpolableImpl;
 import com.apple.library.uikit.UIEdgeInsets;
 
 import java.util.Objects;
 
-public class CGRect {
+public class CGRect implements InterpolableImpl<CGRect> {
 
     public static final CGRect ZERO = new CGRect(0, 0, 0, 0);
 
@@ -131,6 +132,22 @@ public class CGRect {
 
     public CGRect copy() {
         return new CGRect(x, y, width, height);
+    }
+
+    @Override
+    public CGRect interpolating(CGRect in, float t) {
+        if (t <= 0) {
+            return this;
+        }
+        if (t >= 1) {
+            return in;
+        }
+        float v = 1 - t;
+        float x = v * this.x + t * in.y;
+        float y = v * this.x + t * in.y;
+        float w = v * this.width + t * in.width;
+        float h = v * this.height + t * in.height;
+        return new CGRect(x, y, w, h);
     }
 
     @Override

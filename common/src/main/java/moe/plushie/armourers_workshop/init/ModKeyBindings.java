@@ -12,20 +12,34 @@ import net.fabricmc.api.Environment;
 @Environment(EnvType.CLIENT)
 public class ModKeyBindings {
 
-    public static IKeyBinding OPEN_WARDROBE_KEY = cmd("key.keyboard.p").bind(() -> InputMotionHandler::sendOpenWardrobe).build("open-wardrobe");
-    public static IKeyBinding UNDO_KEY = cmd("key.keyboard.z").bind(() -> InputMotionHandler::sendUndo).build("undo");
+    private static final KeyBuilder MAIN = new KeyBuilder("category", null);
+    private static final KeyBuilder GUI = new KeyBuilder("category.gui", "gui");
 
-//    public static IKeyBinding CAMERA_S_KEY = normal("key.keyboard.space").build("undo");
-//    public static IKeyBinding CAMERA_N_KEY = normal("key.keyboard.n").build("undo");
+    public static IKeyBinding OPEN_WARDROBE_KEY = MAIN.cmd("key.keyboard.p").bind(() -> InputMotionHandler::sendOpenWardrobe).build("open-wardrobe");
+    public static IKeyBinding UNDO_KEY = MAIN.cmd("key.keyboard.z").bind(() -> InputMotionHandler::sendUndo).build("undo");
 
-    private static IKeyBindingBuilder<IKeyBinding> cmd(String key) {
-        return normal(key).modifier(OpenKeyModifier.CONTROL);
-    }
-
-    private static IKeyBindingBuilder<IKeyBinding> normal(String key) {
-        return BuilderManager.getInstance().createKeyBindingBuilder(key).category("category");
-    }
+    public static IKeyBinding GUI_TOGGLE_LEFT_KEY = GUI.cmd("key.keyboard.1").build("gui.toggleLeft");
+    public static IKeyBinding GUI_TOGGLE_RIGHT_KEY = GUI.cmd("key.keyboard.2").build("gui.toggleRight");
 
     public static void init() {
+    }
+
+    private static class KeyBuilder {
+
+        private final String category;
+        private final String scope;
+
+        KeyBuilder(String category, String scope) {
+            this.category = category;
+            this.scope = scope;
+        }
+
+        IKeyBindingBuilder<IKeyBinding> cmd(String key) {
+            return normal(key).modifier(OpenKeyModifier.CONTROL);
+        }
+
+        IKeyBindingBuilder<IKeyBinding> normal(String key) {
+            return BuilderManager.getInstance().createKeyBindingBuilder(key).category(category).scope(scope);
+        }
     }
 }

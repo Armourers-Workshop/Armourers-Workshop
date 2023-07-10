@@ -1,5 +1,9 @@
 package com.apple.library.impl;
 
+import com.apple.library.coregraphics.CGAffineTransform;
+import com.apple.library.coregraphics.CGPoint;
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIView;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,18 +13,129 @@ public interface ViewImpl {
 
     UIView self();
 
-    @Nullable
-    default LinkedList<UIView> _searchInViewHierarchy(UIView searchedView) {
-        LinkedList<UIView> results = new LinkedList<>();
-        UIView searchingView = self();
-        while (searchingView != searchedView && searchingView != null) {
-            results.add(searchingView);
-            searchingView = searchingView.superview();
+    CGPoint center();
+
+    CGRect bounds();
+
+    CGAffineTransform transform();
+
+    default CGPoint convertPointFromView(CGPoint point, @Nullable UIView view) {
+        CGAffineTransform transform = _computeTransformInViewHierarchy(view, false);
+        if (transform != null) {
+            return point.applying(transform);
         }
-        if (searchingView == searchedView) {
+        return point;
+    }
+
+    default CGPoint convertPointToView(CGPoint point, @Nullable UIView view) {
+        CGAffineTransform transform = _computeTransformInViewHierarchy(view, true);
+        if (transform != null) {
+            return point.applying(transform);
+        }
+        return point;
+    }
+
+    default CGRect convertRectFromView(CGRect rect, @Nullable UIView view) {
+        CGAffineTransform transform = _computeTransformInViewHierarchy(view, false);
+        if (transform != null) {
+            return rect.applying(transform);
+        }
+        return rect;
+    }
+
+    default CGRect convertRectToView(CGRect rect, @Nullable UIView view) {
+        CGAffineTransform transform = _computeTransformInViewHierarchy(view, true);
+        if (transform != null) {
+            return rect.applying(transform);
+        }
+        return rect;
+    }
+
+    @Nullable
+    default CGAffineTransform _computeTransformInViewHierarchy(@Nullable UIView searchedView, boolean reversed) {
+        // yep, pass null to find window.
+        if (searchedView == null) {
+            searchedView = self().window();
+        }
+        // is self, not any convert changes.
+        if (searchedView == this) {
+            return null;
+        }
+        Iterable<ViewImpl> enumerator = null;
+        LinkedList<ViewImpl> results = _searchInViewHierarchy(searchedView); // child -> parent
+        if (results != null) {
+            enumerator = results::descendingIterator;
+        }
+        if (enumerator == null && searchedView != null) {
+            results = searchedView._searchInViewHierarchy(self()); // parent -> child
+            if (results == null) {
+                return null;
+            }
+            results.removeFirst(); // ignore self.
+            results.add(searchedView); // attach target view.
+            reversed = !reversed;
+            enumerator = results;
+        }
+        if (enumerator == null) {
+            return null;
+        }
+        float tx = 0, ty = 0;
+        CGAffineTransform translate = CGAffineTransform.createScale(1, 1);
+        for (ViewImpl view : enumerator) {
+            CGAffineTransform transform = view.transform();
+            CGPoint center = view.center();
+            CGRect bounds = view.bounds();
+            tx += center.x;
+            ty += center.y;
+            // TODO: the bounds origin need apply transform?
+            tx -= bounds.x;
+            ty -= bounds.y;
+            if (transform.isIdentity()) {
+                tx -= bounds.width * 0.5f;
+                ty -= bounds.height * 0.5f;
+                continue;
+            }
+            // calculate transformed view size
+            CGSize size = bounds.size();
+            size.apply(transform);
+            tx -= size.width * 0.5f;
+            ty -= size.height * 0.5f;
+            CGAffineTransform tmp = CGAffineTransform.createTranslation(-tx, -ty);
+            tmp.concat(view._invertedTransform());
+            translate.concat(tmp);
+            tx = 0;
+            ty = 0;
+        }
+        if (tx != 0 || ty != 0) {
+            translate.concat(CGAffineTransform.createTranslation(-tx, -ty));
+        }
+        if (reversed) {
+            translate.invert();
+        }
+        return translate;
+    }
+
+    @Nullable
+    default LinkedList<ViewImpl> _searchInViewHierarchy(UIView searchedView) {
+        LinkedList<ViewImpl> results = new LinkedList<>();
+        ViewImpl searchingView = this;
+        while (searchingView != null && searchingView.self() != searchedView) {
+            results.add(searchingView);
+            searchingView = _superviewInViewHierarchy(searchingView);
+        }
+        UIView searchingView1 = ObjectUtilsImpl.flatMap(searchingView, ViewImpl::self);
+        if (searchingView1 == searchedView) {
             return results;
         }
         return null;
+    }
+
+    default ViewImpl _superviewInViewHierarchy(ViewImpl searchingView) {
+        return searchingView.self().superview();
+    }
+
+    default CGAffineTransform _invertedTransform() {
+        return transform().inverted();
     }
 
     default boolean _ignoresTouchEvents(UIView view) {

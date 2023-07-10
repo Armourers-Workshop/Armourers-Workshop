@@ -42,7 +42,7 @@ public class ShaderPreprocessor {
     }
 
     private String processOptifineShader(Builder builder) {
-        builder.attribute("ivec2", "vaUV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 0, 1))");
+        builder.attribute("ivec2", "vaUV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
         builder.uniform("mat4", "textureMatrix", "mat4", "aw_TextureMatrix", "($1 * $2)");
         builder.attribute("vec3", "vaNormal", "mat3", "aw_NormalMatrix", "($1 * $2)");
         builder.uniform("mat4", "modelViewMatrix", "mat4", "aw_ModelViewMat", "($1 * $2)");
@@ -58,8 +58,8 @@ public class ShaderPreprocessor {
     }
 
     private String processVanillaShader(Builder builder) {
-        builder.attribute("ivec2", "UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 0, 1))");
-        builder.attribute("vec2", "UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 0, 1))");
+        builder.attribute("ivec2", "UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
+        builder.attribute("vec2", "UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 1, 1))");
         builder.attribute("vec3", "Normal", "mat3", "aw_NormalMatrix", "($1 * $2)");
         builder.uniform("mat4", "ModelViewMat", "mat4", "aw_ModelViewMat", "($1 * $2)");
         return build("vanilla", builder);
