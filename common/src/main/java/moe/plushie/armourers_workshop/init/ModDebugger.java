@@ -17,8 +17,6 @@ public class ModDebugger {
     public static float sy = 1;
     public static float sz = 1;
 
-    public static float textureOffset = -1;
-
     public static boolean flag1 = false;
     public static boolean flag2 = false;
     public static boolean flag3 = false;
@@ -26,7 +24,7 @@ public class ModDebugger {
 
     public static boolean skinnableBlock = false;
     public static boolean hologramProjectorBlock = false;
-    public static boolean advancedSkinBuilderBlock = true;
+    public static boolean advancedSkinBuilderBlock = false;
 
     public static boolean skinBounds = false;
     public static boolean skinOrigin = false;

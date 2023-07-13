@@ -11,6 +11,10 @@ public class UIEdgeInsets {
     public final float right;
     public final float bottom;
 
+    public UIEdgeInsets(UIEdgeInsets edge) {
+        this(edge.top, edge.left, edge.bottom, edge.right);
+    }
+
     public UIEdgeInsets(float top, float left, float bottom, float right) {
         this.top = top;
         this.left = left;

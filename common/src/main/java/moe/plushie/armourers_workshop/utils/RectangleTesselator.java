@@ -5,29 +5,29 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
 public class RectangleTesselator {
 
-    private final MultiBufferSource bufferSource;
     private final CGGraphicsState state;
 
     private final PoseStack.Pose pose;
 
     private float uScale;
     private float vScale;
+    private ResourceLocation texture;
     private VertexConsumer builder;
 
     public RectangleTesselator(CGGraphicsState state) {
         this.state = state;
         this.pose = state.ctm().last();
-        this.bufferSource = state.buffers();
     }
 
-    public void begin(RenderType renderType, float texWidth, float texHeight) {
-        this.builder = bufferSource.getBuffer(renderType);
+    public void begin(RenderType renderType, ResourceLocation texture, float texWidth, float texHeight) {
+        this.builder = state.buffers().getBuffer(renderType);
+        this.texture = texture;
         this.uScale = 1f / texWidth;
         this.vScale = 1f / texHeight;
     }
@@ -56,6 +56,7 @@ public class RectangleTesselator {
     }
 
     public void end() {
+        RenderSystem.setShaderTexture(0, texture);
         state.flush();
         builder = null;
     }

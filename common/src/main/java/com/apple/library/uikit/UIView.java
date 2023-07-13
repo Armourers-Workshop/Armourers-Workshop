@@ -5,28 +5,23 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
-import com.apple.library.impl.InterpolableImpl;
 import com.apple.library.impl.ObjectUtilsImpl;
 import com.apple.library.impl.ReversedIteratorImpl;
 import com.apple.library.impl.ViewImpl;
-import com.apple.library.quartzcore.CAAnimation;
-import com.apple.library.quartzcore.CAMediaTimingFunction;
 import com.apple.library.quartzcore.CATransaction;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class UIView extends UIResponder implements ViewImpl {
 
     protected final Flags _flags = new Flags();
-    protected final Presentation _presentation;
     protected final ArrayList<UIView> _subviews = new ArrayList<>();
+    protected final UIPresentationDelegate _presentation = new UIPresentationDelegate(this);
 
     private WeakReference<UIView> _superview;
     private WeakReference<UIWindow> _window;
@@ -47,7 +42,6 @@ public class UIView extends UIResponder implements ViewImpl {
     private boolean _isOpaque = true;
 
     public UIView(CGRect frame) {
-        this._presentation = new Presentation(this);
         this.setFrame(frame);
     }
 
@@ -167,6 +161,10 @@ public class UIView extends UIResponder implements ViewImpl {
     public void sizeToFit() {
     }
 
+    public CGSize sizeThatFits(CGSize size) {
+        return size;
+    }
+
     public boolean isDescendantOfView(UIView superview) {
         UIView searchingView = this;
         while (searchingView != null) {
@@ -189,11 +187,6 @@ public class UIView extends UIResponder implements ViewImpl {
 
     public Object tooltip() {
         return _tooltip;
-    }
-
-
-    public Presentation presentation() {
-        return _presentation;
     }
 
     @Nullable
@@ -257,7 +250,7 @@ public class UIView extends UIResponder implements ViewImpl {
         }
         _frame = null;
         _center = center;
-        CATransaction._addAnimation("center", oldValue, center, _presentation);
+        _presentation.addAnimationForKeyPath(oldValue, center, "center");
     }
 
     public void setBounds(CGRect bounds) {
@@ -271,7 +264,7 @@ public class UIView extends UIResponder implements ViewImpl {
             _resizeSubviewsWithOldSize(oldValue, bounds());
         }
         _sizeDidChange();
-        CATransaction._addAnimation("bounds", oldValue, bounds, _presentation);
+        _presentation.addAnimationForKeyPath(oldValue, bounds, "bounds");
     }
 
     public void setFrame(CGRect frame) {
@@ -302,7 +295,7 @@ public class UIView extends UIResponder implements ViewImpl {
         _transform = transform;
         _invertedTransform = null;
         _frame = null;
-        CATransaction._addAnimation("transform", oldValue, transform, _presentation);
+        _presentation.addAnimationForKeyPath(oldValue, transform, "transform");
     }
 
     public void setContents(Object contents) {
@@ -521,7 +514,7 @@ public class UIView extends UIResponder implements ViewImpl {
         return () -> iterator;
     }
 
-    public static class Flags {
+    protected static class Flags {
 
         public boolean isHidden = false;
         public boolean isClipBounds = false;
@@ -532,133 +525,6 @@ public class UIView extends UIResponder implements ViewImpl {
 
         public boolean needsLayout = false;
         public boolean needsAutoresizing = false;
-    }
-
-    public static class Presentation implements ViewImpl {
-
-        protected double tp;
-        protected final UIView view;
-        protected HashMap<String, CAAnimation> animations;
-
-        public Presentation(UIView view) {
-            this.view = view;
-        }
-
-        @Override
-        public UIView self() {
-            return view;
-        }
-
-        @Override
-        public CGPoint center() {
-            return _valueForKeyPath("center", view, UIView::center);
-        }
-
-        @Override
-        public CGRect bounds() {
-            return _valueForKeyPath("bounds", view, UIView::bounds);
-        }
-
-        @Override
-        public CGAffineTransform transform() {
-            return _valueForKeyPath("transform", view, UIView::transform);
-        }
-
-        public CAAnimation animationForKey(String key) {
-            if (animations != null) {
-                return animations.get(key);
-            }
-            return null;
-        }
-
-        public void addAnimationForKey(CAAnimation animation, String key) {
-            if (!CATransaction.isEnabled()) {
-                return;
-            }
-            removeAnimationForKey(key);
-            if (animations == null) {
-                animations = new HashMap<>();
-            }
-            animations.put(key, animation);
-        }
-
-        public void removeAnimationForKey(String key) {
-            if (animations == null) {
-                return;
-            }
-            CAAnimation oldValue = animations.remove(key);
-            if (oldValue != null) {
-                CATransaction._completeAnimation(key, oldValue);
-            }
-            if (animations.isEmpty()) {
-                animations = null;
-            }
-        }
-
-        public void tick(double tp) {
-            this.tp = tp;
-            if (animations == null) {
-                return;
-            }
-            ArrayList<String> removedKeys = null;
-            for (String key : animations.keySet()) {
-                CAAnimation ani = animations.get(key);
-                double t = _getAnimationTime(ani);
-                if (t >= ani.duration()) {
-                    if (removedKeys == null) {
-                        removedKeys = new ArrayList<>();
-                    }
-                    removedKeys.add(key);
-                }
-            }
-            if (removedKeys != null) {
-                removedKeys.forEach(this::removeAnimationForKey);
-            }
-        }
-
-        @Override
-        public CGAffineTransform _invertedTransform() {
-            CGAffineTransform transform = transform();
-            if (transform != view.transform()) {
-                return transform.inverted();
-            }
-            return view._invertedTransform();
-        }
-
-        public <T extends InterpolableImpl<T>> T _valueForKeyPath(String keyPath, UIView view, Function<UIView, T> getter) {
-            CAAnimation animation = animationForKey(keyPath);
-            if (animation != null) {
-
-                double t = _getAnimationTime(animation);
-                double dur = animation.duration();
-                if (t < 0 || t >= dur) {
-                    return getter.apply(view);
-                }
-
-                T fromValue = ObjectUtilsImpl.unsafeCast(animation.fromValue());
-                T toValue = ObjectUtilsImpl.unsafeCast(animation.toValue());
-
-                CAMediaTimingFunction f = animation.timingFunction();
-                return fromValue.interpolating(toValue, f.applying((float) (t / dur)));
-            }
-            return getter.apply(view);
-        }
-
-        public double _getAnimationTime(CAAnimation animation) {
-            double begin = animation.beginTime();
-            double speed = animation.speed();
-            double offset = animation.timeOffset();
-            return (tp - begin) * speed + offset;
-        }
-
-        @Override
-        public ViewImpl _superviewInViewHierarchy(ViewImpl searchingView) {
-            UIView superview = searchingView.self().superview();
-            if (superview != null) {
-                return superview.presentation();
-            }
-            return null;
-        }
     }
 
     public static class AutoresizingMask {

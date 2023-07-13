@@ -13,7 +13,7 @@ public class UIScreen extends ScreenImpl {
         }
         // we can only convert to the window coordinate,
         // so add window offset convert to screen coordinate.
-        rect = view.presentation().convertRectToView(rect, window);
+        rect = view._presentation.convertRectToView(rect, window);
         CGRect frame = window.frame();
         if (frame.x == 0 && frame.y == 0) {
             return rect;

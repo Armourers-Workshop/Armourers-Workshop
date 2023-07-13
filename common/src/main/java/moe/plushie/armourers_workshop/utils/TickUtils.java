@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.utils;
 
-import moe.plushie.armourers_workshop.init.ModDebugger;
-
 public class TickUtils {
 
     private static boolean isPaused;
@@ -20,9 +18,6 @@ public class TickUtils {
     }
 
     public static float getPaintTextureOffset() {
-        if (ModDebugger.textureOffset >= 0) {
-            return ModDebugger.textureOffset;
-        }
         double f = ticks() % (255L * 25) / 25f;
         return Math.round(f);
     }

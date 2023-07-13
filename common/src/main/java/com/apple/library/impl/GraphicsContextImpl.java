@@ -106,9 +106,8 @@ public interface GraphicsContextImpl {
     }
 
     default void drawResizableImage(ResourceLocation rl, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight, float zLevel) {
-        RenderSystem.setShaderTexture(0, rl);
         RectangleTesselator tesselator = new RectangleTesselator(state());
-        tesselator.begin(SkinRenderType.GUI_IMAGE, texWidth, texHeight);
+        tesselator.begin(SkinRenderType.GUI_IMAGE, rl, texWidth, texHeight);
         tesselator.blit(x, y, width, height, u, v, sourceWidth, sourceHeight, zLevel);
         tesselator.end();
     }
@@ -122,9 +121,8 @@ public interface GraphicsContextImpl {
     }
 
     default void drawTilableImage(ResourceLocation rl, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight, float topBorder, float bottomBorder, float leftBorder, float rightBorder, float zLevel) {
-        RenderSystem.setShaderTexture(0, rl);
         auto tesselator = new RectangleTesselator(state());
-        tesselator.begin(SkinRenderType.GUI_IMAGE, texWidth, texHeight);
+        tesselator.begin(SkinRenderType.GUI_IMAGE, rl, texWidth, texHeight);
 
         float x0 = x + 0;
         float y0 = y + 0;

@@ -10,12 +10,15 @@ import com.apple.library.impl.LBSIterator;
 import com.apple.library.impl.ObjectUtilsImpl;
 import com.apple.library.impl.WeakDispatcherImpl;
 import com.apple.library.impl.WindowDispatcherImpl;
+import com.apple.library.quartzcore.CATransaction;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiConsumer;
+
+import manifold.ext.rt.api.auto;
 
 @SuppressWarnings("unused")
 public class UIWindow extends UIView {
@@ -266,7 +269,8 @@ public class UIWindow extends UIView {
             }
             float mouseX = context.state().mousePos().getX();
             float mouseY = context.state().mousePos().getY();
-            applyRender(mouseX, mouseY, 0, ObjectUtilsImpl.currentMediaTime(), window, context);
+            applyAnimationPre();
+            applyRender(mouseX, mouseY, 0, window, context);
             if (level != 0) {
                 context.restoreGraphicsState();
             }
@@ -464,11 +468,11 @@ public class UIWindow extends UIView {
             return checkEvent(event);
         }
 
-        private static void applyRender(float mouseX, float mouseY, int depth, double tp, UIView view, CGGraphicsContext context) {
+        private static void applyRender(float mouseX, float mouseY, int depth, UIView view, CGGraphicsContext context) {
             if (view.isHidden()) {
                 return;
             }
-            UIView.Presentation presentation = applyAnimation(view, tp);
+            auto presentation = view._presentation;
             CGPoint center = presentation.center();
             CGRect bounds = presentation.bounds();
             CGAffineTransform transform = presentation.transform();
@@ -476,7 +480,7 @@ public class UIWindow extends UIView {
             float y = center.y;
             float width = bounds.width;
             float height = bounds.height;
-            if (transform != CGAffineTransform.IDENTITY) {
+            if (transform != CGAffineTransform.IDENTITY) { // fast check
                 CGSize size = new CGSize(width, height);
                 size.apply(transform);
                 width = size.width;
@@ -511,7 +515,7 @@ public class UIWindow extends UIView {
                 if (needClips && !bounds.intersects(subview.frame())) {
                     continue;
                 }
-                applyRender(ix, iy, depth + 1, tp, subview, context);
+                applyRender(ix, iy, depth + 1, subview, context);
             }
             view.layerDidDraw(context);
             context.restoreGraphicsState();
@@ -520,10 +524,8 @@ public class UIWindow extends UIView {
             }
         }
 
-        private static UIView.Presentation applyAnimation(UIView view, double tp) {
-            UIView.Presentation presentation = view.presentation();
-            presentation.tick(tp);
-            return presentation;
+        private static void applyAnimationPre() {
+            CATransaction._updateAnimations(ObjectUtilsImpl.currentMediaTime());
         }
 
         private static UIView findFirstResponder(float mouseX, float mouseY, UIEvent event, UIView view) {

@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.builder.blockentity;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
+import moe.plushie.armourers_workshop.builder.data.properties.BooleanProperty;
+import moe.plushie.armourers_workshop.builder.data.properties.VectorProperty;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -24,6 +26,13 @@ public class AdvancedSkinBuilderBlockEntity extends UpdatableBlockEntity impleme
     public SkinDescriptor descriptor = new SkinDescriptor("ks:10830");
     public Vector3f offset = new Vector3f(0, 10, 0);
     public float scale = 1f;
+
+    public final BooleanProperty mirror2 = new BooleanProperty();
+    public final BooleanProperty enabled2 = new BooleanProperty();
+
+    public final VectorProperty location2 = new VectorProperty();
+    public final VectorProperty rotation2 = new VectorProperty();
+    public final VectorProperty scale2 = new VectorProperty();
 
     public Vector3f getRenderOrigin() {
         BlockPos pos = getBlockPos();

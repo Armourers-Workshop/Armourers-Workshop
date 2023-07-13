@@ -20,17 +20,19 @@ import java.util.HashMap;
 
 public class TreeView extends UIScrollView {
 
-    private final TreeNode rootNode;
+    private final TreeNode rootNode = new TreeNode(new NSString("Root"));
     private final HashMap<String, Entry> entries = new HashMap<>();
 
     private boolean dirt = true;
     private TreeNode selectedNode = null;
 
-    public TreeView(TreeNode rootNode, CGRect frame) {
+    public TreeView(CGRect frame) {
         super(frame);
-        this.rootNode = rootNode;
-        // link node to tree.
-        rootNode.link(this);
+        this.rootNode.link(this);
+    }
+
+    public TreeNode rootNode() {
+        return rootNode;
     }
 
     public void selectNode(TreeNode node) {

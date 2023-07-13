@@ -1,8 +1,6 @@
 package com.apple.library.impl;
 
 import com.apple.library.coregraphics.CGAffineTransform;
-import com.apple.library.coregraphics.CGPoint;
-import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSRange;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TickUtils;

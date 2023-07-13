@@ -51,7 +51,7 @@ public class AbstractRenderType extends RenderType {
     });
 
     // unlike vanilla, we do not modify any opengl options.
-    private static final TextureStateShard NO_TEXTURE_UNCHANGED = new TextureStateShard() {
+    private static final TextureStateShard EMPTY_TEXTURE = new TextureStateShard() {
         @Override
         public void setupRenderState() {
         }
@@ -73,7 +73,7 @@ public class AbstractRenderType extends RenderType {
         it.put(SkinRenderFormat.LINE, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_LINES, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
         it.put(SkinRenderFormat.IMAGE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
 
-        it.put(SkinRenderFormat.GUI_IMAGE, () -> _builder(DefaultVertexFormat.POSITION_TEX, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTextureState(NO_TEXTURE_UNCHANGED)));
+        it.put(SkinRenderFormat.GUI_IMAGE, () -> _builder(DefaultVertexFormat.POSITION_TEX, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTextureState(EMPTY_TEXTURE)));
         it.put(SkinRenderFormat.GUI_HIGHLIGHTED_TEXT, () -> _builder(DefaultVertexFormat.POSITION, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTexturingState(OR_REVERSE)));
         it.put(SkinRenderFormat.GUI_COLOR, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_QUADS, builder -> builder.setTransparencyState(DEFAULT_TRANSPARENCY)));
 

@@ -146,4 +146,11 @@ public class CAAnimation implements CAMediaTiming {
     public void _setAnimationData(Object animationData) {
         this.animationData = animationData;
     }
+
+    public double _currentTime(double tp) {
+        double begin = beginTime();
+        double speed = speed();
+        double offset = timeOffset();
+        return (tp - begin) * speed + offset;
+    }
 }

@@ -72,7 +72,7 @@ public class TreeNode {
         setNeedsDisplay();
     }
 
-    public void link(@Nullable TreeView view) {
+    protected void link(@Nullable TreeView view) {
         this.view = view;
         for (TreeNode node : children) {
             node.link(view);

@@ -16,6 +16,11 @@ public class NSMutableString extends NSString {
         this.mutableValue = value;
     }
 
+    public NSMutableString(NSString value) {
+        this("");
+        this.append(value);
+    }
+
     public void append(String value) {
         mutableValue.append(value);
     }

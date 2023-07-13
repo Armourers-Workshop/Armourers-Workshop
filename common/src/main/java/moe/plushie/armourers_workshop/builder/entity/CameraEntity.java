@@ -8,7 +8,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 
@@ -18,8 +17,8 @@ public class CameraEntity extends SeatEntity implements ICamera {
     private CameraType cameraType;
     private final Minecraft minecraft = Minecraft.getInstance();
 
-    public CameraEntity(LocalPlayer player) {
-        super(ModEntityTypes.SEAT.get().get(), player.getLevel());
+    public CameraEntity() {
+        super(ModEntityTypes.SEAT.get().get(), Minecraft.getInstance().level);
     }
 
     @Override
