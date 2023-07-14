@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "ForgeItemRendererMixin",
+    "ForgeEpicFightRendererMixin",
     "ForgeCuriosAddonMixin"
   ],
   "mixins": [

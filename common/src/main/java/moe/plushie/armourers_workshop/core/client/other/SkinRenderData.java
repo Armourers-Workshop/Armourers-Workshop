@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.common.IItemStackProvider;
+import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
+import moe.plushie.armourers_workshop.api.data.IAssociatedContainerKey;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
@@ -22,6 +24,7 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
+import moe.plushie.armourers_workshop.utils.DataStorage;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -42,7 +45,7 @@ import java.util.function.BiConsumer;
 import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
-public class SkinRenderData implements SkinBakery.IBakeListener {
+public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeListener {
 
     private final ArrayList<String> missingSkins = new ArrayList<>();
     private final ArrayList<Entry> armorSkins = new ArrayList<>();
@@ -59,6 +62,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
     private final Ticket loadTicket = Ticket.wardrobe();
     private final IItemStackProvider itemProvider = ItemStackProvider.getInstance();
     private final SkinOverriddenManager overriddenManager = new SkinOverriddenManager();
+    private final DataStorage dataStorage = new DataStorage();
 
     private ColorScheme colorScheme = ColorScheme.EMPTY;
 
@@ -337,6 +341,16 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
     public boolean shouldRenderExtra() {
         return isRenderExtra;
+    }
+
+    @Override
+    public <T> T getAssociatedObject(IAssociatedContainerKey<T> key) {
+        return dataStorage.getAssociatedObject(key);
+    }
+
+    @Override
+    public <T> void setAssociatedObject(T value, IAssociatedContainerKey<T> key) {
+        dataStorage.setAssociatedObject(value, key);
     }
 
     protected interface ItemConsumer {

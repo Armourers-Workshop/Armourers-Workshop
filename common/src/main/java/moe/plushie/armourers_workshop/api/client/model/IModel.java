@@ -14,4 +14,3 @@ public interface IModel extends IAssociatedContainer {
 
     Collection<IModelPart> getAllParts();
 }
-

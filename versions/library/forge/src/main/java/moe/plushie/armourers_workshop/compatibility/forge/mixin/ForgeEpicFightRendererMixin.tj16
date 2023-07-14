@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import yesman.epicfight.api.animation.Joint;
-import yesman.epicfight.api.client.model.ClientModels;
 import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.client.renderer.FirstPersonRenderer;
@@ -26,7 +25,7 @@ import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 import java.nio.FloatBuffer;
 
-@Available("[1.16, 1.19)")
+@Available("[1.16, 1.18)")
 @Pseudo
 @Mixin(PatchedLivingEntityRenderer.class)
 public abstract class ForgeEpicFightRendererMixin {
@@ -34,23 +33,34 @@ public abstract class ForgeEpicFightRendererMixin {
     private static final FloatBuffer AW_MAT_BUFFER3 = ObjectUtils.createFloatBuffer(16);
     private static final FloatBuffer AW_MAT_BUFFER4 = ObjectUtils.createFloatBuffer(16);
 
+    private Armature lastApplyArmature;
+
+    @Inject(method = "mulPoseStack", at = @At("HEAD"), remap = false)
+    public void aw$mulPoseStack(PoseStack poseStack, Armature armature, LivingEntity entityIn, LivingEntityPatch<?> entityPatch, float partialTicks, CallbackInfo callbackInfo) {
+        lastApplyArmature = armature;
+    }
+
     @Inject(method = "renderLayer", at = @At("HEAD"), remap = false)
     public void aw$renderLayerPre(LivingEntityRenderer<?, ?> renderer, LivingEntityPatch<?> entityPatch, LivingEntity entityIn, OpenMatrix4f[] poses, MultiBufferSource buffers, PoseStack poseStack, int packedLightIn, float partialTicks, CallbackInfo callbackInfo) {
-        Armature armature = entityPatch.getEntityModel(ClientModels.LOGICAL_CLIENT).getArmature();
+        Armature armature = lastApplyArmature;
+        if (armature == null) {
+            return;
+        }
         boolean isFirstPersonRenderer = ObjectUtils.safeCast(this, FirstPersonRenderer.class) != null;
         EpicFlightWardrobeHandler.onRenderLivingPre(entityIn, partialTicks, packedLightIn, poseStack, buffers, renderer, isFirstPersonRenderer, name -> {
             Joint joint = armature.searchJointByName(name);
             if (joint == null) {
                 return ITransformf.NONE;
             }
+            OpenMatrix4f jointMatrix = poses[joint.getId()];
+            OpenMatrix4f jointNormalMatrix = jointMatrix.removeTranslation();
             return poseStack1 -> {
-                OpenMatrix4f jointMatrix = poses[joint.getId()];
-                OpenMatrix4f jointNormalMatrix = jointMatrix.removeTranslation();
                 jointMatrix.store(AW_MAT_BUFFER4);
                 jointNormalMatrix.store(AW_MAT_BUFFER3);
                 AW_MAT_BUFFER3.position(0);
                 AW_MAT_BUFFER4.position(0);
-                EpicFlightWardrobeHandler.applyPoseFromBuffer(poseStack1, AW_MAT_BUFFER4, AW_MAT_BUFFER3);
+                poseStack1.multiply(EpicFlightWardrobeHandler.convertPoseMatrix(AW_MAT_BUFFER4));
+                poseStack1.multiply(EpicFlightWardrobeHandler.convertNormalMatrix(AW_MAT_BUFFER3));
             };
         });
     }
