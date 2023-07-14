@@ -13,13 +13,9 @@ import net.fabricmc.api.Environment;
 public class ModKeyBindings {
 
     private static final KeyBuilder MAIN = new KeyBuilder("category", null);
-    private static final KeyBuilder GUI = new KeyBuilder("category.gui", "gui");
 
     public static IKeyBinding OPEN_WARDROBE_KEY = MAIN.cmd("key.keyboard.p").bind(() -> InputMotionHandler::sendOpenWardrobe).build("open-wardrobe");
     public static IKeyBinding UNDO_KEY = MAIN.cmd("key.keyboard.z").bind(() -> InputMotionHandler::sendUndo).build("undo");
-
-    public static IKeyBinding GUI_TOGGLE_LEFT_KEY = GUI.cmd("key.keyboard.1").build("gui.toggleLeft");
-    public static IKeyBinding GUI_TOGGLE_RIGHT_KEY = GUI.cmd("key.keyboard.2").build("gui.toggleRight");
 
     public static void init() {
     }
@@ -27,11 +23,9 @@ public class ModKeyBindings {
     private static class KeyBuilder {
 
         private final String category;
-        private final String scope;
 
         KeyBuilder(String category, String scope) {
             this.category = category;
-            this.scope = scope;
         }
 
         IKeyBindingBuilder<IKeyBinding> cmd(String key) {
@@ -39,7 +33,7 @@ public class ModKeyBindings {
         }
 
         IKeyBindingBuilder<IKeyBinding> normal(String key) {
-            return BuilderManager.getInstance().createKeyBindingBuilder(key).category(category).scope(scope);
+            return BuilderManager.getInstance().createKeyBindingBuilder(key).category(category);
         }
     }
 }

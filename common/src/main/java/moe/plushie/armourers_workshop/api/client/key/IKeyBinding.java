@@ -4,8 +4,6 @@ import net.minecraft.network.chat.Component;
 
 public interface IKeyBinding {
 
-    boolean matches(int key1, int key2);
-
     Component getKeyName();
 
     IKeyModifier getKeyModifier();

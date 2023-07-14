@@ -12,19 +12,18 @@ import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIScreen;
 import com.apple.library.uikit.UIView;
-import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedSkinBuilderBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.AdvancedBoneSkinPanel;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.AdvancedCameraSkinPanel;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.AdvancedGeneralSkinPanel;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.AdvancedSkinPanel;
 import moe.plushie.armourers_workshop.builder.client.gui.widget.DrawerToolbar;
+import moe.plushie.armourers_workshop.builder.client.gui.widget.Shortcut;
 import moe.plushie.armourers_workshop.builder.menu.AdvancedSkinBuilderMenu;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractMenuWindowProvider;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.client.gui.widget.TreeNode;
 import moe.plushie.armourers_workshop.core.client.gui.widget.TreeView;
-import moe.plushie.armourers_workshop.init.ModKeyBindings;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import net.fabricmc.api.EnvType;
@@ -43,7 +42,7 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
     private final TreeView rightTree = new TreeView(new CGRect(0, 0, 200, 200));
     private final DrawerToolbar rightToolbar = new DrawerToolbar(new CGRect(0, 0, 200, 480));
 
-    private final HashMap<IKeyBinding, Runnable> shortcuts = new HashMap<>();
+    private final HashMap<Shortcut, Runnable> shortcuts = new HashMap<>();
 
     private int leftCardOffset = 100;
     private int rightCardOffset = 100;
@@ -153,8 +152,8 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
     }
 
     private void setupShortcuts() {
-        shortcuts.put(ModKeyBindings.GUI_TOGGLE_LEFT_KEY, this::toggleLeftCard);
-        shortcuts.put(ModKeyBindings.GUI_TOGGLE_RIGHT_KEY, this::toggleRightCard);
+        shortcuts.put(Shortcut.of("key.keyboard.control", "key.keyboard.1"), this::toggleLeftCard);
+        shortcuts.put(Shortcut.of("key.keyboard.control", "key.keyboard.2"), this::toggleRightCard);
     }
 
     private void reloadData() {

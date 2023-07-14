@@ -11,8 +11,6 @@ public interface IKeyBindingBuilder<T extends IKeyBinding> {
 
     IKeyBindingBuilder<T> category(String category);
 
-    IKeyBindingBuilder<T> scope(String scope);
-
     IKeyBindingBuilder<T> bind(Supplier<Runnable> handler);
 
     T build(String name);
