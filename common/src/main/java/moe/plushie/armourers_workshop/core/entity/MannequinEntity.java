@@ -38,6 +38,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import manifold.ext.rt.api.auto;
+
 @SuppressWarnings("unused")
 public class MannequinEntity extends ArmorStand implements IEntityHandler {
 
@@ -357,24 +359,30 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
             newEntityTag.remove(Constants.Key.ENTITY_TEXTURE);
         }
         if (MannequinToolOptions.CHANGE_SCALE.get(itemStack)) {
-            newEntityTag.put(Constants.Key.ENTITY_SCALE, entityTag.get(Constants.Key.ENTITY_SCALE));
+            auto oldValue = entityTag.get(Constants.Key.ENTITY_SCALE);
+            if (oldValue != null) {
+                newEntityTag.put(Constants.Key.ENTITY_SCALE, oldValue);
+            }
         }
         if (MannequinToolOptions.CHANGE_ROTATION.get(itemStack)) {
-            CompoundTag poseTag = entityTag.getCompound(Constants.Key.ENTITY_POSE);
-            if (MannequinToolOptions.MIRROR_MODE.get(itemStack) && !poseTag.isEmpty()) {
-                CompoundTag newPoseTag = poseTag.copy();
-                DataSerializers.mirrorRotations(poseTag, Constants.Key.ENTITY_POSE_HEAD, DEFAULT_HEAD_POSE, newPoseTag, Constants.Key.ENTITY_POSE_HEAD, DEFAULT_HEAD_POSE);
-                DataSerializers.mirrorRotations(poseTag, Constants.Key.ENTITY_POSE_BODY, DEFAULT_BODY_POSE, newPoseTag, Constants.Key.ENTITY_POSE_BODY, DEFAULT_BODY_POSE);
-                DataSerializers.mirrorRotations(poseTag, Constants.Key.ENTITY_POSE_RIGHT_ARM, DEFAULT_RIGHT_ARM_POSE, newPoseTag, Constants.Key.ENTITY_POSE_LEFT_ARM, DEFAULT_LEFT_ARM_POSE);
-                DataSerializers.mirrorRotations(poseTag, Constants.Key.ENTITY_POSE_LEFT_ARM, DEFAULT_LEFT_ARM_POSE, newPoseTag, Constants.Key.ENTITY_POSE_RIGHT_ARM, DEFAULT_RIGHT_ARM_POSE);
-                DataSerializers.mirrorRotations(poseTag, Constants.Key.ENTITY_POSE_RIGHT_LEG, DEFAULT_RIGHT_LEG_POSE, newPoseTag, Constants.Key.ENTITY_POSE_LEFT_LEG, DEFAULT_LEFT_LEG_POSE);
-                DataSerializers.mirrorRotations(poseTag, Constants.Key.ENTITY_POSE_LEFT_LEG, DEFAULT_LEFT_LEG_POSE, newPoseTag, Constants.Key.ENTITY_POSE_RIGHT_LEG, DEFAULT_RIGHT_LEG_POSE);
-                poseTag = newPoseTag;
+            auto oldValue = entityTag.getCompound(Constants.Key.ENTITY_POSE);
+            if (MannequinToolOptions.MIRROR_MODE.get(itemStack) && !oldValue.isEmpty()) {
+                CompoundTag newPoseTag = oldValue.copy();
+                DataSerializers.mirrorRotations(oldValue, Constants.Key.ENTITY_POSE_HEAD, DEFAULT_HEAD_POSE, newPoseTag, Constants.Key.ENTITY_POSE_HEAD, DEFAULT_HEAD_POSE);
+                DataSerializers.mirrorRotations(oldValue, Constants.Key.ENTITY_POSE_BODY, DEFAULT_BODY_POSE, newPoseTag, Constants.Key.ENTITY_POSE_BODY, DEFAULT_BODY_POSE);
+                DataSerializers.mirrorRotations(oldValue, Constants.Key.ENTITY_POSE_RIGHT_ARM, DEFAULT_RIGHT_ARM_POSE, newPoseTag, Constants.Key.ENTITY_POSE_LEFT_ARM, DEFAULT_LEFT_ARM_POSE);
+                DataSerializers.mirrorRotations(oldValue, Constants.Key.ENTITY_POSE_LEFT_ARM, DEFAULT_LEFT_ARM_POSE, newPoseTag, Constants.Key.ENTITY_POSE_RIGHT_ARM, DEFAULT_RIGHT_ARM_POSE);
+                DataSerializers.mirrorRotations(oldValue, Constants.Key.ENTITY_POSE_RIGHT_LEG, DEFAULT_RIGHT_LEG_POSE, newPoseTag, Constants.Key.ENTITY_POSE_LEFT_LEG, DEFAULT_LEFT_LEG_POSE);
+                DataSerializers.mirrorRotations(oldValue, Constants.Key.ENTITY_POSE_LEFT_LEG, DEFAULT_LEFT_LEG_POSE, newPoseTag, Constants.Key.ENTITY_POSE_RIGHT_LEG, DEFAULT_RIGHT_LEG_POSE);
+                oldValue = newPoseTag;
             }
-            newEntityTag.put(Constants.Key.ENTITY_POSE, poseTag);
+            newEntityTag.put(Constants.Key.ENTITY_POSE, oldValue);
         }
         if (MannequinToolOptions.CHANGE_TEXTURE.get(itemStack)) {
-            newEntityTag.put(Constants.Key.ENTITY_TEXTURE, entityTag.get(Constants.Key.ENTITY_TEXTURE));
+            auto oldValue = entityTag.get(Constants.Key.ENTITY_TEXTURE);
+            if (oldValue != null) {
+                newEntityTag.put(Constants.Key.ENTITY_TEXTURE, oldValue);
+            }
         }
         // load into entity
         readExtendedData(newEntityTag);
