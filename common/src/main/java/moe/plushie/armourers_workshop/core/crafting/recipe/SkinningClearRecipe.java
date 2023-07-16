@@ -13,7 +13,9 @@ public class SkinningClearRecipe extends SkinningRecipe {
 
     @Override
     protected ItemStack build(ItemStack targetStack, ItemStack skinStack) {
-        return SkinItem.replace(skinStack.copy(), ItemStack.EMPTY);
+        ItemStack newItemStack = skinStack.copy();
+        newItemStack.setCount(1);
+        return SkinItem.replace(newItemStack, ItemStack.EMPTY);
     }
 
     @Override
