@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.ArmatureModifier;
 
-public class DefaultWingJointModifier extends ArmatureModifier {
+public class FlatWingJointModifier extends ArmatureModifier {
 
     @Override
     public ITransformf apply(ITransformf transform, IModelHolder<?> model) {

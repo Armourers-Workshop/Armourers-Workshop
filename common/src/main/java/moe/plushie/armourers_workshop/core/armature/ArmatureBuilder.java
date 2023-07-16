@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.core.AfterTransformModifier;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultBabyJointModifier;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultSkirtJointModifier;
-import moe.plushie.armourers_workshop.core.armature.core.DefaultWingJointModifier;
+import moe.plushie.armourers_workshop.core.armature.core.FlatWingJointModifier;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.resources.ResourceLocation;
 
@@ -26,7 +26,7 @@ public abstract class ArmatureBuilder {
     private static final ImmutableMap<String, ArmatureModifier> FIXED_MODIFIERS = ImmutableMap.<String, ArmatureModifier>builder()
             .put("armourers_workshop:baby_head_apt", new DefaultBabyJointModifier())
             .put("armourers_workshop:body_to_skirt", new DefaultSkirtJointModifier())
-            .put("armourers_workshop:body_to_wing", new DefaultWingJointModifier())
+            .put("armourers_workshop:body_to_flat_wing", new FlatWingJointModifier())
             .build();
 
     private static final ImmutableMap<String, Function<IDataPackObject, ArmatureModifier>> PARAMETERIZED_MODIFIERS = ImmutableMap.<String, Function<IDataPackObject, ArmatureModifier>>builder()

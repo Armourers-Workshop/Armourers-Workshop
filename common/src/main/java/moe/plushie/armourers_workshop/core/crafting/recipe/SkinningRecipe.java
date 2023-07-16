@@ -78,7 +78,9 @@ public abstract class SkinningRecipe {
     }
 
     protected ItemStack build(ItemStack targetStack, ItemStack skinStack) {
-        return SkinItem.replace(targetStack.copy(), skinStack);
+        ItemStack newItemStack = targetStack.copy();
+        newItemStack.setCount(1);
+        return SkinItem.replace(newItemStack, skinStack);
     }
 
     protected boolean isValidSkin(ItemStack itemStack) {

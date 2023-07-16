@@ -43,13 +43,13 @@
     "Wing_L": {
       "target": "body",
       "modifier": [
-        "armourers_workshop:body_to_wing"
+        "armourers_workshop:body_to_flat_wing"
       ]
     },
     "Wing_R": {
       "target": "body",
       "modifier": [
-        "armourers_workshop:body_to_wing"
+        "armourers_workshop:body_to_flat_wing"
       ]
     },
     "Phalanx_L": {
