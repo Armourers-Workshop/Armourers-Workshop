@@ -76,8 +76,8 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     private OpenQuaternionf renderRotations;
     private AABB renderBoundingBox;
     private VoxelShape renderVoxelShape = null;
+    private ItemStack droppedStack = null;
 
-    private boolean isDropped = false;
     private boolean isParent = false;
 
     public SkinnableBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
@@ -284,12 +284,16 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         return null;
     }
 
-    public void setDropped(boolean flag) {
-        isDropped = flag;
+    public void setDropped(ItemStack itemStack) {
+        this.droppedStack = itemStack;
+    }
+
+    public ItemStack getDropped() {
+        return droppedStack;
     }
 
     public boolean isDropped() {
-        return isDropped;
+        return droppedStack != null;
     }
 
     public boolean isLadder() {

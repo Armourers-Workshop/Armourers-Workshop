@@ -1,17 +1,22 @@
 package moe.plushie.armourers_workshop.core.block;
 
 import moe.plushie.armourers_workshop.api.common.IBlockHandler;
+import moe.plushie.armourers_workshop.api.common.ILootContext;
+import moe.plushie.armourers_workshop.api.common.ILootContextParam;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
+import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3d;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,6 +43,7 @@ import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -45,6 +51,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements AbstractBlockEntityProvider, IBlockHandler {
@@ -95,6 +103,30 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
             this.brokenByAnything(level, blockPos, blockState, null);
         }
         super.onRemove(blockState, level, blockPos, blockState2, bl);
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState blockState, ILootContext context) {
+        List<ItemStack> results = super.getDrops(blockState, context);
+        SkinnableBlockEntity blockEntity = ObjectUtils.safeCast(context.getOptionalParameter(ILootContextParam.BLOCK_ENTITY), SkinnableBlockEntity.class);
+        if (blockEntity == null || results.isEmpty()) {
+            return results;
+        }
+        ArrayList<ItemStack> fixedResults = new ArrayList<>(results.size());
+        for (ItemStack itemStack : results) {
+            // we will add an invalid skin item from loot table at data pack,
+            // so we need fix the skin info in the drop event.
+            if (itemStack.is(ModItems.SKIN.get()) && SkinDescriptor.of(itemStack).isEmpty()) {
+                // when not found any dropped stack,
+                // we must be remove invalid skin item.
+                itemStack = blockEntity.getDropped();
+                if (itemStack == null) {
+                    continue;
+                }
+            }
+            fixedResults.add(itemStack);
+        }
+        return fixedResults;
     }
 
     @Override
@@ -235,17 +267,17 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     public boolean dropItems(Level level, BlockPos blockPos, @Nullable Player player) {
-        SkinnableBlockEntity blockEntity = getParentBlockEntity(level, blockPos);
-        if (blockEntity == null || blockEntity.isDropped()) {
+        SkinnableBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        SkinnableBlockEntity parentBlockEntity = getParentBlockEntity(level, blockPos);
+        if (blockEntity == null || parentBlockEntity == null || parentBlockEntity.isDropped()) {
             return false;
         }
         // anyway, we only drop all items once.
-        blockEntity.setDropped(true);
-        if (player == null || !player.getAbilities().instabuild) {
-            DataSerializers.dropItemStack(level, blockPos, blockEntity.getDescriptor().asItemStack());
-        }
-        if (blockEntity.isInventory()) {
-            DataSerializers.dropContents(level, blockPos, blockEntity);
+        ItemStack droppedStack = parentBlockEntity.getDescriptor().asItemStack();
+        blockEntity.setDropped(droppedStack); // mark the attacked block
+        parentBlockEntity.setDropped(droppedStack);
+        if (parentBlockEntity.isInventory()) {
+            DataSerializers.dropContents(level, blockPos, parentBlockEntity);
         }
         return true;
     }

@@ -12,7 +12,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -20,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class AbstractHorizontalBlock extends HorizontalDirectionalBlock {
+public abstract class AbstractHorizontalBlock extends AbstractHorizontalBlockImpl {
 
     public AbstractHorizontalBlock(BlockBehaviour.Properties properties) {
         super(properties);
