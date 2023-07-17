@@ -1,8 +1,6 @@
 package extensions.net.minecraft.core.Registry;
 
 import com.mojang.brigadier.CommandDispatcher;
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
@@ -53,6 +51,9 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
 
 @Available("[1.19, )")
 @Extension

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.compatibility.AbstractRenderLayer;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import net.fabricmc.api.EnvType;
@@ -27,7 +27,7 @@ public class ForwardingLayer<T extends Entity, M extends EntityModel<T>> extends
         this.test = test;
     }
 
-    public static <T extends Entity, V extends EntityModel<T>, M extends IModelHolder<V>> BiFunction<RenderLayerParent<T, V>, RenderLayer<T, V>, RenderLayer<T, V>> when(BiPredicate<T, M> test) {
+    public static <T extends Entity, V extends EntityModel<T>, M extends IModel> BiFunction<RenderLayerParent<T, V>, RenderLayer<T, V>, RenderLayer<T, V>> when(BiPredicate<T, M> test) {
         return (entityRenderer, layer) -> new ForwardingLayer<>(entityRenderer, layer, (e, m) -> test.test(e, ModelHolder.of(m)));
     }
 

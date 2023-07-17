@@ -1,9 +1,10 @@
 package moe.plushie.armourers_workshop.utils;
 
-import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
-import moe.plushie.armourers_workshop.api.client.model.IPlayerModelHolder;
-import moe.plushie.armourers_workshop.api.data.IExtraDateStorageKey;
+import moe.plushie.armourers_workshop.api.client.model.IHumanoidModel;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
+import moe.plushie.armourers_workshop.api.client.model.IModelPart;
+import moe.plushie.armourers_workshop.api.client.model.IPlayerModel;
+import moe.plushie.armourers_workshop.api.data.IAssociatedContainerKey;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.compatibility.AbstractModelPartRegistries;
@@ -14,7 +15,6 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 
-import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,31 +23,31 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
-public class ModelHolder<T extends Model> implements IModelHolder<T> {
+public class ModelHolder implements IModel {
 
     private static final HashMap<Class<?>, Entry<?, ?>> ENTRIES = new HashMap<>();
 
     private final PartSet table = new PartSet();
     private final DataStorage storage = new DataStorage();
 
-    public ModelHolder(T model, Consumer<PartSet> provider) {
+    public ModelHolder(Model model, Consumer<PartSet> provider) {
         provider.accept(table);
     }
 
     @FunctionalInterface
-    public interface Factory<V extends Model, M extends IModelHolder<V>> {
+    public interface Factory<V extends Model, M extends IModel> {
 
         M create(V model, Consumer<PartSet> table);
     }
 
-    public static <V extends Model, M extends IModelHolder<V>> M ofNullable(V model) {
+    public static <V extends Model, M extends IModel> M ofNullable(V model) {
         if (model != null) {
             return of(model);
         }
         return null;
     }
 
-    public static <V extends Model, M extends IModelHolder<V>> M of(V model) {
+    public static <M extends IModel> M of(Model model) {
         ISkinDataProvider provider = ObjectUtils.safeCast(model, ISkinDataProvider.class);
         if (provider != null) {
             M holder = provider.getSkinData();
@@ -63,7 +63,7 @@ public class ModelHolder<T extends Model> implements IModelHolder<T> {
         return createHolder(model);
     }
 
-    private static <V extends Model, M extends IModelHolder<V>> M createHolder(V model) {
+    private static <V extends Model, M extends IModel> M createHolder(V model) {
         ArrayList<BiConsumer<V, PartSet>> builders = new ArrayList<>();
         Factory<V, M> factory = null;
         Class<?> clazz = model.getClass();
@@ -79,20 +79,20 @@ public class ModelHolder<T extends Model> implements IModelHolder<T> {
             clazz = clazz.getSuperclass();
         }
         if (factory == null) {
-            Factory<V, ModelHolder<V>> factory1 = ModelHolder::new;
+            Factory<V, ModelHolder> factory1 = ModelHolder::new;
             factory = ObjectUtils.unsafeCast(factory1);
         }
         return factory.create(model, it -> builders.forEach(builder -> builder.accept(model, it)));
     }
 
     @Override
-    public <V> V getExtraData(IExtraDateStorageKey<V> key) {
-        return storage.getExtraData(key);
+    public <V> V getAssociatedObject(IAssociatedContainerKey<V> key) {
+        return storage.getAssociatedObject(key);
     }
 
     @Override
-    public <V> void setExtraData(IExtraDateStorageKey<V> key, V value) {
-        storage.setExtraData(key, value);
+    public <V> void setAssociatedObject(IAssociatedContainerKey<V> key, V value) {
+        storage.setAssociatedObject(key, value);
     }
 
     @Override
@@ -101,29 +101,29 @@ public class ModelHolder<T extends Model> implements IModelHolder<T> {
     }
 
     @Override
-    public ModelPart getPart(String name) {
+    public IModelPart getPart(String name) {
         return table.get(name);
     }
 
     @Override
-    public Collection<ModelPart> getAllParts() {
+    public Collection<IModelPart> getAllParts() {
         return table.values();
     }
 
-    public static class EntityStub<T extends EntityModel<?>> extends ModelHolder<T> {
+    public static class EntityStub extends ModelHolder {
 
-        private final SoftReference<T> model;
+        private final EntityModel<?> model;
         private final Transform transform;
 
-        public EntityStub(T model, Consumer<PartSet> provider) {
+        public EntityStub(EntityModel<?> model, Consumer<PartSet> provider) {
             super(model, provider);
-            this.model = new SoftReference<>(model);
+            this.model = model;
             this.transform = AbstractModelPartRegistries.transform(model);
         }
 
         @Override
         public boolean isBaby() {
-            return getModel().young;
+            return model.young;
         }
 
         @Override
@@ -135,108 +135,104 @@ public class ModelHolder<T extends Model> implements IModelHolder<T> {
         public IVector3f getBabyOffset() {
             return transform.offset;
         }
-
-        private T getModel() {
-            return model.get();
-        }
     }
 
-    public static class HumanoidStub<T extends EntityModel<?>> extends EntityStub<T> implements IHumanoidModelHolder<T> {
+    public static class HumanoidStub extends EntityStub implements IHumanoidModel {
 
-        private final ModelPart hat;
-        private final ModelPart head;
-        private final ModelPart body;
-        private final ModelPart leftArm;
-        private final ModelPart rightArm;
-        private final ModelPart leftLeg;
-        private final ModelPart rightLeg;
+        private final IModelPart hat;
+        private final IModelPart head;
+        private final IModelPart body;
+        private final IModelPart leftArm;
+        private final IModelPart rightArm;
+        private final IModelPart leftLeg;
+        private final IModelPart rightLeg;
 
-        public HumanoidStub(T model, Consumer<PartSet> provider) {
+        public HumanoidStub(EntityModel<?> model, Consumer<PartSet> provider) {
             super(model, provider);
-            this.hat = IHumanoidModelHolder.super.getHatPart();
-            this.head = IHumanoidModelHolder.super.getHeadPart();
-            this.body = IHumanoidModelHolder.super.getBodyPart();
-            this.leftArm = IHumanoidModelHolder.super.getLeftArmPart();
-            this.rightArm = IHumanoidModelHolder.super.getRightArmPart();
-            this.leftLeg = IHumanoidModelHolder.super.getLeftLegPart();
-            this.rightLeg = IHumanoidModelHolder.super.getRightLegPart();
+            this.hat = IHumanoidModel.super.getHatPart();
+            this.head = IHumanoidModel.super.getHeadPart();
+            this.body = IHumanoidModel.super.getBodyPart();
+            this.leftArm = IHumanoidModel.super.getLeftArmPart();
+            this.rightArm = IHumanoidModel.super.getRightArmPart();
+            this.leftLeg = IHumanoidModel.super.getLeftLegPart();
+            this.rightLeg = IHumanoidModel.super.getRightLegPart();
         }
 
         @Override
-        public ModelPart getHatPart() {
+        public IModelPart getHatPart() {
             return hat;
         }
 
         @Override
-        public ModelPart getHeadPart() {
+        public IModelPart getHeadPart() {
             return head;
         }
 
         @Override
-        public ModelPart getBodyPart() {
+        public IModelPart getBodyPart() {
             return body;
         }
 
         @Override
-        public ModelPart getLeftArmPart() {
+        public IModelPart getLeftArmPart() {
             return leftArm;
         }
 
         @Override
-        public ModelPart getRightArmPart() {
+        public IModelPart getRightArmPart() {
             return rightArm;
         }
 
         @Override
-        public ModelPart getLeftLegPart() {
+        public IModelPart getLeftLegPart() {
             return leftLeg;
         }
 
         @Override
-        public ModelPart getRightLegPart() {
+        public IModelPart getRightLegPart() {
             return rightLeg;
         }
     }
 
-    public static class PlayerStub<T extends EntityModel<?>> extends HumanoidStub<T> implements IPlayerModelHolder<T> {
+    public static class PlayerStub extends HumanoidStub implements IPlayerModel {
 
-        private final ModelPart leftSleeve;
-        private final ModelPart rightSleeve;
-        private final ModelPart leftPants;
-        private final ModelPart rightPants;
-        private final ModelPart jacket;
+        private final IModelPart leftSleeve;
+        private final IModelPart rightSleeve;
+        private final IModelPart leftPants;
+        private final IModelPart rightPants;
+        private final IModelPart jacket;
 
-        public PlayerStub(T model, Consumer<PartSet> provider) {
+        public PlayerStub(EntityModel<?> model, Consumer<PartSet> provider) {
             super(model, provider);
-            this.leftSleeve = IPlayerModelHolder.super.getLeftSleevePart();
-            this.rightSleeve = IPlayerModelHolder.super.getRightSleevePart();
-            this.leftPants = IPlayerModelHolder.super.getLeftPantsPart();
-            this.rightPants = IPlayerModelHolder.super.getRightPantsPart();
-            this.jacket = IPlayerModelHolder.super.getJacketPart();
+            this.leftSleeve = IPlayerModel.super.getLeftSleevePart();
+            this.rightSleeve = IPlayerModel.super.getRightSleevePart();
+            this.leftPants = IPlayerModel.super.getLeftPantsPart();
+            this.rightPants = IPlayerModel.super.getRightPantsPart();
+            this.jacket = IPlayerModel.super.getJacketPart();
         }
 
         @Override
-        public ModelPart getLeftSleevePart() {
+        public IModelPart getLeftSleevePart() {
             return leftSleeve;
         }
 
         @Override
-        public ModelPart getRightSleevePart() {
+        public IModelPart getRightSleevePart() {
             return rightSleeve;
         }
 
         @Override
-        public ModelPart getLeftPantsPart() {
+        public IModelPart getLeftPantsPart() {
             return leftPants;
         }
 
         @Override
-        public ModelPart getRightPantsPart() {
+        public IModelPart getRightPantsPart() {
             return rightPants;
         }
 
         @Override
-        public ModelPart getJacketPart() {
+        public IModelPart getJacketPart() {
             return jacket;
         }
     }
@@ -252,11 +248,11 @@ public class ModelHolder<T extends Model> implements IModelHolder<T> {
         }
     }
 
-    public static class Entry<T extends Model, M extends IModelHolder<T>> {
+    public static class Entry<T extends Model, M extends IModel> {
 
         Class<T> clazz;
         Factory<T, M> factory;
-        BiFunction<T, Consumer<PartSet>, IModelHolder<T>> provider;
+        BiFunction<T, Consumer<PartSet>, IModel> provider;
         BiConsumer<T, PartSet> builder;
 
         Entry(Class<T> clazz, Factory<T, M> factory, BiConsumer<T, PartSet> builder) {
@@ -264,29 +260,30 @@ public class ModelHolder<T extends Model> implements IModelHolder<T> {
             this.factory = factory;
             this.builder = builder;
         }
-
     }
 
     public static class PartSet {
 
-        final ArrayList<ModelPart> values = new ArrayList<>();
-        final HashMap<String, ModelPart> parts = new HashMap<>();
+        final ArrayList<IModelPart> values = new ArrayList<>();
+        final HashMap<String, IModelPart> parts = new HashMap<>();
 
         public void put(String name, ModelPart part) {
-            parts.put(name, part);
-            values.add(part);
+            IModelPart holder = ModelPartHolder.of(part);
+            parts.put(name, holder);
+            values.add(holder);
         }
 
         public void unnamed(Iterable<ModelPart> parts) {
-            parts.forEach(values::add);
+            for (ModelPart part : parts) {
+                values.add(ModelPartHolder.of(part));
+            }
         }
 
-
-        public Collection<ModelPart> values() {
+        public Collection<IModelPart> values() {
             return values;
         }
 
-        public ModelPart get(String name) {
+        public IModelPart get(String name) {
             return parts.get(name);
         }
     }
@@ -295,7 +292,13 @@ public class ModelHolder<T extends Model> implements IModelHolder<T> {
         register(clazz, null, builder);
     }
 
-    public static <T extends Model> void register(Class<T> clazz, Factory<T, IModelHolder<T>> factory, BiConsumer<T, PartSet> builder) {
+    public static <T extends Model> void register(Class<T> clazz, Factory<T, IModel> factory, BiConsumer<T, PartSet> builder) {
         ENTRIES.put(clazz, new Entry<>(clazz, factory, builder));
+    }
+
+    public static <T extends Model> void registerOptional(Class<T> clazz, Factory<T, IModel> factory, BiConsumer<T, PartSet> builder) {
+        if (clazz != null) {
+            register(clazz, factory, builder);
+        }
     }
 }

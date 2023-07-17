@@ -1,10 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
-import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -14,7 +13,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.LivingEntity;
 
 @Environment(EnvType.CLIENT)
-public class FirstPersonSkinRenderer<T extends LivingEntity, V extends FirstPersonPlayerModel<T>, M extends IModelHolder<V>> extends SkinRenderer<T, V, M> {
+public class FirstPersonSkinRenderer<T extends LivingEntity, M extends IModel> extends SkinRenderer<T, M> {
 
     public FirstPersonSkinRenderer(EntityProfile profile) {
         super(profile);

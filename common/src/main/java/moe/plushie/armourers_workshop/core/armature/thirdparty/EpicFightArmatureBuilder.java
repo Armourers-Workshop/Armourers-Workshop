@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.armature.thirdparty;
 
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.IJoint;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.ArmatureBuilder;
@@ -17,8 +18,8 @@ public class EpicFightArmatureBuilder extends ArmatureBuilder {
     }
 
     @Override
-    public ITransformf buildTransform(Collection<ArmatureModifier> modifiers, IModelHolder<?> model) {
-        ITransformf transform = super.buildTransform(modifiers, model);
+    public ITransformf buildTransform(IJoint joint, IModel model, Collection<ArmatureModifier> modifiers) {
+        ITransformf transform = super.buildTransform(joint, model, modifiers);
         return poseStack -> {
             transform.apply(poseStack);
             poseStack.scale(-1, -1, 1);

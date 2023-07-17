@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.skinrender.plugin;
 
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.core.client.layer.ForwardingLayer;
-import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
+import moe.plushie.armourers_workshop.core.client.skinrender.LivingSkinRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
@@ -16,7 +16,7 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 @Environment(EnvType.CLIENT)
-public class ForwardingLayerPlugin<T extends LivingEntity, V extends EntityModel<T>, M extends IModelHolder<V>> implements SkinRenderer.Plugin<T, V, M> {
+public class ForwardingLayerPlugin<T extends LivingEntity, M extends IModel> implements LivingSkinRenderer.Plugin<T, M> {
 
     private final ArrayList<Entry> entries = new ArrayList<>();
 
@@ -28,10 +28,10 @@ public class ForwardingLayerPlugin<T extends LivingEntity, V extends EntityModel
     }
 
     @Override
-    public RenderLayer<T, V> getOverrideLayer(SkinRenderer<T, V, M> skinRenderer, LivingEntityRenderer<T, V> entityRenderer, RenderLayer<T, V> renderLayer) {
+    public RenderLayer<T, EntityModel<T>> getOverrideLayer(LivingEntityRenderer<T, EntityModel<T>> entityRenderer, RenderLayer<T, EntityModel<T>> renderLayer) {
         for (Entry entry : entries) {
             if (entry.layerType.isInstance(renderLayer)) {
-                RenderLayer<T, V> newValue = entry.layerFactory.apply(entityRenderer, renderLayer);
+                RenderLayer<T, EntityModel<T>> newValue = entry.layerFactory.apply(entityRenderer, renderLayer);
                 if (newValue != null) {
                     return newValue;
                 }
@@ -42,6 +42,6 @@ public class ForwardingLayerPlugin<T extends LivingEntity, V extends EntityModel
 
     private class Entry {
         Class<?> layerType;
-        BiFunction<RenderLayerParent<T, V>, RenderLayer<T, V>, RenderLayer<T, V>> layerFactory;
+        BiFunction<RenderLayerParent<T, EntityModel<T>>, RenderLayer<T, EntityModel<T>>, RenderLayer<T, EntityModel<T>>> layerFactory;
     }
 }

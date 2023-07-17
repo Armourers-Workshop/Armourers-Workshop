@@ -1,10 +1,11 @@
 package extensions.net.minecraft.world.level.block.entity.BlockEntity;
 
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.This;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
 
 @Extension
 @Available("[1.16, 1.18)")

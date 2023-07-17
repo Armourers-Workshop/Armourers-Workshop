@@ -1,17 +1,16 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
-import moe.plushie.armourers_workshop.api.client.model.IPlayerModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IPlayerModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.world.entity.LivingEntity;
 
 @Environment(EnvType.CLIENT)
-public class PlayerSkinRenderer<T extends LivingEntity, V extends PlayerModel<T>, M extends IPlayerModelHolder<V>> extends BipedSkinRenderer<T, V, M> {
+public class PlayerSkinRenderer<T extends LivingEntity, M extends IPlayerModel> extends BipedSkinRenderer<T, M> {
 
     public PlayerSkinRenderer(EntityProfile profile) {
         super(profile);

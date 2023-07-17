@@ -1,7 +1,6 @@
 package com.apple.library.impl;
 
 import com.apple.library.coregraphics.CGRect;
-import com.apple.library.foundation.NSMutableString;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIFont;
 import net.minecraft.network.chat.Component;

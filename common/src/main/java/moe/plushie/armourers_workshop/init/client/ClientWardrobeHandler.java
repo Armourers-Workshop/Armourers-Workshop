@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
-import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
@@ -47,6 +46,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Collections;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class ClientWardrobeHandler {
@@ -325,11 +326,11 @@ public class ClientWardrobeHandler {
 
     private static int render(Entity entity, Model model, SkinRenderContext context, Supplier<Iterable<SkinRenderData.Entry>> provider) {
         int r = 0;
-        SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
+        auto renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer == null) {
             return 0;
         }
-        IModelHolder<Model> modelHolder = ModelHolder.ofNullable(model);
+        IModel modelHolder = ModelHolder.ofNullable(model);
         for (SkinRenderData.Entry entry : provider.get()) {
             ItemStack itemStack = context.getReference();
             if (itemStack.isEmpty()) {

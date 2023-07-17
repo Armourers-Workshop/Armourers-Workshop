@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.utils.math;
 
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
-import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.AABB;
 

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import moe.plushie.armourers_workshop.api.client.IJoint;
-import moe.plushie.armourers_workshop.api.client.model.IHumanoidModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IHumanoidModel;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.armature.Joints;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
@@ -12,12 +12,10 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.world.entity.LivingEntity;
 
-
 @Environment(EnvType.CLIENT)
-public abstract class ExtendedSkinRenderer<T extends LivingEntity, V extends EntityModel<T>, M extends IHumanoidModelHolder<V>> extends LivingSkinRenderer<T, V, M> {
+public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends IHumanoidModel> extends LivingSkinRenderer<T, M> {
 
     public ExtendedSkinRenderer(EntityProfile profile) {
         super(profile);

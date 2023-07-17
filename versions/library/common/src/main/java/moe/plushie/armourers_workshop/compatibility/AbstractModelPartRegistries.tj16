@@ -1,20 +1,14 @@
 package moe.plushie.armourers_workshop.compatibility;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compatibility.client.model.AbstractSkinnableModels;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.client.model.AgeableListModel;
-import net.minecraft.client.model.ChickenModel;
-import net.minecraft.client.model.CreeperModel;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.IllagerModel;
-import net.minecraft.client.model.IronGolemModel;
 import net.minecraft.client.model.ListModel;
 import net.minecraft.client.model.Model;
-import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.VillagerModel;
 
 @Available("[1.16, 1.18)")
 public abstract class AbstractModelPartRegistries {
@@ -29,7 +23,7 @@ public abstract class AbstractModelPartRegistries {
             it.unnamed(model.parts());
         });
 
-        ModelHolder.register(HumanoidModel.class, ModelHolder.HumanoidStub::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.HUMANOID, ModelHolder.HumanoidStub::new, (model, it) -> {
             it.put("hat", model.hat);
             it.put("head", model.head);
             it.put("body", model.body);
@@ -38,7 +32,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("left_leg", model.leftLeg);
             it.put("right_leg", model.rightLeg);
         });
-        ModelHolder.register(PlayerModel.class, ModelHolder.PlayerStub::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.PLAYER, ModelHolder.PlayerStub::new, (model, it) -> {
             it.put("left_sleeve", model.leftSleeve);
             it.put("right_sleeve", model.rightSleeve);
             it.put("left_pants", model.leftPants);
@@ -46,8 +40,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("jacket", model.jacket);
         });
 
-
-        ModelHolder.register(VillagerModel.class, ModelHolder.HumanoidStub::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.VILLAGER, ModelHolder.HumanoidStub::new, (model, it) -> {
             it.put("hat", model.hat);
             it.put("hat_rim", model.hatRim);
             it.put("head", model.head);
@@ -60,7 +53,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("jacket", model.jacket);
         });
 
-        ModelHolder.register(IllagerModel.class, ModelHolder.HumanoidStub::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.ILLAGER, ModelHolder.HumanoidStub::new, (model, it) -> {
             it.put("hat", model.hat);
             it.put("head", model.head);
             it.put("body", model.body);
@@ -71,7 +64,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("arms", model.arms);
         });
 
-        ModelHolder.register(IronGolemModel.class, ModelHolder.HumanoidStub::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.IRON_GOLE, ModelHolder.HumanoidStub::new, (model, it) -> {
             it.put("head", model.head);
             it.put("body", model.body);
             it.put("left_arm", model.arm1);
@@ -80,7 +73,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("right_leg", model.leg0);
         });
 
-        ModelHolder.register(ChickenModel.class, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.CHICKEN, (model, it) -> {
             it.put("head", model.head);
 //            it.put("body", model.body);
             it.put("beak", model.beak);
@@ -91,7 +84,7 @@ public abstract class AbstractModelPartRegistries {
 //            it.put("right_wing", model.wing0);
         });
 
-        ModelHolder.register(CreeperModel.class, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.CREEPER, (model, it) -> {
             it.put("head", model.head);
             it.put("hair", model.hair);
         });

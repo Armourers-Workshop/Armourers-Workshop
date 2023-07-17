@@ -1,13 +1,14 @@
 package extensions.com.mojang.blaze3d.vertex.BufferBuilder;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
 
 import java.nio.ByteBuffer;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
 
 @Available("[1.19, )")
 @Extension

@@ -1,7 +1,5 @@
 package extensions.net.minecraft.core.Registry;
 
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IItemTag;
 import moe.plushie.armourers_workshop.api.registry.IRegistry;
@@ -32,6 +30,9 @@ import net.minecraftforge.registries.IForgeRegistry;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
 
 @Available("[1.19, )")
 @Extension

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import com.google.common.collect.Iterators;
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
@@ -147,16 +147,16 @@ public class SkinRenderContext {
         return transformType;
     }
 
-    public void setTransforms(Entity entity, IModelHolder<?> model) {
+    public void setTransforms(Entity entity, IModel model) {
         setTransforms(null, entity, model);
     }
 
-    public void setTransforms(JointTransformModifier transformModifier, Entity entity, IModelHolder<?> model) {
+    public void setTransforms(JointTransformModifier transformModifier, Entity entity, IModel model) {
         if (entity == null || model == null) {
             return;
         }
         if (transformModifier == null) {
-            transformModifier = model.getExtraData(JointTransformModifier.DEFAULT);
+            transformModifier = model.getAssociatedObject(JointTransformModifier.DEFAULT);
         }
         transforms = transformModifier.getTransforms(entity.getType(), model);
     }

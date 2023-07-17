@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
@@ -36,7 +36,7 @@ public class EpicFlightWardrobeHandler {
     }
 
     public static void onRenderLivingPre(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer, boolean isFirstPersonRenderer, EpicFlightTransformProvider transformProvider) {
-        IModelHolder<?> model = ModelHolder.ofNullable(entityRenderer.getModel());
+        IModel model = ModelHolder.ofNullable(entityRenderer.getModel());
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {
             return;
@@ -46,11 +46,11 @@ public class EpicFlightWardrobeHandler {
             overrideParts = Collections.singleton(SkinPartTypes.BIPPED_HEAD);
         }
 
-        model.setExtraData(EpicFlightTransformProvider.KEY, transformProvider);
+        model.setAssociatedObject(EpicFlightTransformProvider.KEY, transformProvider);
 
         context.overrideParts = overrideParts;
         context.overridePostStack = poseStack.copy();
-        context.overrideTransformModifier = model.getExtraData(JointTransformModifier.EPICFIGHT);
+        context.overrideTransformModifier = model.getAssociatedObject(JointTransformModifier.EPICFIGHT);
         context.isLimitLimbs = false;
 
         renderData.epicFlightContext = context;
@@ -59,12 +59,12 @@ public class EpicFlightWardrobeHandler {
     }
 
     public static void onRenderLivingPost(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
-        IModelHolder<?> model = ModelHolder.ofNullable(entityRenderer.getModel());
+        IModel model = ModelHolder.ofNullable(entityRenderer.getModel());
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {
             return;
         }
-        model.setExtraData(EpicFlightTransformProvider.KEY, null);
+        model.setAssociatedObject(EpicFlightTransformProvider.KEY, null);
 
         context.overrideParts = null;
         context.overridePostStack = null;

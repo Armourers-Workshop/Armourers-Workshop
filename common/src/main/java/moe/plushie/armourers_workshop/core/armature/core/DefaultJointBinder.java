@@ -1,10 +1,11 @@
 package moe.plushie.armourers_workshop.core.armature.core;
 
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.IJoint;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
+import moe.plushie.armourers_workshop.api.client.model.IModelPart;
+import moe.plushie.armourers_workshop.api.client.model.IModelPartPose;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.ArmatureModifier;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
-import net.minecraft.client.model.geom.ModelPart;
 
 public class DefaultJointBinder extends ArmatureModifier {
 
@@ -15,25 +16,15 @@ public class DefaultJointBinder extends ArmatureModifier {
     }
 
     @Override
-    public ITransformf apply(ITransformf transform, IModelHolder<?> model) {
-        ModelPart part = model.getPart(name);
-        if (part == null) {
+    public ITransformf apply(IJoint joint, IModel model, ITransformf transform) {
+        IModelPart modelPart = model.getPart(name);
+        if (modelPart == null) {
             return transform;
         }
+        IModelPartPose pose = modelPart.pose();
         return poseStack -> {
             transform.apply(poseStack);
-            if (part.x != 0 || part.y != 0 || part.z != 0) {
-                poseStack.translate(part.x, part.y, part.z);
-            }
-            if (part.zRot != 0) {
-                poseStack.rotate(Vector3f.ZP.rotation(part.zRot));
-            }
-            if (part.yRot != 0) {
-                poseStack.rotate(Vector3f.YP.rotation(part.yRot));
-            }
-            if (part.xRot != 0) {
-                poseStack.rotate(Vector3f.XP.rotation(part.xRot));
-            }
+            pose.transform(poseStack);
         };
     }
 }

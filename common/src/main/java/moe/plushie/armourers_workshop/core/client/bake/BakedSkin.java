@@ -4,7 +4,7 @@ import com.google.common.collect.Range;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
@@ -48,6 +48,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class BakedSkin implements IBakedSkin {
@@ -154,14 +156,14 @@ public class BakedSkin implements IBakedSkin {
     }
 
     public OpenVoxelShape getRenderShape(Entity entity, Model model, ItemStack itemStack, AbstractItemTransformType transformType) {
-        SkinRenderer<Entity, Model, IModelHolder<Model>> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
+        auto renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer != null) {
             return getRenderShape(entity, ModelHolder.ofNullable(model), itemStack, transformType, renderer);
         }
         return OpenVoxelShape.empty();
     }
 
-    public <T extends Entity, V extends Model, M extends IModelHolder<V>> OpenVoxelShape getRenderShape(T entity, M model, ItemStack itemStack, AbstractItemTransformType transformType, SkinRenderer<T, V, M> renderer) {
+    public <T extends Entity, M extends IModel> OpenVoxelShape getRenderShape(T entity, M model, ItemStack itemStack, AbstractItemTransformType transformType, SkinRenderer<T, M> renderer) {
         SkinRenderContext context = new SkinRenderContext(new PoseStack());
         context.setTransformType(transformType);
         context.setReference(0, itemStack);
@@ -173,7 +175,7 @@ public class BakedSkin implements IBakedSkin {
         return shape;
     }
 
-    private <T extends Entity, V extends Model, M extends IModelHolder<V>> void addRenderShape(OpenVoxelShape shape, T entity, M model, BakedSkinPart part, SkinRenderer<T, V, M> renderer, SkinRenderContext context) {
+    private <T extends Entity, M extends IModel> void addRenderShape(OpenVoxelShape shape, T entity, M model, BakedSkinPart part, SkinRenderer<T, M> renderer, SkinRenderContext context) {
         if (!renderer.prepare(entity, model, part, this, context)) {
             return;
         }
@@ -188,7 +190,7 @@ public class BakedSkin implements IBakedSkin {
         context.popPose();
     }
 
-    public <T extends Entity, V extends Model, M extends IModelHolder<V>> boolean shouldRenderPart(T entity, M model, BakedSkinPart bakedPart, SkinRenderContext context) {
+    public <T extends Entity, V extends Model, M extends IModel> boolean shouldRenderPart(T entity, M model, BakedSkinPart bakedPart, SkinRenderContext context) {
         ISkinPartType partType = bakedPart.getType();
         if (partType == SkinPartTypes.ITEM_ARROW) {
             // arrow part only render in arrow entity
@@ -208,7 +210,7 @@ public class BakedSkin implements IBakedSkin {
         }
         if (partType instanceof ICanUse && entity instanceof LivingEntity) {
             int useTick = getUseTick((LivingEntity) entity, context.getReference());
-            Range<Integer> useRange = ((ICanUse) partType).getUseRange();
+            auto useRange = ((ICanUse) partType).getUseRange();
             return useRange.contains(MathUtils.clamp(useTick, useTickRange.lowerEndpoint(), useTickRange.upperEndpoint()));
         }
         return true;
@@ -228,7 +230,7 @@ public class BakedSkin implements IBakedSkin {
             return;
         }
         for (BakedSkinPart skinPart : skinParts) {
-            HashMap<BlockPos, Rectangle3i> bm = skinPart.getPart().getBlockBounds();
+            auto bm = skinPart.getPart().getBlockBounds();
             if (bm != null) {
                 cachedBlockBounds.putAll(bm);
             }

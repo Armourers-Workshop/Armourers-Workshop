@@ -1,7 +1,5 @@
 package extensions.net.minecraft.server.packs.resources.ResourceManager;
 
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.This;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import net.minecraft.resources.ResourceLocation;
@@ -14,6 +12,9 @@ import java.io.InputStream;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
 
 @Available("[1.19, )")
 @Extension

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.compatibility.AbstractRenderLayer;
 import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
@@ -25,12 +25,12 @@ import net.minecraft.world.entity.Entity;
 import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
-public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M extends IModelHolder<V>> extends AbstractRenderLayer<T, V> {
+public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M extends IModel> extends AbstractRenderLayer<T, V> {
 
-    protected final SkinRenderer<T, V, M> skinRenderer;
+    protected final SkinRenderer<T, M> skinRenderer;
     protected final RenderLayerParent<T, V> entityRenderer;
 
-    public SkinWardrobeLayer(SkinRenderer<T, V, M> skinRenderer, RenderLayerParent<T, V> renderer) {
+    public SkinWardrobeLayer(SkinRenderer<T, M> skinRenderer, RenderLayerParent<T, V> renderer) {
         super(renderer);
         this.skinRenderer = skinRenderer;
         this.entityRenderer = renderer;

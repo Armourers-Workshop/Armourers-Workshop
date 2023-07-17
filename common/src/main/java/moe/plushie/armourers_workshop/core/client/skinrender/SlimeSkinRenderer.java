@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
@@ -8,11 +8,10 @@ import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.SlimeModel;
 import net.minecraft.world.entity.LivingEntity;
 
 @Environment(EnvType.CLIENT)
-public class SlimeSkinRenderer<T extends LivingEntity, V extends SlimeModel<T>, M extends IModelHolder<V>> extends LivingSkinRenderer<T, V, M> {
+public class SlimeSkinRenderer<T extends LivingEntity, M extends IModel> extends LivingSkinRenderer<T, M> {
 
     public SlimeSkinRenderer(EntityProfile profile) {
         super(profile);

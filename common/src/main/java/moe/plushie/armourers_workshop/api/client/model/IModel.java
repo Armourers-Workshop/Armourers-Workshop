@@ -1,13 +1,11 @@
 package moe.plushie.armourers_workshop.api.client.model;
 
-import moe.plushie.armourers_workshop.api.data.IExtraDateStorage;
+import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
-import net.minecraft.client.model.Model;
-import net.minecraft.client.model.geom.ModelPart;
 
 import java.util.Collection;
 
-public interface IModelHolder<T extends Model> extends IExtraDateStorage {
+public interface IModel extends IAssociatedContainer {
 
     default boolean isBaby() {
         return false;
@@ -21,8 +19,8 @@ public interface IModelHolder<T extends Model> extends IExtraDateStorage {
         return null;
     }
 
-    ModelPart getPart(String name);
+    IModelPart getPart(String name);
 
-    Collection<ModelPart> getAllParts();
+    Collection<IModelPart> getAllParts();
 }
 

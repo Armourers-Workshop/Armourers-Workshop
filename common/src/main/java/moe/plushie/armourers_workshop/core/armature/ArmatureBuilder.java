@@ -2,11 +2,14 @@ package moe.plushie.armourers_workshop.core.armature;
 
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.client.IJoint;
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.core.AfterTransformModifier;
+import moe.plushie.armourers_workshop.core.armature.core.AllayBodyJointModifier;
+import moe.plushie.armourers_workshop.core.armature.core.AllayHeadJointModifier;
+import moe.plushie.armourers_workshop.core.armature.core.AllayWingJointModifier;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultBabyJointModifier;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultSkirtJointModifier;
 import moe.plushie.armourers_workshop.core.armature.core.FlatWingJointModifier;
@@ -27,6 +30,9 @@ public abstract class ArmatureBuilder {
             .put("armourers_workshop:baby_head_apt", new DefaultBabyJointModifier())
             .put("armourers_workshop:body_to_skirt", new DefaultSkirtJointModifier())
             .put("armourers_workshop:body_to_flat_wing", new FlatWingJointModifier())
+            .put("armourers_workshop:apply_ally_head", new AllayHeadJointModifier())
+            .put("armourers_workshop:apply_ally_body", new AllayBodyJointModifier())
+            .put("armourers_workshop:apply_ally_wing", new AllayWingJointModifier())
             .build();
 
     private static final ImmutableMap<String, Function<IDataPackObject, ArmatureModifier>> PARAMETERIZED_MODIFIERS = ImmutableMap.<String, Function<IDataPackObject, ArmatureModifier>>builder()
@@ -78,19 +84,19 @@ public abstract class ArmatureBuilder {
         });
     }
 
-    public ITransformf[] build(IModelHolder<?> model) {
+    public ITransformf[] build(IModel model) {
         HashMap<IJoint, Collection<ArmatureModifier>> modifiers = new HashMap<>();
         jointModifiers.forEach((joint, modifiers1) -> modifiers.computeIfAbsent(joint, k -> new ArrayList<>()).addAll(modifiers1));
         transformModifiers.forEach((joint, modifiers1) -> modifiers.computeIfAbsent(joint, k -> new ArrayList<>()).addAll(modifiers1));
         JointTransformBuilder builder = JointTransformBuilder.of(Armatures.BIPPED);
-        modifiers.forEach((joint, modifiers1) -> builder.put(joint, buildTransform(modifiers1, model)));
+        modifiers.forEach((joint, modifiers1) -> builder.put(joint, buildTransform(joint, model, modifiers1)));
         return builder.build();
     }
 
-    public ITransformf buildTransform(Collection<ArmatureModifier> modifiers, IModelHolder<?> model) {
+    public ITransformf buildTransform(IJoint joint, IModel model, Collection<ArmatureModifier> modifiers) {
         ITransformf transform = ITransformf.NONE;
         for (ArmatureModifier modifier : modifiers) {
-            transform = modifier.apply(transform, model);
+            transform = modifier.apply(joint, model, transform);
         }
         return transform;
     }

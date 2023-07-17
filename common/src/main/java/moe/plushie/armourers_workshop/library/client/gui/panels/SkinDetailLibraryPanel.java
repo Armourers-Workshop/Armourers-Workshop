@@ -39,7 +39,6 @@ import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.util.Strings;
 

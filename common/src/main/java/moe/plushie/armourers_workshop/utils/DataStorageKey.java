@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.utils;
 
-import moe.plushie.armourers_workshop.api.data.IExtraDateStorageKey;
+import moe.plushie.armourers_workshop.api.data.IAssociatedContainerKey;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
-public class DataStorageKey<T> implements IExtraDateStorageKey<T> {
+public class DataStorageKey<T> implements IAssociatedContainerKey<T> {
 
     private static final AtomicInteger GENERATOR = new AtomicInteger();
 

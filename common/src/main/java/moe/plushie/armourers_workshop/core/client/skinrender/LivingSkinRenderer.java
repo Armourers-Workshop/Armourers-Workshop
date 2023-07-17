@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -11,19 +11,15 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.LivingEntity;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.function.BiFunction;
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
-public class LivingSkinRenderer<T extends LivingEntity, V extends EntityModel<T>, M extends IModelHolder<V>> extends SkinRenderer<T, V, M> {
+public class LivingSkinRenderer<T extends LivingEntity, M extends IModel> extends SkinRenderer<T, M> {
 
-    protected final HashMap<Class<?>, BiFunction<RenderLayerParent<T, V>, RenderLayer<T, V>, RenderLayer<T, V>>> mappers = new HashMap<>();
-    protected LivingEntityRenderer<T, V> renderer;
+    protected LivingEntityRenderer<T, ?> renderer;
 
     public LivingSkinRenderer(EntityProfile profile) {
         super(profile);
@@ -33,21 +29,8 @@ public class LivingSkinRenderer<T extends LivingEntity, V extends EntityModel<T>
     public void init(EntityRenderer<T> entityRenderer) {
         super.init(entityRenderer);
         if (entityRenderer instanceof LivingEntityRenderer<?, ?>) {
-            init((LivingEntityRenderer<T, V>) entityRenderer);
+            apply((LivingEntityRenderer<T, EntityModel<T>>) entityRenderer);
         }
-    }
-
-    protected void init(LivingEntityRenderer<T, V> entityRenderer) {
-        this.renderer = entityRenderer;
-        SkinRendererManager.getInstance().getPlugins(this).forEach(plugin -> {
-            List<RenderLayer<T, V>> layers = entityRenderer.layers;
-            for (int index = 0; index < layers.size(); ++index) {
-                RenderLayer<T, V> newValue = plugin.getOverrideLayer(this, entityRenderer, layers.get(index));
-                if (newValue != null) {
-                    layers.set(index, newValue);
-                }
-            }
-        });
     }
 
     @Override
@@ -60,16 +43,30 @@ public class LivingSkinRenderer<T extends LivingEntity, V extends EntityModel<T>
         return super.render(entity, getResolvedModel(model), bakedSkin, scheme, context);
     }
 
-    public V getModel() {
-        return renderer.getModel();
-    }
-
     public M getResolvedModel(M model) {
         // we don't know how to draw without a model, right?
         if (model == null) {
-            model = ModelHolder.of(getModel());
+            model = ModelHolder.of(renderer.getModel());
         }
         return model;
+    }
+
+    private void apply(LivingEntityRenderer<T, EntityModel<T>> entityRenderer) {
+        this.renderer = entityRenderer;
+        SkinRendererManager.getInstance().applyPlugins(this, plugin -> {
+            auto layers = entityRenderer.layers;
+            for (int index = 0; index < layers.size(); ++index) {
+                auto newValue = plugin.getOverrideLayer(entityRenderer, layers.get(index));
+                if (newValue != null) {
+                    layers.set(index, newValue);
+                }
+            }
+        });
+    }
+
+    public interface Plugin<T extends LivingEntity, M extends IModel> {
+
+        RenderLayer<T, EntityModel<T>> getOverrideLayer(LivingEntityRenderer<T, EntityModel<T>> entityRenderer, RenderLayer<T, EntityModel<T>> renderLayer);
     }
 }
 

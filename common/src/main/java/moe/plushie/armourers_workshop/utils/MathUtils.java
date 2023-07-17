@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.utils;
 
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
-
 public class MathUtils {
 
     public static final float SCALE = 0.0625f; // 1 / 16f;

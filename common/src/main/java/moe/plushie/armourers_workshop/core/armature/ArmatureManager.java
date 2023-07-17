@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.armature;
 
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
@@ -74,7 +74,7 @@ public abstract class ArmatureManager {
         version += 1;
     }
 
-    public ITransformf[] getTransforms(EntityType<?> entityType, IModelHolder<?> model) {
+    public ITransformf[] getTransforms(EntityType<?> entityType, IModel model) {
         ArmatureBuilder builder = ObjectUtils.find(entityBuilders, entityType, IEntityTypeProvider::get);
         if (builder == null) {
             builder = getDefaultBuilder("*");

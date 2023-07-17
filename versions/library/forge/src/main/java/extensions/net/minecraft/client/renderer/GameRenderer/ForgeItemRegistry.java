@@ -1,7 +1,5 @@
 package extensions.net.minecraft.client.renderer.GameRenderer;
 
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractItemStackRendererProvider;
@@ -9,6 +7,9 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
 
 @Available("[1.19, )")
 @Extension

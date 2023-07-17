@@ -1,7 +1,5 @@
 package extensions.net.minecraft.client.renderer.GameRenderer;
 
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBlockEntityRendererProvider;
@@ -14,6 +12,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
 
 @Available("[1.18, )")
 @Extension

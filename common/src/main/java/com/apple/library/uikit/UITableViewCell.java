@@ -1,6 +1,5 @@
 package com.apple.library.uikit;
 
-import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSIndexPath;
 import com.apple.library.impl.HighlightedDisplayable;

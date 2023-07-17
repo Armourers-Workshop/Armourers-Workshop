@@ -1,9 +1,10 @@
 package extensions.net.minecraft.core.Registry;
 
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import net.minecraftforge.fml.event.IModBusEvent;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
 
 @Available("[1.18, )")
 @Extension

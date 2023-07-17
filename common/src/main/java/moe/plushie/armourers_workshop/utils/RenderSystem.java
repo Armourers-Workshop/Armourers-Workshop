@@ -23,7 +23,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;

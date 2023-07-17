@@ -1,25 +1,21 @@
 package moe.plushie.armourers_workshop.compatibility;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compatibility.client.model.AbstractSkinnableModels;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.AgeableListModel;
-import net.minecraft.client.model.ChickenModel;
-import net.minecraft.client.model.CreeperModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.IllagerModel;
-import net.minecraft.client.model.IronGolemModel;
 import net.minecraft.client.model.Model;
-import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelPart;
 
 import java.util.stream.Collectors;
+
+import manifold.ext.rt.api.auto;
 
 @Available("[1.18, )")
 @Environment(EnvType.CLIENT)
@@ -31,7 +27,11 @@ public abstract class AbstractModelPartRegistries {
             // noop
         });
 
-        ModelHolder.register(HumanoidModel.class, ModelHolder.HumanoidStub::new, (model, it) -> {
+        ModelHolder.register(HierarchicalModel.class, (model, it) -> {
+            it.unnamed(model.root().getAllParts().collect(Collectors.toList()));
+        });
+
+        ModelHolder.register(AbstractSkinnableModels.HUMANOID, ModelHolder.HumanoidStub::new, (model, it) -> {
             it.put("hat", model.hat);
             it.put("head", model.head);
             it.put("body", model.body);
@@ -40,7 +40,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("left_leg", model.leftLeg);
             it.put("right_leg", model.rightLeg);
         });
-        ModelHolder.register(PlayerModel.class, ModelHolder.PlayerStub::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.PLAYER, ModelHolder.PlayerStub::new, (model, it) -> {
             it.put("left_sleeve", model.leftSleeve);
             it.put("right_sleeve", model.rightSleeve);
             it.put("left_pants", model.leftPants);
@@ -48,17 +48,13 @@ public abstract class AbstractModelPartRegistries {
             it.put("jacket", model.jacket);
         });
 
-        ModelHolder.register(HierarchicalModel.class, (model, it) -> {
-            it.unnamed(model.root().getAllParts().collect(Collectors.toList()));
-        });
-
-        ModelHolder.register(CreeperModel.class, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.CREEPER, (model, it) -> {
             ModelPart root = model.root();
             it.put("head", getChild(root, "head"));
             it.put("hair", getChild(root, "head"));
         });
 
-        ModelHolder.register(ChickenModel.class, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.CHICKEN, (model, it) -> {
             it.put("head", model.head);
             //it.put("body", model.body);
             it.put("beak", model.beak);
@@ -69,7 +65,7 @@ public abstract class AbstractModelPartRegistries {
             //it.put("right_wing", model.rightWing);
         });
 
-        ModelHolder.register(VillagerModel.class, ModelHolder.HumanoidStub::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.VILLAGER, ModelHolder.HumanoidStub::new, (model, it) -> {
             ModelPart root = model.root();
             ModelPart head = getChild(root, "head");
             ModelPart hat = getChild(head, "hat");
@@ -86,7 +82,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("jacket", getChild(body, "jacket"));
         });
 
-        ModelHolder.register(IllagerModel.class, ModelHolder.HumanoidStub::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.ILLAGER, ModelHolder.HumanoidStub::new, (model, it) -> {
             ModelPart root = model.root();
             ModelPart head = getChild(root, "head");
             ModelPart hat = getChild(head, "hat");
@@ -100,7 +96,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("right_leg", getChild(root, "right_leg"));
         });
 
-        ModelHolder.register(IronGolemModel.class, ModelHolder.HumanoidStub::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.IRON_GOLE, ModelHolder.HumanoidStub::new, (model, it) -> {
             ModelPart root = model.root();
             it.put("hat", getChild(root, "head"));
             it.put("head", getChild(root, "head"));
@@ -110,10 +106,25 @@ public abstract class AbstractModelPartRegistries {
             it.put("left_leg", getChild(root, "left_leg"));
             it.put("right_leg", getChild(root, "right_leg"));
         });
+
+        ModelHolder.registerOptional(AbstractSkinnableModels.ALLAY, ModelHolder.HumanoidStub::new, (model, it) -> {
+            ModelPart root = model.root();
+            ModelPart body = getChild(root, "body");
+            it.put("root", root);
+            it.put("hat", getChild(root, "head"));
+            it.put("head", getChild(root, "head"));
+            it.put("body", getChild(root, "body"));
+            it.put("left_arm", getChild(body, "left_arm"));
+            it.put("right_arm", getChild(body, "right_arm"));
+            it.put("left_leg", getChild(body, "left_wing"));
+            it.put("right_leg", getChild(body, "right_wing"));
+            it.put("left_wing", getChild(body, "left_wing"));
+            it.put("right_wing", getChild(body, "right_wing"));
+        });
     }
 
     public static ModelHolder.Transform transform(Model model) {
-        AgeableListModel<?> model1 = ObjectUtils.safeCast(model, AgeableListModel.class);
+        auto model1 = ObjectUtils.safeCast(model, AgeableListModel.class);
         if (model1 != null) {
             float scale = model1.babyHeadScale;
             if (model1.scaleHead) {

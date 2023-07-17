@@ -1,7 +1,5 @@
 package extensions.net.minecraft.core.Registry;
 
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
@@ -17,6 +15,9 @@ import net.minecraftforge.client.event.RenderHighlightEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 
 import java.util.function.Consumer;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
 
 @Available("[1.19, )")
 @Extension

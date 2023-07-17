@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.core.client.layer.SkinWardrobeLayer;
@@ -31,13 +31,15 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import manifold.ext.rt.api.auto;
+
 @Environment(EnvType.CLIENT)
-public class SkinRendererManager  {
+public class SkinRendererManager {
 
     private static final SkinRendererManager INSTANCE = new SkinRendererManager();
 
@@ -45,8 +47,8 @@ public class SkinRendererManager  {
 
     private final HashMap<IEntityTypeProvider<?>, EntityProfile> entities = new HashMap<>();
 
-    private final ArrayList<SkinRenderer.Factory<SkinRenderer<?, ?, ?>>> builders = new ArrayList<>();
-    private final ArrayList<Pair<Class<?>, SkinRenderer.Plugin<?, ?, ?>>> plugins = new ArrayList<>();
+    private final ArrayList<SkinRenderer.Factory<SkinRenderer<?, ?>>> builders = new ArrayList<>();
+    private final ArrayList<Pair<Class<?>, LivingSkinRenderer.Plugin<?, ?>>> plugins = new ArrayList<>();
 
     public static SkinRendererManager getInstance() {
         return INSTANCE;
@@ -126,26 +128,24 @@ public class SkinRendererManager  {
         });
     }
 
-    public <T extends SkinRenderer<?, ?, ?>> void registerPlugin(Class<T> targetType, SkinRenderer.Plugin<?, ?, ?> plugin) {
+    public <T extends SkinRenderer<?, ?>> void registerPlugin(Class<T> targetType, LivingSkinRenderer.Plugin<?, ?> plugin) {
         plugins.add(Pair.of(targetType, plugin));
     }
 
-    public <T extends LivingEntity, V extends EntityModel<T>, M extends IModelHolder<V>> Collection<SkinRenderer.Plugin<T, V, M>> getPlugins(SkinRenderer<T, V, M> renderer) {
-        ArrayList<SkinRenderer.Plugin<T, V, M>> plugins1 = new ArrayList<>();
+    public <T extends LivingEntity, M extends IModel> void applyPlugins(SkinRenderer<T, M> renderer, Consumer<LivingSkinRenderer.Plugin<T, M>> applier) {
         plugins.forEach(pair -> {
             if (pair.getKey().isInstance(renderer)) {
-                plugins1.add(ObjectUtils.unsafeCast(pair.getValue()));
+                applier.accept(ObjectUtils.unsafeCast(pair.getValue()));
             }
         });
-        return plugins1;
     }
 
-    public void registerRenderer(SkinRenderer.Factory<SkinRenderer<?, ?, ?>> builder) {
+    public void registerRenderer(SkinRenderer.Factory<SkinRenderer<?, ?>> builder) {
         builders.add(builder);
     }
 
     @Nullable
-    public <T extends Entity, V extends Model, M extends IModelHolder<V>> SkinRenderer<T, V, M> getRenderer(@Nullable T entity, @Nullable Model entityModel, @Nullable EntityRenderer<?> entityRenderer) {
+    public SkinRenderer<Entity, IModel> getRenderer(@Nullable Entity entity, @Nullable Model entityModel, @Nullable EntityRenderer<?> entityRenderer) {
         if (entity == null) {
             return null;
         }
@@ -162,23 +162,23 @@ public class SkinRendererManager  {
     }
 
     @Nullable
-    protected <T extends Entity, V extends Model, M extends IModelHolder<V>> SkinRenderer<T, V, M> getRenderer(EntityType<?> entityType, Model entityModel, EntityRenderer<?> entityRenderer) {
+    protected <T extends Entity, M extends IModel> SkinRenderer<T, M> getRenderer(EntityType<?> entityType, Model entityModel, EntityRenderer<?> entityRenderer) {
         // in the normal, the entityRenderer only one model type,
         // but some mods(Custom NPC) generate dynamically models,
         // so we need to be compatible with that
-        Storage<T, V, M> storage = Storage.of(entityRenderer);
+        Storage<T, M> storage = Storage.of(entityRenderer);
         return storage.computeIfAbsent(entityModel, key -> createRenderer(entityType, entityRenderer, entityModel));
     }
 
 
     @Nullable
-    protected <T extends Entity, V extends Model, M extends IModelHolder<V>> SkinRenderer<T, V, M> createRenderer(EntityType<?> entityType, EntityRenderer<?> entityRenderer, Model entityModel) {
+    protected <T extends Entity, M extends IModel> SkinRenderer<T, M> createRenderer(EntityType<?> entityType, EntityRenderer<?> entityRenderer, Model entityModel) {
         EntityProfile entityProfile = ModEntityProfiles.getProfile(entityType);
         if (entityProfile == null) {
             return null;
         }
-        for (SkinRenderer.Factory<SkinRenderer<?, ?, ?>> builder : builders) {
-            SkinRenderer<?, ?, ?> skinRenderer = builder.create(entityType, entityRenderer, entityModel, entityProfile);
+        for (SkinRenderer.Factory<SkinRenderer<?, ?>> builder : builders) {
+            SkinRenderer<?, ?> skinRenderer = builder.create(entityType, entityRenderer, entityModel, entityProfile);
             if (skinRenderer != null) {
                 return ObjectUtils.unsafeCast(skinRenderer);
             }
@@ -193,7 +193,7 @@ public class SkinRendererManager  {
         return null;
     }
 
-    private <T extends LivingEntity, V extends EntityModel<T>, M extends IModelHolder<V>> void setupRenderer(EntityType<?> entityType, LivingEntityRenderer<T, V> livingRenderer, boolean autoInject) {
+    private <T extends LivingEntity, V extends EntityModel<T>, M extends IModel> void setupRenderer(EntityType<?> entityType, LivingEntityRenderer<T, V> livingRenderer, boolean autoInject) {
         RenderLayer<T, V> armorLayer = null;
         for (RenderLayer<T, V> layerRenderer : livingRenderer.layers) {
             if (layerRenderer instanceof HumanoidArmorLayer<?, ?, ?>) {
@@ -206,15 +206,15 @@ public class SkinRendererManager  {
         if (autoInject && armorLayer == null) {
             return;
         }
-        SkinRenderer<T, V, M> skinRenderer = getRenderer(entityType, livingRenderer.getModel(), livingRenderer);
+        SkinRenderer<T, M> skinRenderer = getRenderer(entityType, livingRenderer.getModel(), livingRenderer);
         if (skinRenderer != null) {
             livingRenderer.addLayer(new SkinWardrobeLayer<>(skinRenderer, livingRenderer));
         }
     }
 
 
-    public <T extends Entity, V extends Model, M extends IModelHolder<V>> void willRender(T entity, V entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
-        SkinRenderer<T, V, M> renderer = getRenderer(entity, entityModel, entityRenderer);
+    public <T extends Entity, M extends IModel> void willRender(T entity, Model entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
+        auto renderer = getRenderer(entity, entityModel, entityRenderer);
         if (renderer != null) {
             SkinRenderContext context1 = context.get();
             renderer.willRender(entity, ModelHolder.of(entityModel), renderData, context1);
@@ -222,8 +222,8 @@ public class SkinRendererManager  {
         }
     }
 
-    public <T extends Entity, V extends Model, M extends IModelHolder<V>> void willRenderModel(T entity, V entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
-        SkinRenderer<T, V, M> renderer = getRenderer(entity, entityModel, entityRenderer);
+    public <T extends Entity, M extends IModel> void willRenderModel(T entity, Model entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
+        auto renderer = getRenderer(entity, entityModel, entityRenderer);
         if (renderer != null) {
             SkinRenderContext context1 = context.get();
             renderer.willRenderModel(entity, ModelHolder.of(entityModel), renderData, context1);
@@ -231,8 +231,8 @@ public class SkinRendererManager  {
         }
     }
 
-    public <T extends Entity, V extends Model, M extends IModelHolder<V>> void didRender(T entity, V entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
-        SkinRenderer<T, V, M> renderer = getRenderer(entity, entityModel, entityRenderer);
+    public <T extends Entity, M extends IModel> void didRender(T entity, Model entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
+        auto renderer = getRenderer(entity, entityModel, entityRenderer);
         if (renderer != null) {
             SkinRenderContext context1 = context.get();
             renderer.didRender(entity, ModelHolder.of(entityModel), renderData, context1);
@@ -240,13 +240,13 @@ public class SkinRendererManager  {
         }
     }
 
-    public static class Storage<T extends Entity, V extends Model, M extends IModelHolder<V>> {
+    public static class Storage<T extends Entity, M extends IModel> {
 
-        private final HashMap<Object, SkinRenderer<T, V, M>> skinRenderers = new HashMap<>();
+        private final HashMap<Object, SkinRenderer<T, M>> skinRenderers = new HashMap<>();
 
-        public static <T extends Entity, V extends Model, M extends IModelHolder<V>> Storage<T, V, M> of(EntityRenderer<?> entityRenderer) {
+        public static <T extends Entity, V extends Model, M extends IModel> Storage<T, M> of(EntityRenderer<?> entityRenderer) {
             ISkinDataProvider dataProvider = (ISkinDataProvider) entityRenderer;
-            Storage<T, V, M> storage = dataProvider.getSkinData();
+            Storage<T, M> storage = dataProvider.getSkinData();
             if (storage == null) {
                 storage = new Storage<>();
                 dataProvider.setSkinData(storage);
@@ -254,7 +254,7 @@ public class SkinRendererManager  {
             return storage;
         }
 
-        public SkinRenderer<T, V, M> computeIfAbsent(Model entityModel, Function<Object, SkinRenderer<T, V, M>> provider) {
+        public SkinRenderer<T, M> computeIfAbsent(Model entityModel, Function<Object, SkinRenderer<T, M>> provider) {
             return skinRenderers.computeIfAbsent(getModelClass(entityModel), provider);
         }
 

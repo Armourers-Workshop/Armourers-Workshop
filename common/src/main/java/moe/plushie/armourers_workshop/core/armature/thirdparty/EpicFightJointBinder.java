@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.armature.thirdparty;
 
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.IJoint;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.ArmatureModifier;
 
@@ -13,9 +14,9 @@ public class EpicFightJointBinder extends ArmatureModifier {
     }
 
     @Override
-    public ITransformf apply(ITransformf transform, IModelHolder<?> model){
+    public ITransformf apply(IJoint joint, IModel model, ITransformf transform){
         return poseStack -> {
-            ITransformf transform1 = model.getExtraData(EpicFlightTransformProvider.KEY).apply(name);
+            ITransformf transform1 = model.getAssociatedObject(EpicFlightTransformProvider.KEY).apply(name);
 
             // the extra transforms is based on 1:1, but we own transforms is based on 1:16.
             // because we will zoom out the pose stack before the call apply,

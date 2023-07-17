@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.armature.core;
 
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.IJoint;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 
@@ -11,8 +12,8 @@ public class BeforeTransformModifier extends AfterTransformModifier {
     }
 
     @Override
-    public ITransformf apply(ITransformf transform, IModelHolder<?> model) {
-        ITransformf transform1 = super.apply(ITransformf.NONE, model);
+    public ITransformf apply(IJoint joint, IModel model, ITransformf transform) {
+        ITransformf transform1 = super.apply(joint, model, ITransformf.NONE);
         if (transform1 == ITransformf.NONE) {
             return transform;
         }

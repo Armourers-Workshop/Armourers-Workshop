@@ -2,8 +2,6 @@ package com.apple.library.coregraphics;
 
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIFont;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;

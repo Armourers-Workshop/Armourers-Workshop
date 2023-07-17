@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.armature;
 
-import moe.plushie.armourers_workshop.api.client.model.IModelHolder;
+import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.init.platform.SkinModifierManager;
 import moe.plushie.armourers_workshop.utils.DataStorageKey;
@@ -23,7 +23,7 @@ public class JointTransformModifier {
         this.armatureManager = armatureManager;
     }
 
-    public ITransformf[] getTransforms(EntityType<?> entityType, IModelHolder<?> model) {
+    public ITransformf[] getTransforms(EntityType<?> entityType, IModel model) {
         // if the entity reenter the world, we need to clear the old data.
         if (version != armatureManager.getVersion()) {
             version = armatureManager.getVersion();
