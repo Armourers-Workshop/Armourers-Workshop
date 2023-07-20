@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.builder.entity;
 
-import moe.plushie.armourers_workshop.api.client.ICamera;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import moe.plushie.armourers_workshop.utils.math.OpenNearPlane;
@@ -12,7 +11,7 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 
 @Environment(EnvType.CLIENT)
-public class CameraEntity extends SeatEntity implements ICamera {
+public class CameraEntity extends SeatEntity {
 
     private CameraType cameraType;
     private final Minecraft minecraft = Minecraft.getInstance();
@@ -21,14 +20,12 @@ public class CameraEntity extends SeatEntity implements ICamera {
         super(ModEntityTypes.SEAT.get().get(), Minecraft.getInstance().level);
     }
 
-    @Override
     public void connect() {
         cameraType = minecraft.options.getCameraType();
         minecraft.options.setCameraType(CameraType.THIRD_PERSON_BACK);
         minecraft.setCameraEntity(this);
     }
 
-    @Override
     public void disconnect() {
         minecraft.setCameraEntity(null);
         minecraft.options.setCameraType(cameraType);

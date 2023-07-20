@@ -2,12 +2,10 @@ package moe.plushie.armourers_workshop.api.skin;
 
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
+import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 
-/**
- * @author RiskyKen
- */
-public interface ISkinPartType extends ISkinRegistryEntry {
+public interface ISkinPartType extends IRegistryEntry {
 
     /**
      * The last 3 values are used to define the size of this part, the first 3

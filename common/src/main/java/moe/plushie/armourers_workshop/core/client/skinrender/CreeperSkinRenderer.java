@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.core.armature.Joints;
-import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.SkinModelTransformer;
+import moe.plushie.armourers_workshop.core.client.other.SkinVisibilityTransformer;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import net.fabricmc.api.EnvType;
@@ -18,16 +18,13 @@ public class CreeperSkinRenderer<T extends LivingEntity, M extends IModel> exten
     }
 
     @Override
-    public void initTransformers() {
+    protected void init(SkinModelTransformer<T, M> transformer) {
         transformer.registerArmor(SkinPartTypes.BIPPED_HEAD, Joints.BIPPED_HEAD);
     }
 
     @Override
-    protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
-        super.apply(entity, model, overriddenManager, renderData);
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_HEAD)) {
-            addModelOverride(model.getPart("head"));
-            addModelOverride(model.getPart("hair"));
-        }
+    protected void init(SkinVisibilityTransformer<M> transformer) {
+        transformer.modelToPart(SkinPartTypes.BIPPED_HEAD, "head");
+        transformer.modelToPart(SkinPartTypes.BIPPED_HEAD, "hair");
     }
 }

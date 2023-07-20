@@ -1,8 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import moe.plushie.armourers_workshop.api.client.model.IHumanoidModel;
-import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.SkinVisibilityTransformer;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import net.fabricmc.api.EnvType;
@@ -17,14 +16,10 @@ public class IllagerSkinRenderer<T extends AbstractIllager, M extends IHumanoidM
     }
 
     @Override
-    protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
-        super.apply(entity, model, overriddenManager, renderData);
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_LEFT_ARM)) {
-            addModelOverride(model.getPart("arms"));
-        }
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_RIGHT_ARM)) {
-            addModelOverride(model.getPart("arms"));
-        }
+    protected void init(SkinVisibilityTransformer<M> transformer) {
+        super.init(transformer);
+        transformer.modelToPart(SkinPartTypes.BIPPED_LEFT_ARM, "arms");
+        transformer.modelToPart(SkinPartTypes.BIPPED_RIGHT_ARM, "arms");
     }
 }
 

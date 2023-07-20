@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.data.undo.action;
 
 import com.google.common.collect.ImmutableMap;
-import moe.plushie.armourers_workshop.api.action.IUndoCommand;
+import moe.plushie.armourers_workshop.api.action.IUndoAction;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
@@ -23,7 +23,7 @@ public class SetBlockColorAction extends BlockUndoAction {
     }
 
     @Override
-    public IUndoCommand apply() throws CommandRuntimeException {
+    public IUndoAction apply() throws CommandRuntimeException {
         IPaintable target = (IPaintable) getBlockEntity();
         HashMap<Direction, IPaintColor> oldValue = new HashMap<>();
         for (Direction direction : newValue.keySet()) {
@@ -33,7 +33,7 @@ public class SetBlockColorAction extends BlockUndoAction {
             }
             oldValue.put(direction, paintColor);
         }
-        IUndoCommand revertAction = new SetBlockColorAction(level, blockPos, oldValue);
+        IUndoAction revertAction = new SetBlockColorAction(level, blockPos, oldValue);
         target.setColors(newValue);
         return revertAction;
     }

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.armature;
 
 import com.google.common.collect.ImmutableMap;
-import moe.plushie.armourers_workshop.api.client.IJoint;
+import moe.plushie.armourers_workshop.api.client.armature.IJoint;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 
 public class ModelBinder {

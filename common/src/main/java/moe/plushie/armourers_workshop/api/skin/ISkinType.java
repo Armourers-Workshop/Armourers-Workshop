@@ -1,11 +1,10 @@
 package moe.plushie.armourers_workshop.api.skin;
 
+import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
+
 import java.util.List;
 
-/**
- * @author RiskyKen
- */
-public interface ISkinType extends ISkinRegistryEntry {
+public interface ISkinType extends IRegistryEntry {
 
     int getId();
 

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.model;
 
-import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
+import moe.plushie.armourers_workshop.api.data.IAssociatedObjectProvider;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.EmbeddedSkinStack;
 import net.fabricmc.api.EnvType;
@@ -36,8 +36,8 @@ public class BakedModelStorage {
 
     @Nullable
     public static BakedModelStorage unwrap(BakedModel bakedModel) {
-        if (bakedModel instanceof ISkinDataProvider) {
-            return ((ISkinDataProvider) bakedModel).getSkinData();
+        if (bakedModel instanceof IAssociatedObjectProvider) {
+            return ((IAssociatedObjectProvider) bakedModel).getAssociatedObject();
         }
         return null;
     }
@@ -48,10 +48,10 @@ public class BakedModelStorage {
             bakedModel = getSkinBakedModel();
         }
         // we use a java proxy, which will forward all methods back to the original baked model.
-        Class<?>[] classes = new Class[]{BakedModel.class, ISkinDataProvider.class};
+        Class<?>[] classes = new Class[]{BakedModel.class, IAssociatedObjectProvider.class};
         BakedModelStorage storage = new BakedModelStorage(itemStack, embeddedStack, entity, level, bakedModel);
         return (BakedModel) Proxy.newProxyInstance(BakedModel.class.getClassLoader(), classes, (proxy, method, methodArgs) -> {
-            if (method.getDeclaringClass() == ISkinDataProvider.class) {
+            if (method.getDeclaringClass() == IAssociatedObjectProvider.class) {
                 return storage;
             }
             return method.invoke(storage.bakedModel, methodArgs);

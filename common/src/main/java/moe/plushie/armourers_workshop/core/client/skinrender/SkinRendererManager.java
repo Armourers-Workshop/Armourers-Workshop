@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
-import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
+import moe.plushie.armourers_workshop.api.data.IAssociatedObjectProvider;
 import moe.plushie.armourers_workshop.core.client.layer.SkinWardrobeLayer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
@@ -245,11 +245,11 @@ public class SkinRendererManager {
         private final HashMap<Object, SkinRenderer<T, M>> skinRenderers = new HashMap<>();
 
         public static <T extends Entity, V extends Model, M extends IModel> Storage<T, M> of(EntityRenderer<?> entityRenderer) {
-            ISkinDataProvider dataProvider = (ISkinDataProvider) entityRenderer;
-            Storage<T, M> storage = dataProvider.getSkinData();
+            IAssociatedObjectProvider dataProvider = (IAssociatedObjectProvider) entityRenderer;
+            Storage<T, M> storage = dataProvider.getAssociatedObject();
             if (storage == null) {
                 storage = new Storage<>();
-                dataProvider.setSkinData(storage);
+                dataProvider.setAssociatedObject(storage);
             }
             return storage;
         }

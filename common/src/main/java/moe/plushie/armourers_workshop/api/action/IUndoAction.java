@@ -4,7 +4,7 @@ import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
-public interface IUndoCommand {
+public interface IUndoAction {
 
     @Nullable
     default Component name() {
@@ -14,5 +14,5 @@ public interface IUndoCommand {
     default void prepare() throws CommandRuntimeException {
     }
 
-    IUndoCommand apply() throws CommandRuntimeException;
+    IUndoAction apply() throws CommandRuntimeException;
 }

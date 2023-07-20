@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.data.base;
 
-import moe.plushie.armourers_workshop.api.skin.ISkinRegistryEntry;
+import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 
@@ -74,7 +74,7 @@ public interface IDataOutputStream {
         properties.writeToStream(this);
     }
 
-    default void writeType(ISkinRegistryEntry type) throws IOException {
+    default void writeType(IRegistryEntry type) throws IOException {
         writeString(type.getRegistryName().toString());
     }
 }

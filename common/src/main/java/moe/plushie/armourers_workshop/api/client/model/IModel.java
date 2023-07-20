@@ -1,23 +1,14 @@
 package moe.plushie.armourers_workshop.api.client.model;
 
 import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
-import moe.plushie.armourers_workshop.api.math.IVector3f;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
 public interface IModel extends IAssociatedContainer {
 
-    default boolean isBaby() {
-        return false;
-    }
-
-    default float getBabyScale() {
-        return 1f;
-    }
-
-    default IVector3f getBabyOffset() {
-        return null;
-    }
+    @Nullable
+    IModelBabyPose getBabyPose();
 
     IModelPart getPart(String name);
 

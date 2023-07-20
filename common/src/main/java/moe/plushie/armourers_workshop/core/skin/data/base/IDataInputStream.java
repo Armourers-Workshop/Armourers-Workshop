@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.data.base;
 
-import moe.plushie.armourers_workshop.api.skin.ISkinRegistryEntry;
+import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 
@@ -68,7 +68,7 @@ public interface IDataInputStream {
         return new Vector3f(x, y, z);
     }
 
-    default <T extends ISkinRegistryEntry> T readType(Function<String, T> transform) throws IOException {
+    default <T extends IRegistryEntry> T readType(Function<String, T> transform) throws IOException {
         String name = readString();
         return transform.apply(name);
     }

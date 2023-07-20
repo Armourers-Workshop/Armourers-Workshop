@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.api.skin;
 
-public interface ISkinPaintType extends ISkinRegistryEntry {
+import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
+
+public interface ISkinPaintType extends IRegistryEntry {
 
     int getId();
 

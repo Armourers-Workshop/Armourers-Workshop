@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.data;
 
-import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
+import moe.plushie.armourers_workshop.api.data.IAssociatedObjectProvider;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.init.ModCapabilities;
@@ -52,11 +52,11 @@ public class SkinDataStorage {
     }
 
     private static SkinDataStorage getDataStore(Entity entity) {
-        ISkinDataProvider provider = (ISkinDataProvider) entity;
-        SkinDataStorage snapshot = provider.getSkinData();
+        IAssociatedObjectProvider provider = (IAssociatedObjectProvider) entity;
+        SkinDataStorage snapshot = provider.getAssociatedObject();
         if (snapshot == null) {
             snapshot = new SkinDataStorage(entity);
-            provider.setSkinData(snapshot);
+            provider.setAssociatedObject(snapshot);
         }
         return snapshot;
     }

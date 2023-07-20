@@ -46,7 +46,7 @@ public class EpicFlightWardrobeHandler {
             overrideParts = Collections.singleton(SkinPartTypes.BIPPED_HEAD);
         }
 
-        model.setAssociatedObject(EpicFlightTransformProvider.KEY, transformProvider);
+        model.setAssociatedObject(transformProvider, EpicFlightTransformProvider.KEY);
 
         context.overrideParts = overrideParts;
         context.overridePostStack = poseStack.copy();
@@ -64,7 +64,7 @@ public class EpicFlightWardrobeHandler {
         if (renderData == null) {
             return;
         }
-        model.setAssociatedObject(EpicFlightTransformProvider.KEY, null);
+        model.setAssociatedObject(null, EpicFlightTransformProvider.KEY);
 
         context.overrideParts = null;
         context.overridePostStack = null;

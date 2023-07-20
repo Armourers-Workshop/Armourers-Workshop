@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
+import moe.plushie.armourers_workshop.core.client.other.SkinModelTransformer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -20,7 +21,7 @@ public class FirstPersonSkinRenderer<T extends LivingEntity, M extends IModel> e
     }
 
     @Override
-    public void initTransformers() {
+    protected void init(SkinModelTransformer<T, M> transformer) {
         transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_ARM, this::setLeftArm);
         transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_ARM, this::setRightArm);
     }

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.armature.thirdparty;
 
-import moe.plushie.armourers_workshop.api.client.IJoint;
+import moe.plushie.armourers_workshop.api.client.armature.IJoint;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.ArmatureModifier;

@@ -26,7 +26,7 @@ public class DataStorage implements IAssociatedContainer {
     }
 
     @Override
-    public <T> void setAssociatedObject(IAssociatedContainerKey<T> key, T value) {
+    public <T> void setAssociatedObject(T value, IAssociatedContainerKey<T> key) {
         values.put(key, () -> value);
     }
 }

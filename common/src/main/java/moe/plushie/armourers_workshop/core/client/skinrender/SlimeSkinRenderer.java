@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.SkinModelTransformer;
+import moe.plushie.armourers_workshop.core.client.other.SkinVisibilityTransformer;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import net.fabricmc.api.EnvType;
@@ -18,16 +18,13 @@ public class SlimeSkinRenderer<T extends LivingEntity, M extends IModel> extends
     }
 
     @Override
-    public void initTransformers() {
+    protected void init(SkinModelTransformer<T, M> transformer) {
         transformer.registerArmor(SkinPartTypes.BIPPED_HEAD, this::offset);
     }
 
     @Override
-    protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
-        super.apply(entity, model, overriddenManager, renderData);
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_HEAD)) {
-            model.getAllParts().forEach(this::addModelOverride);
-        }
+    protected void init(SkinVisibilityTransformer<M> watcher) {
+        watcher.modelToParts(SkinPartTypes.BIPPED_HEAD, M::getAllParts);
     }
 
     private void offset(IPoseStack poseStack, M model) {

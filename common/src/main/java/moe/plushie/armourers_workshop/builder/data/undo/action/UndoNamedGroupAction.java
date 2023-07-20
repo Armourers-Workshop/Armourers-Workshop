@@ -1,39 +1,39 @@
 package moe.plushie.armourers_workshop.builder.data.undo.action;
 
-import moe.plushie.armourers_workshop.api.action.IUndoCommand;
+import moe.plushie.armourers_workshop.api.action.IUndoAction;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 
-public class UndoNamedGroupAction implements IUndoCommand {
+public class UndoNamedGroupAction implements IUndoAction {
 
     private final Component name;
-    private final ArrayList<IUndoCommand> commands = new ArrayList<>();
+    private final ArrayList<IUndoAction> actions = new ArrayList<>();
 
     public UndoNamedGroupAction(Component name) {
         this.name = name;
     }
 
-    public void push(IUndoCommand command) {
-        commands.add(command);
+    public void push(IUndoAction command) {
+        actions.add(command);
     }
 
     @Override
     public void prepare() throws CommandRuntimeException {
-        for (IUndoCommand childCommand : commands) {
-            childCommand.prepare();
+        for (IUndoAction childAction : actions) {
+            childAction.prepare();
         }
     }
 
     @Override
-    public IUndoCommand apply() throws CommandRuntimeException {
+    public IUndoAction apply() throws CommandRuntimeException {
         // first prepare command to avoid backtracking, and then apply all child commands.
         prepare();
         UndoNamedGroupAction revertGroup = new UndoNamedGroupAction(name);
-        for (IUndoCommand childCommand : commands) {
-            IUndoCommand revertChildCommand = childCommand.apply();
-            revertGroup.push(revertChildCommand);
+        for (IUndoAction childAction : actions) {
+            IUndoAction revertChildAction = childAction.apply();
+            revertGroup.push(revertChildAction);
         }
         return revertGroup;
     }

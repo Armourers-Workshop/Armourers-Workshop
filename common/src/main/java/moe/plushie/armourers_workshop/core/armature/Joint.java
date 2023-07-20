@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.armature;
 
-import moe.plushie.armourers_workshop.api.client.IJoint;
+import moe.plushie.armourers_workshop.api.client.armature.IJoint;
 
 public class Joint implements IJoint {
 

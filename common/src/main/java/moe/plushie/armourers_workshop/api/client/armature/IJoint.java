@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.api.client;
+package moe.plushie.armourers_workshop.api.client.armature;
 
 public interface IJoint {
 

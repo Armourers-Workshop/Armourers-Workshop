@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.builder.data.undo.action;
 
-import moe.plushie.armourers_workshop.api.action.IUndoCommand;
+import moe.plushie.armourers_workshop.api.action.IUndoAction;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.core.BlockPos;
@@ -26,7 +26,7 @@ public class SetBlockAction extends BlockUndoAction {
     }
 
     @Override
-    public IUndoCommand apply() {
+    public IUndoAction apply() {
         BlockState oldState = level.getBlockState(blockPos);
         CompoundTag oldNBT = null;
         BlockEntity oldBlockEntity = level.getBlockEntity(blockPos);

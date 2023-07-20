@@ -1,10 +1,11 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
-import moe.plushie.armourers_workshop.api.client.IJoint;
+import moe.plushie.armourers_workshop.api.client.armature.IJoint;
 import moe.plushie.armourers_workshop.api.client.model.IHumanoidModel;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.armature.Joints;
-import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
+import moe.plushie.armourers_workshop.core.client.other.SkinModelTransformer;
+import moe.plushie.armourers_workshop.core.client.other.SkinVisibilityTransformer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
@@ -22,7 +23,7 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends IHu
     }
 
     @Override
-    public void initTransformers() {
+    protected void init(SkinModelTransformer<T, M> transformer) {
         transformer.registerArmor(SkinPartTypes.BIPPED_HAT, Joints.BIPPED_HEAD);
         transformer.registerArmor(SkinPartTypes.BIPPED_HEAD, Joints.BIPPED_HEAD);
         transformer.registerArmor(SkinPartTypes.BIPPED_CHEST, Joints.BIPPED_CHEST);
@@ -42,14 +43,19 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends IHu
         transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_LEG2, Joints.BIPPED_LEFT_LEG);
         transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_LEG2, Joints.BIPPED_RIGHT_LEG);
 
-        transformer.registerItem(AbstractItemTransformType.NONE, Transformer::withModel);
-        transformer.registerItem(AbstractItemTransformType.GUI, Transformer::withModel);
-        transformer.registerItem(AbstractItemTransformType.FIXED, Transformer::withModel);
-        transformer.registerItem(AbstractItemTransformType.GROUND, Transformer::withModel);
-        transformer.registerItem(AbstractItemTransformType.THIRD_PERSON_LEFT_HAND, Transformer::withModel);
-        transformer.registerItem(AbstractItemTransformType.THIRD_PERSON_RIGHT_HAND, Transformer::withModel);
-        transformer.registerItem(AbstractItemTransformType.FIRST_PERSON_LEFT_HAND, Transformer::withModel);
-        transformer.registerItem(AbstractItemTransformType.FIRST_PERSON_RIGHT_HAND, Transformer::withModel);
+        transformer.registerItem(AbstractItemTransformType.NONE, SkinModelTransformer::fromModel);
+        transformer.registerItem(AbstractItemTransformType.GUI, SkinModelTransformer::fromModel);
+        transformer.registerItem(AbstractItemTransformType.FIXED, SkinModelTransformer::fromModel);
+        transformer.registerItem(AbstractItemTransformType.GROUND, SkinModelTransformer::fromModel);
+        transformer.registerItem(AbstractItemTransformType.THIRD_PERSON_LEFT_HAND, SkinModelTransformer::fromModel);
+        transformer.registerItem(AbstractItemTransformType.THIRD_PERSON_RIGHT_HAND, SkinModelTransformer::fromModel);
+        transformer.registerItem(AbstractItemTransformType.FIRST_PERSON_LEFT_HAND, SkinModelTransformer::fromModel);
+        transformer.registerItem(AbstractItemTransformType.FIRST_PERSON_RIGHT_HAND, SkinModelTransformer::fromModel);
+    }
+
+    @Override
+    protected void init(SkinVisibilityTransformer<M> transformer) {
+        SkinVisibilityTransformer.setupHumanoidModel(transformer);
     }
 
     @Override
@@ -70,41 +76,7 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends IHu
         renderData.getOverriddenManager().didRender(entity);
     }
 
-    @Override
-    protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
-        super.apply(entity, model, overriddenManager, renderData);
-        // model
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_HEAD)) {
-            addModelOverride(model.getHeadPart());
-        }
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_CHEST)) {
-            addModelOverride(model.getBodyPart());
-        }
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_LEFT_ARM)) {
-            addModelOverride(model.getLeftArmPart());
-        }
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_RIGHT_ARM)) {
-            addModelOverride(model.getRightArmPart());
-        }
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_LEFT_LEG)) {
-            addModelOverride(model.getLeftLegPart());
-        }
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_RIGHT_LEG)) {
-            addModelOverride(model.getRightLegPart());
-        }
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_LEFT_FOOT)) {
-            addModelOverride(model.getLeftLegPart());
-        }
-        if (overriddenManager.overrideModel(SkinPartTypes.BIPPED_RIGHT_FOOT)) {
-            addModelOverride(model.getRightLegPart());
-        }
-        // overlay
-        if (overriddenManager.overrideOverlay(SkinPartTypes.BIPPED_HEAD)) {
-            addModelOverride(model.getHatPart());
-        }
-    }
-
-    protected PartTransform<T, M> sel(IJoint joint1, IJoint joint2) {
+    protected SkinModelTransformer.Entry<T, M> sel(IJoint joint1, IJoint joint2) {
         return (poseStack, entity, model, bakedPart, bakedSkin, context) -> {
             if (bakedPart.getProperties().get(SkinProperty.WINGS_MATCHING_POSE)) {
                 transformer.apply(poseStack, joint2, context);

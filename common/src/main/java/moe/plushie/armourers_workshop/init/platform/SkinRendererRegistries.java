@@ -22,7 +22,6 @@ import moe.plushie.armourers_workshop.core.client.skinrender.plugin.SlimeOuterFi
 import moe.plushie.armourers_workshop.core.client.skinrender.plugin.VillagerLayerFixPlugin;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.Model;
@@ -101,8 +100,7 @@ public class SkinRendererRegistries {
                 return null;
             }
             SkinRenderer<?, ?> skinRenderer = this.factory.apply(entityProfile);
-            skinRenderer.initTransformers();
-            skinRenderer.init(ObjectUtils.unsafeCast(entityRenderer));
+            skinRenderer.initWithRenderer(entityRenderer);
             return skinRenderer;
         }
     }

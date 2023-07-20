@@ -1,23 +1,23 @@
 package moe.plushie.armourers_workshop.init.mixin;
 
-import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.api.data.IAssociatedObjectProvider;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin({EntityModel.class, EntityRenderer.class})
-public abstract class ClientDataAttachMixin implements ISkinDataProvider {
+public abstract class ClientDataAttachMixin implements IAssociatedObjectProvider {
 
-    public Object aw$skinData;
+    private Object aw$associatedObject;
 
     @Override
-    public <T> T getSkinData() {
-        return ObjectUtils.unsafeCast(aw$skinData);
+    public <T> T getAssociatedObject() {
+        // noinspection unchecked
+        return (T) aw$associatedObject;
     }
 
     @Override
-    public <T> void setSkinData(T data) {
-        this.aw$skinData = data;
+    public <T> void setAssociatedObject(T data) {
+        this.aw$associatedObject = data;
     }
 }

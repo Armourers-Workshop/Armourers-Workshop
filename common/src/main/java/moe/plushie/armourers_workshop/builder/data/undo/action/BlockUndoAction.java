@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.builder.data.undo.action;
 
-import moe.plushie.armourers_workshop.api.action.IUndoCommand;
+import moe.plushie.armourers_workshop.api.action.IUndoAction;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public abstract class BlockUndoAction implements IUndoCommand {
+public abstract class BlockUndoAction implements IUndoAction {
 
     protected final Level level;
     protected final BlockPos blockPos;

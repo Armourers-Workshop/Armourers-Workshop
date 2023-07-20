@@ -26,10 +26,10 @@ public class LivingSkinRenderer<T extends LivingEntity, M extends IModel> extend
     }
 
     @Override
-    public void init(EntityRenderer<T> entityRenderer) {
+    protected void init(EntityRenderer<T> entityRenderer) {
         super.init(entityRenderer);
         if (entityRenderer instanceof LivingEntityRenderer<?, ?>) {
-            apply((LivingEntityRenderer<T, EntityModel<T>>) entityRenderer);
+            replace((LivingEntityRenderer<T, EntityModel<T>>) entityRenderer);
         }
     }
 
@@ -51,7 +51,7 @@ public class LivingSkinRenderer<T extends LivingEntity, M extends IModel> extend
         return model;
     }
 
-    private void apply(LivingEntityRenderer<T, EntityModel<T>> entityRenderer) {
+    private void replace(LivingEntityRenderer<T, EntityModel<T>> entityRenderer) {
         this.renderer = entityRenderer;
         SkinRendererManager.getInstance().applyPlugins(this, plugin -> {
             auto layers = entityRenderer.layers;
