@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.api.skin;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 
 public interface ISkinPartType extends IRegistryEntry {
 
@@ -59,9 +58,4 @@ public interface ISkinPartType extends IRegistryEntry {
      * @return
      */
     boolean isPartRequired();
-
-
-    boolean isModelOverridden(ISkinProperties skinProps);
-
-    boolean isOverlayOverridden(ISkinProperties skinProps);
 }

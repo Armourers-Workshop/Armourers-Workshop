@@ -41,6 +41,8 @@ public abstract class AbstractModelPartRegistries {
             it.put("left_pants", model.leftPants);
             it.put("right_pants", model.rightPants);
             it.put("jacket", model.jacket);
+            it.put("cloak", model.cloak);
+            it.put("ear", model.ear);
         });
 
         ModelHolder.register(AbstractSkinnableModels.CREEPER, (model, it) -> {

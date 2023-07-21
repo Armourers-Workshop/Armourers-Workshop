@@ -3,9 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.part.chest;
 import moe.plushie.armourers_workshop.api.math.ITexturePos;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartTypeTextured;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
@@ -44,15 +42,5 @@ public class ChestPartType extends SkinPartType implements ISkinPartTypeTextured
     @Override
     public IVector3i getTextureModelSize() {
         return new Vector3i(8, 12, 4);
-    }
-
-    @Override
-    public boolean isModelOverridden(ISkinProperties skinProps) {
-        return skinProps.get(SkinProperty.MODEL_OVERRIDE_CHEST);
-    }
-
-    @Override
-    public boolean isOverlayOverridden(ISkinProperties skinProps) {
-        return skinProps.get(SkinProperty.MODEL_HIDE_OVERLAY_CHEST);
     }
 }

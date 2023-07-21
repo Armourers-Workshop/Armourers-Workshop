@@ -107,19 +107,38 @@ public class CachedModel<P> implements IModel {
 
     public static class Player<P> extends Humanoid<P> implements IPlayerModel {
 
+        private final IModelPart ear;
+        private final IModelPart cloak;
+        private final IModelPart jacket;
         private final IModelPart leftSleeve;
         private final IModelPart rightSleeve;
         private final IModelPart leftPants;
         private final IModelPart rightPants;
-        private final IModelPart jacket;
 
         public Player(Container<P> container) {
             super(container);
+            this.ear = IPlayerModel.super.getEarPart();
+            this.cloak = IPlayerModel.super.getCloakPart();
+            this.jacket = IPlayerModel.super.getJacketPart();
             this.leftSleeve = IPlayerModel.super.getLeftSleevePart();
             this.rightSleeve = IPlayerModel.super.getRightSleevePart();
             this.leftPants = IPlayerModel.super.getLeftPantsPart();
             this.rightPants = IPlayerModel.super.getRightPantsPart();
-            this.jacket = IPlayerModel.super.getJacketPart();
+        }
+
+        @Override
+        public IModelPart getEarPart() {
+            return ear;
+        }
+
+        @Override
+        public IModelPart getCloakPart() {
+            return cloak;
+        }
+
+        @Override
+        public IModelPart getJacketPart() {
+            return jacket;
         }
 
         @Override
@@ -140,11 +159,6 @@ public class CachedModel<P> implements IModel {
         @Override
         public IModelPart getRightPantsPart() {
             return rightPants;
-        }
-
-        @Override
-        public IModelPart getJacketPart() {
-            return jacket;
         }
     }
 

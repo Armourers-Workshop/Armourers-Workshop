@@ -16,6 +16,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.ObjectArrays;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -409,11 +410,11 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
         }
 
         public <V extends Enum<V>> EnumValue<V> defineEnum(List<String> path, V defaultValue, @SuppressWarnings("unchecked") V... acceptableValues) {
-            return defineEnum(path, defaultValue, Arrays.asList(acceptableValues));
+            return defineEnum(path, defaultValue, ObjectUtils.map(acceptableValues));
         }
 
         public <V extends Enum<V>> EnumValue<V> defineEnum(List<String> path, V defaultValue, EnumGetMethod converter, @SuppressWarnings("unchecked") V... acceptableValues) {
-            return defineEnum(path, defaultValue, converter, Arrays.asList(acceptableValues));
+            return defineEnum(path, defaultValue, converter, ObjectUtils.map(acceptableValues));
         }
 
         public <V extends Enum<V>> EnumValue<V> defineEnum(String path, V defaultValue, Collection<V> acceptableValues) {

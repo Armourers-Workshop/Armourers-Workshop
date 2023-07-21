@@ -16,9 +16,9 @@ import manifold.ext.rt.api.ThisClass;
 public class ForgeItemRegistry {
 
     public static void registerItemRendererFO(@ThisClass Class<?> clazz, Item item, AbstractItemStackRendererProvider provider) {
-        ISkinDataProvider provider1 = ObjectUtils.unsafeCast(item);
+        IAssociatedObjectProvider provider1 = ObjectUtils.unsafeCast(item);
         BlockEntityWithoutLevelRenderer renderer = provider.create();
-        provider1.setSkinData(new IItemRenderProperties() {
+        provider1.setAssociatedObject(new IItemRenderProperties() {
 
             @Override
             public BlockEntityWithoutLevelRenderer getItemStackRenderer() {

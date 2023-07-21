@@ -109,7 +109,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         checkShowGuides.setSelected(blockEntity.isShowGuides());
         checkShowModelGuides.setSelected(blockEntity.isShowModelGuides());
         checkShowHelper.setSelected(blockEntity.isShowHelper());
-        checkShowHelper.setHidden(!blockEntity.usesHelper());
+        checkShowHelper.setHidden(!blockEntity.isUseHelper());
         // update input type
         if (lastSource == PlayerTextureDescriptor.Source.URL) {
             inputType.setText(getDisplayText("label.url"));

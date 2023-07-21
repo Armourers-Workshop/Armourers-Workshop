@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideDataProvider;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.ModelPartBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -46,14 +47,14 @@ public class FeetGuideRenderer extends AbstractGuideRenderer {
 
     public void renderLeftLeg(PoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
         legLeft.render(poseStack, buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
-        if (provider.shouldRenderOverlay()) {
+        if (provider.shouldRenderOverlay(SkinProperty.OVERRIDE_OVERLAY_LEFT_PANTS)) {
             leftPants.render(poseStack, buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
         }
     }
 
     public void renderRightLeg(PoseStack poseStack, IGuideDataProvider provider, int light, int overlay, MultiBufferSource buffers) {
         legRight.render(poseStack, buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
-        if (provider.shouldRenderOverlay()) {
+        if (provider.shouldRenderOverlay(SkinProperty.OVERRIDE_OVERLAY_RIGHT_PANTS)) {
             rightPants.render(poseStack, buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
         }
     }

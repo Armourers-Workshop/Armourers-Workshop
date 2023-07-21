@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
+import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRendererManager;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
@@ -64,7 +65,11 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
         boolean isShowGuides = entity.isShowGuides();
         boolean isShowModelGuides = entity.isShowModelGuides();
         boolean isShowHelper = entity.isShowHelper();
-        boolean isUsesHelper = entity.usesHelper();
+        boolean isUseHelper = entity.isUseHelper();
+
+        // don't display overlay layers when helpers are actived.
+        renderData.shouldRenderOverlay = !isUseHelper;
+        renderData.skinProperties = skinProperties;
 
         poseStack.pushPose();
         transform(poseStack, entity);
@@ -92,12 +97,9 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
                 a = 0.2f;
             }
 
-            boolean isModelOverridden = partType.isModelOverridden(skinProperties);
-            boolean isOverlayOverridden = partType.isOverlayOverridden(skinProperties);
-            if (isUsesHelper) {
+            boolean isModelOverridden = entity.isModelOverridden(partType);
+            if (isUseHelper) {
                 isModelOverridden = !isShowHelper;
-                // don't display overlay layers when helpers are actived.
-                isOverlayOverridden = true;
             }
 
             poseStack.pushPose();
@@ -111,7 +113,6 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
                     poseStack.pushPose();
                     poseStack.translate(0, -rect2.getMinY(), 0);
                     poseStack.scale(16, 16, 16);
-                    renderData.shouldRenderOverlay = !isOverlayOverridden;
                     guideRenderer.render(poseStack, renderData, 0xf000f0, OverlayTexture.NO_OVERLAY, buffers);
                     poseStack.popPose();
                 }
@@ -188,6 +189,7 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
         protected final ResourceLocation displayTextureLocation;
         protected int lastVersion;
         protected boolean shouldRenderOverlay = false;
+        protected ISkinProperties skinProperties;
 
         public RenderData(ArmourerBlockEntity blockEntity) {
             this.blockEntity = blockEntity;
@@ -222,8 +224,12 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
         }
 
         @Override
-        public boolean shouldRenderOverlay() {
-            return shouldRenderOverlay;
+        public boolean shouldRenderOverlay(ISkinProperty<Boolean> property) {
+            //  must check after the enable rendering.
+            if (shouldRenderOverlay) {
+                return !skinProperties.get(property);
+            }
+            return false;
         }
     }
 }

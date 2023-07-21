@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.builder.blockentity;
 
+import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
 import moe.plushie.armourers_workshop.api.common.IWorldUpdateTask;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
@@ -8,6 +9,7 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
 import moe.plushie.armourers_workshop.builder.data.BoundingBox;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
@@ -55,7 +57,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
+import manifold.ext.rt.api.auto;
+
 public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockEntityHandler, IPaintToolSelector.Provider {
+
+    private static final ImmutableMap<ISkinPartType, ISkinProperty<Boolean>> PART_TO_MODEL = new ImmutableMap.Builder<ISkinPartType, ISkinProperty<Boolean>>()
+            .put(SkinPartTypes.BIPPED_HEAD, SkinProperty.OVERRIDE_MODEL_HEAD)
+            .put(SkinPartTypes.BIPPED_CHEST, SkinProperty.OVERRIDE_MODEL_CHEST)
+            .put(SkinPartTypes.BIPPED_LEFT_ARM, SkinProperty.OVERRIDE_MODEL_LEFT_ARM)
+            .put(SkinPartTypes.BIPPED_RIGHT_ARM, SkinProperty.OVERRIDE_MODEL_RIGHT_ARM)
+            .put(SkinPartTypes.BIPPED_LEFT_LEG, SkinProperty.OVERRIDE_MODEL_LEFT_LEG)
+            .put(SkinPartTypes.BIPPED_RIGHT_LEG, SkinProperty.OVERRIDE_MODEL_RIGHT_LEG)
+            .put(SkinPartTypes.BIPPED_LEFT_FOOT, SkinProperty.OVERRIDE_MODEL_LEFT_LEG)
+            .put(SkinPartTypes.BIPPED_RIGHT_FOOT, SkinProperty.OVERRIDE_MODEL_RIGHT_LEG)
+            .build();
 
     protected int flags = 0;
     protected int version = 0;
@@ -232,7 +247,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
         this.setChanged();
     }
 
-    public boolean usesHelper() {
+    public boolean isUseHelper() {
         if (skinType == SkinTypes.ARMOR_WINGS) {
             return true;
         }
@@ -319,6 +334,15 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
         setChanged();
     }
 
+
+    public boolean isModelOverridden(ISkinPartType partType) {
+        auto property = PART_TO_MODEL.get(partType);
+        if (property != null) {
+            return getSkinProperties().get(property);
+        }
+        return false;
+    }
+
     public int getVersion() {
         return version;
     }
@@ -355,10 +379,10 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
     }
 
     private boolean shouldAddBoundingBoxes(ISkinPartType partType) {
-        if (usesHelper()) {
+        if (isUseHelper()) {
             return isShowHelper();
         }
-        return !partType.isModelOverridden(getSkinProperties());
+        return !isModelOverridden(partType);
     }
 
     private void remakeBoundingBoxes(Collection<BoundingBox> oldBoxes, Collection<BoundingBox> newBoxes, boolean forced) {

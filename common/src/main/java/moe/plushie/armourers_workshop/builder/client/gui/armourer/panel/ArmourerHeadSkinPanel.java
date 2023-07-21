@@ -15,7 +15,8 @@ public class ArmourerHeadSkinPanel extends ArmourerBaseSkinPanel {
     @Override
     public void init() {
         super.init();
-        addCheckBox(0, 0, SkinProperty.MODEL_OVERRIDE_HEAD);
-        addCheckBox(0, 0, SkinProperty.MODEL_HIDE_OVERLAY_HEAD);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_MODEL_HEAD);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_OVERLAY_HAT);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_EQUIPMENT_HELMET);
     }
 }

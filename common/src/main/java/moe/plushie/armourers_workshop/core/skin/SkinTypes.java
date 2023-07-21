@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.data.slot.ItemOverrideType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 
@@ -62,11 +63,11 @@ public final class SkinTypes {
     }
 
     private static ISkinType register(String name, int id, ISkinPartType... parts) {
-        return register(name, new SkinType(name, id, Arrays.asList(parts)));
+        return register(name, new SkinType(name, id, ObjectUtils.map(parts)));
     }
 
     private static ISkinType registerArmor(String name, int id, EquipmentSlot slotType, ISkinPartType... parts) {
-        return register(name, new SkinType.Armor(name, id, slotType, Arrays.asList(parts)));
+        return register(name, new SkinType.Armor(name, id, slotType, ObjectUtils.map(parts)));
     }
 
     private static ISkinType registerArmor(String name, int id, EquipmentSlot slotType, ISkinType... types) {
@@ -78,7 +79,7 @@ public final class SkinTypes {
     }
 
     private static ISkinType registerItem(String name, int id, ItemOverrideType overrideType, ISkinPartType... parts) {
-        return register(name, new SkinType.Tool(name, id, Arrays.asList(parts), overrideType::isOverrideItem));
+        return register(name, new SkinType.Tool(name, id, ObjectUtils.map(parts), overrideType::isOverrideItem));
     }
 
     private static ISkinType register(String name, SkinType type) {

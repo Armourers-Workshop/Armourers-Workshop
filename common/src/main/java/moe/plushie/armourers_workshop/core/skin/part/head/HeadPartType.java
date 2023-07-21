@@ -3,9 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.part.head;
 import moe.plushie.armourers_workshop.api.math.ITexturePos;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartTypeTextured;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
@@ -44,15 +42,5 @@ public class HeadPartType extends SkinPartType implements ISkinPartTypeTextured 
     @Override
     public IVector3i getTextureModelSize() {
         return new Vector3i(8, 8, 8);
-    }
-
-    @Override
-    public boolean isModelOverridden(ISkinProperties skinProps) {
-        return skinProps.get(SkinProperty.MODEL_OVERRIDE_HEAD);
-    }
-
-    @Override
-    public boolean isOverlayOverridden(ISkinProperties skinProps) {
-        return skinProps.get(SkinProperty.MODEL_HIDE_OVERLAY_HEAD);
     }
 }

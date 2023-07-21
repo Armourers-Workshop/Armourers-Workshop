@@ -9,6 +9,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -118,9 +119,9 @@ public class ObjectUtils {
             if (value != null) {
                 return value;
             }
-		}
-		return defaultValue;
-	}
+        }
+        return defaultValue;
+    }
 
     public static <T> ArrayList<T> filter(T[] in, Predicate<? super T> predicate) {
         ArrayList<T> results = new ArrayList<>(in.length);
@@ -139,6 +140,13 @@ public class ObjectUtils {
                 results.add(value);
             }
         }
+        return results;
+    }
+
+    @SafeVarargs
+    public static <T> ArrayList<T> map(T... objects) {
+        ArrayList<T> results = new ArrayList<>(objects.length);
+        Collections.addAll(results, objects);
         return results;
     }
 

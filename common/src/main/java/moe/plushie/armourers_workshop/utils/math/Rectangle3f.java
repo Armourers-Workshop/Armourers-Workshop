@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.utils.math;
 
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.AABB;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -180,7 +180,7 @@ public class Rectangle3f implements IRectangle3f {
     }
 
     public void mul(OpenMatrix4f matrix) {
-        List<Vector4f> vertexes = Arrays.asList(
+        List<Vector4f> vertexes = ObjectUtils.map(
                 new Vector4f(x, y, z, 1.0f),
                 new Vector4f(x + width, y, z, 1.0f),
                 new Vector4f(x + width, y + height, z, 1.0f),

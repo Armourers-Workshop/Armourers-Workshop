@@ -15,9 +15,10 @@ public class ArmourerFeetSkinPanel extends ArmourerBaseSkinPanel {
     @Override
     public void init() {
         super.init();
-        addCheckBox(0, 0, SkinProperty.MODEL_OVERRIDE_LEG_LEFT);
-        addCheckBox(0, 0, SkinProperty.MODEL_OVERRIDE_LEG_RIGHT);
-        addCheckBox(0, 0, SkinProperty.MODEL_HIDE_OVERLAY_LEG_LEFT);
-        addCheckBox(0, 0, SkinProperty.MODEL_HIDE_OVERLAY_LEG_RIGHT);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_MODEL_LEFT_LEG);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_MODEL_RIGHT_LEG);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_OVERLAY_LEFT_PANTS);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_OVERLAY_RIGHT_PANTS);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_EQUIPMENT_BOOTS);
     }
 }

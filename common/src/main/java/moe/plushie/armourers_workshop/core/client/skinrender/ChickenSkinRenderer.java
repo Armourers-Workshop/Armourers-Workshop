@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinModelTransformer;
 import moe.plushie.armourers_workshop.core.client.other.SkinVisibilityTransformer;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,9 +25,9 @@ public class ChickenSkinRenderer<T extends LivingEntity, M extends IModel> exten
 
     @Override
     protected void init(SkinVisibilityTransformer<M> transformer) {
-        transformer.modelToPart(SkinPartTypes.BIPPED_HEAD, "head");
-        transformer.modelToPart(SkinPartTypes.BIPPED_HEAD, "beak");
-        transformer.modelToPart(SkinPartTypes.BIPPED_HEAD, "red_thing");
+        transformer.linkToPart(SkinProperty.OVERRIDE_MODEL_HEAD, "head");
+        transformer.linkToPart(SkinProperty.OVERRIDE_MODEL_HEAD, "beak");
+        transformer.linkToPart(SkinProperty.OVERRIDE_MODEL_HEAD, "red_thing");
     }
 
     private void offset(IPoseStack poseStack, M model) {

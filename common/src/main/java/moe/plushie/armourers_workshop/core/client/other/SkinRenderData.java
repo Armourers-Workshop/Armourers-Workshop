@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.common.IItemStackProvider;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
-import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightContext;
@@ -18,7 +17,6 @@ import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModConfig;
@@ -272,16 +270,9 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
     private void loadSkinPart(BakedSkin skin) {
         // check all part status, some skin only one part, but overridden all the models/overlays
         SkinProperties properties = skin.getSkin().getProperties();
-        for (ISkinPartType partType : skin.getType().getParts()) {
-            if (partType.isModelOverridden(properties)) {
-                overriddenManager.addModel(partType);
-            }
-            if (partType.isOverlayOverridden(properties)) {
-                overriddenManager.addOverlay(partType);
-            }
-            if (partType == SkinPartTypes.BIPPED_SKIRT && !isLimitLimbs) {
-                isLimitLimbs = properties.get(SkinProperty.MODEL_LEGS_LIMIT_LIMBS);
-            }
+        overriddenManager.merge(properties);
+        if (!isLimitLimbs) {
+            isLimitLimbs = properties.get(SkinProperty.LIMIT_LEGS_LIMBS);
         }
     }
 

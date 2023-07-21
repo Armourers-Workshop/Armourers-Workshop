@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinModelTransformer;
 import moe.plushie.armourers_workshop.core.client.other.SkinVisibilityTransformer;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.monster.Ghast;
@@ -24,7 +25,7 @@ public class GhastSkinRenderer<T extends Ghast, M extends IModel> extends Living
 
     @Override
     protected void init(SkinVisibilityTransformer<M> watcher) {
-        watcher.modelToParts(SkinPartTypes.BIPPED_HEAD, M::getAllParts);
+        watcher.linkToParts(SkinProperty.OVERRIDE_MODEL_HEAD, M::getAllParts);
     }
 
     private void offset(IPoseStack poseStack, M model) {

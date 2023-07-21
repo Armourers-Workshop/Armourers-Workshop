@@ -4,11 +4,11 @@ import moe.plushie.armourers_workshop.api.client.model.IHumanoidModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.api.client.model.IModelPartPose;
 import moe.plushie.armourers_workshop.core.client.model.TransformModel;
-import moe.plushie.armourers_workshop.core.client.other.SkinVisibilityTransformer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.SkinVisibilityTransformer;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
@@ -27,22 +27,20 @@ public class VillagerSkinRenderer<T extends LivingEntity, M extends IHumanoidMod
 
     @Override
     protected void init(SkinVisibilityTransformer<M> transformer) {
-        transformer.modelToPart(SkinPartTypes.BIPPED_LEFT_ARM, M::getLeftArmPart);
-        transformer.modelToPart(SkinPartTypes.BIPPED_RIGHT_ARM, M::getRightArmPart);
 
-        transformer.modelToPart(SkinPartTypes.BIPPED_HEAD, M::getHatPart); // when override the head, the hat needs to override too
-        transformer.modelToPart(SkinPartTypes.BIPPED_HEAD, M::getHeadPart);
-        transformer.modelToPart(SkinPartTypes.BIPPED_HEAD, "hat_rim");
-        transformer.modelToPart(SkinPartTypes.BIPPED_HEAD, "nose");
+        transformer.linkToPart(SkinProperty.OVERRIDE_MODEL_LEFT_ARM, M::getLeftArmPart);
+        transformer.linkToPart(SkinProperty.OVERRIDE_MODEL_RIGHT_ARM, M::getRightArmPart);
 
-        transformer.modelToPart(SkinPartTypes.BIPPED_CHEST, M::getBodyPart);
-        transformer.modelToPart(SkinPartTypes.BIPPED_CHEST, "jacket");
+        transformer.linkToPart(SkinProperty.OVERRIDE_MODEL_HEAD, M::getHatPart); // when override the head, the hat needs to override too
+        transformer.linkToPart(SkinProperty.OVERRIDE_MODEL_HEAD, M::getHeadPart);
+        transformer.linkToPart(SkinProperty.OVERRIDE_MODEL_HEAD, "hat_rim");
+        transformer.linkToPart(SkinProperty.OVERRIDE_MODEL_HEAD, "nose");
 
-        transformer.modelToPart(SkinPartTypes.BIPPED_LEFT_LEG, M::getLeftLegPart);
-        transformer.modelToPart(SkinPartTypes.BIPPED_LEFT_FOOT, M::getLeftLegPart);
+        transformer.linkToPart(SkinProperty.OVERRIDE_MODEL_CHEST, M::getBodyPart);
+        transformer.linkToPart(SkinProperty.OVERRIDE_MODEL_CHEST, "jacket");
 
-        transformer.modelToPart(SkinPartTypes.BIPPED_RIGHT_LEG, M::getRightLegPart);
-        transformer.modelToPart(SkinPartTypes.BIPPED_RIGHT_FOOT, M::getRightLegPart);
+        transformer.linkToPart(SkinProperty.OVERRIDE_MODEL_LEFT_LEG, M::getLeftLegPart);
+        transformer.linkToPart(SkinProperty.OVERRIDE_MODEL_RIGHT_LEG, M::getRightLegPart);
     }
 
     @Override

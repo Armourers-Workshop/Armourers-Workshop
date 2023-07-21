@@ -9,6 +9,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.FriendlyByteBuf;
 
@@ -18,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ColorArgumentType implements IArgumentType<PaintColor> {
 
-    private static final Collection<String> EXAMPLES = Arrays.asList("[paintType:]#RRGGBB", "[paintType:]R,G,B");
+    private static final Collection<String> EXAMPLES = ObjectUtils.map("[paintType:]#RRGGBB", "[paintType:]R,G,B");
 
     public ColorArgumentType() {
         super();

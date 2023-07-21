@@ -7,13 +7,13 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModConfig;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.core.Direction;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
@@ -176,7 +176,7 @@ public class SkinCuller {
                 // ..
                 SearchResult upperResult = new SearchResult(upperPartType, upperBox, Vector3i.ZERO);
                 SearchResult lowerResult = new SearchResult(lowerPartType, lowerBox, new Vector3i(0, -yClip, 0));
-                return Arrays.asList(upperResult, lowerResult);
+                return ObjectUtils.map(upperResult, lowerResult);
             }
             return super.subdivide(rect);
         }

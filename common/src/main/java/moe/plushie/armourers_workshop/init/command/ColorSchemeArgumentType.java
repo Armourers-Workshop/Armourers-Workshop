@@ -11,17 +11,17 @@ import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.FriendlyByteBuf;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class ColorSchemeArgumentType implements IArgumentType<ColorScheme> {
 
-    private static final Collection<String> EXAMPLES = Arrays.asList("<dyeIndex=[paintType:]#RRGGBB>", "<dyeIndex=[paintType:]R,G,B>");
+    private static final Collection<String> EXAMPLES = ObjectUtils.map("<dyeIndex=[paintType:]#RRGGBB>", "<dyeIndex=[paintType:]R,G,B>");
 
     public ColorSchemeArgumentType() {
         super();

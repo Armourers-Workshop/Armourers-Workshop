@@ -18,26 +18,30 @@ public class SkinProperty<T> implements ISkinProperty<T> {
 
     // Properties.
     @Deprecated
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE = normal("armourOverride", false);
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE_HEAD = normal("overrideModelHead", false);
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE_CHEST = normal("overrideModelChest", false);
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE_ARM_LEFT = normal("overrideModelArmLeft", false);
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE_ARM_RIGHT = normal("overrideModelArmRight", false);
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE_LEG_LEFT = normal("overrideModelLegLeft", false);
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE_LEG_RIGHT = normal("overrideModelLegRight", false);
-
-    public static final SkinProperty<Boolean> MODEL_OVERRIDE_CHEST_OF_WINGS = normal("overrideModelChestOfWings", false);
+    public static final SkinProperty<Boolean> OVERRIDE_MODEL_ALL = normal("armourOverride", false);
+    public static final SkinProperty<Boolean> OVERRIDE_MODEL_HEAD = normal("overrideModelHead", false);
+    public static final SkinProperty<Boolean> OVERRIDE_MODEL_CHEST = normal("overrideModelChest", false);
+    public static final SkinProperty<Boolean> OVERRIDE_MODEL_LEFT_ARM = normal("overrideModelArmLeft", false);
+    public static final SkinProperty<Boolean> OVERRIDE_MODEL_RIGHT_ARM = normal("overrideModelArmRight", false);
+    public static final SkinProperty<Boolean> OVERRIDE_MODEL_LEFT_LEG = normal("overrideModelLegLeft", false);
+    public static final SkinProperty<Boolean> OVERRIDE_MODEL_RIGHT_LEG = normal("overrideModelLegRight", false);
 
     @Deprecated
-    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY = normal("armourHideOverlay", false);
-    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_HEAD = normal("hideOverlayHead", false);
-    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_CHEST = normal("hideOverlayChest", false);
-    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_ARM_LEFT = normal("hideOverlayArmLeft", false);
-    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_ARM_RIGHT = normal("hideOverlayArmRight", false);
-    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_LEG_LEFT = normal("hideOverlayLegLeft", false);
-    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_LEG_RIGHT = normal("hideOverlayLegRight", false);
+    public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_ALL = normal("armourHideOverlay", false);
+    public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_HAT = normal("hideOverlayHead", false);
+    public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_CLOAK = normal("hideOverlayCloak", false);
+    public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_JACKET = normal("hideOverlayChest", false);
+    public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_LEFT_SLEEVE = normal("hideOverlayArmLeft", false);
+    public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_RIGHT_SLEEVE = normal("hideOverlayArmRight", false);
+    public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_LEFT_PANTS = normal("hideOverlayLegLeft", false);
+    public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_RIGHT_PANTS = normal("hideOverlayLegRight", false);
 
-    public static final SkinProperty<Boolean> MODEL_LEGS_LIMIT_LIMBS = normal("limitLimbs", false);
+    public static final SkinProperty<Boolean> OVERRIDE_EQUIPMENT_HELMET = normal("hideEquipmentHead", false);
+    public static final SkinProperty<Boolean> OVERRIDE_EQUIPMENT_CHESTPLATE = normal("hideEquipmentChest", false);
+    public static final SkinProperty<Boolean> OVERRIDE_EQUIPMENT_LEGGINGS = normal("hideEquipmentLegs", false);
+    public static final SkinProperty<Boolean> OVERRIDE_EQUIPMENT_BOOTS = normal("hideEquipmentFeet", false);
+
+    public static final SkinProperty<Boolean> LIMIT_LEGS_LIMBS = normal("limitLimbs", false);
 
     public static final SkinProperty<String> OUTFIT_PART_INDEXS = normal("partIndexs", "");
 

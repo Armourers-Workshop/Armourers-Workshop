@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.part;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
@@ -77,16 +76,6 @@ public abstract class SkinPartType implements ISkinPartType {
     @Override
     public float getRenderPolygonOffset() {
         return renderPolygonOffset;
-    }
-
-    @Override
-    public boolean isModelOverridden(ISkinProperties skinProps) {
-        return false;
-    }
-
-    @Override
-    public boolean isOverlayOverridden(ISkinProperties skinProps) {
-        return false;
     }
 
     @Override

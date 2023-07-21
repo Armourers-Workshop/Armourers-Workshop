@@ -30,6 +30,9 @@ accessible field net/minecraft/client/model/ChickenModel head Lnet/minecraft/cli
 accessible field net/minecraft/client/model/ChickenModel beak Lnet/minecraft/client/model/geom/ModelPart;
 accessible field net/minecraft/client/model/ChickenModel redThing Lnet/minecraft/client/model/geom/ModelPart;
 
+accessible field net/minecraft/client/model/PlayerModel ear Lnet/minecraft/client/model/geom/ModelPart;
+accessible field net/minecraft/client/model/PlayerModel cloak Lnet/minecraft/client/model/geom/ModelPart;
+
 ##if MC >= 11800
 accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
 ##else

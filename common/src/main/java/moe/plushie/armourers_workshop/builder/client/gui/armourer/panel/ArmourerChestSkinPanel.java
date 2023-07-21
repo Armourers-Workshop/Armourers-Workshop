@@ -15,11 +15,13 @@ public class ArmourerChestSkinPanel extends ArmourerBaseSkinPanel {
     @Override
     public void init() {
         super.init();
-        addCheckBox(0, 0, SkinProperty.MODEL_OVERRIDE_CHEST);
-        addCheckBox(0, 0, SkinProperty.MODEL_OVERRIDE_ARM_LEFT);
-        addCheckBox(0, 0, SkinProperty.MODEL_OVERRIDE_ARM_RIGHT);
-        addCheckBox(0, 0, SkinProperty.MODEL_HIDE_OVERLAY_CHEST);
-        addCheckBox(0, 0, SkinProperty.MODEL_HIDE_OVERLAY_ARM_LEFT);
-        addCheckBox(0, 0, SkinProperty.MODEL_HIDE_OVERLAY_ARM_RIGHT);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_MODEL_CHEST);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_MODEL_LEFT_ARM);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_MODEL_RIGHT_ARM);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_OVERLAY_JACKET);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_OVERLAY_LEFT_SLEEVE);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_OVERLAY_RIGHT_SLEEVE);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_OVERLAY_CLOAK);
+        addCheckBox(0, 0, SkinProperty.OVERRIDE_EQUIPMENT_CHESTPLATE);
     }
 }

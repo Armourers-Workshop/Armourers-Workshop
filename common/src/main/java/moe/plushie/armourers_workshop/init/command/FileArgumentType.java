@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -21,7 +22,6 @@ import net.minecraft.network.chat.Component;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -31,7 +31,7 @@ public class FileArgumentType implements IArgumentType<String> {
 
     public static final SimpleCommandExceptionType ERROR_START = new SimpleCommandExceptionType(Component.literal("File must start with '/'"));
     public static final SimpleCommandExceptionType ERROR_NOT_FOUND = new SimpleCommandExceptionType(Component.literal("Not found any file"));
-    private static final Collection<String> EXAMPLES = Arrays.asList("/", "/file" + Constants.EXT, "\"<scheme>:<identifier>\"");
+    private static final Collection<String> EXAMPLES = ObjectUtils.map("/", "/file" + Constants.EXT, "\"<scheme>:<identifier>\"");
     private final File rootFile;
     private final ArrayList<String> fileList;
     private final StringArgumentType stringType = StringArgumentType.string();
@@ -88,7 +88,7 @@ public class FileArgumentType implements IArgumentType<String> {
                 return suggestFiles(fileList, inputPath, builder);
             }
         }
-        return SharedSuggestionProvider.suggest(Arrays.asList("/", "\""), builder);
+        return SharedSuggestionProvider.suggest(ObjectUtils.map("/", "\""), builder);
     }
 
     @Override

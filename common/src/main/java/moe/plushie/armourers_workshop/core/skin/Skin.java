@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin;
 
 import moe.plushie.armourers_workshop.api.skin.ISkin;
-import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
@@ -83,16 +82,6 @@ public class Skin implements ISkin {
     @Override
     public List<SkinPart> getParts() {
         return parts;
-    }
-
-
-    public boolean isModelOverridden(ISkinPartType partType) {
-        for (SkinPart part : parts) {
-            if (part.getType() == partType) {
-                return part.getType().isModelOverridden(properties);
-            }
-        }
-        return false;
     }
 
     public boolean requiresAdvanceFeatures() {
@@ -199,43 +188,43 @@ public class Skin implements ISkin {
 
         private void updatePropertiesIfNeeded() {
             // Update skin properties.
-            if (properties.get(SkinProperty.MODEL_OVERRIDE)) {
+            if (properties.get(SkinProperty.OVERRIDE_MODEL_ALL)) {
                 if (skinType == SkinTypes.ARMOR_HEAD) {
-                    properties.put(SkinProperty.MODEL_OVERRIDE_HEAD, true);
+                    properties.put(SkinProperty.OVERRIDE_MODEL_HEAD, true);
                 }
                 if (skinType == SkinTypes.ARMOR_CHEST) {
-                    properties.put(SkinProperty.MODEL_OVERRIDE_CHEST, true);
-                    properties.put(SkinProperty.MODEL_OVERRIDE_ARM_LEFT, true);
-                    properties.put(SkinProperty.MODEL_OVERRIDE_ARM_RIGHT, true);
+                    properties.put(SkinProperty.OVERRIDE_MODEL_CHEST, true);
+                    properties.put(SkinProperty.OVERRIDE_MODEL_LEFT_ARM, true);
+                    properties.put(SkinProperty.OVERRIDE_MODEL_RIGHT_ARM, true);
                 }
                 if (skinType == SkinTypes.ARMOR_LEGS) {
-                    properties.put(SkinProperty.MODEL_OVERRIDE_LEG_LEFT, true);
-                    properties.put(SkinProperty.MODEL_OVERRIDE_LEG_RIGHT, true);
+                    properties.put(SkinProperty.OVERRIDE_MODEL_LEFT_LEG, true);
+                    properties.put(SkinProperty.OVERRIDE_MODEL_RIGHT_LEG, true);
                 }
                 if (skinType == SkinTypes.ARMOR_FEET) {
-                    properties.put(SkinProperty.MODEL_OVERRIDE_LEG_LEFT, true);
-                    properties.put(SkinProperty.MODEL_OVERRIDE_LEG_RIGHT, true);
+                    properties.put(SkinProperty.OVERRIDE_MODEL_LEFT_LEG, true);
+                    properties.put(SkinProperty.OVERRIDE_MODEL_RIGHT_LEG, true);
                 }
-                properties.remove(SkinProperty.MODEL_OVERRIDE);
+                properties.remove(SkinProperty.OVERRIDE_MODEL_ALL);
             }
-            if (properties.get(SkinProperty.MODEL_HIDE_OVERLAY)) {
+            if (properties.get(SkinProperty.OVERRIDE_OVERLAY_ALL)) {
                 if (skinType == SkinTypes.ARMOR_HEAD) {
-                    properties.put(SkinProperty.MODEL_HIDE_OVERLAY_HEAD, true);
+                    properties.put(SkinProperty.OVERRIDE_OVERLAY_HAT, true);
                 }
                 if (skinType == SkinTypes.ARMOR_CHEST) {
-                    properties.put(SkinProperty.MODEL_HIDE_OVERLAY_CHEST, true);
-                    properties.put(SkinProperty.MODEL_HIDE_OVERLAY_ARM_LEFT, true);
-                    properties.put(SkinProperty.MODEL_HIDE_OVERLAY_ARM_RIGHT, true);
+                    properties.put(SkinProperty.OVERRIDE_OVERLAY_JACKET, true);
+                    properties.put(SkinProperty.OVERRIDE_OVERLAY_LEFT_SLEEVE, true);
+                    properties.put(SkinProperty.OVERRIDE_OVERLAY_RIGHT_SLEEVE, true);
                 }
                 if (skinType == SkinTypes.ARMOR_LEGS) {
-                    properties.put(SkinProperty.MODEL_HIDE_OVERLAY_LEG_LEFT, true);
-                    properties.put(SkinProperty.MODEL_HIDE_OVERLAY_LEG_RIGHT, true);
+                    properties.put(SkinProperty.OVERRIDE_OVERLAY_LEFT_PANTS, true);
+                    properties.put(SkinProperty.OVERRIDE_OVERLAY_RIGHT_PANTS, true);
                 }
                 if (skinType == SkinTypes.ARMOR_FEET) {
-                    properties.put(SkinProperty.MODEL_HIDE_OVERLAY_LEG_LEFT, true);
-                    properties.put(SkinProperty.MODEL_HIDE_OVERLAY_LEG_RIGHT, true);
+                    properties.put(SkinProperty.OVERRIDE_OVERLAY_LEFT_PANTS, true);
+                    properties.put(SkinProperty.OVERRIDE_OVERLAY_RIGHT_PANTS, true);
                 }
-                properties.remove(SkinProperty.MODEL_HIDE_OVERLAY);
+                properties.remove(SkinProperty.OVERRIDE_OVERLAY_ALL);
             }
         }
 
