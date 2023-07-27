@@ -54,7 +54,7 @@ public class HologramProjectorAngleSetting extends HologramProjectorBaseSetting 
         UISliderBox slider = new UISliderBox(new CGRect(x, y, 178, 10));
         slider.setMinValue(-180);
         slider.setMaxValue(180);
-        slider.setFormatter(currentValue -> new NSString(String.format("%s%.2f\u00b0", key, currentValue)));
+        slider.setFormatter(currentValue -> new NSString(String.format("%s%.2f°", key, currentValue)));
         slider.addTarget(this, UIControl.Event.VALUE_CHANGED, HologramProjectorAngleSetting::updateValue);
         slider.addTarget(this, UIControl.Event.EDITING_DID_END, HologramProjectorAngleSetting::didUpdateValue);
         slider.setValue(value);

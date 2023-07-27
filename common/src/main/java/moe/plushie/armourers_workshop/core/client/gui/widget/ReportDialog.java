@@ -40,7 +40,7 @@ public class ReportDialog extends ConfirmDialog {
 
     public String getText() {
         if (textView != null) {
-            return textView.value();
+            return textView.text();
         }
         return null;
     }
@@ -48,7 +48,7 @@ public class ReportDialog extends ConfirmDialog {
     public void setText(String value) {
         this.content = value;
         if (textView != null) {
-            textView.setValue(value);
+            textView.setText(value);
         }
     }
 
@@ -80,7 +80,7 @@ public class ReportDialog extends ConfirmDialog {
         UITextView textBox = new UITextView(new CGRect(x, y, width, height));
         textBox.setMaxLength(255);
         if (this.content != null) {
-            textBox.setValue(content);
+            textBox.setText(content);
             this.content = null;
         }
         return textBox;

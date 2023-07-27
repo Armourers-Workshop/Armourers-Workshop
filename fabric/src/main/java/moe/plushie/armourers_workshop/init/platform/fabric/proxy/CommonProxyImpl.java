@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.init.platform.fabric.builder.ConfigBuilder
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfig;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfigEvents;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfigTracker;
-import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityClimbingEvents;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityLifecycleEvents;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
@@ -51,7 +51,7 @@ public class CommonProxyImpl implements ModInitializer {
         UseBlockCallback.EVENT.register(this::onUseItemFirst);
         EntitySleepEvents.ALLOW_BED.register(this::onAllowBed);
         EntitySleepEvents.STOP_SLEEPING.register(this::onStopSleep);
-        EntityClimbingEvents.ALLOW_CLIMBING.register(this::onAllowClimbing);
+        EntityLifecycleEvents.ALLOW_CLIMBING.register(this::onAllowClimbing);
 
         AttackBlockCallback.EVENT.register(this::onBlockBreakPre);
 

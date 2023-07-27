@@ -66,21 +66,21 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
     public void tick() {
         super.tick();
         if (textName != null) {
-            buttonUpdate.setEnabled(Strings.isNotBlank(textName.value()));
+            buttonUpdate.setEnabled(Strings.isNotBlank(textName.text()));
         }
     }
 
     public void reloadData(ServerSkin entry, GlobalSkinLibraryWindow.Page returnPage) {
         this.entry = entry;
         this.returnPage = returnPage;
-        this.textName.setValue(entry.getName());
-        this.textDescription.setValue(entry.getDescription());
-        this.textTags.setValue("");
+        this.textName.setText(entry.getName());
+        this.textDescription.setText(entry.getDescription());
+        this.textTags.setText("");
     }
 
     private void updateSkin(UIControl button) {
-        String name = textName.value().trim();
-        String description = textDescription.value().trim();
+        String name = textName.text().trim();
+        String description = textDescription.text().trim();
         if (name.isEmpty()) {
             ModLog.warn("Can't set the skin name to empty");
             return;

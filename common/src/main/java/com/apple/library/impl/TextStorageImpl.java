@@ -7,6 +7,7 @@ import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSRange;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextPosition;
+import com.apple.library.foundation.NSTextRange;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIFont;
 import com.mojang.blaze3d.vertex.Tesselator;
@@ -317,6 +318,14 @@ public class TextStorageImpl {
         setCursorAndHighlightPos(cursorPos1, highlightPos1);
     }
 
+    public NSTextRange selectedTextRange() {
+        return new NSTextRange(highlightPos, cursorPos);
+    }
+
+    public void setSelectedTextRange(NSTextRange range) {
+        setCursorAndHighlightPos(range.end, range.start);
+    }
+
     private void setNeedsRemakeTextLine() {
         cachedTextLines = null;
     }
@@ -528,7 +537,7 @@ public class TextStorageImpl {
     }
 
     boolean isAllowedChatCharacter(char c) {
-        return c != '\u00a7' && c >= ' ' && c != '\u007f';
+        return c != '§' && c >= ' ' && c != '\u007f';
     }
 
     interface TextTokenizer {

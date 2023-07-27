@@ -146,7 +146,7 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
 
     @Override
     public boolean textFieldShouldReturn(UITextField textField) {
-        String value = textField.value();
+        String value = textField.text();
         if (value.matches("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")) {
             setSelectedColor(UIColor.decode(value));
             submitColorChange(textField);
@@ -160,7 +160,7 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
         for (HSBSliderBox slider : sliders) {
             slider.setValueWithComponents(values);
         }
-        hexInputView.setValue(String.format("#%02x%02x%02x", newValue.getRed(), newValue.getGreen(), newValue.getBlue()));
+        hexInputView.setText(String.format("#%02x%02x%02x", newValue.getRed(), newValue.getGreen(), newValue.getBlue()));
         if (hexInputView.isEditing()) {
             hexInputView.resignFirstResponder();
         }

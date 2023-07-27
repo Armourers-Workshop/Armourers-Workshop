@@ -19,13 +19,13 @@ public class AdvancedSkinBuilderBlockEntity extends UpdatableBlockEntity impleme
 
     private AABB renderBoundingBox;
 
-    public Vector3f carmeOffset = Vector3f.ZERO;
-    public Vector3f carmeRot = Vector3f.ZERO;
+    public final Vector3f carmeOffset = new Vector3f();
+    public final Vector3f carmeRot = new Vector3f();
+    public final Vector3f carmeScale = new Vector3f(1, 1, 1);
 
     //public SkinDescriptor descriptor = new SkinDescriptor("db:QoTHtJTeeZ");
     public SkinDescriptor descriptor = new SkinDescriptor("ks:10830");
     public Vector3f offset = new Vector3f(0, 10, 0);
-    public float scale = 1f;
 
     public final BooleanProperty mirror2 = new BooleanProperty();
     public final BooleanProperty enabled2 = new BooleanProperty();
@@ -62,16 +62,8 @@ public class AdvancedSkinBuilderBlockEntity extends UpdatableBlockEntity impleme
             return renderBoundingBox;
         }
         float s = 16;
-        Vector3f q = getRenderOrigin();
-        Rectangle3f rect = new Rectangle3f(q.getX() - s / 2, q.getY() - s / 2, q.getZ() - s / 2, s, s, s);
-//        Rectangle3f rect = getRenderBoundingBox(blockState);
-//        if (rect == null) {
-//            return ZERO_BOX;
-//        }
-//        OpenQuaternionf quaternion = getRenderRotations(blockState);
-//        if (quaternion != null) {
-//            rect.mul(quaternion);
-//        }
+        Vector3f origin = getRenderOrigin();
+        Rectangle3f rect = new Rectangle3f(origin.getX() - s / 2, origin.getY() - s / 2, origin.getZ() - s / 2, s, s, s);
         renderBoundingBox = rect.asAABB();
         return renderBoundingBox;
     }

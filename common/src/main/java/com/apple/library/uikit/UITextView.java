@@ -7,6 +7,7 @@ import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSRange;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextPosition;
+import com.apple.library.foundation.NSTextRange;
 import com.apple.library.impl.AppearanceImpl;
 import com.apple.library.impl.DelegateImpl;
 import com.apple.library.impl.TextInputImpl;
@@ -73,6 +74,7 @@ public class UITextView extends UIScrollView implements TextInputTraits {
 
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
+        super.render(point, context);
         CGRect bounds = bounds();
         CGRect fixedBounds = bounds.insetBy(1, 1, 1, 1);
         if (isBordered) {
@@ -116,11 +118,11 @@ public class UITextView extends UIScrollView implements TextInputTraits {
         storage.setPlaceholderColor(placeholderColor);
     }
 
-    public String value() {
+    public String text() {
         return storage.value();
     }
 
-    public void setValue(String text) {
+    public void setText(String text) {
         storage.setValue(text);
         storage.checkCursorAndHighlightPos();
     }
@@ -133,8 +135,12 @@ public class UITextView extends UIScrollView implements TextInputTraits {
         storage.setTextColor(textColor);
     }
 
-    public void setCursorPos(NSTextPosition pos) {
-        storage.setCursorAndHighlightPos(pos);
+    public NSTextRange selectedTextRange() {
+        return storage.selectedTextRange();
+    }
+
+    public void setSelectedTextRange(NSTextRange range) {
+        storage.setSelectedTextRange(range);
     }
 
     public UITextViewDelegate delegate() {
@@ -155,13 +161,12 @@ public class UITextView extends UIScrollView implements TextInputTraits {
         }
         UIWindow window = window();
         if (window != null) {
-//            if (!delegate.invoker().textFieldShouldBeginEditing(this)) {
-//                return;
-//            }
+            if (!delegate.invoker().textViewShouldBeginEditing(this)) {
+                return;
+            }
             window.setFirstInputResponder(this);
             storage.setFocused(true);
-            //sendEvent(Event.EDITING_DID_BEGIN);
-//            delegate.invoker().textFieldDidBeginEditing(this);
+            delegate.invoker().textViewDidBeginEditing(this);
         }
     }
 
@@ -169,16 +174,15 @@ public class UITextView extends UIScrollView implements TextInputTraits {
         if (!storage.isFocused()) {
             return;
         }
-//        if (!delegate.invoker().textFieldShouldEndEditing(this)) {
-//            return;
-//        }
+        if (!delegate.invoker().textViewShouldEndEditing(this)) {
+            return;
+        }
         UIWindow window = window();
         if (window != null) {
             window.setFirstInputResponder(null);
         }
         storage.setFocused(false);
-//        sendEvent(Event.EDITING_DID_END);
-//        delegate.invoker().textFieldDidEndEditing(this);
+        delegate.invoker().textViewDidEndEditing(this);
     }
 
     @Override
@@ -216,16 +220,16 @@ public class UITextView extends UIScrollView implements TextInputTraits {
     }
 
     private boolean valueShouldChange(NSRange range, String newValue) {
-//        return delegate.invoker().textFieldShouldChangeCharacters(this, range, newValue);
-        return true;
+        return delegate.invoker().textViewShouldChangeText(this, range, newValue);
     }
 
     private void valueDidChange(String oldValue, String newValue) {
 //        sendEvent(Event.VALUE_CHANGED);
+        delegate.invoker().textViewDidChange(this);
     }
 
     private void selectionDidChange() {
-//        delegate.invoker().textFieldDidChangeSelection(this);
+        delegate.invoker().textViewDidChangeSelection(this);
         needSyncCursor = true;
     }
 

@@ -2,12 +2,24 @@ package moe.plushie.armourers_workshop.init.platform.fabric.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class EntityClimbingEvents {
+@SuppressWarnings("unused")
+public final class EntityLifecycleEvents {
+
+    public static final Event<EntityTrackingEvents.StartTracking> WILL_START_TRACKING = EntityTrackingEvents.START_TRACKING;
+
+    public static final Event<EntityTrackingEvents.StopTracking> DID_STOP_TRACKING = EntityTrackingEvents.STOP_TRACKING;
+
+    public static final Event<EntityTrackingEvents.StartTracking> DID_START_TRACKING = EventFactory.createArrayBacked(EntityTrackingEvents.StartTracking.class, callbacks -> (trackedEntity, player) -> {
+        for (EntityTrackingEvents.StartTracking callback : callbacks) {
+            callback.onStartTracking(trackedEntity, player);
+        }
+    });
 
     public static final Event<AllowClimbing> ALLOW_CLIMBING = EventFactory.createArrayBacked(AllowClimbing.class, callbacks -> (entity, blockPos, blockState) -> {
         for (AllowClimbing callback : callbacks) {

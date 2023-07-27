@@ -18,6 +18,9 @@ public class WindowManagerImpl {
     private CGSize lastLayoutSize;
     private double lastMouseX;
     private double lastMouseY;
+    private int lastMouseButton;
+    private int lastFocusVersion = 0;
+    private int lastFocusVersionOld = 0;
 
     protected final Queue<WindowDispatcherImpl> dispatchers = new Queue<>();
 
@@ -46,24 +49,32 @@ public class WindowManagerImpl {
         if (lastLayoutSize != null) {
             dispatcher.layout(lastLayoutSize);
         }
+        if (lastFocusVersion != 0) {
+            _setNeedsUpdateFocus();
+        }
     }
 
     public void removeWindow(UIWindow window) {
         dispatchers.removeIf(dispatcher -> {
-            if (dispatcher instanceof UIWindow.Dispatcher) {
-                UIWindow.Dispatcher dispatcher1 = (UIWindow.Dispatcher) dispatcher;
-                if (dispatcher1.window == window) {
-                    dispatcher1.deinit();
-                    return true;
-                }
+            UIWindow.Dispatcher dispatcher1 = ObjectUtilsImpl.safeCast(dispatcher, UIWindow.Dispatcher.class);
+            if (dispatcher1 != null && dispatcher1.window == window) {
+                dispatcher1.deinit();
+                return true;
             }
             return false;
         });
         // when remove a window, first tooltip responder maybe change, so we need to recalculate.
-        dispatchers.forEach(dispatcher -> dispatcher.mouseMoved(lastMouseX, lastMouseY, 0));
+        if (lastFocusVersion != 0) {
+            _setNeedsUpdateFocus();
+        }
+    }
+
+    public void _setNeedsUpdateFocus() {
+        lastFocusVersion += 1;
     }
 
     public void tick() {
+        updateLastFocusIfNeeded();
         dispatchers.forEach(WindowDispatcherImpl::tick);
     }
 
@@ -97,8 +108,6 @@ public class WindowManagerImpl {
                 renderTooltip(tooltipResponder, context);
             }
         }
-        lastMouseX = context.state().mousePos().getX();
-        lastMouseY = context.state().mousePos().getY();
     }
 
     private void renderTooltip(UIView tooltipResponder, CGGraphicsContext context) {
@@ -111,6 +120,20 @@ public class WindowManagerImpl {
             context.translateCTM(0, 0, 400);
             context.drawTooltip(tooltip, tooltipResponder.bounds());
             context.restoreGraphicsState();
+        }
+    }
+
+    private void updateLastFocus(double mouseX, double mouseY, int button) {
+        lastMouseX = mouseX;
+        lastMouseY = mouseY;
+        lastMouseButton = button;
+        lastFocusVersionOld = lastFocusVersion;
+    }
+
+    private void updateLastFocusIfNeeded() {
+        // send the move event again.
+        if (lastFocusVersion != lastFocusVersionOld) {
+            mouseMoved(lastMouseX, lastMouseY, lastMouseButton, (mouseX, mouseY, button) -> true);
         }
     }
 
@@ -135,6 +158,7 @@ public class WindowManagerImpl {
     }
 
     public boolean mouseMoved(double mouseX, double mouseY, int button, Invoker<Double, Double, Integer, Boolean> invoker) {
+        updateLastFocus(mouseX, mouseY, button);
         return dispatchers.invoke(mouseX, mouseY, button, invoker, WindowDispatcherImpl::mouseMoved);
     }
 

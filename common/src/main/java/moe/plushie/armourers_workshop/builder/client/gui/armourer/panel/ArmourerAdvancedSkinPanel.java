@@ -28,9 +28,9 @@ public class ArmourerAdvancedSkinPanel extends ArmourerBaseSkinPanel {
         addSliderBox(0, 0, 154, 10, -128, 128, "", SkinProperty.TRANSFORM_TRANSLATE_Z);
 
         addLabel(0, 0, new NSString("Rotation"));
-        addSliderBox(0, 0, 154, 10, -180, 180, "\u00b0", SkinProperty.TRANSFORM_ROTATION_X);
-        addSliderBox(0, 0, 154, 10, -180, 180, "\u00b0", SkinProperty.TRANSFORM_ROTATION_Y);
-        addSliderBox(0, 0, 154, 10, -180, 180, "\u00b0", SkinProperty.TRANSFORM_ROTATION_Z);
+        addSliderBox(0, 0, 154, 10, -180, 180, "°", SkinProperty.TRANSFORM_ROTATION_X);
+        addSliderBox(0, 0, 154, 10, -180, 180, "°", SkinProperty.TRANSFORM_ROTATION_Y);
+        addSliderBox(0, 0, 154, 10, -180, 180, "°", SkinProperty.TRANSFORM_ROTATION_Z);
 
         addLabel(0, 0, new NSString("Scale"));
         addSliderBox(0, 0, 154, 10, Lists.newArrayList(0.25, 0.5, 1.0, 2.0, 4.0), "", SkinProperty.TRANSFORM_SCALE);

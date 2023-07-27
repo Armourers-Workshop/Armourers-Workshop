@@ -58,7 +58,7 @@ public class AdvancedSkinBuilderBlockEntityRenderer<T extends AdvancedSkinBuilde
         poseStack.pushPose();
         poseStack.translate(entity.offset.getX(), entity.offset.getY(), entity.offset.getZ());
         poseStack.translate(0.5f, 0.5f, 0.5f);
-        poseStack.scale(entity.scale, entity.scale, entity.scale);
+        poseStack.scale(entity.carmeScale.getX(), entity.carmeScale.getY(), entity.carmeScale.getZ());
 
         poseStack.scale(-MathUtils.SCALE, -MathUtils.SCALE, MathUtils.SCALE);
 
@@ -77,11 +77,12 @@ public class AdvancedSkinBuilderBlockEntityRenderer<T extends AdvancedSkinBuilde
             poseStack.pushPose();
             poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
             RenderSystem.drawBoundingBox(poseStack, entity.getCustomRenderBoundingBox(blockState), UIColor.RED, buffers);
-            RenderSystem.drawPoint(poseStack, entity.getRenderOrigin(), 1, buffers);
-
+            Vector3f origin = entity.getRenderOrigin();
+            poseStack.translate(origin.getX(), origin.getY(), origin.getZ());
+            RenderSystem.drawPoint(poseStack, Vector3f.ZERO, 1, buffers);
             poseStack.translate(entity.carmeOffset.getX(), entity.carmeOffset.getY(), entity.carmeOffset.getZ());
 //            poseStack.mulPose(new OpenQuaternionf(-entity.carmeRot.getX(), entity.carmeRot.getY(), entity.carmeRot.getZ(), true));
-//            RenderSystem.drawPoint(poseStack, Vector3f.ZERO, 1, buffers);
+            RenderSystem.drawPoint(poseStack, Vector3f.ZERO, 1, buffers);
 
             poseStack.popPose();
         }

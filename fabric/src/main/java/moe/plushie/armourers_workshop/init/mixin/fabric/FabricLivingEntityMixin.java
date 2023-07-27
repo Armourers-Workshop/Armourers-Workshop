@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.mixin.fabric;
 
-import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityClimbingEvents;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityLifecycleEvents;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
@@ -24,7 +24,7 @@ public class FabricLivingEntityMixin {
     public void aw2$isClimbing(CallbackInfoReturnable<Boolean> cir) {
         LivingEntity entity = ObjectUtils.unsafeCast(this);
         BlockPos blockPos = entity.blockPosition();
-        InteractionResult result = EntityClimbingEvents.ALLOW_CLIMBING.invoker().allowClimbing(entity, blockPos, entity.getFeetBlockState());
+        InteractionResult result = EntityLifecycleEvents.ALLOW_CLIMBING.invoker().allowClimbing(entity, blockPos, entity.getFeetBlockState());
         if (result == InteractionResult.SUCCESS) {
             lastClimbablePos = Optional.of(blockPos);
             cir.setReturnValue(true);

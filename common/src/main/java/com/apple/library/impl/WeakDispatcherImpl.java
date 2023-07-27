@@ -19,6 +19,9 @@ public class WeakDispatcherImpl<V> {
     }
 
     public void send(V value) {
+        if (entries.isEmpty()) {
+            return;
+        }
         accessing = entries;
         entries.forEach(e -> e.consumer.accept(value));
         accessing = null;

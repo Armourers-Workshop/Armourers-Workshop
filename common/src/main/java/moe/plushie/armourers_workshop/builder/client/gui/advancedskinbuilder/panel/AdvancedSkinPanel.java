@@ -11,13 +11,16 @@ import com.apple.library.uikit.UIEdgeInsets;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIView;
+import moe.plushie.armourers_workshop.builder.client.gui.widget.NewSlider;
 import moe.plushie.armourers_workshop.builder.data.properties.BooleanProperty;
 import moe.plushie.armourers_workshop.builder.data.properties.FloatProperty;
 import moe.plushie.armourers_workshop.builder.data.properties.VectorProperty;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -71,6 +74,8 @@ public abstract class AdvancedSkinPanel extends UIView {
 
     public static class Group extends UIView {
 
+        public static Function<CGRect, NewSlider> CC = NewSlider::new;
+
         protected final UILabel titleView = new UILabel(CGRect.ZERO);
         protected final ArrayList<Pair<UIView, UIView>> lines = new ArrayList<>();
 
@@ -116,36 +121,82 @@ public abstract class AdvancedSkinPanel extends UIView {
         }
 
         // name [ --- ]
-        public void slider(NSString name, FloatProperty property, Function<Float, NSString> formatter) {
-            UIView i = new UIView(new CGRect(0, 0, 80, 16));
-            i.setBackgroundColor(UIColor.RED);
-            addLine(name, i);
+        public void slider(NSString name, FloatProperty property, Unit unit) {
+            NewSlider view = CC.apply(new CGRect(0, 0, 80, 16));
+            view.setFormatter(unit);
+            view.setStepValue(unit.stepValue);
+            view.setValue(unit.defaultValue);
+            view.setMultipler(unit.multipler);
+            addLine(name, view);
         }
 
         // name x [ --- ]
         //      y [ --- ]
         //      z [ --- ]
-        public void vector(NSString name, VectorProperty property, Function<Float, NSString> formatter) {
+        public void vector(NSString name, VectorProperty property, Unit unit) {
             NSMutableString name1 = new NSMutableString(name);
             name1.append(" ");
             name1.append("X");
-            slider(name1, property.x(), formatter);
-            slider(new NSString("Y"), property.y(), formatter);
-            slider(new NSString("Z"), property.z(), formatter);
+            slider(name1, property.x(), unit);
+            slider(new NSString("Y"), property.y(), unit);
+            slider(new NSString("Z"), property.z(), unit);
         }
 
         private void addLine(NSString name, UIView view) {
-            UILabel label = new UILabel(new CGRect(0, 0, 30, 10));
-            label.setText(name);
-            label.setTextColor(UIColor.WHITE);
-            label.setTextHorizontalAlignment(NSTextAlignment.Horizontal.RIGHT);
-            addView(label, view);
+            UILabel title = new UILabel(new CGRect(0, 0, 30, 10));
+            title.setText(name);
+            title.setTextColor(UIColor.WHITE);
+            title.setTextHorizontalAlignment(NSTextAlignment.Horizontal.RIGHT);
+            addView(title, view);
         }
 
         private void addView(UIView leftView, UIView rightView) {
             lines.add(Pair.of(leftView, rightView));
             addSubview(leftView);
             addSubview(rightView);
+        }
+
+
+        public enum Unit implements NewSlider.Formatter {
+
+            POINT(0, "#.#### m", "#.#####", 0.01, 1),
+            DEGREES(0, "#.#°", "#.#####", 0.1, 10),
+            SCALE(1, "0.000", "0.0####", 0.01, 1);
+
+            public final double stepValue;
+            public final double defaultValue;
+            public final float multipler;
+
+            public final DecimalFormat inputFormat;
+            public final DecimalFormat displayFormat;
+
+            Unit(double defaultValue, String displayFormat, String inputFormat, double stepValue, float multipler) {
+                this.stepValue = stepValue;
+                this.defaultValue = defaultValue;
+                this.multipler = multipler;
+                this.displayFormat = new DecimalFormat(displayFormat);
+                this.inputFormat = new DecimalFormat(inputFormat);
+            }
+
+            @Override
+            public String display(double value) {
+                return displayFormat.format(value);
+            }
+
+            @Override
+            public String input(double value) {
+                return inputFormat.format(value);
+            }
+
+            @Override
+            public Optional<Double> parse(String value) {
+                try {
+                    return Optional.of(inputFormat.parse(value).doubleValue());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return Optional.empty();
+                }
+            }
         }
     }
 

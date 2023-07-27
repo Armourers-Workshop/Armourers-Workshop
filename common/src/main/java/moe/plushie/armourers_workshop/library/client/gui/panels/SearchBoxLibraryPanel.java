@@ -60,7 +60,7 @@ public class SearchBoxLibraryPanel extends AbstractLibraryPanel implements UITex
     private void setupSearchField(CGRect rect) {
         searchText.setFrame(rect);
         searchText.setPlaceholder(getDisplayText("typeToSearch"));
-        searchText.setValue(keyword);
+        searchText.setText(keyword);
         searchText.setMaxLength(255);
         searchText.setDelegate(this);
         searchText.setAutoresizingMask(AutoresizingMask.flexibleWidth);
@@ -88,9 +88,9 @@ public class SearchBoxLibraryPanel extends AbstractLibraryPanel implements UITex
             SearchOrderType orderType = orderTypes[columnTypes1.size() % 2];
             NSMutableString title = new NSMutableString("");
             if (orderType == SearchOrderType.DESC) {
-                title.append("\u2191 "); // up
+                title.append("↑ "); // up
             } else {
-                title.append("\u2193 "); // down
+                title.append("↓ "); // down
             }
             title.append(TranslateUtils.title("skin_search_column.armourers_workshop." + columnType.toString().toLowerCase()));
             UIComboItem item = new UIComboItem(title);
@@ -127,7 +127,7 @@ public class SearchBoxLibraryPanel extends AbstractLibraryPanel implements UITex
         if (this.searchText == null) {
             return;
         }
-        this.searchText.setValue(keyword);
+        this.searchText.setText(keyword);
         this.sortList.setSelectedIndex(getSortIndex(columnType, orderType));
         this.skinTypeList.setSelectedSkin(skinType);
     }
@@ -142,7 +142,7 @@ public class SearchBoxLibraryPanel extends AbstractLibraryPanel implements UITex
     }
 
     private void search(Object button) {
-        keyword = searchText.value();
+        keyword = searchText.text();
         router.showSkinList(keyword, skinType, columnType, orderType);
     }
 }

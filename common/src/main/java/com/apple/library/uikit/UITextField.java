@@ -7,6 +7,7 @@ import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSRange;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextPosition;
+import com.apple.library.foundation.NSTextRange;
 import com.apple.library.impl.AppearanceImpl;
 import com.apple.library.impl.DelegateImpl;
 import com.apple.library.impl.TextInputImpl;
@@ -66,6 +67,7 @@ public class UITextField extends UIControl implements TextInputTraits {
 
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
+        super.render(point, context);
         CGRect bounds = bounds();
         CGRect fixedBounds = bounds.insetBy(1, 1, 1, 1);
         if (isBordered) {
@@ -109,11 +111,11 @@ public class UITextField extends UIControl implements TextInputTraits {
         storage.setPlaceholderColor(placeholderColor);
     }
 
-    public String value() {
+    public String text() {
         return storage.value();
     }
 
-    public void setValue(String text) {
+    public void setText(String text) {
         storage.setValue(text);
         storage.checkCursorAndHighlightPos();
     }
@@ -126,8 +128,12 @@ public class UITextField extends UIControl implements TextInputTraits {
         storage.setTextColor(textColor);
     }
 
-    public void setCursorPos(NSTextPosition pos) {
-        storage.setCursorAndHighlightPos(pos);
+    public NSTextRange selectedTextRange() {
+        return storage.selectedTextRange();
+    }
+
+    public void setSelectedTextRange(NSTextRange range) {
+        storage.setSelectedTextRange(range);
     }
 
     public UITextFieldDelegate delegate() {
@@ -201,6 +207,10 @@ public class UITextField extends UIControl implements TextInputTraits {
     @Override
     public boolean canBecomeFocused() {
         return !_ignoresTouchEvents(this) && input.isEditable();
+    }
+
+    public void setBordered(boolean bordered) {
+        this.isBordered = bordered;
     }
 
     private boolean shouldReturn(String value) {

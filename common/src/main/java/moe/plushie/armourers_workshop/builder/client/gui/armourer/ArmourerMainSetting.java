@@ -140,8 +140,8 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
     @Override
     public void reloadData() {
         SkinProperties skinProperties = blockEntity.getSkinProperties();
-        nameTextField.setValue(skinProperties.get(SkinProperty.ALL_CUSTOM_NAME));
-        flavorTextField.setValue(skinProperties.get(SkinProperty.ALL_FLAVOUR_TEXT));
+        nameTextField.setText(skinProperties.get(SkinProperty.ALL_CUSTOM_NAME));
+        flavorTextField.setText(skinProperties.get(SkinProperty.ALL_FLAVOUR_TEXT));
         skinTypeBox.setSelectedSkin(blockEntity.getSkinType());
     }
 
@@ -176,8 +176,8 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
 
     private void updateSkinProperties() {
         SkinProperties skinProperties = SkinProperties.create(blockEntity.getSkinProperties());
-        skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, nameTextField.value());
-        skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, flavorTextField.value());
+        skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, nameTextField.text());
+        skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, flavorTextField.text());
         if (skinProperties.equals(blockEntity.getSkinProperties())) {
             return; // not any changes.
         }

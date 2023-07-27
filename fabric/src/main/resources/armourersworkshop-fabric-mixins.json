@@ -12,7 +12,8 @@
   "mixins": [
     "FabricBlockItemMixin",
     "FabricEntityMixin",
-    "FabricLivingEntityMixin"
+    "FabricLivingEntityMixin",
+    "FabricEntityTrackerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

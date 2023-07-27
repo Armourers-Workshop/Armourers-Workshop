@@ -109,7 +109,7 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
         if (this.buttonUpload == null) {
             return;
         }
-        boolean flags = Strings.isNotBlank(textName.value()) && !SkinDescriptor.of(getInputStack()).isEmpty() && !isUploading;
+        boolean flags = Strings.isNotBlank(textName.text()) && !SkinDescriptor.of(getInputStack()).isEmpty() && !isUploading;
         this.buttonUpload.setEnabled(flags);
     }
 
@@ -158,7 +158,7 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
             return;
         }
 
-        if (Strings.isBlank(textName.value())) {
+        if (Strings.isBlank(textName.text())) {
             onUploadFailed("Skin name missing.");
             return;
         }
@@ -175,7 +175,7 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
                 return;
             }
             // upload now
-            library.uploadSkin(textName.value().trim(), textDescription.value().trim(), bakedSkin.getSkin(), (result1, exception1) -> {
+            library.uploadSkin(textName.text().trim(), textDescription.text().trim(), bakedSkin.getSkin(), (result1, exception1) -> {
                 if (exception1 != null) {
                     onUploadFailed(exception1.toString());
                 } else {
@@ -187,9 +187,9 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
 
 
     private void onUploadFinish() {
-        textName.setValue("");
-        textTags.setValue("");
-        textDescription.setValue("");
+        textName.setText("");
+        textTags.setText("");
+        textDescription.setText("");
         isUploading = false;
         router.showNewHome();
         NetworkManager.sendToServer(new UploadSkinPacket());

@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.math.ClamppedVector3f;
 import moe.plushie.armourers_workshop.utils.math.OpenAABB;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenNearPlane;
@@ -30,20 +31,25 @@ import java.util.function.Consumer;
 
 public class AdvancedCameraSkinPanel extends UIView {
 
-    CGPoint startMousePos = CGPoint.ZERO;
+    private CGPoint startMousePos = CGPoint.ZERO;
 
-    Vector3f oldCameraRot = new Vector3f();
-    Vector3f oldCameraPos = new Vector3f();
+    private final Vector3f origin = new Vector3f();
 
-    Vector3f lastCameraRot = new Vector3f();
-    Vector3f lastCameraPos = new Vector3f();
+    private final Vector3f oldRotation = new Vector3f();
+    private final Vector3f oldTranslate = new Vector3f();
 
-    boolean moveMode = false;
-    boolean rotationMode = false;
+    private final ClamppedVector3f lastScale = new ClamppedVector3f(1, 1, 1, 0.5f, 0.5f, 0.5f, 5.0f, 5.0f, 5.0f);
+    private final ClamppedVector3f lastRotation = new ClamppedVector3f(0, 0, 0, -90, Float.NEGATIVE_INFINITY, 0, 90, Float.POSITIVE_INFINITY, 0);
+    private final ClamppedVector3f lastTranslate = new ClamppedVector3f(0, 0, 0, -8, -8, -8, 8, 8, 8);
 
     private final Options options;
     private final AdvancedSkinBuilderBlockEntity blockEntity;
     private final CameraEntity cameraEntity = new CameraEntity();
+
+    private Collection<Node> cachedTree;
+
+    boolean moveMode = false;
+    boolean rotationMode = false;
 
     public AdvancedCameraSkinPanel(AdvancedSkinBuilderBlockEntity blockEntity) {
         super(CGRect.ZERO);
@@ -53,16 +59,19 @@ public class AdvancedCameraSkinPanel extends UIView {
 
     public void connect() {
         cameraEntity.connect();
+        reset();
     }
 
     public void disconnect() {
+        reset();
         cameraEntity.disconnect();
     }
 
     public void reset() {
-        Vector3f pos = blockEntity.getRenderOrigin();
-        lastCameraRot = new Vector3f();
-        lastCameraPos = new Vector3f(pos);
+        origin.set(blockEntity.getRenderOrigin());
+        lastRotation.set(0, 0, 0);
+        lastTranslate.set(0, 0, 0);
+        lastScale.set(1, 1, 1);
         applyCameraChanges();
     }
 
@@ -74,64 +83,92 @@ public class AdvancedCameraSkinPanel extends UIView {
         }
         moveMode = !rotationMode;
         startMousePos = event.locationInWindow();
-        oldCameraRot = lastCameraRot.copy();
-        oldCameraPos = lastCameraPos.copy();
-        // .
-//        raycast(event);
+        // save the camera last state.
+        oldRotation.set(lastRotation);
+        oldTranslate.set(lastTranslate);
+    }
+
+    @Override
+    public void mouseUp(UIEvent event) {
+        // save the camera last state.
+        oldRotation.set(lastRotation);
+        oldTranslate.set(lastTranslate);
     }
 
     @Override
     public void mouseDragged(UIEvent event) {
-        CGRect window = bounds();
         CGPoint mousePos = event.locationInWindow();
-        if (rotationMode) {
-            float dx = (mousePos.y - startMousePos.y) / window.height;
-            float dy = (mousePos.x - startMousePos.x) / window.width;
-            float rx = oldCameraRot.getX() + dx * 360;
-            float ry = oldCameraRot.getY() + dy * 360;
-            lastCameraRot.set(rx, ry, 0);
-            ModLog.debug("{}/{} => {}", mousePos, window, lastCameraRot);
-        }
         if (moveMode) {
-            float x = oldCameraPos.getX();
-            float y = oldCameraPos.getY();
-            float z = oldCameraPos.getZ();
-
-            float deltaX = -((mousePos.x - startMousePos.x)) / (window.width / 2f);
-            float deltaY = ((mousePos.y - startMousePos.y)) / (window.height / 2f);
-            float deltaZ = options.getCameraNear();
-
-            OpenNearPlane plane = cameraEntity.getNearPlane();
-
-            Vector3f d1 = plane.at(0, 0, -deltaZ);
-            Vector3f d2 = plane.at(deltaX, deltaY, deltaZ);
-
-            float finalX = x + d1.getX() + d2.getX();
-            float finalY = y + d1.getY() + d2.getY();
-            float finalZ = z + d1.getZ() + d2.getZ();
-
-            lastCameraPos.set(finalX, finalY, finalZ);
-            ModLog.debug("{}/{}/({} {}) ", mousePos, window, deltaX, deltaY);
+            float dx = mousePos.x - startMousePos.x;
+            float dy = mousePos.y - startMousePos.y;
+            move(new Vector3f(dx, dy, 0));
+        }
+        if (rotationMode) {
+            rotation(mousePos);
         }
         applyCameraChanges();
     }
 
     @Override
     public void mouseWheel(UIEvent event) {
-        double delta = event.delta();
-        if (delta < 0) {
-            blockEntity.scale *= 0.95f;
-        } else if (delta > 0) {
-            blockEntity.scale /= 0.95f;
+        if (KeyboardManagerImpl.hasControlDown()) {
+            zoom(event.delta());
+        } else {
+            double delta = event.delta();
+            if (delta < 0) {
+                move(new Vector3f(0, 0, 0.95f));
+            } else if (delta > 0) {
+                move(new Vector3f(0, 0, -0.95f));
+            }
+            oldTranslate.set(lastTranslate);
         }
-        cachedTree = null;
-
-        ModLog.debug("{}", blockEntity.scale);
+        applyCameraChanges();
     }
 
     @Override
     public void mouseMoved(UIEvent event) {
         raycast(event);
+    }
+
+    private void move(Vector3f delta) {
+        CGRect window = bounds();
+        OpenNearPlane plane = cameraEntity.getNearPlane();
+        float near = options.getCameraNear();
+
+        float deltaX = -delta.getX() / (window.width / 2f);
+        float deltaY = delta.getY() / (window.height / 2f);
+        float deltaZ = near + delta.getZ();
+
+        Vector3f d1 = plane.at(0, 0, -near);
+        Vector3f d2 = plane.at(deltaX, deltaY, deltaZ);
+
+        float x = oldTranslate.getX() + d1.getX() + d2.getX();
+        float y = oldTranslate.getY() + d1.getY() + d2.getY();
+        float z = oldTranslate.getZ() + d1.getZ() + d2.getZ();
+
+        lastTranslate.set(x, y, z);
+    }
+
+    private void rotation(CGPoint mousePos) {
+        CGRect window = bounds();
+
+        float dx = (mousePos.y - startMousePos.y) / window.height;
+        float dy = (mousePos.x - startMousePos.x) / window.width;
+        float rx = oldRotation.getX() + dx * 360;
+        float ry = oldRotation.getY() + dy * 360;
+
+        lastRotation.set(rx, ry, 0);
+    }
+
+    private void zoom(double delta) {
+        float scale = lastScale.getX();
+        if (delta < 0) {
+            scale *= 0.95f;
+        } else if (delta > 0) {
+            scale /= 0.95f;
+        }
+        lastScale.set(scale, scale, scale);
+        cachedTree = null;
     }
 
     private void raycast(UIEvent event) {
@@ -147,8 +184,9 @@ public class AdvancedCameraSkinPanel extends UIView {
         Vector3f d1 = plane.at(0, 0, -deltaZ);
         Vector3f d2 = plane.at(deltaX, deltaY, deltaZ);
 
-        Vector3f hit = lastCameraPos.adding(d1).adding(d2);
-        Vector3f origin = lastCameraPos.adding(d1);
+        Vector3f location = lastTranslate.adding(origin);
+        Vector3f hit = location.adding(d1).adding(d2);
+        Vector3f origin = location.adding(d1);
         Vector3f direction = hit.subtracting(origin).normalizing();
 
         OpenRay ray = new OpenRay(origin, direction);
@@ -163,11 +201,8 @@ public class AdvancedCameraSkinPanel extends UIView {
 
 //        AdvancedSkinBuilderBlockEntityRenderer.setOutput(0, origin);
 //        AdvancedSkinBuilderBlockEntityRenderer.setOutput(1, origin.adding(direction.scaling(50)));
-
-        ModLog.debug("{}/{}/({} {}) ", mousePos, window, deltaX, deltaY);
+//        ModLog.debug("{}/{}/({} {}) ", mousePos, window, deltaX, deltaY);
     }
-
-    private Collection<Node> cachedTree;
 
     public Collection<Node> buildPickTree() {
         if (cachedTree != null) {
@@ -182,9 +217,10 @@ public class AdvancedCameraSkinPanel extends UIView {
         PoseStack poseStack = new PoseStack();
 
         Vector3f pos = entity.getRenderOrigin();
+        Vector3f scale = entity.carmeScale;
 
         poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
-        poseStack.scale(entity.scale, entity.scale, entity.scale);
+        poseStack.scale(scale.getX(), scale.getY(), scale.getZ());
         poseStack.scale(-MathUtils.SCALE, -MathUtils.SCALE, MathUtils.SCALE);
 
         tesselator.setLightmap(0xf000f0);
@@ -207,14 +243,29 @@ public class AdvancedCameraSkinPanel extends UIView {
     }
 
     public void applyCameraChanges() {
-        cameraEntity.setXRot(lastCameraRot.getX());
-        cameraEntity.setYRot(lastCameraRot.getY());
-        cameraEntity.setPos(lastCameraPos.getX(), lastCameraPos.getY(), lastCameraPos.getZ());
+
+        float tx = lastTranslate.getX();
+        float ty = lastTranslate.getY();
+        float tz = lastTranslate.getZ();
+
+        float rx = lastRotation.getX();
+        float ry = lastRotation.getY();
+        float rz = lastRotation.getZ();
+
+        float sx = lastScale.getX();
+        float sy = lastScale.getY();
+        float sz = lastScale.getZ();
+
+        blockEntity.carmeOffset.set(tx, ty, tz);
+        blockEntity.carmeRot.set(rx, ry, rz);
+        blockEntity.carmeScale.set(sx, sy, sz);
+
+        cameraEntity.setXRot(rx);
+        cameraEntity.setYRot(ry);
+        cameraEntity.setPos(origin.getX() + tx, origin.getY() + ty, origin.getZ() + tz);
         cameraEntity.setOldPosAndRot();
-        // .
-        blockEntity.carmeOffset = lastCameraPos;
-        blockEntity.carmeRot = lastCameraRot;
     }
+
 
     public static class Result {
 
@@ -259,3 +310,4 @@ public class AdvancedCameraSkinPanel extends UIView {
         }
     }
 }
+

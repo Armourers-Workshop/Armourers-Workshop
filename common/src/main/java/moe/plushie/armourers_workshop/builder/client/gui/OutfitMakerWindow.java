@@ -71,11 +71,11 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
     }
 
     private void saveSkinInfo(UIControl textField) {
-        String value = nameTextField.value();
+        String value = nameTextField.text();
         UpdateOutfitMakerPacket.Field field = UpdateOutfitMakerPacket.Field.ITEM_NAME;
         if (textField == flavourTextField) {
             field = UpdateOutfitMakerPacket.Field.ITEM_FLAVOUR;
-            value = flavourTextField.value();
+            value = flavourTextField.text();
         }
         if (Objects.equals(value, field.get(blockEntity))) {
             return; // ignore when value not changes
@@ -85,7 +85,7 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
 
     private void setupTextField(UITextField textField, String value, String placeholderKey) {
         textField.setMaxLength(40);
-        textField.setValue(value);
+        textField.setText(value);
         textField.setPlaceholder(getDisplayText(placeholderKey));
         textField.addTarget(this, UIControl.Event.EDITING_DID_END, OutfitMakerWindow::saveSkinInfo);
         addSubview(textField);

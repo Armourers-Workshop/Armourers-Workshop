@@ -42,13 +42,13 @@ public class PaletteManager {
 
     public void createDefaultPalettes() {
         ModLog.debug("Creating default palettes.");
-        putPaletteInMap(new Palette("\u2606 Minecraft", true, ColorUtils.PALETTE_MINECRAFT));
-        putPaletteInMap(new Palette("\u2606 Shades", true, ColorUtils.PALETTE_SHADES));
-        putPaletteInMap(new Palette("\u2606 Warm32", true, ColorUtils.PALETTE_WARM32));
-        putPaletteInMap(new Palette("\u2606 Pastel-64 A", true, ColorUtils.PALETTE_PASTEL_64_A));
-        putPaletteInMap(new Palette("\u2606 Pastel-64 B", true, ColorUtils.PALETTE_PASTEL_64_B));
-        putPaletteInMap(new Palette("\u2606 SoftMilk32", true, ColorUtils.PALETTE_SOFTMILK32));
-        putPaletteInMap(new Palette("\u2606 Endesga 32", true, ColorUtils.PALETTE_ENDESGA_32));
+        putPaletteInMap(new Palette("☆ Minecraft", true, ColorUtils.PALETTE_MINECRAFT));
+        putPaletteInMap(new Palette("☆ Shades", true, ColorUtils.PALETTE_SHADES));
+        putPaletteInMap(new Palette("☆ Warm32", true, ColorUtils.PALETTE_WARM32));
+        putPaletteInMap(new Palette("☆ Pastel-64 A", true, ColorUtils.PALETTE_PASTEL_64_A));
+        putPaletteInMap(new Palette("☆ Pastel-64 B", true, ColorUtils.PALETTE_PASTEL_64_B));
+        putPaletteInMap(new Palette("☆ SoftMilk32", true, ColorUtils.PALETTE_SOFTMILK32));
+        putPaletteInMap(new Palette("☆ Endesga 32", true, ColorUtils.PALETTE_ENDESGA_32));
     }
 
     private void putPaletteInMap(Palette palette) {

@@ -25,6 +25,7 @@ import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -115,8 +116,8 @@ public class CommonProxy {
         });
         registries.didEntityJoin(entity -> {
             SkinUtils.copySkinFromOwner(entity);
-            if (entity instanceof ServerPlayer) {
-                ServerPlayer player = (ServerPlayer) entity;
+            ServerPlayer player = ObjectUtils.safeCast(entity, ServerPlayer.class);
+            if (player != null) {
                 NetworkManager.sendTo(new UpdateContextPacket(player), player);
                 NetworkManager.sendWardrobeTo(player, player);
             }

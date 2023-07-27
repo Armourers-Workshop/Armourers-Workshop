@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.init.platform.fabric.provider;
 import com.mojang.brigadier.CommandDispatcher;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityLifecycleEvents;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.PlayerBlockPlaceEvents;
 import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -10,7 +11,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
-import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
@@ -108,7 +108,7 @@ public interface FabricCommonNativeProvider extends CommonNativeProvider {
 
     @Override
     default void didTackingEntity(BiConsumer<Entity, Player> consumer) {
-        EntityTrackingEvents.START_TRACKING.register(consumer::accept);
+        EntityLifecycleEvents.DID_START_TRACKING.register(consumer::accept);
     }
 
     @Override

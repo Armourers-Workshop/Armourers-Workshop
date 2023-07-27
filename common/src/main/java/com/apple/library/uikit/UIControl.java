@@ -47,6 +47,7 @@ public class UIControl extends UIView implements HighlightedDisplayable {
     public void mouseEntered(UIEvent event) {
         CGPoint point = event.locationInView(this);
         this.setHighlighted(shouldBeHighlight(point, event));
+        this.sendEvent(Event.MOUSE_ENTERED);
     }
 
     @Override
@@ -57,6 +58,7 @@ public class UIControl extends UIView implements HighlightedDisplayable {
     @Override
     public void mouseExited(UIEvent event) {
         this.setHighlighted(false);
+        this.sendEvent(Event.MOUSE_EXITED);
     }
 
     public void sendEvent(Event event) {
@@ -137,6 +139,8 @@ public class UIControl extends UIView implements HighlightedDisplayable {
         MOUSE_WHEEL(UIEvent.Type.MOUSE_WHEEL),
         MOUSE_DRAGGED,
         MOUSE_MOVED,
+        MOUSE_ENTERED,
+        MOUSE_EXITED,
         EDITING_DID_END,
         EDITING_DID_BEGIN,
         VALUE_CHANGED;

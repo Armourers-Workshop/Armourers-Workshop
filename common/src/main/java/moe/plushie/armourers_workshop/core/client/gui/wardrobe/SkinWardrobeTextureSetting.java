@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.gui.wardrobe;
 
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSTextRange;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIComboBox;
@@ -76,7 +77,7 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
         textField.setDelegate(this);
         textField.setMaxLength(1024);
         if (Strings.isNotBlank(defaultValue)) {
-            textField.setValue(defaultValue);
+            textField.setText(defaultValue);
         }
         addSubview(textField);
     }
@@ -101,17 +102,17 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
         textField.resignFirstResponder();
         int index = comboView.selectedIndex();
         PlayerTextureDescriptor.Source source = PlayerTextureDescriptor.Source.values()[index + 1];
-        applyText(source, textField.value());
+        applyText(source, textField.text());
     }
 
     private void changeSource(PlayerTextureDescriptor.Source newSource) {
         if (this.lastSource == newSource) {
             return;
         }
-        defaultValues.put(lastSource, textField.value());
-        textField.setValue(defaultValues.getOrDefault(newSource, ""));
+        defaultValues.put(lastSource, textField.text());
+        textField.setText(defaultValues.getOrDefault(newSource, ""));
         textField.resignFirstResponder();
-        textField.setCursorPos(textField.beginOfDocument());
+        textField.setSelectedTextRange(new NSTextRange(textField.beginOfDocument()));
         comboView.setSelectedIndex(newSource.ordinal() - 1);
         lastSource = newSource;
     }
@@ -143,7 +144,7 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
 
     @Override
     public boolean textFieldShouldReturn(UITextField textField) {
-        submit(textField.value());
+        submit(textField.text());
         return true;
     }
 }

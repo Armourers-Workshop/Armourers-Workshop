@@ -110,6 +110,13 @@ public class UIWindow extends UIView {
 
     public <T> void removeGlobalTarget(T target, UIControl.Event event) {
         _dispatcher(event).remove(target);
+        // when remove mouse move event, the first responder maybe changes.
+        if (event == UIControl.Event.MOUSE_MOVED) {
+            UIWindowManager windowManager = getWindowManager();
+            if (windowManager != null) {
+                windowManager._setNeedsUpdateFocus();
+            }
+        }
     }
 
     public UIView firstResponder() {
@@ -369,7 +376,7 @@ public class UIWindow extends UIView {
             updateHoveredResponder((float) mouseX, (float) mouseY, event, false);
             if (window.hoveredResponder != null) {
                 window.hoveredResponder.mouseWheel(event);
-                if (!event.result().isDecided()) {
+                if (!event.isCancelled()) {
                     mouseMoved(mouseX, mouseY, 0);
                 }
                 return checkEvent(event);

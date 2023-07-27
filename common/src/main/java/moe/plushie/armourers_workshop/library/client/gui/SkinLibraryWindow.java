@@ -126,7 +126,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
 
     @Override
     public boolean textFieldShouldReturn(UITextField textField) {
-        renameItem(textField.value());
+        renameItem(textField.text());
         return true;
     }
 
@@ -295,11 +295,11 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
         if (bakedSkin != null) {
             name = bakedSkin.getSkin().getCustomName();
         }
-        this.nameTextField.setValue(Strings.nullToEmpty(name));
+        this.nameTextField.setText(Strings.nullToEmpty(name));
     }
 
     public void reloadData(Object value) {
-        String keyword = searchTextField.value();
+        String keyword = searchTextField.text();
         ArrayList<SkinLibraryFile> results = selectedLibrary.search(keyword, skinType, selectedPath);
         fileList.setSelectedItem(null);
         fileList.reloadData(new ArrayList<>(results));
@@ -377,7 +377,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
             loadSkin();
             return;
         }
-        String newName = nameTextField.value();
+        String newName = nameTextField.text();
         if (newName.isEmpty()) {
             toast(getDisplayText("error.noFileName"));
             return; // must input name
@@ -465,9 +465,9 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
         selectedFile = newValue;
         boolean isFile = newValue != null && (!newValue.isDirectory() || !newValue.getName().equals(".."));
         if (isFile) {
-            nameTextField.setValue(newValue.getName());
+            nameTextField.setText(newValue.getName());
         } else {
-            nameTextField.setValue("");
+            nameTextField.setText("");
         }
         reloadStatus();
         if (newValue != null && newValue.isDirectory() && oldValue == newValue) {

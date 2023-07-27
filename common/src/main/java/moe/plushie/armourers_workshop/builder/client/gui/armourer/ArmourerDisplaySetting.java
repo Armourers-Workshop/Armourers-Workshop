@@ -74,7 +74,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         textBox.setMaxLength(1024);
         textBox.setDelegate(this);
         if (Strings.isNotBlank(defaultValue)) {
-            textBox.setValue(defaultValue);
+            textBox.setText(defaultValue);
         }
         addSubview(textBox);
 
@@ -136,15 +136,15 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         textBox.resignFirstResponder();
         int index = comboList.selectedIndex();
         PlayerTextureDescriptor.Source source = PlayerTextureDescriptor.Source.values()[index + 1];
-        applyText(source, textBox.value());
+        applyText(source, textBox.text());
     }
 
     private void changeSource(PlayerTextureDescriptor.Source newSource) {
         if (this.lastSource == newSource) {
             return;
         }
-        defaultValues.put(lastSource, textBox.value());
-        textBox.setValue(defaultValues.getOrDefault(newSource, ""));
+        defaultValues.put(lastSource, textBox.text());
+        textBox.setText(defaultValues.getOrDefault(newSource, ""));
         textBox.resignFirstResponder();
         //textBox.moveCursorToStart();
         comboList.setSelectedIndex(newSource.ordinal() - 1);

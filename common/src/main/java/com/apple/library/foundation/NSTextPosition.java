@@ -1,5 +1,7 @@
 package com.apple.library.foundation;
 
+import java.util.Objects;
+
 public class NSTextPosition {
 
     public static NSTextPosition ZERO = forward(0);
@@ -25,11 +27,11 @@ public class NSTextPosition {
         if (this == o) return true;
         if (!(o instanceof NSTextPosition)) return false;
         NSTextPosition that = (NSTextPosition) o;
-        return value == that.value;
+        return value == that.value && isBackward == that.isBackward;
     }
 
     @Override
     public int hashCode() {
-        return value;
+        return Objects.hash(value, isBackward);
     }
 }

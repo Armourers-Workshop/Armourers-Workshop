@@ -37,7 +37,7 @@ public class InputDialog extends ConfirmDialog implements UITextFieldDelegate {
 
     @Override
     public boolean textFieldShouldReturn(UITextField textField) {
-        checkValue(textField.value());
+        checkValue(textField.text());
         confirmAction(confirmButton);
         return true;
     }
@@ -51,11 +51,11 @@ public class InputDialog extends ConfirmDialog implements UITextFieldDelegate {
     }
 
     public String value() {
-        return textField.value();
+        return textField.text();
     }
 
     public void setValue(String value) {
-        textField.setValue(value);
+        textField.setText(value);
         checkValue(value);
     }
 
@@ -69,7 +69,7 @@ public class InputDialog extends ConfirmDialog implements UITextFieldDelegate {
 
     @Override
     public void confirmAction(UIControl sender) {
-        if (textField.value().isEmpty()) {
+        if (textField.text().isEmpty()) {
             return;
         }
         super.confirmAction(sender);
