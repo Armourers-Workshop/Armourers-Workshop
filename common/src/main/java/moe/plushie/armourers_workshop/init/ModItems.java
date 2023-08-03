@@ -106,11 +106,11 @@ public class ModItems {
             this.group = group;
         }
 
-        <T extends Item> IItemBuilder<Item> normal(Function<Item.Properties, T> factory) {
+        IItemBuilder<Item> normal(Function<Item.Properties, Item> factory) {
             return ObjectUtils.unsafeCast(BuilderManager.getInstance().createItemBuilder(factory).stacksTo(1).group(group));
         }
 
-        <T extends Item> IItemBuilder<Item> rare(Function<Item.Properties, T> factory) {
+        IItemBuilder<Item> rare(Function<Item.Properties, Item> factory) {
             return normal(factory).rarity(Rarity.RARE);
         }
 

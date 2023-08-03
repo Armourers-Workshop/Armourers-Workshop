@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 
+@SuppressWarnings("unused")
 public class CATransaction {
 
     private static double time = 0;

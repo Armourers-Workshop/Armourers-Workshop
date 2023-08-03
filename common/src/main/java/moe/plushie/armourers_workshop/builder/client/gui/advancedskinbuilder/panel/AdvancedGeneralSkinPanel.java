@@ -4,8 +4,6 @@ import com.apple.library.uikit.UIImage;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedSkinBuilderBlockEntity;
 import moe.plushie.armourers_workshop.init.ModTextures;
 
-import javax.swing.*;
-
 public class AdvancedGeneralSkinPanel extends AdvancedSkinPanel {
 
     private final AdvancedSkinBuilderBlockEntity blockEntity;

@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
+import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
@@ -7,7 +8,9 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
@@ -63,7 +66,10 @@ public final class ExtendedItemRenderer {
         Rectangle3f rect = context.getBakedRenderBounds();
         float newScale = Math.min(targetWidth / rect.getWidth(), targetHeight / rect.getHeight());
         newScale = Math.min(newScale, targetDepth / rect.getDepth());
-        RenderSystem.drawTargetBox(poseStack, targetWidth, targetHeight, targetDepth, buffers);
+        if (ModDebugger.targetBounds) {
+            ShapeTesselator.stroke(-targetWidth / 2, -targetHeight / 2, -targetDepth / 2, targetWidth / 2, targetHeight / 2, targetDepth / 2, UIColor.ORANGE, poseStack, buffers);
+            ShapeTesselator.vector(0, 0, 0, targetWidth, targetHeight, targetDepth, poseStack, buffers);
+        }
 
         poseStack.scale(newScale / scale.getX(), newScale / scale.getY(), newScale / scale.getZ());
         poseStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
@@ -86,7 +92,10 @@ public final class ExtendedItemRenderer {
         }
 
         Rectangle3f rect = new Rectangle3f(entity.getBoundingBox());
-        RenderSystem.drawTargetBox(poseStack, targetWidth, targetHeight, targetDepth, buffers);
+        if (ModDebugger.targetBounds) {
+            ShapeTesselator.stroke(-targetWidth / 2, -targetHeight / 2, -targetDepth / 2, targetWidth / 2, targetHeight / 2, targetDepth / 2, UIColor.ORANGE, poseStack, buffers);
+            ShapeTesselator.vector(0, 0, 0, targetWidth, targetHeight, targetDepth, poseStack, buffers);
+        }
 
         Rectangle3f resolvedRect = rect.offset(rect.getMidX(), rect.getMidY(), rect.getMidZ());
         resolvedRect.mul(new OpenMatrix4f(new OpenQuaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), true)));

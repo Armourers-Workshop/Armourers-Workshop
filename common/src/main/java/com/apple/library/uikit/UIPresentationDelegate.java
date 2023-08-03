@@ -15,6 +15,7 @@ import java.util.function.Function;
 
 import manifold.ext.rt.api.auto;
 
+@SuppressWarnings("unused")
 class UIPresentationDelegate implements ViewImpl {
 
     protected final UIView view;

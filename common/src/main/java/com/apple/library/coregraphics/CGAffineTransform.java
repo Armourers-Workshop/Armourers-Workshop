@@ -11,6 +11,7 @@ import java.util.Objects;
  * | tx ty 1 |   |  0  0  0 |   |  0  0  1 |   |   0       0     1 |   | tx ty 1 |
  * CGAffineTransform    scale           shear            rotation          translation
  */
+@SuppressWarnings("unused")
 public class CGAffineTransform implements InterpolableImpl<CGAffineTransform> {
 
     public static final CGAffineTransform IDENTITY = new CGAffineTransform(1, 0, 1, 0, 0, 0);

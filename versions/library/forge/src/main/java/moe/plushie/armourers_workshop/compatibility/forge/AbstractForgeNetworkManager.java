@@ -38,6 +38,10 @@ public abstract class AbstractForgeNetworkManager extends NetworkEvent {
         channel.registerObject(dispatcher);
     }
 
+    public static PacketDistributor.PacketTarget server() {
+        return PacketDistributor.SERVER.noArg();
+    }
+
     public static PacketDistributor.PacketTarget allPlayers() {
         return PacketDistributor.ALL.noArg();
     }

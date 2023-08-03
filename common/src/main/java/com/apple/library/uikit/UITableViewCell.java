@@ -4,6 +4,7 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSIndexPath;
 import com.apple.library.impl.HighlightedDisplayable;
 
+@SuppressWarnings("unused")
 public class UITableViewCell extends UIView implements HighlightedDisplayable {
 
     private NSIndexPath indexPath;

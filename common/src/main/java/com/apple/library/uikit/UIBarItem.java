@@ -2,6 +2,7 @@ package com.apple.library.uikit;
 
 import com.apple.library.foundation.NSString;
 
+@SuppressWarnings("unused")
 public class UIBarItem {
 
     private NSString title;

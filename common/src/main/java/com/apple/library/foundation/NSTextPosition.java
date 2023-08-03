@@ -2,6 +2,7 @@ package com.apple.library.foundation;
 
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class NSTextPosition {
 
     public static NSTextPosition ZERO = forward(0);

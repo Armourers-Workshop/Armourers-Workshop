@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.fabricmc.api.EnvType;
@@ -48,20 +48,20 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
 
         poseStack.popPose();
 
-        if (ModDebugger.skinnableBlock) {
+        if (ModDebugger.skinnable) {
             tesselator.getBakedSkin().getBlockBounds().forEach((pos, rect) -> {
                 poseStack.pushPose();
                 poseStack.translate(0.5f, 0.5f, 0.5f);
                 poseStack.scale(f, f, f);
                 poseStack.mulPose(rotations);
                 poseStack.translate(pos.getX() * 16f, pos.getY() * 16f, pos.getZ() * 16f);
-                RenderSystem.drawBoundingBox(poseStack, rect, UIColor.RED, buffers);
+                ShapeTesselator.stroke(rect, UIColor.RED, poseStack, buffers);
                 poseStack.popPose();
             });
             BlockPos pos = entity.getBlockPos();
             poseStack.pushPose();
             poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-            RenderSystem.drawBoundingBox(poseStack, entity.getCustomRenderBoundingBox(blockState), UIColor.ORANGE, buffers);
+            ShapeTesselator.stroke(entity.getCustomRenderBoundingBox(blockState), UIColor.ORANGE, poseStack, buffers);
             poseStack.popPose();
         }
     }

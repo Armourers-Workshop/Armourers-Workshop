@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.PacketSplitter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
@@ -51,10 +50,7 @@ public class NetworkManagerImpl extends AbstractForgeNetworkManager implements N
     @Override
     @OnlyIn(Dist.CLIENT)
     public void sendToServer(final CustomPacket message) {
-        ClientPacketListener connection = Minecraft.getInstance().getConnection();
-        if (connection != null) {
-            dispatcher.split(message, Direction.PLAY_TO_SERVER, connection::send);
-        }
+        dispatcher.split(message, Direction.PLAY_TO_SERVER, AbstractForgeNetworkManager.server()::send);
     }
 
     @Override

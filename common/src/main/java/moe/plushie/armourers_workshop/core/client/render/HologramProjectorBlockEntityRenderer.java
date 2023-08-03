@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -65,11 +65,11 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
 
         poseStack.popPose();
 
-        if (ModDebugger.hologramProjectorBlock) {
+        if (ModDebugger.hologramProjector) {
             BlockPos pos = entity.getBlockPos();
             poseStack.pushPose();
             poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-            RenderSystem.drawBoundingBox(poseStack, entity.getCustomRenderBoundingBox(blockState), UIColor.ORANGE, buffers);
+            ShapeTesselator.stroke(entity.getCustomRenderBoundingBox(blockState), UIColor.ORANGE, poseStack, buffers);
             poseStack.popPose();
         }
     }
@@ -106,18 +106,18 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         poseStack.translate(-offset.getX(), -offset.getY(), offset.getZ());
 
         if (entity.shouldShowRotationPoint()) {
-            RenderSystem.drawBoundingBox(poseStack, -1, -1, -1, 1, 1, 1, UIColor.MAGENTA, buffers);
+            ShapeTesselator.stroke(-1, -1, -1, 1, 1, 1, UIColor.MAGENTA, poseStack, buffers);
         }
 
-        if (ModDebugger.hologramProjectorBlock) {
-            RenderSystem.drawPoint(poseStack, null, 128, buffers);
+        if (ModDebugger.hologramProjector) {
+            ShapeTesselator.vector(Vector3f.ZERO, 128, poseStack, buffers);
         }
 
         poseStack.mulPose(new OpenQuaternionf(rotX, -rotY, rotZ, true));
         poseStack.translate(rotationOffset.getX(), -rotationOffset.getY(), rotationOffset.getZ());
 
-        if (ModDebugger.hologramProjectorBlock) {
-            RenderSystem.drawPoint(poseStack, null, 128, buffers);
+        if (ModDebugger.hologramProjector) {
+            ShapeTesselator.vector(Vector3f.ZERO, 128, poseStack, buffers);
         }
     }
 

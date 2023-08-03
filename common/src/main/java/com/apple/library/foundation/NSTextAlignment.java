@@ -1,5 +1,6 @@
 package com.apple.library.foundation;
 
+@SuppressWarnings("unused")
 public class NSTextAlignment {
 
     public enum Horizontal {

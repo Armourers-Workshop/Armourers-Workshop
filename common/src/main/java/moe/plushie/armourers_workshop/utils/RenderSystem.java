@@ -11,27 +11,19 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractRenderSystem;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
-import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
-import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
-import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.FloatBuffer;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public final class RenderSystem extends AbstractRenderSystem {
@@ -142,140 +134,6 @@ public final class RenderSystem extends AbstractRenderSystem {
         }
         return true;
     }
-
-    public static void drawLine(PoseStack poseStack, float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, MultiBufferSource buffers) {
-        PoseStack.Pose pose = poseStack.last();
-        VertexConsumer builder = buffers.getBuffer(SkinRenderType.lines());
-        drawLine(pose, x0, y0, z0, x1, y1, z1, color, builder);
-    }
-
-    private static void drawLine(PoseStack.Pose pose, float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, VertexConsumer builder) {
-        float nx = 0, ny = 0, nz = 0;
-        if (x0 != x1) {
-            nx = 1;
-        }
-        if (y0 != y1) {
-            ny = 1;
-        }
-        if (z0 != z1) {
-            nz = 1;
-        }
-        builder.vertex(pose.pose(), x0, y0, z0).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).normal(pose.normal(), nx, ny, nz).endVertex();
-        builder.vertex(pose.pose(), x1, y1, z1).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).normal(pose.normal(), nx, ny, nz).endVertex();
-    }
-
-    public static void drawBoundingBox(PoseStack poseStack, float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, VertexConsumer builder) {
-        PoseStack.Pose pose = poseStack.last();
-        drawLine(pose, x1, y0, z1, x0, y0, z1, color, builder);
-        drawLine(pose, x1, y0, z1, x1, y1, z1, color, builder);
-        drawLine(pose, x1, y0, z1, x1, y0, z0, color, builder);
-        drawLine(pose, x1, y1, z0, x0, y1, z0, color, builder);
-        drawLine(pose, x1, y1, z0, x1, y0, z0, color, builder);
-        drawLine(pose, x1, y1, z0, x1, y1, z1, color, builder);
-        drawLine(pose, x0, y1, z1, x1, y1, z1, color, builder);
-        drawLine(pose, x0, y1, z1, x0, y0, z1, color, builder);
-        drawLine(pose, x0, y1, z1, x0, y1, z0, color, builder);
-        drawLine(pose, x0, y0, z0, x1, y0, z0, color, builder);
-        drawLine(pose, x0, y0, z0, x0, y1, z0, color, builder);
-        drawLine(pose, x0, y0, z0, x0, y0, z1, color, builder);
-    }
-
-    public static void drawPoint(PoseStack poseStack, @Nullable MultiBufferSource renderTypeBuffer) {
-        drawPoint(poseStack, null, 2, renderTypeBuffer);
-    }
-
-    public static void drawPoint(PoseStack poseStack, @Nullable Vector3f point, float size, @Nullable MultiBufferSource renderTypeBuffer) {
-        drawPoint(poseStack, point, size, size, size, renderTypeBuffer);
-    }
-
-    public static void drawPoint(PoseStack poseStack, @Nullable Vector3f point, float width, float height, float depth, @Nullable MultiBufferSource renderTypeBuffer) {
-        if (renderTypeBuffer == null) {
-            renderTypeBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
-        }
-        VertexConsumer builder = renderTypeBuffer.getBuffer(SkinRenderType.lines());
-        float x0 = 0;
-        float y0 = 0;
-        float z0 = 0;
-        if (point != null) {
-            x0 = point.getX();
-            y0 = point.getY();
-            z0 = point.getZ();
-        }
-        PoseStack.Pose pose = poseStack.last();
-        drawLine(pose, x0 - width, y0, z0, x0 + width, y0, z0, UIColor.RED, builder); // x
-        drawLine(pose, x0, y0 - height, z0, x0, y0 + height, z0, UIColor.GREEN, builder); // Y
-        drawLine(pose, x0, y0, z0 - depth, x0, y0, z0 + depth, UIColor.BLUE, builder); // Z
-    }
-
-    public static void drawTargetBox(PoseStack poseStack, float width, float height, float depth, MultiBufferSource buffers) {
-        if (ModDebugger.targetBounds) {
-            drawBoundingBox(poseStack, -width / 2, -height / 2, -depth / 2, width / 2, height / 2, depth / 2, UIColor.ORANGE, buffers);
-            drawPoint(poseStack, null, width, height, depth, buffers);
-        }
-    }
-
-    public static void drawBoundingBox(PoseStack poseStack, float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, MultiBufferSource buffers) {
-        VertexConsumer builder = buffers.getBuffer(SkinRenderType.lines());
-        drawBoundingBox(poseStack, x0, y0, z0, x1, y1, z1, color, builder);
-    }
-
-    public static void drawBoundingBox(PoseStack poseStack, CGRect rect, UIColor color) {
-        auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        drawBoundingBox(poseStack, rect.x, rect.y, 0, rect.x + rect.width, rect.y + rect.height, 0, color, buffers);
-        buffers.endBatch();
-    }
-
-//    public static void drawAllEdges(PoseStack matrix, VoxelShape shape, UIColor color) {
-//        MultiBufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-//        VertexConsumer builder = buffer.getBuffer(RenderType.lines());
-//        Matrix4f mat = matrix.last().pose();
-//        shape.forAllEdges((x0, y0, z0, x1, y1, z1) -> {
-//            builder.vertex(mat, (float) x0, (float) y0, (float) z0).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-//            builder.vertex(mat, (float) x1, (float) y1, (float) z1).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-//        });
-//    }
-
-    public static void drawBoundingBox(PoseStack poseStack, Rectangle3f rec, UIColor color, MultiBufferSource renderTypeBuffer) {
-        float x0 = rec.getMinX();
-        float y0 = rec.getMinY();
-        float z0 = rec.getMinZ();
-        float x1 = rec.getMaxX();
-        float y1 = rec.getMaxY();
-        float z1 = rec.getMaxZ();
-        drawBoundingBox(poseStack, x0, y0, z0, x1, y1, z1, color, renderTypeBuffer);
-    }
-
-    public static void drawBoundingBox(PoseStack poseStack, Rectangle3i rec, UIColor color, MultiBufferSource renderTypeBuffer) {
-        int x0 = rec.getMinX();
-        int y0 = rec.getMinY();
-        int z0 = rec.getMinZ();
-        int x1 = rec.getMaxX();
-        int y1 = rec.getMaxY();
-        int z1 = rec.getMaxZ();
-        drawBoundingBox(poseStack, x0, y0, z0, x1, y1, z1, color, renderTypeBuffer);
-    }
-
-    public static void drawBoundingBox(PoseStack poseStack, AABB rec, UIColor color, MultiBufferSource renderTypeBuffer) {
-        float x0 = (float) rec.minX;
-        float y0 = (float) rec.minY;
-        float z0 = (float) rec.minZ;
-        float x1 = (float) rec.maxX;
-        float y1 = (float) rec.maxY;
-        float z1 = (float) rec.maxZ;
-        drawBoundingBox(poseStack, x0, y0, z0, x1, y1, z1, color, renderTypeBuffer);
-    }
-
-//    public static void drawShape(PoseStack poseStack, OpenVoxelShape shape, UIColor color, MultiBufferSource buffers) {
-//        VertexConsumer builder = buffers.getBuffer(SkinRenderType.lines());
-//        PoseStack.Pose pose = poseStack.last();
-////        Vector4f pt1 = null;
-////        for (Vector4f pt2 : shape) {
-////            if (pt1 != null) {
-////                drawLine(pose, pt1.x(), pt1.y(), pt1.z(), pt2.x(), pt2.y(), pt2.z(), color, builder);
-////            }
-////            pt1 = pt2;
-////        }
-//    }
 
     public static void drawCube(PoseStack poseStack, IRectangle3i rect, float r, float g, float b, float a, MultiBufferSource buffers) {
         float x = rect.getMinX();

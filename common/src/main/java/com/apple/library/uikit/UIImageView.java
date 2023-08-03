@@ -5,6 +5,7 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.impl.HighlightedDisplayable;
 
+@SuppressWarnings("unused")
 public class UIImageView extends UIView implements HighlightedDisplayable {
 
     private UIImage image;

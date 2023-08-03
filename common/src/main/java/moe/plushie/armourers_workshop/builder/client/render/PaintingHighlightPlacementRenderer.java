@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -47,10 +47,10 @@ public class PaintingHighlightPlacementRenderer {
         poseStack.pushPose();
 
         Vector3f origin = new Vector3f(renderInfo.getPosition());
+        VertexConsumer builder = buffers.getBuffer(SkinRenderType.HIGHLIGHTED_LINES);
+
         poseStack.translate(-origin.getX(), -origin.getY(), -origin.getZ());
         poseStack.translate(0.5f, 0.5f, 0.5f);
-
-        VertexConsumer builder = buffers.getBuffer(SkinRenderType.HIGHLIGHTED_LINES);
 
         for (BlockPos pos1 : blockSamples) {
             float x0 = pos1.getX() - 0.5f;
@@ -59,7 +59,7 @@ public class PaintingHighlightPlacementRenderer {
             float x1 = pos1.getX() + 0.5f;
             float y1 = pos1.getY() + 0.5f;
             float z1 = pos1.getZ() + 0.5f;
-            RenderSystem.drawBoundingBox(poseStack, x0, y0, z0, x1, y1, z1, UIColor.RED, builder);
+            ShapeTesselator.fill(x0, y0, z0, x1, y1, z1, UIColor.RED, poseStack, builder);
         }
 
         for (BlockPos pos1 : blockEffects) {
@@ -69,7 +69,7 @@ public class PaintingHighlightPlacementRenderer {
             float x1 = pos1.getX() + 0.4f;
             float y1 = pos1.getY() + 0.4f;
             float z1 = pos1.getZ() + 0.4f;
-            RenderSystem.drawBoundingBox(poseStack, x0, y0, z0, x1, y1, z1, UIColor.GREEN, builder);
+            ShapeTesselator.fill(x0, y0, z0, x1, y1, z1, UIColor.GREEN, poseStack, builder);
         }
 
         poseStack.popPose();

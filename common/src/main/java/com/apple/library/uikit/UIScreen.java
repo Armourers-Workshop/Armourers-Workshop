@@ -3,6 +3,7 @@ package com.apple.library.uikit;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.impl.ScreenImpl;
 
+@SuppressWarnings("unused")
 public class UIScreen extends ScreenImpl {
 
     public static CGRect convertRectFromView(CGRect rect, UIView view) {

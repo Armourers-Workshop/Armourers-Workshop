@@ -13,8 +13,8 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -71,18 +71,18 @@ public class AdvancedSkinBuilderBlockEntityRenderer<T extends AdvancedSkinBuilde
 
         poseStack.popPose();
 
-        if (ModDebugger.advancedSkinBuilderBlock) {
+        if (ModDebugger.advancedSkinBuilder) {
             BlockState blockState = entity.getBlockState();
             BlockPos pos = entity.getBlockPos();
             poseStack.pushPose();
             poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-            RenderSystem.drawBoundingBox(poseStack, entity.getCustomRenderBoundingBox(blockState), UIColor.RED, buffers);
+            ShapeTesselator.stroke(entity.getCustomRenderBoundingBox(blockState), UIColor.RED, poseStack, buffers);
             Vector3f origin = entity.getRenderOrigin();
             poseStack.translate(origin.getX(), origin.getY(), origin.getZ());
-            RenderSystem.drawPoint(poseStack, Vector3f.ZERO, 1, buffers);
+            ShapeTesselator.vector(Vector3f.ZERO, 1, poseStack, buffers);
             poseStack.translate(entity.carmeOffset.getX(), entity.carmeOffset.getY(), entity.carmeOffset.getZ());
 //            poseStack.mulPose(new OpenQuaternionf(-entity.carmeRot.getX(), entity.carmeRot.getY(), entity.carmeRot.getZ(), true));
-            RenderSystem.drawPoint(poseStack, Vector3f.ZERO, 1, buffers);
+            ShapeTesselator.vector(Vector3f.ZERO, 1, poseStack, buffers);
 
             poseStack.popPose();
         }
@@ -101,7 +101,7 @@ public class AdvancedSkinBuilderBlockEntityRenderer<T extends AdvancedSkinBuilde
             Vector3f pt1 = OUTPUTS.get(0);
             Vector3f pt2 = OUTPUTS.get(1);
 //            Vector3f pt3 = OUTPUTS.get(2);
-            RenderSystem.drawLine(poseStack, pt1.getX(), pt1.getY(), pt1.getZ(), pt2.getX(), pt2.getY(), pt2.getZ(), UIColor.YELLOW, buffers);
+//            RenderSystem.drawLine(poseStack, pt1.getX(), pt1.getY(), pt1.getZ(), pt2.getX(), pt2.getY(), pt2.getZ(), UIColor.YELLOW, buffers);
 //            drawLine(pose, pt2.getX(), pt2.getY(), pt2.getZ(), pt3.getX(), pt3.getY(), pt3.getZ(), UIColor.MAGENTA, builder);
         }
 

@@ -1,5 +1,6 @@
 package com.apple.library.uikit;
 
+@SuppressWarnings("unused")
 public abstract class UIResponder {
 
     public void mouseUp(UIEvent event) {

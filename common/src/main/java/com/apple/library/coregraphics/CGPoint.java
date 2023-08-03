@@ -4,6 +4,7 @@ import com.apple.library.impl.InterpolableImpl;
 
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class CGPoint implements InterpolableImpl<CGPoint> {
 
     public static final CGPoint ZERO = new CGPoint(0, 0);

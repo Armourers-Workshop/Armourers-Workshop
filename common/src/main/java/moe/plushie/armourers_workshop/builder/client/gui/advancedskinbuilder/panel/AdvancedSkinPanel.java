@@ -6,6 +6,7 @@ import com.apple.library.foundation.NSMutableString;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.uikit.UIBarItem;
+import com.apple.library.uikit.UICheckBox;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIEdgeInsets;
 import com.apple.library.uikit.UIImage;
@@ -17,12 +18,12 @@ import moe.plushie.armourers_workshop.builder.data.properties.FloatProperty;
 import moe.plushie.armourers_workshop.builder.data.properties.VectorProperty;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public abstract class AdvancedSkinPanel extends UIView {
 
@@ -74,8 +75,6 @@ public abstract class AdvancedSkinPanel extends UIView {
 
     public static class Group extends UIView {
 
-        public static Function<CGRect, NewSlider> CC = NewSlider::new;
-
         protected final UILabel titleView = new UILabel(CGRect.ZERO);
         protected final ArrayList<Pair<UIView, UIView>> lines = new ArrayList<>();
 
@@ -92,20 +91,23 @@ public abstract class AdvancedSkinPanel extends UIView {
         public float layout(float x0, float x1, float x2, float x3, float spacing) {
             float top = titleView.frame().getMaxY() + 4f + spacing;
             for (Pair<UIView, UIView> it : lines) {
-                UIView leftView = it.getLeft();
                 UIView rightView = it.getRight();
-                CGRect leftFrame = leftView.frame().copy();
                 CGRect rightFrame = rightView.frame().copy();
-                float height = Math.max(leftFrame.getHeight(), rightFrame.getHeight());
-                leftFrame.x = x0;
-                leftFrame.y = top + (height - leftFrame.getHeight()) / 2;
-                leftFrame.width = x1 - x0;
+                UIView leftView = it.getLeft();
+                float height = rightFrame.getHeight();
+                if (leftView != null) {
+                    CGRect leftFrame = leftView.frame().copy();
+                    height = Math.max(height, leftFrame.getHeight());
+                    leftFrame.x = x0;
+                    leftFrame.y = top + (height - leftFrame.getHeight()) / 2;
+                    leftFrame.width = x1 - x0;
+                    leftView.setFrame(leftFrame);
+                    leftView.setAutoresizingMask(AutoresizingMask.flexibleRightMargin | AutoresizingMask.flexibleBottomMargin);
+                }
                 rightFrame.x = x2;
                 rightFrame.y = top + (height - rightFrame.getHeight()) / 2;
                 rightFrame.width = x3 - x2;
-                leftView.setFrame(leftFrame);
                 rightView.setFrame(rightFrame);
-                leftView.setAutoresizingMask(AutoresizingMask.flexibleRightMargin | AutoresizingMask.flexibleBottomMargin);
                 rightView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
                 top += height + spacing;
             }
@@ -114,15 +116,20 @@ public abstract class AdvancedSkinPanel extends UIView {
         }
 
         // [x] name
-        public void bool(NSString name, BooleanProperty property) {
-            UIView i = new UIView(new CGRect(0, 0, 80, 16));
-            i.setBackgroundColor(UIColor.GREEN);
-            addLine(name, i);
+        public void bool(@Nullable NSString name, BooleanProperty property) {
+            bool(name, null, property);
+        }
+
+        // [x] name
+        public void bool(@Nullable NSString name, @Nullable NSString desc, BooleanProperty property) {
+            UICheckBox box = new UICheckBox(new CGRect(0, 0, 80, 16));
+            box.setTitle(desc);
+            addLine(name, box);
         }
 
         // name [ --- ]
-        public void slider(NSString name, FloatProperty property, Unit unit) {
-            NewSlider view = CC.apply(new CGRect(0, 0, 80, 16));
+        public void slider(@Nullable NSString name, FloatProperty property, Unit unit) {
+            NewSlider view = new NewSlider(new CGRect(0, 0, 80, 16));
             view.setFormatter(unit);
             view.setStepValue(unit.stepValue);
             view.setValue(unit.defaultValue);
@@ -142,7 +149,11 @@ public abstract class AdvancedSkinPanel extends UIView {
             slider(new NSString("Z"), property.z(), unit);
         }
 
-        private void addLine(NSString name, UIView view) {
+        private void addLine(@Nullable NSString name, UIView view) {
+            if (name == null) {
+                addView(null, view);
+                return;
+            }
             UILabel title = new UILabel(new CGRect(0, 0, 30, 10));
             title.setText(name);
             title.setTextColor(UIColor.WHITE);
@@ -150,18 +161,19 @@ public abstract class AdvancedSkinPanel extends UIView {
             addView(title, view);
         }
 
-        private void addView(UIView leftView, UIView rightView) {
+        private void addView(@Nullable UIView leftView, UIView rightView) {
             lines.add(Pair.of(leftView, rightView));
-            addSubview(leftView);
+            if (leftView != null) {
+                addSubview(leftView);
+            }
             addSubview(rightView);
         }
 
-
         public enum Unit implements NewSlider.Formatter {
 
-            POINT(0, "#.#### m", "#.#####", 0.01, 1),
-            DEGREES(0, "#.#°", "#.#####", 0.1, 10),
-            SCALE(1, "0.000", "0.0####", 0.01, 1);
+            POINT("#.#### m", "#.#####", 0, 0.01, 1),
+            DEGREES("#.#°", "#.#####", 0, 0.1, 10),
+            SCALE("0.000", "0.0####", 1, 0.01, 1);
 
             public final double stepValue;
             public final double defaultValue;
@@ -170,7 +182,7 @@ public abstract class AdvancedSkinPanel extends UIView {
             public final DecimalFormat inputFormat;
             public final DecimalFormat displayFormat;
 
-            Unit(double defaultValue, String displayFormat, String inputFormat, double stepValue, float multipler) {
+            Unit(String displayFormat, String inputFormat, double defaultValue, double stepValue, float multipler) {
                 this.stepValue = stepValue;
                 this.defaultValue = defaultValue;
                 this.multipler = multipler;

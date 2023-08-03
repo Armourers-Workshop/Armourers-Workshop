@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 public enum SkinRenderFormat {
 
     LINE,
+    LINE_STRIP,
 
     IMAGE,
 

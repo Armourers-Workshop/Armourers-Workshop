@@ -1,5 +1,6 @@
 package com.apple.library.foundation;
 
+@SuppressWarnings("unused")
 public class NSRange {
 
     public static final NSRange ZERO = new NSRange(0, 0);

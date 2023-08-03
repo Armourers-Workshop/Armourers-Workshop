@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.data.MannequinHitResult;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -50,7 +50,7 @@ public class HighlightPlacementRenderer {
             }
             poseStack.pushPose();
             poseStack.translate(pos.getX() * 16f, pos.getY() * 16f, pos.getZ() * 16f);
-            RenderSystem.drawBoundingBox(poseStack, part.getShape(), color, buffers);
+            ShapeTesselator.stroke(part.getShape(), color, poseStack, buffers);
             poseStack.popPose();
         }
 

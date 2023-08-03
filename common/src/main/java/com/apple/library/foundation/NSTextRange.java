@@ -1,5 +1,6 @@
 package com.apple.library.foundation;
 
+@SuppressWarnings("unused")
 public class NSTextRange {
 
     public final NSTextPosition start;

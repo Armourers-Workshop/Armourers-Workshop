@@ -5,6 +5,7 @@ import com.apple.library.uikit.UIEdgeInsets;
 
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class CGRect implements InterpolableImpl<CGRect> {
 
     public static final CGRect ZERO = new CGRect(0, 0, 0, 0);

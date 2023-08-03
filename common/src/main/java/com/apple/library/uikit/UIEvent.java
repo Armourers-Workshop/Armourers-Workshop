@@ -3,6 +3,7 @@ package com.apple.library.uikit;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.impl.InvokerResult;
 
+@SuppressWarnings("unused")
 public class UIEvent {
 
     private InvokerResult result = InvokerResult.PASS;

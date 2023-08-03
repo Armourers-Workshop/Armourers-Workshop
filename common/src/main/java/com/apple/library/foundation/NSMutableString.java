@@ -3,6 +3,7 @@ package com.apple.library.foundation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
+@SuppressWarnings("unused")
 public class NSMutableString extends NSString {
 
     private final MutableComponent mutableValue;

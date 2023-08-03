@@ -2,6 +2,7 @@ package com.apple.library.coregraphics;
 
 import com.apple.library.uikit.UIColor;
 
+@SuppressWarnings("unused")
 public class CGGradient {
 
     public final UIColor startColor;

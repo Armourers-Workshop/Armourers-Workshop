@@ -5,6 +5,7 @@ import com.apple.library.impl.StringImpl;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 
+@SuppressWarnings("unused")
 public class NSString implements StringImpl {
 
     private static final Component EMPTY_COMPONENT = Component.literal("");

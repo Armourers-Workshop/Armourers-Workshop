@@ -4,6 +4,7 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 
+@SuppressWarnings("unused")
 public class UIPopoverView extends UIWindow {
 
     private UIView contentView;

@@ -2,6 +2,7 @@ package com.apple.library.uikit;
 
 import com.apple.library.foundation.NSString;
 
+@SuppressWarnings("unused")
 public class UIComboItem {
 
     public final NSString title;

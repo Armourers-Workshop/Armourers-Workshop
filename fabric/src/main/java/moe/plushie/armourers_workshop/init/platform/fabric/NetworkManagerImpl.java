@@ -24,14 +24,12 @@ import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientHandshakePacketListenerImpl;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -90,10 +88,7 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
     @Override
     @Environment(EnvType.CLIENT)
     public void sendToServer(final CustomPacket message) {
-        ClientPacketListener connection = Minecraft.getInstance().getConnection();
-        if (connection != null) {
-            dispatcher.split(message, NetworkDirection.PLAY_TO_SERVER, connection::send);
-        }
+        dispatcher.split(message, NetworkDirection.PLAY_TO_SERVER, ClientPlayNetworking.getSender()::sendPacket);
     }
 
     @Override
@@ -120,36 +115,39 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
             this.splitter = new PacketSplitter();
         }
 
-        public void startServerHandshake(ServerLoginPacketListenerImpl handler, MinecraftServer server, PacketSender sender, ServerLoginNetworking.LoginSynchronizer synchronizer) {
+        public void startServerHandshake(Object handler, MinecraftServer server, PacketSender sender, ServerLoginNetworking.LoginSynchronizer synchronizer) {
             if (ModConfig.Common.enableProtocolCheck) {
                 sender.sendPacket(channelName, PacketByteBufs.empty());
             }
         }
 
         public void onServerHandshake(MinecraftServer server, ServerLoginPacketListenerImpl handler, boolean understood, FriendlyByteBuf buf, ServerLoginNetworking.LoginSynchronizer synchronizer, PacketSender responseSender) {
-//            if (understood) {
-//                String version = buf.readUtf(Short.MAX_VALUE);
-//                if (version.equals(channelVersion)) {
-//                    return;
-//                }
-//            }
-//            handler.disconnect(Component.literal("Please install correct Armourers Workshop to play on this server!"));
+            if (!ModConfig.Common.enableProtocolCheck) {
+                return;
+            }
+            if (understood) {
+                String version = buf.readUtf(Short.MAX_VALUE);
+                if (version.equals(channelVersion)) {
+                    return;
+                }
+            }
+            handler.disconnect(Component.literal("Please install correct Armourers Workshop to play on this server!"));
         }
 
         @Environment(EnvType.CLIENT)
-        public CompletableFuture<@Nullable FriendlyByteBuf> onClientHandshake(Minecraft client, ClientHandshakePacketListenerImpl handler, FriendlyByteBuf buf, Consumer<GenericFutureListener<? extends Future<? super Void>>> listenerAdder) {
+        public CompletableFuture<@Nullable FriendlyByteBuf> onClientHandshake(Minecraft client, Object handler, FriendlyByteBuf buf, Consumer<GenericFutureListener<? extends Future<? super Void>>> listenerAdder) {
             FriendlyByteBuf responseBuffer = new FriendlyByteBuf(Unpooled.buffer());
             responseBuffer.writeUtf(channelVersion);
             return CompletableFuture.completedFuture(responseBuffer);
         }
 
-        public void onServerEvent(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) {
+        public void onServerEvent(MinecraftServer server, ServerPlayer player, Object handler, FriendlyByteBuf buf, PacketSender responseSender) {
             IServerPacketHandler packetHandler = this;
             merge(player.getUUID(), buf, packet -> server.execute(() -> packet.accept(packetHandler, player)));
         }
 
         @Environment(EnvType.CLIENT)
-        public void onClientEvent(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender responseSender) {
+        public void onClientEvent(Minecraft client, Object handler, FriendlyByteBuf buf, PacketSender responseSender) {
             IClientPacketHandler packetHandler = this;
             merge(clientUUID, buf, packet -> client.execute(() -> packet.accept(packetHandler, getClientPlayer())));
         }

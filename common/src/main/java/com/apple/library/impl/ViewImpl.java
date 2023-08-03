@@ -5,8 +5,14 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIView;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public interface ViewImpl {
@@ -56,63 +62,110 @@ public interface ViewImpl {
         // yep, pass null to find window.
         if (searchedView == null) {
             searchedView = self().window();
-        }
-        // is self, not any convert changes.
-        if (searchedView == this) {
-            return null;
-        }
-        Iterable<ViewImpl> enumerator = null;
-        LinkedList<ViewImpl> results = _searchInViewHierarchy(searchedView); // child -> parent
-        if (results != null) {
-            enumerator = results::descendingIterator;
-        }
-        if (enumerator == null && searchedView != null) {
-            results = searchedView._searchInViewHierarchy(self()); // parent -> child
-            if (results == null) {
+            if (searchedView == null) {
                 return null;
             }
-            results.removeFirst(); // ignore self.
-            results.add(searchedView); // attach target view.
-            reversed = !reversed;
-            enumerator = results;
         }
-        if (enumerator == null) {
+        // is self, not any convert changes.
+        if (searchedView == self()) {
             return null;
         }
-        float tx = 0, ty = 0;
-        CGAffineTransform translate = CGAffineTransform.createScale(1, 1);
-        for (ViewImpl view : enumerator) {
-            CGAffineTransform transform = view.transform();
-            CGPoint center = view.center();
-            CGRect bounds = view.bounds();
-            tx += center.x;
-            ty += center.y;
-            // TODO: the bounds origin need apply transform?
-            tx -= bounds.x;
-            ty -= bounds.y;
-            if (transform.isIdentity()) {
-                tx -= bounds.width * 0.5f;
-                ty -= bounds.height * 0.5f;
-                continue;
+        ViewImpl parentView = null;
+        LinkedList<ViewImpl> toViews = new LinkedList<>();
+        LinkedList<ViewImpl> fromViews = new LinkedList<>();
+        ViewImpl searchingView1 = this;
+        ViewImpl searchingView2 = searchedView;
+        HashSet<UIView> parentViews = new HashSet<>();
+        Iterator<ViewImpl> cleaner = null;
+        while (searchingView1 != null || searchingView2 != null) {
+            if (searchingView1 != null) {
+                if (!parentViews.add(searchingView1.self())) {
+                    parentView = searchingView1.self();
+                    cleaner = toViews.iterator();
+                    break;
+                }
+                fromViews.addFirst(searchingView1);
+                searchingView1 = _superviewInViewHierarchy(searchingView1);
             }
-            // calculate transformed view size
-            CGSize size = bounds.size();
-            size.apply(transform);
-            tx -= size.width * 0.5f;
-            ty -= size.height * 0.5f;
-            CGAffineTransform tmp = CGAffineTransform.createTranslation(-tx, -ty);
-            tmp.concat(view._invertedTransform());
-            translate.concat(tmp);
-            tx = 0;
-            ty = 0;
+            if (searchingView2 != null) {
+                if (!parentViews.add(searchingView2.self())) {
+                    parentView = searchingView2.self();
+                    cleaner = fromViews.iterator();
+                    break;
+                }
+                toViews.addFirst(searchingView2);
+                searchingView2 = _superviewInViewHierarchy(searchingView2);
+            }
         }
-        if (tx != 0 || ty != 0) {
-            translate.concat(CGAffineTransform.createTranslation(-tx, -ty));
+        // when already found the common view, we need excluded the view of the common view above.
+        // and the also excluded the common view, because common view does not need to eval.
+        while (cleaner != null && cleaner.hasNext()) {
+            ViewImpl view = cleaner.next();
+            cleaner.remove();
+            if (view.self() == parentView) {
+                cleaner = null;
+            }
         }
-        if (reversed) {
-            translate.invert();
+        if (parentView == null) {
+            // can't find same parent view, maybe target view not in the same hierarchy.
+            return null;
         }
-        return translate;
+        CGAffineTransform offset = null;
+        ArrayList<Pair<Collection<ViewImpl>, Boolean>> enumerator = new ArrayList<>();
+        if (fromViews.size() != 0) {
+            enumerator.add(Pair.of(fromViews, reversed));
+        }
+        if (toViews.size() != 0) {
+            enumerator.add(Pair.of(toViews, !reversed));
+        }
+        // when forward search, the evaluate order needs reverse.
+        if (!reversed && enumerator.size() > 1) {
+            Collections.reverse(enumerator);
+        }
+        for (Pair<Collection<ViewImpl>, Boolean> it : enumerator) {
+            float tx = 0, ty = 0;
+            CGAffineTransform translate = CGAffineTransform.createScale(1, 1);
+            for (ViewImpl view : it.getLeft()) {
+                CGAffineTransform transform = view.transform();
+                CGPoint center = view.center();
+                CGRect bounds = view.bounds();
+                tx += center.x;
+                ty += center.y;
+                // TODO: the bounds origin need apply transform?
+                tx -= bounds.x;
+                ty -= bounds.y;
+                if (transform.isIdentity()) {
+                    tx -= bounds.width * 0.5f;
+                    ty -= bounds.height * 0.5f;
+                    continue;
+                }
+                // calculate transformed view size
+                CGSize size = bounds.size();
+                size.apply(transform);
+                tx -= size.width * 0.5f;
+                ty -= size.height * 0.5f;
+                CGAffineTransform tmp = CGAffineTransform.createTranslation(-tx, -ty);
+                tmp.concat(view._invertedTransform());
+                translate.concat(tmp);
+                tx = 0;
+                ty = 0;
+            }
+            if (tx != 0 || ty != 0) {
+                translate.concat(CGAffineTransform.createTranslation(-tx, -ty));
+            }
+            if (it.getRight()) {
+                translate.invert();
+            }
+            // the first eval, we will get the offset from current view to common view,
+            // the second eval, we will get the offset from the common view to target view,
+            // the final offset is the current view to target view.
+            if (offset == null) {
+                offset = translate;
+            } else {
+                offset.concat(translate);
+            }
+        }
+        return offset;
     }
 
     @Nullable

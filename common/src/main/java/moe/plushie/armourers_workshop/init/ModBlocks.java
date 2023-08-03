@@ -17,7 +17,6 @@ import moe.plushie.armourers_workshop.core.block.SkinningTableBlock;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import moe.plushie.armourers_workshop.library.block.GlobalSkinLibraryBlock;
 import moe.plushie.armourers_workshop.library.block.SkinLibraryBlock;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -56,19 +55,19 @@ public class ModBlocks {
         return state -> state.getValue(BlockStateProperties.LIT) ? level : 0;
     }
 
-    private static <T extends Block> IBlockBuilder<Block> create(Function<BlockBehaviour.Properties, T> supplier, AbstractBlockMaterial material, AbstractBlockMaterialColor materialColor) {
-        return ObjectUtils.unsafeCast(BuilderManager.getInstance().createBlockBuilder(supplier, material, materialColor).strength(1.5f, 6.f));
+    private static IBlockBuilder<Block> create(Function<BlockBehaviour.Properties, Block> supplier, AbstractBlockMaterial material, AbstractBlockMaterialColor materialColor) {
+        return BuilderManager.getInstance().createBlockBuilder(supplier, material, materialColor).strength(1.5f, 6.f);
     }
 
-    private static <T extends Block> IBlockBuilder<Block> normal(Function<BlockBehaviour.Properties, T> supplier) {
+    private static IBlockBuilder<Block> normal(Function<BlockBehaviour.Properties, Block> supplier) {
         return create(supplier, AbstractBlockMaterial.STONE, AbstractBlockMaterialColor.NONE);
     }
 
-    private static <T extends Block> IBlockBuilder<Block> half(Function<BlockBehaviour.Properties, T> supplier) {
+    private static IBlockBuilder<Block> half(Function<BlockBehaviour.Properties, Block> supplier) {
         return normal(supplier).noOcclusion().bind(() -> RenderType::cutout);
     }
 
-    private static <T extends Block> IBlockBuilder<Block> glass(Function<BlockBehaviour.Properties, T> supplier) {
+    private static IBlockBuilder<Block> glass(Function<BlockBehaviour.Properties, Block> supplier) {
         return create(supplier, AbstractBlockMaterial.GLASS, AbstractBlockMaterialColor.NONE).noOcclusion().bind(() -> RenderType::translucent);
     }
 

@@ -7,6 +7,7 @@ import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIBarItem;
 import com.apple.library.uikit.UIColor;
+import com.apple.library.uikit.UIComboBox;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UILabel;
@@ -18,6 +19,7 @@ import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.pan
 import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.AdvancedGeneralSkinPanel;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.AdvancedSkinPanel;
 import moe.plushie.armourers_workshop.builder.client.gui.widget.DrawerToolbar;
+import moe.plushie.armourers_workshop.builder.client.gui.widget.NewComboBox;
 import moe.plushie.armourers_workshop.builder.client.gui.widget.Shortcut;
 import moe.plushie.armourers_workshop.builder.menu.AdvancedSkinBuilderMenu;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractMenuWindowProvider;
@@ -46,15 +48,6 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
 
     private int leftCardOffset = 100;
     private int rightCardOffset = 100;
-
-    public static AbstractMenuWindowProvider<AdvancedSkinBuilderMenu, AdvancedSkinBuilderWindow> PROVIDER;
-
-    public static AdvancedSkinBuilderWindow create(AdvancedSkinBuilderMenu container, Inventory inventory, NSString title) {
-        if (PROVIDER != null) {
-            return PROVIDER.create(container, inventory, title);
-        }
-        return new AdvancedSkinBuilderWindow(container, inventory, title);
-    }
 
     public AdvancedSkinBuilderWindow(AdvancedSkinBuilderMenu container, Inventory inventory, NSString title) {
         super(container, inventory, title);
@@ -125,15 +118,16 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
         bg1.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
         rightCard.addSubview(bg1);
 
-        UILabel typeView = new UILabel(new CGRect(24, 0, bg1.bounds().getWidth() - 24, 24));
-        typeView.setText(new NSString("General - Outfit"));
-        typeView.setTextColor(UIColor.WHITE);
-        typeView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
-        bg1.addSubview(typeView);
 
-        rightTree.setFrame(bg1.bounds().insetBy(24, 0, 0, 0));
+        NewComboBox typeView = NewComboBox.CR.apply(new CGRect(0, 0, bg1.bounds().getWidth(), 20));
+//        typeView.setText(new NSString("General - Outfit"));
+//        typeView.setTextColor(UIColor.WHITE);
+        typeView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
+        bg1.insertViewAtIndex(typeView, 0);
+
+        rightTree.setFrame(bg1.bounds().insetBy(20, 0, 0, 0));
         rightTree.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
-        bg1.addSubview(rightTree);
+        bg1.insertViewAtIndex(rightTree, 0);
 
         UIView bg2 = new UIView(rightCard.bounds().insetBy(h1 + 4, 4, 4, 4));
         bg2.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);

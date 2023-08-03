@@ -2,6 +2,7 @@ package com.apple.library.uikit;
 
 import com.apple.library.foundation.NSRange;
 
+@SuppressWarnings("unused")
 public interface UITextFieldDelegate {
 
     default boolean textFieldShouldBeginEditing(UITextField textField) {

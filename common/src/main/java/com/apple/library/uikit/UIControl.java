@@ -8,6 +8,7 @@ import com.apple.library.impl.WeakDispatcherImpl;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 
+@SuppressWarnings("unused")
 public class UIControl extends UIView implements HighlightedDisplayable {
 
     private boolean isEnabled = true;

@@ -2,6 +2,7 @@ package com.apple.library.uikit;
 
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class UIEdgeInsets {
 
     public static final UIEdgeInsets ZERO = new UIEdgeInsets(0, 0, 0, 0);

@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.IntFunction;
 
+@SuppressWarnings("unused")
 public class UIImage {
 
     protected final ResourceLocation rl;

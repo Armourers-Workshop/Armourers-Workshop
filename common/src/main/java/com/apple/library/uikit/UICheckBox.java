@@ -6,16 +6,19 @@ import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.impl.AppearanceImpl;
 import com.apple.library.impl.SoundManagerImpl;
 
+@SuppressWarnings("unused")
 public class UICheckBox extends UIControl {
 
     private final UILabel markerView = new UILabel(new CGRect(1, 0, 9, 9));
     private final UILabel titleView = new UILabel(CGRect.ZERO);
+    private final UIImageView imageView = new UIImageView(new CGRect(0, 0, 9, 9));
+
+    private float boxSize = 9;
+    private float boxSpacing = 1;
 
     public UICheckBox(CGRect frame) {
         super(frame);
-        // TODO: Using image and UIImageView to replace marker
-        UIImageView imageView = new UIImageView(new CGRect(0, 0, 9, 9));
-        imageView.setImage(AppearanceImpl.BUTTON_IMAGE.imageAtIndex(State.DISABLED));
+        this.imageView.setImage(AppearanceImpl.BUTTON_IMAGE.imageAtIndex(State.DISABLED));
         this.addSubview(imageView);
         this.markerView.setText(new NSString("x"));
         this.markerView.setTextColor(UIColor.WHITE);
@@ -29,7 +32,10 @@ public class UICheckBox extends UIControl {
     public void layoutSubviews() {
         super.layoutSubviews();
         CGRect rect = bounds();
-        this.titleView.setFrame(rect.insetBy(0, 10, 0, 0));
+        CGRect frame = new CGRect(0, (rect.getHeight() - boxSize) / 2, boxSize, boxSize);
+        this.titleView.setFrame(rect.insetBy(0, frame.getWidth() + boxSpacing, 0, 0));
+        this.imageView.setFrame(frame);
+        this.markerView.setFrame(frame.offset(0.5f, 0));
     }
 
     @Override
@@ -73,5 +79,11 @@ public class UICheckBox extends UIControl {
     public void setSelected(boolean isSelected) {
         super.setSelected(isSelected);
         markerView.setHidden(!isSelected);
+    }
+
+    public void setBox(float boxSize, float boxSpacing) {
+        this.boxSize = boxSize;
+        this.boxSpacing = boxSpacing;
+        this.setNeedsLayout();
     }
 }

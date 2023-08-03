@@ -12,9 +12,9 @@ import net.minecraft.resources.ResourceLocation;
 @Environment(EnvType.CLIENT)
 public abstract class SkinRenderType implements IRenderTypeBuilder {
 
+    public static final RenderType GUI_COLOR = _builder(SkinRenderFormat.GUI_COLOR).transparency(Transparency.DEFAULT).build("aw_gui_color");
     public static final RenderType GUI_IMAGE = _builder(SkinRenderFormat.GUI_IMAGE).transparency(Transparency.TRANSLUCENT).build("aw_gui_image");
     public static final RenderType GUI_HIGHLIGHTED_TEXT = _builder(SkinRenderFormat.GUI_HIGHLIGHTED_TEXT).transparency(Transparency.TRANSLUCENT).colorLogic(ColorLogic.OR_REVERSE).depthTest(DepthTest.NONE).build("aw_highlighted_text");
-    public static final RenderType GUI_COLOR = _builder(SkinRenderFormat.GUI_COLOR).transparency(Transparency.DEFAULT).build("aw_gui_color");
 
     public static final RenderType IMAGE_MAGIC = _texture(ModTextures.CIRCLE).writeMask(WriteMask.COLOR_WRITE).sortOnUpload().build("aw_image_magic");
     public static final RenderType IMAGE_EARTH = _texture(ModTextures.EARTH).build("aw_image_earth");
@@ -22,7 +22,7 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
     public static final RenderType IMAGE_GUIDE = _texture(ModTextures.GUIDES).polygonOffset(-1, -10).build("aw_image_guide");
     public static final RenderType IMAGE_MARKER = _texture2(ModTextures.MARKERS).polygonOffset(-1, -10).cull().build("aw_image_marker");
 
-    public static final RenderType HIGHLIGHTED_LINES = _line().depthTest(DepthTest.NONE).build("aw_lines");
+    public static final RenderType HIGHLIGHTED_LINES = _line(2).depthTest(DepthTest.NONE).build("aw_lines_ndt");
     public static final RenderType HIGHLIGHTED_ENTITY_LINES = _entityHighlight(ModTextures.MANNEQUIN_HIGHLIGHT).build("aw_entity_lines");
 
     public static final RenderType PLAYER_CUTOUT = entityCutout(ModTextures.MANNEQUIN_DEFAULT);
@@ -37,6 +37,9 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
     public static final RenderType FACE_LIGHTING = _cube(SkinRenderFormat.SKIN_FACE_LIGHTING).texture(ModTextures.LIGHTING_CUBE).build("aw_lighting_quad_face");
     public static final RenderType FACE_TRANSLUCENT = _cube(SkinRenderFormat.SKIN_FACE_TRANSLUCENT).texture(ModTextures.CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build("aw_translucent_quad_face");
     public static final RenderType FACE_LIGHTING_TRANSLUCENT = _cube(SkinRenderFormat.SKIN_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.LIGHTING_CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build("aw_translucent_lighting_quad_face");
+
+    public static final RenderType LINES = _line(1).build("aw_lines");
+    public static final RenderType LINE_STRIP = _builder(SkinRenderFormat.LINE_STRIP).lineWidth(1).build("aw_line_strip");
 
     public static final RenderType[] RENDER_ORDERING_FACES = {FACE_SOLID, FACE_LIGHTING, FACE_TRANSLUCENT, FACE_LIGHTING_TRANSLUCENT};
 
@@ -56,7 +59,11 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
     }
 
     public static RenderType lines() {
-        return RenderType.lines();
+        return LINES;
+    }
+
+    public static RenderType lineStrip() {
+        return LINE_STRIP;
     }
 
     public static RenderType entityCutout(ResourceLocation texture) {
@@ -95,8 +102,8 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
         return _builder(SkinRenderFormat.BLOCK).texture(texture).overlay().lightmap();
     }
 
-    private static IRenderTypeBuilder _line() {
-        return _builder(SkinRenderFormat.LINE).lineWidth(2).polygonOffset(0, 10);
+    private static IRenderTypeBuilder _line(float lineWidth) {
+        return _builder(SkinRenderFormat.LINE).lineWidth(lineWidth).polygonOffset(0, 10);
     }
 
     private static IRenderTypeBuilder _builder(SkinRenderFormat format) {

@@ -2,6 +2,7 @@ package com.apple.library.uikit;
 
 import com.apple.library.impl.FontImpl;
 
+@SuppressWarnings("unused")
 public class UIFont extends FontImpl {
 
     private static final UIFont DEFAULT = new UIFont(FontImpl.defaultFont(), 9);

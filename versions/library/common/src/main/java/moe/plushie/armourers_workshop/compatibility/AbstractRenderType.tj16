@@ -71,6 +71,8 @@ public class AbstractRenderType extends RenderType {
     private static final Map<SkinRenderFormat, Supplier<IRenderTypeBuilder>> MAPPER = _make(it -> {
 
         it.put(SkinRenderFormat.LINE, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_LINES, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
+        it.put(SkinRenderFormat.LINE_STRIP, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_LINE_STRIP, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
+
         it.put(SkinRenderFormat.IMAGE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
 
         it.put(SkinRenderFormat.GUI_IMAGE, () -> _builder(DefaultVertexFormat.POSITION_TEX, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTextureState(EMPTY_TEXTURE)));

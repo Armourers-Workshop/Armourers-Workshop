@@ -2,6 +2,7 @@ package com.apple.library.uikit;
 
 import com.apple.library.foundation.NSIndexPath;
 
+@SuppressWarnings("unused")
 public interface UITableViewDelegate extends UIScrollViewDelegate {
 
     default boolean tableViewShouldHighlightRow(UITableView tableView, NSIndexPath indexPath) {
@@ -26,5 +27,25 @@ public interface UITableViewDelegate extends UIScrollViewDelegate {
     }
 
     default void tableViewDidDeselectRow(UITableView tableView, NSIndexPath indexPath) {
+    }
+
+    default float tableViewHeightForRowAt(UITableView tableView, NSIndexPath indexPath) {
+        return 0;
+    }
+
+    default float tableViewHeightForHeaderInSection(UITableView tableView, int section) {
+        return 0;
+    }
+
+    default float tableViewHeightForFooterInSection(UITableView tableView, int section) {
+        return 0;
+    }
+
+    default UIView tableViewViewForHeaderInSection(UITableView tableView, int section) {
+        return null;
+    }
+
+    default UIView tableViewViewForFooterInSection(UITableView tableView, int section) {
+        return null;
     }
 }

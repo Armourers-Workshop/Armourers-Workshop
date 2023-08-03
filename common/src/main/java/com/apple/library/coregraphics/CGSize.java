@@ -4,6 +4,7 @@ import com.apple.library.impl.InterpolableImpl;
 
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class CGSize implements InterpolableImpl<CGSize> {
 
     public static final CGSize ZERO = new CGSize(0, 0);

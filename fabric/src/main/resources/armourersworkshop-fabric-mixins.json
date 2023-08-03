@@ -3,7 +3,7 @@
   "package": "moe.plushie.armourers_workshop.init.mixin.fabric",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "FabricClientPacketListenerMixin",
+    "FabricBlockEntityUpdatePacketMixin",
     "FabricLivingRendererMixin",
     "FabricPlayerRendererMixin",
     "FabricScreenREIMixin",

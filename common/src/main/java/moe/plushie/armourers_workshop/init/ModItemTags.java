@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.common.IItemTag;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 
+@SuppressWarnings("unused")
 public class ModItemTags {
 
     public static final IRegistryKey<IItemTag> SWORDS = skinnable("swords");

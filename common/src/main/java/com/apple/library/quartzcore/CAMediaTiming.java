@@ -1,5 +1,6 @@
 package com.apple.library.quartzcore;
 
+@SuppressWarnings("unused")
 public interface CAMediaTiming {
 
 

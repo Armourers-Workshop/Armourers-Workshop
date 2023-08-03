@@ -2,6 +2,7 @@ package com.apple.library.uikit;
 
 import com.apple.library.impl.WindowManagerImpl;
 
+@SuppressWarnings("unused")
 public class UIWindowManager extends WindowManagerImpl {
 
     @Override

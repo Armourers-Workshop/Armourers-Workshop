@@ -2,6 +2,7 @@ package com.apple.library.foundation;
 
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class NSIndexPath {
 
     public final int row;

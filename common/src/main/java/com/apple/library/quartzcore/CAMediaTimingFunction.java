@@ -2,6 +2,7 @@ package com.apple.library.quartzcore;
 
 import com.apple.library.impl.BezierPathImpl;
 
+@SuppressWarnings("unused")
 public enum CAMediaTimingFunction {
 
     LINEAR(null),

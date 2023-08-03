@@ -2,6 +2,7 @@ package com.apple.library.uikit;
 
 import com.apple.library.foundation.NSRange;
 
+@SuppressWarnings("unused")
 public interface UITextViewDelegate extends UIScrollViewDelegate {
 
     default boolean textViewShouldBeginEditing(UITextView textView) {

@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -74,7 +74,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
             double ty = -box.minY;
             double tz = -box.minZ - (box.maxZ - box.minZ) / 2;
             poseStack.translate((float) tx, (float) ty, (float) tz);
-            RenderSystem.drawBoundingBox(poseStack, box, UIColor.YELLOW, buffers);
+            ShapeTesselator.stroke(box, UIColor.YELLOW, poseStack, buffers);
             poseStack.popPose();
         }
     }

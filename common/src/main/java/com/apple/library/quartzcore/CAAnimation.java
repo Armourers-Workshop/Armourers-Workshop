@@ -1,5 +1,6 @@
 package com.apple.library.quartzcore;
 
+@SuppressWarnings("unused")
 public class CAAnimation implements CAMediaTiming {
 
     private Object fromValue;

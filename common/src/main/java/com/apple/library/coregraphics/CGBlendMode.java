@@ -1,5 +1,6 @@
 package com.apple.library.coregraphics;
 
+@SuppressWarnings("unused")
 public enum CGBlendMode {
     NORMAL,
     MULTIPLY,

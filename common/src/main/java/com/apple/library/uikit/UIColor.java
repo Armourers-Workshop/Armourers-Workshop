@@ -2,6 +2,7 @@ package com.apple.library.uikit;
 
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class UIColor {
 
     public static final UIColor CLEAR = new UIColor(0x00000000, true);

@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 
+@SuppressWarnings("unused")
 public interface CGGraphicsState {
 
     PoseStack ctm();

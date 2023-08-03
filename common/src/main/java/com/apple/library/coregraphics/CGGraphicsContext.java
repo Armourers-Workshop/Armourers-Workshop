@@ -6,6 +6,7 @@ import com.apple.library.impl.GraphicsContextImpl;
 import com.apple.library.impl.ObjectUtilsImpl;
 import com.apple.library.impl.TooltipRenderer;
 import com.apple.library.uikit.UIColor;
+import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIView;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public class CGGraphicsContext implements GraphicsContextImpl {
 
     private final CGGraphicsState state;
@@ -147,7 +149,7 @@ public class CGGraphicsContext implements GraphicsContextImpl {
     }
 
     public void strokeRect(UIColor color, CGRect rect) {
-        RenderSystem.drawBoundingBox(state.ctm(), rect, color);
+        drawBorder(rect.getMinX(), rect.getMinY(), rect.getMaxX(), rect.getMaxY(), 0, 1, color.getRGB());
     }
 
     public void addClipRect(CGRect rect) {
@@ -198,7 +200,8 @@ public class CGGraphicsContext implements GraphicsContextImpl {
 
     public void strokeDebugRect(int tag, CGRect rect) {
         if (ModDebugger.viewHierarchy) {
-            strokeRect(ColorUtils.getPaletteColor(tag), rect);
+            UIColor color = ColorUtils.getPaletteColor(tag);
+            drawBorder(rect.getMinX(), rect.getMinY(), rect.getMaxX(), rect.getMaxY(), 0, 0.1f, color.getRGB());
         }
     }
 

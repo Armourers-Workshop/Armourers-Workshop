@@ -18,7 +18,8 @@ public class UITableView extends UIScrollView {
     private int rowHeight = 24;
     private boolean allowsMultipleSection = false;
 
-    protected final DelegateImpl<UITableViewDelegate> delegate = DelegateImpl.of(new UITableViewDelegate() {});
+    protected final DelegateImpl<UITableViewDelegate> delegate = DelegateImpl.of(new UITableViewDelegate() {
+    });
     protected final DelegateImpl<UITableViewDataSource> dataSource = DelegateImpl.of(new UITableViewDataSource() {
 
         @Override
@@ -35,8 +36,8 @@ public class UITableView extends UIScrollView {
     private float cachedWidth = 0;
     private final HashSet<NSIndexPath> selectedIndexPaths = new HashSet<>();
 
-    private ArrayList<Entry> entries;
-    private HashMap<NSIndexPath, Entry> indexedEntries;
+    private ArrayList<UIView> entries;
+    private HashMap<NSIndexPath, UIView> indexedEntries;
 
     public UITableView(CGRect frame) {
         super(frame);
@@ -54,29 +55,49 @@ public class UITableView extends UIScrollView {
 
     public void reloadData() {
         CGRect bounds = bounds();
-        ArrayList<Entry> entries = new ArrayList<>();
-        HashMap<NSIndexPath, Entry> indexedEntries = new HashMap<>();
-        UITableViewDataSource delegate = this.dataSource();
+        ArrayList<UIView> entries = new ArrayList<>();
+        HashMap<NSIndexPath, UIView> indexedEntries = new HashMap<>();
+        UITableViewDelegate delegate = this.delegate.invoker();
+        UITableViewDataSource dataSource = this.dataSource.invoker();
         int height = 0;
-        int sections = delegate.tableViewNumberOfSections(this);
+        int sections = dataSource.tableViewNumberOfSections(this);
         for (int section = 0; section < sections; ++section) {
-            int rows = delegate.tableViewNumberOfRowsInSection(this, section);
+            int rows = dataSource.tableViewNumberOfRowsInSection(this, section);
+            float headerHeight = delegate.tableViewHeightForHeaderInSection(this, section);
+            if (headerHeight != 0) {
+                UIView headerView = delegate.tableViewViewForHeaderInSection(this, section);
+                if (headerView != null) {
+                    headerView.setFrame(new CGRect(0, height, bounds.width, headerHeight));
+                    entries.add(headerView);
+                    height += headerHeight;
+                }
+            }
             for (int row = 0; row < rows; ++row) {
                 NSIndexPath indexPath = new NSIndexPath(row, section);
-                UITableViewCell cell = delegate.tableViewCellForRow(this, indexPath);
-                Entry entry = new Entry(cell, indexPath);
+                UITableViewCell cell = dataSource.tableViewCellForRow(this, indexPath);
+                float rowHeight = heightForRow(indexPath);
+                cell._setIndexPath(indexPath);
                 cell.setFrame(new CGRect(0, height, bounds.width, rowHeight));
-                entries.add(entry);
-                indexedEntries.put(indexPath, entry);
+                entries.add(cell);
+                indexedEntries.put(indexPath, cell);
                 height += rowHeight;
+            }
+            float footerHeight = delegate.tableViewHeightForFooterInSection(this, section);
+            if (footerHeight != 0) {
+                UIView footerView = delegate.tableViewViewForFooterInSection(this, section);
+                if (footerView != null) {
+                    footerView.setFrame(new CGRect(0, height, bounds.width, footerHeight));
+                    entries.add(footerView);
+                    height += footerHeight;
+                }
             }
         }
         if (this.entries != null) {
-            this.entries.forEach(Entry::remove);
+            this.entries.forEach(UIView::removeFromSuperview);
         }
         this.indexedEntries = indexedEntries;
         this.entries = entries;
-        this.entries.forEach(Entry::add);
+        this.entries.forEach(this::addSubview);
         this.setContentSize(new CGSize(0, height));
     }
 
@@ -121,9 +142,9 @@ public class UITableView extends UIScrollView {
     }
 
     public UITableViewCell cellForRow(NSIndexPath indexPath) {
-        Entry entry = entryForRow(indexPath);
-        if (entry != null) {
-            return entry.cell;
+        UIView entry = indexedEntries.get(indexPath);
+        if (entry instanceof UITableViewCell) {
+            return (UITableViewCell) entry;
         }
         return null;
     }
@@ -172,37 +193,18 @@ public class UITableView extends UIScrollView {
         delegate.invoker().tableViewDidUnhighlightRow(this, indexPath);
     }
 
-    private Entry entryForRow(NSIndexPath indexPath) {
-        if (indexedEntries != null) {
-            return indexedEntries.get(indexPath);
+    private float heightForRow(NSIndexPath indexPath) {
+        float height = delegate.invoker().tableViewHeightForRowAt(this, indexPath);
+        if (height != 0) {
+            return height;
         }
-        return null;
+        return rowHeight;
     }
 
     private <T> void apply(BiConsumer<UITableViewCell, T> func, NSIndexPath indexPath, T value) {
         UITableViewCell cell = cellForRow(indexPath);
         if (cell != null) {
             func.accept(cell, value);
-        }
-    }
-
-    private class Entry {
-
-        NSIndexPath indexPath;
-        UITableViewCell cell;
-
-        Entry(UITableViewCell cell, NSIndexPath indexPath) {
-            this.indexPath = indexPath;
-            this.cell = cell;
-            this.cell._setIndexPath(indexPath);
-        }
-
-        void add() {
-            addSubview(cell);
-        }
-
-        void remove() {
-            cell.removeFromSuperview();
         }
     }
 }

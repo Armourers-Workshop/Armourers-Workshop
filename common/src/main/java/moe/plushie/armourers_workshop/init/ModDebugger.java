@@ -17,14 +17,9 @@ public class ModDebugger {
     public static float sy = 1;
     public static float sz = 1;
 
-    public static boolean flag1 = false;
-    public static boolean flag2 = false;
-    public static boolean flag3 = false;
-    public static boolean flag4 = false;
-
-    public static boolean skinnableBlock = false;
-    public static boolean hologramProjectorBlock = false;
-    public static boolean advancedSkinBuilderBlock = false;
+    public static boolean skinnable = false;
+    public static boolean hologramProjector = false;
+    public static boolean advancedSkinBuilder = false;
 
     public static boolean skinBounds = false;
     public static boolean skinOrigin = false;
@@ -53,7 +48,6 @@ public class ModDebugger {
     public static boolean viewHierarchy = false;
 
     public static boolean armature = false;
-
 
     // Debug tool
     public static boolean armourerDebugRender;

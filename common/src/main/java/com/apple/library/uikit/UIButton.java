@@ -13,6 +13,7 @@ import com.apple.library.impl.StateValueImpl;
 
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class UIButton extends UIControl {
 
     private final StateValueImpl<NSString> titleContainer = new StateValueImpl<>();

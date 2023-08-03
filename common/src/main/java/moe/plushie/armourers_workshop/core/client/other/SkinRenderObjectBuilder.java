@@ -19,6 +19,7 @@ import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
+import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
@@ -83,13 +84,13 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
     public void addShape(Vector3f origin, SkinRenderContext context) {
         auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
 //        RenderUtils.drawBoundingBox(poseStack, box, color, SkinRenderBuffer.getInstance());
-        RenderSystem.drawPoint(context.pose().pose(), origin, 16, buffers);
+        ShapeTesselator.vector(origin, 16, context.pose().pose(), buffers);
     }
 
     @Override
     public void addShape(OpenVoxelShape shape, UIColor color, SkinRenderContext context) {
         auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        RenderSystem.drawBoundingBox(context.pose().pose(), shape.bounds(), color, buffers);
+        ShapeTesselator.stroke(shape.bounds(), color, context.pose().pose(), buffers);
     }
 
     @Override
@@ -108,8 +109,8 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
             transform.apply(context.pose());
 
 //			poseStack.translate(box.o.getX(), box.o.getY(), box.o.getZ());
-            RenderSystem.drawBoundingBox(context.pose().pose(), rect, ColorUtils.getPaletteColor(joint.getId()), buffers);
-            RenderSystem.drawPoint(context.pose().pose(), Vector3f.ZERO, 4, 4, 4, buffers);
+            ShapeTesselator.stroke(rect, ColorUtils.getPaletteColor(joint.getId()), context.pose().pose(), buffers);
+            ShapeTesselator.vector(0, 0, 0, 4, 4, 4, context.pose().pose(), buffers);
             context.popPose();
         });
     }

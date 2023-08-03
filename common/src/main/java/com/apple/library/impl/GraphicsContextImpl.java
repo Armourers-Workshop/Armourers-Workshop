@@ -12,6 +12,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -173,6 +174,22 @@ public interface GraphicsContextImpl {
         buffer.vertex(pose, minX, maxY, zLevel).color(r2, g2, b2, a2).endVertex();
         buffer.vertex(pose, maxX, maxY, zLevel).color(r2, g2, b2, a2).endVertex();
         buffer.vertex(pose, maxX, minY, zLevel).color(r1, g1, b1, a1).endVertex();
+        state.flush();
+    }
+
+    default void drawBorder(float minX, float minY, float maxX, float maxY, float zLevel, float height, int color) {
+        int a1 = color >> 24 & 0xff;
+        int r1 = color >> 16 & 0xff;
+        int g1 = color >> 8 & 0xff;
+        int b1 = color & 0xff;
+        auto state = state();
+        auto pose = state.ctm().last().pose();
+        auto buffer = state.buffers().getBuffer(SkinRenderType.lineStrip());
+        buffer.vertex(pose, minX, minY, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, minX, maxY, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, maxX, maxY, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, maxX, minY, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, minX, minY, zLevel).color(r1, g1, b1, a1).endVertex();
         state.flush();
     }
 }

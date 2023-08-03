@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.data.slot;
 import moe.plushie.armourers_workshop.api.common.IItemTag;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.init.ModConfig;
+import moe.plushie.armourers_workshop.init.ModItemMatchers;
 import moe.plushie.armourers_workshop.init.ModItemTags;
 import moe.plushie.armourers_workshop.init.platform.RegistryManager;
 import moe.plushie.armourers_workshop.utils.ItemMatcher;
@@ -12,15 +13,15 @@ import org.jetbrains.annotations.Nullable;
 
 public enum ItemOverrideType {
 
-    SWORD("sword", "sword|tachi|katana|dagger", ModItemTags.SWORDS),
-    SHIELD("shield", null, ModItemTags.SHIELDS),
-    BOW("bow", null, ModItemTags.BOWS),
-    TRIDENT("trident", "trident|lance", ModItemTags.TRIDENTS),
+    SWORD("sword", ModItemTags.SWORDS, ModItemMatchers.SWORDS),
+    SHIELD("shield", ModItemTags.SHIELDS, ModItemMatchers.SHIELDS),
+    BOW("bow", ModItemTags.BOWS, ModItemMatchers.BOWS),
+    TRIDENT("trident", ModItemTags.TRIDENTS, ModItemMatchers.TRIDENTS),
 
-    PICKAXE("pickaxe", null, ModItemTags.PICKAXES),
-    AXE("axe", "(?<!pick)axe", ModItemTags.AXES),
-    SHOVEL("shovel", null, ModItemTags.SHOVELS),
-    HOE("hoe", null, ModItemTags.HOES),
+    PICKAXE("pickaxe", ModItemTags.PICKAXES, ModItemMatchers.PICKAXES),
+    AXE("axe", ModItemTags.AXES, ModItemMatchers.AXES),
+    SHOVEL("shovel", ModItemTags.SHOVELS, ModItemMatchers.SHOVELS),
+    HOE("hoe", ModItemTags.HOES, ModItemMatchers.HOES),
 
     ITEM("item", null, null);
 
@@ -28,10 +29,10 @@ public enum ItemOverrideType {
     private final String name;
     private final ItemMatcher matcher;
 
-    ItemOverrideType(String name, String regex, IRegistryKey<IItemTag> tag) {
+    ItemOverrideType(String name, IRegistryKey<IItemTag> tag, ItemMatcher matcher) {
         this.name = name;
         this.tag = tag;
-        this.matcher = new ItemMatcher(name, regex);
+        this.matcher = matcher;
     }
 
     @Nullable
@@ -59,7 +60,7 @@ public enum ItemOverrideType {
             return true;
         }
         // test by item id matching system.
-        return matcher.test(registryName);
+        return matcher.test(registryName, itemStack);
     }
 
     public String getName() {

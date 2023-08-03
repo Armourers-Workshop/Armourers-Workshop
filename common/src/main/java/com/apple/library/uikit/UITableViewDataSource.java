@@ -2,6 +2,7 @@ package com.apple.library.uikit;
 
 import com.apple.library.foundation.NSIndexPath;
 
+@SuppressWarnings("unused")
 public interface UITableViewDataSource {
 
     default int tableViewNumberOfSections(UITableView tableView) {
