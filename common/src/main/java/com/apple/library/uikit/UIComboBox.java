@@ -50,7 +50,7 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
         this.popoverView.addSubview(popoverContentView);
     }
 
-    public void reloadData(List<UIComboItem> items) {
+    public void reloadData(List<? extends UIComboItem> items) {
         this.items.clear();
         this.items.addAll(items);
         this.applyTableViewSize();

@@ -4,11 +4,11 @@ import com.apple.library.uikit.UIImage;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedSkinBuilderBlockEntity;
 import moe.plushie.armourers_workshop.init.ModTextures;
 
-public class AdvancedGeneralSkinPanel extends AdvancedSkinPanel {
+public class AdvancedGeneralPanel extends AdvancedPanel {
 
     private final AdvancedSkinBuilderBlockEntity blockEntity;
 
-    public AdvancedGeneralSkinPanel(AdvancedSkinBuilderBlockEntity blockEntity) {
+    public AdvancedGeneralPanel(AdvancedSkinBuilderBlockEntity blockEntity) {
         this.blockEntity = blockEntity;
         this.barItem.setImage(UIImage.of(ModTextures.TAB_ICONS).uv(16, 128).fixed(16, 16).build());
         this.setup();

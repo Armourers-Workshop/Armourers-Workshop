@@ -25,12 +25,12 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public abstract class AdvancedSkinPanel extends UIView {
+public abstract class AdvancedPanel extends UIView {
 
     protected ArrayList<Group> groups = new ArrayList<>();
     protected UIBarItem barItem = new UIBarItem();
 
-    public AdvancedSkinPanel() {
+    public AdvancedPanel() {
         super(CGRect.ZERO);
     }
 

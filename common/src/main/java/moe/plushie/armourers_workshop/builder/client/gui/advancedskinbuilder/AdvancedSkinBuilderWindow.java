@@ -5,29 +5,17 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSString;
-import com.apple.library.uikit.UIBarItem;
 import com.apple.library.uikit.UIColor;
-import com.apple.library.uikit.UIComboBox;
 import com.apple.library.uikit.UIEvent;
-import com.apple.library.uikit.UIImage;
-import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIScreen;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedSkinBuilderBlockEntity;
-import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.AdvancedBoneSkinPanel;
-import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.AdvancedCameraSkinPanel;
-import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.AdvancedGeneralSkinPanel;
-import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.AdvancedSkinPanel;
-import moe.plushie.armourers_workshop.builder.client.gui.widget.DrawerToolbar;
-import moe.plushie.armourers_workshop.builder.client.gui.widget.NewComboBox;
+import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.AdvancedCameraPanel;
+import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.AdvancedRightCardPanel;
 import moe.plushie.armourers_workshop.builder.client.gui.widget.Shortcut;
 import moe.plushie.armourers_workshop.builder.menu.AdvancedSkinBuilderMenu;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractMenuWindowProvider;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
-import moe.plushie.armourers_workshop.core.client.gui.widget.TreeNode;
-import moe.plushie.armourers_workshop.core.client.gui.widget.TreeView;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.init.ModTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Inventory;
@@ -37,12 +25,8 @@ import java.util.HashMap;
 @Environment(EnvType.CLIENT)
 public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMenu> {
 
-    private final AdvancedCameraSkinPanel cameraView;
-    private final AdvancedSkinBuilderBlockEntity blockEntity;
-
-    private final UIView rightCard = new UIView(CGRect.ZERO);
-    private final TreeView rightTree = new TreeView(new CGRect(0, 0, 200, 200));
-    private final DrawerToolbar rightToolbar = new DrawerToolbar(new CGRect(0, 0, 200, 480));
+    private final AdvancedCameraPanel cameraView;
+    private final AdvancedRightCardPanel rightCard;
 
     private final HashMap<Shortcut, Runnable> shortcuts = new HashMap<>();
 
@@ -51,11 +35,11 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
 
     public AdvancedSkinBuilderWindow(AdvancedSkinBuilderMenu container, Inventory inventory, NSString title) {
         super(container, inventory, title);
-        this.blockEntity = container.getBlockEntity(AdvancedSkinBuilderBlockEntity.class);
-        this.cameraView = new AdvancedCameraSkinPanel(blockEntity);
+        AdvancedSkinBuilderBlockEntity blockEntity = container.getBlockEntity(AdvancedSkinBuilderBlockEntity.class);
+        this.cameraView = new AdvancedCameraPanel(blockEntity);
+        this.rightCard = new AdvancedRightCardPanel(blockEntity, new CGRect(0, 0, 200, UIScreen.bounds().getHeight() * 2));
         this.inventoryView.setHidden(true);
         this.setup();
-        this.reloadData();
         this.cameraView.reset();
     }
 
@@ -74,89 +58,17 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
     }
 
     private void setupRightCard(CGRect rect) {
-        // /----------------------\
-        // | [v] general - outfit |
-        // |----------------------|
-        // | v []root             |
-        // | | > []child          |
-        // | | v []child          |
-        // | |     []child        |
-        // \----------------------/
-        // /----------------------\
-        // | [v] [ name ]         |
-        // |----------------------|
-        // | properties           |
-        // |  [x] mirror          |
-        // |  [x] enabled         |
-        // |                      |
-        // | transform            |
-        // |   location x [ - ]   |
-        // |            y [ - ]   |
-        // |            z [ - ]   |
-        // |   rotation x [ - ]   |
-        // |            y [ - ]   |
-        // |            z [ - ]   |
-        // |      scale x [ 1 ]   |
-        // |            y [ 1 ]   |
-        // |            z [ 1 ]   |
-        // \----------------------/
-        float w = 200f;
-        float h = rect.height * 2f;
-
-        float h1 = h * 0.35f;
-        float h2 = h * 0.65f;
-
-        rightCard.setFrame(new CGRect(0, 0, w, h));
         rightCard.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleHeight);
         rightCard.setBackgroundColor(new UIColor(0x1d1d1d));
-        addSubview(rightCard);
-
-        UIImage image = UIImage.of(ModTextures.ADVANCED_SKIN_BUILDER).uv(24, 24).fixed(24, 24).clip(4, 4, 4, 4).build();
-
-        UIView bg1 = new UIView(rightCard.bounds().insetBy(4, 4, h2, 4));
-        bg1.setContents(image);
-        bg1.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
-        rightCard.addSubview(bg1);
-
-
-        NewComboBox typeView = NewComboBox.CR.apply(new CGRect(0, 0, bg1.bounds().getWidth(), 20));
-//        typeView.setText(new NSString("General - Outfit"));
-//        typeView.setTextColor(UIColor.WHITE);
-        typeView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
-        bg1.insertViewAtIndex(typeView, 0);
-
-        rightTree.setFrame(bg1.bounds().insetBy(20, 0, 0, 0));
-        rightTree.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
-        bg1.insertViewAtIndex(rightTree, 0);
-
-        UIView bg2 = new UIView(rightCard.bounds().insetBy(h1 + 4, 4, 4, 4));
-        bg2.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
-        bg2.setContents(image);
-        rightCard.addSubview(bg2);
-
-        rightToolbar.setFrame(bg2.bounds().insetBy(0, 0, 0, 0));
-        rightToolbar.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
-        bg2.addSubview(rightToolbar);
-
-        addRightPanel(new AdvancedGeneralSkinPanel(blockEntity));
-        addRightPanel(new AdvancedBoneSkinPanel(blockEntity));
-
         rightCard.setTransform(CGAffineTransform.createScale(0.5f, 0.5f));
         rightCard.setFrame(new CGRect(rect.width - rightCardOffset, 0, rightCardOffset, rect.height));
+        rightCard.setSkinTypeWithIndex(0);
+        addSubview(rightCard);
     }
 
     private void setupShortcuts() {
         shortcuts.put(Shortcut.of("key.keyboard.control", "key.keyboard.1"), this::toggleLeftCard);
         shortcuts.put(Shortcut.of("key.keyboard.control", "key.keyboard.2"), this::toggleRightCard);
-    }
-
-    private void reloadData() {
-        TreeNode rootNode = rightTree.rootNode();
-        addToNode(rootNode, "Root", 10);
-        addToNode(rootNode.nodeAtIndex(0), "First", 10);
-        addToNode(rootNode.nodeAtIndex(1), "Second", 10);
-        addToNode(rootNode.nodeAtIndex(3), "Thriii", 10);
-        addToNode(rootNode.nodeAtIndex(0).nodeAtIndex(0), "Children", 10);
     }
 
     private void toggleLeftCard() {
@@ -170,20 +82,6 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
         CGPoint newValue = new CGPoint(oldValue.x + rightCardOffset, oldValue.y);
         UIView.animationWithDuration(0.35, () -> rightCard.setCenter(newValue));
         rightCardOffset = -rightCardOffset;
-    }
-
-
-    protected void addRightPanel(AdvancedSkinPanel panel) {
-        UIBarItem barItem = panel.barItem();
-        panel.setFrame(rightToolbar.bounds());
-        panel.sizeToFit();
-        rightToolbar.addPage(panel, barItem);
-    }
-
-    protected void addToNode(TreeNode node, String prefix, int count) {
-        for (int i = 0; i < count; ++i) {
-            node.add(new TreeNode(new NSString(prefix + " - " + i)));
-        }
     }
 
     @Override

@@ -38,6 +38,12 @@ public class TreeNode {
         setNeedsDisplay();
     }
 
+    public void clear() {
+        children.forEach(node -> node.link(null));
+        children.clear();
+        setNeedsDisplay();
+    }
+
     public TreeNode nodeAtIndex(int index) {
         return children.get(index);
     }

@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.builder.entity.CameraEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.math.ClamppedVector3f;
 import moe.plushie.armourers_workshop.utils.math.OpenAABB;
@@ -29,7 +28,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.function.Consumer;
 
-public class AdvancedCameraSkinPanel extends UIView {
+public class AdvancedCameraPanel extends UIView {
 
     private CGPoint startMousePos = CGPoint.ZERO;
 
@@ -51,7 +50,7 @@ public class AdvancedCameraSkinPanel extends UIView {
     boolean moveMode = false;
     boolean rotationMode = false;
 
-    public AdvancedCameraSkinPanel(AdvancedSkinBuilderBlockEntity blockEntity) {
+    public AdvancedCameraPanel(AdvancedSkinBuilderBlockEntity blockEntity) {
         super(CGRect.ZERO);
         this.options = Minecraft.getInstance().options;
         this.blockEntity = blockEntity;
