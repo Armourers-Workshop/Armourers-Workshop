@@ -21,6 +21,7 @@ import java.util.HashSet;
 
 import manifold.ext.rt.api.auto;
 
+@SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
 public class SkinOverriddenManager {
 
@@ -75,7 +76,6 @@ public class SkinOverriddenManager {
 
     private final HashMap<EquipmentSlot, ItemStack> disabledEquipmentItems = new HashMap<>();
 
-
     public void addEquipment(EquipmentSlot slotType) {
         disabledEquipmentSlots.add(slotType);
     }
@@ -93,12 +93,12 @@ public class SkinOverriddenManager {
             // when equipment required hide, we need synchronize it to slot.
             auto equipmentSlot = OVERRIDDEN_EQUIPMENT_TO_SLOT.get(property);
             if (equipmentSlot != null) {
-                disabledModelByProperties.add(property);
                 disabledEquipmentSlotsByProperties.add(equipmentSlot);
             }
             // when model part required hide, we need synchronize it to overlay.
             auto overlayProperties = OVERRIDDEN_MODEL_TO_OVERLAY.get(property);
-            if (overlayProperties != null && !overlayProperties.isEmpty()) {
+            if (overlayProperties != null) {
+                disabledModelByProperties.add(property);
                 disabledProperties.addAll(overlayProperties);
             }
         }
