@@ -34,7 +34,7 @@ import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
 import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -261,7 +261,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         String idString = leftZeroPadding(skinId, 5);
         String skinName = entry.getName();
         File path = new File(EnvironmentManager.getSkinLibraryDirectory(), "downloads");
-        File target = new File(path, SkinIOUtils.makeFileNameValid(idString + " - " + skinName + ".armour"));
+        File target = new File(path, SkinFileStreamUtils.makeFileNameValid(idString + " - " + skinName + ".armour"));
         SkinDescriptor skinDescriptor = entry.getDescriptor();
         buttonDownload.setEnabled(false);
         // yep, we directly download and save in the local.

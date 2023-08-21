@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class SkinLibraryLoader implements Runnable {
         if (cache != null && cache.isValid(modifiedTime)) {
             return cache.getHeader();
         }
-        ISkinFileHeader header = SkinIOUtils.readHeaderFromFile(file);
+        ISkinFileHeader header = SkinFileStreamUtils.readHeaderFromFile(file);
         if (header != null) {
             if (header instanceof SkinFileHeader) {
                 ((SkinFileHeader) header).setLastModified((int) modifiedTime);

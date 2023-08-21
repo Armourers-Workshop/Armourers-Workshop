@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.compatibility.mixin;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
 import net.minecraft.client.renderer.RenderStateShard;
@@ -15,8 +16,17 @@ public class RenderStateMixin implements IRenderAttachable {
     private Runnable aw$attachment;
 
     @Override
-    public void attachRenderTask(Runnable runnable) {
+    public void attachRenderTask(VertexConsumer buffer, Runnable runnable) {
+        Runnable oldAttachment = aw$attachment;
         aw$attachment = runnable;
+        if (oldAttachment != null) {
+            return;
+        }
+        // we still need to add a placeholder block to the vertex buffer,
+        // otherwise RenderType.clearRenderState maybe ignore of the empty vertexes.
+        for (int i = 0; i < 4; ++i) {
+            buffer.vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        }
     }
 
     @Inject(method = "clearRenderState", at = @At("RETURN"))

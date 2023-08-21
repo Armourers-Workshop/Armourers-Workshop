@@ -41,10 +41,10 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
     }
 
     private static void attach(MultiBufferSource buffers, RenderType renderType, Runnable action) {
-        VertexConsumer ignored = buffers.getBuffer(renderType);
-        IRenderAttachable builder = ObjectUtils.safeCast(renderType, IRenderAttachable.class);
-        if (builder != null) {
-            builder.attachRenderTask(action);
+        VertexConsumer buffer = buffers.getBuffer(renderType);
+        IRenderAttachable attachable = ObjectUtils.safeCast(renderType, IRenderAttachable.class);
+        if (attachable != null) {
+            attachable.attachRenderTask(buffer, action);
         }
     }
 

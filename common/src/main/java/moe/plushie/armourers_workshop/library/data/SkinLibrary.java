@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilePacket;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -86,7 +86,7 @@ public class SkinLibrary implements ISkinLibrary {
             return;
         }
         ModLog.debug("Save file '{}'", file);
-        SkinIOUtils.saveSkinToFile(file, skin);
+        SkinFileStreamUtils.saveSkinToFile(file, skin);
         reload();
     }
 

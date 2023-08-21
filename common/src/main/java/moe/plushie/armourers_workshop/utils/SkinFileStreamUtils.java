@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public final class SkinIOUtils {
+public final class SkinFileStreamUtils {
 
     public static boolean saveSkinToFile(File file, Skin skin) {
         ModLog.debug("save skin into '{}'", file);

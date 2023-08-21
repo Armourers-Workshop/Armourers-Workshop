@@ -147,6 +147,10 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
             if (skin == null) {
                 throw SkinLoadException.Type.NOT_FOUND.build("notFound");
             }
+            // because descriptor maybe is a wrong skin type.
+            if (skin.getType() != blockEntity.getSkinType()) {
+                throw SkinLoadException.Type.NOT_SUPPORTED.build("notSupported");
+            }
 
             blockEntity.setSkinProperties(skin.getProperties());
             blockEntity.setPaintData(skin.getPaintData());

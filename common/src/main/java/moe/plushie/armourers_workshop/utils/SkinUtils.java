@@ -218,9 +218,9 @@ public final class SkinUtils {
 
     public static Skin copySkin(Skin skin) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        SkinIOUtils.saveSkinToStream(outputStream, skin);
+        SkinFileStreamUtils.saveSkinToStream(outputStream, skin);
         byte[] skinData = outputStream.toByteArray();
-        Skin skinCopy = SkinIOUtils.loadSkinFromStream(new ByteArrayInputStream(skinData));
+        Skin skinCopy = SkinFileStreamUtils.loadSkinFromStream(new ByteArrayInputStream(skinData));
         return skinCopy;
     }
 

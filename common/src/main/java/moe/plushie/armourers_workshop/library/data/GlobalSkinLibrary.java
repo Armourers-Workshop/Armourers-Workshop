@@ -24,7 +24,7 @@ import moe.plushie.armourers_workshop.library.data.impl.ServerStatus;
 import moe.plushie.armourers_workshop.library.data.impl.ServerToken;
 import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
@@ -163,7 +163,7 @@ public class GlobalSkinLibrary extends ServerSession {
         parameters.put("description", desc);
         parameters.put("fileToUpload", new ServerRequest.MultipartFormFile(name, () -> {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            SkinIOUtils.saveSkinToStream(outputStream, skin);
+            SkinFileStreamUtils.saveSkinToStream(outputStream, skin);
             byte[] fileBytes = outputStream.toByteArray();
             StreamUtils.closeQuietly(outputStream);
             return Unpooled.wrappedBuffer(fileBytes);

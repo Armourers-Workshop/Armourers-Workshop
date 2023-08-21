@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.WorkQueue;
@@ -514,7 +514,7 @@ public class SkinLoader {
             try {
                 inputStream = from(request);
                 long startTime = System.currentTimeMillis();
-                Skin skin = SkinIOUtils.loadSkinFromStream2(inputStream);
+                Skin skin = SkinFileStreamUtils.loadSkinFromStream2(inputStream);
                 long totalTime = System.currentTimeMillis() - startTime;
                 loadDidFinish(request, skin, totalTime);
                 return skin;
@@ -696,7 +696,7 @@ public class SkinLoader {
                             SkinFileUtils.deleteQuietly(cachedFile);
                         }
                         outputStream = new FileOutputStream(cachedFile);
-                        SkinIOUtils.saveSkinToStream(outputStream, skin);
+                        SkinFileStreamUtils.saveSkinToStream(outputStream, skin);
                         outputStream.flush();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -726,7 +726,7 @@ public class SkinLoader {
                         Cipher aes = Cipher.getInstance("AES/ECB/PKCS5Padding");
                         aes.init(Cipher.ENCRYPT_MODE, key);
                         cipherOutputStream = new CipherOutputStream(fileOutputStream, aes);
-                        SkinIOUtils.saveSkinToStream(cipherOutputStream, skin);
+                        SkinFileStreamUtils.saveSkinToStream(cipherOutputStream, skin);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

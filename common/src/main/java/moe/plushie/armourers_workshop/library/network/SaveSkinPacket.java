@@ -17,7 +17,7 @@ import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.menu.SkinLibraryMenu;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -191,7 +191,7 @@ public class SaveSkinPacket extends CustomPacket {
         try {
             buffer.writeEnum(mode);
             GZIPOutputStream stream = new GZIPOutputStream(new ByteBufOutputStream(buffer));
-            SkinIOUtils.saveSkinToStream(stream, skin);
+            SkinFileStreamUtils.saveSkinToStream(stream, skin);
             stream.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -202,7 +202,7 @@ public class SaveSkinPacket extends CustomPacket {
         Skin skin = null;
         try {
             GZIPInputStream stream = new GZIPInputStream(new ByteBufInputStream(buffer));
-            skin = SkinIOUtils.loadSkinFromStream(stream);
+            skin = SkinFileStreamUtils.loadSkinFromStream(stream);
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();

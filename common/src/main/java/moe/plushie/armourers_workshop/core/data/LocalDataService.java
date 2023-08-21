@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import moe.plushie.armourers_workshop.utils.SkinUUID;
 import net.minecraft.nbt.CompoundTag;
 
@@ -123,7 +123,7 @@ public class LocalDataService {
         }
         byte[] bytes = SkinFileUtils.readFileToByteArray(skinFile);
         ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
-        Skin skin = SkinIOUtils.loadSkinFromStream2(stream);
+        Skin skin = SkinFileStreamUtils.loadSkinFromStream2(stream);
         if (skin == null) {
             return null;
         }
@@ -156,7 +156,7 @@ public class LocalDataService {
     public String addFile(Skin skin) {
         // save file first.
         ByteArrayOutputStream stream = new ByteArrayOutputStream(5 * 1024);
-        SkinIOUtils.saveSkinToStream(stream, skin);
+        SkinFileStreamUtils.saveSkinToStream(stream, skin);
         byte[] bytes = stream.toByteArray();
         // check whether the files are the same as those in the db.
         Node tmp = new Node(getFreeUUID(), skin.getType(), bytes, skin.getProperties());
