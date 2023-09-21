@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.core.holiday.Holiday;
 import moe.plushie.armourers_workshop.init.ModHolidays;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -84,10 +83,13 @@ public class GiftSackItem extends FlavouredItem implements IItemGroupProvider, I
 
     @Override
     public int getTintColor(ItemStack itemStack, int index) {
-        CompoundTag nbt = itemStack.getTag();
-        if (index == 1) {
-            return DataSerializers.getInt(nbt, Constants.Key.COLOR_2, 0x333333) | 0xff000000;
+        CompoundTag tag = itemStack.getTag();
+        if (tag == null) {
+            return 0;
         }
-        return DataSerializers.getInt(nbt, Constants.Key.COLOR_1, 0xffffff) | 0xff000000;
+        if (index == 1) {
+            return tag.getOptionalInt(Constants.Key.COLOR_2, 0x333333) | 0xff000000;
+        }
+        return tag.getOptionalInt(Constants.Key.COLOR_1, 0xffffff) | 0xff000000;
     }
 }

@@ -241,7 +241,7 @@ public class ColorUtils {
     }
 
     public static void setColor(ItemStack itemStack, IPaintColor color) {
-        DataSerializers.putPaintColor(itemStack.getOrCreateTag(), Constants.Key.COLOR, color, null);
+        itemStack.getOrCreateTag().putOptionalPaintColor(Constants.Key.COLOR, color, null);
     }
 
     @Nullable
@@ -266,7 +266,7 @@ public class ColorUtils {
                 tag = newTag;
             }
         }
-        DataSerializers.putPaintColor(tag, Constants.Key.COLOR, color, null);
+        tag.putOptionalPaintColor(Constants.Key.COLOR, color, null);
     }
 
     @Nullable
@@ -297,9 +297,9 @@ public class ColorUtils {
             return storage.blockPaintColor.orElse(null);
         }
         BlockPaintColor color = null;
-        CompoundTag nbt = itemStack.getTagElement(Constants.Key.BLOCK_ENTITY);
-        if (nbt != null) {
-            color = DataSerializers.getBlockPaintColor(nbt, Constants.Key.COLOR, null);
+        CompoundTag tag = itemStack.getTagElement(Constants.Key.BLOCK_ENTITY);
+        if (tag != null) {
+            color = tag.getOptionalBlockPaintColor(Constants.Key.COLOR, null);
         }
         storage.blockPaintColor = Optional.ofNullable(color);
         return color;
@@ -321,7 +321,7 @@ public class ColorUtils {
     }
 
     public static int mix(int a, int b, float q) {
-        return (int)(a * (1 - q) + b * q);
+        return (int) (a * (1 - q) + b * q);
     }
 
     // #[A]RGB or 0x[A]RGB

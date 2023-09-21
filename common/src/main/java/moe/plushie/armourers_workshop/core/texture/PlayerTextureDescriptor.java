@@ -47,7 +47,7 @@ public class PlayerTextureDescriptor {
         }
         if (nbt != null && nbt.contains(Constants.Key.TEXTURE_PROFILE, Constants.TagFlags.COMPOUND)) {
             this.source = Source.USER;
-            this.profile = DataSerializers.readGameProfile(nbt.getCompound(Constants.Key.TEXTURE_PROFILE));
+            this.profile = nbt.getOptionalGameProfile(Constants.Key.TEXTURE_PROFILE, null);
         }
         if (this.url == null && this.profile == null) {
             this.source = Source.NONE;
@@ -81,9 +81,7 @@ public class PlayerTextureDescriptor {
             nbt.putString(Constants.Key.TEXTURE_URL, url);
         }
         if (profile != null) {
-            CompoundTag nbt1 = new CompoundTag();
-            DataSerializers.writeGameProfile(nbt1, profile);
-            nbt.put(Constants.Key.TEXTURE_PROFILE, nbt1);
+            nbt.putOptionalGameProfile(Constants.Key.TEXTURE_PROFILE, profile, null);
         }
         return nbt;
     }

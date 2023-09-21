@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.skin;
 
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.Objects;
@@ -24,10 +23,9 @@ public class SkinOptions {
     }
 
     public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
-        DataSerializers.putInt(nbt, Constants.Key.OPTIONS_TOOLTIP_FLAGS, tooltipFlags, 0);
-        DataSerializers.putInt(nbt, Constants.Key.OPTIONS_EMBEDDED_ITEM_RENDERER, enableEmbeddedItemRenderer, 0);
-        return nbt;
+        CompoundTag tag = new CompoundTag();
+        tag.putOptionalInt(Constants.Key.OPTIONS_EMBEDDED_ITEM_RENDERER, enableEmbeddedItemRenderer, 0);
+        return tag;
     }
 
     @Override

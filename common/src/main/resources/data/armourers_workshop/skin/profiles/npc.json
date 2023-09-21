@@ -28,6 +28,12 @@
     "mca:male_villager",
     "mca:female_zombie_villager",
     "mca:male_zombie_villager",
-    "mca:grim_reaper"
+    "mca:grim_reaper",
+    "recruits:recruit",
+    "recruits:recruit_shieldman",
+    "recruits:bowman",
+    "recruits:crossbowman",
+    "recruits:nomad",
+    "recruits:horseman"
   ]
 }

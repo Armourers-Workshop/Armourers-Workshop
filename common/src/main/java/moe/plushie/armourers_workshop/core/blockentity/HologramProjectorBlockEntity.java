@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -65,30 +64,30 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     }
 
     @Override
-    public void readFromNBT(CompoundTag nbt) {
-        ContainerHelper.loadAllItems(nbt, items);
-        modelAngle = DataSerializers.getVector3f(nbt, Constants.Key.BLOCK_ENTITY_ANGLE);
-        modelOffset = DataSerializers.getVector3f(nbt, Constants.Key.BLOCK_ENTITY_OFFSET);
-        rotationSpeed = DataSerializers.getVector3f(nbt, Constants.Key.BLOCK_ENTITY_ROTATION_SPEED);
-        rotationOffset = DataSerializers.getVector3f(nbt, Constants.Key.BLOCK_ENTITY_ROTATION_OFFSET);
-        isGlowing = DataSerializers.getBoolean(nbt, Constants.Key.BLOCK_ENTITY_IS_GLOWING, true);
-        isPowered = DataSerializers.getBoolean(nbt, Constants.Key.BLOCK_ENTITY_IS_POWERED, false);
-        modelScale = DataSerializers.getFloat(nbt, Constants.Key.ENTITY_SCALE, 1.0f);
-        powerMode = DataSerializers.getInt(nbt, Constants.Key.BLOCK_ENTITY_POWER_MODE, 0);
+    public void readFromNBT(CompoundTag tag) {
+        ContainerHelper.loadAllItems(tag, items);
+        modelAngle = tag.getOptionalVector3f(Constants.Key.BLOCK_ENTITY_ANGLE, Vector3f.ZERO);
+        modelOffset = tag.getOptionalVector3f(Constants.Key.BLOCK_ENTITY_OFFSET, Vector3f.ZERO);
+        rotationSpeed = tag.getOptionalVector3f(Constants.Key.BLOCK_ENTITY_ROTATION_SPEED, Vector3f.ZERO);
+        rotationOffset = tag.getOptionalVector3f(Constants.Key.BLOCK_ENTITY_ROTATION_OFFSET, Vector3f.ZERO);
+        isGlowing = tag.getOptionalBoolean(Constants.Key.BLOCK_ENTITY_IS_GLOWING, true);
+        isPowered = tag.getOptionalBoolean(Constants.Key.BLOCK_ENTITY_IS_POWERED, false);
+        modelScale = tag.getOptionalFloat(Constants.Key.ENTITY_SCALE, 1.0f);
+        powerMode = tag.getOptionalInt(Constants.Key.BLOCK_ENTITY_POWER_MODE, 0);
         setRenderChanged();
     }
 
     @Override
-    public void writeToNBT(CompoundTag nbt) {
-        ContainerHelper.saveAllItems(nbt, items);
-        DataSerializers.putVector3f(nbt, Constants.Key.BLOCK_ENTITY_ANGLE, modelAngle);
-        DataSerializers.putVector3f(nbt, Constants.Key.BLOCK_ENTITY_OFFSET, modelOffset);
-        DataSerializers.putVector3f(nbt, Constants.Key.BLOCK_ENTITY_ROTATION_SPEED, rotationSpeed);
-        DataSerializers.putVector3f(nbt, Constants.Key.BLOCK_ENTITY_ROTATION_OFFSET, rotationOffset);
-        DataSerializers.putBoolean(nbt, Constants.Key.BLOCK_ENTITY_IS_GLOWING, isGlowing, true);
-        DataSerializers.putBoolean(nbt, Constants.Key.BLOCK_ENTITY_IS_POWERED, isPowered, false);
-        DataSerializers.putFloat(nbt, Constants.Key.ENTITY_SCALE, modelScale, 1.0f);
-        DataSerializers.putInt(nbt, Constants.Key.BLOCK_ENTITY_POWER_MODE, powerMode, 0);
+    public void writeToNBT(CompoundTag tag) {
+        ContainerHelper.saveAllItems(tag, items);
+        tag.putOptionalVector3f(Constants.Key.BLOCK_ENTITY_ANGLE, modelAngle, Vector3f.ZERO);
+        tag.putOptionalVector3f(Constants.Key.BLOCK_ENTITY_OFFSET, modelOffset, Vector3f.ZERO);
+        tag.putOptionalVector3f(Constants.Key.BLOCK_ENTITY_ROTATION_SPEED, rotationSpeed, Vector3f.ZERO);
+        tag.putOptionalVector3f(Constants.Key.BLOCK_ENTITY_ROTATION_OFFSET, rotationOffset, Vector3f.ZERO);
+        tag.putOptionalBoolean(Constants.Key.BLOCK_ENTITY_IS_GLOWING, isGlowing, true);
+        tag.putOptionalBoolean(Constants.Key.BLOCK_ENTITY_IS_POWERED, isPowered, false);
+        tag.putOptionalFloat(Constants.Key.ENTITY_SCALE, modelScale, 1.0f);
+        tag.putOptionalInt(Constants.Key.BLOCK_ENTITY_POWER_MODE, powerMode, 0);
     }
 
     public void updatePowerStats() {

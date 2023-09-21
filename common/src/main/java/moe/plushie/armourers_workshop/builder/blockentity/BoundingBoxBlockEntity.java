@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TextureUtils;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
@@ -46,18 +45,18 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
         super(blockEntityType, blockPos, blockState);
     }
 
-    public void readFromNBT(CompoundTag nbt) {
-        parent = DataSerializers.getBlockPos(nbt, Constants.Key.BLOCK_ENTITY_REFER, INVALID);
-        guide = DataSerializers.getVector3i(nbt, Constants.Key.BLOCK_ENTITY_OFFSET);
-        partType = SkinPartTypes.byName(DataSerializers.getString(nbt, Constants.Key.SKIN_PART_TYPE, SkinTypes.UNKNOWN.getRegistryName().toString()));
+    public void readFromNBT(CompoundTag tag) {
+        parent = tag.getOptionalBlockPos(Constants.Key.BLOCK_ENTITY_REFER, INVALID);
+        guide = tag.getOptionalVector3i(Constants.Key.BLOCK_ENTITY_OFFSET, Vector3i.ZERO);
+        partType = SkinPartTypes.byName(tag.getOptionalString(Constants.Key.SKIN_PART_TYPE, SkinTypes.UNKNOWN.getRegistryName().toString()));
         customRenderer = Arrays.stream(Direction.values()).anyMatch(this::shouldChangeColor);
         cachedParentBlockEntity = null;
     }
 
-    public void writeToNBT(CompoundTag nbt) {
-        DataSerializers.putBlockPos(nbt, Constants.Key.BLOCK_ENTITY_REFER, parent, INVALID);
-        DataSerializers.putVector3i(nbt, Constants.Key.BLOCK_ENTITY_OFFSET, guide);
-        DataSerializers.putString(nbt, Constants.Key.SKIN_PART_TYPE, partType.getRegistryName().toString(), SkinTypes.UNKNOWN.getRegistryName().toString());
+    public void writeToNBT(CompoundTag tag) {
+        tag.putOptionalBlockPos(Constants.Key.BLOCK_ENTITY_REFER, parent, INVALID);
+        tag.putOptionalVector3i(Constants.Key.BLOCK_ENTITY_OFFSET, guide, Vector3i.ZERO);
+        tag.putOptionalString(Constants.Key.SKIN_PART_TYPE, partType.getRegistryName().toString(), SkinTypes.UNKNOWN.getRegistryName().toString());
     }
 
     public ISkinPartType getPartType() {

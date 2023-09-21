@@ -57,7 +57,7 @@ public class ServerSkin {
                 this.description = desc;
                 handler.accept(this);
             } else {
-                handler.reject(exception);
+                handler.throwing(exception);
             }
         });
     }

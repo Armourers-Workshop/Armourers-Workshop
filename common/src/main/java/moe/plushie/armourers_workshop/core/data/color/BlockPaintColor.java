@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.data.color;
 
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 
@@ -27,11 +26,11 @@ public class BlockPaintColor implements IBlockPaintColor {
         this.paintColor = paintColor;
     }
 
-    public void deserializeNBT(CompoundTag nbt) {
-        this.paintColor = DataSerializers.getPaintColor(nbt, "All", null);
+    public void deserializeNBT(CompoundTag tag) {
+        this.paintColor = tag.getOptionalPaintColor(Side.fullyName(), null);
         this.paintColors = null;
         for (Side side : Side.values()) {
-            IPaintColor paintColor = DataSerializers.getPaintColor(nbt, side.name, null);
+            IPaintColor paintColor = tag.getOptionalPaintColor(side.name, null);
             if (paintColor != null) {
                 if (this.paintColors == null) {
                     this.paintColors = new EnumMap<>(Side.class);
@@ -43,14 +42,14 @@ public class BlockPaintColor implements IBlockPaintColor {
     }
 
     public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
+        CompoundTag tag = new CompoundTag();
         if (paintColor != null) {
-            DataSerializers.putPaintColor(nbt, "All", paintColor, null);
+            tag.putOptionalPaintColor(Side.fullyName(), paintColor, null);
         }
         if (paintColors != null) {
-            paintColors.forEach((side, paintColor) -> DataSerializers.putPaintColor(nbt, side.name, paintColor, null));
+            paintColors.forEach((side, paintColor) -> tag.putOptionalPaintColor(side.name, paintColor, null));
         }
-        return nbt;
+        return tag;
     }
 
     public void putAll(IPaintColor paintColor) {
@@ -177,6 +176,10 @@ public class BlockPaintColor implements IBlockPaintColor {
 
         public static Side of(Direction direction) {
             return values()[direction.ordinal()];
+        }
+
+        public static String fullyName() {
+            return "All";
         }
 
         public String getName() {

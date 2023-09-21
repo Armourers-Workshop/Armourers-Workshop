@@ -33,7 +33,7 @@ public abstract class ServerSession {
                 T value = request(path, parameters, deserializer);
                 handlerOut.accept(value);
             } catch (Exception exception1) {
-                handlerOut.reject(exception1);
+                handlerOut.throwing(exception1);
             }
         });
     }

@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -145,10 +144,10 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
             this.shape = shape;
         }
 
-        public CompoundTag writeToNBT(CompoundTag nbt) {
-            DataSerializers.putBlockPos(nbt, Constants.Key.BLOCK_ENTITY_REFER, offset, null);
-            DataSerializers.putRectangle3i(nbt, Constants.Key.BLOCK_ENTITY_SHAPE, shape, null);
-            return nbt;
+        public CompoundTag writeToNBT(CompoundTag tag) {
+            tag.putOptionalBlockPos(Constants.Key.BLOCK_ENTITY_REFER, offset, null);
+            tag.putOptionalRectangle3i(Constants.Key.BLOCK_ENTITY_SHAPE, shape, null);
+            return tag;
         }
 
         public void transform(Vector3f r) {
@@ -198,13 +197,13 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         }
 
         @Override
-        public CompoundTag writeToNBT(CompoundTag nbt) {
-            nbt = super.writeToNBT(nbt);
-            DataSerializers.putBlockPosList(nbt, Constants.Key.BLOCK_ENTITY_REFERS, blockPosList);
-            DataSerializers.putMarkerList(nbt, Constants.Key.BLOCK_ENTITY_MARKERS, markerList);
-            DataSerializers.putSkinDescriptor(nbt, Constants.Key.BLOCK_ENTITY_SKIN, descriptor, SkinDescriptor.EMPTY);
-            DataSerializers.putSkinProperties(nbt, Constants.Key.BLOCK_ENTITY_SKIN_PROPERTIES, properties);
-            return nbt;
+        public CompoundTag writeToNBT(CompoundTag tag) {
+            tag = super.writeToNBT(tag);
+            tag.putOptionalBlockPosArray(Constants.Key.BLOCK_ENTITY_REFERS, blockPosList);
+            tag.putOptionalSkinMarkerArray(Constants.Key.BLOCK_ENTITY_MARKERS, markerList);
+            tag.putOptionalSkinDescriptor(Constants.Key.BLOCK_ENTITY_SKIN, descriptor);
+            tag.putOptionalSkinProperties(Constants.Key.BLOCK_ENTITY_SKIN_PROPERTIES, properties);
+            return tag;
         }
 
         @Override

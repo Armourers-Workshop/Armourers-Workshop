@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
@@ -91,41 +90,41 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     @Override
-    public void readFromNBT(CompoundTag nbt) {
-        refer = DataSerializers.getBlockPos(nbt, Constants.Key.BLOCK_ENTITY_REFER, INVALID);
-        shape = DataSerializers.getRectangle3i(nbt, Constants.Key.BLOCK_ENTITY_SHAPE, Rectangle3i.ZERO);
+    public void readFromNBT(CompoundTag tag) {
+        refer = tag.getOptionalBlockPos(Constants.Key.BLOCK_ENTITY_REFER, INVALID);
+        shape = tag.getOptionalRectangle3i(Constants.Key.BLOCK_ENTITY_SHAPE, Rectangle3i.ZERO);
         renderVoxelShape = null;
         isParent = BlockPos.ZERO.equals(refer);
         if (!isParent()) {
             return;
         }
         SkinProperties oldProperties = properties;
-        refers = DataSerializers.getBlockPosList(nbt, Constants.Key.BLOCK_ENTITY_REFERS);
-        markers = DataSerializers.getMarkerList(nbt, Constants.Key.BLOCK_ENTITY_MARKERS);
-        descriptor = DataSerializers.getSkinDescriptor(nbt, Constants.Key.BLOCK_ENTITY_SKIN, SkinDescriptor.EMPTY);
-        properties = DataSerializers.getSkinProperties(nbt, Constants.Key.BLOCK_ENTITY_SKIN_PROPERTIES);
-        linkedBlockPos = DataSerializers.getBlockPos(nbt, Constants.Key.BLOCK_ENTITY_LINKED_POS, null);
+        refers = tag.getOptionalBlockPosArray(Constants.Key.BLOCK_ENTITY_REFERS);
+        markers = tag.getOptionalSkinMarkerArray(Constants.Key.BLOCK_ENTITY_MARKERS);
+        descriptor = tag.getOptionalSkinDescriptor(Constants.Key.BLOCK_ENTITY_SKIN);
+        properties = tag.getOptionalSkinProperties(Constants.Key.BLOCK_ENTITY_SKIN_PROPERTIES);
+        linkedBlockPos = tag.getOptionalBlockPos(Constants.Key.BLOCK_ENTITY_LINKED_POS, null);
         if (oldProperties != null) {
             oldProperties.copyFrom(properties);
             properties = oldProperties;
         }
-        ContainerHelper.loadAllItems(nbt, getOrCreateItems());
+        ContainerHelper.loadAllItems(tag, getOrCreateItems());
     }
 
     @Override
-    public void writeToNBT(CompoundTag nbt) {
-        DataSerializers.putBlockPos(nbt, Constants.Key.BLOCK_ENTITY_REFER, refer, INVALID);
-        DataSerializers.putRectangle3i(nbt, Constants.Key.BLOCK_ENTITY_SHAPE, shape, Rectangle3i.ZERO);
+    public void writeToNBT(CompoundTag tag) {
+        tag.putOptionalBlockPos(Constants.Key.BLOCK_ENTITY_REFER, refer, INVALID);
+        tag.putOptionalRectangle3i(Constants.Key.BLOCK_ENTITY_SHAPE, shape, Rectangle3i.ZERO);
         if (!isParent()) {
             return;
         }
-        DataSerializers.putBlockPosList(nbt, Constants.Key.BLOCK_ENTITY_REFERS, refers);
-        DataSerializers.putMarkerList(nbt, Constants.Key.BLOCK_ENTITY_MARKERS, markers);
-        DataSerializers.putSkinDescriptor(nbt, Constants.Key.BLOCK_ENTITY_SKIN, descriptor, SkinDescriptor.EMPTY);
-        DataSerializers.putSkinProperties(nbt, Constants.Key.BLOCK_ENTITY_SKIN_PROPERTIES, properties);
-        DataSerializers.putBlockPos(nbt, Constants.Key.BLOCK_ENTITY_LINKED_POS, linkedBlockPos, null);
+        tag.putOptionalBlockPosArray(Constants.Key.BLOCK_ENTITY_REFERS, refers);
+        tag.putOptionalSkinMarkerArray(Constants.Key.BLOCK_ENTITY_MARKERS, markers);
+        tag.putOptionalSkinDescriptor(Constants.Key.BLOCK_ENTITY_SKIN, descriptor);
+        tag.putOptionalSkinProperties(Constants.Key.BLOCK_ENTITY_SKIN_PROPERTIES, properties);
+        tag.putOptionalBlockPos(Constants.Key.BLOCK_ENTITY_LINKED_POS, linkedBlockPos, null);
 
-        ContainerHelper.saveAllItems(nbt, getOrCreateItems());
+        ContainerHelper.saveAllItems(tag, getOrCreateItems());
     }
 
     public void updateBlockStates() {

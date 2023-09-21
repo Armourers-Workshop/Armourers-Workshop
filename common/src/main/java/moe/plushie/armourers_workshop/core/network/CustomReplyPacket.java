@@ -120,7 +120,7 @@ public class CustomReplyPacket<R> extends CustomPacket {
             TIMER.scheduleAtFixedRate(() -> {
                 Request<?> request = REQUESTS.remove(id);
                 if (request != null && request.handler != null) {
-                    request.handler.reject(new RuntimeException("Request timeout"));
+                    request.handler.throwing(new RuntimeException("Request timeout"));
                 }
             }, timeout, timeout, TimeUnit.SECONDS);
         }

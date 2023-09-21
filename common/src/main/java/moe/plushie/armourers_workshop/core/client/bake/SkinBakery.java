@@ -146,7 +146,7 @@ public final class SkinBakery implements ISkinLibraryListener {
             bakeSkin(identifier, skin, complete);
         } catch (Exception exception) {
             exception.printStackTrace();
-            complete.reject(exception);
+            complete.throwing(exception);
         }
     }
 

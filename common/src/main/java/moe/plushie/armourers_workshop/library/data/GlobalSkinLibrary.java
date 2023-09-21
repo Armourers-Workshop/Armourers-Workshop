@@ -111,7 +111,7 @@ public class GlobalSkinLibrary extends ServerSession {
                 request("/user/join", parameters, o -> o);
                 handlerOut.accept(null);
             } catch (Exception exception1) {
-                handlerOut.reject(exception1);
+                handlerOut.throwing(exception1);
             }
         });
     }
@@ -149,10 +149,10 @@ public class GlobalSkinLibrary extends ServerSession {
                 if (!result.getSkins().isEmpty()) {
                     handler.accept(result.getSkins().get(0));
                 } else {
-                    handler.reject(new RuntimeException("can't found the skin " + skinId));
+                    handler.throwing(new RuntimeException("can't found the skin " + skinId));
                 }
             } else {
-                handler.reject(exception);
+                handler.throwing(exception);
             }
         });
     }
@@ -192,7 +192,7 @@ public class GlobalSkinLibrary extends ServerSession {
                 SkinFileUtils.copyInputStreamToFile(inputStream, target);
                 handlerOut.accept(target);
             } catch (Exception exception) {
-                handlerOut.reject(exception);
+                handlerOut.throwing(exception);
             }
         });
     }

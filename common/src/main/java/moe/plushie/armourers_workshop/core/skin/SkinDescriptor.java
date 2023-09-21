@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.core.data.ItemStackStorage;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
@@ -46,11 +45,11 @@ public class SkinDescriptor implements ISkinDescriptor {
         this(descriptor.getIdentifier(), descriptor.getType(), descriptor.getOptions(), colorScheme);
     }
 
-    public SkinDescriptor(CompoundTag nbt) {
-        this.identifier = nbt.getString(Constants.Key.SKIN_IDENTIFIER);
-        this.type = SkinTypes.byName(nbt.getString(Constants.Key.SKIN_TYPE));
-        this.options = DataSerializers.getSkinOptions(nbt, Constants.Key.SKIN_OPTIONS, SkinOptions.DEFAULT);
-        this.colorScheme = DataSerializers.getColorScheme(nbt, Constants.Key.SKIN_DYE, ColorScheme.EMPTY);
+    public SkinDescriptor(CompoundTag tag) {
+        this.identifier = tag.getString(Constants.Key.SKIN_IDENTIFIER);
+        this.type = SkinTypes.byName(tag.getString(Constants.Key.SKIN_TYPE));
+        this.options = tag.getOptionalSkinOptions(Constants.Key.SKIN_OPTIONS, SkinOptions.DEFAULT);
+        this.colorScheme = tag.getOptionalColorScheme(Constants.Key.SKIN_DYE, ColorScheme.EMPTY);
     }
 
     public static SkinDescriptor of(ItemStack itemStack) {
@@ -62,12 +61,12 @@ public class SkinDescriptor implements ISkinDescriptor {
         if (descriptor != null) {
             return descriptor;
         }
-        CompoundTag nbt = itemStack.getTag();
-        if (nbt == null || !nbt.contains(Constants.Key.SKIN)) {
+        CompoundTag tag = itemStack.getTag();
+        if (tag == null || !tag.contains(Constants.Key.SKIN)) {
             storage.skinDescriptor = EMPTY;
             return EMPTY;
         }
-        descriptor = DataSerializers.getSkinDescriptor(nbt, Constants.Key.SKIN, EMPTY);
+        descriptor = tag.getOptionalSkinDescriptor(Constants.Key.SKIN);
         storage.skinDescriptor = descriptor;
         return descriptor;
     }
@@ -101,8 +100,8 @@ public class SkinDescriptor implements ISkinDescriptor {
         CompoundTag nbt = new CompoundTag();
         nbt.putString(Constants.Key.SKIN_TYPE, type.getRegistryName().toString());
         nbt.putString(Constants.Key.SKIN_IDENTIFIER, identifier);
-        DataSerializers.putSkinOptions(nbt, Constants.Key.SKIN_OPTIONS, options, SkinOptions.DEFAULT);
-        DataSerializers.putColorScheme(nbt, Constants.Key.SKIN_DYE, colorScheme, ColorScheme.EMPTY);
+        nbt.putOptionalSkinOptions(Constants.Key.SKIN_OPTIONS, options, SkinOptions.DEFAULT);
+        nbt.putOptionalColorScheme(Constants.Key.SKIN_DYE, colorScheme, ColorScheme.EMPTY);
         return nbt;
     }
 

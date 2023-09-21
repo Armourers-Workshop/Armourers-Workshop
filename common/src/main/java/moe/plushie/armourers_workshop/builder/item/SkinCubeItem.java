@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -74,7 +73,7 @@ public class SkinCubeItem extends BlockItem implements IItemColorProvider, IPain
     public void setItemColor(ItemStack itemStack, IPaintColor paintColor) {
         CompoundTag nbt = itemStack.getOrCreateTagElement(Constants.Key.BLOCK_ENTITY);
         BlockPaintColor color = new BlockPaintColor(paintColor);
-        DataSerializers.putBlockPaintColor(nbt, Constants.Key.COLOR, color, null);
+        nbt.putOptionalBlockPaintColor(Constants.Key.COLOR, color, null);
         itemStack.addTagElement(Constants.Key.FLAGS, IntTag.valueOf(1));
     }
 

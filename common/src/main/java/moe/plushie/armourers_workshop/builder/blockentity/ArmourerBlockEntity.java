@@ -30,7 +30,6 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
@@ -89,23 +88,23 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
     }
 
     @Override
-    public void readFromNBT(CompoundTag nbt) {
-        this.skinType = SkinTypes.byName(DataSerializers.getString(nbt, Constants.Key.SKIN_TYPE, SkinTypes.ARMOR_HEAD.getRegistryName().toString()));
-        this.skinProperties = DataSerializers.getSkinProperties(nbt, Constants.Key.SKIN_PROPERTIES);
-        this.textureDescriptor = DataSerializers.getTextureDescriptor(nbt, Constants.Key.ENTITY_TEXTURE, PlayerTextureDescriptor.EMPTY);
-        this.flags = DataSerializers.getInt(nbt, Constants.Key.FLAGS, 0);
-        this.version = DataSerializers.getInt(nbt, Constants.Key.DATA_VERSION, 0);
-        this.paintData = DataSerializers.getPaintData(nbt, Constants.Key.PAINT_DATA);
+    public void readFromNBT(CompoundTag tag) {
+        this.skinType = SkinTypes.byName(tag.getOptionalString(Constants.Key.SKIN_TYPE, SkinTypes.ARMOR_HEAD.getRegistryName().toString()));
+        this.skinProperties = tag.getOptionalSkinProperties(Constants.Key.SKIN_PROPERTIES);
+        this.textureDescriptor = tag.getOptionalTextureDescriptor(Constants.Key.ENTITY_TEXTURE, PlayerTextureDescriptor.EMPTY);
+        this.flags = tag.getOptionalInt(Constants.Key.FLAGS, 0);
+        this.version = tag.getOptionalInt(Constants.Key.DATA_VERSION, 0);
+        this.paintData = tag.getOptionalPaintData(Constants.Key.PAINT_DATA);
     }
 
     @Override
-    public void writeToNBT(CompoundTag nbt) {
-        DataSerializers.putString(nbt, Constants.Key.SKIN_TYPE, skinType.getRegistryName().toString(), null);
-        DataSerializers.putSkinProperties(nbt, Constants.Key.SKIN_PROPERTIES, skinProperties);
-        DataSerializers.putTextureDescriptor(nbt, Constants.Key.ENTITY_TEXTURE, textureDescriptor, PlayerTextureDescriptor.EMPTY);
-        DataSerializers.putInt(nbt, Constants.Key.FLAGS, flags, 0);
-        DataSerializers.putInt(nbt, Constants.Key.DATA_VERSION, version, 0);
-        DataSerializers.putPaintData(nbt, Constants.Key.PAINT_DATA, paintData);
+    public void writeToNBT(CompoundTag tag) {
+        tag.putOptionalString(Constants.Key.SKIN_TYPE, skinType.getRegistryName().toString(), null);
+        tag.putOptionalSkinProperties(Constants.Key.SKIN_PROPERTIES, skinProperties);
+        tag.putOptionalTextureDescriptor(Constants.Key.ENTITY_TEXTURE, textureDescriptor, PlayerTextureDescriptor.EMPTY);
+        tag.putOptionalInt(Constants.Key.FLAGS, flags, 0);
+        tag.putOptionalInt(Constants.Key.DATA_VERSION, version, 0);
+        tag.putOptionalPaintData(Constants.Key.PAINT_DATA, paintData);
     }
 
     public void onPlace(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity) {

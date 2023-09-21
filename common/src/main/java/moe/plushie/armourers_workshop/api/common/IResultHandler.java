@@ -8,7 +8,7 @@ public interface IResultHandler<T> {
         apply(value, null);
     }
 
-    default void reject(Exception exception) {
+    default void throwing(Exception exception) {
         apply(null, exception);
     }
 }

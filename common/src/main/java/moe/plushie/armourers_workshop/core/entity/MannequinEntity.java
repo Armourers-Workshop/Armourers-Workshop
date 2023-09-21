@@ -84,41 +84,41 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
-        super.readAdditionalSaveData(nbt);
-        this.readExtendedData(nbt);
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        this.readExtendedData(tag);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
-        super.addAdditionalSaveData(nbt);
-        this.addExtendedData(nbt);
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        this.addExtendedData(tag);
     }
 
-    public void readExtendedData(CompoundTag nbt) {
-        entityData.set(DATA_IS_CHILD, DataSerializers.getBoolean(nbt, Constants.Key.ENTITY_IS_SMALL, false));
-        entityData.set(DATA_IS_FLYING, DataSerializers.getBoolean(nbt, Constants.Key.ENTITY_IS_FLYING, false));
-        entityData.set(DATA_IS_GHOST, DataSerializers.getBoolean(nbt, Constants.Key.ENTITY_IS_GHOST, false));
-        entityData.set(DATA_IS_VISIBLE, DataSerializers.getBoolean(nbt, Constants.Key.ENTITY_IS_VISIBLE, true));
-        entityData.set(DATA_EXTRA_RENDERER, DataSerializers.getBoolean(nbt, Constants.Key.ENTITY_EXTRA_RENDER, true));
+    public void readExtendedData(CompoundTag tag) {
+        entityData.set(DATA_IS_CHILD, tag.getOptionalBoolean(Constants.Key.ENTITY_IS_SMALL, false));
+        entityData.set(DATA_IS_FLYING, tag.getOptionalBoolean(Constants.Key.ENTITY_IS_FLYING, false));
+        entityData.set(DATA_IS_GHOST, tag.getOptionalBoolean(Constants.Key.ENTITY_IS_GHOST, false));
+        entityData.set(DATA_IS_VISIBLE, tag.getOptionalBoolean(Constants.Key.ENTITY_IS_VISIBLE, true));
+        entityData.set(DATA_EXTRA_RENDERER, tag.getOptionalBoolean(Constants.Key.ENTITY_EXTRA_RENDER, true));
 
-        entityData.set(DATA_SCALE, DataSerializers.getFloat(nbt, Constants.Key.ENTITY_SCALE, 1.0f));
-        entityData.set(DATA_TEXTURE, DataSerializers.getTextureDescriptor(nbt, Constants.Key.ENTITY_TEXTURE, PlayerTextureDescriptor.EMPTY));
+        entityData.set(DATA_SCALE, tag.getOptionalFloat(Constants.Key.ENTITY_SCALE, 1.0f));
+        entityData.set(DATA_TEXTURE, tag.getOptionalTextureDescriptor(Constants.Key.ENTITY_TEXTURE, PlayerTextureDescriptor.EMPTY));
 
-        readCustomPose(nbt.getCompound(Constants.Key.ENTITY_POSE));
+        readCustomPose(tag.getCompound(Constants.Key.ENTITY_POSE));
     }
 
-    public void addExtendedData(CompoundTag nbt) {
-        DataSerializers.putBoolean(nbt, Constants.Key.ENTITY_IS_SMALL, entityData.get(DATA_IS_CHILD), false);
-        DataSerializers.putBoolean(nbt, Constants.Key.ENTITY_IS_FLYING, entityData.get(DATA_IS_FLYING), false);
-        DataSerializers.putBoolean(nbt, Constants.Key.ENTITY_IS_GHOST, entityData.get(DATA_IS_GHOST), false);
-        DataSerializers.putBoolean(nbt, Constants.Key.ENTITY_IS_VISIBLE, entityData.get(DATA_IS_VISIBLE), true);
-        DataSerializers.putBoolean(nbt, Constants.Key.ENTITY_EXTRA_RENDER, entityData.get(DATA_EXTRA_RENDERER), true);
+    public void addExtendedData(CompoundTag tag) {
+        tag.putOptionalBoolean(Constants.Key.ENTITY_IS_SMALL, entityData.get(DATA_IS_CHILD), false);
+        tag.putOptionalBoolean(Constants.Key.ENTITY_IS_FLYING, entityData.get(DATA_IS_FLYING), false);
+        tag.putOptionalBoolean(Constants.Key.ENTITY_IS_GHOST, entityData.get(DATA_IS_GHOST), false);
+        tag.putOptionalBoolean(Constants.Key.ENTITY_IS_VISIBLE, entityData.get(DATA_IS_VISIBLE), true);
+        tag.putOptionalBoolean(Constants.Key.ENTITY_EXTRA_RENDER, entityData.get(DATA_EXTRA_RENDERER), true);
 
-        DataSerializers.putFloat(nbt, Constants.Key.ENTITY_SCALE, getScale(), 1.0f);
-        DataSerializers.putTextureDescriptor(nbt, Constants.Key.ENTITY_TEXTURE, getTextureDescriptor(), PlayerTextureDescriptor.EMPTY);
+        tag.putOptionalFloat(Constants.Key.ENTITY_SCALE, getScale(), 1.0f);
+        tag.putOptionalTextureDescriptor(Constants.Key.ENTITY_TEXTURE, getTextureDescriptor(), PlayerTextureDescriptor.EMPTY);
 
-        nbt.put(Constants.Key.ENTITY_POSE, saveCustomPose());
+        tag.put(Constants.Key.ENTITY_POSE, saveCustomPose());
     }
 
     @Override
@@ -284,8 +284,8 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
     protected ItemStack createMannequinStack() {
         ItemStack itemStack = new ItemStack(ModItems.MANNEQUIN.get());
         CompoundTag entityTag = itemStack.getOrCreateTagElement(Constants.Key.ENTITY);
-        DataSerializers.putFloat(entityTag, Constants.Key.ENTITY_SCALE, getScale(), 1.0f);
-        DataSerializers.putTextureDescriptor(entityTag, Constants.Key.ENTITY_TEXTURE, getTextureDescriptor(), PlayerTextureDescriptor.EMPTY);
+        entityTag.putOptionalFloat(Constants.Key.ENTITY_SCALE, getScale(), 1.0f);
+        entityTag.putOptionalTextureDescriptor(Constants.Key.ENTITY_TEXTURE, getTextureDescriptor(), PlayerTextureDescriptor.EMPTY);
         return itemStack;
     }
 
@@ -327,23 +327,23 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
     }
 
     public CompoundTag saveCustomPose() {
-        CompoundTag nbt = new CompoundTag();
-        DataSerializers.putRotations(nbt, Constants.Key.ENTITY_POSE_HEAD, entityData.get(DATA_HEAD_POSE), DEFAULT_HEAD_POSE);
-        DataSerializers.putRotations(nbt, Constants.Key.ENTITY_POSE_BODY, entityData.get(DATA_BODY_POSE), DEFAULT_BODY_POSE);
-        DataSerializers.putRotations(nbt, Constants.Key.ENTITY_POSE_LEFT_ARM, entityData.get(DATA_LEFT_ARM_POSE), DEFAULT_LEFT_ARM_POSE);
-        DataSerializers.putRotations(nbt, Constants.Key.ENTITY_POSE_RIGHT_ARM, entityData.get(DATA_RIGHT_ARM_POSE), DEFAULT_RIGHT_ARM_POSE);
-        DataSerializers.putRotations(nbt, Constants.Key.ENTITY_POSE_LEFT_LEG, entityData.get(DATA_LEFT_LEG_POSE), DEFAULT_LEFT_LEG_POSE);
-        DataSerializers.putRotations(nbt, Constants.Key.ENTITY_POSE_RIGHT_LEG, entityData.get(DATA_RIGHT_LEG_POSE), DEFAULT_RIGHT_LEG_POSE);
-        return nbt;
+        CompoundTag tag = new CompoundTag();
+        tag.putOptionalRotations(Constants.Key.ENTITY_POSE_HEAD, entityData.get(DATA_HEAD_POSE), DEFAULT_HEAD_POSE);
+        tag.putOptionalRotations(Constants.Key.ENTITY_POSE_BODY, entityData.get(DATA_BODY_POSE), DEFAULT_BODY_POSE);
+        tag.putOptionalRotations(Constants.Key.ENTITY_POSE_LEFT_ARM, entityData.get(DATA_LEFT_ARM_POSE), DEFAULT_LEFT_ARM_POSE);
+        tag.putOptionalRotations(Constants.Key.ENTITY_POSE_RIGHT_ARM, entityData.get(DATA_RIGHT_ARM_POSE), DEFAULT_RIGHT_ARM_POSE);
+        tag.putOptionalRotations(Constants.Key.ENTITY_POSE_LEFT_LEG, entityData.get(DATA_LEFT_LEG_POSE), DEFAULT_LEFT_LEG_POSE);
+        tag.putOptionalRotations(Constants.Key.ENTITY_POSE_RIGHT_LEG, entityData.get(DATA_RIGHT_LEG_POSE), DEFAULT_RIGHT_LEG_POSE);
+        return tag;
     }
 
-    public void readCustomPose(CompoundTag nbt) {
-        this.setHeadPose(DataSerializers.getRotations(nbt, Constants.Key.ENTITY_POSE_HEAD, DEFAULT_HEAD_POSE));
-        this.setBodyPose(DataSerializers.getRotations(nbt, Constants.Key.ENTITY_POSE_BODY, DEFAULT_BODY_POSE));
-        this.setLeftArmPose(DataSerializers.getRotations(nbt, Constants.Key.ENTITY_POSE_LEFT_ARM, DEFAULT_LEFT_ARM_POSE));
-        this.setRightArmPose(DataSerializers.getRotations(nbt, Constants.Key.ENTITY_POSE_RIGHT_ARM, DEFAULT_RIGHT_ARM_POSE));
-        this.setLeftLegPose(DataSerializers.getRotations(nbt, Constants.Key.ENTITY_POSE_LEFT_LEG, DEFAULT_LEFT_LEG_POSE));
-        this.setRightLegPose(DataSerializers.getRotations(nbt, Constants.Key.ENTITY_POSE_RIGHT_LEG, DEFAULT_RIGHT_LEG_POSE));
+    public void readCustomPose(CompoundTag tag) {
+        this.setHeadPose(tag.getOptionalRotations(Constants.Key.ENTITY_POSE_HEAD, DEFAULT_HEAD_POSE));
+        this.setBodyPose(tag.getOptionalRotations(Constants.Key.ENTITY_POSE_BODY, DEFAULT_BODY_POSE));
+        this.setLeftArmPose(tag.getOptionalRotations(Constants.Key.ENTITY_POSE_LEFT_ARM, DEFAULT_LEFT_ARM_POSE));
+        this.setRightArmPose(tag.getOptionalRotations(Constants.Key.ENTITY_POSE_RIGHT_ARM, DEFAULT_RIGHT_ARM_POSE));
+        this.setLeftLegPose(tag.getOptionalRotations(Constants.Key.ENTITY_POSE_LEFT_LEG, DEFAULT_LEFT_LEG_POSE));
+        this.setRightLegPose(tag.getOptionalRotations(Constants.Key.ENTITY_POSE_RIGHT_LEG, DEFAULT_RIGHT_LEG_POSE));
     }
 
     public void saveMannequinToolData(CompoundTag entityTag) {

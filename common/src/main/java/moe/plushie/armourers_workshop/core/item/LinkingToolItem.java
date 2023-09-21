@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -28,14 +27,14 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
     }
 
     public static void setLinkedBlockPos(ItemStack itemStack, BlockPos pos) {
-        DataSerializers.putBlockPos(itemStack.getOrCreateTag(), Constants.Key.BLOCK_ENTITY_LINKED_POS, pos, null);
+        itemStack.getOrCreateTag().putOptionalBlockPos(Constants.Key.BLOCK_ENTITY_LINKED_POS, pos, null);
     }
 
     @Nullable
     public static BlockPos getLinkedBlockPos(ItemStack itemStack) {
         CompoundTag tag = itemStack.getTag();
         if (tag != null) {
-            return DataSerializers.getBlockPos(tag, Constants.Key.BLOCK_ENTITY_LINKED_POS, null);
+            return tag.getOptionalBlockPos(Constants.Key.BLOCK_ENTITY_LINKED_POS, null);
         }
         return null;
     }

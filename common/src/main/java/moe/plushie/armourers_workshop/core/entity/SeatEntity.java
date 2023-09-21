@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.compatibility.core.AbstractLivingEntity;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -22,7 +21,7 @@ import java.util.Collections;
 public class SeatEntity extends AbstractLivingEntity {
 
     private int holdingTick;
-    private BlockPos blockPos;
+    private BlockPos blockPos = BlockPos.ZERO;
 
     public SeatEntity(EntityType<? extends SeatEntity> entityType, Level level) {
         super(entityType, level);
@@ -32,15 +31,15 @@ public class SeatEntity extends AbstractLivingEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
-        super.readAdditionalSaveData(nbt);
-        this.blockPos = DataSerializers.getBlockPos(nbt, Constants.Key.BLOCK_ENTITY_REFER, BlockPos.ZERO);
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        this.blockPos = tag.getOptionalBlockPos(Constants.Key.BLOCK_ENTITY_REFER, BlockPos.ZERO);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
-        super.addAdditionalSaveData(nbt);
-        DataSerializers.putBlockPos(nbt, Constants.Key.BLOCK_ENTITY_REFER, blockPos, BlockPos.ZERO);
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putOptionalBlockPos(Constants.Key.BLOCK_ENTITY_REFER, blockPos, BlockPos.ZERO);
     }
 
     @Override
