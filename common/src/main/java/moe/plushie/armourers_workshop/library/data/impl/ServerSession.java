@@ -19,7 +19,7 @@ import java.util.function.Function;
 
 public abstract class ServerSession {
 
-    private static final ExecutorService workThread = ThreadUtils.newFixedThreadPool(1, "AW-NET/G-ED");
+    private static final ExecutorService workThread = ThreadUtils.newFixedThreadPool(1, "AW-SKIN-NT");
 
     private static final ArrayList<String> DEFAULT_URLs = new ArrayList<>();
     private static final Map<String, ServerRequest> REQUESTS = new HashMap<>();
@@ -48,7 +48,7 @@ public abstract class ServerSession {
             }
             ServerResponse response = new ServerResponse(responseData);
             if (!response.isValid()) {
-                throw new RuntimeException(response.getMessage());
+                throw new RuntimeException("a invalid response of the " + path);
             }
             if (deserializer == null) {
                 return null;
@@ -69,7 +69,7 @@ public abstract class ServerSession {
     protected String buildRequestURL(ServerRequest request) {
         // when the request required authorization,
         // we will try to switch to the https channel.
-        if (request.has("accessToken")) {
+        if (request.isAuthRequired()) {
             for (String baseURL : getBaseURLs()) {
                 if (baseURL.startsWith("https://")) {
                     return baseURL;

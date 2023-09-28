@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.library.data.impl;
 
+import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 
@@ -19,7 +20,9 @@ public class MinecraftAuth {
 
     private static final String JOIN_URL = "https://sessionserver.mojang.com/session/minecraft/join";
     private static final Object MC_AUTH_LOCK = new Object();
+
     private static long lastAuthTime;
+    private static Exception lastAuthError;
 
     private static Supplier<String> USER_ID_PROVIDER;
     private static Supplier<String> USER_ACCESS_TOKEN_PROVIDER;
@@ -37,6 +40,7 @@ public class MinecraftAuth {
             }
             if (USER_ID_PROVIDER == null || USER_ACCESS_TOKEN_PROVIDER == null) {
                 ModLog.debug("pls call init before!!!");
+                lastAuthError = new RuntimeException("pls call init before!!!");
                 return false;
             }
             ModLog.info("MC Auth start");
@@ -44,20 +48,23 @@ public class MinecraftAuth {
             String data = "{\"accessToken\":\"" + USER_ACCESS_TOKEN_PROVIDER.get() + "\", \"serverId\":\"" + serverId + "\", \"selectedProfile\":\"" + USER_ID_PROVIDER.get() + "\"}";
 
             try {
+                // returns non 204 if error occurred
                 String result = performPostRequest(new URL(JOIN_URL), data, "application/json");
+                IDataPackObject object = StreamUtils.fromPackObject(result);
+                if (object != null && object.get("error") != null) {
+                    throw new RuntimeException(object.get("error").stringValue());
+                }
                 lastAuthTime = System.currentTimeMillis();
                 return true;
-            } catch (MalformedURLException e) {
-                // TODO: Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO: Auto-generated catch block
-                e.printStackTrace();
+            } catch (Exception e) {
+                lastAuthError = e;
+                return false;
             }
-            return false;
         }
+    }
 
-        // returns non 204 if error occurred
+    public static Exception getLastError() {
+        return lastAuthError;
     }
 
     private static String performPostRequest(URL url, String post, String contentType) throws IOException {

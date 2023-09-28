@@ -64,6 +64,10 @@ public class ServerRequest {
         return query.contains(key) || body.contains(key);
     }
 
+    public boolean isAuthRequired() {
+        return permission != null && permission.isAuthRequired();
+    }
+
     public String getPath() {
         return path;
     }
@@ -143,6 +147,8 @@ public class ServerRequest {
             URL uploadUrl = new URL(this.uploadUrl);
             URLConnection connection = uploadUrl.openConnection();
 
+            connection.setConnectTimeout(15000);
+            connection.setReadTimeout(15000);
             connection.setDoOutput(true);
             connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
             OutputStream output = null;

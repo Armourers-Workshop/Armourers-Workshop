@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -28,7 +29,7 @@ public final class StreamUtils {
     private StreamUtils() {
     }
 
-//    public static void writeString(DataOutputStream stream, Charset charset, String string) throws IOException {
+    //    public static void writeString(DataOutputStream stream, Charset charset, String string) throws IOException {
 //        byte[] bytes = string.getBytes(charset);
 //        int size = bytes.length;
 //        writeUnsignedShort(stream, size);
@@ -92,8 +93,7 @@ public final class StreamUtils {
             JsonReader jsonReader = new JsonReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             jsonReader.setLenient(false);
             return GSON.getAdapter(class_).read(jsonReader);
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             throw new JsonParseException(exception);
         }
     }
@@ -107,6 +107,13 @@ public final class StreamUtils {
         return null;
     }
 
+    @Nullable
+    public static IDataPackObject fromPackObject(String jsonString) {
+        if (jsonString == null || jsonString.isEmpty()) {
+            return null;
+        }
+        return fromPackObject(new ByteArrayInputStream(jsonString.getBytes()));
+    }
 
     public static byte[] toByteArray(final InputStream input) throws IOException {
         return IOUtils.toByteArray(input);

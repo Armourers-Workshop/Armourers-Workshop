@@ -84,7 +84,7 @@ public class GlobalSkinLibrary extends ServerSession {
         if (user.isAuthenticated()) {
             return;
         }
-        HashMap<String, Object> parameters = buildAuthFromMinecraft();
+        HashMap<String, Object> parameters = authenticationFromMinecraft();
         ServerToken accessToken = request("/user/auth", parameters, ServerToken::new);
         user.setAccessToken(accessToken);
     }
@@ -107,7 +107,7 @@ public class GlobalSkinLibrary extends ServerSession {
     public void join(IResultHandler<Void> handlerIn) {
         submit(handlerIn, handlerOut -> {
             try {
-                HashMap<String, Object> parameters = buildAuthFromMinecraft();
+                HashMap<String, Object> parameters = authenticationFromMinecraft();
                 request("/user/join", parameters, o -> o);
                 handlerOut.accept(null);
             } catch (Exception exception1) {
@@ -336,12 +336,14 @@ public class GlobalSkinLibrary extends ServerSession {
         return searchTypesBuilder.toString();
     }
 
-    private HashMap<String, Object> buildAuthFromMinecraft() {
+    private HashMap<String, Object> authenticationFromMinecraft() {
         ServerUser user = getUser();
         String serverId = String.valueOf(defaultBaseURL().hashCode());
         if (!MinecraftAuth.checkAndRefeshAuth(serverId)) {
-            ModLog.debug("Failed MC Auth");
-            throw new RuntimeException("Failed MC Auth");
+            Exception error = MinecraftAuth.getLastError();
+            ModLog.debug("MC Auth Failed");
+            error.printStackTrace();
+            throw new RuntimeException(error.getMessage());
         }
         ModLog.debug("MC Auth Done");
         HashMap<String, Object> parameters = new HashMap<>();

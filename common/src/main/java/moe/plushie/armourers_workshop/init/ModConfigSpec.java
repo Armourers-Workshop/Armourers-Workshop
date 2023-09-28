@@ -70,7 +70,7 @@ public class ModConfigSpec {
                 define("tooltipOpenWardrobe", true, "Show open wardrobe message on skins.").bind(v -> tooltipOpenWardrobe = v, () -> tooltipOpenWardrobe);
             });
             defineCategory("debug", "Debug Settings.", () -> {
-                define("shader", true, "Shows shader mixin results in logs.").bind(v -> enableShaderDebug = v, () -> enableShaderDebug);
+                define("shader", false, "Shows shader mixin results in logs.").bind(v -> enableShaderDebug = v, () -> enableShaderDebug);
                 define("showF3DebugInfo", true, "Shows extra info on the F3 debug screen.").bind(v -> showF3DebugInfo = v, () -> showF3DebugInfo);
                 defineInRange("texturePaintingType", 0, -1, 2, "Texture painting replacing the players texture with a painted version.", "Turning this off may fix issues with the players texture rendering", "incorrectly or showing the steve skin.", "", "-1 = disabled", "0 = auto", "1 = texture_replace (replaces the players texture - LEGACY)", "2 = model_replace_mc (render using a mc model - slower, more compatible - NOT IMPLEMENTED)", "3 = model_replace_aw (render using a aw model - faster, less compatible)").bind(n -> texturePaintingType = n, () -> texturePaintingType);
             });

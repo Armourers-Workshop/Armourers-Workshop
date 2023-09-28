@@ -6,10 +6,10 @@ public class ServerToken {
 
     private final String serverId;
 
-    private final String mc_id;
-    private final String mc_name;
-
-    private final ServerPermissions permissions;
+//    private final String mc_id;
+//    private final String mc_name;
+//
+//    private final ServerPermissions permissions;
 
     private final String accessToken;
 
@@ -18,9 +18,9 @@ public class ServerToken {
 
     public ServerToken(IDataPackObject object) {
         this.serverId = object.get("server_id").stringValue();
-        this.mc_id = object.get("mc_id").stringValue();
-        this.mc_name = object.get("mc_name").stringValue();
-        this.permissions = ServerPermissions.byId(object.get("permission_group_id").intValue());
+//        this.mc_id = object.get("mc_id").stringValue();
+//        this.mc_name = object.get("mc_name").stringValue();
+//        this.permissions = ServerPermissions.byId(object.get("permission_group_id").intValue());
         this.accessToken = object.get("accessToken").stringValue();
         this.expiryTime = object.get("expiryTime").intValue();
         this.receivedTime = System.currentTimeMillis();

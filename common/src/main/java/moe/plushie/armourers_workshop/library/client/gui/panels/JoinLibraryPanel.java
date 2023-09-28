@@ -24,7 +24,7 @@ import java.util.Map;
 public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDelegate {
 
     private static final String URL_DISCORD = "https://discord.gg/5Z3KKvU";
-    private static final String URL_WIKI_FAQ = "https://github.com/RiskyKen/Armourers-Workshop/wiki/FAQ";
+    private static final String URL_WIKI_FAQ = "https://github.com/Armourers-Workshop/Armourers-Workshop/wiki/FAQ";
     private static final String URL_VIDEO_UPDATE_JAVA = "https://youtu.be/xZfaXHulmKo";
 
     private final ArrayList<NSString> pages = new ArrayList<>();
@@ -112,7 +112,7 @@ public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDel
         joinFailMessage = null;
         GlobalSkinLibrary.getInstance().join((result, exception) -> {
             if (exception != null) {
-                onJoinedFailed(exception.toString());
+                onJoinedFailed(exception.getMessage());
             } else {
                 onJoined();
             }
@@ -149,10 +149,8 @@ public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDel
         pages.clear();
 
         GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
-        String[] javaVersion = library.getJavaVersion();
-        boolean validJava = library.isValidJavaVersion();
-
-        if (!validJava) {
+        if (!library.isValidJavaVersion()) {
+            String[] javaVersion = library.getJavaVersion();
             NSString urlWikiFaq = getURLText(URL_WIKI_FAQ);
             NSString urlVideoUpdateJava = getURLText(URL_VIDEO_UPDATE_JAVA);
             String update = javaVersion.length > 2 ? javaVersion[2] : "0";

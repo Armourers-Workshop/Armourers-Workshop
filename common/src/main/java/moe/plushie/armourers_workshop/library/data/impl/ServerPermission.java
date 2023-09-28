@@ -22,7 +22,7 @@ public enum ServerPermission {
     /**
      * Tried to join the beta using a code.
      */
-    BETA_JOIN("/join"),
+    BETA_JOIN("/user/join", true),
 
     /**
      * Checks if a player is in the beta.
@@ -64,32 +64,32 @@ public enum ServerPermission {
     /**
      * Upload skins
      */
-    SKIN_UPLOAD("/skin/upload"),
+    SKIN_UPLOAD("/skin/upload", true),
 
     /**
      * Leave a skin rating.
      */
-    SKIN_RATE("/skin/rate"),
+    SKIN_RATE("/skin/rate", true),
 
     /**
      * Gets the rating a user left on a skin.
      */
-    SKIN_GET_RATED("/skin/rating"),
+    SKIN_GET_RATED("/skin/rating", true),
 
     /**
      * Report a skin.
      */
-    SKIN_REPORT("/skin/report"),
+    SKIN_REPORT("/skin/report", true),
 
     /**
      * Delete their own skin.
      */
-    SKIN_OWNER_DELETE("/skin/delete"),
+    SKIN_OWNER_DELETE("/skin/delete", true),
 
     /**
      * Edit their own skins.
      */
-    SKIN_OWNER_EDIT("/skin/edit"),
+    SKIN_OWNER_EDIT("/skin/edit", true),
 
     /**
      * Comment on skins.
@@ -111,7 +111,7 @@ public enum ServerPermission {
     /**
      * Gets the list of reported skins.
      */
-    GET_REPORT_LIST("/skin/reports"),
+    GET_REPORT_LIST("/skin/reports", true),
 
     /**
      * Delete other users skins.
@@ -159,12 +159,19 @@ public enum ServerPermission {
     USER_GROUP_CHANGE;
 
     private final String id;
-    ServerPermission(String id) {
+    private final boolean isAuthRequired;
+    
+    ServerPermission(String id, boolean isAuthRequired) {
         this.id = id;
+        this.isAuthRequired = isAuthRequired;
+    }
+
+    ServerPermission(String id) {
+        this(id, false);
     }
 
     ServerPermission() {
-        this(null);
+        this(null, false);
     }
 
     public static ServerPermission byId(String id) {
@@ -174,5 +181,9 @@ public enum ServerPermission {
             }
         }
         return null;
+    }
+
+    public boolean isAuthRequired() {
+        return isAuthRequired;
     }
 }
