@@ -16,8 +16,10 @@ public class GlobalSkinLibraryMenu extends AbstractBlockContainerMenu {
 
     private final Container inventory = new SimpleContainer(2);
     private final Inventory playerInventory;
+
     public int inventoryWidth = 162;
     public int inventoryHeight = 76;
+
     private boolean isVisible = false;
 
     public GlobalSkinLibraryMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess access) {

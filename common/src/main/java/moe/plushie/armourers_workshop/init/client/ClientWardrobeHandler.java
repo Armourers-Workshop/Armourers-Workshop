@@ -243,7 +243,7 @@ public class ClientWardrobeHandler {
                     poseStack.pushPose();
                     poseStack.scale(-SCALE, -SCALE, SCALE);
                     SkinRenderContext context = SkinRenderContext.alloc(renderData, packedLight, TickUtils.ticks(), transformType, poseStack, buffers);
-                    context.setReference(9, itemStack);
+                    context.setReference(800, itemStack);
                     counter = render(entity, null, context, () -> Collections.singleton(embeddedStack.getEntry()));
                     if (counter != 0 && !ModDebugger.itemOverride) {
                         callback.cancel();
@@ -282,7 +282,7 @@ public class ClientWardrobeHandler {
         context.setRenderData(SkinRenderData.of(context.getMannequin()));
         context.setLightmap(packedLight);
         context.setPartialTicks(0);
-        context.setReference(9, embeddedStack.getItemStack(), null);
+        context.setReference(embeddedStack.getItemStack(), 800, null);
         context.setColorScheme(descriptor.getColorScheme());
 
         counter = context.draw(poseStack, buffers);
@@ -336,7 +336,7 @@ public class ClientWardrobeHandler {
             if (itemStack.isEmpty()) {
                 itemStack = entry.getItemStack();
             }
-            context.setReference(entry.getSlotIndex(), itemStack);
+            context.setReference(entry.getRenderPriority(), itemStack);
             context.setTransforms(entity, renderer.getOverrideModel(modelHolder));
             r += renderer.render(entity, modelHolder, entry.getBakedSkin(), entry.getBakedScheme(), context);
         }

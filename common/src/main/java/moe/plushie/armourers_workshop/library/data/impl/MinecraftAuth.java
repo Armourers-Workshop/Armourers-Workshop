@@ -43,8 +43,7 @@ public class MinecraftAuth {
                 lastAuthError = new RuntimeException("pls call init before!!!");
                 return false;
             }
-            ModLog.info("MC Auth start");
-            HttpURLConnection conn = null;
+            ModLog.info("MC Auth Start");
             String data = "{\"accessToken\":\"" + USER_ACCESS_TOKEN_PROVIDER.get() + "\", \"serverId\":\"" + serverId + "\", \"selectedProfile\":\"" + USER_ID_PROVIDER.get() + "\"}";
 
             try {

@@ -782,13 +782,9 @@ public class SkinLoader {
             File cacheFile = null;
             UUID t0 = ModContext.t0();
             String namespace = DataDomain.getNamespace(identifier);
-            if (isGlobalLibraryResource(identifier)) {
+            if (isGlobalLibraryResource(identifier) && ModConfig.Common.isGlobalSkinServer()) {
                 String path = DataDomain.getPath(identifier);
                 String domain = "00000000-0000-0000-0000-000000000000";
-                // for private global skin library caches, it will be stored in its server cache directory.
-                if (t0 != null && ModConfig.Common.enablePrivateGlobalSkinLibrary) {
-                    domain = t0.toString();
-                }
                 // for history reasons and performance optimization,
                 // when skin already downloaded we don't need preview skin.
                 cacheFile = cachingFile(domain, DataDomain.GLOBAL_SERVER.namespace(), path);

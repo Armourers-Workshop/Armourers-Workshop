@@ -39,6 +39,7 @@ public class ToastWindow extends UIWindow {
         this.messageLabel.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
         this.messageLabel.setTextColor(UIColor.WHITE);
         this.addSubview(messageLabel);
+        this.updateIconRect();
     }
 
     @Override
@@ -95,6 +96,7 @@ public class ToastWindow extends UIWindow {
         this.icon = icon;
         CompoundTag tag = ObjectUtils.safeCast(icon, CompoundTag.class);
         if (tag == null) {
+            this.updateIconRect();
             return;
         }
         if (tag.contains("Skin")) {
@@ -108,6 +110,7 @@ public class ToastWindow extends UIWindow {
         if (tag.contains("id")) {
             this.icon = ItemStack.of(tag);
         }
+        this.updateIconRect();
     }
 
     public Object getIcon() {
@@ -124,6 +127,29 @@ public class ToastWindow extends UIWindow {
 
     private ResourceLocation getDefaultTexture() {
         return new ResourceLocation("textures/gui/toasts.png");
+    }
+
+    private void updateIconRect() {
+        float x1 = 0;
+        float x2 = titleLabel.frame().getMaxX();
+        float x3 = 0;
+        float x4 = messageLabel.frame().getMaxX();
+
+        if (icon != null) {
+            x1 = 30;
+            x3 = 30;
+        } else {
+            x1 = 8;
+            x3 = 8;
+        }
+        CGRect nf1 = new CGRect(titleLabel.frame());
+        nf1.x = x1;
+        nf1.width = x2 - x1;
+        titleLabel.setFrame(nf1);
+        CGRect nf2 = new CGRect(messageLabel.frame());
+        nf2.x = x3;
+        nf2.width = x4 - x3;
+        messageLabel.setFrame(nf2);
     }
 
     public static class CustomTexture {

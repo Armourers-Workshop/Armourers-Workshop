@@ -17,11 +17,14 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.HSBSliderBox;
 import moe.plushie.armourers_workshop.core.client.gui.widget.InputDialog;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.client.gui.widget.PaintColorView;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.ArrayList;
 
+@Environment(EnvType.CLIENT)
 public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> extends MenuWindow<M> implements UITextFieldDelegate {
 
     protected final HSBSliderBox[] sliders = {null, null, null};

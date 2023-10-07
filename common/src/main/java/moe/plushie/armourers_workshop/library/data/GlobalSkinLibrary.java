@@ -245,7 +245,7 @@ public class GlobalSkinLibrary extends ServerSession {
 
     @Override
     protected ArrayList<String> getBaseURLs() {
-        ArrayList<String> customURLs = ModConfig.Common.customGlobalSkinLibraryURLs;
+        ArrayList<String> customURLs = ModConfig.Common.customSkinServerURLs;
         if (!customURLs.isEmpty()) {
             return customURLs;
         }
@@ -385,7 +385,7 @@ public class GlobalSkinLibrary extends ServerSession {
     }
 
     private void resolveState() {
-        ArrayList<String> customURLs = ModConfig.Common.customGlobalSkinLibraryURLs;
+        ArrayList<String> customURLs = ModConfig.Common.customSkinServerURLs;
         if (!customURLs.equals(state.hosts)) {
             state = new State(customURLs);
         }

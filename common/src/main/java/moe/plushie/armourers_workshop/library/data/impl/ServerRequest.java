@@ -64,8 +64,8 @@ public class ServerRequest {
         return query.contains(key) || body.contains(key);
     }
 
-    public boolean isAuthRequired() {
-        return permission != null && permission.isAuthRequired();
+    public boolean isSSLRequired() {
+        return permission != null && permission.isSSLRequired();
     }
 
     public String getPath() {

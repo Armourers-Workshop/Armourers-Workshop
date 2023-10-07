@@ -159,11 +159,11 @@ public enum ServerPermission {
     USER_GROUP_CHANGE;
 
     private final String id;
-    private final boolean isAuthRequired;
+    private final boolean isSSLRequired;
     
-    ServerPermission(String id, boolean isAuthRequired) {
+    ServerPermission(String id, boolean isSSLRequired) {
         this.id = id;
-        this.isAuthRequired = isAuthRequired;
+        this.isSSLRequired = isSSLRequired;
     }
 
     ServerPermission(String id) {
@@ -183,7 +183,7 @@ public enum ServerPermission {
         return null;
     }
 
-    public boolean isAuthRequired() {
-        return isAuthRequired;
+    public boolean isSSLRequired() {
+        return isSSLRequired;
     }
 }

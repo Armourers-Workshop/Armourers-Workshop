@@ -69,7 +69,7 @@ public abstract class ServerSession {
     protected String buildRequestURL(ServerRequest request) {
         // when the request required authorization,
         // we will try to switch to the https channel.
-        if (request.isAuthRequired()) {
+        if (request.isSSLRequired()) {
             for (String baseURL : getBaseURLs()) {
                 if (baseURL.startsWith("https://")) {
                     return baseURL;

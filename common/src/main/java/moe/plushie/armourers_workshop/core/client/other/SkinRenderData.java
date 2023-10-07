@@ -203,7 +203,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
     private void loadArmorSlots(Entity entity, ItemConsumer consumer) {
         int i = 0;
         for (ItemStack itemStack : itemProvider.getArmorSlots(entity)) {
-            consumer.accept(itemStack, i, false);
+            consumer.accept(itemStack, 400 + i++, false);
         }
         if (!isActiveWardrobe) {
             return;
@@ -215,7 +215,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
             int index = slotType.getIndex();
             int size = slotType.getMaxSize();
             for (i = 0; i < size; ++i) {
-                consumer.accept(lastWardrobeSlots.get(index + i), i, false);
+                consumer.accept(lastWardrobeSlots.get(index + i), i * 10, false);
             }
         }
     }
@@ -223,7 +223,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
     private void loadHandSlots(Entity entity, ItemConsumer consumer) {
         int i = 0;
         for (ItemStack itemStack : itemProvider.getHandSlots(entity)) {
-            consumer.accept(itemStack, i, true);
+            consumer.accept(itemStack, 400 + i++, true);
         }
     }
 
@@ -249,7 +249,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
         }
     }
 
-    private void updateSkin(ItemStack itemStack, int slotIndex, boolean isHeld) {
+    private void updateSkin(ItemStack itemStack, float renderPriority, boolean isHeld) {
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
             return;
@@ -262,11 +262,11 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
         ISkinType type = bakedSkin.getType();
         // If held a skin of armor type, nothing happen
         if (type instanceof ISkinArmorType && !isHeld) {
-            armorSkins.add(new Entry(itemStack, descriptor, bakedSkin, colorScheme, slotIndex, false));
+            armorSkins.add(new Entry(itemStack, descriptor, bakedSkin, colorScheme, renderPriority, false));
             loadSkinPart(bakedSkin);
         }
         if (type instanceof ISkinToolType || type == SkinTypes.ITEM) {
-            itemSkins.add(new Entry(itemStack, descriptor, bakedSkin, colorScheme, slotIndex, isHeld));
+            itemSkins.add(new Entry(itemStack, descriptor, bakedSkin, colorScheme, renderPriority, isHeld));
             loadSkinPart(bakedSkin);
         }
     }
@@ -354,7 +354,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
     }
 
     protected interface ItemConsumer {
-        void accept(ItemStack itemStack, int slode, boolean flag);
+        void accept(ItemStack itemStack, float priority, boolean flag);
     }
 
     public static class Entry {
@@ -364,14 +364,14 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
         protected final BakedSkin bakedSkin;
         protected final ColorScheme bakedScheme;
         protected final boolean isHeld;
-        protected final int slotIndex;
+        protected final float renderPriority;
 
-        public Entry(ItemStack itemStack, SkinDescriptor descriptor, BakedSkin bakedSkin, ColorScheme entityScheme, int slotIndex, boolean isHeld) {
+        public Entry(ItemStack itemStack, SkinDescriptor descriptor, BakedSkin bakedSkin, ColorScheme entityScheme, float renderPriority, boolean isHeld) {
             this.itemStack = itemStack;
             this.descriptor = descriptor;
             this.bakedSkin = bakedSkin;
             this.bakedScheme = baking(descriptor.getColorScheme(), entityScheme);
-            this.slotIndex = slotIndex;
+            this.renderPriority = renderPriority;
             this.isHeld = isHeld;
         }
 
@@ -387,8 +387,8 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
             return bakedScheme;
         }
 
-        public int getSlotIndex() {
-            return slotIndex;
+        public float getRenderPriority() {
+            return renderPriority;
         }
 
         public BakedSkin getBakedSkin() {

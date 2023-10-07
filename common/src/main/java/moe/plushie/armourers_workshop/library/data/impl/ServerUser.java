@@ -39,7 +39,7 @@ public class ServerUser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ServerUser user = (ServerUser) o;
-        return id == user.id;
+        return Objects.equals(id, user.id);
     }
 
     @Override

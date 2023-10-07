@@ -60,7 +60,7 @@ public final class ExtendedItemRenderer {
         context.setLightmap(light);
         context.setPartialTicks(partialTicks);
         context.setRenderData(SkinRenderData.of(context.getMannequin()));
-        context.setReference(9, itemStack, rotation);
+        context.setReference(itemStack, 0, rotation);
         context.setColorScheme(scheme);
 
         Rectangle3f rect = context.getBakedRenderBounds();

@@ -36,7 +36,7 @@ public class SkinRenderContext {
     private SkinRenderData renderData;
     private SkinRenderBufferSource bufferProvider;
 
-    private int itemFromSlotIndex = 0;
+    private float itemRenderPriority = 0;
     private Vector3f itemRotation;
     private ItemStack itemReference = ItemStack.EMPTY;
 
@@ -73,7 +73,7 @@ public class SkinRenderContext {
         this.partialTicks = 0;
 
         this.itemReference = ItemStack.EMPTY;
-        this.itemFromSlotIndex = 0;
+        this.itemRenderPriority = 0;
         this.itemRotation = null;
 
         this.colorScheme = ColorScheme.EMPTY;
@@ -165,26 +165,26 @@ public class SkinRenderContext {
         return transforms;
     }
 
-    public void setReference(int fromSlotIndex, ItemStack reference) {
-        setReference(fromSlotIndex, reference, null);
+    public void setReference(float renderPriority, ItemStack reference) {
+        setReference(reference, renderPriority, null);
     }
 
-    public void setReference(int fromSlotIndex, ItemStack reference, @Nullable Vector3f rotation) {
+    public void setReference(ItemStack reference, float renderPriority, @Nullable Vector3f rotation) {
         this.itemReference = reference;
-        this.itemFromSlotIndex = fromSlotIndex;
         this.itemRotation = rotation;
+        this.itemRenderPriority = renderPriority;
     }
 
     public ItemStack getReference() {
         return itemReference;
     }
 
-    public int getReferenceSlot() {
-        return itemFromSlotIndex;
-    }
-
     public Vector3f getReferenceRotation() {
         return itemRotation;
+    }
+
+    public float getRenderPriority() {
+        return itemRenderPriority;
     }
 
     public void setRenderData(SkinRenderData renderData) {

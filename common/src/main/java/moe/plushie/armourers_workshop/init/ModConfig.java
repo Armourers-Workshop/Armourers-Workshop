@@ -134,12 +134,16 @@ public class ModConfig {
         public static int skinCacheMaxSize = 2000;
 
         // Global Skin Library
-        public static ArrayList<String> customGlobalSkinLibraryURLs = new ArrayList<>();
-        public static boolean enablePrivateGlobalSkinLibrary = false;
+        public static ArrayList<String> customSkinServerURLs = new ArrayList<>();
 
         // Overrides
         public static ArrayList<String> overrides = new ArrayList<>();
         public static ArrayList<String> disableMatchingItems = new ArrayList<>();
+
+        public static boolean isGlobalSkinServer() {
+            // if use specify a skin server, it a private skin server.
+            return customSkinServerURLs.isEmpty();
+        }
 
         public static boolean canOpenWardrobe(Entity target, Player operator) {
             if (!wardrobeAllowOpening) {

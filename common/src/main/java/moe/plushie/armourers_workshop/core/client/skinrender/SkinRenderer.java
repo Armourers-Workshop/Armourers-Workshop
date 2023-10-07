@@ -145,7 +145,7 @@ public class SkinRenderer<T extends Entity, M extends IModel> {
         if (ModDebugger.skinBounds) {
             builder.addShape(bakedSkin.getRenderShape(entity, model, context.getReference(), context.getTransformType(), this), UIColor.RED, context);
         }
-        if (ModDebugger.skinBounds) {
+        if (ModDebugger.skinOrigin) {
             builder.addShape(Vector3f.ZERO, context);
         }
         if (ModDebugger.armature && skin.getType() instanceof ISkinArmorType) {

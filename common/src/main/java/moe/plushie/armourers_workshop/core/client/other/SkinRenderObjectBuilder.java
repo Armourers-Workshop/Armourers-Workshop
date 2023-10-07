@@ -280,7 +280,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         int draw(CachedTask task, SkinRenderContext context) {
             int lightmap = context.getLightmap();
             float partialTicks = context.getPartialTicks();
-            int slotIndex = context.getReferenceSlot();
+            float renderPriority = context.getRenderPriority();
             IPoseStack poseStack = context.pose();
             PoseStack modelViewStack = RenderSystem.getModelViewStack();
             OpenPoseStack finalPostStack = new OpenPoseStack();
@@ -291,7 +291,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 //            lastNormal.multiply(modelViewStack.lastNormal());
             lastNormal.multiply(poseStack.lastNormal());
             lastNormal.invert();
-            task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, finalPostStack, lightmap, partialTicks, slotIndex)));
+            task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, finalPostStack, lightmap, partialTicks, renderPriority)));
             return task.totalTask;
         }
 
@@ -313,13 +313,13 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         OpenPoseStack poseStack;
         CompiledTask compiledTask;
 
-        CompiledPass(CompiledTask compiledTask, OpenPoseStack poseStack, int lightmap, float partialTicks, int slotIndex) {
+        CompiledPass(CompiledTask compiledTask, OpenPoseStack poseStack, int lightmap, float partialTicks, float renderPriority) {
             super();
             this.compiledTask = compiledTask;
             this.poseStack = poseStack;
             this.lightmap = lightmap;
             this.partialTicks = partialTicks;
-            this.additionalPolygonOffset = slotIndex * 10;
+            this.additionalPolygonOffset = renderPriority;
         }
 
         @Override

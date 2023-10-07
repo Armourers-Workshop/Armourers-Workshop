@@ -120,8 +120,7 @@ public class ModConfigSpec {
                 define("allowPreviewSkins", true, "Shows model previews in the library.", "Causes a lot of extra load on servers.", "Best to turn off on high population servers").bind(n -> allowLibraryPreviews = n, () -> allowLibraryPreviews);
                 define("allowManageSkins", false, "Allows clients to manage skins of the server computer library.", "Required permission level 5 or higher.").bind(v -> allowLibraryRemoteManage = v, () -> allowLibraryRemoteManage);
 
-                defineList("customGlobalServerURLs", new ArrayList<String>(), this::allowsString, "We priority use https for the access token APIs.").bind(v -> customGlobalSkinLibraryURLs = new ArrayList<>(v), () -> new ArrayList<>(customGlobalSkinLibraryURLs));
-                define("privateGlobalServer", false, "For the private global servers, will have special handling for caching.").bind(v -> enablePrivateGlobalSkinLibrary = v, () -> enablePrivateGlobalSkinLibrary);
+                defineList("skinServerURLs", new ArrayList<String>(), this::allowsString, "We priority use https for the access token APIs.").bind(v -> customSkinServerURLs = new ArrayList<>(v), () -> new ArrayList<>(customSkinServerURLs));
             });
 
             defineCategory("holiday-events", "Enable/disable holiday events.", () -> {

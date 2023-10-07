@@ -18,7 +18,7 @@ import java.util.Map;
 public class InfoLibraryPanel extends AbstractLibraryPanel implements UILabelDelegate {
 
     private static final String URL_DISCORD = "https://discord.gg/5Z3KKvU";
-    private static final String URL_GITHUB = "https://github.com/RiskyKen/Armourers-Workshop";
+    private static final String URL_GITHUB = "https://github.com/Armourers-Workshop/Armourers-Workshop";
     private static final String URL_REDDIT = "https://www.reddit.com/r/ArmourersWorkshop/";
     private static final String URL_DONATION = "https://ko-fi.com/riskyken";
 
