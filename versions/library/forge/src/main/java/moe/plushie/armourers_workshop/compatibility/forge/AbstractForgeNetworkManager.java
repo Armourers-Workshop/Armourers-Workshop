@@ -5,7 +5,9 @@ import moe.plushie.armourers_workshop.init.ModConfig;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.thread.BlockableEventLoop;
 import net.minecraft.world.entity.Entity;
+import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.network.ICustomPacket;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
@@ -61,6 +63,11 @@ public abstract class AbstractForgeNetworkManager extends NetworkEvent {
 
         public <T extends Packet<?>> ICustomPacket<T> buildPacket(Pair<FriendlyByteBuf, Integer> packetData, ResourceLocation channelName) {
             return networkDirection.buildPacket(packetData, channelName);
+        }
+
+        public void enqueueWork(Runnable runnable) {
+            BlockableEventLoop<?> executor = LogicalSidedProvider.WORKQUEUE.get(networkDirection.getOriginationSide());
+            executor.submitAsync(runnable);
         }
     }
 }

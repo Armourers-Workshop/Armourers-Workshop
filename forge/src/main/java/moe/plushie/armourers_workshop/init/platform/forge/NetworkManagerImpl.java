@@ -105,7 +105,7 @@ public class NetworkManagerImpl extends AbstractForgeNetworkManager implements N
             if (dir == Direction.PLAY_TO_CLIENT) {
                 partSize = Integer.MAX_VALUE;
             }
-            splitter.split(message, buf -> dir.buildPacket(Pair.of(buf, 0), channelName).getThis(), partSize, consumer);
+            splitter.split(message, buf -> dir.buildPacket(Pair.of(buf, 0), channelName).getThis(), partSize, packet -> dir.enqueueWork(() -> consumer.accept(packet)));
         }
     }
 }
