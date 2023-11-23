@@ -1,24 +1,25 @@
 package moe.plushie.armourers_workshop.core.skin.painting;
 
+import moe.plushie.armourers_workshop.api.common.ITextureKey;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.skin.data.SkinDyeType;
+import moe.plushie.armourers_workshop.core.skin.SkinDyeType;
+import moe.plushie.armourers_workshop.utils.texture.TextureKey;
 import net.minecraft.resources.ResourceLocation;
 
 public class SkinPaintType implements ISkinPaintType {
+
+    private static final TextureKey DEFAULT_TEXTURE = new TextureKey(0, 0, 1, 1, 256, 256);
 
     private final int id;
     private final int index;
 
     private SkinDyeType dyeType;
-    private float textureU;
-    private float textureV;
     private ResourceLocation registryName;
+    private TextureKey texture = DEFAULT_TEXTURE;
 
     public SkinPaintType(int index, int id) {
         this.id = id;
         this.index = index;
-        this.textureU = 0;
-        this.textureV = 0;
     }
 
     @Override
@@ -30,15 +31,14 @@ public class SkinPaintType implements ISkinPaintType {
         this.registryName = registryName;
     }
 
-    //    @Override
-//    public ExtraColourType getColourType() {
-//        return colourType;
-//    }
-
     public SkinPaintType setTexture(float u, float v) {
-        this.textureU = u;
-        this.textureV = v;
+        this.texture = new TextureKey(u, v, 1, 1, 256, 256);
         return this;
+    }
+
+    @Override
+    public ITextureKey getTexture() {
+        return this.texture;
     }
 
     @Override
@@ -54,16 +54,6 @@ public class SkinPaintType implements ISkinPaintType {
     @Override
     public int getId() {
         return id;
-    }
-
-    @Override
-    public float getU() {
-        return textureU;
-    }
-
-    @Override
-    public float getV() {
-        return textureV;
     }
 
     @Override

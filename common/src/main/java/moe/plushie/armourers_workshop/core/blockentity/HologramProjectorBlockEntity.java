@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.Constants;
@@ -42,7 +43,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
             .put(Pair.of(AttachFace.FLOOR, Direction.NORTH), new Vector3f(0, 0, 0))
             .build();
 
-    private NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
+    private final NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
 
     private OpenQuaternionf renderRotations;
 
@@ -173,11 +174,6 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     }
 
     @Override
-    protected void setItems(NonNullList<ItemStack> items) {
-        this.items = items;
-    }
-
-    @Override
     protected void setContainerChanged() {
         super.setContainerChanged();
         this.updateBlockStates();
@@ -257,7 +253,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
         if (bakedSkin == null) {
             return null;
         }
-        Rectangle3f rect = bakedSkin.getRenderBounds(null, null, null, ItemStack.EMPTY);
+        Rectangle3f rect = bakedSkin.getRenderBounds(null, null, SkinItemSource.EMPTY);
         float f = 1 / 16f;
         float scale = getModelScale() * f;
         float modelRadius = 0.0f;

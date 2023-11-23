@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.init.platform;
 
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
-import moe.plushie.armourers_workshop.core.skin.data.SkinServerType;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinServerType;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.network.ServerReplayPacket;
 import net.minecraft.network.FriendlyByteBuf;

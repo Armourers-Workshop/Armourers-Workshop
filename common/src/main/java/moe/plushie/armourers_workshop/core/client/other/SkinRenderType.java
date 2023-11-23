@@ -9,6 +9,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 @Environment(EnvType.CLIENT)
 public abstract class SkinRenderType implements IRenderTypeBuilder {
 
@@ -41,7 +43,10 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
     public static final RenderType LINES = _line(1).build("aw_lines");
     public static final RenderType LINE_STRIP = _builder(SkinRenderFormat.LINE_STRIP).lineWidth(1).build("aw_line_strip");
 
-    public static final RenderType[] RENDER_ORDERING_FACES = {FACE_SOLID, FACE_LIGHTING, FACE_TRANSLUCENT, FACE_LIGHTING_TRANSLUCENT};
+    private static final RenderType[] RENDER_ORDERING_FACES = {FACE_SOLID, FACE_LIGHTING, FACE_TRANSLUCENT, FACE_LIGHTING_TRANSLUCENT};
+
+    private static final ConcurrentHashMap<String, RenderType> FACE_SOLID_VARIANTS = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, RenderType> FACE_LIGHTING_VARIANTS = new ConcurrentHashMap<>();
 
     public static RenderType by(ISkinCubeType cubeType) {
         if (cubeType.isGlass()) {
@@ -56,6 +61,16 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
         } else {
             return FACE_SOLID;
         }
+    }
+
+    public static RenderType solidFace(ResourceLocation texture)  {
+        String key = String.format("aw_custom_solid/%s", texture.getPath());
+        return FACE_SOLID_VARIANTS.computeIfAbsent(key, k -> _builder(SkinRenderFormat.SKIN_FACE_TEXTURE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build(k));
+    }
+
+    public static RenderType lightingFace(ResourceLocation texture) {
+        String key = String.format("aw_custom_lighting/%s", texture.getPath());
+        return FACE_LIGHTING_VARIANTS.computeIfAbsent(key, k -> _builder(SkinRenderFormat.SKIN_FACE_LIGHTING_TEXTURE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build(k));
     }
 
     public static RenderType lines() {
@@ -76,6 +91,37 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
 
     public static RenderType entityTranslucentCull(ResourceLocation texture) {
         return _entity(SkinRenderFormat.ENTITY_TRANSLUCENT, texture).cull().transparency(Transparency.TRANSLUCENT).build("aw_player_translucent");
+    }
+
+    public static int getOrdering(RenderType renderType) {
+        int index = 1;
+        for (RenderType target : SkinRenderType.RENDER_ORDERING_FACES) {
+            if (target == renderType) {
+                return index;
+            }
+            index += 1;
+        }
+        index += 1;
+        if (FACE_SOLID_VARIANTS.containsValue(renderType)) {
+            return index;
+        }
+        index += 1;
+        if (FACE_LIGHTING_VARIANTS.containsValue(renderType)) {
+            return index;
+        }
+        return 0;
+    }
+
+    public static boolean isGrowing(RenderType renderType) {
+        // do fast hitting.
+        if (renderType == FACE_LIGHTING || renderType == FACE_LIGHTING_TRANSLUCENT) {
+            return true;
+        }
+        // do fast missing.
+        if (renderType == FACE_SOLID || renderType == FACE_TRANSLUCENT) {
+            return false;
+        }
+        return FACE_LIGHTING_VARIANTS.containsValue(renderType);
     }
 
     private static IRenderTypeBuilder _entity(SkinRenderFormat format, ResourceLocation texture) {

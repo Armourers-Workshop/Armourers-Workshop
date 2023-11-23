@@ -38,6 +38,6 @@ public class UIEdgeInsets {
 
     @Override
     public String toString() {
-        return String.format("(%d %d %d %d)", top, left, bottom, right);
+        return String.format("(%f %f %f %f)", top, left, bottom, right);
     }
 }

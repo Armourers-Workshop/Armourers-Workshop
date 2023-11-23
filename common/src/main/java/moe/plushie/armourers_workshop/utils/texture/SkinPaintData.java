@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.utils.texture;
 
 import moe.plushie.armourers_workshop.api.math.ITexturePos;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 
 import java.util.ArrayList;
 
@@ -91,6 +92,10 @@ public class SkinPaintData {
             return 0;
         }
         return data[x + y * width];
+    }
+
+    public void setColor(int x, int y, IPaintColor paintColor) {
+        setColor(x, y, paintColor.getRawValue());
     }
 
     public void setColor(int x, int y, int color) {

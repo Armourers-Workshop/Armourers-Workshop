@@ -80,7 +80,7 @@ public class ArmourerWindow extends MenuWindow<ArmourerMenu> {
 
     private void switchTab(TabView.Entry entry) {
         ArmourerMenu.Group group = ArmourerMenu.Group.MAIN;
-        Object value = entry.tag();
+        Object value = entry.target();
         if (value != null) {
             group = (ArmourerMenu.Group)value;
         }

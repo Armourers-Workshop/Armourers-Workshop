@@ -25,7 +25,7 @@ public class MannequinToolItem extends ConfigurableToolItem {
     @Override
     public InteractionResult interactLivingEntity(ItemStack itemStack, Player player, LivingEntity entity, InteractionHand hand) {
         if (entity instanceof MannequinEntity) {
-            if (player.isShiftKeyDown()) {
+            if (player.isSecondaryUseActive()) {
                 CompoundTag config = new CompoundTag();
                 ItemStack newItemStack = itemStack.copy();
                 ((MannequinEntity) entity).saveMannequinToolData(config);

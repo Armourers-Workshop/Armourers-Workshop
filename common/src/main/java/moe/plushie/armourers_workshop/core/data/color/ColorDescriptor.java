@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.data.color;
 
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 
@@ -10,7 +11,7 @@ public class ColorDescriptor {
 
     private final HashMap<ISkinPaintType, Channel> channels = new HashMap<>();
 
-    public void add(PaintColor color) {
+    public void add(IPaintColor color) {
         ISkinPaintType paintType = color.getPaintType();
         if (shouldRecordChannel(paintType)) {
             Channel ch = channels.computeIfAbsent(paintType, k -> new Channel());
@@ -37,7 +38,7 @@ public class ColorDescriptor {
         return channels.isEmpty();
     }
 
-    public PaintColor getAverageColor(ISkinPaintType paintType) {
+    public IPaintColor getAverageColor(ISkinPaintType paintType) {
         Channel channel = channels.get(paintType);
         if (channel != null) {
             return channel.getResolvedColor();
@@ -64,13 +65,13 @@ public class ColorDescriptor {
         int red = 0;
         int green = 0;
         int blue = 0;
-        PaintColor resolvedColor;
+        IPaintColor resolvedColor;
 
         void setChanged() {
             resolvedColor = null;
         }
 
-        PaintColor getResolvedColor() {
+        IPaintColor getResolvedColor() {
             if (resolvedColor != null) {
                 return resolvedColor;
             }
@@ -81,7 +82,7 @@ public class ColorDescriptor {
             int r = red / total;
             int g = green / total;
             int b = blue / total;
-            resolvedColor = PaintColor.of(r << 16 | g << 8 | b, SkinPaintTypes.NORMAL);
+            resolvedColor = PaintColor.of(r, g, b, SkinPaintTypes.NORMAL);
             return resolvedColor;
         }
     }

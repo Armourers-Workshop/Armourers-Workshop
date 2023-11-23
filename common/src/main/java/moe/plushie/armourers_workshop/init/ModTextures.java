@@ -28,6 +28,7 @@ public class ModTextures {
     public static final ResourceLocation TABS = res("textures/gui/controls/tabs.png");
     public static final ResourceLocation COMMON = res("textures/gui/common.png");
     public static final ResourceLocation WIDGETS = res("textures/gui/widgets.png");
+    public static final ResourceLocation MENUS = res("textures/gui/controls/menus.png");
     public static final ResourceLocation LIST = res("textures/gui/controls/list.png");
     public static final ResourceLocation RATING = res("textures/gui/controls/rating.png");
     public static final ResourceLocation TAB_ICONS = res("textures/gui/controls/tab_icons.png");

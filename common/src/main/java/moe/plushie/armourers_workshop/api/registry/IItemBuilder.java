@@ -7,6 +7,7 @@ import net.minecraft.world.item.Rarity;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public interface IItemBuilder<T extends Item> extends IRegistryBuilder<T> {
 
     IItemBuilder<T> stacksTo(int i);

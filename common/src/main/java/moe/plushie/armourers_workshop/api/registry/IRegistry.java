@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.Collection;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public interface IRegistry<T> {
 
     Collection<IRegistryKey<? extends T>> getEntries();

@@ -55,17 +55,17 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
 
     @Override
     public final void render(GuiGraphics context, int mouseX, int mouseY, float partialTicks) {
-        this.render(AbstractGraphicsRenderer.of(font, context, mouseX, mouseY, partialTicks), mouseX, mouseY, partialTicks);
+        this.render(AbstractGraphicsRenderer.of(context, mouseX, mouseY, partialTicks), mouseX, mouseY, partialTicks);
     }
 
     @Override
     public final void renderLabels(GuiGraphics context, int mouseX, int mouseY) {
-        this.renderLabels(AbstractGraphicsRenderer.of(font, context, mouseX, mouseY, 0), mouseX, mouseY);
+        this.renderLabels(AbstractGraphicsRenderer.of(context, mouseX, mouseY, 0), mouseX, mouseY);
     }
 
     @Override
     public final void renderTooltip(GuiGraphics context, int mouseX, int mouseY) {
-        this.renderTooltip(AbstractGraphicsRenderer.of(font, context, mouseX, mouseY, 0), mouseX, mouseY);
+        this.renderTooltip(AbstractGraphicsRenderer.of(context, mouseX, mouseY, 0), mouseX, mouseY);
     }
 
     @Override

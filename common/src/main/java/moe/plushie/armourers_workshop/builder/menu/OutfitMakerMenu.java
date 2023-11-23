@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.math.ITexturePos;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.builder.blockentity.OutfitMakerBlockEntity;
+import moe.plushie.armourers_workshop.core.data.UserNotifications;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlot;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
@@ -15,6 +16,8 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.exception.SkinLoadException;
+import moe.plushie.armourers_workshop.core.skin.exception.TranslatableException;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
@@ -67,6 +70,18 @@ public class OutfitMakerMenu extends AbstractBlockContainerMenu {
         if (!shouldCrafting() || blockEntity == null) {
             return;
         }
+        try {
+            saveArmourItemWithProfile(profile, blockEntity);
+        } catch (TranslatableException exception) {
+            player.sendSystemMessage(exception.getComponent());
+            UserNotifications.sendErrorMessage(exception.getComponent(), player);
+        } catch (Exception exception) {
+            // we unknown why, pls report this.
+            exception.printStackTrace();
+        }
+    }
+
+    private void saveArmourItemWithProfile(GameProfile profile, OutfitMakerBlockEntity blockEntity) throws Exception {
         ArrayList<SkinPart> skinParts = new ArrayList<>();
         SkinProperties skinProperties = SkinProperties.create();
         String partIndexs = "";
@@ -77,6 +92,13 @@ public class OutfitMakerMenu extends AbstractBlockContainerMenu {
             Skin skin = SkinLoader.getInstance().loadSkin(descriptor.getIdentifier());
             if (skin == null) {
                 continue;
+            }
+            // TODO: no support!!
+            if (skin.getVersion() >= 20) {
+                throw SkinLoadException.Type.NOT_SUPPORTED.build("notSupported");
+            }
+            if (!skin.getSettings().isEditable()) {
+                throw SkinLoadException.Type.NOT_EDITABLE.build("notEditable");
             }
             for (int partIndex = 0; partIndex < skin.getPartCount(); partIndex++) {
                 SkinPart part = skin.getParts().get(partIndex);

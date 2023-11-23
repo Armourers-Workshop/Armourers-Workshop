@@ -10,6 +10,8 @@ import java.nio.FloatBuffer;
 @SuppressWarnings("unused")
 public class OpenMatrix4f implements IMatrix4f {
 
+    private static final OpenMatrix4f IDENTITY = OpenMatrix4f.createScaleMatrix(1, 1, 1);
+
     public float m00, m01, m02, m03;
     public float m10, m11, m12, m13;
     public float m20, m21, m22, m23;
@@ -73,6 +75,10 @@ public class OpenMatrix4f implements IMatrix4f {
         matrix.m13 = y;
         matrix.m23 = z;
         return matrix;
+    }
+
+    public static OpenMatrix4f identity() {
+        return IDENTITY;
     }
 
     public static OpenMatrix4f of(IMatrix4f o) {
@@ -441,22 +447,22 @@ public class OpenMatrix4f implements IMatrix4f {
         float l = in.m22 * in.m33 - in.m23 * in.m32;
         float det = a * l - b * k + c * j + d * i - e * h + f * g;
         det = 1.0f / det;
-        float m00 = MathUtils.fma( in.m11, l, MathUtils.fma(-in.m12, k,  in.m13 * j)) * det;
-        float m01 = MathUtils.fma(-in.m01, l, MathUtils.fma( in.m02, k, -in.m03 * j)) * det;
-        float m02 = MathUtils.fma( in.m31, f, MathUtils.fma(-in.m32, e,  in.m33 * d)) * det;
-        float m03 = MathUtils.fma(-in.m21, f, MathUtils.fma( in.m22, e, -in.m23 * d)) * det;
-        float m10 = MathUtils.fma(-in.m10, l, MathUtils.fma( in.m12, i, -in.m13 * h)) * det;
-        float m11 = MathUtils.fma( in.m00, l, MathUtils.fma(-in.m02, i,  in.m03 * h)) * det;
-        float m12 = MathUtils.fma(-in.m30, f, MathUtils.fma( in.m32, c, -in.m33 * b)) * det;
-        float m13 = MathUtils.fma( in.m20, f, MathUtils.fma(-in.m22, c,  in.m23 * b)) * det;
-        float m20 = MathUtils.fma( in.m10, k, MathUtils.fma(-in.m11, i,  in.m13 * g)) * det;
-        float m21 = MathUtils.fma(-in.m00, k, MathUtils.fma( in.m01, i, -in.m03 * g)) * det;
-        float m22 = MathUtils.fma( in.m30, e, MathUtils.fma(-in.m31, c,  in.m33 * a)) * det;
-        float m23 = MathUtils.fma(-in.m20, e, MathUtils.fma( in.m21, c, -in.m23 * a)) * det;
-        float m30 = MathUtils.fma(-in.m10, j, MathUtils.fma( in.m11, h, -in.m12 * g)) * det;
-        float m31 = MathUtils.fma( in.m00, j, MathUtils.fma(-in.m01, h,  in.m02 * g)) * det;
-        float m32 = MathUtils.fma(-in.m30, d, MathUtils.fma( in.m31, b, -in.m32 * a)) * det;
-        float m33 = MathUtils.fma( in.m20, d, MathUtils.fma(-in.m21, b,  in.m22 * a)) * det;
+        float m00 = MathUtils.fma(in.m11, l, MathUtils.fma(-in.m12, k, in.m13 * j)) * det;
+        float m01 = MathUtils.fma(-in.m01, l, MathUtils.fma(in.m02, k, -in.m03 * j)) * det;
+        float m02 = MathUtils.fma(in.m31, f, MathUtils.fma(-in.m32, e, in.m33 * d)) * det;
+        float m03 = MathUtils.fma(-in.m21, f, MathUtils.fma(in.m22, e, -in.m23 * d)) * det;
+        float m10 = MathUtils.fma(-in.m10, l, MathUtils.fma(in.m12, i, -in.m13 * h)) * det;
+        float m11 = MathUtils.fma(in.m00, l, MathUtils.fma(-in.m02, i, in.m03 * h)) * det;
+        float m12 = MathUtils.fma(-in.m30, f, MathUtils.fma(in.m32, c, -in.m33 * b)) * det;
+        float m13 = MathUtils.fma(in.m20, f, MathUtils.fma(-in.m22, c, in.m23 * b)) * det;
+        float m20 = MathUtils.fma(in.m10, k, MathUtils.fma(-in.m11, i, in.m13 * g)) * det;
+        float m21 = MathUtils.fma(-in.m00, k, MathUtils.fma(in.m01, i, -in.m03 * g)) * det;
+        float m22 = MathUtils.fma(in.m30, e, MathUtils.fma(-in.m31, c, in.m33 * a)) * det;
+        float m23 = MathUtils.fma(-in.m20, e, MathUtils.fma(in.m21, c, -in.m23 * a)) * det;
+        float m30 = MathUtils.fma(-in.m10, j, MathUtils.fma(in.m11, h, -in.m12 * g)) * det;
+        float m31 = MathUtils.fma(in.m00, j, MathUtils.fma(-in.m01, h, in.m02 * g)) * det;
+        float m32 = MathUtils.fma(-in.m30, d, MathUtils.fma(in.m31, b, -in.m32 * a)) * det;
+        float m33 = MathUtils.fma(in.m20, d, MathUtils.fma(-in.m21, b, in.m22 * a)) * det;
         ret.m00 = m00;
         ret.m01 = m01;
         ret.m02 = m02;

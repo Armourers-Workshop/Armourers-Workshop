@@ -21,7 +21,11 @@ public abstract class BaseDialog extends UIView {
     protected final UILabel titleLabel = new UILabel(new CGRect(0, 8, 240, 9));
 
     public BaseDialog() {
-        super(new CGRect(0, 0, 240, 120));
+        this(new CGRect(0, 0, 240, 120));
+    }
+
+    public BaseDialog(CGRect frame) {
+        super(frame);
         this.setContents(ModTextures.defaultWindowImage());
         this.titleLabel.setTextHorizontalAlignment(NSTextAlignment.Horizontal.CENTER);
         this.titleLabel.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);

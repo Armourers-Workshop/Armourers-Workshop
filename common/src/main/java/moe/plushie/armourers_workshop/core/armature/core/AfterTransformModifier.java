@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.armature.core;
 
-import moe.plushie.armourers_workshop.api.client.armature.IJoint;
+import moe.plushie.armourers_workshop.api.armature.IJoint;
+import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.ArmatureModifier;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 
@@ -20,14 +20,14 @@ public class AfterTransformModifier extends ArmatureModifier {
     }
 
     @Override
-    public ITransformf apply(IJoint joint, IModel model, ITransformf transform) {
+    public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
         transform = _translate(transform);
         transform = _rotate(transform);
         transform = _scale(transform);
         return transform;
     }
 
-    private ITransformf _translate(ITransformf transform) {
+    private IJointTransform _translate(IJointTransform transform) {
         if (translate.equals(Vector3f.ZERO)) {
             return transform;
         }
@@ -37,7 +37,7 @@ public class AfterTransformModifier extends ArmatureModifier {
         };
     }
 
-    private ITransformf _rotate(ITransformf transform) {
+    private IJointTransform _rotate(IJointTransform transform) {
         if (rotate.equals(Vector3f.ZERO)) {
             return transform;
         }
@@ -52,7 +52,7 @@ public class AfterTransformModifier extends ArmatureModifier {
         };
     }
 
-    private ITransformf _scale(ITransformf transform) {
+    private IJointTransform _scale(IJointTransform transform) {
         if (scale.equals(Vector3f.ONE)) {
             return transform;
         }

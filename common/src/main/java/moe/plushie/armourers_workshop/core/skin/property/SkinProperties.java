@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.skin.property;
 
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
-import moe.plushie.armourers_workshop.core.skin.data.base.IDataInputStream;
-import moe.plushie.armourers_workshop.core.skin.data.base.IDataOutputStream;
+import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
+import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
@@ -106,7 +106,7 @@ public class SkinProperties implements ISkinProperties {
         this.properties = new LinkedHashMap<>(properties.properties);
     }
 
-    public void writeToStream(IDataOutputStream stream) throws IOException {
+    public void writeToStream(IOutputStream stream) throws IOException {
         stream.writeInt(properties.size());
         for (int i = 0; i < properties.size(); i++) {
             String key = (String) properties.keySet().toArray()[i];
@@ -131,7 +131,7 @@ public class SkinProperties implements ISkinProperties {
         }
     }
 
-    public void readFromStream(IDataInputStream stream) throws IOException {
+    public void readFromStream(IInputStream stream) throws IOException {
         int count = stream.readInt();
         for (int i = 0; i < count; i++) {
             String key = stream.readString();

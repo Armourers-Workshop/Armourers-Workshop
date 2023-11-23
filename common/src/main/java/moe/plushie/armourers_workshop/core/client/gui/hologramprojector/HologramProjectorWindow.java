@@ -77,7 +77,7 @@ public class HologramProjectorWindow extends MenuWindow<HologramProjectorMenu> {
 
     private void switchTab(TabView.Entry entry) {
         int group = 0;
-        Object value = entry.tag();
+        Object value = entry.target();
         if (value != null) {
             group = (int) value;
         }

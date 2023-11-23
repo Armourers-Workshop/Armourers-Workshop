@@ -204,7 +204,7 @@ public class TabView extends UIView {
         }
 
         public EntryBuilder setTarget(Object target) {
-            this.view.tag = target;
+            this.view.target = target;
             return this;
         }
 
@@ -224,7 +224,7 @@ public class TabView extends UIView {
         protected final UIImageView iconView;
         protected final UIView contentView;
 
-        protected Object tag;
+        protected Object target;
 
         public Entry(UIView contentView, CGRect frame) {
             super(frame);
@@ -247,8 +247,8 @@ public class TabView extends UIView {
         }
 
         @Nullable
-        public Object tag() {
-            return this.tag;
+        public Object target() {
+            return this.target;
         }
 
         public UIView contentView() {

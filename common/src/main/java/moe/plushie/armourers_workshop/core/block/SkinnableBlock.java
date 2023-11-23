@@ -145,12 +145,12 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
             BlockState linkedState = level.getBlockState(linkedPos);
             return linkedState.getBlock().use(linkedState, level, linkedPos, player, hand, traceResult);
         }
-        if (blockEntity.isBed() && !player.isShiftKeyDown()) {
+        if (blockEntity.isBed() && !player.isSecondaryUseActive()) {
             if (ModPermissions.SKINNABLE_SLEEP.accept(blockEntity, player)) {
                 return Blocks.RED_BED.use(blockState, level, blockEntity.getBedPos(), player, hand, traceResult);
             }
         }
-        if (blockEntity.isSeat() && !player.isShiftKeyDown()) {
+        if (blockEntity.isSeat() && !player.isSecondaryUseActive()) {
             if (ModPermissions.SKINNABLE_SIT.accept(blockEntity, player)) {
                 if (level.isClientSide()) {
                     return InteractionResult.CONSUME;

@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import com.google.common.collect.Iterators;
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
@@ -11,14 +11,11 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.PoseStackWrapper;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 
@@ -36,14 +33,12 @@ public class SkinRenderContext {
     private SkinRenderData renderData;
     private SkinRenderBufferSource bufferProvider;
 
-    private float itemRenderPriority = 0;
-    private Vector3f itemRotation;
-    private ItemStack itemReference = ItemStack.EMPTY;
+    private SkinItemSource itemSource;
 
     private ColorScheme colorScheme = ColorScheme.EMPTY;
     private AbstractItemTransformType transformType = AbstractItemTransformType.NONE;
 
-    private ITransformf[] transforms;
+    private IJointTransform[] transforms;
 
     private final PoseStack defaultPoseStack;
     private final PoseStackWrapper usingPoseStack;
@@ -72,12 +67,9 @@ public class SkinRenderContext {
         this.lightmap = 0xf000f0;
         this.partialTicks = 0;
 
-        this.itemReference = ItemStack.EMPTY;
-        this.itemRenderPriority = 0;
-        this.itemRotation = null;
-
         this.colorScheme = ColorScheme.EMPTY;
         this.transformType = AbstractItemTransformType.NONE;
+        this.itemSource = SkinItemSource.EMPTY;
 
         this.usingPoseStack.set(defaultPoseStack);
 
@@ -161,30 +153,20 @@ public class SkinRenderContext {
         transforms = transformModifier.getTransforms(entity.getType(), model);
     }
 
-    public ITransformf[] getTransforms() {
+    public IJointTransform[] getTransforms() {
         return transforms;
     }
 
-    public void setReference(float renderPriority, ItemStack reference) {
-        setReference(reference, renderPriority, null);
+    public void setReferenced(SkinItemSource itemSource) {
+        this.itemSource = itemSource;
     }
 
-    public void setReference(ItemStack reference, float renderPriority, @Nullable Vector3f rotation) {
-        this.itemReference = reference;
-        this.itemRotation = rotation;
-        this.itemRenderPriority = renderPriority;
-    }
 
-    public ItemStack getReference() {
-        return itemReference;
-    }
-
-    public Vector3f getReferenceRotation() {
-        return itemRotation;
-    }
-
-    public float getRenderPriority() {
-        return itemRenderPriority;
+    public SkinItemSource getReferenced() {
+        if (this.itemSource != null) {
+            return this.itemSource;
+        }
+        return SkinItemSource.EMPTY;
     }
 
     public void setRenderData(SkinRenderData renderData) {
@@ -207,15 +189,15 @@ public class SkinRenderContext {
         return buffers;
     }
 
-    public void setBuffer(SkinRenderBufferSource bufferProvider) {
-        this.bufferProvider = bufferProvider;
-    }
-
     public SkinRenderBufferSource.ObjectBuilder getBuffer(@NotNull Skin skin) {
         if (bufferProvider != null) {
             return bufferProvider.getBuffer(skin);
         }
         SkinVertexBufferBuilder bufferBuilder = SkinVertexBufferBuilder.getBuffer(buffers);
         return bufferBuilder.getBuffer(skin);
+    }
+
+    public void setBufferProvider(SkinRenderBufferSource bufferProvider) {
+        this.bufferProvider = bufferProvider;
     }
 }

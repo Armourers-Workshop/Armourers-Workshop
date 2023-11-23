@@ -48,7 +48,7 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
         this.titleView.setUserInteractionEnabled(false);
         this.titleView.setHorizontalAlignment(NSTextAlignment.Horizontal.LEFT);
         this.titleView.setContentEdgeInsets(new UIEdgeInsets(0, 4, 0, 4));
-        this.titleView.setTitleEdgeInsets(new UIEdgeInsets(0, 2, 0, 0));
+        this.titleView.setTitleEdgeInsets(new UIEdgeInsets(0, 4, 0, 0));
         this.titleView.setTitleColor(UIColor.WHITE, State.NORMAL);
         this.titleView.setTitleColor(new UIColor(0xffffa0), State.HIGHLIGHTED);
         this.titleView.setTitleColor(new UIColor(0xcc0000), State.DISABLED);
@@ -241,11 +241,14 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
 
     private void updatePassthroughView() {
         UIWindow window = window();
-        if (window != null && passthroughView.superview() != window) {
-            window.addSubview(passthroughView);
-        }
-        if (window == null && passthroughView.superview() != null) {
-            passthroughView.removeFromSuperview();
+        if (window != null && popoverView.superview() != null) {
+            if (passthroughView.superview() != window) {
+                window.addSubview(passthroughView);
+            }
+        } else {
+            if (passthroughView.superview() != null) {
+                passthroughView.removeFromSuperview();
+            }
         }
     }
 
@@ -253,10 +256,7 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
         if (pointInside(event.locationInView(this), event)) {
             return false;
         }
-        if (popoverView.pointInside(event.locationInView(popoverView), event)) {
-            return false;
-        }
-        return true;
+        return !popoverView.pointInside(event.locationInView(popoverView), event);
     }
 
     public static class Cell extends UITableViewCell {
@@ -269,8 +269,8 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
             super(CGRect.ZERO);
             this.titleView.setUserInteractionEnabled(false);
             this.titleView.setHorizontalAlignment(NSTextAlignment.Horizontal.LEFT);
-            this.titleView.setContentEdgeInsets(new UIEdgeInsets(0, 4, 0, 4));
-            this.titleView.setTitleEdgeInsets(new UIEdgeInsets(0, 2, 0, 0));
+            this.titleView.setContentEdgeInsets(new UIEdgeInsets(0, 8, 0, 4));
+            this.titleView.setTitleEdgeInsets(new UIEdgeInsets(0, 4, 0, 0));
             this.titleView.setTitleColor(UIColor.WHITE, State.NORMAL);
             this.titleView.setTitleColor(new UIColor(0xffffa0), State.HIGHLIGHTED);
             this.titleView.setTitleColor(new UIColor(0xcc0000), State.DISABLED);

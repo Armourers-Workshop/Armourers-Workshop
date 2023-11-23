@@ -5,9 +5,10 @@ import moe.plushie.armourers_workshop.api.client.IBlockEntityExtendedRenderer;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
+import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.Constants;
@@ -202,11 +203,6 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     @Override
-    protected void setItems(NonNullList<ItemStack> items) {
-        this.items = items;
-    }
-
-    @Override
     public int getContainerSize() {
         return 9 * 9;
     }
@@ -352,7 +348,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
             return null;
         }
         float f = 1 / 16f;
-        Rectangle3f box = bakedSkin.getRenderBounds(null, null, null, ItemStack.EMPTY).copy();
+        Rectangle3f box = bakedSkin.getRenderBounds(null, null, SkinItemSource.EMPTY).copy();
         box.mul(OpenMatrix4f.createScaleMatrix(-f, -f, f));
         return box;
     }

@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import org.apache.logging.log4j.util.Strings;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -27,7 +26,7 @@ public final class SkinExportManager {
     }
 
     public static ISkinExporter getSkinExporter(String fileExtension) {
-        if (Strings.isEmpty(fileExtension)) {
+        if (fileExtension.isEmpty()) {
             return null;
         }
         for (ISkinExporter skinExporter : SKIN_EXPORTERS) {

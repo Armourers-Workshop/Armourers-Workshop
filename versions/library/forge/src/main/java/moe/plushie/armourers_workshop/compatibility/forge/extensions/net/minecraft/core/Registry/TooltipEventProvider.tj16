@@ -27,7 +27,7 @@ public class TooltipEventProvider {
             float screenWidth = screenLayout.getWidth();
             float screenHeight = screenLayout.getHeight();
             CGRect frame = new CGRect(event.getX(), event.getY(), event.getWidth(), event.getHeight());
-            CGGraphicsContext context = AbstractGraphicsRenderer.of(null, event.getFontRenderer(), event.getMatrixStack(), mouseX, mouseY, 0);
+            CGGraphicsContext context = AbstractGraphicsRenderer.of(null, event.getMatrixStack(), mouseX, mouseY, 0);
             consumer.render(event.getStack(), frame, screenWidth, screenHeight, context);
         });
     }

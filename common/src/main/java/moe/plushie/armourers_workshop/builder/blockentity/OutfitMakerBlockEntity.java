@@ -17,7 +17,7 @@ public class OutfitMakerBlockEntity extends UpdatableContainerBlockEntity {
     private String itemName = "";
     private String itemFlavour = "";
 
-    private NonNullList<ItemStack> items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
+    private final NonNullList<ItemStack> items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
 
     public OutfitMakerBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -60,11 +60,6 @@ public class OutfitMakerBlockEntity extends UpdatableContainerBlockEntity {
     @Override
     protected NonNullList<ItemStack> getItems() {
         return items;
-    }
-
-    @Override
-    protected void setItems(NonNullList<ItemStack> items) {
-        this.items = items;
     }
 
     @Override

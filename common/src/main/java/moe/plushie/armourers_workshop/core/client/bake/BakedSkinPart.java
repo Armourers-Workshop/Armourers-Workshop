@@ -5,11 +5,10 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
+import moe.plushie.armourers_workshop.core.data.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.skin.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.math.OpenRay;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
@@ -26,25 +25,35 @@ import java.util.function.Consumer;
 public class BakedSkinPart {
 
     private final SkinPart part;
-    private final PackedQuad quads;
+    private final BakedCubeQuads quads;
     private final SkinPartTransform transform;
     private final ColorDescriptor descriptor;
     private final ArrayList<BakedSkinPart> children = new ArrayList<>();
 
     private int id = 0;
+    private float renderPolygonOffset;
 
-    public BakedSkinPart(SkinPart part, PackedQuad quads) {
+    public BakedSkinPart(SkinPart part, BakedCubeQuads quads) {
         this.part = part;
         this.quads = quads;
         this.transform = new SkinPartTransform(part, quads.getTransform());
         this.descriptor = quads.getColorInfo();
+        this.renderPolygonOffset = getType().getRenderPolygonOffset();
     }
 
-    public void forEach(BiConsumer<RenderType, ArrayList<SkinCubeFace>> action) {
+    public void addPart(BakedSkinPart part) {
+        children.add(part);
+    }
+
+    public void removePart(BakedSkinPart part) {
+        children.remove(part);
+    }
+
+    public void forEach(BiConsumer<RenderType, ArrayList<BakedCubeFace>> action) {
         quads.forEach(action);
     }
 
-    public void forEach(OpenRay ray, Consumer<SkinCubeFace> recorder) {
+    public void forEach(OpenRay ray, Consumer<BakedCubeFace> recorder) {
         quads.forEach(ray, recorder);
     }
 
@@ -108,11 +117,12 @@ public class BakedSkinPart {
         return quads.getFaceTotal();
     }
 
+    public void setRenderPolygonOffset(float renderPolygonOffset) {
+        this.renderPolygonOffset = renderPolygonOffset;
+    }
+
     public float getRenderPolygonOffset() {
-        if (part instanceof SkinPart.Empty) {
-            return 20;
-        }
-        return getType().getRenderPolygonOffset();
+        return renderPolygonOffset;
     }
 
     public ArrayList<BakedSkinPart> getChildren() {

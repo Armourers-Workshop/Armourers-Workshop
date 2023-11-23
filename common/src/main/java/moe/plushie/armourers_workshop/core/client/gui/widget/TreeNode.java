@@ -12,8 +12,9 @@ public class TreeNode {
     private NSString title;
 
     private boolean folding = false;
-    private boolean enabled = false;
+    private boolean enabled = true;
 
+    private TreeNode parent;
     private final ArrayList<TreeNode> children = new ArrayList<>();
 
     public TreeNode(NSString title) {
@@ -28,14 +29,19 @@ public class TreeNode {
 
     public void add(TreeNode node) {
         children.add(node);
+        node.parent = this;
         node.link(view);
         setNeedsDisplay();
     }
 
-    public void remove(TreeNode node) {
-        children.remove(node);
-        node.link(null);
-        setNeedsDisplay();
+    public void removeFromParent() {
+        if (parent == null) {
+            return;
+        }
+        parent.children.remove(this);
+        parent.setNeedsDisplay();
+        parent = null;
+        link(null);
     }
 
     public void clear() {
@@ -46,6 +52,10 @@ public class TreeNode {
 
     public TreeNode nodeAtIndex(int index) {
         return children.get(index);
+    }
+
+    public TreeNode parent() {
+        return parent;
     }
 
     public Collection<TreeNode> children() {

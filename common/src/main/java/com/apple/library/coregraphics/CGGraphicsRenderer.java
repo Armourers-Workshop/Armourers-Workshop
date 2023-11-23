@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public interface CGGraphicsRenderer {
 
-    void renderTooltip(NSString text, CGRect rect, @Nullable UIFont font, CGGraphicsContext context);
+    void renderTooltip(NSString text, CGRect rect, UIFont font, CGGraphicsContext context);
 
     void renderEntity(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY, CGGraphicsContext context);
 

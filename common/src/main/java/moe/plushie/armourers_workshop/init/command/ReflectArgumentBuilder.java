@@ -66,6 +66,17 @@ public class ReflectArgumentBuilder<S> extends LiteralArgumentBuilder<S> {
                 });
     }
 
+//    public static <R> ArgumentBuilder<CommandSourceStack, ?> call(Pair<Object, Method> pair) {
+//        return Commands.literal(pair.getValue().getName() + "()")
+//                .executes(context -> {
+//                    String name = pair.getValue().getName();
+//                    Class<?> object = (Class<?>) pair.getKey();
+//                    ServerPlayer player = context.getSource().getPlayerOrException();
+//                    NetworkManager.sendTo(ExecuteCommandPacket.invoke(object, name), player);
+//                    return 0;
+//                });
+//    }
+
     @Override
     public Collection<CommandNode<S>> getArguments() {
         ArrayList<CommandNode<S>> nodes = new ArrayList<>(super.getArguments());
@@ -75,6 +86,11 @@ public class ReflectArgumentBuilder<S> extends LiteralArgumentBuilder<S> {
                 nodes.add(ObjectUtils.unsafeCast(function.apply(Pair.of(object, field)).build()));
             }
         }
+//        for (Method method : object.getMethods()) {
+//            if (method.getParameterCount() == 0 && Modifier.isStatic(method.getModifiers())) {
+//                nodes.add(ObjectUtils.unsafeCast(ReflectArgumentBuilder.call(Pair.of(object, method)).build()));
+//            }
+//        }
         return nodes;
     }
 }

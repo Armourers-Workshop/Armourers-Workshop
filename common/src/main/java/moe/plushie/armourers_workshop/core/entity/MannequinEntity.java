@@ -237,13 +237,13 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
         }
         if (itemStack.is(Items.NAME_TAG)) {
             Component customName = null;
-            if (itemStack.hasCustomHoverName() && !player.isShiftKeyDown()) {
+            if (itemStack.hasCustomHoverName() && !player.isSecondaryUseActive()) {
                 customName = itemStack.getHoverName();
             }
             setCustomName(customName);
             return InteractionResult.sidedSuccess(getLevel().isClientSide());
         }
-        if (player.isShiftKeyDown()) {
+        if (player.isSecondaryUseActive()) {
             double ry = TrigUtils.getAngleDegrees(player.getX(), player.getZ(), getX(), getZ()) + 90.0;
             Rotations rotations = getBodyPose();
             float yRot = this.getYRot();

@@ -67,17 +67,17 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
 
     @Override
     public final void render(PoseStack poseStack, int i, int j, float f) {
-        this.render(AbstractGraphicsRenderer.of(this, font, poseStack, i, j, f), i, j, f);
+        this.render(AbstractGraphicsRenderer.of(this, poseStack, i, j, f), i, j, f);
     }
 
     @Override
     protected final void renderLabels(PoseStack poseStack, int i, int j) {
-        this.renderLabels(AbstractGraphicsRenderer.of(this, font, poseStack, i, j, 0), i, j);
+        this.renderLabels(AbstractGraphicsRenderer.of(this, poseStack, i, j, 0), i, j);
     }
 
     @Override
     protected final void renderTooltip(PoseStack poseStack, int i, int j) {
-        this.renderTooltip(AbstractGraphicsRenderer.of(this, font, poseStack, i, j, 0), i, j);
+        this.renderTooltip(AbstractGraphicsRenderer.of(this, poseStack, i, j, 0), i, j);
     }
 
     @Override

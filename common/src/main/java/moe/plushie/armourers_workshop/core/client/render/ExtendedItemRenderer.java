@@ -2,7 +2,9 @@ package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -21,18 +23,17 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public final class ExtendedItemRenderer {
 
-    public static void renderSkinInBox(BakedSkin bakedSkin, float x, float y, float z, float width, float height, float rx, float ry, float rz, PoseStack poseStack, MultiBufferSource buffers) {
-        renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, x, y, z, width, height, rx, ry, rz, 0, 0xf000f0, poseStack, buffers);
+    public static void renderSkinInGUI(BakedSkin bakedSkin, float x, float y, float z, float width, float height, float rx, float ry, float rz, PoseStack poseStack, MultiBufferSource buffers) {
+        renderSkinInGUI(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, x, y, z, width, height, rx, ry, rz, 0, 0xf000f0, poseStack, buffers);
     }
 
-    public static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, float x, float y, float z, float width, float height, float rx, float ry, float rz, float partialTicks, int light, PoseStack poseStack, MultiBufferSource buffers) {
+    public static void renderSkinInGUI(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, float x, float y, float z, float width, float height, float rx, float ry, float rz, float partialTicks, int light, PoseStack poseStack, MultiBufferSource buffers) {
         if (bakedSkin != null) {
             int t = TickUtils.ticks();
             float si = Math.min(width, height);
@@ -44,12 +45,12 @@ public final class ExtendedItemRenderer {
             poseStack.mulPose(Vector3f.YP.rotationDegrees(ry + (float) (t / 10 % 360)));
             poseStack.scale(0.625f, 0.625f, 0.625f);
             poseStack.scale(si, si, si);
-            renderSkinInBox(bakedSkin, scheme, itemStack, null, Vector3f.ONE, 1, 1, 1, partialTicks, light, poseStack, buffers);
+            renderSkinInBox(bakedSkin, scheme, Vector3f.ONE, 1, 1, 1, partialTicks, light, SkinItemSource.create(itemStack), poseStack, buffers);
             poseStack.popPose();
         }
     }
 
-    public static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, PoseStack poseStack, MultiBufferSource buffers) {
+    public static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, SkinItemSource itemSource, PoseStack poseStack, MultiBufferSource buffers) {
         SkinRenderTesselator context = SkinRenderTesselator.create(bakedSkin);
         if (context == null) {
             return;
@@ -60,8 +61,8 @@ public final class ExtendedItemRenderer {
         context.setLightmap(light);
         context.setPartialTicks(partialTicks);
         context.setRenderData(SkinRenderData.of(context.getMannequin()));
-        context.setReference(itemStack, 0, rotation);
         context.setColorScheme(scheme);
+        context.setReferenced(itemSource);
 
         Rectangle3f rect = context.getBakedRenderBounds();
         float newScale = Math.min(targetWidth / rect.getWidth(), targetHeight / rect.getHeight());

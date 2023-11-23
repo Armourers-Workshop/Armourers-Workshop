@@ -5,9 +5,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
+import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
+import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
@@ -18,8 +20,8 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
@@ -47,6 +49,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import manifold.ext.rt.api.auto;
@@ -67,17 +70,19 @@ public class BakedSkin implements IBakedSkin {
     private final ColorDescriptor colorDescriptor;
     private final SkinUsedCounter usedCounter;
 
-    private final ColorScheme preference;
+    private final ColorScheme colorScheme;
+    private final BakedItemModel resolvedItemModel;
     private final HashMap<Integer, ColorScheme> resolvedColorSchemes = new HashMap<>();
 
-    public BakedSkin(String identifier, Skin skin, ColorScheme preference, SkinUsedCounter usedCounter, ColorDescriptor colorDescriptor, ArrayList<BakedSkinPart> bakedParts) {
+    public BakedSkin(String identifier, Skin skin, ColorScheme colorScheme, ColorDescriptor colorDescriptor, ArrayList<BakedSkinPart> bakedParts, SkinUsedCounter usedCounter) {
         this.identifier = identifier;
         this.skin = skin;
         this.skinParts = bakedParts;
-        this.preference = preference;
+        this.colorScheme = colorScheme;
         this.colorDescriptor = colorDescriptor;
         this.usedCounter = usedCounter;
         this.useTickRange = getUseTickRange(bakedParts);
+        this.resolvedItemModel = resolveItemModel(skin.getItemTransforms());
         this.loadBlockBounds();
     }
 
@@ -85,7 +90,7 @@ public class BakedSkin implements IBakedSkin {
         if (colorDescriptor.isEmpty()) {
             return ColorScheme.EMPTY;
         }
-        ColorScheme resolvedColorScheme = resolvedColorSchemes.computeIfAbsent(entity.getId(), k -> preference.copy());
+        ColorScheme resolvedColorScheme = resolvedColorSchemes.computeIfAbsent(entity.getId(), k -> colorScheme.copy());
         // we can't bind textures to skin when the item stack rendering.
         if (entity.getId() != MannequinEntity.PLACEHOLDER_ENTITY_ID) {
             ResourceLocation resolvedTexture = PlayerTextureLoader.getInstance().getTextureLocation(entity);
@@ -115,6 +120,11 @@ public class BakedSkin implements IBakedSkin {
         return skinParts;
     }
 
+    @Nullable
+    public BakedItemModel getItemModel() {
+        return resolvedItemModel;
+    }
+
     public SkinUsedCounter getUsedCounter() {
         return usedCounter;
     }
@@ -123,13 +133,14 @@ public class BakedSkin implements IBakedSkin {
         return cachedBlockBounds;
     }
 
-    public Rectangle3f getRenderBounds(@Nullable Entity entity, @Nullable Model model, @Nullable Vector3f rotation, ItemStack itemStack) {
+    public Rectangle3f getRenderBounds(@Nullable Entity entity, @Nullable Model model, SkinItemSource itemSource) {
         if (entity == null) {
             entity = SkinItemRenderer.getInstance().getMannequinEntity();
         }
         if (model == null) {
             model = SkinItemRenderer.getInstance().getMannequinModel();
         }
+        Vector3f rotation = itemSource.getRotation();
         Object key = SkinCache.borrowKey(model, rotation);
         Rectangle3f bounds = cachedBounds.get(key);
         if (bounds != null) {
@@ -137,7 +148,7 @@ public class BakedSkin implements IBakedSkin {
             return bounds;
         }
         OpenMatrix4f matrix = OpenMatrix4f.createScaleMatrix(1, 1, 1);
-        OpenVoxelShape shape = getRenderShape(entity, model, itemStack, AbstractItemTransformType.NONE);
+        OpenVoxelShape shape = getRenderShape(entity, model, itemSource);
         if (rotation != null) {
             matrix.rotate(new OpenQuaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), true));
             shape.mul(matrix);
@@ -155,18 +166,18 @@ public class BakedSkin implements IBakedSkin {
         return bounds;
     }
 
-    public OpenVoxelShape getRenderShape(Entity entity, Model model, ItemStack itemStack, AbstractItemTransformType transformType) {
+    public OpenVoxelShape getRenderShape(Entity entity, Model model, SkinItemSource itemSource) {
         auto renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer != null) {
-            return getRenderShape(entity, ModelHolder.ofNullable(model), itemStack, transformType, renderer);
+            return getRenderShape(entity, ModelHolder.ofNullable(model), itemSource, renderer);
         }
         return OpenVoxelShape.empty();
     }
 
-    public <T extends Entity, M extends IModel> OpenVoxelShape getRenderShape(T entity, M model, ItemStack itemStack, AbstractItemTransformType transformType, SkinRenderer<T, M> renderer) {
+    public <T extends Entity, M extends IModel> OpenVoxelShape getRenderShape(T entity, M model, SkinItemSource itemSource, SkinRenderer<T, M> renderer) {
         SkinRenderContext context = new SkinRenderContext(new PoseStack());
-        context.setTransformType(transformType);
-        context.setReference(0, itemStack);
+        context.setReferenced(itemSource);
+        context.setTransformType(itemSource.getTransformType());
         context.setTransforms(entity, model);
         OpenVoxelShape shape = OpenVoxelShape.empty();
         for (BakedSkinPart bakedPart : skinParts) {
@@ -209,7 +220,7 @@ public class BakedSkin implements IBakedSkin {
             return false; // arrow entity only render arrow part
         }
         if (partType instanceof ICanUse && entity instanceof LivingEntity) {
-            int useTick = getUseTick((LivingEntity) entity, context.getReference());
+            int useTick = getUseTick((LivingEntity) entity, context.getReferenced().getItem());
             auto useRange = ((ICanUse) partType).getUseRange();
             return useRange.contains(MathUtils.clamp(useTick, useTickRange.lowerEndpoint(), useTickRange.upperEndpoint()));
         }
@@ -266,6 +277,14 @@ public class BakedSkin implements IBakedSkin {
             return Range.closed(0, 0);
         }
         return Range.closed(minUseTick, maxUseTick);
+    }
+
+    private BakedItemModel resolveItemModel(Map<String, ITransformf> oldValue) {
+        // we only convert transform when override item transforms is enabled.
+        if (oldValue != null) {
+            return new BakedItemModel(oldValue, false);
+        }
+        return null;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop;
 
-import com.apple.library.impl.SelfTester;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;

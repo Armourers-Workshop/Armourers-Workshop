@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.bake.SkinPreloadManager;
+import moe.plushie.armourers_workshop.core.client.other.SkinTextureManager;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -92,11 +93,13 @@ public class ClientProxy {
         registries.willPlayerLogin(player -> {
             SkinBakery.start();
             SkinPreloadManager.start();
+            SkinTextureManager.getInstance().start();
         });
         registries.willPlayerLogout(player -> {
             SkinPreloadManager.stop();
             SkinBakery.stop();
             Tickets.invalidateAll();
+            SkinTextureManager.getInstance().stop();
             SkinLoader.getInstance().stop();
             SkinLibraryManager.getClient().getPublicSkinLibrary().reset();
             SkinLibraryManager.getClient().getPrivateSkinLibrary().reset();

@@ -86,14 +86,18 @@ public class DataTransformer<K, V, T> {
         });
     }
 
-    public void shutdown() {
+    public void clear() {
         loadQueue.clear();
         transformQueue.clear();
         allEntries.clear();
-        mainThread.shutdown();
-        transformThread.shutdown();
         loading.set(0);
         transforming.set(0);
+    }
+
+    public void shutdown() {
+        mainThread.shutdown();
+        transformThread.shutdown();
+        clear();
     }
 
     private void dispatchIfNeeded() {

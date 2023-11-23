@@ -45,7 +45,7 @@ public class TooltipEventProvider {
                 k2 = screenHeight - j - 6;
             }
             CGRect frame = new CGRect(j2, k2, i, j);
-            CGGraphicsContext context = AbstractGraphicsRenderer.of(null, font, event.getPoseStack(), mouseX, mouseY, 0);
+            CGGraphicsContext context = AbstractGraphicsRenderer.of(null, event.getPoseStack(), mouseX, mouseY, 0);
             consumer.render(event.getItemStack(), frame, screenWidth, screenHeight, context);
         });
     }

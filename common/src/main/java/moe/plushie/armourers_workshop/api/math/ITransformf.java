@@ -2,7 +2,13 @@ package moe.plushie.armourers_workshop.api.math;
 
 public interface ITransformf {
 
-    ITransformf NONE = poseStack -> {};
+    boolean isIdentity();
 
-    void apply(IPoseStack poseStack);
+    IVector3f getPivot();
+
+    IVector3f getTranslate();
+
+    IVector3f getRotation();
+
+    IVector3f getScale();
 }

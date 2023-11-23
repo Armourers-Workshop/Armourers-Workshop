@@ -193,7 +193,7 @@ public class SkinItemList extends UIView {
 
         float tx = dx - dw / 2;
         float ty = dy - dh / 2;
-        ExtendedItemRenderer.renderSkinInBox(bakedSkin, tx, ty, 100, dw, dh, 20, 45, 0, context.state().ctm(), buffers);
+        ExtendedItemRenderer.renderSkinInGUI(bakedSkin, tx, ty, 100, dw, dh, 20, 45, 0, context.state().ctm(), buffers);
     }
 
     public void renderItemBackground(float x, float y, float width, float height, boolean isHovered, ServerSkin entry, CGGraphicsContext context) {

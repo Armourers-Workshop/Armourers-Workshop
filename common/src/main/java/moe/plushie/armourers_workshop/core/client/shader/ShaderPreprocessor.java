@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
+import com.google.common.collect.ImmutableList;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 import net.fabricmc.api.EnvType;
@@ -10,6 +11,13 @@ import java.util.Collection;
 
 @Environment(EnvType.CLIENT)
 public class ShaderPreprocessor {
+
+    public static final ImmutableList<String> PATCHED_VANILLA_SHADERS = new ImmutableList.Builder<String>()
+            .add("rendertype_entity_solid")
+            .add("rendertype_entity_shadow")
+            .add("rendertype_entity_cutout")
+            .add("rendertype_energy_swirl")
+            .build();
 
     private final String prefix;
 

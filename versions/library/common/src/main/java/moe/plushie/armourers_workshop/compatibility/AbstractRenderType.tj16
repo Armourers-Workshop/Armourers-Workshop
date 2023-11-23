@@ -91,6 +91,10 @@ public class AbstractRenderType extends RenderType {
         it.put(SkinRenderFormat.SKIN_FACE_TRANSLUCENT, () -> _builder(SKIN_NORMAL_FORMAT, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP).setAlphaState(DEFAULT_ALPHA)));
         it.put(SkinRenderFormat.SKIN_FACE_LIGHTING, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET)));
         it.put(SkinRenderFormat.SKIN_FACE_LIGHTING_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setAlphaState(DEFAULT_ALPHA)));
+
+        it.put(SkinRenderFormat.SKIN_FACE_TEXTURE, () -> _builder(SKIN_NORMAL_FORMAT, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP)));
+        // TODO: impl @SAGESSE
+        it.put(SkinRenderFormat.SKIN_FACE_LIGHTING_TEXTURE, () -> _builder(SKIN_NORMAL_FORMAT, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP)));
     });
 
     public AbstractRenderType(String name, RenderType delegate, boolean affectsCrumbling, boolean sortUpload, Runnable setupRenderState, Runnable clearRenderState) {

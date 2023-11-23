@@ -74,8 +74,6 @@ public abstract class UpdatableContainerBlockEntity extends UpdatableBlockEntity
 
     protected abstract NonNullList<ItemStack> getItems();
 
-    protected abstract void setItems(NonNullList<ItemStack> var1);
-
     @Override
     public Container getInventory() {
         return this;

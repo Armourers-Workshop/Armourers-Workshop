@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.painting;
 
-import moe.plushie.armourers_workshop.core.skin.data.SkinDyeType;
+import moe.plushie.armourers_workshop.core.skin.SkinDyeType;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinResourceLocation;
 

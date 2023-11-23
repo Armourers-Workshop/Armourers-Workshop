@@ -4,6 +4,7 @@ import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
+import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -57,7 +58,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         context.setLightmap(overLight);
         context.setPartialTicks(partialTicks1);
         context.setColorScheme(descriptor.getColorScheme());
-        context.setReference(0, itemStack);
+        context.setReferenced(SkinItemSource.create(itemStack));
 
         Rectangle3f rect = context.getBakedRenderBounds();
         apply(entity, rect, partialTicks1, poseStack, buffers);

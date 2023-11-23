@@ -9,6 +9,7 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIScreen;
 import com.apple.library.uikit.UIView;
 import com.mojang.authlib.GameProfile;
@@ -183,7 +184,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
             return;
         }
         context.addClipRect(UIScreen.convertRectFromView(rect, this));
-        context.drawMultilineText(message, rect.x + 2, rect.y + 2, rect.width - 4, 0xffeeeeee, null);
+        context.drawMultilineText(message, rect.x + 2, rect.y + 2, rect.width - 4, 0xffeeeeee, UIFont.systemFont());
         context.removeClipRect();
     }
 
@@ -196,7 +197,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
             float tw = rect.width;
             float th = rect.height;
             auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            ExtendedItemRenderer.renderSkinInBox(bakedSkin, tx, ty, 100, tw, th, 20, 45, 0, context.state().ctm(), buffers);
+            ExtendedItemRenderer.renderSkinInGUI(bakedSkin, tx, ty, 100, tw, th, 20, 45, 0, context.state().ctm(), buffers);
             buffers.endBatch();
         }
     }

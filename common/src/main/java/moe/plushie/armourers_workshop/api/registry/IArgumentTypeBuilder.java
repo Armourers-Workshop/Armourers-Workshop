@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.common.IArgumentType;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public interface IArgumentTypeBuilder<T extends IArgumentType<?>> extends IRegistryBuilder<T> {
 
     IArgumentTypeBuilder<T> serializer(Supplier<IArgumentSerializer<T>> argumentSerializer);

@@ -1,9 +1,12 @@
 package moe.plushie.armourers_workshop.core.skin.exporter;
 
+import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.api.skin.ISkinExporter;
+import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
+import moe.plushie.armourers_workshop.core.data.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
@@ -11,8 +14,6 @@ import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCuller;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
-import moe.plushie.armourers_workshop.core.skin.transform.SkinPartTransform;
-import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
@@ -91,19 +92,19 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         int partIndex = 0;
         for (Task task : tasks) {
             OpenPoseStack poseStack = new OpenPoseStack();
-            SkinPart skinPart = task.skinPart;
-            SkinPartTransform transform = new SkinPartTransform(skinPart, SkinTransform.IDENTIFIER);
+            SkinPart part = task.skinPart;
+            SkinPartTransform transform = new SkinPartTransform(part, SkinBasicTransform.IDENTITY);
             // apply the render context matrix.
             poseStack.scale(scale, scale, scale);
             poseStack.scale(-1, -1, 1);
             poseStack.rotate(Vector3f.YP.rotationDegrees(90));
             // apply the origin offset.
-            IVector3i pos = skinPart.getType().getRenderOffset();
+            IVector3i pos = part.getType().getRenderOffset();
             poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
             // apply the marker rotation and offset.
             transform.setup(0, null);
             transform.apply(poseStack);
-            exportPart(poseStack, task.skinFaces, skinPart, task.skin, os, textureBuilder, partIndex++);
+            exportPart(poseStack, task.skinFaces, part, task.skin, os, textureBuilder, partIndex++);
         }
 
         os.flush();
@@ -142,9 +143,16 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
 
         // Export vertex list.
         for (SkinCubeFace face : faces) {
-            byte[][] vertexes = SkinUtils.FACE_VERTEXES[face.getDirection().get3DDataValue()];
+            IRectangle3f shape = face.getShape();
+            float x = shape.getX();
+            float y = shape.getY();
+            float z = shape.getZ();
+            float w = shape.getWidth();
+            float h = shape.getHeight();
+            float d = shape.getDepth();
+            float[][] vertexes = SkinUtils.getRenderVertexes(face.getDirection());
             for (int i = 0; i < 4; ++i) {
-                writeVert(poseStack, os, face.x + vertexes[i][0], face.y + vertexes[i][1], face.z + vertexes[i][2]);
+                writeVert(poseStack, os, x + vertexes[i][0] * w, y + vertexes[i][1] * h, z + vertexes[i][2] * d);
             }
         }
 
@@ -162,7 +170,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         }
 
         for (SkinCubeFace face : faces) {
-            byte[][] vertexes = SkinUtils.FACE_VERTEXES[face.getDirection().get3DDataValue()];
+            float[][] vertexes = SkinUtils.FACE_VERTEXES[face.getDirection().get3DDataValue()];
             writeNormal(poseStack, os, vertexes[4][0], vertexes[4][1], vertexes[4][2]);
         }
 

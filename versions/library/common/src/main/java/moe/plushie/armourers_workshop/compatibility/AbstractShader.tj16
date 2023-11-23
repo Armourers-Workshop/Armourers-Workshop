@@ -36,9 +36,9 @@ public class AbstractShader extends Shader {
     @Override
     public void apply(ShaderVertexGroup group, Runnable action) {
         lastMaxVertexCount = group.maxVertexCount;
-        group.getType().setupRenderState();
+        group.getRenderType().setupRenderState();
         action.run();
-        group.getType().clearRenderState();
+        group.getRenderType().clearRenderState();
     }
 
     @Override

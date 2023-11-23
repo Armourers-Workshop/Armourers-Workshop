@@ -23,9 +23,8 @@ public abstract class Shader {
     private int lastMaxVertexCount = 0;
 
     private int lastLightmap = 0;
-    private OpenMatrix4f lastLightmapMat;
 
-    private final OpenMatrix4f noneLightmapMat = OpenMatrix4f.createScaleMatrix(1, 1, 1);
+    private OpenMatrix4f lastLightmapMat;
 
     private final SkinRenderState renderState = new SkinRenderState();
     private final VertexArrayBuffer arrayBuffer = new VertexArrayBuffer();
@@ -42,7 +41,7 @@ public abstract class Shader {
         RenderSystem.backupExtendedMatrix();
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.setExtendedMatrixFlags(1);
-        RenderSystem.setExtendedTextureMatrix(OpenMatrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
+        //RenderSystem.setExtendedTextureMatrix(OpenMatrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
         ShaderUniforms.begin();
 
         if (ModDebugger.wireframeRender) {
@@ -64,6 +63,8 @@ public abstract class Shader {
         renderState.push();
         lastMaxVertexCount = group.maxVertexCount;
         arrayBuffer.bind();
+        // apply changes of texture animation.
+        RenderSystem.setExtendedTextureMatrix(group.getTextureMatrix(TickUtils.ticks()));
     }
 
     protected void clean(ShaderVertexGroup group) {
@@ -108,6 +109,7 @@ public abstract class Shader {
         indexBuffer.bind(maxVertexes);
 
         draw(object.getType(), indexBuffer.type(), vertexes, 0);
+
         cleanPolygonState(object);
         cleanVertexFormat(object.getFormat());
     }
@@ -149,8 +151,10 @@ public abstract class Shader {
     }
 
     private OpenMatrix4f getLightmapTextureMatrix(ShaderVertexObject object) {
+        // We specified the fully lighting when create the vertex,
+        // so we don't need any change when growing is required.
         if (object.isGrowing()) {
-            return noneLightmapMat;
+            return OpenMatrix4f.identity();
         }
         // we only recreate when something changes.
         int lightmap = object.getLightmap();

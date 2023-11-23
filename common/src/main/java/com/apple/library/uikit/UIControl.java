@@ -63,9 +63,6 @@ public class UIControl extends UIView implements HighlightedDisplayable {
     }
 
     public void sendEvent(Event event) {
-        if (!isEnabled()) {
-            return;
-        }
         getDispatcher(event).send(this);
     }
 
@@ -125,6 +122,14 @@ public class UIControl extends UIView implements HighlightedDisplayable {
                 applyHighlightState(subview, isHighlighted);
             }
         }
+    }
+
+    @Override
+    public boolean _ignoresTouchEvents(UIView view) {
+        if (!isEnabled()) {
+            return true;
+        }
+        return super._ignoresTouchEvents(view);
     }
 
     public enum Event {

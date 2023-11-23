@@ -6,6 +6,7 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSMutableString;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UIFont;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
@@ -99,7 +100,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         if (user.isAuthenticated()) {
             textColor = 0xAAFFAA;
         }
-        float lineHeight = context.state().font().lineHeight();
+        float lineHeight = UIFont.systemFont().lineHeight();
         context.drawText(profile, 24, (rect.height - lineHeight) / 2f, textColor);
     }
 

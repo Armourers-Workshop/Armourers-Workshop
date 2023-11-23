@@ -32,8 +32,8 @@ public class Vector3f implements IVector3f, Position {
         this.z = z;
     }
 
-    public Vector3f(Vector3f pos) {
-        this(pos.x, pos.y, pos.z);
+    public Vector3f(IVector3f pos) {
+        this(pos.getX(), pos.getY(), pos.getZ());
     }
 
     public Vector3f(Position pos) {
@@ -49,24 +49,24 @@ public class Vector3f implements IVector3f, Position {
         if (this == other) {
             return true;
         }
-        if (other != null && this.getClass() == other.getClass()) {
-            Vector3f vector3f = (Vector3f) other;
-            if (Float.compare(vector3f.x, this.x) != 0) {
-                return false;
-            } else if (Float.compare(vector3f.y, this.y) != 0) {
-                return false;
-            } else {
-                return Float.compare(vector3f.z, this.z) == 0;
-            }
+        if (!(other instanceof Vector3f)) {
+            return false;
         }
-        return false;
+        Vector3f pos = (Vector3f) other;
+        if (Float.compare(pos.x, x) != 0) {
+            return false;
+        }
+        if (Float.compare(pos.y, y) != 0) {
+            return false;
+        }
+        return Float.compare(pos.z, z) == 0;
     }
 
     @Override
     public int hashCode() {
-        int i = Float.floatToIntBits(this.x);
-        i = 31 * i + Float.floatToIntBits(this.y);
-        return 31 * i + Float.floatToIntBits(this.z);
+        int i = Float.floatToIntBits(x);
+        i = 31 * i + Float.floatToIntBits(y);
+        return 31 * i + Float.floatToIntBits(z);
     }
 
     @Override
@@ -93,6 +93,7 @@ public class Vector3f implements IVector3f, Position {
     public float getY() {
         return y;
     }
+
     @Override
     public float getZ() {
         return z;
@@ -164,6 +165,12 @@ public class Vector3f implements IVector3f, Position {
         z *= sz;
     }
 
+    public void scale(Vector3f pos) {
+        x *= pos.x;
+        y *= pos.y;
+        z *= pos.z;
+    }
+
     public void transform(IMatrix3f mat) {
         float[] floats = {x, y, z};
         mat.multiply(floats);
@@ -197,9 +204,9 @@ public class Vector3f implements IVector3f, Position {
     }
 
     public void cross(Vector3f pos) {
-        float ax = this.x;
-        float ay = this.y;
-        float az = this.z;
+        float ax = x;
+        float ay = y;
+        float az = z;
         float bx = pos.getX();
         float by = pos.getY();
         float bz = pos.getZ();
@@ -216,9 +223,9 @@ public class Vector3f implements IVector3f, Position {
 
     public void lerp(Vector3f pos, float f) {
         float f1 = 1.0F - f;
-        this.x = this.x * f1 + pos.x * f;
-        this.y = this.y * f1 + pos.y * f;
-        this.z = this.z * f1 + pos.z * f;
+        this.x = x * f1 + pos.x * f;
+        this.y = y * f1 + pos.y * f;
+        this.z = z * f1 + pos.z * f;
     }
 
     public float dot(Vector3f pos) {
@@ -232,7 +239,7 @@ public class Vector3f implements IVector3f, Position {
     /**
      * Computes distance of Vector3 vector to pos.
      */
-   public float distanceTo(Vector3f pos) {
+    public float distanceTo(Vector3f pos) {
         return MathUtils.sqrt(distanceToSquared(pos));
     }
 
@@ -240,9 +247,13 @@ public class Vector3f implements IVector3f, Position {
      * Computes squared distance of Vector3 vector to v.
      */
     public float distanceToSquared(Vector3f pos) {
-        float dx = x - pos.x;
-        float dy = y - pos.y;
-        float dz = z - pos.z;
+        return distanceToSquared(pos.x, pos.y, pos.z);
+    }
+
+    public float distanceToSquared(float tx, float ty, float tz) {
+        float dx = x - tx;
+        float dy = y - ty;
+        float dz = z - tz;
         return dx * dx + dy * dy + dz * dz;
     }
 
@@ -290,6 +301,12 @@ public class Vector3f implements IVector3f, Position {
         return ret;
     }
 
+    public Vector3f scaling(Vector3f pos) {
+        Vector3f ret = copy();
+        ret.scale(pos);
+        return ret;
+    }
+
     public Vector3f transforming(IMatrix3f mat) {
         Vector3f ret = copy();
         ret.transform(mat);
@@ -327,7 +344,7 @@ public class Vector3f implements IVector3f, Position {
     }
 
     public Vector3f copy() {
-        return new Vector3f(this.x, this.y, this.z);
+        return new Vector3f(x, y, z);
     }
 
     @Override

@@ -3,15 +3,16 @@ package com.apple.library.uikit;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.impl.DelegateImpl;
-import com.apple.library.impl.ObjectUtilsImpl;
+import com.apple.library.impl.SimpleTextLayoutImpl;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+
+import manifold.ext.rt.api.auto;
 
 @SuppressWarnings("unused")
 public class UILabel extends UIView {
@@ -29,7 +30,7 @@ public class UILabel extends UIView {
     private int lineSpacing = 0;
 
     private NSString text;
-    private List<TextLine> cachedTextLines;
+    private SimpleTextLayoutImpl cachedTextLayout;
 
     private float cachedTextWidth;
     private float cachedTextHeight;
@@ -51,18 +52,27 @@ public class UILabel extends UIView {
     }
 
     @Override
+    public CGSize sizeThatFits(CGSize size) {
+        if (text == null) {
+            return CGSize.ZERO;
+        }
+        SimpleTextLayoutImpl textLayout = new SimpleTextLayoutImpl(text, font(), numberOfLines, lineSpacing, size.width);
+        return textLayout.contentSize();
+    }
+
+    @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         if (text == null) {
             return;
         }
-        UIFont font = this.font != null ? this.font : context.state().font();
+        UIFont font = font();
         CGRect rect = bounds();
         remakeTextLineIfNeeded(text, font, rect);
-        if (cachedTextLines == null || cachedTextLines.isEmpty()) {
+        if (cachedTextLayout == null || cachedTextLayout.isEmpty()) {
             return;
         }
         float dy = sel(rect, cachedTextHeight, textVerticalAlignment);
-        for (TextLine line : cachedTextLines) {
+        for (auto line : cachedTextLayout.contents()) {
             CGPoint offset = line.offset;
             float dx = sel(rect, line.size.width, textHorizontalAlignment);
             context.drawText(line.text, offset.x + dx, offset.y + dy, font, textColor, shadowColor);
@@ -111,7 +121,10 @@ public class UILabel extends UIView {
     }
 
     public UIFont font() {
-        return this.font;
+        if (font != null) {
+            return font;
+        }
+        return UIFont.systemFont();
     }
 
     public void setFont(UIFont font) {
@@ -147,12 +160,12 @@ public class UILabel extends UIView {
 
     @Nullable
     public Map<String, ?> attributesAtPoint(CGPoint point) {
-        if (cachedTextLines == null) {
+        if (cachedTextLayout == null) {
             return null;
         }
         CGRect rect = bounds();
         float dy = sel(rect, cachedTextHeight, textVerticalAlignment);
-        for (TextLine line : cachedTextLines) {
+        for (auto line : cachedTextLayout.contents()) {
             CGPoint offset = line.offset;
             float dx = sel(rect, line.size.width, textHorizontalAlignment);
             if (point.y >= offset.y + dy && point.y <= offset.y + dy + line.size.height) {
@@ -190,52 +203,17 @@ public class UILabel extends UIView {
     }
 
     private void setNeedsRemakeTextLine() {
-        cachedTextLines = null;
+        cachedTextLayout = null;
     }
 
     private void remakeTextLineIfNeeded(NSString title, UIFont font, CGRect bounds) {
         // if the cache is still valid, we continue to use it.
         float width = bounds.width;
-        if (cachedTextLines != null && cachedTextWidth == width) {
+        if (cachedTextLayout != null && cachedTextWidth == width) {
             return;
         }
-        // split all line with text.
-        LinkedList<NSString> lines = new LinkedList<>();
-        if (numberOfLines == 1) {
-            lines.add(title);
-        } else {
-            lines.addAll(title.split((int) width, font));
-        }
-        // remove all excess lines.
-        while (numberOfLines != 0 && lines.size() > numberOfLines) {
-            lines.removeLast();
-        }
-        // transform the char sequence to text line.
-        cachedTextLines = ObjectUtilsImpl.map(lines, text -> new TextLine(text, font));
+        cachedTextLayout = new SimpleTextLayoutImpl(title, font, numberOfLines, lineSpacing, width);
         cachedTextWidth = width;
-
-        int textHeight = 0;
-        for (TextLine line : cachedTextLines) {
-            line.offset = new CGPoint(0, textHeight);
-            textHeight += line.size.height + lineSpacing;
-        }
-        if (!cachedTextLines.isEmpty()) {
-            textHeight -= lineSpacing;
-        }
-
-        cachedTextHeight = textHeight;
-    }
-
-    protected static class TextLine {
-        CGPoint offset;
-        CGRect size;
-        NSString text;
-        UIFont font;
-
-        TextLine(NSString text, UIFont font) {
-            this.text = text;
-            this.size = text.boundingRectWithFont(font);
-            this.font = font;
-        }
+        cachedTextHeight = cachedTextLayout.contentSize().getHeight();
     }
 }

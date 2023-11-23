@@ -28,7 +28,18 @@ import java.util.Objects;
 
 public final class SkinUtils {
 
-    public static final byte[][][] FACE_VERTEXES = new byte[][][]{
+    public static final float[][][] FACE_UVS = new float[][][]{
+            {{1, 0}, {1, 1}, {0, 1}, {0, 0}}, // -y <- down
+            {{0, 0}, {0, 1}, {1, 1}, {1, 0}}, // +y <- up
+            {{0, 0}, {0, 1}, {1, 1}, {1, 0}}, // -z <- north
+            {{0, 0}, {0, 1}, {1, 1}, {1, 0}}, // +z <- south
+            {{0, 0}, {0, 1}, {1, 1}, {1, 0}},
+            {{0, 0}, {0, 1}, {1, 1}, {1, 0}},
+//            {{1, 0}, {1, 1}, {0, 1}, {0, 0}}, // -x <- west
+//            {{1, 0}, {1, 1}, {0, 1}, {0, 0}}, // +x <- east
+    };
+
+    public static final float[][][] FACE_VERTEXES = new float[][][]{
             {{1, 1, 1}, {1, 1, 0}, {0, 1, 0}, {0, 1, 1}, {0, 1, 0}},  // -y <- down
             {{0, 0, 1}, {0, 0, 0}, {1, 0, 0}, {1, 0, 1}, {0, -1, 0}}, // +y <- up
             {{0, 0, 0}, {0, 1, 0}, {1, 1, 0}, {1, 0, 0}, {0, 0, -1}}, // -z <- north
@@ -40,7 +51,11 @@ public final class SkinUtils {
     private SkinUtils() {
     }
 
-    public static byte[][] getRenderVertexes(Direction direction) {
+    public static float[][] getRenderUVs(Direction direction) {
+        return FACE_UVS[direction.get3DDataValue()];
+    }
+
+    public static float[][] getRenderVertexes(Direction direction) {
         return FACE_VERTEXES[direction.get3DDataValue()];
     }
 

@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
@@ -34,6 +36,15 @@ public class SkinModelManager {
 
     public static SkinModelManager getInstance() {
         return INSTANCE;
+    }
+
+    public BakedModel getModel(BakedSkinPart bakedPart, BakedSkin bakedSkin, ItemStack itemStack, Entity entity) {
+        // yep, we prefer to use the overridden item model.
+        BakedModel itemModel = bakedSkin.getItemModel();
+        if (itemModel != null) {
+            return itemModel;
+        }
+        return getModel(bakedPart.getType(), itemStack, entity.getLevel(), entity);
     }
 
     public BakedModel getModel(ISkinPartType partType, ItemStack itemStack, @Nullable Level level, @Nullable Entity entity) {

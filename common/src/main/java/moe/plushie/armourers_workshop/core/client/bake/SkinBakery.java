@@ -11,8 +11,9 @@ import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
-import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
+import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV0;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinUsedCounter;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
@@ -23,8 +24,11 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.function.BiFunction;
 
 @Environment(EnvType.CLIENT)
 public final class SkinBakery implements ISkinLibraryListener {
@@ -69,6 +73,13 @@ public final class SkinBakery implements ISkinLibraryListener {
             BAKERY = null;
             SkinVertexBufferBuilder.clearAllCache();
             ModLog.debug("stop bakery");
+        }
+    }
+
+    public static void clear() {
+        if (BAKERY != null) {
+            BAKERY.manager.clear();
+            SkinVertexBufferBuilder.clearAllCache();
         }
     }
 
@@ -165,34 +176,82 @@ public final class SkinBakery implements ISkinLibraryListener {
 //            if (ClientProxy.getTexturePaintType() == TexturePaintType.MODEL_REPLACE_AW) {
 //                skin.addPaintDataParts();
 //            }
+//
+//        Skin oldSkin = skin;
+//        if (identifier.equals("fs:/test-bb/test.armour") && ModDebugger.flag1 == 1) {
+////            File file = new File("/Users/sagesse/Projects/Minecraft/CustomPlayerModel/steve");
+////            File file = new File("/Users/sagesse/Downloads/Ahri Spirit Blossom.zip");
+////            File file = new File("/Users/sagesse/Downloads/Ahri Spirit Blossom");
+//            File file = new File("/Users/sagesse/Downloads/Default");
+////            File file = new File("/Users/sagesse/Downloads/Hakurei Reimu");
+////            File file = new File("/Users/sagesse/Downloads/Syameimaru Aya.zip");
+////            File file = new File("/Users/sagesse/Downloads/legacy_guide.mcaddon");
+//            try {
+//                skin = SkinSerializerV21.readSkinFromFile(file);
+////            BedrockModel model = BedrockModelLoader.readFromStream(new FileInputStream(file));
+//                ModLog.debug("{}", skin);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
 
         SkinUsedCounter usedCounter = new SkinUsedCounter();
+        ArrayList<BakedSkinPart> rootParts = new ArrayList<>();
         ArrayList<BakedSkinPart> bakedParts = new ArrayList<>();
 
         ColorScheme scheme = new ColorScheme();
         ColorDescriptor colorInfo = new ColorDescriptor();
 
-        skin.getParts().forEach(part -> {
-            PackedQuad.from(part).forEach((partType, quads) -> {
+        eachPart(skin.getParts(), null, (parent, part) -> {
+            ArrayList<BakedSkinPart> children = new ArrayList<>();
+            BakedCubeQuads.from(part).forEach((partType, quads) -> {
                 // when has a different part type, it means the skin part was split.
                 // for ensure data safety, we need create a blank skin part to manage data.
                 SkinPart usedPart = part;
                 if (usedPart.getType() != partType) {
-                    usedPart = new SkinPart.Empty(partType, quads.getBounds(), quads.getRenderShape());
+                    usedPart = new SkinPart(partType, Collections.emptyList(), new SkinCubesV0(0));
                 }
                 BakedSkinPart bakedPart = new BakedSkinPart(usedPart, quads);
+                children.add(bakedPart);
                 bakedParts.add(bakedPart);
                 usedCounter.addFaceTotal(bakedPart.getFaceTotal());
             });
+            // a part maybe bake into multiple parts,
+            // but we must add sub-parts into main parts.
+            BakedSkinPart mainChildPart = null;
+            for (BakedSkinPart bakedPart : children) {
+                if (parent != null) {
+                    parent.addPart(bakedPart);
+                } else {
+                    rootParts.add(bakedPart);
+                }
+                if (bakedPart.getPart() == part) {
+                    mainChildPart = bakedPart;
+                }
+            }
             usedCounter.add(part.getCubeData().getUsedCounter());
             // part.clearCubeData();
+            return mainChildPart;
         });
 
-        PackedQuad.from(skin.getPaintData()).forEach((partType, quads) -> {
-            SkinPart part = new SkinPart.Empty(partType, quads.getBounds(), quads.getRenderShape());
+        BakedCubeQuads.from(skin.getPaintData()).forEach((partType, quads) -> {
+            SkinPart part = new SkinPart(partType, Collections.emptyList(), new SkinCubesV0(0));
             BakedSkinPart bakedPart = new BakedSkinPart(part, quads);
+            bakedPart.setRenderPolygonOffset(20);
             bakedParts.add(bakedPart);
+            rootParts.add(bakedPart);
         });
+
+        // we only bake special parts in preview mode.
+        if (skin.isPreviewMode()) {
+            BakedCubeQuads.from(skin.getPreviewData()).forEach((partType, quads) -> {
+                SkinPart part = new SkinPart(partType, Collections.emptyList(), new SkinCubesV0(0));
+                BakedSkinPart bakedPart = new BakedSkinPart(part, quads);
+                bakedPart.setRenderPolygonOffset(bakedParts.size());
+                bakedParts.add(bakedPart);
+                rootParts.add(bakedPart);
+            });
+        }
 
         int partId = 0;
         ArrayList<BakedSkinPart> iterator = new ArrayList<>(bakedParts);
@@ -213,7 +272,7 @@ public final class SkinBakery implements ISkinLibraryListener {
 //            }
 //            bakeTimes.set(index, (int) totalTime);
 
-        BakedSkin bakedSkin = new BakedSkin(identifier, skin, scheme, usedCounter, colorInfo, bakedParts);
+        BakedSkin bakedSkin = new BakedSkin(identifier, skin, scheme, colorInfo, rootParts, usedCounter);
         ModLog.debug("'{}' => accept baked skin, time: {}ms", identifier, totalTime);
         complete.accept(bakedSkin);
         RenderSystem.recordRenderCall(() -> notifyBake(identifier, bakedSkin));
@@ -233,6 +292,13 @@ public final class SkinBakery implements ISkinLibraryListener {
 
     private void notifyBake(String identifier, BakedSkin bakedSkin) {
         listeners.forEach(listener -> listener.didBake(identifier, bakedSkin));
+    }
+
+    private void eachPart(Collection<SkinPart> parts, BakedSkinPart parent, BiFunction<BakedSkinPart, SkinPart, BakedSkinPart> consumer) {
+        for (SkinPart part : parts) {
+            BakedSkinPart value = consumer.apply(parent, part);
+            eachPart(part.getParts(), value, consumer);
+        }
     }
 
     public int getAverageBakeTime() {

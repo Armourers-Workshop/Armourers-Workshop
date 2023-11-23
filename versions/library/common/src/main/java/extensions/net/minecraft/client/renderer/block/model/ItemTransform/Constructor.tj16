@@ -1,0 +1,33 @@
+package extensions.net.minecraft.client.renderer.block.model.ItemTransform;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.math.ITransformf;
+import net.minecraft.client.renderer.block.model.ItemTransform;
+import org.jetbrains.annotations.Nullable;
+import com.mojang.math.Vector3f;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+
+@Extension
+@Available("[1.16, 1.20)")
+public class Constructor {
+
+    public static ItemTransform from(@ThisClass Class<?> clazz, @Nullable ITransformf transform) {
+        if (transform != null) {
+            float tx = transform.getTranslate().getX();
+            float ty = transform.getTranslate().getY();
+            float tz = transform.getTranslate().getZ();
+            float rx = transform.getRotation().getX();
+            float ry = transform.getRotation().getY();
+            float rz = transform.getRotation().getZ();
+            float sx = transform.getScale().getX();
+            float sy = transform.getScale().getY();
+            float sz = transform.getScale().getZ();
+            return new ItemTransform(new Vector3f(tx, ty, tz), new Vector3f(rx, ry, rz), new Vector3f(sx, sy, sz));
+        }
+        return ItemTransform.NO_TRANSFORM;
+    }
+
+
+}

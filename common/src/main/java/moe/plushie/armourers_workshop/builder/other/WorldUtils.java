@@ -16,11 +16,11 @@ import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.core.data.OptionalDirection;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCube;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV0;
-import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.exception.SkinSaveException;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -181,7 +181,7 @@ public final class WorldUtils {
 
         if (markerCheck) {
             if (partType.getMinimumMarkersNeeded() > markerBlocks.size()) {
-                throw  SkinSaveException.Type.MARKER_ERROR.build("missingMarker", TranslateUtils.Name.of(partType));
+                throw SkinSaveException.Type.MARKER_ERROR.build("missingMarker", TranslateUtils.Name.of(partType));
             }
 
             if (markerBlocks.size() > partType.getMaximumMarkersNeeded()) {
@@ -205,7 +205,7 @@ public final class WorldUtils {
         OptionalDirection marker = SkinCubeBlock.getMarker(blockState);
 
         cube.setType(SkinCubeTypes.byBlock(blockState.getBlock()));
-        cube.setPos(new Vector3i(ix, iy, iz));
+        cube.setPosition(new Vector3i(ix, iy, iz));
         for (Direction dir : Direction.values()) {
             IPaintColor paintColor = target.getColor(dir);
             Direction resolvedDir = transform.invRotate(dir);
@@ -236,9 +236,9 @@ public final class WorldUtils {
         IVector3i offset = skinPart.getOffset();
         ISkinCubeProvider cubeData = partData.getCubeData();
 
-        for (int i = 0; i < cubeData.getCubeCount(); i++) {
+        for (int i = 0; i < cubeData.getCubeTotal(); i++) {
             ISkinCube cube = cubeData.getCube(i);
-            IVector3i cubePos = cube.getPos();
+            IVector3i cubePos = cube.getPosition();
             ISkinCubeType blockData = cube.getType();
             OptionalDirection markerFacing = OptionalDirection.NONE;
             for (ISkinMarker marker : partData.getMarkers()) {

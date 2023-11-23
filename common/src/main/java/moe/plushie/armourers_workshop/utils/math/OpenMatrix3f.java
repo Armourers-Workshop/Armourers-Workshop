@@ -212,6 +212,19 @@ public class OpenMatrix3f implements IMatrix3f {
         return this;
     }
 
+    public OpenMatrix3f setIdentity() {
+        m00 = 1.0f;
+        m01 = 0.0f;
+        m02 = 0.0f;
+        m10 = 0.0f;
+        m11 = 1.0f;
+        m12 = 0.0f;
+        m20 = 0.0f;
+        m21 = 0.0f;
+        m22 = 1.0f;
+        return this;
+    }
+
     public OpenMatrix3f copy() {
         return new OpenMatrix3f(this);
     }

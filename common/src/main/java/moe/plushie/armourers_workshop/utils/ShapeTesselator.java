@@ -37,8 +37,8 @@ public class ShapeTesselator {
         auto pose = poseStack.last().pose();
         auto normal = poseStack.last().normal();
 
-        float n = 0.020f;
-        float m = 0.002f;
+        float n = 0.10f;
+        float m = 0.01f;
 
         float x0 = x - w * 0.5f;
         float y0 = y - h * 0.5f;

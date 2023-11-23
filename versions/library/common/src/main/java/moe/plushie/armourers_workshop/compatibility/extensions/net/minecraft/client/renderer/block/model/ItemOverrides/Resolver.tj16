@@ -16,7 +16,7 @@ import manifold.ext.rt.api.This;
 public class Resolver {
 
     @Nullable
-    public static BakedModel resolve(@This ItemOverrides itemOverrides, BakedModel bakedModel, ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity, int index) {
+    public static BakedModel resolve(@This ItemOverrides itemOverrides, BakedModel bakedModel, ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity, int colorIndexReference) {
         return itemOverrides.resolve(bakedModel, itemStack, clientLevel, livingEntity);
     }
 }

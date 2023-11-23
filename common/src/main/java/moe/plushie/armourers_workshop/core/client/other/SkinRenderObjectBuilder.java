@@ -7,9 +7,9 @@ import com.google.common.cache.RemovalNotification;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.armature.ModelBinder;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -94,13 +94,13 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
     }
 
     @Override
-    public void addShape(ITransformf[] transforms, SkinRenderContext context) {
+    public void addShape(IJointTransform[] transforms, SkinRenderContext context) {
         if (transforms == null) {
             return;
         }
         auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         ModelBinder.BIPPED_BOXES.forEach((joint, rect) -> {
-            ITransformf transform = transforms[joint.getId()];
+            IJointTransform transform = transforms[joint.getId()];
             if (transform == null) {
                 return;
             }
@@ -280,7 +280,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         int draw(CachedTask task, SkinRenderContext context) {
             int lightmap = context.getLightmap();
             float partialTicks = context.getPartialTicks();
-            float renderPriority = context.getRenderPriority();
+            float renderPriority = context.getReferenced().getRenderPriority();
             IPoseStack poseStack = context.pose();
             PoseStack modelViewStack = RenderSystem.getModelViewStack();
             OpenPoseStack finalPostStack = new OpenPoseStack();
@@ -309,6 +309,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         float partialTicks;
 
         float additionalPolygonOffset;
+        boolean isGrowing;
 
         OpenPoseStack poseStack;
         CompiledTask compiledTask;
@@ -319,6 +320,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
             this.poseStack = poseStack;
             this.lightmap = lightmap;
             this.partialTicks = partialTicks;
+            this.isGrowing = SkinRenderType.isGrowing(compiledTask.renderType);
             this.additionalPolygonOffset = renderPriority;
         }
 
@@ -363,6 +365,11 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         @Override
         public int getLightmap() {
             return lightmap;
+        }
+
+        @Override
+        public boolean isGrowing() {
+            return isGrowing;
         }
     }
 }

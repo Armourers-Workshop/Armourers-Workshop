@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.armature;
 
 import com.google.common.collect.ImmutableMap;
-import moe.plushie.armourers_workshop.api.client.armature.IJoint;
+import moe.plushie.armourers_workshop.api.armature.IJoint;
+import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.core.AfterTransformModifier;
 import moe.plushie.armourers_workshop.core.armature.core.AllayBodyJointModifier;
 import moe.plushie.armourers_workshop.core.armature.core.AllayHeadJointModifier;
@@ -84,7 +84,7 @@ public abstract class ArmatureBuilder {
         });
     }
 
-    public ITransformf[] build(IModel model) {
+    public IJointTransform[] build(IModel model) {
         HashMap<IJoint, Collection<ArmatureModifier>> modifiers = new HashMap<>();
         jointModifiers.forEach((joint, modifiers1) -> modifiers.computeIfAbsent(joint, k -> new ArrayList<>()).addAll(modifiers1));
         transformModifiers.forEach((joint, modifiers1) -> modifiers.computeIfAbsent(joint, k -> new ArrayList<>()).addAll(modifiers1));
@@ -93,8 +93,8 @@ public abstract class ArmatureBuilder {
         return builder.build();
     }
 
-    public ITransformf buildTransform(IJoint joint, IModel model, Collection<ArmatureModifier> modifiers) {
-        ITransformf transform = ITransformf.NONE;
+    public IJointTransform buildTransform(IJoint joint, IModel model, Collection<ArmatureModifier> modifiers) {
+        IJointTransform transform = IJointTransform.NONE;
         for (ArmatureModifier modifier : modifiers) {
             transform = modifier.apply(joint, model, transform);
         }

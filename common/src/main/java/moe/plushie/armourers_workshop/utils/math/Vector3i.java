@@ -41,25 +41,29 @@ public class Vector3i implements Comparable<Vector3i>, IVector3i, Position {
             return false;
         }
         Vector3i v = (Vector3i) other;
-        if (this.getX() != v.getX()) {
+        if (getX() != v.getX()) {
             return false;
-        } else if (this.getY() != v.getY()) {
-            return false;
-        } else {
-            return this.getZ() == v.getZ();
         }
+        if (getY() != v.getY()) {
+            return false;
+        }
+        return getZ() == v.getZ();
     }
 
     public int hashCode() {
-        return (this.getY() + this.getZ() * 31) * 31 + this.getX();
+        return (getY() + getZ() * 31) * 31 + getX();
     }
 
     public int compareTo(Vector3i v) {
-        if (this.getY() == v.getY()) {
-            return this.getZ() == v.getZ() ? this.getX() - v.getX() : this.getZ() - v.getZ();
-        } else {
-            return this.getY() - v.getY();
+        int dy = getY() - v.getY();
+        if (dy != 0) {
+            return dy;
         }
+        int dz = getZ() - v.getZ();
+        if (dz != 0) {
+            return dz;
+        }
+        return getX() - v.getX();
     }
 
     public BlockPos asBlockPos() {
@@ -108,63 +112,66 @@ public class Vector3i implements Comparable<Vector3i>, IVector3i, Position {
         this.z = z;
     }
 
-    public Vector3i above() {
-        return this.above(1);
+    public int get(Direction.Axis axis) {
+        return axis.choose(x, y, z);
     }
 
-    public Vector3i above(int p_177981_1_) {
-        return this.relative(Direction.UP, p_177981_1_);
+    public Vector3i above() {
+        return above(1);
+    }
+
+    public Vector3i above(int step) {
+        return relative(Direction.UP, step);
     }
 
     public Vector3i below() {
-        return this.below(1);
+        return below(1);
     }
 
-    public Vector3i below(int p_177979_1_) {
-        return this.relative(Direction.DOWN, p_177979_1_);
+    public Vector3i below(int step) {
+        return relative(Direction.DOWN, step);
     }
 
     public Vector3i relative(Direction dir, int i) {
-        return i == 0 ? this : new Vector3i(this.getX() + dir.getStepX() * i, this.getY() + dir.getStepY() * i, this.getZ() + dir.getStepZ() * i);
+        if (i == 0) {
+            return this;
+        }
+        return new Vector3i(getX() + dir.getStepX() * i, getY() + dir.getStepY() * i, getZ() + dir.getStepZ() * i);
     }
 
     public Vector3i cross(Vector3i pos) {
-        return new Vector3i(this.getY() * pos.getZ() - this.getZ() * pos.getY(), this.getZ() * pos.getX() - this.getX() * pos.getZ(), this.getX() * pos.getY() - this.getY() * pos.getX());
+        return new Vector3i(getY() * pos.getZ() - getZ() * pos.getY(), getZ() * pos.getX() - getX() * pos.getZ(), getX() * pos.getY() - getY() * pos.getX());
     }
 
     public boolean closerThan(Vector3i pos, double d) {
-        return this.distSqr(pos.getX(), pos.getY(), pos.getZ(), false) < d * d;
+        return distSqr(pos.getX(), pos.getY(), pos.getZ(), false) < d * d;
     }
 
     public boolean closerThan(Position v, double f) {
-        return this.distSqr(v.x(), v.y(), v.z(), true) < f * f;
+        return distSqr(v.x(), v.y(), v.z(), true) < f * f;
     }
 
     public double distSqr(Vector3i v) {
-        return this.distSqr(v.getX(), v.getY(), v.getZ(), true);
+        return distSqr(v.getX(), v.getY(), v.getZ(), true);
     }
 
     public double distSqr(Position v, boolean fl) {
-        return this.distSqr(v.x(), v.y(), v.z(), fl);
+        return distSqr(v.x(), v.y(), v.z(), fl);
     }
 
-    public double distSqr(double p_218140_1_, double p_218140_3_, double p_218140_5_, boolean p_218140_7_) {
+    public double distSqr(double tx, double ty, double tz, boolean p_218140_7_) {
         double d0 = p_218140_7_ ? 0.5D : 0.0D;
-        double d1 = (double) this.getX() + d0 - p_218140_1_;
-        double d2 = (double) this.getY() + d0 - p_218140_3_;
-        double d3 = (double) this.getZ() + d0 - p_218140_5_;
+        double d1 = (double) getX() + d0 - tx;
+        double d2 = (double) getY() + d0 - ty;
+        double d3 = (double) getZ() + d0 - tz;
         return d1 * d1 + d2 * d2 + d3 * d3;
     }
 
     public int distManhattan(Vector3i pos) {
-        float f = (float) Math.abs(pos.getX() - this.getX());
-        float f1 = (float) Math.abs(pos.getY() - this.getY());
-        float f2 = (float) Math.abs(pos.getZ() - this.getZ());
+        float f = (float) Math.abs(pos.getX() - getX());
+        float f1 = (float) Math.abs(pos.getY() - getY());
+        float f2 = (float) Math.abs(pos.getZ() - getZ());
         return (int) (f + f1 + f2);
-    }
-
-    public int get(Direction.Axis axis) {
-        return axis.choose(this.x, this.y, this.z);
     }
 
     @Override

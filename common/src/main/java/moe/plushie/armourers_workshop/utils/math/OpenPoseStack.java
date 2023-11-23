@@ -20,6 +20,11 @@ public class OpenPoseStack implements IPoseStack {
     public void popPose() {
     }
 
+    public void setIdentity() {
+        poseMatrix.setIdentity();
+        normalMatrix.setIdentity();
+    }
+
     @Override
     public void translate(float x, float y, float z) {
         poseMatrix.multiply(OpenMatrix4f.createTranslateMatrix(x, y, z));

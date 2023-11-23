@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.compatibility.forge.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.api.client.model.IModelPartPose;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFightModelHolder;
 import moe.plushie.armourers_workshop.core.client.model.CachedModel;
 import moe.plushie.armourers_workshop.init.client.EpicFlightWardrobeHandler;
@@ -88,7 +88,7 @@ public abstract class ForgeEpicFightRendererMixin {
         EpicFlightWardrobeHandler.onRenderLivingPre(entityIn, partialTicks, packedLightIn, poseStack, buffers, renderer, isFirstPersonRenderer, name -> {
             Joint joint = armature.searchJointByName(name);
             if (joint == null) {
-                return ITransformf.NONE;
+                return IJointTransform.NONE;
             }
             // Referenced: yesman.epicfight.api.client.model.AnimatedMesh.drawModelWithPose
             OpenMatrix4f jointPose = OpenMatrix4f.mul(poses[joint.getId()], joint.getToOrigin(), null);

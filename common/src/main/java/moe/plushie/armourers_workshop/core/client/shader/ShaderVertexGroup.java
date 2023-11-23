@@ -1,5 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
+import moe.plushie.armourers_workshop.core.client.other.SkinTextureManager;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
+import moe.plushie.armourers_workshop.utils.texture.TextureAnimationController;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
@@ -12,15 +16,21 @@ public class ShaderVertexGroup {
 
     public int maxVertexCount;
 
-    private final RenderType type;
+    private final RenderType renderType;
+    private final TextureAnimationController animationController;
     private final ArrayList<ShaderVertexObject> objects = new ArrayList<>();
 
-    public ShaderVertexGroup(RenderType type) {
-        this.type = type;
+    public ShaderVertexGroup(RenderType renderType) {
+        this.renderType = renderType;
+        this.animationController = SkinTextureManager.getInstance().getTextureAnimationController(renderType);
     }
 
-    public RenderType getType() {
-        return type;
+    public RenderType getRenderType() {
+        return renderType;
+    }
+
+    public OpenMatrix4f getTextureMatrix(int ticks) {
+        return animationController.getTextureMatrix(ticks);
     }
 
     public boolean isEmpty() {

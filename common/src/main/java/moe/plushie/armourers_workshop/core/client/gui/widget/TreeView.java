@@ -6,25 +6,35 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSString;
 import com.apple.library.impl.AppearanceImpl;
+import com.apple.library.impl.DelegateImpl;
 import com.apple.library.impl.SoundManagerImpl;
 import com.apple.library.impl.StateValueImpl;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIEvent;
+import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIImage;
+import com.apple.library.uikit.UIMenuController;
+import com.apple.library.uikit.UIMenuItem;
 import com.apple.library.uikit.UIScrollView;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 public class TreeView extends UIScrollView {
 
-    private final TreeNode rootNode = new TreeNode(new NSString("Root"));
-    private final HashMap<String, Entry> entries = new HashMap<>();
+    protected final TreeNode rootNode = new TreeNode(new NSString("Root"));
+    protected final HashMap<String, Entry> entries = new HashMap<>();
 
-    private boolean dirt = true;
-    private TreeNode selectedNode = null;
+    protected boolean dirt = true;
+
+    protected UIMenuController menuController;
+    protected TreeNode selectedNode = null;
+
+    protected final DelegateImpl<TreeViewDelegate> delegate = DelegateImpl.of(new TreeViewDelegate() {
+    });
 
     public TreeView(CGRect frame) {
         super(frame);
@@ -68,6 +78,27 @@ public class TreeView extends UIScrollView {
     public void setNeedsDisplay(TreeNode node) {
         dirt = true;
         setNeedsLayout();
+    }
+
+    public UIMenuController menuController() {
+        if (menuController != null) {
+            return menuController;
+        }
+        return UIMenuController.getInstance();
+    }
+
+    public void setMenuController(UIMenuController menuController) {
+        this.menuController = menuController;
+    }
+
+    @Override
+    public TreeViewDelegate delegate() {
+        return this.delegate.get();
+    }
+
+    public void setDelegate(TreeViewDelegate delegate) {
+        super.setDelegate(delegate);
+        this.delegate.set(delegate);
     }
 
     private void buildEntriesIfNeeded() {
@@ -114,7 +145,17 @@ public class TreeView extends UIScrollView {
         }
     }
 
-    public static class Entry extends UIControl {
+    private void showNodeMenuAtPoint(TreeNode node, CGPoint point) {
+        Collection<UIMenuItem> menuItems = delegate.invoker().treeViewShouldShowMenuForNode(this, node);
+        if (menuItems == null || menuItems.isEmpty()) {
+            return;
+        }
+        UIMenuController menuController = menuController();
+        menuController.setMenuItems(menuItems);
+        menuController.showMenu(this, point);
+    }
+
+    protected static class Entry extends UIControl {
 
         private static final UIImage FOLDING_IMAGE = UIImage.of(ModTextures.LIST).uv(8, 240).build();
         private static final UIImage UNFOLDING_IMAGE = UIImage.of(ModTextures.LIST).uv(8, 248).build();
@@ -164,7 +205,7 @@ public class TreeView extends UIScrollView {
             }
             // show the title always.
             if (title != null) {
-                context.drawText(title, iconRect.getMaxX(), 1, null, textColor.currentValue(), null);
+                context.drawText(title, iconRect.getMaxX(), 1, UIFont.systemFont(), textColor.currentValue(), null);
             }
         }
 
@@ -186,6 +227,10 @@ public class TreeView extends UIScrollView {
             if (treeView != null) {
                 treeView.selectNode(node);
                 SoundManagerImpl.click();
+            }
+            // popover the menu of node.
+            if (treeView != null && event.type() == UIEvent.Type.MOUSE_RIGHT_DOWN) {
+                treeView.showNodeMenuAtPoint(node, event.locationInView(treeView));
             }
         }
 

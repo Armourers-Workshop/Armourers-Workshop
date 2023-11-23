@@ -10,7 +10,7 @@ import manifold.ext.rt.api.This;
 @Available("[1.16, 1.18)")
 public class SetupProvider {
 
-    public static void setupBufferState(@This VertexFormatElement element, int index, long offset, int strict) {
+    public static void setupBufferState(@This VertexFormatElement element, int colorIndexReference, long offset, int strict) {
         element.setupBufferState(offset, strict);
     }
 }

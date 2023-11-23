@@ -32,7 +32,7 @@ public class FabricGuiGraphicsMixin {
         }
         GuiGraphics graphics = ObjectUtils.unsafeCast(this);
         int screenWidth = graphics.guiWidth();
-        int screenHeight = graphics.guiHeight();;
+        int screenHeight = graphics.guiHeight();
         int i = 0;
         int j = tooltips.size() == 1 ? -2 : 0;
         for (ClientTooltipComponent tooltip : tooltips) {
@@ -50,7 +50,7 @@ public class FabricGuiGraphicsMixin {
         if (k2 + j + 6 > screenHeight) {
             k2 = screenHeight - j - 6;
         }
-        CGGraphicsContext context = AbstractGraphicsRenderer.of(font, graphics, mouseX, mouseY, 0);
+        CGGraphicsContext context = AbstractGraphicsRenderer.of(graphics, mouseX, mouseY, 0);
         RenderTooltipEvents.BEFORE.invoker().onRenderTooltip(itemStack, j2, k2, i, j, screenWidth, screenHeight, context);
     }
 

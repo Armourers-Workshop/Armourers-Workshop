@@ -1,9 +1,10 @@
 package moe.plushie.armourers_workshop.core.skin.exporter;
 
+import moe.plushie.armourers_workshop.api.math.IRectangle3f;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.api.skin.ISkinExporter;
-import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
@@ -102,9 +103,16 @@ public class SkinExporterPolygon implements ISkinExporter {
         poseStack.rotate(Vector3f.YP.rotationDegrees(90));
 
         for (SkinCubeFace face : faces) {
-            byte[][] vertexes = SkinUtils.getRenderVertexes(face.getDirection());
+            IRectangle3f shape = face.getShape();
+            float x = shape.getX();
+            float y = shape.getY();
+            float z = shape.getZ();
+            float w = shape.getWidth();
+            float h = shape.getHeight();
+            float d = shape.getDepth();
+            float[][] vertexes = SkinUtils.getRenderVertexes(face.getDirection());
             for (int i = 0; i < 4; ++i) {
-                writeVert(poseStack, os, face.x + vertexes[i][0], face.y + vertexes[i][1], face.z + vertexes[i][2], face.getColor());
+                writeVert(poseStack, os, x + vertexes[i][0] * w, y + vertexes[i][1] * h, z + vertexes[i][2] * d, face.getColor());
             }
         }
 
@@ -117,7 +125,7 @@ public class SkinExporterPolygon implements ISkinExporter {
         outputStream.close();
     }
 
-    private void writeVert(OpenPoseStack poseStack, OutputStreamWriter os, float x, float y, float z, PaintColor color) throws IOException {
+    private void writeVert(OpenPoseStack poseStack, OutputStreamWriter os, float x, float y, float z, IPaintColor color) throws IOException {
         Vector4f q = new Vector4f(x, y, z, 1);
         q.transform(poseStack.lastPose());
         os.write(String.format("%s %s %s %d %d %d", f2s(q.x()), f2s(q.y()), f2s(q.z()), color.getRed(), color.getGreen(), color.getBlue()) + CRLF);

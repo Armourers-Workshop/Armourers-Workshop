@@ -2,19 +2,19 @@ package moe.plushie.armourers_workshop.core.skin.part;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPart;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
+import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
+import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
-import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV1;
-import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
-import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 public class SkinPart implements ISkinPart {
@@ -23,66 +23,56 @@ public class SkinPart implements ISkinPart {
 
     protected ISkinPartType partType;
 
-    protected OpenVoxelShape renderShape;
-    protected Rectangle3i partBounds;
-
-    protected SkinTransform transform = SkinTransform.IDENTIFIER;
+    protected ISkinTransform transform = SkinBasicTransform.IDENTITY;
     protected SkinProperties properties = SkinProperties.EMPTY;
 
-    private HashMap<Long, Rectangle3i> blockGrid;
     private SkinCubes cubeData;
-    private final ArrayList<SkinMarker> markerBlocks;
 
-    public SkinPart(ISkinPartType partType, ArrayList<SkinMarker> markers, SkinCubes cubes) {
+    private Object blobs;
+    private HashMap<BlockPos, Rectangle3i> blockBounds;
+
+    private final ArrayList<SkinPart> children = new ArrayList<>();
+    private final ArrayList<SkinMarker> markerBlocks = new ArrayList<>();
+
+    public SkinPart(ISkinPartType partType, Collection<SkinMarker> markers, SkinCubes cubes) {
         this.partType = partType;
-        this.renderShape = cubes.getRenderShape();
 
         this.cubeData = cubes;
-        this.markerBlocks = markers;
+        this.cubeData.getUsedCounter().addMarkers(markers.size());
 
-        this.setupPartBounds();
-
-        if (markers != null) {
-            cubes.getUsedCounter().addMarkers(markers.size());
-        }
+        this.markerBlocks.addAll(markers);
     }
 
-    public SkinProperties getProperties() {
-        return properties;
+    public void addPart(SkinPart part) {
+        children.add(part);
+    }
+
+    public void removePart(SkinPart part) {
+        children.remove(part);
     }
 
     public void setProperties(SkinProperties properties) {
         this.properties = properties;
     }
 
+    public SkinProperties getProperties() {
+        return properties;
+    }
+
     public int getModelCount() {
         return 0;
     }
 
-    private void setupPartBounds() {
-        if (partType == SkinPartTypes.BLOCK || partType == SkinPartTypes.BLOCK_MULTI) {
-            setupBlockBounds();
-        } else {
-            partBounds = new Rectangle3i(this.renderShape.bounds());
-        }
-    }
-
     public void setSkinPart(ISkinPartType skinPart) {
         this.partType = skinPart;
-        setupPartBounds();
     }
 
     public HashMap<BlockPos, Rectangle3i> getBlockBounds() {
-        if (blockGrid != null) {
-            HashMap<BlockPos, Rectangle3i> blockBounds = new HashMap<>();
-            blockGrid.forEach((key, value) -> blockBounds.put(BlockPos.of(key), value));
+        if (blockBounds != null) {
             return blockBounds;
         }
-        return null;
-    }
-
-    private void setupBlockBounds() {
-        blockGrid = new HashMap<>();
+        HashMap<Long, Rectangle3i> blockGrid = new HashMap<>();
+        blockBounds = new HashMap<>();
         cubeData.forEach((i, x, y, z) -> {
             int tx = MathUtils.floor((x + 8) / 16f);
             int ty = MathUtils.floor((y + 8) / 16f);
@@ -91,6 +81,8 @@ public class SkinPart implements ISkinPart {
             Rectangle3i rec = new Rectangle3i(-(x - tx * 16) - 1, -(y - ty * 16) - 1, z - tz * 16, 1, 1, 1);
             blockGrid.computeIfAbsent(key, k -> rec).union(rec);
         });
+        blockGrid.forEach((key, value) -> blockBounds.put(BlockPos.of(key), value));
+        return blockBounds;
     }
 
     public SkinCubes getCubeData() {
@@ -110,20 +102,20 @@ public class SkinPart implements ISkinPart {
         return name;
     }
 
-    public void setTransform(SkinTransform transform) {
+    public void setTransform(ISkinTransform transform) {
         this.transform = transform;
     }
 
-    public SkinTransform getTransform() {
+    public ISkinTransform getTransform() {
         return transform;
     }
 
-    public SkinPaintData getPaintData() {
-        return null;
+    public void setBlobs(Object blobs) {
+        this.blobs = blobs;
     }
 
     public Object getBlobs() {
-        return null;
+        return blobs;
     }
 
     @Override
@@ -132,23 +124,18 @@ public class SkinPart implements ISkinPart {
     }
 
     @Override
-    public ArrayList<SkinMarker> getMarkers() {
+    public ArrayList<SkinPart> getParts() {
+        return children;
+    }
+
+    @Override
+    public Collection<SkinMarker> getMarkers() {
         return markerBlocks;
     }
 
     @Override
     public String toString() {
-        return "SkinPart [cubeData=" + cubeData + ", markerBlocks=" + markerBlocks + ", skinPart=" + partType.getRegistryName() + "]";
-    }
-
-    public static class Empty extends SkinPart {
-
-        public Empty(ISkinPartType partType, Rectangle3i bounds, OpenVoxelShape renderShape) {
-            super(partType, new ArrayList<>(), new SkinCubesV1(0));
-            this.partBounds = bounds;
-            this.renderShape = renderShape;
-            this.setProperties(SkinProperties.create());
-        }
+        return ObjectUtils.makeDescription(this, "cubeData", cubeData, "markerBlocks", markerBlocks, "type", partType);
     }
 
     public static class Builder {
@@ -157,14 +144,10 @@ public class SkinPart implements ISkinPart {
 
         private String name;
         private SkinCubes cubes;
-        private SkinPaintData paintData;
-        private SkinTransform transform = SkinTransform.IDENTIFIER;
+        private ISkinTransform transform = SkinBasicTransform.IDENTITY;
         private ArrayList<SkinMarker> markers = new ArrayList<>();
         private SkinProperties properties;
         private Object blobs;
-
-        private int id = 0;
-        private Integer parentId;
 
         public Builder(ISkinPartType partType) {
             this.partType = partType;
@@ -175,17 +158,7 @@ public class SkinPart implements ISkinPart {
             return this;
         }
 
-        public Builder id(int id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder parent(Integer parentId) {
-            this.parentId = parentId;
-            return this;
-        }
-
-        public Builder transform(SkinTransform transform) {
+        public Builder transform(ISkinTransform transform) {
             if (transform != null) {
                 this.transform = transform;
             }
@@ -197,12 +170,7 @@ public class SkinPart implements ISkinPart {
             return this;
         }
 
-        public Builder paintData(SkinPaintData paintData) {
-            this.paintData = paintData;
-            return this;
-        }
-
-        public Builder markers(ArrayList<SkinMarker> markers) {
+        public Builder markers(Collection<SkinMarker> markers) {
             if (markers != null) {
                 this.markers.addAll(markers);
             }
@@ -223,6 +191,7 @@ public class SkinPart implements ISkinPart {
             SkinPart skinPart = new SkinPart(partType, markers, cubes);
             skinPart.setName(name);
             skinPart.setTransform(transform);
+            skinPart.setBlobs(blobs);
             return skinPart;
         }
     }

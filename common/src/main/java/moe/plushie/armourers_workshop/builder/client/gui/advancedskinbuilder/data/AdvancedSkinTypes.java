@@ -21,16 +21,6 @@ public class AdvancedSkinTypes {
     public static final Entry GENERAL_ARMOR_WINGS = register("general", SkinTypes.ARMOR_WINGS);
     public static final Entry GENERAL_ARMOR_OUTFIT = register("general", SkinTypes.OUTFIT);
 
-    public static final Entry GENERAL_ITEM_SWORD = register("general", SkinTypes.ITEM_SWORD);
-    public static final Entry GENERAL_ITEM_SHIELD = register("general", SkinTypes.ITEM_SHIELD);
-    public static final Entry GENERAL_ITEM_BOW = register("general", SkinTypes.ITEM_BOW);
-    public static final Entry GENERAL_ITEM_TRIDENT = register("general", SkinTypes.ITEM_TRIDENT);
-
-    public static final Entry GENERAL_TOOL_PICKAXE = register("general", SkinTypes.TOOL_PICKAXE);
-    public static final Entry GENERAL_TOOL_AXE = register("general", SkinTypes.TOOL_AXE);
-    public static final Entry GENERAL_TOOL_SHOVEL = register("general", SkinTypes.TOOL_SHOVEL);
-    public static final Entry GENERAL_TOOL_HOE = register("general", SkinTypes.TOOL_HOE);
-
 //    public static final Entry HORSE_ARMOR_HEAD = register("horse", SkinTypes.ARMOR_HEAD);
 //    public static final Entry HORSE_ARMOR_CHEST = register("horse", SkinTypes.ARMOR_CHEST);
 //    public static final Entry HORSE_ARMOR_FEET = register("horse", SkinTypes.ARMOR_FEET);
@@ -45,8 +35,20 @@ public class AdvancedSkinTypes {
 //    public static final Entry IRONMAN_ARMOR_WINGS = register("ironman", SkinTypes.ARMOR_WINGS);
 //    public static final Entry IRONMAN_ARMOR_OUTFIT = register("ironman", SkinTypes.OUTFIT);
 
-    public static final Entry OTHER_ITEM = register("other", SkinTypes.ITEM);
-    public static final Entry OTHER_BLOCK = register("other", SkinTypes.BLOCK);
+
+    public static final Entry ITEM = register("item", SkinTypes.ITEM);
+
+    public static final Entry ITEM_SWORD = register("item", SkinTypes.ITEM_SWORD);
+    public static final Entry ITEM_SHIELD = register("item", SkinTypes.ITEM_SHIELD);
+    public static final Entry ITEM_BOW = register("item", SkinTypes.ITEM_BOW);
+    public static final Entry ITEM_TRIDENT = register("item", SkinTypes.ITEM_TRIDENT);
+
+    public static final Entry ITEM_PICKAXE = register("item", SkinTypes.TOOL_PICKAXE);
+    public static final Entry ITEM_AXE = register("item", SkinTypes.TOOL_AXE);
+    public static final Entry ITEM_SHOVEL = register("item", SkinTypes.TOOL_SHOVEL);
+    public static final Entry ITEM_HOE = register("item", SkinTypes.TOOL_HOE);
+
+    public static final Entry BLOCK = register("block", SkinTypes.BLOCK);
 
 
     public static void forEach(BiConsumer<String, List<Entry>> consumer) {

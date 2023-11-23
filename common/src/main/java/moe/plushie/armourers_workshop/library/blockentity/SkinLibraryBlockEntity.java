@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class SkinLibraryBlockEntity extends UpdatableContainerBlockEntity {
 
-    private NonNullList<ItemStack> items = NonNullList.withSize(2, ItemStack.EMPTY);
+    private final NonNullList<ItemStack> items = NonNullList.withSize(2, ItemStack.EMPTY);
 
     public SkinLibraryBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -30,11 +30,6 @@ public class SkinLibraryBlockEntity extends UpdatableContainerBlockEntity {
     @Override
     protected NonNullList<ItemStack> getItems() {
         return items;
-    }
-
-    @Override
-    protected void setItems(NonNullList<ItemStack> items) {
-        this.items = items;
     }
 
     @Override

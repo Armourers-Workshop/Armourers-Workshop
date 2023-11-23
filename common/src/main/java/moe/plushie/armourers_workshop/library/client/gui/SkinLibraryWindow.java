@@ -8,8 +8,10 @@ import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UICheckBox;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIImageView;
+import com.apple.library.uikit.UIMenuItem;
 import com.apple.library.uikit.UITextField;
 import com.apple.library.uikit.UITextFieldDelegate;
 import com.apple.library.uikit.UIView;
@@ -93,6 +95,8 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
         this.selectedPath = selectedLibrary.getRootPath();
         this.playerInventory = inventory;
         this.inventoryView.removeFromSuperview();
+        //
+        this.addMenuItem(UIMenuItem.of("import").keyDown("key.keyboard.control", "key.keyboard.i").execute(this::importItem).build());
     }
 
     @Override
@@ -365,6 +369,13 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
             setSelectedPath(entry.getPath());
             reloadData(sender);
         }
+    }
+
+    private void importItem() {
+        SkinImportDialog dialog = new SkinImportDialog(bounds());
+        dialog.showInView(this, () -> {
+            // ..
+        });
     }
 
     private void loadOrSaveItem(UIControl button) {

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.armature;
 
-import moe.plushie.armourers_workshop.api.client.armature.IJoint;
+import moe.plushie.armourers_workshop.api.armature.IJoint;
 
 @SuppressWarnings("unused")
 public class Joints {

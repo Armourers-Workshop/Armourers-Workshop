@@ -12,13 +12,11 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import manifold.ext.rt.api.auto;
 
@@ -30,11 +28,7 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     private final CGPoint mousePos;
     private final float partialTicks;
 
-    private final Font font;
-    private UIFont uifont;
-
-    public AbstractGraphicsRenderer(Font font, GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.font = font;
+    public AbstractGraphicsRenderer(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         this.graphics = graphics;
         this.mousePos = new CGPoint(mouseX, mouseY);
         this.partialTicks = partialTicks;
@@ -45,16 +39,13 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
         return impl.graphics;
     }
 
-    public static CGGraphicsContext of(Font font, GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        AbstractGraphicsRenderer impl = new AbstractGraphicsRenderer(font, graphics, mouseX, mouseY, partialTicks);
+    public static CGGraphicsContext of(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        AbstractGraphicsRenderer impl = new AbstractGraphicsRenderer(graphics, mouseX, mouseY, partialTicks);
         return new CGGraphicsContext(impl, impl);
     }
 
     @Override
-    public void renderTooltip(NSString text, CGRect rect, @Nullable UIFont font, CGGraphicsContext context) {
-        if (font == null) {
-            font = context.state().font();
-        }
+    public void renderTooltip(NSString text, CGRect rect, UIFont font, CGGraphicsContext context) {
         // there are some versions of tooltip that don't split normally,
         // and while we can't decide on the final tooltip size,
         // but we can to handle the break the newline
@@ -86,14 +77,6 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     @Override
     public float partialTicks() {
         return partialTicks;
-    }
-
-    @Override
-    public UIFont font() {
-        if (uifont == null) {
-            uifont = new UIFont(font, 9);
-        }
-        return uifont;
     }
 
     @Override

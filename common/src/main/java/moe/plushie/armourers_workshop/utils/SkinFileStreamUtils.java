@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.utils;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinFileHeader;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.exception.NewerFileVersionException;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.init.ModLog;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +22,22 @@ import java.io.OutputStream;
 
 public final class SkinFileStreamUtils {
 
+    public static Skin loadSkinFromFile(File file) {
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            Skin skin = loadSkinFromStream2(fis);
+            fis.close();
+            return skin;
+        } catch (FileNotFoundException e) {
+            ModLog.warn("skin file not found.");
+            e.printStackTrace();
+        } catch (Exception e) {
+            ModLog.error("skin file load failed.");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static boolean saveSkinToFile(File file, Skin skin) {
         ModLog.debug("save skin into '{}'", file);
         try {
@@ -36,7 +52,7 @@ public final class SkinFileStreamUtils {
             ModLog.warn("skin file not found.");
             e.printStackTrace();
             return false;
-        } catch (IOException e) {
+        } catch (Exception e) {
             ModLog.error("skin file save failed.");
             e.printStackTrace();
             return false;
@@ -49,7 +65,7 @@ public final class SkinFileStreamUtils {
             SkinSerializer.writeToStream(skin, dos);
             dos.flush();
             bos.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             ModLog.error("Skin file save failed.");
             e.printStackTrace();
             return false;
@@ -111,14 +127,6 @@ public final class SkinFileStreamUtils {
         } finally {
             StreamUtils.closeQuietly(stream);
         }
-
-//        if (skinType == null) {
-//            Skin skin = loadSkinRecovery(file);
-//            if (skin != null) {
-//                ModLog.warn("Loaded skin with recovery system.");
-//                skinType = Pair.of(skin.getType(), SkinProperties.create());
-//            }
-//        }
 
         return header;
     }

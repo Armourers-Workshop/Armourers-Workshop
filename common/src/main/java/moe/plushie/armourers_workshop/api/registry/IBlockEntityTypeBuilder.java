@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public interface IBlockEntityTypeBuilder<T extends BlockEntity> extends IRegistryBuilder<IBlockEntityType<T>> {
 
     IBlockEntityTypeBuilder<T> of(Supplier<Block> block);

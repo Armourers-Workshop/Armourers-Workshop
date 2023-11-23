@@ -15,7 +15,6 @@ import moe.plushie.armourers_workshop.compatibility.AbstractShaderTesselator;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Style;
@@ -121,7 +120,7 @@ public class TextStorageImpl {
     }
 
     public void sizeToFit() {
-        Font font = defaultFont();
+        Font font = font().impl();
         remakeTextLineIfNeeded(boundingSize, font);
     }
 
@@ -219,7 +218,10 @@ public class TextStorageImpl {
     }
 
     public UIFont font() {
-        return font;
+        if (font != null) {
+            return font;
+        }
+        return UIFont.systemFont();
     }
 
     public void setFont(UIFont font) {
@@ -442,13 +444,6 @@ public class TextStorageImpl {
             return textColor.getRGB();
         }
         return 0xffffffff;
-    }
-
-    private Font defaultFont() {
-        if (font != null) {
-            return font.impl();
-        }
-        return Minecraft.getInstance().font;
     }
 
     private List<TextLine> split(String value, Font font, float maxWidth) {

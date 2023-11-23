@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import moe.plushie.armourers_workshop.api.client.armature.IJoint;
+import moe.plushie.armourers_workshop.api.armature.IJoint;
+import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -28,14 +28,14 @@ public class SkinModelTransformer<T, M> {
     }
 
     public static <T extends Entity, M extends IModel> void fromModel(IPoseStack poseStack, T entity, M model, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinRenderContext context) {
-        auto itemStack = context.getReference();
-        auto transformType = context.getTransformType();
+        auto itemSource = context.getReferenced();
+        auto transformType = itemSource.getTransformType();
+        auto itemModel = SkinModelManager.getInstance().getModel(bakedPart, bakedSkin, itemSource.getItem(), entity);
         float f1 = 16f;
         float f2 = 1 / 16f;
-        boolean flag = (transformType == AbstractItemTransformType.THIRD_PERSON_LEFT_HAND || transformType == AbstractItemTransformType.FIRST_PERSON_LEFT_HAND);
+        boolean flag = transformType.isLeftHand();
         poseStack.scale(f1, f1, f1);
-        auto bakedModel = SkinModelManager.getInstance().getModel(bakedPart.getType(), itemStack, entity.getLevel(), entity);
-        TransformationProvider.handleTransforms(context.pose().pose(), bakedModel, transformType, flag);
+        TransformationProvider.handleTransforms(context.pose().pose(), itemModel, transformType, flag);
         poseStack.scale(f2, f2, f2);
         if (flag) {
             // we must reverse x-axis the direction of drawing,
@@ -62,9 +62,9 @@ public class SkinModelTransformer<T, M> {
     }
 
     public void apply(IPoseStack poseStack, IJoint joint, SkinRenderContext context) {
-        ITransformf[] transforms = context.getTransforms();
+        IJointTransform[] transforms = context.getTransforms();
         if (transforms != null) {
-            ITransformf transform = transforms[joint.getId()];
+            IJointTransform transform = transforms[joint.getId()];
             if (transform != null) {
                 transform.apply(poseStack);
             }

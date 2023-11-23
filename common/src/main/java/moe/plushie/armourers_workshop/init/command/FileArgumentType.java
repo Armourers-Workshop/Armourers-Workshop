@@ -122,11 +122,11 @@ public class FileArgumentType implements IArgumentType<String> {
         return filteredFileList;
     }
 
-    public ArrayList<String> getFileList(File root, String name) {
+    public ArrayList<String> getFileList(File parentFile, String name) {
         ArrayList<String> results = new ArrayList<>();
-        File[] files = root.listFiles();
+        File[] files = parentFile.listFiles();
         if (files == null) {
-            ModLog.error("load file error at {}", root);
+            ModLog.error("load file error at {}", parentFile);
             return results;
         }
         for (File file : files) {

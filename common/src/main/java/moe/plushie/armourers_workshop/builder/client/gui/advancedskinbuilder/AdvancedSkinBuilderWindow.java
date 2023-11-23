@@ -6,13 +6,13 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIColor;
-import com.apple.library.uikit.UIEvent;
+import com.apple.library.uikit.UIMenuController;
+import com.apple.library.uikit.UIMenuItem;
 import com.apple.library.uikit.UIScreen;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedSkinBuilderBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.AdvancedCameraPanel;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel.AdvancedRightCardPanel;
-import moe.plushie.armourers_workshop.builder.client.gui.widget.Shortcut;
 import moe.plushie.armourers_workshop.builder.menu.AdvancedSkinBuilderMenu;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -20,15 +20,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Inventory;
 
-import java.util.HashMap;
-
 @Environment(EnvType.CLIENT)
 public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMenu> {
 
     private final AdvancedCameraPanel cameraView;
     private final AdvancedRightCardPanel rightCard;
-
-    private final HashMap<Shortcut, Runnable> shortcuts = new HashMap<>();
 
     private int leftCardOffset = 100;
     private int rightCardOffset = 100;
@@ -64,11 +60,15 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
         rightCard.setFrame(new CGRect(rect.width - rightCardOffset, 0, rightCardOffset, rect.height));
         rightCard.setSkinTypeWithIndex(0);
         addSubview(rightCard);
+        // provide a scaled menu.
+        UIMenuController menuController = new UIMenuController();
+        menuController.setTransform(CGAffineTransform.createScale(0.5f, 0.5f));
+        rightCard.setMenuController(menuController);
     }
 
     private void setupShortcuts() {
-        shortcuts.put(Shortcut.of("key.keyboard.control", "key.keyboard.1"), this::toggleLeftCard);
-        shortcuts.put(Shortcut.of("key.keyboard.control", "key.keyboard.2"), this::toggleRightCard);
+        addMenuItem(UIMenuItem.of("show1").keyDown("key.keyboard.control", "key.keyboard.1").execute(this::toggleLeftCard).build());
+        addMenuItem(UIMenuItem.of("show2").keyDown("key.keyboard.control", "key.keyboard.2").execute(this::toggleRightCard).build());
     }
 
     private void toggleLeftCard() {
@@ -99,18 +99,6 @@ public class AdvancedSkinBuilderWindow extends MenuWindow<AdvancedSkinBuilderMen
     @Override
     public void screenWillResize(CGSize size) {
         setFrame(new CGRect(0, 0, size.width, size.height));
-    }
-
-    @Override
-    public void keyDown(UIEvent event) {
-        super.keyDown(event);
-        int key1 = event.key();
-        int key2 = event.keyModifier();
-        shortcuts.forEach((key, handler) -> {
-            if (key.matches(key1, key2)) {
-                handler.run();
-            }
-        });
     }
 
     @Override

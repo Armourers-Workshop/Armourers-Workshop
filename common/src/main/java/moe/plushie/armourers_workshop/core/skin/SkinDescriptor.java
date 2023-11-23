@@ -145,7 +145,7 @@ public class SkinDescriptor implements ISkinDescriptor {
 
     @Override
     public String toString() {
-        return identifier + "@" + type;
+        return String.format("%s@%s[%s]", identifier, type.getRegistryName(), type.getId());
     }
 
     @Override

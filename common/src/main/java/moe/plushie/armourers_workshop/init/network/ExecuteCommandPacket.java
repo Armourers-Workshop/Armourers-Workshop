@@ -47,6 +47,9 @@ public class ExecuteCommandPacket extends CustomPacket {
         return new ExecuteCommandPacket(obj, key, null, Mode.GET);
     }
 
+    public static ExecuteCommandPacket invoke(Class<?> obj, String key) {
+        return new ExecuteCommandPacket(obj, key, null, Mode.INVOKE);
+    }
 
     @Override
     public void encode(FriendlyByteBuf buffer) {
@@ -69,6 +72,14 @@ public class ExecuteCommandPacket extends CustomPacket {
                 case SET: {
                     Field field = object.getField(key);
                     field.set(object, data);
+                    break;
+                }
+                case INVOKE: {
+//                    Method method = object.getMethod(key);
+//                    data = method.invoke(object);
+//                    if (data == null) {
+//                        data = "void";
+//                    }
                     break;
                 }
             }
@@ -125,6 +136,6 @@ public class ExecuteCommandPacket extends CustomPacket {
     }
 
     public enum Mode {
-        SET, GET
+        SET, GET, INVOKE
     }
 }

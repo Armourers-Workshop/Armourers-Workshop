@@ -255,7 +255,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
 
     public IPaintToolSelector createPaintToolSelector(UseOnContext context) {
         Player player = context.getPlayer();
-        if (player == null || !player.isShiftKeyDown()) {
+        if (player == null || !player.isSecondaryUseActive()) {
             return null;
         }
         ArrayList<Rectangle3i> rects = new ArrayList<>();

@@ -5,6 +5,7 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIView;
+import moe.plushie.armourers_workshop.api.common.ITextureKey;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
@@ -27,9 +28,10 @@ public class PaintColorView extends UIView {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        int cu = (int) paintType.getU();
-        int cv = (int) paintType.getV();
-        int dv = (cv + (int) TickUtils.getPaintTextureOffset()) % 256;
+        ITextureKey texture = paintType.getTexture();
+        float cu = texture.getU();
+        float cv = texture.getV();
+        float dv = (int) (cv + TickUtils.getPaintTextureOffset()) % 256;
 
         if (paintType != SkinPaintTypes.RAINBOW) {
             context.setBlendColor(color);

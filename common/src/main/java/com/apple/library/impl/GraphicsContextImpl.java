@@ -10,11 +10,8 @@ import moe.plushie.armourers_workshop.utils.RectangleTesselator;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,22 +26,19 @@ public interface GraphicsContextImpl {
     CGGraphicsState state();
 
     default void drawText(NSString text, float x, float y, int textColor) {
-        drawText(Collections.singleton(text), x, y, textColor, false, null, 0);
+        drawText(Collections.singleton(text), x, y, textColor, false, UIFont.systemFont(), 0);
     }
 
-    default void drawText(NSString text, float x, float y, int textColor, @Nullable UIFont font) {
+    default void drawText(NSString text, float x, float y, int textColor, UIFont font) {
         drawText(Collections.singleton(text), x, y, textColor, false, font, 0);
     }
 
-    default void drawText(NSString text, float x, float y, int textColor, boolean shadow, @Nullable UIFont font, float zLevel) {
+    default void drawText(NSString text, float x, float y, int textColor, boolean shadow, UIFont font, float zLevel) {
         drawText(Collections.singleton(text), x, y, textColor, shadow, font, 0);
     }
 
-    default void drawText(Collection<NSString> lines, float x, float y, int textColor, boolean shadow, @Nullable UIFont font, float zLevel) {
+    default void drawText(Collection<NSString> lines, float x, float y, int textColor, boolean shadow, UIFont font, float zLevel) {
         PoseStack poseStack = state().ctm();
-        if (font == null) {
-            font = state().font();
-        }
 
         float scale = font.fontSize() / 9f;
         poseStack.pushPose();
@@ -53,7 +47,7 @@ public interface GraphicsContextImpl {
 
         auto pose = poseStack.last().pose();
         auto buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-        Font renderer = font.impl();
+        auto renderer = font.impl();
 
         int dx = 0, dy = 0;
         for (NSString line : lines) {
@@ -73,19 +67,15 @@ public interface GraphicsContextImpl {
         RenderSystem.defaultBlendFunc();
     }
 
-    default void drawMultilineText(NSString text, float x, float y, float maxWidth, int textColor, @Nullable UIFont font) {
+    default void drawMultilineText(NSString text, float x, float y, float maxWidth, int textColor, UIFont font) {
         drawMultilineText(Collections.singleton(text), x, y, maxWidth, textColor, false, font, 0);
     }
 
-    default void drawMultilineText(NSString text, float x, float y, float maxWidth, int textColor, boolean shadow, @Nullable UIFont font, float zLevel) {
+    default void drawMultilineText(NSString text, float x, float y, float maxWidth, int textColor, boolean shadow, UIFont font, float zLevel) {
         drawMultilineText(Collections.singleton(text), x, y, maxWidth, textColor, shadow, font, zLevel);
     }
 
-    default void drawMultilineText(Collection<NSString> lines, float x, float y, float maxWidth, int textColor, boolean shadow, @Nullable UIFont font, float zLevel) {
-        if (font == null) {
-            font = state().font();
-        }
-
+    default void drawMultilineText(Collection<NSString> lines, float x, float y, float maxWidth, int textColor, boolean shadow, UIFont font, float zLevel) {
         float scale = font.fontSize() / 9f;
         ArrayList<NSString> wrappedTextLines = new ArrayList<>();
         for (NSString line : lines) {

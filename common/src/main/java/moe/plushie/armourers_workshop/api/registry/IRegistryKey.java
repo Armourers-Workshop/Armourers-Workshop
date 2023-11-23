@@ -4,6 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public interface IRegistryKey<T> extends Supplier<T> {
 
     /**

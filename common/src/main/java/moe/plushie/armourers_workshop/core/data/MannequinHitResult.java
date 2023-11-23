@@ -37,7 +37,7 @@ public class MannequinHitResult extends BlockHitResult {
         }
         BlockState blockState = level.getBlockState(pos);
 
-        if (player.isShiftKeyDown()) {
+        if (player.isSecondaryUseActive()) {
             VoxelShape shape = blockState.getShape(level, pos);
             target = Vec3.upFromBottomCenterOf(pos, shape.max(Direction.Axis.Y));
             VoxelShape collisionShape = blockState.getCollisionShape(level, pos);

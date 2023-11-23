@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.library.data.impl.MinecraftAuth;
@@ -233,7 +233,7 @@ public class GlobalSkinLibrary extends ServerSession {
         HashMap<String, Object> parameters = super.defaultParameters();
         ServerUser user = getUser();
         ServerToken accessToken = user.getAccessToken();
-        parameters.put("maxFileVersion", SkinSerializer.FILE_VERSION_V1M);
+        parameters.put("maxFileVersion", SkinSerializer.Versions.V13);
         if (user.getId() != null) {
             parameters.put("userId", user.getId());
         }

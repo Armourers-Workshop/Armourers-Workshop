@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.armature.core;
 
-import moe.plushie.armourers_workshop.api.client.armature.IJoint;
+import moe.plushie.armourers_workshop.api.armature.IJoint;
+import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.api.client.model.IModelPartPose;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.ArmatureModifier;
 
 public class DefaultJointBinder extends ArmatureModifier {
@@ -16,7 +16,7 @@ public class DefaultJointBinder extends ArmatureModifier {
     }
 
     @Override
-    public ITransformf apply(IJoint joint, IModel model, ITransformf transform) {
+    public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
         IModelPart modelPart = model.getPart(name);
         if (modelPart == null) {
             return transform;

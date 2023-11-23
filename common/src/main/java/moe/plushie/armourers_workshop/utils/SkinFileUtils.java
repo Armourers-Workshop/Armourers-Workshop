@@ -17,6 +17,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * because `commons.io` versions on some servers are too low,
@@ -59,6 +62,22 @@ public class SkinFileUtils {
         } catch (Exception ignored) {
             return null;
         }
+    }
+
+    public static Collection<File> listAllFiles(final File directory) {
+        ArrayList<File> allFiles = new ArrayList<>();
+        allFiles.add(directory);
+        for (int i = 0; i < allFiles.size(); ++i) {
+            File path = allFiles.get(i);
+            if (path.isDirectory()) {
+                File[] subfiles = listFiles(path);
+                if (subfiles != null) {
+                    Collections.addAll(allFiles, subfiles);
+                }
+            }
+        }
+        allFiles.remove(0);
+        return allFiles;
     }
 
     /**

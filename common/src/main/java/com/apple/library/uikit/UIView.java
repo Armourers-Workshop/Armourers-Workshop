@@ -37,6 +37,7 @@ public class UIView extends UIResponder implements ViewImpl {
     private CGAffineTransform _transform = CGAffineTransform.IDENTITY;
     private CGAffineTransform _invertedTransform = CGAffineTransform.IDENTITY;
 
+    private int _tag = 0;
     private int _zIndex = 0;
     private int _autoresizingMask = 0;
     private boolean _isOpaque = true;
@@ -159,6 +160,9 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     public void sizeToFit() {
+        CGRect rect = bounds().copy();
+        rect.setSize(sizeThatFits(rect.size()));
+        setBounds(rect);
     }
 
     public CGSize sizeThatFits(CGSize size) {
@@ -362,6 +366,14 @@ public class UIView extends UIResponder implements ViewImpl {
         }
     }
 
+    public int tag() {
+        return _tag;
+    }
+
+    public void setTag(int tag) {
+        _tag = tag;
+    }
+
     public void setNeedsLayout() {
         _flags.needsLayout = true;
         _setDirty();
@@ -472,13 +484,6 @@ public class UIView extends UIResponder implements ViewImpl {
         if (oldWindow != null && newWindow == null) {
             oldWindow._didRemoveFromWindow(this);
         }
-    }
-
-    protected int _testFlags(int value, int mask) {
-        if ((value & mask) != 0) {
-            return 1;
-        }
-        return 0;
     }
 
     private CGRect _remakeFrame() {

@@ -1,16 +1,16 @@
 package moe.plushie.armourers_workshop.core.armature.core;
 
-import moe.plushie.armourers_workshop.api.client.armature.IJoint;
+import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelBabyPose;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
+import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.core.armature.ArmatureModifier;
 
 public class DefaultBabyJointModifier extends ArmatureModifier {
 
     @Override
-    public ITransformf apply(IJoint joint, IModel model, ITransformf transform) {
+    public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
         return poseStack -> {
             transform.apply(poseStack);
             IModelBabyPose babyPose = model.getBabyPose();

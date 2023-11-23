@@ -56,7 +56,8 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
         if (descriptor.isEmpty()) {
             return false;
         }
-        return descriptor.getType() == blockEntity.getSkinType();
+//        return descriptor.getType() == blockEntity.getSkinType();
+        return true;
     }
 
     public boolean shouldSaveArmourItem(Player player) {
@@ -141,17 +142,18 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
         if (!shouldLoadArmourItem(player)) {
             return;
         }
-
         try {
             Skin skin = SkinLoader.getInstance().loadSkin(descriptor.getIdentifier());
             if (skin == null) {
                 throw SkinLoadException.Type.NOT_FOUND.build("notFound");
             }
             // because descriptor maybe is a wrong skin type.
-            if (skin.getType() != blockEntity.getSkinType()) {
+            if (skin.getType() != blockEntity.getSkinType() || skin.getVersion() >= 20) {
                 throw SkinLoadException.Type.NOT_SUPPORTED.build("notSupported");
             }
-
+            if (!skin.getSettings().isEditable()) {
+                throw SkinLoadException.Type.NOT_EDITABLE.build("notEditable");
+            }
             blockEntity.setSkinProperties(skin.getProperties());
             blockEntity.setPaintData(skin.getPaintData());
 
@@ -160,6 +162,9 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
             WorldUtils.loadSkinIntoWorld(applier, transform, skin);
             applier.submit(Component.translatable("action.armourers_workshop.block.load"), player);
 
+            inventory.setItem(0, ItemStack.EMPTY);
+            inventory.setItem(1, stackInput);
+
         } catch (TranslatableException exception) {
             player.sendSystemMessage(exception.getComponent());
             UserNotifications.sendErrorMessage(exception.getComponent(), player);
@@ -167,9 +172,6 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
             // we unknown why, pls report this.
             exception.printStackTrace();
         }
-
-        inventory.setItem(0, ItemStack.EMPTY);
-        inventory.setItem(1, stackInput);
     }
 
     @Override

@@ -71,6 +71,6 @@ public class SkinRenderTesselator extends SkinRenderContext {
     }
 
     public Rectangle3f getBakedRenderBounds() {
-        return bakedSkin.getRenderBounds(mannequin, mannequinModel, getReferenceRotation(), getReference());
+        return bakedSkin.getRenderBounds(mannequin, mannequinModel, getReferenced());
     }
 }

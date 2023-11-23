@@ -222,10 +222,6 @@ public class ObjectUtils {
     }
 
     public static FloatBuffer createFloatBuffer(int capacity) {
-        return createByteBuffer(getAllocationSize(capacity, 2)).asFloatBuffer();
-    }
-
-    public static int getAllocationSize(int elements, int elementShift) {
-        return elements << elementShift;
+        return createByteBuffer(Float.BYTES * capacity).asFloatBuffer();
     }
 }

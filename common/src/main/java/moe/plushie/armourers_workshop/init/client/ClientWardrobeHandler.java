@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformTyp
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.model.BakedModelStorage;
 import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
+import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
@@ -243,7 +244,7 @@ public class ClientWardrobeHandler {
                     poseStack.pushPose();
                     poseStack.scale(-SCALE, -SCALE, SCALE);
                     SkinRenderContext context = SkinRenderContext.alloc(renderData, packedLight, TickUtils.ticks(), transformType, poseStack, buffers);
-                    context.setReference(800, itemStack);
+                    context.setReferenced(SkinItemSource.create(800, itemStack, transformType));
                     counter = render(entity, null, context, () -> Collections.singleton(embeddedStack.getEntry()));
                     if (counter != 0 && !ModDebugger.itemOverride) {
                         callback.cancel();
@@ -282,7 +283,7 @@ public class ClientWardrobeHandler {
         context.setRenderData(SkinRenderData.of(context.getMannequin()));
         context.setLightmap(packedLight);
         context.setPartialTicks(0);
-        context.setReference(embeddedStack.getItemStack(), 800, null);
+        context.setReferenced(SkinItemSource.create(800, embeddedStack.getItemStack(), transformType));
         context.setColorScheme(descriptor.getColorScheme());
 
         counter = context.draw(poseStack, buffers);
@@ -332,11 +333,17 @@ public class ClientWardrobeHandler {
         }
         IModel modelHolder = ModelHolder.ofNullable(model);
         for (SkinRenderData.Entry entry : provider.get()) {
-            ItemStack itemStack = context.getReference();
+            SkinItemSource itemSource = context.getReferenced();
+            ItemStack itemStack = itemSource.getItem();
             if (itemStack.isEmpty()) {
                 itemStack = entry.getItemStack();
             }
-            context.setReference(entry.getRenderPriority(), itemStack);
+            if (itemSource == SkinItemSource.EMPTY) {
+                itemSource = SkinItemSource.create(itemStack);
+            }
+            itemSource.setItem(itemStack);
+            itemSource.setRenderPriority(entry.getRenderPriority());
+            context.setReferenced(itemSource);
             context.setTransforms(entity, renderer.getOverrideModel(modelHolder));
             r += renderer.render(entity, modelHolder, entry.getBakedSkin(), entry.getBakedScheme(), context);
         }

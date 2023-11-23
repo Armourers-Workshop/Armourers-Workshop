@@ -385,7 +385,7 @@ public class CubePaintingEvent {
             newB += oldB / 100F * (100 - intensity);
             newB = MathUtils.clamp((int) newB, 0, 255);
 
-            return PaintColor.of(ColorUtils.getRGB((int) newR, (int) newG, (int) newB), sourceColor.getPaintType());
+            return PaintColor.of((int) newR, (int) newG, (int) newB, sourceColor.getPaintType());
         }
     }
 }

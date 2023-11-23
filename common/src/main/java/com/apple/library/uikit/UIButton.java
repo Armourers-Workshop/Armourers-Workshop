@@ -7,7 +7,7 @@ import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.impl.KeyboardManagerImpl;
-import com.apple.library.impl.LayoutManagerImpl;
+import com.apple.library.impl.SimpleContentLayoutImpl;
 import com.apple.library.impl.SoundManagerImpl;
 import com.apple.library.impl.StateValueImpl;
 
@@ -74,9 +74,21 @@ public class UIButton extends UIControl {
     }
 
     @Override
+    public void sizeToFit() {
+        super.sizeToFit();
+        setNeedsRemakeLayouts();
+    }
+
+    @Override
+    public CGSize sizeThatFits(CGSize size) {
+        SimpleContentLayoutImpl layout = buildContentLayout(titleView.font(), CGRect.ZERO);
+        return layout.contentSize();
+    }
+
+    @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        remakeContentLayoutIfNeeded(context.state().font());
+        remakeContentLayoutIfNeeded(titleView.font(), bounds());
         context.drawImage(backgroundImageContainer.currentValue(), bounds());
     }
 
@@ -197,29 +209,6 @@ public class UIButton extends UIControl {
         this.shouldPassHighlighted = shouldPassHighlighted;
     }
 
-    private void setNeedsRemakeLayouts() {
-        cachedTitleRect = null;
-        cachedIconRect = null;
-    }
-
-    private void remakeContentLayoutIfNeeded(UIFont font) {
-        if (cachedIconRect != null && cachedTitleRect != null) {
-            return;
-        }
-        LayoutManagerImpl manager = new LayoutManagerImpl();
-        manager.add(imageSize(imageContainer.currentValue()), imageEdgeInsets, size -> new CGRect(CGPoint.ZERO, size));
-        manager.add(titleContainer.currentValue(), titleEdgeInsets, text -> text.boundingRectWithFont(font).offset(0, 1));
-        manager.applyHorizontalLayout(bounds().insetBy(contentEdgeInsets), horizontalAlignment, verticalAlignment);
-        cachedIconRect = manager.getOrDefault(0, CGRect.ZERO);
-        if (cachedIconRect != null) {
-            imageView.setFrame(cachedIconRect);
-        }
-        cachedTitleRect = manager.getOrDefault(1, CGRect.ZERO);
-        if (cachedTitleRect != null) {
-            titleView.setFrame(cachedTitleRect);
-        }
-    }
-
     @Override
     protected void updateStateIfNeeded() {
         int state = State.NORMAL;
@@ -261,6 +250,33 @@ public class UIButton extends UIControl {
         }
         cachedCurrentTitle = currentTitle;
         cachedCurrentImage = currentImage;
+    }
+    private void setNeedsRemakeLayouts() {
+        cachedTitleRect = null;
+        cachedIconRect = null;
+    }
+
+    private void remakeContentLayoutIfNeeded(UIFont font, CGRect rect) {
+        if (cachedIconRect != null && cachedTitleRect != null) {
+            return;
+        }
+        SimpleContentLayoutImpl layout = buildContentLayout(font, rect);
+        cachedIconRect = layout.getOrDefault(0, CGRect.ZERO);
+        if (cachedIconRect != null) {
+            imageView.setFrame(cachedIconRect);
+        }
+        cachedTitleRect = layout.getOrDefault(1, CGRect.ZERO);
+        if (cachedTitleRect != null) {
+            titleView.setFrame(cachedTitleRect);
+        }
+    }
+
+    private SimpleContentLayoutImpl buildContentLayout(UIFont font, CGRect rect) {
+        SimpleContentLayoutImpl layout = new SimpleContentLayoutImpl();
+        layout.add(imageSize(imageContainer.currentValue()), imageEdgeInsets, size -> new CGRect(CGPoint.ZERO, size));
+        layout.add(titleContainer.currentValue(), titleEdgeInsets, text -> text.boundingRectWithFont(font).offset(0, 1));
+        layout.applyHorizontalLayout(rect, contentEdgeInsets, horizontalAlignment, verticalAlignment);
+        return layout;
     }
 
     private CGSize imageSize(UIImage image) {

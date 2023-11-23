@@ -171,7 +171,7 @@ public class ColorUtils {
     }
 
     public static UIColor getPaletteColor(int index) {
-        return PALETTE_MINECRAFT[(index + 1) % PALETTE_MINECRAFT.length];
+        return PALETTE_MINECRAFT[((index & 0x7fffffff) + 1) % PALETTE_MINECRAFT.length];
     }
 
 

@@ -168,21 +168,6 @@ public interface ViewImpl {
         return offset;
     }
 
-    @Nullable
-    default LinkedList<ViewImpl> _searchInViewHierarchy(UIView searchedView) {
-        LinkedList<ViewImpl> results = new LinkedList<>();
-        ViewImpl searchingView = this;
-        while (searchingView != null && searchingView.self() != searchedView) {
-            results.add(searchingView);
-            searchingView = _superviewInViewHierarchy(searchingView);
-        }
-        UIView searchingView1 = ObjectUtilsImpl.flatMap(searchingView, ViewImpl::self);
-        if (searchingView1 == searchedView) {
-            return results;
-        }
-        return null;
-    }
-
     default ViewImpl _superviewInViewHierarchy(ViewImpl searchingView) {
         return searchingView.self().superview();
     }

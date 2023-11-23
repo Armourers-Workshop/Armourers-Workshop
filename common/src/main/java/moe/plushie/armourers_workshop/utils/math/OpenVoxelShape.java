@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.utils.math;
 
 import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
+import moe.plushie.armourers_workshop.api.math.IRectangle3f;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,6 +22,15 @@ public class OpenVoxelShape implements Iterable<Vector4f> {
 
     public static OpenVoxelShape empty() {
         return new OpenVoxelShape();
+    }
+
+
+    public static OpenVoxelShape box(IRectangle3f bounds) {
+        Rectangle3f rect = ObjectUtils.safeCast(bounds, Rectangle3f.class);
+        if (rect != null) {
+            return box(rect);
+        }
+        return box(new Rectangle3f(bounds));
     }
 
     public static OpenVoxelShape box(Rectangle3f bounds) {
@@ -88,7 +99,7 @@ public class OpenVoxelShape implements Iterable<Vector4f> {
         box = null;
     }
 
-    public void add(Rectangle3f rect) {
+    public void add(IRectangle3f rect) {
         add(rect.getX(), rect.getY(), rect.getZ(), rect.getWidth(), rect.getHeight(), rect.getDepth());
     }
 
@@ -140,7 +151,7 @@ public class OpenVoxelShape implements Iterable<Vector4f> {
         return vertexes;
     }
 
-    private ArrayList<Vector4f> getVertexes(Rectangle3f box) {
+    private ArrayList<Vector4f> getVertexes(IRectangle3f box) {
         if (box == null) {
             return Lists.newArrayList();
         }

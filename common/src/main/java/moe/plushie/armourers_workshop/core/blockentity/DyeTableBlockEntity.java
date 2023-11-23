@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class DyeTableBlockEntity extends UpdatableContainerBlockEntity {
 
-    private NonNullList<ItemStack> items = NonNullList.withSize(10, ItemStack.EMPTY);
+    private final NonNullList<ItemStack> items = NonNullList.withSize(10, ItemStack.EMPTY);
 
     public DyeTableBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -29,11 +29,6 @@ public class DyeTableBlockEntity extends UpdatableContainerBlockEntity {
     @Override
     protected NonNullList<ItemStack> getItems() {
         return items;
-    }
-
-    @Override
-    protected void setItems(NonNullList<ItemStack> items) {
-        this.items = items;
     }
 
     @Override

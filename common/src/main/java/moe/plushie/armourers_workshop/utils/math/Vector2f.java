@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.utils.math;
 
+import java.util.Objects;
+
 @SuppressWarnings("unused")
 public class Vector2f {
 
@@ -44,7 +46,19 @@ public class Vector2f {
         this.y = y;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Vector2f vector2f)) return false;
+        return Float.compare(vector2f.x, x) == 0 && Float.compare(vector2f.y, y) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
+
     public String toString() {
-        return String.format("(%f %f)", x, y);
+        return String.format("(%g %g)", x, y);
     }
 }

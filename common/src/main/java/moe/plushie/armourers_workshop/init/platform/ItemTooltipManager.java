@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinOptions;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
-import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinUsedCounter;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -148,7 +148,6 @@ public class ItemTooltipManager {
             String registryName = RegistryManager.getKey(itemStack.getItem()).toString();
             for (int index = tooltips.size(); index > 0; --index) {
                 Component text = tooltips.get(index - 1);
-                // FIXME: @SAGESSE Test 1.16/1.18
                 if (registryName.equals(text.getString())) {
                     tooltips.addAll(index - 1, newTooltips);
                     return;
@@ -189,7 +188,7 @@ public class ItemTooltipManager {
         }
         ColorScheme colorScheme = descriptor.getColorScheme();
         auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        ExtendedItemRenderer.renderSkinInBox(bakedSkin, colorScheme, itemStack, dx, dy, 500, size, size, 30, 45, 0, 0, 0xf000f0, context.state().ctm(), buffers);
+        ExtendedItemRenderer.renderSkinInGUI(bakedSkin, colorScheme, itemStack, dx, dy, 500, size, size, 30, 45, 0, 0, 0xf000f0, context.state().ctm(), buffers);
         buffers.endBatch();
     }
 }

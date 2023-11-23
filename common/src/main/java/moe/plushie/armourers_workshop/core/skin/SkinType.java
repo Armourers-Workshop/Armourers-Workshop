@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
@@ -40,7 +41,7 @@ public class SkinType implements ISkinType {
 
     @Override
     public String toString() {
-        return registryName.toString();
+        return ObjectUtils.makeDescription(this, "id", id, "name", registryName);
     }
 
     @Override

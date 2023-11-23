@@ -21,6 +21,8 @@ public final class SkinCubeTypes {
     public static final ISkinCubeType GLASS = register("glass", 2, true, false, ModBlocks.SKIN_CUBE_GLASS);
     public static final ISkinCubeType GLASS_GLOWING = register("glass_gowing", 3, true, true, ModBlocks.SKIN_CUBE_GLASS_GLOWING);
 
+    public static final ISkinCubeType TEXTURE = register("texture", 4, false, false, ModBlocks.BOUNDING_BOX);
+
     public static ISkinCubeType byName(String name) {
         ISkinCubeType cube = ALL_CUBES.get(name);
         if (cube != null) {

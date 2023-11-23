@@ -7,9 +7,9 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCube;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
-import moe.plushie.armourers_workshop.core.skin.data.base.IDataInputStream;
-import moe.plushie.armourers_workshop.core.skin.data.base.IDataOutputStream;
-import moe.plushie.armourers_workshop.core.skin.data.serialize.LegacyCubeHelper;
+import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
+import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
+import moe.plushie.armourers_workshop.core.skin.serializer.LegacyCubeHelper;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
@@ -19,12 +19,12 @@ import java.io.IOException;
 
 public class SkinCubesV1 extends SkinCubes {
 
-    private final int cubeCount;
+    private final int cubeTotal;
     private final BufferSlice bufferSlice;
 
     public SkinCubesV1(int count) {
         this.bufferSlice = new BufferSlice(count);
-        this.cubeCount = count;
+        this.cubeTotal = count;
     }
 
     @Override
@@ -33,13 +33,13 @@ public class SkinCubesV1 extends SkinCubes {
     }
 
     @Override
-    public int getCubeCount() {
-        return cubeCount;
+    public int getCubeTotal() {
+        return cubeTotal;
     }
 
-    public static void writeToStream(SkinCubes cubes, IDataOutputStream stream) throws IOException {
-        int count = cubes.getCubeCount();
-        stream.writeInt(cubes.getCubeCount());
+    public static void writeToStream(SkinCubes cubes, IOutputStream stream) throws IOException {
+        int count = cubes.getCubeTotal();
+        stream.writeInt(cubes.getCubeTotal());
         if (cubes instanceof SkinCubesV1) {
             stream.write(((SkinCubesV1) cubes).bufferSlice.getBuffers());
             return;
@@ -49,7 +49,7 @@ public class SkinCubesV1 extends SkinCubes {
         for (int i = 0; i < count; ++i) {
             // id/x/y/z + r/g/b/t * 6
             SkinCube cube = cubes.getCube(i);
-            Vector3i pos = cube.getPos();
+            Vector3i pos = cube.getPosition();
             stream.writeByte(cube.getType().getId());
             stream.writeByte(pos.getX());
             stream.writeByte(pos.getY());
@@ -65,13 +65,13 @@ public class SkinCubesV1 extends SkinCubes {
         }
     }
 
-    public static SkinCubesV1 readFromStream(IDataInputStream stream, int version, ISkinPartType skinPart) throws IOException, InvalidCubeTypeException {
+    public static SkinCubesV1 readFromStream(IInputStream stream, int version, ISkinPartType skinPart) throws IOException, InvalidCubeTypeException {
         int size = stream.readInt();
         SkinCubesV1 cubes = new SkinCubesV1(size);
         BufferSlice bufferSlice = cubes.bufferSlice;
         if (version >= 10) {
             byte[] buffers = bufferSlice.getBuffers();
-            stream.readFully(buffers, 0, size * bufferSlice.lineSize);
+            stream.read(buffers, 0, size * bufferSlice.lineSize);
             for (int i = 0; i < size; i++) {
                 BufferSlice slice = bufferSlice.at(i);
                 if (version < 11) {
@@ -201,14 +201,14 @@ public class SkinCubesV1 extends SkinCubes {
         }
 
         @Override
-        public void setPos(Vector3i pos) {
+        public void setPosition(Vector3i pos) {
             setX((byte) pos.getX());
             setY((byte) pos.getY());
             setZ((byte) pos.getZ());
         }
 
         @Override
-        public Vector3i getPos() {
+        public Vector3i getPosition() {
             pos.setX(getX());
             pos.setY(getY());
             pos.setZ(getZ());

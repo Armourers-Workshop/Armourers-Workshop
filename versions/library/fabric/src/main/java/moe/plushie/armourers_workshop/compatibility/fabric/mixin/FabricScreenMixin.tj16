@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.client.gui.AbstractGraphicsRenderer;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderTooltipEvents;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
@@ -22,8 +21,6 @@ import java.util.List;
 @Available("[1.16, 1.18)")
 @Mixin(Screen.class)
 public class FabricScreenMixin {
-
-    @Shadow protected Font font;
 
     @Inject(method = "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V", at = @At(value = "HEAD"))
     public void aw2$renderTooltipPre(PoseStack poseStack, ItemStack itemStack, int i, int j, CallbackInfo ci) {
@@ -41,7 +38,7 @@ public class FabricScreenMixin {
         int screenWidth = screen.width;
         int screenHeight = screen.height;
         ItemStack itemStack = RenderTooltipEvents.TOOLTIP_ITEM_STACK;
-        CGGraphicsContext context = AbstractGraphicsRenderer.of(null, font, poseStack, mouseX, mouseY, 0);
+        CGGraphicsContext context = AbstractGraphicsRenderer.of(null, poseStack, mouseX, mouseY, 0);
         RenderTooltipEvents.BEFORE.invoker().onRenderTooltip(itemStack, x, y, w, h, screenWidth, screenHeight, context);
     }
 }

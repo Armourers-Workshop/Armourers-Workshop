@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.compatibility.AbstractRenderLayer;
 import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightContext;
+import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
@@ -75,7 +76,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         SkinRenderContext context = SkinRenderContext.alloc(renderData, packedLightIn, TickUtils.ticks(), null, poseStack, buffers);
         context.setTransforms(transformModifier, entity, skinRenderer.getOverrideModel(model));
         for (SkinRenderData.Entry entry : renderData.getArmorSkins()) {
-            context.setReference(entry.getRenderPriority(), entry.getItemStack());
+            context.setReferenced(SkinItemSource.create(entry.getRenderPriority(), entry.getItemStack()));
             skinRenderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), context);
         }
         context.release();

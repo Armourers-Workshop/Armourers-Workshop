@@ -7,6 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public interface IDataPackObject {
 
@@ -107,6 +108,15 @@ public interface IDataPackObject {
         return keys;
     }
 
+    default <T> ArrayList<T> collect(Function<IDataPackObject, ? extends T> mapper) {
+        Collection<IDataPackObject> values = allValues();
+        ArrayList<T> results = new ArrayList<>(values.size());
+        for (IDataPackObject value : values) {
+            results.add(mapper.apply(value));
+        }
+        return results;
+    }
+
     default boolean boolValue() {
         switch (type()) {
             case STRING:
@@ -162,6 +172,10 @@ public interface IDataPackObject {
                 return "";
             }
         }
+    }
+
+    default boolean isNull() {
+        return type() == Type.NULL;
     }
 
     default void ifPresent(Consumer<IDataPackObject> consumer) {

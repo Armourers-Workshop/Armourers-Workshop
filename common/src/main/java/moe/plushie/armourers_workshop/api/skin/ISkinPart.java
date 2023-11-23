@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.api.skin;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface ISkinPart {
 
@@ -9,5 +9,7 @@ public interface ISkinPart {
      */
     ISkinPartType getType();
 
-    List<? extends ISkinMarker> getMarkers();
+    Collection<? extends ISkinPart> getParts();
+
+    Collection<? extends ISkinMarker> getMarkers();
 }

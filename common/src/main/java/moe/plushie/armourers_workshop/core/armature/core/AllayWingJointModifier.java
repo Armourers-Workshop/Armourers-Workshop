@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.armature.core;
 
-import moe.plushie.armourers_workshop.api.client.armature.IJoint;
+import moe.plushie.armourers_workshop.api.armature.IJoint;
+import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.api.client.model.IModelPartPose;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.ArmatureModifier;
 import moe.plushie.armourers_workshop.core.armature.Joints;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 public class AllayWingJointModifier extends ArmatureModifier {
 
     @Override
-    public ITransformf apply(IJoint joint, IModel model, ITransformf transform) {
+    public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
         IModelPart rootModelPart = model.getPart("root");
         IModelPart bodyModelPart = model.getPart("body");
         IModelPart wingModelPart = getWingPart(joint, model);

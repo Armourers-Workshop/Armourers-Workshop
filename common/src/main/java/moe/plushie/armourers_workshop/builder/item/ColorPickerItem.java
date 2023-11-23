@@ -64,7 +64,7 @@ public class ColorPickerItem extends AbstractPaintToolItem implements IItemTintC
         }
         if (blockEntity instanceof IPaintProvider) {
             Player player = context.getPlayer();
-            if (player != null && !player.isShiftKeyDown()) {
+            if (player != null && !player.isSecondaryUseActive()) {
                 return InteractionResult.PASS;
             }
             IPaintProvider provider = (IPaintProvider) blockEntity;

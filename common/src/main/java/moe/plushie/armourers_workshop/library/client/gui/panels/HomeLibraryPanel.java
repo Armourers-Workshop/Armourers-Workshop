@@ -161,7 +161,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         list.addSubview(label);
     }
 
-    private SkinItemList buildFileList(int x, int y, int width, int height) {
+    private SkinItemList buildFileList(float x, float y, float width, float height) {
         SkinItemList fileList = new SkinItemList(new CGRect(x, y, width ,height));
         fileList.setItemSize(new CGSize(50, 50));
         fileList.setBackgroundColor(0);

@@ -6,6 +6,8 @@ import moe.plushie.armourers_workshop.utils.MathUtils;
 @SuppressWarnings("unused")
 public class Vector2i implements IVector2i {
 
+    public static final Vector2i ZERO = new Vector2i(0, 0);
+
     public int x;
     public int y;
 

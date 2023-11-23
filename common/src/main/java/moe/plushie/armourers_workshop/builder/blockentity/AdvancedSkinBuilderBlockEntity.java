@@ -25,7 +25,7 @@ public class AdvancedSkinBuilderBlockEntity extends UpdatableBlockEntity impleme
 
     //public SkinDescriptor descriptor = new SkinDescriptor("db:QoTHtJTeeZ");
     public SkinDescriptor descriptor = new SkinDescriptor("ks:10830");
-    public Vector3f offset = new Vector3f(0, 10, 0);
+    public Vector3f offset = new Vector3f(0, 12, 0);
 
     public final BooleanProperty mirror2 = new BooleanProperty();
     public final BooleanProperty enabled2 = new BooleanProperty();

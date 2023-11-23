@@ -6,7 +6,6 @@ import com.apple.library.impl.GraphicsContextImpl;
 import com.apple.library.impl.ObjectUtilsImpl;
 import com.apple.library.impl.TooltipRenderer;
 import com.apple.library.uikit.UIColor;
-import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIView;
@@ -72,12 +71,12 @@ public class CGGraphicsContext implements GraphicsContextImpl {
         drawResizableImage(image.rl(), rect.x, rect.y, w, h, u, v, w, h, mw, mh);
     }
 
-    public void drawText(NSString text, float x, float y, @Nullable UIFont font, @Nullable UIColor color, @Nullable UIColor shadowColor) {
+    public void drawText(NSString text, float x, float y, UIFont font, @Nullable UIColor color, @Nullable UIColor shadowColor) {
         if (text == null) {
             return;
         }
         if (color == null) {
-            color = AppearanceImpl.TEXT_COLOR;
+            color = AppearanceImpl.DEFAULT_TEXT_COLOR;
         }
         if (shadowColor != null) {
             drawText(text, x, y, color.getRGB(), true, font, 0);
@@ -92,7 +91,7 @@ public class CGGraphicsContext implements GraphicsContextImpl {
         }
         NSString text = ObjectUtilsImpl.safeCast(tooltip, NSString.class);
         if (text != null) {
-            renderer.renderTooltip(text, rect, null, this);
+            renderer.renderTooltip(text, rect, UIFont.systemFont(), this);
             return;
         }
         TooltipRenderer view = ObjectUtilsImpl.safeCast(tooltip, TooltipRenderer.class);

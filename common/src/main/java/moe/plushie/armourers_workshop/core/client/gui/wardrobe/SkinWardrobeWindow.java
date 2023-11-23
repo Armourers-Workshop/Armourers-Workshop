@@ -131,7 +131,7 @@ public class SkinWardrobeWindow<M extends SkinWardrobeMenu> extends MenuWindow<M
     }
 
     private void switchTab(TabView.Entry entry) {
-        menu.setGroup(ObjectUtils.safeCast(entry.tag(), SkinWardrobeMenu.Group.class));
+        menu.setGroup(ObjectUtils.safeCast(entry.target(), SkinWardrobeMenu.Group.class));
         inventoryView.setHidden(!menu.shouldRenderInventory());
     }
 

@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public interface IEntityTypeBuilder<T extends Entity> extends IRegistryBuilder<IEntityType<T>> {
 
     IEntityTypeBuilder<T> fixed(float f, float g);

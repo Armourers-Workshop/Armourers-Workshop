@@ -6,6 +6,7 @@ import com.apple.library.impl.KeyboardManagerImpl;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedSkinBuilderBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.render.AdvancedSkinBuilderBlockEntityRenderer;
 import moe.plushie.armourers_workshop.builder.entity.CameraEntity;
@@ -224,7 +225,7 @@ public class AdvancedCameraPanel extends UIView {
 
         tesselator.setLightmap(0xf000f0);
         tesselator.setPartialTicks(0);
-        tesselator.setBuffer(skin -> (bakedPart, bakedSkin, scheme, shouldRender, context) -> {
+        tesselator.setBufferProvider(skin -> (bakedPart, bakedSkin, scheme, shouldRender, context) -> {
             if (shouldRender) {
                 OpenMatrix4f mat = new OpenMatrix4f(context.pose().lastPose());
                 mat.invert();
@@ -296,7 +297,10 @@ public class AdvancedCameraPanel extends UIView {
             }
             Result[] result = {null};
             part.forEach(ray1, face -> {
-                float distance = ray1.origin.distanceToSquared(new Vector3f(face.x, face.y, face.z));
+                // TODO: Support Transform @SAGESSE
+                //ITransformf transform = face.getTransform();
+                IRectangle3f shape = face.getShape();
+                float distance = ray1.origin.distanceToSquared(shape.getMinX(), shape.getMinY(), shape.getMinZ());
                 if (result[0] == null) {
                     result[0] = new Result(part, distance);
                 } else {

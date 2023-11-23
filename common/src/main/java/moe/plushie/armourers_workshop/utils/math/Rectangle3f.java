@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.utils.math;
 
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
+import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.AABB;
@@ -20,13 +21,12 @@ public class Rectangle3f implements IRectangle3f {
     private float height;
     private float depth;
 
-    public Rectangle3f(Rectangle3i rect) {
-        this.x = rect.getX();
-        this.y = rect.getY();
-        this.z = rect.getZ();
-        this.width = rect.getWidth();
-        this.height = rect.getHeight();
-        this.depth = rect.getDepth();
+    public Rectangle3f(IRectangle3i rect) {
+        this(rect.getX(), rect.getY(), rect.getZ(), rect.getWidth(), rect.getHeight(), rect.getDepth());
+    }
+
+    public Rectangle3f(IRectangle3f rect) {
+        this(rect.getX(), rect.getY(), rect.getZ(), rect.getWidth(), rect.getHeight(), rect.getDepth());
     }
 
     public Rectangle3f(float x, float y, float z, float width, float height, float depth) {

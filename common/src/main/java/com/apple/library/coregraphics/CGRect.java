@@ -213,7 +213,17 @@ public class CGRect implements InterpolableImpl<CGRect> {
         return new CGSize(width, height);
     }
 
+    public void setSize(CGSize size) {
+        this.width = size.width;
+        this.height = size.height;
+    }
+
     public CGPoint origin() {
         return new CGPoint(x, y);
+    }
+
+    public void setOrigin(CGPoint origin) {
+        this.x = origin.x;
+        this.y = origin.y;
     }
 }

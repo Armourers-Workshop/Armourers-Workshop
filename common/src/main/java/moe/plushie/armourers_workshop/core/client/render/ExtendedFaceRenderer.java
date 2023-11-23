@@ -4,9 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.utils.ColorUtils;
-import moe.plushie.armourers_workshop.utils.SkinUtils;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 
 import manifold.ext.rt.api.auto;
@@ -29,6 +26,7 @@ public class ExtendedFaceRenderer {
             {{1, 0, 0}, {1, 1, 0}, {1, 1, 1}, {1, 0, 1}, {1, 0, 0}},    // -x
     };
 
+/*
     public static void render(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int lightmap, int overlay, PoseStack poseStack, VertexConsumer builder) {
         auto pose = poseStack.last().pose();
         auto normal = poseStack.last().normal();
@@ -57,7 +55,7 @@ public class ExtendedFaceRenderer {
                     .endVertex();
         }
     }
-
+*/
     public static void renderMarker(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, PoseStack poseStack, VertexConsumer builder) {
         if (paintColor.getPaintType() == SkinPaintTypes.NORMAL) {
             return;

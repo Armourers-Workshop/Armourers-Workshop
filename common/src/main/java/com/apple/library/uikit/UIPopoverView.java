@@ -19,6 +19,7 @@ public class UIPopoverView extends UIWindow {
         UIWindowManager windowManager = getWindowManagerFromView(this);
         if (windowManager != null) {
             windowManager.removeWindow(this);
+            windowManager._setNeedsUpdateFocus();
         }
     }
 

@@ -13,8 +13,6 @@ public interface CGGraphicsState {
 
     MultiBufferSource buffers();
 
-    UIFont font();
-
     CGPoint mousePos();
 
     float partialTicks();

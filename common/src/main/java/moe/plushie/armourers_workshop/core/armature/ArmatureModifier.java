@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.core.armature;
 
-import moe.plushie.armourers_workshop.api.client.armature.IJoint;
+import moe.plushie.armourers_workshop.api.armature.IJoint;
+import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 
 public abstract class ArmatureModifier {
 
-    public abstract ITransformf apply(IJoint joint, IModel model, ITransformf transform);
+    public abstract IJointTransform apply(IJoint joint, IModel model, IJointTransform transform);
 }
 
 

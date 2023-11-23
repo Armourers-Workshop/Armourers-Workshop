@@ -39,7 +39,7 @@ public class AbstractShader extends Shader {
     public void apply(ShaderVertexGroup group, Runnable action) {
         // we let the vanilla's rendering system normal call rendering once,
         // and then insert our the rendering content in end stage.
-        SkinRenderExecutor.execute(group.getType(), () -> super.apply(group, action));
+        SkinRenderExecutor.execute(group.getRenderType(), () -> super.apply(group, action));
     }
 
     @Override

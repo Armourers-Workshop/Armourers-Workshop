@@ -2,17 +2,18 @@ package moe.plushie.armourers_workshop.compatibility.forge.extensions.net.minecr
 
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGRect;
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.client.gui.AbstractGraphicsRenderer;
 import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 
 import java.util.List;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+import manifold.ext.rt.api.auto;
 
 @Available("[1.20, )")
 @Extension
@@ -20,7 +21,7 @@ public class TooltipEventProvider {
 
     public static void willRenderTooltipFO(@ThisClass Class<?> clazz, ClientNativeProvider.RenderTooltip consumer) {
         NotificationCenterImpl.observer(RenderTooltipEvent.Pre.class, event -> {
-            Font font = event.getFont();
+            auto font = event.getFont();
             List<ClientTooltipComponent> tooltips = event.getComponents();
             int mouseX = event.getX();
             int mouseY = event.getY();
@@ -44,7 +45,7 @@ public class TooltipEventProvider {
                 k2 = screenHeight - j - 6;
             }
             CGRect frame = new CGRect(j2, k2, i, j);
-            CGGraphicsContext context = AbstractGraphicsRenderer.of(font, event.getGraphics(), mouseX, mouseY, 0);
+            CGGraphicsContext context = AbstractGraphicsRenderer.of(event.getGraphics(), mouseX, mouseY, 0);
             consumer.render(event.getItemStack(), frame, screenWidth, screenHeight, context);
         });
     }

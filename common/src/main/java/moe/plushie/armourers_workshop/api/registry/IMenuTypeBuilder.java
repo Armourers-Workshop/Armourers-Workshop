@@ -7,6 +7,7 @@ import net.minecraft.world.inventory.MenuType;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public interface IMenuTypeBuilder<T extends AbstractContainerMenu> extends IRegistryBuilder<MenuType<T>> {
 
     <U extends UIWindow> IMenuTypeBuilder<T> bind(Supplier<AbstractMenuWindowProvider<T, U>> provider);

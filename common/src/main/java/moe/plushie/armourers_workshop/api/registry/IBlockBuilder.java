@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
+@SuppressWarnings("unused")
 public interface IBlockBuilder<T extends Block> extends IRegistryBuilder<T> {
 
     IBlockBuilder<T> noCollission();

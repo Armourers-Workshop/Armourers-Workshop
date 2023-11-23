@@ -24,7 +24,8 @@ public class FabricScreenMixin {
 
     private ItemStack aw$tooltipStack = ItemStack.EMPTY;
 
-    @Shadow protected Font font;
+    @Shadow
+    protected Font font;
 
     @Inject(method = "renderTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V", at = @At(value = "HEAD"))
     public void aw2$renderTooltipPre(PoseStack poseStack, ItemStack itemStack, int i, int j, CallbackInfo ci) {
@@ -61,7 +62,7 @@ public class FabricScreenMixin {
         if (k2 + j + 6 > screenHeight) {
             k2 = screenHeight - j - 6;
         }
-        CGGraphicsContext context = AbstractGraphicsRenderer.of(null, font, poseStack, mouseX, mouseY, 0);
+        CGGraphicsContext context = AbstractGraphicsRenderer.of(null, poseStack, mouseX, mouseY, 0);
         RenderTooltipEvents.BEFORE.invoker().onRenderTooltip(aw$tooltipStack, j2, k2, i, j, screenWidth, screenHeight, context);
     }
 }

@@ -43,7 +43,7 @@ public class SkinPreviewView extends UIControl {
         auto colorScheme = descriptor.getColorScheme();
         auto itemStack = ItemStack.EMPTY;
         auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        ExtendedItemRenderer.renderSkinInBox(bakedSkin, colorScheme, itemStack, tx, ty, 200, tw, th, 20, 45, 0, 0, 0xf000f0, poseStack, buffers);
+        ExtendedItemRenderer.renderSkinInGUI(bakedSkin, colorScheme, itemStack, tx, ty, 200, tw, th, 20, 45, 0, 0, 0xf000f0, poseStack, buffers);
         buffers.endBatch();
     }
 

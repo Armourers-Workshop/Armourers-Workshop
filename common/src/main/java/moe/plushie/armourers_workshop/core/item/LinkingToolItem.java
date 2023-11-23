@@ -59,7 +59,7 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
         }
         BlockPos linkedBlockPos = getLinkedBlockPos(itemStack);
         SkinnableBlockEntity blockEntity = getTitleEntity(level, context.getClickedPos());
-        if (blockEntity != null && player.isShiftKeyDown()) {
+        if (blockEntity != null && player.isSecondaryUseActive()) {
             blockEntity.setLinkedBlockPos(null);
             player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.linking-tool.clear"));
             return InteractionResult.SUCCESS;

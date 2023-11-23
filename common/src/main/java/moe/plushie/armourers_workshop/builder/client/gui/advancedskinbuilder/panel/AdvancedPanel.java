@@ -36,7 +36,6 @@ public abstract class AdvancedPanel extends UIView {
 
     @Override
     public void sizeToFit() {
-        super.sizeToFit();
         CGRect bounds = bounds();
         UIEdgeInsets edge = new UIEdgeInsets(8, 8, 8, 8);
         float width = bounds.width - edge.left - edge.right;

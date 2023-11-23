@@ -199,8 +199,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
             if (c == 0) {
                 return null; // :p a wrong texture
             }
-            int argb = 0xff000000 | (r / c) << 16 | (g / c) << 8 | (b / c);
-            return PaintColor.of(argb, SkinPaintTypes.NORMAL);
+            return PaintColor.of(r / c, g / c, b / c, SkinPaintTypes.NORMAL);
         }
 
         private IPaintColor getColor() {

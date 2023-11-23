@@ -195,6 +195,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
 
         private final NSString title;
         private final ISkinLibrary.Entry entry;
+        private final UIFont font = UIFont.systemFont(7);
 
         private final UIView iconView = new UIView(CGRect.ZERO);
 
@@ -257,7 +258,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
                 return;
             }
             auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            ExtendedItemRenderer.renderSkinInBox(bakedSkin, x, y, 100, width, height - 1, 20, 45, 0, context.state().ctm(), buffers);
+            ExtendedItemRenderer.renderSkinInGUI(bakedSkin, x, y, 100, width, height - 1, 20, 45, 0, context.state().ctm(), buffers);
         }
 
         public void renderTooltip(CGRect rect, CGGraphicsContext context) {
@@ -276,13 +277,12 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             float dy = MathUtils.clamp(context.state().mousePos().getY() - size / 2f, 0, bounds.height - size);
             context.drawTilableImage(ModTextures.GUI_PREVIEW, dx, dy, size, size, 0, 0, 62, 62, 4, 4, 4, 4);
 
-            UIFont font = new UIFont(context.state().font(), 7);
             PoseStack poseStack = context.state().ctm();
             List<NSString> tooltips = ObjectUtils.map(ItemTooltipManager.createSkinInfo(bakedSkin), NSString::new);
             context.drawMultilineText(tooltips, dx + 4, dy + 4, size - 8, 0xffffffff, true, font, 0);
 
             auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            ExtendedItemRenderer.renderSkinInBox(bakedSkin, dx, dy, 100, size, size, 30, 45, 0, poseStack, buffers);
+            ExtendedItemRenderer.renderSkinInGUI(bakedSkin, dx, dy, 100, size, size, 30, 45, 0, poseStack, buffers);
             buffers.endBatch();
         }
 

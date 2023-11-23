@@ -138,12 +138,11 @@ public class SkinRenderer<T extends Entity, M extends IModel> {
             if (shouldRenderPart) {
                 counter += 1;
             }
-//            RenderUtils.drawPoint(poseStack, null, 32, buffers);
             context.popPose();
         }
 
         if (ModDebugger.skinBounds) {
-            builder.addShape(bakedSkin.getRenderShape(entity, model, context.getReference(), context.getTransformType(), this), UIColor.RED, context);
+            builder.addShape(bakedSkin.getRenderShape(entity, model, context.getReferenced(), this), UIColor.RED, context);
         }
         if (ModDebugger.skinOrigin) {
             builder.addShape(Vector3f.ZERO, context);

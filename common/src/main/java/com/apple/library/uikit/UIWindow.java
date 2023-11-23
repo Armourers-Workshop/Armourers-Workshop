@@ -14,6 +14,7 @@ import com.apple.library.quartzcore.CATransaction;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -30,6 +31,7 @@ public class UIWindow extends UIView {
     private UIView firstInputResponder;
     private UIView focusedResponder;
 
+    private final ArrayList<UIMenuItem> menuItems = new ArrayList<>();
     private final HashMap<UIControl.Event, WeakDispatcherImpl<UIEvent>> dispatchers = new HashMap<>();
 
     private WeakReference<UIWindowManager> windowManager;
@@ -81,12 +83,16 @@ public class UIWindow extends UIView {
 
     @Override
     public void keyUp(UIEvent event) {
-        event.cancel(InvokerResult.FAIL);
+        if (!_sendMenuEvent(event)) {
+            event.cancel(InvokerResult.FAIL);
+        }
     }
 
     @Override
     public void keyDown(UIEvent event) {
-        event.cancel(InvokerResult.FAIL);
+        if (!_sendMenuEvent(event)) {
+            event.cancel(InvokerResult.FAIL);
+        }
     }
 
     public void screenWillTick() {
@@ -102,6 +108,14 @@ public class UIWindow extends UIView {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public void addMenuItem(UIMenuItem menuItem) {
+        this.menuItems.add(menuItem);
+    }
+
+    public void removeMenuItem(UIMenuItem menuItem) {
+        this.menuItems.remove(menuItem);
     }
 
     public <T> void addGlobalTarget(T target, UIControl.Event event, BiConsumer<T, UIEvent> consumer) {
@@ -186,6 +200,17 @@ public class UIWindow extends UIView {
     private boolean _sendGlobalEvent(UIControl.Event event, UIEvent event1) {
         _dispatcher(event).send(event1);
         return !event1.isCancelled();
+    }
+
+    private boolean _sendMenuEvent(UIEvent event) {
+        int hitCount = 0;
+        for (UIMenuItem menuItem : menuItems) {
+            if (menuItem.test(event)) {
+                menuItem.perform(event);
+                hitCount += 1;
+            }
+        }
+        return hitCount != 0;
     }
 
     private WeakDispatcherImpl<UIEvent> _dispatcher(UIControl.Event event) {

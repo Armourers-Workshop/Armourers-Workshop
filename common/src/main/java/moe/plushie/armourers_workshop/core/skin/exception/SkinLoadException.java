@@ -15,7 +15,8 @@ public class SkinLoadException extends TranslatableException {
 
     public enum Type {
         NOT_FOUND,
-        NOT_SUPPORTED;
+        NOT_SUPPORTED,
+        NOT_EDITABLE;
 
         public SkinLoadException build(String message, Object... args) {
             return new SkinLoadException(this, "exception.armourers_workshop.load." + message, args);

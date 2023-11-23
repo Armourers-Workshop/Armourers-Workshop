@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.utils.math;
 
 
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
+import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 
 public class OpenAABB {
 
@@ -15,7 +16,7 @@ public class OpenAABB {
         this.max = max;
     }
 
-    public OpenAABB(Rectangle3f rect) {
+    public OpenAABB(IRectangle3f rect) {
         this.min = new Vector3f(rect.getMinX(), rect.getMinY(), rect.getMinZ());
         this.max = new Vector3f(rect.getMaxX(), rect.getMaxY(), rect.getMaxZ());
     }

@@ -27,7 +27,5 @@ public abstract class ShaderVertexObject {
 
     public abstract RenderType getType();
 
-    public boolean isGrowing() {
-        return getType() == SkinRenderType.FACE_LIGHTING || getType() == SkinRenderType.FACE_LIGHTING_TRANSLUCENT;
-    }
+    public abstract boolean isGrowing();
 }

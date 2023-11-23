@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.api.registry;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public interface IRegistryBinder<T> {
 
     Consumer<IRegistryKey<T>> get();

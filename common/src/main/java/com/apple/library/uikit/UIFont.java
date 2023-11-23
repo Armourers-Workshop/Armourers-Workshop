@@ -21,6 +21,10 @@ public class UIFont extends FontImpl {
         return DEFAULT;
     }
 
+    public static UIFont systemFont(float size) {
+        return new UIFont(DEFAULT, size);
+    }
+
     public float fontSize() {
         return fontSize;
     }

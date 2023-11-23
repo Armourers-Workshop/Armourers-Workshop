@@ -37,27 +37,28 @@ public class Vector4f {
         if (this == other) {
             return true;
         }
-        if (other != null && this.getClass() == other.getClass()) {
-            Vector4f vector4f = (Vector4f) other;
-            if (Float.compare(vector4f.x, this.x) != 0) {
-                return false;
-            } else if (Float.compare(vector4f.y, this.y) != 0) {
-                return false;
-            } else if (Float.compare(vector4f.z, this.z) != 0) {
-                return false;
-            } else {
-                return Float.compare(vector4f.w, this.w) == 0;
-            }
+        if (!(other instanceof Vector4f)) {
+            return false;
         }
-        return false;
+        Vector4f vector4f = (Vector4f) other;
+        if (Float.compare(vector4f.x, x) != 0) {
+            return false;
+        }
+        if (Float.compare(vector4f.y, y) != 0) {
+            return false;
+        }
+        if (Float.compare(vector4f.z, z) != 0) {
+            return false;
+        }
+        return Float.compare(vector4f.w, w) == 0;
     }
 
     @Override
     public int hashCode() {
-        int i = Float.floatToIntBits(this.x);
-        i = 31 * i + Float.floatToIntBits(this.y);
-        i = 31 * i + Float.floatToIntBits(this.z);
-        return 31 * i + Float.floatToIntBits(this.w);
+        int i = Float.floatToIntBits(x);
+        i = 31 * i + Float.floatToIntBits(y);
+        i = 31 * i + Float.floatToIntBits(z);
+        return 31 * i + Float.floatToIntBits(w);
     }
 
     public float x() {
@@ -141,6 +142,13 @@ public class Vector4f {
         w *= sw;
     }
 
+    public void scale(Vector4f pos) {
+        x *= pos.x;
+        y *= pos.y;
+        z *= pos.z;
+        w *= pos.w;
+    }
+
     public void transform(IMatrix4f matrix) {
         float[] floats = {x, y, z, w};
         matrix.multiply(floats);
@@ -155,7 +163,7 @@ public class Vector4f {
         quaternion.mul(quaternion1);
         set(quaternion.x(), quaternion.y(), quaternion.z(), w);
     }
-    
+
     public float dot(Vector4f pos) {
         return x * pos.x + y * pos.y + z * pos.z + w * pos.w;
     }
@@ -182,6 +190,12 @@ public class Vector4f {
     public Vector4f scaling(float sx, float sy, float sz, float sw) {
         Vector4f ret = copy();
         ret.scale(sx, sy, sz, sw);
+        return ret;
+    }
+
+    public Vector4f scaling(Vector4f pos) {
+        Vector4f ret = copy();
+        ret.scale(pos);
         return ret;
     }
 

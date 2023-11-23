@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.builder.client.render;
 
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
+import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedSkinBuilderBlockEntity;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -65,7 +65,7 @@ public class AdvancedSkinBuilderBlockEntityRenderer<T extends AdvancedSkinBuilde
         tesselator.setLightmap(0xf000f0);
         //tesselator.setPartialTicks(TickUtils.ticks());
         tesselator.setPartialTicks(0);
-        tesselator.setBuffer(OutlineObjectBuilder.immediate(buffers));
+        tesselator.setBufferProvider(OutlineObjectBuilder.immediate(buffers));
 
         tesselator.draw(poseStack, buffers);
 
@@ -159,7 +159,7 @@ public class AdvancedSkinBuilderBlockEntityRenderer<T extends AdvancedSkinBuilde
         }
 
         @Override
-        public void addShape(ITransformf[] transforms, SkinRenderContext context) {
+        public void addShape(IJointTransform[] transforms, SkinRenderContext context) {
             builder.addShape(transforms, context);
         }
     }
