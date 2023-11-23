@@ -16,7 +16,7 @@ public class SkinUUID {
 
     public SkinUUID() {
         StringBuilder builder = new StringBuilder(10);
-        long number = RANDOM.nextLong(Long.MAX_VALUE);
+        long number = RANDOM.nextLong() & Long.MAX_VALUE;
         for (int i = 0; i < 10; ++i) {
             builder.append(ALPHABET[(int) (number % 62)]);
             number /= 62;
