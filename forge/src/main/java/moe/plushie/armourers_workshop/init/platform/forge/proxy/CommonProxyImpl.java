@@ -33,7 +33,7 @@ public class CommonProxyImpl {
             ConfigBuilderImpl.reloadSpec(ModConfigSpec.CLIENT, spec);
             ConfigBuilderImpl.reloadSpec(ModConfigSpec.COMMON, spec);
         });
-        Registry.shouldAttackEntityFO((entity, player) -> {
+        Registry.shouldEntityAttackFO((entity, player) -> {
             if (player.isSpectator()) {
                 return InteractionResult.PASS;
             }

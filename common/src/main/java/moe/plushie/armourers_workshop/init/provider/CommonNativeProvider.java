@@ -51,9 +51,9 @@ public interface CommonNativeProvider {
 
     void willPlayerClone(BiConsumer<Player, Player> consumer);
 
-    void willPlayerDrop(Consumer<Player> consumer);
+    void willPlayerDeath(Consumer<Player> consumer);
 
-    void didTackingEntity(BiConsumer<Entity, Player> consumer);
+    void didEntityTacking(BiConsumer<Entity, Player> consumer);
 
     void didEntityJoin(Consumer<Entity> consumer);
 

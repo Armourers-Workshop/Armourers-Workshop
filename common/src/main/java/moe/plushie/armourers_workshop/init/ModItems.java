@@ -58,7 +58,7 @@ public class ModItems {
     public static final IRegistryKey<Item> OUTFIT_MAKER = MAIN.block(ModBlocks.OUTFIT_MAKER).build("outfit-maker");
     public static final IRegistryKey<Item> HOLOGRAM_PROJECTOR = MAIN.block(ModBlocks.HOLOGRAM_PROJECTOR).build("hologram-projector");
 
-    public static final IRegistryKey<Item> BOTTLE = MAIN.normal(BottleItem::new).build("dye-bottle");
+    public static final IRegistryKey<Item> BOTTLE = MAIN.normal(BottleItem::new).stacksTo(64).build("dye-bottle");
     public static final IRegistryKey<Item> MANNEQUIN_TOOL = MAIN.normal(MannequinToolItem::new).build("mannequin-tool");
     public static final IRegistryKey<Item> ARMOURERS_HAMMER = MAIN.normal(ArmourersHammerItem::new).build("armourers-hammer");
     public static final IRegistryKey<Item> WAND_OF_STYLE = MAIN.normal(WandOfStyleItem::new).build("wand-of-style");
@@ -119,7 +119,7 @@ public class ModItems {
         }
 
         IItemBuilder<Item> block(BiFunction<Block, Item.Properties, Item> provider, IRegistryKey<Block> block) {
-            return normal(properties -> provider.apply(block.get(), properties));
+            return normal(properties -> provider.apply(block.get(), properties)).stacksTo(64);
         }
 
         IItemBuilder<Item> cube(IRegistryKey<Block> block) {

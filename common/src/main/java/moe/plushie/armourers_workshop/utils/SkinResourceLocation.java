@@ -6,10 +6,12 @@ import net.minecraft.resources.ResourceLocation;
 // but there are uppercase in the old data
 public class SkinResourceLocation extends ResourceLocation {
 
+    private final String realNamespace;
     private final String realPath;
 
     public SkinResourceLocation(String namespace, String path) {
         super(namespace, path.toLowerCase());
+        this.realNamespace = namespace;
         this.realPath = path;
     }
 
@@ -20,6 +22,6 @@ public class SkinResourceLocation extends ResourceLocation {
 
     @Override
     public String toString() {
-        return this.getNamespace() + ':' + this.realPath;
+        return realNamespace + ':' + this.realPath;
     }
 }

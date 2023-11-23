@@ -57,13 +57,13 @@ public interface ForgeCommonNativeProvider extends CommonNativeProvider {
     }
 
     @Override
-    default void didTackingEntity(BiConsumer<Entity, Player> consumer) {
-        Registry.didTackingEntityFO(consumer);
+    default void didEntityTacking(BiConsumer<Entity, Player> consumer) {
+        Registry.didEntityTackingFO(consumer);
     }
 
     @Override
     default void didEntityJoin(Consumer<Entity> consumer) {
-        Registry.didJoinEntityFO(consumer);
+        Registry.didEntityJoinFO(consumer);
     }
 
     @Override
@@ -97,8 +97,8 @@ public interface ForgeCommonNativeProvider extends CommonNativeProvider {
     }
 
     @Override
-    default void willPlayerDrop(Consumer<Player> consumer) {
-        Registry.willDropEntityFO(entity -> {
+    default void willPlayerDeath(Consumer<Player> consumer) {
+        Registry.willEntityDeathFO(entity -> {
             if (entity instanceof Player) {
                 consumer.accept((Player) entity);
             }

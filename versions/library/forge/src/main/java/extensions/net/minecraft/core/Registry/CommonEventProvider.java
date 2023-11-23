@@ -96,13 +96,13 @@ public class CommonEventProvider {
         NotificationCenterImpl.observer(PlayerEvent.Clone.class, event -> consumer.accept(event.getOriginal(), event.getEntity()));
     }
 
-    public static void didTackingEntityFO(@ThisClass Class<?> clazz, BiConsumer<Entity, Player> consumer) {
+    public static void didEntityTackingFO(@ThisClass Class<?> clazz, BiConsumer<Entity, Player> consumer) {
         NotificationCenterImpl.observer(PlayerEvent.StartTracking.class, event -> {
             consumer.accept(event.getTarget(), event.getEntity());
         });
     }
 
-    public static void shouldAttackEntityFO(@ThisClass Class<?> clazz, BiFunction<Entity, Player, InteractionResult> consumer) {
+    public static void shouldEntityAttackFO(@ThisClass Class<?> clazz, BiFunction<Entity, Player, InteractionResult> consumer) {
         NotificationCenterImpl.observer(AttackEntityEvent.class, event -> {
             if (consumer.apply(event.getTarget(), event.getEntity()) == InteractionResult.FAIL) {
                 event.setCanceled(true);
@@ -110,11 +110,11 @@ public class CommonEventProvider {
         });
     }
 
-    public static void willDropEntityFO(@ThisClass Class<?> clazz, Consumer<Entity> consumer) {
+    public static void willEntityDeathFO(@ThisClass Class<?> clazz, Consumer<Entity> consumer) {
         NotificationCenterImpl.observer(LivingDropsEvent.class, consumer, LivingEvent::getEntity);
     }
 
-    public static void didJoinEntityFO(@ThisClass Class<?> clazz, Consumer<Entity> consumer) {
+    public static void didEntityJoinFO(@ThisClass Class<?> clazz, Consumer<Entity> consumer) {
         NotificationCenterImpl.observer(EntityJoinLevelEvent.class, event -> {
             if (!event.getLevel().isClientSide()) {
                 consumer.accept(event.getEntity());

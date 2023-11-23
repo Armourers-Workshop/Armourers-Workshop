@@ -107,7 +107,7 @@ public interface FabricCommonNativeProvider extends CommonNativeProvider {
     }
 
     @Override
-    default void didTackingEntity(BiConsumer<Entity, Player> consumer) {
+    default void didEntityTacking(BiConsumer<Entity, Player> consumer) {
         EntityLifecycleEvents.DID_START_TRACKING.register(consumer::accept);
     }
 
@@ -155,8 +155,8 @@ public interface FabricCommonNativeProvider extends CommonNativeProvider {
     }
 
     @Override
-    default void willPlayerDrop(Consumer<Player> consumer) {
-        Registry.willDropEntityFA(entity -> {
+    default void willPlayerDeath(Consumer<Player> consumer) {
+        Registry.willEntityDeathFA(entity -> {
             if (entity instanceof Player) {
                 consumer.accept((Player) entity);
             }

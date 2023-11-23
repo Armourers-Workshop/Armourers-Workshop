@@ -44,19 +44,19 @@ public final class SkinUtils {
         return FACE_VERTEXES[direction.get3DDataValue()];
     }
 
-    public static Skin getSkinDetectSide(ItemStack stack, boolean serverSoftLoad, boolean clientRequestSkin) {
+//    public static Skin getSkinDetectSide(ItemStack stack, boolean serverSoftLoad, boolean clientRequestSkin) {
 //        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
 //        return getSkinDetectSide(skinPointer, serverSoftLoad, clientRequestSkin);
-        return null;
-    }
+//        return null;
+//    }
 
-    public static Skin getSkinDetectSide(ISkinDescriptor descriptor, boolean serverSoftLoad, boolean clientRequestSkin) {
+//    public static Skin getSkinDetectSide(ISkinDescriptor descriptor, boolean serverSoftLoad, boolean clientRequestSkin) {
 //        if (descriptor != null) {
 //            ISkinIdentifier skinIdentifier = descriptor.getIdentifier();
 //            return getSkinDetectSide(skinIdentifier, serverSoftLoad, clientRequestSkin);
 //        }
-        return null;
-    }
+//        return null;
+//    }
 
 //    public static Skin getSkinForSide(ISkinIdentifier skinIdentifier, Side side, boolean softLoad, boolean requestSkin) {
 //        if (side == Side.CLIENT) {

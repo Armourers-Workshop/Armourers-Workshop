@@ -22,7 +22,7 @@ import manifold.ext.rt.api.ThisClass;
 @Extension
 public class CommonEventProvider {
 
-    public static void willDropEntityFA(@ThisClass Class<?> clazz, Consumer<Entity> consumer) {
+    public static void willEntityDeathFA(@ThisClass Class<?> clazz, Consumer<Entity> consumer) {
         ServerLivingEntityEvents.ALLOW_DEATH.register((entity, source, damageAmount) -> {
             consumer.accept(entity);
             return true;

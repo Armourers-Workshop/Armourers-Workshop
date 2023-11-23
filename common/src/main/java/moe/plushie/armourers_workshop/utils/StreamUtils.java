@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
-import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,13 +35,13 @@ public final class StreamUtils {
 //        stream.write(bytes);
 //    }
 //
-    public static String readString(DataInputStream stream, Charset charset) throws IOException {
-        int size = readUnsignedShort(stream);
-        byte[] bytes = new byte[size];
-        stream.readFully(bytes, 0, size);
-        return new String(bytes, charset);
-    }
-
+//    public static String readString(DataInputStream stream, Charset charset) throws IOException {
+//        int size = readUnsignedShort(stream);
+//        byte[] bytes = new byte[size];
+//        stream.readFully(bytes, 0, size);
+//        return new String(bytes, charset);
+//    }
+//
 //    public static void writeStringUtf8(DataOutputStream stream, String string) throws IOException {
 //        writeString(stream, StandardCharsets.UTF_8, string);
 //    }
@@ -74,18 +73,18 @@ public final class StreamUtils {
 //    public static JsonElement fromJson(String json) {
 //        return new JsonParser().parse(json);
 //    }
-
-    public static int readBuffer(InputStream stream, byte[] buffer, int offset, int length) throws IOException {
-        int index = 0;
-        while (index < length) {
-            int readSize = stream.read(buffer, offset + index, length - index);
-            if (readSize <= 0) {
-                throw new EOFException();
-            }
-            index += length;
-        }
-        return index;
-    }
+//
+//    public static int readBuffer(InputStream stream, byte[] buffer, int offset, int length) throws IOException {
+//        int index = 0;
+//        while (index < length) {
+//            int readSize = stream.read(buffer, offset + index, length - index);
+//            if (readSize <= 0) {
+//                throw new EOFException();
+//            }
+//            index += length;
+//        }
+//        return index;
+//    }
 
     @Nullable
     public static <T> T fromJson(InputStream inputStream, Class<T> class_) {
@@ -144,8 +143,8 @@ public final class StreamUtils {
 //        }
 //        stream.writeShort((short) value);
 //    }
-
-    private static int readUnsignedShort(DataInputStream stream) throws IOException {
-        return stream.readShort() & 0xFFFF;
-    }
+//
+//    private static int readUnsignedShort(DataInputStream stream) throws IOException {
+//        return stream.readShort() & 0xFFFF;
+//    }
 }

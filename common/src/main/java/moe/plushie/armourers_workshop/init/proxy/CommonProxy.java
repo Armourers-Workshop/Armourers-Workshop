@@ -94,7 +94,7 @@ public class CommonProxy {
             SkinLibraryManager.getServer().remove(player);
             ReplayManager.stopRecording(player.getServer(), player);
         });
-        registries.willPlayerDrop(player -> {
+        registries.willPlayerDeath(player -> {
             ModLog.debug("keep careful {}", player.getScoreboardName());
             SkinUtils.dropAll(player);
         });
@@ -108,7 +108,7 @@ public class CommonProxy {
             }
         });
 
-        registries.didTackingEntity((entity, player) -> {
+        registries.didEntityTacking((entity, player) -> {
             EntityProfile entityProfile = ModEntityProfiles.getProfile(entity);
             if (entityProfile != null) {
                 NetworkManager.sendWardrobeTo(entity, (ServerPlayer) player);

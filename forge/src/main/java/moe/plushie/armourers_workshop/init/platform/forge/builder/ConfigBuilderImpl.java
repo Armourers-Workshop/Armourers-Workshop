@@ -91,7 +91,7 @@ public class ConfigBuilderImpl {
             ModLog.debug("apply {} snapshot from server", type);
             snapshot.forEach((key, object) -> {
                 ValueProxy<Object> value = values.get(key);
-                if (value.setter != null) {
+                if (value != null && value.setter != null) {
                     value.setter.accept(object);
                 }
             });

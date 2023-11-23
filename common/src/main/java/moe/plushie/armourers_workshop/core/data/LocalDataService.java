@@ -112,7 +112,7 @@ public class LocalDataService {
                 return node;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ModLog.error("can't load file: {}, pls try fix or remove it.", parent);
         }
         return null;
     }
@@ -171,7 +171,7 @@ public class LocalDataService {
             nodes.put(tmp.id, tmp);
             return tmp.id;
         } catch (IOException exception) {
-            exception.printStackTrace();
+            ModLog.error("can't save file: {}, pls try fix or remove it.", tmp.getFile().getParentFile());
         }
         return null;
     }
