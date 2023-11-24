@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.panel;
 
+import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIImage;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedSkinBuilderBlockEntity;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -15,6 +16,8 @@ public class AdvancedGeneralPanel extends AdvancedPanel {
     }
 
     private void setup() {
+
+        addContent(new AdvancedHeaderView(new CGRect(0, 0, 200, 24)));
 
         addGroup(translatable("properties"), builder -> {
             builder.bool(translatable("mirror"), blockEntity.mirror2);

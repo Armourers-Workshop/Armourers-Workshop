@@ -160,9 +160,13 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     public void sizeToFit() {
-        CGRect rect = bounds().copy();
-        rect.setSize(sizeThatFits(rect.size()));
-        setBounds(rect);
+        CGPoint center = center();
+        CGRect rect = bounds();
+        CGSize size = sizeThatFits(rect.size());
+        float dx = (size.getWidth() - rect.getWidth()) / 2;
+        float dy = (size.getHeight() - rect.getHeight()) / 2;
+        setBounds(new CGRect(rect.getX(), rect.getY(), size.getWidth(), size.getHeight()));
+        setCenter(new CGPoint(center.getX() + dx, center.getY() + dy));
     }
 
     public CGSize sizeThatFits(CGSize size) {

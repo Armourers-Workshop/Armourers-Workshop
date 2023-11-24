@@ -67,6 +67,10 @@ public class BakedCubeFace {
         if (resolvedColor.getPaintType() == SkinPaintTypes.NONE) {
             return;
         }
+        auto resolvedTexture = resolveTexture(resolvedColor);
+        if (resolvedTexture == null) {
+            return;
+        }
 
         if (transform != SkinBasicTransform.IDENTITY) {
             poseStack.pushPose();
@@ -75,20 +79,19 @@ public class BakedCubeFace {
 
         auto pose = poseStack.last().pose();
         auto normal = poseStack.last().normal();
-        auto resolvedTexture = resolveTexture(resolvedColor);
 
         // https://learnopengl.com/Getting-started/Coordinate-Systems
         float x = shape.getX();
         float y = shape.getY();
         float z = shape.getZ();
-        float w = shape.getWidth();
-        float h = shape.getHeight();
-        float d = shape.getDepth();
+        float w = roundUp(shape.getWidth());
+        float h = roundUp(shape.getHeight());
+        float d = roundUp(shape.getDepth());
 
         float u = resolvedTexture.getU();
         float v = resolvedTexture.getV();
-        float s = round(resolvedTexture.getWidth());
-        float t = round(resolvedTexture.getHeight());
+        float s = roundDown(resolvedTexture.getWidth());
+        float t = roundDown(resolvedTexture.getHeight());
         float n = resolvedTexture.getTotalWidth();
         float m = resolvedTexture.getTotalHeight();
 
@@ -222,7 +225,15 @@ public class BakedCubeFace {
         return PaintColor.of(r, g, b, destination.getPaintType());
     }
 
-    private float round(float edg) {
+    private float roundUp(float edg) {
+        if (edg == 0) {
+            return 0.002f;
+        }
+        return edg;
+    }
+
+        // avoid out-of-bounds behavior caused by floating point precision.
+    private float roundDown(float edg) {
         if (edg < 0) {
             return edg + 0.002f;
         } else {

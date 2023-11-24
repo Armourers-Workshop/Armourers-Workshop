@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
-import moe.plushie.armourers_workshop.library.client.gui.widget.SkinItemList;
+import moe.plushie.armourers_workshop.library.client.gui.widget.ServerItemList;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.impl.SearchColumnType;
 import moe.plushie.armourers_workshop.library.data.impl.SearchOrderType;
@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
@@ -40,7 +41,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     private final HashSet<Integer> downloadingPages = new HashSet<>();
     private final HashMap<Integer, ArrayList<ServerSkin>> downloadedPageList = new HashMap<>();
     private final UILabel resultTitle = new UILabel(CGRect.ZERO);
-    private final SkinItemList skinPanelResults = new SkinItemList(CGRect.ZERO);
+    private final ServerItemList skinPanelResults = new ServerItemList(CGRect.ZERO);
 
     private int itemSize = 48;
     private int lastRequestSize = 0;
@@ -203,6 +204,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         totalPages = -1;
         totalResults = 0;
         skinPanelResults.setEntries(new ArrayList<>());
+        skinPanelResults.reloadData();
         lastRequestSize = 0;
         resultTitle.setText(getResultsTitle());
     }
@@ -253,7 +255,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
 
     private Pair<Integer, Integer> getPageBySkin(String skinId) {
         for (Map.Entry<Integer, ArrayList<ServerSkin>> entry : downloadedPageList.entrySet()) {
-            int index = Iterables.indexOf(entry.getValue(), e -> e.getId() == skinId);
+            int index = Iterables.indexOf(entry.getValue(), e -> Objects.equals(e.getId(), skinId));
             if (index != -1) {
                 return Pair.of(entry.getKey(), index);
             }

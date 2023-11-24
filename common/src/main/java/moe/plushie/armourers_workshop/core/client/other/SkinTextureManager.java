@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.utils.texture.TextureAnimationController;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -92,14 +93,14 @@ public class SkinTextureManager {
     }
 
     private ResourceLocation registerTexture(ResourceLocation rl, ITextureProvider provider) {
-        ModLog.debug("register dynamic texture: {} => {}", rl, provider);
+        ModLog.debug("Registering Dynamic Texture '{}', {}", rl, provider);
         RenderSystem.recordRenderCall(() -> textureManager.register(rl, new CustomTexture(provider)));
         return rl;
     }
 
     private RenderType registerAnimation(RenderType renderType, ITextureProvider textureProvider) {
-//        TextureAnimation animation = new TextureAnimation(textureProvider);
-//        textureAnimationControllers.put(renderType, animation);
+        TextureAnimationController animation = new TextureAnimationController((TextureAnimation) textureProvider.getAnimation());
+        textureAnimationControllers.put(renderType, animation);
         return renderType;
     }
 
@@ -121,12 +122,10 @@ public class SkinTextureManager {
 
         @Override
         public void load(ResourceManager resourceManager) throws IOException {
-            ModLog.debug("start load dynamic texture: {}", provider);
             NativeImage pixels = NativeImage.read(provider.getBuffer());
             TextureUtil.prepareImage(getId(), pixels.getWidth(), pixels.getHeight());
             pixels.upload(0, 0, 0, false);
             pixels.close();
-            ModLog.debug("did load dynamic texture: {}", provider);
         }
     }
 }

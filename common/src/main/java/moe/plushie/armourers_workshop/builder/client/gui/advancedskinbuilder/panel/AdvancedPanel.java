@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 
 public abstract class AdvancedPanel extends UIView {
 
-    protected ArrayList<Group> groups = new ArrayList<>();
+    protected ArrayList<Section> sections = new ArrayList<>();
     protected UIBarItem barItem = new UIBarItem();
 
     public AdvancedPanel() {
@@ -41,11 +41,11 @@ public abstract class AdvancedPanel extends UIView {
         float width = bounds.width - edge.left - edge.right;
         float top = edge.top;
         float left = bounds.width * 0.4f;
-        for (Group group : groups) {
-            float h = group.layout(4, left, left + 4, width - 4 - 4, 2);
-            group.setFrame(new CGRect(edge.left, top, width, h));
-            group.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
-            top += h + 4f;
+        for (Section section : sections) {
+            float h = section.layout(4, left, left + 4, width - 4 - 4, 2);
+            section.setFrame(new CGRect(edge.left, top + section.headerSize(), width, h));
+            section.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
+            top += section.headerSize() + h + section.footerSize();
         }
         setBounds(new CGRect(0, 0, bounds.width, top + edge.bottom));
     }
@@ -68,11 +68,19 @@ public abstract class AdvancedPanel extends UIView {
     protected void addGroup(NSString name, Consumer<Group> builder) {
         Group group = new Group(name);
         builder.accept(group);
-        addSubview(group);
-        groups.add(group);
+        addSection(group);
     }
 
-    public static class Group extends UIView {
+    protected void addContent(UIView contentView) {
+        addSection(new Content(contentView));
+    }
+
+    protected void addSection(Section section) {
+        addSubview(section);
+        sections.add(section);
+    }
+
+    public static class Group extends Section {
 
         protected final UILabel titleView = new UILabel(CGRect.ZERO);
         protected final ArrayList<Pair<UIView, UIView>> lines = new ArrayList<>();
@@ -87,6 +95,7 @@ public abstract class AdvancedPanel extends UIView {
             this.addSubview(titleView);
         }
 
+        @Override
         public float layout(float x0, float x1, float x2, float x3, float spacing) {
             float top = titleView.frame().getMaxY() + 4f + spacing;
             for (Pair<UIView, UIView> it : lines) {
@@ -211,5 +220,44 @@ public abstract class AdvancedPanel extends UIView {
         }
     }
 
+    public static class Content extends Section {
+
+        protected final UIView contentView;
+
+        public Content(UIView contentView) {
+            super(contentView.bounds());
+            this.contentView = contentView;
+            this.contentView.setFrame(bounds());
+            this.contentView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
+            this.addSubview(contentView);
+        }
+
+        @Override
+        public float layout(float x0, float x1, float x2, float x3, float spacing) {
+            return contentView.bounds().getHeight();
+        }
+
+        @Override
+        public float footerSize() {
+            return 8;
+        }
+    }
+
+    public static abstract class Section extends UIView {
+
+        public Section(CGRect frame) {
+            super(frame);
+        }
+
+        public abstract float layout(float x0, float x1, float x2, float x3, float spacing);
+
+        public float headerSize() {
+            return 0;
+        }
+
+        public float footerSize() {
+            return 4;
+        }
+    }
 }
 

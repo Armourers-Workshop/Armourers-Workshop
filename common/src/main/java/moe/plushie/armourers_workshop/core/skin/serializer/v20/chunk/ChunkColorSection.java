@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
 import moe.plushie.armourers_workshop.utils.math.Vector2f;
+import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.utils.texture.TextureData;
 import moe.plushie.armourers_workshop.utils.texture.TextureProperties;
 
@@ -181,7 +182,7 @@ public abstract class ChunkColorSection {
 
         @Override
         public TextureList getTextureList(Vector2f pos) {
-            if (textureLists == null || textureLists.length == 0) {
+            if (textureLists == null) {
                 return null;
             }
             for (TextureList list : textureLists) {
@@ -189,7 +190,7 @@ public abstract class ChunkColorSection {
                     return list;
                 }
             }
-            return textureLists[0];
+            return null;
         }
     }
 
@@ -220,7 +221,7 @@ public abstract class ChunkColorSection {
             float y = 0;
             for (TextureList list : textureLists.values()) {
                 list.freeze(x, y, textureLists::get);
-                x += list.rect.getWidth();
+                x += list.rect.getWidth() * 2;
             }
             total = colorLists.size() + textureLists.size();
             super.freeze(index);
@@ -260,7 +261,7 @@ public abstract class ChunkColorSection {
                     return list;
                 }
             }
-            return textureLists.values().stream().findFirst().orElse(null);
+            return null;
         }
 
         protected TextureList getOrCreateTextureList(ITextureProvider provider) {
@@ -316,7 +317,7 @@ public abstract class ChunkColorSection {
 
         public static Vector2f readFromStream(int usedIndexBytes, int offset, byte[] bytes) {
             float x = _readFixedFloat(usedIndexBytes, offset, bytes);
-            float y = _readFixedFloat(usedIndexBytes, offset + 4, bytes);
+            float y = _readFixedFloat(usedIndexBytes, offset + usedIndexBytes, bytes);
             if (x == 0 && y == 0) {
                 return Vector2f.ZERO;
             }
@@ -325,8 +326,9 @@ public abstract class ChunkColorSection {
 
         @Override
         public void writeToStream(IOutputStream stream) throws IOException {
-            _writeFixedFloat(uv.getX(), section.textureIndexBytes, stream);
-            _writeFixedFloat(uv.getY(), section.textureIndexBytes, stream);
+            Rectangle2f rect = list.getRect();
+            _writeFixedFloat(rect.getX() + uv.getX(), section.textureIndexBytes, stream);
+            _writeFixedFloat(rect.getY() + uv.getY(), section.textureIndexBytes, stream);
         }
 
         @Override
@@ -378,9 +380,10 @@ public abstract class ChunkColorSection {
             float width = stream.readFloat();
             float height = stream.readFloat();
             this.rect = new Rectangle2f(x, y, width, height);
+            TextureAnimation animation = stream.readTextureAnimation();
             TextureProperties properties = stream.readTextureProperties();
             int byteSize = stream.readInt();
-            TextureData provider = new TextureData(String.valueOf(id), width, height, properties);
+            TextureData provider = new TextureData(String.valueOf(id), width, height, animation, properties);
             provider.load(stream.readBytes(byteSize));
             this.provider = provider;
         }
@@ -393,13 +396,14 @@ public abstract class ChunkColorSection {
             stream.writeFloat(rect.getY());
             stream.writeFloat(rect.getWidth());
             stream.writeFloat(rect.getHeight());
+            stream.writeTextureAnimation((TextureAnimation) provider.getAnimation());
             stream.writeTextureProperties((TextureProperties) provider.getProperties());
             stream.writeInt(buffer.remaining());
             stream.writeBytes(buffer);
         }
 
         public void freeze(float x, float y, Function<ITextureProvider, TextureList> childProvider) {
-            this.rect = rect.offset(x, y);
+            this.rect = new Rectangle2f(x, y, rect.getWidth(), rect.getHeight());
             this.isResolved = true;
             // bind the child -> parent
             if (this.provider.getVariants() != null) {
@@ -408,13 +412,14 @@ public abstract class ChunkColorSection {
         }
 
         public boolean contains(Vector2f uv) {
-            return rect.contains(uv);
+            float x0 = rect.getMinX();
+            float x1 = uv.getX();
+            float x2 = rect.getMaxX();
+            return x0 <= x1 && x1 <= x2;
         }
 
         public TextureRef get(Vector2f uv, ChunkColorSection section) {
-            float u = uv.getX() - rect.getX();
-            float v = uv.getY() - rect.getY();
-            return new TextureRef(section, this, new Vector2f(u, v));
+            return new TextureRef(section, this, new Vector2f(uv.getX() - rect.getX(), uv.getY()));
         }
 
         public TextureRef add(Vector2f uv, ChunkColorSection section) {

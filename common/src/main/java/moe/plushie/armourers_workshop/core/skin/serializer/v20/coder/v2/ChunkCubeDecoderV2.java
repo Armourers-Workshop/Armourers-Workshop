@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.common.ITextureKey;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
+import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkColorSection;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkCubeSection;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkCubeSelector;
@@ -87,6 +88,15 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
             parseTextures();
         }
         return textureKeys.get(dir);
+    }
+
+
+    @Override
+    public SkinCubeFace getFace(Direction dir) {
+        if (getTexture(dir) != null) {
+            return super.getFace(dir);
+        }
+        return null;
     }
 
     protected void parseTextures() {

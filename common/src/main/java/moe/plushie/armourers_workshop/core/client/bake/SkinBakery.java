@@ -164,36 +164,6 @@ public final class SkinBakery implements ISkinLibraryListener {
     private void bakeSkin(String identifier, Skin skin, IResultHandler<BakedSkin> complete) {
         ModLog.debug("'{}' => start baking skin", identifier);
         long startTime = System.currentTimeMillis();
-//            skin.lightHash();
-//            int extraDyes = SkinPaintTypes.getInstance().getExtraChannels();
-//
-//            int[][] dyeColour;
-//            int[] dyeUseCount;
-//
-//            dyeColour = new int[3][extraDyes];
-//            dyeUseCount = new int[extraDyes];
-
-//            if (ClientProxy.getTexturePaintType() == TexturePaintType.MODEL_REPLACE_AW) {
-//                skin.addPaintDataParts();
-//            }
-//
-//        Skin oldSkin = skin;
-//        if (identifier.equals("fs:/test-bb/test.armour") && ModDebugger.flag1 == 1) {
-////            File file = new File("/Users/sagesse/Projects/Minecraft/CustomPlayerModel/steve");
-////            File file = new File("/Users/sagesse/Downloads/Ahri Spirit Blossom.zip");
-////            File file = new File("/Users/sagesse/Downloads/Ahri Spirit Blossom");
-//            File file = new File("/Users/sagesse/Downloads/Default");
-////            File file = new File("/Users/sagesse/Downloads/Hakurei Reimu");
-////            File file = new File("/Users/sagesse/Downloads/Syameimaru Aya.zip");
-////            File file = new File("/Users/sagesse/Downloads/legacy_guide.mcaddon");
-//            try {
-//                skin = SkinSerializerV21.readSkinFromFile(file);
-////            BedrockModel model = BedrockModelLoader.readFromStream(new FileInputStream(file));
-//                ModLog.debug("{}", skin);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
 
         SkinUsedCounter usedCounter = new SkinUsedCounter();
         ArrayList<BakedSkinPart> rootParts = new ArrayList<>();

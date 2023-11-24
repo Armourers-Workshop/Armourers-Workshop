@@ -29,15 +29,16 @@ public class BlockBenchTexture extends BlockBenchObject {
         return source;
     }
 
-//    public TextureAnimation getAnimation(int imageWidth, int imageHeight) {
-//
-        //TextureAnimation.Mode mode = texture.getAnimationMode();
-        //properties.setAnimation(new TextureAnimation(imageWidth, imageWidth, frameCount, mode));
-//
-//
-//    }
 
-    public TextureAnimation.Mode getAnimationMode() {
+    public int getFrameTime() {
+        return frameTime;
+    }
+
+    public boolean getFrameInterpolate() {
+        return frameInterpolate;
+    }
+
+    public TextureAnimation.Mode getFrameMode() {
         if (frameOrderType.equals("loop")) {
             return TextureAnimation.Mode.LOOP;
         }
@@ -49,7 +50,7 @@ public class BlockBenchTexture extends BlockBenchObject {
         }
         if (frameOrderType.equals("custom")) {
             int[] frames = _parseFrameSeq(frameOrder);
-            if (frames.length > 1) {
+            if (frames.length >= 1) {
                 return new TextureAnimation.Mode(frames);
             }
         }

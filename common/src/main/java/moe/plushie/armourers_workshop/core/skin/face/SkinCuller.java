@@ -77,7 +77,10 @@ public class SkinCuller {
                         if (cube == null) {
                             cube = cubeData.getCube(i);
                         }
-                        result.add(cube.getFace(dir));
+                        SkinCubeFace face = cube.getFace(dir);
+                        if (face != null) {
+                            result.add(face);
+                        }
                     }
                 }
             }
@@ -90,7 +93,10 @@ public class SkinCuller {
         for (int i = 0; i < cubeData.getCubeTotal(); ++i) {
             SkinCube cube = cubeData.getCube(i);
             for (Direction dir : Direction.values()) {
-                result.add(cube.getFace(dir));
+                SkinCubeFace face = cube.getFace(dir);
+                if (face != null) {
+                    result.add(face);
+                }
             }
         }
         return Collections.singleton(result);
@@ -108,7 +114,10 @@ public class SkinCuller {
                     if (cube == null) {
                         cube = cubeData.getCube(i);
                     }
-                    faces.add(cube.getFace(dir));
+                    SkinCubeFace face = cube.getFace(dir);
+                    if (face != null) {
+                        faces.add(face);
+                    }
                 }
             }
         }

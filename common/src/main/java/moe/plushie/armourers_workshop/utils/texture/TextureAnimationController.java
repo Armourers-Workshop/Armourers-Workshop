@@ -15,6 +15,10 @@ public class TextureAnimationController {
 
     private final OpenMatrix4f[] frames;
 
+    public TextureAnimationController(TextureAnimation animation) {
+        this(animation.getFrameTime(), animation.getFrameCount(), animation.getFrmaeMode());
+    }
+
     public TextureAnimationController(int frameTime, int frameCount, TextureAnimation.Mode frameMode) {
         this.frames = _genTextureMatrices(frameCount, frameMode);
         this.frameTime = frameTime;
@@ -30,6 +34,9 @@ public class TextureAnimationController {
     }
 
     private OpenMatrix4f[] _genTextureMatrices(int total, TextureAnimation.Mode mode) {
+        if (total <= 0) {
+            return new OpenMatrix4f[0];
+        }
         if (mode.equals(TextureAnimation.Mode.LOOP)) {
             OpenMatrix4f[] frames = new OpenMatrix4f[total];
             for (int i = 0; i < total; ++i) {

@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.client.shader;
 
 import moe.plushie.armourers_workshop.core.client.other.SkinTextureManager;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
-import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.utils.texture.TextureAnimationController;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

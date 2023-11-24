@@ -51,7 +51,7 @@ public interface GraphicsContextImpl {
 
         int dx = 0, dy = 0;
         for (NSString line : lines) {
-            int qx = renderer.drawInBatch(line.chars(), dx, dy, textColor, shadow, pose, buffers, false, 0, 15728880);
+            int qx = renderer.drawInBatch(line.characters(), dx, dy, textColor, shadow, pose, buffers, false, 0, 15728880);
             if (qx == dx) {
                 dy += 7;
             } else {
@@ -79,7 +79,7 @@ public interface GraphicsContextImpl {
         float scale = font.fontSize() / 9f;
         ArrayList<NSString> wrappedTextLines = new ArrayList<>();
         for (NSString line : lines) {
-            wrappedTextLines.addAll(line.split(maxWidth / scale, font));
+            wrappedTextLines.addAll(line.split(font, maxWidth / scale));
         }
         drawText(wrappedTextLines, x, y, textColor, shadow, font, zLevel);
     }

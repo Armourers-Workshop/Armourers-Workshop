@@ -32,19 +32,21 @@ public class ChunkCubeEncoderV2 extends ChunkCubeEncoder {
         // merge all values
         for (Direction dir : Direction.values()) {
             ITextureKey value = cube.getTexture(dir);
-            TextureBox.Slice slice = ObjectUtils.safeCast(value, TextureBox.Slice.class);
-            if (slice != null) {
-                startValues.put(slice.getParent(), slice, 0x80);
+            if (value == null) {
                 continue;
             }
-            if (value != null) {
-                float u = value.getU();
-                float v = value.getV();
-                float s = value.getWidth();
-                float t = value.getHeight();
-                startValues.put(new Vector2f(u, v), value, 1 << dir.get3DDataValue());
-                endValues.put(new Vector2f(u + s, v + t), value, 1 << dir.get3DDataValue());
+            ITextureProvider provider = value.getProvider();
+            TextureBox.Entry entry = ObjectUtils.safeCast(value, TextureBox.Entry.class);
+            if (entry != null) {
+                startValues.put(entry.getParent(), provider, 0x80);
+                continue;
             }
+            float u = value.getU();
+            float v = value.getV();
+            float s = value.getWidth();
+            float t = value.getHeight();
+            startValues.put(new Vector2f(u, v), provider, 1 << dir.get3DDataValue());
+            endValues.put(new Vector2f(u + s, v + t), provider, 1 << dir.get3DDataValue());
         }
         this.cube = cube;
         return this.startValues.size() + this.endValues.size();
@@ -81,8 +83,8 @@ public class ChunkCubeEncoderV2 extends ChunkCubeEncoder {
 
     public static class SortedMap extends LinkedHashMap<Pair<Vector2f, ITextureProvider>, Integer> {
 
-        public void put(Vector2f pos, ITextureKey key, int flag) {
-            Pair<Vector2f, ITextureProvider> index = Pair.of(pos, key.getProvider());
+        public void put(Vector2f pos, ITextureProvider provider, int flag) {
+            Pair<Vector2f, ITextureProvider> index = Pair.of(pos, provider);
             int face = getOrDefault(index, 0);
             face |= flag;
             put(index, face);

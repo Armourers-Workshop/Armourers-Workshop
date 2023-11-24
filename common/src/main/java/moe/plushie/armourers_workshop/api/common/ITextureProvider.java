@@ -15,6 +15,8 @@ public interface ITextureProvider {
 
     ByteBuffer getBuffer();
 
+    ITextureAnimation getAnimation();
+
     ITextureProperties getProperties();
 
     @Nullable

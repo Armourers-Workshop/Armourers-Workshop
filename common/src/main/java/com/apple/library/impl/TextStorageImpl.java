@@ -10,20 +10,16 @@ import com.apple.library.foundation.NSTextPosition;
 import com.apple.library.foundation.NSTextRange;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIFont;
-import com.mojang.blaze3d.vertex.Tesselator;
 import moe.plushie.armourers_workshop.compatibility.AbstractShaderTesselator;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.network.chat.Style;
-import net.minecraft.util.FormattedCharSequence;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
@@ -59,7 +55,7 @@ public class TextStorageImpl {
 
     private CGRect cursorRect = CGRect.ZERO;
     private Collection<CGRect> highlightedRects;
-    private Font cachedFont;
+    private UIFont cachedFont;
 
     private Collection<TextLine> cachedTextLines;
 
@@ -120,8 +116,7 @@ public class TextStorageImpl {
     }
 
     public void sizeToFit() {
-        Font font = font().impl();
-        remakeTextLineIfNeeded(boundingSize, font);
+        remakeTextLineIfNeeded(boundingSize, font());
     }
 
     public void render(CGPoint point, CGGraphicsContext context) {
@@ -129,7 +124,7 @@ public class TextStorageImpl {
         if (cachedTextLines == null) {
             sizeToFit();
         }
-        Font font = cachedFont;
+        UIFont font = cachedFont;
         int textColor = defaultTextColor();
         if (cachedFont == null || cachedTextLines == null) {
             return;
@@ -137,17 +132,14 @@ public class TextStorageImpl {
         context.saveGraphicsState();
         context.translateCTM(offset.x, offset.y, 0);
 
-        auto pose = context.state().ctm().last().pose();
-        auto buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
         if (placeholder != null && cachedTextLines.isEmpty()) {
             int placeholderColor = defaultPlaceholderColor();
-            font.drawInBatch(placeholder.chars(), 1, 0, placeholderColor, true, pose, buffers, false, 0, 15728880);
+            context.drawText(placeholder, 1, 0, placeholderColor, true, font, 0);
         }
         for (TextLine line : cachedTextLines) {
-            font.drawInBatch(line.chars, line.rect.x, line.rect.y, textColor, true, pose, buffers, false, 0, 15728880);
+            context.drawText(line.formattedText, line.rect.x, line.rect.y, textColor, true, font, 0);
             context.strokeDebugRect(line.index, line.rect);
         }
-        buffers.endBatch();
 
         renderHighlightedRectIfNeeded(context);
         renderCursorIfNeeded(context);
@@ -263,7 +255,7 @@ public class TextStorageImpl {
         }
         for (TextLine line : selectedLines) {
             if (line.insideAtX(point.x)) {
-                String value = cachedFont.plainSubstrByWidth(line.text, (int) (point.x - line.rect.x));
+                String value = cachedFont._getTextByWidth(line.text, (point.x - line.rect.x));
                 int index = line.range.startIndex() + value.length();
                 return NSTextPosition.forward(index);
             }
@@ -332,21 +324,21 @@ public class TextStorageImpl {
         cachedTextLines = null;
     }
 
-    private void remakeTextLineIfNeeded(CGSize boundingSize, Font font) {
+    private void remakeTextLineIfNeeded(CGSize boundingSize, UIFont font) {
         if (cachedTextLines != null) {
             return;
         }
-        int x = 0;
-        int y = 0;
+        float x = 0;
+        float y = 0;
+        float lineHeight = font.lineHeight() + lineSpacing;
+        float maxHeight = 0;
         int lineIndex = 0;
-        int lineHeight = font.lineHeight + lineSpacing;
-        int maxHeight = 0;
 
         NSRange selection = NSRange.of(cursorPos.value, highlightPos.value);
 
         List<TextLine> lines = split(value, selection, font, boundingSize.width);
         for (TextLine line : lines) {
-            int width = font.width(line.chars);
+            float width = font._getTextWidth(line.formattedText.characters());
             if (lineIndex != line.index) {
                 lineIndex = line.index;
                 y += maxHeight;
@@ -446,21 +438,18 @@ public class TextStorageImpl {
         return 0xffffffff;
     }
 
-    private List<TextLine> split(String value, Font font, float maxWidth) {
+    private List<TextLine> split(String value, UIFont font, float maxWidth) {
         if (value.isEmpty()) {
             return Collections.emptyList();
         }
         if (maxWidth == 0) {
             return Collections.singletonList(new TextLine(0, 0, value.length(), value));
         }
-        ArrayList<TextLine> lines = new ArrayList<>();
-        font.getSplitter().splitLines(value, (int) maxWidth, Style.EMPTY, false, (style, startIndex, endIndex) -> {
-            lines.add(new TextLine(lines.size(), startIndex, endIndex, value.substring(startIndex, endIndex)));
-        });
-        return lines;
+        AtomicInteger counter = new AtomicInteger();
+        return font._splitLines(value, maxWidth, false, (substring, begin, end) -> new TextLine(counter.getAndIncrement(), begin, end, substring));
     }
 
-    private ArrayList<TextLine> split(String value, NSRange selection, Font font, float maxWidth) {
+    private ArrayList<TextLine> split(String value, NSRange selection, UIFont font, float maxWidth) {
         List<TextLine> wrappedTextLines = split(value, font, maxWidth);
         if (wrappedTextLines.isEmpty()) {
             return new ArrayList<>();
@@ -592,14 +581,14 @@ public class TextStorageImpl {
         final int index;
 
         final String text;
-        final FormattedCharSequence chars;
+        final NSString formattedText;
         final NSRange range;
 
         CGRect rect = CGRect.ZERO;
 
         TextLine(int index, int startIndex, int endIndex, String text) {
             this.text = text;
-            this.chars = FormattedCharSequence.forward(text, Style.EMPTY);
+            this.formattedText = new FormattedStringImpl(text);
             this.index = index;
             this.range = new NSRange(startIndex, endIndex - startIndex);
         }

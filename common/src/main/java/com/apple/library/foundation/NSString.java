@@ -13,7 +13,7 @@ public class NSString implements StringImpl {
     private Component completedValue;
 
     private final Component value;
-    private final FormattedCharSequence sequence;
+    private final FormattedCharSequence characters;
 
     public NSString(String value) {
         this(Component.literal(value));
@@ -21,12 +21,12 @@ public class NSString implements StringImpl {
 
     public NSString(Component value) {
         this.value = value;
-        this.sequence = null;
+        this.characters = null;
     }
 
-    public NSString(FormattedCharSequence sequence) {
+    public NSString(FormattedCharSequence characters) {
         this.value = null;
-        this.sequence = sequence;
+        this.characters = characters;
     }
 
     @Override
@@ -37,9 +37,9 @@ public class NSString implements StringImpl {
         if (completedValue != null) {
             return completedValue;
         }
-        if (sequence != null) {
+        if (characters != null) {
             StringEncoderImpl impl = new StringEncoderImpl();
-            sequence.accept(impl::append);
+            characters.accept(impl::append);
             completedValue = impl.encode();
             return completedValue;
         }
@@ -47,11 +47,11 @@ public class NSString implements StringImpl {
     }
 
     @Override
-    public FormattedCharSequence chars() {
+    public FormattedCharSequence characters() {
         if (value != null) {
             return value.getVisualOrderText();
         }
-        return sequence;
+        return characters;
     }
 
     public String contents() {

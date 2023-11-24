@@ -5,6 +5,7 @@ import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
+import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.utils.texture.TextureProperties;
 
 import java.io.DataInputStream;
@@ -128,6 +129,12 @@ public interface IInputStream {
         SkinProperties properties = SkinProperties.create();
         properties.readFromStream(this);
         return properties;
+    }
+
+    default TextureAnimation readTextureAnimation() throws IOException {
+        TextureAnimation animation = new TextureAnimation();
+        animation.readFromStream(this);
+        return animation;
     }
 
     default TextureProperties readTextureProperties() throws IOException {

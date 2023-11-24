@@ -22,19 +22,21 @@ public class TextureData implements ITextureProvider {
     private final float width;
     private final float height;
 
+    private TextureAnimation animation;
     private TextureProperties properties;
 
     private ByteBuffer bytes;
     private Collection<ITextureProvider> variants;
 
     public TextureData(String name, float width, float height) {
-        this(name, width, height, TextureProperties.NONE);
+        this(name, width, height, TextureAnimation.EMPTY, TextureProperties.EMPTY);
     }
 
-    public TextureData(String name, float width, float height, TextureProperties properties) {
+    public TextureData(String name, float width, float height, TextureAnimation animation, TextureProperties properties) {
         this.name = name;
         this.width = width;
         this.height = height;
+        this.animation = animation;
         this.properties = properties;
     }
 
@@ -106,6 +108,15 @@ public class TextureData implements ITextureProvider {
         return height;
     }
 
+    public void setAnimation(TextureAnimation animation) {
+        this.animation = animation;
+    }
+
+    @Override
+    public TextureAnimation getAnimation() {
+        return animation;
+    }
+
     public void setProperties(TextureProperties properties) {
         this.properties = properties;
     }
@@ -131,6 +142,6 @@ public class TextureData implements ITextureProvider {
 
     @Override
     public String toString() {
-        return ObjectUtils.makeDescription(this, "name", name, "width", width, "height", height, "properties", properties);
+        return ObjectUtils.makeDescription(this, "name", name, "width", width, "height", height, "animation", animation, "properties", properties);
     }
 }

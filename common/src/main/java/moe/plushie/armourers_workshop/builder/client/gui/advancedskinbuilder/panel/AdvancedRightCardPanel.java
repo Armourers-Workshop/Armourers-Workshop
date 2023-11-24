@@ -161,6 +161,7 @@ public class AdvancedRightCardPanel extends UIView implements TreeViewDelegate {
             setSkinTypeWithItem(item);
         }
     }
+
     @Override
     public Collection<UIMenuItem> treeViewShouldShowMenuForNode(TreeView treeView, TreeNode node) {
         AdvancedMenuAction action = new AdvancedMenuAction(rightTree, node);
@@ -223,7 +224,7 @@ public class AdvancedRightCardPanel extends UIView implements TreeViewDelegate {
         }
 
         public void add() {
-            AdvancedPartPickerDialog alert = AdvancedPartPickerDialog.SHH.apply(treeView);
+            AdvancedPartPickerDialog alert = new AdvancedPartPickerDialog();
             alert.setTitle(new NSString("Pick a skin part"));
             alert.showInView(treeView, () -> {
                 if (!alert.isCancelled()) {

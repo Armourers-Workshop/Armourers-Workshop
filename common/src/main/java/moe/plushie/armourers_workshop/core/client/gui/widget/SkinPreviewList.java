@@ -1,10 +1,11 @@
-package moe.plushie.armourers_workshop.library.client.gui.widget;
+package moe.plushie.armourers_workshop.core.client.gui.widget;
 
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSString;
+import com.apple.library.uikit.UIEdgeInsets;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIScreen;
@@ -13,8 +14,8 @@ import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -23,7 +24,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -31,14 +31,14 @@ import java.util.function.Consumer;
 import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
-public class SkinItemList extends UIView {
+public abstract class SkinPreviewList<T> extends UIView {
 
-    protected Insets contentInset = new Insets(0, 0, 0, 0);
+    protected UIEdgeInsets contentInset = new UIEdgeInsets(0, 0, 0, 0);
     protected CGSize itemSize = new CGSize(48, 48);
 
     protected UIFont font = UIFont.systemFont();
-    protected Consumer<ServerSkin> itemSelector;
-    protected ArrayList<ServerSkin> entries = new ArrayList<>();
+    protected Consumer<T> itemSelector;
+    protected ArrayList<T> entries = new ArrayList<>();
     protected Ticket loadTicket = Ticket.list();
 
     protected int minimumLineSpacing = 1;
@@ -53,7 +53,7 @@ public class SkinItemList extends UIView {
 
     private boolean showsName = true;
 
-    public SkinItemList(CGRect frame) {
+    public SkinPreviewList(CGRect frame) {
         super(frame);
         this.reloadData();
     }
@@ -94,11 +94,11 @@ public class SkinItemList extends UIView {
         this.loadTicket.invalidate();
     }
 
-    public ArrayList<ServerSkin> getEntries() {
+    public ArrayList<T> getEntries() {
         return entries;
     }
 
-    public void setEntries(ArrayList<ServerSkin> entries) {
+    public void setEntries(ArrayList<T> entries) {
         this.loadTicket.invalidate();
         this.entries = new ArrayList<>(entries);
     }
@@ -109,6 +109,16 @@ public class SkinItemList extends UIView {
         this.colCount = Math.max(1, (int) Math.floor(boxW / (itemSize.width + minimumInteritemSpacing)));
         this.rowCount = Math.max(1, (int) Math.floor(boxH / (itemSize.height + minimumLineSpacing)));
         this.totalCount = rowCount * colCount;
+    }
+
+    @Override
+    public CGSize sizeThatFits(CGSize size) {
+        float boxW = (size.width - contentInset.left - contentInset.right) + minimumInteritemSpacing;
+        int colCount = Math.max(1, (int) Math.floor(boxW / (itemSize.width + minimumInteritemSpacing)));
+        int rowCount = Math.max(1, (entries.size() + colCount - 1) / colCount);
+        float width = (itemSize.width + minimumInteritemSpacing) * colCount - minimumInteritemSpacing;
+        float height = (itemSize.height + minimumLineSpacing) * rowCount - minimumLineSpacing;
+        return new CGSize(contentInset.left + width + contentInset.right, contentInset.top + height + contentInset.bottom);
     }
 
     @Override
@@ -136,7 +146,7 @@ public class SkinItemList extends UIView {
         if (index >= entries.size()) {
             return;
         }
-        ServerSkin entry = entries.get(index);
+        T entry = entries.get(index);
         int row = index / colCount;
         int col = index % colCount;
         float ix = (itemSize.width + minimumInteritemSpacing) * col;
@@ -160,8 +170,8 @@ public class SkinItemList extends UIView {
         }
     }
 
-    public void renderItemContent(float x, float y, float width, float height, boolean isHovered, ServerSkin entry, MultiBufferSource buffers, CGGraphicsContext context) {
-        auto bakedSkin = SkinBakery.getInstance().loadSkin(entry.getDescriptor(), loadTicket);
+    public void renderItemContent(float x, float y, float width, float height, boolean isHovered, T entry, MultiBufferSource buffers, CGGraphicsContext context) {
+        auto bakedSkin = SkinBakery.getInstance().loadSkin(getItemDescriptor(entry), loadTicket);
         if (bakedSkin == null) {
             int speed = 60;
             int frames = 18;
@@ -174,8 +184,8 @@ public class SkinItemList extends UIView {
         }
         auto skin = bakedSkin.getSkin();
         if (showsName) {
-            NSString name = new NSString(entry.getName());
-            List<NSString> properties = name.split(width - 2, font);
+            NSString name = new NSString(getItemName(entry));
+            List<NSString> properties = name.split(font, width - 2);
             float iy = y + height - properties.size() * font.lineHeight() - 2;
             context.drawText(properties, x + 1, iy, 0xffeeeeee, false, font, 0);
         }
@@ -196,14 +206,9 @@ public class SkinItemList extends UIView {
         ExtendedItemRenderer.renderSkinInGUI(bakedSkin, tx, ty, 100, dw, dh, 20, 45, 0, context.state().ctm(), buffers);
     }
 
-    public void renderItemBackground(float x, float y, float width, float height, boolean isHovered, ServerSkin entry, CGGraphicsContext context) {
-        int backgroundColor = 0x22AAAAAA;
-        int borderColor = 0x22FFFFFF;
-
-        if (isHovered) {
-            backgroundColor = 0xC0777711;
-            borderColor = 0xCC888811;
-        }
+    public void renderItemBackground(float x, float y, float width, float height, boolean isHovered, T entry, CGGraphicsContext context) {
+        int backgroundColor = getItemBackgroundColor(entry, isHovered);
+        int borderColor = getItemBorderColor(entry, isHovered);
 
         context.fillRect(x, y, x + width, y + height, backgroundColor);
         context.fillRect(x, y + 1, x + 1, y + height, borderColor);
@@ -213,7 +218,6 @@ public class SkinItemList extends UIView {
 
         RenderSystem.enableAlphaTest();
     }
-
 
     public CGSize getItemSize() {
         return itemSize;
@@ -239,17 +243,37 @@ public class SkinItemList extends UIView {
         this.showsName = showsName;
     }
 
-    public Consumer<ServerSkin> getItemSelector() {
+    public Consumer<T> getItemSelector() {
         return itemSelector;
     }
 
-    public void setItemSelector(Consumer<ServerSkin> itemSelector) {
+    public void setItemSelector(Consumer<T> itemSelector) {
         this.itemSelector = itemSelector;
     }
 
     public int getTotalCount() {
         return this.totalCount;
     }
+
+
+    protected abstract String getItemName(T value);
+
+    protected abstract SkinDescriptor getItemDescriptor(T value);
+
+    protected int getItemBackgroundColor(T entry, boolean isHovered) {
+        if (isHovered) {
+            return 0xC0777711;
+        }
+        return 0x22AAAAAA;
+    }
+
+    protected int getItemBorderColor(T entry, boolean isHovered) {
+        if (isHovered) {
+            return 0xCC888811;
+        }
+        return 0x22FFFFFF;
+    }
+
 
     private float getInnerWidth() {
         return bounds().width - contentInset.left - contentInset.right;

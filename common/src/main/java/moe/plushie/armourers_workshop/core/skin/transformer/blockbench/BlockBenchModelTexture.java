@@ -3,13 +3,12 @@ package moe.plushie.armourers_workshop.core.skin.transformer.blockbench;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelCube;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelTexture;
-import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelUV;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Size2f;
 import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
-import moe.plushie.armourers_workshop.utils.texture.TextureBox;
 import moe.plushie.armourers_workshop.utils.texture.TextureData;
 import moe.plushie.armourers_workshop.utils.texture.TextureProperties;
+import net.minecraft.core.Direction;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -25,8 +24,8 @@ public class BlockBenchModelTexture extends BedrockModelTexture {
 
     private final Size2f resolution;
     private final List<BlockBenchTexture> inputs;
-    private final HashMap<Integer, TextureData> textureDatas = new HashMap<>();
-    private final HashMap<String, TextureData> allLoadedTextures = new HashMap<>();
+    private final HashMap<Integer, TextureData> allTexture = new HashMap<>();
+    private final HashMap<String, TextureData> loadedTextures = new HashMap<>();
 
     protected TextureData defaultTextureData;
 
@@ -46,7 +45,7 @@ public class BlockBenchModelTexture extends BedrockModelTexture {
             }
             BlockBenchTexture texture = inputs.get(textureId);
             TextureData data = loadTextureData(texture);
-            textureDatas.put(textureId, data);
+            allTexture.put(textureId, data);
             if (defaultTextureData == null) {
                 defaultTextureData = data;
             }
@@ -64,9 +63,21 @@ public class BlockBenchModelTexture extends BedrockModelTexture {
     }
 
     @Override
-    public TextureBox read(BedrockModelCube cube) {
-        textureData = getTextureData(cube.getUV());
-        return super.read(cube);
+    protected TextureData getTextureData(BedrockModelCube cube) {
+        BlockBenchModelUV uv1 = ObjectUtils.safeCast(cube.getUV(), BlockBenchModelUV.class);
+        if (uv1 != null) {
+            return allTexture.get(uv1.getDefaultTextureId());
+        }
+        return null;
+    }
+
+    @Override
+    protected TextureData getTextureData(BedrockModelCube cube, Direction dir) {
+        BlockBenchModelUV uv1 = ObjectUtils.safeCast(cube.getUV(), BlockBenchModelUV.class);
+        if (uv1 != null) {
+            return allTexture.get(uv1.getTextureId(dir));
+        }
+        return null;
     }
 
     private BlockBenchTexture getAdditionalTexture(BlockBenchTexture texture) {
@@ -80,16 +91,8 @@ public class BlockBenchModelTexture extends BedrockModelTexture {
         return null;
     }
 
-    private TextureData getTextureData(BedrockModelUV uv) {
-        BlockBenchModelUV uv1 = ObjectUtils.safeCast(uv, BlockBenchModelUV.class);
-        if (uv1 != null) {
-            return textureDatas.getOrDefault(uv1.getTextureId(), defaultTextureData);
-        }
-        return defaultTextureData;
-    }
-
     private TextureData loadTextureData(BlockBenchTexture texture) throws IOException {
-        TextureData textureData = allLoadedTextures.get(texture.getUUID());
+        TextureData textureData = loadedTextures.get(texture.getUUID());
         if (textureData != null) {
             return textureData;
         }
@@ -98,30 +101,44 @@ public class BlockBenchModelTexture extends BedrockModelTexture {
         if (parts.length != 2) {
             throw new IOException("error.bb.loadModel.textureNotSupported");
         }
-        TextureProperties properties = texture.getProperties();
         byte[] imageBytes = Base64.getDecoder().decode(parts[1]);
-        Size2f size = resolveTextureSize(imageBytes, texture, properties);
-        textureData = new TextureData(texture.getName(), size.getWidth(), size.getHeight(), properties);
+        int imageFrame = resolveTextureFrame(imageBytes);
+        Size2f size = resolveTextureSize(imageFrame);
+        TextureAnimation animation = resolveTextureAnimation(texture, imageFrame);
+        TextureProperties properties = texture.getProperties();
+        textureData = new TextureData(texture.getName(), size.getWidth(), size.getHeight(), animation, properties);
         textureData.load(Unpooled.wrappedBuffer(imageBytes));
-        allLoadedTextures.put(texture.getUUID(), textureData);
+        loadedTextures.put(texture.getUUID(), textureData);
         return textureData;
     }
 
-    private Size2f resolveTextureSize(byte[] imageBytes, BlockBenchTexture texture, TextureProperties properties) throws IOException {
+    private int resolveTextureFrame(byte[] imageBytes) throws IOException {
         BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageBytes));
-        int imageWidth = image.getWidth();
-        int imageHeight = image.getHeight();
-        if (imageWidth == 0 || imageHeight == 0) {
-            throw new IOException("inaild image");
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int frame = height / width;
+        if (frame * width == height) {
+            return frame;
         }
+        return 0;
+    }
+
+    private Size2f resolveTextureSize(int frameCount) {
         float width = resolution.getWidth();
         float height = resolution.getHeight();
-        int frameCount = imageHeight / imageWidth;
-        if (frameCount > 1 && imageHeight % imageWidth == 0) {
-            TextureAnimation.Mode mode = texture.getAnimationMode();
-//            properties.setAnimation(new TextureAnimation(imageWidth, imageWidth, frameCount, mode));
-            height = imageHeight * (width / imageWidth);
+        if (frameCount > 1) {
+            height = width * frameCount;
         }
         return new Size2f(width, height);
+    }
+
+    private TextureAnimation resolveTextureAnimation(BlockBenchTexture texture, int frameCount) {
+        if (frameCount > 1) {
+            int time = texture.getFrameTime() * 50;
+            boolean interpolate = texture.getFrameInterpolate();
+            TextureAnimation.Mode mode = texture.getFrameMode();
+            return new TextureAnimation(time, frameCount, mode, interpolate);
+        }
+        return TextureAnimation.EMPTY;
     }
 }

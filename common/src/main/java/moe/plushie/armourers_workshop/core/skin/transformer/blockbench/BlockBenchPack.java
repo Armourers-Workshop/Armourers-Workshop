@@ -47,7 +47,7 @@ public class BlockBenchPack implements SkinPack {
         this.transforms = transforms;
         // rebuild object map.
         elements.forEach(it -> objects.put(it.getUUID(), it));
-        rootOutliner.getChilds().forEach(it -> {
+        rootOutliner.getChildren().forEach(it -> {
             BlockBenchObject object = ObjectUtils.safeCast(it, BlockBenchObject.class);
             if (object != null) {
                 objects.put(object.getUUID(), object);

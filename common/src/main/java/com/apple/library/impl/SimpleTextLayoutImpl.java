@@ -26,7 +26,7 @@ public class SimpleTextLayoutImpl {
         if (numberOfLines == 1) {
             lines.add(title);
         } else {
-            lines.addAll(title.split(preferredMaxLayoutWidth, font));
+            lines.addAll(title.split(font, preferredMaxLayoutWidth));
         }
         // remove all excess lines.
         while (numberOfLines != 0 && lines.size() > numberOfLines) {

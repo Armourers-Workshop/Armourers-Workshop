@@ -90,10 +90,13 @@ public class Rectangle2f {
     }
 
     public boolean contains(Vector2f point) {
-        float tx = point.getX();
-        float ty = point.getY();
+        return contains(point.getX(), point.getY());
+    }
+
+    public boolean contains(float tx, float ty) {
         return x <= tx && tx <= (x + width) && y <= ty && ty <= (y + height);
     }
+
 
     @Override
     public String toString() {

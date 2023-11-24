@@ -39,7 +39,7 @@ import java.util.Map;
  * chunk format:          |< length(4B) | name(4B) | flag(2B) >[ chunk data ]|
  * part chunk format:     |< length(4B) | name(4B) | flag(2B) | id(4B) >[ chunk data ]|
  * skin properties :      | length | PPTS | flag |[ key/value ]|
- * cube data:             | length | CCBO | flag |< id(VB) | opt(VB) >[ cube entry(VB) |[ face options(1B) | cube face(VB) ](1-6)]|
+ * cube data:             | length | CCBO | flag |< id(VB) | opt(VB) >[ cube entry(VB) |[ face options(1B) | cube face entry(VB) ](1-6)]|
  * cube data preview:     | length | VCBO | flag |< id(VB) | transform(VB) >[ cube sel(8B) ]|
  * skin part:             | length | SKPR | flag |[ id(VB) | pid(VB) | name(VB) | type(VB) | transform(VB) |[ cube sel(8B) ]]|{ part chunk }|
  * skin part markers:     | length | PRMK | flag |[ x(1B)/y(1B)/z(1B) | meta(1B) ]|
@@ -48,13 +48,13 @@ import java.util.Map;
  * item transforms:       | length | ITTF | falg |[ id(VB) | opt(VB) | translate(12B)/rotation(12B)/scale(12B) ]|
  * chunk flag:            1 encrypt, 2 gzip, 3 encrypt+gzip
  * cube entry:            x(1B)/y(1B)/z(1B)
- * origin(12B)/size(12B), translate(12B)/rotation(12B)/scale(12B)/pivot(12B)
+ *                        origin(12B)/size(12B), translate(12B)/rotation(12B)/scale(12B)/pivot(12B)
  * cube face entry:       color index(VB)
- * first: u(VB)/v(VB), second: s(VB)/t(VB)
+ *                        first: u(VB)/v(VB), second: s(VB)/t(VB)
  * palette entry:         RRGGBB/AARRGGBB
- * id(VB)/parent id(VB)/x(4B)/y(4B)/w(4B)/h(4B)/frames(4B)/opt(4B)/bytes(4B) | raw data(nB)
+ *                        id(VB)/parent id(VB)/x(4B)/y(4B)/w(4B)/h(4B)/ani(4B)/opt(4B)/bytes(4B) | raw data(nB)
  * symbol:                {n} = (length(4B) + byte[length]) * n + 0(4B)
- * [data] = count(VB) + data[count]
+ *                        [data] = count(VB) + data[count]
  * <header>[data] = (count(VB) + header + data[count]) * n + 0(VB)
  */
 @SuppressWarnings("unused")

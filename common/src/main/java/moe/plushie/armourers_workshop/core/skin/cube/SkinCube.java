@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.core.Direction;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 
@@ -63,10 +64,11 @@ public class SkinCube implements ISkinCube {
         return null;
     }
 
+    @Nullable
     public SkinCubeFace getFace(Direction dir) {
-        ISkinCubeType cubeType = getType();
         ITextureKey textureKey = getTexture(dir);
         IPaintColor paintColor = getPaintColor(dir);
+        ISkinCubeType cubeType = getType();
         int alpha = 255;
         if (cubeType.isGlass()) {
             alpha = 127;

@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
-import moe.plushie.armourers_workshop.library.client.gui.widget.SkinItemList;
+import moe.plushie.armourers_workshop.library.client.gui.widget.ServerItemList;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.impl.SearchColumnType;
 import moe.plushie.armourers_workshop.library.data.impl.SearchOrderType;
@@ -23,16 +23,18 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 @Environment(EnvType.CLIENT)
 public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkinLibraryWindow.ISkinListListener {
 
     private final UIScrollView scrollView = new UIScrollView(CGRect.ZERO);
 
     //    private final GuiScrollbar scrollbar;
-    private final SkinItemList skinPanelRecentlyUploaded = buildFileList(0, 0, 300, 307);
-    private final SkinItemList skinPanelMostDownloaded = buildFileList(0, 0, 300, 307);
-    private final SkinItemList skinPanelTopRated = buildFileList(0, 0, 300, 307);
-    private final SkinItemList skinPanelNeedRated = buildFileList(0, 0, 300, 307);
+    private final ServerItemList skinPanelRecentlyUploaded = buildFileList(0, 0, 300, 307);
+    private final ServerItemList skinPanelMostDownloaded = buildFileList(0, 0, 300, 307);
+    private final ServerItemList skinPanelTopRated = buildFileList(0, 0, 300, 307);
+    private final ServerItemList skinPanelNeedRated = buildFileList(0, 0, 300, 307);
 
     private int lastRequestSize = 0;
     private final GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
@@ -75,7 +77,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         float listTop = 20;
         float listLeft = 4;
         float width = bounds().getWidth();
-        for (SkinItemList fileList : lists()) {
+        for (ServerItemList fileList : lists()) {
             fileList.setFrame(new CGRect(listLeft, listTop + 20, width, 307));
             fileList.setItemSize(new CGSize(50, 50));
             fileList.setBackgroundColor(0);
@@ -136,7 +138,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         if (newValue != null) {
             return;
         }
-        for (SkinItemList fileList : lists()) {
+        for (ServerItemList fileList : lists()) {
             if (indexOf(fileList, skinId) != -1) {
                 // removed skin in here
                 reloadData();
@@ -153,7 +155,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         router.showSkinDetail(sender, GlobalSkinLibraryWindow.Page.HOME);
     }
 
-    private void buildTitle(SkinItemList list, String titleKey) {
+    private void buildTitle(ServerItemList list, String titleKey) {
         UILabel label = new UILabel(new CGRect(1, -16, list.frame().width - 2, 16));
         label.setText(getDisplayText(titleKey));
         label.setTextColor(UIColor.WHITE);
@@ -161,8 +163,8 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         list.addSubview(label);
     }
 
-    private SkinItemList buildFileList(float x, float y, float width, float height) {
-        SkinItemList fileList = new SkinItemList(new CGRect(x, y, width ,height));
+    private ServerItemList buildFileList(float x, float y, float width, float height) {
+        ServerItemList fileList = new ServerItemList(new CGRect(x, y, width ,height));
         fileList.setItemSize(new CGSize(50, 50));
         fileList.setBackgroundColor(0);
         fileList.setShowsName(false);
@@ -170,11 +172,11 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         return fileList;
     }
 
-    private int indexOf(SkinItemList list, String skinId) {
-        return Iterables.indexOf(list.getEntries(), e -> e.getId() == skinId);
+    private int indexOf(ServerItemList list, String skinId) {
+        return Iterables.indexOf(list.getEntries(), e -> Objects.equals(e.getId(), skinId));
     }
 
-    private Iterable<SkinItemList> lists() {
-        return () -> Iterators.filter(scrollView.subviews().listIterator(), SkinItemList.class);
+    private Iterable<ServerItemList> lists() {
+        return () -> Iterators.filter(scrollView.subviews().listIterator(), ServerItemList.class);
     }
 }

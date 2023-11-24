@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.core.skin.transformer.blockbench;
 
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPack;
+import moe.plushie.armourers_workshop.core.skin.transformer.SkinPackModelReader;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModel;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelBone;
+import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelCube;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelGeometry;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelTexture;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelUV;
-import moe.plushie.armourers_workshop.core.skin.transformer.SkinPackModelReader;
-import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelCube;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockTransform;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
@@ -109,7 +109,7 @@ public class BlockBenchModelReader implements SkinPackModelReader {
 
         builder.mirror(false);
 
-        for (Object child : outliner.getChilds()) {
+        for (Object child : outliner.getChildren()) {
             BlockBenchOutliner childOutliner = ObjectUtils.safeCast(child, BlockBenchOutliner.class);
             if (childOutliner != null) {
                 bones.addAll(convertToBone(childOutliner, outliner));
@@ -170,16 +170,15 @@ public class BlockBenchModelReader implements SkinPackModelReader {
         if (element.isBoxUV()) {
             BlockBenchModelUV uv = new BlockBenchModelUV(element.getUVOffset());
             element.getFaces().forEach((dir, face) -> {
-                uv.setTextureId(face.getTextureId());
+                uv.setDefaultTextureId(face.getTextureId());
                 usedTextureIds.add(face.getTextureId());
             });
             return uv;
         }
         // per-face texture
         BlockBenchModelUV uv = new BlockBenchModelUV(null);
+        uv.setDefaultTextureId(-1); // default not use any texture.
         element.getFaces().forEach((dir, face) -> {
-            uv.setTextureId(face.getTextureId());
-            usedTextureIds.add(face.getTextureId());
             if (face.getTextureId() < 0) {
                 return;
             }
@@ -193,6 +192,8 @@ public class BlockBenchModelReader implements SkinPackModelReader {
                 rect = fixedRect;
             }
             uv.put(dir, rect);
+            uv.setTextureId(dir, face.getTextureId());
+            usedTextureIds.add(face.getTextureId());
         });
         return uv;
     }

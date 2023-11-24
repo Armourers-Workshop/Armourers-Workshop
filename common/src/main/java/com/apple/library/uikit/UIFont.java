@@ -1,15 +1,17 @@
 package com.apple.library.uikit;
 
 import com.apple.library.impl.FontImpl;
+import com.apple.library.impl.ObjectImpl;
 
 @SuppressWarnings("unused")
 public class UIFont extends FontImpl {
 
     private static final UIFont DEFAULT = new UIFont(FontImpl.defaultFont(), 9);
+
     private final float fontSize;
 
-    public UIFont(Object impl, float size) {
-        super(impl);
+    private UIFont(Object impl, float size) {
+        super(impl, size);
         this.fontSize = size;
     }
 
@@ -27,5 +29,10 @@ public class UIFont extends FontImpl {
 
     public float fontSize() {
         return fontSize;
+    }
+
+    @Override
+    public String toString() {
+        return ObjectImpl.makeDescription(this, "fontSize", fontSize, "lineHeight", lineHeight());
     }
 }

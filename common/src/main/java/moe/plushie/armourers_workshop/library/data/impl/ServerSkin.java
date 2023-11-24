@@ -10,20 +10,26 @@ import java.util.HashMap;
 
 public class ServerSkin {
 
-    private String id;
-    private String userId;
-    private String name;
-    private String description;
+    protected String id;
+    protected String userId;
+    protected String name;
+    protected String description;
 
-    public int downloads = 0;
-    public float rating = 0;
-    public int ratingCount = 0;
+    protected int downloads = 0;
+    protected float rating = 0;
+    protected int ratingCount = 0;
 
     public boolean showsDownloads = true;
     public boolean showsRating = false;
     public boolean showsGlobalId = true;
 
-    private final SkinDescriptor descriptor;
+    protected final SkinDescriptor descriptor;
+
+    public ServerSkin(String id, String name, SkinDescriptor descriptor) {
+        this.id = id;
+        this.name = name;
+        this.descriptor = descriptor;
+    }
 
     public ServerSkin(IDataPackObject object) {
         this.id = object.get("id").stringValue();
@@ -115,6 +121,23 @@ public class ServerSkin {
 
     public SkinDescriptor getDescriptor() {
         return descriptor;
+    }
+
+
+    public void setRatingCount(int ratingCount) {
+        this.ratingCount = ratingCount;
+    }
+
+    public int getRatingCount() {
+        return ratingCount;
+    }
+
+    public int getDownloads() {
+        return downloads;
+    }
+
+    public float getRating() {
+        return rating;
     }
 
     private GlobalSkinLibrary getLibrary() {

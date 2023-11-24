@@ -313,7 +313,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         entry.updateRate(rating, (result, exception) -> {
             if (exception == null) {
                 if (isNew) {
-                    entry.ratingCount += 1;
+                    entry.setRatingCount(entry.getRatingCount() + 1);
                 }
                 reloadUI(entry);
             }
@@ -358,14 +358,14 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         if (entry.showsDownloads) {
             message.append(getDisplayText("downloads"));
             message.append(" ");
-            message.append("" + entry.downloads);
+            message.append("" + entry.getDownloads());
             message.append("\n\n");
         }
 
         if (entry.showsRating) {
             message.append(getDisplayText("rating"));
             message.append(" ");
-            message.append(String.format("(%d) %.1f/10.0", entry.ratingCount, entry.rating));
+            message.append(String.format("(%d) %.1f/10.0", entry.getRatingCount(), entry.getRating()));
             message.append("\n\n");
         }
 

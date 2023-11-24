@@ -12,14 +12,14 @@ public class BlockBenchOutliner extends BlockBenchObject {
     private final Vector3f origin;
     private final Vector3f rotation;
 
-    private final List<Object> childs;
+    private final List<Object> children;
 
-    public BlockBenchOutliner(String uuid, String name, Vector3f origin, Vector3f rotation, boolean allowExport, List<Object> childs) {
+    public BlockBenchOutliner(String uuid, String name, Vector3f origin, Vector3f rotation, boolean allowExport, List<Object> children) {
         super(uuid, name);
         this.origin = origin;
         this.rotation = rotation;
         this.allowExport = allowExport;
-        this.childs = childs;
+        this.children = children;
     }
 
     public boolean allowExport() {
@@ -34,8 +34,8 @@ public class BlockBenchOutliner extends BlockBenchObject {
         return rotation;
     }
 
-    public List<Object> getChilds() {
-        return childs;
+    public List<Object> getChildren() {
+        return children;
     }
 
     public static class Builder extends BlockBenchObject.Builder {
@@ -45,7 +45,7 @@ public class BlockBenchOutliner extends BlockBenchObject {
         private Vector3f origin = Vector3f.ZERO;
         private Vector3f rotation = Vector3f.ZERO;
 
-        private ArrayList<Object> childs = new ArrayList<>();
+        private final ArrayList<Object> children = new ArrayList<>();
 
         public void origin(Vector3f origin) {
             this.origin = origin;
@@ -60,11 +60,11 @@ public class BlockBenchOutliner extends BlockBenchObject {
         }
 
         public void addChild(Object obj) {
-            this.childs.add(obj);
+            this.children.add(obj);
         }
 
         public BlockBenchOutliner build() {
-            return new BlockBenchOutliner(uuid, name, origin, rotation, allowExport, childs);
+            return new BlockBenchOutliner(uuid, name, origin, rotation, allowExport, children);
         }
     }
 }

@@ -169,8 +169,16 @@ public class CGRect implements InterpolableImpl<CGRect> {
         return String.format("(%f %f; %f %f)", x, y, width, height);
     }
 
+    public void setX(float x) {
+        this.x = x;
+    }
+
     public float getX() {
         return x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
     }
 
     public float getY() {
@@ -181,8 +189,16 @@ public class CGRect implements InterpolableImpl<CGRect> {
         return x;
     }
 
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
     public float getWidth() {
         return width;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
     }
 
     public float getHeight() {

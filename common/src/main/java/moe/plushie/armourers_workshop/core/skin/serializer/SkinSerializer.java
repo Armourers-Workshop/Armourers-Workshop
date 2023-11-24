@@ -50,7 +50,7 @@ public class SkinSerializer {
                 return impl.readFromStream(IInputStream.of(stream), fileVersion);
             }
         }
-        throw new NewerFileVersionException();
+        throw new NewerFileVersionException(fileVersion);
     }
 
     public static SkinFileHeader readSkinInfoFromStream(DataInputStream stream) throws IOException, NewerFileVersionException {
@@ -60,7 +60,7 @@ public class SkinSerializer {
                 return impl.readInfoFromStream(IInputStream.of(stream), fileVersion);
             }
         }
-        throw new NewerFileVersionException();
+        throw new NewerFileVersionException(fileVersion);
     }
 
     public static class Versions {

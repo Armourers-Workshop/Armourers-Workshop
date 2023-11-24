@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.utils.texture.TextureProperties;
 
 import java.io.BufferedOutputStream;
@@ -113,6 +114,10 @@ public interface IOutputStream {
 
     default void writeSkinProperties(SkinProperties properties) throws IOException {
         properties.writeToStream(this);
+    }
+
+    default void writeTextureAnimation(TextureAnimation animation) throws IOException {
+        animation.writeToStream(this);
     }
 
     default void writeTextureProperties(TextureProperties properties) throws IOException {

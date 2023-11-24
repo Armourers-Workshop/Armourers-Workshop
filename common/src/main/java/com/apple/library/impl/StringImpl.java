@@ -18,23 +18,23 @@ public interface StringImpl {
 
     Component component();
 
-    FormattedCharSequence chars();
+    FormattedCharSequence characters();
 
     default CGRect boundingRectWithFont(UIFont font) {
-        int width = font.impl().width(chars());
+        float width = font._getTextWidth(characters());
         return new CGRect(0, 0, width, font.lineHeight());
     }
 
-    default List<NSString> split(float width, UIFont font) {
+    default List<NSString> split(UIFont font, float maxWidth) {
         Component contents = component();
         if (contents != null) {
-            return ObjectUtilsImpl.map(font.impl().split(contents, (int) width), NSString::new);
+            return font._splitLines(contents, maxWidth, false, NSString::new);
         }
         return new ArrayList<>();
     }
 
     default Map<String, ?> attributes(int width, UIFont font) {
-        auto style = font.impl().getSplitter().componentStyleAtWidth(chars(), width);
+        auto style = font._getStyleByWidth(characters(), width);
         if (style == null) {
             return null;
         }

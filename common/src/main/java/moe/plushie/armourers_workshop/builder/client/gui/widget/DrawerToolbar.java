@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.builder.client.gui.widget;
 
+import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIBarItem;
@@ -94,6 +95,7 @@ public class DrawerToolbar extends UIView implements UIScrollViewDelegate {
             CGSize size = displayView.sizeThatFits(bounds.size());
             displayView.setFrame(new CGRect(0, 0, bounds.width, Math.max(bounds.height, size.height)));
             containerView.setContentSize(new CGSize(0, size.height));
+            containerView.setContentOffset(new CGPoint(0, 0));
         }
     }
 }

@@ -12,7 +12,7 @@ import java.util.EnumMap;
 public class TextureBox {
 
     private final Vector2f texturePos;
-    private final ITextureProvider textureProvider;
+    private final ITextureProvider defaultTexture;
 
     private final float width;
     private final float height;
@@ -20,12 +20,12 @@ public class TextureBox {
 
     private final boolean mirror;
 
-    private EnumMap<Direction, ITextureProvider> textureProviders;
-    private EnumMap<Direction, Rectangle2f> textureRects;
+    private EnumMap<Direction, Rectangle2f> variantRects;
+    private EnumMap<Direction, ITextureProvider> variantTextures;
 
-    public TextureBox(float width, float height, float depth, boolean mirror, @Nullable Vector2f baseUV, ITextureProvider textureProvider) {
+    public TextureBox(float width, float height, float depth, boolean mirror, @Nullable Vector2f baseUV, @Nullable ITextureProvider defaultTexture) {
         this.texturePos = baseUV;
-        this.textureProvider = textureProvider;
+        this.defaultTexture = defaultTexture;
         this.width = width;
         this.height = height;
         this.depth = depth;
@@ -33,28 +33,28 @@ public class TextureBox {
     }
 
     public void put(Direction dir, ITextureProvider textureProvider) {
-        if (textureProviders == null) {
-            textureProviders = new EnumMap<>(Direction.class);
+        if (variantTextures == null) {
+            variantTextures = new EnumMap<>(Direction.class);
         }
-        textureProviders.put(dir, textureProvider);
+        variantTextures.put(dir, textureProvider);
     }
 
     public void put(Direction dir, Rectangle2f rect) {
-        if (textureRects == null) {
-            textureRects = new EnumMap<>(Direction.class);
+        if (variantRects == null) {
+            variantRects = new EnumMap<>(Direction.class);
         }
-        textureRects.put(dir, rect);
+        variantRects.put(dir, rect);
     }
 
     public TextureBox separated() {
-        TextureBox box = new TextureBox(width, height, depth, mirror, null, textureProvider);
+        TextureBox box = new TextureBox(width, height, depth, mirror, null, defaultTexture);
         for (Direction dir : Direction.values()) {
             ITextureKey key = getTexture(dir);
             if (key == null) {
                 continue;
             }
             box.put(dir, new Rectangle2f(key.getU(), key.getV(), key.getWidth(), key.getHeight()));
-            if (key.getProvider() == textureProvider) {
+            if (key.getProvider() == defaultTexture) {
                 continue;
             }
             box.put(dir, key.getProvider());
@@ -98,50 +98,42 @@ public class TextureBox {
 
     @Nullable
     private ITextureKey makeTexture(Direction dir, float u, float v, float s, float t) {
-        float x = 0;
-        float y = 0;
-        float width = s;
-        float height = t;
+        ITextureProvider texture = getTextureProvider(dir);
+        if (texture == null) {
+            return null;
+        }
         // specifies the uv origin for the face.
         Rectangle2f rect = getTextureRect(dir);
         if (rect != null) {
-            x = rect.getX();
-            y = rect.getY();
-            width = rect.getWidth();
-            height = rect.getHeight();
-        } else {
-            if (texturePos == null) {
-                return null;
-            }
-            x = texturePos.getX() + u;
-            y = texturePos.getY() + v;
+            return new TextureKey(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight(), texture);
         }
-        if (rect == null) {
-            return new Slice(x, y, width, height, getTextureProvider(dir), texturePos);
+        Vector2f pos = texturePos;
+        if (pos != null) {
+            return new Entry(pos.getX() + u, pos.getY() + v, s, t, texture, pos);
         }
-        return new TextureKey(x, y, width, height, getTextureProvider(dir));
+        return null;
     }
 
     @Nullable
     private Rectangle2f getTextureRect(Direction dir) {
-        if (textureRects != null) {
-            return textureRects.get(dir);
+        if (variantRects != null) {
+            return variantRects.get(dir);
         }
         return null;
     }
 
     private ITextureProvider getTextureProvider(Direction dir) {
-        if (textureProviders != null) {
-            return textureProviders.getOrDefault(dir, textureProvider);
+        if (variantTextures != null) {
+            return variantTextures.getOrDefault(dir, defaultTexture);
         }
-        return textureProvider;
+        return defaultTexture;
     }
 
-    public static class Slice extends TextureKey {
+    public static class Entry extends TextureKey {
 
         protected final Vector2f parent;
 
-        public Slice(float u, float v, float width, float height, ITextureProvider provider, Vector2f parent) {
+        public Entry(float u, float v, float width, float height, ITextureProvider provider, Vector2f parent) {
             super(u, v, width, height, provider);
             this.parent = parent;
         }

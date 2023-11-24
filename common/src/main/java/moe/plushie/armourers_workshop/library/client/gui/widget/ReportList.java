@@ -246,7 +246,7 @@ public class ReportList extends UIScrollView {
                         columnWidth = itemWidth - 2 - xOffset;
                     }
                     if (!name.isEmpty()) {
-                        List<NSString> lines = name.split(columnWidth, font);
+                        List<NSString> lines = name.split(font, columnWidth);
                         itemHeight = Math.max(itemHeight, lines.size() * 10);
                         wrappedTextLines.put(i, lines);
                     }
