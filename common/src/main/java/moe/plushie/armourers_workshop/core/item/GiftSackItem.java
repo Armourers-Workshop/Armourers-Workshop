@@ -85,7 +85,7 @@ public class GiftSackItem extends FlavouredItem implements IItemGroupProvider, I
     public int getTintColor(ItemStack itemStack, int index) {
         CompoundTag tag = itemStack.getTag();
         if (tag == null) {
-            return 0;
+            return 0xffffffff;
         }
         if (index == 1) {
             return tag.getOptionalInt(Constants.Key.COLOR_2, 0x333333) | 0xff000000;

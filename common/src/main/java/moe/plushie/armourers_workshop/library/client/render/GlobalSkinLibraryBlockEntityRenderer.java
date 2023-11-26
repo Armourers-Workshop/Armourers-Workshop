@@ -50,8 +50,8 @@ public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends
             poseStack.mulPose(new OpenQuaternionf(angle * 4, angle, angle * 2, true));
         }
 
-        auto builder = buffers.getBuffer(SkinRenderType.IMAGE_EARTH);
-        model.render(poseStack, builder, light, overlay, 1.0f, 1.0f, 1.0f, 0.5f);
+        auto builder = buffers.getBuffer(SkinRenderType.BLOCK_EARTH);
+        model.render(poseStack, builder, 0xf000f0, overlay, 1.0f, 1.0f, 1.0f, 0.5f);
 
         poseStack.popPose();
     }
