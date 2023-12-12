@@ -49,9 +49,7 @@ public class WindowManagerImpl {
         if (lastLayoutSize != null) {
             dispatcher.layout(lastLayoutSize);
         }
-        if (lastFocusVersion != 0) {
-            _setNeedsUpdateFocus();
-        }
+        _setNeedsUpdateFocus();
     }
 
     public void removeWindow(UIWindow window) {
@@ -63,13 +61,11 @@ public class WindowManagerImpl {
             }
             return false;
         });
-        // when remove a window, first tooltip responder maybe change, so we need to recalculate.
-        if (lastFocusVersion != 0) {
-            _setNeedsUpdateFocus();
-        }
+        _setNeedsUpdateFocus();
     }
 
     public void _setNeedsUpdateFocus() {
+        // when remove a window, first tooltip responder maybe change, so we need to recalculate.
         lastFocusVersion += 1;
     }
 

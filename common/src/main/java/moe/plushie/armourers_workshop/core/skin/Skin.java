@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin;
 
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Skin implements ISkin {
 
@@ -30,15 +29,10 @@ public class Skin implements ISkin {
     private final ISkinType skinType;
     private final List<SkinPart> parts;
 
-    //    public SkinModelTexture skinModelTexture;
-    public String serverId;
-    public int paintTextureId;
-
     private Object blobs;
-    private boolean previewMode = false;
-    private int version;
 
-    private Map<String, ITransformf> itemTransforms = null;
+    private int version;
+    private boolean previewMode = false;
 
     private final SkinPaintData paintData;
     private final SkinPreviewData previewData;
@@ -109,16 +103,8 @@ public class Skin implements ISkin {
         return parts;
     }
 
-    public Map<String, ITransformf> getItemTransforms() {
-        return itemTransforms;
-    }
-
-    public void setPreviewMode(boolean previewMode) {
-        this.previewMode = previewMode;
-    }
-
-    public boolean isPreviewMode() {
-        return previewMode;
+    public SkinItemTransforms getItemTransforms() {
+        return settings.getItemTransforms();
     }
 
     public String getCustomName() {
@@ -163,26 +149,33 @@ public class Skin implements ISkin {
 
         private final ISkinType skinType;
         private final ArrayList<SkinPart> skinParts = new ArrayList<>();
-        private Map<String, ITransformf> itemTransforms = null;
 
         private SkinPaintData paintData;
         private SkinPreviewData previewData;
-        private SkinSettings settings = SkinSettings.EMPTY;
+        private SkinSettings settings = new SkinSettings();
         private SkinProperties properties = SkinProperties.EMPTY;
         private Object blobs;
         private int version = SkinSerializer.Versions.V13;
 
         public Builder(ISkinType skinType) {
             this.skinType = skinType;
+            // for outfit skin, editable is not allowed by default.
+            if (this.skinType == SkinTypes.OUTFIT) {
+                this.settings.setEditable(false);
+            }
         }
 
         public Builder properties(SkinProperties properties) {
-            this.properties = properties;
+            if (properties != null) {
+                this.properties = properties;
+            }
             return this;
         }
 
         public Builder settings(SkinSettings settings) {
-            this.settings = settings;
+            if (settings != null) {
+                this.settings = settings;
+            }
             return this;
         }
 
@@ -203,11 +196,6 @@ public class Skin implements ISkin {
             return this;
         }
 
-        public Builder itemTransforms(Map<String, ITransformf> itemTransforms) {
-            this.itemTransforms = itemTransforms;
-            return this;
-        }
-
         public Builder blobs(Object blobs) {
             this.blobs = blobs;
             return this;
@@ -219,33 +207,20 @@ public class Skin implements ISkin {
         }
 
         public Skin build() {
+            updateSettingIfNeeded();
             updatePropertiesIfNeeded();
             bindPropertiesIfNeeded();
             Skin skin = new Skin(skinType, properties, settings, paintData, previewData, skinParts);
             skin.version = version;
             skin.blobs = blobs;
-            skin.itemTransforms = itemTransforms;
-            // when skin only provided preview data and not any part data,
-            // this indicates the skin is in preview mod
-            skin.setPreviewMode(previewData != null && skinParts.isEmpty());
             return skin;
         }
 
-//        private void test() {
-//            String name = properties.get(SkinProperty.ALL_CUSTOM_NAME);
-//            if (!name.equals("TAS") || skinParts.size() != 1) {
-//                return;
-//            }
-//            SkinPart skinPart = skinParts.get(0);
-//            for (int i = 0; i < 2; ++i) {
-//                SkinPart.Builder builder = new SkinPart.Builder(skinPart.getType());
-//                builder.id(skinParts.size());
-//                builder.parent(skinPart.getId());
-//                builder.cubes(skinPart.getCubeData());
-//                builder.transform(SkinTransform.createRotationTransform(new Vector3f(30 * (i + 1), 0, 0)));
-//                skinParts.add(builder.build());
-//            }
-//        }
+        private void updateSettingIfNeeded() {
+            // when skin only provided preview data and not any part data,
+            // this indicates the skin is in preview mod
+            settings.setPreviewMode(previewData != null && skinParts.isEmpty());
+        }
 
         private void updatePropertiesIfNeeded() {
             // Update skin properties.
@@ -299,7 +274,7 @@ public class Skin implements ISkin {
                 String[] split = skinIndexs.split(":");
                 int partIndex = 0;
                 for (int skinIndex = 0; skinIndex < split.length; ++skinIndex) {
-                    SkinProperties stub = SkinProperties.create(properties, skinIndex);
+                    SkinProperties stub = properties.slice(skinIndex);
                     int count = Integer.parseInt(split[skinIndex]);
                     while (partIndex < count) {
                         if (partIndex < skinParts.size()) {

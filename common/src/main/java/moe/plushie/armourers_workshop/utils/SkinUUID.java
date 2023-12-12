@@ -32,6 +32,11 @@ public class SkinUUID {
         return new SkinUUID();
     }
 
+    public static String randomUUIDString() {
+        return randomUUID().toString();
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

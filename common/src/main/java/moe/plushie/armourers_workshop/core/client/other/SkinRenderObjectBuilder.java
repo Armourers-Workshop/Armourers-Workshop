@@ -17,11 +17,10 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
-import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
@@ -51,14 +50,13 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
             .removalListener(CachedTask::release)
             .build();
 
-    protected final Skin skin;
-
+    protected final BakedSkin skin;
     protected final CachedRenderPipeline cachedRenderPipeline = new CachedRenderPipeline();
 
     protected final ArrayList<CachedTask> pendingCacheTasks = new ArrayList<>();
     protected boolean isSent = false;
 
-    public SkinRenderObjectBuilder(Skin skin) {
+    public SkinRenderObjectBuilder(BakedSkin skin) {
         this.skin = skin;
     }
 

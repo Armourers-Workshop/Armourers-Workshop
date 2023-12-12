@@ -98,6 +98,9 @@ public class SkinDescriptor implements ISkinDescriptor {
 
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
+        if (isEmpty()) {
+            return nbt;
+        }
         nbt.putString(Constants.Key.SKIN_TYPE, type.getRegistryName().toString());
         nbt.putString(Constants.Key.SKIN_IDENTIFIER, identifier);
         nbt.putOptionalSkinOptions(Constants.Key.SKIN_OPTIONS, options, SkinOptions.DEFAULT);

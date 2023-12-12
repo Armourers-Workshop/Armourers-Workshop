@@ -158,15 +158,17 @@ public abstract class SkinPreviewList<T> extends UIView {
             return;
         }
         CGRect clipBox = UIScreen.convertRectFromView(new CGRect(ix, iy, iw, ih), this);
-        if (!RenderSystem.inScissorRect(clipBox)) {
+        if (!context.boundingBoxOfClipPath().intersects(clipBox)) {
             return;
         }
         renderItemBackground(ix, iy, iw, ih, isHovered, entry, context);
+        if (isHovered) {
+            context.addClip(clipBox.insetBy(1, 1, 1, 1));
+        }
         renderItemContent(ix, iy, iw, ih, isHovered, entry, buffers, context);
         if (isHovered) {
-            context.addClipRect(clipBox.insetBy(1, 1, 1, 1));
             buffers.endBatch();
-            context.removeClipRect();
+            context.removeClip();
         }
     }
 
@@ -182,7 +184,6 @@ public abstract class SkinPreviewList<T> extends UIView {
             context.drawResizableImage(ModTextures.SKIN_PANEL, x + 8, y + 8, width - 16, height - 16, u * 28, v * 28, 27, 27, 256, 256);
             return;
         }
-        auto skin = bakedSkin.getSkin();
         if (showsName) {
             NSString name = new NSString(getItemName(entry));
             List<NSString> properties = name.split(font, width - 2);
@@ -190,7 +191,7 @@ public abstract class SkinPreviewList<T> extends UIView {
             context.drawText(properties, x + 1, iy, 0xffeeeeee, false, font, 0);
         }
 
-        ResourceLocation texture = ArmourersWorkshop.getItemIcon(skin.getType());
+        ResourceLocation texture = ArmourersWorkshop.getItemIcon(bakedSkin.getType());
         if (texture != null) {
             context.drawResizableImage(texture, x + 1, y + 1, width / 4, height / 4, 0, 0, 16, 16, 16, 16);
         }

@@ -39,7 +39,7 @@ public class SkinWardrobeContributorSetting extends SkinWardrobeBaseSetting {
         UpdateWardrobePacket.Field option = UpdateWardrobePacket.Field.WARDROBE_EXTRA_RENDER;
         UICheckBox checkBox = new UICheckBox(new CGRect(85, 128, 185, 10));
         checkBox.setTitle(getDisplayText("label.enableContributorMagic"));
-        checkBox.setSelected(option.get(wardrobe, true));
+        checkBox.setSelected(option.getOrDefault(wardrobe, true));
         checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, c) -> {
             UICheckBox checkBox1 = ObjectUtils.unsafeCast(c);
             NetworkManager.sendToServer(UpdateWardrobePacket.field(self.wardrobe, option, checkBox1.isSelected()));

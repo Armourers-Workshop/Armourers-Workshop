@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.BaseDialog;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ContainerMenuToast;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ToastWindow;
 import moe.plushie.armourers_workshop.core.network.ExecuteAlertPacket;
+import moe.plushie.armourers_workshop.core.skin.exception.TranslatableException;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -60,6 +61,10 @@ public class UserNotificationCenter {
         Minecraft.getInstance().getToasts().addToast(new ContainerMenuToast<>(window));
     }
 
+    public static void showToast(NSString message, NSString title, Object icon) {
+        showToast(message, UIColor.WHITE, title, icon);
+    }
+
     public static void showToast(NSString message, String title, Object icon) {
         showToast(message, UIColor.WHITE, new NSString(title), icon);
     }
@@ -69,8 +74,14 @@ public class UserNotificationCenter {
     }
 
     public static void showToast(Exception exception, String title, Object icon) {
+        NSString message;
+        if (exception instanceof TranslatableException) {
+            message = new NSString(((TranslatableException) exception).getComponent());
+        } else {
+            message = new NSString(exception.getMessage());
+        }
         exception.printStackTrace();
-        showToast(new NSString(exception.getMessage()), UIColor.RED, new NSString(title), icon);
+        showToast(message, UIColor.RED, new NSString(title), icon);
     }
 
     private static class Impl extends BaseDialog {

@@ -32,7 +32,7 @@ public class SkinWardrobeExtraSetting extends SkinWardrobeBaseSetting {
     private void setupOptionView(int x, int y, UpdateWardrobePacket.Field option, String key) {
         UICheckBox checkBox = new UICheckBox(new CGRect(x, y, 185, 10));
         checkBox.setTitle(getDisplayText(key));
-        checkBox.setSelected(option.get(wardrobe, true));
+        checkBox.setSelected(option.getOrDefault(wardrobe, true));
         checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, c) -> {
             UICheckBox checkBox1 = ObjectUtils.unsafeCast(c);
             NetworkManager.sendToServer(UpdateWardrobePacket.field(self.wardrobe, option, checkBox1.isSelected()));

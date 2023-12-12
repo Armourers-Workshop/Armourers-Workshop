@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.serializer.v20.coder.v2;
 import moe.plushie.armourers_workshop.api.common.ITextureKey;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
-import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkColorSection;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkCubeSection;
@@ -26,7 +26,7 @@ import manifold.ext.rt.api.auto;
 public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
 
     private Rectangle3f shape = Rectangle3f.ZERO;
-    private SkinBasicTransform transform = SkinBasicTransform.IDENTITY;
+    private SkinTransform transform = SkinTransform.IDENTITY;
 
     protected final BitSet flags = new BitSet();
     protected final EnumMap<Direction, Vector2f> startUVs = new EnumMap<>(Direction.class);
@@ -62,13 +62,13 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
     }
 
     @Override
-    public SkinBasicTransform getTransform() {
+    public SkinTransform getTransform() {
         if (setBit(1)) {
             Vector3f translate = getVector3f(24);
             Vector3f rotation = getVector3f(36);
             Vector3f scale = getVector3f(48);
             Vector3f pivot = getVector3f(60);
-            transform = SkinBasicTransform.create(translate, rotation, scale, pivot);
+            transform = SkinTransform.create(translate, rotation, scale, pivot);
         }
         return transform;
     }

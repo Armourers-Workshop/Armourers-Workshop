@@ -43,19 +43,19 @@ public final class SkinPartTypes {
     public static final ISkinPartType BIPPED_LEFT_ARM = register("chest.leftArm", new LeftArmPartType());
     public static final ISkinPartType BIPPED_RIGHT_ARM = register("chest.rightArm", new RightArmPartType());
     public static final ISkinPartType BIPPED_SKIRT = register("legs.skirt", new SkirtPartType());
-    public static final ISkinPartType BIPPED_LEFT_LEG = register("legs.leftLeg", new LeftLegPartType());
-    public static final ISkinPartType BIPPED_RIGHT_LEG = register("legs.rightLeg", new RightLegPartType());
+    public static final ISkinPartType BIPPED_LEFT_THIGH = register("legs.leftLeg", new LeftLegPartType());
+    public static final ISkinPartType BIPPED_RIGHT_THIGH = register("legs.rightLeg", new RightLegPartType());
     public static final ISkinPartType BIPPED_LEFT_FOOT = register("feet.leftFoot", new LeftFootPartType());
     public static final ISkinPartType BIPPED_RIGHT_FOOT = register("feet.rightFoot", new RightFootPartType());
     public static final ISkinPartType BIPPED_LEFT_WING = register("wings.leftWing", new LeftWingPartType());
     public static final ISkinPartType BIPPED_RIGHT_WING = register("wings.rightWing", new RightWingPartType());
 
-    public static final ISkinPartType BIPPED_CHEST2 = register("chest.base2", new PartitionPartType(BIPPED_CHEST));
-    public static final ISkinPartType BIPPED_LEFT_ARM2 = register("chest.leftArm2", new PartitionPartType(BIPPED_LEFT_ARM));
-    public static final ISkinPartType BIPPED_RIGHT_ARM2 = register("chest.rightArm2", new PartitionPartType(BIPPED_RIGHT_ARM));
+    public static final ISkinPartType BIPPED_TORSO = register("chest.base2", new PartitionPartType(BIPPED_CHEST));
+    public static final ISkinPartType BIPPED_LEFT_HAND = register("chest.leftArm2", new PartitionPartType(BIPPED_LEFT_ARM));
+    public static final ISkinPartType BIPPED_RIGHT_HAND = register("chest.rightArm2", new PartitionPartType(BIPPED_RIGHT_ARM));
     //public static final ISkinPartType BIPPED_SKIRT2 = register("legs.skirt2", new PartitionPartType(BIPPED_SKIRT));
-    public static final ISkinPartType BIPPED_LEFT_LEG2 = register("legs.leftLeg2", new PartitionPartType(BIPPED_LEFT_LEG));
-    public static final ISkinPartType BIPPED_RIGHT_LEG2 = register("legs.rightLeg2", new PartitionPartType(BIPPED_RIGHT_LEG));
+    public static final ISkinPartType BIPPED_LEFT_LEG = register("legs.leftLeg2", new PartitionPartType(BIPPED_LEFT_THIGH));
+    public static final ISkinPartType BIPPED_RIGHT_LEG = register("legs.rightLeg2", new PartitionPartType(BIPPED_RIGHT_THIGH));
 
     public static final ISkinPartType TOOL_PICKAXE = register("pickaxe.base", new ItemPartType());
     public static final ISkinPartType TOOL_AXE = register("axe.base", new ItemPartType());

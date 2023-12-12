@@ -168,9 +168,9 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
         if (entry == null) {
             return null;
         }
-        for (Entry entry1 : cells) {
-            if (entry1.entry.equals(entry)) {
-                return entry1;
+        for (Entry cell : cells) {
+            if (cell.entry.equals(entry)) {
+                return cell;
             }
         }
         return null;
@@ -205,7 +205,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             super(CGRect.ZERO);
             this.title = new NSString(entry.getName());
             this.entry = entry;
-            if (!entry.isDirectory()) {
+            if (!entry.isDirectory() && entry.getSkinIdentifier() != null) {
                 this.descriptor = new SkinDescriptor(entry.getSkinIdentifier(), entry.getSkinType(), ColorScheme.EMPTY);
             }
             this.iconView.setFrame(new CGRect(0, 0, 16, 14));
@@ -237,9 +237,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
                 textColor = 0xff000000;
                 backgroundColor = 0xffffff88;
             }
-            if (entry.isDirectory() || !getDescriptor().isEmpty()) {
-                iconOffset = 16;
-            }
+            iconOffset = 16;
             if (backgroundColor != 0) {
                 context.fillRect(left, top, left + width, top + height, backgroundColor);
             }
@@ -250,10 +248,16 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
         public void renderIcon(CGGraphicsContext context, float x, float y, float width, float height) {
             if (entry.isDirectory()) {
                 int u = entry.isPrivateDirectory() ? 32 : 16;
-                context.drawImage(ModTextures.LIST, x + (width - 12) / 2f, y + (height - 12) / 2f - 1, 12, 12, u, 0, 256, 256);
+                context.drawResizableImage(ModTextures.LIST, x + (width - 12) / 2f, y + (height - 12) / 2f, 12, 12, u, 0, 16, 16, 256, 256);
                 return;
             }
-            auto bakedSkin = SkinBakery.getInstance().loadSkin(getDescriptor(), loadTicket);
+            auto descriptor = getDescriptor();
+            if (descriptor.isEmpty()) {
+                int u = 48;
+                context.drawResizableImage(ModTextures.LIST, x + (width - 12) / 2f, y + (height - 12) / 2f, 12, 12, u, 0, 16, 16, 256, 256);
+                return;
+            }
+            auto bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
             if (bakedSkin == null) {
                 return;
             }

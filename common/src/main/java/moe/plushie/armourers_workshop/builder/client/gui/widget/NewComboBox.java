@@ -223,7 +223,6 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
             return;
         }
         window.addGlobalTarget(this, Event.MOUSE_LEFT_DOWN, (self, event) -> {
-            //
             if (self.isOutsideEvent(event)) {
                 self.setSelected(false);
                 self.removeGlobalClickListener();

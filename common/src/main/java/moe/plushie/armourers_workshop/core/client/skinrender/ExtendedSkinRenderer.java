@@ -31,17 +31,17 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends IHu
         transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_ARM, Joints.BIPPED_RIGHT_ARM);
         transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_FOOT, Joints.BIPPED_LEFT_FOOT);
         transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_FOOT, Joints.BIPPED_RIGHT_FOOT);
-        transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_LEG, Joints.BIPPED_LEFT_THIGH);
-        transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_LEG, Joints.BIPPED_RIGHT_THIGH);
+        transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_THIGH, Joints.BIPPED_LEFT_THIGH);
+        transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_THIGH, Joints.BIPPED_RIGHT_THIGH);
         transformer.registerArmor(SkinPartTypes.BIPPED_SKIRT, Joints.BIPPED_SKIRT);
         transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_WING, sel(Joints.BIPPED_LEFT_WING, Joints.BIPPED_LEFT_PHALANX));
         transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_WING, sel(Joints.BIPPED_RIGHT_WING, Joints.BIPPED_RIGHT_PHALANX));
 
-        transformer.registerArmor(SkinPartTypes.BIPPED_CHEST2, Joints.BIPPED_TORSO);
-        transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_ARM2, Joints.BIPPED_LEFT_HAND);
-        transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_ARM2, Joints.BIPPED_RIGHT_HAND);
-        transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_LEG2, Joints.BIPPED_LEFT_LEG);
-        transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_LEG2, Joints.BIPPED_RIGHT_LEG);
+        transformer.registerArmor(SkinPartTypes.BIPPED_TORSO, Joints.BIPPED_TORSO);
+        transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_HAND, Joints.BIPPED_LEFT_HAND);
+        transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_HAND, Joints.BIPPED_RIGHT_HAND);
+        transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_LEG, Joints.BIPPED_LEFT_LEG);
+        transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_LEG, Joints.BIPPED_RIGHT_LEG);
 
         transformer.registerItem(AbstractItemTransformType.NONE, SkinModelTransformer::fromModel);
         transformer.registerItem(AbstractItemTransformType.GUI, SkinModelTransformer::fromModel);

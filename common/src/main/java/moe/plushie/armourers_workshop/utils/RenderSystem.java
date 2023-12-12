@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.utils;
 
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.impl.ClipContextImpl;
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -22,7 +23,6 @@ import net.minecraft.core.Direction;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.FloatBuffer;
-import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Environment(EnvType.CLIENT)
@@ -59,9 +59,6 @@ public final class RenderSystem extends AbstractRenderSystem {
             {{1, 0, 0}, {1, 1, 0}, {1, 1, 1}, {1, 0, 1}, {1, 0, 0}},  // +x
     };
 
-    private static final LinkedList<CGRect> clipBounds = new LinkedList<>();
-
-
     public static void call(Runnable task) {
         if (isOnRenderThread()) {
             task.run();
@@ -85,54 +82,11 @@ public final class RenderSystem extends AbstractRenderSystem {
     }
 
     public static void addClipRect(int x, int y, int width, int height) {
-        addClipRect(new CGRect(x, y, width, height));
-    }
-
-    public static void addClipRect(CGRect rect) {
-        if (!clipBounds.isEmpty()) {
-            CGRect rect1 = clipBounds.getLast();
-            rect = rect.intersection(rect1);
-        }
-        clipBounds.add(rect);
-        applyScissor(rect);
+        ClipContextImpl.getInstance().addClip(new ClipContextImpl.Rectangle(new CGRect(x, y, width, height)));
     }
 
     public static void removeClipRect() {
-        if (clipBounds.isEmpty()) {
-            return;
-        }
-        clipBounds.removeLast();
-        if (!clipBounds.isEmpty()) {
-            applyScissor(clipBounds.getLast());
-        } else {
-            disableScissor();
-        }
-    }
-
-    public static void applyScissor(CGRect rect) {
-        Window window = Minecraft.getInstance().getWindow();
-        double scale = window.getGuiScale();
-        double sx = rect.getX() * scale;
-        double sy = window.getHeight() - rect.getMaxY() * scale;
-        double sw = rect.getWidth() * scale;
-        double sh = rect.getHeight() * scale;
-        enableScissor((int) sx, (int) sy, (int) sw, (int) sh);
-    }
-
-    public static boolean inScissorRect(CGRect rect1) {
-        if (!clipBounds.isEmpty()) {
-            CGRect rect = clipBounds.getLast();
-            return rect.intersects(rect1);
-        }
-        return true;
-    }
-
-    public static boolean inScissorRect(int x, int y, int width, int height) {
-        if (!clipBounds.isEmpty()) {
-            CGRect rect = clipBounds.getLast();
-            return rect.intersects(x, y, width, height);
-        }
-        return true;
+        ClipContextImpl.getInstance().removeClip();
     }
 
     public static void drawCube(PoseStack poseStack, IRectangle3i rect, float r, float g, float b, float a, MultiBufferSource buffers) {

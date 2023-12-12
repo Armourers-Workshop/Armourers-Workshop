@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.DataAccessor;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -29,7 +28,7 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
     public UpdateOutfitMakerPacket(FriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
         this.field = buffer.readEnum(Field.class);
-        this.fieldValue = field.getDataAccessor().dataSerializer.read(buffer);
+        this.fieldValue = field.accessor.read(buffer);
     }
 
     public UpdateOutfitMakerPacket(OutfitMakerBlockEntity entity, Field field, Object value) {
@@ -42,7 +41,7 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeBlockPos(pos);
         buffer.writeEnum(field);
-        field.getDataAccessor().dataSerializer.write(buffer, fieldValue);
+        field.accessor.write(buffer, fieldValue);
     }
 
     @Override
@@ -70,38 +69,28 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
             case ITEM_FLAVOUR: {
                 BlockEntity entity = player.getLevel().getBlockEntity(pos);
                 if (entity instanceof OutfitMakerBlockEntity) {
-                    field.set((OutfitMakerBlockEntity) entity, fieldValue);
+                    field.accessor.set((OutfitMakerBlockEntity) entity, fieldValue);
                 }
                 break;
             }
         }
     }
 
+    public enum Field implements DataAccessor.Provider<OutfitMakerBlockEntity> {
 
-    public enum Field {
+        ITEM_NAME(OutfitMakerBlockEntity::getItemName, OutfitMakerBlockEntity::setItemName, DataSerializers.STRING),
+        ITEM_FLAVOUR(OutfitMakerBlockEntity::getItemFlavour, OutfitMakerBlockEntity::setItemFlavour, DataSerializers.STRING),
+        ITEM_CRAFTING(null, null, DataSerializers.COMPOUND_TAG);
 
-        ITEM_NAME(DataSerializers.STRING, OutfitMakerBlockEntity::getItemName, OutfitMakerBlockEntity::setItemName),
-        ITEM_FLAVOUR(DataSerializers.STRING, OutfitMakerBlockEntity::getItemFlavour, OutfitMakerBlockEntity::setItemFlavour),
-        ITEM_CRAFTING(DataSerializers.COMPOUND_TAG, null, null);
+        private final DataAccessor<OutfitMakerBlockEntity, Object> accessor;
 
-        private final DataAccessor<OutfitMakerBlockEntity, ?> dataAccessor;
-
-        <T> Field(IEntitySerializer<T> dataSerializer, Function<OutfitMakerBlockEntity, T> supplier, BiConsumer<OutfitMakerBlockEntity, T> applier) {
-            this.dataAccessor = DataAccessor.of(dataSerializer, supplier, applier);
+        <T> Field(Function<OutfitMakerBlockEntity, T> supplier, BiConsumer<OutfitMakerBlockEntity, T> applier, IEntitySerializer<T> dataSerializer) {
+            this.accessor = DataAccessor.erased(dataSerializer, supplier, applier);
         }
 
-        public <T> T get(OutfitMakerBlockEntity entity) {
-            DataAccessor<OutfitMakerBlockEntity, T> dataAccessor = getDataAccessor();
-            return dataAccessor.get(entity);
-        }
-
-        public <T> void set(OutfitMakerBlockEntity entity, T value) {
-            DataAccessor<OutfitMakerBlockEntity, T> dataAccessor = getDataAccessor();
-            dataAccessor.set(entity, value);
-        }
-
-        public <T> DataAccessor<OutfitMakerBlockEntity, T> getDataAccessor() {
-            return ObjectUtils.unsafeCast(dataAccessor);
+        @Override
+        public DataAccessor<OutfitMakerBlockEntity, Object> getAccessor() {
+            return accessor;
         }
     }
 }

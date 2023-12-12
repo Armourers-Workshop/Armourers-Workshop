@@ -28,6 +28,7 @@ public class UIWindow extends UIView {
 
     private UIView firstResponder;
     private UIView hoveredResponder;
+    private UIView hoveredTooltipResponder;
     private UIView firstInputResponder;
     private UIView focusedResponder;
 
@@ -53,45 +54,45 @@ public class UIWindow extends UIView {
 
     @Override
     public void mouseDown(UIEvent event) {
-        event.cancel(InvokerResult.FAIL);
+        event.setResult(InvokerResult.FAIL);
     }
 
     @Override
     public void mouseUp(UIEvent event) {
-        event.cancel(InvokerResult.FAIL);
+        event.setResult(InvokerResult.FAIL);
     }
 
     @Override
     public void mouseDragged(UIEvent event) {
-        event.cancel(InvokerResult.FAIL);
+        event.setResult(InvokerResult.FAIL);
     }
 
     @Override
     public void mouseMoved(UIEvent event) {
-        event.cancel(InvokerResult.FAIL);
+        event.setResult(InvokerResult.FAIL);
     }
 
     @Override
     public void mouseExited(UIEvent event) {
-        event.cancel(InvokerResult.FAIL);
+        event.setResult(InvokerResult.FAIL);
     }
 
     @Override
     public void mouseEntered(UIEvent event) {
-        event.cancel(InvokerResult.FAIL);
+        event.setResult(InvokerResult.FAIL);
     }
 
     @Override
     public void keyUp(UIEvent event) {
         if (!_sendMenuEvent(event)) {
-            event.cancel(InvokerResult.FAIL);
+            event.setResult(InvokerResult.FAIL);
         }
     }
 
     @Override
     public void keyDown(UIEvent event) {
         if (!_sendMenuEvent(event)) {
-            event.cancel(InvokerResult.FAIL);
+            event.setResult(InvokerResult.FAIL);
         }
     }
 
@@ -142,7 +143,7 @@ public class UIWindow extends UIView {
     }
 
     public UIView firstTooltipResponder() {
-        UIView view = hoveredResponder;
+        UIView view = hoveredTooltipResponder;
         while (view != null) {
             if (view.tooltip() != null) {
                 return view;
@@ -186,6 +187,7 @@ public class UIWindow extends UIView {
         }
         if (hoveredResponder == view) {
             _setHoveredResponder(null, Dispatcher.NULL_EVENT);
+            _setHoveredTooltipRender(null);
         }
     }
 
@@ -254,6 +256,10 @@ public class UIWindow extends UIView {
         if (hoveredResponder != null) {
             Dispatcher.applyMouseHovered(hoveredResponder, true, event);
         }
+    }
+
+    private void _setHoveredTooltipRender(UIView view) {
+        hoveredTooltipResponder = view;
     }
 
     public static class Dispatcher extends WindowDispatcherImpl {
@@ -459,6 +465,7 @@ public class UIWindow extends UIView {
 
         private void updateHoveredResponder(float mouseX, float mouseY, UIEvent event, boolean force) {
             window._setHoveredResponder(findFirstResponder(mouseX, mouseY, event, window), event);
+            window._setHoveredTooltipRender(findTooltipResponder(window, window.hoveredResponder, mouseX, mouseY, event));
         }
 
         private UIEvent makeMouseEvent(double mouseX, double mouseY, int key, double delta, UIEvent.Type type) {
@@ -476,15 +483,24 @@ public class UIWindow extends UIView {
         }
 
         private InvokerResult checkEvent(UIEvent event) {
-            // if the event is not cancelled, indicates the event has been successfully handled,
-            // we needs return success to interrupt the event chain.
-            if (!event.isCancelled()) {
-                return InvokerResult.SUCCESS;
+            // when the event is manually canceled by the user, we will take the results as the final criterion.
+            if (event.isCancelled()) {
+                return event.result();
             }
-            // in normal case we need to pass events to the next window,
-            // but some special cases the window need exclusive the event handler.
-            if (window.shouldPassEventToNextWindow(event)) {
-                return InvokerResult.PASS;
+            switch (event.result()) {
+                case PASS: {
+                    // pass indicates the event has been successfully handled,
+                    // we needs return success to interrupt the event chain.
+                    return InvokerResult.SUCCESS;
+                }
+                case FAIL: {
+                    // in normal case we need to pass events to the next window,
+                    // but some special cases the window need exclusive the event handler.
+                    if (window.shouldPassEventToNextWindow(event)) {
+                        event.setResult(InvokerResult.PASS);
+                        return InvokerResult.PASS;
+                    }
+                }
             }
             return event.result();
         }
@@ -504,6 +520,7 @@ public class UIWindow extends UIView {
             if (view.isHidden()) {
                 return;
             }
+            auto layer = view.layer();
             auto presentation = view._presentation;
             CGPoint center = presentation.center();
             CGRect bounds = presentation.bounds();
@@ -524,7 +541,14 @@ public class UIWindow extends UIView {
             float iy = mouseY - y;
             boolean needClips = view.isClipBounds();
             if (needClips) {
-                context.addClipRect(UIScreen.convertRectFromView(bounds, view));
+                CGRect clipBox = UIScreen.convertRectFromView(bounds, view);
+                float cornerRadius = layer.cornerRadius();
+                if (cornerRadius != 0) {
+                    CGRect cornerBox = UIScreen.convertRectFromView(new CGRect(0, 0, cornerRadius, cornerRadius), view);
+                    context.addClip(clipBox, cornerBox.getWidth());
+                } else {
+                    context.addClip(clipBox);
+                }
             }
             context.saveGraphicsState();
             context.translateCTM(x - bounds.x, y - bounds.y, view.zIndex());
@@ -533,13 +557,16 @@ public class UIWindow extends UIView {
             }
             context.strokeDebugRect(depth, bounds);
             view.layerWillDraw(context);
+            boolean isOpaque = view.isOpaque();
+            if (!isOpaque) {
+                context.enableBlend();
+            }
             UIColor backgroundColor = view.backgroundColor();
             if (backgroundColor != null) {
                 context.fillRect(backgroundColor, bounds);
             }
-            boolean isOpaque = view.isOpaque();
-            if (!isOpaque) {
-                context.enableBlend();
+            if (layer.borderWidth() != 0) {
+                context.strokeRect(bounds, layer.borderWidth(), layer.borderColor());
             }
             view.render(new CGPoint(ix, iy), context);
             for (UIView subview : view.subviews()) {
@@ -552,7 +579,7 @@ public class UIWindow extends UIView {
             view.layerDidDraw(context);
             context.restoreGraphicsState();
             if (needClips) {
-                context.removeClipRect();
+                context.removeClip();
             }
         }
 
@@ -576,7 +603,7 @@ public class UIWindow extends UIView {
                     return subview;
                 }
                 UIView focusedResponder = findFocusedResponder(subview, null, iterator, false, false);
-                if (focusedResponder != null) {
+                if (focusedResponder != null && subview.shouldBecomeFocused(focusedResponder)) {
                     return focusedResponder;
                 }
             }
@@ -599,6 +626,22 @@ public class UIWindow extends UIView {
                 }
             }
             return null;
+        }
+
+        protected static UIView findTooltipResponder(UIView view, @Nullable UIView currentView, float mouseX, float mouseY, UIEvent event) {
+            if (currentView == null) {
+                return null;
+            }
+            CGRect frame = view.frame();
+            CGPoint point = new CGPoint(mouseX - frame.x, mouseY - frame.y);
+            for (UIView subview : currentView._invertedSubviews()) {
+                if (subview.tooltip() != null && !subview.isHidden()) {
+                    if (subview.pointInside(view.convertPointToView(point, subview), event)) {
+                        return subview;
+                    }
+                }
+            }
+            return currentView;
         }
 
         private static void applyMouseHovered(UIView view, boolean isHovered, UIEvent event) {

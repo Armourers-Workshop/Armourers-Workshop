@@ -29,7 +29,7 @@ import java.util.function.Function;
 
 public class UpdateWardrobePacket extends CustomPacket {
 
-    private final Mode mode;
+    private final Type type;
     private final int entityId;
 
     private final Field field;
@@ -38,21 +38,21 @@ public class UpdateWardrobePacket extends CustomPacket {
     private final CompoundTag compoundNBT;
 
     public UpdateWardrobePacket(FriendlyByteBuf buffer) {
-        this.mode = buffer.readEnum(Mode.class);
+        this.type = buffer.readEnum(Type.class);
         this.entityId = buffer.readInt();
-        if (this.mode != Mode.SYNC_OPTION) {
+        if (this.type != Type.SYNC_OPTION) {
             this.fieldValue = null;
             this.field = null;
             this.compoundNBT = buffer.readNbt();
         } else {
             this.field = buffer.readEnum(Field.class);
-            this.fieldValue = field.getDataSerializer().read(buffer);
+            this.fieldValue = field.accessor.read(buffer);
             this.compoundNBT = null;
         }
     }
 
-    public UpdateWardrobePacket(SkinWardrobe wardrobe, Mode mode, CompoundTag compoundNBT, Field field, Object fieldValue) {
-        this.mode = mode;
+    public UpdateWardrobePacket(SkinWardrobe wardrobe, Type mode, CompoundTag compoundNBT, Field field, Object fieldValue) {
+        this.type = mode;
         this.entityId = wardrobe.getId();
         this.field = field;
         this.fieldValue = fieldValue;
@@ -60,30 +60,30 @@ public class UpdateWardrobePacket extends CustomPacket {
     }
 
     public static UpdateWardrobePacket sync(SkinWardrobe wardrobe) {
-        return new UpdateWardrobePacket(wardrobe, Mode.SYNC, wardrobe.serializeNBT(), null, null);
+        return new UpdateWardrobePacket(wardrobe, Type.SYNC, wardrobe.serializeNBT(), null, null);
     }
 
     public static UpdateWardrobePacket pick(SkinWardrobe wardrobe, int slot, ItemStack itemStack) {
         CompoundTag compoundNBT = new CompoundTag();
         compoundNBT.putInt("Slot", slot);
         compoundNBT.put("Item", itemStack.save(new CompoundTag()));
-        return new UpdateWardrobePacket(wardrobe, Mode.SYNC_ITEM, compoundNBT, null, null);
+        return new UpdateWardrobePacket(wardrobe, Type.SYNC_ITEM, compoundNBT, null, null);
     }
 
     public static UpdateWardrobePacket field(SkinWardrobe wardrobe, Field field, Object value) {
-        return new UpdateWardrobePacket(wardrobe, Mode.SYNC_OPTION, null, field, value);
+        return new UpdateWardrobePacket(wardrobe, Type.SYNC_OPTION, null, field, value);
     }
 
     @Override
     public void encode(FriendlyByteBuf buffer) {
-        buffer.writeEnum(mode);
+        buffer.writeEnum(type);
         buffer.writeInt(entityId);
         if (compoundNBT != null) {
             buffer.writeNbt(compoundNBT);
         }
         if (field != null) {
             buffer.writeEnum(field);
-            field.getDataSerializer().write(buffer, fieldValue);
+            field.accessor.write(buffer, fieldValue);
         }
     }
 
@@ -117,7 +117,7 @@ public class UpdateWardrobePacket extends CustomPacket {
         if (wardrobe == null) {
             return null;
         }
-        switch (mode) {
+        switch (type) {
             case SYNC: {
                 wardrobe.deserializeNBT(compoundNBT);
                 return wardrobe;
@@ -133,7 +133,7 @@ public class UpdateWardrobePacket extends CustomPacket {
             }
             case SYNC_OPTION: {
                 if (field != null) {
-                    field.set(wardrobe, fieldValue);
+                    field.accessor.set(wardrobe, fieldValue);
                     return wardrobe;
                 }
                 break;
@@ -143,7 +143,7 @@ public class UpdateWardrobePacket extends CustomPacket {
     }
 
     private boolean checkSecurityByServer() {
-        switch (mode) {
+        switch (type) {
             case SYNC: {
                 // the server side never accept sync request.
                 return false;
@@ -173,14 +173,14 @@ public class UpdateWardrobePacket extends CustomPacket {
         if (field != null) {
             return field;
         }
-        return mode;
+        return type;
     }
 
-    public enum Mode {
+    public enum Type {
         SYNC, SYNC_ITEM, SYNC_OPTION
     }
 
-    public enum Field {
+    public enum Field implements DataAccessor.Provider<SkinWardrobe> {
 
         WARDROBE_ARMOUR_HEAD(EquipmentSlot.HEAD),
         WARDROBE_ARMOUR_CHEST(EquipmentSlot.CHEST),
@@ -195,37 +195,30 @@ public class UpdateWardrobePacket extends CustomPacket {
         MANNEQUIN_IS_GHOST(MannequinEntity.DATA_IS_GHOST),
         MANNEQUIN_EXTRA_RENDER(MannequinEntity.DATA_EXTRA_RENDERER),
 
-        MANNEQUIN_POSE(DataSerializers.COMPOUND_TAG, MannequinEntity::saveCustomPose, MannequinEntity::readCustomPose),
-        MANNEQUIN_POSITION(DataSerializers.VECTOR_3D, MannequinEntity::position, MannequinEntity::moveTo),
+        MANNEQUIN_POSE(MannequinEntity::saveCustomPose, MannequinEntity::readCustomPose, DataSerializers.COMPOUND_TAG),
+        MANNEQUIN_POSITION(MannequinEntity::position, MannequinEntity::moveTo, DataSerializers.VECTOR_3D),
 
         MANNEQUIN_TEXTURE(MannequinEntity.DATA_TEXTURE);
 
-        private final boolean broadcastChanges;
-        private final DataAccessor<SkinWardrobe, ?> dataAccessor;
+        private final DataAccessor<SkinWardrobe, Object> accessor;
 
         Field(EquipmentSlot slotType) {
             this(w -> w.shouldRenderEquipment(slotType), (w, v) -> w.setRenderEquipment(slotType, v));
         }
 
         Field(Function<SkinWardrobe, Boolean> supplier, BiConsumer<SkinWardrobe, Boolean> applier) {
-            this.broadcastChanges = true;
-            this.dataAccessor = DataAccessor
-                    .withDataSerializer(SkinWardrobe.class, DataSerializers.BOOLEAN)
-                    .withSupplier(supplier)
-                    .withApplier(applier);
+            this.accessor = DataAccessor.erased(DataSerializers.BOOLEAN, supplier, applier);
         }
 
-        <S extends Entity, T> Field(IEntitySerializer<T> dataSerializer, Function<S, T> supplier, BiConsumer<S, T> applier) {
-            this.broadcastChanges = false;
-            this.dataAccessor = DataAccessor
-                    .withDataSerializer(SkinWardrobe.class, dataSerializer)
-                    .withSupplier((wardrobe) -> {
+        <S extends Entity, T> Field(Function<S, T> supplier, BiConsumer<S, T> applier, IEntitySerializer<T> dataSerializer) {
+            this.accessor = DataAccessor.erased(dataSerializer,
+                    (wardrobe) -> {
                         if (wardrobe.getEntity() != null) {
                             return supplier.apply(ObjectUtils.unsafeCast(wardrobe.getEntity()));
                         }
                         return null;
-                    })
-                    .withApplier((wardrobe, value) -> {
+                    },
+                    (wardrobe, value) -> {
                         if (wardrobe.getEntity() != null) {
                             applier.accept(ObjectUtils.unsafeCast(wardrobe.getEntity()), value);
                         }
@@ -233,30 +226,12 @@ public class UpdateWardrobePacket extends CustomPacket {
         }
 
         <T> Field(EntityDataAccessor<T> dataParameter) {
-            this(DataSerializers.of(dataParameter.getSerializer()), e -> e.getEntityData().get(dataParameter), (e, v) -> e.getEntityData().set(dataParameter, v));
+            this(e -> e.getEntityData().get(dataParameter), (e, v) -> e.getEntityData().set(dataParameter, v), DataSerializers.of(dataParameter.getSerializer()));
         }
 
-        public <T> void set(SkinWardrobe wardrobe, T value) {
-            DataAccessor<SkinWardrobe, T> dataAccessor = getDataAccessor();
-            dataAccessor.set(wardrobe, value);
-        }
-
-        public <T> T get(SkinWardrobe wardrobe, T defaultValue) {
-            DataAccessor<SkinWardrobe, T> dataAccessor = getDataAccessor();
-            T value = dataAccessor.get(wardrobe);
-            if (value != null) {
-                return value;
-            }
-            return defaultValue;
-        }
-
-        public <T> DataAccessor<SkinWardrobe, T> getDataAccessor() {
-            return ObjectUtils.unsafeCast(dataAccessor);
-        }
-
-        public <T> IEntitySerializer<T> getDataSerializer() {
-            DataAccessor<SkinWardrobe, T> dataAccessor = getDataAccessor();
-            return dataAccessor.dataSerializer;
+        @Override
+        public DataAccessor<SkinWardrobe, Object> getAccessor() {
+            return accessor;
         }
     }
 }

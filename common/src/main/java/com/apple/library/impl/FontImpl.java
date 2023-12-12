@@ -38,6 +38,10 @@ public abstract class FontImpl {
     }
 
 
+    public float _getScale() {
+        return scale;
+    }
+
     public float _getTextWidth(FormattedCharSequence value) {
         return _i2f(font.width(value));
     }
@@ -71,7 +75,7 @@ public abstract class FontImpl {
     }
 
     private float _i2f(int size) {
-        return (int) (size * scale * 4f) / 4f;
+        return size * scale;
     }
 
     private int _f2i(float size) {

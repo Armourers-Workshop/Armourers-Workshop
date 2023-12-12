@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk;
 
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
-import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
@@ -37,7 +37,7 @@ public class ChunkTransform {
     public ChunkTransform() {
     }
 
-    public ChunkTransform(SkinBasicTransform transform) {
+    public ChunkTransform(SkinTransform transform) {
         if (transform.isIdentity()) {
             this.setIdentity();
             return;
@@ -53,8 +53,8 @@ public class ChunkTransform {
     }
 
     public static ChunkTransform of(ISkinTransform transform) {
-        if (transform instanceof SkinBasicTransform) {
-            return new ChunkTransform((SkinBasicTransform) transform);
+        if (transform instanceof SkinTransform) {
+            return new ChunkTransform((SkinTransform) transform);
         }
         return flat(transform);
     }
@@ -121,14 +121,14 @@ public class ChunkTransform {
 
     public ISkinTransform build() {
         if (isIdentity()) {
-            return SkinBasicTransform.IDENTITY;
+            return SkinTransform.IDENTITY;
         }
         if (buffer != null) {
             OpenMatrix4f pose = new OpenMatrix4f(buffer);
             OpenMatrix3f normal = new OpenMatrix3f(buffer);
             return new FlatTransform(pose, normal);
         }
-        return SkinBasicTransform.create(translate, rotation, scale, pivot);
+        return SkinTransform.create(translate, rotation, scale, pivot);
     }
 
     private static Vector3f readVector(FloatBuffer buffer, int offset) {

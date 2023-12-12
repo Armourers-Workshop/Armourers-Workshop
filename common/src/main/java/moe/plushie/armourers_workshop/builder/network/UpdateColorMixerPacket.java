@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.utils.DataAccessor;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,7 +23,7 @@ public class UpdateColorMixerPacket extends CustomPacket {
     public UpdateColorMixerPacket(FriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
         this.field = buffer.readEnum(Field.class);
-        this.fieldValue = field.getDataAccessor().dataSerializer.read(buffer);
+        this.fieldValue = field.accessor.read(buffer);
     }
 
     public UpdateColorMixerPacket(ColorMixerBlockEntity entity, Field field, Object value) {
@@ -37,7 +36,7 @@ public class UpdateColorMixerPacket extends CustomPacket {
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeBlockPos(pos);
         buffer.writeEnum(field);
-        field.getDataAccessor().dataSerializer.write(buffer, fieldValue);
+        field.accessor.write(buffer, fieldValue);
     }
 
     @Override
@@ -45,32 +44,23 @@ public class UpdateColorMixerPacket extends CustomPacket {
         // TODO: check player
         BlockEntity entity = player.getLevel().getBlockEntity(pos);
         if (entity instanceof ColorMixerBlockEntity) {
-            field.set((ColorMixerBlockEntity) entity, fieldValue);
+            field.accessor.set((ColorMixerBlockEntity) entity, fieldValue);
         }
     }
 
-    public enum Field {
+    public enum Field implements DataAccessor.Provider<ColorMixerBlockEntity> {
 
-        COLOR(DataSerializers.PAINT_COLOR, ColorMixerBlockEntity::getColor, ColorMixerBlockEntity::setColor);
+        COLOR(ColorMixerBlockEntity::getColor, ColorMixerBlockEntity::setColor, DataSerializers.PAINT_COLOR);
 
-        private final DataAccessor<ColorMixerBlockEntity, ?> dataAccessor;
+        private final DataAccessor<ColorMixerBlockEntity, Object> accessor;
 
-        <T> Field(IEntitySerializer<T> dataSerializer, Function<ColorMixerBlockEntity, T> supplier, BiConsumer<ColorMixerBlockEntity, T> applier) {
-            this.dataAccessor = DataAccessor.of(dataSerializer, supplier, applier);
+        <T> Field(Function<ColorMixerBlockEntity, T> supplier, BiConsumer<ColorMixerBlockEntity, T> applier, IEntitySerializer<T> dataSerializer) {
+            this.accessor = DataAccessor.erased(dataSerializer, supplier, applier);
         }
 
-        public <T> T get(ColorMixerBlockEntity entity) {
-            DataAccessor<ColorMixerBlockEntity, T> dataAccessor = getDataAccessor();
-            return dataAccessor.get(entity);
-        }
-
-        public <T> void set(ColorMixerBlockEntity entity, T value) {
-            DataAccessor<ColorMixerBlockEntity, T> dataAccessor = getDataAccessor();
-            dataAccessor.set(entity, value);
-        }
-
-        public <T> DataAccessor<ColorMixerBlockEntity, T> getDataAccessor() {
-            return ObjectUtils.unsafeCast(dataAccessor);
+        @Override
+        public DataAccessor<ColorMixerBlockEntity, Object> getAccessor() {
+            return accessor;
         }
     }
 }

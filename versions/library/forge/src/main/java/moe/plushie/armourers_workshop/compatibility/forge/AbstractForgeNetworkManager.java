@@ -7,6 +7,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.thread.BlockableEventLoop;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.network.ICustomPacket;
 import net.minecraftforge.network.NetworkDirection;
@@ -46,6 +47,10 @@ public abstract class AbstractForgeNetworkManager extends NetworkEvent {
 
     public static PacketDistributor.PacketTarget allPlayers() {
         return PacketDistributor.ALL.noArg();
+    }
+
+    public static PacketDistributor.PacketTarget trackingChunk(Supplier<LevelChunk> supplier) {
+        return PacketDistributor.TRACKING_CHUNK.with(supplier);
     }
 
     public static PacketDistributor.PacketTarget trackingEntityAndSelf(Supplier<Entity> supplier) {

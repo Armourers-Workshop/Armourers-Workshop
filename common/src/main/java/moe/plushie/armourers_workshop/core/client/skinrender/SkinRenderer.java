@@ -115,9 +115,8 @@ public class SkinRenderer<T extends Entity, M extends IModel> {
             }
         }
         int counter = 0;
-        auto skin = bakedSkin.getSkin();
         auto scheme1 = bakedSkin.resolve(entity, scheme);
-        auto builder = context.getBuffer(skin);
+        auto builder = context.getBuffer(bakedSkin);
         for (auto bakedPart : bakedSkin.getSkinParts()) {
             if (!prepare(entity, model, bakedPart, bakedSkin, context)) {
                 continue;
@@ -147,7 +146,7 @@ public class SkinRenderer<T extends Entity, M extends IModel> {
         if (ModDebugger.skinOrigin) {
             builder.addShape(Vector3f.ZERO, context);
         }
-        if (ModDebugger.armature && skin.getType() instanceof ISkinArmorType) {
+        if (ModDebugger.armature && bakedSkin.getType() instanceof ISkinArmorType) {
             builder.addShape(context.getTransforms(), context);
         }
 

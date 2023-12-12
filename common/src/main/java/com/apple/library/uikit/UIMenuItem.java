@@ -36,6 +36,10 @@ public class UIMenuItem {
         return new Builder(new NSString(title));
     }
 
+    public static Builder of(NSString title) {
+        return new Builder(title);
+    }
+
     public void perform(UIEvent event) {
         actions.forEach(Runnable::run);
     }

@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.utils.SkinResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,7 +23,7 @@ public final class SkinTypes {
 
     public static final ISkinType ARMOR_HEAD = registerArmor("head", 1, EquipmentSlot.HEAD, SkinPartTypes.BIPPED_HEAD);
     public static final ISkinType ARMOR_CHEST = registerArmor("chest", 2, EquipmentSlot.CHEST, SkinPartTypes.BIPPED_CHEST, SkinPartTypes.BIPPED_LEFT_ARM, SkinPartTypes.BIPPED_RIGHT_ARM);
-    public static final ISkinType ARMOR_LEGS = registerArmor("legs", 3, EquipmentSlot.LEGS, SkinPartTypes.BIPPED_LEFT_LEG, SkinPartTypes.BIPPED_RIGHT_LEG, SkinPartTypes.BIPPED_SKIRT);
+    public static final ISkinType ARMOR_LEGS = registerArmor("legs", 3, EquipmentSlot.LEGS, SkinPartTypes.BIPPED_LEFT_THIGH, SkinPartTypes.BIPPED_RIGHT_THIGH, SkinPartTypes.BIPPED_SKIRT);
     public static final ISkinType ARMOR_FEET = registerArmor("feet", 4, EquipmentSlot.FEET, SkinPartTypes.BIPPED_LEFT_FOOT, SkinPartTypes.BIPPED_RIGHT_FOOT);
     public static final ISkinType ARMOR_WINGS = registerArmor("wings", 5, null, SkinPartTypes.BIPPED_LEFT_WING, SkinPartTypes.BIPPED_RIGHT_WING);
 

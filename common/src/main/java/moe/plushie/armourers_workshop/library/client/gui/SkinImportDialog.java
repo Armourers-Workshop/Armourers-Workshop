@@ -20,7 +20,7 @@ import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
 import moe.plushie.armourers_workshop.core.client.gui.widget.BaseDialog;
 import moe.plushie.armourers_workshop.core.client.gui.widget.SkinComboBox;
-import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
@@ -52,7 +52,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -293,7 +292,7 @@ public class SkinImportDialog extends BaseDialog {
                     Vector3f translation = transform.getTranslation();
                     Vector3f rotation = transform.getRotation();
                     Vector3f scale = transform.getScale();
-                    SkinBasicTransform transform1 = SkinBasicTransform.create(translation, rotation, scale);
+                    SkinTransform transform1 = SkinTransform.create(translation, rotation, scale);
                     if (!transform1.isIdentity()) {
                         exporter.add(name, transform1);
                     }

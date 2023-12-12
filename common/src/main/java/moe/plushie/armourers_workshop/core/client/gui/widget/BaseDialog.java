@@ -5,6 +5,7 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.impl.InvokerResult;
 import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIPopoverView;
 import com.apple.library.uikit.UIView;
@@ -32,6 +33,15 @@ public abstract class BaseDialog extends UIView {
         this.addSubview(titleLabel);
     }
 
+    @Override
+    public void keyDown(UIEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+            dismiss();
+            return;
+        }
+        super.keyDown(event);
+    }
+
     public void dismiss() {
         UIWindow window = window();
         if (window instanceof UIPopoverView) {
@@ -47,12 +57,12 @@ public abstract class BaseDialog extends UIView {
     public void showInView(UIView view) {
         UIPopoverView popoverView = makePopoverView();
         popoverView.showInView(view);
-        popoverView.addGlobalTarget(this, UIControl.Event.KEY_DOWN, (self, event) -> {
-            if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
-                event.cancel(InvokerResult.SUCCESS);
-                self.dismiss();
-            }
-        });
+//        popoverView.addGlobalTarget(this, UIControl.Event.KEY_DOWN, (self, event) -> {
+//            if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+//                event.cancel(InvokerResult.SUCCESS);
+//                self.dismiss();
+//            }
+//        });
     }
 
     public void showInView(UIView view, Runnable completeHandler) {

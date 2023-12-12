@@ -183,9 +183,9 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         if (message == null) {
             return;
         }
-        context.addClipRect(UIScreen.convertRectFromView(rect, this));
+        context.addClip(UIScreen.convertRectFromView(rect, this));
         context.drawMultilineText(message, rect.x + 2, rect.y + 2, rect.width - 4, 0xffeeeeee, UIFont.systemFont());
-        context.removeClipRect();
+        context.removeClip();
     }
 
     public void drawPreviewBox(CGGraphicsContext context, CGRect rect) {

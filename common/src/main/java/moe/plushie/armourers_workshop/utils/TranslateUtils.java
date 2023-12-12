@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.data.slot.ItemOverrideType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentType;
 import moe.plushie.armourers_workshop.init.ModLog;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 
 public final class TranslateUtils {
 
-    public static final TextFormatter FORMATTER = new TextFormatter();
+    private static final TextFormatter FORMATTER = new TextFormatter();
 
     public static MutableComponent formatted(String content) {
         return Component.literal(FORMATTER.getFormattedString(content));
@@ -48,6 +49,12 @@ public final class TranslateUtils {
 
         public static MutableComponent of(ItemOverrideType overrideType) {
             return title("itemOverrideType.armourers_workshop." + overrideType.getName());
+        }
+
+        public static MutableComponent of(SkinDocumentType documentType) {
+            Component lhs = title("documentType.armourers_workshop.category." + documentType.getName());
+            Component rhs = of(documentType.getSkinType());
+            return title("documentType.armourers_workshop.category", lhs, rhs);
         }
 
         public static MutableComponent of(ISkinType skinType) {

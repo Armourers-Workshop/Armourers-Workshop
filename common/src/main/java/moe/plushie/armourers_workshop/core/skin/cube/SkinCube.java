@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.common.ITextureKey;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
-import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -37,8 +37,8 @@ public class SkinCube implements ISkinCube {
     }
 
     @Override
-    public SkinBasicTransform getTransform() {
-        return SkinBasicTransform.IDENTITY;
+    public SkinTransform getTransform() {
+        return SkinTransform.IDENTITY;
     }
 
     public void setType(ISkinCubeType type) {

@@ -111,7 +111,7 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
                     continue;
                 }
                 ISkinType skinType = SkinTypes.byName(oi.readUTF());
-                ISkinProperties properties = SkinProperties.create();
+                ISkinProperties properties = new SkinProperties();
                 properties.put(SkinProperty.ALL_CUSTOM_NAME, oi.readUTF());
                 properties.put(SkinProperty.ALL_AUTHOR_NAME, oi.readUTF());
                 properties.put(SkinProperty.ALL_FLAVOUR_TEXT, oi.readUTF());

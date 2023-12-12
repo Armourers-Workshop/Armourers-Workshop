@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.part;
 import moe.plushie.armourers_workshop.api.skin.ISkinPart;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
-import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
@@ -23,7 +23,7 @@ public class SkinPart implements ISkinPart {
 
     protected ISkinPartType partType;
 
-    protected ISkinTransform transform = SkinBasicTransform.IDENTITY;
+    protected ISkinTransform transform = SkinTransform.IDENTITY;
     protected SkinProperties properties = SkinProperties.EMPTY;
 
     private SkinCubes cubeData;
@@ -144,7 +144,7 @@ public class SkinPart implements ISkinPart {
 
         private String name;
         private SkinCubes cubes;
-        private ISkinTransform transform = SkinBasicTransform.IDENTITY;
+        private ISkinTransform transform = SkinTransform.IDENTITY;
         private ArrayList<SkinMarker> markers = new ArrayList<>();
         private SkinProperties properties;
         private Object blobs;

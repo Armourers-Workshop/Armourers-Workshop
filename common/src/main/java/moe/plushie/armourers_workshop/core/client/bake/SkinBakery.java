@@ -213,7 +213,7 @@ public final class SkinBakery implements ISkinLibraryListener {
         });
 
         // we only bake special parts in preview mode.
-        if (skin.isPreviewMode()) {
+        if (skin.getSettings().isPreviewMode()) {
             BakedCubeQuads.from(skin.getPreviewData()).forEach((partType, quads) -> {
                 SkinPart part = new SkinPart(partType, Collections.emptyList(), new SkinCubesV0(0));
                 BakedSkinPart bakedPart = new BakedSkinPart(part, quads);
@@ -242,7 +242,7 @@ public final class SkinBakery implements ISkinLibraryListener {
 //            }
 //            bakeTimes.set(index, (int) totalTime);
 
-        BakedSkin bakedSkin = new BakedSkin(identifier, skin, scheme, colorInfo, rootParts, usedCounter);
+        BakedSkin bakedSkin = new BakedSkin(identifier, skin.getType(), rootParts, skin, scheme, colorInfo, usedCounter);
         ModLog.debug("'{}' => accept baked skin, time: {}ms", identifier, totalTime);
         complete.accept(bakedSkin);
         RenderSystem.recordRenderCall(() -> notifyBake(identifier, bakedSkin));

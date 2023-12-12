@@ -11,8 +11,6 @@ public interface ISkinLibrary {
 
         String getName();
 
-        String getNamespace();
-
         String getPath();
 
         String getSkinIdentifier();

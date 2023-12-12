@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModel
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelExporter;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelGeometry;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockTransform;
-import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 
@@ -77,7 +77,7 @@ public final class SkinSerializerV21 {
                     Vector3f translation = transform.getTranslation();
                     Vector3f rotation = transform.getRotation();
                     Vector3f scale = transform.getScale();
-                    SkinBasicTransform transform1 = SkinBasicTransform.create(translation, rotation, scale);
+                    SkinTransform transform1 = SkinTransform.create(translation, rotation, scale);
                     if (!transform1.isIdentity()) {
                         exporter.add(name, transform1);
                     }

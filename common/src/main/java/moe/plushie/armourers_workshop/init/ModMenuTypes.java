@@ -8,9 +8,9 @@ import moe.plushie.armourers_workshop.api.registry.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.builder.client.gui.ColorMixerWindow;
 import moe.plushie.armourers_workshop.builder.client.gui.OutfitMakerWindow;
-import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.AdvancedSkinBuilderWindow;
+import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.AdvancedBuilderWindow;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.ArmourerWindow;
-import moe.plushie.armourers_workshop.builder.menu.AdvancedSkinBuilderMenu;
+import moe.plushie.armourers_workshop.builder.menu.AdvancedBuilderMenu;
 import moe.plushie.armourers_workshop.builder.menu.ArmourerMenu;
 import moe.plushie.armourers_workshop.builder.menu.ColorMixerMenu;
 import moe.plushie.armourers_workshop.builder.menu.OutfitMakerMenu;
@@ -55,7 +55,7 @@ public class ModMenuTypes {
     public static final IRegistryKey<MenuType<ColorMixerMenu>> COLOR_MIXER = block(ColorMixerMenu::new, ModBlocks.COLOR_MIXER).bind(() -> ColorMixerWindow::new).build("colour-mixer");
     public static final IRegistryKey<MenuType<ArmourerMenu>> ARMOURER = block(ArmourerMenu::new, ModBlocks.ARMOURER).bind(() -> ArmourerWindow::new).build("armourer");
     public static final IRegistryKey<MenuType<OutfitMakerMenu>> OUTFIT_MAKER = block(OutfitMakerMenu::new, ModBlocks.OUTFIT_MAKER).bind(() -> OutfitMakerWindow::new).build("outfit-maker");
-    public static final IRegistryKey<MenuType<AdvancedSkinBuilderMenu>> ADVANCED_SKIN_BUILDER = block(AdvancedSkinBuilderMenu::new, ModBlocks.ADVANCED_SKIN_BUILDER).bind(() -> AdvancedSkinBuilderWindow::new).build("advanced-skin-builder");
+    public static final IRegistryKey<MenuType<AdvancedBuilderMenu>> ADVANCED_SKIN_BUILDER = block(AdvancedBuilderMenu::new, ModBlocks.ADVANCED_SKIN_BUILDER).bind(() -> AdvancedBuilderWindow::new).build("advanced-skin-builder");
 
     private static <T extends AbstractContainerMenu, V> IMenuTypeBuilder<T> normal(IMenuProvider<T, V> factory, IPlayerDataSerializer<V> serializer) {
         return BuilderManager.getInstance().createMenuTypeBuilder(factory, serializer);

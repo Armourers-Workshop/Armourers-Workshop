@@ -25,27 +25,16 @@ public class SkinProperties implements ISkinProperties {
 
     public static final SkinProperties EMPTY = new SkinProperties();
 
-    protected LinkedHashMap<String, Object> properties;
+    protected final LinkedHashMap<String, Object> properties;
 
     public SkinProperties() {
-        properties = new LinkedHashMap<>();
+        this.properties = new LinkedHashMap<>();
     }
 
-    public SkinProperties(SkinProperties skinProps) {
-        properties = new LinkedHashMap<>(skinProps.properties);
+    public SkinProperties(LinkedHashMap<String, Object> properties) {
+        this.properties = properties;
     }
 
-    public static SkinProperties create() {
-        return new SkinProperties();
-    }
-
-    public static SkinProperties create(SkinProperties properties) {
-        return new SkinProperties(properties);
-    }
-
-    public static SkinProperties create(SkinProperties properties, int skinIndex) {
-        return new SkinProperties.Stub(properties, skinIndex);
-    }
 
     public boolean isEmpty() {
         return properties.isEmpty();
@@ -64,6 +53,14 @@ public class SkinProperties implements ISkinProperties {
         } else {
             properties.put(property.getKey(), value);
         }
+    }
+
+    public void putAll(SkinProperties properties) {
+        this.properties.putAll(properties.properties);
+    }
+
+    public void clear() {
+        properties.clear();
     }
 
     @Override
@@ -100,10 +97,6 @@ public class SkinProperties implements ISkinProperties {
             list.add(key + ":" + properties.get(key));
         }
         return list;
-    }
-
-    public void copyFrom(SkinProperties properties) {
-        this.properties = new LinkedHashMap<>(properties.properties);
     }
 
     public void writeToStream(IOutputStream stream) throws IOException {
@@ -160,6 +153,13 @@ public class SkinProperties implements ISkinProperties {
         }
     }
 
+    public SkinProperties slice(int index) {
+        return new SkinProperties.Stub(this, index);
+    }
+
+    public SkinProperties copy() {
+        return new SkinProperties(new LinkedHashMap<>(properties));
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -228,8 +228,7 @@ public class SkinProperties implements ISkinProperties {
         private final int index;
 
         public Stub(SkinProperties paranet, int index) {
-            super();
-            this.properties = paranet.properties;
+            super(paranet.properties);
             this.index = index;
         }
 

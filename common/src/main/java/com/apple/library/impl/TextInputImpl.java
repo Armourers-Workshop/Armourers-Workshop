@@ -62,6 +62,9 @@ public class TextInputImpl {
             }
             return true;
         }
+        if (KeyboardManagerImpl.hasShortcutDown()) {
+            key = KeyboardManagerImpl.getShortcutKey(key);
+        }
         switch (key) {
             case GLFW.GLFW_KEY_BACKSPACE: {
                 if (isEditable) {
@@ -172,4 +175,5 @@ public class TextInputImpl {
             storage.moveCursorTo(pos, selectMode);
         }
     }
+
 }

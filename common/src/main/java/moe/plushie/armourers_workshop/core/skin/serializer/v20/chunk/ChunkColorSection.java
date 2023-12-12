@@ -30,7 +30,7 @@ public abstract class ChunkColorSection {
     protected int textureIndexBytes = 4;
     protected boolean resolved = false;
 
-    protected final int usedBytes;
+    protected final int usedBytes; // 0 is texture
     protected final ISkinPaintType paintType;
 
     public ChunkColorSection(int count, int colorBytes, ISkinPaintType paintType) {
@@ -131,7 +131,7 @@ public abstract class ChunkColorSection {
 
         public void readFromStream(IInputStream stream) throws IOException {
             if (usedBytes != 0) {
-                buffers = new byte[total];
+                buffers = new byte[usedBytes * total];
                 stream.read(buffers);
             }
             if (usedBytes == 0) {

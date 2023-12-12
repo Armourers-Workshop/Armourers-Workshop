@@ -9,8 +9,11 @@ import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -199,6 +202,26 @@ public final class SkinUtils {
         SkinWardrobe oldWardrobe = SkinWardrobe.of(player);
         if (oldWardrobe != null) {
             oldWardrobe.dropAll(player::spawnAtLocation);
+        }
+    }
+
+    public static void giveTo(ItemStack itemStack, Player player) {
+        boolean flag = player.getInventory().add(itemStack);
+        if (flag && itemStack.isEmpty()) {
+            itemStack.setCount(1);
+            ItemEntity itemEntity1 = player.drop(itemStack, false);
+            if (itemEntity1 != null) {
+                itemEntity1.makeFakeItem();
+            }
+            player.getLevel().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+            player.inventoryMenu.broadcastChanges();
+        } else {
+            ItemEntity itemEntity = player.drop(itemStack, false);
+            if (itemEntity != null) {
+                itemEntity.setNoPickUpDelay();
+                //itemEntity.setOwner(player.getUUID());
+                itemEntity.setThrower(player.getUUID());
+            }
         }
     }
 

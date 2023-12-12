@@ -71,7 +71,7 @@ public class DataTransformer<K, V, T> {
     public void load(K key, Ticket ticket, IResultHandler<V> resultHandler) {
         Entry entry = getEntryAndCreate(key);
         validator.update(key, ticket);
-        entry.notify(resultHandler);
+        entry.listen(resultHandler);
         if (entry.isCompleted()) {
             return;
         }
@@ -225,7 +225,7 @@ public class DataTransformer<K, V, T> {
             }
         }
 
-        public void notify(IResultHandler<V> callback) {
+        public void listen(IResultHandler<V> callback) {
             if (callback == null) {
                 return;
             }

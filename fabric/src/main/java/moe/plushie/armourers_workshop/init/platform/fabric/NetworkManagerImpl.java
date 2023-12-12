@@ -29,10 +29,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -67,6 +69,13 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
             ClientLoginNetworking.registerGlobalReceiver(dispatcher.channelName, dispatcher::onClientHandshake);
             ClientPlayNetworking.registerGlobalReceiver(dispatcher.channelName, dispatcher::onClientEvent);
         });
+    }
+
+    @Override
+    public void sendToTrackingChunk(CustomPacket message, LevelChunk chunk) {
+        ServerLevel serverLevel = (ServerLevel) chunk.getLevel();
+        Collection<ServerPlayer> players = PlayerLookup.tracking(serverLevel, chunk.getPos());
+        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, getSender(players));
     }
 
     @Override

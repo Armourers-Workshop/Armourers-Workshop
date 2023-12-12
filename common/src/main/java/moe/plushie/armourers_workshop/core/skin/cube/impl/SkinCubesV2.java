@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.common.ITextureKey;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
-import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCube;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
@@ -14,7 +14,6 @@ import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.texture.TextureBox;
 import net.minecraft.core.Direction;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,10 +65,10 @@ public class SkinCubesV2 extends SkinCubes {
     public static class Box extends SkinCube {
 
         private final Rectangle3f shape;
-        private final SkinBasicTransform transform;
+        private final SkinTransform transform;
         private final TextureBox skyBox;
 
-        public Box(Rectangle3f shape, SkinBasicTransform transform, TextureBox skyBox) {
+        public Box(Rectangle3f shape, SkinTransform transform, TextureBox skyBox) {
             this.shape = shape;
             this.transform = transform;
             this.skyBox = skyBox;
@@ -81,7 +80,7 @@ public class SkinCubesV2 extends SkinCubes {
         }
 
         @Override
-        public SkinBasicTransform getTransform() {
+        public SkinTransform getTransform() {
             return transform;
         }
 

@@ -127,7 +127,7 @@ public final class SkinSerializerV12 implements ISkinSerializer {
             if (!(fileVersion < 4)) {
                 tags = stream.readString();
             }
-            properties = SkinProperties.create();
+            properties = new SkinProperties();
             properties.put(SkinProperty.ALL_AUTHOR_NAME, authorName);
             properties.put(SkinProperty.ALL_CUSTOM_NAME, customName);
             if (!tags.equalsIgnoreCase("")) {
@@ -140,7 +140,7 @@ public final class SkinSerializerV12 implements ISkinSerializer {
                 ModLog.error("prop load failed");
                 e = propE;
                 loadedProps = false;
-                properties = SkinProperties.create();
+                properties = new SkinProperties();
             }
         }
 
@@ -284,7 +284,7 @@ public final class SkinSerializerV12 implements ISkinSerializer {
             } else {
                 tags = "";
             }
-            properties = SkinProperties.create();
+            properties = new SkinProperties();
             properties.put(SkinProperty.ALL_AUTHOR_NAME, authorName);
             properties.put(SkinProperty.ALL_CUSTOM_NAME, customName);
             if (!tags.equalsIgnoreCase("")) {
@@ -297,7 +297,7 @@ public final class SkinSerializerV12 implements ISkinSerializer {
                 ModLog.error("prop load failed");
                 e = propE;
                 loadedProps = false;
-                properties = SkinProperties.create();
+                properties = new SkinProperties();
             }
         }
 

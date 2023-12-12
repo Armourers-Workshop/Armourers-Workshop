@@ -22,7 +22,7 @@ public class ModDebugger {
 
     public static boolean skinnable = false;
     public static boolean hologramProjector = false;
-    public static boolean advancedSkinBuilder = false;
+    public static boolean advancedBuilder = false;
 
     public static boolean skinBounds = false;
     public static boolean skinOrigin = false;

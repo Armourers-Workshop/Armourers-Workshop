@@ -83,7 +83,7 @@ public class OutfitMakerMenu extends AbstractBlockContainerMenu {
 
     private void saveArmourItemWithProfile(GameProfile profile, OutfitMakerBlockEntity blockEntity) throws Exception {
         ArrayList<SkinPart> skinParts = new ArrayList<>();
-        SkinProperties skinProperties = SkinProperties.create();
+        SkinProperties skinProperties = new SkinProperties();
         String partIndexs = "";
         SkinPaintData paintData = null;
         int skinIndex = 0;

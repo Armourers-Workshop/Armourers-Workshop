@@ -39,6 +39,7 @@ import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
@@ -231,23 +232,7 @@ public class ModCommands {
             }
             ItemStack itemStack = descriptor.asItemStack();
             for (Player player : EntityArgument.getPlayers(context, "targets")) {
-                boolean flag = player.getInventory().add(itemStack);
-                if (flag && itemStack.isEmpty()) {
-                    itemStack.setCount(1);
-                    ItemEntity itemEntity1 = player.drop(itemStack, false);
-                    if (itemEntity1 != null) {
-                        itemEntity1.makeFakeItem();
-                    }
-                    player.getLevel().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                    player.inventoryMenu.broadcastChanges();
-                } else {
-                    ItemEntity itemEntity = player.drop(itemStack, false);
-                    if (itemEntity != null) {
-                        itemEntity.setNoPickUpDelay();
-                        //itemEntity.setOwner(player.getUUID());
-                        itemEntity.setThrower(player.getUUID());
-                    }
-                }
+                SkinUtils.giveTo(itemStack, player);
                 context.getSource().sendSuccess(Component.translatable("commands.give.success.single", 1, itemStack.getDisplayName(), player.getDisplayName()), true);
             }
             return 1;

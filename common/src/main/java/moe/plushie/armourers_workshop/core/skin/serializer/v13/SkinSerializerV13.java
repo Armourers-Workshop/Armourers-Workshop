@@ -100,7 +100,7 @@ public final class SkinSerializerV13 implements ISkinSerializer {
             ModLog.error("prop load failed");
             e = propE;
             loadedProps = false;
-            properties = SkinProperties.create();
+            properties = new SkinProperties();
         }
 
         if (!stream.readString().equals(TAG_SKIN_PROPS_FOOTER)) {
@@ -205,7 +205,7 @@ public final class SkinSerializerV13 implements ISkinSerializer {
             ModLog.error("prop load failed");
             e = propE;
             loadedProps = false;
-            properties = SkinProperties.create();
+            properties = new SkinProperties();
         }
 
         if (!stream.readString().equals(TAG_SKIN_PROPS_FOOTER)) {

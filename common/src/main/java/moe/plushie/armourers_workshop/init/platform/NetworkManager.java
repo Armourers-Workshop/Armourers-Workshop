@@ -7,6 +7,9 @@ import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.network.CustomReplyPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.chunk.LevelChunk;
 
 public class NetworkManager {
 
@@ -14,6 +17,14 @@ public class NetworkManager {
 
     public static void init(String name, String version) {
         IMPL = getInstance(name, version);
+    }
+
+    public static void sendToTrackingBlock(final CustomPacket message, final BlockEntity blockEntity) {
+        Level level = blockEntity.getLevel();
+        if (level == null) {
+            return;
+        }
+        IMPL.sendToTrackingChunk(message, level.getChunkAt(blockEntity.getBlockPos()));
     }
 
     public static void sendToTracking(final CustomPacket message, final Entity entity) {
@@ -55,6 +66,8 @@ public class NetworkManager {
     }
 
     public interface Impl {
+
+        void sendToTrackingChunk(final CustomPacket message, final LevelChunk chunk);
 
         void sendToTracking(final CustomPacket message, final Entity entity);
 

@@ -57,9 +57,9 @@ public final class LegacyCubeHelper {
                 y -= 1;
             } else if (skinPart == SkinPartTypes.BIPPED_SKIRT) {
                 y -= 1;
-            } else if (skinPart == SkinPartTypes.BIPPED_LEFT_LEG) {
+            } else if (skinPart == SkinPartTypes.BIPPED_LEFT_THIGH) {
                 y -= 1;
-            } else if (skinPart == SkinPartTypes.BIPPED_RIGHT_LEG) {
+            } else if (skinPart == SkinPartTypes.BIPPED_RIGHT_THIGH) {
                 y -= 1;
             } else if (skinPart == SkinPartTypes.BIPPED_LEFT_FOOT) {
                 y -= 1;

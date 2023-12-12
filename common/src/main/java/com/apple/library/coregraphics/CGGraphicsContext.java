@@ -2,6 +2,7 @@ package com.apple.library.coregraphics;
 
 import com.apple.library.foundation.NSString;
 import com.apple.library.impl.AppearanceImpl;
+import com.apple.library.impl.ClipContextImpl;
 import com.apple.library.impl.GraphicsContextImpl;
 import com.apple.library.impl.ObjectUtilsImpl;
 import com.apple.library.impl.TooltipRenderer;
@@ -22,9 +23,12 @@ public class CGGraphicsContext implements GraphicsContextImpl {
     private final CGGraphicsState state;
     private final CGGraphicsRenderer renderer;
 
+    private final ClipContextImpl clipContext;
+
     public CGGraphicsContext(CGGraphicsState state, CGGraphicsRenderer renderer) {
         this.state = state;
         this.renderer = renderer;
+        this.clipContext = ClipContextImpl.getInstance();
     }
 
     public void drawImage(UIImage image, CGRect rect) {
@@ -78,11 +82,7 @@ public class CGGraphicsContext implements GraphicsContextImpl {
         if (color == null) {
             color = AppearanceImpl.DEFAULT_TEXT_COLOR;
         }
-        if (shadowColor != null) {
-            drawText(text, x, y, color.getRGB(), true, font, 0);
-        } else {
-            drawText(text, x, y, color.getRGB(), false, font, 0);
-        }
+        drawText(text, x, y, color.getRGB(), shadowColor != null, font, 0);
     }
 
     public void drawTooltip(Object tooltip, CGRect rect) {
@@ -92,6 +92,11 @@ public class CGGraphicsContext implements GraphicsContextImpl {
         NSString text = ObjectUtilsImpl.safeCast(tooltip, NSString.class);
         if (text != null) {
             renderer.renderTooltip(text, rect, UIFont.systemFont(), this);
+            return;
+        }
+        ItemStack itemStack = ObjectUtilsImpl.safeCast(tooltip, ItemStack.class);
+        if (itemStack != null) {
+            renderer.renderTooltip(itemStack, rect, UIFont.systemFont(), this);
             return;
         }
         TooltipRenderer view = ObjectUtilsImpl.safeCast(tooltip, TooltipRenderer.class);
@@ -147,16 +152,35 @@ public class CGGraphicsContext implements GraphicsContextImpl {
         drawColor(rect.getMinX(), rect.getMinY(), rect.getMaxX(), rect.getMaxY(), 0, color1, color2);
     }
 
-    public void strokeRect(UIColor color, CGRect rect) {
-        drawBorder(rect.getMinX(), rect.getMinY(), rect.getMaxX(), rect.getMaxY(), 0, 1, color.getRGB());
+    public void strokeRect(CGRect rect, UIColor color) {
+        strokeRect(rect, 1, color.getRGB());
     }
 
-    public void addClipRect(CGRect rect) {
-        RenderSystem.addClipRect(rect);
+    public void strokeRect(CGRect rect, float lineHeight, UIColor color) {
+        strokeRect(rect, lineHeight, color.getRGB());
     }
 
-    public void removeClipRect() {
-        RenderSystem.removeClipRect();
+    public void strokeRect(CGRect rect, float lineHeight, int rgb) {
+        drawBorder(rect.getMinX(), rect.getMinY(), rect.getMaxX(), rect.getMaxY(), 0, lineHeight, rgb);
+    }
+
+    public void addClip(CGRect rect) {
+        state.flush();
+        clipContext.addClip(new ClipContextImpl.Rectangle(rect));
+    }
+
+    public void addClip(CGRect rect, float cornerRadius) {
+        state.flush();
+        clipContext.addClip(new ClipContextImpl.RoundRectangle(rect, cornerRadius));
+    }
+
+    public void removeClip() {
+        state.flush();
+        clipContext.removeClip();
+    }
+
+    public CGRect boundingBoxOfClipPath() {
+        return clipContext.boundingBoxOfClipPath();
     }
 
     public void saveGraphicsState() {
@@ -200,7 +224,7 @@ public class CGGraphicsContext implements GraphicsContextImpl {
     public void strokeDebugRect(int tag, CGRect rect) {
         if (ModDebugger.viewHierarchy) {
             UIColor color = ColorUtils.getPaletteColor(tag);
-            drawBorder(rect.getMinX(), rect.getMinY(), rect.getMaxX(), rect.getMaxY(), 0, 0.1f, color.getRGB());
+            drawBorder(rect.getMinX(), rect.getMinY(), rect.getMaxX(), rect.getMaxY(), 0, color.getRGB());
         }
     }
 

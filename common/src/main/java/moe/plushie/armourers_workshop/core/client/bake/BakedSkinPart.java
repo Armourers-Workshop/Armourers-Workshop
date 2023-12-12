@@ -132,4 +132,8 @@ public class BakedSkinPart {
     public SkinProperties getProperties() {
         return part.getProperties();
     }
+
+    public BakedCubeQuads getQuads() {
+        return quads;
+    }
 }

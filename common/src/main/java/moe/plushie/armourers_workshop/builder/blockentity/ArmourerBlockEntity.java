@@ -65,8 +65,8 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
             .put(SkinPartTypes.BIPPED_CHEST, SkinProperty.OVERRIDE_MODEL_CHEST)
             .put(SkinPartTypes.BIPPED_LEFT_ARM, SkinProperty.OVERRIDE_MODEL_LEFT_ARM)
             .put(SkinPartTypes.BIPPED_RIGHT_ARM, SkinProperty.OVERRIDE_MODEL_RIGHT_ARM)
-            .put(SkinPartTypes.BIPPED_LEFT_LEG, SkinProperty.OVERRIDE_MODEL_LEFT_LEG)
-            .put(SkinPartTypes.BIPPED_RIGHT_LEG, SkinProperty.OVERRIDE_MODEL_RIGHT_LEG)
+            .put(SkinPartTypes.BIPPED_LEFT_THIGH, SkinProperty.OVERRIDE_MODEL_LEFT_LEG)
+            .put(SkinPartTypes.BIPPED_RIGHT_THIGH, SkinProperty.OVERRIDE_MODEL_RIGHT_LEG)
             .put(SkinPartTypes.BIPPED_LEFT_FOOT, SkinProperty.OVERRIDE_MODEL_LEFT_LEG)
             .put(SkinPartTypes.BIPPED_RIGHT_FOOT, SkinProperty.OVERRIDE_MODEL_RIGHT_LEG)
             .build();
@@ -75,7 +75,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
     protected int version = 0;
 
     protected ISkinType skinType = SkinTypes.ARMOR_HEAD;
-    protected SkinProperties skinProperties = SkinProperties.create();
+    protected SkinProperties skinProperties = new SkinProperties();
     protected PlayerTextureDescriptor textureDescriptor = PlayerTextureDescriptor.EMPTY;
 
     protected SkinPaintData paintData;
@@ -315,7 +315,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
         }
         // remake all properties.
         boolean isMultiBlock = skinProperties.get(SkinProperty.BLOCK_MULTIBLOCK);
-        skinProperties = SkinProperties.create();
+        skinProperties = new SkinProperties();
         skinProperties.put(SkinProperty.BLOCK_MULTIBLOCK, isMultiBlock);
         BlockUtils.combine(this, this::sendBlockUpdates);
     }

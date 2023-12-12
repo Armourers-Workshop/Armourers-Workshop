@@ -175,7 +175,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
     }
 
     private void updateSkinProperties() {
-        SkinProperties skinProperties = SkinProperties.create(blockEntity.getSkinProperties());
+        SkinProperties skinProperties = blockEntity.getSkinProperties().copy();
         skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, nameTextField.text());
         skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, flavorTextField.text());
         if (skinProperties.equals(blockEntity.getSkinProperties())) {

@@ -24,6 +24,10 @@ public class Fix16 {
         RenderSystem.assertThread(RenderSystem::isOnGameThread);
     }
 
+    public static void setShaderTexture(@ThisClass Class<?> clazz, int i, int textureId) {
+        RenderSystem.bindTexture(textureId);
+    }
+
     public static void setShaderTexture(@ThisClass Class<?> clazz, int i, ResourceLocation texture) {
         Minecraft.getInstance().getTextureManager().bind(texture);
     }

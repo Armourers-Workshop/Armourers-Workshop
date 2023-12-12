@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
@@ -17,6 +16,7 @@ import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager
 import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -49,7 +49,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import manifold.ext.rt.api.auto;
@@ -61,6 +60,7 @@ public class BakedSkin implements IBakedSkin {
 
     private final String identifier;
     private final Skin skin;
+    private final ISkinType skinType;
     private final HashMap<Object, Rectangle3f> cachedBounds = new HashMap<>();
     private final HashMap<BlockPos, Rectangle3i> cachedBlockBounds = new HashMap<>();
 
@@ -74,9 +74,10 @@ public class BakedSkin implements IBakedSkin {
     private final BakedItemModel resolvedItemModel;
     private final HashMap<Integer, ColorScheme> resolvedColorSchemes = new HashMap<>();
 
-    public BakedSkin(String identifier, Skin skin, ColorScheme colorScheme, ColorDescriptor colorDescriptor, ArrayList<BakedSkinPart> bakedParts, SkinUsedCounter usedCounter) {
+    public BakedSkin(String identifier, ISkinType skinType, ArrayList<BakedSkinPart> bakedParts, Skin skin, ColorScheme colorScheme, ColorDescriptor colorDescriptor, SkinUsedCounter usedCounter) {
         this.identifier = identifier;
         this.skin = skin;
+        this.skinType = skinType;
         this.skinParts = bakedParts;
         this.colorScheme = colorScheme;
         this.colorDescriptor = colorDescriptor;
@@ -106,6 +107,10 @@ public class BakedSkin implements IBakedSkin {
         return id;
     }
 
+    public String getIdentifier() {
+        return identifier;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public Skin getSkin() {
@@ -113,11 +118,19 @@ public class BakedSkin implements IBakedSkin {
     }
 
     public ISkinType getType() {
-        return skin.getType();
+        return skinType;
     }
 
     public List<BakedSkinPart> getSkinParts() {
         return skinParts;
+    }
+
+    public ColorScheme getColorScheme() {
+        return colorScheme;
+    }
+
+    public ColorDescriptor getColorDescriptor() {
+        return colorDescriptor;
     }
 
     @Nullable
@@ -237,7 +250,7 @@ public class BakedSkin implements IBakedSkin {
     }
 
     private void loadBlockBounds() {
-        if (skin.getType() != SkinTypes.BLOCK) {
+        if (skinType != SkinTypes.BLOCK) {
             return;
         }
         for (BakedSkinPart skinPart : skinParts) {
@@ -279,7 +292,7 @@ public class BakedSkin implements IBakedSkin {
         return Range.closed(minUseTick, maxUseTick);
     }
 
-    private BakedItemModel resolveItemModel(Map<String, ITransformf> oldValue) {
+    private BakedItemModel resolveItemModel(SkinItemTransforms oldValue) {
         // we only convert transform when override item transforms is enabled.
         if (oldValue != null) {
             return new BakedItemModel(oldValue, false);

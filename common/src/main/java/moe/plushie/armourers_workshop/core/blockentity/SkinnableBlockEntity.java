@@ -106,7 +106,8 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         properties = tag.getOptionalSkinProperties(Constants.Key.BLOCK_ENTITY_SKIN_PROPERTIES);
         linkedBlockPos = tag.getOptionalBlockPos(Constants.Key.BLOCK_ENTITY_LINKED_POS, null);
         if (oldProperties != null) {
-            oldProperties.copyFrom(properties);
+            oldProperties.clear();
+            oldProperties.putAll(properties);
             properties = oldProperties;
         }
         ContainerHelper.loadAllItems(tag, getOrCreateItems());

@@ -20,7 +20,7 @@ public class SkinPreviewView extends UIControl {
 
     private SkinDescriptor descriptor = SkinDescriptor.EMPTY;
 
-    private final Ticket loadTicket = Ticket.wardrobe();
+    private final Ticket loadTicket = Ticket.list();
 
     public SkinPreviewView(CGRect frame) {
         super(frame);

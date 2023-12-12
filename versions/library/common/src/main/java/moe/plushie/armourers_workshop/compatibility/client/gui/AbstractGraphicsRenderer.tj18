@@ -62,6 +62,11 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     }
 
     @Override
+    public void renderTooltip(ItemStack itemStack, CGRect rect, UIFont font, CGGraphicsContext context) {
+        screen._renderTooltip(poseStack, itemStack, (int) mousePos.getX(), (int) mousePos.getY());
+    }
+
+    @Override
     public void renderEntity(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY, CGGraphicsContext context) {
         PoseStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushPose();

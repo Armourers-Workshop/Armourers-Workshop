@@ -4,9 +4,9 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
 import moe.plushie.armourers_workshop.compatibility.AbstractShader;
+import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexMerger;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
-import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -24,10 +24,10 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
 
     protected final Pipeline pipeline = new Pipeline();
 
-    protected final HashMap<Skin, SkinRenderObjectBuilder> cachingBuilders = new HashMap<>();
+    protected final HashMap<BakedSkin, SkinRenderObjectBuilder> cachingBuilders = new HashMap<>();
     protected final HashMap<RenderType, BufferBuilder> cachingBuilders2 = new HashMap<>();
 
-    protected final HashMap<Skin, SkinRenderObjectBuilder> pendingBuilders = new HashMap<>();
+    protected final HashMap<BakedSkin, SkinRenderObjectBuilder> pendingBuilders = new HashMap<>();
     protected final HashMap<RenderType, BufferBuilder> pendingBuilders2 = new HashMap<>();
 
     public SkinVertexBufferBuilder() {
@@ -83,7 +83,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         return buffer;
     }
 
-    public SkinRenderObjectBuilder getBuffer(@NotNull Skin skin) {
+    public SkinRenderObjectBuilder getBuffer(@NotNull BakedSkin skin) {
         SkinRenderObjectBuilder bufferBuilder = pendingBuilders.get(skin);
         if (bufferBuilder != null) {
             return bufferBuilder;

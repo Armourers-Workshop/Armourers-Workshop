@@ -1,23 +1,25 @@
 package moe.plushie.armourers_workshop.core.client.gui.widget;
 
-import com.apple.library.foundation.NSString;
+import moe.plushie.armourers_workshop.utils.MathUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 public class TreeNode {
 
     private TreeView view;
-    private NSString title;
+    private String title;
+    private Object contents;
 
     private boolean folding = false;
     private boolean enabled = true;
+    private boolean locked = false;
 
     private TreeNode parent;
     private final ArrayList<TreeNode> children = new ArrayList<>();
 
-    public TreeNode(NSString title) {
+    public TreeNode(String title) {
         this.title = title;
     }
 
@@ -28,9 +30,23 @@ public class TreeNode {
     }
 
     public void add(TreeNode node) {
-        children.add(node);
+        insertAtIndex(node, children.size());
+    }
+
+    public void insertAtIndex(TreeNode node, int index) {
+        children.add(index, node);
         node.parent = this;
         node.link(view);
+        setNeedsDisplay();
+    }
+
+    public void moveTo(TreeNode node, int toIndex) {
+        int index = children.indexOf(node);
+        if (index < 0 || index == toIndex) {
+            return;
+        }
+        children.remove(index);
+        children.add(MathUtils.clamp(toIndex, 0, children.size()), node);
         setNeedsDisplay();
     }
 
@@ -58,7 +74,7 @@ public class TreeNode {
         return parent;
     }
 
-    public Collection<TreeNode> children() {
+    public List<TreeNode> children() {
         return children;
     }
 
@@ -71,6 +87,14 @@ public class TreeNode {
         setNeedsDisplay();
     }
 
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -79,13 +103,24 @@ public class TreeNode {
         this.enabled = enabled;
     }
 
-    public NSString title() {
+    public String title() {
         return title;
     }
 
-    public void setTitle(NSString title) {
+    public void setTitle(String title) {
         this.title = title;
-        setNeedsDisplay();
+    }
+
+    public void setContents(Object contents) {
+        this.contents = contents;
+    }
+
+    public Object getContents() {
+        return contents;
+    }
+
+    public TreeView getTreeView() {
+        return view;
     }
 
     protected void link(@Nullable TreeView view) {

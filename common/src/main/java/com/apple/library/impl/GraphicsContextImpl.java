@@ -40,7 +40,7 @@ public interface GraphicsContextImpl {
     default void drawText(Collection<NSString> lines, float x, float y, int textColor, boolean shadow, UIFont font, float zLevel) {
         PoseStack poseStack = state().ctm();
 
-        float scale = font.fontSize() / 9f;
+        float scale = font._getScale();
         poseStack.pushPose();
         poseStack.translate(x, y, zLevel);
         poseStack.scale(scale, scale, scale);
@@ -167,7 +167,7 @@ public interface GraphicsContextImpl {
         state.flush();
     }
 
-    default void drawBorder(float minX, float minY, float maxX, float maxY, float zLevel, float height, int color) {
+    default void drawBorder(float minX, float minY, float maxX, float maxY, float zLevel, int color) {
         int a1 = color >> 24 & 0xff;
         int r1 = color >> 16 & 0xff;
         int g1 = color >> 8 & 0xff;
@@ -180,6 +180,39 @@ public interface GraphicsContextImpl {
         buffer.vertex(pose, maxX, maxY, zLevel).color(r1, g1, b1, a1).endVertex();
         buffer.vertex(pose, maxX, minY, zLevel).color(r1, g1, b1, a1).endVertex();
         buffer.vertex(pose, minX, minY, zLevel).color(r1, g1, b1, a1).endVertex();
+        state.flush();
+    }
+
+    default void drawBorder(float minX, float minY, float maxX, float maxY, float zLevel, float height, int color) {
+        int a1 = color >> 24 & 0xff;
+        int r1 = color >> 16 & 0xff;
+        int g1 = color >> 8 & 0xff;
+        int b1 = color & 0xff;
+        float sp = height * 0.5f;
+        auto state = state();
+        auto pose = state.ctm().last().pose();
+        auto buffer = state.buffers().getBuffer(SkinRenderType.GUI_COLOR);
+
+        buffer.vertex(pose, minX - sp, minY - sp, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, minX - sp, maxY + sp, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, minX + sp, maxY + sp, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, minX + sp, minY - sp, zLevel).color(r1, g1, b1, a1).endVertex();
+
+        buffer.vertex(pose, maxX - sp, minY - sp, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, maxX - sp, maxY + sp, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, maxX + sp, maxY + sp, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, maxX + sp, minY - sp, zLevel).color(r1, g1, b1, a1).endVertex();
+
+        buffer.vertex(pose, minX + sp, minY - sp, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, minX + sp, minY + sp, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, maxX - sp, minY + sp, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, maxX - sp, minY - sp, zLevel).color(r1, g1, b1, a1).endVertex();
+
+        buffer.vertex(pose, minX + sp, maxY - sp, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, minX + sp, maxY + sp, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, maxX - sp, maxY + sp, zLevel).color(r1, g1, b1, a1).endVertex();
+        buffer.vertex(pose, maxX - sp, maxY - sp, zLevel).color(r1, g1, b1, a1).endVertex();
+
         state.flush();
     }
 }

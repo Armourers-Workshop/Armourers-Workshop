@@ -14,6 +14,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Environment(EnvType.CLIENT)
 public abstract class SkinRenderType implements IRenderTypeBuilder {
 
+    public static final RenderType BLIT_MASK = _builder(SkinRenderFormat.BLIT_MASK).writeMask(WriteMask.NONE).build("aw_blit_mask");
+    public static final RenderType BLIT_IMAGE = _builder(SkinRenderFormat.GUI_IMAGE).build("aw_blit_IMAGE");
+
     public static final RenderType GUI_COLOR = _builder(SkinRenderFormat.GUI_COLOR).transparency(Transparency.DEFAULT).build("aw_gui_color");
     public static final RenderType GUI_IMAGE = _builder(SkinRenderFormat.GUI_IMAGE).transparency(Transparency.TRANSLUCENT).build("aw_gui_image");
     public static final RenderType GUI_HIGHLIGHTED_TEXT = _builder(SkinRenderFormat.GUI_HIGHLIGHTED_TEXT).transparency(Transparency.TRANSLUCENT).colorLogic(ColorLogic.OR_REVERSE).depthTest(DepthTest.NONE).build("aw_highlighted_text");
@@ -40,13 +43,13 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
     public static final RenderType FACE_TRANSLUCENT = _cube(SkinRenderFormat.SKIN_FACE_TRANSLUCENT).texture(ModTextures.CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build("aw_translucent_quad_face");
     public static final RenderType FACE_LIGHTING_TRANSLUCENT = _cube(SkinRenderFormat.SKIN_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.LIGHTING_CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build("aw_translucent_lighting_quad_face");
 
-    public static final RenderType LINES = _line(1).build("aw_lines");
-    public static final RenderType LINE_STRIP = _builder(SkinRenderFormat.LINE_STRIP).lineWidth(1).build("aw_line_strip");
-
-    private static final RenderType[] RENDER_ORDERING_FACES = {FACE_SOLID, FACE_LIGHTING, FACE_TRANSLUCENT, FACE_LIGHTING_TRANSLUCENT};
+    private static final RenderType LINES = _line(1).build("aw_lines");
+    private static final RenderType LINE_STRIP = _builder(SkinRenderFormat.LINE_STRIP).lineWidth(1).build("aw_line_strip");
 
     private static final ConcurrentHashMap<String, RenderType> FACE_SOLID_VARIANTS = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, RenderType> FACE_LIGHTING_VARIANTS = new ConcurrentHashMap<>();
+
+    private static final RenderType[] RENDER_ORDERING_FACES = {FACE_SOLID, FACE_LIGHTING, FACE_TRANSLUCENT, FACE_LIGHTING_TRANSLUCENT};
 
     public static RenderType by(ISkinCubeType cubeType) {
         if (cubeType.isGlass()) {
@@ -63,14 +66,14 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
         }
     }
 
-    public static RenderType solidFace(ResourceLocation texture)  {
+    public static RenderType solidFace(ResourceLocation texture) {
         String key = String.format("aw_custom_solid/%s", texture.getPath());
-        return FACE_SOLID_VARIANTS.computeIfAbsent(key, k -> _builder(SkinRenderFormat.SKIN_FACE_TEXTURE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).cull().build(k));
+        return FACE_SOLID_VARIANTS.computeIfAbsent(key, k -> _builder(SkinRenderFormat.SKIN_FACE_TEXTURE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build(k));
     }
 
     public static RenderType lightingFace(ResourceLocation texture) {
         String key = String.format("aw_custom_lighting/%s", texture.getPath());
-        return FACE_LIGHTING_VARIANTS.computeIfAbsent(key, k -> _builder(SkinRenderFormat.SKIN_FACE_LIGHTING_TEXTURE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).cull().build(k));
+        return FACE_LIGHTING_VARIANTS.computeIfAbsent(key, k -> _builder(SkinRenderFormat.SKIN_FACE_LIGHTING_TEXTURE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build(k));
     }
 
     public static RenderType lines() {

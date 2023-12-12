@@ -8,6 +8,7 @@ import com.apple.library.coregraphics.CGSize;
 import com.apple.library.impl.ObjectUtilsImpl;
 import com.apple.library.impl.ReversedIteratorImpl;
 import com.apple.library.impl.ViewImpl;
+import com.apple.library.quartzcore.CALayer;
 import com.apple.library.quartzcore.CATransaction;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,13 +22,13 @@ public class UIView extends UIResponder implements ViewImpl {
 
     protected final Flags _flags = new Flags();
     protected final ArrayList<UIView> _subviews = new ArrayList<>();
+    protected final CALayer _layer = new CALayer();
     protected final UIPresentationDelegate _presentation = new UIPresentationDelegate(this);
 
     private WeakReference<UIView> _superview;
     private WeakReference<UIWindow> _window;
 
     private Object _tooltip;
-    private Object _contents;
 
     private UIColor _backgroundColor;
 
@@ -40,7 +41,6 @@ public class UIView extends UIResponder implements ViewImpl {
     private int _tag = 0;
     private int _zIndex = 0;
     private int _autoresizingMask = 0;
-    private boolean _isOpaque = true;
 
     public UIView(CGRect frame) {
         this.setFrame(frame);
@@ -111,7 +111,7 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     public void render(CGPoint point, CGGraphicsContext context) {
-        context.drawContents(contents(), bounds(), this);
+        context.drawContents(_layer.contents(), bounds(), this);
     }
 
     public boolean pointInside(CGPoint point, UIEvent event) {
@@ -189,10 +189,6 @@ public class UIView extends UIResponder implements ViewImpl {
         return superview();
     }
 
-    public Object contents() {
-        return _contents;
-    }
-
     public Object tooltip() {
         return _tooltip;
     }
@@ -243,12 +239,20 @@ public class UIView extends UIResponder implements ViewImpl {
         return _transform;
     }
 
+    public CALayer layer() {
+        return _layer;
+    }
+
     public boolean canBecomeFocused() {
         return false;
     }
 
     public boolean isFocused() {
         return _flags.isFocused;
+    }
+
+    public boolean shouldBecomeFocused(UIView subview) {
+        return true;
     }
 
     public void setCenter(CGPoint center) {
@@ -306,10 +310,6 @@ public class UIView extends UIResponder implements ViewImpl {
         _presentation.addAnimationForKeyPath(oldValue, transform, "transform");
     }
 
-    public void setContents(Object contents) {
-        _contents = contents;
-    }
-
     public void setTooltip(Object tooltip) {
         _tooltip = tooltip;
     }
@@ -319,19 +319,27 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     public boolean isHidden() {
-        return _flags.isHidden;
+        return _layer.isHidden();
     }
 
     public void setHidden(boolean isHidden) {
-        _flags.isHidden = isHidden;
+        _layer.setHidden(isHidden);
     }
 
     public boolean isOpaque() {
-        return _isOpaque;
+        return _layer.isOpaque();
     }
 
     public void setOpaque(boolean opaque) {
-        _isOpaque = opaque;
+        _layer.setOpaque(opaque);
+    }
+
+    public float alpha() {
+        return _layer.opacity();
+    }
+
+    public void setAlpha(float alpha) {
+        _layer.setOpacity(alpha);
     }
 
     public int zIndex() {
@@ -343,11 +351,11 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     public boolean isClipBounds() {
-        return _flags.isClipBounds;
+        return _layer.masksToBounds();
     }
 
     public void setClipBounds(boolean clipBounds) {
-        _flags.isClipBounds = clipBounds;
+        _layer.setMasksToBounds(clipBounds);
     }
 
     public boolean isUserInteractionEnabled() {
@@ -376,6 +384,14 @@ public class UIView extends UIResponder implements ViewImpl {
 
     public void setTag(int tag) {
         _tag = tag;
+    }
+
+    public Object contents() {
+        return _layer.contents();
+    }
+
+    public void setContents(Object contents) {
+        _layer.setContents(contents);
     }
 
     public void setNeedsLayout() {
@@ -525,8 +541,6 @@ public class UIView extends UIResponder implements ViewImpl {
 
     protected static class Flags {
 
-        public boolean isHidden = false;
-        public boolean isClipBounds = false;
         public boolean isHovered = false;
         public boolean isFocused = false;
         public boolean isUserInteractionEnabled = true;

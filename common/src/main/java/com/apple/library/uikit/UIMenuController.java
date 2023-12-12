@@ -6,10 +6,8 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.impl.AppearanceImpl;
-import com.apple.library.impl.InvokerResult;
+import com.apple.library.impl.DelegateImpl;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,11 +19,13 @@ public class UIMenuController {
 
     private static final UIMenuController INSTANCE = new UIMenuController();
 
-    private MenuPopoverView popoverView;
+    private UIMenuPopoverView popoverView;
 
     private CGAffineTransform transform = CGAffineTransform.IDENTITY;
 
     private Collection<UIMenuItem> menuItems;
+    protected final DelegateImpl<UIMenuControllerDelegate> delegate = DelegateImpl.of(new UIMenuControllerDelegate() {
+    });
 
     public static UIMenuController getInstance() {
         return INSTANCE;
@@ -36,7 +36,7 @@ public class UIMenuController {
         if (window == null) {
             return;
         }
-        MenuListView listView = new MenuListView(menuItems());
+        MenuListView listView = new MenuListView(this, menuItems());
         CGSize size = listView.sizeThatFits(window.bounds().size());
         listView.setBounds(new CGRect(CGPoint.ZERO, size));
         listView.setAutoresizingMask(UIView.AutoresizingMask.flexibleRightMargin | UIView.AutoresizingMask.flexibleBottomMargin);
@@ -50,17 +50,26 @@ public class UIMenuController {
         center.x += size1.width / 2;
         center.y += size1.height / 2;
         listView.setCenter(center);
-        MenuPopoverView popoverView = new MenuPopoverView();
+        popoverView = new UIMenuPopoverView();
         popoverView.setBackgroundColor(null);
         popoverView.setContentView(listView);
         popoverView.showInView(fromView);
-        this.popoverView = popoverView;
+        delegate.invoker().menuControllerDidShow(this);
     }
 
     public void dismissMenu() {
-        if (this.popoverView != null) {
-            this.popoverView.dismiss();
+        delegate.invoker().menuControllerDidDismiss(this);
+        if (popoverView != null) {
+            popoverView.dismiss();
         }
+    }
+
+    public UIMenuControllerDelegate delegate() {
+        return this.delegate.get();
+    }
+
+    public void setDelegate(UIMenuControllerDelegate delegate) {
+        this.delegate.set(delegate);
     }
 
     public Collection<UIMenuItem> menuItems() {
@@ -79,12 +88,22 @@ public class UIMenuController {
         this.transform = transform;
     }
 
+    protected void selectAction(UIMenuItem menuItem, UIEvent event) {
+        if (delegate.invoker().menuControllerShouldSelectItem(this, menuItem)) {
+            menuItem.perform(event);
+            delegate.invoker().menuControllerDidSelectItem(this, menuItem);
+            dismissMenu();
+        }
+    }
+
     protected static class MenuCell extends UIButton {
 
+        private final UIMenuController menuController;
         private final UIMenuItem menuItem;
 
-        public MenuCell(UIMenuItem menuItem) {
+        public MenuCell(UIMenuController menuController, UIMenuItem menuItem) {
             super(CGRect.ZERO);
+            this.menuController = menuController;
             this.menuItem = menuItem;
             this.titleView().setShadowColor(null);
             this.setTitle(menuItem.title(), State.ALL);
@@ -100,12 +119,8 @@ public class UIMenuController {
         @Override
         public void mouseDown(UIEvent event) {
             super.mouseDown(event);
-            if (menuItem != null) {
-                menuItem.perform(event);
-            }
-            MenuPopoverView popoverView = ObjectUtils.safeCast(window(), MenuPopoverView.class);
-            if (popoverView != null) {
-                popoverView.dismiss();
+            if (menuItem != null && menuItem.isEnabled()) {
+                menuController.selectAction(menuItem, event);
             }
         }
     }
@@ -128,11 +143,13 @@ public class UIMenuController {
 
     protected static class MenuListView extends UIScrollView {
 
+        private final UIMenuController menuController;
         private final AtomicInteger lastGroup = new AtomicInteger();
         private final ArrayList<UIView> contentCells = new ArrayList<>();
 
-        public MenuListView(Collection<UIMenuItem> menuItems) {
+        public MenuListView(UIMenuController menuController, Collection<UIMenuItem> menuItems) {
             super(CGRect.ZERO);
+            this.menuController = menuController;
             this.setContentInsets(new UIEdgeInsets(4, 4, 4, 4));
             menuItems.stream().sorted(Comparator.comparingInt(UIMenuItem::group)).forEachOrdered(menuItem -> {
                 // add separator when groups changed.
@@ -141,7 +158,7 @@ public class UIMenuController {
                     addSubview(separatorView);
                     contentCells.add(separatorView);
                 }
-                UIView cell = new MenuCell(menuItem);
+                UIView cell = new MenuCell(menuController, menuItem);
                 addSubview(cell);
                 contentCells.add(cell);
                 lastGroup.set(menuItem.group());
@@ -189,55 +206,5 @@ public class UIMenuController {
             return contentSize();
         }
     }
-
-    protected static class MenuPopoverView extends UIPopoverView {
-
-        private UIView contentView;
-
-        @Override
-        public void mouseDown(UIEvent event) {
-            super.mouseDown(event);
-            dismiss();
-        }
-
-        @Override
-        public void keyDown(UIEvent event) {
-            //
-            if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
-                event.cancel(InvokerResult.SUCCESS);
-                dismiss();
-                return;
-            }
-            super.keyDown(event);
-        }
-
-        @Override
-        public UIView hitTest(CGPoint point, UIEvent event) {
-            UIView hitView = super.hitTest(point, event);
-            if (hitView != null) {
-                return hitView;
-            }
-            return this;
-        }
-
-        @Override
-        public UIView contentView() {
-            return contentView;
-        }
-
-        @Override
-        public void setContentView(UIView contentView) {
-            if (this.contentView == contentView) {
-                return;
-            }
-            if (this.contentView != null) {
-                this.contentView.removeFromSuperview();
-            }
-            this.contentView = contentView;
-            if (this.contentView != null) {
-                this.addSubview(this.contentView);
-                this.setNeedsLayout();
-            }
-        }
-    }
 }
+

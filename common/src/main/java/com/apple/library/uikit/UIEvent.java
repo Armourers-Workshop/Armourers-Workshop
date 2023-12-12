@@ -7,6 +7,7 @@ import com.apple.library.impl.InvokerResult;
 public class UIEvent {
 
     private InvokerResult result = InvokerResult.PASS;
+    private boolean isCancelled = false;
 
     protected final int key;
     protected final int keyModifier;
@@ -50,6 +51,11 @@ public class UIEvent {
     }
 
     public void cancel(InvokerResult result) {
+        setCancelled(true);
+        setResult(result);
+    }
+
+    public void setResult(InvokerResult result) {
         this.result = result;
     }
 
@@ -57,8 +63,12 @@ public class UIEvent {
         return result;
     }
 
+    public void setCancelled(boolean cancelled) {
+        isCancelled = cancelled;
+    }
+
     public boolean isCancelled() {
-        return result.isDecided();
+        return isCancelled;
     }
 
     public enum Type {

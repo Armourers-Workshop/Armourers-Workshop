@@ -43,7 +43,7 @@ import manifold.ext.rt.api.auto;
 @SuppressWarnings("unused")
 public class MannequinEntity extends ArmorStand implements IEntityHandler {
 
-    public static final int PLACEHOLDER_ENTITY_ID = -1;
+    public static final int PLACEHOLDER_ENTITY_ID = -1021;
 
     public static final Rotations DEFAULT_HEAD_POSE = new Rotations(0.0f, 0.0f, 0.0f);
     public static final Rotations DEFAULT_BODY_POSE = new Rotations(0.0f, 0.0f, 0.0f);

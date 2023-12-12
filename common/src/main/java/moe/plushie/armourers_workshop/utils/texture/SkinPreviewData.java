@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.utils.texture;
 
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
-import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.data.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
@@ -31,7 +31,7 @@ public class SkinPreviewData {
         eachPart(skin.getParts(), part -> {
             // apply the origin offset.
             IVector3i pos = part.getType().getRenderOffset();
-            SkinBasicTransform offset = SkinBasicTransform.createTranslateTransform(pos.getX(), pos.getY(), pos.getZ());
+            SkinTransform offset = SkinTransform.createTranslateTransform(pos.getX(), pos.getY(), pos.getZ());
             // apply the marker rotation and offset.
             SkinPartTransform transform = new SkinPartTransform(part, offset);
             transform.setup(0, null);

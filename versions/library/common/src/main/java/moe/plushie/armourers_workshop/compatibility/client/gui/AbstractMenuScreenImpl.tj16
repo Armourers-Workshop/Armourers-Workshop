@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
@@ -83,6 +84,10 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
     @Override
     protected final void renderBg(PoseStack poseStack, float f, int i, int j) {
         // ignored
+    }
+
+    public void _renderTooltip(PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY) {
+        this.renderTooltip(poseStack, itemStack, mouseX, mouseY);
     }
 
     public void _renderTooltip(PoseStack poseStack, List<? extends FormattedCharSequence> texts, int mouseX, int mouseY) {

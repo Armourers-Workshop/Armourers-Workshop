@@ -22,7 +22,7 @@ public class ChunkWriter {
 
     public <V, T> void write(ChunkSerializer<V, T> serializer, @Nullable V value, T obj) throws IOException {
         // we allow user write a null values, but it doesn't visible in the stream.
-        if (serializer.isChunkEmpty(value)) {
+        if (!serializer.canWrite(value, obj, stream)) {
             return;
         }
         String name = serializer.getChunkType().getName();

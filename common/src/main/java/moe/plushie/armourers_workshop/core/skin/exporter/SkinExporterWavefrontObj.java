@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.api.skin.ISkinExporter;
-import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.data.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
@@ -93,7 +93,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         for (Task task : tasks) {
             OpenPoseStack poseStack = new OpenPoseStack();
             SkinPart part = task.skinPart;
-            SkinPartTransform transform = new SkinPartTransform(part, SkinBasicTransform.IDENTITY);
+            SkinPartTransform transform = new SkinPartTransform(part, SkinTransform.IDENTITY);
             // apply the render context matrix.
             poseStack.scale(scale, scale, scale);
             poseStack.scale(-1, -1, 1);

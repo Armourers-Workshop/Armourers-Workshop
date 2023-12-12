@@ -58,7 +58,7 @@ public interface IRenderTypeBuilder {
     }
 
     enum WriteMask {
-        COLOR_DEPTH_WRITE, COLOR_WRITE, DEPTH_WRITE
+        NONE, COLOR_DEPTH_WRITE, COLOR_WRITE, DEPTH_WRITE
     }
 
     enum DepthTest {

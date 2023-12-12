@@ -10,9 +10,11 @@ import com.apple.library.foundation.NSTextPosition;
 import com.apple.library.foundation.NSTextRange;
 import com.apple.library.impl.AppearanceImpl;
 import com.apple.library.impl.DelegateImpl;
+import com.apple.library.impl.InvokerResult;
 import com.apple.library.impl.TextInputImpl;
 import com.apple.library.impl.TextInputTraits;
 import com.apple.library.impl.TextStorageImpl;
+import org.lwjgl.glfw.GLFW;
 
 @SuppressWarnings("unused")
 public class UITextField extends UIControl implements TextInputTraits {
@@ -54,6 +56,10 @@ public class UITextField extends UIControl implements TextInputTraits {
         if (shouldInputText() && input.keyDown(event.key)) {
             return;
         }
+        if (isFocused() && event.key == GLFW.GLFW_KEY_ESCAPE) {
+            resignFirstResponder();
+            return;
+        }
         super.keyDown(event);
     }
 
@@ -74,9 +80,9 @@ public class UITextField extends UIControl implements TextInputTraits {
             context.fillRect(getBorderColor(), bounds);
             context.fillRect(getFillColor(), fixedBounds);
         }
-        context.addClipRect(UIScreen.convertRectFromView(fixedBounds, this));
+        context.addClip(UIScreen.convertRectFromView(fixedBounds, this));
         storage.render(point, context);
-        context.removeClipRect();
+        context.removeClip();
     }
 
     public boolean isEditable() {
@@ -149,7 +155,7 @@ public class UITextField extends UIControl implements TextInputTraits {
     }
 
     public void becomeFirstResponder() {
-        if (storage.isFocused()) {
+        if (storage.isFocused() || !isEditable()) {
             return;
         }
         UIWindow window = window();

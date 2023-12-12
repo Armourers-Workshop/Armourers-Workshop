@@ -115,10 +115,10 @@ public class SaveSkinPacket extends CustomPacket {
                 return;
             }
             if (container.shouldLoadStack()) {
+                accept(player, "load");
                 // TODO: fix db-link
                 String identifier = SkinLoader.getInstance().saveSkin(source, skin);
                 container.crafting(new SkinDescriptor(identifier, skin.getType()));
-                accept(player, "load");
             }
             return;
         }
@@ -134,9 +134,9 @@ public class SaveSkinPacket extends CustomPacket {
                 return;
             }
             if (container.shouldSaveStack()) {
+                accept(player, "save");
                 server.getLibrary().save(getPath(destination), skin);
                 container.crafting(null);
-                accept(player, "save");
             }
             return;
         }
@@ -152,9 +152,9 @@ public class SaveSkinPacket extends CustomPacket {
             }
             if (container.shouldSaveStack()) {
                 // send skin data to client again, except case: fs -> fs
+                accept(player, "download");
                 NetworkManager.sendTo(this, player);
                 container.crafting(null);
-                accept(player, "download");
             }
             return;
         }

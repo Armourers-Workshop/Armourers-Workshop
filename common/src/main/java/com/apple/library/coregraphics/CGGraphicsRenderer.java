@@ -11,6 +11,8 @@ public interface CGGraphicsRenderer {
 
     void renderTooltip(NSString text, CGRect rect, UIFont font, CGGraphicsContext context);
 
+    void renderTooltip(ItemStack itemStack, CGRect rect, UIFont font, CGGraphicsContext context);
+
     void renderEntity(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY, CGGraphicsContext context);
 
     void renderItem(ItemStack itemStack, int x, int y, CGGraphicsContext context);

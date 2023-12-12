@@ -53,6 +53,7 @@ import manifold.ext.rt.api.auto;
 @Environment(EnvType.CLIENT)
 public class ClientWardrobeHandler {
 
+    private static Runnable INVENTORY_RENDER_POST_EVENT = null;
     public static ItemStack RENDERING_GUI_ITEM = null;
     public static final float SCALE = 1 / 16f;
 
@@ -316,13 +317,14 @@ public class ClientWardrobeHandler {
                 return;
         }
         RenderSystem.addClipRect(left, top, width, height);
+        INVENTORY_RENDER_POST_EVENT = RenderSystem::removeClipRect;
     }
 
     public static void onRenderEntityInInventoryPost(LivingEntity entity) {
-        if (!ModConfig.Client.enableEntityInInventoryClip) {
-            return;
+        if (INVENTORY_RENDER_POST_EVENT != null) {
+            INVENTORY_RENDER_POST_EVENT.run();
+            INVENTORY_RENDER_POST_EVENT = null;
         }
-        RenderSystem.removeClipRect();
     }
 
     private static int render(Entity entity, Model model, SkinRenderContext context, Supplier<Iterable<SkinRenderData.Entry>> provider) {

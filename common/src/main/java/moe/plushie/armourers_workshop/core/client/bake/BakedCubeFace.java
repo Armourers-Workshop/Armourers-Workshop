@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinTextureManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
-import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
@@ -72,7 +72,7 @@ public class BakedCubeFace {
             return;
         }
 
-        if (transform != SkinBasicTransform.IDENTITY) {
+        if (transform != SkinTransform.IDENTITY) {
             poseStack.pushPose();
             resolveTransform(poseStack);
         }
@@ -120,7 +120,7 @@ public class BakedCubeFace {
                     .endVertex();
         }
 
-        if (transform != SkinBasicTransform.IDENTITY) {
+        if (transform != SkinTransform.IDENTITY) {
             poseStack.popPose();
         }
     }

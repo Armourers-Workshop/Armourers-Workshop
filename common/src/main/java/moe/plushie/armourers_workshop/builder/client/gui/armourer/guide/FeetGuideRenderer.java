@@ -29,8 +29,8 @@ public class FeetGuideRenderer extends AbstractGuideRenderer {
     @Override
     public void init(GuideRendererManager rendererManager) {
         rendererManager.register(SkinPartTypes.BIPPED_SKIRT, this::render);
-        rendererManager.register(SkinPartTypes.BIPPED_LEFT_LEG, this::renderLeftLeg);
-        rendererManager.register(SkinPartTypes.BIPPED_RIGHT_LEG, this::renderRightLeg);
+        rendererManager.register(SkinPartTypes.BIPPED_LEFT_THIGH, this::renderLeftLeg);
+        rendererManager.register(SkinPartTypes.BIPPED_RIGHT_THIGH, this::renderRightLeg);
         rendererManager.register(SkinPartTypes.BIPPED_LEFT_FOOT, this::renderLeftLeg);
         rendererManager.register(SkinPartTypes.BIPPED_RIGHT_FOOT, this::renderRightLeg);
     }

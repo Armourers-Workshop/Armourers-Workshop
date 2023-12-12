@@ -8,13 +8,15 @@ import moe.plushie.armourers_workshop.api.skin.ISkinEquipmentType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
-import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
+import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV0;
 import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV2;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Size3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -32,8 +34,9 @@ public class BedrockModelExporter {
 
     protected Vector3f baseOrigin = Vector3f.ZERO;
 
+    protected SkinSettings settings = new SkinSettings();
     protected SkinProperties properties = new SkinProperties();
-    protected LinkedHashMap<String, ITransformf> itemTransforms = new LinkedHashMap<>();
+    protected SkinItemTransforms itemTransforms = new SkinItemTransforms();
 
     protected Node rootNode = new Node("", null, null);
     protected HashMap<String, Node> namedNodes = new HashMap<>();
@@ -88,8 +91,7 @@ public class BedrockModelExporter {
 //        rootParts.removeIf(it -> !whitelist.contains(it.getType()));
 //        rootParts.removeIf(it -> it.getType() == SkinPartTypes.ADVANCED);
 
-
-        Skin.Builder builder = new Skin.Builder(skinType);
+        Skin.Builder builder = createSkin(skinType);
 
         if (skinType instanceof ISkinArmorType) {
             builder.parts(rootParts);
@@ -97,17 +99,22 @@ public class BedrockModelExporter {
             SkinPart.Builder builder1 = new SkinPart.Builder(skinType.getParts().get(0));
             builder1.cubes(new SkinCubesV0(0));
             //builder1.transform(SkinBasicTransform.createScaleTransform(1, 1, 1));
-            SkinPart rootP = builder1.build();
-            rootParts.forEach(rootP::addPart);
-            builder.parts(Collections.singleton(rootP));
+            SkinPart rootPart = builder1.build();
+            rootParts.forEach(rootPart::addPart);
+            builder.parts(Collections.singleton(rootPart));
         }
 
+        builder.settings(settings);
         builder.properties(properties);
         if (skinType instanceof ISkinEquipmentType) {
-            builder.itemTransforms(itemTransforms);
+            settings.setItemTransforms(itemTransforms);
         }
         builder.version(20);
         return builder.build();
+    }
+
+    protected Skin.Builder createSkin(ISkinType skinType) {
+        return new Skin.Builder(skinType);
     }
 
     protected void exportSkinPart(Node node, SkinPart parentPart, Collection<SkinPart> rootParts) {
@@ -155,7 +162,7 @@ public class BedrockModelExporter {
         SkinPart.Builder builder = new SkinPart.Builder(partType);
 
         builder.cubes(cubes);
-        builder.transform(SkinBasicTransform.create(translate, rotation, scale, pivot));
+        builder.transform(SkinTransform.create(translate, rotation, scale, pivot));
 
         if (bone != null) {
             builder.name(bone.getName());
@@ -194,7 +201,7 @@ public class BedrockModelExporter {
             skyBox = skyBox.separated();
         }
         Rectangle3f rect = new Rectangle3f(x, y, z, w, h, d).inflate(delta);
-        SkinBasicTransform transform = SkinBasicTransform.create(translate, rotation, scale, pivot);
+        SkinTransform transform = SkinTransform.create(translate, rotation, scale, pivot);
         return new SkinCubesV2.Box(rect, transform, skyBox);
     }
 
@@ -231,8 +238,8 @@ public class BedrockModelExporter {
             .put("left_arm_c", SkinPartTypes.BIPPED_LEFT_ARM)
             .put("right_arm_c", SkinPartTypes.BIPPED_RIGHT_ARM)
             .put("body_c", SkinPartTypes.BIPPED_CHEST)
-            .put("left_leg_c", SkinPartTypes.BIPPED_LEFT_LEG)
-            .put("right_leg_c", SkinPartTypes.BIPPED_RIGHT_LEG)
+            .put("left_leg_c", SkinPartTypes.BIPPED_LEFT_THIGH)
+            .put("right_leg_c", SkinPartTypes.BIPPED_RIGHT_THIGH)
 
             // ??
 //            .put("Head", SkinPartTypes.BIPPED_HEAD)
@@ -240,12 +247,12 @@ public class BedrockModelExporter {
 //            .put("Skirt", SkinPartTypes.BIPPED_SKIRT)
             .put("LeftArm", SkinPartTypes.BIPPED_LEFT_ARM)
             .put("RightArm", SkinPartTypes.BIPPED_RIGHT_ARM)
-            .put("LeftForeArm", SkinPartTypes.BIPPED_LEFT_ARM2)
-            .put("RightForeArm", SkinPartTypes.BIPPED_RIGHT_ARM2)
-            .put("LeftLeg", SkinPartTypes.BIPPED_LEFT_LEG)
-            .put("RightLeg", SkinPartTypes.BIPPED_RIGHT_LEG)
-            .put("LeftForeLeg", SkinPartTypes.BIPPED_LEFT_LEG2)
-            .put("RightForeLeg", SkinPartTypes.BIPPED_RIGHT_LEG2)
+            .put("LeftForeArm", SkinPartTypes.BIPPED_LEFT_HAND)
+            .put("RightForeArm", SkinPartTypes.BIPPED_RIGHT_HAND)
+            .put("LeftLeg", SkinPartTypes.BIPPED_LEFT_THIGH)
+            .put("RightLeg", SkinPartTypes.BIPPED_RIGHT_THIGH)
+            .put("LeftForeLeg", SkinPartTypes.BIPPED_LEFT_LEG)
+            .put("RightForeLeg", SkinPartTypes.BIPPED_RIGHT_LEG)
             .put("LeftFoot", SkinPartTypes.BIPPED_LEFT_FOOT)
             .put("RightFoot", SkinPartTypes.BIPPED_RIGHT_FOOT)
 
@@ -256,8 +263,8 @@ public class BedrockModelExporter {
             .put("Arm_R", SkinPartTypes.BIPPED_RIGHT_ARM)
             .put("Foot_L", SkinPartTypes.BIPPED_LEFT_FOOT)
             .put("Foot_R", SkinPartTypes.BIPPED_RIGHT_FOOT)
-            .put("Thigh_L", SkinPartTypes.BIPPED_LEFT_LEG)
-            .put("Thigh_R", SkinPartTypes.BIPPED_RIGHT_LEG)
+            .put("Thigh_L", SkinPartTypes.BIPPED_LEFT_THIGH)
+            .put("Thigh_R", SkinPartTypes.BIPPED_RIGHT_THIGH)
             .put("Skirt", SkinPartTypes.BIPPED_SKIRT)
 
             .put("Wing_L", SkinPartTypes.BIPPED_RIGHT_WING)
@@ -265,19 +272,19 @@ public class BedrockModelExporter {
             .put("Phalanx_L", SkinPartTypes.BIPPED_RIGHT_WING)
             .put("Phalanx_R", SkinPartTypes.BIPPED_LEFT_WING)
 
-            .put("Torso", SkinPartTypes.BIPPED_CHEST2)
-            .put("Hand_L", SkinPartTypes.BIPPED_LEFT_ARM2)
-            .put("Hand_R", SkinPartTypes.BIPPED_RIGHT_ARM2)
-            .put("Leg_L", SkinPartTypes.BIPPED_LEFT_LEG2)
-            .put("Leg_R", SkinPartTypes.BIPPED_RIGHT_LEG2)
+            .put("Torso", SkinPartTypes.BIPPED_TORSO)
+            .put("Hand_L", SkinPartTypes.BIPPED_LEFT_HAND)
+            .put("Hand_R", SkinPartTypes.BIPPED_RIGHT_HAND)
+            .put("Leg_L", SkinPartTypes.BIPPED_LEFT_LEG)
+            .put("Leg_R", SkinPartTypes.BIPPED_RIGHT_LEG)
 
             .build();
 
     private static final ImmutableMap<ISkinPartType, IVector3i> PART_OFFSETS = new ImmutableMap.Builder<ISkinPartType, IVector3i>()
-            .put(SkinPartTypes.BIPPED_CHEST2, new Vector3i(0, 6, 0))
-            .put(SkinPartTypes.BIPPED_LEFT_ARM2, new Vector3i(0, 4, 0))
-            .put(SkinPartTypes.BIPPED_RIGHT_ARM2, new Vector3i(0, 4, 0))
-            .put(SkinPartTypes.BIPPED_LEFT_LEG2, new Vector3i(0, 6, 0))
-            .put(SkinPartTypes.BIPPED_RIGHT_LEG2, new Vector3i(0, 6, 0))
+            .put(SkinPartTypes.BIPPED_TORSO, new Vector3i(0, 6, 0))
+            .put(SkinPartTypes.BIPPED_LEFT_HAND, new Vector3i(0, 4, 0))
+            .put(SkinPartTypes.BIPPED_RIGHT_HAND, new Vector3i(0, 4, 0))
+            .put(SkinPartTypes.BIPPED_LEFT_LEG, new Vector3i(0, 6, 0))
+            .put(SkinPartTypes.BIPPED_RIGHT_LEG, new Vector3i(0, 6, 0))
             .build();
 }

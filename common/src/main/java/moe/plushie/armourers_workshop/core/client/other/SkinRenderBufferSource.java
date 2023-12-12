@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -20,7 +19,7 @@ public interface SkinRenderBufferSource {
         };
     }
 
-    ObjectBuilder getBuffer(@NotNull Skin skin);
+    ObjectBuilder getBuffer(@NotNull BakedSkin skin);
 
     interface ObjectBuilder {
 

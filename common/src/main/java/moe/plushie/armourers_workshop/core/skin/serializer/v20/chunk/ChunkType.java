@@ -10,8 +10,7 @@ public enum ChunkType {
     SKIN_PART("SKPR"),
     SKIN_PART_NAME("PRNM"),
     MARKER("PRMK"),
-    SKIN_SETTINGS("SETS"),
-    ITEM_TRANSFORMS("ITTF");
+    SKIN_SETTINGS("SET2");
 
     private final String name;
 

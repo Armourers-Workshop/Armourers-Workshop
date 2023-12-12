@@ -15,6 +15,7 @@ import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIMenuController;
+import com.apple.library.uikit.UIMenuControllerDelegate;
 import com.apple.library.uikit.UIMenuItem;
 import com.apple.library.uikit.UIScrollView;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -23,21 +24,27 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class TreeView extends UIScrollView {
+public class TreeView extends UIScrollView implements UIMenuControllerDelegate {
 
-    protected final TreeNode rootNode = new TreeNode(new NSString("Root"));
+    protected final TreeNode rootNode;
     protected final HashMap<String, Entry> entries = new HashMap<>();
 
     protected boolean dirt = true;
 
     protected UIMenuController menuController;
     protected TreeNode selectedNode = null;
+    protected UIMenuController currentMenuController;
 
     protected final DelegateImpl<TreeViewDelegate> delegate = DelegateImpl.of(new TreeViewDelegate() {
     });
 
     public TreeView(CGRect frame) {
+        this(new TreeNode("Root"), frame);
+    }
+
+    public TreeView(TreeNode rootNode, CGRect frame) {
         super(frame);
+        this.rootNode = rootNode;
         this.rootNode.link(this);
     }
 
@@ -45,19 +52,26 @@ public class TreeView extends UIScrollView {
         return rootNode;
     }
 
+    public TreeNode selectedNode() {
+        return selectedNode;
+    }
+
     public void selectNode(TreeNode node) {
         if (selectedNode != null) {
             deselectNode(selectedNode);
         }
+        hideNodeMenuIfNeeded();
         selectedNode = node;
         for (Entry entry : entries.values()) {
             if (entry.node == node) {
                 entry.setSelected(true);
             }
         }
+        delegate.invoker().treeViewDidSelect(this, node);
     }
 
     public void deselectNode(TreeNode node) {
+        hideNodeMenuIfNeeded();
         selectedNode = null;
         for (Entry entry : entries.values()) {
             if (entry.node == node) {
@@ -73,6 +87,16 @@ public class TreeView extends UIScrollView {
             buildEntriesIfNeeded();
             dirt = false;
         }
+    }
+
+    @Override
+    public void menuControllerDidShow(UIMenuController menuController) {
+        currentMenuController = menuController;
+    }
+
+    @Override
+    public void menuControllerDidDismiss(UIMenuController menuController) {
+        currentMenuController = null;
     }
 
     public void setNeedsDisplay(TreeNode node) {
@@ -153,6 +177,13 @@ public class TreeView extends UIScrollView {
         UIMenuController menuController = menuController();
         menuController.setMenuItems(menuItems);
         menuController.showMenu(this, point);
+        menuController.setDelegate(this);
+    }
+
+    private void hideNodeMenuIfNeeded() {
+        if (currentMenuController != null) {
+            currentMenuController.dismissMenu();
+        }
     }
 
     protected static class Entry extends UIControl {
@@ -161,7 +192,8 @@ public class TreeView extends UIScrollView {
         private static final UIImage UNFOLDING_IMAGE = UIImage.of(ModTextures.LIST).uv(8, 248).build();
 
         private TreeNode node;
-        private NSString title;
+        private NSString cachedTitle;
+        private Object title;
 
         private CGRect iconRect = CGRect.ZERO;
 
@@ -185,7 +217,6 @@ public class TreeView extends UIScrollView {
                 return;
             }
             this.node = node;
-            this.title = node.title();
             this.iconRect = new CGRect(offset + 1, 1, 8, 8);
             this.setEnabled(node.isEnabled());
         }
@@ -204,8 +235,9 @@ public class TreeView extends UIScrollView {
                 context.setBlendColor(UIColor.WHITE);
             }
             // show the title always.
-            if (title != null) {
-                context.drawText(title, iconRect.getMaxX(), 1, UIFont.systemFont(), textColor.currentValue(), null);
+            updateTitleIfNeeded();
+            if (cachedTitle != null) {
+                context.drawText(cachedTitle, iconRect.getMaxX(), 1, UIFont.systemFont(), textColor.currentValue(), null);
             }
         }
 
@@ -249,6 +281,16 @@ public class TreeView extends UIScrollView {
             textColor.setCurrentState(state);
             backgroundColor.setCurrentState(state);
             setBackgroundColor(backgroundColor.currentValue());
+        }
+
+        private void updateTitleIfNeeded() {
+            if (node != null) {
+                String value = node.title();
+                if (title != value) {
+                    title = value;
+                    cachedTitle = new NSString(value);
+                }
+            }
         }
     }
 }

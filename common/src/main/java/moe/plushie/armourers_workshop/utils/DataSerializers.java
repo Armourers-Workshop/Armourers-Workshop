@@ -8,6 +8,8 @@ import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentTypes;
+import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
@@ -226,7 +228,7 @@ public class DataSerializers {
         }
 
         public SkinProperties read(FriendlyByteBuf buffer, Player player) {
-            SkinProperties properties = SkinProperties.create();
+            SkinProperties properties = new SkinProperties();
             CompoundTag nbt = buffer.readNbt();
             if (nbt != null) {
                 properties.readFromNBT(nbt);

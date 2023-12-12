@@ -58,7 +58,7 @@ public class ChunkReader {
                 return entry.read(serializer, context);
             }
         }
-        return null;
+        return serializer.getDefaultValue(stream);
     }
 
     public <T> Collection<T> readAll(ChunkSerializer<T, Void> serializer) throws IOException {

@@ -79,10 +79,10 @@ public class HSBSliderBox extends UIControl {
             context.drawResizableImage(ModTextures.HUE, cx, cy, cw, ch, type.u, type.v, type.texWidth, type.texHeight, 256, 256);
         }
 
-        context.addClipRect(UIScreen.convertRectFromView(fixedBounds, this));
+        context.addClip(UIScreen.convertRectFromView(fixedBounds, this));
         context.drawImage(ModTextures.HUE, ((bounds.width - 3) * value) - 2, 0, 7, 4, 0, 0, 256, 256);
         context.drawImage(ModTextures.HUE, ((bounds.width - 3) * value) - 2, bounds.height - 4, 7, 4, 7, 0, 256, 256);
-        context.removeClipRect();
+        context.removeClip();
     }
 
     public void setValueWithComponents(float[] values) {

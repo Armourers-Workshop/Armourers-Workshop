@@ -59,7 +59,7 @@ public class SkinTextureManager {
 
     public TextureAnimationController getTextureAnimationController(RenderType renderType) {
         // by default render type, we will use special animation.
-        if (renderType == SkinRenderType.FACE_SOLID || renderType == SkinRenderType.FACE_LIGHTING || renderType == SkinRenderType.FACE_TRANSLUCENT || renderType == SkinRenderType.FACE_LIGHTING_TRANSLUCENT) {
+        if (isDefault(renderType)) {
             return TextureAnimationController.DEFAULT;
         }
         return textureAnimationControllers.getOrDefault(renderType, TextureAnimationController.NONE);
@@ -110,6 +110,10 @@ public class SkinTextureManager {
             return "s"; // light
         }
         return String.format("%04x", properties.hashCode());
+    }
+
+    private boolean isDefault(RenderType renderType) {
+        return renderType == SkinRenderType.FACE_SOLID || renderType == SkinRenderType.FACE_LIGHTING || renderType == SkinRenderType.FACE_TRANSLUCENT || renderType == SkinRenderType.FACE_LIGHTING_TRANSLUCENT;
     }
 
     public static class CustomTexture extends AbstractTexture {

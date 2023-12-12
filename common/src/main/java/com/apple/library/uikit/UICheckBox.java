@@ -14,7 +14,7 @@ public class UICheckBox extends UIControl {
     private final UIImageView imageView = new UIImageView(new CGRect(0, 0, 9, 9));
 
     private float boxSize = 9;
-    private float boxSpacing = 1;
+    private float boxSpacing = 2;
 
     public UICheckBox(CGRect frame) {
         super(frame);

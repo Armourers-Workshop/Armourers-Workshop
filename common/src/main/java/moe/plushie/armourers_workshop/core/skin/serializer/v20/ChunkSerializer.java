@@ -24,14 +24,18 @@ public abstract class ChunkSerializer<V, T> {
     public void config(ChunkFlags flags, V value, ChunkContext context) {
     }
 
-    public boolean isChunkEmpty(V value) {
+    public boolean canWrite(V value, T obj, ChunkOutputStream stream) {
         if (value == null) {
-            return true;
+            return false;
         }
         if (value instanceof Collection<?>) {
-            return ((Collection<?>) value).isEmpty();
+            return !((Collection<?>) value).isEmpty();
         }
-        return false;
+        return true;
+    }
+
+    public V getDefaultValue(ChunkInputStream stream) throws IOException {
+        return null;
     }
 
     public ChunkFlags getChunkFlags(V value, ChunkContext context) {

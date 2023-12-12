@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.builder.network.AdvancedExportPacket;
+import moe.plushie.armourers_workshop.builder.network.AdvancedImportPacket;
 import moe.plushie.armourers_workshop.builder.network.UndoActionPacket;
 import moe.plushie.armourers_workshop.builder.network.UpdateArmourerPacket;
 import moe.plushie.armourers_workshop.builder.network.UpdateBlockColorPacket;
@@ -13,6 +15,7 @@ import moe.plushie.armourers_workshop.core.network.RequestSkinPacket;
 import moe.plushie.armourers_workshop.core.network.ResponseSkinPacket;
 import moe.plushie.armourers_workshop.core.network.UpdateConfigurableToolPacket;
 import moe.plushie.armourers_workshop.core.network.UpdateHologramProjectorPacket;
+import moe.plushie.armourers_workshop.core.network.UpdateSkinDocumentPacket;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.init.network.ExecuteCommandPacket;
 import moe.plushie.armourers_workshop.init.network.ServerReplayPacket;
@@ -50,6 +53,8 @@ public enum ModPackets {
     UPLOAD_SKIN_TO_GLOBAL(0x43, UploadSkinPacket.class, UploadSkinPacket::new),
     UPLOAD_SKIN_TO_GLOBAL_PRE(0x44, UploadSkinPrePacket.class, UploadSkinPrePacket::new),
 
+    UPDATE_SKIN_DOCUMENT(0x60, UpdateSkinDocumentPacket.class, UpdateSkinDocumentPacket::new),
+
     UPDATE_BLOCK_COLOR(0x80, UpdateBlockColorPacket.class, UpdateBlockColorPacket::new),
 
     UPDATE_COLOR_PICKER(0x81, UpdateColorPickerPacket.class, UpdateColorPickerPacket::new),
@@ -59,6 +64,9 @@ public enum ModPackets {
 
     UPDATE_OUTFIT_MAKER(0x84, UpdateOutfitMakerPacket.class, UpdateOutfitMakerPacket::new),
     UPDATE_ARMOURER(0x85, UpdateArmourerPacket.class, UpdateArmourerPacket::new),
+
+    ADVANCED_IMPORT_FILE(0x86, AdvancedImportPacket.class, AdvancedImportPacket::new),
+    ADVANCED_EXPORT_FILE(0x87, AdvancedExportPacket.class, AdvancedExportPacket::new),
 
     REPLAY_EVENT(0xf0, ServerReplayPacket.class, ServerReplayPacket::new);
 

@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
@@ -35,6 +36,7 @@ import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Function;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -93,6 +95,19 @@ public class OptionalAPI {
     public static void putOptionalString(@This CompoundTag tag, String key, String value, String defaultValue) {
         if (_shouldPutValue(tag, key, value, defaultValue)) {
             tag.putString(key, value);
+        }
+    }
+
+    public static <T extends IRegistryEntry> T getOptionalType(@This CompoundTag tag, String key, T defaultValue, Function<String, T> provider) {
+        if (tag.contains(key, Constants.TagFlags.STRING)) {
+            return provider.apply(tag.getString(key));
+        }
+        return defaultValue;
+    }
+
+    public static <T extends IRegistryEntry> void putOptionalType(@This CompoundTag tag, String key, T value, T defaultValue) {
+        if (_shouldPutValue(tag, key, value, defaultValue)) {
+            tag.putString(key, value.getRegistryName().toString());
         }
     }
 
@@ -328,15 +343,26 @@ public class OptionalAPI {
     }
 
     public static SkinDescriptor getOptionalSkinDescriptor(@This CompoundTag tag, String key) {
-        CompoundTag parsedTag = _parseCompoundTag(tag, key);
-        if (parsedTag != null && !parsedTag.isEmpty()) {
-            return new SkinDescriptor(parsedTag);
-        }
-        return SkinDescriptor.EMPTY;
+        return getOptionalSkinDescriptor(tag, key, SkinDescriptor.EMPTY);
     }
 
     public static void putOptionalSkinDescriptor(@This CompoundTag tag, String key, SkinDescriptor value) {
-        if (_shouldPutValue(tag, key, value, SkinDescriptor.EMPTY)) {
+        putOptionalSkinDescriptor(tag, key, value, SkinDescriptor.EMPTY);
+    }
+
+    public static SkinDescriptor getOptionalSkinDescriptor(@This CompoundTag tag, String key, SkinDescriptor defaultValue) {
+        CompoundTag parsedTag = _parseCompoundTag(tag, key);
+        if (parsedTag != null) {
+            if (!parsedTag.isEmpty()) {
+                return new SkinDescriptor(parsedTag);
+            }
+            return SkinDescriptor.EMPTY;
+        }
+        return defaultValue;
+    }
+
+    public static void putOptionalSkinDescriptor(@This CompoundTag tag, String key, SkinDescriptor value, SkinDescriptor defaultValue) {
+        if (_shouldPutValue(tag, key, value, defaultValue)) {
             tag.put(key, value.serializeNBT());
         }
     }

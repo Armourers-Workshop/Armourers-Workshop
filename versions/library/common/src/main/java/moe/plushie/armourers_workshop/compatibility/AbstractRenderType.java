@@ -30,6 +30,8 @@ public class AbstractRenderType extends RenderType {
 
         it.put(SkinRenderFormat.IMAGE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, POSITION_COLOR_TEX_LIGHTMAP_SHADER).overlay().lightmap());
 
+        it.put(SkinRenderFormat.BLIT_MASK, () -> _builder(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLES, POSITION_COLOR_SHADER));
+
         it.put(SkinRenderFormat.GUI_COLOR, () -> _builder(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, POSITION_COLOR_SHADER));
         it.put(SkinRenderFormat.GUI_IMAGE, () -> _builder(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, POSITION_TEX_SHADER));
         it.put(SkinRenderFormat.GUI_HIGHLIGHTED_TEXT, () -> _builder(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, POSITION_SHADER));
@@ -100,6 +102,7 @@ public class AbstractRenderType extends RenderType {
         });
 
         private static final Map<WriteMask, WriteMaskStateShard> TABLE_WRITE_MASK = _make(it -> {
+            it.put(WriteMask.NONE, new WriteMaskStateShard(false, false));
             it.put(WriteMask.COLOR_DEPTH_WRITE, COLOR_DEPTH_WRITE);
             it.put(WriteMask.COLOR_WRITE, COLOR_WRITE);
             it.put(WriteMask.DEPTH_WRITE, DEPTH_WRITE);

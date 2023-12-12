@@ -91,7 +91,7 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
         ItemStack stackInput = inventory.getItem(0);
 
         Skin skin = null;
-        SkinProperties skinProps = SkinProperties.create(blockEntity.getSkinProperties());
+        SkinProperties skinProps = blockEntity.getSkinProperties().copy();
         skinProps.put(SkinProperty.ALL_AUTHOR_NAME, profile.getName());
 
         // in the offline server the `player.getStringUUID()` is not real player uuid.

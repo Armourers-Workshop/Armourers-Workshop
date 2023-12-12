@@ -212,7 +212,7 @@ public class LocalDataService implements ISkinFileManager {
     private String getFreeUUID() {
         String uuid = lastGenUUID;
         while (uuid.isEmpty() || nodes.containsKey(uuid)) {
-            uuid = SkinUUID.randomUUID().toString();
+            uuid = SkinUUID.randomUUIDString();
         }
         lastGenUUID = uuid;
         return uuid;
@@ -250,7 +250,7 @@ public class LocalDataService implements ISkinFileManager {
             this.fileSize = nbt.getInt("FileSize");
             this.fileHash = nbt.getInt("FileHash");
             // properties
-            this.properties = SkinProperties.create();
+            this.properties = new SkinProperties();
             this.properties.readFromNBT(nbt.getCompound("Properties"));
             this.propertiesHash = nbt.getInt("PropertiesHash");
         }

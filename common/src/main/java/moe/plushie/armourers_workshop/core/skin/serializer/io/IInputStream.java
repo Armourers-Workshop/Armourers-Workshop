@@ -126,7 +126,7 @@ public interface IInputStream {
     }
 
     default SkinProperties readSkinProperties() throws IOException {
-        SkinProperties properties = SkinProperties.create();
+        SkinProperties properties = new SkinProperties();
         properties.readFromStream(this);
         return properties;
     }

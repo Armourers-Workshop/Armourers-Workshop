@@ -7,8 +7,8 @@ import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
+import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.PoseStackWrapper;
 import net.fabricmc.api.EnvType;
@@ -189,7 +189,7 @@ public class SkinRenderContext {
         return buffers;
     }
 
-    public SkinRenderBufferSource.ObjectBuilder getBuffer(@NotNull Skin skin) {
+    public SkinRenderBufferSource.ObjectBuilder getBuffer(@NotNull BakedSkin skin) {
         if (bufferProvider != null) {
             return bufferProvider.getBuffer(skin);
         }

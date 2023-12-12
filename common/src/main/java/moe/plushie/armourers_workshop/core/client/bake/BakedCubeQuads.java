@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
-import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
@@ -63,7 +63,7 @@ public class BakedCubeQuads {
         SkinCuller.cullFaces2(data, bounds, part.getType()).forEach(result -> {
             // when has a different part type, it means the skin part was split.
             Rectangle3i newBounds = bounds;
-            SkinBasicTransform newTransform = SkinBasicTransform.createTranslateTransform(new Vector3f(result.getOrigin()));
+            SkinTransform newTransform = SkinTransform.createTranslateTransform(new Vector3f(result.getOrigin()));
             OpenVoxelShape newRenderShape = renderShape;
             if (result.getPartType() != part.getType()) {
                 newBounds = result.getBounds().offset(bounds.getOrigin());
@@ -105,13 +105,13 @@ public class BakedCubeQuads {
                 }
                 // in the vanilla's player textures are rendering without diffuse lighting.
                 Rectangle3f shape = new Rectangle3f(x, y, z, 1, 1, 1);
-                SkinBasicTransform transform = SkinBasicTransform.IDENTITY;
+                SkinTransform transform = SkinTransform.IDENTITY;
                 quads.add(new SkinCubeFace(shape, transform, paintColor, 255, dir, null, SkinCubeTypes.SOLID));
             });
             if (quads.size() != 0) {
                 Rectangle3i bounds = box.getBounds();
                 OpenVoxelShape renderShape = OpenVoxelShape.box(new Rectangle3f(bounds));
-                allQuads.add(entry.getKey(), new BakedCubeQuads(bounds, SkinBasicTransform.IDENTITY, renderShape, quads));
+                allQuads.add(entry.getKey(), new BakedCubeQuads(bounds, SkinTransform.IDENTITY, renderShape, quads));
             }
         }
         return allQuads;

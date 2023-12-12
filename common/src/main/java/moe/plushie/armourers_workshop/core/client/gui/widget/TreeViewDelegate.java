@@ -8,6 +8,9 @@ import java.util.Collection;
 
 public interface TreeViewDelegate extends UIScrollViewDelegate {
 
+    default void treeViewDidSelect(TreeView treeView, TreeNode node) {
+    }
+
     @Nullable
     default Collection<UIMenuItem> treeViewShouldShowMenuForNode(TreeView treeView, TreeNode node) {
         return null;

@@ -13,6 +13,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -35,6 +36,11 @@ public class NetworkManagerImpl extends AbstractForgeNetworkManager implements N
     public void init(String name, String version) {
         dispatcher = new NetworkDispatcher(ModConstants.key(name));
         AbstractForgeNetworkManager.register(dispatcher.channelName, version, dispatcher);
+    }
+
+    @Override
+    public void sendToTrackingChunk(CustomPacket message, LevelChunk chunk) {
+        dispatcher.split(message, Direction.PLAY_TO_CLIENT, AbstractForgeNetworkManager.trackingChunk(() -> chunk)::send);
     }
 
     @Override

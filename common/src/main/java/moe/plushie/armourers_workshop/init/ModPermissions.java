@@ -33,6 +33,9 @@ public class ModPermissions {
     public static final BlockPermission SKIN_LIBRARY_SKIN_LOAD = new BlockPermission("skin.load", ModBlocks.SKIN_LIBRARY);
     public static final BlockPermission SKIN_LIBRARY_SKIN_SAVE = new BlockPermission("skin.save", ModBlocks.SKIN_LIBRARY);
 
+    public static final BlockPermission ADVANCED_SKIN_BUILDER_SKIN_EXPORT = new BlockPermission("skin.export", ModBlocks.ADVANCED_SKIN_BUILDER);
+    public static final BlockPermission ADVANCED_SKIN_BUILDER_SKIN_IMPORT = new BlockPermission("skin.import", ModBlocks.ADVANCED_SKIN_BUILDER);
+
     public static final BlockPermission SKIN_LIBRARY_GLOBAL_SKIN_UPLOAD = new BlockPermission("skin.upload", ModBlocks.SKIN_LIBRARY_GLOBAL);
 
     public static final ContainerPermission OPEN = new ContainerPermission("open-gui", RegistryManager.getEntries(MenuType.class)::forEach);

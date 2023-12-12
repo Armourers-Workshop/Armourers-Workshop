@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.v20;
 
 import com.google.common.collect.Lists;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
-import moe.plushie.armourers_workshop.core.data.transform.SkinBasicTransform;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -22,7 +20,6 @@ import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkPalett
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkPartData;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkPreviewData;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkType;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.utils.texture.SkinPreviewData;
 import org.apache.commons.lang3.tuple.Pair;
@@ -30,8 +27,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * file header:           0x534b494e (SKIN)
@@ -45,7 +40,6 @@ import java.util.Map;
  * skin part markers:     | length | PRMK | flag |[ x(1B)/y(1B)/z(1B) | meta(1B) ]|
  * skin paint data:       | length | PADT | flag | opt(VB)/total width(VB)/total height(VB) |< width(VB) | height(VB) >[ color index ]|
  * palette data:          | length | PALE | flag | opt(VB)/reserved(VB) |< paint type(1B)/used bytes(1B) >[ palette entry(VB) ]|
- * item transforms:       | length | ITTF | falg |[ id(VB) | opt(VB) | translate(12B)/rotation(12B)/scale(12B) ]|
  * chunk flag:            1 encrypt, 2 gzip, 3 encrypt+gzip
  * cube entry:            x(1B)/y(1B)/z(1B)
  *                        origin(12B)/size(12B), translate(12B)/rotation(12B)/scale(12B)/pivot(12B)
@@ -75,7 +69,6 @@ public class ChunkSerializers {
                 builder.paintData(it.read(SKIN_PAINT_DATA, palette));
                 builder.previewData(it.read(SKIN_PREVIEW_DATA, chunkCubes));
                 builder.parts(it.read(SKIN_PART, chunkCubes));
-                builder.itemTransforms(it.read(SKIN_ITEM_TRANSFORMS));
                 builder.blobs(it.readBlobs());
                 builder.version(version);
                 return builder.build();
@@ -102,7 +95,6 @@ public class ChunkSerializers {
                 if (context.isEnablePreviewData()) {
                     it.write(SKIN_PREVIEW_DATA, SkinPreviewData.of(skin), chunkCubes);
                 }
-                it.write(SKIN_ITEM_TRANSFORMS, skin.getItemTransforms());
                 it.writeBlobs(skin.getBlobs());
             });
         }
@@ -247,6 +239,11 @@ public class ChunkSerializers {
         public void write(SkinProperties value, Void obj, ChunkOutputStream stream) throws IOException {
             value.writeToStream(stream);
         }
+
+        @Override
+        public boolean canWrite(SkinProperties value, Void obj, ChunkOutputStream stream) {
+            return !value.isEmpty();
+        }
     });
 
     public static final ChunkSerializer<SkinSettings, Void> SKIN_SETTINGS = register(new ChunkSerializer<SkinSettings, Void>(ChunkType.SKIN_SETTINGS) {
@@ -254,42 +251,18 @@ public class ChunkSerializers {
         @Override
         public SkinSettings read(ChunkInputStream stream, Void obj) throws IOException {
             SkinSettings settings = new SkinSettings();
-            settings.setEditable(stream.readBoolean());
+            settings.readFromStream(stream);
             return settings;
         }
 
         @Override
         public void write(SkinSettings value, Void obj, ChunkOutputStream stream) throws IOException {
-            stream.writeBoolean(value.isEditable());
-        }
-    });
-
-    public static final ChunkSerializer<Map<String, ITransformf>, Void> SKIN_ITEM_TRANSFORMS = register(new ChunkSerializer<Map<String, ITransformf>, Void>(ChunkType.ITEM_TRANSFORMS) {
-
-        @Override
-        public Map<String, ITransformf> read(ChunkInputStream stream, Void obj) throws IOException {
-            int size = stream.readInt();
-            LinkedHashMap<String, ITransformf> value = new LinkedHashMap<>();
-            for (int i = 0; i < size; ++i) {
-                String name = stream.readString();
-                Vector3f translate = stream.readVector3f();
-                Vector3f rotation = stream.readVector3f();
-                Vector3f scale = stream.readVector3f();
-                value.put(name, SkinBasicTransform.create(translate, rotation, scale));
-            }
-            return value;
+            value.writeToStream(stream);
         }
 
         @Override
-        public void write(Map<String, ITransformf> value, Void obj, ChunkOutputStream stream) throws IOException {
-            stream.writeInt(value.size());
-            for (Map.Entry<String, ITransformf> entry : value.entrySet()) {
-                ITransformf transform = entry.getValue();
-                stream.writeString(entry.getKey());
-                stream.writeVector3f(transform.getTranslate());
-                stream.writeVector3f(transform.getRotation());
-                stream.writeVector3f(transform.getScale());
-            }
+        public boolean canWrite(SkinSettings value, Void obj, ChunkOutputStream stream) {
+            return !value.isEmpty();
         }
     });
 

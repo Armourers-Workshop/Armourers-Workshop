@@ -16,6 +16,7 @@ import com.apple.library.uikit.UITextField;
 import com.apple.library.uikit.UITextFieldDelegate;
 import com.apple.library.uikit.UIView;
 import com.apple.library.uikit.UIWindow;
+import com.google.common.base.Objects;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 
@@ -47,6 +48,7 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
     private float multipler = 1;
     private Formatter formatter = Formatter.DEFAULT;
 
+    private boolean isEditing = false;
     private boolean isChangedValue = false;
     private CGPoint startDragLocation = null;
 
@@ -86,7 +88,28 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
     }
 
     @Override
+    public boolean shouldBecomeFocused(UIView subview) {
+        return false;
+    }
+
+    @Override
+    public boolean canBecomeFocused() {
+        return true;
+    }
+
+    @Override
+    public void becomeFirstResponder() {
+        inputBegin();
+    }
+
+    @Override
+    public void resignFirstResponder() {
+        valueInputView.resignFirstResponder();
+    }
+
+    @Override
     public void textFieldDidBeginEditing(UITextField textField) {
+        updateEditing(true);
         leftView.setHidden(true);
         contentView.setHidden(true);
         rightView.setHidden(true);
@@ -99,6 +122,8 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
         leftView.setHidden(false);
         contentView.setHidden(false);
         rightView.setHidden(false);
+        inputEnd();
+        updateEditing(false);
     }
 
     @Override
@@ -200,6 +225,8 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
 
         isChangedValue = false;
         startDragLocation = null;
+
+        updateEditing(true);
     }
 
     private void buttonMove(UIEvent event) {
@@ -218,6 +245,7 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
             return;
         }
         update(value + dx * stepValue);
+        sendEvent(Event.VALUE_CHANGED);
         startDragLocation.x += dx / multipler;
         isChangedValue = true;
     }
@@ -237,6 +265,7 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
 
         // when no value changes occurs, we need to check the clicked button.
         if (isChangedValue) {
+            updateEditing(false);
             return;
         }
 
@@ -244,23 +273,19 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
         UIView view = hitTest(event.locationInView(this), event);
         if (view == leftView) {
             update(value - stepValue);
+            sendEvent(Event.VALUE_CHANGED);
+            updateEditing(false);
             return;
         }
 
         // the click on the right side?
         if (view == rightView) {
             update(value + stepValue);
+            sendEvent(Event.VALUE_CHANGED);
+            updateEditing(false);
             return;
         }
-
-        // enter text input mode.
-        valueInputView.setFrame(bounds());
-        valueInputView.setSelectedTextRange(new NSTextRange(valueInputView.beginOfDocument(), valueInputView.endOfDocument()));
-        addSubview(valueInputView);
-        valueInputView.becomeFirstResponder();
-
-        window.addGlobalTarget(this, Event.MOUSE_MOVED, NewSlider::inputMove);
-        window.addGlobalTarget(this, Event.MOUSE_LEFT_DOWN, NewSlider::inputDown);
+        inputBegin();
     }
 
     private void inputDown(UIEvent event) {
@@ -277,6 +302,20 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
         }
     }
 
+    private void inputBegin() {
+        UIWindow window = window();
+        if (window == null) {
+            return;
+        }
+        // enter text input mode.
+        valueInputView.setFrame(bounds());
+        valueInputView.setSelectedTextRange(new NSTextRange(valueInputView.beginOfDocument(), valueInputView.endOfDocument()));
+        addSubview(valueInputView);
+        valueInputView.becomeFirstResponder();
+        window.addGlobalTarget(this, Event.MOUSE_MOVED, NewSlider::inputMove);
+        window.addGlobalTarget(this, Event.MOUSE_LEFT_DOWN, NewSlider::inputDown);
+    }
+
     private void inputEnd() {
         UIWindow window = window();
         if (window == null) {
@@ -287,6 +326,7 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
 
         Optional<Double> newValue = formatter.parse(valueInputView.text());
         update(newValue.orElse(value));
+        sendEvent(Event.VALUE_CHANGED);
         valueInputView.resignFirstResponder();
         valueInputView.removeFromSuperview();
     }
@@ -299,6 +339,18 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
         value = MathUtils.clamp(newValue, minValue, maxValue);
         valueView.setText(new NSString(formatter.display(value)));
         valueInputView.setText(formatter.input(value));
+    }
+
+    private void updateEditing(boolean value) {
+        if (Objects.equal(isEditing, value)) {
+            return;
+        }
+        isEditing = value;
+        if (value) {
+            sendEvent(Event.EDITING_DID_BEGIN);
+        } else {
+            sendEvent(Event.EDITING_DID_END);
+        }
     }
 
     public interface Formatter {

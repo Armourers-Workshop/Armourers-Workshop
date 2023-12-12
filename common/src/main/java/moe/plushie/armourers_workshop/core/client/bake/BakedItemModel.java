@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
 import moe.plushie.armourers_workshop.api.math.ITransformf;
+import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -15,7 +16,7 @@ import manifold.ext.rt.api.auto;
 @Environment(EnvType.CLIENT)
 public class BakedItemModel extends BuiltInModel {
 
-    public BakedItemModel(Map<String, ITransformf> itemTransforms, boolean usesBlockLight) {
+    public BakedItemModel(SkinItemTransforms itemTransforms, boolean usesBlockLight) {
         super(convert(itemTransforms), ItemOverrides.EMPTY, null, usesBlockLight);
     }
 

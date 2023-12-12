@@ -75,9 +75,11 @@ public class AbstractRenderType extends RenderType {
 
         it.put(SkinRenderFormat.IMAGE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
 
+        it.put(SkinRenderFormat.BLIT_MASK, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
+
         it.put(SkinRenderFormat.GUI_IMAGE, () -> _builder(DefaultVertexFormat.POSITION_TEX, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTextureState(EMPTY_TEXTURE)));
-        it.put(SkinRenderFormat.GUI_HIGHLIGHTED_TEXT, () -> _builder(DefaultVertexFormat.POSITION, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTexturingState(OR_REVERSE)));
         it.put(SkinRenderFormat.GUI_COLOR, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_QUADS, builder -> builder.setTransparencyState(DEFAULT_TRANSPARENCY)));
+        it.put(SkinRenderFormat.GUI_HIGHLIGHTED_TEXT, () -> _builder(DefaultVertexFormat.POSITION, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTexturingState(OR_REVERSE)));
 
         it.put(SkinRenderFormat.BLOCK, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING)));
         it.put(SkinRenderFormat.BLOCK_CUTOUT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING)));
@@ -112,7 +114,6 @@ public class AbstractRenderType extends RenderType {
         builder.stateBuilder = config.apply(builder.stateBuilder);
         return builder;
     }
-
 
     public static IRenderTypeBuilder builder(SkinRenderFormat format) {
         Supplier<IRenderTypeBuilder> provider = MAPPER.get(format);

@@ -1,53 +1,65 @@
 package moe.plushie.armourers_workshop.builder.data.properties;
 
-import moe.plushie.armourers_workshop.api.data.IDataProperty;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class VectorProperty implements IDataProperty<Vector3f> {
+public class VectorProperty extends DataProperty<Vector3f> {
 
-    private Vector3f vectorValue;
+    private final DataProperty<Float> x = field(Vector3f::setX, Vector3f::getX);
+    private final DataProperty<Float> y = field(Vector3f::setY, Vector3f::getY);
+    private final DataProperty<Float> z = field(Vector3f::setZ, Vector3f::getZ);
 
     @Override
     public void set(Vector3f value) {
-        this.vectorValue = value;
+        super.set(value);
+        this.x.set(value.getX());
+        this.y.set(value.getY());
+        this.z.set(value.getZ());
     }
 
-    @Override
-    public Vector3f get() {
-        return vectorValue;
+    public DataProperty<Float> x() {
+        return x;
     }
 
-    public FloatProperty x() {
-        return field(Vector3f::setX, Vector3f::getX);
+    public DataProperty<Float> y() {
+        return y;
     }
 
-    public FloatProperty y() {
-        return field(Vector3f::setY, Vector3f::getY);
+    public DataProperty<Float> z() {
+        return z;
     }
 
-    public FloatProperty z() {
-        return field(Vector3f::setZ, Vector3f::getZ);
-    }
+    private DataProperty<Float> field(BiConsumer<Vector3f, Float> setter, Function<Vector3f, Float> getter) {
+        return new DataProperty<Float>() {
 
-    private FloatProperty field(BiConsumer<Vector3f, Float> setter, Function<Vector3f, Float> getter) {
-        return new FloatProperty() {
             @Override
-            public void set(Float value) {
-                Vector3f newValue = vectorValue.copy();
-                setter.accept(newValue, value);
-                vectorValue = newValue;
+            public void beginEditing() {
+                super.beginEditing();
+                VectorProperty.super.beginEditing();
             }
 
             @Override
-            public @Nullable Float get() {
-                if (vectorValue != null) {
-                    return getter.apply(vectorValue);
+            public void endEditing() {
+                super.endEditing();
+                VectorProperty.super.endEditing();
+            }
+
+            @Override
+            public void set(Float value) {
+                super.set(value);
+                Vector3f newValue = VectorProperty.this.value.copy();
+                setter.accept(newValue, value);
+                VectorProperty.super.set(newValue);
+            }
+
+            @Override
+            public Float get() {
+                if (VectorProperty.this.value != null) {
+                    return getter.apply(VectorProperty.this.value);
                 }
-                return null;
+                return 0.0f;
             }
         };
     }

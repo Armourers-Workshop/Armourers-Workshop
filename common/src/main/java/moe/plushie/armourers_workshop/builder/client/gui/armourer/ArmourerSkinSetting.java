@@ -58,7 +58,7 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
     @Override
     public void reloadData() {
         ISkinType skinType = blockEntity.getSkinType();
-        skinProperties.copyFrom(blockEntity.getSkinProperties());
+        skinProperties.reset(blockEntity.getSkinProperties());
         Function<SkinProperties, ArmourerBaseSkinPanel> supplier = REGISTERED.get(skinType);
         if (supplier != null) {
             updateScreen(supplier.apply(skinProperties));
@@ -77,12 +77,12 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
     }
 
     private void updateSkinProperties(SkinProperties skinProperties) {
-        SkinProperties skinProperties1 = SkinProperties.create(blockEntity.getSkinProperties());
+        SkinProperties skinProperties1 = blockEntity.getSkinProperties().copy();
         this.skinProperties.applyTo(skinProperties1);
         if (skinProperties1.equals(blockEntity.getSkinProperties())) {
             return; // no changes
         }
-        this.skinProperties.copyFrom(skinProperties1);
+        this.skinProperties.reset(skinProperties1);
         this.blockEntity.setSkinProperties(skinProperties);
         UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.SKIN_PROPERTIES;
         UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, skinProperties);
@@ -119,9 +119,20 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
         }
 
         @Override
-        public void copyFrom(SkinProperties properties) {
-            super.copyFrom(properties);
-            this.changes.clear();
+        public void clear() {
+            changes.clear();
+            super.clear();
+        }
+
+        @Override
+        public void putAll(SkinProperties properties) {
+            changes.clear();
+            super.putAll(properties);
+        }
+
+        public void reset(SkinProperties properties) {
+            clear();
+            putAll(properties);
         }
 
         public void applyTo(SkinProperties properties) {

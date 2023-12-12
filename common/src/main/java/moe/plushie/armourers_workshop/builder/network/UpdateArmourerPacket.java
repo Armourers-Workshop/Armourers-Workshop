@@ -17,7 +17,6 @@ import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataAccessor;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -39,7 +38,7 @@ public class UpdateArmourerPacket extends CustomPacket {
     public UpdateArmourerPacket(FriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
         this.field = buffer.readEnum(Field.class);
-        this.fieldValue = field.getDataAccessor().dataSerializer.read(buffer);
+        this.fieldValue = field.accessor.read(buffer);
     }
 
     public UpdateArmourerPacket(ArmourerBlockEntity entity, Field field, Object value) {
@@ -52,7 +51,7 @@ public class UpdateArmourerPacket extends CustomPacket {
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeBlockPos(pos);
         buffer.writeEnum(field);
-        field.getDataAccessor().dataSerializer.write(buffer, fieldValue);
+        field.accessor.write(buffer, fieldValue);
     }
 
     @Override
@@ -141,47 +140,38 @@ public class UpdateArmourerPacket extends CustomPacket {
                 break;
             }
             default: {
-                field.set(blockEntity, fieldValue);
+                field.accessor.set(blockEntity, fieldValue);
                 break;
             }
         }
     }
 
-    public enum Field {
-        FLAGS(DataSerializers.INT, ArmourerBlockEntity::getFlags, ArmourerBlockEntity::setFlags, ModPermissions.ARMOURER_SETTING),
+    public enum Field implements DataAccessor.Provider<ArmourerBlockEntity> {
+        FLAGS(ArmourerBlockEntity::getFlags, ArmourerBlockEntity::setFlags, DataSerializers.INT, ModPermissions.ARMOURER_SETTING),
 
-        SKIN_TYPE(DataSerializers.SKIN_TYPE, ArmourerBlockEntity::getSkinType, ArmourerBlockEntity::setSkinType, ModPermissions.ARMOURER_SETTING),
-        SKIN_PROPERTIES(DataSerializers.SKIN_PROPERTIES, ArmourerBlockEntity::getSkinProperties, ArmourerBlockEntity::setSkinProperties, ModPermissions.ARMOURER_SETTING),
+        SKIN_TYPE(ArmourerBlockEntity::getSkinType, ArmourerBlockEntity::setSkinType, DataSerializers.SKIN_TYPE, ModPermissions.ARMOURER_SETTING),
+        SKIN_PROPERTIES(ArmourerBlockEntity::getSkinProperties, ArmourerBlockEntity::setSkinProperties, DataSerializers.SKIN_PROPERTIES, ModPermissions.ARMOURER_SETTING),
 
-        TEXTURE_DESCRIPTOR(DataSerializers.PLAYER_TEXTURE, ArmourerBlockEntity::getTextureDescriptor, ArmourerBlockEntity::setTextureDescriptor, ModPermissions.ARMOURER_SETTING),
+        TEXTURE_DESCRIPTOR(ArmourerBlockEntity::getTextureDescriptor, ArmourerBlockEntity::setTextureDescriptor, DataSerializers.PLAYER_TEXTURE, ModPermissions.ARMOURER_SETTING),
 
-        ITEM_CLEAR(DataSerializers.COMPOUND_TAG, null, null, ModPermissions.ARMOURER_CLEAR),
-        ITEM_COPY(DataSerializers.COMPOUND_TAG, null, null, ModPermissions.ARMOURER_COPY),
-        ITEM_REPLACE(DataSerializers.COMPOUND_TAG, null, null, ModPermissions.ARMOURER_REPLACE),
+        ITEM_CLEAR(null, null, DataSerializers.COMPOUND_TAG, ModPermissions.ARMOURER_CLEAR),
+        ITEM_COPY(null, null, DataSerializers.COMPOUND_TAG, ModPermissions.ARMOURER_COPY),
+        ITEM_REPLACE(null, null, DataSerializers.COMPOUND_TAG, ModPermissions.ARMOURER_REPLACE),
 
-        ITEM_LOAD(DataSerializers.COMPOUND_TAG, null, null, ModPermissions.ARMOURER_LOAD),
-        ITEM_SAVE(DataSerializers.COMPOUND_TAG, null, null, ModPermissions.ARMOURER_SAVE);
+        ITEM_LOAD(null, null, DataSerializers.COMPOUND_TAG, ModPermissions.ARMOURER_LOAD),
+        ITEM_SAVE(null, null, DataSerializers.COMPOUND_TAG, ModPermissions.ARMOURER_SAVE);
 
-        public final BlockPermission permission;
-        private final DataAccessor<ArmourerBlockEntity, ?> dataAccessor;
+        private final BlockPermission permission;
+        private final DataAccessor<ArmourerBlockEntity, Object> accessor;
 
-        <T> Field(IEntitySerializer<T> dataSerializer, Function<ArmourerBlockEntity, T> supplier, BiConsumer<ArmourerBlockEntity, T> applier, BlockPermission permission) {
+        <T> Field(Function<ArmourerBlockEntity, T> supplier, BiConsumer<ArmourerBlockEntity, T> applier, IEntitySerializer<T> dataSerializer, BlockPermission permission) {
+            this.accessor = DataAccessor.erased(dataSerializer, supplier, applier);
             this.permission = permission;
-            this.dataAccessor = DataAccessor.of(dataSerializer, supplier, applier);
         }
 
-        public <T> T get(ArmourerBlockEntity entity) {
-            DataAccessor<ArmourerBlockEntity, T> dataAccessor = getDataAccessor();
-            return dataAccessor.get(entity);
-        }
-
-        public <T> void set(ArmourerBlockEntity entity, T value) {
-            DataAccessor<ArmourerBlockEntity, T> dataAccessor = getDataAccessor();
-            dataAccessor.set(entity, value);
-        }
-
-        public <T> DataAccessor<ArmourerBlockEntity, T> getDataAccessor() {
-            return ObjectUtils.unsafeCast(dataAccessor);
+        @Override
+        public DataAccessor<ArmourerBlockEntity, Object> getAccessor() {
+            return accessor;
         }
 
         public BlockPermission getPermission() {

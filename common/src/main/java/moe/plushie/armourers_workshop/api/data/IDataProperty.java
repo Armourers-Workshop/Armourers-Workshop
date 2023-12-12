@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.api.data;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 public interface IDataProperty<T> {
 
     void set(T value);
@@ -14,5 +16,14 @@ public interface IDataProperty<T> {
             return value;
         }
         return defaultValue;
+    }
+
+    default void addObserver(Consumer<T> observer) {
+    }
+
+    default void beginEditing() {
+    }
+
+    default void endEditing() {
     }
 }

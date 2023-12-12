@@ -7,12 +7,14 @@ import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.network.RequestSkinPacket;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinServerType;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModContext;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
+import moe.plushie.armourers_workshop.utils.SkinCipher;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
@@ -37,6 +39,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.CancellationException;
@@ -70,6 +73,7 @@ public class SkinLoader {
         taskManager.values().forEach(Session::shutdown);
         LocalDataSession local = new LocalDataSession();
         DownloadSession download = new DownloadSession();
+        SliceSession slice = new SliceSession();
         if (type == SkinServerType.CLIENT) {
             ProxySession proxy = new ProxySession();
             taskManager.put(DataDomain.LOCAL, local);
@@ -78,6 +82,7 @@ public class SkinLoader {
             taskManager.put(DataDomain.DEDICATED_SERVER, proxy);
             taskManager.put(DataDomain.GLOBAL_SERVER, proxy);
             taskManager.put(DataDomain.GLOBAL_SERVER_PREVIEW, download);
+            taskManager.put(DataDomain.SLICE_LOAD, slice);
         } else {
             taskManager.put(DataDomain.LOCAL, local);
             taskManager.put(DataDomain.DATABASE, local);
@@ -85,6 +90,7 @@ public class SkinLoader {
             taskManager.put(DataDomain.DEDICATED_SERVER, local);
             taskManager.put(DataDomain.GLOBAL_SERVER, download);
             taskManager.put(DataDomain.GLOBAL_SERVER_PREVIEW, download);
+            taskManager.put(DataDomain.SLICE_LOAD, slice);
         }
     }
 
@@ -125,7 +131,7 @@ public class SkinLoader {
 
     public void loadSkin(String identifier, @Nullable IResultHandler<Skin> handler) {
         Entry entry = getOrCreateEntry(identifier);
-        entry.notify(handler);
+        entry.listen(handler);
         resumeRequest(entry, Method.ASYNC);
     }
 
@@ -307,7 +313,7 @@ public class SkinLoader {
             handlers.forEach(handler -> handler.apply(get(), exception));
         }
 
-        public void notify(@Nullable IResultHandler<Skin> handler) {
+        public void listen(@Nullable IResultHandler<Skin> handler) {
             if (isCompleted()) {
                 if (handler != null) {
                     handler.apply(get(), exception);
@@ -390,10 +396,11 @@ public class SkinLoader {
 
     public static class Request {
 
-        public final String identifier;
-        public int level = 0;
-        public Method method = Method.ASYNC;
-        public Entry delegate;
+        private final String identifier;
+        private int level = 0;
+        private boolean isRunning = false;
+        private Method method = Method.ASYNC;
+        private Entry delegate;
 
         public Request(String identifier) {
             this.identifier = identifier;
@@ -472,7 +479,13 @@ public class SkinLoader {
         }
 
         protected void run(Request request) {
+            // this request is executed in another thread, so we must wait it complete.
+            if (request.isRunning) {
+                syncRequest(request);
+                return;
+            }
             ModLog.debug("'{}' => start load skin", request.identifier);
+            request.isRunning = true;
             try {
                 Skin skin = load(request);
                 request.accept(skin);
@@ -480,13 +493,27 @@ public class SkinLoader {
                 exception.printStackTrace();
                 request.abort(exception);
             }
+            request.isRunning = false;
         }
 
         protected ExecutorService buildThreadPool(String name, int size) {
             return ThreadUtils.newFixedThreadPool(size, name, Thread.MIN_PRIORITY);
         }
 
-        protected synchronized Request pollRequest() {
+        private void syncRequest(Request request) {
+            try {
+                ModLog.debug("'{}' => await load skin", request.identifier);
+                Semaphore semaphore = new Semaphore(0);
+                request.delegate.listen((skin, exception) -> semaphore.release());
+                semaphore.acquire();
+                ModLog.debug("'{}' => await load skin completed", request.identifier);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                ModLog.debug("'{}' => await load skin failed", request.identifier);
+            }
+        }
+
+        private synchronized Request pollRequest() {
             if (requests.isEmpty()) {
                 return null;
             }
@@ -497,7 +524,7 @@ public class SkinLoader {
             return null;
         }
 
-        protected synchronized Request getRequest(String identifier) {
+        private synchronized Request getRequest(String identifier) {
             return requests.computeIfAbsent(identifier, Request::new);
         }
     }
@@ -806,6 +833,65 @@ public class SkinLoader {
 
         private boolean isGlobalLibraryResource(String identifier) {
             return DataDomain.GLOBAL_SERVER.matches(identifier) || DataDomain.GLOBAL_SERVER_PREVIEW.matches(identifier);
+        }
+    }
+
+    public static class SliceSession extends Session {
+
+        public SliceSession() {
+            super("AW-SKIN-SL");
+        }
+
+        @Override
+        public Skin load(Request request) throws Exception {
+            String[] parts = SkinCipher.getInstance().decrypt(DataDomain.getPath(request.identifier));
+            if (parts.length != 2) {
+                throw new RuntimeException("invalid identifier format!");
+            }
+            String id = parts[0];
+            String keyPath = parts[1];
+            Skin skin = LOADER.loadSkin(id);
+            if (skin == null || !skin.getSettings().isEditable()) {
+                throw new RuntimeException("can't load skin " + id);
+            }
+            SkinPart skinPart = extractPart(keyPath, skin.getParts());
+            if (skinPart == null) {
+                throw new RuntimeException("can't load part " + keyPath + " in " + id);
+            }
+            Skin.Builder builder = new Skin.Builder(SkinTypes.ADVANCED);
+            builder.paintData(skin.getPaintData());
+            builder.version(skin.getVersion());
+            builder.parts(Collections.singleton(skinPart));
+            builder.settings(skin.getSettings().copy());
+            builder.properties(skin.getProperties().copy());
+            return builder.build();
+        }
+
+        SkinPart extractPart(String keyPath, List<SkinPart> parts) {
+            SkinPart part = null;
+            for (String key : keyPath.split("[.]")) {
+                part = findPart(key, parts);
+                if (part == null) {
+                    return null;
+                }
+                parts = part.getParts();
+            }
+            return part;
+        }
+
+        SkinPart findPart(String key, List<SkinPart> parts) {
+            for (SkinPart part : parts) {
+                if (key.equals(part.getName())) {
+                    return part;
+                }
+            }
+            int size = parts.size();
+            for (int i = 0; i < size; ++i) {
+                if (key.equals(String.valueOf(i))) {
+                    return parts.get(i);
+                }
+            }
+            return null;
         }
     }
 }
