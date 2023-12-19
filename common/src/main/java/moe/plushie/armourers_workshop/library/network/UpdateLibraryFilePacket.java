@@ -104,7 +104,7 @@ public class UpdateLibraryFilePacket extends CustomPacket {
         if (destination.startsWith(key) && source.startsWith(key)) {
             return true;
         }
-        return SkinLibraryManager.getServer().shouldModifierFile(player);
+        return SkinLibraryManager.getServer().shouldMaintenanceFile(player);
     }
 
     public enum Mode {

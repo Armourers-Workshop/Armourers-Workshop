@@ -29,7 +29,6 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
@@ -553,7 +552,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
     private boolean isAuthorized() {
         // op can manage the public folder.
         if (selectedLibrary == libraryManager.getPublicSkinLibrary()) {
-            return ModConfig.Common.allowLibraryRemoteManage && menu.getPlayer().hasPermissions(5);
+            return libraryManager.shouldMaintenanceFile(inventory.player);
         }
         return true;
     }

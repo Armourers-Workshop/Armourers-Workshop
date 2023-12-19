@@ -217,12 +217,12 @@ public class SkinLibrary implements ISkinLibrary {
         return domain.namespace();
     }
 
-    public String getRootPath() {
-        return rootPath;
-    }
-
     public void setRootPath(String rootPath) {
         this.rootPath = rootPath;
+    }
+
+    public String getRootPath() {
+        return rootPath;
     }
 
     public void markBaseDir() {

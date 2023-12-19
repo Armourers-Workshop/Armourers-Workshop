@@ -12,8 +12,10 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinFileHeader;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.library.data.SkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryFile;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
+import moe.plushie.armourers_workshop.library.data.SkinLibrarySetting;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.minecraft.network.FriendlyByteBuf;
@@ -29,13 +31,16 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
 
     private final ArrayList<SkinLibraryFile> publicFiles;
     private final ArrayList<SkinLibraryFile> privateFiles;
+    private SkinLibrarySetting setting;
 
-    public UpdateLibraryFilesPacket(ArrayList<SkinLibraryFile> publicFiles, ArrayList<SkinLibraryFile> privateFiles) {
+    public UpdateLibraryFilesPacket(ArrayList<SkinLibraryFile> publicFiles, ArrayList<SkinLibraryFile> privateFiles, SkinLibrarySetting setting) {
+        this.setting = setting;
         this.publicFiles = publicFiles;
         this.privateFiles = privateFiles;
     }
 
     public UpdateLibraryFilesPacket(FriendlyByteBuf buffer) {
+        this.setting = new SkinLibrarySetting(buffer.readNbt());
         this.publicFiles = new ArrayList<>();
         this.privateFiles = new ArrayList<>();
         for (SkinLibraryFile file : readCompressedBuffer(new ByteBufInputStream(buffer))) {
@@ -50,12 +55,14 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
     @Override
     public void encode(FriendlyByteBuf buffer) {
         int totalSize = publicFiles.size() + privateFiles.size();
+        buffer.writeNbt(setting.serializeNBT());
         writeCompressedBuffer(new ByteBufOutputStream(buffer), Iterables.concat(publicFiles, privateFiles), totalSize);
     }
 
     @Override
     public void accept(IClientPacketHandler packetHandler, Player player) {
         SkinLibraryManager.Client client = SkinLibraryManager.getClient();
+        client.setSetting(setting);
         client.getPublicSkinLibrary().reloadFiles(publicFiles);
         client.getPrivateSkinLibrary().reloadFiles(privateFiles);
     }

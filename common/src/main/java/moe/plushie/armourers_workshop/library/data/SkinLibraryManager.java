@@ -58,6 +58,10 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         return true;
     }
 
+    public boolean shouldMaintenanceFile(Player player) {
+        return true;
+    }
+
     @Override
     public void libraryDidReload(ISkinLibrary library) {
         listeners.forEach(listener -> listener.libraryDidReload(library));
@@ -75,6 +79,8 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         private final SkinLibrary localSkinLibrary;
         private final SkinLibrary publicSkinLibrary;
         private final SkinLibrary privateSkinLibrary;
+
+        private SkinLibrarySetting setting = SkinLibrarySetting.DEFAULT;
 
         public Client() {
             this.localSkinLibrary = new SkinLibrary(DataDomain.LOCAL, EnvironmentManager.getSkinLibraryDirectory());
@@ -99,24 +105,29 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
 
         @Override
         public boolean shouldDownloadFile(Player player) {
-            if (!ModPermissions.SKIN_LIBRARY_SKIN_DOWNLOAD.accept(player)) {
-                return false;
-            }
             if (!LocalDataService.isRunning()) {
-                return ModConfig.Common.allowDownloadingSkins;
+                if (shouldMaintenanceFile(player)) {
+                    return true;
+                }
+                return ModConfig.Common.allowDownloadingSkins && setting.allowsDownload();
             }
             return true;
         }
 
         @Override
         public boolean shouldUploadFile(Player player) {
-            if (!ModPermissions.SKIN_LIBRARY_SKIN_UPLOAD.accept(player)) {
-                return false;
-            }
             if (!LocalDataService.isRunning()) {
-                return ModConfig.Common.allowUploadingSkins;
+                if (shouldMaintenanceFile(player)) {
+                    return true;
+                }
+                return ModConfig.Common.allowUploadingSkins && setting.allowsUpload();
             }
             return true;
+        }
+
+        @Override
+        public boolean shouldMaintenanceFile(Player player) {
+            return ModConfig.Common.allowLibraryRemoteManage && setting.allowsMaintenance();
         }
 
         public SkinLibrary getLocalSkinLibrary() {
@@ -129,6 +140,14 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
 
         public SkinLibrary getPrivateSkinLibrary() {
             return privateSkinLibrary;
+        }
+
+        public void setSetting(SkinLibrarySetting setting) {
+            this.setting = setting;
+        }
+
+        public SkinLibrarySetting getSetting() {
+            return setting;
         }
     }
 
@@ -212,8 +231,9 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
             syncedPlayers.add(uuid);
             String key = Constants.PRIVATE + "/" + uuid;
             String name = player.getScoreboardName();
+            SkinLibrarySetting setting = new SkinLibrarySetting(player);
             ArrayList<SkinLibraryFile> privateFiles = this.privateFiles.getOrDefault(key, new ArrayList<>());
-            UpdateLibraryFilesPacket packet = new UpdateLibraryFilesPacket(publicFiles, privateFiles);
+            UpdateLibraryFilesPacket packet = new UpdateLibraryFilesPacket(publicFiles, privateFiles, setting);
             NetworkManager.sendTo(packet, player);
             ModLog.debug("syncing library files {}/{} to '{}'.", publicFiles.size(), privateFiles.size(), name);
         }
@@ -228,6 +248,9 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
                 return false;
             }
             if (EnvironmentManager.isDedicatedServer()) {
+                if (shouldMaintenanceFile(player)) {
+                    return true;
+                }
                 return ModConfig.Common.allowDownloadingSkins;
             }
             return true;
@@ -239,12 +262,16 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
                 return false;
             }
             if (EnvironmentManager.isDedicatedServer()) {
+                if (shouldMaintenanceFile(player)) {
+                    return true;
+                }
                 return ModConfig.Common.allowUploadingSkins;
             }
             return true;
         }
 
-        public boolean shouldModifierFile(Player player) {
+        @Override
+        public boolean shouldMaintenanceFile(Player player) {
             // super op can manage the public folder.
             return ModConfig.Common.allowLibraryRemoteManage && player.hasPermissions(5);
         }
