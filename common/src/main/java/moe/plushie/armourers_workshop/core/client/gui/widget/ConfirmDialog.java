@@ -7,7 +7,6 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UILabel;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -29,8 +28,8 @@ public class ConfirmDialog extends BaseDialog {
         super();
         this.messageLabel.setNumberOfLines(0);
         this.addSubview(messageLabel);
-        this.setConfirmText(new NSString(TranslateUtils.title("inventory.armourers_workshop.common.button.ok")));
-        this.setCancelText(new NSString(TranslateUtils.title("inventory.armourers_workshop.common.button.cancel")));
+        this.setConfirmText(NSString.localizedString("common.button.ok"));
+        this.setCancelText(NSString.localizedString("common.button.cancel"));
         this.setup();
     }
 

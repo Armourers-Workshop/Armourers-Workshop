@@ -29,6 +29,14 @@ public class NSString implements StringImpl {
         this.characters = characters;
     }
 
+    public static NSString localizedString(String key, Object... args) {
+        return StringImpl.localizedString("inventory", key, args);
+    }
+
+    public static NSString localizedTableString(String table, String key, Object... args) {
+        return StringImpl.localizedString(table, key, args);
+    }
+
     @Override
     public Component component() {
         if (value != null) {

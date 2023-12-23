@@ -11,12 +11,14 @@ import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV0;
 import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV2;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Size3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -28,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public class BedrockModelExporter {
 
@@ -106,10 +107,10 @@ public class BedrockModelExporter {
 
         builder.settings(settings);
         builder.properties(properties);
-        if (skinType instanceof ISkinEquipmentType) {
+        if (skinType instanceof ISkinEquipmentType || skinType == SkinTypes.ITEM) {
             settings.setItemTransforms(itemTransforms);
         }
-        builder.version(20);
+        builder.version(SkinSerializer.Versions.V20);
         return builder.build();
     }
 
@@ -145,7 +146,6 @@ public class BedrockModelExporter {
         Vector3f pivot = Vector3f.ZERO;
         Vector3f translate = Vector3f.ZERO;
         Vector3f rotation = Vector3f.ZERO;
-        Vector3f scale = Vector3f.ONE;
 
         if (bone != null) {
             pivot = convertToLocal(bone.getPivot());
@@ -162,7 +162,7 @@ public class BedrockModelExporter {
         SkinPart.Builder builder = new SkinPart.Builder(partType);
 
         builder.cubes(cubes);
-        builder.transform(SkinTransform.create(translate, rotation, scale, pivot));
+        builder.transform(SkinTransform.create(Vector3f.ZERO, rotation, Vector3f.ONE, pivot, translate));
 
         if (bone != null) {
             builder.name(bone.getName());
@@ -179,7 +179,6 @@ public class BedrockModelExporter {
         Vector3f pivot = convertToLocal(cube.getPivot());
         Vector3f translate = Vector3f.ZERO;
         Vector3f rotation = cube.getRotation();
-        Vector3f scale = Vector3f.ONE;
 
         Vector3f origin = convertToLocal(cube.getOrigin());
         Size3f size = cube.getSize();
@@ -201,7 +200,7 @@ public class BedrockModelExporter {
             skyBox = skyBox.separated();
         }
         Rectangle3f rect = new Rectangle3f(x, y, z, w, h, d).inflate(delta);
-        SkinTransform transform = SkinTransform.create(translate, rotation, scale, pivot);
+        SkinTransform transform = SkinTransform.create(Vector3f.ZERO, rotation, Vector3f.ONE, pivot, translate);
         return new SkinCubesV2.Box(rect, transform, skyBox);
     }
 
@@ -266,18 +265,15 @@ public class BedrockModelExporter {
             .put("Thigh_L", SkinPartTypes.BIPPED_LEFT_THIGH)
             .put("Thigh_R", SkinPartTypes.BIPPED_RIGHT_THIGH)
             .put("Skirt", SkinPartTypes.BIPPED_SKIRT)
-
             .put("Wing_L", SkinPartTypes.BIPPED_RIGHT_WING)
             .put("Wing_R", SkinPartTypes.BIPPED_LEFT_WING)
-            .put("Phalanx_L", SkinPartTypes.BIPPED_RIGHT_WING)
-            .put("Phalanx_R", SkinPartTypes.BIPPED_LEFT_WING)
-
+            .put("Phalanx_L", SkinPartTypes.BIPPED_RIGHT_PHALANX)
+            .put("Phalanx_R", SkinPartTypes.BIPPED_LEFT_PHALANX)
             .put("Torso", SkinPartTypes.BIPPED_TORSO)
             .put("Hand_L", SkinPartTypes.BIPPED_LEFT_HAND)
             .put("Hand_R", SkinPartTypes.BIPPED_RIGHT_HAND)
             .put("Leg_L", SkinPartTypes.BIPPED_LEFT_LEG)
             .put("Leg_R", SkinPartTypes.BIPPED_RIGHT_LEG)
-
             .build();
 
     private static final ImmutableMap<ISkinPartType, IVector3i> PART_OFFSETS = new ImmutableMap.Builder<ISkinPartType, IVector3i>()

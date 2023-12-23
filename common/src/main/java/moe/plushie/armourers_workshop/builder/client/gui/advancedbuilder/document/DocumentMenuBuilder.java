@@ -4,8 +4,6 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIMenuItem;
 import moe.plushie.armourers_workshop.core.client.gui.widget.TreeView;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +22,7 @@ public class DocumentMenuBuilder {
     }
 
     public Row add(int group, String key) {
-        NSString title = new NSString(getText("menu." + key));
+        NSString title = NSString.localizedString("advanced-skin-builder.menu." + key);
         UIMenuItem.Builder builder = UIMenuItem.of(title).group(group);
         Row row = new Row(builder, node, treeView);
         rows.add(row);
@@ -35,10 +33,6 @@ public class DocumentMenuBuilder {
         ArrayList<UIMenuItem> items = new ArrayList<>();
         rows.forEach(it -> items.add(it.builder.build()));
         return items;
-    }
-
-    private static Component getText(String key, Object... args) {
-        return TranslateUtils.title("inventory.armourers_workshop.advanced-skin-builder." + key, args);
     }
 
     public static class Row {

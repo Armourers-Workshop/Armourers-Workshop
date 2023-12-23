@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.library.client.gui.panels;
 
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSMutableString;
+import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIComboBox;
@@ -16,7 +17,6 @@ import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.impl.SearchColumnType;
 import moe.plushie.armourers_workshop.library.data.impl.SearchOrderType;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -39,7 +39,7 @@ public class SearchBoxLibraryPanel extends AbstractLibraryPanel implements UITex
     private SearchColumnType columnType = SearchColumnType.DATE_CREATED;
 
     public SearchBoxLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.searchBox", GlobalSkinLibraryWindow.Page::hasSearch);
+        super("skin-library-global.searchBox", GlobalSkinLibraryWindow.Page::hasSearch);
         this.setup();
     }
 
@@ -92,7 +92,7 @@ public class SearchBoxLibraryPanel extends AbstractLibraryPanel implements UITex
             } else {
                 title.append("↓ "); // down
             }
-            title.append(TranslateUtils.title("skin_search_column.armourers_workshop." + columnType.toString().toLowerCase()));
+            title.append(NSString.localizedTableString("skin_search_column", columnType.toString().toLowerCase()));
             UIComboItem item = new UIComboItem(title);
             if (columnType == this.columnType && orderType == this.orderType) {
                 selectedIndex = items.size();

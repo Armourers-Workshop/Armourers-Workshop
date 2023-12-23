@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.builder.data.properties.VectorProperty;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
+import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentSettings;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 
@@ -44,6 +45,9 @@ public class DocumentConnector {
         this.document = document;
     }
 
+    public void update(SkinDocumentSettings settings) {
+    }
+
     public void update(SkinProperties properties) {
         this.skinProperties.forEach(it -> it.accept(properties));
     }
@@ -52,7 +56,6 @@ public class DocumentConnector {
         this.node = node;
         this.nodeListeners.forEach(it -> it.accept(node));
     }
-
 
     public void addListener(Consumer<SkinDocumentNode> consumer) {
         nodeListeners.add(consumer);

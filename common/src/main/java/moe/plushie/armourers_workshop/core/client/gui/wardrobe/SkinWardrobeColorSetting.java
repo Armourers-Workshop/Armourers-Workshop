@@ -42,7 +42,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
     private final SkinWardrobe wardrobe;
 
     public SkinWardrobeColorSetting(SkinWardrobe wardrobe) {
-        super("inventory.armourers_workshop.wardrobe.colour_settings");
+        super("wardrobe.colour_settings");
         this.wardrobe = wardrobe;
         this.setup();
     }

@@ -40,7 +40,7 @@ public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDel
     private boolean joining = false;
 
     public JoinLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.join", GlobalSkinLibraryWindow.Page.LIBRARY_JOIN::equals);
+        super("skin-library-global.join", GlobalSkinLibraryWindow.Page.LIBRARY_JOIN::equals);
         this.remake();
         this.setup(bounds());
     }
@@ -65,13 +65,13 @@ public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDel
         float buttonBottom = frame.getMaxY() - 16;
 
         buttonPrevious.setFrame(new CGRect(frame.getMinX(), buttonBottom, 16, 16));
-        buttonPrevious.setTooltip(getCommonDisplayText("button.previousPage"));
+        buttonPrevious.setTooltip(NSString.localizedString("common.button.previousPage"));
         buttonPrevious.setImage(ModTextures.iconImage(208, 80, 16, 16, ModTextures.BUTTONS), UIControl.State.ALL);
         buttonPrevious.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, JoinLibraryPanel::previous);
         contentView.addSubview(buttonPrevious);
 
         buttonNext.setFrame(new CGRect(frame.getMaxX() - 16, buttonBottom, 16, 16));
-        buttonNext.setTooltip(getCommonDisplayText("button.nextPage"));
+        buttonNext.setTooltip(NSString.localizedString("common.button.nextPage"));
         buttonNext.setImage(ModTextures.iconImage(208, 96, 16, 16, ModTextures.BUTTONS), UIControl.State.ALL);
         buttonNext.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, JoinLibraryPanel::next);
         contentView.addSubview(buttonNext);

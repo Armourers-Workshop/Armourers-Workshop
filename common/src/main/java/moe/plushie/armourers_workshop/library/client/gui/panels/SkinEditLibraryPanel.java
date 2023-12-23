@@ -33,7 +33,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
     private GlobalSkinLibraryWindow.Page returnPage;
 
     public SkinEditLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.edit", GlobalSkinLibraryWindow.Page.SKIN_EDIT::equals);
+        super("skin-library-global.edit", GlobalSkinLibraryWindow.Page.SKIN_EDIT::equals);
         this.setup();
     }
 

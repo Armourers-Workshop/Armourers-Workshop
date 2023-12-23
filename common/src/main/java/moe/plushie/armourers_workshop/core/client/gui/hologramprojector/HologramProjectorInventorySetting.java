@@ -15,7 +15,7 @@ public class HologramProjectorInventorySetting extends HologramProjectorBaseSett
     private final UIView slotView = new UIView(new CGRect(0, 0, 18, 18));
 
     public HologramProjectorInventorySetting(HologramProjectorBlockEntity entity) {
-        super("inventory.armourers_workshop.hologram-projector.inventory");
+        super("hologram-projector.inventory");
         this.setFrame(new CGRect(0, 0, 176, 40));
         this.slotView.setContents(UIImage.of(ModTextures.COMMON).uv(238, 0).build());
         this.addSubview(slotView);

@@ -8,6 +8,9 @@ public interface SkinDocumentListener {
     default void documentDidChangeType(SkinDocumentType type) {
     }
 
+    default void documentDidChangeSettings(CompoundTag tag) {
+    }
+
     default void documentDidChangeProperties(SkinProperties properties) {
     }
 

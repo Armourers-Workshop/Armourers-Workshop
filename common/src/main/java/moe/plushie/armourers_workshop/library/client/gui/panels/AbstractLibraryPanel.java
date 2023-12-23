@@ -21,9 +21,11 @@ import java.util.function.Predicate;
 @Environment(EnvType.CLIENT)
 public abstract class AbstractLibraryPanel extends UIView {
 
-    public String baseKey;
     public final Predicate<GlobalSkinLibraryWindow.Page> predicate;
+
     protected GlobalSkinLibraryWindow.Router router;
+
+    private final String baseKey;
 
     public AbstractLibraryPanel(String titleKey, Predicate<GlobalSkinLibraryWindow.Page> predicate) {
         super(new CGRect(0, 0, 320, 240));
@@ -46,16 +48,8 @@ public abstract class AbstractLibraryPanel extends UIView {
         return subviews().stream().anyMatch(subview -> subview.pointInside(convertPointToView(point, subview), event));
     }
 
-    protected NSString getDisplayText(String key) {
-        return new NSString(TranslateUtils.title(baseKey + "." + key));
-    }
-
     protected NSString getDisplayText(String key, Object... objects) {
-        return new NSString(TranslateUtils.title(baseKey + "." + key, objects));
-    }
-
-    protected NSString getCommonDisplayText(String key) {
-        return new NSString(TranslateUtils.title("inventory.armourers_workshop.common" + "." + key));
+        return NSString.localizedString(baseKey + "." + key, objects);
     }
 
     protected NSString getURLText(String url) {

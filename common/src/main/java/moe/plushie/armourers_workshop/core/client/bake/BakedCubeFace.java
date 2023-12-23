@@ -22,6 +22,9 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
+import moe.plushie.armourers_workshop.utils.TrigUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenRay;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -186,7 +189,10 @@ public class BakedCubeFace {
     }
 
     private void resolveTransform(PoseStack poseStack) {
-        poseStack.pushPose();
+        IVector3f translate = transform.getTranslate();
+        if (translate != Vector3f.ZERO) {
+            poseStack.translate(translate.getX(), translate.getY(), translate.getZ());
+        }
         IVector3f rotation = transform.getRotation();
         if (rotation != Vector3f.ZERO) {
             IVector3f pivot = transform.getPivot();
@@ -200,13 +206,14 @@ public class BakedCubeFace {
                 poseStack.translate(-pivot.getX(), -pivot.getY(), -pivot.getZ());
             }
         }
-        IVector3f translate = transform.getTranslate();
-        if (translate != Vector3f.ZERO) {
-            poseStack.translate(translate.getX(), translate.getY(), translate.getZ());
-        }
         IVector3f scale = transform.getScale();
         if (scale != Vector3f.ONE) {
-            poseStack.scale(scale.getX(), scale.getY(), scale.getZ());
+            poseStack.mulPoseMatrix(OpenMatrix4f.createScaleMatrix(scale.getX(), scale.getY(), scale.getZ()));
+            poseStack.mulNormalMatrix(OpenMatrix3f.createScaleMatrix(scale.getX(), scale.getY(), scale.getZ()));
+        }
+        IVector3f offset = transform.getOffset();
+        if (offset != Vector3f.ZERO) {
+            poseStack.translate(offset.getX(), offset.getY(), offset.getZ());
         }
     }
 
@@ -232,7 +239,7 @@ public class BakedCubeFace {
         return edg;
     }
 
-        // avoid out-of-bounds behavior caused by floating point precision.
+    // avoid out-of-bounds behavior caused by floating point precision.
     private float roundDown(float edg) {
         if (edg < 0) {
             return edg + 0.002f;

@@ -37,17 +37,17 @@ public class ArmourerClearDialog extends ConfirmDialog {
         float bottom = confirmButton.frame().getY() - 4;
 
         blockCheckBox.setFrame(new CGRect(left, bottom - 22, width, 9));
-        blockCheckBox.setTitle(getText("clearBlocks"));
+        blockCheckBox.setTitle(NSString.localizedString("armourer.dialog.clear.clearBlocks"));
         blockCheckBox.setSelected(true);
         addSubview(blockCheckBox);
 
         paintCheckBox.setFrame(new CGRect(left, bottom - 11, width, 9));
-        paintCheckBox.setTitle(getText("clearPaint"));
+        paintCheckBox.setTitle(NSString.localizedString("armourer.dialog.clear.clearPaint"));
         paintCheckBox.setSelected(true);
         addSubview(paintCheckBox);
 
         markersCheckBox.setFrame(new CGRect(left, bottom - 33, width, 9));
-        markersCheckBox.setTitle(getText("clearMarkers"));
+        markersCheckBox.setTitle(NSString.localizedString("armourer.dialog.clear.clearMarkers"));
         markersCheckBox.setSelected(true);
         addSubview(markersCheckBox);
 
@@ -88,9 +88,5 @@ public class ArmourerClearDialog extends ConfirmDialog {
             items.add(new UIComboItem(title));
         }
         return items;
-    }
-
-    private NSString getText(String key) {
-        return new NSString(TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.clear" + "." + key));
     }
 }

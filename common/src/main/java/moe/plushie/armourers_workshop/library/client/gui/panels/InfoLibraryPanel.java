@@ -28,7 +28,7 @@ public class InfoLibraryPanel extends AbstractLibraryPanel implements UILabelDel
     private String failMessage = null;
 
     public InfoLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.panel.info", GlobalSkinLibraryWindow.Page.LIBRARY_INFO::equals);
+        super("skin-library-global.panel.info", GlobalSkinLibraryWindow.Page.LIBRARY_INFO::equals);
         this.setup();
     }
 

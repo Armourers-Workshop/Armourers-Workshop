@@ -9,6 +9,8 @@ import net.minecraft.core.Position;
 @SuppressWarnings("unused")
 public class Vector3f implements IVector3f, Position {
 
+    public static final int BYTES = Float.BYTES * 3;
+
     public static Vector3f ZERO = new Vector3f(0.0F, 0.0F, 0.0F);
     public static Vector3f ONE = new Vector3f(1.0f, 1.0F, 1.0F);
 

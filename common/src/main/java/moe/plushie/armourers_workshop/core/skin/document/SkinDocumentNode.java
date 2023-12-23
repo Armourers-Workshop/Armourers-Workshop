@@ -26,10 +26,10 @@ public class SkinDocumentNode {
     private String name;
     private SkinDocumentNode parent;
     private SkinDocumentListener listener;
-    
+
     private boolean isEnabled = true;
     private boolean isMirror = false;
-    
+
     private final String id;
     private final ArrayList<SkinDocumentNode> children = new ArrayList<>();
 
@@ -212,7 +212,7 @@ public class SkinDocumentNode {
             listener.documentDidUpdateNode(this, tag);
         }
     }
-    
+
     public boolean isEnabled() {
         return isEnabled;
     }

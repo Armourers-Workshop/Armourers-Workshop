@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-public class SkinningTableMenu extends AbstractBlockContainerMenu {
+public class SkinningTableMenu extends AbstractBlockMenu {
 
     private final Container craftingInventory = new SimpleContainer(2);
     private final Container craftingResultInventory = new SimpleContainer(1);

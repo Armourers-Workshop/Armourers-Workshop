@@ -13,6 +13,8 @@ import net.minecraft.world.entity.Pose;
 @Environment(EnvType.CLIENT)
 public class CameraEntity extends SeatEntity {
 
+    public float fov = 0;
+
     private CameraType cameraType;
     private final Minecraft minecraft = Minecraft.getInstance();
 

@@ -20,6 +20,7 @@ import net.minecraft.core.Direction;
 
 import java.util.BitSet;
 import java.util.EnumMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import manifold.ext.rt.api.auto;
 
@@ -29,6 +30,7 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
     private SkinTransform transform = SkinTransform.IDENTITY;
 
     protected final BitSet flags = new BitSet();
+    protected final AtomicInteger index = new AtomicInteger(0);
     protected final EnumMap<Direction, Vector2f> startUVs = new EnumMap<>(Direction.class);
     protected final EnumMap<Direction, Vector2f> endUVs = new EnumMap<>(Direction.class);
     protected final EnumMap<Direction, ITextureKey> textureKeys = new EnumMap<>(Direction.class);
@@ -43,19 +45,20 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
     }
 
     public static int calcStride(int usedBytes, int size) {
-        // origin(12B)/size(12B) + translate(12B)/rotation(12B)/scale(12B)/pivot(12B) + (face flag + texture ref) * faceCount;
-        return 72 + (1 + usedBytes * 2) * size;
+        // rectangle(24B) + transform(64b) + (face flag + texture ref) * faceCount;
+        return Rectangle3f.BYTES + SkinTransform.BYTES + (1 + usedBytes * 2) * size;
     }
 
     @Override
     public Rectangle3f getShape() {
         if (setBit(0)) {
-            float x = getFloat(0);
-            float y = getFloat(4);
-            float z = getFloat(8);
-            float width = getFloat(12);
-            float height = getFloat(16);
-            float depth = getFloat(20);
+            index.set(0);
+            float x = getFloat(index.getAndAdd(4));
+            float y = getFloat(index.getAndAdd(4));
+            float z = getFloat(index.getAndAdd(4));
+            float width = getFloat(index.getAndAdd(4));
+            float height = getFloat(index.getAndAdd(4));
+            float depth = getFloat(index.getAndAdd(4));
             shape = new Rectangle3f(x, y, z, width, height, depth);
         }
         return shape;
@@ -64,11 +67,14 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
     @Override
     public SkinTransform getTransform() {
         if (setBit(1)) {
-            Vector3f translate = getVector3f(24);
-            Vector3f rotation = getVector3f(36);
-            Vector3f scale = getVector3f(48);
-            Vector3f pivot = getVector3f(60);
-            transform = SkinTransform.create(translate, rotation, scale, pivot);
+            index.set(24);
+            int flags = getInt(index.getAndAdd(4));
+            Vector3f translate = getVector3f(index.getAndAdd(12));
+            Vector3f rotation = getVector3f(index.getAndAdd(12));
+            Vector3f scale = getVector3f(index.getAndAdd(12));
+            Vector3f vector = getVector3f(index.getAndAdd(12));
+            Vector3f pivot = getVector3f(index.getAndAdd(12));
+            transform = SkinTransform.create(translate, rotation, scale, pivot, vector);
         }
         return transform;
     }

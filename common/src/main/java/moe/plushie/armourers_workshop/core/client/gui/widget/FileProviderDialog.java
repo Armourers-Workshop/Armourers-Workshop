@@ -3,13 +3,20 @@ package moe.plushie.armourers_workshop.core.client.gui.widget;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
+import com.apple.library.foundation.NSTextAlignment;
+import com.apple.library.uikit.UIButton;
+import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UIImage;
+import com.apple.library.uikit.UIImageView;
+import com.apple.library.uikit.UILabel;
+import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.minecraft.network.chat.Component;
+import net.minecraft.Util;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,8 +38,8 @@ public class FileProviderDialog extends ConfirmDialog {
         this.rootPath = rootPath;
         this.extension = extension;
         this.setFrame(new CGRect(0, 0, 240, 200));
-        this.setTitle(new NSString(getDisplayText("title")));
-        this.setMessage(new NSString(getDisplayText("message", extension)));
+        this.setTitle(NSString.localizedString("skin-library.dialog.fileProvider.title"));
+        this.setMessage(NSString.localizedString("skin-library.dialog.fileProvider.message", extension));
         this.setup(bounds());
     }
 
@@ -46,10 +53,41 @@ public class FileProviderDialog extends ConfirmDialog {
         fileList.addTarget(this, UIControl.Event.VALUE_CHANGED, FileProviderDialog::selectFile);
         addSubview(fileList);
 
-        confirmButton.setTooltip(new NSString(getDisplayText("tooltip", extension)), UIControl.State.DISABLED);
+        confirmButton.setTooltip(NSString.localizedString("skin-library.dialog.fileProvider.tooltip", extension), UIControl.State.DISABLED);
         confirmButton.setEnabled(false);
 
         selectPath("");
+    }
+
+    private void setupEmptyView() {
+        CGRect rect = fileList.bounds();
+        UIView emptyView = new UIView(fileList.frame());
+        emptyView.setAutoresizingMask(fileList.autoresizingMask());
+
+        UIImageView bg1 = new UIImageView(rect);
+        bg1.setImage(UIImage.of(ModTextures.LIST).fixed(11, 11).clip(1, 1, 1, 1).build());
+        bg1.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
+        emptyView.addSubview(bg1);
+
+        float top = (rect.height - 50) / 2;
+        UILabel titleView = new UILabel(new CGRect(10, top, rect.width - 20, 30));
+        titleView.setText(NSString.localizedString("skin-library.dialog.fileProvider.emptyFolder", extension, rootPath.getName()));
+        titleView.setTextColor(UIColor.GRAY);
+        titleView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
+        titleView.setTextHorizontalAlignment(NSTextAlignment.Horizontal.CENTER);
+        titleView.setTextVerticalAlignment(NSTextAlignment.Vertical.TOP);
+        titleView.setNumberOfLines(0);
+        emptyView.addSubview(titleView);
+
+        UIButton openButton = new UIButton(new CGRect((rect.width - 100) / 2, top + 30, 100, 20));
+        openButton.setTitle(NSString.localizedString("skin-library.dialog.fileProvider.openFolder"), UIControl.State.ALL);
+        openButton.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
+        openButton.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
+        openButton.setAutoresizingMask(AutoresizingMask.flexibleTopMargin | AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleRightMargin);
+        openButton.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, FileProviderDialog::openFolder);
+        emptyView.addSubview(openButton);
+
+        addSubview(emptyView);
     }
 
     private void selectFile(UIControl control) {
@@ -74,6 +112,13 @@ public class FileProviderDialog extends ConfirmDialog {
             items.add(0, new FileItem("..", newSelectedPath + "/..", true));
         }
         fileList.reloadData(new ArrayList<>(items));
+        if (items.isEmpty()) {
+            setupEmptyView();
+        }
+    }
+
+    private void openFolder(UIControl sender) {
+        Util.getPlatform().openFile(rootPath);
     }
 
     public File getSelectedFile() {
@@ -81,10 +126,6 @@ public class FileProviderDialog extends ConfirmDialog {
             return null;
         }
         return new File(rootPath, selectedFile.getPath());
-    }
-
-    private Component getDisplayText(String key, Object... args) {
-        return TranslateUtils.title("inventory.armourers_workshop.skin-library.dialog.fileProvider." + key, args);
     }
 
     private ArrayList<FileItem> getSkinFiles(File directory, boolean recursive) {

@@ -22,7 +22,7 @@ public class HologramProjectorAngleSetting extends HologramProjectorBaseSetting 
     private final UpdateHologramProjectorPacket.Field field = UpdateHologramProjectorPacket.Field.ANGLE;
 
     public HologramProjectorAngleSetting(HologramProjectorBlockEntity entity) {
-        super("inventory.armourers_workshop.hologram-projector.angle");
+        super("hologram-projector.angle");
         this.entity = entity;
         this.setFrame(new CGRect(0, 0, 200, 82));
         this.setup();

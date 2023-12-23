@@ -42,7 +42,7 @@ import java.util.Collection;
  * palette data:          | length | PALE | flag | opt(VB)/reserved(VB) |< paint type(1B)/used bytes(1B) >[ palette entry(VB) ]|
  * chunk flag:            1 encrypt, 2 gzip, 3 encrypt+gzip
  * cube entry:            x(1B)/y(1B)/z(1B)
- *                        origin(12B)/size(12B), translate(12B)/rotation(12B)/scale(12B)/pivot(12B)
+ *                        origin(12B)/size(12B), translate(12B)/rotation(12B)/scale(12B)/pivot(12B)/vector(12B)
  * cube face entry:       color index(VB)
  *                        first: u(VB)/v(VB), second: s(VB)/t(VB)
  * palette entry:         RRGGBB/AARRGGBB

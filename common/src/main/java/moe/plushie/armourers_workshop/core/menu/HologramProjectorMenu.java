@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.menu;
 
 import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
+import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -9,7 +10,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-public class HologramProjectorMenu extends AbstractBlockContainerMenu {
+public class HologramProjectorMenu extends AbstractBlockEntityMenu<HologramProjectorBlockEntity> {
 
     private final Inventory playerInventory;
     private final Container inventory;
@@ -18,7 +19,7 @@ public class HologramProjectorMenu extends AbstractBlockContainerMenu {
     public HologramProjectorMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess worldPos) {
         super(menuType, block, containerId, worldPos);
         this.playerInventory = playerInventory;
-        this.inventory = getBlockInventory();
+        this.inventory = blockEntity.getInventory();
         this.reload(0, 0, 240, 240);
     }
 

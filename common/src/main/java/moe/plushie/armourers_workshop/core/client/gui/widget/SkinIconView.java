@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -51,8 +52,8 @@ public class SkinIconView extends UIControl {
         auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         poseStack.pushPose();
         poseStack.translate(tx + tw / 2f, ty + th / 2f, 200);
-        // we need do a vertical mirror, but normal matrix no needs.
         poseStack.mulPoseMatrix(OpenMatrix4f.createScaleMatrix(1, -1, 1));
+        poseStack.mulNormalMatrix(OpenMatrix3f.createScaleMatrix(1, -1, 1));
         poseStack.mulPose(Vector3f.XP.rotationDegrees(30));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(135));
         poseStack.scale(0.625f, 0.625f, 0.625f);

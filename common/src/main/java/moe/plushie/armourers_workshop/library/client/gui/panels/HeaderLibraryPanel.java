@@ -40,7 +40,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
     private PlayerTextureDescriptor playerTexture;
 
     public HeaderLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.header", p -> true);
+        super("skin-library-global.header", p -> true);
         this.betaCheckUpdate();
     }
 

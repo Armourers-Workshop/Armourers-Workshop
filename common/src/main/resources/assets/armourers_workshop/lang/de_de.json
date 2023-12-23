@@ -361,12 +361,12 @@
   "sounds.armourers_workshop.burn": "Nachbelichten-Werkzeug",
   "sounds.armourers_workshop.dodge": "Aufhellen-Werkzeug",
   "sounds.armourers_workshop.picker": "Pipette",
-  "tooloption.armourers_workshop.changeBrightness": "Helligkeit ändern",
-  "tooloption.armourers_workshop.changeHue": "Farbton ändern",
-  "tooloption.armourers_workshop.changePaintType": "Farbtyp ändern",
-  "tooloption.armourers_workshop.changeSaturation": "Sättigung ändern",
-  "tooloption.armourers_workshop.effectRadius": "Effekt Radius",
-  "tooloption.armourers_workshop.fullBlockMode": "ganze Würfel anstreichen",
-  "tooloption.armourers_workshop.intensity": "Intensität",
-  "tooloption.armourers_workshop.planeRestrict": "Einschränkungsbereich"
+  "inventory.armourers_workshop.toolOptions.changeBrightness": "Helligkeit ändern",
+  "inventory.armourers_workshop.toolOptions.changeHue": "Farbton ändern",
+  "inventory.armourers_workshop.toolOptions.changePaintType": "Farbtyp ändern",
+  "inventory.armourers_workshop.toolOptions.changeSaturation": "Sättigung ändern",
+  "inventory.armourers_workshop.toolOptions.effectRadius": "Effekt Radius",
+  "inventory.armourers_workshop.toolOptions.fullBlockMode": "ganze Würfel anstreichen",
+  "inventory.armourers_workshop.toolOptions.intensity": "Intensität",
+  "inventory.armourers_workshop.toolOptions.planeRestrict": "Einschränkungsbereich"
 }

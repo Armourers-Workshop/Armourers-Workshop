@@ -13,7 +13,7 @@ public class SkinWardrobeInventorySetting extends SkinWardrobeBaseSetting {
     private final SkinWardrobeMenu container;
 
     public SkinWardrobeInventorySetting(SkinWardrobeMenu container) {
-        super("inventory.armourers_workshop.wardrobe.skins");
+        super("wardrobe.skins");
         this.container = container;
     }
 

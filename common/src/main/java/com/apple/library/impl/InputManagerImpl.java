@@ -8,10 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.function.BiPredicate;
-
 @Environment(EnvType.CLIENT)
-public class KeyboardManagerImpl {
+public class InputManagerImpl {
 
     public static boolean hasControlDown() {
         return Screen.hasControlDown();
@@ -106,16 +104,6 @@ public class KeyboardManagerImpl {
 
     public static void setClipboard(String string) {
         keyboardHandler().setClipboard(string);
-    }
-
-    public static BiPredicate<Integer, Integer> getKeyHandler(String keyName) {
-        InputConstants.Key key = InputConstants.getKey(keyName);
-        return (i, j) -> {
-            if (i == InputConstants.UNKNOWN.getValue()) {
-                return key.getType() == InputConstants.Type.SCANCODE && key.getValue() == j;
-            }
-            return key.getType() == InputConstants.Type.KEYSYM && key.getValue() == i;
-        };
     }
 
     private static KeyboardHandler keyboardHandler() {

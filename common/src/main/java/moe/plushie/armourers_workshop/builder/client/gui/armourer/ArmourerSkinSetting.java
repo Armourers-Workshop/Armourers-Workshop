@@ -43,7 +43,7 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
     protected ArmourerBaseSkinPanel screen;
 
     public ArmourerSkinSetting(ArmourerMenu container) {
-        super("inventory.armourers_workshop.armourer.skinSettings");
+        super("armourer.skinSettings");
         this.blockEntity = container.getBlockEntity();
     }
 

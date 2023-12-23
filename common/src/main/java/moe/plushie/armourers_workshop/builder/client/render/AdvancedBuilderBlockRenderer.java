@@ -4,7 +4,6 @@ import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideDataProvider;
-import moe.plushie.armourers_workshop.api.client.guide.IGuideRenderer;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedBuilderBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRendererManager;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
@@ -17,17 +16,16 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -80,14 +78,15 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
 
         poseStack.scale(-MathUtils.SCALE, -MathUtils.SCALE, MathUtils.SCALE);
 
-        IGuideRenderer guideRenderer = rendererManager.getRenderer(SkinPartTypes.BIPPED_HEAD);
-        if (guideRenderer != null) {
-            poseStack.pushPose();
-//            poseStack.translate(0, -rect2.getMinY(), 0);
-            poseStack.scale(16, 16, 16);
-            guideRenderer.render(poseStack, renderData, 0xf000f0, OverlayTexture.NO_OVERLAY, buffers);
-            poseStack.popPose();
-        }
+        ShapeTesselator.vector(Vector3f.ZERO, 16, poseStack, buffers);
+//        IGuideRenderer guideRenderer = rendererManager.getRenderer(SkinPartTypes.BIPPED_HEAD);
+//        if (guideRenderer != null) {
+//            poseStack.pushPose();
+////            poseStack.translate(0, -rect2.getMinY(), 0);
+//            poseStack.scale(16, 16, 16);
+//            guideRenderer.render(poseStack, renderData, 0xf000f0, OverlayTexture.NO_OVERLAY, buffers);
+//            poseStack.popPose();
+//        }
 
         renderNode(entity.getDocument().getRoot(), 0, poseStack, buffers, light, overlay);
 
@@ -120,18 +119,25 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
         }
         poseStack.pushPose();
 
-        Vector3f t = node.getLocation();
-        Vector3f r = node.getRotation();
-        Vector3f s = node.getScale();
+        Vector3f translate = node.getLocation();
+        Vector3f rotation = node.getRotation();
+        Vector3f scale = node.getScale();
 
-        poseStack.translate(t.getX() * 16, t.getY() * 16, t.getZ() * 16);
-        poseStack.mulPose(Vector3f.XP.rotationDegrees(r.getX()));
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(r.getY()));
-        poseStack.mulPose(Vector3f.ZP.rotationDegrees(r.getZ()));
-        poseStack.scale(s.getX(), s.getY(), s.getZ());
-
+        if (translate != Vector3f.ZERO) {
+            poseStack.translate(translate.getX() * 16, translate.getY() * 16, translate.getZ() * 16);
+        }
+        if (rotation != Vector3f.ZERO) {
+            poseStack.mulPose(Vector3f.ZP.rotationDegrees(rotation.getZ()));
+            poseStack.mulPose(Vector3f.YP.rotationDegrees(rotation.getY()));
+            poseStack.mulPose(Vector3f.XP.rotationDegrees(rotation.getX()));
+        }
+        if (scale != Vector3f.ONE) {
+            poseStack.mulPoseMatrix(OpenMatrix4f.createScaleMatrix(scale.getX(), scale.getY(), scale.getZ()));
+            poseStack.mulNormalMatrix(OpenMatrix3f.createScaleMatrix(scale.getX(), scale.getY(), scale.getZ()));
+        }
         if (node.isMirror()) {
             poseStack.mulPoseMatrix(OpenMatrix4f.createScaleMatrix(-1, 1, 1));
+            poseStack.mulNormalMatrix(OpenMatrix3f.createScaleMatrix(-1, 1, 1));
         }
 
         SkinDescriptor descriptor = node.getSkin();

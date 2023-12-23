@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -52,6 +53,7 @@ public class PoseStackWrapper implements IPoseStack {
         stack.mulNormalMatrix(matrix);
     }
 
+    @Override
     public void multiply(IMatrix4f matrix) {
         stack.mulPoseMatrix(matrix);
     }

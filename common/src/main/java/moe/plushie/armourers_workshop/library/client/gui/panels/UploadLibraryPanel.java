@@ -47,7 +47,7 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
     private final GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
 
     public UploadLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.upload", GlobalSkinLibraryWindow.Page.SKIN_UPLOAD::equals);
+        super("skin-library-global.upload", GlobalSkinLibraryWindow.Page.SKIN_UPLOAD::equals);
         this.setup();
     }
 

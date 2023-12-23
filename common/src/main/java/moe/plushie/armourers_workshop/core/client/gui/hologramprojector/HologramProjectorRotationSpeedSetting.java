@@ -22,7 +22,7 @@ public class HologramProjectorRotationSpeedSetting extends HologramProjectorBase
     private final UpdateHologramProjectorPacket.Field field = UpdateHologramProjectorPacket.Field.ROTATION_SPEED;
 
     public HologramProjectorRotationSpeedSetting(HologramProjectorBlockEntity entity) {
-        super("inventory.armourers_workshop.hologram-projector.rotationSpeed");
+        super("hologram-projector.rotationSpeed");
         this.entity = entity;
         this.setFrame(new CGRect(0, 0, 200, 82));
         this.setup();

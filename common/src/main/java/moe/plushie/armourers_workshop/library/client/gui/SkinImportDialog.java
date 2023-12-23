@@ -204,7 +204,7 @@ public class SkinImportDialog extends BaseDialog {
         float top = 0;
         for (ISkinProperty<Boolean> p : bb) {
             UICheckBox checkBox = new UICheckBox(new CGRect(0, top, width, 10));
-            checkBox.setTitle(new NSString(TranslateUtils.title("inventory.armourers_workshop.armourer.skinSettings." + p.getKey())));
+            checkBox.setTitle(NSString.localizedString("armourer.skinSettings." + p.getKey()));
             checkBox.setSelected(p.getDefaultValue());
             checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, c) -> {
                 UICheckBox checkBox1 = ObjectUtils.unsafeCast(c);

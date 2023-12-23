@@ -65,7 +65,7 @@ public class DocumentTypeListView extends NewComboBox {
     public static class AdvancedTypeSection extends NewComboItem {
 
         public AdvancedTypeSection(String category) {
-            super(new NSString(TranslateUtils.title("documentType.armourers_workshop.category." + category)));
+            super(NSString.localizedTableString("documentType", "category." + category));
         }
 
         public AdvancedTypeItem add(SkinDocumentType category) {

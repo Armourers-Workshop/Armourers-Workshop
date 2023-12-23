@@ -24,7 +24,7 @@ public class SkinWardrobeLocationSetting extends SkinWardrobeBaseSetting {
     private final Entity entity;
 
     public SkinWardrobeLocationSetting(SkinWardrobe wardrobe, Entity entity) {
-        super("inventory.armourers_workshop.wardrobe.man_offsets");
+        super("wardrobe.man_offsets");
         this.wardrobe = wardrobe;
         this.entity = entity;
         this.setup();

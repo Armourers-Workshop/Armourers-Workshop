@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.gui.wardrobe;
 
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
-import com.apple.library.impl.KeyboardManagerImpl;
+import com.apple.library.impl.InputManagerImpl;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
@@ -46,7 +46,7 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
     private static ArrayList<HashMap<EntityPartView.Part, Rotations>> RANDOMLY_ROTATIONS;
 
     public SkinWardrobeRotationSetting(SkinWardrobe wardrobe, Entity entity) {
-        super("inventory.armourers_workshop.wardrobe.man_rotations");
+        super("wardrobe.man_rotations");
         this.wardrobe = wardrobe;
         this.entity = entity;
         this.setup();
@@ -135,7 +135,7 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
     }
 
     private void resetRotation(UIControl button) {
-        boolean isCtrl = KeyboardManagerImpl.hasControlDown();
+        boolean isCtrl = InputManagerImpl.hasControlDown();
         for (EntityPartView.Part part : EntityPartView.Part.values()) {
             if (isCtrl) {
                 part.setValue(entity, new Rotations(0, 0, 0));
@@ -150,7 +150,7 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
     private HashMap<EntityPartView.Part, Rotations> getRandomParts() {
         Random random = new Random();
         // we get rotations from pre-defined json.
-        if (KeyboardManagerImpl.hasControlDown() && !RANDOMLY_ROTATIONS.isEmpty()) {
+        if (InputManagerImpl.hasControlDown() && !RANDOMLY_ROTATIONS.isEmpty()) {
             int index = RANDOMLY_INDEX;
             RANDOMLY_INDEX = (RANDOMLY_INDEX + 1) % RANDOMLY_ROTATIONS.size();
             return RANDOMLY_ROTATIONS.get(index);

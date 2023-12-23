@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.common.ITextureKey;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
+import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -56,7 +57,7 @@ public class SkinCube implements ISkinCube {
 
     @Override
     public IPaintColor getPaintColor(Direction dir) {
-        return paintColors.get(dir);
+        return paintColors.getOrDefault(dir, PaintColor.CLEAR);
     }
 
     @Override

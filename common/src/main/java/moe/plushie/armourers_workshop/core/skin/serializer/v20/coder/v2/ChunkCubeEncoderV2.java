@@ -54,21 +54,9 @@ public class ChunkCubeEncoderV2 extends ChunkCubeEncoder {
 
     @Override
     public void end(ChunkPaletteData palette, ChunkOutputStream stream) throws IOException {
-        // origin(12B)/size(12B)
-        IRectangle3f shape = cube.getShape();
-        stream.writeFloat(shape.getX());
-        stream.writeFloat(shape.getY());
-        stream.writeFloat(shape.getZ());
-        stream.writeFloat(shape.getWidth());
-        stream.writeFloat(shape.getHeight());
-        stream.writeFloat(shape.getDepth());
-
-        // translate(12B)/rotation(12B)/scale(12B)/pivot(12B)
-        ITransformf transform = cube.getTransform();
-        stream.writeVector3f(transform.getTranslate());
-        stream.writeVector3f(transform.getRotation());
-        stream.writeVector3f(transform.getScale());
-        stream.writeVector3f(transform.getPivot());
+        // rectangle(24B) + transform(64b)
+        stream.writeRectangle3f(cube.getShape());
+        stream.writeTransformf(cube.getTransform());
 
         // face: <texture ref>
         for (auto entry : Iterables.concat(startValues.entrySet(), endValues.entrySet())) {

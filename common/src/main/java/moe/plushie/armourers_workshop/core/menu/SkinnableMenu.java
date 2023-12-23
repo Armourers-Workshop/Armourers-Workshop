@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import org.apache.logging.log4j.util.Strings;
 
-public class SkinnableMenu extends AbstractBlockContainerMenu {
+public class SkinnableMenu extends AbstractBlockEntityMenu<SkinnableBlockEntity> {
 
     private final String title;
     private int row;
@@ -22,7 +22,6 @@ public class SkinnableMenu extends AbstractBlockContainerMenu {
 
     public SkinnableMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess worldPos) {
         super(menuType, block, containerId, worldPos);
-        SkinnableBlockEntity blockEntity = getBlockEntity();
         this.title = blockEntity.getInventoryName();
 
         row = 3;

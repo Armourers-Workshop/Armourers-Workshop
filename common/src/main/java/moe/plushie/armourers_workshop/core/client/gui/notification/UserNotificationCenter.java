@@ -16,7 +16,6 @@ import moe.plushie.armourers_workshop.core.network.ExecuteAlertPacket;
 import moe.plushie.armourers_workshop.core.skin.exception.TranslatableException;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -95,7 +94,7 @@ public class UserNotificationCenter {
             super();
             this.messageLabel.setNumberOfLines(0);
             this.addSubview(messageLabel);
-            this.setConfirmText(new NSString(TranslateUtils.title("commands.armourers_workshop.notify.confirm")));
+            this.setConfirmText(NSString .localizedTableString("commands", "notify.confirm"));
             this.setup();
         }
 

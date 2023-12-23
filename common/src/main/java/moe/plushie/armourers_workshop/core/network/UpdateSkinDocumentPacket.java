@@ -88,7 +88,8 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
     public enum Mode {
 
         CHANGE_TYPE(ChangeTypeAction.class, ChangeTypeAction::new),
-        UPDATE_SETTING(UpdatePropertiesAction.class, UpdatePropertiesAction::new),
+        UPDATE_SETTINGS(UpdateSettingsAction.class, UpdateSettingsAction::new),
+        UPDATE_PROPERTIES(UpdatePropertiesAction.class, UpdatePropertiesAction::new),
         INSERT_NODE(InsertNodeAction.class, InsertNodeAction::new),
         UPDATE_NODE(UpdateNodeAction.class, UpdateNodeAction::new),
         REMOVE_NODE(RemoveNodeAction.class, RemoveNodeAction::new),
@@ -157,6 +158,34 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
         }
     }
 
+    public static class UpdateSettingsAction extends Action {
+
+        private final CompoundTag tag;
+
+        public UpdateSettingsAction(CompoundTag tag) {
+            this.tag = tag;
+        }
+
+        public UpdateSettingsAction(FriendlyByteBuf buf) {
+            this.tag = buf.readNbt();
+        }
+
+        @Override
+        public void encode(FriendlyByteBuf buf) {
+            buf.writeNbt(tag);
+        }
+
+        @Override
+        public void execute(SkinDocument document, Player player) {
+            document.updateSettings(tag);
+        }
+
+        @Override
+        public String toString() {
+            return makeDescription("updateSettings", "tag", tag);
+        }
+    }
+
     public static class UpdatePropertiesAction extends Action {
 
         private final SkinProperties properties;
@@ -180,7 +209,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
 
         @Override
         public void execute(SkinDocument document, Player player) {
-            document.putAll(properties);
+            document.updateProperties(properties);
         }
 
         @Override

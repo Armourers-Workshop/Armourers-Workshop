@@ -25,7 +25,7 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
     private final ReportFilter filter = ReportFilter.OPEN;
 
     public ModerationLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.panel.info", GlobalSkinLibraryWindow.Page.LIBRARY_MODERATION::equals);
+        super("skin-library-global.panel.info", GlobalSkinLibraryWindow.Page.LIBRARY_MODERATION::equals);
         this.listReports.setFrame(bounds().insetBy(5, 5, 5, 5));
         this.listReports.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
         this.addSubview(listReports);

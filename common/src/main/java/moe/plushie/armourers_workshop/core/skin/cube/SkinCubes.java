@@ -44,7 +44,7 @@ public abstract class SkinCubes implements ISkinCubeProvider {
                 continue;
             }
             OpenVoxelShape shape1 = OpenVoxelShape.box(rect);
-            TrigUtils.apply(transform, poseStack);
+            transform.apply(poseStack);
             shape1.mul(poseStack.lastPose());
             shape.add(shape1);
             poseStack.setIdentity();

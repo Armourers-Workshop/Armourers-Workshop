@@ -1,8 +1,9 @@
 package moe.plushie.armourers_workshop.library.menu;
 
 import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
-import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
+import moe.plushie.armourers_workshop.core.menu.AbstractBlockEntityMenu;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.library.blockentity.GlobalSkinLibraryBlockEntity;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -12,7 +13,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-public class GlobalSkinLibraryMenu extends AbstractBlockContainerMenu {
+public class GlobalSkinLibraryMenu extends AbstractBlockEntityMenu<GlobalSkinLibraryBlockEntity> {
 
     private final Container inventory = new SimpleContainer(2);
     private final Inventory playerInventory;

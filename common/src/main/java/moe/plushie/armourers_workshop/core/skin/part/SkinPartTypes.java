@@ -49,6 +49,8 @@ public final class SkinPartTypes {
     public static final ISkinPartType BIPPED_RIGHT_FOOT = register("feet.rightFoot", new RightFootPartType());
     public static final ISkinPartType BIPPED_LEFT_WING = register("wings.leftWing", new LeftWingPartType());
     public static final ISkinPartType BIPPED_RIGHT_WING = register("wings.rightWing", new RightWingPartType());
+    public static final ISkinPartType BIPPED_LEFT_PHALANX = register("wings.leftWing2", new PartitionPartType(BIPPED_LEFT_WING));
+    public static final ISkinPartType BIPPED_RIGHT_PHALANX = register("wings.rightWing2", new PartitionPartType(BIPPED_RIGHT_WING));
 
     public static final ISkinPartType BIPPED_TORSO = register("chest.base2", new PartitionPartType(BIPPED_CHEST));
     public static final ISkinPartType BIPPED_LEFT_HAND = register("chest.leftArm2", new PartitionPartType(BIPPED_LEFT_ARM));

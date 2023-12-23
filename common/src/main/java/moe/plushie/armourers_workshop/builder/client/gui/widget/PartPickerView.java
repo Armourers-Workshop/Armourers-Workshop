@@ -15,7 +15,6 @@ import com.apple.library.uikit.UIWindow;
 import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -133,10 +132,10 @@ public class PartPickerView extends UIControl {
             UIView contentView;
             UILabel titleView = new UILabel(new CGRect(x, y, width, 10));
             titleView.setTextColor(UIColor.WHITE);
-            titleView.setText(buildText("section" + (i + 1)));
+            titleView.setText(NSString.localizedString("advanced-skin-builder.picker.section" + (i + 1)));
             if (items.isEmpty()) {
                 UILabel emptyView = new UILabel(new CGRect(x, y + 12, width, 65));
-                emptyView.setText(buildText("section" + (i + 1) + ".empty"));
+                emptyView.setText(NSString.localizedString("advanced-skin-builder.picker.section" + (i + 1) + ".empty"));
                 emptyView.setTextColor(UIColor.LIGHT_GRAY);
                 emptyView.setNumberOfLines(0);
                 emptyView.setTextHorizontalAlignment(NSTextAlignment.Horizontal.CENTER);
@@ -170,10 +169,6 @@ public class PartPickerView extends UIControl {
 
     private boolean isValid(PartItem item) {
         return filter == null || filter.test(item.getDescriptor());
-    }
-
-    private NSString buildText(String key) {
-        return new NSString(TranslateUtils.title("inventory.armourers_workshop.advanced-skin-builder.picker." + key));
     }
 
     private ArrayList<PartItem> getInventorySkins() {

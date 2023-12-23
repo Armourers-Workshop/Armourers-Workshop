@@ -1,31 +1,48 @@
 package com.apple.library.uikit;
 
 import com.apple.library.foundation.NSString;
-import com.apple.library.impl.KeyboardManagerImpl;
+import com.apple.library.impl.InputKeyImpl;
+import com.apple.library.impl.InputManagerImpl;
+import com.apple.library.impl.StringImpl;
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class UIMenuItem {
 
     private static final ImmutableMap<String, Predicate<UIEvent>> TESTER = ImmutableMap.<String, Predicate<UIEvent>>builder()
-            .put("key.keyboard.control", event -> KeyboardManagerImpl.hasControlDown())
-            .put("key.keyboard.shift", event -> KeyboardManagerImpl.hasShiftDown())
-            .put("key.keyboard.alt", event -> KeyboardManagerImpl.hasAltDown())
+            .put("key.keyboard.control", event -> InputManagerImpl.hasControlDown())
+            .put("key.keyboard.shift", event -> InputManagerImpl.hasShiftDown())
+            .put("key.keyboard.alt", event -> InputManagerImpl.hasAltDown())
             .build();
 
+    private static final ImmutableMap<String, Supplier<String>> TESTER_NAME = ImmutableMap.<String, Supplier<String>>builder()
+            .put("key.keyboard.alt", () -> "ALT")
+            .put("key.keyboard.shift", () -> "SHIFT")
+            .put("key.keyboard.control", () -> {
+                if (Minecraft.ON_OSX) {
+                    return "CMD";
+                }
+                return "CTRL";
+            })
+            .build();
+
+
     private final NSString title;
+    private final NSString key;
     private final Collection<Runnable> actions;
     private final Collection<Predicate<UIEvent>> conditions;
 
     private final int group;
     private final boolean isEnabled;
 
-    private UIMenuItem(NSString title, Collection<Runnable> actions, Collection<Predicate<UIEvent>> conditions, int group, boolean isEnabled) {
+    private UIMenuItem(NSString title, NSString key, Collection<Runnable> actions, Collection<Predicate<UIEvent>> conditions, int group, boolean isEnabled) {
         this.title = title;
+        this.key = key;
         this.actions = actions;
         this.conditions = conditions;
         this.group = group;
@@ -52,6 +69,10 @@ public class UIMenuItem {
         return title;
     }
 
+    public NSString key() {
+        return key;
+    }
+
     public boolean isEnabled() {
         return isEnabled;
     }
@@ -64,6 +85,7 @@ public class UIMenuItem {
 
         private int group;
         private boolean isEnabled = true;
+        private NSString inputName;
 
         private final NSString title;
         private final ArrayList<Runnable> actions = new ArrayList<>();
@@ -97,20 +119,27 @@ public class UIMenuItem {
         }
 
         public UIMenuItem build() {
-            return new UIMenuItem(title, actions, conditions, group, isEnabled);
+            return new UIMenuItem(title, inputName, actions, conditions, group, isEnabled);
         }
 
         private Builder addCondition(UIEvent.Type eventType, String... keyNames) {
             conditions.add(event -> event.type() == eventType);
+            ArrayList<NSString> names = new ArrayList<>();
             for (String keyName : keyNames) {
                 Predicate<UIEvent> condition = TESTER.get(keyName);
                 if (condition != null) {
                     conditions.add(condition);
-                    continue;
+                    Supplier<String> name = TESTER_NAME.get(keyName);
+                    if (name != null) {
+                        names.add(new NSString(name.get()));
+                    }
+                } else {
+                    InputKeyImpl key = new InputKeyImpl(keyName);
+                    conditions.add(event -> key.test(event.key(), event.keyModifier()));
+                    names.add(new NSString(key.getName()));
                 }
-                BiPredicate<Integer, Integer> keyHandler = KeyboardManagerImpl.getKeyHandler(keyName);
-                conditions.add(event -> keyHandler.test(event.key(), event.keyModifier()));
             }
+            inputName = StringImpl.join(names, " + ");
             return this;
         }
     }

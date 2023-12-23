@@ -13,7 +13,7 @@ public class ProfileLibraryPanel extends AbstractLibraryPanel {
 //    private Rectangle recStats;
 
     public ProfileLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.panel.profile", p -> false);
+        super("skin-library-global.panel.profile", p -> false);
     }
 
 //    public GuiGlobalLibraryPanelProfile(GuiScreen parent) {

@@ -29,19 +29,22 @@ public class SkinDocument {
     public void setType(SkinDocumentType type) {
         this.type = type;
         this.nodes = _generateDefaultNode(type);
+        this.settings = _generateSkinSettings();
+        this.properties = _generateSkinProperties();
         this.nodes.setListener(listener);
-        this._remakeSkinProperties();
         this.listener.documentDidChangeType(type);
     }
 
     public void serializeNBT(CompoundTag tag) {
         tag.putOptionalType(Keys.TYPE, type, null);
         tag.put(Keys.NODES, nodes.serializeNBT());
+        tag.put(Keys.SETTINGS, settings.serializeNBT());
         tag.putOptionalSkinProperties(Keys.PROPERTIES, properties);
     }
 
     public void deserializeNBT(CompoundTag tag) {
         type = tag.getOptionalType(Keys.TYPE, SkinDocumentTypes.GENERAL_ARMOR_HEAD, SkinDocumentTypes::byName);
+        settings = new SkinDocumentSettings(tag.getCompound(Keys.SETTINGS));
         properties = tag.getOptionalSkinProperties(Keys.PROPERTIES);
         try {
             nodes = null;
@@ -59,8 +62,14 @@ public class SkinDocument {
         listener.documentDidReload();
     }
 
-    public void putAll(SkinProperties value) {
+    public void updateSettings(CompoundTag tag) {
+        settings.deserializeNBT(tag);
+        listener.documentDidChangeSettings(tag);
+    }
+
+    public void updateProperties(SkinProperties value) {
         properties.putAll(value);
+        listener.documentDidChangeProperties(value);
     }
 
     public <T> void put(ISkinProperty<T> property, T value) {
@@ -102,6 +111,10 @@ public class SkinDocument {
         return nodes;
     }
 
+    public SkinDocumentSettings getSettings() {
+        return settings;
+    }
+
     public SkinProperties getProperties() {
         return properties;
     }
@@ -128,12 +141,18 @@ public class SkinDocument {
         return null;
     }
 
-    private void _remakeSkinProperties() {
+    private SkinDocumentSettings _generateSkinSettings() {
+        SkinDocumentSettings settings = new SkinDocumentSettings();
+        return settings;
+    }
+
+    private SkinProperties _generateSkinProperties() {
         String name = properties.get(SkinProperty.ALL_CUSTOM_NAME);
         String flavour = properties.get(SkinProperty.ALL_FLAVOUR_TEXT);
-        properties = new SkinProperties();
+        SkinProperties properties = new SkinProperties();
         properties.put(SkinProperty.ALL_CUSTOM_NAME, name);
         properties.put(SkinProperty.ALL_FLAVOUR_TEXT, flavour);
+        return properties;
     }
 
     private SkinDocumentNode _generateDefaultNode(SkinDocumentType category) {
@@ -149,9 +168,10 @@ public class SkinDocument {
         return root;
     }
 
-    public static class Keys {
+    protected static class Keys {
         public static final String NODES = "Nodes";
         public static final String TYPE = "Type";
+        public static final String SETTINGS = "Settings";
         public static final String PROPERTIES = "Properties";
     }
 }

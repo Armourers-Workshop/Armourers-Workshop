@@ -5,6 +5,7 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSString;
+import com.apple.library.impl.StringImpl;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
@@ -23,7 +24,6 @@ import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.panel.A
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.panel.AdvancedRightCardPanel;
 import moe.plushie.armourers_workshop.builder.menu.AdvancedBuilderMenu;
 import moe.plushie.armourers_workshop.builder.network.AdvancedExportPacket;
-import moe.plushie.armourers_workshop.builder.network.AdvancedImportPacket;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
 import moe.plushie.armourers_workshop.core.client.gui.widget.FileProviderDialog;
@@ -38,13 +38,15 @@ import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.FileUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.io.File;
+import java.util.ArrayList;
 
 @Environment(EnvType.CLIENT)
 public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> implements SkinDocumentListener {
@@ -53,6 +55,7 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
     private static int LEFT_CARD_OFFSET = -CARD_WIDTH;
     private static int RIGHT_CARD_OFFSET = -CARD_WIDTH;
 
+    private final ArrayList<NSString> helps = new ArrayList<>();
     private final UIButton helpView = new UIButton(new CGRect(0, 0, 7, 8));
 
     private final AdvancedCameraPanel cameraView;
@@ -62,23 +65,23 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
     private final DocumentMinimapView minimapView;
     private final DocumentTypeListView typeListView;
 
-    private final SkinDocument document;
+    private final SkinDocument doc;
     private final DocumentEditor editor;
 
     private CGSize cachedTitleSize;
 
     public AdvancedBuilderWindow(AdvancedBuilderMenu container, Inventory inventory, NSString title) {
-        this(container, container.getBlockEntity(AdvancedBuilderBlockEntity.class), inventory, title);
+        this(container, container.getBlockEntity(), inventory, title);
     }
 
     public AdvancedBuilderWindow(AdvancedBuilderMenu container, AdvancedBuilderBlockEntity blockEntity, Inventory inventory, NSString title) {
         super(container, inventory, title);
         this.editor = new DocumentEditor(blockEntity);
+        this.doc = editor.getDocument();
         this.cameraView = new AdvancedCameraPanel(editor);
         this.leftCard = new AdvancedLeftCardPanel(editor, new CGRect(0, 0, 200, UIScreen.bounds().getHeight() * 2));
         this.rightCard = new AdvancedRightCardPanel(editor, new CGRect(0, 0, 200, UIScreen.bounds().getHeight() * 2));
         this.inventoryView.setHidden(true);
-        this.document = editor.getDocument();
         this.minimapView = rightCard.getMinimapView();
         this.typeListView = rightCard.getTypeListView();
         this.setup();
@@ -92,8 +95,8 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
         this.setupCameraView();
         this.setupLeftCard(bounds);
         this.setupRightCard(bounds);
-        this.setupHelp();
         this.setupShortcuts();
+        this.setupHelp();
     }
 
     private void setupCameraView() {
@@ -124,7 +127,7 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
 
     private void setupHelp() {
         helpView.setBackgroundImage(ModTextures.helpButtonImage(), UIControl.State.ALL);
-        helpView.setTooltip(new NSString("CTRL + 1 open/close left card\nCTRL + 2 open/close right card\nCTRL + I open skin import dialog\nCTRL + E open skin export dialog"));
+        helpView.setTooltip(StringImpl.join(helps, "\n"));
         helpView.setCanBecomeFocused(false);
         addSubview(helpView);
     }
@@ -141,11 +144,10 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
     }
 
     private void setupShortcuts() {
-        addMenuItem(UIMenuItem.of("show1").keyDown("key.keyboard.control", "key.keyboard.1").execute(this::toggleLeftCard).build());
-        addMenuItem(UIMenuItem.of("show2").keyDown("key.keyboard.control", "key.keyboard.2").execute(this::toggleRightCard).build());
-
-        addMenuItem(UIMenuItem.of("import").keyDown("key.keyboard.control", "key.keyboard.i").execute(this::importAction).build());
-        addMenuItem(UIMenuItem.of("export").keyDown("key.keyboard.control", "key.keyboard.e").execute(this::exportAction).build());
+        addShortcut("show1", this::toggleLeftCard, "key.keyboard.control", "key.keyboard.1");
+        addShortcut("show2", this::toggleRightCard, "key.keyboard.control", "key.keyboard.2");
+        addShortcut("import", this::importAction, "key.keyboard.control", "key.keyboard.i");
+        addShortcut("export", this::exportAction, "key.keyboard.control", "key.keyboard.e");
     }
 
     private void toggleLeftCard() {
@@ -167,16 +169,21 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
         if (documentType == null) {
             return;
         }
+        NSString title = NSString.localizedString("advanced-skin-builder.dialog.importer.title");
         SkinLibraryManager libraryManager = SkinLibraryManager.getClient();
         if (!libraryManager.shouldUploadFile(inventory.player)) {
-            NSString message = new NSString(TranslateUtils.title("inventory.armourers_workshop.skin-library.error.illegalOperation"));
-            NSString title = new NSString(TranslateUtils.title("inventory.armourers_workshop.advanced-skin-builder.dialog.importer.title"));
+            NSString message = NSString.localizedString("skin-library.error.illegalOperation");
             UserNotificationCenter.showToast(message, UIColor.RED, title, null);
             return;
         }
         File rootPath = new File(EnvironmentManager.getRootDirectory(), "model-imports");
+        if (!rootPath.exists() && !rootPath.mkdirs()) {
+            NSString message = new NSString("Can't create directory");
+            UserNotificationCenter.showToast(message, UIColor.RED, title, null);
+            return;
+        }
         FileProviderDialog alert = new FileProviderDialog(rootPath, "bbmodel");
-        alert.setTitle(new NSString(TranslateUtils.title("inventory.armourers_workshop.advanced-skin-builder.dialog.importer.title")));
+        alert.setTitle(title);
         alert.showInView(this, () -> {
             if (!alert.isCancelled()) {
                 DocumentImporter importer = new DocumentImporter(alert.getSelectedFile(), documentType.getSkinType());
@@ -191,8 +198,8 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
             return;
         }
         ConfirmDialog alert = new ConfirmDialog();
-        alert.setTitle(new NSString(TranslateUtils.title("inventory.armourers_workshop.advanced-skin-builder.dialog.exporter.title")));
-        alert.setMessage(new NSString(TranslateUtils.title("inventory.armourers_workshop.advanced-skin-builder.dialog.exporter.message")));
+        alert.setTitle(NSString.localizedString("advanced-skin-builder.dialog.exporter.title"));
+        alert.setMessage(NSString.localizedString("advanced-skin-builder.dialog.exporter.message"));
         alert.showInView(this, () -> {
             if (!alert.isCancelled()) {
                 AdvancedExportPacket packet = new AdvancedExportPacket(editor.getBlockEntity());
@@ -201,10 +208,19 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
         });
     }
 
+    private void addShortcut(String name, Runnable action, String... keys) {
+        UIMenuItem.Builder builder = UIMenuItem.of(name);
+        builder.keyDown(keys);
+        builder.execute(action);
+        UIMenuItem item = builder.build();
+        helps.add(NSString.localizedString("advanced-skin-builder.shortcut." + name, item.key()));
+        addMenuItem(item);
+    }
+
     @Override
     public void init() {
         super.init();
-        document.addListener(this);
+        doc.addListener(this);
         cameraView.connect();
         editor.connect();
     }
@@ -213,7 +229,7 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
     public void deinit() {
         editor.disconnect();
         cameraView.disconnect();
-        document.removeListener(this);
+        doc.removeListener(this);
         super.deinit();
     }
 
@@ -241,6 +257,11 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
         TreeIndexPath indexPath = minimapView.getSelectedIndex();
         minimapView.reloadData(editor.getDocument().getRoot());
         minimapView.setSelectedIndex(indexPath);
+    }
+
+    @Override
+    public void documentDidChangeSettings(CompoundTag tag) {
+        editor.getConnector().update(editor.getDocument().getSettings());
     }
 
     @Override

@@ -502,13 +502,13 @@
   "sounds.armourers_workshop.burn": "태닝 도구",
   "sounds.armourers_workshop.dodge": "미백 도구",
   "sounds.armourers_workshop.picker": "색상 선택기",
-  "tooloption.armourers_workshop.changeBrightness": "밝기 변경",
-  "tooloption.armourers_workshop.changeHue": "색조 변경",
-  "tooloption.armourers_workshop.changePaintType": "채색 유형 변경",
-  "tooloption.armourers_workshop.changeSaturation": "채도 변경",
-  "tooloption.armourers_workshop.effectRadius": "효과 반경",
-  "tooloption.armourers_workshop.fullBlockMode": "전체 블럭 채색 모드",
-  "tooloption.armourers_workshop.intensity": "강도",
-  "tooloption.armourers_workshop.planeRestrict": "기본 블록 한정",
-  "tooloption.armourers_workshop.radius": "넓이"
+  "inventory.armourers_workshop.toolOptions.changeBrightness": "밝기 변경",
+  "inventory.armourers_workshop.toolOptions.changeHue": "색조 변경",
+  "inventory.armourers_workshop.toolOptions.changePaintType": "채색 유형 변경",
+  "inventory.armourers_workshop.toolOptions.changeSaturation": "채도 변경",
+  "inventory.armourers_workshop.toolOptions.effectRadius": "효과 반경",
+  "inventory.armourers_workshop.toolOptions.fullBlockMode": "전체 블럭 채색 모드",
+  "inventory.armourers_workshop.toolOptions.intensity": "강도",
+  "inventory.armourers_workshop.toolOptions.planeRestrict": "기본 블록 한정",
+  "inventory.armourers_workshop.toolOptions.radius": "넓이"
 }

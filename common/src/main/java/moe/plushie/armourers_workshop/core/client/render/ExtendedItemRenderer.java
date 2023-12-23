@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.TickUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -39,8 +40,8 @@ public final class ExtendedItemRenderer {
             float si = Math.min(width, height);
             poseStack.pushPose();
             poseStack.translate(x + width / 2f, y + height / 2f, z);
-            // we need do a vertical mirror, but normal matrix no needs.
             poseStack.mulPoseMatrix(OpenMatrix4f.createScaleMatrix(1, -1, 1));
+            poseStack.mulNormalMatrix(OpenMatrix3f.createScaleMatrix(1, -1, 1));
             poseStack.mulPose(Vector3f.XP.rotationDegrees(rx));
             poseStack.mulPose(Vector3f.YP.rotationDegrees(ry + (float) (t / 10 % 360)));
             poseStack.scale(0.625f, 0.625f, 0.625f);

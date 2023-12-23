@@ -2,8 +2,11 @@ package moe.plushie.armourers_workshop.core.skin.serializer.io;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.utils.texture.TextureProperties;
@@ -118,6 +121,25 @@ public interface IInputStream {
         float y = stream.readFloat();
         float z = stream.readFloat();
         return new Vector3f(x, y, z);
+    }
+
+    default Rectangle3f readRectangle3f() throws IOException {
+        float x = readFloat();
+        float y = readFloat();
+        float z = readFloat();
+        float width = readFloat();
+        float height = readFloat();
+        float depth = readFloat();
+        return new Rectangle3f(x, y, z, width, height, depth);
+    }
+
+    default SkinTransform readTransformf() throws IOException {
+        SkinTransform transform = new SkinTransform();
+        transform.readFromStream(this);
+        if (!transform.equals(SkinTransform.IDENTITY)) {
+            return transform;
+        }
+        return SkinTransform.IDENTITY;
     }
 
     default <T extends IRegistryEntry> T readType(Function<String, T> transform) throws IOException {

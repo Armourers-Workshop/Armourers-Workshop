@@ -36,6 +36,8 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends IHu
         transformer.registerArmor(SkinPartTypes.BIPPED_SKIRT, Joints.BIPPED_SKIRT);
         transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_WING, sel(Joints.BIPPED_LEFT_WING, Joints.BIPPED_LEFT_PHALANX));
         transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_WING, sel(Joints.BIPPED_RIGHT_WING, Joints.BIPPED_RIGHT_PHALANX));
+        transformer.registerArmor(SkinPartTypes.BIPPED_RIGHT_PHALANX, Joints.BIPPED_LEFT_PHALANX);
+        transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_PHALANX, Joints.BIPPED_RIGHT_PHALANX);
 
         transformer.registerArmor(SkinPartTypes.BIPPED_TORSO, Joints.BIPPED_TORSO);
         transformer.registerArmor(SkinPartTypes.BIPPED_LEFT_HAND, Joints.BIPPED_LEFT_HAND);

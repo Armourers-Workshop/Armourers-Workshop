@@ -17,7 +17,7 @@ public class UserSkinsLibraryPanel extends SearchResultsLibraryPanel {
     private ServerUser user;
 
     public UserSkinsLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.searchResults", GlobalSkinLibraryWindow.Page.LIST_USER_SKINS::equals);
+        super("skin-library-global.searchResults", GlobalSkinLibraryWindow.Page.LIST_USER_SKINS::equals);
     }
 
     public void reloadData(ServerUser user) {

@@ -44,7 +44,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
     private PlayerTextureDescriptor.Source lastSource = PlayerTextureDescriptor.Source.NONE;
 
     public ArmourerDisplaySetting(ArmourerMenu container) {
-        super("inventory.armourers_workshop.armourer.displaySettings");
+        super("armourer.displaySettings");
         this.blockEntity = container.getBlockEntity();
         this.reloadData();
     }

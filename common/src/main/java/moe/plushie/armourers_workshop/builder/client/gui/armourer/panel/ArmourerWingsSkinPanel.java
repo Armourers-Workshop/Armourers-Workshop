@@ -7,7 +7,6 @@ import com.apple.library.uikit.UIComboItem;
 import com.apple.library.uikit.UIControl;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -41,8 +40,8 @@ public class ArmourerWingsSkinPanel extends ArmourerBaseSkinPanel {
         SkinProperty.MovementType selectedMovementType = SkinProperty.MovementType.valueOf(skinProperties.get(property));
         ArrayList<UIComboItem> items = new ArrayList<>();
         for (SkinProperty.MovementType movementType : SkinProperty.MovementType.values()) {
-            String key = "movmentType.armourers_workshop." + movementType.name().toLowerCase();
-            UIComboItem item = new UIComboItem(new NSString(TranslateUtils.title(key)));
+            NSString name = NSString.localizedTableString("movmentType", movementType.name().toLowerCase());
+            UIComboItem item = new UIComboItem(name);
             if (movementType == selectedMovementType) {
                 selectedIndex = items.size();
             }

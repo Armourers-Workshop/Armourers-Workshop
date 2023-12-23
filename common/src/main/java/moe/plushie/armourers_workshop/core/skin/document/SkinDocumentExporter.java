@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
@@ -44,13 +45,13 @@ public class SkinDocumentExporter {
         settings.setEditable(false);
         settings.setItemTransforms(itemTransforms);
 
-        builder.version(20);
+        builder.version(SkinSerializer.Versions.V20);
         builder.settings(settings);
         builder.properties(properties);
         builder.parts(parts);
 
-         builder.previewData(null);
-         builder.blobs(null);
+        builder.previewData(null);
+        builder.blobs(null);
 
         return builder.build();
     }

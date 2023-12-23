@@ -1,10 +1,5 @@
 package moe.plushie.armourers_workshop.utils;
 
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
-import moe.plushie.armourers_workshop.api.math.IVector3f;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
-
 public class TrigUtils {
 
     public static double getAngleRadians(double x1, double y1, double x2, double y2) {
@@ -34,29 +29,5 @@ public class TrigUtils {
         float f1 = Float.intBitsToFloat(i);
         f1 = 0.6666667F * f1 + 1.0F / (3.0F * f1 * f1 * f);
         return 0.6666667F * f1 + 1.0F / (3.0F * f1 * f1 * f);
-    }
-
-    public static void apply(ITransformf transform, IPoseStack poseStack) {
-        IVector3f rotation = transform.getRotation();
-        if (rotation != Vector3f.ZERO) {
-            IVector3f pivot = transform.getPivot();
-            if (pivot != Vector3f.ZERO) {
-                poseStack.translate(pivot.getX(), pivot.getY(), pivot.getZ());
-            }
-            poseStack.rotate(Vector3f.ZP.rotationDegrees(rotation.getZ()));
-            poseStack.rotate(Vector3f.YP.rotationDegrees(rotation.getY()));
-            poseStack.rotate(Vector3f.XP.rotationDegrees(rotation.getX()));
-            if (pivot != Vector3f.ZERO) {
-                poseStack.translate(-pivot.getX(), -pivot.getY(), -pivot.getZ());
-            }
-        }
-        IVector3f translate = transform.getTranslate();
-        if (translate != Vector3f.ZERO) {
-            poseStack.translate(translate.getX(), translate.getY(), translate.getZ());
-        }
-        IVector3f scale = transform.getScale();
-        if (scale != Vector3f.ONE) {
-            poseStack.scale(scale.getX(), scale.getY(), scale.getZ());
-        }
     }
 }

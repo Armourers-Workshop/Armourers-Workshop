@@ -21,7 +21,6 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
@@ -35,7 +34,7 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
     protected final ArmourerBlockEntity blockEntity;
 
     protected ArmourerBlockSetting(ArmourerMenu container) {
-        super("inventory.armourers_workshop.armourer.blockUtils");
+        super("armourer.blockUtils");
         this.blockEntity = container.getBlockEntity();
     }
 
@@ -67,7 +66,7 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
 
     private void clearAction(UIControl sender) {
         ArmourerClearDialog dialog = new ArmourerClearDialog(getPartTypes(true));
-        dialog.setTitle(getCommonText("inventory.armourers_workshop.armourer.dialog.clear.title"));
+        dialog.setTitle(NSString.localizedString("armourer.dialog.clear.title"));
         dialog.showInView(this, () -> {
             if (dialog.isCancelled()) {
                 return;
@@ -84,7 +83,7 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
 
     private void copyAction(UIControl sender) {
         ArmourerCopyDialog dialog = new ArmourerCopyDialog(getPartTypes(false));
-        dialog.setTitle(getCommonText("inventory.armourers_workshop.armourer.dialog.copy.title"));
+        dialog.setTitle(NSString.localizedString("armourer.dialog.copy.title"));
         dialog.showInView(this, () -> {
             if (dialog.isCancelled()) {
                 return;
@@ -102,7 +101,7 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
 
     private void replaceAction(UIControl sender) {
         ArmourerReplaceDialog dialog = new ArmourerReplaceDialog();
-        dialog.setTitle(getCommonText("inventory.armourers_workshop.armourer.dialog.replace.title"));
+        dialog.setTitle(NSString.localizedString("armourer.dialog.replace.title"));
         dialog.showInView(this, () -> {
             if (dialog.isCancelled()) {
                 return;
@@ -148,9 +147,5 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             }
         }
         return partTypes;
-    }
-
-    protected NSString getCommonText(String key) {
-        return new NSString(TranslateUtils.title(key));
     }
 }

@@ -52,7 +52,7 @@ public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMen
     @Override
     public void init() {
         super.init();
-        setupLayout();;
+        setupLayout();
         setupBackgroundView();
         setupPaletteViews();
         setupPickerViews();
@@ -85,12 +85,12 @@ public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMen
         bg.setAutoresizingMask(AutoresizingMask.flexibleBottomMargin | AutoresizingMask.flexibleRightMargin);
         addSubview(bg);
 
-        setupLabel(5, 21, "label.hue");
-        setupLabel(5, 46, "label.saturation");
-        setupLabel(5, 71, "label.brightness");
-        setupLabel(5, 94, "label.hex");
-        setupLabel(165, 51, "label.presets");
-        setupLabel(165, 21, "label.paintType");
+        setupLabel(5, 21, "colour-mixer.label.hue");
+        setupLabel(5, 46, "colour-mixer.label.saturation");
+        setupLabel(5, 71, "colour-mixer.label.brightness");
+        setupLabel(5, 94, "colour-mixer.label.hex");
+        setupLabel(165, 51, "colour-mixer.label.presets");
+        setupLabel(165, 21, "colour-mixer.label.paintType");
 
         addSubview(paintColorView);
     }
@@ -112,21 +112,21 @@ public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMen
         paletteBox.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, PaletteToolWindow::applyPaletteChange);
         addSubview(paletteBox);
         setupHelpButton(186, 130);
-        setupButton(232, 126, 208, 176, "button.add_palette", PaletteToolWindow::showNewPaletteDialog);
-        setupButton(214, 126, 208, 160, "button.remove_palette", PaletteToolWindow::showRemovePaletteDialog);
-        setupButton(196, 126, 208, 192, "button.rename_palette", PaletteToolWindow::showRenamePaletteDialog);
+        setupButton(232, 126, 208, 176, "colour-mixer.button.add_palette", PaletteToolWindow::showNewPaletteDialog);
+        setupButton(214, 126, 208, 160, "colour-mixer.button.remove_palette", PaletteToolWindow::showRemovePaletteDialog);
+        setupButton(196, 126, 208, 192, "colour-mixer.button.rename_palette", PaletteToolWindow::showRenamePaletteDialog);
         setupPaletteList();
     }
 
     private void setupLabel(int x, int y, String key) {
         UILabel label = new UILabel(new CGRect(x, y, 80, 9));
-        label.setText(getDisplayText(key));
+        label.setText(NSString.localizedString(key));
         addSubview(label);
     }
 
     private void setupButton(int x, int y, int u, int v, String key, BiConsumer<PaletteToolWindow, UIControl> consumer) {
         UIButton button = new UIButton(new CGRect(x, y, 16, 16));
-        button.setTooltip(getDisplayText(key));
+        button.setTooltip(NSString.localizedString(key));
         button.setBackgroundImage(ModTextures.defaultButtonImage(u, v), UIControl.State.ALL);
         button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, consumer);
         addSubview(button);
@@ -135,7 +135,7 @@ public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMen
     private void setupHelpButton(int x, int y) {
         UIButton button = new UIButton(new CGRect(x, y, 7, 8));
         button.setBackgroundImage(ModTextures.helpButtonImage(), UIControl.State.ALL);
-        button.setTooltip(getDisplayText("help.palette"));
+        button.setTooltip(NSString.localizedString("colour-mixer.help.palette"));
         button.setCanBecomeFocused(false);
         addSubview(button);
     }
@@ -182,11 +182,6 @@ public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMen
         });
         addSubview(paletteComboBox);
         reloadPalettes();
-    }
-
-    @Override
-    protected NSString getDisplayText(String key, Object... args) {
-        return new NSString(TranslateUtils.title("inventory.armourers_workshop.colour-mixer" + "." + key, args));
     }
 
     protected IPaintColor getItemColor(ItemStack itemStack) {

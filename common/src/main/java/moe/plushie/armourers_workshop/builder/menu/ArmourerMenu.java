@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.builder.other.CubeApplier;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.builder.other.WorldUtils;
 import moe.plushie.armourers_workshop.core.data.UserNotifications;
-import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
+import moe.plushie.armourers_workshop.core.menu.AbstractBlockEntityMenu;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
-public class ArmourerMenu extends AbstractBlockContainerMenu {
+public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
 
     private final SimpleContainer inventory = new SimpleContainer(4);
     private Group group = null;
@@ -48,8 +48,7 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
     public boolean shouldLoadArmourItem(Player player) {
         ItemStack stackInput = inventory.getItem(0);
         ItemStack stackOuput = inventory.getItem(1);
-        ArmourerBlockEntity blockEntity = getBlockEntity(ArmourerBlockEntity.class);
-        if (stackInput.isEmpty() || !stackOuput.isEmpty() || blockEntity == null) {
+        if (stackInput.isEmpty() || !stackOuput.isEmpty()) {
             return false;
         }
         SkinDescriptor descriptor = SkinDescriptor.of(stackInput);
@@ -84,8 +83,7 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
         if (!shouldSaveArmourItem(player)) {
             return;
         }
-        ArmourerBlockEntity blockEntity = getBlockEntity(ArmourerBlockEntity.class);
-        if (blockEntity == null || blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide()) {
+        if (blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide()) {
             return;
         }
         ItemStack stackInput = inventory.getItem(0);
@@ -133,8 +131,7 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
      * @param player The player that pressed the load button.
      */
     public void loadArmourItem(Player player) {
-        ArmourerBlockEntity blockEntity = getBlockEntity(ArmourerBlockEntity.class);
-        if (blockEntity == null || blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide()) {
+        if (blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide()) {
             return;
         }
         ItemStack stackInput = inventory.getItem(0);

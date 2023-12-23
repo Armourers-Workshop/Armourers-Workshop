@@ -40,7 +40,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
     private final GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
 
     public HomeLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.home", GlobalSkinLibraryWindow.Page.HOME::equals);
+        super("skin-library-global.home", GlobalSkinLibraryWindow.Page.HOME::equals);
         this.setup();
     }
 

@@ -56,7 +56,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     private SearchOrderType orderType = SearchOrderType.DESC;
 
     public SearchResultsLibraryPanel() {
-        this("inventory.armourers_workshop.skin-library-global.searchResults", GlobalSkinLibraryWindow.Page.LIST_SEARCH::equals);
+        this("skin-library-global.searchResults", GlobalSkinLibraryWindow.Page.LIST_SEARCH::equals);
     }
 
     public SearchResultsLibraryPanel(String titleKey, Predicate<GlobalSkinLibraryWindow.Page> predicate) {
@@ -84,8 +84,8 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         addIconButton(iconX - 34, 2, 16, 16, 48, 17, "medium", buildItemSizeUpdater(48));
         addIconButton(iconX - 16, 2, 16, 16, 48, 34, "large", buildItemSizeUpdater(80));
 
-        UIButton btn1 = addCommonButton(4, rect.height - 20, 16, 16, 208, 80, "button.previousPage", buildPageUpdater(-1));
-        UIButton btn2 = addCommonButton(rect.width - 20, rect.height - 20, 16, 16, 208, 96, "button.nextPage", buildPageUpdater(1));
+        UIButton btn1 = addCommonButton(4, rect.height - 20, 16, 16, 208, 80, "common.button.previousPage", buildPageUpdater(-1));
+        UIButton btn2 = addCommonButton(rect.width - 20, rect.height - 20, 16, 16, 208, 96, "common.button.nextPage", buildPageUpdater(1));
         btn1.setAutoresizingMask(AutoresizingMask.flexibleRightMargin | AutoresizingMask.flexibleTopMargin);
         btn2.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleTopMargin);
     }
@@ -159,7 +159,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     private UIButton addCommonButton(float x, float y, float width, float height, int u, int v, String key, BiConsumer<SearchResultsLibraryPanel, UIControl> handler) {
         UIButton button = new UIButton(new CGRect(x, y, width, height));
         button.setImage(ModTextures.iconImage(u, v, width, height, ModTextures.BUTTONS), UIControl.State.ALL);
-        button.setTooltip(getCommonDisplayText(key));
+        button.setTooltip(NSString.localizedString(key));
         button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, handler);
         addSubview(button);
         return button;

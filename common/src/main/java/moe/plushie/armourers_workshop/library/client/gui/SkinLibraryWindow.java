@@ -305,12 +305,8 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
         fileList.setContentOffset(contentOffsets.getOrDefault(selectedPath, CGPoint.ZERO));
     }
 
-    private NSString getDisplayText(String key) {
-        return new NSString(TranslateUtils.title("inventory.armourers_workshop.skin-library" + "." + key));
-    }
-
     private NSString getDisplayText(String key, Object... args) {
-        return new NSString(TranslateUtils.title("inventory.armourers_workshop.skin-library" + "." + key, args));
+        return NSString.localizedString("skin-library" + "." + key, args);
     }
 
     private void selectLibrary(UIControl sender) {
@@ -448,7 +444,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
 
     private void toast(NSString message) {
         ConfirmDialog dialog = new ConfirmDialog();
-        dialog.setTitle(new NSString(TranslateUtils.title("inventory.armourers_workshop.skin-library-global.panel.info")));
+        dialog.setTitle(NSString.localizedString("skin-library-global.panel.info"));
         dialog.setMessage(message);
         dialog.setMessageColor(new UIColor(0xff5555));
         dialog.showInView(this);

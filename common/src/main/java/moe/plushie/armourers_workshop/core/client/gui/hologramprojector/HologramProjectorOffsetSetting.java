@@ -22,7 +22,7 @@ public class HologramProjectorOffsetSetting extends HologramProjectorBaseSetting
     private final UpdateHologramProjectorPacket.Field field = UpdateHologramProjectorPacket.Field.OFFSET;
 
     public HologramProjectorOffsetSetting(HologramProjectorBlockEntity entity) {
-        super("inventory.armourers_workshop.hologram-projector.offset");
+        super("hologram-projector.offset");
         this.entity = entity;
         this.setFrame(new CGRect(0, 0, 200, 82));
         this.setup();

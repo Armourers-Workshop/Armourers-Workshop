@@ -287,12 +287,12 @@
   "skin_search_column.armourers_workshop.downloads": "Descargas",
   "skin_search_column.armourers_workshop.name": "Nombre",
   "skin_search_column.armourers_workshop.skin_type": "Tipo de Aspecto",
-  "tooloption.armourers_workshop.changeBrightness": "Cambiar Brillo",
-  "tooloption.armourers_workshop.changeHue": "Cambiar Tono",
-  "tooloption.armourers_workshop.changePaintType": "Cambiar Tipo de Pintura",
-  "tooloption.armourers_workshop.changeSaturation": "Cambiar Saturación",
-  "tooloption.armourers_workshop.effectRadius": "Radio de Efecto",
-  "tooloption.armourers_workshop.fullBlockMode": "Modo Bloque Completo",
-  "tooloption.armourers_workshop.intensity": "Intensidad",
-  "tooloption.armourers_workshop.radius": "Radio"
+  "inventory.armourers_workshop.toolOptions.changeBrightness": "Cambiar Brillo",
+  "inventory.armourers_workshop.toolOptions.changeHue": "Cambiar Tono",
+  "inventory.armourers_workshop.toolOptions.changePaintType": "Cambiar Tipo de Pintura",
+  "inventory.armourers_workshop.toolOptions.changeSaturation": "Cambiar Saturación",
+  "inventory.armourers_workshop.toolOptions.effectRadius": "Radio de Efecto",
+  "inventory.armourers_workshop.toolOptions.fullBlockMode": "Modo Bloque Completo",
+  "inventory.armourers_workshop.toolOptions.intensity": "Intensidad",
+  "inventory.armourers_workshop.toolOptions.radius": "Radio"
 }

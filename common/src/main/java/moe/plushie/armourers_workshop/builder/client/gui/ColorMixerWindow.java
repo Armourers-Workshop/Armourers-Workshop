@@ -59,10 +59,7 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
     }
 
     protected void reloadStatus() {
-        ColorMixerBlockEntity blockEntity = menu.getBlockEntity(ColorMixerBlockEntity.class);
-        if (blockEntity == null) {
-            return;
-        }
+        ColorMixerBlockEntity blockEntity = menu.getBlockEntity();
         IPaintColor paintColor = blockEntity.getColor();
         UIColor selectedColor = new UIColor(paintColor.getRGB());
         ISkinPaintType selectedPaintType = paintColor.getPaintType();
@@ -80,10 +77,7 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
 
     @Override
     protected void submitColorChange(UIControl control) {
-        ColorMixerBlockEntity blockEntity = menu.getBlockEntity(ColorMixerBlockEntity.class);
-        if (blockEntity == null) {
-            return;
-        }
+        ColorMixerBlockEntity blockEntity = menu.getBlockEntity();
         PaintColor paintColor = paintColorView.paintColor();
         UpdateColorMixerPacket.Field field = UpdateColorMixerPacket.Field.COLOR;
         if (paintColor.equals(field.get(blockEntity))) {
@@ -202,8 +196,7 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
         reloadPalettes();
     }
 
-    @Override
     protected NSString getDisplayText(String key, Object... args) {
-        return new NSString(TranslateUtils.title("inventory.armourers_workshop.colour-mixer" + "." + key, args));
+        return NSString.localizedString("colour-mixer" + "." + key, args);
     }
 }

@@ -4,7 +4,7 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.impl.AppearanceImpl;
-import com.apple.library.impl.KeyboardManagerImpl;
+import com.apple.library.impl.InputManagerImpl;
 
 import java.util.function.Function;
 
@@ -188,13 +188,13 @@ public class UISliderBox extends UIControl {
 
     private double getResolvedValue(double inc) {
         double modifier;
-        if (KeyboardManagerImpl.hasShiftDown()) {
-            modifier = KeyboardManagerImpl.hasControlDown() ? 0.01 : 0.1;
+        if (InputManagerImpl.hasShiftDown()) {
+            modifier = InputManagerImpl.hasControlDown() ? 0.01 : 0.1;
         } else {
-            modifier = KeyboardManagerImpl.hasControlDown() ? 10.0 : 1.0;
+            modifier = InputManagerImpl.hasControlDown() ? 10.0 : 1.0;
         }
         double newValue = value + inc * modifier;
-        if (KeyboardManagerImpl.hasAltDown()) {
+        if (InputManagerImpl.hasAltDown()) {
             newValue = (int) (newValue / modifier) * modifier; // align to modifier
         }
         return newValue;

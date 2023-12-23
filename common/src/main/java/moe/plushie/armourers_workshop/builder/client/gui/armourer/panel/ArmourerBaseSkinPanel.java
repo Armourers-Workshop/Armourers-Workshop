@@ -9,7 +9,6 @@ import com.apple.library.uikit.UISliderBox;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -26,11 +25,8 @@ public class ArmourerBaseSkinPanel extends UIView {
     protected int cursorY = 0;
     protected Consumer<SkinProperties> applier;
 
-    private final String baseKey;
-
     public ArmourerBaseSkinPanel(SkinProperties skinProperties) {
         super(CGRect.ZERO);
-        this.baseKey = "inventory.armourers_workshop.armourer.skinSettings";
         this.skinProperties = skinProperties;
     }
 
@@ -101,11 +97,7 @@ public class ArmourerBaseSkinPanel extends UIView {
         cursorY += view.bounds().getHeight() + 2;
     }
 
-    protected NSString getDisplayText(String key) {
-        return new NSString(TranslateUtils.title(baseKey + "." + key));
-    }
-
     protected NSString getDisplayText(String key, Object... objects) {
-        return new NSString(TranslateUtils.title(baseKey + "." + key, objects));
+        return NSString.localizedString("armourer.skinSettings." + key, objects);
     }
 }

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.panel;
 
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
-import com.apple.library.impl.KeyboardManagerImpl;
+import com.apple.library.impl.InputManagerImpl;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
@@ -75,7 +75,7 @@ public class AdvancedCameraPanel extends UIView {
     @Override
     public void mouseDown(UIEvent event) {
         rotationMode = event.type() != UIEvent.Type.MOUSE_RIGHT_DOWN;
-        if (KeyboardManagerImpl.hasSpaceDown()) {
+        if (InputManagerImpl.hasSpaceDown()) {
             rotationMode = !rotationMode;
         }
         moveMode = !rotationMode;
@@ -108,7 +108,7 @@ public class AdvancedCameraPanel extends UIView {
 
     @Override
     public void mouseWheel(UIEvent event) {
-        if (KeyboardManagerImpl.hasControlDown()) {
+        if (InputManagerImpl.hasControlDown()) {
             zoom(event.delta());
         } else {
             double delta = event.delta();

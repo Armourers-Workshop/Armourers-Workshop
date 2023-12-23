@@ -25,45 +25,45 @@ public class TextInputImpl {
         float ty = Math.max(point.y - storage.offset.y, 0);
         NSTextPosition pos = storage.positionAtPoint(new CGPoint(tx, ty));
         if (pos != null) {
-            storage.moveCursorTo(pos, KeyboardManagerImpl.hasShiftDown());
+            storage.moveCursorTo(pos, InputManagerImpl.hasShiftDown());
         }
         return false;
     }
 
     public boolean keyDown(int key) {
         // some methods may rely on this info.
-        boolean hasShiftDown = KeyboardManagerImpl.hasShiftDown();
-        boolean hasControlDown = KeyboardManagerImpl.hasControlDown();
+        boolean hasShiftDown = InputManagerImpl.hasShiftDown();
+        boolean hasControlDown = InputManagerImpl.hasControlDown();
         // each input causes the user cursor to reset, even if it doesn't.
         CGRect userCursorRect = lastUserCursorRect;
         lastUserCursorRect = null;
         // select all text
-        if (KeyboardManagerImpl.isSelectAll(key)) {
+        if (InputManagerImpl.isSelectAll(key)) {
             storage.setCursorAndHighlightPos(storage.endOfDocument(), storage.beginOfDocument());
             return true;
         }
         // cut selected text.
-        if (KeyboardManagerImpl.isCut(key)) {
-            KeyboardManagerImpl.setClipboard(storage.highlightedText());
+        if (InputManagerImpl.isCut(key)) {
+            InputManagerImpl.setClipboard(storage.highlightedText());
             if (isEditable) {
                 storage.insertText("");
             }
             return true;
         }
         // copy selected text
-        if (KeyboardManagerImpl.isCopy(key)) {
-            KeyboardManagerImpl.setClipboard(storage.highlightedText());
+        if (InputManagerImpl.isCopy(key)) {
+            InputManagerImpl.setClipboard(storage.highlightedText());
             return true;
         }
         // paste some text into selected range.
-        if (KeyboardManagerImpl.isPaste(key)) {
+        if (InputManagerImpl.isPaste(key)) {
              if (isEditable) {
-                storage.insertText(KeyboardManagerImpl.getClipboard());
+                storage.insertText(InputManagerImpl.getClipboard());
             }
             return true;
         }
-        if (KeyboardManagerImpl.hasShortcutDown()) {
-            key = KeyboardManagerImpl.getShortcutKey(key);
+        if (InputManagerImpl.hasShortcutDown()) {
+            key = InputManagerImpl.getShortcutKey(key);
         }
         switch (key) {
             case GLFW.GLFW_KEY_BACKSPACE: {

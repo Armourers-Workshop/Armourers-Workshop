@@ -29,6 +29,11 @@ public class SkinDocumentListeners {
         }
 
         @Override
+        public void documentDidChangeSettings(CompoundTag tag) {
+            listeners.forEach(it -> it.documentDidChangeSettings(tag));
+        }
+
+        @Override
         public void documentDidChangeProperties(SkinProperties properties) {
             listeners.forEach(it -> it.documentDidChangeProperties(properties));
         }
@@ -83,6 +88,11 @@ public class SkinDocumentListeners {
         @Override
         public void documentDidChangeType(SkinDocumentType type) {
             BlockUtils.combine(blockEntity, blockEntity::sendBlockUpdates);
+        }
+
+        @Override
+        public void documentDidChangeSettings(CompoundTag tag) {
+            blockEntity.setChanged();
         }
 
         @Override

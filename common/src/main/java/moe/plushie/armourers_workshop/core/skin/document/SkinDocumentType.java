@@ -20,6 +20,8 @@ public class SkinDocumentType implements IRegistryEntry {
             .put(SkinPartTypes.BIPPED_RIGHT_ARM, ObjectUtils.map(SkinPartTypes.BIPPED_RIGHT_HAND))
             .put(SkinPartTypes.BIPPED_LEFT_THIGH, ObjectUtils.map(SkinPartTypes.BIPPED_LEFT_LEG))
             .put(SkinPartTypes.BIPPED_RIGHT_THIGH, ObjectUtils.map(SkinPartTypes.BIPPED_RIGHT_LEG))
+            .put(SkinPartTypes.BIPPED_RIGHT_WING, ObjectUtils.map(SkinPartTypes.BIPPED_RIGHT_PHALANX))
+            .put(SkinPartTypes.BIPPED_LEFT_WING, ObjectUtils.map(SkinPartTypes.BIPPED_LEFT_PHALANX))
             .build();
 
     private final String name;

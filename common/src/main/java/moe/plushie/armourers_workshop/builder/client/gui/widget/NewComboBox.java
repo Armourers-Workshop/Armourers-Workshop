@@ -61,7 +61,7 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
         this.popoverBackgroundView.setImage(UIImage.of(ModTextures.ADVANCED_SKIN_BUILDER).uv(96, 0).resizable(24, 24).build());
         this.popoverBackgroundView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
         this.popoverView.addSubview(popoverBackgroundView);
-        this.popoverView.setZIndex(200);
+        this.popoverView.setZIndex(400);
         this.popoverView.addSubview(popoverContentView);
         this.popoverView.setOpaque(false);
     }

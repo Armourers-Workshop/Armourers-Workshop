@@ -1,14 +1,15 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.io;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufOutputStream;
+import moe.plushie.armourers_workshop.api.math.IRectangle3f;
+import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.utils.texture.TextureProperties;
 
-import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -110,6 +111,21 @@ public interface IOutputStream {
         stream.writeFloat(vec.getX());
         stream.writeFloat(vec.getY());
         stream.writeFloat(vec.getZ());
+    }
+
+    default void writeRectangle3f(IRectangle3f rect) throws IOException {
+        writeFloat(rect.getX());
+        writeFloat(rect.getY());
+        writeFloat(rect.getZ());
+        writeFloat(rect.getWidth());
+        writeFloat(rect.getHeight());
+        writeFloat(rect.getDepth());
+    }
+
+    default void writeTransformf(ITransformf transform) throws IOException {
+        if (transform instanceof SkinTransform) {
+            ((SkinTransform) transform).writeToStream(this);
+        }
     }
 
     default void writeSkinProperties(SkinProperties properties) throws IOException {

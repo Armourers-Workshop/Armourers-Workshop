@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.builder.client.gui.widget;
 
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
-import com.apple.library.impl.KeyboardManagerImpl;
+import com.apple.library.impl.InputManagerImpl;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIComboBox;
 import com.apple.library.uikit.UIComboItem;
@@ -57,7 +57,7 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
         int index = paletteBox.getSelectedIndex();
         Palette palette = getSelectedPalette();
         if (palette != null) {
-            if (!palette.isLocked() && KeyboardManagerImpl.hasShiftDown()) {
+            if (!palette.isLocked() && InputManagerImpl.hasShiftDown()) {
                 palette.setColor(index, paintColorView.color());
                 paletteManager.markDirty();
                 return;
@@ -75,12 +75,10 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
         setColorComponents(new float[]{sliders[0].getValue(), sliders[1].getValue(), sliders[2].getValue()});
     }
 
-    protected abstract NSString getDisplayText(String key, Object... args);
-
     protected void showNewPaletteDialog(UIControl button) {
         InputDialog alert = new InputDialog();
-        alert.setTitle(getDisplayText("add_palette.title"));
-        alert.setPlaceholder(getDisplayText("add_palette.enter_name"));
+        alert.setTitle(NSString.localizedString("colour-mixer.add_palette.title"));
+        alert.setPlaceholder(NSString.localizedString("colour-mixer.add_palette.enter_name"));
         alert.showInView(this, () -> {
             if (!alert.isCancelled()) {
                 setSelectedPalette(paletteManager.addPalette(alert.value()));
@@ -95,8 +93,8 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
             return;
         }
         InputDialog alert = new InputDialog();
-        alert.setTitle(getDisplayText("rename_palette.title"));
-        alert.setPlaceholder(getDisplayText("rename_palette.enter_name"));
+        alert.setTitle(NSString.localizedString("colour-mixer.rename_palette.title"));
+        alert.setPlaceholder(NSString.localizedString("colour-mixer.rename_palette.enter_name"));
         alert.setValue(palette.getName());
         alert.showInView(this, () -> {
             if (!alert.isCancelled()) {
@@ -113,8 +111,8 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
             return;
         }
         ConfirmDialog alert = new ConfirmDialog();
-        alert.setTitle(getDisplayText("remove_palette.title"));
-        alert.setMessage(getDisplayText("remove_palette.message", palette.getName()));
+        alert.setTitle(NSString.localizedString("colour-mixer.remove_palette.title"));
+        alert.setMessage(NSString.localizedString("colour-mixer.remove_palette.message", palette.getName()));
         alert.showInView(this, () -> {
             if (!alert.isCancelled()) {
                 String name = palette.getName();

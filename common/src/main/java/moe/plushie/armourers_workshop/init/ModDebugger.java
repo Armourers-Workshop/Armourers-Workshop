@@ -17,7 +17,7 @@ public class ModDebugger {
     public static float sy = 1;
     public static float sz = 1;
 
-    public static int flag1 = 0;
+    public static int flag1 = 1;
 
 
     public static boolean skinnable = false;

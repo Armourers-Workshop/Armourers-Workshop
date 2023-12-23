@@ -17,7 +17,6 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.PlayerInventoryView
 import moe.plushie.armourers_workshop.core.client.gui.widget.SlotListView;
 import moe.plushie.armourers_workshop.core.menu.AbstractContainerMenu;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -64,12 +63,12 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         setupBackgroundView(left, centerX, height);
 
         keepColorBox.setFrame(new CGRect(left, bottom - 22, width, 9));
-        keepColorBox.setTitle(getText("keepColor"));
+        keepColorBox.setTitle(NSString.localizedString("armourer.dialog.replace.keepColor"));
         keepColorBox.setSelected(false);
         addSubview(keepColorBox);
 
         keepPaintBox.setFrame(new CGRect(left, bottom - 11, width, 9));
-        keepPaintBox.setTitle(getText("keepPaint"));
+        keepPaintBox.setTitle(NSString.localizedString("armourer.dialog.replace.keepPaint"));
         keepPaintBox.setSelected(false);
         addSubview(keepPaintBox);
 
@@ -84,8 +83,8 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
     private void setupBackgroundView(float left, float center, float height) {
         UILabel label1 = new UILabel(new CGRect(left + 8, 25, 100, 9));
         UILabel label2 = new UILabel(new CGRect(center + 8, 25, 100, 9));
-        label1.setText(getText("srcBlock"));
-        label2.setText(getText("desBlock"));
+        label1.setText(NSString.localizedString("armourer.dialog.replace.srcBlock"));
+        label2.setText(NSString.localizedString("armourer.dialog.replace.desBlock"));
         addSubview(label1);
         addSubview(label2);
 
@@ -104,8 +103,8 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         inventoryView.setUserInteractionEnabled(false);
         addSubview(inventoryView);
 
-        addHelpButton(left, 25, "help.selector");
-        addHelpButton(center, 25, "help.applier");
+        addHelpButton(left, 25, "armourer.dialog.replace.help.selector");
+        addHelpButton(center, 25, "armourer.dialog.replace.help.applier");
     }
 
     private Container createBackup(Inventory inventory) {
@@ -175,16 +174,12 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         }
     }
 
-    private void addHelpButton(float x, float y, String key) {
+    private void addHelpButton(float x, float y, String tooltipKey) {
         UIButton button = new UIButton(new CGRect(x, y, 7, 8));
         button.setBackgroundImage(ModTextures.helpButtonImage(), UIControl.State.ALL);
-        button.setTooltip(getText(key));
+        button.setTooltip(NSString.localizedString(tooltipKey));
         button.setCanBecomeFocused(false);
         addSubview(button);
-    }
-
-    private NSString getText(String key) {
-        return new NSString(TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.replace" + "." + key));
     }
 
     static class PickerContainer extends AbstractContainerMenu {

@@ -20,7 +20,7 @@ public class SkinWardrobeContributorSetting extends SkinWardrobeBaseSetting {
     private final SkinWardrobe wardrobe;
 
     public SkinWardrobeContributorSetting(SkinWardrobe wardrobe) {
-        super("inventory.armourers_workshop.wardrobe.contributor");
+        super("wardrobe.contributor");
         this.wardrobe = wardrobe;
         this.setup();
     }

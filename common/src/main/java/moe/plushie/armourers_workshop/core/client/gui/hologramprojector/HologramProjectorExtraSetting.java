@@ -23,7 +23,7 @@ public class HologramProjectorExtraSetting extends HologramProjectorBaseSetting 
     private final UpdateHologramProjectorPacket.Field field2 = UpdateHologramProjectorPacket.Field.IS_GLOWING;
 
     public HologramProjectorExtraSetting(HologramProjectorBlockEntity entity) {
-        super("inventory.armourers_workshop.hologram-projector.extra");
+        super("hologram-projector.extra");
         this.entity = entity;
         this.setFrame(new CGRect(0, 0, 200, 78));
         this.setup();

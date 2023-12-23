@@ -38,7 +38,7 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
     private PlayerTextureDescriptor.Source lastSource = PlayerTextureDescriptor.Source.NONE;
 
     public SkinWardrobeTextureSetting(SkinWardrobe wardrobe) {
-        super("inventory.armourers_workshop.wardrobe.man_texture");
+        super("wardrobe.man_texture");
         this.wardrobe = wardrobe;
         this.prepareDefaultValue();
         this.setup();

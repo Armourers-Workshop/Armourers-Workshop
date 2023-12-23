@@ -76,8 +76,8 @@ public class DocumentEditor {
 
     public void nodeRemoveAction(SkinDocumentNode node, TreeView treeView) {
         ConfirmDialog alert = new ConfirmDialog();
-        alert.setTitle(new NSString(_getText("dialog.delete.title")));
-        alert.setMessage(new NSString(_getText("dialog.delete.message", node.getName())));
+        alert.setTitle(NSString.localizedString("advanced-skin-builder.dialog.delete.title"));
+        alert.setMessage(NSString.localizedString("advanced-skin-builder.dialog.delete.message", node.getName()));
         alert.showInView(treeView, () -> {
             if (!alert.isCancelled()) {
                 node.removeFromParent();
@@ -195,9 +195,5 @@ public class DocumentEditor {
         for (SkinDocumentNode child : node.children()) {
             _eachNode(child, consumer);
         }
-    }
-
-    private static Component _getText(String key, Object... args) {
-        return TranslateUtils.title("inventory.armourers_workshop.advanced-skin-builder." + key, args);
     }
 }

@@ -2,8 +2,9 @@ package moe.plushie.armourers_workshop.builder.menu;
 
 import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
 import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
+import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
-import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
+import moe.plushie.armourers_workshop.core.menu.AbstractBlockEntityMenu;
 import moe.plushie.armourers_workshop.utils.ext.OpenUseOnContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,7 +23,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class ColorMixerMenu extends AbstractBlockContainerMenu {
+public class ColorMixerMenu extends AbstractBlockEntityMenu<ColorMixerBlockEntity> {
 
     private final Container inventory = new SimpleContainer(2);
 

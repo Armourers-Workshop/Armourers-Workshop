@@ -452,13 +452,13 @@
   "sounds.armourers_workshop.burn": "Ferramenta de escurecimento",
   "sounds.armourers_workshop.dodge": "Ferramenta de clareamento",
   "sounds.armourers_workshop.picker": "Selecionador de cores",
-  "tooloption.armourers_workshop.changeBrightness": "Mudar brilho",
-  "tooloption.armourers_workshop.changeHue": "Mudar matiz",
-  "tooloption.armourers_workshop.changePaintType": "Mudar tipo de pintura",
-  "tooloption.armourers_workshop.changeSaturation": "Mudar saturação",
-  "tooloption.armourers_workshop.effectRadius": "Raio de efeito",
-  "tooloption.armourers_workshop.fullBlockMode": "Modo bloco inteiro",
-  "tooloption.armourers_workshop.intensity": "Intensidade",
-  "tooloption.armourers_workshop.planeRestrict": "Restringir plano",
-  "tooloption.armourers_workshop.radius": "Raio"
+  "inventory.armourers_workshop.toolOptions.changeBrightness": "Mudar brilho",
+  "inventory.armourers_workshop.toolOptions.changeHue": "Mudar matiz",
+  "inventory.armourers_workshop.toolOptions.changePaintType": "Mudar tipo de pintura",
+  "inventory.armourers_workshop.toolOptions.changeSaturation": "Mudar saturação",
+  "inventory.armourers_workshop.toolOptions.effectRadius": "Raio de efeito",
+  "inventory.armourers_workshop.toolOptions.fullBlockMode": "Modo bloco inteiro",
+  "inventory.armourers_workshop.toolOptions.intensity": "Intensidade",
+  "inventory.armourers_workshop.toolOptions.planeRestrict": "Restringir plano",
+  "inventory.armourers_workshop.toolOptions.radius": "Raio"
 }

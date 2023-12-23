@@ -2,9 +2,10 @@ package moe.plushie.armourers_workshop.library.menu;
 
 import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
-import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
+import moe.plushie.armourers_workshop.core.menu.AbstractBlockEntityMenu;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModItems;
+import moe.plushie.armourers_workshop.library.blockentity.SkinLibraryBlockEntity;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -15,7 +16,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-public class SkinLibraryMenu extends AbstractBlockContainerMenu {
+public class SkinLibraryMenu extends AbstractBlockEntityMenu<SkinLibraryBlockEntity> {
 
     protected final Container inventory;
     protected final Inventory playerInventory;
@@ -27,7 +28,7 @@ public class SkinLibraryMenu extends AbstractBlockContainerMenu {
 
     public SkinLibraryMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess access) {
         super(menuType, block, containerId, access);
-        this.inventory = getBlockInventory();
+        this.inventory = blockEntity.getInventory();
         this.playerInventory = playerInventory;
         this.reload(0, 0, 240, 240);
     }

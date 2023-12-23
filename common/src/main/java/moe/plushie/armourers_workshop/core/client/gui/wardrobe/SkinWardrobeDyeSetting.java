@@ -13,7 +13,7 @@ public class SkinWardrobeDyeSetting extends SkinWardrobeBaseSetting {
     private final SkinWardrobeMenu container;
 
     public SkinWardrobeDyeSetting(SkinWardrobeMenu container) {
-        super("inventory.armourers_workshop.wardrobe.dyes");
+        super("wardrobe.dyes");
         this.container = container;
     }
 

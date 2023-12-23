@@ -77,7 +77,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     private final GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
 
     public SkinDetailLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.skinInfo", GlobalSkinLibraryWindow.Page.SKIN_DETAIL::equals);
+        super("skin-library-global.skinInfo", GlobalSkinLibraryWindow.Page.SKIN_DETAIL::equals);
         this.setup();
     }
 

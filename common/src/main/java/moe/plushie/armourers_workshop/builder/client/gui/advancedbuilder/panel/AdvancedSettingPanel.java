@@ -10,20 +10,15 @@ import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIScrollView;
 import com.apple.library.uikit.UIView;
 import com.google.common.collect.ImmutableMap;
-import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.document.DocumentEditor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -124,7 +119,7 @@ public class AdvancedSettingPanel extends AdvancedPanel {
         float top = 10;
         for (ISkinProperty<Boolean> property : properties) {
             UICheckBox checkBox = new UICheckBox(new CGRect(10, top, width, 10));
-            checkBox.setTitle(new NSString(TranslateUtils.title("inventory.armourers_workshop.armourer.skinSettings." + property.getKey())));
+            checkBox.setTitle(NSString.localizedString("armourer.skinSettings." + property.getKey()));
             checkBox.setTitleColor(UIColor.WHITE);
             checkBox.setSelected(document.get(property));
             checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, c) -> {

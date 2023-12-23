@@ -12,6 +12,8 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class Rectangle3f implements IRectangle3f {
 
+    public static final int BYTES = Float.BYTES * 6;
+
     public final static Rectangle3f ZERO = new Rectangle3f(0, 0, 0, 0, 0, 0);
 
     private float x;

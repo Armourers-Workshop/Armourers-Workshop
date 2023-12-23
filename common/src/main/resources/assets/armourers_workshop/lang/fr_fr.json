@@ -266,12 +266,12 @@
   "skin_search_column.armourers_workshop.downloads": "Telechargement",
   "skin_search_column.armourers_workshop.name": "Nom",
   "skin_search_column.armourers_workshop.skin_type": "Type de skin",
-  "tooloption.armourers_workshop.changeBrightness": "Changer la luminositee",
-  "tooloption.armourers_workshop.changeHue": "Changer la teinte",
-  "tooloption.armourers_workshop.changePaintType": "Changer le type de peinture",
-  "tooloption.armourers_workshop.changeSaturation": "Changer la Saturation",
-  "tooloption.armourers_workshop.effectRadius": "Taille a effet",
-  "tooloption.armourers_workshop.fullBlockMode": "Mode Bloc entier",
-  "tooloption.armourers_workshop.intensity": "Intensitee",
-  "tooloption.armourers_workshop.radius": "Taille"
+  "inventory.armourers_workshop.toolOptions.changeBrightness": "Changer la luminositee",
+  "inventory.armourers_workshop.toolOptions.changeHue": "Changer la teinte",
+  "inventory.armourers_workshop.toolOptions.changePaintType": "Changer le type de peinture",
+  "inventory.armourers_workshop.toolOptions.changeSaturation": "Changer la Saturation",
+  "inventory.armourers_workshop.toolOptions.effectRadius": "Taille a effet",
+  "inventory.armourers_workshop.toolOptions.fullBlockMode": "Mode Bloc entier",
+  "inventory.armourers_workshop.toolOptions.intensity": "Intensitee",
+  "inventory.armourers_workshop.toolOptions.radius": "Taille"
 }

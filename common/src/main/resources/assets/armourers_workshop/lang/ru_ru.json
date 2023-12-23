@@ -492,13 +492,13 @@
   "sounds.armourers_workshop.burn": "Затемнитель",
   "sounds.armourers_workshop.dodge": "Осветлитель",
   "sounds.armourers_workshop.picker": "Пипетка",
-  "tooloption.armourers_workshop.changeBrightness": "Изменить яркость",
-  "tooloption.armourers_workshop.changeHue": "Изменить тон",
-  "tooloption.armourers_workshop.changePaintType": "Изменить тип краски",
-  "tooloption.armourers_workshop.changeSaturation": "Изменить насыщенность",
-  "tooloption.armourers_workshop.effectRadius": "Радиус применения эффекта",
-  "tooloption.armourers_workshop.fullBlockMode": "Режим полного блока",
-  "tooloption.armourers_workshop.intensity": "Интенсивность",
-  "tooloption.armourers_workshop.planeRestrict": "Ограничить плоскость",
-  "tooloption.armourers_workshop.radius": "Радиус"
+  "inventory.armourers_workshop.toolOptions.changeBrightness": "Изменить яркость",
+  "inventory.armourers_workshop.toolOptions.changeHue": "Изменить тон",
+  "inventory.armourers_workshop.toolOptions.changePaintType": "Изменить тип краски",
+  "inventory.armourers_workshop.toolOptions.changeSaturation": "Изменить насыщенность",
+  "inventory.armourers_workshop.toolOptions.effectRadius": "Радиус применения эффекта",
+  "inventory.armourers_workshop.toolOptions.fullBlockMode": "Режим полного блока",
+  "inventory.armourers_workshop.toolOptions.intensity": "Интенсивность",
+  "inventory.armourers_workshop.toolOptions.planeRestrict": "Ограничить плоскость",
+  "inventory.armourers_workshop.toolOptions.radius": "Радиус"
 }

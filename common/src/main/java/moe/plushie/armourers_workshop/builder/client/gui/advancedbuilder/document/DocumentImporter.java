@@ -26,7 +26,6 @@ import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenc
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -65,12 +64,12 @@ public class DocumentImporter {
             } catch (TranslatableException e) {
                 e.printStackTrace();
                 NSString message = new NSString(e.getComponent());
-                NSString title = new NSString(TranslateUtils.title("inventory.armourers_workshop.advanced-skin-builder.dialog.importer.title"));
+                NSString title = NSString.localizedString("advanced-skin-builder.dialog.importer.title");
                 UserNotificationCenter.showToast(message, UIColor.RED, title, null);
             } catch (Exception e) {
                 e.printStackTrace();
-                NSString message = new NSString(TranslateUtils.title("inventory.armourers_workshop.skin-library.error.illegalOperation"));
-                NSString title = new NSString(TranslateUtils.title("inventory.armourers_workshop.advanced-skin-builder.dialog.importer.title"));
+                NSString message = NSString.localizedString("skin-library.error.illegalOperation");
+                NSString title = NSString.localizedString("advanced-skin-builder.dialog.importer.title");
                 UserNotificationCenter.showToast(message, UIColor.RED, title, null);
             }
         });

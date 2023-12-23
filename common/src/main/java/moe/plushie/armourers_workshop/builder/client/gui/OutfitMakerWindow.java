@@ -15,7 +15,6 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -46,8 +45,8 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
     public void init() {
         super.init();
 
-        setupTextField(nameTextField, blockEntity.getItemName(), "skinName");
-        setupTextField(flavourTextField, blockEntity.getItemFlavour(), "skinFlavour");
+        setupTextField(nameTextField, blockEntity.getItemName(), "outfit-maker.skinName");
+        setupTextField(flavourTextField, blockEntity.getItemFlavour(), "outfit-maker.skinFlavour");
 
         HashMap<Integer, CGPoint> offsets = new HashMap<>();
         offsets.put(UIControl.State.NORMAL, new CGPoint(0, 0));
@@ -86,13 +85,9 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
     private void setupTextField(UITextField textField, String value, String placeholderKey) {
         textField.setMaxLength(40);
         textField.setText(value);
-        textField.setPlaceholder(getDisplayText(placeholderKey));
+        textField.setPlaceholder(NSString.localizedString(placeholderKey));
         textField.addTarget(this, UIControl.Event.EDITING_DID_END, OutfitMakerWindow::saveSkinInfo);
         addSubview(textField);
-    }
-
-    private NSString getDisplayText(String key) {
-        return new NSString(TranslateUtils.title("inventory.armourers_workshop.outfit-maker" + "." + key));
     }
 
     @Override

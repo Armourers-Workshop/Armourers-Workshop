@@ -16,7 +16,7 @@ public class SkinWardrobeExtraSetting extends SkinWardrobeBaseSetting {
     private final SkinWardrobe wardrobe;
 
     public SkinWardrobeExtraSetting(SkinWardrobe wardrobe) {
-        super("inventory.armourers_workshop.wardrobe.man_extras");
+        super("wardrobe.man_extras");
         this.wardrobe = wardrobe;
         this.setup();
     }

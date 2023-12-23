@@ -6,7 +6,7 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
-import com.apple.library.impl.KeyboardManagerImpl;
+import com.apple.library.impl.InputManagerImpl;
 import com.apple.library.impl.SimpleContentLayoutImpl;
 import com.apple.library.impl.SoundManagerImpl;
 import com.apple.library.impl.StateValueImpl;
@@ -287,7 +287,7 @@ public class UIButton extends UIControl {
     }
 
     private boolean isDownKey(int key) {
-        return KeyboardManagerImpl.isEnter(key) || KeyboardManagerImpl.isSpace(key);
+        return InputManagerImpl.isEnter(key) || InputManagerImpl.isSpace(key);
     }
 
     private void applyImageToAnother(StateValueImpl<UIImage> container, UIImage image, int state) {

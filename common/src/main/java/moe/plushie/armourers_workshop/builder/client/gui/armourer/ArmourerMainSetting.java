@@ -49,7 +49,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
     protected ISkinType skinType = SkinTypes.ARMOR_HEAD;
 
     protected ArmourerMainSetting(ArmourerMenu container) {
-        super("inventory.armourers_workshop.armourer.main");
+        super("armourer.main");
         this.modVersion = EnvironmentManager.getVersion();
         this.container = container;
         this.blockEntity = container.getBlockEntity();

@@ -16,7 +16,6 @@ import moe.plushie.armourers_workshop.core.menu.AbstractContainerMenu;
 import moe.plushie.armourers_workshop.core.network.UpdateConfigurableToolPacket;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
@@ -63,15 +62,12 @@ public class ConfigurableToolWindow extends MenuWindow<AbstractContainerMenu> {
         NetworkManager.sendToServer(new UpdateConfigurableToolPacket(hand, itemStack));
     }
 
-    protected NSString getOptionText(String key) {
-        return new NSString(TranslateUtils.title("tooloption.armourers_workshop" + "." + key));
-    }
-
     private UIView createOptionView(IConfigurableToolProperty<?> property) {
+        NSString name = NSString.localizedString("toolOptions." + property.getName());
         if (property instanceof BooleanToolProperty) {
             BooleanToolProperty property1 = (BooleanToolProperty) property;
             UICheckBox checkBox = new UICheckBox(new CGRect(8, contentHeight, contentWidth - 16, 9));
-            checkBox.setTitle(getOptionText(property.getName()));
+            checkBox.setTitle(name);
             checkBox.setSelected(property1.get(itemStack));
             checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, sender) -> {
                 boolean value = sender.isSelected();
@@ -82,11 +78,10 @@ public class ConfigurableToolWindow extends MenuWindow<AbstractContainerMenu> {
         }
         if (property instanceof IntegerToolProperty) {
             IntegerToolProperty property1 = (IntegerToolProperty) property;
-            NSString title = getOptionText(property.getName());
             UISliderBox slider = new UISliderBox(new CGRect(8, contentHeight, contentWidth - 16, 20));
             slider.setFormatter(currentValue -> {
                 NSMutableString formattedValue = new NSMutableString("");
-                formattedValue.append(title);
+                formattedValue.append(name);
                 formattedValue.append(" ");
                 formattedValue.append(String.format("%.1f", currentValue));
                 return formattedValue;

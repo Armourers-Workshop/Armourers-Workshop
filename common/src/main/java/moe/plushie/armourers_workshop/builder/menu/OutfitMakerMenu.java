@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.core.data.UserNotifications;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlot;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
-import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
+import moe.plushie.armourers_workshop.core.menu.AbstractBlockEntityMenu;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -33,13 +33,13 @@ import net.minecraft.world.level.block.Block;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class OutfitMakerMenu extends AbstractBlockContainerMenu {
+public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEntity> {
 
     private final Container inventory;
 
     public OutfitMakerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess access) {
         super(menuType, block, containerId, access);
-        this.inventory = getBlockInventory();
+        this.inventory = blockEntity.getInventory();
         this.addPlayerSlots(playerInventory, 8, 158);
         this.addInputSlots(inventory, 0, inventory.getContainerSize() - 1, 36, 58);
         this.addOutputSlot(inventory, inventory.getContainerSize() - 1, 148, 88);
@@ -66,8 +66,7 @@ public class OutfitMakerMenu extends AbstractBlockContainerMenu {
 
     public void saveArmourItem(Player player, GameProfile profile) {
         // check again before crafting to avoid fake request.
-        OutfitMakerBlockEntity blockEntity = getBlockEntity(OutfitMakerBlockEntity.class);
-        if (!shouldCrafting() || blockEntity == null) {
+        if (!shouldCrafting()) {
             return;
         }
         try {

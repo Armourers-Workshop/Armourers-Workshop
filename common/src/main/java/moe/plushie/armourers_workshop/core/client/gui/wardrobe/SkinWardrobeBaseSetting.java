@@ -18,14 +18,10 @@ public abstract class SkinWardrobeBaseSetting extends UIView {
     }
 
     public NSString getTitle() {
-        return new NSString(TranslateUtils.title(baseKey));
-    }
-
-    protected NSString getDisplayText(String key) {
-        return new NSString(TranslateUtils.title(baseKey + "." + key));
+        return NSString.localizedString(baseKey);
     }
 
     protected NSString getDisplayText(String key, Object... objects) {
-        return new NSString(TranslateUtils.title(baseKey + "." + key, objects));
+        return NSString.localizedString(baseKey + "." + key, objects);
     }
 }

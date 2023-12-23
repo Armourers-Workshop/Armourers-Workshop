@@ -73,6 +73,7 @@ public class SkinTextureManager {
         textures.clear();
         renderTypes.clear();
         renderTypeVariants.clear();
+        textureAnimationControllers.clear();
         counter.set(0);
     }
 

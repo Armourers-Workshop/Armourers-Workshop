@@ -41,12 +41,12 @@ public class ArmourerCopyDialog extends ConfirmDialog {
         float bottom = confirmButton.frame().getY() - 4;
 
         mirrorCheckBox.setFrame(new CGRect(left, bottom - 22, width, 9));
-        mirrorCheckBox.setTitle(getText("mirror"));
+        mirrorCheckBox.setTitle(NSString.localizedString("armourer.dialog.copy.mirror"));
         mirrorCheckBox.setSelected(false);
         addSubview(mirrorCheckBox);
 
         paintCheckBox.setFrame(new CGRect(left, bottom - 11, width, 9));
-        paintCheckBox.setTitle(getText("copyPaint"));
+        paintCheckBox.setTitle(NSString.localizedString("armourer.dialog.copy.copyPaint"));
         paintCheckBox.setSelected(false);
         addSubview(paintCheckBox);
 
@@ -62,8 +62,8 @@ public class ArmourerCopyDialog extends ConfirmDialog {
 
         UILabel label1 = new UILabel(new CGRect(sourcePartComboBox.frame().getX(), sourcePartComboBox.frame().getY() - 10, 100, 9));
         UILabel label2 = new UILabel(new CGRect(destinationPartComboBox.frame().getX(), destinationPartComboBox.frame().getY() - 10, 100, 9));
-        label1.setText(getText("srcPart"));
-        label2.setText(getText("desPart"));
+        label1.setText(NSString.localizedString("armourer.dialog.copy.srcPart"));
+        label2.setText(NSString.localizedString("armourer.dialog.copy.desPart"));
         addSubview(label1);
         addSubview(label2);
     }
@@ -97,9 +97,5 @@ public class ArmourerCopyDialog extends ConfirmDialog {
             items.add(new UIComboItem(title));
         }
         return items;
-    }
-
-    private NSString getText(String key) {
-        return new NSString(TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.copy" + "." + key));
     }
 }
