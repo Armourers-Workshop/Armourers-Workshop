@@ -5,8 +5,6 @@ import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.api.common.IResource;
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.builder.blockentity.AdvancedBuilderBlockEntity;
-import moe.plushie.armourers_workshop.builder.network.AdvancedImportPacket;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -24,7 +22,6 @@ import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModel
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockTransform;
 import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchReader;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.Util;
@@ -38,6 +35,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -53,14 +51,14 @@ public class DocumentImporter {
     }
 
 
-    public void execute(AdvancedBuilderBlockEntity blockEntity) {
+    public void execute(Consumer<Skin> consumer) {
         generateSkin((skin, exception) -> {
             try {
-                if (skin == null) {
+                if (skin != null) {
+                    consumer.accept(skin);
+                } else {
                     throw exception;
                 }
-                AdvancedImportPacket packet = new AdvancedImportPacket(blockEntity, skin);
-                NetworkManager.sendToServer(packet);
             } catch (TranslatableException e) {
                 e.printStackTrace();
                 NSString message = new NSString(e.getComponent());
@@ -82,7 +80,6 @@ public class DocumentImporter {
                     throw new TranslatableException("inventory.armourers_workshop.skin-library.error.illegalModelFile");
                 }
                 Skin skin = readSkinFromFile(inputFile);
-                ModLog.debug("{}", skin);
                 if (skin == null || skin.getParts().isEmpty()) {
                     throw new TranslatableException("inventory.armourers_workshop.skin-library.error.illegalModelFormat");
                 }

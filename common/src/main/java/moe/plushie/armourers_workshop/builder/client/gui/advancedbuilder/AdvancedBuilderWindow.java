@@ -13,6 +13,7 @@ import com.apple.library.uikit.UIMenuController;
 import com.apple.library.uikit.UIMenuItem;
 import com.apple.library.uikit.UIScreen;
 import com.apple.library.uikit.UIView;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedBuilderBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.document.DocumentEditor;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.document.DocumentImporter;
@@ -24,11 +25,13 @@ import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.panel.A
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.panel.AdvancedRightCardPanel;
 import moe.plushie.armourers_workshop.builder.menu.AdvancedBuilderMenu;
 import moe.plushie.armourers_workshop.builder.network.AdvancedExportPacket;
+import moe.plushie.armourers_workshop.builder.network.AdvancedImportPacket;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
 import moe.plushie.armourers_workshop.core.client.gui.widget.FileProviderDialog;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.client.gui.widget.TreeIndexPath;
+import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentListener;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
@@ -38,15 +41,14 @@ import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
-import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.FileUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> implements SkinDocumentListener {
@@ -169,26 +171,10 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
         if (documentType == null) {
             return;
         }
-        NSString title = NSString.localizedString("advanced-skin-builder.dialog.importer.title");
-        SkinLibraryManager libraryManager = SkinLibraryManager.getClient();
-        if (!libraryManager.shouldUploadFile(inventory.player)) {
-            NSString message = NSString.localizedString("skin-library.error.illegalOperation");
-            UserNotificationCenter.showToast(message, UIColor.RED, title, null);
-            return;
-        }
-        File rootPath = new File(EnvironmentManager.getRootDirectory(), "model-imports");
-        if (!rootPath.exists() && !rootPath.mkdirs()) {
-            NSString message = new NSString("Can't create directory");
-            UserNotificationCenter.showToast(message, UIColor.RED, title, null);
-            return;
-        }
-        FileProviderDialog alert = new FileProviderDialog(rootPath, "bbmodel");
-        alert.setTitle(title);
-        alert.showInView(this, () -> {
-            if (!alert.isCancelled()) {
-                DocumentImporter importer = new DocumentImporter(alert.getSelectedFile(), documentType.getSkinType());
-                importer.execute(editor.getBlockEntity());
-            }
+        importNewSkin(documentType.getSkinType(), skin -> {
+            AdvancedBuilderBlockEntity blockEntity = editor.getBlockEntity();
+            AdvancedImportPacket packet = new AdvancedImportPacket(blockEntity, skin, "");
+            NetworkManager.sendToServer(packet);
         });
     }
 
@@ -215,6 +201,30 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
         UIMenuItem item = builder.build();
         helps.add(NSString.localizedString("advanced-skin-builder.shortcut." + name, item.key()));
         addMenuItem(item);
+    }
+
+    public void importNewSkin(ISkinType skinType, Consumer<Skin> consumer) {
+        NSString title = NSString.localizedString("advanced-skin-builder.dialog.importer.title");
+        SkinLibraryManager libraryManager = SkinLibraryManager.getClient();
+        if (!libraryManager.shouldUploadFile(inventory.player)) {
+            NSString message = NSString.localizedString("skin-library.error.illegalOperation");
+            UserNotificationCenter.showToast(message, UIColor.RED, title, null);
+            return;
+        }
+        File rootPath = new File(EnvironmentManager.getRootDirectory(), "model-imports");
+        if (!rootPath.exists() && !rootPath.mkdirs()) {
+            NSString message = new NSString("Can't create directory");
+            UserNotificationCenter.showToast(message, UIColor.RED, title, null);
+            return;
+        }
+        FileProviderDialog alert = new FileProviderDialog(rootPath, "bbmodel");
+        alert.setTitle(title);
+        alert.showInView(this, () -> {
+            if (!alert.isCancelled()) {
+                DocumentImporter importer = new DocumentImporter(alert.getSelectedFile(), skinType);
+                importer.execute(consumer);
+            }
+        });
     }
 
     @Override

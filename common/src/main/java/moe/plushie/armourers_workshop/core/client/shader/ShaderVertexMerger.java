@@ -40,6 +40,11 @@ public class ShaderVertexMerger {
         pending.forEach((renderType, group) -> group.clear());
     }
 
+    public void clear() {
+        sortedGroups.clear();
+        pending.clear();
+    }
+
     public boolean isEmpty() {
         return maxVertexCount == 0;
     }

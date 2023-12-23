@@ -65,6 +65,10 @@ public class DocumentConnector {
         nodeListeners.remove(consumer);
     }
 
+    public SkinDocumentNode getNode() {
+        return node;
+    }
+
     public DocumentEditor getEditor() {
         return editor;
     }

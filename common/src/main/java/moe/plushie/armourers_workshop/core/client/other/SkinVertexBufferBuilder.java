@@ -67,6 +67,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         SkinVertexBufferBuilder builder = getInstance();
         builder.cachingBuilders.clear();
         builder.cachingBuilders2.clear();
+        builder.pipeline.clear();
         SkinRenderObjectBuilder.clearAllCache();
     }
 
@@ -127,6 +128,10 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
             shader.end();
 
             merger.reset();
+        }
+
+        public void clear() {
+           merger.clear();
         }
     }
 }

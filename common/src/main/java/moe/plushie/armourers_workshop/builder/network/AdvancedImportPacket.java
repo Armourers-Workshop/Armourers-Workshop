@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.builder.menu.AdvancedBuilderMenu;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
@@ -26,20 +27,24 @@ public class AdvancedImportPacket extends CustomPacket {
 
     private final BlockPos pos;
     private final Skin skin;
+    private final String target;
 
-    public AdvancedImportPacket(AdvancedBuilderBlockEntity blockEntity, Skin skin) {
+    public AdvancedImportPacket(AdvancedBuilderBlockEntity blockEntity, Skin skin, String target) {
         this.pos = blockEntity.getBlockPos();
         this.skin = skin;
+        this.target = target;
     }
 
     public AdvancedImportPacket(FriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
+        this.target = buffer.readUtf();
         this.skin = decodeSkin(buffer);
     }
 
     @Override
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeBlockPos(pos);
+        buffer.writeUtf(target);
         encodeSkin(buffer);
     }
 
@@ -64,10 +69,22 @@ public class AdvancedImportPacket extends CustomPacket {
             abort(player, "import", "prohibited by the skin can't editing.");
             return;
         }
-        accept(player, "import");
+        SkinDocumentNode node = null;
         AdvancedBuilderBlockEntity blockEntity1 = (AdvancedBuilderBlockEntity) blockEntity;
+        if (!target.isEmpty()) {
+            node = blockEntity1.getDocument().nodeById(target);
+            if (node == null) {
+                abort(player, "import", "can't found node.");
+                return;
+            }
+        }
+        accept(player, "import");
         String identifier = SkinLoader.getInstance().saveSkin("", skin);
-        blockEntity1.importToDocument(identifier, skin);
+        if (node != null) {
+            blockEntity1.importToNode(identifier, skin, node);
+        } else {
+            blockEntity1.importToDocument(identifier, skin);
+        }
     }
 
     private void accept(Player player, String op) {

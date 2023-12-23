@@ -67,12 +67,11 @@ public class SkinDocumentExporter {
             List<SkinPart> using = loadSkinParts(skin, node);
             SkinTransform transform = loadTransform(node);
             ArrayList<SkinPart> parts = convertToParts(node);
-            boolean isEmpty = parts.isEmpty() && transform.isIdentity();
-            if (using == null && node.getType() == SkinPartTypes.ADVANCED && isEmpty) {
+            if (using == null && parts.isEmpty()) {
                 // ignore empty node.
                 continue;
             }
-            if (using != null && node.getType() == using.get(0).getType() && isEmpty) {
+            if (using != null && node.getType() == using.get(0).getType() && parts.isEmpty() && transform.isIdentity()) {
                 // using original skin data directly.
                 SkinPart part = using.get(0);
                 part.setName(node.getName());

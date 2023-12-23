@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.builder.blockentity;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.UserNotifications;
+import moe.plushie.armourers_workshop.core.network.UpdateSkinDocumentPacket;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -10,8 +11,10 @@ import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentExporter;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentImporter;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentListeners;
+import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentProvider;
 import moe.plushie.armourers_workshop.core.skin.exception.TranslatableException;
+import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -63,6 +66,14 @@ public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements 
         document.serializeNBT(tag);
     }
 
+    public void importToNode(String identifier, Skin skin, SkinDocumentNode node) {
+        SkinDescriptor descriptor = new SkinDescriptor(identifier, skin.getType());
+        node.setSkin(descriptor);
+        CompoundTag tag = new CompoundTag();
+        tag.putOptionalSkinDescriptor(SkinDocumentNode.Keys.SKIN, descriptor, null);
+        UpdateSkinDocumentPacket.UpdateNodeAction action = new UpdateSkinDocumentPacket.UpdateNodeAction(node.getId(), tag);
+        NetworkManager.sendToAll(new UpdateSkinDocumentPacket(this, action));
+    }
 
     public void importToDocument(String identifier, Skin skin) {
         BlockUtils.beginCombiner();

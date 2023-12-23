@@ -32,6 +32,7 @@ public class PartPickerView extends UIControl {
     protected SkinDescriptor selectedPart = SkinDescriptor.EMPTY;
     protected Collection<SkinDescriptor> historySkins;
     protected Consumer<SkinDescriptor> itemSelector;
+    protected Runnable itemImporter;
 
     protected Predicate<SkinDescriptor> filter;
     protected final UIScrollView scrollView = new UIScrollView(CGRect.ZERO);
@@ -85,7 +86,18 @@ public class PartPickerView extends UIControl {
         this.dismiss();
     }
 
-    private void setSelectedPart(PartItem selectedItem) {
+    private void importPartAction() {
+        dismiss();
+        if (itemImporter != null) {
+            itemImporter.run();
+        }
+    }
+
+    private void selectPartAction(PartItem selectedItem) {
+        if (selectedItem == PartItem.IMPORT) {
+            importPartAction();
+            return;
+        }
         setSelectedPart(selectedItem.getDescriptor());
     }
 
@@ -106,6 +118,14 @@ public class PartPickerView extends UIControl {
         return historySkins;
     }
 
+    public void setImporter(Runnable itemImporter) {
+        this.itemImporter = itemImporter;
+    }
+
+    public Runnable getImporter() {
+        return itemImporter;
+    }
+
     public void setFilter(Predicate<SkinDescriptor> filter) {
         this.filter = filter;
     }
@@ -116,7 +136,7 @@ public class PartPickerView extends UIControl {
 
     private void setupData() {
         List<List<PartItem>> items = new ArrayList<>();
-        items.add(Lists.newArrayList(new PartItem(SkinDescriptor.EMPTY)));
+        items.add(Lists.newArrayList(PartItem.IMPORT, PartItem.CLEAR));
         items.add(getInventorySkins().stream().filter(this::isValid).collect(Collectors.toList()));
         items.add(getImportedSkins().stream().filter(this::isValid).collect(Collectors.toList()));
         buildSections(items);
@@ -162,7 +182,7 @@ public class PartPickerView extends UIControl {
         fileList.setBackgroundColor(0);
         fileList.setShowsName(false);
         fileList.setSelectedItem(selectedPart);
-        fileList.setItemSelector(this::setSelectedPart);
+        fileList.setItemSelector(this::selectPartAction);
         itemLists.add(fileList);
         return fileList;
     }

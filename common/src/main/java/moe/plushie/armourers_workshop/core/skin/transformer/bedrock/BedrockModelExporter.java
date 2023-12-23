@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 public class BedrockModelExporter {
 
@@ -42,6 +43,7 @@ public class BedrockModelExporter {
     protected Node rootNode = new Node("", null, null);
     protected HashMap<String, Node> namedNodes = new HashMap<>();
     protected ArrayList<Pair<String, Node>> allNodes = new ArrayList<>();
+    protected Map<String, ISkinPartType> mapper = PARTS;
 
     public void add(BedrockModelBone bone, BedrockModelTexture texture) {
         Node node = new Node(bone.getName(), bone, texture);
@@ -62,6 +64,10 @@ public class BedrockModelExporter {
     }
 
     public Skin export(ISkinType skinType) {
+        if (skinType == SkinTypes.ITEM_BOW) {
+            mapper = BOW_PARTS;
+        }
+
         // build the bone child-parent relationships tree.
         allNodes.forEach(it -> {
             String parentName = it.getKey();
@@ -94,15 +100,19 @@ public class BedrockModelExporter {
 
         Skin.Builder builder = createSkin(skinType);
 
-        if (skinType instanceof ISkinArmorType) {
+        if (skinType == SkinTypes.ADVANCED || skinType == SkinTypes.OUTFIT || skinType == SkinTypes.ITEM_BOW || skinType instanceof ISkinArmorType) {
             builder.parts(rootParts);
         } else {
-            SkinPart.Builder builder1 = new SkinPart.Builder(skinType.getParts().get(0));
-            builder1.cubes(new SkinCubesV0(0));
-            //builder1.transform(SkinBasicTransform.createScaleTransform(1, 1, 1));
-            SkinPart rootPart = builder1.build();
-            rootParts.forEach(rootPart::addPart);
-            builder.parts(Collections.singleton(rootPart));
+            if (skinType.getParts().size() == 1) {
+                SkinPart.Builder builder1 = new SkinPart.Builder(skinType.getParts().get(0));
+                builder1.cubes(new SkinCubesV0(0));
+                //builder1.transform(SkinBasicTransform.createScaleTransform(1, 1, 1));
+                SkinPart rootPart = builder1.build();
+                rootParts.forEach(rootPart::addPart);
+                builder.parts(Collections.singleton(rootPart));
+            } else {
+                builder.parts(rootParts);
+            }
         }
 
         builder.settings(settings);
@@ -121,7 +131,7 @@ public class BedrockModelExporter {
     protected void exportSkinPart(Node node, SkinPart parentPart, Collection<SkinPart> rootParts) {
         IVector3i iv = Vector3i.ZERO;
         IVector3i of = Vector3i.ZERO;
-        ISkinPartType partType = PARTS.getOrDefault(node.name, SkinPartTypes.ADVANCED);
+        ISkinPartType partType = mapper.getOrDefault(node.name, SkinPartTypes.ADVANCED);
         if (partType != null && partType != SkinPartTypes.ADVANCED) {
             // new root node
             parentPart = null;
@@ -274,6 +284,14 @@ public class BedrockModelExporter {
             .put("Hand_R", SkinPartTypes.BIPPED_RIGHT_HAND)
             .put("Leg_L", SkinPartTypes.BIPPED_LEFT_LEG)
             .put("Leg_R", SkinPartTypes.BIPPED_RIGHT_LEG)
+            .build();
+
+    private static final ImmutableMap<String, ISkinPartType> BOW_PARTS = new ImmutableMap.Builder<String, ISkinPartType>()
+            .put("Arrow", SkinPartTypes.ITEM_ARROW)
+            .put("Frame0", SkinPartTypes.ITEM_BOW0)
+            .put("Frame1", SkinPartTypes.ITEM_BOW1)
+            .put("Frame2", SkinPartTypes.ITEM_BOW2)
+            .put("Frame3", SkinPartTypes.ITEM_BOW3)
             .build();
 
     private static final ImmutableMap<ISkinPartType, IVector3i> PART_OFFSETS = new ImmutableMap.Builder<ISkinPartType, IVector3i>()

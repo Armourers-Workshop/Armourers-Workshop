@@ -23,8 +23,12 @@ public class PartItemList extends SkinPreviewList<PartItem> {
     @Override
     public void renderItemContent(float x, float y, float width, float height, boolean isHovered, PartItem entry, MultiBufferSource buffers, CGGraphicsContext context) {
         setTooltip(getItemTooltip(entry, isHovered));
-        if (!entry.hasSkin()) {
+        if (entry == PartItem.CLEAR) {
             context.drawResizableImage(ModTextures.SKIN_PANEL, x, y, width, height, 224, 0, 32, 32, 256, 256);
+            return;
+        }
+        if (entry == PartItem.IMPORT) {
+            context.drawResizableImage(ModTextures.SKIN_PANEL, x, y, width, height, 224, 32, 32, 32, 256, 256);
             return;
         }
         super.renderItemContent(x, y, width, height, isHovered, entry, buffers, context);

@@ -5,6 +5,9 @@ import net.minecraft.world.item.ItemStack;
 
 public class PartItem {
 
+    public static final PartItem CLEAR = new PartItem(SkinDescriptor.EMPTY);
+    public static final PartItem IMPORT = new PartItem(SkinDescriptor.EMPTY);
+
     private final SkinDescriptor descriptor;
     private final ItemStack itemStack;
 
