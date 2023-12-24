@@ -2,7 +2,9 @@ package moe.plushie.armourers_workshop.utils;
 
 import moe.plushie.armourers_workshop.init.ModLog;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SliceRandomlyAccessor<T> {
 
@@ -16,7 +18,7 @@ public class SliceRandomlyAccessor<T> {
     private final List<Provider<? extends T>> slices;
 
     public SliceRandomlyAccessor(List<Provider<? extends T>> slices) {
-        this.slices = slices;
+        this.slices = slices.stream().sorted(Comparator.comparingInt(Provider::getStartIndex)).collect(Collectors.toList());
         this.count = slices.size();
         if (this.count != 0) {
             this.switchSlice(0);

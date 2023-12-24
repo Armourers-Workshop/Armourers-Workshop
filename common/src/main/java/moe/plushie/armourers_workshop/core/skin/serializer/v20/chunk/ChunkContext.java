@@ -22,7 +22,7 @@ public class ChunkContext {
 
     public boolean enablePreviewData = false;
 
-    public boolean enableFastEncoder = true;
+    private boolean allowsFastEncoder = true;
 
     private final int fileVersion;
 
@@ -82,8 +82,12 @@ public class ChunkContext {
         return enablePreviewData;
     }
 
-    public boolean isEnableFastEncoder() {
-        return enableFastEncoder;
+    public void setFastEncoder(boolean allowsFastEncoder) {
+        this.allowsFastEncoder = allowsFastEncoder;
+    }
+
+    public boolean allowsFastEncoder() {
+        return allowsFastEncoder;
     }
 
     public int getVersion() {

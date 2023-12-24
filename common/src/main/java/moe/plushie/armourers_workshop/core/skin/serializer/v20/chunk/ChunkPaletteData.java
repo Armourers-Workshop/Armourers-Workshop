@@ -119,6 +119,7 @@ public class ChunkPaletteData implements ChunkVariable {
 
     public void readFromStream(IInputStream stream) throws IOException {
         int offset = 0;
+        int colorOffset = 0;
         flags = stream.readVarInt();
         reserved = stream.readVarInt();
         while (true) {
@@ -129,9 +130,12 @@ public class ChunkPaletteData implements ChunkVariable {
             sections.put(_key(section), section);
             section.freeze(offset);
             offset += section.getTotal();
+            if (!section.isTexture()) {
+                colorOffset += section.getTotal();
+            }
         }
         // yep, we have a fixed color table.
-        paintColors = new IPaintColor[offset];
+        paintColors = new IPaintColor[colorOffset];
         paintColorAccessor = new SliceRandomlyAccessor<>(ObjectUtils.map(sections.values(), ColorAccessor::new));
         // regenerate index use info.
         colorUsedIndex = flags & 0x0f;
@@ -214,7 +218,6 @@ public class ChunkPaletteData implements ChunkVariable {
         public ColorAccessor(ChunkColorSection section) {
             this.section = section;
         }
-
 
         @Override
         public IPaintColor get(int index) {

@@ -67,6 +67,10 @@ public abstract class ChunkColorSection {
         return resolved;
     }
 
+    public boolean isTexture() {
+        return usedBytes == 0;
+    }
+
     public int getStartIndex() {
         return index;
     }

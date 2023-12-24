@@ -30,7 +30,6 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
     private SkinTransform transform = SkinTransform.IDENTITY;
 
     protected final BitSet flags = new BitSet();
-    protected final AtomicInteger index = new AtomicInteger(0);
     protected final EnumMap<Direction, Vector2f> startUVs = new EnumMap<>(Direction.class);
     protected final EnumMap<Direction, Vector2f> endUVs = new EnumMap<>(Direction.class);
     protected final EnumMap<Direction, ITextureKey> textureKeys = new EnumMap<>(Direction.class);
@@ -52,13 +51,12 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
     @Override
     public Rectangle3f getShape() {
         if (setBit(0)) {
-            index.set(0);
-            float x = getFloat(index.getAndAdd(4));
-            float y = getFloat(index.getAndAdd(4));
-            float z = getFloat(index.getAndAdd(4));
-            float width = getFloat(index.getAndAdd(4));
-            float height = getFloat(index.getAndAdd(4));
-            float depth = getFloat(index.getAndAdd(4));
+            float x = getFloat(0);
+            float y = getFloat(4);
+            float z = getFloat(8);
+            float width = getFloat(12);
+            float height = getFloat(16);
+            float depth = getFloat(20);
             shape = new Rectangle3f(x, y, z, width, height, depth);
         }
         return shape;
@@ -67,13 +65,12 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
     @Override
     public SkinTransform getTransform() {
         if (setBit(1)) {
-            index.set(24);
-            int flags = getInt(index.getAndAdd(4));
-            Vector3f translate = getVector3f(index.getAndAdd(12));
-            Vector3f rotation = getVector3f(index.getAndAdd(12));
-            Vector3f scale = getVector3f(index.getAndAdd(12));
-            Vector3f vector = getVector3f(index.getAndAdd(12));
-            Vector3f pivot = getVector3f(index.getAndAdd(12));
+            int flags = getInt(24);
+            Vector3f translate = getVector3f(28);
+            Vector3f rotation = getVector3f(40);
+            Vector3f scale = getVector3f(52);
+            Vector3f vector = getVector3f(64);
+            Vector3f pivot = getVector3f(76);
             transform = SkinTransform.create(translate, rotation, scale, pivot, vector);
         }
         return transform;

@@ -3,11 +3,12 @@ package moe.plushie.armourers_workshop.core.skin.serializer.v20;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileHeader;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.ISkinSerializer;
-import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileHeader;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkContext;
+import moe.plushie.armourers_workshop.core.skin.serializer.v20.coder.ChunkCubeCoders;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
@@ -29,7 +30,8 @@ public final class SkinSerializerV20 implements ISkinSerializer {
         stream.writeInt(skin.getVersion());
         stream.writeInt(0); // reserved data 1
         stream.writeInt(0); // reserved data 2
-        ChunkSerializers.writeToStream(skin, stream, new ChunkContext(skin.getVersion()));
+        ChunkContext context = ChunkCubeCoders.createEncodeContext(skin);
+        ChunkSerializers.writeToStream(skin, stream, context);
         stream.writeInt(0); // crc32
     }
 
@@ -39,7 +41,8 @@ public final class SkinSerializerV20 implements ISkinSerializer {
         fileVersion = stream.readInt();
         stream.readInt(); // reserved data 1
         stream.readInt(); // reserved data 2
-        return ChunkSerializers.readFromStream(stream, new ChunkContext(fileVersion));
+        ChunkContext context = ChunkCubeCoders.createDecodeContext(fileVersion);
+        return ChunkSerializers.readFromStream(stream, context);
     }
 
     @Override
@@ -48,7 +51,8 @@ public final class SkinSerializerV20 implements ISkinSerializer {
         fileVersion = stream.readInt();
         stream.readInt();
         stream.readInt();
-        Pair<ISkinType, ISkinProperties> pair = ChunkSerializers.readInfoFromStream(stream, new ChunkContext(fileVersion));
+        ChunkContext context = ChunkCubeCoders.createDecodeContext(fileVersion);
+        Pair<ISkinType, ISkinProperties> pair = ChunkSerializers.readInfoFromStream(stream, context);
         return SkinFileHeader.of(fileVersion, pair.getKey(), pair.getValue());
     }
 
