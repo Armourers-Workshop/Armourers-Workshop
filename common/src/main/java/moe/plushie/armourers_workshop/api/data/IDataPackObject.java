@@ -41,8 +41,10 @@ public interface IDataPackObject {
         return Type.NULL;
     }
 
-    default void add(Object value) {
-
+    default void add(IDataPackObject value) {
+        if (type() == Type.ARRAY) {
+            jsonValue().getAsJsonArray().add(value.jsonValue());
+        }
     }
 
     default IDataPackObject at(int index) {
@@ -62,8 +64,10 @@ public interface IDataPackObject {
         return 0;
     }
 
-    default void set(String key, Object value) {
-
+    default void set(String key, IDataPackObject value) {
+        if (type() == Type.DICTIONARY) {
+            jsonValue().getAsJsonObject().add(key, value.jsonValue());
+        }
     }
 
     default IDataPackObject get(String key) {

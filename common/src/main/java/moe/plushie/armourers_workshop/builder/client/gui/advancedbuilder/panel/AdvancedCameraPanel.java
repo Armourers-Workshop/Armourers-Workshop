@@ -31,10 +31,10 @@ public class AdvancedCameraPanel extends UIView {
     private final Vector3f oldRotation = new Vector3f();
     private final Vector3f oldTranslate = new Vector3f();
 
-//    private final ClamppedVector3f lastScale = new ClamppedVector3f(1, 1, 1, 0.5f, 0.5f, 0.5f, 5.0f, 5.0f, 5.0f);
+    //    private final ClamppedVector3f lastScale = new ClamppedVector3f(1, 1, 1, 0.5f, 0.5f, 0.5f, 5.0f, 5.0f, 5.0f);
 //    private final ClamppedVector3f lastRotation = new ClamppedVector3f(0, 0, 0, -90, Float.NEGATIVE_INFINITY, 0, 90, Float.POSITIVE_INFINITY, 0);
 //    private final ClamppedVector3f lastTranslate = new ClamppedVector3f(0, 0, 0, -8, -8, -8, 8, 8, 8);
-    private final Vector3f lastScale = new ClamppedVector3f(1, 1, 1, 0.5f, 0.5f, 0.5f, 5.0f, 5.0f, 5.0f);
+    private final Vector3f lastZoom = new ClamppedVector3f(1, 1, 1, 0.1f, 0.1f, 0.1f, 2.0f, 2.0f, 2.0f);
     private final Vector3f lastRotation = new ClamppedVector3f(0, 0, 0, -90, Float.NEGATIVE_INFINITY, 0, 90, Float.POSITIVE_INFINITY, 0);
     private final Vector3f lastTranslate = new Vector3f(0, 0, 0);
 
@@ -68,7 +68,7 @@ public class AdvancedCameraPanel extends UIView {
         origin.set(blockEntity.getRenderOrigin());
         lastRotation.set(0, 0, 0);
         lastTranslate.set(0, 0, 0);
-        lastScale.set(1, 1, 1);
+        lastZoom.set(1, 1, 1);
         applyCameraChanges();
     }
 
@@ -108,18 +108,7 @@ public class AdvancedCameraPanel extends UIView {
 
     @Override
     public void mouseWheel(UIEvent event) {
-        if (InputManagerImpl.hasControlDown()) {
-            zoom(event.delta());
-        } else {
-            double delta = event.delta();
-            if (delta > 0) {
-                move(new Vector3f(0, 0, 0.05f));
-            } else if (delta < 0) {
-                move(new Vector3f(0, 0, -0.05f));
-            }
-            oldTranslate.set(lastTranslate);
-        }
-        applyCameraChanges();
+        zoom(event.delta());
     }
 
     @Override
@@ -158,14 +147,14 @@ public class AdvancedCameraPanel extends UIView {
     }
 
     private void zoom(double delta) {
-        float scale = lastScale.getX();
+        float scale = lastZoom.getX();
         if (delta < 0) {
-            scale *= 0.99f;
-        } else if (delta > 0) {
             scale /= 0.99f;
+        } else if (delta > 0) {
+            scale *= 0.99f;
         }
-        lastScale.set(scale, scale, scale);
-        cachedTree = null;
+        lastZoom.set(scale, scale, scale);
+        applyCameraChanges();
     }
 
 //    private void raycast(UIEvent event) {
@@ -249,14 +238,10 @@ public class AdvancedCameraPanel extends UIView {
         float ry = lastRotation.getY();
         float rz = lastRotation.getZ();
 
-        float sx = lastScale.getX();
-        float sy = lastScale.getY();
-        float sz = lastScale.getZ();
-
         blockEntity.carmeOffset.set(tx, ty, tz);
         blockEntity.carmeRot.set(rx, ry, rz);
-        blockEntity.carmeScale.set(sx, sy, sz);
 
+        cameraEntity.setZoom(lastZoom.getZ());
         cameraEntity.setXRot(rx);
         cameraEntity.setYRot(ry);
         cameraEntity.setPos(origin.getX() + tx, origin.getY() + ty, origin.getZ() + tz);

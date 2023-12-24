@@ -4,16 +4,18 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -112,6 +114,12 @@ public final class StreamUtils {
             return null;
         }
         return fromPackObject(new ByteArrayInputStream(jsonString.getBytes()));
+    }
+
+    public static void writePackObject(IDataPackObject object, OutputStream outputStream) throws IOException {
+        JsonWriter writer = new JsonWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
+        GSON.getAdapter(JsonObject.class).write(writer, (JsonObject) object.jsonValue());
+        writer.close();
     }
 
     public static byte[] toByteArray(final InputStream input) throws IOException {

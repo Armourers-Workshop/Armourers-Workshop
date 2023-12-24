@@ -13,7 +13,8 @@
     "ItemRendererMixin",
     "InventoryScreenMixin",
     "GuiGraphicsMixin",
-    "HttpTextureMixin"
+    "HttpTextureMixin",
+    "CameraMixin"
   ],
   "mixins": [
     "EntityJSMixin"

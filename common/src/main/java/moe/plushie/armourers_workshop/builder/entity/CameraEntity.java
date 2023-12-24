@@ -13,7 +13,7 @@ import net.minecraft.world.entity.Pose;
 @Environment(EnvType.CLIENT)
 public class CameraEntity extends SeatEntity {
 
-    public float fov = 0;
+    private float zoom = 0;
 
     private CameraType cameraType;
     private final Minecraft minecraft = Minecraft.getInstance();
@@ -47,6 +47,18 @@ public class CameraEntity extends SeatEntity {
     @Override
     public float getViewYRot(float f) {
         return getYRot();
+    }
+
+    public void setZoom(float zoom) {
+        this.zoom = zoom;
+    }
+
+    public float getZoom() {
+        return zoom;
+    }
+
+    public double getMaxZoom(double targetZoom) {
+        return targetZoom * zoom;
     }
 
     public OpenNearPlane getNearPlane() {

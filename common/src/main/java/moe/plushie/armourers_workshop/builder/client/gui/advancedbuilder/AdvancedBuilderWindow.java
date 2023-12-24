@@ -37,6 +37,7 @@ import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentListener;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentType;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.init.ModOptions;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
@@ -54,8 +55,6 @@ import java.util.function.Consumer;
 public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> implements SkinDocumentListener {
 
     private static int CARD_WIDTH = 100;
-    private static int LEFT_CARD_OFFSET = -CARD_WIDTH;
-    private static int RIGHT_CARD_OFFSET = -CARD_WIDTH;
 
     private final ArrayList<NSString> helps = new ArrayList<>();
     private final UIButton helpView = new UIButton(new CGRect(0, 0, 7, 8));
@@ -108,18 +107,26 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
     }
 
     private void setupLeftCard(CGRect rect) {
+        float offset = -CARD_WIDTH;
+        if (Options.SHOWS_LEFT_CARD.get()) {
+            offset = 0;
+        }
         leftCard.setAutoresizingMask(AutoresizingMask.flexibleRightMargin | AutoresizingMask.flexibleHeight);
         leftCard.setBackgroundColor(new UIColor(0x1d1d1d));
         leftCard.setTransform(CGAffineTransform.createScale(0.5f, 0.5f));
-        leftCard.setFrame(new CGRect(Math.min(LEFT_CARD_OFFSET, 0), 0, CARD_WIDTH, rect.height));
+        leftCard.setFrame(new CGRect(offset, 0, CARD_WIDTH, rect.height));
         addSubview(leftCard);
     }
 
     private void setupRightCard(CGRect rect) {
+        float offset = 0;
+        if (Options.SHOWS_RIGHT_CARD.get()) {
+            offset = CARD_WIDTH;
+        }
         rightCard.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleHeight);
         rightCard.setBackgroundColor(new UIColor(0x1d1d1d));
         rightCard.setTransform(CGAffineTransform.createScale(0.5f, 0.5f));
-        rightCard.setFrame(new CGRect(rect.width - CARD_WIDTH - Math.min(RIGHT_CARD_OFFSET, 0), 0, CARD_WIDTH, rect.height));
+        rightCard.setFrame(new CGRect(rect.width - offset, 0, CARD_WIDTH, rect.height));
         addSubview(rightCard);
         // provide a scaled menu.
         UIMenuController menuController = new UIMenuController();
@@ -153,17 +160,31 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
     }
 
     private void toggleLeftCard() {
+        float value = 0;
+        if (Options.SHOWS_LEFT_CARD.get()) {
+            Options.SHOWS_LEFT_CARD.set(false);
+            value = -CARD_WIDTH;
+        } else {
+            Options.SHOWS_LEFT_CARD.set(true);
+            value = CARD_WIDTH;
+        }
         CGPoint oldValue = leftCard.center();
-        CGPoint newValue = new CGPoint(oldValue.x - LEFT_CARD_OFFSET, oldValue.y);
+        CGPoint newValue = new CGPoint(oldValue.x + value, oldValue.y);
         UIView.animationWithDuration(0.35, () -> leftCard.setCenter(newValue));
-        LEFT_CARD_OFFSET = -LEFT_CARD_OFFSET;
     }
 
     private void toggleRightCard() {
+        float value = 0;
+        if (Options.SHOWS_RIGHT_CARD.get()) {
+            Options.SHOWS_RIGHT_CARD.set(false);
+            value = CARD_WIDTH;
+        } else {
+            Options.SHOWS_RIGHT_CARD.set(true);
+            value = -CARD_WIDTH;
+        }
         CGPoint oldValue = rightCard.center();
-        CGPoint newValue = new CGPoint(oldValue.x + RIGHT_CARD_OFFSET, oldValue.y);
+        CGPoint newValue = new CGPoint(oldValue.x + value, oldValue.y);
         UIView.animationWithDuration(0.35, () -> rightCard.setCenter(newValue));
-        RIGHT_CARD_OFFSET = -RIGHT_CARD_OFFSET;
     }
 
     private void importAction() {
@@ -326,5 +347,28 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
     @Override
     public boolean shouldRenderBackground() {
         return false;
+    }
+
+
+    public static class Options {
+        public static final Options SHOWS_LEFT_CARD = new Options("advanced.showLeftCard");
+        public static final Options SHOWS_RIGHT_CARD = new Options("advanced.showRightCard");
+
+        private final String key;
+        private boolean value;
+
+        public Options(String key) {
+            this.key = key;
+            this.value = ModOptions.getInstance().getBoolean(key);
+        }
+
+        public void set(boolean value) {
+            this.value = value;
+            ModOptions.getInstance().putBoolean(key, value);
+        }
+
+        public boolean get() {
+            return value;
+        }
     }
 }
