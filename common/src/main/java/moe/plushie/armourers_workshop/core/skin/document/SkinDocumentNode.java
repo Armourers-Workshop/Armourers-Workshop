@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.document;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.utils.Constants;
@@ -19,6 +20,7 @@ public class SkinDocumentNode {
     private Vector3f location = Vector3f.ZERO;
     private Vector3f rotation = Vector3f.ZERO;
     private Vector3f scale = Vector3f.ONE;
+    private SkinTransform transform = null;
 
     private ISkinPartType type = SkinPartTypes.ADVANCED;
     private SkinDescriptor skin = SkinDescriptor.EMPTY;
@@ -163,6 +165,7 @@ public class SkinDocumentNode {
 
     public void setLocation(Vector3f value) {
         location = value;
+        transform = null;
         if (listener != null) {
             CompoundTag tag = new CompoundTag();
             tag.putOptionalVector3f(Keys.LOCATION, value, null);
@@ -176,6 +179,7 @@ public class SkinDocumentNode {
 
     public void setRotation(Vector3f value) {
         rotation = value;
+        transform = null;
         if (listener != null) {
             CompoundTag tag = new CompoundTag();
             tag.putOptionalVector3f(Keys.ROTATION, value, null);
@@ -189,6 +193,7 @@ public class SkinDocumentNode {
 
     public void setScale(Vector3f value) {
         scale = value;
+        transform = null;
         if (listener != null) {
             CompoundTag tag = new CompoundTag();
             tag.putOptionalVector3f(Keys.SCALE, value, null);
@@ -198,6 +203,19 @@ public class SkinDocumentNode {
 
     public Vector3f getScale() {
         return scale;
+    }
+
+    public SkinTransform getTransform() {
+        if (transform != null) {
+            return transform;
+        }
+        Vector3f translate = location;
+        if (!translate.equals(Vector3f.ZERO)) {
+            // meters to block
+            translate = new Vector3f(-translate.getX() * 16, -translate.getY() * 16, translate.getZ() * 16);
+        }
+        transform = SkinTransform.create(translate, rotation, scale);
+        return transform;
     }
 
     public String getId() {
@@ -233,6 +251,19 @@ public class SkinDocumentNode {
     public boolean isLocked() {
         return name == null;
     }
+
+    public boolean isStatic() {
+        return id.equals("static");
+    }
+
+    public boolean isFloat() {
+        return id.equals("float");
+    }
+
+    public boolean isLocator() {
+        return type.equals(SkinPartTypes.ADVANCED_LOCATOR);
+    }
+
 
     public SkinDocumentNode parent() {
         return parent;
@@ -293,14 +324,17 @@ public class SkinDocumentNode {
         Vector3f newLocation = tag.getOptionalVector3f(Keys.LOCATION, null);
         if (newLocation != null) {
             location = newLocation;
+            transform = null;
         }
         Vector3f newRotation = tag.getOptionalVector3f(Keys.ROTATION, null);
         if (newRotation != null) {
             rotation = newRotation;
+            transform = null;
         }
         Vector3f newScale = tag.getOptionalVector3f(Keys.SCALE, null);
         if (newScale != null) {
             scale = newScale;
+            transform = null;
         }
         String newName = tag.getOptionalString(Keys.NAME, null);
         if (newName != null) {

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.builder.item.impl;
 
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.network.UpdateBlockColorPacket;
-import moe.plushie.armourers_workshop.builder.other.CubeApplier;
+import moe.plushie.armourers_workshop.builder.other.CubeChangesCollector;
 import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.minecraft.world.InteractionResult;
@@ -28,10 +28,10 @@ public interface IPaintToolApplier {
         if (selector == null || action == null) {
             return InteractionResult.PASS;
         }
-        CubeApplier applier = new CubeApplier(context.getLevel());
+        CubeChangesCollector collector = new CubeChangesCollector(context.getLevel());
         CubePaintingEvent event = new CubePaintingEvent(selector, action);
-        if (event.prepare(applier, context)) {
-            event.apply(applier, context);
+        if (event.prepare(collector, context)) {
+            event.apply(collector, context);
             UpdateBlockColorPacket packet = new UpdateBlockColorPacket(context, event);
             NetworkManager.sendToServer(packet);
             return InteractionResult.SUCCESS;

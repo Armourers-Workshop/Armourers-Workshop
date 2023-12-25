@@ -14,8 +14,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Environment(EnvType.CLIENT)
 public abstract class SkinRenderType implements IRenderTypeBuilder {
 
+    public static final RenderType BLIT_COLOR = _builder(SkinRenderFormat.BLIT_MASK).build("aw_blit_color");
     public static final RenderType BLIT_MASK = _builder(SkinRenderFormat.BLIT_MASK).writeMask(WriteMask.NONE).build("aw_blit_mask");
-    public static final RenderType BLIT_IMAGE = _builder(SkinRenderFormat.GUI_IMAGE).build("aw_blit_IMAGE");
+    public static final RenderType BLIT_IMAGE = _builder(SkinRenderFormat.GUI_IMAGE).build("aw_blit_image");
 
     public static final RenderType GUI_COLOR = _builder(SkinRenderFormat.GUI_COLOR).transparency(Transparency.DEFAULT).build("aw_gui_color");
     public static final RenderType GUI_IMAGE = _builder(SkinRenderFormat.GUI_IMAGE).transparency(Transparency.TRANSLUCENT).build("aw_gui_image");

@@ -14,7 +14,7 @@ public class SkinDocumentSynchronizer implements SkinDocumentListener {
     private boolean isApplying = false;
     private boolean isCapturing = false;
 
-    private SkinProperties capturedSkinValues;
+    private CompoundTag capturedPropertiesValues;
     private CompoundTag capturedSettingValues;
 
     private final LinkedHashMap<String, CompoundTag> capturedNodeValues = new LinkedHashMap<>();
@@ -45,17 +45,17 @@ public class SkinDocumentSynchronizer implements SkinDocumentListener {
     }
 
     @Override
-    public void documentDidChangeProperties(SkinProperties properties) {
+    public void documentDidChangeProperties(CompoundTag tag) {
         if (isCapturing) {
-            if (capturedSkinValues != null) {
-                capturedSkinValues.putAll(properties);
+            if (capturedPropertiesValues != null) {
+                capturedPropertiesValues.merge(tag);
             } else {
-                capturedSkinValues = properties;
+                capturedPropertiesValues = tag;
             }
             return;
         }
 
-        post(new UpdateSkinDocumentPacket.UpdatePropertiesAction(properties));
+        post(new UpdateSkinDocumentPacket.UpdatePropertiesAction(tag));
     }
 
     @Override
@@ -102,9 +102,9 @@ public class SkinDocumentSynchronizer implements SkinDocumentListener {
         if (isCapturing) {
             return;
         }
-        if (capturedSkinValues != null) {
-            documentDidChangeProperties(capturedSkinValues);
-            capturedSkinValues = null;
+        if (capturedPropertiesValues != null) {
+            documentDidChangeProperties(capturedPropertiesValues);
+            capturedPropertiesValues = null;
         }
         if (capturedSettingValues != null) {
             documentDidChangeSettings(capturedSettingValues);

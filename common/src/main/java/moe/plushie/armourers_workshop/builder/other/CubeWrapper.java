@@ -67,6 +67,16 @@ public class CubeWrapper implements IPaintable {
         this.lastChanges().setBlockState(state);
     }
 
+    public void setBlockStateAndTag(BlockState state, CompoundTag nbt) {
+        this.lastChanges().setBlockState(state);
+        this.lastChanges().setCompoundTag(nbt);
+    }
+
+    public void setBlockStateAndColors(BlockState state, Map<Direction, IPaintColor> colors) {
+        this.lastChanges().setBlockState(state);
+        this.lastChanges().setColors(colors);
+    }
+
     @Nullable
     public BlockEntity getBlockEntity() {
         if (this.blockEntity != null) {
@@ -81,22 +91,12 @@ public class CubeWrapper implements IPaintable {
     }
 
     @Nullable
-    public CompoundTag getBlockEntityNBT() {
+    public CompoundTag getBlockTag() {
         BlockEntity blockEntity = getBlockEntity();
         if (blockEntity != null) {
             return blockEntity.saveWithFullMetadata();
         }
         return null;
-    }
-
-    public void setBlockState(BlockState state, CompoundTag nbt) {
-        this.lastChanges().setBlockState(state);
-        this.lastChanges().setCompoundTag(nbt);
-    }
-
-    public void setBlockState(BlockState state, Map<Direction, IPaintColor> colors) {
-        this.lastChanges().setBlockState(state);
-        this.lastChanges().setColors(colors);
     }
 
     @Override

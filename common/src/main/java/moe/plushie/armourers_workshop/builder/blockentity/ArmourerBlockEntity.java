@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
 import moe.plushie.armourers_workshop.builder.data.BoundingBox;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
-import moe.plushie.armourers_workshop.builder.other.CubeApplier;
+import moe.plushie.armourers_workshop.builder.other.CubeChangesCollector;
 import moe.plushie.armourers_workshop.builder.other.CubeReplacingEvent;
 import moe.plushie.armourers_workshop.builder.other.CubeSelector;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
@@ -275,7 +275,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
         return CubeSelector.all(rects);
     }
 
-    public void copyPaintData(CubeApplier applier, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) {
+    public void copyPaintData(CubeChangesCollector collector, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) {
         if (paintData == null) {
             return;
         }
@@ -288,7 +288,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
         }
     }
 
-    public void clearPaintData(CubeApplier applier, ISkinPartType partType) {
+    public void clearPaintData(CubeChangesCollector collector, ISkinPartType partType) {
         if (paintData == null) {
             return;
         }
@@ -306,9 +306,9 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
         }
     }
 
-    public void clearCubes(CubeApplier applier, ISkinPartType partType) {
+    public void clearCubes(CubeChangesCollector collector, ISkinPartType partType) {
         // remove all part
-        WorldUtils.clearCubes(applier, getTransform(), getSkinType(), getSkinProperties(), partType);
+        WorldUtils.clearCubes(collector, getTransform(), getSkinType(), getSkinProperties(), partType);
         // when just clear a part, we don't reset skin properties.
         if (partType != SkinPartTypes.UNKNOWN) {
             return;
@@ -320,16 +320,16 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
         BlockUtils.combine(this, this::sendBlockUpdates);
     }
 
-    public void replaceCubes(CubeApplier applier, ISkinPartType partType, CubeReplacingEvent event) throws Exception {
-        WorldUtils.replaceCubes(applier, getTransform(), getSkinType(), getSkinProperties(), event);
+    public void replaceCubes(CubeChangesCollector collector, ISkinPartType partType, CubeReplacingEvent event) throws Exception {
+        WorldUtils.replaceCubes(collector, getTransform(), getSkinType(), getSkinProperties(), event);
     }
 
-    public void copyCubes(CubeApplier applier, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws Exception {
-        WorldUtils.copyCubes(applier, getTransform(), getSkinType(), getSkinProperties(), srcPart, destPart, mirror);
+    public void copyCubes(CubeChangesCollector collector, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws Exception {
+        WorldUtils.copyCubes(collector, getTransform(), getSkinType(), getSkinProperties(), srcPart, destPart, mirror);
     }
 
-    public void clearMarkers(CubeApplier applier, ISkinPartType partType) {
-        WorldUtils.clearMarkers(applier, getTransform(), getSkinType(), getSkinProperties(), partType);
+    public void clearMarkers(CubeChangesCollector collector, ISkinPartType partType) {
+        WorldUtils.clearMarkers(collector, getTransform(), getSkinType(), getSkinProperties(), partType);
         setChanged();
     }
 

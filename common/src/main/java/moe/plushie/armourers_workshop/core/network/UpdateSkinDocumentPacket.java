@@ -188,33 +188,29 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
 
     public static class UpdatePropertiesAction extends Action {
 
-        private final SkinProperties properties;
+        private final CompoundTag tag;
 
-        public UpdatePropertiesAction(SkinProperties properties) {
-            this.properties = properties;
+        public UpdatePropertiesAction(CompoundTag tag) {
+            this.tag = tag;
         }
 
         public UpdatePropertiesAction(FriendlyByteBuf buf) {
-            CompoundTag tag = buf.readNbt();
-            this.properties = new SkinProperties();
-            this.properties.readFromNBT(tag);
+            this.tag = buf.readNbt();
         }
 
         @Override
         public void encode(FriendlyByteBuf buf) {
-            CompoundTag tag = new CompoundTag();
-            properties.writeToNBT(tag);
             buf.writeNbt(tag);
         }
 
         @Override
         public void execute(SkinDocument document, Player player) {
-            document.updateProperties(properties);
+            document.updateProperties(tag);
         }
 
         @Override
         public String toString() {
-            return makeDescription("updateProperties", "properties", properties);
+            return makeDescription("updateProperties", "tag", tag);
         }
     }
 

@@ -86,7 +86,7 @@ public class MathUtils {
         // sin(x)^2 + cos(x)^2 = 1
         float cos = sqrt(1.0f - sin * sin);
         float a = angle + PI_D2;
-        float b = a - (int)(a / PI_M2) * PI_M2;
+        float b = a - (int) (a / PI_M2) * PI_M2;
         if (b < 0.0)
             b = PI_M2 + b;
         if (b >= PI)

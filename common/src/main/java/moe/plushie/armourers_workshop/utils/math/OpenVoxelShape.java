@@ -13,7 +13,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class OpenVoxelShape implements Iterable<Vector4f> {
 
-    private OpenAABB aabb;
+    private OpenBoundingBox aabb;
     private Rectangle3f box;
     private ArrayList<Vector4f> vertexes;
 
@@ -39,11 +39,11 @@ public class OpenVoxelShape implements Iterable<Vector4f> {
         return shape;
     }
 
-    public OpenAABB aabb() {
+    public OpenBoundingBox aabb() {
         if (aabb != null) {
             return aabb;
         }
-        aabb = new OpenAABB(bounds());
+        aabb = new OpenBoundingBox(bounds());
         return aabb;
     }
 

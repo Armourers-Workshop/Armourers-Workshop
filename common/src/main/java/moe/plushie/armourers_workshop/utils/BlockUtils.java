@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.utils;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.data.undo.UndoManager;
 import moe.plushie.armourers_workshop.builder.data.undo.action.SetBlockAction;
-import moe.plushie.armourers_workshop.builder.data.undo.action.UndoNamedGroupAction;
+import moe.plushie.armourers_workshop.builder.data.undo.action.NamedUserAction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -44,7 +44,7 @@ public final class BlockUtils {
         if (level == null) {
             return;
         }
-        UndoNamedGroupAction group = new UndoNamedGroupAction(reason);
+        NamedUserAction group = new NamedUserAction(reason);
         group.push(new SetBlockAction((Level) level, blockPos, blockState, tag));
         UndoManager.of(player.getUUID()).push(group);
     }
@@ -59,6 +59,15 @@ public final class BlockUtils {
             k.setChanged();
         });
         pending.set(null);
+    }
+
+    public static void performBatch(Runnable handler) {
+        try {
+            beginCombiner();
+            handler.run();
+        } finally {
+            endCombiner();
+        }
     }
 
 //    public static int determineOrientation(BlockPos pos, LivingEntity entity) {

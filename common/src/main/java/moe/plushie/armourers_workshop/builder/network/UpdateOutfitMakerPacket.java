@@ -47,9 +47,9 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
-        BlockUtils.beginCombiner();
-        accept2(packetHandler, player);
-        BlockUtils.endCombiner();
+        BlockUtils.performBatch(() -> {
+            accept2(packetHandler, player);
+        });
     }
 
     private void accept2(IServerPacketHandler packetHandler, ServerPlayer player) {

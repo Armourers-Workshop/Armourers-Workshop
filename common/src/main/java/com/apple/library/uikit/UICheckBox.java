@@ -5,6 +5,7 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
 import com.apple.library.impl.AppearanceImpl;
 import com.apple.library.impl.SoundManagerImpl;
+import com.apple.library.impl.StateValueImpl;
 
 @SuppressWarnings("unused")
 public class UICheckBox extends UIControl {
@@ -12,6 +13,7 @@ public class UICheckBox extends UIControl {
     private final UILabel markerView = new UILabel(new CGRect(1, 0, 9, 9));
     private final UILabel titleView = new UILabel(CGRect.ZERO);
     private final UIImageView imageView = new UIImageView(new CGRect(0, 0, 9, 9));
+    private final StateValueImpl<UIColor> titleColorContainer = new StateValueImpl<>();
 
     private float boxSize = 9;
     private float boxSpacing = 2;
@@ -23,6 +25,7 @@ public class UICheckBox extends UIControl {
         this.markerView.setText(new NSString("x"));
         this.markerView.setTextColor(UIColor.WHITE);
         this.markerView.setTextHorizontalAlignment(NSTextAlignment.Horizontal.CENTER);
+        this.setTitleColor(UIColor.GRAY, State.DISABLED);
         this.addSubview(markerView);
         this.addSubview(titleView);
         this.setSelected(false);
@@ -62,22 +65,25 @@ public class UICheckBox extends UIControl {
     }
 
     public void setTitleColor(UIColor color) {
-        titleView.setTextColor(color);
+        setTitleColor(color, State.NORMAL);
     }
+
+    public void setTitleColor(UIColor color, int state) {
+        titleColorContainer.setValueForState(color, state);
+        titleView.setTextColor(titleColorContainer.currentValue());
+    }
+
 
     @Override
     public void setEnabled(boolean isEnabled) {
         super.setEnabled(isEnabled);
-        if (!isEnabled) {
-            titleView.setTextColor(new UIColor(0xa0a0a0));
-        } else {
-            titleView.setTextColor(null);
-        }
+        updateStateIfNeeded();
     }
 
     @Override
     public void setSelected(boolean isSelected) {
         super.setSelected(isSelected);
+        updateStateIfNeeded();
         markerView.setHidden(!isSelected);
     }
 
@@ -85,5 +91,17 @@ public class UICheckBox extends UIControl {
         this.boxSize = boxSize;
         this.boxSpacing = boxSpacing;
         this.setNeedsLayout();
+    }
+
+    protected void updateStateIfNeeded() {
+        int state = State.NORMAL;
+        if (isSelected()) {
+            state |= State.SELECTED;
+        }
+        if (!isEnabled()) {
+            state |= State.DISABLED;
+        }
+        titleColorContainer.setCurrentState(state);
+        titleView.setTextColor(titleColorContainer.currentValue());
     }
 }

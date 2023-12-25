@@ -17,11 +17,15 @@ public abstract class ChunkSerializer<V, T> {
         this.chunkType = chunkType;
     }
 
-    public abstract V read(ChunkInputStream stream, T obj) throws IOException;
+    public abstract V read(ChunkInputStream stream, String name, T obj) throws IOException;
 
     public abstract void write(V value, T obj, ChunkOutputStream stream) throws IOException;
 
     public void config(ChunkFlags flags, V value, ChunkContext context) {
+    }
+
+    public boolean canRead(String name) {
+        return chunkType.getName().equals(name);
     }
 
     public boolean canWrite(V value, T obj, ChunkOutputStream stream) {
@@ -34,7 +38,7 @@ public abstract class ChunkSerializer<V, T> {
         return true;
     }
 
-    public V getDefaultValue(ChunkInputStream stream) throws IOException {
+    public V getDefaultValue() throws IOException {
         return null;
     }
 

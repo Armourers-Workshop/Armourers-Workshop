@@ -220,17 +220,17 @@ public final class WorldUtils {
     /**
      * Converts a skin class into blocks in the world.
      *
-     * @param applier   The world applier.
+     * @param collector The world collector.
      * @param transform The armourer transform.
      * @param skin      The skin to load.
      */
-    public static void loadSkinIntoWorld(CubeApplier applier, CubeTransform transform, Skin skin) {
+    public static void loadSkinIntoWorld(CubeChangesCollector collector, CubeTransform transform, Skin skin) {
         for (SkinPart part : skin.getParts()) {
-            loadSkinPartIntoWorld(applier, transform, part, false);
+            loadSkinPartIntoWorld(collector, transform, part, false);
         }
     }
 
-    private static void loadSkinPartIntoWorld(CubeApplier applier, CubeTransform transform, SkinPart partData, boolean mirror) {
+    private static void loadSkinPartIntoWorld(CubeChangesCollector collector, CubeTransform transform, SkinPart partData, boolean mirror) {
         ISkinPartType skinPart = partData.getType();
         IRectangle3i buildSpace = skinPart.getBuildingSpace();
         IVector3i offset = skinPart.getOffset();
@@ -249,11 +249,11 @@ public final class WorldUtils {
                 }
             }
             BlockPos origin = new BlockPos(-offset.getX(), -offset.getY() + -buildSpace.getY(), offset.getZ());
-            loadSkinBlockIntoWorld(applier, transform, origin, blockData, cubePos, markerFacing, cube, mirror);
+            loadSkinBlockIntoWorld(collector, transform, origin, blockData, cubePos, markerFacing, cube, mirror);
         }
     }
 
-    private static void loadSkinBlockIntoWorld(CubeApplier applier, CubeTransform transform, BlockPos origin, ISkinCubeType blockData, IVector3i cubePos, OptionalDirection markerFacing, ISkinCube cube, boolean mirror) {
+    private static void loadSkinBlockIntoWorld(CubeChangesCollector collector, CubeTransform transform, BlockPos origin, ISkinCubeType blockData, IVector3i cubePos, OptionalDirection markerFacing, ISkinCube cube, boolean mirror) {
         int shiftX = -cubePos.getX() - 1;
         int shiftY = cubePos.getY() + 1;
         int shiftZ = cubePos.getZ();
@@ -262,10 +262,10 @@ public final class WorldUtils {
         }
 
         auto target = transform.mul(shiftX + origin.getX(), origin.getY() - shiftY, shiftZ + origin.getZ());
-        auto wrapper = applier.wrap(target);
+        auto targetCube = collector.getCube(target);
 
-        if (wrapper.is(ModBlocks.BOUNDING_BOX.get())) {
-            wrapper.setBlockState(Blocks.AIR.defaultBlockState(), (CompoundTag) null);
+        if (targetCube.is(ModBlocks.BOUNDING_BOX.get())) {
+            targetCube.setBlockStateAndTag(Blocks.AIR.defaultBlockState(), null);
         }
 
         Block targetBlock = blockData.getBlock();
@@ -278,7 +278,7 @@ public final class WorldUtils {
             colors.put(transform.rotate(resolvedDir), paintColor);
         }
 
-        wrapper.setBlockState(targetState, colors);
+        targetCube.setBlockStateAndColors(targetState, colors);
     }
 
     public static void copyPaintData(SkinPaintData paintData, SkyBox srcBox, SkyBox destBox, boolean isMirrorX) {
@@ -316,30 +316,30 @@ public final class WorldUtils {
         srcBox.forEach((texturePos, x, y, z, dir) -> paintData.setColor(texturePos, 0));
     }
 
-    public static void replaceCubes(CubeApplier applier, CubeTransform transform, ISkinType skinType, SkinProperties skinProps, CubeReplacingEvent event) {
+    public static void replaceCubes(CubeChangesCollector collector, CubeTransform transform, ISkinType skinType, SkinProperties skinProps, CubeReplacingEvent event) {
         for (ISkinPartType skinPart : skinType.getParts()) {
             for (Vector3i offset : getResolvedBuildingSpace2(skinPart)) {
-                replaceCube(applier, transform.mul(offset), event);
+                replaceCube(collector, transform.mul(offset), event);
             }
         }
     }
 
-    public static void replaceCube(CubeApplier applier, BlockPos pos, CubeReplacingEvent event) {
-        auto wrapper = applier.wrap(pos);
-        if (event.accept(wrapper)) {
-            event.apply(wrapper);
+    public static void replaceCube(CubeChangesCollector collector, BlockPos pos, CubeReplacingEvent event) {
+        auto cube = collector.getCube(pos);
+        if (event.accept(cube)) {
+            event.apply(cube);
         }
     }
 
-    public static void copyCubes(CubeApplier applier, CubeTransform transform, ISkinType skinType, SkinProperties skinProps, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws SkinSaveException {
-        SkinPart skinPart = saveArmourPart(applier.getLevel(), transform, srcPart, false);
+    public static void copyCubes(CubeChangesCollector collector, CubeTransform transform, ISkinType skinType, SkinProperties skinProps, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws SkinSaveException {
+        SkinPart skinPart = saveArmourPart(collector.getLevel(), transform, srcPart, false);
         if (skinPart != null) {
             skinPart.setSkinPart(destPart);
-            loadSkinPartIntoWorld(applier, transform, skinPart, mirror);
+            loadSkinPartIntoWorld(collector, transform, skinPart, mirror);
         }
     }
 
-    public static int clearMarkers(CubeApplier applier, CubeTransform transform, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
+    public static int clearMarkers(CubeChangesCollector collector, CubeTransform transform, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
         int blockCount = 0;
         for (ISkinPartType skinPart : skinType.getParts()) {
             if (partType != SkinPartTypes.UNKNOWN) {
@@ -350,32 +350,32 @@ public final class WorldUtils {
             if (skinType == SkinTypes.BLOCK) {
                 boolean multiblock = skinProps.get(SkinProperty.BLOCK_MULTIBLOCK);
                 if (skinPart == SkinPartTypes.BLOCK && !multiblock) {
-                    blockCount += clearMarkersForSkinPart(applier, transform, skinPart);
+                    blockCount += clearMarkersForSkinPart(collector, transform, skinPart);
                 }
                 if (skinPart == SkinPartTypes.BLOCK_MULTI && multiblock) {
-                    blockCount += clearMarkersForSkinPart(applier, transform, skinPart);
+                    blockCount += clearMarkersForSkinPart(collector, transform, skinPart);
                 }
             } else {
-                blockCount += clearMarkersForSkinPart(applier, transform, skinPart);
+                blockCount += clearMarkersForSkinPart(collector, transform, skinPart);
             }
         }
         return blockCount;
     }
 
-    private static int clearMarkersForSkinPart(CubeApplier applier, CubeTransform transform, ISkinPartType skinPart) {
+    private static int clearMarkersForSkinPart(CubeChangesCollector collector, CubeTransform transform, ISkinPartType skinPart) {
         int blockCount = 0;
         for (Vector3i offset : getResolvedBuildingSpace2(skinPart)) {
-            auto wrapper = applier.wrap(transform.mul(offset));
-            auto targetState = wrapper.getBlockState();
+            auto cube = collector.getCube(transform.mul(offset));
+            auto targetState = cube.getBlockState();
             if (targetState.hasProperty(SkinCubeBlock.MARKER) && SkinCubeBlock.getMarker(targetState) != OptionalDirection.NONE) {
-                wrapper.setBlockState(SkinCubeBlock.setMarker(targetState, OptionalDirection.NONE));
+                cube.setBlockState(SkinCubeBlock.setMarker(targetState, OptionalDirection.NONE));
                 blockCount++;
             }
         }
         return blockCount;
     }
 
-    public static int clearCubes(CubeApplier applier, CubeTransform transform, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
+    public static int clearCubes(CubeChangesCollector collector, CubeTransform transform, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
         int blockCount = 0;
         for (ISkinPartType skinPart : skinType.getParts()) {
             if (partType != SkinPartTypes.UNKNOWN) {
@@ -386,24 +386,24 @@ public final class WorldUtils {
             if (skinType == SkinTypes.BLOCK) {
                 boolean multiblock = skinProps.get(SkinProperty.BLOCK_MULTIBLOCK);
                 if (skinPart == SkinPartTypes.BLOCK && !multiblock) {
-                    blockCount += clearEquipmentCubesForSkinPart(applier, transform, skinPart);
+                    blockCount += clearEquipmentCubesForSkinPart(collector, transform, skinPart);
                 }
                 if (skinPart == SkinPartTypes.BLOCK_MULTI && multiblock) {
-                    blockCount += clearEquipmentCubesForSkinPart(applier, transform, skinPart);
+                    blockCount += clearEquipmentCubesForSkinPart(collector, transform, skinPart);
                 }
             } else {
-                blockCount += clearEquipmentCubesForSkinPart(applier, transform, skinPart);
+                blockCount += clearEquipmentCubesForSkinPart(collector, transform, skinPart);
             }
         }
         return blockCount;
     }
 
-    private static int clearEquipmentCubesForSkinPart(CubeApplier applier, CubeTransform transform, ISkinPartType skinPart) {
+    private static int clearEquipmentCubesForSkinPart(CubeChangesCollector collector, CubeTransform transform, ISkinPartType skinPart) {
         int blockCount = 0;
         for (Vector3i offset : getResolvedBuildingSpace2(skinPart)) {
-            auto wrapper = applier.wrap(transform.mul(offset));
-            if (wrapper.is(SkinCubeBlock.class)) {
-                wrapper.setBlockState(Blocks.AIR.defaultBlockState(), (CompoundTag) null);
+            auto cube = collector.getCube(transform.mul(offset));
+            if (cube.is(SkinCubeBlock.class)) {
+                cube.setBlockStateAndTag(Blocks.AIR.defaultBlockState(), (CompoundTag) null);
                 blockCount++;
             }
         }

@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
-import moe.plushie.armourers_workshop.builder.other.CubeApplier;
+import moe.plushie.armourers_workshop.builder.other.CubeChangesCollector;
 import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
 import moe.plushie.armourers_workshop.builder.other.CubeSelector;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
@@ -75,11 +75,11 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
         int radiusSample = PaintingToolOptions.RADIUS_SAMPLE.get(itemStack);
         // we need to complete sampling before we can use blending tool.
         ArrayList<Integer> colors = new ArrayList<>();
-        CubeApplier applier = new CubeApplier(context.getLevel());
+        CubeChangesCollector collector = new CubeChangesCollector(context.getLevel());
         createColorApplierSelector(radiusSample, context).forEach(context, (targetPos, dir) -> {
-            auto wrapper = applier.wrap(targetPos);
-            if (wrapper.shouldChangeColor(dir)) {
-                IPaintColor paintColor = wrapper.getColor(dir);
+            auto cube = collector.getCube(targetPos);
+            if (cube.shouldChangeColor(dir)) {
+                IPaintColor paintColor = cube.getColor(dir);
                 if (paintColor != null) {
                     colors.add(paintColor.getRGB());
                 }

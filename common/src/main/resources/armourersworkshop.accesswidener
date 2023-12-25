@@ -1,5 +1,6 @@
 accessWidener   v1  named
 
+accessible method net/minecraft/world/item/context/UseOnContext <init> (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/phys/BlockHitResult;)V
 accessible method net/minecraft/world/level/storage/LevelResource <init> (Ljava/lang/String;)V
 
 extendable method net/minecraft/world/entity/decoration/ArmorStand brokenByAnything (Lnet/minecraft/world/damagesource/DamageSource;)V

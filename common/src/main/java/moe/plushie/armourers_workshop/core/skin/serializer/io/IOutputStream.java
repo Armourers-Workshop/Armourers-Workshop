@@ -2,8 +2,10 @@ package moe.plushie.armourers_workshop.core.skin.serializer.io;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
+import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
+import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
@@ -106,6 +108,13 @@ public interface IOutputStream {
         }
     }
 
+    default void writeVector3i(IVector3i vec) throws IOException {
+        DataOutputStream stream = getOutputStream();
+        stream.writeInt(vec.getX());
+        stream.writeInt(vec.getY());
+        stream.writeInt(vec.getZ());
+    }
+
     default void writeVector3f(IVector3f vec) throws IOException {
         DataOutputStream stream = getOutputStream();
         stream.writeFloat(vec.getX());
@@ -113,13 +122,24 @@ public interface IOutputStream {
         stream.writeFloat(vec.getZ());
     }
 
+    default void writeRectangle3i(IRectangle3i rect) throws IOException {
+        DataOutputStream stream = getOutputStream();
+        stream.writeInt(rect.getX());
+        stream.writeInt(rect.getY());
+        stream.writeInt(rect.getZ());
+        stream.writeInt(rect.getWidth());
+        stream.writeInt(rect.getHeight());
+        stream.writeInt(rect.getDepth());
+    }
+
     default void writeRectangle3f(IRectangle3f rect) throws IOException {
-        writeFloat(rect.getX());
-        writeFloat(rect.getY());
-        writeFloat(rect.getZ());
-        writeFloat(rect.getWidth());
-        writeFloat(rect.getHeight());
-        writeFloat(rect.getDepth());
+        DataOutputStream stream = getOutputStream();
+        stream.writeFloat(rect.getX());
+        stream.writeFloat(rect.getY());
+        stream.writeFloat(rect.getZ());
+        stream.writeFloat(rect.getWidth());
+        stream.writeFloat(rect.getHeight());
+        stream.writeFloat(rect.getDepth());
     }
 
     default void writeTransformf(ITransformf transform) throws IOException {

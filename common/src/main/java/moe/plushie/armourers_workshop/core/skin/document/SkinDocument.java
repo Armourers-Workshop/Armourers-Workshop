@@ -31,6 +31,7 @@ public class SkinDocument {
         this.nodes = _generateDefaultNode(type);
         this.settings = _generateSkinSettings();
         this.properties = _generateSkinProperties();
+        this.settings.setListener(listener);
         this.nodes.setListener(listener);
         this.listener.documentDidChangeType(type);
     }
@@ -58,6 +59,7 @@ public class SkinDocument {
         if (nodes == null) {
             nodes = _generateDefaultNode(type);
         }
+        settings.setListener(listener);
         nodes.setListener(listener);
         listener.documentDidReload();
     }
@@ -67,16 +69,16 @@ public class SkinDocument {
         listener.documentDidChangeSettings(tag);
     }
 
-    public void updateProperties(SkinProperties value) {
-        properties.putAll(value);
+    public void updateProperties(CompoundTag value) {
+        properties.putAll(new SkinProperties.Changes(value));
         listener.documentDidChangeProperties(value);
     }
 
     public <T> void put(ISkinProperty<T> property, T value) {
         properties.put(property, value);
-        SkinProperties changes = new SkinProperties();
+        SkinProperties.Changes changes = new SkinProperties.Changes();
         changes.put(property, value);
-        listener.documentDidChangeProperties(changes);
+        listener.documentDidChangeProperties(changes.serializeNBT());
     }
 
     public <T> T get(ISkinProperty<T> property) {
@@ -142,7 +144,6 @@ public class SkinDocument {
     }
 
     private SkinDocumentSettings _generateSkinSettings() {
-        SkinDocumentSettings settings = new SkinDocumentSettings();
         return settings;
     }
 

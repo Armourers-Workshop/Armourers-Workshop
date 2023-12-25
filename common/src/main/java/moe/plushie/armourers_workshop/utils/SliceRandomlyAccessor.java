@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.utils;
 
-import moe.plushie.armourers_workshop.init.ModLog;
-
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SliceRandomlyAccessor<T> {
 
@@ -18,10 +16,10 @@ public class SliceRandomlyAccessor<T> {
     private final List<Provider<? extends T>> slices;
 
     public SliceRandomlyAccessor(List<Provider<? extends T>> slices) {
-        this.slices = slices.stream().sorted(Comparator.comparingInt(Provider::getStartIndex)).collect(Collectors.toList());
+        this.slices = checkOrder(slices);
         this.count = slices.size();
-        if (this.count != 0) {
-            this.switchSlice(0);
+        if (count != 0) {
+            switchSlice(0);
         }
     }
 
@@ -52,13 +50,16 @@ public class SliceRandomlyAccessor<T> {
     }
 
     private void switchSlice(int selectedIndex) {
-        if (slices.size() == 0) {
-            ModLog.debug("{}", selectedIndex);
-        }
         this.selected = slices.get(selectedIndex);
         this.selectedIndex = selectedIndex;
         this.startIndex = selected.getStartIndex();
         this.endIndex = selected.getEndIndex();
+    }
+
+    private List<Provider<? extends T>> checkOrder(List<Provider<? extends T>> slices) {
+        ArrayList<Provider<? extends T>> sortedSlices = new ArrayList<>(slices);
+        sortedSlices.sort(Comparator.comparingInt(Provider::getStartIndex));
+        return sortedSlices;
     }
 
     public interface Provider<T> {

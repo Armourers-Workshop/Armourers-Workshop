@@ -13,14 +13,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 
 public class ChunkCubeData implements ChunkVariable {
 
     private final ChunkPaletteData palette;
-    private final HashMap<Integer, ChunkCubeSection> sections = new HashMap<>();
-    private final HashMap<ChunkCubeSection, Integer> changes = new HashMap<>();
+    private final LinkedHashMap<Integer, ChunkCubeSection> sections = new LinkedHashMap<>();
+    private final LinkedHashMap<ChunkCubeSection, Integer> changes = new LinkedHashMap<>();
     private final IdentityHashMap<SkinCubes, Collection<ChunkCubeSelector>> pending = new IdentityHashMap<>();
 
     public ChunkCubeData(ChunkPaletteData palette) {

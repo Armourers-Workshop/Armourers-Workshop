@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.utils.math;
 
+import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 
@@ -144,6 +145,21 @@ public class Rectangle3i implements IRectangle3i {
 //    public AABB asAABB() {
 //        return new AABB(x, y, z, x + width, y + height, z + depth);
 //    }
+
+    public void intersection(Rectangle3i rect) {
+        int x1 = Math.max(getMinX(), rect.getMinX());
+        int y1 = Math.max(getMinY(), rect.getMinY());
+        int z1 = Math.max(getMinZ(), rect.getMinZ());
+        int x2 = Math.min(getMaxX(), rect.getMaxX());
+        int y2 = Math.min(getMaxY(), rect.getMaxY());
+        int z2 = Math.min(getMaxZ(), rect.getMaxZ());
+        x = x1;
+        y = y1;
+        z = z1;
+        width = x2 - x1;
+        height = y2 - y1;
+        depth = z2 - z1;
+    }
 
     public void union(Rectangle3i rect) {
         int x1 = Math.min(getMinX(), rect.getMinX());

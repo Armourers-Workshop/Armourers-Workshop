@@ -21,6 +21,8 @@ import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.PoseStackWrapper;
+import moe.plushie.armourers_workshop.utils.PoseUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
@@ -77,7 +79,7 @@ public class BakedCubeFace {
 
         if (transform != SkinTransform.IDENTITY) {
             poseStack.pushPose();
-            resolveTransform(poseStack);
+            PoseUtils.apply(poseStack, transform);
         }
 
         auto pose = poseStack.last().pose();

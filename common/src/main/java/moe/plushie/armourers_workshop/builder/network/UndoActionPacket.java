@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.builder.network;
 
-import moe.plushie.armourers_workshop.api.action.IUndoAction;
+import moe.plushie.armourers_workshop.api.action.IUserAction;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.data.undo.UndoManager;
 import moe.plushie.armourers_workshop.builder.data.undo.UndoStack;
@@ -38,13 +38,13 @@ public class UndoActionPacket extends CustomPacket {
                 if (!ModPermissions.REDO.accept(player)) {
                     return;
                 }
-                IUndoAction command = stack.redo();
+                IUserAction command = stack.redo();
                 message = Component.translatable("chat.armourers_workshop.undo.redoing", command.name());
             } else {
                 if (!ModPermissions.UNDO.accept(player)) {
                     return;
                 }
-                IUndoAction command = stack.undo();
+                IUserAction command = stack.undo();
                 message = Component.translatable("chat.armourers_workshop.undo.undoing", command.name());
             }
             player.sendSystemMessage(message);

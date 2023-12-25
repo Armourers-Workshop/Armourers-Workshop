@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.document;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -22,6 +23,10 @@ public class SkinDocumentType implements IRegistryEntry {
             .put(SkinPartTypes.BIPPED_RIGHT_THIGH, ObjectUtils.map(SkinPartTypes.BIPPED_RIGHT_LEG))
             .put(SkinPartTypes.BIPPED_RIGHT_WING, ObjectUtils.map(SkinPartTypes.BIPPED_RIGHT_PHALANX))
             .put(SkinPartTypes.BIPPED_LEFT_WING, ObjectUtils.map(SkinPartTypes.BIPPED_LEFT_PHALANX))
+            .build();
+
+    private static final ImmutableSet<ISkinPartType> DISABLED_PARTS = new ImmutableSet.Builder<ISkinPartType>()
+            .add(SkinPartTypes.BLOCK_MULTI)
             .build();
 
     private final String name;
@@ -65,6 +70,10 @@ public class SkinDocumentType implements IRegistryEntry {
     private ArrayList<ISkinPartType> generatePartTypes(ISkinType type) {
          ArrayList<ISkinPartType> partTypes = new ArrayList<>();
         for (ISkinPartType partType : type.getParts()) {
+            // manually disabled parts.
+            if (DISABLED_PARTS.contains(partType)) {
+                continue;
+            }
             Collection<ISkinPartType> linkedParts = LINKED_PARTS.get(partType);
             partTypes.add(partType);
             if (linkedParts != null) {

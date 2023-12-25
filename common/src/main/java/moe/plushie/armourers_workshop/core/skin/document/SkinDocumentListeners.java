@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.document;
 
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import net.minecraft.nbt.CompoundTag;
 
@@ -34,8 +33,8 @@ public class SkinDocumentListeners {
         }
 
         @Override
-        public void documentDidChangeProperties(SkinProperties properties) {
-            listeners.forEach(it -> it.documentDidChangeProperties(properties));
+        public void documentDidChangeProperties(CompoundTag tag) {
+            listeners.forEach(it -> it.documentDidChangeProperties(tag));
         }
 
         @Override
@@ -96,7 +95,7 @@ public class SkinDocumentListeners {
         }
 
         @Override
-        public void documentDidChangeProperties(SkinProperties properties) {
+        public void documentDidChangeProperties(CompoundTag tag) {
             blockEntity.setChanged();
         }
 

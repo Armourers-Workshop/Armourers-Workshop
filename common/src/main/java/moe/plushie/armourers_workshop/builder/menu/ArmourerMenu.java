@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.builder.menu;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
-import moe.plushie.armourers_workshop.builder.other.CubeApplier;
+import moe.plushie.armourers_workshop.builder.other.CubeChangesCollector;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.builder.other.WorldUtils;
 import moe.plushie.armourers_workshop.core.data.UserNotifications;
@@ -154,10 +154,10 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
             blockEntity.setSkinProperties(skin.getProperties());
             blockEntity.setPaintData(skin.getPaintData());
 
-            CubeApplier applier = new CubeApplier(blockEntity.getLevel());
+            CubeChangesCollector collector = new CubeChangesCollector(blockEntity.getLevel());
             CubeTransform transform = blockEntity.getTransform();
-            WorldUtils.loadSkinIntoWorld(applier, transform, skin);
-            applier.submit(Component.translatable("action.armourers_workshop.block.load"), player);
+            WorldUtils.loadSkinIntoWorld(collector, transform, skin);
+            collector.submit(Component.translatable("action.armourers_workshop.block.load"), player);
 
             inventory.setItem(0, ItemStack.EMPTY);
             inventory.setItem(1, stackInput);

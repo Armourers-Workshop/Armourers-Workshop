@@ -12,13 +12,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Objects;
 
 public class WorldUpdater {
 
     private static final WorldUpdater INSTANCE = new WorldUpdater();
 
-    private final ArrayList<IWorldUpdateTask> failedTasks = new ArrayList<>();
+    private final LinkedList<IWorldUpdateTask> failedTasks = new LinkedList<>();
     private final HashMap<ResourceKey<Level>, AutoMergeQueue> allTasks = new HashMap<>();
 
     public static WorldUpdater getInstance() {
@@ -34,25 +35,25 @@ public class WorldUpdater {
         if (isEmpty(key)) {
             return;
         }
-        BlockUtils.beginCombiner();
-//        long startAt = System.currentTimeMillis();
-        for (int count = ModConfig.Common.blockTaskRate; count > 0; /* noop */) {
-            IWorldUpdateTask task = poll(key);
-            if (task == null) {
-                break; // no more tasks to run
+        BlockUtils.performBatch(() -> {
+            // long startAt = System.currentTimeMillis();
+            for (int count = ModConfig.Common.blockTaskRate; count > 0; /* noop */) {
+                IWorldUpdateTask task = poll(key);
+                if (task == null) {
+                    break; // no more tasks to run
+                }
+                InteractionResult resultType = task.run(level);
+                if (resultType.consumesAction()) {
+                    count -= 1;
+                } else if (resultType == InteractionResult.FAIL) {
+                    failedTasks.add(task);
+                }
             }
-            InteractionResult resultType = task.run(level);
-            if (resultType.consumesAction()) {
-                count -= 1;
-            } else if (resultType == InteractionResult.FAIL) {
-                failedTasks.add(task);
+            if (!failedTasks.isEmpty()) {
+                failedTasks.forEach(this::submit);
+                failedTasks.clear();
             }
-        }
-        if (!failedTasks.isEmpty()) {
-            failedTasks.forEach(this::submit);
-            failedTasks.clear();
-        }
-        BlockUtils.endCombiner();
+        });
     }
 
     public synchronized void drain(Level level) {
@@ -60,11 +61,11 @@ public class WorldUpdater {
         if (queue == null || queue.isEmpty()) {
             return;
         }
-        BlockUtils.beginCombiner();
-        while (!queue.isEmpty()) {
-            queue.pop().run(level);
-        }
-        BlockUtils.endCombiner();
+        BlockUtils.performBatch(() -> {
+            while (!queue.isEmpty()) {
+                queue.pop().run(level);
+            }
+        });
     }
 
     public synchronized boolean isEmpty(ResourceKey<Level> key) {

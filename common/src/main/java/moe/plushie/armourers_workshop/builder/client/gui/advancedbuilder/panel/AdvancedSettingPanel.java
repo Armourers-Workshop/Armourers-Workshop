@@ -13,6 +13,7 @@ import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.document.DocumentEditor;
+import moe.plushie.armourers_workshop.builder.client.gui.widget.PropertySettingView;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
@@ -25,7 +26,7 @@ import java.util.Collection;
 
 public class AdvancedSettingPanel extends AdvancedPanel {
 
-    private static final ImmutableMap<ISkinType, Collection<ISkinProperty<Boolean>>> TTTT = new ImmutableMap.Builder<ISkinType, Collection<ISkinProperty<Boolean>>>()
+    private static final ImmutableMap<ISkinType, Collection<ISkinProperty<?>>> TTTT = new ImmutableMap.Builder<ISkinType, Collection<ISkinProperty<?>>>()
             .put(SkinTypes.OUTFIT, ObjectUtils.map(
                     SkinProperty.OVERRIDE_MODEL_HEAD,
                     SkinProperty.OVERRIDE_MODEL_CHEST,
@@ -81,11 +82,24 @@ public class AdvancedSettingPanel extends AdvancedPanel {
             .put(SkinTypes.TOOL_AXE, ObjectUtils.map())
             .put(SkinTypes.TOOL_SHOVEL, ObjectUtils.map())
             .put(SkinTypes.TOOL_HOE, ObjectUtils.map())
+            .put(SkinTypes.BLOCK, ObjectUtils.map(
+                    SkinProperty.BLOCK_GLOWING,
+                    SkinProperty.BLOCK_LADDER,
+                    SkinProperty.BLOCK_NO_COLLISION,
+                    SkinProperty.BLOCK_SEAT,
+                    SkinProperty.BLOCK_MULTIBLOCK,
+                    SkinProperty.BLOCK_BED,
+                    SkinProperty.BLOCK_ENDER_INVENTORY,
+                    SkinProperty.BLOCK_INVENTORY,
+                    SkinProperty.BLOCK_INVENTORY_WIDTH,
+                    SkinProperty.BLOCK_INVENTORY_HEIGHT
+            ))
             .build();
 
 
     private SkinProperties properties;
     private final ArrayList<UICheckBox> boxes = new ArrayList<>();
+    private PropertySettingView settingView;
     private final UIScrollView scrollView = new UIScrollView(CGRect.ZERO);
 
     public AdvancedSettingPanel(DocumentEditor editor) {
@@ -110,26 +124,37 @@ public class AdvancedSettingPanel extends AdvancedPanel {
     }
 
     private void addProperties(ISkinType skinType) {
-        boxes.forEach(UIView::removeFromSuperview);
-        Collection<ISkinProperty<Boolean>> properties = TTTT.get(skinType);
+        if (settingView != null) {
+            settingView.removeFromSuperview();
+        }
+        CGRect rect = scrollView.frame();
+        Collection<ISkinProperty<?>> properties = TTTT.get(skinType);
         if (properties == null || properties.isEmpty()) {
             return;
         }
-        float width = scrollView.frame().getWidth() - 20;
-        float top = 10;
-        for (ISkinProperty<Boolean> property : properties) {
-            UICheckBox checkBox = new UICheckBox(new CGRect(10, top, width, 10));
-            checkBox.setTitle(NSString.localizedString("armourer.skinSettings." + property.getKey()));
-            checkBox.setTitleColor(UIColor.WHITE);
-            checkBox.setSelected(document.get(property));
-            checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, c) -> {
-                UICheckBox checkBox1 = ObjectUtils.unsafeCast(c);
-                self.document.put(property, checkBox1.isSelected());
-            });
-            boxes.add(checkBox);
-            scrollView.addSubview(checkBox);
-            top += 12;
-        }
-        scrollView.setContentSize(new CGSize(0, top));
+        settingView = new PropertySettingView(new CGRect(10, 10, rect.width - 20, 0), properties) {
+            @Override
+            public void beginEditing() {
+                editor.beginEditing();
+            }
+
+            @Override
+            public <T> void putValue(ISkinProperty<T> property, T value) {
+                document.put(property, value);
+            }
+
+            @Override
+            public <T> T getValue(ISkinProperty<T> property) {
+                return document.get(property);
+            }
+
+            @Override
+            public void endEditing() {
+                editor.endEditing();;
+            }
+
+        };
+        scrollView.addSubview(settingView);
+        scrollView.setContentSize(new CGSize(0, settingView.frame().getMaxY() + 10));
     }
 }

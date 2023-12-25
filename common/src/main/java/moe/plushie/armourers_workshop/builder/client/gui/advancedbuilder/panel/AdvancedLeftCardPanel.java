@@ -2,14 +2,19 @@ package moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.panel;
 
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
+import com.apple.library.uikit.UICheckBox;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UITextField;
 import com.apple.library.uikit.UIView;
 import com.google.common.base.Objects;
+import moe.plushie.armourers_workshop.api.data.IDataProperty;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.document.DocumentConnector;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.document.DocumentEditor;
+import moe.plushie.armourers_workshop.builder.data.properties.DataProperty;
+import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentSettings;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 
 public class AdvancedLeftCardPanel extends UIView {
 
@@ -47,6 +52,11 @@ public class AdvancedLeftCardPanel extends UIView {
             it.set(textField.text());
         });
 
+        float height = bounds().height;
+        float width = bounds().width;
+        setupCheckBox(10, height - 30, width - 20, "armourer.displaySettings.showOrigin", connector.registerSettings(DataProperty::new, SkinDocumentSettings::showsOrigin, SkinDocumentSettings::setShowsOrigin));
+        setupCheckBox(10, height - 20, width - 20, "armourer.displaySettings.showHelper", connector.registerSettings(DataProperty::new, SkinDocumentSettings::showsHelperModel, SkinDocumentSettings::setShowsHelperModel));
+
         connector.itemName.addObserver((newValue) -> {
             String oldValue = nameTextField.text();
             if (!Objects.equal(oldValue, newValue)) {
@@ -74,5 +84,18 @@ public class AdvancedLeftCardPanel extends UIView {
         textField.setPlaceholder(NSString.localizedString(placeholderKey));
 //        textField.addTarget(this, UIControl.Event.EDITING_DID_END, OutfitMakerWindow::saveSkinInfo);
         addSubview(textField);
+    }
+
+    private void setupCheckBox(float x, float y, float width, String key, IDataProperty<Boolean> property) {
+        UICheckBox checkBox = new UICheckBox(new CGRect(x, y, width, 10));
+        checkBox.setTitle(NSString.localizedString(key));
+        checkBox.setTitleColor(UIColor.WHITE);
+        checkBox.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleTopMargin);
+        checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, c) -> {
+            UICheckBox checkBox1 = ObjectUtils.unsafeCast(c);
+            property.set(checkBox1.isSelected());
+        });
+        addSubview(checkBox);
+        property.addObserver(checkBox::setSelected);
     }
 }

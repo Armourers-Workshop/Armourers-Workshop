@@ -121,6 +121,11 @@ public class SkinProperties implements ISkinProperties {
                 stream.writeByte(DataTypes.BOOLEAN.ordinal());
                 stream.writeBoolean((Boolean) value);
             }
+            if (value instanceof CompoundTag) {
+                //stream.writeByte(DataTypes.COMPOUND_TAG.ordinal());
+                //stream.writeTag((CompoundTag) value);
+                // TODO: @SAGESSE
+            }
         }
     }
 
@@ -147,6 +152,9 @@ public class SkinProperties implements ISkinProperties {
                     break;
                 case BOOLEAN:
                     value = stream.readBoolean();
+                    break;
+                case COMPOUND_TAG:
+                    // value = stream.readTag();
                     break;
             }
             properties.put(key, value);
@@ -213,7 +221,7 @@ public class SkinProperties implements ISkinProperties {
     }
 
     public enum DataTypes {
-        STRING, INT, DOUBLE, BOOLEAN;
+        STRING, INT, DOUBLE, BOOLEAN, COMPOUND_TAG;
 
         @Nullable
         public static DataTypes byId(int id) {
@@ -291,6 +299,27 @@ public class SkinProperties implements ISkinProperties {
                 }
             }
             return null;
+        }
+    }
+
+
+    public static class Changes extends SkinProperties {
+
+        public Changes() {
+        }
+        public Changes(CompoundTag tag) {
+            readFromNBT(tag);
+        }
+
+        @Override
+        public <T> void put(ISkinProperty<T> property, T value) {
+            properties.put(property.getKey(), value);
+        }
+
+        public CompoundTag serializeNBT() {
+            CompoundTag tag = new CompoundTag();
+            writeToNBT(tag);
+            return tag;
         }
     }
 }

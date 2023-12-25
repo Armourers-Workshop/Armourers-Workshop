@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
-import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.platform.TransformationProvider;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;

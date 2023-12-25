@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -16,16 +15,6 @@ public class PoseStackWrapper implements IPoseStack {
 
     public PoseStackWrapper(PoseStack poseStack) {
         this.stack = poseStack;
-    }
-
-    public static PoseStack of(IPoseStack poseStack) {
-        if (poseStack instanceof PoseStackWrapper) {
-            return ((PoseStackWrapper) poseStack).pose();
-        }
-        PoseStack poseStack1 = new PoseStack();
-        poseStack1.mulPoseMatrix(poseStack.lastPose());
-        poseStack1.mulNormalMatrix(poseStack.lastNormal());
-        return poseStack1;
     }
 
     public void pushPose() {

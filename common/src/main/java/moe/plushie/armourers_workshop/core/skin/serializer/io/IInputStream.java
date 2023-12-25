@@ -2,12 +2,13 @@ package moe.plushie.armourers_workshop.core.skin.serializer.io;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
+import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
+import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.utils.texture.TextureProperties;
 
@@ -115,6 +116,14 @@ public interface IInputStream {
         return i;
     }
 
+    default Vector3i readVector3i() throws IOException {
+        DataInputStream stream = getInputStream();
+        int x = stream.readInt();
+        int y = stream.readInt();
+        int z = stream.readInt();
+        return new Vector3i(x, y, z);
+    }
+
     default Vector3f readVector3f() throws IOException {
         DataInputStream stream = getInputStream();
         float x = stream.readFloat();
@@ -123,13 +132,25 @@ public interface IInputStream {
         return new Vector3f(x, y, z);
     }
 
+    default Rectangle3i readRectangle3i() throws IOException {
+        DataInputStream stream = getInputStream();
+        int x = stream.readInt();
+        int y = stream.readInt();
+        int z = stream.readInt();
+        int width = stream.readInt();
+        int height = stream.readInt();
+        int depth = stream.readInt();
+        return new Rectangle3i(x, y, z, width, height, depth);
+    }
+
     default Rectangle3f readRectangle3f() throws IOException {
-        float x = readFloat();
-        float y = readFloat();
-        float z = readFloat();
-        float width = readFloat();
-        float height = readFloat();
-        float depth = readFloat();
+        DataInputStream stream = getInputStream();
+        float x = stream.readFloat();
+        float y = stream.readFloat();
+        float z = stream.readFloat();
+        float width = stream.readFloat();
+        float height = stream.readFloat();
+        float depth = stream.readFloat();
         return new Rectangle3f(x, y, z, width, height, depth);
     }
 

@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.documen
 import moe.plushie.armourers_workshop.builder.entity.CameraEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.utils.math.ClamppedVector3f;
-import moe.plushie.armourers_workshop.utils.math.OpenAABB;
+import moe.plushie.armourers_workshop.utils.math.OpenBoundingBox;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenNearPlane;
 import moe.plushie.armourers_workshop.utils.math.OpenRay;
@@ -264,7 +264,7 @@ public class AdvancedCameraPanel extends UIView {
 
         final OpenMatrix4f invMat;
         final BakedSkinPart part;
-        final OpenAABB box;
+        final OpenBoundingBox box;
 
         Node(BakedSkinPart part, OpenMatrix4f invMat) {
             this.part = part;

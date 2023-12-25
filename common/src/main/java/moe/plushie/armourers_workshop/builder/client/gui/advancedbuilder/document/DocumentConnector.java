@@ -34,8 +34,8 @@ public class DocumentConnector {
     public final DataProperty<Boolean> enabled = register(DataProperty::new, SkinDocumentNode::isEnabled, SkinDocumentNode::setEnabled);
     public final DataProperty<Boolean> mirror = register(DataProperty::new, SkinDocumentNode::isMirror, SkinDocumentNode::setMirror);
 
-    public final DataProperty<String> itemName = register(DataProperty::new, SkinProperty.ALL_CUSTOM_NAME);
-    public final DataProperty<String> itemFlavour = register(DataProperty::new, SkinProperty.ALL_FLAVOUR_TEXT);
+    public final DataProperty<String> itemName = registerProperties(DataProperty::new, SkinProperty.ALL_CUSTOM_NAME);
+    public final DataProperty<String> itemFlavour = registerProperties(DataProperty::new, SkinProperty.ALL_FLAVOUR_TEXT);
 
     private SkinDocument document;
     private SkinDocumentNode node;
@@ -73,7 +73,7 @@ public class DocumentConnector {
         return editor;
     }
 
-    private <T, P extends DataProperty<T>> P register(Supplier<P> factory, ISkinProperty<T> key) {
+    public <T, P extends DataProperty<T>> P registerProperties(Supplier<P> factory, ISkinProperty<T> key) {
         P property = factory.get();
         property.addEditingObserver((flag) -> {
             if (flag) {
@@ -98,7 +98,32 @@ public class DocumentConnector {
         return property;
     }
 
-    private <T, P extends DataProperty<T>> P register(Supplier<P> factory, Function<SkinDocumentNode, T> getter, BiConsumer<SkinDocumentNode, T> setter) {
+    public <T, P extends DataProperty<T>> P registerSettings(Supplier<P> factory, Function<SkinDocumentSettings, T> getter, BiConsumer<SkinDocumentSettings, T> setter) {
+        P property = factory.get();
+        property.addEditingObserver((flag) -> {
+            if (flag) {
+                editor.beginEditing();
+            } else {
+                editor.endEditing();
+            }
+        });
+        property.addObserver((newValue) -> {
+            T oldValue = getter.apply(document.getSettings());
+            if (!Objects.equal(oldValue, newValue)) {
+                setter.accept(document.getSettings(), newValue);
+            }
+        });
+        nodeListeners.add((node) -> {
+            T oldValue = property.get();
+            T newValue = getter.apply(document.getSettings());
+            if (!Objects.equal(oldValue, newValue)) {
+                property.set(newValue);
+            }
+        });
+        return property;
+    }
+
+    public <T, P extends DataProperty<T>> P register(Supplier<P> factory, Function<SkinDocumentNode, T> getter, BiConsumer<SkinDocumentNode, T> setter) {
         P property = factory.get();
         property.addEditingObserver((flag) -> {
             if (flag) {

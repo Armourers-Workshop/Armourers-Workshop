@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.builder.other;
 
-import moe.plushie.armourers_workshop.api.action.IUndoAction;
+import moe.plushie.armourers_workshop.api.action.IUserAction;
 import moe.plushie.armourers_workshop.api.common.IWorldUpdateTask;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CubeChanges implements IUndoAction, IWorldUpdateTask {
+public class CubeChanges implements IUserAction, IWorldUpdateTask {
 
     private final Level level;
     private final BlockPos blockPos;
@@ -85,7 +85,7 @@ public class CubeChanges implements IUndoAction, IWorldUpdateTask {
     }
 
     @Override
-    public IUndoAction apply() throws CommandRuntimeException {
+    public IUserAction apply() throws CommandRuntimeException {
         boolean isChangedNBT = false;
         CubeChanges changes = new CubeChanges(level, blockPos);
         if (blockState != null) {

@@ -1,53 +1,50 @@
 package moe.plushie.armourers_workshop.core.skin.cube;
 
-import moe.plushie.armourers_workshop.api.math.IRectangle3f;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
-import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeProvider;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinUsedCounter;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.TrigUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenAABB;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
-import moe.plushie.armourers_workshop.utils.math.Vector3i;
+import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 
 public abstract class SkinCubes implements ISkinCubeProvider {
 
     protected final OpenPoseStack poseStack = new OpenPoseStack();
     protected final SkinUsedCounter usedCounter = new SkinUsedCounter();
 
-    public void forEach(ICubeConsumer consumer) {
+    public void forEach(Consumer<SkinCube> consumer) {
         int count = getCubeTotal();
         for (int i = 0; i < count; ++i) {
-            Vector3i pos = getCube(i).getPosition();
-            consumer.apply(i, pos.getX(), pos.getY(), pos.getZ());
+            consumer.accept(getCube(i));
         }
     }
 
-    public OpenVoxelShape getRenderShape() {
+    public OpenVoxelShape getShape() {
         OpenVoxelShape shape = OpenVoxelShape.empty();
         int total = getCubeTotal();
         if (total == 0) {
             return shape;
         }
         for (int i = 0; i < total; ++i) {
-            ISkinCube cube = getCube(i);
-            IRectangle3f rect = cube.getShape();
-            ITransformf transform = cube.getTransform();
+            SkinCube cube = getCube(i);
+            Rectangle3f rect = cube.getShape();
+            SkinTransform transform = cube.getTransform();
             if (transform.isIdentity()) {
                 shape.add(rect);
                 continue;
             }
+            poseStack.pushPose();
             OpenVoxelShape shape1 = OpenVoxelShape.box(rect);
             transform.apply(poseStack);
             shape1.mul(poseStack.lastPose());
+            poseStack.popPose();
             shape.add(shape1);
-            poseStack.setIdentity();
         }
         shape.optimize();
         return shape;
@@ -69,9 +66,5 @@ public abstract class SkinCubes implements ISkinCubeProvider {
     @Override
     public String toString() {
         return ObjectUtils.makeDescription(this, "total", getCubeTotal());
-    }
-
-    public interface ICubeConsumer {
-        void apply(int i, int x, int y, int z);
     }
 }

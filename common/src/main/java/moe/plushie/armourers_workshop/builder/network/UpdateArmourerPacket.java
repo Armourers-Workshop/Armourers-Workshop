@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.ArmourerMenu;
-import moe.plushie.armourers_workshop.builder.other.CubeApplier;
+import moe.plushie.armourers_workshop.builder.other.CubeChangesCollector;
 import moe.plushie.armourers_workshop.builder.other.CubeReplacingEvent;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.permission.BlockPermission;
@@ -58,11 +58,12 @@ public class UpdateArmourerPacket extends CustomPacket {
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
         BlockEntity blockEntity = player.getLevel().getBlockEntity(pos);
-        if (blockEntity instanceof ArmourerBlockEntity && player.containerMenu instanceof ArmourerMenu) {
-            BlockUtils.beginCombiner();
-            acceptFieldUpdate(player, (ArmourerBlockEntity) blockEntity, (ArmourerMenu) player.containerMenu);
-            BlockUtils.endCombiner();
+        if (!(blockEntity instanceof ArmourerBlockEntity) || !(player.containerMenu instanceof ArmourerMenu)) {
+            return;
         }
+        BlockUtils.performBatch(() -> {
+            acceptFieldUpdate(player, (ArmourerBlockEntity) blockEntity, (ArmourerMenu) player.containerMenu);
+        });
     }
 
     private void acceptFieldUpdate(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container) {
@@ -85,18 +86,18 @@ public class UpdateArmourerPacket extends CustomPacket {
             case ITEM_CLEAR: {
                 CompoundTag nbt = (CompoundTag) fieldValue;
                 ModLog.info("accept clear action of the {}, nbt: {}", playerName, nbt);
-                CubeApplier applier = new CubeApplier(blockEntity.getLevel());
+                CubeChangesCollector collector = new CubeChangesCollector(blockEntity.getLevel());
                 ISkinPartType partType = SkinPartTypes.byName(nbt.getString(Constants.Key.SKIN_PART_TYPE));
                 if (nbt.getBoolean(Constants.Key.SKIN_CUBES)) {
-                    blockEntity.clearCubes(applier, partType);
+                    blockEntity.clearCubes(collector, partType);
                 }
                 if (nbt.getBoolean(Constants.Key.SKIN_PAINTS)) {
-                    blockEntity.clearPaintData(applier, partType);
+                    blockEntity.clearPaintData(collector, partType);
                 }
                 if (nbt.getBoolean(Constants.Key.SKIN_MARKERS) && !nbt.getBoolean(Constants.Key.SKIN_CUBES)) {
-                    blockEntity.clearMarkers(applier, partType);
+                    blockEntity.clearMarkers(collector, partType);
                 }
-                applier.submit(Component.translatable("action.armourers_workshop.block.clear"), player);
+                collector.submit(Component.translatable("action.armourers_workshop.block.clear"), player);
                 break;
             }
             case ITEM_COPY: {
@@ -107,12 +108,12 @@ public class UpdateArmourerPacket extends CustomPacket {
                     boolean isCopyPaintData = nbt.getBoolean(Constants.Key.SKIN_PAINTS);
                     ISkinPartType sourcePartType = SkinPartTypes.byName(nbt.getString(Constants.Key.SOURCE));
                     ISkinPartType destinationPartType = SkinPartTypes.byName(nbt.getString(Constants.Key.DESTINATION));
-                    CubeApplier applier = new CubeApplier(blockEntity.getLevel());
-                    blockEntity.copyCubes(applier, sourcePartType, destinationPartType, isMirror);
+                    CubeChangesCollector collector = new CubeChangesCollector(blockEntity.getLevel());
+                    blockEntity.copyCubes(collector, sourcePartType, destinationPartType, isMirror);
                     if (isCopyPaintData) {
-                        blockEntity.copyPaintData(applier, sourcePartType, destinationPartType, isMirror);
+                        blockEntity.copyPaintData(collector, sourcePartType, destinationPartType, isMirror);
                     }
-                    applier.submit(Component.translatable("action.armourers_workshop.block.copy"), player);
+                    collector.submit(Component.translatable("action.armourers_workshop.block.copy"), player);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -130,10 +131,10 @@ public class UpdateArmourerPacket extends CustomPacket {
                     if (event.isEmptySource && event.isEmptyDestination) {
                         return;
                     }
-                    CubeApplier applier = new CubeApplier(blockEntity.getLevel());
-                    blockEntity.replaceCubes(applier, SkinPartTypes.UNKNOWN, event);
-                    applier.submit(Component.translatable("action.armourers_workshop.block.replace"), player);
-                    player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.armourer.dialog.replace.success", applier.getChanges()));
+                    CubeChangesCollector collector = new CubeChangesCollector(blockEntity.getLevel());
+                    blockEntity.replaceCubes(collector, SkinPartTypes.UNKNOWN, event);
+                    collector.submit(Component.translatable("action.armourers_workshop.block.replace"), player);
+                    player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.armourer.dialog.replace.success", collector.getTotal()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

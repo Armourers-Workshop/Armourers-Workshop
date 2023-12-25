@@ -2,13 +2,13 @@ package moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.function.Predicate;
 
 public class ChunkPartReader extends ChunkReader {
 
     protected int id = 0;
-    protected final HashMap<Object, ArrayList<Entry>> mapping = new HashMap<>();
+    protected final LinkedHashMap<Object, ArrayList<Entry>> mapping = new LinkedHashMap<>();
 
     public ChunkPartReader(ChunkInputStream stream, Predicate<String> chunkFilter) {
         super(stream, chunkFilter);

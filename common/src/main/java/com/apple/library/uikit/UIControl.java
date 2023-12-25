@@ -7,6 +7,7 @@ import com.apple.library.impl.WeakDispatcherImpl;
 
 import java.util.HashMap;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class UIControl extends UIView implements HighlightedDisplayable {
@@ -19,6 +20,11 @@ public class UIControl extends UIView implements HighlightedDisplayable {
 
     public UIControl(CGRect frame) {
         super(frame);
+    }
+
+
+    public <T> void addTarget(T value, Event event, Consumer<T> consumer) {
+        addTarget(value, event, (self, sender) -> consumer.accept(self));
     }
 
     public <T> void addTarget(T value, Event event, BiConsumer<T, UIControl> consumer) {

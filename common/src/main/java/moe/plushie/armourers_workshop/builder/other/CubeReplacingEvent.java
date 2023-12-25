@@ -49,9 +49,9 @@ public class CubeReplacingEvent {
         this.isChangedBlock = isChangedBlock();
     }
 
-    public boolean accept(CubeWrapper wrapper) {
+    public boolean accept(CubeWrapper cube) {
         // security check, we only can modify the paintable block.
-        if (!wrapper.is(IPaintable.class)) {
+        if (!cube.is(IPaintable.class)) {
             return false;
         }
         // replace all block's to target block.
@@ -59,7 +59,7 @@ public class CubeReplacingEvent {
             return true;
         }
         // when specified block type we need to check matching.
-        if (sourceBlock != null && !wrapper.is(sourceBlock)) {
+        if (sourceBlock != null && !cube.is(sourceBlock)) {
             return false;
         }
         // when specified block color we need to check matching.
@@ -67,7 +67,7 @@ public class CubeReplacingEvent {
             int diff = 0;
             for (Direction dir : Direction.values()) {
                 IPaintColor s = sourceBlockColor.getOrDefault(dir, PaintColor.WHITE);
-                IPaintColor t = wrapper.getColor(dir);
+                IPaintColor t = cube.getColor(dir);
                 if (!Objects.equals(s, t)) {
                     diff += 1;
                 }
@@ -81,20 +81,20 @@ public class CubeReplacingEvent {
         return true;
     }
 
-    public void apply(CubeWrapper wrapper) {
+    public void apply(CubeWrapper cube) {
         // security check, we only can modify the paintable block.
-        if (!wrapper.is(IPaintable.class)) {
+        if (!cube.is(IPaintable.class)) {
             return;
         }
         int oldBlockChanges = blockChanges;
         int oldBlockColorChanges = blockColorChanges;
         // when specified new block color, we need to apply it first.
         if (!destination.isEmpty() && destinationBlockColor != null) {
-            applyColor(wrapper);
+            applyColor(cube);
         }
         // when specified new block type, we need to apply it.
         if (isChangedBlock) {
-            applyBlock(wrapper);
+            applyBlock(cube);
         }
         // statistical change data.
         if (oldBlockChanges != blockChanges || oldBlockColorChanges != blockColorChanges) {
@@ -102,7 +102,7 @@ public class CubeReplacingEvent {
         }
     }
 
-    private void applyColor(CubeWrapper wrapper) {
+    private void applyColor(CubeWrapper cube) {
         // when both keep color and keep paint type, we not need to color mix.
         if (keepColor && keepPaintType) {
             return;
@@ -110,7 +110,7 @@ public class CubeReplacingEvent {
         // we just need to replace the matching block colors.
         HashMap<Direction, IPaintColor> newColors = new HashMap<>();
         for (Direction dir : Direction.values()) {
-            IPaintColor targetColor = wrapper.getColor(dir);
+            IPaintColor targetColor = cube.getColor(dir);
             if (sourceBlockColor != null) {
                 IPaintColor sourceColor = sourceBlockColor.getOrDefault(dir, PaintColor.WHITE);
                 if (!Objects.equals(sourceColor, targetColor)) {
@@ -131,26 +131,26 @@ public class CubeReplacingEvent {
             newColors.put(dir, newColor);
         }
         // apply all block color changes into tile entity.
-        wrapper.setColors(newColors);
+        cube.setColors(newColors);
         blockColorChanges += 1;
     }
 
-    private void applyBlock(CubeWrapper wrapper) {
+    private void applyBlock(CubeWrapper cube) {
         // security check, we only can modify the skin cube block.
-        if (!wrapper.is(SkinCubeBlock.class)) {
+        if (!cube.is(SkinCubeBlock.class)) {
             return;
         }
         CompoundTag newNBT = null;
-        BlockState oldState = wrapper.getBlockState();
+        BlockState oldState = cube.getBlockState();
         BlockState newState = Blocks.AIR.defaultBlockState();
         if (destinationBlock != null) {
-            newNBT = wrapper.getBlockEntityNBT();
+            newNBT = cube.getBlockTag();
             newState = destinationBlock.defaultBlockState();
             for (Property<?> property : oldState.getProperties()) {
                 newState = applyBlockState(newState, oldState, property);
             }
         }
-        wrapper.setBlockState(newState, newNBT);
+        cube.setBlockStateAndTag(newState, newNBT);
         blockChanges += 1;
     }
 

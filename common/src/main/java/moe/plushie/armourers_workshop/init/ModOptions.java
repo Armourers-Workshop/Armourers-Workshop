@@ -25,12 +25,10 @@ public class ModOptions {
         try {
             if (contentPath.exists()) {
                 load();
-                return;
             }
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-        setChanged();
     }
 
     public static ModOptions getInstance() {

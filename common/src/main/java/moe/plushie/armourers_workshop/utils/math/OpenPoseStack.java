@@ -5,19 +5,34 @@ import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.Stack;
 
 @SuppressWarnings("unused")
 public class OpenPoseStack implements IPoseStack {
 
-    private final OpenMatrix4f poseMatrix = OpenMatrix4f.createScaleMatrix(1, 1, 1);
-    private final OpenMatrix3f normalMatrix = OpenMatrix3f.createScaleMatrix(1, 1, 1);
+    private OpenMatrix4f poseMatrix = OpenMatrix4f.createScaleMatrix(1, 1, 1);
+    private OpenMatrix3f normalMatrix = OpenMatrix3f.createScaleMatrix(1, 1, 1);
+
+    private Stack<Pair<OpenMatrix3f, OpenMatrix4f>> stack;
 
     @Override
     public void pushPose() {
+        if (stack == null) {
+            stack = new Stack<>();
+        }
+        stack.push(Pair.of(normalMatrix.copy(), poseMatrix.copy()));
     }
 
     @Override
     public void popPose() {
+        if (stack == null || stack.isEmpty()) {
+            return;
+        }
+        Pair<OpenMatrix3f, OpenMatrix4f> pair = stack.pop();
+        normalMatrix = pair.getLeft();
+        poseMatrix = pair.getRight();
     }
 
     public void setIdentity() {

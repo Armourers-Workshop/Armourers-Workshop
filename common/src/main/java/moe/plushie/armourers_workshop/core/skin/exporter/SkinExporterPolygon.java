@@ -49,7 +49,7 @@ public class SkinExporterPolygon implements ISkinExporter {
 
     private void exportPart(SkinPart skinPart, Skin skin, File filePath, String filename, float scale, int partIndex) throws IOException {
         SkinCubes cubeData = skinPart.getCubeData();
-        Rectangle3i bounds = new Rectangle3i(cubeData.getRenderShape().bounds());
+        Rectangle3i bounds = new Rectangle3i(cubeData.getShape().bounds());
         // user maybe need apply some effects for the glass or glowing blocks,
         // so we need split the glass and glowing block into separate layers.
         HashMap<ISkinCubeType, ArrayList<SkinCubeFace>> faces = new HashMap<>();

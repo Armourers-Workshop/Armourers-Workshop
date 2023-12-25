@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.menu.AbstractBlockEntityMenu;
-import moe.plushie.armourers_workshop.utils.ext.OpenUseOnContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
@@ -70,6 +69,6 @@ public class ColorMixerMenu extends AbstractBlockEntityMenu<ColorMixerBlockEntit
 
     protected UseOnContext buildContext(Level level, BlockPos pos, ItemStack itemStack) {
         BlockHitResult traceResult = BlockHitResult.miss(Vec3.ZERO, Direction.NORTH, pos);
-        return new OpenUseOnContext(level, null, InteractionHand.OFF_HAND, itemStack, traceResult);
+        return new UseOnContext(level, null, InteractionHand.OFF_HAND, itemStack, traceResult);
     }
 }

@@ -1,24 +1,31 @@
 package moe.plushie.armourers_workshop.core.skin.document;
 
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.core.skin.SkinMarker;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV2;
+import moe.plushie.armourers_workshop.core.skin.exception.SkinSaveException;
 import moe.plushie.armourers_workshop.core.skin.exception.TranslatableException;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
+import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
+import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SkinDocumentExporter {
 
@@ -32,15 +39,42 @@ public class SkinDocumentExporter {
     }
 
     public Skin execute(Player player) throws TranslatableException {
-        List<SkinPart> parts = convertToParts(document.getRoot());
-        Skin.Builder builder = new Skin.Builder(document.getType().getSkinType());
-
-        if (parts.isEmpty()) {
-            throw new TranslatableException("exception.armourers_workshop.save.noting");
-        }
-
+        ISkinType skinType = document.getType().getSkinType();
         SkinSettings settings = new SkinSettings();
         SkinProperties properties = document.getProperties().copy();
+        List<SkinPart> parts = convertToParts(document.getRoot());
+
+        if (parts.isEmpty()) {
+            throw SkinSaveException.Type.NO_DATA.build("noting");
+        }
+
+//        for (SkinPart part : parts) {
+//            ISkinPartType partType = part.getType();
+//            Collection<SkinMarker> markers = part.getMarkers();
+//            if (partType.getMinimumMarkersNeeded() > markers.size()) {
+//                throw SkinSaveException.Type.MARKER_ERROR.build("missingMarker", TranslateUtils.Name.of(partType));
+//            }
+//            if (markers.size() > partType.getMaximumMarkersNeeded()) {
+//                throw SkinSaveException.Type.MARKER_ERROR.build("tooManyMarkers", TranslateUtils.Name.of(partType));
+//            }
+//        }
+
+        if (skinType == SkinTypes.BLOCK) {
+            Map<Vector3i, Rectangle3i> boxes = SkinDocumentCollider.generateCollisionBox(document.getRoot());
+            settings.setCollisionBox(new ArrayList<>(boxes.values()));
+
+            // check if the skin is not a seat and a bed.
+            if (properties.get(SkinProperty.BLOCK_BED) && properties.get(SkinProperty.BLOCK_SEAT)) {
+                throw SkinSaveException.Type.BED_AND_SEAT.build("conflictBedSeat");
+            }
+
+            // check if multi-block is valid.
+            if (properties.get(SkinProperty.BLOCK_MULTIBLOCK) && !boxes.containsKey(Vector3i.ZERO)) {
+                throw SkinSaveException.Type.INVALID_MULTIBLOCK.build("missingMainBlock");
+            }
+        }
+
+        Skin.Builder builder = new Skin.Builder(skinType);
 
         settings.setEditable(false);
         settings.setItemTransforms(itemTransforms);
@@ -65,7 +99,7 @@ public class SkinDocumentExporter {
             }
             Skin skin = loadSkin(node);
             List<SkinPart> using = loadSkinParts(skin, node);
-            SkinTransform transform = loadTransform(node);
+            SkinTransform transform = node.getTransform();
             ArrayList<SkinPart> parts = convertToParts(node);
             if (using == null && parts.isEmpty()) {
                 // ignore empty node.
@@ -74,8 +108,12 @@ public class SkinDocumentExporter {
             if (using != null && node.getType() == using.get(0).getType() && parts.isEmpty() && transform.isIdentity()) {
                 // using original skin data directly.
                 SkinPart part = using.get(0);
-                part.setName(node.getName());
-                allParts.add(part);
+                SkinPart.Builder builder = new SkinPart.Builder(node.getType());
+                builder.name(node.getName());
+                builder.transform(part.getTransform());
+                builder.cubes(part.getCubeData());
+                builder.markers(loadSkinMarkers(node));
+                allParts.add(builder.build());
                 loadItemTransforms(skin);
                 continue;
             }
@@ -87,7 +125,7 @@ public class SkinDocumentExporter {
             SkinCubesV2 cubes = new SkinCubesV2();
             builder.cubes(cubes);
 
-            builder.markers(null);
+            builder.markers(loadSkinMarkers(node));
             builder.properties(null);
             builder.blobs(null);
 
@@ -136,12 +174,18 @@ public class SkinDocumentExporter {
         return skin;
     }
 
-    private SkinTransform loadTransform(SkinDocumentNode node) {
-        Vector3f location = node.getLocation();
-        if (!location.equals(Vector3f.ZERO)) {
-            location = location.scaling(16); // meters to block
+    private List<SkinMarker> loadSkinMarkers(SkinDocumentNode node) {
+        ArrayList<SkinMarker> markers = new ArrayList<>();
+        for (SkinDocumentNode child : node.children()) {
+            if (child.isLocator()) {
+                int x = -MathUtils.floor(child.getLocation().getX() * 16);
+                int y = -MathUtils.floor(child.getLocation().getY() * 16);
+                int z = MathUtils.floor(child.getLocation().getZ() * 16);
+                SkinMarker marker = new SkinMarker((byte) x, (byte) y, (byte) z, (byte) 0);
+                markers.add(marker);
+            }
         }
-        return SkinTransform.create(location, node.getRotation(), node.getScale());
+        return markers;
     }
 
     private void loadItemTransforms(Skin skin) {

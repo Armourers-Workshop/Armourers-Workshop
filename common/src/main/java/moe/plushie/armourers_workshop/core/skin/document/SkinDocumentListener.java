@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.skin.document;
 
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import net.minecraft.nbt.CompoundTag;
 
 public interface SkinDocumentListener {
@@ -11,7 +10,7 @@ public interface SkinDocumentListener {
     default void documentDidChangeSettings(CompoundTag tag) {
     }
 
-    default void documentDidChangeProperties(SkinProperties properties) {
+    default void documentDidChangeProperties(CompoundTag tag) {
     }
 
     default void documentDidInsertNode(SkinDocumentNode node, SkinDocumentNode target, int index) {

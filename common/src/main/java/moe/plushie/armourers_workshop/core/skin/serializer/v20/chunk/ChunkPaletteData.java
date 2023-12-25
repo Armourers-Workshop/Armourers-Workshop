@@ -14,12 +14,12 @@ import moe.plushie.armourers_workshop.utils.math.Vector2f;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class ChunkPaletteData implements ChunkVariable {
 
     private IPaintColor[] paintColors;
-    private final HashMap<Integer, ChunkColorSection> sections = new HashMap<>();
+    private final LinkedHashMap<Integer, ChunkColorSection> sections = new LinkedHashMap<>();
 
     private SliceRandomlyAccessor<IPaintColor> paintColorAccessor;
 
@@ -105,7 +105,7 @@ public class ChunkPaletteData implements ChunkVariable {
             if (!section.isResolved()) {
                 section.freeze(offset);
             }
-            offset += section.getTotal();
+            offset += section.getSize();
         }
         colorUsedIndex = _used(offset);
         textureUsedIndex = 4;
@@ -129,9 +129,9 @@ public class ChunkPaletteData implements ChunkVariable {
             }
             sections.put(_key(section), section);
             section.freeze(offset);
-            offset += section.getTotal();
+            offset += section.getSize();
             if (!section.isTexture()) {
-                colorOffset += section.getTotal();
+                colorOffset += section.getSize();
             }
         }
         // yep, we have a fixed color table.
@@ -172,7 +172,7 @@ public class ChunkPaletteData implements ChunkVariable {
             stream.writeVarInt(0);
             return;
         }
-        stream.writeVarInt(section.getTotal());
+        stream.writeVarInt(section.getSize());
         stream.writeByte(section.getPaintType().getId());
         stream.writeByte(section.getUsedBytes());
         section.writeToStream(stream);

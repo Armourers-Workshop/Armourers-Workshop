@@ -238,7 +238,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
 
         Task(Skin skin, SkinPart skinPart) {
             SkinCubes cubeData = skinPart.getCubeData();
-            Rectangle3i bounds = new Rectangle3i(cubeData.getRenderShape().bounds());
+            Rectangle3i bounds = new Rectangle3i(cubeData.getShape().bounds());
             this.skin = skin;
             this.skinPart = skinPart;
             this.skinFaces = SkinCuller.cullFaces(cubeData, bounds);

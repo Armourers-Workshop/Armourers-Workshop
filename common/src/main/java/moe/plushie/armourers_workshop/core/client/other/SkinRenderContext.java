@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.PoseStackWrapper;
+import moe.plushie.armourers_workshop.utils.PoseUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -45,7 +46,7 @@ public class SkinRenderContext {
 
     public SkinRenderContext(PoseStack poseStack) {
         this.defaultPoseStack = poseStack;
-        this.usingPoseStack = new PoseStackWrapper(poseStack);
+        this.usingPoseStack = PoseUtils.wrap(poseStack);
     }
 
     public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, AbstractItemTransformType transformType, PoseStack poseStack, MultiBufferSource buffers) {

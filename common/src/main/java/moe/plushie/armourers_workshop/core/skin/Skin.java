@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Skin implements ISkin {
 
@@ -30,9 +31,9 @@ public class Skin implements ISkin {
     private final List<SkinPart> parts;
 
     private Object blobs;
+    private HashMap<BlockPos, Rectangle3i> blockBounds;
 
     private int version;
-    private boolean previewMode = false;
 
     private final SkinPaintData paintData;
     private final SkinPreviewData previewData;
@@ -58,9 +59,29 @@ public class Skin implements ISkin {
         return properties;
     }
 
-    public HashMap<BlockPos, Rectangle3i> getBlockBounds() {
-        HashMap<BlockPos, Rectangle3i> blockBounds = new HashMap<>();
+    public Map<BlockPos, Rectangle3i> getBlockBounds() {
+        if (blockBounds != null) {
+            return blockBounds;
+        }
+        blockBounds = new HashMap<>();
         if (skinType != SkinTypes.BLOCK) {
+            return blockBounds;
+        }
+        List<Rectangle3i> collisionBox = settings.getCollisionBox();
+        blockBounds.put(BlockPos.ZERO, Rectangle3i.ZERO);
+        if (collisionBox != null) {
+            for (Rectangle3i rect : collisionBox) {
+                int bx = -Math.floorDiv(rect.getMinX(), 16);
+                int by = -Math.floorDiv(rect.getMinY(), 16);
+                int bz = Math.floorDiv(rect.getMinZ(), 16);
+                int tx = Math.floorMod(rect.getMinX(), 16) - 8;
+                int ty = Math.floorMod(rect.getMinY(), 16) - 8;
+                int tz = Math.floorMod(rect.getMinZ(), 16) - 8;
+                int tw = rect.getWidth();
+                int th = rect.getHeight();
+                int td = rect.getDepth();
+                blockBounds.put(new BlockPos(bx, by, bz), new Rectangle3i(-tx, -ty, tz, -tw, -th, td));
+            }
             return blockBounds;
         }
         for (SkinPart part : getParts()) {

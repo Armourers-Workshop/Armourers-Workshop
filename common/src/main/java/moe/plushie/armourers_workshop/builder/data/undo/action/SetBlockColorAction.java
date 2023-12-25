@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.data.undo.action;
 
 import com.google.common.collect.ImmutableMap;
-import moe.plushie.armourers_workshop.api.action.IUndoAction;
+import moe.plushie.armourers_workshop.api.action.IUserAction;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.HashMap;
 
-public class SetBlockColorAction extends BlockUndoAction {
+public class SetBlockColorAction extends BlockUserAction {
 
     private final ImmutableMap<Direction, IPaintColor> newValue;
 
@@ -23,7 +23,7 @@ public class SetBlockColorAction extends BlockUndoAction {
     }
 
     @Override
-    public IUndoAction apply() throws CommandRuntimeException {
+    public IUserAction apply() throws CommandRuntimeException {
         IPaintable target = (IPaintable) getBlockEntity();
         HashMap<Direction, IPaintColor> oldValue = new HashMap<>();
         for (Direction direction : newValue.keySet()) {
@@ -33,7 +33,7 @@ public class SetBlockColorAction extends BlockUndoAction {
             }
             oldValue.put(direction, paintColor);
         }
-        IUndoAction revertAction = new SetBlockColorAction(level, blockPos, oldValue);
+        IUserAction revertAction = new SetBlockColorAction(level, blockPos, oldValue);
         target.setColors(newValue);
         return revertAction;
     }

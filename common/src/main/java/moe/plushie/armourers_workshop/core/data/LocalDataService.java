@@ -33,8 +33,6 @@ public class LocalDataService implements ISkinFileManager {
 
     public LocalDataService(File rootPath) {
         this.rootPath = rootPath;
-        // data migration for the internal-test version, and will be removed in later versions.
-        this.loadLegacyNodes();
         this.loadNodes();
     }
 
@@ -58,35 +56,6 @@ public class LocalDataService implements ISkinFileManager {
 
     public static boolean isRunning() {
         return RUNNING != null;
-    }
-
-    protected void loadLegacyNodes() {
-        File indexDB = new File(rootPath, "index.data");
-        if (!indexDB.exists()) {
-            return;
-        }
-        File[] files = SkinFileUtils.listFiles(rootPath);
-        if (files == null) {
-            return;
-        }
-        ModLog.info("data fixer for db {} started", indexDB);
-        for (File file : files) {
-            String name = file.getName();
-            if (name.equals("objects") || name.equals("index.dat")) {
-                continue;
-            }
-            try {
-                Node node = generateNode(name, file);
-                if (node != null) {
-                    ModLog.info("data fixer -> upgrade {} node to new db", name);
-                    SkinFileUtils.deleteQuietly(file);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        SkinFileUtils.deleteQuietly(indexDB);
-        ModLog.info("data fixer for db {} completed", indexDB);
     }
 
     private void loadNodes() {

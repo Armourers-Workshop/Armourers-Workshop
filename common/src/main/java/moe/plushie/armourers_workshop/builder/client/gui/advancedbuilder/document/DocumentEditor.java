@@ -10,8 +10,7 @@ import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentSynchronizer;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentType;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.minecraft.network.chat.Component;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -49,6 +48,14 @@ public class DocumentEditor {
 
     public void nodeAddAction(SkinDocumentNode node) {
         SkinDocumentNode newValue = new SkinDocumentNode("New Node");
+        newValue.setName(_resolveName(newValue.getName(), node.children()));
+        node.insertAtIndex(newValue, 0);
+        nodeSelectAction(newValue);
+    }
+
+    public void nodeAddLocatorAction(SkinDocumentNode node) {
+        SkinDocumentNode newValue = new SkinDocumentNode("New Locator");
+        newValue.setType(SkinPartTypes.ADVANCED_LOCATOR);
         newValue.setName(_resolveName(newValue.getName(), node.children()));
         node.insertAtIndex(newValue, 0);
         nodeSelectAction(newValue);
@@ -113,21 +120,23 @@ public class DocumentEditor {
         document.getHandler().documentDidSelectNode(node);
     }
 
-    // ..
-
     public Collection<UIMenuItem> getNodeMenuItems(SkinDocumentNode node, TreeView treeView) {
         DocumentMenuBuilder builder = new DocumentMenuBuilder(node, treeView);
         List<SkinDocumentNode> children = node.parent().children();
         boolean isEnabled = !node.isLocked();
         int order = children.indexOf(node);
 
-        builder.add(0, "add").execute(this::nodeAddAction);
-        builder.add(0, "copy").execute(this::nodeCopyAction);
+        builder.add(0, "add").execute(this::nodeAddAction).enable(!node.isLocator());
+        builder.add(0, "copy").execute(this::nodeCopyAction).enable(!node.isLocator());
         builder.add(0, "paste").execute(this::nodePasteAction).enable(DocumentPasteboard.getInstance().getContents() != null);
         builder.add(0, "delete").execute(this::nodeRemoveAction).enable(isEnabled);
 
         if (isEnabled) {
-            builder.add(1, "duplicate").execute(this::nodeDuplicateAction);
+            builder.add(1, "duplicate").execute(this::nodeDuplicateAction).enable(!node.isLocator());
+        }
+
+        if (node.getType().getMaximumMarkersNeeded() != 0) {
+            builder.add(2, "addLocator").execute(this::nodeAddLocatorAction);
         }
 
         builder.add(4, "moveUp").execute(this::nodeMoveUpAction).enable(isEnabled && order != 0);

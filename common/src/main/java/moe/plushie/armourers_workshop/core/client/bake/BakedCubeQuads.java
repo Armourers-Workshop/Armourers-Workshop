@@ -58,13 +58,13 @@ public class BakedCubeQuads {
     public static QuadsList<ISkinPartType> from(SkinPart part) {
         QuadsList<ISkinPartType> quads = new QuadsList<>();
         SkinCubes data = part.getCubeData();
-        OpenVoxelShape renderShape = data.getRenderShape();
-        Rectangle3i bounds = new Rectangle3i(renderShape.bounds());
+        OpenVoxelShape shape = data.getShape();
+        Rectangle3i bounds = new Rectangle3i(shape.bounds());
         SkinCuller.cullFaces2(data, bounds, part.getType()).forEach(result -> {
             // when has a different part type, it means the skin part was split.
             Rectangle3i newBounds = bounds;
             SkinTransform newTransform = SkinTransform.createTranslateTransform(new Vector3f(result.getOrigin()));
-            OpenVoxelShape newRenderShape = renderShape;
+            OpenVoxelShape newRenderShape = shape;
             if (result.getPartType() != part.getType()) {
                 newBounds = result.getBounds().offset(bounds.getOrigin());
                 newRenderShape = OpenVoxelShape.box(new Rectangle3f(newBounds));
@@ -80,10 +80,10 @@ public class BakedCubeQuads {
             return allQuads;
         }
         previewData.forEach((transform, data) -> {
-            OpenVoxelShape renderShape = data.getRenderShape();
-            Rectangle3i bounds = new Rectangle3i(renderShape.bounds());
+            OpenVoxelShape shape = data.getShape();
+            Rectangle3i bounds = new Rectangle3i(shape.bounds());
             SkinCuller.cullFaces2(data, bounds, SkinPartTypes.BLOCK).forEach(result -> {
-                BakedCubeQuads quad = new BakedCubeQuads(bounds, transform, renderShape, result.getFaces());
+                BakedCubeQuads quad = new BakedCubeQuads(bounds, transform, shape, result.getFaces());
                 allQuads.add(result.getPartType(), quad);
             });
         });

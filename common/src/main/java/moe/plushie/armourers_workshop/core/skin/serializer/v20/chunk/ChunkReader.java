@@ -53,12 +53,12 @@ public class ChunkReader {
         Iterator<Entry> iterator = entries.iterator();
         while (iterator.hasNext()) {
             Entry entry = iterator.next();
-            if (entry.name.equals(serializer.getChunkType().getName())) {
+            if (serializer.canRead(entry.name)) {
                 iterator.remove();
                 return entry.read(serializer, context);
             }
         }
-        return serializer.getDefaultValue(stream);
+        return serializer.getDefaultValue();
     }
 
     public <T> Collection<T> readAll(ChunkSerializer<T, Void> serializer) throws IOException {
@@ -70,7 +70,7 @@ public class ChunkReader {
         Iterator<Entry> iterator = entries.iterator();
         while (iterator.hasNext()) {
             Entry entry = iterator.next();
-            if (entry.name.equals(serializer.getChunkType().getName())) {
+            if (serializer.canRead(entry.name)) {
                 iterator.remove();
                 T result = entry.read(serializer, context);
                 if (result != null) {
@@ -127,7 +127,7 @@ public class ChunkReader {
             if (inputStream == null) {
                 inputStream = new ChunkInputStream(new DataInputStream(context.createInputStream(buffer, flags)), context, null);
             }
-            return serializer.read(inputStream, obj);
+            return serializer.read(inputStream, name, obj);
         }
 
         @Override

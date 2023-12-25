@@ -76,11 +76,11 @@ public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements 
     }
 
     public void importToDocument(String identifier, Skin skin) {
-        BlockUtils.beginCombiner();
-        SkinDocumentImporter importer = new SkinDocumentImporter(document);
-        document.reset();
-        importer.execute(identifier, skin);
-        BlockUtils.endCombiner();
+        BlockUtils.performBatch(() -> {
+            SkinDocumentImporter importer = new SkinDocumentImporter(document);
+            document.reset();
+            importer.execute(identifier, skin);
+        });
     }
 
     public void exportFromDocument(ServerPlayer player) {

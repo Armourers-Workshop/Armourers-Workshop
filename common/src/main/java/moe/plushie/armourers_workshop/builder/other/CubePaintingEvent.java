@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.function.Function;
 
+import manifold.ext.rt.api.auto;
+
 public class CubePaintingEvent {
 
     private static final HashMap<Class<? extends Action>, ActionTypes> REVERSE_LOOKUP = new HashMap<>();
@@ -72,15 +74,15 @@ public class CubePaintingEvent {
         buffer.writeByte(0);
     }
 
-    public boolean prepare(CubeApplier applier, UseOnContext context) {
-        Level level = context.getLevel();
-        Player player = context.getPlayer();
+    public boolean prepare(CubeChangesCollector collector, UseOnContext context) {
+        auto level = context.getLevel();
+        auto player = context.getPlayer();
         selector.forEach(context, (target, dir) -> {
-            CubeWrapper wrapper = applier.wrap(target);
-            if (wrapper.is(IPaintable.class)) {
+            auto cube = collector.getCube(target);
+            if (cube.is(IPaintable.class)) {
                 targetCount += 1;
             }
-            IPaintToolAction action1 = action.build(level, target, dir, wrapper, player);
+            auto action1 = action.build(level, target, dir, cube, player);
             if (action1 != action) {
                 overrides.put(Pair.of(target, dir), action1);
             }
@@ -88,40 +90,19 @@ public class CubePaintingEvent {
         return targetCount != 0;
     }
 
-    public void apply(CubeApplier applier, UseOnContext context) {
-        Level level = context.getLevel();
-        Player player = context.getPlayer();
+    public void apply(CubeChangesCollector collector, UseOnContext context) {
+        auto level = context.getLevel();
+        auto player = context.getPlayer();
         selector.forEach(context, (target, dir) -> {
-            IPaintToolAction action1 = overrides.getOrDefault(Pair.of(target, dir), action);
-            action1.apply(level, target, dir, applier.wrap(target), player);
+            auto action1 = overrides.getOrDefault(Pair.of(target, dir), action);
+            action1.apply(level, target, dir, collector.getCube(target), player);
         });
-    }
-
-    public enum ActionTypes {
-
-        SET_COLOR(SetAction.class, SetAction::new),
-        SET_BRIGHTNESS(BrightnessAction.class, BrightnessAction::new),
-        SET_NOISE(NoiseAction.class, NoiseAction::new),
-        SET_HUE(HueAction.class, HueAction::new),
-        SET_BLENDING(BlendingAction.class, BlendingAction::new),
-        CLEAR_COLOR(ClearAction.class, ClearAction::new);
-
-        private final Function<FriendlyByteBuf, Action> factory;
-
-        ActionTypes(Class<? extends Action> packetClass, Function<FriendlyByteBuf, Action> factory) {
-            this.factory = factory;
-            REVERSE_LOOKUP.put(packetClass, this);
-        }
-
-        public static ActionTypes getType(final Class<?> c) {
-            return REVERSE_LOOKUP.get(c);
-        }
     }
 
     public static abstract class Action implements IPaintToolAction {
 
         public static Action fromBuffer(FriendlyByteBuf buffer) {
-            ActionTypes type = buffer.readEnum(ActionTypes.class);
+            auto type = buffer.readEnum(ActionTypes.class);
             return type.factory.apply(buffer);
         }
 
@@ -386,6 +367,27 @@ public class CubePaintingEvent {
             newB = MathUtils.clamp((int) newB, 0, 255);
 
             return PaintColor.of((int) newR, (int) newG, (int) newB, sourceColor.getPaintType());
+        }
+    }
+
+    public enum ActionTypes {
+
+        SET_COLOR(SetAction.class, SetAction::new),
+        SET_BRIGHTNESS(BrightnessAction.class, BrightnessAction::new),
+        SET_NOISE(NoiseAction.class, NoiseAction::new),
+        SET_HUE(HueAction.class, HueAction::new),
+        SET_BLENDING(BlendingAction.class, BlendingAction::new),
+        CLEAR_COLOR(ClearAction.class, ClearAction::new);
+
+        private final Function<FriendlyByteBuf, Action> factory;
+
+        ActionTypes(Class<? extends Action> packetClass, Function<FriendlyByteBuf, Action> factory) {
+            this.factory = factory;
+            REVERSE_LOOKUP.put(packetClass, this);
+        }
+
+        public static ActionTypes getType(final Class<?> c) {
+            return REVERSE_LOOKUP.get(c);
         }
     }
 }

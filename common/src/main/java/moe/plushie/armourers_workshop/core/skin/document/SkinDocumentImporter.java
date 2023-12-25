@@ -48,6 +48,14 @@ public class SkinDocumentImporter {
             name = "untitled node";
         }
 
+        if (name.equals("Float")) {
+            SkinDocumentNode floatNode = findNodeById(document.getRoot(), "float");
+            if (floatNode != null) {
+                node = floatNode;
+                name = "untitled float node";
+            }
+        }
+
         // this maybe has multiple nodes, so we need to append it.
         SkinDocumentNode newValue = new SkinDocumentNode(name);
         newValue.setSkin(descriptor);

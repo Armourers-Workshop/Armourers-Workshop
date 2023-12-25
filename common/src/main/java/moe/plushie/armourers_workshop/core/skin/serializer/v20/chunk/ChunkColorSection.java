@@ -25,7 +25,7 @@ public abstract class ChunkColorSection {
     private final static byte[] BUFFER = new byte[8];
 
     protected int index = 0;
-    protected int total = 0;
+    protected int size = 0;
     protected int colorIndexBytes = 1;
     protected int textureIndexBytes = 4;
     protected boolean resolved = false;
@@ -34,7 +34,7 @@ public abstract class ChunkColorSection {
     protected final ISkinPaintType paintType;
 
     public ChunkColorSection(int count, int colorBytes, ISkinPaintType paintType) {
-        this.total = count;
+        this.size = count;
         this.usedBytes = colorBytes;
         this.paintType = paintType;
     }
@@ -76,11 +76,11 @@ public abstract class ChunkColorSection {
     }
 
     public int getEndIndex() {
-        return index + total;
+        return index + size;
     }
 
-    public int getTotal() {
-        return total;
+    public int getSize() {
+        return size;
     }
 
     public int getUsedBytes() {
@@ -135,12 +135,12 @@ public abstract class ChunkColorSection {
 
         public void readFromStream(IInputStream stream) throws IOException {
             if (usedBytes != 0) {
-                buffers = new byte[usedBytes * total];
+                buffers = new byte[usedBytes * size];
                 stream.read(buffers);
             }
-            if (usedBytes == 0) {
-                textureLists = new TextureList[total];
-                for (int i = 0; i < total; ++i) {
+            if (isTexture()) {
+                textureLists = new TextureList[size];
+                for (int i = 0; i < size; ++i) {
                     TextureList list = new TextureList();
                     list.readFromStream(stream);
                     textureLists[i] = list;
@@ -227,7 +227,7 @@ public abstract class ChunkColorSection {
                 list.freeze(x, y, textureLists::get);
                 x += list.rect.getWidth() * 2;
             }
-            total = colorLists.size() + textureLists.size();
+            size = colorLists.size() + textureLists.size();
             super.freeze(index);
         }
 

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 
@@ -25,7 +26,7 @@ public class ChunkPartData {
     public Collection<SkinPart> readFromStream(ChunkInputStream stream, IOConsumer2<ChunkReader, SkinPart.Builder> consumer) throws IOException {
         ChunkTransform chunkTransform = new ChunkTransform();
         ArrayList<Pair<Integer, SkinPart.Builder>> pairs = new ArrayList<>();
-        HashMap<Integer, Integer> relationship = new HashMap<>();
+        LinkedHashMap<Integer, Integer> relationship = new LinkedHashMap<>();
         int count = stream.readVarInt();
         for (int i = 0; i < count; ++i) {
             int id = stream.readVarInt();

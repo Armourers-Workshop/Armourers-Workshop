@@ -4,10 +4,9 @@ import moe.plushie.armourers_workshop.api.common.IItemParticleProvider;
 import moe.plushie.armourers_workshop.api.common.IItemSoundProvider;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.builder.other.CubeApplier;
+import moe.plushie.armourers_workshop.builder.other.CubeChangesCollector;
 import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
-import moe.plushie.armourers_workshop.utils.ext.OpenUseOnContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -59,10 +58,10 @@ public class UpdateBlockColorPacket extends CustomPacket {
         }
         try {
             ItemStack itemStack = player.getItemInHand(hand);
-            UseOnContext context = new OpenUseOnContext(level, player, hand, itemStack, traceResult);
-            CubeApplier applier = new CubeApplier(level);
-            paintingEvent.apply(applier, context);
-            applier.submit(itemStack.getHoverName(), player);
+            UseOnContext context = new UseOnContext(level, player, hand, itemStack, traceResult);
+            CubeChangesCollector collector = new CubeChangesCollector(level);
+            paintingEvent.apply(collector, context);
+            collector.submit(itemStack.getHoverName(), player);
             applyUseEffects(itemStack, context);
         } catch (Exception exception) {
             // ignore any exception.

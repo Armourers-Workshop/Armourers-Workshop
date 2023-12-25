@@ -42,13 +42,13 @@ import java.util.Collection;
  * palette data:          | length | PALE | flag | opt(VB)/reserved(VB) |< paint type(1B)/used bytes(1B) >[ palette entry(VB) ]|
  * chunk flag:            1 encrypt, 2 gzip, 3 encrypt+gzip
  * cube entry:            x(1B)/y(1B)/z(1B)
- *                        origin(12B)/size(12B), type(4b)/translate(12B)/rotation(12B)/scale(12B)/pivot(12B)/offset(12B)
+ * origin(12B)/size(12B), type(4b)/translate(12B)/rotation(12B)/scale(12B)/pivot(12B)/offset(12B)
  * cube face entry:       color index(VB)
- *                        first: u(VB)/v(VB), second: s(VB)/t(VB)
+ * first: u(VB)/v(VB), second: s(VB)/t(VB)
  * palette entry:         RRGGBB/AARRGGBB
- *                        id(VB)/parent id(VB)/x(4B)/y(4B)/w(4B)/h(4B)/ani(4B)/opt(4B)/bytes(4B) | raw data(nB)
+ * id(VB)/parent id(VB)/x(4B)/y(4B)/w(4B)/h(4B)/ani(4B)/opt(4B)/bytes(4B) | raw data(nB)
  * symbol:                {n} = (length(4B) + byte[length]) * n + 0(4B)
- *                        [data] = count(VB) + data[count]
+ * [data] = count(VB) + data[count]
  * <header>[data] = (count(VB) + header + data[count]) * n + 0(VB)
  */
 @SuppressWarnings("unused")
@@ -57,7 +57,7 @@ public class ChunkSerializers {
     public static final ChunkSerializer<Skin, Void> SKIN = register(new ChunkSerializer<Skin, Void>(ChunkType.SKIN) {
 
         @Override
-        public Skin read(ChunkInputStream stream, Void obj) throws IOException {
+        public Skin read(ChunkInputStream stream, String name, Void obj) throws IOException {
             int version = stream.getContext().getVersion();
             ISkinType skinType = stream.readType(SkinTypes::byName);
             return stream.readChunk(it -> {
@@ -103,7 +103,7 @@ public class ChunkSerializers {
     public static final ChunkSerializer<Pair<ISkinType, ISkinProperties>, Void> SKIN_INFO = register(new ChunkSerializer<Pair<ISkinType, ISkinProperties>, Void>(ChunkType.SKIN) {
 
         @Override
-        public Pair<ISkinType, ISkinProperties> read(ChunkInputStream stream, Void obj) throws IOException {
+        public Pair<ISkinType, ISkinProperties> read(ChunkInputStream stream, String name, Void obj) throws IOException {
             ISkinType skinType = stream.readType(SkinTypes::byName);
             return stream.readChunk(it -> {
                 ISkinProperties properties = it.read(SKIN_PROPERTIES);
@@ -120,7 +120,7 @@ public class ChunkSerializers {
     public static final ChunkSerializer<Collection<SkinPart>, ChunkCubeData> SKIN_PART = register(new ChunkSerializer<Collection<SkinPart>, ChunkCubeData>(ChunkType.SKIN_PART) {
 
         @Override
-        public Collection<SkinPart> read(ChunkInputStream stream, ChunkCubeData chunkCubes) throws IOException {
+        public Collection<SkinPart> read(ChunkInputStream stream, String name, ChunkCubeData chunkCubes) throws IOException {
             ChunkPartData partData = new ChunkPartData(chunkCubes);
             return partData.readFromStream(stream, (it, builder) -> {
                 builder.markers(it.read(SKIN_MARKERS));
@@ -147,7 +147,7 @@ public class ChunkSerializers {
     public static final ChunkSerializer<Collection<SkinMarker>, Void> SKIN_MARKERS = register(new ChunkSerializer<Collection<SkinMarker>, Void>(ChunkType.MARKER) {
 
         @Override
-        public Collection<SkinMarker> read(ChunkInputStream stream, Void obj) throws IOException {
+        public Collection<SkinMarker> read(ChunkInputStream stream, String name, Void obj) throws IOException {
             int size = stream.readInt();
             ArrayList<SkinMarker> markers = new ArrayList<>();
             for (int i = 0; i < size; ++i) {
@@ -169,7 +169,7 @@ public class ChunkSerializers {
     public static final ChunkSerializer<ChunkCubeData, ChunkPaletteData> SKIN_CUBE_DATA = register(new ChunkSerializer<ChunkCubeData, ChunkPaletteData>(ChunkType.CUBE_DATA) {
 
         @Override
-        public ChunkCubeData read(ChunkInputStream stream, ChunkPaletteData palette) throws IOException {
+        public ChunkCubeData read(ChunkInputStream stream, String name, ChunkPaletteData palette) throws IOException {
             ChunkCubeData chunkCubes = new ChunkCubeData(palette);
             chunkCubes.readFromStream(stream);
             return chunkCubes;
@@ -184,7 +184,7 @@ public class ChunkSerializers {
     public static final ChunkSerializer<SkinPaintData, ChunkPaletteData> SKIN_PAINT_DATA = register(new ChunkSerializer<SkinPaintData, ChunkPaletteData>(ChunkType.PAINT_DATA) {
 
         @Override
-        public SkinPaintData read(ChunkInputStream stream, ChunkPaletteData palette) throws IOException {
+        public SkinPaintData read(ChunkInputStream stream, String name, ChunkPaletteData palette) throws IOException {
             ChunkPaintData chunkPaintData = new ChunkPaintData(palette);
             return chunkPaintData.readFromStream(stream);
         }
@@ -199,7 +199,7 @@ public class ChunkSerializers {
     public static final ChunkSerializer<SkinPreviewData, ChunkCubeData> SKIN_PREVIEW_DATA = register(new ChunkSerializer<SkinPreviewData, ChunkCubeData>(ChunkType.PREVIEW_DATA) {
 
         @Override
-        public SkinPreviewData read(ChunkInputStream stream, ChunkCubeData chunkCubes) throws IOException {
+        public SkinPreviewData read(ChunkInputStream stream, String name, ChunkCubeData chunkCubes) throws IOException {
             ChunkPreviewData chunkPreviewData = new ChunkPreviewData(chunkCubes);
             return chunkPreviewData.readFromStream(stream);
         }
@@ -214,7 +214,7 @@ public class ChunkSerializers {
     public static final ChunkSerializer<ChunkPaletteData, Void> SKIN_TEXTURE_DATA = register(new ChunkSerializer<ChunkPaletteData, Void>(ChunkType.PALETTE) {
 
         @Override
-        public ChunkPaletteData read(ChunkInputStream stream, Void obj) throws IOException {
+        public ChunkPaletteData read(ChunkInputStream stream, String name, Void obj) throws IOException {
             ChunkPaletteData palette = new ChunkPaletteData();
             palette.readFromStream(stream);
             return palette;
@@ -229,7 +229,7 @@ public class ChunkSerializers {
     public static final ChunkSerializer<SkinProperties, Void> SKIN_PROPERTIES = register(new ChunkSerializer<SkinProperties, Void>(ChunkType.PROPERTIES) {
 
         @Override
-        public SkinProperties read(ChunkInputStream stream, Void obj) throws IOException {
+        public SkinProperties read(ChunkInputStream stream, String name, Void obj) throws IOException {
             SkinProperties properties = new SkinProperties();
             properties.readFromStream(stream);
             return properties;
@@ -249,10 +249,19 @@ public class ChunkSerializers {
     public static final ChunkSerializer<SkinSettings, Void> SKIN_SETTINGS = register(new ChunkSerializer<SkinSettings, Void>(ChunkType.SKIN_SETTINGS) {
 
         @Override
-        public SkinSettings read(ChunkInputStream stream, Void obj) throws IOException {
+        public SkinSettings read(ChunkInputStream stream, String name, Void obj) throws IOException {
             SkinSettings settings = new SkinSettings();
-            settings.readFromStream(stream);
+            if (name.equals("SET2")) {
+                settings.readFromLegacyStream(stream);
+            } else {
+                settings.readFromStream(stream);
+            }
             return settings;
+        }
+
+        @Override
+        public boolean canRead(String name) {
+            return super.canRead(name) || name.equals("SET2");
         }
 
         @Override
@@ -274,13 +283,13 @@ public class ChunkSerializers {
 
     public static Skin readFromStream(IInputStream stream, ChunkContext context) throws IOException {
         ChunkInputStream stream1 = new ChunkInputStream(stream.getInputStream(), context, null);
-        return SKIN.read(stream1, null);
+        return SKIN.read(stream1, "", null);
     }
 
     public static Pair<ISkinType, ISkinProperties> readInfoFromStream(IInputStream stream, ChunkContext context) throws IOException {
         ArrayList<String> allows = Lists.newArrayList(ChunkType.PROPERTIES.getName());
         ChunkInputStream stream1 = new ChunkInputStream(stream.getInputStream(), context, allows::contains);
-        return SKIN_INFO.read(stream1, null);
+        return SKIN_INFO.read(stream1, "", null);
     }
 
     private static <T, C> ChunkSerializer<T, C> register(ChunkSerializer<T, C> serializer) {

@@ -10,5 +10,4 @@ public class UndoManager {
     public static UndoStack of(UUID player) {
         return stacks.computeIfAbsent(player, i -> new UndoStack());
     }
-
 }

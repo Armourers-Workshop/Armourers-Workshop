@@ -29,18 +29,19 @@ public class SkinCubesV2 extends SkinCubes {
     }
 
     @Override
-    public OpenVoxelShape getRenderShape() {
+    public OpenVoxelShape getShape() {
         OpenVoxelShape shape = OpenVoxelShape.empty();
         for (Box box : entities) {
             if (box.transform.isIdentity()) {
                 shape.add(box.shape);
                 continue;
             }
+            poseStack.pushPose();
             OpenVoxelShape shape1 = OpenVoxelShape.box(box.shape);
             box.transform.apply(poseStack);
             shape1.mul(poseStack.lastPose());
             shape.add(shape1);
-            poseStack.setIdentity();
+            poseStack.popPose();
         }
         shape.optimize();
         return shape;

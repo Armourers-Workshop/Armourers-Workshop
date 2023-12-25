@@ -85,6 +85,7 @@ public final class SkinPartTypes {
 //    public static final ISkinPartType PLAYER_RIGHT_SLEEVE = register("player.sleeves.rightSleeve", new UnknownPartType());
 
     public static final ISkinPartType ADVANCED = register("part.advanced_part", new AdvancedPartType());
+    public static final ISkinPartType ADVANCED_LOCATOR = register("part.advanced_locator", new AdvancedPartType());
 
     public static ISkinPartType byName(String registryName) {
         if (registryName == null) {

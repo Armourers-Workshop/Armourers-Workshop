@@ -279,7 +279,7 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
     @Override
     public void documentDidReload() {
         documentDidChangeType(editor.getDocument().getType());
-        documentDidChangeProperties(SkinProperties.EMPTY);
+        documentDidChangeProperties(new CompoundTag());
     }
 
     @Override
@@ -296,8 +296,8 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
     }
 
     @Override
-    public void documentDidChangeProperties(SkinProperties properties) {
-        editor.getConnector().update(properties);
+    public void documentDidChangeProperties(CompoundTag tag) {
+        editor.getConnector().update(editor.getDocument().getProperties());
     }
 
     @Override
