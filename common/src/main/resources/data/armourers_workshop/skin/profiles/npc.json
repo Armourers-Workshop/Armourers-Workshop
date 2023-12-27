@@ -16,24 +16,30 @@
     "shovel": 1
   },
   "entities": [
-    "taterzens:npc",
     "customnpcs:customnpc",
+    "easy_npc:humanoid",
+    "easy_npc:humanoid_slim",
+    "easy_npc:skeleton",
+    "easy_npc:villager",
+    "easy_npc:zombie",
+    "easy_npc:zombie_villager",
+    "guardvillagers:guard",
     "humancompanions:arbalist",
     "humancompanions:archer",
     "humancompanions:axeguard",
     "humancompanions:knight",
-    "guardvillagers:guard",
-    "player_mobs:player_mob",
     "mca:female_villager",
-    "mca:male_villager",
     "mca:female_zombie_villager",
-    "mca:male_zombie_villager",
     "mca:grim_reaper",
-    "recruits:recruit",
-    "recruits:recruit_shieldman",
+    "mca:male_villager",
+    "mca:male_zombie_villager",
+    "player_mobs:player_mob",
     "recruits:bowman",
     "recruits:crossbowman",
+    "recruits:horseman",
     "recruits:nomad",
-    "recruits:horseman"
+    "recruits:recruit",
+    "recruits:recruit_shieldman",
+    "taterzens:npc"
   ]
 }
