@@ -32,4 +32,4 @@ Armourer's Workshop by RiskyKen is licensed under a [Creative Commons Attributio
 
 2. Using `gradlew -p versions/1.20.1` command to switch to target version.
 
-3. Using `gradlew build` command to build target version. Jar will be in build/libs.
+3. Using `gradlew build` command to build target version. Jar will be in `farbric/build/libs` and `forge/build/libs`.
