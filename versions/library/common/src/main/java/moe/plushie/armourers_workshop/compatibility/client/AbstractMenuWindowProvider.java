@@ -15,7 +15,12 @@ public interface AbstractMenuWindowProvider<M extends AbstractContainerMenu, W e
 
     @NotNull
     default ContainerMenuScreen<M, W> createScreen(M menu, Inventory inventory, Component title) {
-        W window = create(menu, inventory, new NSString(title));
-        return new ContainerMenuScreen<>(window, menu, inventory, title);
+        try {
+            W window = create(menu, inventory, new NSString(title));
+            return new ContainerMenuScreen<>(window, menu, inventory, title);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw exception;
+        }
     }
 }

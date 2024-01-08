@@ -7,6 +7,8 @@ import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedBuilderBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AbstractAdvancedGuideRenderer;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AdvancedBlockGuideRenderer;
+import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AdvancedHorseGuideRenderer;
+import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AdvancedHumanGuideRenderer;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRendererManager;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -44,7 +46,29 @@ import java.util.HashSet;
 public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> extends AbstractBlockEntityRenderer<T> {
 
     private static final ImmutableMap<SkinDocumentType, AbstractAdvancedGuideRenderer> GUIDES = ImmutableMap.<SkinDocumentType, AbstractAdvancedGuideRenderer>builder()
+
+            .put(SkinDocumentTypes.GENERAL_ARMOR_HEAD, new AdvancedHumanGuideRenderer())
+            .put(SkinDocumentTypes.GENERAL_ARMOR_CHEST, new AdvancedHumanGuideRenderer())
+            .put(SkinDocumentTypes.GENERAL_ARMOR_FEET, new AdvancedHumanGuideRenderer())
+            .put(SkinDocumentTypes.GENERAL_ARMOR_LEGS, new AdvancedHumanGuideRenderer())
+            .put(SkinDocumentTypes.GENERAL_ARMOR_WINGS, new AdvancedHumanGuideRenderer())
+            .put(SkinDocumentTypes.GENERAL_ARMOR_OUTFIT, new AdvancedHumanGuideRenderer())
+
+            .put(SkinDocumentTypes.ITEM, new AdvancedHumanGuideRenderer())
+            .put(SkinDocumentTypes.ITEM_AXE, new AdvancedHumanGuideRenderer())
+            .put(SkinDocumentTypes.ITEM_HOE, new AdvancedHumanGuideRenderer())
+            .put(SkinDocumentTypes.ITEM_SHOVEL, new AdvancedHumanGuideRenderer())
+            .put(SkinDocumentTypes.ITEM_PICKAXE, new AdvancedHumanGuideRenderer())
+
+            .put(SkinDocumentTypes.ITEM_SWORD, new AdvancedHumanGuideRenderer())
+            .put(SkinDocumentTypes.ITEM_SHIELD, new AdvancedHumanGuideRenderer())
+            .put(SkinDocumentTypes.ITEM_BOW, new AdvancedHumanGuideRenderer())
+            .put(SkinDocumentTypes.ITEM_TRIDENT, new AdvancedHumanGuideRenderer())
+
+            .put(SkinDocumentTypes.ENTITY_HORSE_OUTFIT, new AdvancedHorseGuideRenderer())
+
             .put(SkinDocumentTypes.BLOCK, new AdvancedBlockGuideRenderer())
+
             .build();
 
 

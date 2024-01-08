@@ -5,13 +5,13 @@ import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformTyp
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractItemStackRenderer;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
+import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -28,7 +28,6 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
     private static SkinItemRenderer INSTANCE;
 
     private ItemStack playerMannequinItem;
-    private MannequinEntity entity;
     private MannequinModel<MannequinEntity> model;
 
     public static SkinItemRenderer getInstance() {
@@ -67,21 +66,8 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
         poseStack.popPose();
     }
 
-    public MannequinEntity getMannequinEntity() {
-        auto level = Minecraft.getInstance().level;
-        if (entity == null) {
-            entity = new MannequinEntity(ModEntityTypes.MANNEQUIN.get().get(), level);
-            entity.setId(MannequinEntity.PLACEHOLDER_ENTITY_ID);
-            entity.setExtraRenderer(false); // never magic cir
-        }
-        if (entity.getLevel() != level) {
-            entity.changeLevel(level);
-        }
-        return entity;
-    }
-
     public MannequinModel<?> getMannequinModel() {
-        auto entity = getMannequinEntity();
+        auto entity = PlaceholderManager.MANNEQUIN.get();
         if (model == null && entity != null) {
             model = new MannequinModel<>();
             model.young = false;

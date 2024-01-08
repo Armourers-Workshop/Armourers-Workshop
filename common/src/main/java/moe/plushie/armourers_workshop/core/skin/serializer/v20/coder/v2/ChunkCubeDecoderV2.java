@@ -16,11 +16,11 @@ import moe.plushie.armourers_workshop.utils.math.Vector2f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.texture.TextureBox;
 import moe.plushie.armourers_workshop.utils.texture.TextureKey;
+import moe.plushie.armourers_workshop.utils.texture.TextureOptions;
 import net.minecraft.core.Direction;
 
 import java.util.BitSet;
 import java.util.EnumMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import manifold.ext.rt.api.auto;
 
@@ -32,6 +32,7 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
     protected final BitSet flags = new BitSet();
     protected final EnumMap<Direction, Vector2f> startUVs = new EnumMap<>(Direction.class);
     protected final EnumMap<Direction, Vector2f> endUVs = new EnumMap<>(Direction.class);
+    protected final EnumMap<Direction, TextureOptions> optionsValues = new EnumMap<>(Direction.class);
     protected final EnumMap<Direction, ITextureKey> textureKeys = new EnumMap<>(Direction.class);
 
     public ChunkCubeDecoderV2(int startIndex, int endIndex, ChunkCubeSelector selector, ChunkCubeSection.Immutable section) {
@@ -105,12 +106,21 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
     protected void parseTextures() {
         startUVs.clear();
         endUVs.clear();
+        optionsValues.clear();
         textureKeys.clear();
         TextureBox textureBox = null;
         int usedBytes = palette.getTextureIndexBytes();
         for (int i = 0; i < faceCount; ++i) {
-            int face = getByte(calcStride(usedBytes, i));
-            auto pos = ChunkColorSection.TextureRef.readFromStream(usedBytes, readerIndex + calcStride(usedBytes, i) + 1, bytes);
+            int index = calcStride(usedBytes, i);
+            int face = getByte(index);
+            if ((face & 0x40) != 0) {
+                auto opt = ChunkColorSection.OptionsRef.readFromStream(usedBytes, readerIndex + index + 1, bytes);
+                for (Direction dir : DirectionUtils.valuesFromSet(face)) {
+                    optionsValues.put(dir, opt);
+                }
+                continue;
+            }
+            auto pos = ChunkColorSection.TextureRef.readFromStream(usedBytes, readerIndex + index + 1, bytes);
             for (Direction dir : DirectionUtils.valuesFromSet(face)) {
                 endUVs.put(dir, pos);
                 if (!startUVs.containsKey(dir)) {
@@ -133,6 +143,7 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
             Vector2f start = startUVs.get(dir);
             Vector2f end = endUVs.get(dir);
             if (start != null && end != null) {
+                auto opt = optionsValues.get(dir);
                 auto ref = palette.readTexture(start);
                 if (ref == null) {
                     continue;
@@ -141,7 +152,7 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
                 float v = ref.getV();
                 float width = end.getX() - start.getX();
                 float height = end.getY() - start.getY();
-                textureKeys.put(dir, new TextureKey(u, v, width, height, ref.getProvider()));
+                textureKeys.put(dir, new TextureKey(u, v, width, height, opt, ref.getProvider()));
             } else if (textureBox != null) {
                 textureKeys.put(dir, textureBox.getTexture(dir));
             }

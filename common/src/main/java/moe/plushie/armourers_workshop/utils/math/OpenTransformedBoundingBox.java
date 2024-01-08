@@ -1,11 +1,7 @@
 package moe.plushie.armourers_workshop.utils.math;
 
 
-import moe.plushie.armourers_workshop.utils.GJK;
-import moe.plushie.armourers_workshop.utils.MathUtils;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class OpenTransformedBoundingBox {
 

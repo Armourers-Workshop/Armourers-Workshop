@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
@@ -82,7 +82,7 @@ public final class ExtendedItemRenderer {
     }
 
     public static void renderMannequin(PlayerTextureDescriptor descriptor, Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, PoseStack poseStack, MultiBufferSource buffers) {
-        MannequinEntity entity = SkinItemRenderer.getInstance().getMannequinEntity();
+        MannequinEntity entity = PlaceholderManager.MANNEQUIN.get();
         if (entity == null || entity.getLevel() == null) {
             return;
         }

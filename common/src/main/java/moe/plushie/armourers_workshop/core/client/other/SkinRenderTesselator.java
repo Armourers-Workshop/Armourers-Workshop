@@ -45,7 +45,7 @@ public class SkinRenderTesselator extends SkinRenderContext {
     }
 
     public static SkinRenderTesselator create(BakedSkin bakedSkin) {
-        auto mannequin = SkinItemRenderer.getInstance().getMannequinEntity();
+        auto mannequin = PlaceholderManager.MANNEQUIN.get();
         auto mannequinModel = SkinItemRenderer.getInstance().getMannequinModel();
         auto renderer = SkinRendererManager.getInstance().getRenderer(mannequin, mannequinModel, null);
         if (renderer == null || mannequin == null || mannequin.getLevel() == null) {

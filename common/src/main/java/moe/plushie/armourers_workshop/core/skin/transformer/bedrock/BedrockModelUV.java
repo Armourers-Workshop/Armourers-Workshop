@@ -14,6 +14,7 @@ public class BedrockModelUV {
 
     private final Vector2f base;
 
+    private EnumMap<Direction, Integer> rotations;
     private final EnumMap<Direction, Rectangle2f> rects = new EnumMap<>(Direction.class);
 
     public BedrockModelUV() {
@@ -30,8 +31,31 @@ public class BedrockModelUV {
         }
     }
 
+    public void forEachRotations(BiConsumer<Direction, Integer> consumer) {
+        if (rotations != null) {
+            rotations.forEach(consumer);
+        }
+    }
+
     public void put(Direction dir, Rectangle2f rect) {
         rects.put(dir, rect);
+    }
+
+    public void setRotation(Direction dir, int rotation) {
+        if (rotation == 0) {
+            return;
+        }
+        if (rotations == null) {
+            rotations = new EnumMap<>(Direction.class);
+        }
+        rotations.put(dir, rotation);
+    }
+
+    public int getRotation(Direction dir) {
+        if (rotations != null) {
+            return rotations.getOrDefault(dir, 0);
+        }
+        return 0;
     }
 
     public Vector2f getBase() {

@@ -56,18 +56,8 @@ public class ModelPartHolder implements IModelPart, IModelPartPose {
     }
 
     @Override
-    public void setX(float x) {
-        modelPart.x = x;
-    }
-
-    @Override
     public float getX() {
         return modelPart.x;
-    }
-
-    @Override
-    public void setY(float y) {
-        modelPart.y = y;
     }
 
     @Override
@@ -76,18 +66,8 @@ public class ModelPartHolder implements IModelPart, IModelPartPose {
     }
 
     @Override
-    public void setZ(float z) {
-        modelPart.z = z;
-    }
-
-    @Override
     public float getZ() {
         return modelPart.z;
-    }
-
-    @Override
-    public void setXRot(float xRot) {
-        modelPart.xRot = xRot;
     }
 
     @Override
@@ -96,22 +76,19 @@ public class ModelPartHolder implements IModelPart, IModelPartPose {
     }
 
     @Override
-    public void setYRot(float yRot) {
-        modelPart.yRot = yRot;
-    }
-
-    @Override
     public float getYRot() {
         return modelPart.yRot;
     }
 
     @Override
-    public void setZRot(float zRot) {
-        modelPart.zRot = zRot;
+    public float getZRot() {
+        return modelPart.zRot;
     }
 
     @Override
-    public float getZRot() {
-        return modelPart.zRot;
+    public void setRotations(IModelPartPose partPose) {
+        modelPart.xRot = partPose.getXRot();
+        modelPart.yRot = partPose.getYRot();
+        modelPart.zRot = partPose.getZRot();
     }
 }

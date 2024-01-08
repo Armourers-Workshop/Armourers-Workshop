@@ -13,7 +13,6 @@ import moe.plushie.armourers_workshop.api.data.IDataProperty;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.document.DocumentConnector;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.document.DocumentEditor;
 import moe.plushie.armourers_workshop.builder.data.properties.DataProperty;
-import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentSettings;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 
 public class AdvancedLeftCardPanel extends UIView {
@@ -21,54 +20,24 @@ public class AdvancedLeftCardPanel extends UIView {
     //private final UIButton saveButton = new UIButton(new CGRect(146, 120, 20, 20));
     private DocumentConnector connector;
 
-    private final UITextField nameTextField = new UITextField(new CGRect(10, 28, 180, 16));
-    private final UITextField flavourTextField = new UITextField(new CGRect(10, 60, 180, 16));
-
     public AdvancedLeftCardPanel(DocumentEditor editor, CGRect frame) {
         super(frame);
         this.connector = editor.getConnector();
-        this.setup();
+        this.setup(bounds());
     }
 
-    private void setup() {
+    private void setup(CGRect rect) {
+        float width = rect.width;
+        float height = rect.height;
 
         setupLabel(10, 18, "armourer.main.label.itemName");
         setupLabel(10, 50, "armourer.main.label.flavour");
 
-        setupTextField(nameTextField, "", "outfit-maker.skinName");
-        setupTextField(flavourTextField, "", "outfit-maker.skinFlavour");
+        setupTextField(10, 28, width - 20, "outfit-maker.skinName", connector.itemName);
+        setupTextField(10, 60, width - 20, "outfit-maker.skinFlavour", connector.itemFlavour);
 
-        nameTextField.addTarget(connector.itemName, UIControl.Event.EDITING_DID_BEGIN, (it, ctr) -> it.beginEditing());
-        nameTextField.addTarget(connector.itemName, UIControl.Event.EDITING_DID_END, (it, ctr) -> it.endEditing());
-        nameTextField.addTarget(connector.itemName, UIControl.Event.VALUE_CHANGED, (it, ctr) -> {
-            UITextField textField = (UITextField) ctr;
-            it.set(textField.text());
-        });
-
-        flavourTextField.addTarget(connector.itemFlavour, UIControl.Event.EDITING_DID_BEGIN, (it, ctr) -> it.beginEditing());
-        flavourTextField.addTarget(connector.itemFlavour, UIControl.Event.EDITING_DID_END, (it, ctr) -> it.endEditing());
-        flavourTextField.addTarget(connector.itemFlavour, UIControl.Event.VALUE_CHANGED, (it, ctr) -> {
-            UITextField textField = (UITextField) ctr;
-            it.set(textField.text());
-        });
-
-        float height = bounds().height;
-        float width = bounds().width;
-        setupCheckBox(10, height - 30, width - 20, "armourer.displaySettings.showOrigin", connector.registerSettings(DataProperty::new, SkinDocumentSettings::showsOrigin, SkinDocumentSettings::setShowsOrigin));
-        setupCheckBox(10, height - 20, width - 20, "armourer.displaySettings.showHelper", connector.registerSettings(DataProperty::new, SkinDocumentSettings::showsHelperModel, SkinDocumentSettings::setShowsHelperModel));
-
-        connector.itemName.addObserver((newValue) -> {
-            String oldValue = nameTextField.text();
-            if (!Objects.equal(oldValue, newValue)) {
-                nameTextField.setText(newValue);
-            }
-        });
-        connector.itemFlavour.addObserver((newValue) -> {
-            String oldValue = flavourTextField.text();
-            if (!Objects.equal(oldValue, newValue)) {
-                flavourTextField.setText(newValue);
-            }
-        });
+        setupCheckBox(10, height - 30, width - 20, "armourer.displaySettings.showOrigin", connector.showOrigin);
+        setupCheckBox(10, height - 20, width - 20, "armourer.displaySettings.showHelper", connector.showHelperModel);
     }
 
     private void setupLabel(int x, int y, String key) {
@@ -78,11 +47,23 @@ public class AdvancedLeftCardPanel extends UIView {
         addSubview(label);
     }
 
-    private void setupTextField(UITextField textField, String value, String placeholderKey) {
+    private void setupTextField(float x, float y, float width, String placeholderKey, DataProperty<String> property) {
+        UITextField textField = new UITextField(new CGRect(x, y, width, 16));
         textField.setMaxLength(40);
-        textField.setText(value);
+        textField.setText("");
         textField.setPlaceholder(NSString.localizedString(placeholderKey));
-//        textField.addTarget(this, UIControl.Event.EDITING_DID_END, OutfitMakerWindow::saveSkinInfo);
+        textField.addTarget(property, UIControl.Event.EDITING_DID_BEGIN, DataProperty::beginEditing);
+        textField.addTarget(property, UIControl.Event.EDITING_DID_END, DataProperty::endEditing);
+        textField.addTarget(property, UIControl.Event.VALUE_CHANGED, (it, ctr) -> {
+            UITextField textField1 = (UITextField) ctr;
+            it.set(textField1.text());
+        });
+        property.addObserver((newValue) -> {
+            String oldValue = textField.text();
+            if (!Objects.equal(oldValue, newValue)) {
+                textField.setText(newValue);
+            }
+        });
         addSubview(textField);
     }
 

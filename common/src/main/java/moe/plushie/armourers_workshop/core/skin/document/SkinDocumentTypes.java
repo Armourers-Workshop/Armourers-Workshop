@@ -21,13 +21,6 @@ public class SkinDocumentTypes {
     public static final SkinDocumentType GENERAL_ARMOR_WINGS = register("general", SkinTypes.ARMOR_WINGS);
     public static final SkinDocumentType GENERAL_ARMOR_OUTFIT = register("general", SkinTypes.OUTFIT);
 
-//    public static final AdvancedCategory HORSE_ARMOR_HEAD = register("horse", SkinTypes.ARMOR_HEAD);
-//    public static final AdvancedCategory HORSE_ARMOR_CHEST = register("horse", SkinTypes.ARMOR_CHEST);
-//    public static final AdvancedCategory HORSE_ARMOR_FEET = register("horse", SkinTypes.ARMOR_FEET);
-//    public static final AdvancedCategory HORSE_ARMOR_LEGS = register("horse", SkinTypes.ARMOR_LEGS);
-//    public static final AdvancedCategory HORSE_ARMOR_WINGS = register("horse", SkinTypes.ARMOR_WINGS);
-//    public static final AdvancedCategory HORSE_ARMOR_OUTFIT = register("horse", SkinTypes.OUTFIT);
-//
 //    public static final AdvancedCategory IRONMAN_ARMOR_HEAD = register("ironman", SkinTypes.ARMOR_HEAD);
 //    public static final AdvancedCategory IRONMAN_ARMOR_CHEST = register("ironman", SkinTypes.ARMOR_CHEST);
 //    public static final AdvancedCategory IRONMAN_ARMOR_FEET = register("ironman", SkinTypes.ARMOR_FEET);
@@ -47,8 +40,9 @@ public class SkinDocumentTypes {
     public static final SkinDocumentType ITEM_SHOVEL = register("item", SkinTypes.TOOL_SHOVEL);
     public static final SkinDocumentType ITEM_HOE = register("item", SkinTypes.TOOL_HOE);
 
-    public static final SkinDocumentType BLOCK = register("block", SkinTypes.BLOCK);
+    public static final SkinDocumentType ENTITY_HORSE_OUTFIT = register("entity", SkinTypes.HORSE);
 
+    public static final SkinDocumentType BLOCK = register("block", SkinTypes.BLOCK);
 
     public static SkinDocumentType byName(String name) {
         return ALL_TYPES.getOrDefault(name, GENERAL_ARMOR_HEAD);

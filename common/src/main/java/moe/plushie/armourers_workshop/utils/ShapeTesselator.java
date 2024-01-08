@@ -21,6 +21,47 @@ import manifold.ext.rt.api.auto;
 @Environment(EnvType.CLIENT)
 public class ShapeTesselator {
 
+    public static void point(IVector3f origin, PoseStack poseStack, MultiBufferSource buffers) {
+        point(origin.getX(), origin.getY(), origin.getZ(), 1, poseStack, buffers);
+    }
+
+    public static void point(IVector3f origin, float length, PoseStack poseStack, MultiBufferSource buffers) {
+        point(origin.getX(), origin.getY(), origin.getZ(), length, poseStack, buffers);
+    }
+
+    public static void point(float x, float y, float z, float length, PoseStack poseStack, MultiBufferSource buffers) {
+        point(x, y, z, length, length, length, poseStack, buffers);
+    }
+
+    public static void point(float x, float y, float z, float width, float height, float depth, PoseStack poseStack, MultiBufferSource buffers) {
+        auto pose = poseStack.last().pose();
+        auto normal = poseStack.last().normal();
+
+        float minX = x - width * 0.5f;
+        float minY = y - height * 0.5f;
+        float minZ = z - depth * 0.5f;
+        float midX = x + 0;
+        float midY = y + 0;
+        float midZ = z + 0;
+        float maxX = x + width * 0.5f;
+        float maxY = y + height * 0.5f;
+        float maxZ = z + depth * 0.5f;
+
+        auto lineBuilder = buffers.getBuffer(SkinRenderType.lines());
+
+        // x-axis
+        lineBuilder.vertex(pose, minX, midY, midZ).color(255, 0, 0, 255).normal(normal, 1, 0, 0).endVertex();
+        lineBuilder.vertex(pose, maxX, midY, midZ).color(255, 0, 0, 255).normal(normal, 1, 0, 0).endVertex();
+
+        // y-axis
+        lineBuilder.vertex(pose, midX, minY, midZ).color(0, 255, 0, 255).normal(normal, 1, 0, 0).endVertex();
+        lineBuilder.vertex(pose, midX, maxY, midZ).color(0, 255, 0, 255).normal(normal, 1, 0, 0).endVertex();
+
+        // z-axis
+        lineBuilder.vertex(pose, midX, midY, minZ).color(0, 0, 255, 255).normal(normal, 1, 0, 0).endVertex();
+        lineBuilder.vertex(pose, midX, midY, maxZ).color(0, 0, 255, 255).normal(normal, 1, 0, 0).endVertex();
+    }
+
     public static void vector(IVector3f origin, PoseStack poseStack, MultiBufferSource buffers) {
         vector(origin.getX(), origin.getY(), origin.getZ(), 1, poseStack, buffers);
     }
@@ -130,7 +171,6 @@ public class ShapeTesselator {
         arrowBuilder.vertex(pose, midX + n, midY - n, maxZ - m).color(0, 0, 255, 255).normal(normal, 0, 0, 1).endVertex();
         arrowBuilder.vertex(pose, midX - n, midY - n, maxZ - m).color(0, 0, 255, 255).normal(normal, 0, 0, 1).endVertex();
     }
-
 
     public static void stroke(AABB rect, UIColor color, PoseStack poseStack, MultiBufferSource buffers) {
         stroke((float) rect.minX, (float) rect.minY, (float) rect.minZ, (float) rect.maxX, (float) rect.maxY, (float) rect.maxZ, color, poseStack, buffers);

@@ -5,15 +5,21 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
 public class BlockBenchFace {
 
     private final int textureId;
+    private final int rotation;
     private final Rectangle2f rect;
 
-    public BlockBenchFace(int textureId, Rectangle2f rect) {
+    public BlockBenchFace(int textureId, int rotation, Rectangle2f rect) {
         this.textureId = textureId;
+        this.rotation = rotation;
         this.rect = rect;
     }
 
     public int getTextureId() {
         return textureId;
+    }
+
+    public int getRotation() {
+        return rotation;
     }
 
     public Rectangle2f getRect() {
@@ -23,6 +29,7 @@ public class BlockBenchFace {
     public static class Builder {
 
         private int texture = -1;
+        private int rotation = 0;
         private Rectangle2f rect = Rectangle2f.ZERO;
 
         public void uv(Rectangle2f rect) {
@@ -33,8 +40,12 @@ public class BlockBenchFace {
             this.texture = texture;
         }
 
+        public void rotation(int rotation) {
+            this.rotation = rotation;
+        }
+
         public BlockBenchFace build() {
-            return new BlockBenchFace(texture, rect);
+            return new BlockBenchFace(texture, rotation, rect);
         }
     }
 

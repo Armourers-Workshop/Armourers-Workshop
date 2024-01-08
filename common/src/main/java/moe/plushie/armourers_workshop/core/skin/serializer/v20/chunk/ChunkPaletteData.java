@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SliceRandomlyAccessor;
 import moe.plushie.armourers_workshop.utils.math.Vector2f;
+import moe.plushie.armourers_workshop.utils.texture.TextureOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -82,6 +83,11 @@ public class ChunkPaletteData implements ChunkVariable {
     public ChunkColorSection.TextureRef readTexture(Vector2f uv) {
         // texture + black(0x000000) + 0(used bytes)
         return _sectionAt(SkinPaintTypes.TEXTURE, 0).getTexture(uv);
+    }
+
+    public ChunkColorSection.OptionsRef writeTextureOptions(TextureOptions options, ITextureProvider provider) {
+        // texture + black(0x000000) + 0(used bytes)
+        return _mutableSectionAt(SkinPaintTypes.TEXTURE, 0).putTextureOptions(options);
     }
 
 

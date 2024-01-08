@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.common.IResource;
 import moe.plushie.armourers_workshop.utils.math.Size3f;
 import moe.plushie.armourers_workshop.utils.texture.TextureBox;
 import moe.plushie.armourers_workshop.utils.texture.TextureData;
+import moe.plushie.armourers_workshop.utils.texture.TextureOptions;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,12 +29,20 @@ public class BedrockModelTexture {
     }
 
     public TextureBox read(BedrockModelCube cube) {
+        return getTextureBox(cube, cube.getUV(), getTextureData(cube));
+    }
+
+    protected TextureBox getTextureBox(BedrockModelCube cube, BedrockModelUV uv, TextureData textureData) {
         Size3f size = cube.getSize();
-        BedrockModelUV uv = cube.getUV();
-        TextureBox skyBox = new TextureBox(size.getWidth(), size.getHeight(), size.getDepth(), cube.isMirror(), uv.getBase(), getTextureData(cube));
+        TextureBox skyBox = new TextureBox(size.getWidth(), size.getHeight(), size.getDepth(), cube.isMirror(), uv.getBase(), textureData);
         uv.forEach((dir, rect) -> {
-            skyBox.put(dir, rect);
-            skyBox.put(dir, getTextureData(cube, dir));
+            skyBox.putTextureRect(dir, rect);
+            skyBox.putTextureProvider(dir, getTextureData(cube, dir));
+        });
+        uv.forEachRotations((dir, rot) -> {
+            TextureOptions options = new TextureOptions();
+            options.setRotation(rot);
+            skyBox.putTextureOptions(dir, options);
         });
         return skyBox;
     }

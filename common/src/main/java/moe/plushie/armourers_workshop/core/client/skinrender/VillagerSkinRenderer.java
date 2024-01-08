@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import moe.plushie.armourers_workshop.api.client.model.IHumanoidModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
-import moe.plushie.armourers_workshop.api.client.model.IModelPartPose;
 import moe.plushie.armourers_workshop.core.client.model.TransformModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
@@ -56,11 +55,7 @@ public class VillagerSkinRenderer<T extends LivingEntity, M extends IHumanoidMod
     }
 
     private void copyRot(IModelPart model, IModelPart fromModel) {
-        IModelPartPose pose1 = model.pose();
-        IModelPartPose pose2 = fromModel.pose();
-        pose1.setXRot(pose2.getXRot());
-        pose1.setYRot(pose2.getYRot());
-        pose1.setZRot(pose2.getZRot());
+        model.pose().setRotations(fromModel.pose());
     }
 
     @Override

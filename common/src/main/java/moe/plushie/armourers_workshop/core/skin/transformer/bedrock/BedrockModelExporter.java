@@ -288,6 +288,10 @@ public class BedrockModelExporter {
 
     private static final ImmutableMap<String, ISkinPartType> BOW_PARTS = new ImmutableMap.Builder<String, ISkinPartType>()
             .put("Arrow", SkinPartTypes.ITEM_ARROW)
+            .put("Bow0", SkinPartTypes.ITEM_BOW0)
+            .put("Bow1", SkinPartTypes.ITEM_BOW1)
+            .put("Bow2", SkinPartTypes.ITEM_BOW2)
+            .put("Bow3", SkinPartTypes.ITEM_BOW3)
             .put("Frame0", SkinPartTypes.ITEM_BOW0)
             .put("Frame1", SkinPartTypes.ITEM_BOW1)
             .put("Frame2", SkinPartTypes.ITEM_BOW2)

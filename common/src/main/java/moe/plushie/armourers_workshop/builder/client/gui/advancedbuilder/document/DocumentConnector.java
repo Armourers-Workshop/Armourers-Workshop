@@ -20,22 +20,26 @@ import java.util.function.Supplier;
 public class DocumentConnector {
 
     private final DocumentEditor editor;
-    private final ArrayList<Consumer<SkinProperties>> skinProperties = new ArrayList<>();
     private final ArrayList<Consumer<SkinDocumentNode>> nodeListeners = new ArrayList<>();
+    private final ArrayList<Consumer<SkinDocumentSettings>> settingsListeners = new ArrayList<>();
+    private final ArrayList<Consumer<SkinProperties>> propertiesListeners = new ArrayList<>();
 
-    public final DataProperty<String> name = register(DataProperty::new, SkinDocumentNode::getName, SkinDocumentNode::setName);
-    public final DataProperty<SkinDescriptor> part = register(DataProperty::new, SkinDocumentNode::getSkin, SkinDocumentNode::setSkin);
-    public final DataProperty<Boolean> lock = register(DataProperty::new, SkinDocumentNode::isLocked, Objects::hashCode);
+    public final DataProperty<String> name = registerNode(DataProperty::new, SkinDocumentNode::getName, SkinDocumentNode::setName);
+    public final DataProperty<SkinDescriptor> part = registerNode(DataProperty::new, SkinDocumentNode::getSkin, SkinDocumentNode::setSkin);
+    public final DataProperty<Boolean> lock = registerNode(DataProperty::new, SkinDocumentNode::isLocked, Objects::hashCode);
 
-    public final VectorProperty location = register(VectorProperty::new, SkinDocumentNode::getLocation, SkinDocumentNode::setLocation);
-    public final VectorProperty rotation = register(VectorProperty::new, SkinDocumentNode::getRotation, SkinDocumentNode::setRotation);
-    public final VectorProperty scale = register(VectorProperty::new, SkinDocumentNode::getScale, SkinDocumentNode::setScale);
+    public final VectorProperty location = registerNode(VectorProperty::new, SkinDocumentNode::getLocation, SkinDocumentNode::setLocation);
+    public final VectorProperty rotation = registerNode(VectorProperty::new, SkinDocumentNode::getRotation, SkinDocumentNode::setRotation);
+    public final VectorProperty scale = registerNode(VectorProperty::new, SkinDocumentNode::getScale, SkinDocumentNode::setScale);
 
-    public final DataProperty<Boolean> enabled = register(DataProperty::new, SkinDocumentNode::isEnabled, SkinDocumentNode::setEnabled);
-    public final DataProperty<Boolean> mirror = register(DataProperty::new, SkinDocumentNode::isMirror, SkinDocumentNode::setMirror);
+    public final DataProperty<Boolean> enabled = registerNode(DataProperty::new, SkinDocumentNode::isEnabled, SkinDocumentNode::setEnabled);
+    public final DataProperty<Boolean> mirror = registerNode(DataProperty::new, SkinDocumentNode::isMirror, SkinDocumentNode::setMirror);
 
     public final DataProperty<String> itemName = registerProperties(DataProperty::new, SkinProperty.ALL_CUSTOM_NAME);
     public final DataProperty<String> itemFlavour = registerProperties(DataProperty::new, SkinProperty.ALL_FLAVOUR_TEXT);
+
+    public final DataProperty<Boolean> showOrigin = registerSettings(DataProperty::new, SkinDocumentSettings::showsOrigin, SkinDocumentSettings::setShowsOrigin);
+    public final DataProperty<Boolean> showHelperModel = registerSettings(DataProperty::new, SkinDocumentSettings::showsHelperModel, SkinDocumentSettings::setShowsHelperModel);
 
     private SkinDocument document;
     private SkinDocumentNode node;
@@ -46,10 +50,11 @@ public class DocumentConnector {
     }
 
     public void update(SkinDocumentSettings settings) {
+        this.settingsListeners.forEach(it -> it.accept(settings));
     }
 
     public void update(SkinProperties properties) {
-        this.skinProperties.forEach(it -> it.accept(properties));
+        this.propertiesListeners.forEach(it -> it.accept(properties));
     }
 
     public void update(SkinDocumentNode node) {
@@ -88,7 +93,7 @@ public class DocumentConnector {
                 document.put(key, newValue);
             }
         });
-        skinProperties.add((properties) -> {
+        propertiesListeners.add((properties) -> {
             T oldValue = property.get();
             T newValue = document.get(key);
             if (!Objects.equal(oldValue, newValue)) {
@@ -113,7 +118,7 @@ public class DocumentConnector {
                 setter.accept(document.getSettings(), newValue);
             }
         });
-        nodeListeners.add((node) -> {
+        settingsListeners.add((node) -> {
             T oldValue = property.get();
             T newValue = getter.apply(document.getSettings());
             if (!Objects.equal(oldValue, newValue)) {
@@ -123,7 +128,7 @@ public class DocumentConnector {
         return property;
     }
 
-    public <T, P extends DataProperty<T>> P register(Supplier<P> factory, Function<SkinDocumentNode, T> getter, BiConsumer<SkinDocumentNode, T> setter) {
+    public <T, P extends DataProperty<T>> P registerNode(Supplier<P> factory, Function<SkinDocumentNode, T> getter, BiConsumer<SkinDocumentNode, T> setter) {
         P property = factory.get();
         property.addEditingObserver((flag) -> {
             if (flag) {

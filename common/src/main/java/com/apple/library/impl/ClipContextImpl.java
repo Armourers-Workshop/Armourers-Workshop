@@ -25,6 +25,7 @@ import manifold.ext.rt.api.auto;
 
 public class ClipContextImpl {
 
+    private static final CGRect EMPTY = new CGRect(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
     private static final ClipContextImpl INSTANCE = new ClipContextImpl();
 
     private final Stack<CGRect> clipBoxes = new Stack<>();
@@ -57,7 +58,7 @@ public class ClipContextImpl {
         if (scissorRenderer.clipBox != null) {
             return scissorRenderer.clipBox;
         }
-        return CGRect.ZERO;
+        return EMPTY;
     }
 
     private CGRect lastClipBox() {

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.utils.texture;
 
 import moe.plushie.armourers_workshop.api.common.ITextureKey;
+import moe.plushie.armourers_workshop.api.common.ITextureOptions;
 import moe.plushie.armourers_workshop.api.common.ITextureProvider;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
 import moe.plushie.armourers_workshop.utils.math.Vector2f;
@@ -20,6 +21,7 @@ public class TextureBox {
 
     private final boolean mirror;
 
+    private EnumMap<Direction, ITextureOptions> variantOptions;
     private EnumMap<Direction, Rectangle2f> variantRects;
     private EnumMap<Direction, ITextureProvider> variantTextures;
 
@@ -32,18 +34,25 @@ public class TextureBox {
         this.mirror = mirror;
     }
 
-    public void put(Direction dir, ITextureProvider textureProvider) {
-        if (variantTextures == null) {
-            variantTextures = new EnumMap<>(Direction.class);
-        }
-        variantTextures.put(dir, textureProvider);
-    }
-
-    public void put(Direction dir, Rectangle2f rect) {
+    public void putTextureRect(Direction dir, Rectangle2f rect) {
         if (variantRects == null) {
             variantRects = new EnumMap<>(Direction.class);
         }
         variantRects.put(dir, rect);
+    }
+
+    public void putTextureOptions(Direction dir, ITextureOptions options) {
+        if (variantOptions == null) {
+            variantOptions = new EnumMap<>(Direction.class);
+        }
+        variantOptions.put(dir, options);
+    }
+
+    public void putTextureProvider(Direction dir, ITextureProvider textureProvider) {
+        if (variantTextures == null) {
+            variantTextures = new EnumMap<>(Direction.class);
+        }
+        variantTextures.put(dir, textureProvider);
     }
 
     public TextureBox separated() {
@@ -53,11 +62,11 @@ public class TextureBox {
             if (key == null) {
                 continue;
             }
-            box.put(dir, new Rectangle2f(key.getU(), key.getV(), key.getWidth(), key.getHeight()));
+            box.putTextureRect(dir, new Rectangle2f(key.getU(), key.getV(), key.getWidth(), key.getHeight()));
             if (key.getProvider() == defaultTexture) {
                 continue;
             }
-            box.put(dir, key.getProvider());
+            box.putTextureProvider(dir, key.getProvider());
         }
         return box;
     }
@@ -105,7 +114,8 @@ public class TextureBox {
         // specifies the uv origin for the face.
         Rectangle2f rect = getTextureRect(dir);
         if (rect != null) {
-            return new TextureKey(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight(), texture);
+            ITextureOptions options = getTextureOptions(dir);
+            return new TextureKey(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight(), options, texture);
         }
         Vector2f pos = texturePos;
         if (pos != null) {
@@ -118,6 +128,13 @@ public class TextureBox {
     private Rectangle2f getTextureRect(Direction dir) {
         if (variantRects != null) {
             return variantRects.get(dir);
+        }
+        return null;
+    }
+
+    private ITextureOptions getTextureOptions(Direction dir) {
+        if (variantOptions != null) {
+            return variantOptions.get(dir);
         }
         return null;
     }

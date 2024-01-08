@@ -87,6 +87,17 @@ public final class SkinPartTypes {
     public static final ISkinPartType ADVANCED = register("part.advanced_part", new AdvancedPartType());
     public static final ISkinPartType ADVANCED_LOCATOR = register("part.advanced_locator", new AdvancedPartType());
 
+    public static final ISkinPartType HORSE_HEAD = register("horse.head", new UnknownPartType());
+    public static final ISkinPartType HORSE_NECK = register("horse.neck", new UnknownPartType());
+    public static final ISkinPartType HORSE_CHEST = register("horse.chest", new UnknownPartType());
+    //public static final ISkinPartType HORSE_LOIN = register("horse.loin", new UnknownPartType());
+    public static final ISkinPartType HORSE_LEFT_FRONT_LEG = register("horse.left_front_leg", new UnknownPartType());
+    public static final ISkinPartType HORSE_RIGHT_FRONT_LEG = register("horse.right_front_leg", new UnknownPartType());
+    public static final ISkinPartType HORSE_LEFT_HIND_LEG = register("horse.left_hind_leg", new UnknownPartType());
+    public static final ISkinPartType HORSE_RIGHT_HIND_LEG = register("horse.right_hind_leg", new UnknownPartType());
+    //public static final ISkinPartType HORSE_SADDLE = register("horse.saddle", new UnknownPartType());
+    public static final ISkinPartType HORSE_TAIL = register("horse.tail", new UnknownPartType());
+
     public static ISkinPartType byName(String registryName) {
         if (registryName == null) {
             return UNKNOWN;

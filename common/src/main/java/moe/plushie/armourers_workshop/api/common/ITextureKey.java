@@ -19,6 +19,11 @@ public interface ITextureKey {
     float getTotalHeight();
 
     @Nullable
+    default ITextureOptions getOptions() {
+        return null;
+    }
+
+    @Nullable
     default ITextureProvider getProvider() {
         return null;
     }

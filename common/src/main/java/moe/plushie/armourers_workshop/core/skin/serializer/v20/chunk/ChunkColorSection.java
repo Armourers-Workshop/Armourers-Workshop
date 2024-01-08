@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
 import moe.plushie.armourers_workshop.utils.math.Vector2f;
 import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.utils.texture.TextureData;
+import moe.plushie.armourers_workshop.utils.texture.TextureOptions;
 import moe.plushie.armourers_workshop.utils.texture.TextureProperties;
 
 import java.io.IOException;
@@ -258,6 +259,10 @@ public abstract class ChunkColorSection {
             return textureList.add(uv, this);
         }
 
+        public OptionsRef putTextureOptions(TextureOptions options) {
+            return new OptionsRef(this, options);
+        }
+
         @Override
         protected TextureList getTextureList(Vector2f pos) {
             for (TextureList list : textureLists.values()) {
@@ -438,6 +443,35 @@ public abstract class ChunkColorSection {
 
         public boolean isResolved() {
             return isResolved;
+        }
+    }
+
+    public static class OptionsRef implements ChunkVariable {
+
+        private final TextureOptions textureOptions;
+        private final ChunkColorSection section;
+
+        public OptionsRef(ChunkColorSection section, TextureOptions options) {
+            this.section = section;
+            this.textureOptions = options;
+        }
+
+        public static TextureOptions readFromStream(int usedIndexBytes, int offset, byte[] bytes) {
+            int x = _readFixedInt(usedIndexBytes, offset, bytes);
+            int y = _readFixedInt(usedIndexBytes, offset + usedIndexBytes, bytes);
+            return new TextureOptions(((long) y << 32) | x);
+        }
+
+        @Override
+        public void writeToStream(IOutputStream stream) throws IOException {
+            long value = textureOptions.asLong();
+            _writeFixedInt((int) (value), section.textureIndexBytes, stream);
+            _writeFixedInt((int) (value >> 32), section.textureIndexBytes, stream);
+        }
+
+        @Override
+        public boolean freeze() {
+            return section.isResolved();
         }
     }
 }

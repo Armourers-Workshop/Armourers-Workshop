@@ -156,6 +156,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
             }
         }
 
+        // TODO: add adv skin support.
         double scale = 1.0 / texture.width;
         for (SkinCubeFace face : faces) {
             int index = colors.getOrDefault(face.getColor().getRGB() | 0xff000000, 0);
@@ -170,7 +171,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         }
 
         for (SkinCubeFace face : faces) {
-            float[][] vertexes = SkinUtils.FACE_VERTEXES[face.getDirection().get3DDataValue()];
+            float[][] vertexes = SkinUtils.getRenderVertexes(face.getDirection());
             writeNormal(poseStack, os, vertexes[4][0], vertexes[4][1], vertexes[4][2]);
         }
 

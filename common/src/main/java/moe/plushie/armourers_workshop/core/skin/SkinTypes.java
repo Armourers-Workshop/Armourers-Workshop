@@ -27,7 +27,6 @@ public final class SkinTypes {
     public static final ISkinType ARMOR_FEET = registerArmor("feet", 4, EquipmentSlot.FEET, SkinPartTypes.BIPPED_LEFT_FOOT, SkinPartTypes.BIPPED_RIGHT_FOOT);
     public static final ISkinType ARMOR_WINGS = registerArmor("wings", 5, null, SkinPartTypes.BIPPED_LEFT_WING, SkinPartTypes.BIPPED_RIGHT_WING);
 
-    //public static final ISkinType HORSE = register("horse", 17, SkinPartTypes.BLOCK, SkinPartTypes.BLOCK_MULTI);
     public static final ISkinType OUTFIT = registerArmor("outfit", 6, null, SkinTypes.ARMOR_HEAD, SkinTypes.ARMOR_CHEST, SkinTypes.ARMOR_LEGS, SkinTypes.ARMOR_FEET, SkinTypes.ARMOR_WINGS);
 
     public static final ISkinType ITEM_SWORD = registerItem("sword", 7, ItemOverrideType.SWORD, SkinPartTypes.ITEM_SWORD);
@@ -42,6 +41,8 @@ public final class SkinTypes {
 
     public static final ISkinType ITEM = register("item", 14, SkinPartTypes.ITEM);
     public static final ISkinType BLOCK = register("block", 15, SkinPartTypes.BLOCK, SkinPartTypes.BLOCK_MULTI);
+
+    public static final ISkinType HORSE = register("horse", 17, SkinPartTypes.HORSE_HEAD, SkinPartTypes.HORSE_NECK, SkinPartTypes.HORSE_CHEST, SkinPartTypes.HORSE_RIGHT_FRONT_LEG, SkinPartTypes.HORSE_LEFT_FRONT_LEG, SkinPartTypes.HORSE_RIGHT_HIND_LEG, SkinPartTypes.HORSE_LEFT_HIND_LEG, SkinPartTypes.HORSE_TAIL);
 
     public static final ISkinType ADVANCED = register("part", 16, SkinPartTypes.ADVANCED);
 

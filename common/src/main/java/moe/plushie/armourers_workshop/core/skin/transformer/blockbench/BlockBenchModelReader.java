@@ -171,6 +171,7 @@ public class BlockBenchModelReader implements SkinPackModelReader {
             BlockBenchModelUV uv = new BlockBenchModelUV(element.getUVOffset());
             element.getFaces().forEach((dir, face) -> {
                 uv.setDefaultTextureId(face.getTextureId());
+                uv.setRotation(dir, face.getRotation());
                 usedTextureIds.add(face.getTextureId());
             });
             return uv;
@@ -192,6 +193,7 @@ public class BlockBenchModelReader implements SkinPackModelReader {
                 rect = fixedRect;
             }
             uv.put(dir, rect);
+            uv.setRotation(dir, face.getRotation());
             uv.setTextureId(dir, face.getTextureId());
             usedTextureIds.add(face.getTextureId());
         });

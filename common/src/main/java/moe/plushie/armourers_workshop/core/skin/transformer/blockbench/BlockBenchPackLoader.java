@@ -115,6 +115,7 @@ public class BlockBenchPackLoader {
 
     private static BlockBenchFace parseFaceObject(SkinPackObject object) throws IOException {
         BlockBenchFace.Builder builder = new BlockBenchFace.Builder();
+        object.at("rotation", it -> builder.rotation(it.intValue()));
         object.at("uv", it -> builder.uv(it.rectangle2fValue()));
         object.at("texture", it -> {
             if (!it.isNull()) {

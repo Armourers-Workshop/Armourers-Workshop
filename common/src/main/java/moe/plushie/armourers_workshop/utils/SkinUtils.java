@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.utils;
 
-import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -31,7 +30,7 @@ import java.util.Objects;
 
 public final class SkinUtils {
 
-    public static final float[][][] FACE_UVS = new float[][][]{
+    private static final float[][][] FACE_UVS = new float[][][]{
             {{1, 0}, {1, 1}, {0, 1}, {0, 0}}, // -y <- down
             {{0, 0}, {0, 1}, {1, 1}, {1, 0}}, // +y <- up
             {{0, 0}, {0, 1}, {1, 1}, {1, 0}}, // -z <- north
@@ -42,7 +41,11 @@ public final class SkinUtils {
 //            {{1, 0}, {1, 1}, {0, 1}, {0, 0}}, // +x <- east
     };
 
-    public static final float[][][] FACE_VERTEXES = new float[][][]{
+    private static final float[][][] FACE_UVS_90 = reorder(FACE_UVS, 3, 0, 1, 2);
+    private static final float[][][] FACE_UVS_180 = reorder(FACE_UVS, 2, 3, 0, 1);
+    private static final float[][][] FACE_UVS_270 = reorder(FACE_UVS, 1, 2, 3, 0);
+
+    private static final float[][][] FACE_VERTEXES = new float[][][]{
             {{1, 1, 1}, {1, 1, 0}, {0, 1, 0}, {0, 1, 1}, {0, 1, 0}},  // -y <- down
             {{0, 0, 1}, {0, 0, 0}, {1, 0, 0}, {1, 0, 1}, {0, -1, 0}}, // +y <- up
             {{0, 0, 0}, {0, 1, 0}, {1, 1, 0}, {1, 0, 0}, {0, 0, -1}}, // -z <- north
@@ -51,11 +54,17 @@ public final class SkinUtils {
             {{0, 0, 1}, {0, 1, 1}, {0, 1, 0}, {0, 0, 0}, {-1, 0, 0}}, // +x <- east
     };
 
-    private SkinUtils() {
-    }
-
-    public static float[][] getRenderUVs(Direction direction) {
-        return FACE_UVS[direction.get3DDataValue()];
+    public static float[][] getRenderUVs(Direction direction, int rot) {
+        switch (rot) {
+            case 90:
+                return FACE_UVS_90[direction.get3DDataValue()];
+            case 180:
+                return FACE_UVS_180[direction.get3DDataValue()];
+            case 270:
+                return FACE_UVS_270[direction.get3DDataValue()];
+            default:
+                return FACE_UVS[direction.get3DDataValue()];
+        }
     }
 
     public static float[][] getRenderVertexes(Direction direction) {
@@ -345,5 +354,22 @@ public final class SkinUtils {
             }
         }
         return Shapes.box(minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+    private static float[][][] reorder(float[][][] values, int... indexes) {
+        float[][][] newValues = new float[values.length][][];
+        for (int i = 0; i < values.length; ++i) {
+            float[][] faces = values[i];
+            float[][] newFaces = new float[faces.length][];
+            for (int j = 0; j < faces.length; ++j) {
+                if (j < indexes.length) {
+                    newFaces[indexes[j]] = faces[j];
+                } else {
+                    newFaces[j] = faces[j];
+                }
+            }
+            newValues[i] = newFaces;
+        }
+        return newValues;
     }
 }

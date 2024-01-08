@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
+import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
@@ -17,7 +18,6 @@ import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
-import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -93,7 +93,7 @@ public class BakedSkin implements IBakedSkin {
         }
         ColorScheme resolvedColorScheme = resolvedColorSchemes.computeIfAbsent(entity.getId(), k -> colorScheme.copy());
         // we can't bind textures to skin when the item stack rendering.
-        if (entity.getId() != MannequinEntity.PLACEHOLDER_ENTITY_ID) {
+        if (PlaceholderManager.isPlaceholder(entity)) {
             ResourceLocation resolvedTexture = PlayerTextureLoader.getInstance().getTextureLocation(entity);
             if (!Objects.equals(resolvedColorScheme.getTexture(), resolvedTexture)) {
                 resolvedColorScheme.setTexture(resolvedTexture);
@@ -148,7 +148,7 @@ public class BakedSkin implements IBakedSkin {
 
     public Rectangle3f getRenderBounds(@Nullable Entity entity, @Nullable Model model, SkinItemSource itemSource) {
         if (entity == null) {
-            entity = SkinItemRenderer.getInstance().getMannequinEntity();
+            entity = PlaceholderManager.MANNEQUIN.get();
         }
         if (model == null) {
             model = SkinItemRenderer.getInstance().getMannequinModel();

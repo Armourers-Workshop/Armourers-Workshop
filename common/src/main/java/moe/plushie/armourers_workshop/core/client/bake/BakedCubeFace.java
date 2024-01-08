@@ -21,10 +21,8 @@ import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.PoseStackWrapper;
 import moe.plushie.armourers_workshop.utils.PoseUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
-import moe.plushie.armourers_workshop.utils.TrigUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenRay;
@@ -113,7 +111,7 @@ public class BakedCubeFace {
             b = ColorUtils.mix(b, overlay & 0xff, i);
         }
 
-        float[][] uvs = SkinUtils.getRenderUVs(direction);
+        float[][] uvs = SkinUtils.getRenderUVs(direction, resolveTextureRotation(resolvedTexture));
         float[][] vertexes = SkinUtils.getRenderVertexes(direction);
         for (int i = 0; i < 4; ++i) {
             builder.vertex(pose, x + w * vertexes[i][0], y + h * vertexes[i][1], z + d * vertexes[i][2])
@@ -172,6 +170,14 @@ public class BakedCubeFace {
             return texture;
         }
         return paintColor.getPaintType().getTexture();
+    }
+
+    private int resolveTextureRotation(ITextureKey key) {
+        auto options = key.getOptions();
+        if (options != null) {
+            return options.getRotation();
+        }
+        return 0;
     }
 
     private RenderType resolveRenderType(SkinCubeFace face) {
