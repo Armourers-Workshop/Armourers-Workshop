@@ -3,21 +3,14 @@ package moe.plushie.armourers_workshop.core.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractItemStackRenderer;
-import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
-import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
-import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.item.MannequinItem;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 
 import manifold.ext.rt.api.auto;
@@ -39,31 +32,6 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
 
     @Override
     public void renderByItem(ItemStack itemStack, AbstractItemTransformType transformType, PoseStack poseStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
-        if (itemStack.isEmpty()) {
-            return;
-        }
-        auto descriptor = SkinDescriptor.of(itemStack);
-        auto bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
-        if (bakedSkin == null) {
-            return;
-        }
-        auto bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
-        auto transform = bakedModel.getTransforms().getTransform(ItemTransforms.ofType(transformType));
-
-        poseStack.pushPose();
-        poseStack.translate(0.5f, 0.5f, 0.5f); // reset to center
-
-        Vector3f rotation = new Vector3f(-transform.rotation.x(), -transform.rotation.y(), transform.rotation.z());
-        Vector3f scale = Vector3f.ONE;//new Vector3f(transform.scale.x(), transform.scale.y(), transform.scale.z());
-
-        SkinItemSource itemSource = SkinItemSource.create(itemStack);
-        itemSource.setRotation(rotation);
-        itemSource.setTransformType(transformType);
-
-        ColorScheme scheme = descriptor.getColorScheme();
-        ExtendedItemRenderer.renderSkinInBox(bakedSkin, scheme, scale, 1, 1, 1, 0, light, itemSource, poseStack, renderTypeBuffer);
-
-        poseStack.popPose();
     }
 
     public MannequinModel<?> getMannequinModel() {

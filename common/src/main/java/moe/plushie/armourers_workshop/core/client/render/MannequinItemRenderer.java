@@ -9,7 +9,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 
 import manifold.ext.rt.api.auto;
@@ -32,7 +31,7 @@ public class MannequinItemRenderer extends AbstractItemStackRenderer {
             return;
         }
         auto bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
-        auto transform = bakedModel.getTransforms().getTransform(ItemTransforms.ofType(transformType));
+        auto transform = bakedModel.getTransform(transformType);
 
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f); // reset to center
@@ -40,6 +39,7 @@ public class MannequinItemRenderer extends AbstractItemStackRenderer {
         PlayerTextureDescriptor descriptor = PlayerTextureDescriptor.of(itemStack);
         Vector3f rotation = new Vector3f(transform.rotation.x(), transform.rotation.y(), transform.rotation.z());
         Vector3f scale = new Vector3f(transform.scale.x(), transform.scale.y(), transform.scale.z());
+
         ExtendedItemRenderer.renderMannequin(descriptor, rotation, scale, 1, 1, 1, 0, light, poseStack, renderTypeBuffer);
 
         poseStack.popPose();

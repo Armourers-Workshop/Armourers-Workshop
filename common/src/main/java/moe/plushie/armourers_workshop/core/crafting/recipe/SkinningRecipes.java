@@ -17,10 +17,13 @@ public class SkinningRecipes {
         recipes.add(new SkinningItemRecipe(SkinTypes.ITEM_BOW));
         recipes.add(new SkinningItemRecipe(SkinTypes.ITEM_TRIDENT));
 
-        recipes.add(new SkinningItemRecipe(SkinTypes.TOOL_PICKAXE));
-        recipes.add(new SkinningItemRecipe(SkinTypes.TOOL_AXE));
-        recipes.add(new SkinningItemRecipe(SkinTypes.TOOL_SHOVEL));
-        recipes.add(new SkinningItemRecipe(SkinTypes.TOOL_HOE));
+        recipes.add(new SkinningItemRecipe(SkinTypes.ITEM_PICKAXE));
+        recipes.add(new SkinningItemRecipe(SkinTypes.ITEM_AXE));
+        recipes.add(new SkinningItemRecipe(SkinTypes.ITEM_SHOVEL));
+        recipes.add(new SkinningItemRecipe(SkinTypes.ITEM_HOE));
+
+        recipes.add(new SkinningItemRecipe(SkinTypes.ITEM_BOAT));
+        recipes.add(new SkinningItemRecipe(SkinTypes.ITEM_FISHING));
 
         recipes.add(new SkinningItemRecipe(SkinTypes.ITEM));
 

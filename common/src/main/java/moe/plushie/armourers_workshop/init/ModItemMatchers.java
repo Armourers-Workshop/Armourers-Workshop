@@ -51,6 +51,9 @@ public class ModItemMatchers {
             .required(Attributes.ATTACK_DAMAGE)
             .build();
 
+    public static final ItemMatcher BOATS = simple("boat");
+    public static final ItemMatcher FISHING_RODS = simple("fishing_rod");
+
     public static final ItemMatcher SHIELDS = simple("shield");
     public static final ItemMatcher BOWS = simple("bow");
 

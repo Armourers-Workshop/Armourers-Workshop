@@ -25,6 +25,8 @@ import moe.plushie.armourers_workshop.core.skin.serializer.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
@@ -40,6 +42,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.CrossbowItem;
@@ -47,6 +50,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -216,6 +220,18 @@ public class BakedSkin implements IBakedSkin {
 
     public <T extends Entity, V extends Model, M extends IModel> boolean shouldRenderPart(T entity, M model, BakedSkinPart bakedPart, SkinRenderContext context) {
         ISkinPartType partType = bakedPart.getType();
+        // hook part only render in hook entity.
+        if (partType == SkinPartTypes.ITEM_FISHING_HOOK) {
+            return isHookEntity(entity);
+        }
+        if (partType == SkinPartTypes.ITEM_FISHING_ROD1) {
+            Player player = ObjectUtils.safeCast(entity, Player.class);
+            return player != null && player.fishing != null;
+        }
+        if (partType == SkinPartTypes.ITEM_FISHING_ROD) {
+            Player player = ObjectUtils.safeCast(entity, Player.class);
+            return player == null || player.fishing == null;
+        }
         if (partType == SkinPartTypes.ITEM_ARROW) {
             // arrow part only render in arrow entity
             if (isArrowEntity(entity)) {
@@ -232,12 +248,19 @@ public class BakedSkin implements IBakedSkin {
         if (isArrowEntity(entity)) {
             return false; // arrow entity only render arrow part
         }
+        if (isHookEntity(entity)) {
+            return false; // hook entity only render arrow part.
+        }
         if (partType instanceof ICanUse && entity instanceof LivingEntity) {
             int useTick = getUseTick((LivingEntity) entity, context.getReferenced().getItem());
             auto useRange = ((ICanUse) partType).getUseRange();
             return useRange.contains(MathUtils.clamp(useTick, useTickRange.lowerEndpoint(), useTickRange.upperEndpoint()));
         }
         return true;
+    }
+
+    private boolean isHookEntity(Entity entity) {
+        return false;
     }
 
     private boolean isArrowEntity(Entity entity) {
@@ -292,12 +315,22 @@ public class BakedSkin implements IBakedSkin {
         return Range.closed(minUseTick, maxUseTick);
     }
 
+
     private BakedItemModel resolveItemModel(SkinItemTransforms oldValue) {
         // we only convert transform when override item transforms is enabled.
         if (oldValue != null) {
-            return new BakedItemModel(oldValue, false);
+            return BakedItemModel.from(resolveItemOverrides(), oldValue, false);
         }
         return null;
+    }
+
+    private Collection<String> resolveItemOverrides() {
+        ArrayList<String> overrides = new ArrayList<>();
+        for (BakedSkinPart part : skinParts) {
+            overrides.addAll(SkinUtils.getItemOverrides(part.getType()));
+            // we need search child part?
+        }
+        return overrides;
     }
 
     @Override

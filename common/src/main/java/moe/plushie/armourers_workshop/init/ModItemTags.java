@@ -17,6 +17,9 @@ public class ModItemTags {
     public static final IRegistryKey<IItemTag> SHOVELS = skinnable("shovels");
     public static final IRegistryKey<IItemTag> HOES = skinnable("hoes");
 
+    public static final IRegistryKey<IItemTag> BOATS = skinnable("boats");
+    public static final IRegistryKey<IItemTag> FISHING_RODS = skinnable("fishing_rods");
+
     private static IRegistryKey<IItemTag> skinnable(String name) {
         return BuilderManager.getInstance().createItemTagBuilder().build("skinnable/" + name);
     }

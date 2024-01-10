@@ -17,12 +17,14 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,6 +92,14 @@ public class SkinDocumentExporter {
         return builder.build();
     }
 
+    public void setItemTransforms(SkinItemTransforms itemTransforms) {
+        this.itemTransforms = itemTransforms;
+    }
+
+    public SkinItemTransforms getItemTransforms() {
+        return itemTransforms;
+    }
+
     private ArrayList<SkinPart> convertToParts(SkinDocumentNode parent) throws TranslatableException {
         ArrayList<SkinPart> allParts = new ArrayList<>();
         for (SkinDocumentNode node : parent.children()) {
@@ -113,8 +123,9 @@ public class SkinDocumentExporter {
                 builder.transform(part.getTransform());
                 builder.cubes(part.getCubeData());
                 builder.markers(loadSkinMarkers(node));
-                allParts.add(builder.build());
-                loadItemTransforms(skin);
+                SkinPart newPart = builder.build();
+                part.getParts().forEach(newPart::addPart);
+                allParts.add(newPart);
                 continue;
             }
             // create a new part.
@@ -132,7 +143,6 @@ public class SkinDocumentExporter {
             SkinPart part = builder.build();
             if (using != null) {
                 using.forEach(part::addPart);
-                loadItemTransforms(skin);
             }
             parts.forEach(part::addPart);
             allParts.add(part);
@@ -186,15 +196,5 @@ public class SkinDocumentExporter {
             }
         }
         return markers;
-    }
-
-    private void loadItemTransforms(Skin skin) {
-        SkinItemTransforms partItemTransforms = skin.getSettings().getItemTransforms();
-        if (partItemTransforms != null) {
-            if (itemTransforms == null) {
-                itemTransforms = new SkinItemTransforms();
-            }
-            itemTransforms.putAll(partItemTransforms);
-        }
     }
 }

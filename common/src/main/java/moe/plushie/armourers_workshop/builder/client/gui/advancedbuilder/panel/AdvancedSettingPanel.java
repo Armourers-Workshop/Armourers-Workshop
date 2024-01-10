@@ -2,13 +2,9 @@ package moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.panel;
 
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
-import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UICheckBox;
-import com.apple.library.uikit.UIColor;
-import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIScrollView;
-import com.apple.library.uikit.UIView;
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
@@ -78,10 +74,10 @@ public class AdvancedSettingPanel extends AdvancedPanel {
             .put(SkinTypes.ITEM_SHIELD, ObjectUtils.map())
             .put(SkinTypes.ITEM_BOW, ObjectUtils.map())
             .put(SkinTypes.ITEM_TRIDENT, ObjectUtils.map())
-            .put(SkinTypes.TOOL_PICKAXE, ObjectUtils.map())
-            .put(SkinTypes.TOOL_AXE, ObjectUtils.map())
-            .put(SkinTypes.TOOL_SHOVEL, ObjectUtils.map())
-            .put(SkinTypes.TOOL_HOE, ObjectUtils.map())
+            .put(SkinTypes.ITEM_PICKAXE, ObjectUtils.map())
+            .put(SkinTypes.ITEM_AXE, ObjectUtils.map())
+            .put(SkinTypes.ITEM_SHOVEL, ObjectUtils.map())
+            .put(SkinTypes.ITEM_HOE, ObjectUtils.map())
             .put(SkinTypes.BLOCK, ObjectUtils.map(
                     SkinProperty.BLOCK_GLOWING,
                     SkinProperty.BLOCK_LADDER,

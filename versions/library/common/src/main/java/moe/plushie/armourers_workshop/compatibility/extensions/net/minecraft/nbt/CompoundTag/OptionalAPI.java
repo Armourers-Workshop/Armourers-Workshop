@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
+import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.SkinOptions;
@@ -320,6 +321,19 @@ public class OptionalAPI {
     public static void putOptionalPaintColor(@This CompoundTag tag, String key, IPaintColor value, IPaintColor defaultValue) {
         if (_shouldPutValue(tag, key, value, defaultValue)) {
             tag.putInt(key, value.getRawValue());
+        }
+    }
+
+    public static SkinItemTransforms getOptionalItemTransforms(@This CompoundTag tag, String key, SkinItemTransforms defaultValue) {
+        if (tag.contains(key, Constants.TagFlags.COMPOUND)) {
+            return new SkinItemTransforms(tag.getCompound(key));
+        }
+        return defaultValue;
+    }
+
+    public static void putOptionalItemTransforms(@This CompoundTag tag, String key, SkinItemTransforms value, SkinItemTransforms defaultValue) {
+        if (_shouldPutValue(tag, key, value, defaultValue)) {
+            tag.put(key, value.serializeNBT());
         }
     }
 

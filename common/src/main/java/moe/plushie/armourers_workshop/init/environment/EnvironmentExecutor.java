@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init.environment;
 
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import net.minecraft.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,24 +56,18 @@ public class EnvironmentExecutor {
         DID_SETUP.add(type, task);
     }
 
-    public static <T> Optional<T> callWhenOn(EnvironmentType envType, Supplier<Supplier<T>> supplier) {
-        if (EnvironmentManager.getEnvironmentType() == envType) {
-            return Optional.ofNullable(supplier.get().get());
-        }
-        return Optional.empty();
-    }
-
-    public static void runWhenOn(EnvironmentType envType, Supplier<Runnable> supplier) {
-        if (EnvironmentManager.getEnvironmentType() == envType) {
-            supplier.get().run();
-        }
-    }
-
     public static <T> T call(Supplier<Supplier<T>> clientSupplier, Supplier<Supplier<T>> serverSupplier) {
         if (EnvironmentManager.getEnvironmentType() == EnvironmentType.CLIENT) {
             return clientSupplier.get().get();
         }
         return serverSupplier.get().get();
+    }
+
+    public static <T> Optional<T> callOn(EnvironmentType envType, Supplier<Supplier<T>> supplier) {
+        if (EnvironmentManager.getEnvironmentType() == envType) {
+            return Optional.ofNullable(supplier.get().get());
+        }
+        return Optional.empty();
     }
 
     public static void run(Supplier<Runnable> clientSupplier, Supplier<Runnable> serverSupplier) {
@@ -81,6 +76,16 @@ public class EnvironmentExecutor {
         } else {
             serverSupplier.get().run();
         }
+    }
+
+    public static void runOn(EnvironmentType envType, Supplier<Runnable> supplier) {
+        if (EnvironmentManager.getEnvironmentType() == envType) {
+            supplier.get().run();
+        }
+    }
+
+    public static void runOnBackground(Supplier<Runnable> handler) {
+        Util.backgroundExecutor().execute(handler.get());
     }
 
     protected static class Manager {

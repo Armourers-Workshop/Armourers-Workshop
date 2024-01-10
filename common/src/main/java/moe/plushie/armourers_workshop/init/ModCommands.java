@@ -31,6 +31,7 @@ import moe.plushie.armourers_workshop.init.command.ComponentArgumentType;
 import moe.plushie.armourers_workshop.init.command.FileArgumentType;
 import moe.plushie.armourers_workshop.init.command.ListArgumentType;
 import moe.plushie.armourers_workshop.init.command.ReflectArgumentBuilder;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
@@ -50,11 +51,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -301,7 +299,7 @@ public class ModCommands {
             tag.putString("Skin", identifier);
             player.sendSystemMessage(Component.translatable("commands.armourers_workshop.armourers.exportSkin.processing", filename));
             UserNotifications.sendSystemToast(Component.translatable("commands.armourers_workshop.notify.exportSkin.processing"), tag, player);
-            Util.backgroundExecutor().execute(() -> {
+            EnvironmentExecutor.runOnBackground(() -> () -> {
                 try {
                     SkinExportManager.exportSkin(skin, format, filename, resolvedScale);
                     player.sendSystemMessage(Component.translatable("commands.armourers_workshop.armourers.exportSkin.success", filename));

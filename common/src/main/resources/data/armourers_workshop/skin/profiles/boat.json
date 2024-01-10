@@ -1,0 +1,9 @@
+{
+  "locked": true,
+  "slots": {
+    "boat": 1
+  },
+  "entities": [
+    "minecraft:boat"
+  ]
+}

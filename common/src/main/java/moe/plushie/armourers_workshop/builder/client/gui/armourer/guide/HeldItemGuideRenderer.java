@@ -24,10 +24,10 @@ public class HeldItemGuideRenderer extends AbstractGuideRenderer {
 
     @Override
     public void init(GuideRendererManager rendererManager) {
-        rendererManager.register(SkinPartTypes.TOOL_AXE, this::render);
-        rendererManager.register(SkinPartTypes.TOOL_HOE, this::render);
-        rendererManager.register(SkinPartTypes.TOOL_PICKAXE, this::render);
-        rendererManager.register(SkinPartTypes.TOOL_SHOVEL, this::render);
+        rendererManager.register(SkinPartTypes.ITEM_AXE, this::render);
+        rendererManager.register(SkinPartTypes.ITEM_HOE, this::render);
+        rendererManager.register(SkinPartTypes.ITEM_PICKAXE, this::render);
+        rendererManager.register(SkinPartTypes.ITEM_SHOVEL, this::render);
         rendererManager.register(SkinPartTypes.ITEM_SHIELD, this::render);
         rendererManager.register(SkinPartTypes.ITEM_SWORD, this::render);
         rendererManager.register(SkinPartTypes.ITEM_TRIDENT, this::render);

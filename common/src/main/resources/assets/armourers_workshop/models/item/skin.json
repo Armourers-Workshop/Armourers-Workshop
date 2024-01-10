@@ -1,42 +1,6 @@
 {
   "parent": "builtin/entity",
-  "display": {
-    "gui": {
-      "rotation": [ 30, 135, 0 ],
-      "translation": [ 0, 0, 0 ],
-      "scale":[ 1, 1, 1 ]
-    },
-    "fixed": {
-      "rotation": [ 0, 0, 0 ],
-      "translation": [ 0, 0, -2 ],
-      "scale":[ 1, 1, 1 ]
-    },
-    "ground": {
-      "rotation": [ 0, 0, 0 ],
-      "translation": [ 0, 0, 0],
-      "scale":[ 0.5, 0.5, 0.5 ]
-    },
-    "thirdperson_righthand": {
-      "rotation": [ 0, 90, -5 ],
-      "translation": [ 0, 0, 0],
-      "scale":[ 0.8, 0.8, 0.8 ]
-    },
-    "thirdperson_lefthand": {
-      "rotation": [ 0, 90, -5 ],
-      "translation": [ 0, 0, 0],
-      "scale":[ 0.8, 0.8, 0.8 ]
-    },
-    "firstperson_righthand": {
-      "rotation": [ 0, 90, -5 ],
-      "translation": [ 0, 0, 0],
-      "scale":[ 0.8, 0.8, 0.8 ]
-    },
-    "firstperson_lefthand": {
-      "rotation": [ 0, 90, -5 ],
-      "translation": [ 0, 0, 0],
-      "scale":[ 0.8, 0.8, 0.8 ]
-    }
-  },
+  "gui_light": "front",
   "overrides": [
     { "predicate": { "armourers_workshop:loading": 0.000 }, "model": "armourers_workshop:item/skin" },
     { "predicate": { "armourers_workshop:loading": 0.001 }, "model": "armourers_workshop:item/loading/1" },

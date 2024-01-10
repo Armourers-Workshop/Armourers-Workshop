@@ -23,6 +23,9 @@ public enum ItemOverrideType {
     SHOVEL("shovel", ModItemTags.SHOVELS, ModItemMatchers.SHOVELS),
     HOE("hoe", ModItemTags.HOES, ModItemMatchers.HOES),
 
+    BOAT("boat", ModItemTags.BOATS, ModItemMatchers.BOATS),
+    FISHING_ROD("fishing_rod", ModItemTags.FISHING_RODS, ModItemMatchers.FISHING_RODS),
+
     ITEM("item", null, null);
 
     private final IRegistryKey<IItemTag> tag;

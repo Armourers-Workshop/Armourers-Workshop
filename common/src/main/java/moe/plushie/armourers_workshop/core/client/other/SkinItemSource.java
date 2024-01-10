@@ -11,6 +11,7 @@ public class SkinItemSource {
     private float renderPriority;
     private ItemStack itemStack;
 
+    private Vector3f itemScale;
     private Vector3f itemRotation;
     private AbstractItemTransformType transformType;
 
@@ -41,6 +42,7 @@ public class SkinItemSource {
         itemSource.setItem(itemStack);
         itemSource.setRenderPriority(renderPriority);
         itemSource.setTransformType(transformType);
+        itemSource.setScale(null);
         itemSource.setRotation(null);
         return itemSource;
     }
@@ -67,6 +69,14 @@ public class SkinItemSource {
 
     public Vector3f getRotation() {
         return itemRotation;
+    }
+
+    public void setScale(Vector3f scale) {
+        this.itemScale = scale;
+    }
+
+    public Vector3f getScale() {
+        return itemScale;
     }
 
     public void setTransformType(AbstractItemTransformType transformType) {

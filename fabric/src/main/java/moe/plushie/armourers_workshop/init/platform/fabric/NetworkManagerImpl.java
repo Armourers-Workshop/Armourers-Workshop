@@ -65,7 +65,7 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
 
         ServerPlayNetworking.registerGlobalReceiver(dispatcher.channelName, dispatcher::onServerEvent);
 
-        EnvironmentExecutor.runWhenOn(EnvironmentType.CLIENT, () -> () -> {
+        EnvironmentExecutor.runOn(EnvironmentType.CLIENT, () -> () -> {
             ClientLoginNetworking.registerGlobalReceiver(dispatcher.channelName, dispatcher::onClientHandshake);
             ClientPlayNetworking.registerGlobalReceiver(dispatcher.channelName, dispatcher::onClientEvent);
         });

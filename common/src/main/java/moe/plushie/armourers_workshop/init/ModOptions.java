@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.init;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
-import net.minecraft.Util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -93,7 +93,7 @@ public class ModOptions {
     }
 
     private void setChanged() {
-        Util.backgroundExecutor().execute(this::save);
+        EnvironmentExecutor.runOnBackground(() -> this::save);
     }
 }
 

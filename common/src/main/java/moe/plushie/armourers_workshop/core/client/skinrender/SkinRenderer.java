@@ -15,7 +15,8 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinVisibilityTransformer;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.skin.part.advanced.AdvancedPartType;
+import moe.plushie.armourers_workshop.core.skin.part.block.BlockPartType;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -61,7 +62,7 @@ public class SkinRenderer<T extends Entity, M extends IModel> {
         if (!context.shouldRenderPart(partType)) {
             return false;
         }
-        if (partType == SkinPartTypes.BLOCK || partType == SkinPartTypes.BLOCK_MULTI || partType == SkinPartTypes.ADVANCED) {
+        if (partType instanceof BlockPartType || partType instanceof AdvancedPartType) {
             return true;
         }
         if (partType instanceof ICanHeld) {

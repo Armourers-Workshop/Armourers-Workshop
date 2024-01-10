@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
-import moe.plushie.armourers_workshop.init.platform.TransformationProvider;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import net.minecraft.world.entity.Entity;
@@ -36,9 +35,9 @@ public class SkinModelTransformer<T, M> {
         float f2 = 1 / 16f;
         boolean flag = transformType.isLeftHand();
         poseStack.scale(f1, f1, f1);
-        TransformationProvider.handleTransforms(context.pose().pose(), itemModel, transformType, flag);
+        itemModel.applyTransform(transformType, flag, context.pose().pose());
         poseStack.scale(f2, f2, f2);
-        if (transformType.isLeftHand()) {
+        if (flag) {
             // we need mirror the skin of drawing,
             // because the poseStack.scale have a bug,
             // it will cause the x, y, z change as same time.

@@ -36,7 +36,6 @@ import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentListener;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentType;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.init.ModOptions;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
@@ -192,7 +191,7 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
         if (documentType == null) {
             return;
         }
-        importNewSkin(documentType.getSkinType(), skin -> {
+        importNewSkin(documentType.getSkinType(), documentType.usesItemTransforms(), skin -> {
             AdvancedBuilderBlockEntity blockEntity = editor.getBlockEntity();
             AdvancedImportPacket packet = new AdvancedImportPacket(blockEntity, skin, "");
             NetworkManager.sendToServer(packet);
@@ -224,7 +223,7 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
         addMenuItem(item);
     }
 
-    public void importNewSkin(ISkinType skinType, Consumer<Skin> consumer) {
+    public void importNewSkin(ISkinType skinType, boolean keepItemTransforms, Consumer<Skin> consumer) {
         NSString title = NSString.localizedString("advanced-skin-builder.dialog.importer.title");
         SkinLibraryManager libraryManager = SkinLibraryManager.getClient();
         if (!libraryManager.shouldUploadFile(inventory.player)) {
@@ -243,6 +242,7 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
         alert.showInView(this, () -> {
             if (!alert.isCancelled()) {
                 DocumentImporter importer = new DocumentImporter(alert.getSelectedFile(), skinType);
+                importer.setKeepItemTransforms(keepItemTransforms);
                 importer.execute(consumer);
             }
         });
@@ -279,6 +279,7 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
     @Override
     public void documentDidReload() {
         documentDidChangeType(editor.getDocument().getType());
+        documentDidChangeSettings(new CompoundTag());
         documentDidChangeProperties(new CompoundTag());
     }
 

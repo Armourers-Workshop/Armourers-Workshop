@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 public class SkinDocumentTypes {
 
     private static final LinkedHashMap<String, SkinDocumentType> ALL_TYPES = new LinkedHashMap<>();
@@ -35,10 +36,13 @@ public class SkinDocumentTypes {
     public static final SkinDocumentType ITEM_BOW = register("item", SkinTypes.ITEM_BOW);
     public static final SkinDocumentType ITEM_TRIDENT = register("item", SkinTypes.ITEM_TRIDENT);
 
-    public static final SkinDocumentType ITEM_PICKAXE = register("item", SkinTypes.TOOL_PICKAXE);
-    public static final SkinDocumentType ITEM_AXE = register("item", SkinTypes.TOOL_AXE);
-    public static final SkinDocumentType ITEM_SHOVEL = register("item", SkinTypes.TOOL_SHOVEL);
-    public static final SkinDocumentType ITEM_HOE = register("item", SkinTypes.TOOL_HOE);
+    public static final SkinDocumentType ITEM_PICKAXE = register("item", SkinTypes.ITEM_PICKAXE);
+    public static final SkinDocumentType ITEM_AXE = register("item", SkinTypes.ITEM_AXE);
+    public static final SkinDocumentType ITEM_SHOVEL = register("item", SkinTypes.ITEM_SHOVEL);
+    public static final SkinDocumentType ITEM_HOE = register("item", SkinTypes.ITEM_HOE);
+
+    public static final SkinDocumentType ITEM_BOAT = register("item", SkinTypes.ITEM_BOAT);
+    public static final SkinDocumentType ITEM_FISHING = register("item", SkinTypes.ITEM_FISHING);
 
     public static final SkinDocumentType ENTITY_HORSE_OUTFIT = register("entity", SkinTypes.HORSE);
 

@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.utils;
 
+import moe.plushie.armourers_workshop.api.action.ICanOverride;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -26,6 +28,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 
 public final class SkinUtils {
@@ -186,6 +190,14 @@ public final class SkinUtils {
 //        }
 //        return Vector3f.YP;
 //    }
+
+    public static Collection<String> getItemOverrides(ISkinPartType partType) {
+        ICanOverride override = ObjectUtils.safeCast(partType, ICanOverride.class);
+        if (override != null) {
+            return override.getItemOverrides();
+        }
+        return Collections.emptyList();
+    }
 
     public static boolean shouldKeepWardrobe(Player entity) {
         if (entity.isSpectator()) {

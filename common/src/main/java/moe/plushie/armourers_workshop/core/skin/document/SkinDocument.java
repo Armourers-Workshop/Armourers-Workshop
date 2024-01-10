@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.document;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
+import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -101,6 +102,14 @@ public class SkinDocument {
         this.listener.removeListener(listener);
     }
 
+    public void setItemTransforms(SkinItemTransforms itemTransforms) {
+        settings.setItemTransforms(itemTransforms);
+    }
+
+    public SkinItemTransforms getItemTransforms() {
+        return settings.getItemTransforms();
+    }
+
     public SkinDocumentListener getHandler() {
         return listener;
     }
@@ -144,7 +153,10 @@ public class SkinDocument {
     }
 
     private SkinDocumentSettings _generateSkinSettings() {
-        return settings;
+        SkinDocumentSettings settings1 = new SkinDocumentSettings();
+        settings1.setShowsOrigin(settings.showsOrigin());
+        settings1.setShowsHelperModel(settings.showsHelperModel());
+        return settings1;
     }
 
     private SkinProperties _generateSkinProperties() {

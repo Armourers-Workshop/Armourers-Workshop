@@ -21,10 +21,9 @@ import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModel
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelTexture;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockTransform;
 import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchReader;
-import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 
 import java.io.BufferedInputStream;
@@ -42,6 +41,7 @@ import java.util.zip.ZipInputStream;
 
 public class DocumentImporter {
 
+    private boolean keepItemTransforms = false;
     private final File inputFile;
     private final ISkinType skinType;
 
@@ -50,6 +50,13 @@ public class DocumentImporter {
         this.skinType = skinType;
     }
 
+    public boolean isKeepItemTransforms() {
+        return keepItemTransforms;
+    }
+
+    public void setKeepItemTransforms(boolean keepItemTransforms) {
+        this.keepItemTransforms = keepItemTransforms;
+    }
 
     public void execute(Consumer<Skin> consumer) {
         generateSkin((skin, exception) -> {
@@ -74,7 +81,7 @@ public class DocumentImporter {
     }
 
     private void generateSkin(IResultHandler<Skin> resultHandler) {
-        Util.backgroundExecutor().execute(() -> {
+        EnvironmentExecutor.runOnBackground(() -> () -> {
             try {
                 if (!inputFile.exists()) {
                     throw new TranslatableException("inventory.armourers_workshop.skin-library.error.illegalModelFile");
@@ -161,6 +168,7 @@ public class DocumentImporter {
         }
 
 //        values.forEach(exporter::add);
+        exporter.setKeepItemTransforms(isKeepItemTransforms());
         return exporter.export(skinType);
     }
 

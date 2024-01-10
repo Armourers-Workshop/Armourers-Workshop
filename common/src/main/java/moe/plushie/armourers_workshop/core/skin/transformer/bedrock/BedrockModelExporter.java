@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
-import moe.plushie.armourers_workshop.api.skin.ISkinEquipmentType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
@@ -45,6 +44,8 @@ public class BedrockModelExporter {
     protected ArrayList<Pair<String, Node>> allNodes = new ArrayList<>();
     protected Map<String, ISkinPartType> mapper = PARTS;
 
+    protected boolean keepItemTransforms = false;
+
     public void add(BedrockModelBone bone, BedrockModelTexture texture) {
         Node node = new Node(bone.getName(), bone, texture);
         allNodes.add(Pair.of(bone.getParent(), node));
@@ -66,6 +67,9 @@ public class BedrockModelExporter {
     public Skin export(ISkinType skinType) {
         if (skinType == SkinTypes.ITEM_BOW) {
             mapper = BOW_PARTS;
+        }
+        if (skinType == SkinTypes.ITEM_FISHING) {
+            mapper = FINISHING_PARTS;
         }
 
         // build the bone child-parent relationships tree.
@@ -117,7 +121,7 @@ public class BedrockModelExporter {
 
         builder.settings(settings);
         builder.properties(properties);
-        if (skinType instanceof ISkinEquipmentType || skinType == SkinTypes.ITEM) {
+        if (isKeepItemTransforms()) {
             settings.setItemTransforms(itemTransforms);
         }
         builder.version(SkinSerializer.Versions.V20);
@@ -222,6 +226,14 @@ public class BedrockModelExporter {
         return pos;
     }
 
+    public boolean isKeepItemTransforms() {
+        return keepItemTransforms;
+    }
+
+    public void setKeepItemTransforms(boolean keepItemTransforms) {
+        this.keepItemTransforms = keepItemTransforms;
+    }
+
     public static class Node {
 
         public final String name;
@@ -288,14 +300,16 @@ public class BedrockModelExporter {
 
     private static final ImmutableMap<String, ISkinPartType> BOW_PARTS = new ImmutableMap.Builder<String, ISkinPartType>()
             .put("Arrow", SkinPartTypes.ITEM_ARROW)
-            .put("Bow0", SkinPartTypes.ITEM_BOW0)
-            .put("Bow1", SkinPartTypes.ITEM_BOW1)
-            .put("Bow2", SkinPartTypes.ITEM_BOW2)
-            .put("Bow3", SkinPartTypes.ITEM_BOW3)
             .put("Frame0", SkinPartTypes.ITEM_BOW0)
             .put("Frame1", SkinPartTypes.ITEM_BOW1)
             .put("Frame2", SkinPartTypes.ITEM_BOW2)
             .put("Frame3", SkinPartTypes.ITEM_BOW3)
+            .build();
+
+    private static final ImmutableMap<String, ISkinPartType> FINISHING_PARTS = new ImmutableMap.Builder<String, ISkinPartType>()
+            .put("Hook", SkinPartTypes.ITEM_FISHING_HOOK)
+            .put("Frame0", SkinPartTypes.ITEM_FISHING_ROD)
+            .put("Frame1", SkinPartTypes.ITEM_FISHING_ROD1)
             .build();
 
     private static final ImmutableMap<ISkinPartType, IVector3i> PART_OFFSETS = new ImmutableMap.Builder<ISkinPartType, IVector3i>()

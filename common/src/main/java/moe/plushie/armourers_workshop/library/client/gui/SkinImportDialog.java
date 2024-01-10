@@ -39,7 +39,6 @@ import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.client.Minecraft;
 
@@ -110,10 +109,10 @@ public class SkinImportDialog extends BaseDialog {
             .put(SkinTypes.ITEM_SHIELD, ObjectUtils.map())
             .put(SkinTypes.ITEM_BOW, ObjectUtils.map())
             .put(SkinTypes.ITEM_TRIDENT, ObjectUtils.map())
-            .put(SkinTypes.TOOL_PICKAXE, ObjectUtils.map())
-            .put(SkinTypes.TOOL_AXE, ObjectUtils.map())
-            .put(SkinTypes.TOOL_SHOVEL, ObjectUtils.map())
-            .put(SkinTypes.TOOL_HOE, ObjectUtils.map())
+            .put(SkinTypes.ITEM_PICKAXE, ObjectUtils.map())
+            .put(SkinTypes.ITEM_AXE, ObjectUtils.map())
+            .put(SkinTypes.ITEM_SHOVEL, ObjectUtils.map())
+            .put(SkinTypes.ITEM_HOE, ObjectUtils.map())
             .build();
 
 

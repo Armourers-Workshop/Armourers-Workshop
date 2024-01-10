@@ -98,10 +98,6 @@ public class AdvancedImportPacket extends CustomPacket {
     }
 
     private void encodeSkin(FriendlyByteBuf buffer) {
-        if (skin == null) {
-            buffer.writeEnum(moe.plushie.armourers_workshop.library.network.SaveSkinPacket.Mode.NONE);
-            return;
-        }
         try {
             GZIPOutputStream stream = new GZIPOutputStream(new ByteBufOutputStream(buffer));
             SkinFileStreamUtils.saveSkinToStream(stream, skin);

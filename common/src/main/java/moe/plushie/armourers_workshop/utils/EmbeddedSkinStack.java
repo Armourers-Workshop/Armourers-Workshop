@@ -9,18 +9,21 @@ import net.minecraft.world.item.ItemStack;
 @Environment(EnvType.CLIENT)
 public class EmbeddedSkinStack {
 
+    private final int mode;
     private final ItemStack itemStack;
 
     private final SkinDescriptor descriptor;
     private final SkinRenderData.Entry entry;
 
-    public EmbeddedSkinStack(SkinRenderData.Entry entry) {
+    public EmbeddedSkinStack(int mode, SkinRenderData.Entry entry) {
+        this.mode = mode;
         this.entry = entry;
         this.descriptor = entry.getDescriptor();
         this.itemStack = entry.getItemStack();
     }
 
-    public EmbeddedSkinStack(SkinDescriptor descriptor, ItemStack itemStack) {
+    public EmbeddedSkinStack(int mode, SkinDescriptor descriptor, ItemStack itemStack) {
+        this.mode = mode;
         this.entry = null;
         this.descriptor = descriptor;
         this.itemStack = itemStack;
@@ -36,5 +39,9 @@ public class EmbeddedSkinStack {
 
     public SkinRenderData.Entry getEntry() {
         return entry;
+    }
+
+    public int getMode() {
+        return mode;
     }
 }

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.core.client.bake.BakedItemModel;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -39,19 +40,25 @@ public class SkinModelManager {
     }
 
     public BakedModel getModel(BakedSkinPart bakedPart, BakedSkin bakedSkin, ItemStack itemStack, Entity entity) {
-        // yep, we prefer to use the overridden item model.
-        BakedModel itemModel = bakedSkin.getItemModel();
-        if (itemModel != null) {
-            return itemModel;
-        }
-        return getModel(bakedPart.getType(), itemStack, entity.getLevel(), entity);
+        return getModel(bakedPart, bakedSkin, itemStack, entity.getLevel(), entity);
     }
 
-    public BakedModel getModel(ISkinPartType partType, ItemStack itemStack, @Nullable Level level, @Nullable Entity entity) {
-        BakedModel bakedModel = loadModel(partType);
+    public BakedModel getModel(BakedSkinPart bakedPart, BakedSkin bakedSkin, ItemStack itemStack, @Nullable Level level, @Nullable Entity entity) {
+        // yep, we prefer to use the overridden item model.
+        BakedItemModel itemModel = bakedSkin.getItemModel();
+        if (itemModel != null) {
+            ClientLevel clientWorld = ObjectUtils.safeCast(level, ClientLevel.class);
+            LivingEntity livingEntity = ObjectUtils.safeCast(entity, LivingEntity.class);
+            return itemModel.resolve(itemModel, itemStack, clientWorld, livingEntity, 0);
+        }
+        BakedModel bakedModel = loadModel(bakedPart.getType());
         ClientLevel clientWorld = ObjectUtils.safeCast(level, ClientLevel.class);
         LivingEntity livingEntity = ObjectUtils.safeCast(entity, LivingEntity.class);
         return bakedModel.getOverrides().resolve(bakedModel, itemStack, clientWorld, livingEntity, 0);
+    }
+
+    public BakedModel getMissingModel() {
+        return modelManager.getMissingModel();
     }
 
     private BakedModel loadModel(ISkinPartType partType) {
@@ -60,11 +67,10 @@ public class SkinModelManager {
             return bakedModel;
         }
         bakedModel = modelManager.getModel(ArmourersWorkshop.getCustomModel(partType.getRegistryName()));
-        if (partType != SkinPartTypes.UNKNOWN && bakedModel == modelManager.getMissingModel()) {
+        if (partType != SkinPartTypes.UNKNOWN && bakedModel == getMissingModel()) {
             bakedModel = loadModel(SkinPartTypes.UNKNOWN);
         }
         cachedModels.put(partType, bakedModel);
         return bakedModel;
     }
-
 }

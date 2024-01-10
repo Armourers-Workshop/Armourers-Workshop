@@ -71,20 +71,7 @@ public class UICheckBox extends UIControl {
     public void setTitleColor(UIColor color, int state) {
         titleColorContainer.setValueForState(color, state);
         titleView.setTextColor(titleColorContainer.currentValue());
-    }
-
-
-    @Override
-    public void setEnabled(boolean isEnabled) {
-        super.setEnabled(isEnabled);
         updateStateIfNeeded();
-    }
-
-    @Override
-    public void setSelected(boolean isSelected) {
-        super.setSelected(isSelected);
-        updateStateIfNeeded();
-        markerView.setHidden(!isSelected);
     }
 
     public void setBox(float boxSize, float boxSpacing) {
@@ -93,7 +80,9 @@ public class UICheckBox extends UIControl {
         this.setNeedsLayout();
     }
 
+    @Override
     protected void updateStateIfNeeded() {
+        super.updateStateIfNeeded();
         int state = State.NORMAL;
         if (isSelected()) {
             state |= State.SELECTED;
@@ -101,6 +90,7 @@ public class UICheckBox extends UIControl {
         if (!isEnabled()) {
             state |= State.DISABLED;
         }
+        markerView.setHidden(!super.isSelected());
         titleColorContainer.setCurrentState(state);
         titleView.setTextColor(titleColorContainer.currentValue());
     }

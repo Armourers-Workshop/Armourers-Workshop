@@ -34,15 +34,18 @@ public final class SkinTypes {
     public static final ISkinType ITEM_BOW = registerItem("bow", 9, ItemOverrideType.BOW, SkinPartTypes.ITEM_BOW0, SkinPartTypes.ITEM_BOW1, SkinPartTypes.ITEM_BOW2, SkinPartTypes.ITEM_BOW3, SkinPartTypes.ITEM_ARROW);
     public static final ISkinType ITEM_TRIDENT = registerItem("trident", 17, ItemOverrideType.TRIDENT, SkinPartTypes.ITEM_TRIDENT);
 
-    public static final ISkinType TOOL_PICKAXE = registerItem("pickaxe", 10, ItemOverrideType.PICKAXE, SkinPartTypes.TOOL_PICKAXE);
-    public static final ISkinType TOOL_AXE = registerItem("axe", 11, ItemOverrideType.AXE, SkinPartTypes.TOOL_AXE);
-    public static final ISkinType TOOL_SHOVEL = registerItem("shovel", 12, ItemOverrideType.SHOVEL, SkinPartTypes.TOOL_SHOVEL);
-    public static final ISkinType TOOL_HOE = registerItem("hoe", 13, ItemOverrideType.HOE, SkinPartTypes.TOOL_HOE);
+    public static final ISkinType ITEM_PICKAXE = registerItem("pickaxe", 10, ItemOverrideType.PICKAXE, SkinPartTypes.ITEM_PICKAXE);
+    public static final ISkinType ITEM_AXE = registerItem("axe", 11, ItemOverrideType.AXE, SkinPartTypes.ITEM_AXE);
+    public static final ISkinType ITEM_SHOVEL = registerItem("shovel", 12, ItemOverrideType.SHOVEL, SkinPartTypes.ITEM_SHOVEL);
+    public static final ISkinType ITEM_HOE = registerItem("hoe", 13, ItemOverrideType.HOE, SkinPartTypes.ITEM_HOE);
+
+    public static final ISkinType ITEM_BOAT = registerItem("boat", 19, ItemOverrideType.FISHING_ROD, SkinPartTypes.ITEM_BOAT_BODY, SkinPartTypes.ITEM_BOAT_LEFT_PADDLE, SkinPartTypes.ITEM_BOAT_RIGHT_PADDLE);
+    public static final ISkinType ITEM_FISHING = registerItem("fishing", 20, ItemOverrideType.FISHING_ROD, SkinPartTypes.ITEM_FISHING_ROD, SkinPartTypes.ITEM_FISHING_HOOK);
 
     public static final ISkinType ITEM = register("item", 14, SkinPartTypes.ITEM);
     public static final ISkinType BLOCK = register("block", 15, SkinPartTypes.BLOCK, SkinPartTypes.BLOCK_MULTI);
 
-    public static final ISkinType HORSE = register("horse", 17, SkinPartTypes.HORSE_HEAD, SkinPartTypes.HORSE_NECK, SkinPartTypes.HORSE_CHEST, SkinPartTypes.HORSE_RIGHT_FRONT_LEG, SkinPartTypes.HORSE_LEFT_FRONT_LEG, SkinPartTypes.HORSE_RIGHT_HIND_LEG, SkinPartTypes.HORSE_LEFT_HIND_LEG, SkinPartTypes.HORSE_TAIL);
+    public static final ISkinType HORSE = register("horse", 18, SkinPartTypes.HORSE_HEAD, SkinPartTypes.HORSE_NECK, SkinPartTypes.HORSE_CHEST, SkinPartTypes.HORSE_RIGHT_FRONT_LEG, SkinPartTypes.HORSE_LEFT_FRONT_LEG, SkinPartTypes.HORSE_RIGHT_HIND_LEG, SkinPartTypes.HORSE_LEFT_HIND_LEG, SkinPartTypes.HORSE_TAIL);
 
     public static final ISkinType ADVANCED = register("part", 16, SkinPartTypes.ADVANCED);
 

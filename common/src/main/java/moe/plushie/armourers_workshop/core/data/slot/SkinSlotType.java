@@ -28,10 +28,10 @@ public enum SkinSlotType {
     BOW(7, 52, 1, "bow", SkinTypes.ITEM_BOW),
     TRIDENT(14, 57, 1, "trident", SkinTypes.ITEM_TRIDENT),
 
-    PICKAXE(8, 53, 1, "pickaxe", SkinTypes.TOOL_PICKAXE),
-    AXE(9, 54, 1, "axe", SkinTypes.TOOL_AXE),
-    SHOVEL(10, 55, 1, "shovel", SkinTypes.TOOL_SHOVEL),
-    HOE(11, 56, 1, "hoe", SkinTypes.TOOL_HOE),
+    PICKAXE(8, 53, 1, "pickaxe", SkinTypes.ITEM_PICKAXE),
+    AXE(9, 54, 1, "axe", SkinTypes.ITEM_AXE),
+    SHOVEL(10, 55, 1, "shovel", SkinTypes.ITEM_SHOVEL),
+    HOE(11, 56, 1, "hoe", SkinTypes.ITEM_HOE),
 
     OUTFIT(12, 70, 10, "outfit", SkinTypes.OUTFIT),
     DYE(13, 80, 16, "dye", null);

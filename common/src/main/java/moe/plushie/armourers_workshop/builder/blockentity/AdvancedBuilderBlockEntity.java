@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.builder.blockentity;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.UserNotifications;
+import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.network.UpdateSkinDocumentPacket;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -13,7 +14,9 @@ import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentImporter;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentListeners;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentProvider;
+import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentSettings;
 import moe.plushie.armourers_workshop.core.skin.exception.TranslatableException;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
@@ -21,7 +24,6 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,6 +31,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+
+import java.util.Collection;
 
 public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements IBlockEntityHandler, SkinDocumentProvider {
 
@@ -71,7 +75,28 @@ public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements 
         node.setSkin(descriptor);
         CompoundTag tag = new CompoundTag();
         tag.putOptionalSkinDescriptor(SkinDocumentNode.Keys.SKIN, descriptor, null);
-        UpdateSkinDocumentPacket.UpdateNodeAction action = new UpdateSkinDocumentPacket.UpdateNodeAction(node.getId(), tag);
+        UpdateSkinDocumentPacket.Action action = new UpdateSkinDocumentPacket.UpdateNodeAction(node.getId(), tag);
+        NetworkManager.sendToAll(new UpdateSkinDocumentPacket(this, action));
+        if (skin.getItemTransforms() != null) {
+            importToSettings(skin.getItemTransforms(), node);
+        }
+    }
+
+    private void importToSettings(SkinItemTransforms itemTransforms, SkinDocumentNode node) {
+        SkinItemTransforms newItemTransforms = new SkinItemTransforms();
+        if (document.getItemTransforms() != null) {
+            newItemTransforms.putAll(document.getItemTransforms());
+        }
+        Collection<String> overrideNames = SkinUtils.getItemOverrides(node.getType());
+        if (!overrideNames.isEmpty()) {
+            overrideNames.forEach(name -> itemTransforms.forEach((type, transform) -> newItemTransforms.put(name + ";" + type, transform)));
+        } else {
+            newItemTransforms.putAll(itemTransforms);
+        }
+        document.setItemTransforms(newItemTransforms);
+        CompoundTag tag = new CompoundTag();
+        tag.putOptionalItemTransforms(SkinDocumentSettings.Keys.ITEM_TRANSFORMS, itemTransforms, null);
+        UpdateSkinDocumentPacket.Action action = new UpdateSkinDocumentPacket.UpdateSettingsAction(tag);
         NetworkManager.sendToAll(new UpdateSkinDocumentPacket(this, action));
     }
 
@@ -79,13 +104,15 @@ public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements 
         BlockUtils.performBatch(() -> {
             SkinDocumentImporter importer = new SkinDocumentImporter(document);
             document.reset();
+            document.setItemTransforms(skin.getItemTransforms());
             importer.execute(identifier, skin);
         });
     }
 
     public void exportFromDocument(ServerPlayer player) {
         SkinDocumentExporter exporter = new SkinDocumentExporter(document);
-        Util.backgroundExecutor().execute(() -> {
+        exporter.setItemTransforms(document.getItemTransforms());
+        EnvironmentExecutor.runOnBackground(() -> () -> {
             try {
                 Skin skin = exporter.execute(player);
                 player.server.execute(() -> {

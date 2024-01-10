@@ -72,6 +72,7 @@ public class AdvancedLeftCardPanel extends UIView {
         checkBox.setTitle(NSString.localizedString(key));
         checkBox.setTitleColor(UIColor.WHITE);
         checkBox.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleTopMargin);
+        checkBox.setSelected(property.getOrDefault(false));
         checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, c) -> {
             UICheckBox checkBox1 = ObjectUtils.unsafeCast(c);
             property.set(checkBox1.isSelected());

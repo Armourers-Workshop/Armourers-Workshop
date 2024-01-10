@@ -5,9 +5,11 @@ import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.animal.horse.Markings;
 import net.minecraft.world.entity.animal.horse.Variant;
 import net.minecraft.world.level.Level;
 
@@ -23,7 +25,9 @@ public class PlaceholderManager {
 
     public static final Supplier<Horse> HORSE = new LazyEntry<>(level -> {
         auto entity = new Horse(EntityType.HORSE, level);
-        entity.setVariant(Variant.CREAMY);
+        auto tag = new CompoundTag();
+        tag.putInt("Variant", 1);
+        entity.readAdditionalSaveData(tag);
         return entity;
     });
 
