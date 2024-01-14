@@ -5,9 +5,9 @@ import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.api.client.model.IModelPartPose;
-import moe.plushie.armourers_workshop.core.armature.ArmatureModifier;
+import moe.plushie.armourers_workshop.core.armature.JointModifier;
 
-public class DefaultJointBinder extends ArmatureModifier {
+public class DefaultJointBinder extends JointModifier {
 
     private final String name;
 

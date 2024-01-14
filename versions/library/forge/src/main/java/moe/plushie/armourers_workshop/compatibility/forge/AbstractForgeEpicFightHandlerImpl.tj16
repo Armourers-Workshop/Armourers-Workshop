@@ -1,0 +1,17 @@
+package moe.plushie.armourers_workshop.compatibility.forge;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import yesman.epicfight.api.animation.Joint;
+import yesman.epicfight.api.utils.math.OpenMatrix4f;
+
+import java.nio.FloatBuffer;
+
+@Available("[1.16, 1.18)")
+public class AbstractForgeEpicFightHandlerImpl {
+
+    public static void copyTo(Joint joint, OpenMatrix4f[] poses, FloatBuffer buf) {
+        OpenMatrix4f jointMatrix = poses[joint.getId()];
+        jointMatrix.store(buf);
+        buf.rewind();
+    }
+}

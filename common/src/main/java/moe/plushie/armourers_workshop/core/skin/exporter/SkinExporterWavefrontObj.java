@@ -102,7 +102,6 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
             IVector3i pos = part.getType().getRenderOffset();
             poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
             // apply the marker rotation and offset.
-            transform.setup(0, null);
             transform.apply(poseStack);
             exportPart(poseStack, task.skinFaces, part, task.skin, os, textureBuilder, partIndex++);
         }

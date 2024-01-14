@@ -1,0 +1,89 @@
+{
+  "type": "epicfight:armature",
+  "target": "armourers_workshop:humanoid",
+  "joint": {
+    "Head": "Head",
+    "Chest": "Chest",
+    "Torso": "Torso",
+    "Skirt": {
+      "target": "Torso"
+    },
+    "Arm_L": "Arm_L",
+    "Arm_R": "Arm_R",
+    "Hand_L": "Hand_L",
+    "Hand_R": "Hand_R",
+    "Thigh_L": "Thigh_L",
+    "Thigh_R": "Thigh_R",
+    "Leg_L": "Leg_L",
+    "Leg_R": "Leg_R",
+    "Foot_L": "Leg_L",
+    "Foot_R": "Leg_R",
+    "Wing_L": {
+      "target": "Root"
+    },
+    "Wing_R": {
+      "target": "Root"
+    },
+    "Phalanx_L": {
+      "target": "Chest"
+    },
+    "Phalanx_R": {
+      "target": "Chest"
+    }
+  },
+  "transform": {
+    "translate": {
+      "Head": [ 0, 24, 0 ],
+      "Chest": [ 0, 24, 0 ],
+      "Torso": [ 0, 18, 0 ],
+      "Skirt": [ 0, 12, 0 ],
+      "Arm_L": [ -5, 22, 0 ],
+      "Arm_R": [ 5, 22, 0 ],
+      "Hand_L": [ -5, 18, 0 ],
+      "Hand_R": [ 5, 18, 0 ],
+      "Thigh_L": [ -2, 12, 0 ],
+      "Thigh_R": [ 2, 12, 0 ],
+      "Leg_L": [ -2, 6, 0 ],
+      "Leg_R": [ 2, 6, 0 ],
+      "Foot_L": [ -2, 12, 0 ],
+      "Foot_R": [ 2, 12, 0 ],
+      "Wing_L": [ 0, 24, 2 ],
+      "Wing_R": [ 0, 24, 2 ],
+      "Phalanx_L": [ 0, 24, 2 ],
+      "Phalanx_R": [ 0, 24, 2 ]
+    }
+  },
+  "override": {
+    "overrideModelHead": "Head",
+    "overrideModelChest": [
+      "Chest",
+      "Torso"
+    ],
+    "overrideModelArmLeft": [
+      "Arm_L",
+      "Hand_L",
+      "Shoulder_L",
+      "Elbow_L"
+    ],
+    "overrideModelArmRight": [
+      "Arm_R",
+      "Hand_R",
+      "Shoulder_R",
+      "Elbow_R"
+    ],
+    "overrideModelLegLeft": [
+      "Thigh_L",
+      "Leg_L",
+      "Knee_L"
+    ],
+    "overrideModelLegRight": [
+      "Thigh_R",
+      "Leg_R",
+      "Knee_R"
+    ],
+    "hideOverlayHead": "Hat"
+  },
+  "model": [
+    "minecraft:model/humanoid"
+  ]
+}

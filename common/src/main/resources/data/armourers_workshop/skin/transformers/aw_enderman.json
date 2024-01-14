@@ -1,0 +1,7 @@
+{
+  "type": "armourers_workshop:armature",
+  "parent": "armourers_workshop:skin/transformers/aw_humanoid",
+  "model": [
+    "minecraft:model/enderman"
+  ]
+}

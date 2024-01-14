@@ -1,0 +1,118 @@
+{
+  "type": "armourers_workshop:armature",
+  "parent": "armourers_workshop:skin/transformers/aw_humanoid",
+  "joint": {
+    "Head": {
+      "target": "head",
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_head"
+      ]
+    },
+    "Chest": {
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_body"
+      ]
+    },
+    "Torso": {
+      "translate": [ 0, 3, 0 ],
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_body"
+      ]
+    },
+    "Skirt": {
+      "translate": [ 0, 6, 0 ],
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_body"
+      ]
+    },
+    "Arm_L": {
+      "target": "left_arm",
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_body"
+      ]
+    },
+    "Arm_R": {
+      "target": "right_arm",
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_body"
+      ]
+    },
+    "Hand_L": {
+      "target": "left_arm",
+      "translate": [ 0, 2, 0 ],
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_body"
+      ]
+    },
+    "Hand_R": {
+      "target": "right_arm",
+      "translate": [ 0, 2, 0 ],
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_body"
+      ]
+    },
+    "Thigh_L": {
+      "translate": [ -1, 6, 0 ],
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_body"
+      ]
+    },
+    "Thigh_R": {
+      "translate": [ 1, 6, 0 ],
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_body"
+      ]
+    },
+    "Leg_L": {
+      "translate": [ -1, 9, 0 ],
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_body"
+      ]
+    },
+    "Leg_R": {
+      "translate": [ 1, 9, 0 ],
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_body"
+      ]
+    },
+    "Foot_L": {
+      "translate": [ -1, 6, 0 ],
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_body"
+      ]
+    },
+    "Foot_R": {
+      "translate": [ 1, 6, 0 ],
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_body"
+      ]
+    },
+    "Wing_L": {
+      "translate": [ 0, 0, 1 ],
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_body"
+      ]
+    },
+    "Wing_R": {
+      "translate": [ 0, 0, 1 ],
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_body"
+      ]
+    },
+    "Phalanx_L": {
+      "translate": [ 0, 0, 1 ],
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_wing"
+      ]
+    },
+    "Phalanx_R": {
+      "translate": [ 0, 0, 1 ],
+      "modifier": [
+        "armourers_workshop:modifier/apply_ally_wing"
+      ]
+    }
+  },
+  "model": [
+    "minecraft:model/allay"
+  ]
+}

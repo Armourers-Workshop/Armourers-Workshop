@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedItemModel;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
@@ -39,21 +38,18 @@ public class SkinModelManager {
         return INSTANCE;
     }
 
-    public BakedModel getModel(BakedSkinPart bakedPart, BakedSkin bakedSkin, ItemStack itemStack, Entity entity) {
-        return getModel(bakedPart, bakedSkin, itemStack, entity.getLevel(), entity);
+    public BakedModel getModel(ISkinPartType partType, @Nullable BakedItemModel itemModel, ItemStack itemStack, Entity entity) {
+        return getModel(partType, itemModel, itemStack, entity.getLevel(), entity);
     }
 
-    public BakedModel getModel(BakedSkinPart bakedPart, BakedSkin bakedSkin, ItemStack itemStack, @Nullable Level level, @Nullable Entity entity) {
-        // yep, we prefer to use the overridden item model.
-        BakedItemModel itemModel = bakedSkin.getItemModel();
-        if (itemModel != null) {
-            ClientLevel clientWorld = ObjectUtils.safeCast(level, ClientLevel.class);
-            LivingEntity livingEntity = ObjectUtils.safeCast(entity, LivingEntity.class);
-            return itemModel.resolve(itemModel, itemStack, clientWorld, livingEntity, 0);
-        }
-        BakedModel bakedModel = loadModel(bakedPart.getType());
+    public BakedModel getModel(ISkinPartType partType, @Nullable BakedItemModel itemModel, ItemStack itemStack, @Nullable Level level, @Nullable Entity entity) {
         ClientLevel clientWorld = ObjectUtils.safeCast(level, ClientLevel.class);
         LivingEntity livingEntity = ObjectUtils.safeCast(entity, LivingEntity.class);
+        // we prefer to use the overridden item model.
+        if (itemModel != null) {
+            return itemModel.resolve(itemModel, itemStack, clientWorld, livingEntity, 0);
+        }
+        BakedModel bakedModel = loadModel(partType);
         return bakedModel.getOverrides().resolve(bakedModel, itemStack, clientWorld, livingEntity, 0);
     }
 

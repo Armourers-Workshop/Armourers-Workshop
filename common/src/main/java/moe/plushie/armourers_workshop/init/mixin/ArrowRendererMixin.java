@@ -15,6 +15,6 @@ public class ArrowRendererMixin<T extends AbstractArrow> {
 
     @Inject(method = "render(Lnet/minecraft/world/entity/projectile/AbstractArrow;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("HEAD"), cancellable = true)
     public void aw2$render(T entity, float p_225623_2_, float partialTicks, PoseStack poseStack, MultiBufferSource renderType, int light, CallbackInfo callback) {
-        ClientWardrobeHandler.onRenderArrow(entity, null, partialTicks, light, poseStack, renderType, callback);
+        ClientWardrobeHandler.onRenderArrow(entity, partialTicks, light, poseStack, renderType, callback);
     }
 }

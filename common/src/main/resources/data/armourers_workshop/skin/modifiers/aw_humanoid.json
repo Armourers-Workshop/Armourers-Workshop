@@ -4,7 +4,7 @@
     "Head": {
       "target": "head",
       "modifier": [
-        "armourers_workshop:baby_head_apt"
+        "armourers_workshop:modifier/baby_head_apt"
       ]
     },
     "Chest": "body",
@@ -15,7 +15,7 @@
     "Skirt": {
       "target": "body",
       "modifier": [
-        "armourers_workshop:body_to_skirt"
+        "armourers_workshop:modifier/body_to_skirt"
       ]
     },
     "Arm_L": "left_arm",
@@ -43,13 +43,13 @@
     "Wing_L": {
       "target": "body",
       "modifier": [
-        "armourers_workshop:body_to_flat_wing"
+        "armourers_workshop:modifier/body_to_flat_wing"
       ]
     },
     "Wing_R": {
       "target": "body",
       "modifier": [
-        "armourers_workshop:body_to_flat_wing"
+        "armourers_workshop:modifier/body_to_flat_wing"
       ]
     },
     "Phalanx_L": {

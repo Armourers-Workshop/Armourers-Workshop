@@ -39,6 +39,7 @@ public class ModDebugger {
     public static boolean itemOverride = false;
     public static boolean handOverride = false;
     public static boolean modelOverride = false;
+    public static boolean fishingHook = false;
 
     public static boolean textureBounds = false;
     public static boolean spin = false;

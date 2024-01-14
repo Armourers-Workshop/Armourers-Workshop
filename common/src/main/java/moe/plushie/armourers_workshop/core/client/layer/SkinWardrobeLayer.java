@@ -5,8 +5,8 @@ import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelBabyPose;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.compatibility.AbstractRenderLayer;
-import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
-import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightContext;
+import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
+import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
@@ -29,12 +29,14 @@ import manifold.ext.rt.api.auto;
 @Environment(EnvType.CLIENT)
 public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M extends IModel> extends AbstractRenderLayer<T, V> {
 
-    protected final SkinRenderer<T, M> skinRenderer;
+    protected final BakedArmature armature;
+    protected final BakedArmatureTransformer armatureTransformer;
     protected final RenderLayerParent<T, V> entityRenderer;
 
-    public SkinWardrobeLayer(SkinRenderer<T, M> skinRenderer, RenderLayerParent<T, V> renderer) {
+    public SkinWardrobeLayer(BakedArmatureTransformer armatureTransformer, RenderLayerParent<T, V> renderer) {
         super(renderer);
-        this.skinRenderer = skinRenderer;
+        this.armature = new BakedArmature(armatureTransformer.getArmature());
+        this.armatureTransformer = armatureTransformer;
         this.entityRenderer = renderer;
     }
 
@@ -44,17 +46,17 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         if (entity.isInvisible()) {
             return;
         }
-        PoseStack poseStack1 = poseStack;
+        auto poseStack1 = poseStack;
         M model = ModelHolder.of(getParentModel());
-        SkinRenderData renderData = SkinRenderData.of(entity);
+        auto renderData = SkinRenderData.of(entity);
         if (renderData == null) {
             return;
         }
-        EpicFlightContext epicFlightContext = renderData.epicFlightContext;
-        JointTransformModifier transformModifier = null;
+        auto finalTransformer = armatureTransformer;
+        auto epicFlightContext = renderData.epicFlightContext;
         if (epicFlightContext != null) {
-            poseStack = epicFlightContext.overridePostStack;
-            transformModifier = epicFlightContext.overrideTransformModifier;
+            poseStack = epicFlightContext.getPose();
+            finalTransformer = epicFlightContext.getTransformer();
         }
 
         poseStack.pushPose();
@@ -65,7 +67,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         }
 
         // render the contributor
-        ModContributors.Contributor contributor = ModContributors.by(entity);
+        auto contributor = ModContributors.by(entity);
         if (contributor != null && renderData.shouldRenderExtra()) {
             renderMagicCircle(poseStack1, buffers, entity.tickCount + entity.getId() * 31, partialTicks, 24, contributor.color, packedLightIn, OverlayTexture.NO_OVERLAY);
         }
@@ -73,11 +75,13 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         float f = 1 / 16f;
         poseStack.scale(f, f, f);
 
-        SkinRenderContext context = SkinRenderContext.alloc(renderData, packedLightIn, TickUtils.ticks(), null, poseStack, buffers);
-        context.setTransforms(transformModifier, entity, skinRenderer.getOverrideModel(model));
-        for (SkinRenderData.Entry entry : renderData.getArmorSkins()) {
+        finalTransformer.applyTo(armature);
+        auto context = SkinRenderContext.alloc(renderData, packedLightIn, TickUtils.ticks(), null, poseStack, buffers);
+        for (auto entry : renderData.getArmorSkins()) {
             context.setReferenced(SkinItemSource.create(entry.getRenderPriority(), entry.getItemStack()));
-            skinRenderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), context);
+            auto bakedSkin = entry.getBakedSkin();
+            bakedSkin.setupAnim(entity, context.getPartialTicks(), context.getReferenced());
+            SkinRenderer.render(entity, armature, bakedSkin, entry.getBakedScheme(), context);
         }
         context.release();
 

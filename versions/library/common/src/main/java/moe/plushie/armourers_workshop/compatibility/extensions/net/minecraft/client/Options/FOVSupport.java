@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.client.Options;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Options;
 

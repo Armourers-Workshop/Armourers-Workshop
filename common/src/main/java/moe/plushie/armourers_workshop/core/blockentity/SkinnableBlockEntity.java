@@ -349,7 +349,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
             return null;
         }
         float f = 1 / 16f;
-        Rectangle3f box = bakedSkin.getRenderBounds(null, null, SkinItemSource.EMPTY).copy();
+        Rectangle3f box = bakedSkin.getRenderBounds(SkinItemSource.EMPTY).copy();
         box.mul(OpenMatrix4f.createScaleMatrix(-f, -f, f));
         return box;
     }

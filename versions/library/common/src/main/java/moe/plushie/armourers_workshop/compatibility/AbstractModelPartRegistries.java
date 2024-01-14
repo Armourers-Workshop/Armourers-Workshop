@@ -10,6 +10,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Available("[1.18, )")
@@ -93,7 +94,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("right_leg", root.getSafeChild("right_leg"));
         });
 
-        ModelHolder.register(AbstractSkinnableModels.IRON_GOLE, CachedModel.Humanoid::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.IRON_GOLEM, CachedModel.Humanoid::new, (model, it) -> {
             ModelPart root = model.root();
             it.put("hat", root.getSafeChild("head"));
             it.put("head", root.getSafeChild("head"));
@@ -103,6 +104,23 @@ public abstract class AbstractModelPartRegistries {
             it.put("left_leg", root.getSafeChild("left_leg"));
             it.put("right_leg", root.getSafeChild("right_leg"));
         });
+
+        ModelHolder.register(AbstractSkinnableModels.BOAT, (model, it) -> {
+            List<ModelPart> parts = model.parts();
+            it.put("bottom", parts.get(0));
+            //it.put("back", parts.get(1));
+            //it.put("front", parts.get(2));
+            //it.put("right", parts.get(3));
+            //it.put("left", parts.get(4));
+            it.put("left_paddle", parts.get(5));
+            it.put("right_paddle", parts.get(6));
+        });
+//        ModelHolder.register(AbstractSkinnableModels.RAFT, CachedModel.Humanoid::new, (model, it) -> {
+//            List<ModelPart> parts = model.parts();
+//            it.put("bottom", parts.get(0));
+//            it.put("left_paddle", parts.get(1));
+//            it.put("right_paddle", parts.get(2));
+//        });
 
         ModelHolder.registerOptional(AbstractSkinnableModels.ALLAY, CachedModel.Humanoid::new, (model, it) -> {
             ModelPart root = model.root();

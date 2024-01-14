@@ -34,7 +34,6 @@ public class SkinPreviewData {
             SkinTransform offset = SkinTransform.createTranslateTransform(pos.getX(), pos.getY(), pos.getZ());
             // apply the marker rotation and offset.
             SkinPartTransform transform = new SkinPartTransform(part, offset);
-            transform.setup(0, null);
             allCubes.add(Pair.of(transform, part.getCubeData()));
         });
         return new SkinPreviewData(allCubes);

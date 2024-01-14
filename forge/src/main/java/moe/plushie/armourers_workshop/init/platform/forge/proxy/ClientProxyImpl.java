@@ -59,8 +59,8 @@ public class ClientProxyImpl {
             }
         });
 
-        Registry.willRenderLivingEntityFO(ClientWardrobeHandler::onRenderLivingPre);
-        Registry.didRenderLivingEntityFO(ClientWardrobeHandler::onRenderLivingPost);
+        Registry.willRenderLivingEntityFO(ClientWardrobeHandler::onRenderLivingEntityPre);
+        Registry.didRenderLivingEntityFO(ClientWardrobeHandler::onRenderLivingEntityPost);
 
         NotificationCenterImpl.observer(RenderArmEvent.class, event -> {
             if (!ModConfig.enableFirstPersonSkinRenderer()) {

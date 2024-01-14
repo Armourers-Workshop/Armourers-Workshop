@@ -86,15 +86,6 @@ public class SkinTransform implements ITransformf, ISkinTransform {
     }
 
     @Override
-    public void pre(IPoseStack poseStack) {
-    }
-
-    @Override
-    public void post(IPoseStack poseStack) {
-        apply(poseStack);
-    }
-
-    @Override
     public void apply(IPoseStack poseStack) {
         if (this == IDENTITY) {
             return;

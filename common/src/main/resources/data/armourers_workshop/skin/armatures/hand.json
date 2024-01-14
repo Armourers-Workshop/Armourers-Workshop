@@ -1,0 +1,34 @@
+{
+  "joint": {
+    "Arm_L": {
+      "id": "armourers:chest.leftArm",
+      "transform": {
+        "translate": [ -5, -2, 0 ],
+        "rotation": [ 180, 180, -5 ]
+      }
+    },
+    "Arm_R": {
+      "id": "armourers:chest.rightArm",
+      "transform": {
+        "translate": [ 5, -2, 0 ],
+        "rotation": [ 180, 180, 5 ]
+      }
+    },
+    "Hand_L": {
+      "id": "armourers:chest.leftArm2",
+      "transform": {
+        "translate": [ -5, -2, 0 ],
+        "rotation": [ 180, 180, -5 ],
+        "offset": [ 0, 4, 0 ]
+      }
+    },
+    "Hand_R": {
+      "id": "armourers:chest.rightArm2",
+      "transform": {
+        "translate": [ 5, -2, 0 ],
+        "rotation": [ 180, 180, 5 ],
+        "offset": [ 0, 4, 0 ]
+      }
+    }
+  }
+}

@@ -5,11 +5,10 @@ import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.api.client.model.IModelPartPose;
-import moe.plushie.armourers_workshop.core.armature.ArmatureModifier;
-import moe.plushie.armourers_workshop.core.armature.Joints;
+import moe.plushie.armourers_workshop.core.armature.JointModifier;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 
-public class AllayWingJointModifier extends ArmatureModifier {
+public class AllayWingJointModifier extends JointModifier {
 
     @Override
     public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
@@ -35,7 +34,7 @@ public class AllayWingJointModifier extends ArmatureModifier {
     }
 
     private IModelPart getWingPart(IJoint joint, IModel model) {
-        if (joint == Joints.BIPPED_RIGHT_PHALANX) {
+        if (joint.getName().equals("Phalanx_R")) {
             return model.getPart("right_wing");
         }
         return model.getPart("left_wing");

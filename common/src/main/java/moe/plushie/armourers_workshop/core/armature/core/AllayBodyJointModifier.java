@@ -5,9 +5,9 @@ import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.api.client.model.IModelPartPose;
-import moe.plushie.armourers_workshop.core.armature.ArmatureModifier;
+import moe.plushie.armourers_workshop.core.armature.JointModifier;
 
-public class AllayBodyJointModifier extends ArmatureModifier {
+public class AllayBodyJointModifier extends JointModifier {
 
     @Override
     public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {

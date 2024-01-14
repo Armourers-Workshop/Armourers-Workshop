@@ -15,6 +15,6 @@ public class ThrownTridentRendererMixin<T extends ThrownTrident> {
 
     @Inject(method = "render(Lnet/minecraft/world/entity/projectile/ThrownTrident;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("HEAD"), cancellable = true)
     public void aw2$render(T entity, float p_225623_2_, float partialTicks, PoseStack poseStack, MultiBufferSource renderType, int light, CallbackInfo callback) {
-        ClientWardrobeHandler.onRenderTrident(entity, null, partialTicks, light, poseStack, renderType, callback);
+        ClientWardrobeHandler.onRenderTrident(entity, partialTicks, light, poseStack, renderType, callback);
     }
 }

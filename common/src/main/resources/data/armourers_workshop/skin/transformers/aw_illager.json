@@ -1,0 +1,11 @@
+{
+  "type": "armourers_workshop:armature",
+  "parent": "armourers_workshop:skin/transformers/aw_humanoid",
+  "override": {
+    "overrideModelArmLeft": "arms",
+    "overrideModelArmRight": "arms"
+  },
+  "model": [
+    "minecraft:model/illager"
+  ]
+}

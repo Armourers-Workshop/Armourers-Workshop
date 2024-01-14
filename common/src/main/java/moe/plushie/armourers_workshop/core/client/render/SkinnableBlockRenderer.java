@@ -3,10 +3,15 @@ package moe.plushie.armourers_workshop.core.client.render;
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
+import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
+import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
+import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.TickUtils;
@@ -17,8 +22,15 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.function.Supplier;
+
+import manifold.ext.rt.api.auto;
+
 @Environment(EnvType.CLIENT)
 public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends AbstractBlockEntityRenderer<T> {
+
+    private final BakedArmature armature = new BakedArmature(Armatures.ANY);
+    private final Supplier<MannequinEntity> placeholder = PlaceholderManager.MANNEQUIN;
 
     public SkinnableBlockRenderer(Context context) {
         super(context);
@@ -26,9 +38,9 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
 
     @Override
     public void render(T entity, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
-        SkinDescriptor descriptor = entity.getDescriptor();
-        SkinRenderTesselator tesselator = SkinRenderTesselator.create(descriptor, Tickets.RENDERER);
-        if (tesselator == null) {
+        auto descriptor = entity.getDescriptor();
+        auto skin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
+        if (skin == null) {
             return;
         }
         float f = 1 / 16f;
@@ -43,16 +55,14 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
         poseStack.scale(f, f, f);
         poseStack.scale(-1, -1, 1);
 
-        tesselator.setLightmap(light);
-        tesselator.setPartialTicks(TickUtils.ticks());
-        tesselator.setColorScheme(descriptor.getColorScheme());
-
-        tesselator.draw(poseStack, buffers);
+        SkinRenderContext context = SkinRenderContext.alloc(null, light, TickUtils.ticks(), poseStack, buffers);
+        SkinRenderer.render(placeholder.get(), armature, skin, descriptor.getColorScheme(), context);
+        context.release();
 
         poseStack.popPose();
 
         if (ModDebugger.skinnable) {
-            tesselator.getBakedSkin().getBlockBounds().forEach((pos, rect) -> {
+            skin.getBlockBounds().forEach((pos, rect) -> {
                 poseStack.pushPose();
                 poseStack.translate(0.5f, 0.5f, 0.5f);
                 poseStack.scale(f, f, f);

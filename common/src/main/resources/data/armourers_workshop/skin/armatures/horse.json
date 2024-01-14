@@ -1,0 +1,43 @@
+{
+  "joint": {
+    "Head": {
+      "id": "armourers:horse.head"
+    },
+    "Neck": {
+      "id": "armourers:horse.neck"
+    },
+    "Chest": {
+      "id": "armourers:horse.chest"
+    },
+    "Thigh_LF": {
+      "id": "armourers:horse.left_front_leg"
+    },
+    "Thigh_RF": {
+      "id": "armourers:horse.right_front_leg"
+    },
+    "Thigh_LH": {
+      "id": "armourers:horse.left_hind_leg"
+    },
+    "Thigh_RH": {
+      "id": "armourers:horse.right_hind_leg"
+    },
+    "Leg_LF": {
+      "id": "armourers:horse.left_front_leg2"
+    },
+    "Leg_RF": {
+      "id": "armourers:horse.right_front_leg2"
+    },
+    "Leg_LH": {
+      "id": "armourers:horse.left_hind_leg2"
+    },
+    "Leg_RH": {
+      "id": "armourers:horse.right_hind_leg2"
+    },
+    "Tail": {
+      "id": "armourers:horse.tail"
+    }
+  },
+  "type": [
+    "armourers:horse"
+  ]
+}

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 public class SkinPartTransform implements ISkinTransform {
 
@@ -30,12 +31,8 @@ public class SkinPartTransform implements ISkinTransform {
         }
     }
 
-    public void setup(float partialTicks, @Nullable Entity entity) {
-        for (ISkinTransform transform : transforms) {
-            if (transform instanceof SkinWingsTransform) {
-                ((SkinWingsTransform) transform).setup(partialTicks, entity);
-            }
-        }
+    public void forEach(Consumer<ISkinTransform> consumer) {
+        transforms.forEach(consumer);
     }
 
     private ISkinTransform getWingsTransform(SkinPart part) {
@@ -51,16 +48,17 @@ public class SkinPartTransform implements ISkinTransform {
     }
 
     @Override
-    public void pre(IPoseStack poseStack) {
+    public void apply(IPoseStack poseStack) {
         for (ISkinTransform transform : transforms) {
-            transform.pre(poseStack);
+            transform.apply(poseStack);
         }
     }
 
-    @Override
-    public void post(IPoseStack poseStack) {
-        for (ISkinTransform transform : transforms) {
-            transform.post(poseStack);
-        }
+    public void addTransform(ISkinTransform transform) {
+        transforms.add(transform);
+    }
+
+    public void removeTransform(ISkinTransform transform) {
+        transforms.remove(transform);
     }
 }

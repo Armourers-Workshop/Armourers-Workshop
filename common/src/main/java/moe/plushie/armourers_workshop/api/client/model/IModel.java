@@ -13,4 +13,6 @@ public interface IModel extends IAssociatedContainer {
     IModelPart getPart(String name);
 
     Collection<IModelPart> getAllParts();
+
+    Class<?> getType();
 }

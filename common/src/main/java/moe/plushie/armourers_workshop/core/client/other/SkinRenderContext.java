@@ -2,11 +2,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import com.google.common.collect.Iterators;
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.api.armature.IJointTransform;
-import moe.plushie.armourers_workshop.api.client.model.IModel;
-import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
-import moe.plushie.armourers_workshop.core.armature.JointTransformModifier;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -15,7 +11,6 @@ import moe.plushie.armourers_workshop.utils.PoseUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -23,6 +18,7 @@ import java.util.Iterator;
 @Environment(EnvType.CLIENT)
 public class SkinRenderContext {
 
+    public static final SkinRenderContext EMPTY  = new SkinRenderContext(new PoseStack());
     private static final Iterator<SkinRenderContext> POOL = Iterators.cycle(ObjectUtils.makeItems(100, i -> new SkinRenderContext(new PoseStack())));
 
     private int lightmap = 0xf000f0;
@@ -38,8 +34,6 @@ public class SkinRenderContext {
 
     private ColorScheme colorScheme = ColorScheme.EMPTY;
     private AbstractItemTransformType transformType = AbstractItemTransformType.NONE;
-
-    private IJointTransform[] transforms;
 
     private final PoseStack defaultPoseStack;
     private final PoseStackWrapper usingPoseStack;
@@ -77,15 +71,6 @@ public class SkinRenderContext {
         this.bufferProvider = null;
         this.renderData = null;
         this.buffers = null;
-
-        this.transforms = null;
-    }
-
-    public boolean shouldRenderPart(ISkinPartType partType) {
-        if (renderData != null && renderData.epicFlightContext != null && renderData.epicFlightContext.overrideParts != null) {
-            return !renderData.epicFlightContext.overrideParts.contains(partType);
-        }
-        return true;
     }
 
     public void pushPose() {
@@ -138,24 +123,6 @@ public class SkinRenderContext {
 
     public AbstractItemTransformType getTransformType() {
         return transformType;
-    }
-
-    public void setTransforms(Entity entity, IModel model) {
-        setTransforms(null, entity, model);
-    }
-
-    public void setTransforms(JointTransformModifier transformModifier, Entity entity, IModel model) {
-        if (entity == null || model == null) {
-            return;
-        }
-        if (transformModifier == null) {
-            transformModifier = model.getAssociatedObject(JointTransformModifier.DEFAULT);
-        }
-        transforms = transformModifier.getTransforms(entity.getType(), model);
-    }
-
-    public IJointTransform[] getTransforms() {
-        return transforms;
     }
 
     public void setReferenced(SkinItemSource itemSource) {

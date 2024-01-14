@@ -4,20 +4,17 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIControl;
-import com.mojang.blaze3d.platform.Lighting;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.ItemStack;
 
 import manifold.ext.rt.api.auto;
 
@@ -58,7 +55,7 @@ public class SkinIconView extends UIControl {
         poseStack.mulPose(Vector3f.YP.rotationDegrees(135));
         poseStack.scale(0.625f, 0.625f, 0.625f);
         poseStack.scale(si, si, si);
-        ExtendedItemRenderer.renderSkinInBox(bakedSkin, colorScheme, Vector3f.ONE, 1, 1, 1, 0, 0xf000f0, itemSource, poseStack, buffers);
+        ExtendedItemRenderer.renderSkinInBox(bakedSkin, colorScheme, Vector3f.ONE, 0, 0xf000f0, itemSource, poseStack, buffers);
         poseStack.popPose();
         buffers.endBatch();
     }

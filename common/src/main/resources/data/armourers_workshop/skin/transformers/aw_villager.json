@@ -1,0 +1,25 @@
+{
+  "type": "armourers_workshop:armature",
+  "parent": "armourers_workshop:skin/transformers/aw_humanoid",
+  "override": {
+    "hideOverlayHead": [
+      "hat",
+      "hat_rim"
+    ],
+    "overrideModelHead": [
+      "head",
+      "nose"
+    ],
+    "overrideModelChest": [
+      "body",
+      "jacket"
+    ]
+  },
+  "plugin": [
+    "armourers_workshop:plugin/fix_villager_layer",
+    "armourers_workshop:plugin/fix_villager_model"
+  ],
+  "model": [
+    "minecraft:model/villager"
+  ]
+}

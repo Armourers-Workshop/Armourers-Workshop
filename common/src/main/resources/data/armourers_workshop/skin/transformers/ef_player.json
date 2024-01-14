@@ -1,0 +1,19 @@
+{
+  "type": "epicfight:armature",
+  "parent": "armourers_workshop:skin/transformers/ef_humanoid",
+  "override": {
+    "hideOverlayHead": [
+      "hat",
+      "ear"
+    ],
+    "hideOverlayCloak": "cloak",
+    "hideOverlayChest": "jacket",
+    "hideOverlayArmLeft": "left_sleeve",
+    "hideOverlayArmRight": "right_sleeve",
+    "hideOverlayLegLeft": "left_pants",
+    "hideOverlayLegRight": "right_pants"
+  },
+  "model": [
+    "minecraft:model/player"
+  ]
+}

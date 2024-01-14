@@ -1,0 +1,17 @@
+{
+  "joint": {
+    "Body": {
+      "id": "armourers:boat.base"
+    },
+    "Paddle_L": {
+      "id": "armourers:boat.leftPaddle"
+    },
+    "Paddle_R": {
+      "id": "armourers:boat.rightPaddle"
+    }
+  },
+  "type": [
+    "armourers:boat"
+  ]
+}
+

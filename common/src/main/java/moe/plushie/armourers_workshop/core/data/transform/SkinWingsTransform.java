@@ -29,17 +29,13 @@ public class SkinWingsTransform implements ISkinTransform {
         this.isMirror = ((ICanRotation) partType).isMirror();
     }
 
-    public void setup(float partialTicks, @Nullable Entity entity) {
+    public void setup(@Nullable Entity entity, float partialTicks) {
         this.partialTicks = partialTicks;
         this.isFallFlying = entity instanceof LivingEntity && ((LivingEntity) entity).isFallFlying();
     }
 
     @Override
-    public void pre(IPoseStack poseStack) {
-    }
-
-    @Override
-    public void post(IPoseStack poseStack) {
+    public void apply(IPoseStack poseStack) {
         IVector3i point = marker.getPosition();
         float angle = (float) getRotationDegrees();
         Vector3f offset = new Vector3f(point.getX() + 0.5f, point.getY() + 0.5f, point.getZ() + 0.5f);

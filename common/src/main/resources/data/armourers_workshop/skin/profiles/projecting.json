@@ -2,11 +2,13 @@
   "locked": true,
   "slots": {
     "bow": 1,
-    "trident": 1
+    "trident": 1,
+    "fishing": 1
   },
   "entities": [
     "minecraft:arrow",
     "minecraft:trident",
-    "minecraft:spectral_arrow"
+    "minecraft:spectral_arrow",
+    "minecraft:fishing_bobber"
   ]
 }

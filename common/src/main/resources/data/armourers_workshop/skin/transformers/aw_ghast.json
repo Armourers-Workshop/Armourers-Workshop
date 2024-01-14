@@ -1,0 +1,16 @@
+{
+  "type": "armourers_workshop:armature",
+  "parent": "armourers_workshop:skin/transformers/aw_humanoid",
+  "joint": {
+    "Head": {
+      "translate": [ 0, 25.5, 0 ],
+      "scale": [ 2, 2, 2 ]
+    }
+  },
+  "override": {
+    "overrideModelHead": "*"
+  },
+  "model": [
+    "minecraft:model/ghast"
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "joint": {
+    "Hat": {
+      "id": "armourers:hat.base"
+    },
+    "Head": {
+      "id": "armourers:head.base",
+      "shape": {
+        "origin": [ -4, -8, -4 ],
+        "size": [ 8, 8, 8 ]
+      }
+    },
+    "Chest": {
+      "id": "armourers:chest.base",
+      "shape": {
+        "origin": [ -4, 0, -2 ],
+        "size": [ 8, 6, 4 ]
+      }
+    },
+    "Torso": {
+      "id": "armourers:chest.base2",
+      "shape": {
+        "origin": [ -4, 0, -2 ],
+        "size": [ 8, 6, 4 ]
+      },
+      "transform": {
+        "offset": [ 0, 6, 0 ]
+      }
+    },
+    "Skirt": {
+      "id": "armourers:legs.skirt",
+      "shape": {
+        "origin": [ -4, 0, -2 ],
+        "size": [ 8, 12, 4 ]
+      },
+      "transform": {
+        "translate": [ 0, 12, 0 ]
+      }
+    },
+    "Arm_L": {
+      "id": "armourers:chest.leftArm",
+      "shape": {
+        "origin": [ -1, -2, -2 ],
+        "size": [ 4, 6, 4 ]
+      },
+      "transform": {
+        "translate": [ 5, 2, 0 ],
+        "rotation": [ -10, 0, -10 ]
+      }
+    },
+    "Arm_R": {
+      "id": "armourers:chest.rightArm",
+      "shape": {
+        "origin": [ -3, -2, -2 ],
+        "size": [ 4, 6, 4 ]
+      },
+      "transform": {
+        "translate": [ -5, 2, 0 ],
+        "rotation": [ -15, 0, 10 ]
+      }
+    },
+    "Hand_L": {
+      "id": "armourers:chest.leftArm2",
+      "shape": {
+        "origin": [ -1, 0, -2 ],
+        "size": [ 4, 6, 4 ]
+      },
+      "transform": {
+        "translate": [ 5, 2, 0 ],
+        "rotation": [ -10, 0, -10 ],
+        "offset": [ 0, 4, 0 ]
+      }
+    },
+    "Hand_R": {
+      "id": "armourers:chest.rightArm2",
+      "shape": {
+        "origin": [ -3, 0, -2 ],
+        "size": [ 4, 6, 4 ]
+      },
+      "transform": {
+        "translate": [ -5, 2, 0 ],
+        "rotation": [ -15, 0, 10 ],
+        "offset": [ 0, 4, 0 ]
+      }
+    },
+    "Elbow_L": null,
+    "Elbow_R": null,
+    "Thigh_L": {
+      "id": "armourers:legs.leftLeg",
+      "shape": {
+        "origin": [ -2, 0, -2 ],
+        "size": [ 4, 6, 4 ]
+      },
+      "transform": {
+        "translate": [ -1.9, 12, 0 ],
+        "rotation": [ 1, 0, 1 ]
+      }
+    },
+    "Thigh_R": {
+      "id": "armourers:legs.rightLeg",
+      "shape": {
+        "origin": [ -2, 0, -2 ],
+        "size": [ 4, 6, 4 ]
+      },
+      "transform": {
+        "translate": [ 1.9, 12, 0 ],
+        "rotation": [ -1, 0, -1 ]
+      }
+    },
+    "Leg_L": {
+      "id": "armourers:legs.leftLeg2",
+      "shape": {
+        "origin": [ -2, 0, -2 ],
+        "size": [ 4, 6, 4 ]
+      },
+      "transform": {
+        "translate": [ -1.9, 12, 0 ],
+        "rotation": [ 1, 0, 1 ],
+        "offset": [ 0, 6, 0 ]
+      }
+    },
+    "Leg_R": {
+      "id": "armourers:legs.rightLeg2",
+      "shape": {
+        "origin": [ -2, 0, -2 ],
+        "size": [ 4, 6, 4 ]
+      },
+      "transform": {
+        "translate": [ 1.9, 12, 0 ],
+        "rotation": [ -1, 0, -1 ],
+        "offset": [ 0, 6, 0 ]
+      }
+    },
+    "Foot_L": {
+      "id": "armourers:feet.leftFoot",
+      "shape": {
+        "origin": [ -2, 8, -2 ],
+        "size": [ 4, 4, 4 ]
+      },
+      "transform": {
+        "translate": [ -1.9, 12, 0 ],
+        "rotation": [ 1, 0, 1 ]
+      }
+    },
+    "Foot_R": {
+      "id": "armourers:feet.rightFoot",
+      "shape": {
+        "origin": [ -2, 8, -2 ],
+        "size": [ 4, 4, 4 ]
+      },
+      "transform": {
+        "translate": [ 1.9, 12, 0 ],
+        "rotation": [ -1, 0, -1 ]
+      }
+    },
+    "Knee_L": null,
+    "Knee_R": null,
+    "Wing_L": {
+      "id": "armourers:wings.leftWing"
+    },
+    "Wing_R": {
+      "id": "armourers:wings.rightWing"
+    },
+    "Phalanx_L": {
+      "id": "armourers:wings.leftWing2",
+      "shape": {
+        "origin": [ 0, 0, 0 ],
+        "size": [ 4, 12, 1 ]
+      },
+      "transform": {
+        "translate": [ 0, 0, 2 ]
+      }
+    },
+    "Phalanx_R": {
+      "id": "armourers:wings.rightWing2",
+      "shape": {
+        "origin": [ -4, 0, 0 ],
+        "size": [ 4, 12, 1 ]
+      },
+      "transform": {
+        "translate": [ 0, 0, 2 ]
+      }
+    }
+  },
+  "type": [
+    "armourers:head",
+    "armourers:chest",
+    "armourers:legs",
+    "armourers:feet",
+    "armourers:wings",
+    "armourers:outfit"
+  ]
+}

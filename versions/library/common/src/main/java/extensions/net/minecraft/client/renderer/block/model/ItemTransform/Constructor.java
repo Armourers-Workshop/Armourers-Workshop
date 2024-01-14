@@ -29,6 +29,4 @@ public class Constructor {
         float sz = transform.getScale().getZ();
         return new ItemTransform(new Vector3f(rx, ry, rz), new Vector3f(tx, ty, tz), new Vector3f(sx, sy, sz));
     }
-
-
 }

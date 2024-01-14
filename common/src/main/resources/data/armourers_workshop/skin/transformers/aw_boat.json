@@ -1,0 +1,16 @@
+{
+  "type": "armourers_workshop:armature",
+  "target": "armourers_workshop:boat",
+  "joint": {
+    "Body":  {
+      "target": "bottom",
+      "translate": [ 0, 1, 0 ]
+    },
+    "Paddle_L": "left_paddle",
+    "Paddle_R": "right_paddle"
+  },
+  "model": [
+    "minecraft:model/boat",
+    "minecraft:model/raft"
+  ]
+}

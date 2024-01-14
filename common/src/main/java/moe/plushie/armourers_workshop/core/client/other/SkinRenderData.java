@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightContext;
+import moe.plushie.armourers_workshop.core.client.other.thirdparty.EpicFlightRenderContext;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
@@ -75,7 +75,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
     private int version = 0;
     private int lastVersion = Integer.MAX_VALUE;
 
-    public EpicFlightContext epicFlightContext;
+    public EpicFlightRenderContext epicFlightContext;
 
     public SkinRenderData(EntityType<?> entityType) {
     }

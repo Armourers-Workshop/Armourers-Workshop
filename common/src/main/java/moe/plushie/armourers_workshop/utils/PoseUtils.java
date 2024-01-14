@@ -10,6 +10,8 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+import java.nio.FloatBuffer;
+
 @Environment(EnvType.CLIENT)
 public class PoseUtils {
 
@@ -57,5 +59,13 @@ public class PoseUtils {
         if (offset != Vector3f.ZERO) {
             poseStack.translate(offset.getX(), offset.getY(), offset.getZ());
         }
+    }
+
+    public static OpenMatrix4f createPoseMatrix(FloatBuffer buffer) {
+        return new OpenMatrix4f(buffer);
+    }
+
+    public static OpenMatrix3f createNormalMatrix(FloatBuffer buffer) {
+        return new OpenMatrix3f(buffer);
     }
 }

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
+import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -31,7 +32,7 @@ public interface SkinRenderBufferSource {
         default void addShape(OpenVoxelShape shape, UIColor color, SkinRenderContext context) {
         }
 
-        default void addShape(IJointTransform[] transforms, SkinRenderContext context) {
+        default void addShape(BakedArmature armature, SkinRenderContext context) {
         }
     }
 }

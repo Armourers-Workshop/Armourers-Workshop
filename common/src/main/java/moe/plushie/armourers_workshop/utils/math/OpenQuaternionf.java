@@ -150,43 +150,33 @@ public class OpenQuaternionf implements IQuaternionf {
 //        return quaternion;
 //    }
 //
-//    public Vector3f toXYZ() {
-//        float f = this.w() * this.w();
-//        float g = this.x() * this.x();
-//        float h = this.y() * this.y();
-//        float i = this.z() * this.z();
-//        float j = f + g + h + i;
-//        float k = 2.0f * this.w() * this.x() - 2.0f * this.y() * this.z();
-//        float l = (float) Math.asin(k / j);
-//        if (Math.abs(k) > 0.999f * j) {
-//            return new Vector3f(2.0f * (float) Math.atan2(this.x(), this.w()), l, 0.0f);
-//        }
-//        return new Vector3f((float) Math.atan2(2.0f * this.y() * this.z() + 2.0f * this.x() * this.w(), f - g - h + i), l, (float) Math.atan2(2.0f * this.x() * this.y() + 2.0f * this.w() * this.z(), f + g - h - i));
-//    }
-//
-//    public Vector3f toXYZDegrees() {
-//        Vector3f vector3f = this.toXYZ();
-//        return new Vector3f((float) Math.toDegrees(vector3f.x()), (float) Math.toDegrees(vector3f.y()), (float) Math.toDegrees(vector3f.z()));
-//    }
-//
-//    public Vector3f toYXZ() {
-//        float f = this.w() * this.w();
-//        float g = this.x() * this.x();
-//        float h = this.y() * this.y();
-//        float i = this.z() * this.z();
-//        float j = f + g + h + i;
-//        float k = 2.0f * this.w() * this.x() - 2.0f * this.y() * this.z();
-//        float l = (float) Math.asin(k / j);
-//        if (Math.abs(k) > 0.999f * j) {
-//            return new Vector3f(l, 2.0f * (float) Math.atan2(this.y(), this.w()), 0.0f);
-//        }
-//        return new Vector3f(l, (float) Math.atan2(2.0f * this.x() * this.z() + 2.0f * this.y() * this.w(), f - g - h + i), (float) Math.atan2(2.0f * this.x() * this.y() + 2.0f * this.w() * this.z(), f - g + h - i));
-//    }
-//
-//    public Vector3f toYXZDegrees() {
-//        Vector3f vector3f = this.toYXZ();
-//        return new Vector3f((float) Math.toDegrees(vector3f.x()), (float) Math.toDegrees(vector3f.y()), (float) Math.toDegrees(vector3f.z()));
-//    }
+    public Vector3f toXYZ() {
+        float f = w * w;
+        float g = x * x;
+        float h = y * y;
+        float i = z * z;
+        float j = f + g + h + i;
+        float k = 2.0f * w * x - 2.0f * y * z;
+        float l = (float) Math.asin(k / j);
+        if (Math.abs(k) > 0.999f * j) {
+            return new Vector3f(2.0f * (float) Math.atan2(x, w), l, 0.0f);
+        }
+        return new Vector3f((float) Math.atan2(2.0f * y * z + 2.0f * x * w, f - g - h + i), l, (float) Math.atan2(2.0f * x * y + 2.0f * w * z, f + g - h - i));
+    }
+
+    public Vector3f toYXZ() {
+        float f = w * w;
+        float g = x * x;
+        float h = y * y;
+        float i = z * z;
+        float j = f + g + h + i;
+        float k = 2.0f * w * x - 2.0f * y * z;
+        float l = (float) Math.asin(k / j);
+        if (Math.abs(k) > 0.999f * j) {
+            return new Vector3f(l, 2.0f * (float) Math.atan2(y, w), 0.0f);
+        }
+        return new Vector3f(l, (float) Math.atan2(2.0f * x * z + 2.0f * y * w, f - g - h + i), (float) Math.atan2(2.0f * x * y + 2.0f * w * z, f - g + h - i));
+    }
 
     public boolean equals(Object object) {
         if (this == object) {
@@ -218,10 +208,10 @@ public class OpenQuaternionf implements IQuaternionf {
 
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Quaternionf[").append(this.w()).append(" + ");
-        stringBuilder.append(this.x()).append("i + ");
-        stringBuilder.append(this.y()).append("j + ");
-        stringBuilder.append(this.z()).append("k]");
+        stringBuilder.append("Quaternionf[").append(w).append(" + ");
+        stringBuilder.append(x).append("i + ");
+        stringBuilder.append(y).append("j + ");
+        stringBuilder.append(z).append("k]");
         return stringBuilder.toString();
     }
 
@@ -305,7 +295,7 @@ public class OpenQuaternionf implements IQuaternionf {
     }
 
     public OpenQuaternionf normalize() {
-        float f = this.x() * this.x() + this.y() * this.y() + this.z() * this.z() + this.w() * this.w();
+        float f = x * x + y * y + z * z + w * w;
         if (f > 1.0E-6f) {
             float g = MathUtils.fastInvSqrt(f);
             this.x *= g;

@@ -17,6 +17,6 @@ public class EntityRenderDispatcherMixin {
 
     @Inject(method = "onResourceManagerReload", at = @At("RETURN"))
     private void aw2$reloadResources(ResourceManager resourceManager, CallbackInfo ci) {
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, () -> SkinRendererManager.getInstance()::init);
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, () -> SkinRendererManager.getInstance()::reload);
     }
 }

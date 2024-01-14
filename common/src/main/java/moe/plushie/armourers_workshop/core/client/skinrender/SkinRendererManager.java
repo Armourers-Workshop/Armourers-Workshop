@@ -1,16 +1,12 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
-import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
-import moe.plushie.armourers_workshop.api.data.IAssociatedObjectProvider;
+import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
 import moe.plushie.armourers_workshop.core.client.layer.SkinWardrobeLayer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
-import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.utils.ModelHolder;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -20,20 +16,15 @@ import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import manifold.ext.rt.api.auto;
@@ -47,24 +38,21 @@ public class SkinRendererManager {
 
     private final HashMap<IEntityTypeProvider<?>, EntityProfile> entities = new HashMap<>();
 
-    private final ArrayList<SkinRenderer.Factory<SkinRenderer<?, ?>>> builders = new ArrayList<>();
-    private final ArrayList<Pair<Class<?>, LivingSkinRenderer.Plugin<?, ?>>> plugins = new ArrayList<>();
-
     public static SkinRendererManager getInstance() {
         return INSTANCE;
     }
 
-    public void init() {
+    public void reload() {
         EntityRenderDispatcher entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
         if (entityRenderManager == null) {
             // call again later!!!
-            RenderSystem.recordRenderCall(this::init);
+            RenderSystem.recordRenderCall(this::reload);
             return;
         }
-        RenderSystem.recordRenderCall(() -> _init(entityRenderManager));
+        RenderSystem.recordRenderCall(() -> _reload(entityRenderManager));
     }
 
-    private void _init(EntityRenderDispatcher entityRenderManager) {
+    private void _reload(EntityRenderDispatcher entityRenderManager) {
         SkinRendererManager skinRendererManager = getInstance();
 
         for (EntityRenderer<? extends Player> renderer : entityRenderManager.playerRenderers.values()) {
@@ -128,72 +116,63 @@ public class SkinRendererManager {
         });
     }
 
-    public <T extends SkinRenderer<?, ?>> void registerPlugin(Class<T> targetType, LivingSkinRenderer.Plugin<?, ?> plugin) {
-        plugins.add(Pair.of(targetType, plugin));
-    }
+//    @Nullable
+//    public BakedArmature getArmatureTransformer(@Nullable Entity entity, @Nullable Model entityModel, @Nullable EntityRenderer<?> entityRenderer) {
+//        if (entity == null) {
+//            return null;
+//        }
+//        EntityType<?> entityType = entity.getType();
+//        // when the caller does not provide the entity renderer we need to query it from managers.
+//        if (entityRenderer == null) {
+//            entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
+//        }
+//        // when the caller does not provide the entity model we need to query it from entity render.
+//        if (entityModel == null) {
+//            entityModel = getModel(entityRenderer);
+//        }
+//        return getArmatureTransformer(entityType, entityModel, entityRenderer);
+//    }
+//
+//    public BakedArmature getArmatureTransformer(EntityType<?> entityType, Model entityModel, EntityRenderer<?> entityRenderer) {
+//        // in the normal, the entityRenderer only have a model type,
+//        // but some mods(Custom NPC) generate dynamically models,
+//        // so we need to be compatible with that
+//        auto storage = getStorage(entityRenderer);
+//        return storage.computeIfAbsent(entityModel, (it) -> {
+//            // if it can't transform this, it means we do not support this renderer.
+//            IModel model = ModelHolder.ofNullable(entityModel);
+//            ArmatureTransformer transformer = SkinRendererManager2.DEFAULT.getTransformer(entityType, model);
+//            if (transformer != null) {
+//                ArrayList<ArmaturePlugin> plugins = Lists.newArrayList(transformer.getPlugins());
+//                plugins.forEach(plugin -> plugin.apply(entityRenderer));
+//                plugins.removeIf(plugin -> !plugin.freeze());
+//                BakedArmature armature = new BakedArmature(transformer.getArmature());
+//                armature.setPlugins(plugins);
+//                armature.setTransformer(transformer);
+//                return armature;
+//            }
+//            return null;
+//        });
+//    }
+//
+//    private HashMap<Object, BakedArmature> getStorage(EntityRenderer<?> entityRenderer) {
+//        IAssociatedObjectProvider dataProvider = (IAssociatedObjectProvider) entityRenderer;
+//        HashMap<Object, BakedArmature> storage = dataProvider.getAssociatedObject();
+//        if (storage == null) {
+//            storage = new HashMap<>();
+//            dataProvider.setAssociatedObject(storage);
+//        }
+//        return storage;
+//    }
+//
+//    protected EntityModel<?> getModel(EntityRenderer<?> entityRenderer) {
+//        if (entityRenderer instanceof RenderLayerParent) {
+//            return ((RenderLayerParent<?, ?>) entityRenderer).getModel();
+//        }
+//        return null;
+//    }
 
-    public <T extends LivingEntity, M extends IModel> void applyPlugins(SkinRenderer<T, M> renderer, Consumer<LivingSkinRenderer.Plugin<T, M>> applier) {
-        plugins.forEach(pair -> {
-            if (pair.getKey().isInstance(renderer)) {
-                applier.accept(ObjectUtils.unsafeCast(pair.getValue()));
-            }
-        });
-    }
-
-    public void registerRenderer(SkinRenderer.Factory<SkinRenderer<?, ?>> builder) {
-        builders.add(builder);
-    }
-
-    @Nullable
-    public SkinRenderer<Entity, IModel> getRenderer(@Nullable Entity entity, @Nullable Model entityModel, @Nullable EntityRenderer<?> entityRenderer) {
-        if (entity == null) {
-            return null;
-        }
-        EntityType<?> entityType = entity.getType();
-        // when the caller does not provide the entity renderer we need to query it from managers.
-        if (entityRenderer == null) {
-            entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
-        }
-        // when the caller does not provide the entity model we need to query it from entity render.
-        if (entityModel == null) {
-            entityModel = getModel(entityRenderer);
-        }
-        return getRenderer(entityType, entityModel, entityRenderer);
-    }
-
-    @Nullable
-    protected <T extends Entity, M extends IModel> SkinRenderer<T, M> getRenderer(EntityType<?> entityType, Model entityModel, EntityRenderer<?> entityRenderer) {
-        // in the normal, the entityRenderer only one model type,
-        // but some mods(Custom NPC) generate dynamically models,
-        // so we need to be compatible with that
-        Storage<T, M> storage = Storage.of(entityRenderer);
-        return storage.computeIfAbsent(entityModel, key -> createRenderer(entityType, entityRenderer, entityModel));
-    }
-
-
-    @Nullable
-    protected <T extends Entity, M extends IModel> SkinRenderer<T, M> createRenderer(EntityType<?> entityType, EntityRenderer<?> entityRenderer, Model entityModel) {
-        EntityProfile entityProfile = ModEntityProfiles.getProfile(entityType);
-        if (entityProfile == null) {
-            return null;
-        }
-        for (SkinRenderer.Factory<SkinRenderer<?, ?>> builder : builders) {
-            SkinRenderer<?, ?> skinRenderer = builder.create(entityType, entityRenderer, entityModel, entityProfile);
-            if (skinRenderer != null) {
-                return ObjectUtils.unsafeCast(skinRenderer);
-            }
-        }
-        return null;
-    }
-
-    protected EntityModel<?> getModel(EntityRenderer<?> entityRenderer) {
-        if (entityRenderer instanceof RenderLayerParent) {
-            return ((RenderLayerParent<?, ?>) entityRenderer).getModel();
-        }
-        return null;
-    }
-
-    private <T extends LivingEntity, V extends EntityModel<T>, M extends IModel> void setupRenderer(EntityType<?> entityType, LivingEntityRenderer<T, V> livingRenderer, boolean autoInject) {
+    private <T extends LivingEntity, V extends EntityModel<T>> void setupRenderer(EntityType<?> entityType, LivingEntityRenderer<T, V> livingRenderer, boolean autoInject) {
         RenderLayer<T, V> armorLayer = null;
         for (RenderLayer<T, V> layerRenderer : livingRenderer.layers) {
             if (layerRenderer instanceof HumanoidArmorLayer<?, ?, ?>) {
@@ -206,63 +185,50 @@ public class SkinRendererManager {
         if (autoInject && armorLayer == null) {
             return;
         }
-        SkinRenderer<T, M> skinRenderer = getRenderer(entityType, livingRenderer.getModel(), livingRenderer);
-        if (skinRenderer != null) {
-            livingRenderer.addLayer(new SkinWardrobeLayer<>(skinRenderer, livingRenderer));
+        auto transformer = BakedArmatureTransformer.defaultBy(entityType, livingRenderer.getModel(), livingRenderer);
+        if (transformer != null) {
+            livingRenderer.addLayer(new SkinWardrobeLayer<>(transformer, livingRenderer));
         }
     }
 
 
-    public <T extends Entity, M extends IModel> void willRender(T entity, Model entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
-        auto renderer = getRenderer(entity, entityModel, entityRenderer);
-        if (renderer != null) {
+    public void willRender(Entity entity, Model entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
+//        auto armature = getArmature(entity, entityModel, entityRenderer);
+//        if (armature != null) {
+//            SkinRenderContext context1 = context.get();
+//            armature.willRender(entity, ModelHolder.of(entityModel), renderData, context1);
+//            context1.release();
+//        }
+    }
+
+    public void willRenderModel(Entity entity, Model entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
+        BakedArmatureTransformer transformer = BakedArmatureTransformer.defaultBy(entity, entityModel, entityRenderer);
+        if (transformer != null) {
             SkinRenderContext context1 = context.get();
-            renderer.willRender(entity, ModelHolder.of(entityModel), renderData, context1);
+            transformer.activate(entity, context1);
             context1.release();
         }
+//        auto armature = getArmatureTransformer(entity, entityModel, entityRenderer);
+//        if (armature != null) {
+//            SkinRenderContext context1 = context.get();
+//            armature.prepare(entity, context1);
+//            context1.release();
+//        }
     }
 
-    public <T extends Entity, M extends IModel> void willRenderModel(T entity, Model entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
-        auto renderer = getRenderer(entity, entityModel, entityRenderer);
-        if (renderer != null) {
+    public void didRender(Entity entity, Model entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
+        BakedArmatureTransformer transformer = BakedArmatureTransformer.defaultBy(entity, entityModel, entityRenderer);
+        if (transformer != null) {
             SkinRenderContext context1 = context.get();
-            renderer.willRenderModel(entity, ModelHolder.of(entityModel), renderData, context1);
+            transformer.deactivate(entity, context1);
             context1.release();
         }
-    }
 
-    public <T extends Entity, M extends IModel> void didRender(T entity, Model entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
-        auto renderer = getRenderer(entity, entityModel, entityRenderer);
-        if (renderer != null) {
-            SkinRenderContext context1 = context.get();
-            renderer.didRender(entity, ModelHolder.of(entityModel), renderData, context1);
-            context1.release();
-        }
-    }
-
-    public static class Storage<T extends Entity, M extends IModel> {
-
-        private final HashMap<Object, SkinRenderer<T, M>> skinRenderers = new HashMap<>();
-
-        public static <T extends Entity, V extends Model, M extends IModel> Storage<T, M> of(EntityRenderer<?> entityRenderer) {
-            IAssociatedObjectProvider dataProvider = (IAssociatedObjectProvider) entityRenderer;
-            Storage<T, M> storage = dataProvider.getAssociatedObject();
-            if (storage == null) {
-                storage = new Storage<>();
-                dataProvider.setAssociatedObject(storage);
-            }
-            return storage;
-        }
-
-        public SkinRenderer<T, M> computeIfAbsent(Model entityModel, Function<Object, SkinRenderer<T, M>> provider) {
-            return skinRenderers.computeIfAbsent(getModelClass(entityModel), provider);
-        }
-
-        private Class<?> getModelClass(Model model) {
-            if (model != null) {
-                return model.getClass();
-            }
-            return Model.class;
-        }
+//        auto armature = getArmatureTransformer(entity, entityModel, entityRenderer);
+//        if (armature != null) {
+//            SkinRenderContext context1 = context.get();
+//            armature.clean(entity, context1);
+//            context1.release();
+//        }
     }
 }

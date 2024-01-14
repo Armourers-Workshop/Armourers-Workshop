@@ -1,0 +1,16 @@
+{
+  "type": "armourers_workshop:armature",
+  "parent": "armourers_workshop:skin/transformers/aw_humanoid",
+  "joint": {
+    "Head": "head"
+  },
+  "override": {
+    "overrideModelHead": [
+      "head",
+      "hair"
+    ]
+  },
+  "model": [
+    "minecraft:model/creeper"
+  ]
+}

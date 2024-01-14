@@ -15,6 +15,6 @@ public abstract class ForgeLivingRendererMixin<T extends LivingEntity> {
 
     @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;setupAnim(Lnet/minecraft/world/entity/Entity;FFFFF)V", shift = At.Shift.AFTER))
     private void aw2$render(T entity, float p_225623_2_, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, CallbackInfo ci) {
-        ClientWardrobeHandler.onRenderLiving(entity, partialTicks, light, poseStack, buffers, LivingEntityRenderer.class.cast(this));
+        ClientWardrobeHandler.onRenderLivingEntity(entity, partialTicks, light, poseStack, buffers, LivingEntityRenderer.class.cast(this));
     }
 }

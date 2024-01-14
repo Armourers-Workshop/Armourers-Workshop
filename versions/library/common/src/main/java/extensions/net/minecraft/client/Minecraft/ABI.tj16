@@ -1,0 +1,19 @@
+package extensions.net.minecraft.client.Minecraft;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
+import net.minecraft.client.Minecraft;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+import manifold.ext.rt.api.auto;
+
+@Extension
+@Available("[1.16, 1.20)")
+public class ABI {
+
+    public static OpenQuaternionf getCameraOrientation(@This Minecraft minecraft) {
+        auto quat = minecraft.getEntityRenderDispatcher().cameraOrientation();
+        return new OpenQuaternionf(quat.i(), quat.j(), quat.k(), quat.r());
+    }
+}

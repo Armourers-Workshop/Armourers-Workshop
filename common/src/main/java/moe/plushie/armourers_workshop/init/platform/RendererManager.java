@@ -11,7 +11,7 @@ public class RendererManager {
     public static void init() {
         AbstractModelPartRegistries.init();
         SkinRendererRegistries.init();
-        SkinRendererManager.getInstance().init();
+        SkinRendererManager.getInstance().reload();
     }
 
 }

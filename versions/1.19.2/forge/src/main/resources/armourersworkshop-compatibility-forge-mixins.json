@@ -5,6 +5,7 @@
   "client": [
     "ForgeItemRendererMixin",
     "ForgeEpicFightRendererMixin",
+    "ForgeEpicFightFirstPersonRendererMixin",
     "ForgeCuriosAddonMixin"
   ],
   "mixins": [

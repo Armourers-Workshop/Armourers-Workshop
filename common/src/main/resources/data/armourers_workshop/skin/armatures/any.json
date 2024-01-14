@@ -1,0 +1,11 @@
+{
+  "joint": {
+    "Root": {
+      "id": "*"
+    }
+  },
+  "type": [
+    "armourers:block",
+    "armourers:part"
+  ]
+}

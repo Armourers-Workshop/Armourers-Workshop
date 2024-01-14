@@ -1,0 +1,17 @@
+{
+  "type": "armourers_workshop:armature",
+  "target": "armourers_workshop:horse",
+  "joint": {
+    "Head": "head",
+    "Neck": "neck",
+    "Chest": "body",
+    "Thigh_LF": "left_front_leg",
+    "Thigh_RF": "right_front_leg",
+    "Thigh_LB": "left_hind_leg",
+    "Thigh_RB": "right_hind_leg",
+    "Tail": "tail"
+  },
+  "model": [
+    "minecraft:model/horse"
+  ]
+}

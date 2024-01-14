@@ -1,0 +1,19 @@
+{
+  "type": "armourers_workshop:armature",
+  "parent": "armourers_workshop:skin/transformers/aw_humanoid",
+  "override": {
+    "hideOverlayHead": [
+      "hat",
+      "ear"
+    ],
+    "hideOverlayCloak": "cloak",
+    "hideOverlayChest": "jacket",
+    "hideOverlayArmLeft": "left_sleeve",
+    "hideOverlayArmRight": "right_sleeve",
+    "hideOverlayLegLeft": "left_pants",
+    "hideOverlayLegRight": "right_pants"
+  },
+  "model": [
+    "minecraft:model/player"
+  ]
+}

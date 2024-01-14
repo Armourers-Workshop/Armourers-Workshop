@@ -1,22 +1,17 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.api.client.model.IModel;
+import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
-import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
-import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
-import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.world.entity.Entity;
 
 import manifold.ext.rt.api.auto;
 
@@ -24,16 +19,14 @@ import manifold.ext.rt.api.auto;
 public class SkinRenderTesselator extends SkinRenderContext {
 
     private final BakedSkin bakedSkin;
+    private final BakedArmature bakedArmature;
     private final MannequinEntity mannequin;
-    private final MannequinModel<?> mannequinModel;
-    private final SkinRenderer<Entity, IModel> renderer;
 
-    public SkinRenderTesselator(BakedSkin bakedSkin, MannequinEntity mannequin, MannequinModel<?> mannequinModel, SkinRenderer<Entity, IModel> renderer) {
+    public SkinRenderTesselator(BakedSkin bakedSkin, BakedArmature bakedArmature, MannequinEntity mannequin) {
         super(null);
         this.bakedSkin = bakedSkin;
         this.mannequin = mannequin;
-        this.mannequinModel = mannequinModel;
-        this.renderer = renderer;
+        this.bakedArmature = bakedArmature;
     }
 
     public static SkinRenderTesselator create(SkinDescriptor descriptor, Ticket ticket) {
@@ -46,20 +39,20 @@ public class SkinRenderTesselator extends SkinRenderContext {
 
     public static SkinRenderTesselator create(BakedSkin bakedSkin) {
         auto mannequin = PlaceholderManager.MANNEQUIN.get();
-        auto mannequinModel = SkinItemRenderer.getInstance().getMannequinModel();
-        auto renderer = SkinRendererManager.getInstance().getRenderer(mannequin, mannequinModel, null);
-        if (renderer == null || mannequin == null || mannequin.getLevel() == null) {
+        auto bakedArmature = BakedArmature.defaultBy(bakedSkin.getType());
+        if (bakedArmature == null || mannequin == null || mannequin.getLevel() == null) {
             return null;
         }
-        return new SkinRenderTesselator(bakedSkin, mannequin, mannequinModel, renderer);
+        return new SkinRenderTesselator(bakedSkin, bakedArmature, mannequin);
     }
 
     public int draw(PoseStack poseStack, MultiBufferSource buffers) {
-        auto model = ModelHolder.of(mannequinModel);
         setPose(poseStack);
         setBuffers(buffers);
-        setTransforms(mannequin, renderer.getOverrideModel(model));
-        return renderer.render(mannequin, model, bakedSkin, getColorScheme(), this);
+//        setTransforms(mannequin, renderer.getOverrideModel(model));
+//        bakedArmature.setupAnim(mannequin, null, this);
+        bakedSkin.setupAnim(mannequin, getPartialTicks(), getReferenced());
+        return SkinRenderer.render(mannequin, bakedArmature, bakedSkin, getColorScheme(), this);
     }
 
     public MannequinEntity getMannequin() {
@@ -71,6 +64,6 @@ public class SkinRenderTesselator extends SkinRenderContext {
     }
 
     public Rectangle3f getBakedRenderBounds() {
-        return bakedSkin.getRenderBounds(mannequin, mannequinModel, getReferenced());
+        return bakedSkin.getRenderBounds(getReferenced());
     }
 }

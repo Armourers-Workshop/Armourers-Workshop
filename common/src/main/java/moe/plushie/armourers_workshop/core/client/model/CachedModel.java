@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.api.client.model.IPlayerModel;
 import moe.plushie.armourers_workshop.api.data.IAssociatedContainerKey;
 import moe.plushie.armourers_workshop.utils.DataStorage;
+import moe.plushie.armourers_workshop.utils.ModelPartHolder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,6 +47,11 @@ public class CachedModel<P> implements IModel {
     @Override
     public <T> void setAssociatedObject(T value, IAssociatedContainerKey<T> key) {
         storage.setAssociatedObject(value, key);
+    }
+
+    @Override
+    public Class<?> getType() {
+        return container.type;
     }
 
     public static class Humanoid<P> extends CachedModel<P> implements IHumanoidModel {
@@ -166,11 +172,13 @@ public class CachedModel<P> implements IModel {
 
         protected IModelBabyPose babyPose;
 
+        protected final Class<?> type;
         protected final Function<P, IModelPart> transformer;
         protected final ArrayList<IModelPart> values = new ArrayList<>();
         protected final HashMap<String, IModelPart> parts = new HashMap<>();
 
-        public Container(Function<P, IModelPart> transformer) {
+        public Container(Class<?> type, Function<P, IModelPart> transformer) {
+            this.type = type;
             this.transformer = transformer;
         }
 
@@ -178,6 +186,9 @@ public class CachedModel<P> implements IModel {
             IModelPart holder = transformer.apply(part);
             parts.put(name, holder);
             values.add(holder);
+            if (holder instanceof ModelPartHolder) {
+                ((ModelPartHolder) holder).setName(name);
+            }
         }
 
         public void unnamed(Iterable<P> parts) {

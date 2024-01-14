@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.core.armature.thirdparty;
 import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
-import moe.plushie.armourers_workshop.core.armature.ArmatureModifier;
+import moe.plushie.armourers_workshop.core.armature.JointModifier;
 
-public class EpicFightJointBinder extends ArmatureModifier {
+public class EpicFightJointBinder extends JointModifier {
 
     private final String name;
 

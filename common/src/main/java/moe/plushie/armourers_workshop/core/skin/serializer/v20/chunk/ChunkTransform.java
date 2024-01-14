@@ -188,11 +188,7 @@ public class ChunkTransform {
         }
 
         @Override
-        public void pre(IPoseStack poseStack) {
-        }
-
-        @Override
-        public void post(IPoseStack poseStack) {
+        public void apply(IPoseStack poseStack) {
             poseStack.multiply(normal);
             poseStack.multiply(pose);
         }

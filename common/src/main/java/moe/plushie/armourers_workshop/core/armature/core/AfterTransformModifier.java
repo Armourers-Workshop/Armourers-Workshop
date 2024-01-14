@@ -4,10 +4,11 @@ import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
-import moe.plushie.armourers_workshop.core.armature.ArmatureModifier;
+import moe.plushie.armourers_workshop.core.armature.JointModifier;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 
-public class AfterTransformModifier extends ArmatureModifier {
+public class AfterTransformModifier extends JointModifier {
 
     private final Vector3f translate;
     private final Vector3f scale;
@@ -41,14 +42,13 @@ public class AfterTransformModifier extends ArmatureModifier {
         if (rotate.equals(Vector3f.ZERO)) {
             return transform;
         }
-        IQuaternionf xRot = Vector3f.ZP.rotation(rotate.getX());
-        IQuaternionf yRot = Vector3f.YP.rotation(rotate.getY());
-        IQuaternionf zRot = Vector3f.XP.rotation(rotate.getZ());
+        float rx = rotate.getX();
+        float ry = rotate.getY();
+        float rz = rotate.getZ();
+        IQuaternionf rot = new OpenQuaternionf(rx, ry, rz, true);
         return poseStack -> {
             transform.apply(poseStack);
-            poseStack.rotate(xRot);
-            poseStack.rotate(yRot);
-            poseStack.rotate(zRot);
+            poseStack.rotate(rot);
         };
     }
 

@@ -99,7 +99,7 @@ public class ModelHolder {
         private final EntityModel<?> model;
 
         public Container(Model model) {
-            super(ModelPartHolder::of);
+            super(model.getClass(), ModelPartHolder::of);
             this.model = ObjectUtils.safeCast(model, EntityModel.class);
             this.babyPose = model.getBabyPose();
         }

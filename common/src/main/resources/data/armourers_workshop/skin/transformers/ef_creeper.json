@@ -1,0 +1,12 @@
+{
+  "type": "epicfight:armature",
+  "parent": "armourers_workshop:skin/transformers/ef_humanoid",
+  "transform": {
+    "translate": {
+      "Head": [ 0, 18, 0 ]
+    }
+  },
+  "model": [
+    "minecraft:model/creeper"
+  ]
+}

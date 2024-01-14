@@ -61,7 +61,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("arms", model.arms);
         });
 
-        ModelHolder.register(AbstractSkinnableModels.IRON_GOLE, CachedModel.Humanoid::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.IRON_GOLEM, CachedModel.Humanoid::new, (model, it) -> {
             it.put("head", model.head);
             it.put("body", model.body);
             it.put("left_arm", model.arm1);

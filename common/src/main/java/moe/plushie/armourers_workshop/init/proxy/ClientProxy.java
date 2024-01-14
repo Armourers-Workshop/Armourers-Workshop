@@ -21,7 +21,7 @@ import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
 import moe.plushie.armourers_workshop.init.platform.RegistryManager;
-import moe.plushie.armourers_workshop.init.platform.SkinModifierManager;
+import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager2;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.data.impl.MinecraftAuth;
@@ -44,7 +44,7 @@ public class ClientProxy {
         //            SkinResourceManager.init();
         MinecraftAuth.init(() -> Minecraft.getInstance().getUser().getUuid(), () -> Minecraft.getInstance().getUser().getAccessToken());
         ClientWardrobeHandler.init();
-        SkinModifierManager.init();
+        SkinRendererManager2.init();
         ModKeyBindings.init();
         ModDebugger.init();
 

@@ -6,6 +6,8 @@
     "ArrowRendererMixin",
     "BlockEntityRenderDispatcherMixin",
     "ThrownTridentRendererMixin",
+    "FishingHookRendererMixin",
+    "BoatRendererMixin",
     "ClientDataAttachMixin"
   ],
   "mixins": [

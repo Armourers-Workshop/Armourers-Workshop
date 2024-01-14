@@ -7,11 +7,14 @@ import com.google.common.cache.RemovalNotification;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.armature.ModelBinder;
+import moe.plushie.armourers_workshop.core.armature.Armature;
+import moe.plushie.armourers_workshop.core.armature.JointShape;
+import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
@@ -92,25 +95,22 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
     }
 
     @Override
-    public void addShape(IJointTransform[] transforms, SkinRenderContext context) {
-        if (transforms == null) {
-            return;
-        }
+    public void addShape(BakedArmature armature, SkinRenderContext context) {
         auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        ModelBinder.BIPPED_BOXES.forEach((joint, rect) -> {
+        IJointTransform[] transforms = armature.getTransforms();
+        Armature armature1 = armature.getArmature();
+        for (IJoint joint : armature1.allJoints()) {
+            JointShape shape = armature1.getShape(joint.getId());
             IJointTransform transform = transforms[joint.getId()];
-            if (transform == null) {
-                return;
-            }
-            context.pushPose();
-
-            transform.apply(context.pose());
-
+            if (shape != null && transform != null) {
+                context.pushPose();
+                transform.apply(context.pose());
 //			poseStack.translate(box.o.getX(), box.o.getY(), box.o.getZ());
-            ShapeTesselator.stroke(rect, ColorUtils.getPaletteColor(joint.getId()), context.pose().pose(), buffers);
-            ShapeTesselator.vector(0, 0, 0, 4, 4, 4, context.pose().pose(), buffers);
-            context.popPose();
-        });
+                ShapeTesselator.stroke(shape.bounds(), ColorUtils.getPaletteColor(joint.getId()), context.pose().pose(), buffers);
+                ShapeTesselator.vector(0, 0, 0, 4, 4, 4, context.pose().pose(), buffers);
+                context.popPose();
+            }
+        }
     }
 
     public void endBatch(SkinVertexBufferBuilder.Pipeline pipeline) {

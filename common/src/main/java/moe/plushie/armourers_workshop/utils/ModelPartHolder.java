@@ -8,6 +8,7 @@ import net.minecraft.client.model.geom.ModelPart;
 
 public class ModelPartHolder implements IModelPart, IModelPartPose {
 
+    private String name;
     private final ModelPart modelPart;
 
     public ModelPartHolder(ModelPart modelPart) {
@@ -90,5 +91,13 @@ public class ModelPartHolder implements IModelPart, IModelPartPose {
         modelPart.xRot = partPose.getXRot();
         modelPart.yRot = partPose.getYRot();
         modelPart.zRot = partPose.getZRot();
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -1,0 +1,18 @@
+{
+  "type": "armourers_workshop:armature",
+  "parent": "armourers_workshop:skin/transformers/aw_humanoid",
+  "joint": {
+    "Head": {
+      "translate": [ 0, 24, 0 ]
+    }
+  },
+  "override": {
+    "overrideModelHead": "*"
+  },
+  "plugin": [
+    "armourers_workshop:plugin/fix_slime_layer"
+  ],
+  "model": [
+    "minecraft:model/slime"
+  ]
+}
