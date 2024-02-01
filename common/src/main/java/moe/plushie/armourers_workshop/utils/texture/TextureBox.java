@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.utils.texture;
 
+import moe.plushie.armourers_workshop.api.common.ITextureBox;
 import moe.plushie.armourers_workshop.api.common.ITextureKey;
 import moe.plushie.armourers_workshop.api.common.ITextureOptions;
 import moe.plushie.armourers_workshop.api.common.ITextureProvider;
@@ -10,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 
-public class TextureBox {
+public class TextureBox implements ITextureBox {
 
     private final Vector2f texturePos;
     private final ITextureProvider defaultTexture;
@@ -21,8 +22,8 @@ public class TextureBox {
 
     private final boolean mirror;
 
-    private EnumMap<Direction, ITextureOptions> variantOptions;
     private EnumMap<Direction, Rectangle2f> variantRects;
+    private EnumMap<Direction, ITextureOptions> variantOptions;
     private EnumMap<Direction, ITextureProvider> variantTextures;
 
     public TextureBox(float width, float height, float depth, boolean mirror, @Nullable Vector2f baseUV, @Nullable ITextureProvider defaultTexture) {
@@ -72,37 +73,57 @@ public class TextureBox {
     }
 
     @Nullable
+    @Override
     public ITextureKey getTexture(Direction dir) {
-        Direction dir1 = resolveDirection(dir);
-        switch (dir1) {
+        // when mirroring occurs, the contents of the WEST and EAST sides will be swapped.
+        if (mirror) {
+            return getMirrorTexture(dir);
+        }
+        switch (dir) {
             case UP: {
-                return makeTexture(dir1, depth, 0, width, depth);
+                return makeTexture(dir, depth, 0, width, depth);
             }
             case DOWN: {
-                return makeTexture(dir1, depth + width, 0, width, depth);
+                return makeTexture(dir, depth + width, 0, width, depth);
             }
             case NORTH: {
-                return makeTexture(dir1, depth, depth, width, height);
+                return makeTexture(dir, depth, depth, width, height);
             }
             case SOUTH: {
-                return makeTexture(dir1, depth + width + depth, depth, width, height);
+                return makeTexture(dir, depth + width + depth, depth, width, height);
             }
             case WEST: {
-                return makeTexture(dir1, depth + width, depth, depth, height);
+                return makeTexture(dir, depth + width, depth, depth, height);
             }
             case EAST: {
-                return makeTexture(dir1, 0, depth, depth, height);
+                return makeTexture(dir, 0, depth, depth, height);
             }
         }
         return null;
     }
 
-    private Direction resolveDirection(Direction dir) {
-        // when mirroring occurs, the contents of the WEST and EAST sides will be swapped.
-        if (mirror && dir.getAxis() == Direction.Axis.X) {
-            return dir.getOpposite();
+    private ITextureKey getMirrorTexture(Direction dir) {
+        switch (dir) {
+            case UP: {
+                return makeTexture(dir, depth + width, 0, -width, depth);
+            }
+            case DOWN: {
+                return makeTexture(dir, depth + width + width, 0, -width, depth);
+            }
+            case NORTH: {
+                return makeTexture(dir, depth + width, depth, -width, height);
+            }
+            case SOUTH: {
+                return makeTexture(dir, depth + width + depth + width, depth, -width, height);
+            }
+            case WEST: {
+                return makeTexture(dir, 0 + depth, depth, -depth, height);
+            }
+            case EAST: {
+                return makeTexture(dir, depth + width + depth, depth, -depth, height);
+            }
         }
-        return dir;
+        return null;
     }
 
     @Nullable

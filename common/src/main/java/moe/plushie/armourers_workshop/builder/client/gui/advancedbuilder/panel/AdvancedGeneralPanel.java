@@ -36,6 +36,7 @@ public class AdvancedGeneralPanel extends AdvancedPanel {
         addGroup(translatable("transform"), builder -> {
             builder.vector(translatable("location"), connector.location, Group.Unit.POINT);
             builder.vector(translatable("rotation"), connector.rotation, Group.Unit.DEGREES);
+            //builder.vector(translatable("pivot"), connector.pivot, Group.Unit.POINT);
             builder.vector(translatable("scale"), connector.scale, Group.Unit.SCALE);
         });
 

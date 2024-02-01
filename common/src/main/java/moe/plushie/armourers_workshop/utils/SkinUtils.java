@@ -71,6 +71,10 @@ public final class SkinUtils {
         }
     }
 
+    public static float[][] getRenderUVs(Direction direction) {
+        return FACE_UVS[direction.get3DDataValue()];
+    }
+
     public static float[][] getRenderVertexes(Direction direction) {
         return FACE_VERTEXES[direction.get3DDataValue()];
     }
@@ -253,24 +257,24 @@ public final class SkinUtils {
         }
         Entity owner = projectile.getOwner();
         if (entity instanceof ThrownTrident) {
-            copySkin(owner, entity, SkinSlotType.TRIDENT, 0);
+            copySkin(owner, entity, SkinSlotType.TRIDENT, 0, SkinSlotType.UNKNOWN, 0);
             return;
         }
         if (entity instanceof AbstractArrow) {
-            copySkin(owner, entity, SkinSlotType.BOW, 0);
+            copySkin(owner, entity, SkinSlotType.BOW, 0, SkinSlotType.UNKNOWN, 0);
             return;
         }
         // no supported projectile entity.
     }
 
-    public static void copySkin(Entity src, Entity dest, SkinSlotType slotType, int index) {
-        ItemStack itemStack = getSkin(src, slotType, index);
+    public static void copySkin(Entity src, Entity dest, SkinSlotType fromSlotType, int fromIndex, SkinSlotType toSlotType, int toIndex) {
+        ItemStack itemStack = getSkin(src, fromSlotType, fromIndex);
         if (itemStack.isEmpty()) {
             return;
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(dest);
         if (wardrobe != null) {
-            wardrobe.setItem(slotType, index, itemStack.copy());
+            wardrobe.setItem(toSlotType, toIndex, itemStack.copy());
             wardrobe.broadcast();
         }
     }

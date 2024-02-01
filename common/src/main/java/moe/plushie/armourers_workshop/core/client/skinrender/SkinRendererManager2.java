@@ -80,6 +80,7 @@ public class SkinRendererManager2 {
         register("model/ghast", AbstractSkinnableModels.GHAST);
         register("model/chicken", AbstractSkinnableModels.CHICKEN);
         register("model/creeper", AbstractSkinnableModels.CREEPER);
+        register("model/horse", AbstractSkinnableModels.HORSE);
 
         register("model/boat", AbstractSkinnableModels.BOAT);
         register("model/raft", AbstractSkinnableModels.RAFT);

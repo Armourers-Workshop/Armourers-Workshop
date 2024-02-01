@@ -45,8 +45,7 @@ public final class SkinTypes {
     public static final ISkinType ITEM = register("item", 14, SkinPartTypes.ITEM);
     public static final ISkinType BLOCK = register("block", 15, SkinPartTypes.BLOCK, SkinPartTypes.BLOCK_MULTI);
 
-    public static final ISkinType HORSE = register("horse", 18, SkinPartTypes.HORSE_HEAD, SkinPartTypes.HORSE_NECK, SkinPartTypes.HORSE_CHEST, SkinPartTypes.HORSE_RIGHT_FRONT_THIGH, SkinPartTypes.HORSE_LEFT_FRONT_THIGH, SkinPartTypes.HORSE_RIGHT_HIND_THIGH, SkinPartTypes.HORSE_LEFT_HIND_THIGH, SkinPartTypes.HORSE_TAIL);
-
+    public static final ISkinType HORSE = registerArmor("horse", 18, null, SkinPartTypes.HORSE_HEAD, SkinPartTypes.HORSE_NECK, SkinPartTypes.HORSE_CHEST, SkinPartTypes.HORSE_RIGHT_FRONT_THIGH, SkinPartTypes.HORSE_LEFT_FRONT_THIGH, SkinPartTypes.HORSE_RIGHT_FRONT_LEG, SkinPartTypes.HORSE_LEFT_FRONT_LEG, SkinPartTypes.HORSE_RIGHT_HIND_THIGH, SkinPartTypes.HORSE_LEFT_HIND_THIGH, SkinPartTypes.HORSE_RIGHT_HIND_LEG, SkinPartTypes.HORSE_LEFT_HIND_LEG, SkinPartTypes.HORSE_TAIL);
     public static final ISkinType ADVANCED = register("part", 16, SkinPartTypes.ADVANCED);
 
     public static ISkinType byName(String registryName) {

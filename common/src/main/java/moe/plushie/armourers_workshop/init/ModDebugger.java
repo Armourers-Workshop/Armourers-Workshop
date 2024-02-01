@@ -17,8 +17,7 @@ public class ModDebugger {
     public static float sy = 1;
     public static float sz = 1;
 
-    public static int flag1 = 1;
-
+    public static int flag = 0;
 
     public static boolean skinnable = false;
     public static boolean hologramProjector = false;
@@ -52,6 +51,7 @@ public class ModDebugger {
     public static boolean viewHierarchy = false;
 
     public static boolean armature = false;
+    public static boolean defaultArmature = false;
 
     // Debug tool
     public static boolean armourerDebugRender;

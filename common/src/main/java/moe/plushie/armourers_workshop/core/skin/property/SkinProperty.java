@@ -26,6 +26,12 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     public static final SkinProperty<Boolean> OVERRIDE_MODEL_LEFT_LEG = normal("overrideModelLegLeft", false);
     public static final SkinProperty<Boolean> OVERRIDE_MODEL_RIGHT_LEG = normal("overrideModelLegRight", false);
 
+    public static final SkinProperty<Boolean> OVERRIDE_MODEL_LEFT_FRONT_LEG = normal("overrideModelLeftFrontLeg", false);
+    public static final SkinProperty<Boolean> OVERRIDE_MODEL_RIGHT_FRONT_LEG = normal("overrideModelRightFrontLeg", false);
+    public static final SkinProperty<Boolean> OVERRIDE_MODEL_LEFT_HIND_LEG = normal("overrideModelLeftHindLeg", false);
+    public static final SkinProperty<Boolean> OVERRIDE_MODEL_RIGHT_HIND_LEG = normal("overrideModelRightHindLeg", false);
+    public static final SkinProperty<Boolean> OVERRIDE_MODEL_TAIL = normal("overrideModelTail", false);
+
     @Deprecated
     public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_ALL = normal("armourHideOverlay", false);
     public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_HAT = normal("hideOverlayHead", false);

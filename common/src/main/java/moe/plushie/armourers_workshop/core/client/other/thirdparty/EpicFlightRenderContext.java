@@ -72,6 +72,10 @@ public class EpicFlightRenderContext {
         }
     }
 
+    public void prepare(Entity entity) {
+        transformer.prepare(entity, context);
+    }
+
     public void activate(Entity entity) {
         transformer.activate(entity, context);
         isActivate = true;

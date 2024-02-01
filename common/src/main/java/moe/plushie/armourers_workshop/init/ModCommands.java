@@ -244,7 +244,7 @@ public class ModCommands {
             ItemStack itemStack = descriptor.asItemStack();
             for (Entity entity : EntityArgument.getEntities(context, "entities")) {
                 SkinWardrobe wardrobe = SkinWardrobe.of(entity);
-                SkinSlotType slotType = SkinSlotType.of(descriptor.getType());
+                SkinSlotType slotType = SkinSlotType.byType(descriptor.getType());
                 if (slotType == null || wardrobe == null) {
                     continue;
                 }
@@ -270,7 +270,7 @@ public class ModCommands {
                     continue;
                 }
                 int slot = IntegerArgumentType.getInteger(context, "slot");
-                SkinSlotType slotType = SkinSlotType.of(ListArgumentType.getString(context, "slot_name"));
+                SkinSlotType slotType = SkinSlotType.byName(ListArgumentType.getString(context, "slot_name"));
                 if (slotType == null) {
                     continue;
                 }
@@ -401,7 +401,7 @@ public class ModCommands {
                 if (wardrobe == null) {
                     continue;
                 }
-                SkinSlotType slotType = SkinSlotType.of(ListArgumentType.getString(context, "slot_name"));
+                SkinSlotType slotType = SkinSlotType.byName(ListArgumentType.getString(context, "slot_name"));
                 if (slotType == null) {
                     continue;
                 }

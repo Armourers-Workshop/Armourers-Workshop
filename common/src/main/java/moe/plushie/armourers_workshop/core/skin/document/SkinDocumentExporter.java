@@ -188,9 +188,9 @@ public class SkinDocumentExporter {
         ArrayList<SkinMarker> markers = new ArrayList<>();
         for (SkinDocumentNode child : node.children()) {
             if (child.isLocator()) {
-                int x = -MathUtils.floor(child.getLocation().getX() * 16);
-                int y = -MathUtils.floor(child.getLocation().getY() * 16);
-                int z = MathUtils.floor(child.getLocation().getZ() * 16);
+                int x = -MathUtils.floor(child.getLocation().getX());
+                int y = -MathUtils.floor(child.getLocation().getY());
+                int z = MathUtils.floor(child.getLocation().getZ());
                 SkinMarker marker = new SkinMarker((byte) x, (byte) y, (byte) z, (byte) 0);
                 markers.add(marker);
             }

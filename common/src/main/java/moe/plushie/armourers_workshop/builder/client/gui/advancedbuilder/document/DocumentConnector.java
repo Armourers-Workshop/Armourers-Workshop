@@ -31,6 +31,7 @@ public class DocumentConnector {
     public final VectorProperty location = registerNode(VectorProperty::new, SkinDocumentNode::getLocation, SkinDocumentNode::setLocation);
     public final VectorProperty rotation = registerNode(VectorProperty::new, SkinDocumentNode::getRotation, SkinDocumentNode::setRotation);
     public final VectorProperty scale = registerNode(VectorProperty::new, SkinDocumentNode::getScale, SkinDocumentNode::setScale);
+    public final VectorProperty pivot = registerNode(VectorProperty::new, SkinDocumentNode::getPivot, SkinDocumentNode::setPivot);
 
     public final DataProperty<Boolean> enabled = registerNode(DataProperty::new, SkinDocumentNode::isEnabled, SkinDocumentNode::setEnabled);
     public final DataProperty<Boolean> mirror = registerNode(DataProperty::new, SkinDocumentNode::isMirror, SkinDocumentNode::setMirror);

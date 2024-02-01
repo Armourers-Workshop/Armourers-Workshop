@@ -1,35 +1,55 @@
 {
   "joint": {
     "Hat": {
+      "parent": "Head",
       "id": "armourers:hat.base"
     },
     "Head": {
+      "parent": "Chest",
       "id": "armourers:head.base",
-      "shape": {
+      "cube": {
         "origin": [ -4, -8, -4 ],
-        "size": [ 8, 8, 8 ]
+        "size": [ 8, 8, 8 ],
+        "uv": [ 0, 0 ]
       }
     },
     "Chest": {
+      "parent": "Root",
       "id": "armourers:chest.base",
-      "shape": {
+      "cube": {
         "origin": [ -4, 0, -2 ],
-        "size": [ 8, 6, 4 ]
+        "size": [ 8, 6, 4 ],
+        "uv": {
+          "north": [ 20, 20, 28, 26 ],
+          "east": [ 16, 20, 20, 26 ],
+          "south": [ 32, 20, 40, 26 ],
+          "west": [ 28, 20, 32, 26 ],
+          "up": [ 20, 16, 28, 20 ]
+        }
       }
     },
     "Torso": {
+      "parent": "Chest",
       "id": "armourers:chest.base2",
-      "shape": {
+      "cube": {
         "origin": [ -4, 0, -2 ],
-        "size": [ 8, 6, 4 ]
+        "size": [ 8, 6, 4 ],
+        "uv": {
+          "north": [ 20, 26, 28, 32 ],
+          "east": [ 16, 26, 20, 32 ],
+          "south": [ 32, 26, 40, 32 ],
+          "west": [ 28, 26, 32, 32 ],
+          "down": [ 28, 20, 36, 16 ]
+        }
       },
       "transform": {
-        "offset": [ 0, 6, 0 ]
+        "translate": [ 0, 6, 0 ]
       }
     },
     "Skirt": {
+      "parent": "Chest",
       "id": "armourers:legs.skirt",
-      "shape": {
+      "cube": {
         "origin": [ -4, 0, -2 ],
         "size": [ 8, 12, 4 ]
       },
@@ -38,10 +58,18 @@
       }
     },
     "Arm_L": {
+      "parent": "Chest",
       "id": "armourers:chest.leftArm",
-      "shape": {
+      "cube": {
         "origin": [ -1, -2, -2 ],
-        "size": [ 4, 6, 4 ]
+        "size": [ 4, 6, 4 ],
+        "uv": {
+          "north": [ 36, 52, 40, 58 ],
+          "east": [ 32, 52, 36, 58 ],
+          "south": [ 44, 52, 48, 58 ],
+          "west": [ 40, 52, 44, 58 ],
+          "up": [ 36, 48, 40, 52 ]
+        }
       },
       "transform": {
         "translate": [ 5, 2, 0 ],
@@ -49,10 +77,18 @@
       }
     },
     "Arm_R": {
+      "parent": "Chest",
       "id": "armourers:chest.rightArm",
-      "shape": {
+      "cube": {
         "origin": [ -3, -2, -2 ],
-        "size": [ 4, 6, 4 ]
+        "size": [ 4, 6, 4 ],
+        "uv": {
+          "north": [ 44, 20, 48, 26 ],
+          "east": [ 40, 20, 44, 26 ],
+          "south": [ 52, 20, 56, 26 ],
+          "west": [ 48, 20, 52, 26 ],
+          "up": [ 44, 16, 48, 20 ]
+        }
       },
       "transform": {
         "translate": [ -5, 2, 0 ],
@@ -60,36 +96,56 @@
       }
     },
     "Hand_L": {
+      "parent": "Arm_L",
       "id": "armourers:chest.leftArm2",
-      "shape": {
+      "cube": {
         "origin": [ -1, 0, -2 ],
-        "size": [ 4, 6, 4 ]
+        "size": [ 4, 6, 4 ],
+        "uv": {
+          "north": [ 36, 58, 40, 64 ],
+          "east": [ 32, 58, 36, 64 ],
+          "south": [ 44, 58, 48, 64 ],
+          "west": [ 40, 58, 44, 64 ],
+          "down": [ 40, 52, 44, 48 ]
+        }
       },
       "transform": {
-        "translate": [ 5, 2, 0 ],
-        "rotation": [ -10, 0, -10 ],
-        "offset": [ 0, 4, 0 ]
+        "translate": [ 0, 4, 0 ]
       }
     },
     "Hand_R": {
+      "parent": "Arm_R",
       "id": "armourers:chest.rightArm2",
-      "shape": {
+      "cube": {
         "origin": [ -3, 0, -2 ],
-        "size": [ 4, 6, 4 ]
+        "size": [ 4, 6, 4 ],
+        "uv": {
+          "north": [ 44, 26, 48, 32 ],
+          "east": [ 40, 26, 44, 32 ],
+          "south": [ 52, 26, 56, 32 ],
+          "west": [ 48, 26, 52, 32 ],
+          "down": [ 48, 20, 52, 16 ]
+        }
       },
       "transform": {
-        "translate": [ -5, 2, 0 ],
-        "rotation": [ -15, 0, 10 ],
-        "offset": [ 0, 4, 0 ]
+        "translate": [ 0, 4, 0 ]
       }
     },
     "Elbow_L": null,
     "Elbow_R": null,
     "Thigh_L": {
+      "parent": "Chest",
       "id": "armourers:legs.leftLeg",
-      "shape": {
+      "cube": {
         "origin": [ -2, 0, -2 ],
-        "size": [ 4, 6, 4 ]
+        "size": [ 4, 6, 4 ],
+        "uv": {
+          "north": [ 20, 52, 24, 58 ],
+          "east": [ 16, 52, 20, 58 ],
+          "south": [ 28, 52, 32, 58 ],
+          "west": [ 24, 52, 28, 58 ],
+          "up": [ 20, 48, 24, 52 ]
+        }
       },
       "transform": {
         "translate": [ -1.9, 12, 0 ],
@@ -97,10 +153,18 @@
       }
     },
     "Thigh_R": {
+      "parent": "Chest",
       "id": "armourers:legs.rightLeg",
-      "shape": {
+      "cube": {
         "origin": [ -2, 0, -2 ],
-        "size": [ 4, 6, 4 ]
+        "size": [ 4, 6, 4 ],
+        "uv": {
+          "north": [ 4, 20, 8, 26 ],
+          "east": [ 0, 20, 4, 26 ],
+          "south": [ 12, 20, 16, 26 ],
+          "west": [ 8, 20, 12, 26 ],
+          "up": [ 4, 16, 8, 20 ]
+        }
       },
       "transform": {
         "translate": [ 1.9, 12, 0 ],
@@ -108,62 +172,71 @@
       }
     },
     "Leg_L": {
+      "parent": "Thigh_L",
       "id": "armourers:legs.leftLeg2",
-      "shape": {
+      "cube": {
         "origin": [ -2, 0, -2 ],
-        "size": [ 4, 6, 4 ]
+        "size": [ 4, 6, 4 ],
+        "uv": {
+          "north": [ 20, 58, 24, 64 ],
+          "east": [ 16, 58, 20, 64 ],
+          "south": [ 28, 58, 32, 64 ],
+          "west": [ 24, 58, 28, 64 ],
+          "down": [ 24, 52, 28, 48 ]
+        }
       },
       "transform": {
-        "translate": [ -1.9, 12, 0 ],
-        "rotation": [ 1, 0, 1 ],
-        "offset": [ 0, 6, 0 ]
+        "translate": [ 0, 6, 0 ]
       }
     },
     "Leg_R": {
+      "parent": "Thigh_R",
       "id": "armourers:legs.rightLeg2",
-      "shape": {
+      "cube": {
         "origin": [ -2, 0, -2 ],
-        "size": [ 4, 6, 4 ]
+        "size": [ 4, 6, 4 ],
+        "uv": {
+          "north": [ 4, 26, 8, 32 ],
+          "east": [ 0, 26, 4, 32 ],
+          "south": [ 12, 26, 16, 32 ],
+          "west": [ 8, 26, 12, 32 ],
+          "down": [ 8, 20, 12, 16 ]
+        }
       },
       "transform": {
-        "translate": [ 1.9, 12, 0 ],
-        "rotation": [ -1, 0, -1 ],
-        "offset": [ 0, 6, 0 ]
+        "translate": [ 0, 6, 0 ]
       }
     },
     "Foot_L": {
+      "parent": "Thigh_L",
       "id": "armourers:feet.leftFoot",
-      "shape": {
+      "cube": {
         "origin": [ -2, 8, -2 ],
         "size": [ 4, 4, 4 ]
-      },
-      "transform": {
-        "translate": [ -1.9, 12, 0 ],
-        "rotation": [ 1, 0, 1 ]
       }
     },
     "Foot_R": {
+      "parent": "Thigh_R",
       "id": "armourers:feet.rightFoot",
-      "shape": {
+      "cube": {
         "origin": [ -2, 8, -2 ],
         "size": [ 4, 4, 4 ]
-      },
-      "transform": {
-        "translate": [ 1.9, 12, 0 ],
-        "rotation": [ -1, 0, -1 ]
       }
     },
     "Knee_L": null,
     "Knee_R": null,
     "Wing_L": {
+      "parent": "Chest",
       "id": "armourers:wings.leftWing"
     },
     "Wing_R": {
+      "parent": "Chest",
       "id": "armourers:wings.rightWing"
     },
     "Phalanx_L": {
+      "parent": "Wing_L",
       "id": "armourers:wings.leftWing2",
-      "shape": {
+      "cube": {
         "origin": [ 0, 0, 0 ],
         "size": [ 4, 12, 1 ]
       },
@@ -172,8 +245,9 @@
       }
     },
     "Phalanx_R": {
+      "parent": "Wing_R",
       "id": "armourers:wings.rightWing2",
-      "shape": {
+      "cube": {
         "origin": [ -4, 0, 0 ],
         "size": [ 4, 12, 1 ]
       },

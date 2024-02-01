@@ -3,12 +3,12 @@ package moe.plushie.armourers_workshop.core.armature.core;
 import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
+import moe.plushie.armourers_workshop.api.math.ITransformf;
 
 public class BeforeTransformModifier extends AfterTransformModifier {
 
-    public BeforeTransformModifier(Vector3f translate, Vector3f scale, Vector3f rotate) {
-        super(translate, scale, rotate);
+    public BeforeTransformModifier(ITransformf transform) {
+        super(transform);
     }
 
     @Override

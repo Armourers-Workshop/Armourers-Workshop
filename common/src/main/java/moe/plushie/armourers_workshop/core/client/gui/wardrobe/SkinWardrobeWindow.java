@@ -58,17 +58,28 @@ public class SkinWardrobeWindow<M extends SkinWardrobeMenu> extends MenuWindow<M
         boolean isPlayer = entity instanceof Player;
         boolean isMannequin = entity instanceof MannequinEntity;
 
-        addTab(new SkinWardrobeInventorySetting(menu))
-                .setIcon(tabIcon(192, 0))
-                .setTarget(SkinWardrobeMenu.Group.SKINS)
-                .setActive(!isPlayer || ModConfig.Common.showWardrobeSkins || operator.isCreative());
+        // unknown slot is exclusive.
+        if (!haveSlots(SkinSlotType.HORSE)) {
+            addTab(new SkinWardrobeInventorySetting(menu))
+                    .setIcon(tabIcon(192, 0))
+                    .setTarget(SkinWardrobeMenu.Group.SKINS)
+                    .setActive(!isPlayer || ModConfig.Common.showWardrobeSkins || operator.isCreative());
+        }
 
-        if (wardrobe.getUnlockedSize(SkinSlotType.OUTFIT) != 0) {
+        if (haveSlots(SkinSlotType.OUTFIT)) {
             addTab(new SkinWardrobeOutfitSetting(menu))
                     .setIcon(tabIcon(0, 128))
                     .setTarget(SkinWardrobeMenu.Group.OUTFITS)
                     .setActive(!isPlayer || ModConfig.Common.showWardrobeOutfits || operator.isCreative());
         }
+
+        if (haveSlots(SkinSlotType.HORSE)) {
+            addTab(new SkinWardrobeOutfitSetting(menu))
+                    .setIcon(tabIcon(0, 128))
+                    .setTarget(SkinWardrobeMenu.Group.UNKNOWN)
+                    .setActive(!isPlayer || ModConfig.Common.showWardrobeOutfits || operator.isCreative());
+        }
+
 
         addTab(new SkinWardrobeDisplaySetting(wardrobe))
                 .setIcon(tabIcon(208, 0))
@@ -137,6 +148,10 @@ public class SkinWardrobeWindow<M extends SkinWardrobeMenu> extends MenuWindow<M
 
     private TabView.EntryBuilder addTab(SkinWardrobeBaseSetting contentView) {
         return tabView.addContentView(contentView).setTooltip(contentView.getTitle());
+    }
+
+    private boolean haveSlots(SkinSlotType slotType) {
+        return wardrobe.getUnlockedSize(slotType) != 0;
     }
 
     private UIImage tabIcon(int u, int v) {

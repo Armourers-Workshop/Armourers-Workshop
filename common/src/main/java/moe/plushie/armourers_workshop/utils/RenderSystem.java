@@ -109,15 +109,29 @@ public final class RenderSystem extends AbstractRenderSystem {
         drawCube(poseStack, x, y, z, w, h, d, r, g, b, a, buffers);
     }
 
+    public static void drawCube(PoseStack poseStack, IRectangle3f rect, float r, float g, float b, float a, VertexConsumer consumer) {
+        float x = rect.getMinX();
+        float y = rect.getMinY();
+        float z = rect.getMinZ();
+        float w = rect.getWidth();
+        float h = rect.getHeight();
+        float d = rect.getDepth();
+        drawCube(poseStack, x, y, z, w, h, d, r, g, b, a, consumer);
+    }
+
     public static void drawCube(PoseStack poseStack, float x, float y, float z, float w, float h, float d, float r, float g, float b, float a, MultiBufferSource buffers) {
+        SkinVertexBufferBuilder builder1 = SkinVertexBufferBuilder.getBuffer(buffers);
+        VertexConsumer builder = builder1.getBuffer(SkinRenderType.IMAGE_GUIDE);
+        drawCube(poseStack, x, y, z, w, h, d, r, g, b, a, builder);
+    }
+
+    public static void drawCube(PoseStack poseStack, float x, float y, float z, float w, float h, float d, float r, float g, float b, float a, VertexConsumer consumer) {
         if (w == 0 || h == 0 || d == 0) {
             return;
         }
         PoseStack.Pose pose = poseStack.last();
-        SkinVertexBufferBuilder builder1 = SkinVertexBufferBuilder.getBuffer(buffers);
-        VertexConsumer builder = builder1.getBuffer(SkinRenderType.IMAGE_GUIDE);
         for (Direction dir : Direction.values()) {
-            drawFace(pose, dir, x, y, z, w, h, d, 0, 0, r, g, b, a, builder);
+            drawFace(pose, dir, x, y, z, w, h, d, 0, 0, r, g, b, a, consumer);
         }
     }
 

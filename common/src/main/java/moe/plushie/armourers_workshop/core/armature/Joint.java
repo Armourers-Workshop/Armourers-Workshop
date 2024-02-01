@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.armature.IJoint;
 public class Joint implements IJoint {
 
     private int id;
+    private Joint parent;
     private final String name;
 
     public Joint(String name) {
@@ -26,6 +27,15 @@ public class Joint implements IJoint {
         return name;
     }
 
+    public void setParent(Joint parent) {
+        this.parent = parent;
+    }
+
+    @Override
+    public Joint getParent() {
+        return parent;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -36,11 +46,11 @@ public class Joint implements IJoint {
 
     @Override
     public int hashCode() {
-        return id;
+        return name.hashCode();
     }
 
     @Override
     public String toString() {
-        return "[" + id + "]" + name;
+        return name + "[" + id + "]";
     }
 }

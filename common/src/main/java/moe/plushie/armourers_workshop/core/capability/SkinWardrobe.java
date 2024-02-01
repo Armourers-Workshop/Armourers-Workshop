@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.capability;
 
 import moe.plushie.armourers_workshop.api.common.ITagRepresentable;
-import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
@@ -176,11 +175,7 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
         if (modifiedSize != null) {
             return Math.min(slotType.getMaxSize(), modifiedSize);
         }
-        ISkinType type = slotType.getSkinType();
-        if (type != null) {
-            return Math.min(slotType.getMaxSize(), profile.getMaxCount(type));
-        }
-        return slotType.getMaxSize();
+        return Math.min(slotType.getMaxSize(), profile.getMaxCount(slotType));
     }
 
     public int getMaximumSize(SkinSlotType slotType) {

@@ -77,7 +77,7 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        SkinSlotType slotType = SkinSlotType.of(descriptor.getType());
+        SkinSlotType slotType = SkinSlotType.byType(descriptor.getType());
         if (descriptor.isEmpty() || slotType == null) {
             return InteractionResultHolder.pass(itemStack);
         }

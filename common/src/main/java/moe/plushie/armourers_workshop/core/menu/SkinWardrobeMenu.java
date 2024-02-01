@@ -46,6 +46,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
         addEquipmentSlots(Group.SKINS, 0, 5);
 
         addSkinSlots(SkinSlotType.OUTFIT, Group.OUTFITS, 0, 0);
+        addSkinSlots(SkinSlotType.HORSE, Group.UNKNOWN, 0, 0);
         addSkinSlots(SkinSlotType.DYE, Group.DYES, 0, 0);
 
         addMannequinSlots(Group.SKINS, 0, 5);
@@ -139,7 +140,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
             slot.set(ItemStack.EMPTY);
             return itemStack.copy();
         }
-        SkinSlotType slotType = SkinSlotType.of(itemStack);
+        SkinSlotType slotType = SkinSlotType.byItem(itemStack);
         if (slotType != null) {
             int startIndex = getFreeSlot(slotType);
             if (!moveItemStackTo(itemStack, startIndex, startIndex + 1, false)) {
@@ -217,7 +218,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
     }
 
     public enum Group {
-        SKINS(true, 99), OUTFITS(true, 99), DYES(true, 99), COLORS(false, 99);
+        SKINS(true, 99), OUTFITS(true, 99), UNKNOWN(true, 99), DYES(true, 99), COLORS(false, 99);
 
         private final boolean exchanges;
         private final int extendedHeight;

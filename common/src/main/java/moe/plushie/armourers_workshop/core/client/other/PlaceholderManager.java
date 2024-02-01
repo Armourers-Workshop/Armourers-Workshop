@@ -23,14 +23,6 @@ public class PlaceholderManager {
 
     private static final int PLACEHOLDER_ENTITY_ID = -1021;
 
-    public static final Supplier<Horse> HORSE = new LazyEntry<>(level -> {
-        auto entity = new Horse(EntityType.HORSE, level);
-        auto tag = new CompoundTag();
-        tag.putInt("Variant", 1);
-        entity.readAdditionalSaveData(tag);
-        return entity;
-    });
-
     public static final Supplier<MannequinEntity> MANNEQUIN = new LazyEntry<>(level -> {
         auto entity = new MannequinEntity(ModEntityTypes.MANNEQUIN.get().get(), level);
         entity.setExtraRenderer(false); // never magic cir

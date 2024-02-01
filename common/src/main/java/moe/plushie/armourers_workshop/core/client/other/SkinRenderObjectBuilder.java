@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
+import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -102,11 +103,15 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         for (IJoint joint : armature1.allJoints()) {
             JointShape shape = armature1.getShape(joint.getId());
             IJointTransform transform = transforms[joint.getId()];
+            if (ModDebugger.defaultArmature) {
+                transform = armature1.getGlobalTransform(joint.getId());
+            }
             if (shape != null && transform != null) {
                 context.pushPose();
                 transform.apply(context.pose());
+//                ModDebugger.translate(context.pose().pose());
 //			poseStack.translate(box.o.getX(), box.o.getY(), box.o.getZ());
-                ShapeTesselator.stroke(shape.bounds(), ColorUtils.getPaletteColor(joint.getId()), context.pose().pose(), buffers);
+                ShapeTesselator.stroke(shape, ColorUtils.getPaletteColor(joint.getId()), context.pose().pose(), buffers);
                 ShapeTesselator.vector(0, 0, 0, 4, 4, 4, context.pose().pose(), buffers);
                 context.popPose();
             }

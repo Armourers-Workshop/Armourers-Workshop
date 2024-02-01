@@ -32,7 +32,7 @@ import manifold.ext.rt.api.auto;
 public final class ExtendedItemRenderer {
 
     public static void renderSkinInGUI(BakedSkin bakedSkin, float x, float y, float z, float width, float height, float rx, float ry, float rz, PoseStack poseStack, MultiBufferSource buffers) {
-        renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, null, x, y, z, width, height, rx, ry, rz, 0, 0xf000f0, poseStack, buffers);
+        renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, getTarget(bakedSkin), x, y, z, width, height, rx, ry, rz, 0, 0xf000f0, poseStack, buffers);
     }
 
     public static void renderSkinInGUI(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, float x, float y, float z, float width, float height, float rx, float ry, float rz, float partialTicks, int light, PoseStack poseStack, MultiBufferSource buffers) {
@@ -44,11 +44,7 @@ public final class ExtendedItemRenderer {
     }
 
     public static int renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, Vector3f scale, float partialTicks, int light, SkinItemSource itemSource, PoseStack poseStack, MultiBufferSource buffers) {
-        // by default, when use auto box recalc.
-        if (bakedSkin.getItemModel() == null) {
-            return renderSkinInBox(bakedSkin, scheme, scale, Vector3f.ONE, partialTicks, light, itemSource, poseStack, buffers);
-        }
-        return renderSkinInBox(bakedSkin, scheme, scale, null, partialTicks, light, itemSource, poseStack, buffers);
+        return renderSkinInBox(bakedSkin, scheme, scale, getTarget(bakedSkin), partialTicks, light, itemSource, poseStack, buffers);
     }
 
     private static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, @Nullable Vector3f target, float x, float y, float z, float width, float height, float rx, float ry, float rz, float partialTicks, int light, PoseStack poseStack, MultiBufferSource buffers) {
@@ -138,6 +134,14 @@ public final class ExtendedItemRenderer {
         RenderSystem.runAsFancy(() -> rendererManager.render(entity, 0.0d, 0.0d, 0.0d, 0.0f, 1.0f, poseStack, buffers, light));
 
         poseStack.popPose();
+    }
+
+    private static Vector3f getTarget(BakedSkin bakedSkin) {
+        // when no provided a item model, we will use the default target.
+        if (bakedSkin != null && bakedSkin.getItemModel() == null) {
+            return Vector3f.ONE;
+        }
+        return null;
     }
 }
 

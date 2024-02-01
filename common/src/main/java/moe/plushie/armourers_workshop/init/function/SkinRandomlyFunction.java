@@ -109,7 +109,7 @@ public class SkinRandomlyFunction implements ILootConditionalFunction {
                     // {"type": "outfit"}           // in outfit, any slot
                     // {"type": "sword", "slot": 1} // in sword, first slot
                     int slot = object.get("slot").intValue();
-                    SkinSlotType slotType = SkinSlotType.of(object.get("type").stringValue());
+                    SkinSlotType slotType = SkinSlotType.byName(object.get("type").stringValue());
                     searcher = context -> search(context, slotType, slot);
                     param = LootContextParams.THIS_ENTITY;
                     break;

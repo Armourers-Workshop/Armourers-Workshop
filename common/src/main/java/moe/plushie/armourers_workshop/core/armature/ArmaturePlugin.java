@@ -7,12 +7,13 @@ import net.minecraft.world.entity.Entity;
 
 public class ArmaturePlugin {
 
-    public void activate(Entity entity, SkinRenderContext context) {
+    public void prepare(Entity entity, SkinRenderContext context) {
+    }
 
+    public void activate(Entity entity, SkinRenderContext context) {
     }
 
     public void deactivate(Entity entity, SkinRenderContext context) {
-
     }
 
     public IModel apply(IModel model) {

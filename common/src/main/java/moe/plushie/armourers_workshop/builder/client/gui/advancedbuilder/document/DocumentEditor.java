@@ -185,6 +185,7 @@ public class DocumentEditor {
         newValue.setLocation(node.getLocation());
         newValue.setRotation(node.getRotation());
         newValue.setScale(node.getScale());
+        newValue.setPivot(node.getPivot());
         node.children().forEach(it -> newValue.add(_duplicateNode(it)));
         return newValue;
     }

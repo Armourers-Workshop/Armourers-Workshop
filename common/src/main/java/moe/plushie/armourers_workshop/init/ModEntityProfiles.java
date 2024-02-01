@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
+import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -74,7 +76,7 @@ public class ModEntityProfiles {
         private final ResourceLocation registryName;
 
         private final ArrayList<IEntityTypeProvider<?>> entities = new ArrayList<>();
-        private final HashMap<ISkinType, Function<ISkinType, Integer>> supports = new HashMap<>();
+        private final LinkedHashMap<SkinSlotType, Function<SkinSlotType, Integer>> supports = new LinkedHashMap<>();
 
         public SimpleLoader(ResourceLocation registryName) {
             this.registryName = ModConstants.key(SkinFileUtils.getBaseName(registryName.getPath()));
@@ -91,8 +93,11 @@ public class ModEntityProfiles {
                 locked = o.boolValue();
             });
             object.get("slots").entrySet().forEach(it -> {
-                ISkinType type = SkinTypes.byName(it.getKey());
+                SkinSlotType type = SkinSlotType.byName(it.getKey());
                 String name = it.getValue().stringValue();
+                if (type == null) {
+                    return; // ignore when can't found slot type.
+                }
                 if (name.equals("default_mob_slots")) {
                     supports.put(type, type1 -> ModConfig.Common.prefersWardrobeMobSlots);
                 } else if (name.equals("default_player_slots")) {

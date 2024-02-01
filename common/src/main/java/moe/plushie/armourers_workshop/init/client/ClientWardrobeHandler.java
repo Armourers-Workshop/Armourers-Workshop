@@ -96,7 +96,7 @@ public class ClientWardrobeHandler {
         poseStack.scale(-SCALE, -SCALE, SCALE);
         poseStack.translate(0, 11, 0);
 
-        auto armature = BakedArmature.defaultBy(Armatures.ITEM);
+        auto armature = BakedArmature.defaultBy(Armatures.ANY);
         auto context = SkinRenderContext.alloc(renderData, packedLight, TickUtils.ticks(), poseStack, buffers);
         int count = render(entity, armature, context, renderData::getItemSkins);
         if (count != 0 && !ModDebugger.itemOverride) {
@@ -136,7 +136,7 @@ public class ClientWardrobeHandler {
         poseStack.scale(-SCALE, -SCALE, SCALE);
         poseStack.translate(0, 0, -1);
 
-        auto armature = BakedArmature.defaultBy(Armatures.ITEM);
+        auto armature = BakedArmature.defaultBy(Armatures.ANY);
         auto context = SkinRenderContext.alloc(renderData, packedLight, TickUtils.ticks(), poseStack, buffers);
         int count = render(entity, armature, context, () -> Collections.singletonList(entry));
         if (count != 0 && !ModDebugger.itemOverride) {
@@ -170,7 +170,7 @@ public class ClientWardrobeHandler {
         poseStack.scale(-SCALE, -SCALE, SCALE);
         poseStack.translate(-0.5, -3.0, 0.0);
 
-        auto armature = BakedArmature.defaultBy(Armatures.ITEM);
+        auto armature = BakedArmature.defaultBy(Armatures.ANY);
         auto context = SkinRenderContext.alloc(renderData, packedLight, TickUtils.ticks(), poseStack, buffers);
         int count = render(entity, armature, context, () -> Collections.singletonList(entry));
         if (count != 0 && !ModDebugger.fishingHook) {
@@ -310,7 +310,7 @@ public class ClientWardrobeHandler {
 //                    RenderUtils.drawPoint(poseStack, null, 2, buffers);
                     poseStack.pushPose();
                     poseStack.scale(-SCALE, -SCALE, SCALE);
-                    auto armature = BakedArmature.defaultBy(Armatures.ITEM);
+                    auto armature = BakedArmature.defaultBy(Armatures.ANY);
                     auto context = SkinRenderContext.alloc(renderData, packedLight, TickUtils.ticks(), transformType, poseStack, buffers);
                     context.setReferenced(SkinItemSource.create(800, itemStack, transformType));
                     counter = render(entity, armature, context, () -> Collections.singleton(embeddedStack.getEntry()));

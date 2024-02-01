@@ -6,11 +6,13 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
+import moe.plushie.armourers_workshop.core.armature.JointShape;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.math.OpenBoundingBox;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenOrientedBoundingBox;
 import moe.plushie.armourers_workshop.utils.math.OpenTransformedBoundingBox;
+import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -200,6 +202,18 @@ public class ShapeTesselator {
         poseStack.mulPoseMatrix(tbb.getTransform());
         poseStack.mulNormalMatrix(new OpenMatrix3f(tbb.getTransform()));
         stroke(tbb.getBoundingBox(), color, poseStack, buffers);
+        poseStack.popPose();
+    }
+
+    public static void stroke(JointShape shape, UIColor color, PoseStack poseStack, MultiBufferSource buffers) {
+        poseStack.pushPose();
+        Rectangle3f rect = shape.bounds();
+        poseStack.applyTransform(shape.transform());
+        stroke(rect, color, poseStack, buffers);
+        poseStack.translate(rect.getX(), rect.getY(), rect.getZ());
+        for (JointShape shape1 : shape.children()) {
+            stroke(shape1, color, poseStack, buffers);
+        }
         poseStack.popPose();
     }
 

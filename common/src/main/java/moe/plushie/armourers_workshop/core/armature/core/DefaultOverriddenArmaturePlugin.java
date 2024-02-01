@@ -32,20 +32,25 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
     }
 
     @Override
-    public void activate(Entity entity, SkinRenderContext context) {
+    public void prepare(Entity entity, SkinRenderContext context) {
         SkinRenderData renderData = context.getRenderData();
-        SkinOverriddenManager overriddenManager = renderData.getOverriddenManager();
-
-        overriddenManager.willRender(entity);
 
         // Limit the players limbs if they have a skirt equipped.
         // A proper lady should not swing her legs around!
         if (entity instanceof LivingEntity && renderData.isLimitLimbs()) {
             ((LivingEntity) entity).applyLimitLimbs();
         }
+    }
 
+    @Override
+    public void activate(Entity entity, SkinRenderContext context) {
+        SkinRenderData renderData = context.getRenderData();
+        SkinOverriddenManager overriddenManager = renderData.getOverriddenManager();
 
-        // apply
+        // apply all other part by the entity.
+        overriddenManager.willRender(entity);
+
+        // apply all visible part to hidden.
         overrides.forEach((key, value) -> {
             if (overriddenManager.contains(key)) {
                 value.forEach(this::hidden);
@@ -62,11 +67,6 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
 
         applying.forEach(it -> it.setVisible(true));
         applying.clear();
-    }
-
-    @Override
-    public boolean freeze() {
-        return !overrides.isEmpty();
     }
 
     private void hidden(IModelPart part) {

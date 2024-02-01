@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
+import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.core.AfterTransformModifier;
 import moe.plushie.armourers_workshop.core.armature.core.AllayBodyJointModifier;
 import moe.plushie.armourers_workshop.core.armature.core.AllayHeadJointModifier;
@@ -14,7 +15,9 @@ import moe.plushie.armourers_workshop.core.armature.core.DefaultLayerArmaturePlu
 import moe.plushie.armourers_workshop.core.armature.core.DefaultOverriddenArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultSkirtJointModifier;
 import moe.plushie.armourers_workshop.core.armature.core.FlatWingJointModifier;
+import moe.plushie.armourers_workshop.core.armature.core.HorseBodyJointModifier;
 import moe.plushie.armourers_workshop.core.armature.core.VillagerModelArmaturePlugin;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.resources.ResourceLocation;
 
@@ -36,6 +39,7 @@ public abstract class ArmatureTransformerBuilder {
             .put("armourers_workshop:modifier/apply_ally_head", AllayHeadJointModifier::new)
             .put("armourers_workshop:modifier/apply_ally_body", AllayBodyJointModifier::new)
             .put("armourers_workshop:modifier/apply_ally_wing", AllayWingJointModifier::new)
+            .put("armourers_workshop:modifier/apply_horse_body", HorseBodyJointModifier::new)
             .build();
 
     private static final ImmutableMap<String, Function<IDataPackObject, JointModifier>> PARAMETERIZED_MODIFIERS = ImmutableMap.<String, Function<IDataPackObject, JointModifier>>builder()
@@ -173,8 +177,7 @@ public abstract class ArmatureTransformerBuilder {
         });
         object.get("override").entrySet().forEach(it -> overrideModifiers.put(it.getKey(), _parseOverrideModifiers(it.getValue())));
         object.get("plugin").allValues().forEach(it -> pluginModifiers.add(it.stringValue()));
-        object.get("model").allValues().forEach(it -> models.add(_parseResourceLocation(it)));
-        //object.get("entitie").allValues().forEach(it -> entities.add(IEntityTypeProvider.of(it.stringValue())));
+        object.get("model").allValues().forEach(it -> models.add(ArmatureSerializers.readResourceLocation(it)));
 
         // clear all contents.
         contents = null;
@@ -188,7 +191,7 @@ public abstract class ArmatureTransformerBuilder {
             case DICTIONARY: {
                 ArrayList<JointModifier> modifiers = new ArrayList<>();
                 modifiers.addAll(_parseJointTargets(object));
-                modifiers.addAll(_parseTransformModifiers(object, AfterTransformModifier::new));
+                modifiers.addAll(_parseTransformModifiers(object));
                 modifiers.addAll(_parseModifiers(object.get("modifier")));
                 return modifiers;
             }
@@ -251,43 +254,14 @@ public abstract class ArmatureTransformerBuilder {
         }
     }
 
-    private Collection<JointModifier> _parseTransformModifiers(IDataPackObject object, ArmatureModifierBuilder builder) {
-        Vector3f translate = _parseVector(object.get("translate"), Vector3f.ZERO);
-        Vector3f scale = _parseVector(object.get("scale"), Vector3f.ONE);
-        Vector3f rotation = _parseVector(object.get("rotation"), Vector3f.ZERO);
-        if (translate.equals(Vector3f.ZERO) && scale.equals(Vector3f.ONE) && rotation.equals(Vector3f.ZERO)) {
+    private Collection<JointModifier> _parseTransformModifiers(IDataPackObject object) {
+        ITransformf transform = ArmatureSerializers.readTransform(object);
+        if (transform.isIdentity()) {
             return Collections.emptyList();
         }
-        return Collections.singleton(builder.apply(translate, scale, rotation));
+        return Collections.singleton(new AfterTransformModifier(transform));
     }
 
-    private Vector3f _parseVector(IDataPackObject object, Vector3f defaultValue) {
-        switch (object.type()) {
-            case ARRAY: {
-                if (object.size() != 3) {
-                    break;
-                }
-                float f1 = object.at(0).floatValue();
-                float f2 = object.at(1).floatValue();
-                float f3 = object.at(2).floatValue();
-                return new Vector3f(f1, f2, f3);
-            }
-            case DICTIONARY: {
-                float f1 = object.get("x").floatValue();
-                float f2 = object.get("y").floatValue();
-                float f3 = object.get("z").floatValue();
-                return new Vector3f(f1, f2, f3);
-            }
-            default: {
-                break;
-            }
-        }
-        return defaultValue;
-    }
-
-    private ResourceLocation _parseResourceLocation(IDataPackObject object) {
-        return new ResourceLocation(object.stringValue());
-    }
 
     private Collection<String> _parseOverrideModifiers(IDataPackObject object) {
         switch (object.type()) {
@@ -301,27 +275,30 @@ public abstract class ArmatureTransformerBuilder {
     }
 
     private void _parseTranslateModifiers(String name, IDataPackObject object) {
-        Vector3f value = _parseVector(object, Vector3f.ZERO);
+        Vector3f value = ArmatureSerializers.readVector(object, Vector3f.ZERO);
         if (value.equals(Vector3f.ZERO)) {
             return;
         }
-        _addTransformModifier(name, new AfterTransformModifier(value, Vector3f.ONE, Vector3f.ZERO));
+        ITransformf transform = SkinTransform.createTranslateTransform(value);
+        _addTransformModifier(name, new AfterTransformModifier(transform));
     }
 
     private void _parseRotateModifiers(String name, IDataPackObject object) {
-        Vector3f value = _parseVector(object, Vector3f.ZERO);
+        Vector3f value = ArmatureSerializers.readVector(object, Vector3f.ZERO);
         if (value.equals(Vector3f.ZERO)) {
             return;
         }
-        _addTransformModifier(name, new AfterTransformModifier(Vector3f.ZERO, Vector3f.ONE, value));
+        ITransformf transform = SkinTransform.createRotationTransform(value);
+        _addTransformModifier(name, new AfterTransformModifier(transform));
     }
 
     private void _parseScaleModifiers(String name, IDataPackObject object) {
-        Vector3f value = _parseVector(object, Vector3f.ONE);
+        Vector3f value = ArmatureSerializers.readVector(object, Vector3f.ONE);
         if (value.equals(Vector3f.ONE)) {
             return;
         }
-        _addTransformModifier(name, new AfterTransformModifier(Vector3f.ZERO, value, Vector3f.ZERO));
+        ITransformf transform = SkinTransform.createScaleTransform(value);
+        _addTransformModifier(name, new AfterTransformModifier(transform));
     }
 
     private void _addTransformModifier(String name, JointModifier modifier) {

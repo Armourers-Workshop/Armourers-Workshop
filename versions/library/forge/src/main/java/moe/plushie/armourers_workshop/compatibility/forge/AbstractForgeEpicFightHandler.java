@@ -34,6 +34,7 @@ public class AbstractForgeEpicFightHandler extends AbstractForgeEpicFightHandler
         EpicFlightRenderContext context = EpicFlightRenderContext.alloc(entityIn, renderer, packedLightIn, partialTicks, poseStack, buffers);
         if (context != null) {
             context.setFirstPerson(isFirstPerson);
+            context.prepare(entityIn);
         }
     }
 

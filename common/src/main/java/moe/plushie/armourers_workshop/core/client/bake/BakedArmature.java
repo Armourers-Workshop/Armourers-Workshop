@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 
 import java.util.HashMap;
-import java.util.function.Predicate;
 
 public class BakedArmature {
 
@@ -28,8 +27,8 @@ public class BakedArmature {
         this.defaultTransforms = new IJointTransform[armature.size()];
         this.finalTransforms = defaultTransforms;
         // initialized to default joint transform.
-        for (int i = 0; i < this.defaultTransforms.length; ++i) {
-            this.defaultTransforms[i] = armature.getTransform(i);
+        for (int i = 0; i < defaultTransforms.length; ++i) {
+            this.defaultTransforms[i] = armature.getGlobalTransform(i);
         }
     }
 
@@ -61,8 +60,7 @@ public class BakedArmature {
         return finalTransforms;
     }
 
-    public IJointTransform getTransform(BakedSkinPart bakedPart) {
-        ISkinPartType partType = getType(bakedPart);
+    public IJointTransform getTransform(ISkinPartType partType) {
         IJoint joint = getJoint(partType);
         if (joint != null) {
             return finalTransforms[joint.getId()];
@@ -82,18 +80,18 @@ public class BakedArmature {
         return armature;
     }
 
-    private ISkinPartType getType(BakedSkinPart bakedPart) {
+    public IJointTransform getTransform(BakedSkinPart bakedPart) {
         ISkinPartType partType = bakedPart.getType();
         if (partType == SkinPartTypes.BIPPED_LEFT_WING) {
             if (bakedPart.getProperties().get(SkinProperty.WINGS_MATCHING_POSE)) {
-                return SkinPartTypes.BIPPED_LEFT_PHALANX;
+                return getTransform(SkinPartTypes.BIPPED_LEFT_PHALANX);
             }
         }
         if (partType == SkinPartTypes.BIPPED_RIGHT_WING) {
             if (bakedPart.getProperties().get(SkinProperty.WINGS_MATCHING_POSE)) {
-                return SkinPartTypes.BIPPED_RIGHT_PHALANX;
+                return getTransform(SkinPartTypes.BIPPED_RIGHT_PHALANX);
             }
         }
-        return partType;
+        return getTransform(partType);
     }
 }

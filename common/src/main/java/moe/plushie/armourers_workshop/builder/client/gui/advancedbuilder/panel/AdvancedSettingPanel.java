@@ -39,7 +39,8 @@ public class AdvancedSettingPanel extends AdvancedPanel {
                     SkinProperty.OVERRIDE_EQUIPMENT_BOOTS,
                     SkinProperty.OVERRIDE_EQUIPMENT_CHESTPLATE,
                     SkinProperty.OVERRIDE_EQUIPMENT_HELMET,
-                    SkinProperty.OVERRIDE_EQUIPMENT_LEGGINGS
+                    SkinProperty.OVERRIDE_EQUIPMENT_LEGGINGS,
+                    SkinProperty.LIMIT_LEGS_LIMBS
             ))
             .put(SkinTypes.ARMOR_HEAD, ObjectUtils.map(
                     SkinProperty.OVERRIDE_MODEL_HEAD,
@@ -67,7 +68,8 @@ public class AdvancedSettingPanel extends AdvancedPanel {
                     SkinProperty.OVERRIDE_MODEL_RIGHT_LEG,
                     SkinProperty.OVERRIDE_OVERLAY_LEFT_PANTS,
                     SkinProperty.OVERRIDE_OVERLAY_RIGHT_PANTS,
-                    SkinProperty.OVERRIDE_EQUIPMENT_BOOTS
+                    SkinProperty.OVERRIDE_EQUIPMENT_BOOTS,
+                    SkinProperty.LIMIT_LEGS_LIMBS
             ))
             .put(SkinTypes.ARMOR_WINGS, ObjectUtils.map())
             .put(SkinTypes.ITEM_SWORD, ObjectUtils.map())
@@ -89,6 +91,17 @@ public class AdvancedSettingPanel extends AdvancedPanel {
                     SkinProperty.BLOCK_INVENTORY,
                     SkinProperty.BLOCK_INVENTORY_WIDTH,
                     SkinProperty.BLOCK_INVENTORY_HEIGHT
+            ))
+
+            .put(SkinTypes.HORSE, ObjectUtils.map(
+                    SkinProperty.OVERRIDE_MODEL_HEAD,
+                    SkinProperty.OVERRIDE_MODEL_CHEST,
+                    SkinProperty.OVERRIDE_MODEL_LEFT_FRONT_LEG,
+                    SkinProperty.OVERRIDE_MODEL_RIGHT_FRONT_LEG,
+                    SkinProperty.OVERRIDE_MODEL_LEFT_HIND_LEG,
+                    SkinProperty.OVERRIDE_MODEL_RIGHT_HIND_LEG,
+                    SkinProperty.OVERRIDE_MODEL_TAIL,
+                    SkinProperty.OVERRIDE_EQUIPMENT_CHESTPLATE
             ))
             .build();
 
@@ -146,7 +159,7 @@ public class AdvancedSettingPanel extends AdvancedPanel {
 
             @Override
             public void endEditing() {
-                editor.endEditing();;
+                editor.endEditing();
             }
 
         };

@@ -8,15 +8,16 @@ import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.core.client.other.thirdparty.EpicFlightRenderContext;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.client.other.thirdparty.EpicFlightRenderContext;
 import moe.plushie.armourers_workshop.core.data.ItemStackProvider;
 import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
+import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
@@ -64,11 +65,11 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
     private final SkinOverriddenManager overriddenManager = new SkinOverriddenManager();
     private final DataStorage dataStorage = new DataStorage();
 
+    private EntityProfile wardrobeProfile = null;
     private ColorScheme colorScheme = ColorScheme.EMPTY;
 
     private boolean isRenderExtra = false;
 
-    private boolean isActiveWardrobe = false;
     private boolean isLimitLimbs = false;
     private boolean isListening = false;
 
@@ -148,7 +149,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe == null) {
             this.isRenderExtra = false;
-            this.isActiveWardrobe = false;
+            this.wardrobeProfile = null;
             return;
         }
         Container inventory = wardrobe.getInventory();
@@ -166,7 +167,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
             lastWardrobeFlags.or(flags);
             version += 1;
         }
-        this.isActiveWardrobe = true;
+        this.wardrobeProfile = wardrobe.getProfile();
     }
 
     protected void invalidateAll() {
@@ -183,7 +184,8 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
     }
 
     private void loadDyeSlots(Entity entity, BiConsumer<ISkinPaintType, ItemStack> consumer) {
-        if (!isActiveWardrobe) {
+        // ignore when wardrobe profile load fails.
+        if (wardrobeProfile == null) {
             return;
         }
         for (ISkinPaintType paintType : SkinSlotType.getSupportedPaintTypes()) {
@@ -205,10 +207,11 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
         for (ItemStack itemStack : itemProvider.getArmorSlots(entity)) {
             consumer.accept(itemStack, 400 + i++, false);
         }
-        if (!isActiveWardrobe) {
+        // ignore when wardrobe profile load fails.
+        if (wardrobeProfile == null) {
             return;
         }
-        for (SkinSlotType slotType : SkinSlotType.values()) {
+        for (SkinSlotType slotType : wardrobeProfile.getSlots()) {
             if (slotType == SkinSlotType.DYE) {
                 continue;
             }

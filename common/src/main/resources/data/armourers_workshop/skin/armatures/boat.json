@@ -1,13 +1,91 @@
 {
   "joint": {
     "Body": {
-      "id": "armourers:boat.base"
+      "id": "armourers:boat.base",
+      "cube": {
+        "name": "body",
+        "children": [
+          {
+            "name": "left",
+            "origin": [ -14, -7, -1 ],
+            "size": [  28, 6, 2 ],
+            "uv": [ 0, 43 ],
+            "translate": [ 0, 4, 9 ]
+          },
+          {
+            "name": "right",
+            "origin": [ -14, -7, -1 ],
+            "size": [  28, 6, 2 ],
+            "uv": [ 0, 35 ],
+            "translate": [ 0, 4, -9 ],
+            "rotation": [ 0, 180, 0 ]
+          },
+          {
+            "name": "bottom",
+            "origin": [ -14, -9, -3 ],
+            "size": [  28, 16, 3 ],
+            "uv": [ 0, 0 ],
+            "translate": [ 0, 3, 1 ],
+            "rotation": [ 90, 0, 0 ]
+          },
+          {
+            "name": "front",
+            "origin": [ -8, -7, -1 ],
+            "size": [  16, 6, 2 ],
+            "uv": [ 0, 27 ],
+            "translate": [ 15, 4, 0 ],
+            "rotation": [ 0, 90, 0 ]
+          },
+          {
+            "name": "back",
+            "origin": [ -13, -7, -1 ],
+            "size": [ 18, 6, 2 ],
+            "uv": [ 0, 19 ],
+            "translate": [ -15, 4, 4 ],
+            "rotation": [ 0, 270, 0 ]
+          }
+        ]
+      }
     },
     "Paddle_L": {
-      "id": "armourers:boat.leftPaddle"
+      "id": "armourers:boat.leftPaddle",
+      "cube": {
+        "name": "left_paddle",
+        "origin": [ -1, 0, -5 ],
+        "size": [ 2, 2, 18 ],
+        "uv": [ 62, 0 ],
+        "children": [
+          {
+            "origin": [ -1.001, -3, 8 ],
+            "size": [ 1, 6, 7 ],
+            "uv": [ 62, 0 ]
+          }
+        ]
+      },
+      "transform": {
+        "translate": [ 3, -5, 9 ],
+        "rotation": [ -37.5, 37.8, 11.25 ]
+      }
     },
     "Paddle_R": {
-      "id": "armourers:boat.rightPaddle"
+      "id": "armourers:boat.rightPaddle",
+      "cube": {
+        "name": "right_paddle",
+        "origin": [ -1, 0, -5 ],
+        "size": [ 2, 2, 18 ],
+        "uv": [ 62, 20 ],
+        "children": [
+          {
+            "origin": [ 0.001, -3, 8 ],
+            "size": [ 1, 6, 7 ],
+            "uv": [ 62, 20 ]
+          }
+        ]
+      },
+      "transform": {
+        "translate": [ 3, -5, -9 ],
+        "rotation": [ -37.5, 142, 11.25 ]
+      }
     }
   },
   "type": [

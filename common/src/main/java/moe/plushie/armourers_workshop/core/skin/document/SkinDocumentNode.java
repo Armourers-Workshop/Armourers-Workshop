@@ -20,6 +20,7 @@ public class SkinDocumentNode {
     private Vector3f location = Vector3f.ZERO;
     private Vector3f rotation = Vector3f.ZERO;
     private Vector3f scale = Vector3f.ONE;
+    private Vector3f pivot = Vector3f.ZERO;
     private SkinTransform transform = null;
 
     private ISkinPartType type = SkinPartTypes.ADVANCED;
@@ -54,6 +55,7 @@ public class SkinDocumentNode {
         this.location = tag.getOptionalVector3f(Keys.LOCATION, Vector3f.ZERO);
         this.rotation = tag.getOptionalVector3f(Keys.ROTATION, Vector3f.ZERO);
         this.scale = tag.getOptionalVector3f(Keys.SCALE, Vector3f.ONE);
+        this.pivot = tag.getOptionalVector3f(Keys.PIVOT, Vector3f.ZERO);
         if (tag.contains(Keys.CHILDREN)) {
             ListTag listTag = tag.getList(Keys.CHILDREN, Constants.TagFlags.COMPOUND);
             int count = listTag.size();
@@ -205,16 +207,34 @@ public class SkinDocumentNode {
         return scale;
     }
 
+    public void setPivot(Vector3f value) {
+        pivot = value;
+        transform = null;
+        if (listener != null) {
+            CompoundTag tag = new CompoundTag();
+            tag.putOptionalVector3f(Keys.PIVOT, value, null);
+            listener.documentDidUpdateNode(this, tag);
+        }
+    }
+
+    public Vector3f getPivot() {
+        return pivot;
+    }
+
+
     public SkinTransform getTransform() {
         if (transform != null) {
             return transform;
         }
-        Vector3f translate = location;
+        Vector3f translate = this.location;
+        Vector3f pivot = this.pivot;
         if (!translate.equals(Vector3f.ZERO)) {
-            // meters to block
-            translate = new Vector3f(-translate.getX() * 16, -translate.getY() * 16, translate.getZ() * 16);
+            translate = new Vector3f(-translate.getX(), -translate.getY(), translate.getZ());
         }
-        transform = SkinTransform.create(translate, rotation, scale);
+        if (!pivot.equals(Vector3f.ZERO)) {
+            pivot = new Vector3f(-pivot.getX(), -pivot.getY(), pivot.getZ());
+        }
+        transform = SkinTransform.create(translate, rotation, scale, pivot, Vector3f.ZERO);
         return transform;
     }
 
@@ -306,6 +326,7 @@ public class SkinDocumentNode {
         tag.putOptionalVector3f(Keys.LOCATION, location, Vector3f.ZERO);
         tag.putOptionalVector3f(Keys.ROTATION, rotation, Vector3f.ZERO);
         tag.putOptionalVector3f(Keys.SCALE, scale, Vector3f.ONE);
+        tag.putOptionalVector3f(Keys.PIVOT, pivot, Vector3f.ZERO);
         if (children.size() != 0) {
             ListTag listTag = new ListTag();
             children.forEach(it -> listTag.add(it.serializeNBT()));
@@ -336,6 +357,11 @@ public class SkinDocumentNode {
             scale = newScale;
             transform = null;
         }
+        Vector3f newPivot = tag.getOptionalVector3f(Keys.PIVOT, null);
+        if (newPivot != null) {
+            pivot = newPivot;
+            transform = null;
+        }
         String newName = tag.getOptionalString(Keys.NAME, null);
         if (newName != null) {
             name = newName;
@@ -357,6 +383,7 @@ public class SkinDocumentNode {
         public static final String LOCATION = "Location";
         public static final String ROTATION = "Rotation";
         public static final String SCALE = "Scale";
+        public static final String PIVOT = "Pivot";
         public static final String CHILDREN = "Children";
         public static final String ENABLED = "Enabled";
         public static final String MIRROR = "Mirror";

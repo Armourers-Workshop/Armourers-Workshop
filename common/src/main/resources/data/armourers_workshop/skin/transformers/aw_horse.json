@@ -3,13 +3,59 @@
   "target": "armourers_workshop:horse",
   "joint": {
     "Head": "head",
-    "Neck": "neck",
+    "Neck": "head",
     "Chest": "body",
     "Thigh_LF": "left_front_leg",
     "Thigh_RF": "right_front_leg",
     "Thigh_LB": "left_hind_leg",
     "Thigh_RB": "right_hind_leg",
-    "Tail": "tail"
+    "Leg_LF": "left_front_leg",
+    "Leg_RF": "right_front_leg",
+    "Leg_LB": "left_hind_leg",
+    "Leg_RB": "right_hind_leg",
+    "Tail": {
+      "target": "tail",
+      "modifier": [
+        "armourers_workshop:modifier/apply_horse_body"
+      ]
+    }
+  },
+  "transform": {
+    "translate": {
+      "Head": [ 0, -6, 1 ],
+      "Neck": [ 0, 4, 1 ],
+      "Chest": [ 0, -3, -15 ],
+      "Thigh_LF": [ -1, -1, 0 ],
+      "Thigh_RF": [ 1, -1, 0 ],
+      "Thigh_LB": [ -1, -1, 1 ],
+      "Thigh_RB": [ 1, -1, 1 ],
+      "Leg_LF": [ -1, 4, 0 ],
+      "Leg_RF": [ 1, 4, 0 ],
+      "Leg_LB": [ -1, 4, 1 ],
+      "Leg_RB": [ 1, 4, 1 ],
+      "Tail": [ 0, 2, 2 ]
+    }
+  },
+  "override": {
+    "overrideModelHead": "head",
+    "overrideModelChest": "body",
+    "overrideModelLeftFrontLeg": [
+      "left_front_leg",
+      "left_front_baby_leg"
+    ],
+    "overrideModelRightFrontLeg": [
+      "right_front_leg",
+      "right_front_baby_leg"
+    ],
+    "overrideModelLeftHindLeg": [
+      "left_hind_leg",
+      "left_hind_baby_leg"
+    ],
+    "overrideModelRightHindLeg": [
+      "right_hind_leg",
+      "right_hind_baby_leg"
+    ],
+    "overrideModelTail": "tail"
   },
   "model": [
     "minecraft:model/horse"

@@ -13,21 +13,20 @@ import net.minecraft.world.level.block.state.BlockState;
 @Environment(EnvType.CLIENT)
 public class AdvancedBlockGuideRenderer extends AbstractAdvancedGuideRenderer {
 
-
-    private final BlockRenderDispatcher blockRenderDispatcher;
-
+    private final BlockState blockState;
+    private final BlockRenderDispatcher blockRenderer;
 
     public AdvancedBlockGuideRenderer() {
-        this.blockRenderDispatcher = Minecraft.getInstance().getBlockRenderer();
+        this.blockState = Blocks.GRASS_BLOCK.defaultBlockState();
+        this.blockRenderer = Minecraft.getInstance().getBlockRenderer();
     }
 
     @Override
     public void render(PoseStack poseStack, int light, int overlay, float r, float g, float b, float alpha, MultiBufferSource buffers) {
-        BlockState blockState = Blocks.GRASS_BLOCK.defaultBlockState();
         poseStack.pushPose();
         poseStack.scale(-16, -16, 16);
         poseStack.translate(-0.5f, -1.5f, -0.5f);
-        blockRenderDispatcher.renderSingleBlock(blockState, poseStack, buffers, 0xf000f0, OverlayTexture.NO_OVERLAY);
+        blockRenderer.renderSingleBlock(blockState, poseStack, buffers, 0xf000f0, OverlayTexture.NO_OVERLAY);
         poseStack.popPose();
     }
 }

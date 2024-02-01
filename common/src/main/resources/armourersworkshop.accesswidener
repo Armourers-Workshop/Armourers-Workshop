@@ -38,6 +38,29 @@ accessible field net/minecraft/client/model/ChickenModel redThing Lnet/minecraft
 accessible field net/minecraft/client/model/PlayerModel ear Lnet/minecraft/client/model/geom/ModelPart;
 accessible field net/minecraft/client/model/PlayerModel cloak Lnet/minecraft/client/model/geom/ModelPart;
 
+accessible field net/minecraft/client/model/HorseModel body Lnet/minecraft/client/model/geom/ModelPart;
+accessible field net/minecraft/client/model/HorseModel headParts Lnet/minecraft/client/model/geom/ModelPart;
+accessible field net/minecraft/client/model/HorseModel tail Lnet/minecraft/client/model/geom/ModelPart;
+##if MC >= 11800
+accessible field net/minecraft/client/model/HorseModel rightHindLeg Lnet/minecraft/client/model/geom/ModelPart;
+accessible field net/minecraft/client/model/HorseModel leftHindLeg Lnet/minecraft/client/model/geom/ModelPart;
+accessible field net/minecraft/client/model/HorseModel rightFrontLeg Lnet/minecraft/client/model/geom/ModelPart;
+accessible field net/minecraft/client/model/HorseModel leftFrontLeg Lnet/minecraft/client/model/geom/ModelPart;
+accessible field net/minecraft/client/model/HorseModel rightHindBabyLeg Lnet/minecraft/client/model/geom/ModelPart;
+accessible field net/minecraft/client/model/HorseModel leftHindBabyLeg Lnet/minecraft/client/model/geom/ModelPart;
+accessible field net/minecraft/client/model/HorseModel rightFrontBabyLeg Lnet/minecraft/client/model/geom/ModelPart;
+accessible field net/minecraft/client/model/HorseModel leftFrontBabyLeg Lnet/minecraft/client/model/geom/ModelPart;
+##else
+### accessible field net/minecraft/client/model/HorseModel leg1 Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/HorseModel leg2 Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/HorseModel leg3 Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/HorseModel leg4 Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/HorseModel babyLeg1 Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/HorseModel babyLeg2 Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/HorseModel babyLeg3 Lnet/minecraft/client/model/geom/ModelPart;
+### accessible field net/minecraft/client/model/HorseModel babyLeg4 Lnet/minecraft/client/model/geom/ModelPart;
+##endif
+
 ##if MC >= 11800
 accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
 ##else

@@ -12,7 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 public class SkinSlot extends Slot {
@@ -28,7 +27,7 @@ public class SkinSlot extends Slot {
     @Override
     public boolean mayPlace(ItemStack itemStack) {
         // when slot type is not provide, we consider it is an unrestricted slot.
-        if (!slotTypes.isEmpty() && !slotTypes.contains(SkinSlotType.of(itemStack))) {
+        if (!slotTypes.isEmpty() && !slotTypes.contains(SkinSlotType.byItem(itemStack))) {
             return false;
         }
         return container.canPlaceItem(index, itemStack);

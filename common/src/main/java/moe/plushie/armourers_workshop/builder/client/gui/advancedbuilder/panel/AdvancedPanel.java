@@ -199,7 +199,7 @@ public abstract class AdvancedPanel extends UIView {
 
         public enum Unit implements NewSlider.Formatter {
 
-            POINT("#.#### m", "#.#####", 0, 0.01, 1),
+            POINT("#.####", "#.#####", 0, 0.01, 1),
             DEGREES("#.#°", "#.#####", 0, 0.1, 10),
             SCALE("0.000", "0.0####", 1, 0.01, 1);
 

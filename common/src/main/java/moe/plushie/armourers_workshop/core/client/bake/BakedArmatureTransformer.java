@@ -93,6 +93,12 @@ public class BakedArmatureTransformer {
         });
     }
 
+    public void prepare(Entity entity, SkinRenderContext context) {
+        for (ArmaturePlugin plugin : plugins) {
+            plugin.prepare(entity, context);
+        }
+    }
+
     public void activate(Entity entity, SkinRenderContext context) {
         for (ArmaturePlugin plugin : plugins) {
             plugin.activate(entity, context);

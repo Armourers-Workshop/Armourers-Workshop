@@ -73,28 +73,6 @@ public class SkinWardrobeStorage {
         }
     }
 
-//    public static void saveVisibility(HashSet<EquipmentSlot> visibility, CompoundTag nbt) {
-//        if (visibility.isEmpty()) {
-//            return;
-//        }
-//        short value = 0;
-//        for (EquipmentSlot slotType : visibility) {
-//            value |= 1 << slotType.getFilterFlag();
-//        }
-//        nbt.putShort("Visibility", value);
-//    }
-//
-//    public static void loadVisibility(HashSet<EquipmentSlot> visibility, CompoundTag nbt) {
-//        short value = nbt.getShort("Visibility");
-//        visibility.clear();
-//        for (EquipmentSlot slotType : EquipmentSlot.values()) {
-//            int mask = 1 << slotType.getFilterFlag();
-//            if ((value & mask) != 0) {
-//                visibility.add(slotType);
-//            }
-//        }
-//    }
-
     public static void saveSkinSlots(HashMap<SkinSlotType, Integer> slots, CompoundTag nbt) {
         if (slots.isEmpty()) {
             return;
@@ -117,7 +95,7 @@ public class SkinWardrobeStorage {
         }
         for (int i = 0; i < value.size(); ++i) {
             short encoded = value.getShort(i);
-            SkinSlotType slotType = SkinSlotType.by((encoded >> 8) & 0xff);
+            SkinSlotType slotType = SkinSlotType.byId((encoded >> 8) & 0xff);
             if (slotType != null) {
                 slots.put(slotType, encoded & 0xff);
             }

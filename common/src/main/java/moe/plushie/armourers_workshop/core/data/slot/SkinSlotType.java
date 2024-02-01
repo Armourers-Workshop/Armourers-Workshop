@@ -34,7 +34,10 @@ public enum SkinSlotType {
     HOE(11, 56, 1, "hoe", SkinTypes.ITEM_HOE),
 
     OUTFIT(12, 70, 10, "outfit", SkinTypes.OUTFIT),
-    DYE(13, 80, 16, "dye", null);
+    DYE(13, 80, 16, "dye", null),
+
+    HORSE(14, 70, 10, "horse", SkinTypes.HORSE),
+    UNKNOWN(99, 0, 80, "unknown", null);
 
     private final String name;
     private final int id;
@@ -54,27 +57,26 @@ public enum SkinSlotType {
     }
 
     @Nullable
-    public static SkinSlotType by(int id) {
+    public static SkinSlotType byId(int id) {
         return Helper.INDEXED_SLOTS.get(id);
     }
 
     @Nullable
-    public static SkinSlotType of(String name) {
+    public static SkinSlotType byName(String name) {
         return Helper.NAMED_SLOTS.get(name);
     }
 
-    @Nullable
-    public static SkinSlotType of(ISkinType skinType) {
+    public static SkinSlotType byType(ISkinType skinType) {
         for (SkinSlotType slotType : SkinSlotType.values()) {
             if (Objects.equals(slotType.skinType, skinType)) {
                 return slotType;
             }
         }
-        return null;
+        return SkinSlotType.UNKNOWN;
     }
 
     @Nullable
-    public static SkinSlotType of(ItemStack itemStack) {
+    public static SkinSlotType byItem(ItemStack itemStack) {
         if (itemStack.isEmpty()) {
             return null;
         }
@@ -83,7 +85,7 @@ public enum SkinSlotType {
         }
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         if (!descriptor.isEmpty()) {
-            return of(descriptor.getType());
+            return byType(descriptor.getType());
         }
         return null;
     }

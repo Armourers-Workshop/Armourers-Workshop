@@ -44,7 +44,7 @@ public class SkinDocumentTypes {
     public static final SkinDocumentType ITEM_BOAT = register("item", SkinTypes.ITEM_BOAT);
     public static final SkinDocumentType ITEM_FISHING = register("item", SkinTypes.ITEM_FISHING);
 
-    public static final SkinDocumentType ENTITY_HORSE_OUTFIT = register("entity", SkinTypes.HORSE);
+    public static final SkinDocumentType ENTITY_HORSE = register("entity", SkinTypes.HORSE);
 
     public static final SkinDocumentType BLOCK = register("block", SkinTypes.BLOCK);
 

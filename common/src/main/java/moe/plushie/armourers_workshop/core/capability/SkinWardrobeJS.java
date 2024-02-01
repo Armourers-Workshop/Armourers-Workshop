@@ -74,11 +74,11 @@ public class SkinWardrobeJS {
     }
 
     public void setItem(String slotType, int slot, ItemStack itemStack) {
-        wardrobe.setItem(SkinSlotType.of(slotType), slot, itemStack);
+        wardrobe.setItem(SkinSlotType.byName(slotType), slot, itemStack);
     }
 
     public ItemStack getItem(String slotType, int slot) {
-        return wardrobe.getItem(SkinSlotType.of(slotType), slot);
+        return wardrobe.getItem(SkinSlotType.byName(slotType), slot);
     }
 
     public void clear() {
@@ -86,19 +86,19 @@ public class SkinWardrobeJS {
     }
 
     public void setUnlockedSize(String slotType, int size) {
-        wardrobe.setUnlockedSize(SkinSlotType.of(slotType), size);
+        wardrobe.setUnlockedSize(SkinSlotType.byName(slotType), size);
     }
 
     public int getUnlockedSize(String slotType) {
-        return wardrobe.getUnlockedSize(SkinSlotType.of(slotType));
+        return wardrobe.getUnlockedSize(SkinSlotType.byName(slotType));
     }
 
     public int getMaximumSize(String slotType) {
-        return wardrobe.getMaximumSize(SkinSlotType.of(slotType));
+        return wardrobe.getMaximumSize(SkinSlotType.byName(slotType));
     }
 
     public int getFreeSize(String slotType) {
-        return wardrobe.getFreeSlot(SkinSlotType.of(slotType));
+        return wardrobe.getFreeSlot(SkinSlotType.byName(slotType));
     }
 
     public void disable(String opt) {

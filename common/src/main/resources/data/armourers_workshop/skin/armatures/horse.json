@@ -1,40 +1,239 @@
 {
   "joint": {
     "Head": {
-      "id": "armourers:horse.head"
+      "parent": "Neck",
+      "id": "armourers:horse.head",
+      "cube": {
+        "name": "head",
+        "origin": [ -3, -5, -3 ],
+        "size": [ 6, 5, 7 ],
+        "uv": [ 0, 13 ],
+        "children": [
+          {
+            "name": "left_ear",
+            "origin": [ 3.55, -2, 6 ],
+            "size": [  2, 3, 1 ],
+            "inflate": -0.001,
+            "uv": [ 19, 16 ]
+          },
+          {
+            "name": "right_ear",
+            "origin": [ 0.45, -2, 6 ],
+            "size": [  2, 3, 1 ],
+            "inflate": -0.001,
+            "uv": [ 19, 16, 25, 20 ]
+          },
+          {
+            "name": "upper_mouth",
+            "origin": [ 1, 0, -5 ],
+            "size": [  4, 5, 5 ],
+            "uv": [ 0, 25 ]
+          }
+        ]
+      },
+      "transform": {
+        "translate": [ 0, -10, 0 ]
+      }
     },
     "Neck": {
-      "id": "armourers:horse.neck"
+      "parent": "Chest",
+      "id": "armourers:horse.neck",
+      "cube": {
+        "name": "head_parts",
+        "origin": [ -2.05, -10, -3 ],
+        "size": [ 4, 12, 7 ],
+        "uv": [ 0, 35 ],
+        "children": [
+          {
+            "name": "mane",
+            "origin": [ 1.05, -5, 7.01 ],
+            "size": [  2, 16, 2 ],
+            "uv": [ 56, 36 ]
+          }
+        ]
+      },
+      "transform": {
+        "translate": [ 0, -4, -2 ],
+        "rotation": [ 30, 0, 0 ],
+        "offset": [ 0, 4, 1 ]
+      }
     },
     "Chest": {
-      "id": "armourers:horse.chest"
+      "parent": "Root",
+      "id": "armourers:horse.chest",
+      "cube": {
+        "name": "body",
+        "origin": [ -5, -5, -2 ],
+        "size": [ 10, 10, 22 ],
+        "inflate": 0.05,
+        "uv": [ 0, 32 ]
+      },
+      "transform": {
+        "translate": [ 0, 8, -10 ]
+      }
     },
     "Thigh_LF": {
-      "id": "armourers:horse.left_front_leg"
+      "parent": "Chest",
+      "id": "armourers:horse.left_front_leg",
+      "cube": {
+        "name": "left_front_leg",
+        "origin": [ -2, 0, -1.9 ],
+        "size": [ 4, 5, 4 ],
+        "uv": {
+          "north": [ 56, 25, 52, 30 ],
+          "east": [ 60, 25, 54, 30 ],
+          "south": [ 64, 25, 60, 30 ],
+          "west": [ 52, 25, 48, 30 ],
+          "up": [ 56, 21, 52, 25 ]
+        }
+      },
+      "transform": {
+        "translate": [ 3, 5, 0 ]
+      }
     },
     "Thigh_RF": {
-      "id": "armourers:horse.right_front_leg"
+      "parent": "Chest",
+      "id": "armourers:horse.right_front_leg",
+      "cube": {
+        "name": "right_front_leg",
+        "origin": [ -2, 0, -1.9 ],
+        "size": [ 4, 5, 4 ],
+        "uv": {
+          "north": [ 52, 25, 56, 30 ],
+          "east": [ 48, 25, 52, 30 ],
+          "south": [ 60, 25, 64, 30 ],
+          "west": [ 56, 25, 60, 30 ],
+          "up": [ 52, 21, 56, 25 ]
+        }
+      },
+      "transform": {
+        "translate": [ -3, 5, 0 ]
+      }
     },
-    "Thigh_LH": {
-      "id": "armourers:horse.left_hind_leg"
+    "Thigh_LB": {
+      "parent": "Chest",
+      "id": "armourers:horse.left_hind_leg",
+      "cube": {
+        "name": "left_hind_leg",
+        "origin": [ -2, 0, -2 ],
+        "size": [ 4, 5, 4 ],
+        "uv": {
+          "north": [ 56, 25, 52, 30 ],
+          "east": [ 60, 25, 54, 30 ],
+          "south": [ 64, 25, 60, 30 ],
+          "west": [ 52, 25, 48, 30 ],
+          "up": [ 56, 21, 52, 25 ]
+        }
+      },
+      "transform": {
+        "translate": [ 3, 5, 18 ]
+      }
     },
-    "Thigh_RH": {
-      "id": "armourers:horse.right_hind_leg"
+    "Thigh_RB": {
+      "parent": "Chest",
+      "id": "armourers:horse.right_hind_leg",
+      "cube": {
+        "name": "right_hind_leg",
+        "origin": [ -2, 0, -2 ],
+        "size": [ 4, 5, 4 ],
+        "uv": {
+          "north": [ 52, 25, 56, 30 ],
+          "east": [ 48, 25, 52, 30 ],
+          "south": [ 60, 25, 64, 30 ],
+          "west": [ 56, 25, 60, 30 ],
+          "up": [ 52, 21, 56, 25 ]
+        }
+      },
+      "transform": {
+        "translate": [ -3, 5, 18 ]
+      }
     },
     "Leg_LF": {
-      "id": "armourers:horse.left_front_leg2"
+      "parent": "Thigh_LF",
+      "id": "armourers:horse.left_front_leg2",
+      "cube": {
+        "origin": [ -2, 0, -1.9 ],
+        "size": [ 4, 6, 4 ],
+        "uv": {
+          "north": [ 56, 30, 52, 36 ],
+          "east": [ 60, 30, 56, 36 ],
+          "south": [ 64, 30, 60, 36 ],
+          "west": [ 52, 30, 48, 36 ],
+          "down": [ 56, 25, 60, 21 ]
+        }
+      },
+      "transform": {
+        "translate": [ 0, 5, 0 ]
+      }
     },
     "Leg_RF": {
-      "id": "armourers:horse.right_front_leg2"
+      "parent": "Thigh_RF",
+      "id": "armourers:horse.right_front_leg2",
+      "cube": {
+        "origin": [ -2, 0, -1.9 ],
+        "size": [ 4, 6, 4 ],
+        "uv": {
+          "north": [ 52, 30, 56, 36 ],
+          "east": [ 48, 30, 52, 36 ],
+          "south": [ 60, 30, 64, 36 ],
+          "west": [ 56, 30, 60, 36 ],
+          "down": [ 60, 25, 56, 21 ]
+        }
+      },
+      "transform": {
+        "translate": [ 0, 5, 0 ]
+      }
     },
-    "Leg_LH": {
-      "id": "armourers:horse.left_hind_leg2"
+    "Leg_LB": {
+      "parent": "Thigh_LB",
+      "id": "armourers:horse.left_hind_leg2",
+      "cube": {
+        "origin": [ -2, 0, -2 ],
+        "size": [ 4, 6, 4 ],
+        "uv": {
+          "north": [ 56, 30, 52, 36 ],
+          "east": [ 60, 30, 56, 36 ],
+          "south": [ 64, 30, 60, 36 ],
+          "west": [ 52, 30, 48, 36 ],
+          "down": [ 56, 25, 60, 21 ]
+        }
+      },
+      "transform": {
+        "translate": [ 0, 5, 0 ]
+      }
     },
-    "Leg_RH": {
-      "id": "armourers:horse.right_hind_leg2"
+    "Leg_RB": {
+      "parent": "Thigh_RB",
+      "id": "armourers:horse.right_hind_leg2",
+      "cube": {
+        "origin": [ -2, 0, -2 ],
+        "size": [ 4, 6, 4 ],
+        "uv": {
+          "north": [ 52, 30, 56, 36 ],
+          "east": [ 48, 30, 52, 36 ],
+          "south": [ 60, 30, 64, 36 ],
+          "west": [ 56, 30, 60, 36 ],
+          "down": [ 60, 25, 56, 21 ]
+        }
+      },
+      "transform": {
+        "translate": [ 0, 5, 0 ]
+      }
     },
     "Tail": {
-      "id": "armourers:horse.tail"
+      "parent": "Chest",
+      "id": "armourers:horse.tail",
+      "cube": {
+        "name": "tail",
+        "origin": [ -1.5, -2, -2 ],
+        "size": [ 3, 14, 4 ],
+        "uv": [ 42, 36 ]
+      },
+      "transform": {
+        "translate": [ 0, -2, 17 ],
+        "rotation": [ 30, 0, 0 ],
+        "offset": [ 0, 2, 2 ]
+      }
     }
   },
   "type": [

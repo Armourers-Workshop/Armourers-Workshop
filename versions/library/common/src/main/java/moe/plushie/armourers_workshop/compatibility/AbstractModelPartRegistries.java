@@ -63,6 +63,21 @@ public abstract class AbstractModelPartRegistries {
             //it.put("right_wing", model.rightWing);
         });
 
+        ModelHolder.register(AbstractSkinnableModels.HORSE, (model, it) -> {
+            it.put("head", model.headParts);
+            it.put("body", model.body);
+            it.put("left_hind_leg", model.leftHindLeg);
+            it.put("right_hind_leg", model.rightHindLeg);
+            it.put("left_front_leg", model.leftFrontLeg);
+            it.put("right_front_leg", model.rightFrontLeg);
+            it.put("left_front_baby_leg", model.leftFrontBabyLeg);
+            it.put("right_front_baby_leg", model.rightFrontBabyLeg);
+            it.put("left_hind_baby_leg", model.leftHindBabyLeg);
+            it.put("right_hind_baby_leg", model.rightHindBabyLeg);
+            it.put("tail", model.tail);
+        });
+
+
         ModelHolder.register(AbstractSkinnableModels.VILLAGER, CachedModel.Humanoid::new, (model, it) -> {
             ModelPart root = model.root();
             ModelPart head = root.getSafeChild("head");

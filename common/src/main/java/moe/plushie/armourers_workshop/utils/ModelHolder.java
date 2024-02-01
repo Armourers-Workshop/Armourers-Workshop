@@ -12,6 +12,7 @@ import net.minecraft.client.model.geom.ModelPart;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -58,16 +59,16 @@ public class ModelHolder {
     }
 
     private static <V extends Model, M extends IModel> M createHolder(V model) {
+        HashSet<Entry<?, ?>> exists = new HashSet<>();
         ArrayList<BiConsumer<V, Container>> builders = new ArrayList<>();
         Function<Container, M> factory = null;
         Class<?> clazz = model.getClass();
         while (clazz != Object.class) {
-            Entry<?, ?> entry = ENTRIES.get(clazz);
-            if (entry != null) {
-                Entry<V, M> entry1 = ObjectUtils.unsafeCast(entry);
-                builders.add(entry1.builder);
+            Entry<V, M> entry = getEntry(clazz);
+            if (entry != null && exists.add(entry)) {
+                builders.add(entry.builder);
                 if (factory == null) {
-                    factory = entry1.factory;
+                    factory = entry.factory;
                 }
             }
             clazz = clazz.getSuperclass();
@@ -79,6 +80,20 @@ public class ModelHolder {
         Container container = new Container(model);
         builders.forEach(builder -> builder.accept(model, container));
         return factory.apply(container);
+    }
+
+    private static <V extends Model, M extends IModel> Entry<V, M> getEntry(Class<?> clazz) {
+        Entry<?, ?> entry = ENTRIES.get(clazz);
+        if (entry == null) {
+            // this is root class?
+            if (clazz == Object.class) {
+                return null;
+            }
+            // autofill by parent entry.
+            entry = getEntry(clazz.getSuperclass());
+            ENTRIES.put(clazz, entry);
+        }
+        return ObjectUtils.unsafeCast(entry);
     }
 
     public static class Entry<T extends Model, M extends IModel> {
