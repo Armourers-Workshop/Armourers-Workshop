@@ -7,5 +7,7 @@ public interface IResource {
 
     String getName();
 
+    String getSource();
+
     InputStream getInputStream() throws IOException;
 }

@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.armature.Armature;
 import moe.plushie.armourers_workshop.core.armature.JointShape;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
@@ -43,7 +44,7 @@ public abstract class AdvancedEntityGuideRenderer extends AbstractAdvancedGuideR
     public abstract BakedArmature getArmature();
 
     @Override
-    public void render(PoseStack poseStack, int light, int overlay, float r, float g, float b, float alpha, MultiBufferSource buffers) {
+    public void render(SkinDocument document, PoseStack poseStack, int light, int overlay, MultiBufferSource buffers) {
         poseStack.pushPose();
         IJointTransform[] transforms = armature.getTransforms();
         Armature armature1 = armature.getArmature();

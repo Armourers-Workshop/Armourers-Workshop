@@ -7,8 +7,8 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -114,7 +114,9 @@ public class Armatures {
         private Armature build(String name) {
             jointParents.forEach((child, parentName) -> child.setParent(namedJoints.get(parentName)));
             Armature armature = new Armature(namedJoints, jointTransforms, linkedJoints, wildcardJoint, jointShapes);
-            NAMED_ARMATURES.put(ModConstants.key(name), armature);
+            ResourceLocation registryName = ModConstants.key(name);
+            ModLog.debug("Registering Armature '{}'", registryName);
+            NAMED_ARMATURES.put(registryName, armature);
             skinTypes.forEach(it -> LINKED_ARMATURES.put(it, armature));
             return armature;
         }

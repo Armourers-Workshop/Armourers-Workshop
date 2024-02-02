@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
+import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -83,28 +84,28 @@ public class BakedItemModel extends BuiltInModel {
     public static class DefaultItemTransforms extends SkinItemTransforms {
 
         public DefaultItemTransforms() {
-            put("gui", translate(0, 0, 0), rotation(30, 135, 0), scale(1, 1, 1));
-            put("fixed", translate(0, 0, -2), rotation(0, 0, 0), scale(1, 1, 1));
-            put("ground", translate(0, 0, 0), rotation(0, 0, 0), scale(0.5f, 0.5f, 0.5f));
-            put("thirdperson_righthand", translate(0, 0, 0), rotation(0, 90, -5), scale(0.8f, 0.8f, 0.8f));
-            put("thirdperson_lefthand", translate(0, 0, 0), rotation(0, 90, -5), scale(0.8f, 0.8f, 0.8f));
-            put("firstperson_righthand", translate(0, 0, 0), rotation(0, 90, -5), scale(0.8f, 0.8f, 0.8f));
-            put("firstperson_lefthand", translate(0, 0, 0), rotation(0, 90, -5), scale(0.8f, 0.8f, 0.8f));
+            put(AbstractItemTransformType.GUI, translate(0, 0, 0), rotation(30, 135, 0), scale(1, 1, 1));
+            put(AbstractItemTransformType.FIXED, translate(0, 0, -2), rotation(0, 0, 0), scale(1, 1, 1));
+            put(AbstractItemTransformType.GROUND, translate(0, 0, 0), rotation(0, 0, 0), scale(0.5f, 0.5f, 0.5f));
+            put(AbstractItemTransformType.THIRD_PERSON_RIGHT_HAND, translate(0, 0, 0), rotation(0, 90, -5), scale(0.8f, 0.8f, 0.8f));
+            put(AbstractItemTransformType.THIRD_PERSON_LEFT_HAND, translate(0, 0, 0), rotation(0, 90, -5), scale(0.8f, 0.8f, 0.8f));
+            put(AbstractItemTransformType.FIRST_PERSON_RIGHT_HAND, translate(0, 0, 0), rotation(0, 90, -5), scale(0.8f, 0.8f, 0.8f));
+            put(AbstractItemTransformType.FIRST_PERSON_LEFT_HAND, translate(0, 0, 0), rotation(0, 90, -5), scale(0.8f, 0.8f, 0.8f));
         }
 
-        private void put(String name, Vector3f translate, Vector3f rotation, Vector3f scale) {
-            put(name, SkinTransform.create(translate, rotation, scale));
+        private void put(AbstractItemTransformType key, Vector3f translate, Vector3f rotation, Vector3f scale) {
+            put(key, SkinTransform.create(translate, rotation, scale));
         }
 
-        private Vector3f translate(float x, float y, float z) {
+        private static Vector3f translate(float x, float y, float z) {
             return new Vector3f(x, y, z);
         }
 
-        private Vector3f rotation(float x, float y, float z) {
+        private static Vector3f rotation(float x, float y, float z) {
             return new Vector3f(x, y, z);
         }
 
-        private Vector3f scale(float x, float y, float z) {
+        private static Vector3f scale(float x, float y, float z) {
             return new Vector3f(x, y, z);
         }
     }
@@ -127,22 +128,22 @@ public class BakedItemModel extends BuiltInModel {
         }
 
         private ItemTransforms getTransforms() {
-            auto thirdPersonLeftHand = getTransform("thirdperson_lefthand");
-            auto thirdPersonRightHand = getTransform("thirdperson_righthand");
-            auto firstPersonLeftHand = getTransform("firstperson_lefthand");
-            auto firstPersonRightHand = getTransform("firstperson_righthand");
-            auto head = getTransform("head");
-            auto gui = getTransform("gui");
-            auto ground = getTransform("ground");
-            auto fixed = getTransform("fixed");
+            auto thirdPersonLeftHand = getTransform(AbstractItemTransformType.THIRD_PERSON_LEFT_HAND);
+            auto thirdPersonRightHand = getTransform(AbstractItemTransformType.THIRD_PERSON_RIGHT_HAND);
+            auto firstPersonLeftHand = getTransform(AbstractItemTransformType.FIRST_PERSON_LEFT_HAND);
+            auto firstPersonRightHand = getTransform(AbstractItemTransformType.FIRST_PERSON_RIGHT_HAND);
+            auto head = getTransform(AbstractItemTransformType.HEAD);
+            auto gui = getTransform(AbstractItemTransformType.GUI);
+            auto ground = getTransform(AbstractItemTransformType.GROUND);
+            auto fixed = getTransform(AbstractItemTransformType.FIXED);
             return new ItemTransforms(thirdPersonLeftHand, thirdPersonRightHand, firstPersonLeftHand, firstPersonRightHand, head, gui, ground, fixed);
         }
 
-        private ItemTransform getTransform(String name) {
-            auto transform = itemTransforms.get(prefix + ";" + name);
+        private ItemTransform getTransform(AbstractItemTransformType key) {
+            auto transform = itemTransforms.get(prefix + ";" + key.getName());
             if (transform == null) {
                 // when the child is not found, use the parent set.
-                transform = itemTransforms.get(name);
+                transform = itemTransforms.get(key);
             }
             return ItemTransform.from(transform);
         }

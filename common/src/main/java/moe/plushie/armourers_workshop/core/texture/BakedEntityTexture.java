@@ -46,7 +46,7 @@ public class BakedEntityTexture {
         BufferedImage bufferedImage;
         try {
             IResourceManager resourceManager = ClientNativeManager.getResourceManager();
-            bufferedImage = ImageIO.read(resourceManager.readResource(resourceLocation));
+            bufferedImage = ImageIO.read(resourceManager.readResource(resourceLocation).getInputStream());
             if (bufferedImage != null) {
 //                slim = (bufferedImage.getRGB(54, 20) & 0xff000000) == 0;
                 this.loadColors(bufferedImage.getWidth(), bufferedImage.getHeight(), slim, bufferedImage::getRGB);

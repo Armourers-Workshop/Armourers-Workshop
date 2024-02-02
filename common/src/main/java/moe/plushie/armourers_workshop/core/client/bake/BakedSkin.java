@@ -16,6 +16,7 @@ import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
+import moe.plushie.armourers_workshop.core.data.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.data.transform.SkinWingsTransform;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -259,9 +260,9 @@ public class BakedSkin implements IBakedSkin {
     private void loadPartTransforms() {
         // attach item transform
         skinParts.forEach(part -> {
+            SkinPartTransform transform = part.getTransform();
             if (part.getType() instanceof ICanHeld) {
-                BakedItemTransform transform = new BakedItemTransform(part, this);
-                part.getTransform().addTransform(transform);
+                transform.insertTransform(new BakedItemTransform(part, this), 0);
             }
         });
         // search all transform

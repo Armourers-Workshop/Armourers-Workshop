@@ -46,7 +46,7 @@ public class BakedItemTransform implements ISkinTransform {
         float f2 = 1 / 16f;
         boolean flag = transformType.isLeftHand();
         poseStack.scale(f1, f1, f1);
-        model.applyTransform(transformType, flag, wrapper.pose());
+        model.applyTransform(wrapper.pose(), flag, transformType);
         poseStack.scale(f2, f2, f2);
         if (flag) {
             // we need mirror the skin of drawing,

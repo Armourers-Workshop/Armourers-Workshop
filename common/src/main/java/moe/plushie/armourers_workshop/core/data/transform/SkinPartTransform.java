@@ -6,8 +6,6 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
 import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
-import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,6 +54,10 @@ public class SkinPartTransform implements ISkinTransform {
 
     public void addTransform(ISkinTransform transform) {
         transforms.add(transform);
+    }
+
+    public void insertTransform(ISkinTransform transform, int index) {
+        transforms.add(index, transform);
     }
 
     public void removeTransform(ISkinTransform transform) {

@@ -3,12 +3,9 @@ package moe.plushie.armourers_workshop.init;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
-import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
-import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
@@ -40,7 +37,7 @@ public class ModEntityProfiles {
     }
 
     public static void init() {
-        DataPackManager.register(DataPackType.JAR, new DataPackLoader("skin/profiles", SimpleLoader::new, SimpleLoader::clean, SimpleLoader::freeze));
+        DataPackManager.register(DataPackType.BUNDLED_DATA, "skin/profiles", SimpleLoader::new, SimpleLoader::clean, SimpleLoader::freeze, 1);
     }
 
     public static void forEach(BiConsumer<IEntityTypeProvider<?>, EntityProfile> consumer) {

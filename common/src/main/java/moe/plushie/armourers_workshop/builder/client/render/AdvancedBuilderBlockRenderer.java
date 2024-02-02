@@ -4,22 +4,28 @@ import com.apple.library.uikit.UIColor;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
+import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedBuilderBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AbstractAdvancedGuideRenderer;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AdvancedBlockGuideRenderer;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AdvancedBoatGuideRenderer;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AdvancedHorseGuideRenderer;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AdvancedHumanGuideRenderer;
+import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AdvancedItemGuideRenderer;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRendererManager;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
+import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
+import moe.plushie.armourers_workshop.core.client.other.SkinModelManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderBufferSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
+import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
@@ -37,11 +43,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> extends AbstractBlockEntityRenderer<T> {
@@ -55,16 +64,16 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
             .put(SkinDocumentTypes.GENERAL_ARMOR_WINGS, new AdvancedHumanGuideRenderer())
             .put(SkinDocumentTypes.GENERAL_ARMOR_OUTFIT, new AdvancedHumanGuideRenderer())
 
-            .put(SkinDocumentTypes.ITEM, new AdvancedHumanGuideRenderer())
-            .put(SkinDocumentTypes.ITEM_AXE, new AdvancedHumanGuideRenderer())
-            .put(SkinDocumentTypes.ITEM_HOE, new AdvancedHumanGuideRenderer())
-            .put(SkinDocumentTypes.ITEM_SHOVEL, new AdvancedHumanGuideRenderer())
-            .put(SkinDocumentTypes.ITEM_PICKAXE, new AdvancedHumanGuideRenderer())
+            .put(SkinDocumentTypes.ITEM, new AdvancedItemGuideRenderer())
+            .put(SkinDocumentTypes.ITEM_AXE, new AdvancedItemGuideRenderer())
+            .put(SkinDocumentTypes.ITEM_HOE, new AdvancedItemGuideRenderer())
+            .put(SkinDocumentTypes.ITEM_SHOVEL, new AdvancedItemGuideRenderer())
+            .put(SkinDocumentTypes.ITEM_PICKAXE, new AdvancedItemGuideRenderer())
 
-            .put(SkinDocumentTypes.ITEM_SWORD, new AdvancedHumanGuideRenderer())
-            .put(SkinDocumentTypes.ITEM_SHIELD, new AdvancedHumanGuideRenderer())
-            .put(SkinDocumentTypes.ITEM_BOW, new AdvancedHumanGuideRenderer())
-            .put(SkinDocumentTypes.ITEM_TRIDENT, new AdvancedHumanGuideRenderer())
+            .put(SkinDocumentTypes.ITEM_SWORD, new AdvancedItemGuideRenderer())
+            .put(SkinDocumentTypes.ITEM_SHIELD, new AdvancedItemGuideRenderer())
+            .put(SkinDocumentTypes.ITEM_BOW, new AdvancedItemGuideRenderer())
+            .put(SkinDocumentTypes.ITEM_TRIDENT, new AdvancedItemGuideRenderer())
 
             .put(SkinDocumentTypes.ITEM_BOAT, new AdvancedBoatGuideRenderer())
             .put(SkinDocumentTypes.ENTITY_HORSE, new AdvancedHorseGuideRenderer())
@@ -120,7 +129,7 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
         if (settings.showsHelperModel()) {
             AbstractAdvancedGuideRenderer guideRenderer = GUIDES.get(document.getType());
             if (guideRenderer != null) {
-                guideRenderer.render(poseStack, light, overlay, 1, 1, 1, 1, buffers);
+                guideRenderer.render(document, poseStack, light, overlay, buffers);
             }
         }
 
@@ -207,8 +216,8 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
 //            RenderSystem.drawPoint(poseStack, v, 1.0F, buffers);
 //        }
         if (OUTPUTS.size() >= 2) {
-            Vector3f pt1 = OUTPUTS.get(0);
-            Vector3f pt2 = OUTPUTS.get(1);
+//            Vector3f pt1 = OUTPUTS.get(0);
+//            Vector3f pt2 = OUTPUTS.get(1);
 //            Vector3f pt3 = OUTPUTS.get(2);
 //            RenderSystem.drawLine(poseStack, pt1.getX(), pt1.getY(), pt1.getZ(), pt2.getX(), pt2.getY(), pt2.getZ(), UIColor.YELLOW, buffers);
 //            drawLine(pose, pt2.getX(), pt2.getY(), pt2.getZ(), pt3.getX(), pt3.getY(), pt3.getZ(), UIColor.MAGENTA, builder);

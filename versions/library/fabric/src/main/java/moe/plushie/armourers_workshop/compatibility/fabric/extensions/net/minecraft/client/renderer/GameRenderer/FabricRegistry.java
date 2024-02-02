@@ -25,7 +25,7 @@ public class FabricRegistry {
     }
 
     public static <T extends BlockEntity> void registerBlockEntityRendererFA(@ThisClass Class<?> clazz, IRegistryKey<BlockEntityType<T>> entityType, AbstractBlockEntityRendererProvider<T> provider) {
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, () -> () -> {
+        EnvironmentExecutor.willInit(EnvironmentType.CLIENT, () -> () -> {
             BlockEntityRendererRegistry.register(entityType.get(), provider::create);
         });
     }

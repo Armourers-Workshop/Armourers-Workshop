@@ -94,7 +94,7 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
     public IRegistryKey<IEntityType<T>> build(String name) {
         IRegistryKey<EntityType<T>> object = Registry.registerEntityTypeFA(name, () -> builder.build());
         Proxy<T> proxy = new Proxy<>(object);
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
+        EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
         return AbstractFabricRegistryEntry.of(object.getRegistryName(), proxy);
     }
 

@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPack;
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPackReader;
+import moe.plushie.armourers_workshop.core.skin.transformer.SkinSerializerV21;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModel;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelBone;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelExporter;
@@ -22,22 +23,14 @@ import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModel
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockTransform;
 import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchReader;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
-import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.client.Minecraft;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 public class DocumentImporter {
 
@@ -100,7 +93,7 @@ public class DocumentImporter {
 
     private Skin readSkinFromFile(File file) throws IOException {
         String name = file.getName();
-        Collection<IResource> resources = getResourcesFromFile(file);
+        Collection<IResource> resources = SkinSerializerV21.getResourcesFromFile(file);
         return readSkinFromReader(BlockBenchReader.from(name, resources));
     }
 
@@ -171,89 +164,6 @@ public class DocumentImporter {
         exporter.setKeepItemTransforms(isKeepItemTransforms());
         return exporter.export(skinType);
     }
-
-
-    private Collection<IResource> getResourcesFromFile(File file) throws IOException {
-        if (file.isDirectory()) {
-            return getResourcesFromDirectory(file);
-        }
-        if (file.getName().toLowerCase().endsWith(".zip")) {
-            return getResourcesFromZip(file);
-        }
-        return getResourcesFromSet(file);
-    }
-
-
-    private Collection<IResource> getResourcesFromZip(File zipFile) throws IOException {
-        ArrayList<IResource> resources = new ArrayList<>();
-        ZipFile file = new ZipFile(zipFile);
-        ZipInputStream zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile)));
-        ZipEntry entry;
-        while ((entry = zip.getNextEntry()) != null) {
-            if (entry.isDirectory()) {
-                continue;
-            }
-            String fileName = entry.getName();
-            ZipEntry fileEntry = entry;
-            resources.add(new IResource() {
-                @Override
-                public String getName() {
-                    return fileName;
-                }
-
-                @Override
-                public InputStream getInputStream() throws IOException {
-                    return file.getInputStream(fileEntry);
-                }
-            });
-        }
-        return resources;
-    }
-
-    private Collection<IResource> getResourcesFromDirectory(File rootPath) throws IOException {
-        ArrayList<IResource> resources = new ArrayList<>();
-        for (File entry : SkinFileUtils.listAllFiles(rootPath)) {
-            if (entry.isDirectory()) {
-                continue;
-            }
-            String fileName = SkinFileUtils.getRelativePath(entry, rootPath, true).substring(1);
-            resources.add(new IResource() {
-                @Override
-                public String getName() {
-                    return fileName;
-                }
-
-                @Override
-                public InputStream getInputStream() throws IOException {
-                    return new FileInputStream(entry);
-                }
-            });
-        }
-        return resources;
-    }
-
-    private Collection<IResource> getResourcesFromSet(File... entries) throws IOException {
-        ArrayList<IResource> resources = new ArrayList<>();
-        for (File entry : entries) {
-            if (entry.isDirectory()) {
-                continue;
-            }
-            String fileName = entry.getName();
-            resources.add(new IResource() {
-                @Override
-                public String getName() {
-                    return fileName;
-                }
-
-                @Override
-                public InputStream getInputStream() throws IOException {
-                    return new FileInputStream(entry);
-                }
-            });
-        }
-        return resources;
-    }
-
 
     public static class CustomModelExporter extends BedrockModelExporter {
 

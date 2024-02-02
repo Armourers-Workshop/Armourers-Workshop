@@ -183,8 +183,8 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
 
     private void loadRandomlyRotations() {
         IResourceManager resourceManager = ClientNativeManager.getResourceManager();
-        resourceManager.readResources(ModConstants.key("models/entity/mannequin"), s -> s.endsWith(".json"), (location, inputStream) -> {
-            IDataPackObject object = StreamUtils.fromPackObject(inputStream);
+        resourceManager.readResources(ModConstants.key("models/entity/mannequin"), s -> s.endsWith(".json"), (location, resource) -> {
+            IDataPackObject object = StreamUtils.fromPackObject(resource);
             if (object == null) {
                 return;
             }

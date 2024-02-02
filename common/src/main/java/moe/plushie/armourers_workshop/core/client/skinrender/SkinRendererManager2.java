@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerManager;
 import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultArmatureTransformerManager;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightArmatureTransformerManager;
-import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +31,7 @@ public class SkinRendererManager2 {
     public static void init() {
         Armatures.init();
         registerAll();
-        DataPackManager.register(DataPackType.JAR, new DataPackLoader("skin/transformers", SimpleLoader::new, SimpleLoader::clean, SimpleLoader::freeze));
+        DataPackManager.register(DataPackType.BUNDLED_DATA, "skin/transformers", SimpleLoader::new, SimpleLoader::clean, SimpleLoader::freeze, 0);
     }
 
     private static void register(String name, Class<?> clazz) {

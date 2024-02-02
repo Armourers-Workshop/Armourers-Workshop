@@ -2,5 +2,5 @@ package moe.plushie.armourers_workshop.core.data;
 
 public enum DataPackType {
 
-    JAR, DATA, ASSET
+     SERVER_DATA, CLIENT_RESOURCES, BUNDLED_DATA
 }

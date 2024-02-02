@@ -14,12 +14,25 @@ public enum AbstractItemTransformType {
     GROUND(7, "ground"),
     FIXED(8, "fixed");
 
+    private final int id;
+    private final String name;
+
     AbstractItemTransformType(int id, String name) {
+        this.id = id;
+        this.name = name;
         Codec.BY_NAME.put(name, this);
     }
 
     public static AbstractItemTransformType byName(String name) {
         return Codec.BY_NAME.getOrDefault(name, NONE);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean isLeftHand() {

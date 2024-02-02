@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import moe.plushie.armourers_workshop.api.common.IResource;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
@@ -96,6 +97,15 @@ public final class StreamUtils {
             return GSON.getAdapter(class_).read(jsonReader);
         } catch (Exception exception) {
             throw new JsonParseException(exception);
+        }
+    }
+
+    @Nullable
+    public static IDataPackObject fromPackObject(IResource resource) {
+        try {
+            return fromPackObject(resource.getInputStream());
+        } catch (IOException e) {
+            return null;
         }
     }
 

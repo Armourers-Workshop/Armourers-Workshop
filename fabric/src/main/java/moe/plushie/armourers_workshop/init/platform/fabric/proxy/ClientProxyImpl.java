@@ -12,9 +12,9 @@ import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfig;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfigTracker;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.ClientStartupEvents;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderSpecificArmEvents;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -37,7 +37,6 @@ public class ClientProxyImpl implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         EnvironmentExecutor.willInit(EnvironmentType.CLIENT);
-        EnvironmentExecutor.willSetup(EnvironmentType.CLIENT);
 
         WorldRenderEvents.BLOCK_OUTLINE.register(this::onDrawBlockHighlightEvent);
 
@@ -46,12 +45,18 @@ public class ClientProxyImpl implements ClientModInitializer {
         RenderSpecificArmEvents.MAIN_HAND.register(this::onRenderSpecificFirstPersonHand);
         RenderSpecificArmEvents.OFF_HAND.register(this::onRenderSpecificFirstPersonHand);
 
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT);
-
         // load all configs
         FabricConfigTracker.INSTANCE.loadConfigs(FabricConfig.Type.CLIENT, FabricLoader.getInstance().getConfigDir());
 
-        RenderSystem.recordRenderCall(() -> EnvironmentExecutor.didSetup(EnvironmentType.CLIENT));
+        ClientStartupEvents.CLIENT_WILL_START.register(minecraft -> {
+            // we will call `ResourceManager.registerReloadListener` in willSetup phase.
+            EnvironmentExecutor.willSetup(EnvironmentType.CLIENT);
+        });
+
+        ClientStartupEvents.CLIENT_STARTED.register(minecraft -> {
+            EnvironmentExecutor.didInit(EnvironmentType.CLIENT);
+            EnvironmentExecutor.didSetup(EnvironmentType.CLIENT);
+        });
     }
 
     public ItemStack onPickItem(Player player, HitResult result) {

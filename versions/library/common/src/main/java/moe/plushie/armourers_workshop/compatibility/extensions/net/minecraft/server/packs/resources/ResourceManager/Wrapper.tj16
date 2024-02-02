@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.server.packs.resources.ResourceManager;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IResource;
 import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -26,12 +27,12 @@ public class Wrapper {
             }
 
             @Override
-            public InputStream readResource(ResourceLocation resourceLocation) throws IOException {
-                return resourceManager.getResource(resourceLocation).getInputStream();
+            public IResource readResource(ResourceLocation resourceLocation) throws IOException {
+                return wrap(resourceLocation, resourceManager.getResource(resourceLocation));
             }
 
             @Override
-            public void readResources(ResourceLocation target, Predicate<String> validator, BiConsumer<ResourceLocation, InputStream> consumer) {
+            public void readResources(ResourceLocation target, Predicate<String> validator, BiConsumer<ResourceLocation, IResource> consumer) {
                 for (ResourceLocation key : resourceManager.listResources(target.getPath(), validator)) {
                     try {
                         if (!key.getNamespace().equals(target.getNamespace())) {
@@ -39,9 +40,7 @@ public class Wrapper {
                         }
                         for (Resource resource : resourceManager.getResources(key)) {
                             try {
-                                InputStream inputStream = resource.getInputStream();
-                                consumer.accept(key, inputStream);
-                                inputStream.close();
+                                consumer.accept(key, wrap(key, resource));
                             } catch (Exception exception) {
                                 exception.printStackTrace();
                             }
@@ -50,6 +49,26 @@ public class Wrapper {
                         exception.printStackTrace();
                     }
                 }
+            }
+
+            private IResource wrap(ResourceLocation name, Resource resource) {
+
+                return new IResource() {
+                    @Override
+                    public String getName() {
+                        return name.toString();
+                    }
+
+                    @Override
+                    public String getSource() {
+                        return resource.getSourceName();
+                    }
+
+                    @Override
+                    public InputStream getInputStream() throws IOException {
+                        return resource.getInputStream();
+                    }
+                };
             }
         };
     }

@@ -8,7 +8,8 @@
     "FabricPlayerRendererMixin",
     "FabricScreenREIMixin",
     "FabricScreenFTBMixin",
-    "FabricReplayMixin"
+    "FabricReplayMixin",
+    "FabricMinecraftMixin"
   ],
   "mixins": [
     "FabricBlockItemMixin",

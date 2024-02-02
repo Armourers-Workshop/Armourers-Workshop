@@ -84,7 +84,7 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
         if (group != null) {
             group.get().add(object::get);
         }
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
+        EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
         return object;
     }
 }

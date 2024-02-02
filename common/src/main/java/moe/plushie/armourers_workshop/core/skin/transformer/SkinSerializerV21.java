@@ -115,7 +115,7 @@ public final class SkinSerializerV21 {
     }
 
 
-    private static Collection<IResource> getResourcesFromFile(File file) throws IOException {
+    public static Collection<IResource> getResourcesFromFile(File file) throws IOException {
         if (file.isDirectory()) {
             return getResourcesFromDirectory(file);
         }
@@ -126,7 +126,7 @@ public final class SkinSerializerV21 {
     }
 
 
-    private static Collection<IResource> getResourcesFromZip(File zipFile) throws IOException {
+    public static Collection<IResource> getResourcesFromZip(File zipFile) throws IOException {
         ArrayList<IResource> resources = new ArrayList<>();
         ZipFile file = new ZipFile(zipFile);
         ZipInputStream zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile)));
@@ -144,6 +144,11 @@ public final class SkinSerializerV21 {
                 }
 
                 @Override
+                public String getSource() {
+                    return "";
+                }
+
+                @Override
                 public InputStream getInputStream() throws IOException {
                     return file.getInputStream(fileEntry);
                 }
@@ -152,7 +157,7 @@ public final class SkinSerializerV21 {
         return resources;
     }
 
-    private static Collection<IResource> getResourcesFromDirectory(File rootPath) throws IOException {
+    public static Collection<IResource> getResourcesFromDirectory(File rootPath) throws IOException {
         ArrayList<IResource> resources = new ArrayList<>();
         for (File entry : SkinFileUtils.listAllFiles(rootPath)) {
             if (entry.isDirectory()) {
@@ -166,6 +171,11 @@ public final class SkinSerializerV21 {
                 }
 
                 @Override
+                public String getSource() {
+                    return "";
+                }
+
+                @Override
                 public InputStream getInputStream() throws IOException {
                     return new FileInputStream(entry);
                 }
@@ -174,7 +184,7 @@ public final class SkinSerializerV21 {
         return resources;
     }
 
-    private static Collection<IResource> getResourcesFromSet(File... entries) throws IOException {
+    public static Collection<IResource> getResourcesFromSet(File... entries) throws IOException {
         ArrayList<IResource> resources = new ArrayList<>();
         for (File entry : entries) {
             if (entry.isDirectory()) {
@@ -185,6 +195,11 @@ public final class SkinSerializerV21 {
                 @Override
                 public String getName() {
                     return fileName;
+                }
+
+                @Override
+                public String getSource() {
+                    return "";
                 }
 
                 @Override

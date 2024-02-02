@@ -54,7 +54,7 @@ public class BlockEntityTypeBuilderImpl<T extends BlockEntity> implements IBlock
             return AbstractFabricBlockEntity.createType(supplier, blocks1);
         });
         Proxy<T> proxy = new Proxy<>(object);
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
+        EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
         return AbstractFabricRegistryEntry.of(object.getRegistryName(), proxy);
     }
 

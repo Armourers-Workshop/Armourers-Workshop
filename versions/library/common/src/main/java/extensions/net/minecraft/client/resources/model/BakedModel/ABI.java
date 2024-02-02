@@ -17,7 +17,7 @@ public class ABI {
         return bakedModel.getTransforms().getTransform(ItemTransforms.ofType(transformType));
     }
 
-    public static void applyTransform(@This BakedModel bakedModel, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStack) {
+    public static void applyTransform(@This BakedModel bakedModel, PoseStack poseStack, boolean leftHandHackery, AbstractItemTransformType transformType) {
         TransformationProvider.handleTransforms(poseStack, bakedModel, transformType, leftHandHackery);
     }
 }

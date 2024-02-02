@@ -348,7 +348,7 @@ public class ClientWardrobeHandler {
 
             // when skin not specify item transforms,
             // we need to apply a default item transforms.
-            itemModel.applyTransform(transformType, leftHandHackery, poseStack);
+            itemModel.applyTransform(poseStack, leftHandHackery, transformType);
 
             rotation = new Vector3f(-transform.rotation.x(), -transform.rotation.y(), transform.rotation.z());
             scale = new Vector3f(transform.scale.x(), transform.scale.y(), transform.scale.z());

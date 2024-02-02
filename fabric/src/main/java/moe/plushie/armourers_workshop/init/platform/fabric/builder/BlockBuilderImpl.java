@@ -169,7 +169,7 @@ public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
     @Override
     public IRegistryKey<T> build(String name) {
         IRegistryKey<T> object = Registry.registerBlockFA(name, () -> supplier.apply(properties));
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
+        EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
         return object;
     }
 }

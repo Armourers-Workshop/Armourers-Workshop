@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.server.packs.resources.ResourceManager;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IResource;
 import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -28,25 +29,23 @@ public class Wrapper {
             }
 
             @Override
-            public InputStream readResource(ResourceLocation resourceLocation) throws IOException {
+            public IResource readResource(ResourceLocation resourceLocation) throws IOException {
                 Optional<Resource> resource = resourceManager.getResource(resourceLocation);
                 if (resource.isPresent()) {
-                    return resource.get().open();
+                    return wrap(resourceLocation, resource.get());
                 }
                 throw new FileNotFoundException(resourceLocation.toString());
             }
 
             @Override
-            public void readResources(ResourceLocation target, Predicate<String> validator, BiConsumer<ResourceLocation, InputStream> consumer) {
+            public void readResources(ResourceLocation target, Predicate<String> validator, BiConsumer<ResourceLocation, IResource> consumer) {
                 resourceManager.listResources(target.getPath(), rl -> validator.test(rl.getPath())).forEach((key, resource) -> {
                     try {
                         try {
                             if (!key.getNamespace().equals(target.getNamespace())) {
                                 return;
                             }
-                            InputStream inputStream = resource.open();
-                            consumer.accept(key, inputStream);
-                            inputStream.close();
+                            consumer.accept(key, wrap(key, resource));
                         } catch (Exception exception) {
                             exception.printStackTrace();
                         }
@@ -54,6 +53,26 @@ public class Wrapper {
                         exception.printStackTrace();
                     }
                 });
+            }
+
+            private IResource wrap(ResourceLocation name, Resource resource) {
+
+                return new IResource() {
+                    @Override
+                    public String getName() {
+                        return name.toString();
+                    }
+
+                    @Override
+                    public String getSource() {
+                        return resource.sourcePackId();
+                    }
+
+                    @Override
+                    public InputStream getInputStream() throws IOException {
+                        return resource.open();
+                    }
+                };
             }
         };
     }

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.data.transform;
 
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.nbt.CompoundTag;
@@ -19,6 +20,14 @@ public class SkinItemTransforms extends LinkedHashMap<String, ITransformf> {
         for (String key : nbt.getAllKeys()) {
             put(key, deserializeTransform(nbt.getList(key, Constants.TagFlags.FLOAT)));
         }
+    }
+
+    public void put(AbstractItemTransformType key, ITransformf value) {
+        put(key.getName(), value);
+    }
+
+    public ITransformf get(AbstractItemTransformType key) {
+        return super.get(key.getName());
     }
 
     public CompoundTag serializeNBT() {
