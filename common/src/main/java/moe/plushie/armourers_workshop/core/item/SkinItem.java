@@ -93,10 +93,12 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
         if (level.isClientSide()) {
             return InteractionResultHolder.success(itemStack);
         }
-        wardrobe.setItem(slotType, slot, itemStack.copy());
+        // we need consume item stack even in creative mode.
+        ItemStack resultStack = itemStack.copy();
+        wardrobe.setItem(slotType, slot, resultStack.split(1));
         wardrobe.broadcast();
-        itemStack.shrink(1);
-        return InteractionResultHolder.consume(itemStack.copy());
+        player.setItemInHand(hand, resultStack);
+        return InteractionResultHolder.consume(itemStack);
     }
 
     @Override

@@ -24,7 +24,7 @@ public class SkinUnlockItem extends FlavouredItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
         if (level.isClientSide()) {
-            return InteractionResultHolder.consume(itemStack);
+            return InteractionResultHolder.success(itemStack);
         }
         ISkinType skinType = slotType.getSkinType();
         SkinWardrobe wardrobe = SkinWardrobe.of(player);
@@ -36,11 +36,14 @@ public class SkinUnlockItem extends FlavouredItem {
             player.sendSystemMessage(Component.translatable("chat.armourers_workshop.slotUnlockedFailed", skinName));
             return InteractionResultHolder.fail(itemStack);
         }
-        itemStack.shrink(1);
         int count = wardrobe.getUnlockedSize(slotType) + 1;
         wardrobe.setUnlockedSize(slotType, count);
         wardrobe.broadcast();
         player.sendSystemMessage(Component.translatable("chat.armourers_workshop.slotUnlocked", skinName, Integer.toString(count)));
-        return InteractionResultHolder.success(itemStack);
+        // we need consume item stack even in creative mode.
+        ItemStack resultStack = itemStack.copy();
+        resultStack.shrink(1);
+        player.setItemInHand(hand, resultStack);
+        return InteractionResultHolder.consume(itemStack);
     }
 }

@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_api_version}"
+    forge "${rootProject.forge_api_group}:forge:${rootProject.minecraft_version}-${rootProject.forge_api_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }

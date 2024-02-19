@@ -38,6 +38,7 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @SuppressWarnings({"unused", "SameParameterValue"})
 public class ModItems {
@@ -46,7 +47,7 @@ public class ModItems {
     private static final ItemBuilder BUILDING = new ItemBuilder(ModItemGroups.BUILDING_GROUP);
     private static final ItemBuilder NONE = new ItemBuilder(null);
 
-    public static final IRegistryKey<Item> SKIN = NONE.block(SkinItem::new, ModBlocks.SKINNABLE).bind(() -> SkinItemRenderer::getInstance).build("skin");
+    public static final IRegistryKey<Item> SKIN = NONE.skin(ModBlocks.SKINNABLE).bind(() -> SkinItemRenderer::getInstance).build("skin");
     public static final IRegistryKey<Item> MANNEQUIN = MAIN.normal(MannequinItem::new).rarity(Rarity.RARE).bind(() -> MannequinItemRenderer::getInstance).build("mannequin");
 
     public static final IRegistryKey<Item> SKIN_LIBRARY = MAIN.block(ModBlocks.SKIN_LIBRARY).build("skin-library");
@@ -107,27 +108,31 @@ public class ModItems {
         }
 
         IItemBuilder<Item> normal(Function<Item.Properties, Item> factory) {
-            return ObjectUtils.unsafeCast(BuilderManager.getInstance().createItemBuilder(factory).stacksTo(1).group(group));
-        }
-
-        IItemBuilder<Item> rare(Function<Item.Properties, Item> factory) {
-            return normal(factory).rarity(Rarity.RARE);
+            return _create(factory).stacksTo(1).group(group);
         }
 
         IItemBuilder<Item> block(IRegistryKey<Block> block) {
-            return block(BlockItem::new, block).rarity(Rarity.RARE);
-        }
-
-        IItemBuilder<Item> block(BiFunction<Block, Item.Properties, Item> provider, IRegistryKey<Block> block) {
-            return normal(properties -> provider.apply(block.get(), properties)).stacksTo(64);
+            return _create(BlockItem::new, block).stacksTo(64).rarity(Rarity.RARE);
         }
 
         IItemBuilder<Item> cube(IRegistryKey<Block> block) {
-            return normal(properties -> new SkinCubeItem(block.get(), properties)).stacksTo(64).bind(() -> SkinCubeItemRenderer::getInstance);
+            return _create(SkinCubeItem::new, block).stacksTo(64).bind(() -> SkinCubeItemRenderer::getInstance);
+        }
+
+        IItemBuilder<Item> skin(IRegistryKey<Block> block) {
+            return _create(SkinItem::new, block).stacksTo(1);
         }
 
         IItemBuilder<Item> unlock(SkinSlotType slotType) {
-            return normal(properties -> new SkinUnlockItem(slotType, properties)).stacksTo(16).rarity(Rarity.UNCOMMON);
+            return _create(SkinUnlockItem::new, () -> slotType).stacksTo(16).rarity(Rarity.UNCOMMON);
+        }
+
+        private IItemBuilder<Item> _create(Function<Item.Properties, Item> factory) {
+            return ObjectUtils.unsafeCast(BuilderManager.getInstance().createItemBuilder(factory));
+        }
+
+        private <T> IItemBuilder<Item> _create(BiFunction<T, Item.Properties, Item> factory, Supplier<T> supplier) {
+            return _create(properties -> factory.apply(supplier.get(), properties)).group(group);
         }
     }
 }
