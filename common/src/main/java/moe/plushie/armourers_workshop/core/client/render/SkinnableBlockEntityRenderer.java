@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBloc
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.TickUtils;
@@ -25,7 +26,8 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
 
     @Override
     public void render(T entity, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
-        SkinRenderTesselator tesselator = SkinRenderTesselator.create(entity.getDescriptor(), Tickets.RENDERER);
+        SkinDescriptor descriptor = entity.getDescriptor();
+        SkinRenderTesselator tesselator = SkinRenderTesselator.create(descriptor, Tickets.RENDERER);
         if (tesselator == null) {
             return;
         }
@@ -43,6 +45,7 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
 
         tesselator.setLightmap(light);
         tesselator.setPartialTicks(TickUtils.ticks());
+        tesselator.setColorScheme(descriptor.getColorScheme());
 
         tesselator.draw(poseStack, buffers);
 

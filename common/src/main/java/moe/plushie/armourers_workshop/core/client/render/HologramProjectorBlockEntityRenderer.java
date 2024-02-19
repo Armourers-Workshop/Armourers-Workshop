@@ -56,6 +56,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
 
         context.setLightmap(overLight);
         context.setPartialTicks(partialTicks1);
+        context.setColorScheme(descriptor.getColorScheme());
         context.setReference(0, itemStack);
 
         Rectangle3f rect = context.getBakedRenderBounds();
