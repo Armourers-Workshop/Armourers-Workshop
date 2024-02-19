@@ -50,14 +50,13 @@ jobs:
         cache-disabled: true
 
     - name: Upload Fabric ${{ matrix.version }}
-      uses: Kir-Antipov/mc-publish@v3.2
+      uses: Kir-Antipov/mc-publish@v3.3
       with:
         name: armourersworkshop-fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}.jar
         version: fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
         version-type: release
 
-        files-primary: fabric/build/libs/!(*-@(dev-shadow|sources|javadoc|)).jar
-        files-secondary: ""
+        files: fabric/build/libs/!(*-@(dev-shadow|sources|javadoc|)).jar
 
         loaders: fabric
         game-versions: ${{ matrix.version }}
@@ -75,14 +74,13 @@ jobs:
         fail-mode: warn
 
     - name: Upload Forge ${{ matrix.version }}
-      uses: Kir-Antipov/mc-publish@v3.2
+      uses: Kir-Antipov/mc-publish@v3.3
       with:
         name: armourersworkshop-forge-${{ matrix.version }}-${{ steps.release-version.outputs.version }}.jar
         version: forge-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
         version-type: release
 
-        files-primary: forge/build/libs/!(*-@(dev-shadow|sources|javadoc)).jar
-        files-secondary: ""
+        files: forge/build/libs/!(*-@(dev-shadow|sources|javadoc)).jar
 
         loaders: forge
         game-versions: ${{ matrix.version }}
