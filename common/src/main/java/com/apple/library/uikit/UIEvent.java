@@ -13,11 +13,11 @@ public class UIEvent {
     protected final int keyModifier;
 
     protected final long timestamp;
-    protected final double delta;
+    protected final CGPoint delta;
     protected final CGPoint location;
     protected final Type type;
 
-    public UIEvent(Type type, int key, int keyModifier, double delta, CGPoint location) {
+    public UIEvent(Type type, int key, int keyModifier, CGPoint location, CGPoint delta) {
         this.type = type;
         this.location = location;
         this.timestamp = System.currentTimeMillis();
@@ -38,7 +38,7 @@ public class UIEvent {
         return type;
     }
 
-    public double delta() {
+    public CGPoint delta() {
         return delta;
     }
 

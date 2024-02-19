@@ -10,51 +10,48 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class PlayerTextureDescriptor {
 
-    public static final PlayerTextureDescriptor EMPTY = new PlayerTextureDescriptor();
+    public static final PlayerTextureDescriptor EMPTY = new PlayerTextureDescriptor(Source.NONE, null, null);
 
+    public static final UUID NIL_UUID = new UUID(0, 0);
     private final static Cache<ItemStack, PlayerTextureDescriptor> DESCRIPTOR_CACHES = CacheBuilder.newBuilder()
             .maximumSize(8)
             .expireAfterAccess(15, TimeUnit.SECONDS)
             .build();
 
     private Source source;
-    private String url;
+    private String value;
     private GameProfile profile;
 
-    public PlayerTextureDescriptor() {
-        this.source = Source.NONE;
-    }
-
-    public PlayerTextureDescriptor(String url) {
-        this.source = Source.URL;
-        this.url = url;
-    }
-
-    public PlayerTextureDescriptor(GameProfile profile) {
-        this.source = Source.USER;
+    public PlayerTextureDescriptor(Source source, String value, GameProfile profile) {
+        this.source = source;
+        this.value = value;
         this.profile = profile;
     }
 
     public PlayerTextureDescriptor(@Nullable CompoundTag nbt) {
         if (nbt != null && nbt.contains(Constants.Key.TEXTURE_URL, Constants.TagFlags.STRING)) {
             this.source = Source.URL;
-            this.url = nbt.getString(Constants.Key.TEXTURE_URL);
+            this.value = nbt.getString(Constants.Key.TEXTURE_URL);
         }
         if (nbt != null && nbt.contains(Constants.Key.TEXTURE_PROFILE, Constants.TagFlags.COMPOUND)) {
-            this.source = Source.USER;
-            this.profile = nbt.getOptionalGameProfile(Constants.Key.TEXTURE_PROFILE, null);
+            CompoundTag tag = nbt.getCompound(Constants.Key.TEXTURE_PROFILE);
+            if (tag.contains("Name", Constants.TagFlags.STRING)) {
+                this.source = Source.USER;
+                this.value = tag.getString("Name");
+            }
+            //if (tag.hasUUID("Id")) {
+            //    this.source = Source.USER;
+            //    this.profile = nbt.getOptionalGameProfile(Constants.Key.TEXTURE_PROFILE, null);
+            //}
         }
-        if (this.url == null && this.profile == null) {
+        if (this.value == null && this.profile == null) {
             this.source = Source.NONE;
         }
-    }
-
-    public static PlayerTextureDescriptor by(String userName) {
-        return EMPTY;
     }
 
     public static PlayerTextureDescriptor of(ItemStack itemStack) {
@@ -74,13 +71,38 @@ public class PlayerTextureDescriptor {
         return descriptor;
     }
 
+    public static PlayerTextureDescriptor fromURL(String url) {
+        return new PlayerTextureDescriptor(Source.URL, url, null);
+    }
+
+    public static PlayerTextureDescriptor fromName(String name) {
+        return new PlayerTextureDescriptor(Source.USER, name, null);
+    }
+
+    public static PlayerTextureDescriptor fromProfile(GameProfile profile) {
+        return new PlayerTextureDescriptor(Source.USER, profile.getName(), profile);
+    }
+
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        if (url != null) {
-            nbt.putString(Constants.Key.TEXTURE_URL, url);
-        }
-        if (profile != null) {
-            nbt.putOptionalGameProfile(Constants.Key.TEXTURE_PROFILE, profile, null);
+        switch (source) {
+            case URL:
+                if (value != null) {
+                    nbt.putString(Constants.Key.TEXTURE_URL, value);
+                }
+                break;
+            case USER:
+                if (value != null) {
+                    CompoundTag tag = new CompoundTag();
+                    tag.putString("Name", value);
+                    nbt.put(Constants.Key.TEXTURE_PROFILE, tag);
+                }
+                //if (profile != null) {
+                //    nbt.putOptionalGameProfile(Constants.Key.TEXTURE_PROFILE, profile, null);
+                //}
+                break;
+            case NONE:
+                break;
         }
         return nbt;
     }
@@ -91,13 +113,18 @@ public class PlayerTextureDescriptor {
 
     @Nullable
     public String getURL() {
-        return url;
+        if (source == Source.URL) {
+            return value;
+        }
+        return null;
     }
 
     @Nullable
     public String getName() {
-        if (profile != null) {
-            return profile.getName();
+        if (source == Source.USER) {
+            if (value != null) {
+                return value;
+            }
         }
         return null;
     }
@@ -107,18 +134,12 @@ public class PlayerTextureDescriptor {
         return profile;
     }
 
-    public Source getSource() {
-        return source;
+    public String getValue() {
+        return value;
     }
 
-    public String getValue() {
-        if (source == Source.URL) {
-            return getURL();
-        }
-        if (source == Source.USER) {
-            return getName();
-        }
-        return null;
+    public Source getSource() {
+        return source;
     }
 
     @Override
@@ -126,12 +147,12 @@ public class PlayerTextureDescriptor {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlayerTextureDescriptor that = (PlayerTextureDescriptor) o;
-        return source == that.source && Objects.equals(getValue(), that.getValue());
+        return source == that.source && Objects.equals(value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(source, getValue());
+        return Objects.hash(source, value);
     }
 
     public enum Source {

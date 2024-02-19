@@ -1,41 +1,21 @@
 package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
-import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.InputConstants;
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
 import moe.plushie.armourers_workshop.api.registry.IKeyBindingBuilder;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeKeyMapping;
 import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.ext.OpenKeyModifier;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.settings.IKeyConflictContext;
-import net.minecraftforge.client.settings.KeyConflictContext;
-import net.minecraftforge.client.settings.KeyModifier;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
-@OnlyIn(value = Dist.CLIENT)
 public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBindingBuilder<T> {
-
-    private static final ImmutableMap<IKeyModifier, KeyModifier> MODIFIERS1 = ImmutableMap.<IKeyModifier, KeyModifier>builder()
-            .put(OpenKeyModifier.CONTROL, KeyModifier.CONTROL)
-            .put(OpenKeyModifier.SHIFT, KeyModifier.SHIFT)
-            .put(OpenKeyModifier.ALT, KeyModifier.ALT)
-            .put(OpenKeyModifier.NONE, KeyModifier.NONE)
-            .build();
-
-    private static final ImmutableMap<KeyModifier, IKeyModifier> MODIFIERS2 = ImmutableMap.<KeyModifier, IKeyModifier>builder()
-            .put(KeyModifier.CONTROL, OpenKeyModifier.CONTROL)
-            .put(KeyModifier.SHIFT, OpenKeyModifier.SHIFT)
-            .put(KeyModifier.ALT, OpenKeyModifier.ALT)
-            .put(KeyModifier.NONE, OpenKeyModifier.NONE)
-            .build();
 
     private static final ArrayList<Pair<KeyMapping, Supplier<Runnable>>> INPUTS = createAndAttach();
 
@@ -71,8 +51,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         String nameKey = "keys.armourers_workshop." + name;
         String categoryKey = "keys.armourers_workshop." + category;
         InputConstants.Key input = InputConstants.getKey(key);
-        KeyModifier modifier1 = MODIFIERS1.getOrDefault(modifier, KeyModifier.NONE);
-        KeyMapping binding = createKeyBinding(nameKey, modifier1, input, categoryKey);
+        OnceKeyBinding binding = createKeyBinding(nameKey, modifier, input, categoryKey);
         if (handler != null) {
             INPUTS.add(Pair.of(binding, handler));
         }
@@ -86,19 +65,19 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
 
             @Override
             public IKeyModifier getKeyModifier() {
-                return MODIFIERS2.getOrDefault(binding.getKeyModifier(), OpenKeyModifier.NONE);
+                return binding.getOpenKeyModifier();
             }
         };
         return ObjectUtils.unsafeCast(binding1);
     }
 
-    public static class OnceKeyBinding extends KeyMapping {
+    public static class OnceKeyBinding extends AbstractForgeKeyMapping {
 
         // Once consumed, must need to release the key to reset this flags.
         private boolean canConsumeClick = true;
 
-        public OnceKeyBinding(String description, IKeyConflictContext keyConflictContext, KeyModifier keyModifier, InputConstants.Key keyCode, String category) {
-            super(description, keyConflictContext, keyModifier, keyCode, category);
+        public OnceKeyBinding(String description, IKeyModifier keyModifier, InputConstants.Key keyCode, String category) {
+            super(description, keyModifier, keyCode, category);
         }
 
         @Override
@@ -119,8 +98,8 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         }
     }
 
-    private static OnceKeyBinding createKeyBinding(String description, KeyModifier keyModifier, InputConstants.Key keyCode, String category) {
-        return new OnceKeyBinding(description, KeyConflictContext.IN_GAME, keyModifier, keyCode, category);
+    private static OnceKeyBinding createKeyBinding(String description, IKeyModifier keyModifier, InputConstants.Key keyCode, String category) {
+        return new OnceKeyBinding(description, keyModifier, keyCode, category);
     }
 
     private static <T> ArrayList<T> createAndAttach() {

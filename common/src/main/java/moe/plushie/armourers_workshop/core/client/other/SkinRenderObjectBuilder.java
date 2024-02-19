@@ -4,14 +4,14 @@ import com.apple.library.uikit.UIColor;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalNotification;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferBuilder;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.armature.Armature;
 import moe.plushie.armourers_workshop.core.armature.JointShape;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
@@ -26,14 +26,11 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,6 +68,10 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
     @Override
     public int addPart(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, boolean shouldRender, SkinRenderContext context) {
+        // debug the vbo render.
+        if (ModDebugger.vertexBufferObject) {
+            return draw(part, bakedSkin, scheme, context.getOverlay(), context);
+        }
         CachedTask cachedTask = compile(part, bakedSkin, scheme, context.getOverlay());
         if (cachedTask != null) {
             // we need compile the skin part, but does not render now.
@@ -84,25 +85,25 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
     @Override
     public void addShape(Vector3f origin, SkinRenderContext context) {
-        auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+        auto buffers = AbstractBufferSource.defaultBufferSource();
 //        RenderUtils.drawBoundingBox(poseStack, box, color, SkinRenderBuffer.getInstance());
-        ShapeTesselator.vector(origin, 16, context.pose().pose(), buffers);
+        ShapeTesselator.vector(origin, 16, context.pose(), buffers);
     }
 
     @Override
     public void addShape(OpenVoxelShape shape, UIColor color, SkinRenderContext context) {
-        auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        ShapeTesselator.stroke(shape.bounds(), color, context.pose().pose(), buffers);
+        auto buffers = AbstractBufferSource.defaultBufferSource();
+        ShapeTesselator.stroke(shape.bounds(), color, context.pose(), buffers);
     }
 
     @Override
     public void addShape(BakedArmature armature, SkinRenderContext context) {
-        auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        IJointTransform[] transforms = armature.getTransforms();
-        Armature armature1 = armature.getArmature();
-        for (IJoint joint : armature1.allJoints()) {
-            JointShape shape = armature1.getShape(joint.getId());
-            IJointTransform transform = transforms[joint.getId()];
+        auto buffers = AbstractBufferSource.defaultBufferSource();
+        auto transforms = armature.getTransforms();
+        auto armature1 = armature.getArmature();
+        for (auto joint : armature1.allJoints()) {
+            auto shape = armature1.getShape(joint.getId());
+            auto transform = transforms[joint.getId()];
             if (ModDebugger.defaultArmature) {
                 transform = armature1.getGlobalTransform(joint.getId());
             }
@@ -111,8 +112,8 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
                 transform.apply(context.pose());
 //                ModDebugger.translate(context.pose().pose());
 //			poseStack.translate(box.o.getX(), box.o.getY(), box.o.getZ());
-                ShapeTesselator.stroke(shape, ColorUtils.getPaletteColor(joint.getId()), context.pose().pose(), buffers);
-                ShapeTesselator.vector(0, 0, 0, 4, 4, 4, context.pose().pose(), buffers);
+                ShapeTesselator.stroke(shape, ColorUtils.getPaletteColor(joint.getId()), context.pose(), buffers);
+                ShapeTesselator.vector(0, 0, 0, 4, 4, 4, context.pose(), buffers);
                 context.popPose();
             }
         }
@@ -124,7 +125,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
     @Nullable
     public CachedTask compile(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, int overlay) {
-        Object key = SkinCache.borrowKey(bakedSkin.getId(), part.getId(), part.requirements(scheme), overlay);
+        auto key = SkinCache.borrowKey(bakedSkin.getId(), part.getId(), part.requirements(scheme), overlay);
         auto cachedTask = cachingTasks.getIfPresent(key);
         if (cachedTask != null) {
             SkinCache.returnKey(key);
@@ -160,7 +161,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
             return;
         }
 //        long startTime = System.currentTimeMillis();
-        PoseStack matrixStack1 = new PoseStack();
+        OpenPoseStack poseStack1 = new OpenPoseStack();
         ArrayList<CompiledTask> buildingTasks = new ArrayList<>();
         for (CachedTask task : tasks) {
             int overlay = task.overlay;
@@ -168,9 +169,9 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
             ColorScheme scheme = task.scheme;
             ArrayList<CompiledTask> mergedTasks = new ArrayList<>();
             part.forEach((renderType, quads) -> {
-                auto builder = BufferBuilder.createBuilderBuffer(quads.size() * 8 * renderType.format().getVertexSize());
+                auto builder = new AbstractBufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
                 builder.begin(renderType);
-                quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, overlay, matrixStack1, builder.asBufferBuilder()));
+                quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, overlay, poseStack1, builder));
                 IRenderedBuffer renderedBuffer = builder.end();
                 CompiledTask compiledTask = new CompiledTask(renderType, renderedBuffer, part.getRenderPolygonOffset(), part.getType());
                 mergedTasks.add(compiledTask);
@@ -181,6 +182,24 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         combineAndUpload(tasks, buildingTasks);
 //        long totalTime = System.currentTimeMillis() - startTime;
 //        ModLog.debug("compile tasks {}, times: {}ms", tasks.size(), totalTime);
+    }
+
+    private int draw(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, int overlay, SkinRenderContext context) {
+        auto buffers = context.getBuffers();
+        auto poseStack1 = context.pose();
+//        CachedTask task = new CachedTask(part, scheme, overlay);
+//        ArrayList<CompiledTask> mergedTasks = new ArrayList<>();
+        part.forEach((renderType, quads) -> {
+//            auto builder = BufferBuilder.createBuilderBuffer(quads.size() * 8 * renderType.format().getVertexSize());
+//            builder.begin(renderType);
+            quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, overlay, poseStack1, buffers.getBuffer(renderType)));
+//            IRenderedBuffer renderedBuffer = builder.end();
+//            CompiledTask compiledTask = new CompiledTask(renderType, renderedBuffer, part.getRenderPolygonOffset(), part.getType());
+//            mergedTasks.add(compiledTask);
+//            buildingTasks.add(compiledTask);
+        });
+//        task.mergedTasks = mergedTasks;
+        return 1;
     }
 
     private void combineAndUpload(ArrayList<CachedTask> qt, ArrayList<CompiledTask> buildingTasks) {
@@ -282,19 +301,21 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
         int draw(CachedTask task, SkinRenderContext context) {
             int lightmap = context.getLightmap();
-            float partialTicks = context.getPartialTicks();
+            float animationTicks = context.getAnimationTicks();
             float renderPriority = context.getReferenced().getRenderPriority();
-            IPoseStack poseStack = context.pose();
-            PoseStack modelViewStack = RenderSystem.getModelViewStack();
-            OpenPoseStack finalPostStack = new OpenPoseStack();
-            OpenMatrix4f lastPose = finalPostStack.lastPose();
-            OpenMatrix3f lastNormal = finalPostStack.lastNormal();
-            lastPose.multiply(modelViewStack.lastPose());
-            lastPose.multiply(poseStack.lastPose());
-//            lastNormal.multiply(modelViewStack.lastNormal());
-            lastNormal.multiply(poseStack.lastNormal());
+            auto poseStack = context.pose();
+            auto modelViewStack = AbstractPoseStack.wrap(RenderSystem.getModelViewStack());
+            auto finalPostStack = new OpenPoseStack();
+            auto lastPose = finalPostStack.last().pose();
+            auto lastNormal = finalPostStack.last().normal();
+            // https://web.archive.org/web/20240125142900/http://www.songho.ca/opengl/gl_normaltransform.html
+            //finalPostStack.last().setProperties(poseStack.last().properties());
+            lastPose.multiply(modelViewStack.last().pose());
+            lastPose.multiply(poseStack.last().pose());
+            //lastNormal.multiply(modelViewStack.last().normal());
+            lastNormal.multiply(poseStack.last().normal());
             lastNormal.invert();
-            task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, finalPostStack, lightmap, partialTicks, renderPriority)));
+            task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, finalPostStack, lightmap, animationTicks, renderPriority)));
             return task.totalTask;
         }
 
@@ -309,7 +330,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
     static class CompiledPass extends ShaderVertexObject {
 
         int lightmap;
-        float partialTicks;
+        float animationTicks;
 
         float additionalPolygonOffset;
         boolean isGrowing;
@@ -317,12 +338,12 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         OpenPoseStack poseStack;
         CompiledTask compiledTask;
 
-        CompiledPass(CompiledTask compiledTask, OpenPoseStack poseStack, int lightmap, float partialTicks, float renderPriority) {
+        CompiledPass(CompiledTask compiledTask, OpenPoseStack poseStack, int lightmap, float animationTicks, float renderPriority) {
             super();
             this.compiledTask = compiledTask;
             this.poseStack = poseStack;
             this.lightmap = lightmap;
-            this.partialTicks = partialTicks;
+            this.animationTicks = animationTicks;
             this.isGrowing = SkinRenderType.isGrowing(compiledTask.renderType);
             this.additionalPolygonOffset = renderPriority;
         }

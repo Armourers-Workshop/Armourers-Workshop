@@ -4,11 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
+import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
 import moe.plushie.armourers_workshop.core.client.bake.BakedFirstPersonArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedItemModel;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -22,37 +24,26 @@ import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.EmbeddedSkinStack;
-import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.TickUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
+import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.FishingHook;
-import net.minecraft.world.entity.projectile.ThrownTrident;
-import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Collections;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import manifold.ext.rt.api.auto;
@@ -60,8 +51,13 @@ import manifold.ext.rt.api.auto;
 @Environment(EnvType.CLIENT)
 public class ClientWardrobeHandler {
 
+
     private static Runnable INVENTORY_RENDER_POST_EVENT = null;
     public static ItemStack RENDERING_GUI_ITEM = null;
+
+    private static OpenPoseStack LAST_RENDERING_POSE_STACK = new OpenPoseStack();
+    public static OpenPoseStack RENDERING_POSE_STACK = null;
+
     public static final float SCALE = 1 / 16f;
 
     public static void init() {
@@ -75,147 +71,19 @@ public class ClientWardrobeHandler {
         RENDERING_GUI_ITEM = null;
     }
 
-    public static void onRenderTrident(ThrownTrident entity, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers, CallbackInfo callback) {
-        auto renderData = SkinRenderData.of(entity);
-        if (renderData == null) {
-            return;
-        }
-        poseStack.pushPose();
-
-        float xRot = entity.getXRot();
-        float yRot = entity.getYRot();
-        float xRotO = entity.xRotO;
-        float yRotO = entity.yRotO;
-
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(MathUtils.lerp(partialTicks, yRotO, yRot) - 90.0F));
-        poseStack.mulPose(Vector3f.ZP.rotationDegrees(MathUtils.lerp(partialTicks, xRotO, xRot) + 90.0F));
-
-        poseStack.mulPose(Vector3f.ZP.rotationDegrees(180));
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(-90));
-
-        poseStack.scale(-SCALE, -SCALE, SCALE);
-        poseStack.translate(0, 11, 0);
-
-        auto armature = BakedArmature.defaultBy(Armatures.ANY);
-        auto context = SkinRenderContext.alloc(renderData, packedLight, TickUtils.ticks(), poseStack, buffers);
-        int count = render(entity, armature, context, renderData::getItemSkins);
-        if (count != 0 && !ModDebugger.itemOverride) {
-            callback.cancel();
-        }
-        context.release();
-
-        poseStack.popPose();
-    }
-
-    public static void onRenderArrow(AbstractArrow entity, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers, CallbackInfo callback) {
-        auto renderData = SkinRenderData.of(entity);
-        if (renderData == null) {
-            return;
-        }
-        auto entry = getEntry(renderData.getItemSkins(), part -> part.getType() == SkinPartTypes.ITEM_ARROW);
-        if (entry == null) {
-            return; // we just need to render with the arrows.
-        }
-        poseStack.pushPose();
-
-        float xRot = entity.getXRot();
-        float yRot = entity.getYRot();
-        float xRotO = entity.xRotO;
-        float yRotO = entity.yRotO;
-
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(MathUtils.lerp(partialTicks, yRotO, yRot) - 90.0F));
-        poseStack.mulPose(Vector3f.ZP.rotationDegrees(MathUtils.lerp(partialTicks, xRotO, xRot)));
-
-        float f9 = (float) entity.shakeTime - partialTicks;
-        if (f9 > 0.0F) {
-            float f10 = -MathUtils.sin(f9 * 3.0F) * f9;
-            poseStack.mulPose(Vector3f.ZP.rotationDegrees(f10));
-        }
-
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(-90));
-        poseStack.scale(-SCALE, -SCALE, SCALE);
-        poseStack.translate(0, 0, -1);
-
-        auto armature = BakedArmature.defaultBy(Armatures.ANY);
-        auto context = SkinRenderContext.alloc(renderData, packedLight, TickUtils.ticks(), poseStack, buffers);
-        int count = render(entity, armature, context, () -> Collections.singletonList(entry));
-        if (count != 0 && !ModDebugger.itemOverride) {
-            callback.cancel();
-        }
-        context.release();
-
-        poseStack.popPose();
-    }
-
-    public static void onRenderFishingHook(FishingHook entity, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers, CallbackInfo callback) {
-        auto player = entity.getPlayerOwner();
-        auto renderData = SkinRenderData.of(entity);
-        if (player == null || renderData == null) {
-            return;
-        }
-        auto itemStack = player.getMainHandItem();
-        if (!itemStack.is(Items.FISHING_ROD)) {
-            itemStack = player.getOffhandItem();
-        }
-        auto entry = createEntry(itemStack, part -> part.getType() == SkinPartTypes.ITEM_FISHING_HOOK);
-        if (entry == null) {
-            return; // we just need to render with the arrows.
-        }
-        poseStack.pushPose();
-
-        Vector3f rotation = Minecraft.getInstance().getCameraOrientation().toYXZ();
-        poseStack.mulPose(OpenQuaternionf.fromYXZ(rotation.getY(), 0, 0));
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0f));
-
-        poseStack.scale(-SCALE, -SCALE, SCALE);
-        poseStack.translate(-0.5, -3.0, 0.0);
-
-        auto armature = BakedArmature.defaultBy(Armatures.ANY);
-        auto context = SkinRenderContext.alloc(renderData, packedLight, TickUtils.ticks(), poseStack, buffers);
-        int count = render(entity, armature, context, () -> Collections.singletonList(entry));
-        if (count != 0 && !ModDebugger.fishingHook) {
-            callback.cancel();
-        }
-        context.release();
-
-        poseStack.popPose();
-    }
-
-    public static void onRenderBoat(Boat entity, Model model, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers) {
-        auto renderData = SkinRenderData.of(entity);
-        if (renderData == null) {
-            return;
-        }
-//        SkinRendererManager.getInstance().willRender(entity, model, null, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
-//        SkinRendererManager.getInstance().willRenderModel(entity, model, null, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
-
-        poseStack.pushPose();
-        poseStack.scale(-SCALE, -SCALE, SCALE);
-
-
-        // transformer =
-
-        BakedArmature armature = BakedArmature.defaultBy(Armatures.BOAT);
-        SkinRenderContext context = SkinRenderContext.alloc(renderData, packedLight, TickUtils.ticks(), AbstractItemTransformType.NONE, poseStack, buffers);
-        render(entity, armature, context, renderData::getArmorSkins);
-        context.release();
-
-        poseStack.popPose();
-
-
-//        SkinRendererManager.getInstance().didRender(entity, model, null, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
-    }
-
-    public static void onRenderSpecificHand(LivingEntity entity, float partialTicks, int packedLight, AbstractItemTransformType transformType, PoseStack poseStack, MultiBufferSource buffers, Runnable cancelHandler) {
+    public static void onRenderSpecificHand(LivingEntity entity, float partialTicks, int packedLight, AbstractItemTransformType transformType, PoseStack poseStackIn, MultiBufferSource buffersIn, Runnable cancelHandler) {
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {
             return;
         }
+        auto poseStack = AbstractPoseStack.wrap(poseStackIn);
+        auto buffers = AbstractBufferSource.wrap(buffersIn);
+        auto armature = BakedFirstPersonArmature.defaultBy(transformType);
+        auto context = SkinRenderContext.alloc(renderData, packedLight, partialTicks, transformType, poseStack, buffers);
+
         poseStack.pushPose();
         poseStack.scale(-SCALE, -SCALE, SCALE);
 
-        auto armature = BakedFirstPersonArmature.defaultBy(transformType);
-        auto context = SkinRenderContext.alloc(renderData, packedLight, TickUtils.ticks(), transformType, poseStack, buffers);
         int count = render(entity, armature, context, renderData::getArmorSkins);
         if (count != 0 && !ModDebugger.handOverride) {
             cancelHandler.run();
@@ -225,24 +93,100 @@ public class ClientWardrobeHandler {
         poseStack.popPose();
     }
 
-    public static void onRenderLivingEntityPre(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
-        SkinRenderData renderData = SkinRenderData.of(entity);
-        if (renderData != null) {
-            SkinRendererManager.getInstance().willRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
+
+    public static void onRenderEntityPre(Entity entity, float f, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight) {
+        BakedArmatureTransformer transformer = SkinRendererManager.getFallbackTransformer(entity.getType());
+        if (transformer != null) {
+            poseStackIn.pushPose();
+            CallbackInfo callbackInfo = new CallbackInfo("", true);
+            onRenderEntity(entity, f, partialTicks, poseStackIn, buffersIn, packedLight, transformer, callbackInfo);
+            if (callbackInfo.isCancelled()) {
+                // we hide it by the scale to 0.
+                auto poseStack = AbstractPoseStack.wrap(poseStackIn);
+                LAST_RENDERING_POSE_STACK.last().set(poseStack.last());
+                RENDERING_POSE_STACK = LAST_RENDERING_POSE_STACK;
+                poseStackIn.scale(0, 0, 0);
+            }
         }
     }
 
-    public static void onRenderLivingEntity(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
-        SkinRenderData renderData = SkinRenderData.of(entity);
-        if (renderData != null) {
-            SkinRendererManager.getInstance().willRenderModel(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
+    public static void onRenderEntity(Entity entity, float f, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight, BakedArmatureTransformer transformer, CallbackInfo callback) {
+        auto renderData = SkinRenderData.of(entity);
+        if (renderData == null) {
+            return;
+        }
+        auto poseStack = AbstractPoseStack.wrap(poseStackIn);
+        auto buffers = AbstractBufferSource.wrap(buffersIn);
+        auto armature = BakedArmature.defaultBy(transformer.getArmature());
+        auto context = SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers);
+
+        poseStack.pushPose();
+
+        transformer.prepare(entity, context);
+        transformer.activate(entity, context);
+
+        poseStack.scale(-SCALE, -SCALE, SCALE);
+
+        int count = render(entity, armature, context, renderData::getItemSkins);
+        if (count != 0 && !ModDebugger.itemOverride) {
+            callback.cancel();
+        }
+
+        transformer.deactivate(entity, context);
+
+        context.release();
+
+        poseStack.popPose();
+    }
+
+    public static void onRenderEntityPost(Entity entity, float f, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight) {
+        auto transformer = SkinRendererManager.getFallbackTransformer(entity.getType());
+        if (transformer != null) {
+            RENDERING_POSE_STACK = null;
+            poseStackIn.popPose();
         }
     }
 
-    public static void onRenderLivingEntityPost(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer) {
+
+    public static void onRenderLivingEntityPre(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
-            SkinRendererManager.getInstance().didRender(entity, entityRenderer.getModel(), entityRenderer, renderData, () -> SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers));
+            BakedArmatureTransformer transformer = BakedArmatureTransformer.defaultBy(entity, entityRenderer.getModel(), entityRenderer);
+            if (transformer != null) {
+                auto poseStack = AbstractPoseStack.wrap(poseStackIn);
+                auto buffers = AbstractBufferSource.wrap(buffersIn);
+                SkinRenderContext context1 = SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers);
+                transformer.prepare(entity, context1);
+                context1.release();
+            }
+        }
+    }
+
+    public static void onRenderLivingEntity(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
+        SkinRenderData renderData = SkinRenderData.of(entity);
+        if (renderData != null) {
+            BakedArmatureTransformer transformer = BakedArmatureTransformer.defaultBy(entity, entityRenderer.getModel(), entityRenderer);
+            if (transformer != null) {
+                auto poseStack = AbstractPoseStack.wrap(poseStackIn);
+                auto buffers = AbstractBufferSource.wrap(buffersIn);
+                SkinRenderContext context1 = SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers);
+                transformer.activate(entity, context1);
+                context1.release();
+            }
+        }
+    }
+
+    public static void onRenderLivingEntityPost(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
+        SkinRenderData renderData = SkinRenderData.of(entity);
+        if (renderData != null) {
+            BakedArmatureTransformer transformer = BakedArmatureTransformer.defaultBy(entity, entityRenderer.getModel(), entityRenderer);
+            if (transformer != null) {
+                auto poseStack = AbstractPoseStack.wrap(poseStackIn);
+                auto buffers = AbstractBufferSource.wrap(buffersIn);
+                SkinRenderContext context1 = SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers);
+                transformer.deactivate(entity, context1);
+                context1.release();
+            }
         }
     }
 
@@ -281,13 +225,13 @@ public class ClientWardrobeHandler {
         return null;
     }
 
-    public static void renderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStack, MultiBufferSource buffers, BakedModel bakedModel, int packedLight, int overlay, CallbackInfo callback) {
+    public static void renderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStackIn, MultiBufferSource buffersIn, BakedModel bakedModel, int packedLight, int overlay, CallbackInfo callback) {
         int counter = 0;
         switch (transformType) {
             case GUI:
             case GROUND:
             case FIXED: {
-                counter = _renderEmbeddedSkinInBox(embeddedStack, transformType, leftHandHackery, poseStack, buffers, packedLight, overlay);
+                counter = _renderEmbeddedSkinInBox(embeddedStack, transformType, leftHandHackery, poseStackIn, buffersIn, packedLight, overlay);
                 break;
             }
             case THIRD_PERSON_LEFT_HAND:
@@ -298,9 +242,9 @@ public class ClientWardrobeHandler {
                 // so we need replace it to custom renderer.
                 if (embeddedStack.getEntry() == null) {
                     if (shouldRenderInBox(embeddedStack)) {
-                        counter = _renderEmbeddedSkinInBox(embeddedStack, transformType, leftHandHackery, poseStack, buffers, packedLight, overlay);
+                        counter = _renderEmbeddedSkinInBox(embeddedStack, transformType, leftHandHackery, poseStackIn, buffersIn, packedLight, overlay);
                     } else {
-                        counter = _renderEmbeddedSkin(embeddedStack, transformType, leftHandHackery, poseStack, buffers, packedLight, overlay);
+                        counter = _renderEmbeddedSkin(embeddedStack, transformType, leftHandHackery, poseStackIn, buffersIn, packedLight, overlay);
                     }
                     break;
                 }
@@ -308,10 +252,14 @@ public class ClientWardrobeHandler {
                 if (renderData != null) {
 //                    poseStack.translate(0, 1, -2);
 //                    RenderUtils.drawPoint(poseStack, null, 2, buffers);
+                    auto poseStack = AbstractPoseStack.wrap(poseStackIn);
+                    auto buffers = AbstractBufferSource.wrap(buffersIn);
+                    auto armature = BakedArmature.defaultBy(Armatures.ANY);
+                    auto context = SkinRenderContext.alloc(renderData, packedLight, 0, transformType, poseStack, buffers);
+
                     poseStack.pushPose();
                     poseStack.scale(-SCALE, -SCALE, SCALE);
-                    auto armature = BakedArmature.defaultBy(Armatures.ANY);
-                    auto context = SkinRenderContext.alloc(renderData, packedLight, TickUtils.ticks(), transformType, poseStack, buffers);
+
                     context.setReferenced(SkinItemSource.create(800, itemStack, transformType));
                     counter = render(entity, armature, context, () -> Collections.singleton(embeddedStack.getEntry()));
                     context.release();
@@ -329,13 +277,15 @@ public class ClientWardrobeHandler {
         }
     }
 
-    private static int _renderEmbeddedSkinInBox(EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
+    private static int _renderEmbeddedSkinInBox(EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight, int overlay) {
         int count = 0;
         auto descriptor = embeddedStack.getDescriptor();
         auto bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
         if (bakedSkin == null) {
             return count;
         }
+        auto poseStack = AbstractPoseStack.wrap(poseStackIn);
+        auto buffers = AbstractBufferSource.wrap(buffersIn);
         auto rotation = Vector3f.ZERO;
         auto scale = Vector3f.ONE;
 
@@ -367,13 +317,16 @@ public class ClientWardrobeHandler {
         return count;
     }
 
-    private static int _renderEmbeddedSkin(EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStack, MultiBufferSource buffers, int packedLight, int overlay) {
+    private static int _renderEmbeddedSkin(EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight, int overlay) {
         int count = 0;
-        SkinDescriptor descriptor = embeddedStack.getDescriptor();
-        SkinRenderTesselator context = SkinRenderTesselator.create(descriptor, Tickets.INVENTORY);
+        auto descriptor = embeddedStack.getDescriptor();
+        auto context = SkinRenderTesselator.create(descriptor, Tickets.INVENTORY);
         if (context == null) {
             return count;
         }
+        auto poseStack = AbstractPoseStack.wrap(poseStackIn);
+        auto buffers = AbstractBufferSource.wrap(buffersIn);
+
         poseStack.pushPose();
         poseStack.scale(-16, -16, 16);
 
@@ -389,7 +342,7 @@ public class ClientWardrobeHandler {
         return count;
     }
 
-    public static void onRenderEntityInInventoryPre(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY) {
+    public static void onRenderInventoryEntityPre(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY) {
         if (!ModConfig.Client.enableEntityInInventoryClip) {
             return;
         }
@@ -416,7 +369,7 @@ public class ClientWardrobeHandler {
         INVENTORY_RENDER_POST_EVENT = RenderSystem::removeClipRect;
     }
 
-    public static void onRenderEntityInInventoryPost(LivingEntity entity) {
+    public static void onRenderInventoryEntityPost(LivingEntity entity) {
         if (INVENTORY_RENDER_POST_EVENT != null) {
             INVENTORY_RENDER_POST_EVENT.run();
             INVENTORY_RENDER_POST_EVENT = null;
@@ -438,7 +391,7 @@ public class ClientWardrobeHandler {
             itemSource.setRenderPriority(entry.getRenderPriority());
             context.setReferenced(itemSource);
             auto bakedSkin = entry.getBakedSkin();
-            bakedSkin.setupAnim(entity, context.getPartialTicks(), itemSource);
+            bakedSkin.setupAnim(entity, context.getAnimationTicks(), itemSource);
             r += SkinRenderer.render(entity, bakedArmature, bakedSkin, entry.getBakedScheme(), context);
         }
         return r;
@@ -459,30 +412,5 @@ public class ClientWardrobeHandler {
             return false;
         }
         return true;
-    }
-
-    private static SkinRenderData.Entry createEntry(ItemStack itemStack, Predicate<BakedSkinPart> predicate) {
-        auto descriptor = SkinDescriptor.of(itemStack);
-        auto bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
-        if (bakedSkin == null) {
-            return null;
-        }
-        for (BakedSkinPart part : bakedSkin.getParts()) {
-            if (predicate.test(part)) {
-                return new SkinRenderData.Entry(itemStack, descriptor, bakedSkin, ColorScheme.EMPTY, 0, true);
-            }
-        }
-        return null;
-    }
-
-    private static SkinRenderData.Entry getEntry(Iterable<SkinRenderData.Entry> entries, Predicate<BakedSkinPart> predicate) {
-        for (SkinRenderData.Entry entry1 : entries) {
-            for (BakedSkinPart part : entry1.getBakedSkin().getParts()) {
-                if (predicate.test(part)) {
-                    return entry1;
-                }
-            }
-        }
-        return null;
     }
 }

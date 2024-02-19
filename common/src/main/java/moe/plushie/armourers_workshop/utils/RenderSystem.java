@@ -4,22 +4,13 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.impl.ClipContextImpl;
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import moe.plushie.armourers_workshop.api.math.IRectangle3f;
-import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractRenderSystem;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.Direction;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.FloatBuffer;
@@ -29,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class RenderSystem extends AbstractRenderSystem {
 
     private static final AtomicInteger extendedMatrixFlags = new AtomicInteger();
+    private static final AtomicInteger extendedScissorFlags = new AtomicInteger();
 
     private static final Storage<OpenMatrix3f> extendedNormalMatrix = new Storage<>(OpenMatrix3f.createScaleMatrix(1, 1, 1));
     private static final Storage<OpenMatrix4f> extendedTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
@@ -37,27 +29,6 @@ public final class RenderSystem extends AbstractRenderSystem {
     private static final Storage<PaintColor> extendedTintColor = new Storage<>(PaintColor.WHITE);
 
     private static final FloatBuffer BUFFER = ObjectUtils.createFloatBuffer(3);
-
-    private static final byte[][][] FACE_MARK_TEXTURES = {
-            // 0, 1(w), 2(h), 3(d)
-            {{1, 3}, {1, 0}, {0, 0}, {0, 3}},
-            {{1, 3}, {1, 0}, {0, 0}, {0, 3}},
-
-            {{1, 2}, {1, 0}, {0, 0}, {0, 2}},
-            {{1, 2}, {1, 0}, {0, 0}, {0, 2}},
-
-            {{3, 2}, {3, 0}, {0, 0}, {0, 2}},
-            {{3, 2}, {3, 0}, {0, 0}, {0, 2}},
-    };
-
-    private static final byte[][][] FACE_MARK_VERTEXES = new byte[][][]{
-            {{0, 0, 1}, {0, 0, 0}, {1, 0, 0}, {1, 0, 1}, {0, -1, 0}}, // -y
-            {{1, 1, 1}, {1, 1, 0}, {0, 1, 0}, {0, 1, 1}, {0, 1, 0}},  // +y
-            {{0, 0, 0}, {0, 1, 0}, {1, 1, 0}, {1, 0, 0}, {0, 0, -1}}, // -z
-            {{1, 0, 1}, {1, 1, 1}, {0, 1, 1}, {0, 0, 1}, {0, 0, 1}},  // +z
-            {{0, 0, 1}, {0, 1, 1}, {0, 1, 0}, {0, 0, 0}, {-1, 0, 0}}, // -x
-            {{1, 0, 0}, {1, 1, 0}, {1, 1, 1}, {1, 0, 1}, {1, 0, 0}},  // +x
-    };
 
     public static void call(Runnable task) {
         if (isOnRenderThread()) {
@@ -87,66 +58,6 @@ public final class RenderSystem extends AbstractRenderSystem {
 
     public static void removeClipRect() {
         ClipContextImpl.getInstance().removeClip();
-    }
-
-    public static void drawCube(PoseStack poseStack, IRectangle3i rect, float r, float g, float b, float a, MultiBufferSource buffers) {
-        float x = rect.getMinX();
-        float y = rect.getMinY();
-        float z = rect.getMinZ();
-        float w = rect.getWidth();
-        float h = rect.getHeight();
-        float d = rect.getDepth();
-        drawCube(poseStack, x, y, z, w, h, d, r, g, b, a, buffers);
-    }
-
-    public static void drawCube(PoseStack poseStack, IRectangle3f rect, float r, float g, float b, float a, MultiBufferSource buffers) {
-        float x = rect.getMinX();
-        float y = rect.getMinY();
-        float z = rect.getMinZ();
-        float w = rect.getWidth();
-        float h = rect.getHeight();
-        float d = rect.getDepth();
-        drawCube(poseStack, x, y, z, w, h, d, r, g, b, a, buffers);
-    }
-
-    public static void drawCube(PoseStack poseStack, IRectangle3f rect, float r, float g, float b, float a, VertexConsumer consumer) {
-        float x = rect.getMinX();
-        float y = rect.getMinY();
-        float z = rect.getMinZ();
-        float w = rect.getWidth();
-        float h = rect.getHeight();
-        float d = rect.getDepth();
-        drawCube(poseStack, x, y, z, w, h, d, r, g, b, a, consumer);
-    }
-
-    public static void drawCube(PoseStack poseStack, float x, float y, float z, float w, float h, float d, float r, float g, float b, float a, MultiBufferSource buffers) {
-        SkinVertexBufferBuilder builder1 = SkinVertexBufferBuilder.getBuffer(buffers);
-        VertexConsumer builder = builder1.getBuffer(SkinRenderType.IMAGE_GUIDE);
-        drawCube(poseStack, x, y, z, w, h, d, r, g, b, a, builder);
-    }
-
-    public static void drawCube(PoseStack poseStack, float x, float y, float z, float w, float h, float d, float r, float g, float b, float a, VertexConsumer consumer) {
-        if (w == 0 || h == 0 || d == 0) {
-            return;
-        }
-        PoseStack.Pose pose = poseStack.last();
-        for (Direction dir : Direction.values()) {
-            drawFace(pose, dir, x, y, z, w, h, d, 0, 0, r, g, b, a, consumer);
-        }
-    }
-
-    public static void drawFace(PoseStack.Pose pose, Direction dir, float x, float y, float z, float w, float h, float d, float u, float v, float r, float g, float b, float a, VertexConsumer builder) {
-        byte[][] vertexes = FACE_MARK_VERTEXES[dir.get3DDataValue()];
-        byte[][] textures = FACE_MARK_TEXTURES[dir.get3DDataValue()];
-        float[] values = {0, w, h, d};
-        for (int i = 0; i < 4; ++i) {
-            builder.vertex(pose.pose(), x + vertexes[i][0] * w, y + vertexes[i][1] * h, z + vertexes[i][2] * d)
-                    .color(r, g, b, a)
-                    .uv(u + values[textures[i][0]], v + values[textures[i][1]])
-                    .overlayCoords(OverlayTexture.NO_OVERLAY)
-                    .uv2(0xf000f0)
-                    .endVertex();
-        }
     }
 
     public static void setShaderColor(UIColor color) {
@@ -199,6 +110,14 @@ public final class RenderSystem extends AbstractRenderSystem {
 
     public static int getExtendedMatrixFlags() {
         return extendedMatrixFlags.get();
+    }
+
+    public static void setExtendedScissorFlags(int flags) {
+        extendedScissorFlags.set(flags);
+    }
+
+    public static int getExtendedScissorFlags() {
+        return extendedScissorFlags.get();
     }
 
     public static void setExtendedTintColor(PaintColor tintColor) {

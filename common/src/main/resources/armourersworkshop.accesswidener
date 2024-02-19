@@ -3,6 +3,17 @@ accessWidener   v1  named
 accessible method net/minecraft/world/item/context/UseOnContext <init> (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/phys/BlockHitResult;)V
 accessible method net/minecraft/world/level/storage/LevelResource <init> (Ljava/lang/String;)V
 
+
+##if MC >= 12100
+accessible method net/minecraft/world/level/block/entity/SkullBlockEntity fetchGameProfile (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
+##endif
+
+##if MC >= 11900
+accessible method net/minecraft/world/entity/player/Player hurtArmor (Lnet/minecraft/world/damagesource/DamageSource;F)V
+accessible method net/minecraft/world/entity/player/Player hurtHelmet (Lnet/minecraft/world/damagesource/DamageSource;F)V
+accessible method net/minecraft/world/entity/player/Player hurtCurrentlyUsedShield (F)V
+##endif
+
 ##if MC >= 12000
 accessible method net/minecraft/world/entity/Entity setLevel (Lnet/minecraft/world/level/Level;)V
 ##endif
@@ -89,4 +100,33 @@ accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/St
 ### accessible field net/minecraft/client/model/IronGolemModel arm1 Lnet/minecraft/client/model/geom/ModelPart;
 ### accessible field net/minecraft/client/model/IronGolemModel leg0 Lnet/minecraft/client/model/geom/ModelPart;
 ### accessible field net/minecraft/client/model/IronGolemModel leg1 Lnet/minecraft/client/model/geom/ModelPart;
+##endif
+
+
+##if MC < 12000
+### accessible field com/mojang/math/Matrix3f m00 F
+### accessible field com/mojang/math/Matrix3f m01 F
+### accessible field com/mojang/math/Matrix3f m02 F
+### accessible field com/mojang/math/Matrix3f m10 F
+### accessible field com/mojang/math/Matrix3f m11 F
+### accessible field com/mojang/math/Matrix3f m12 F
+### accessible field com/mojang/math/Matrix3f m20 F
+### accessible field com/mojang/math/Matrix3f m21 F
+### accessible field com/mojang/math/Matrix3f m22 F
+### accessible field com/mojang/math/Matrix4f m00 F
+### accessible field com/mojang/math/Matrix4f m01 F
+### accessible field com/mojang/math/Matrix4f m02 F
+### accessible field com/mojang/math/Matrix4f m03 F
+### accessible field com/mojang/math/Matrix4f m10 F
+### accessible field com/mojang/math/Matrix4f m11 F
+### accessible field com/mojang/math/Matrix4f m12 F
+### accessible field com/mojang/math/Matrix4f m13 F
+### accessible field com/mojang/math/Matrix4f m20 F
+### accessible field com/mojang/math/Matrix4f m21 F
+### accessible field com/mojang/math/Matrix4f m22 F
+### accessible field com/mojang/math/Matrix4f m23 F
+### accessible field com/mojang/math/Matrix4f m30 F
+### accessible field com/mojang/math/Matrix4f m31 F
+### accessible field com/mojang/math/Matrix4f m32 F
+### accessible field com/mojang/math/Matrix4f m33 F
 ##endif

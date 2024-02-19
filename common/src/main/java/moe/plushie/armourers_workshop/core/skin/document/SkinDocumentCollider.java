@@ -86,7 +86,7 @@ public class SkinDocumentCollider {
             poseStack.pushPose();
             cube.getTransform().apply(poseStack);
             OpenBoundingBox aabb = new OpenBoundingBox(cube.getShape());
-            OpenTransformedBoundingBox tbb = new OpenTransformedBoundingBox(poseStack.lastPose().copy(), aabb);
+            OpenTransformedBoundingBox tbb = new OpenTransformedBoundingBox(poseStack.last().pose().copy(), aabb);
             result.add(tbb);
             poseStack.popPose();
         });

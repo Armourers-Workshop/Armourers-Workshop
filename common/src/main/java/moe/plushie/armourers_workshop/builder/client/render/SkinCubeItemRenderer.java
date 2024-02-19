@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.builder.item.SkinCubeItem;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractItemStackRenderer;
@@ -13,12 +13,10 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class SkinCubeItemRenderer extends AbstractItemStackRenderer {
@@ -33,28 +31,28 @@ public class SkinCubeItemRenderer extends AbstractItemStackRenderer {
     }
 
     @Override
-    public void renderByItem(ItemStack itemStack, AbstractItemTransformType transformType, PoseStack poseStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
+    public void renderByItem(ItemStack itemStack, AbstractItemTransformType transformType, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
         if (itemStack.isEmpty()) {
             return;
         }
-        SkinCubeItem item = (SkinCubeItem) itemStack.getItem();
-        BlockPaintColor blockPaintColor = item.getItemColors(itemStack);
+        auto item = (SkinCubeItem) itemStack.getItem();
+        auto blockPaintColor = item.getItemColors(itemStack);
         if (blockPaintColor == null) {
             blockPaintColor = BlockPaintColor.WHITE;
         }
-        Block block = item.getBlock();
+        auto block = item.getBlock();
 
         boolean isGlowing = block.equals(ModBlocks.SKIN_CUBE_GLOWING.get()) || block.equals(ModBlocks.SKIN_CUBE_GLASS_GLOWING.get());
         boolean isGlass = block.equals(ModBlocks.SKIN_CUBE_GLASS.get()) || block.equals(ModBlocks.SKIN_CUBE_GLASS_GLOWING.get());
 
-        RenderType renderType = SkinRenderType.BLOCK_CUBE;
+        auto renderType = SkinRenderType.BLOCK_CUBE;
         if (isGlass) {
             renderType = SkinRenderType.BLOCK_CUBE_GLASS;
         }
         if (isGlowing) {
             float f1 = 1 / 16.0f;
             float f = 14 / 16.0f;
-            VertexConsumer builder2 = renderTypeBuffer.getBuffer(renderType);
+            auto builder2 = bufferSource.getBuffer(renderType);
             poseStack.pushPose();
             poseStack.translate(f1, f1, f1);
             poseStack.scale(f, f, f);
@@ -62,13 +60,13 @@ public class SkinCubeItemRenderer extends AbstractItemStackRenderer {
             poseStack.popPose();
             renderType = SkinRenderType.BLOCK_CUBE_GLASS_UNSORTED;
         }
-        VertexConsumer builder1 = renderTypeBuffer.getBuffer(renderType);
+        auto builder1 = bufferSource.getBuffer(renderType);
         renderCube(blockPaintColor, light, overlay, poseStack, builder1);
     }
 
-    public void renderCube(BlockPaintColor blockPaintColor, int light, int overlay, PoseStack poseStack, VertexConsumer builder) {
-        for (Direction dir : Direction.values()) {
-            IPaintColor paintColor = blockPaintColor.getOrDefault(dir, PaintColor.WHITE);
+    public void renderCube(BlockPaintColor blockPaintColor, int light, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
+        for (auto dir : Direction.values()) {
+            auto paintColor = blockPaintColor.getOrDefault(dir, PaintColor.WHITE);
             ExtendedFaceRenderer.render2(0, 0, 0, dir, paintColor, 255, light, overlay, poseStack, builder);
         }
     }

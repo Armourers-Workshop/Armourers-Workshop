@@ -97,7 +97,7 @@ public class SkinRenderer {
         context.pushPose();
         bakedTransform.apply(context.pose());
         bakedPart.getTransform().apply(context.pose());
-        shape1.mul(context.pose().lastPose());
+        shape1.mul(context.pose().last().pose());
         shape.add(shape1);
         for (BakedSkinPart childPart : bakedPart.getChildren()) {
             getChildShape(shape, childPart, context);
@@ -109,7 +109,7 @@ public class SkinRenderer {
         OpenVoxelShape shape1 = bakedPart.getRenderShape().copy();
         context.pushPose();
         bakedPart.getTransform().apply(context.pose());
-        shape1.mul(context.pose().lastPose());
+        shape1.mul(context.pose().last().pose());
         shape.add(shape1);
         for (BakedSkinPart childPart : bakedPart.getChildren()) {
             getChildShape(shape, childPart, context);

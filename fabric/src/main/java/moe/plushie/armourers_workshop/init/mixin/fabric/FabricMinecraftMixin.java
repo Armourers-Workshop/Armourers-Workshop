@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class FabricMinecraftMixin {
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;resizeDisplay()V"))
-    private void aw$didInit(GameConfig gameConfig, CallbackInfo ci) {
+    private void aw2$didInit(GameConfig gameConfig, CallbackInfo ci) {
         Minecraft minecraft = ObjectUtils.unsafeCast(this);
         ClientStartupEvents.CLIENT_WILL_START.invoker().onClientWillStart(minecraft);
     }

@@ -1,7 +1,8 @@
 package moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.action.ICanHeld;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
@@ -10,28 +11,28 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
-import moe.plushie.armourers_workshop.utils.ModelPartBuilder;
+import moe.plushie.armourers_workshop.utils.ext.OpenModelPart;
+import moe.plushie.armourers_workshop.utils.ext.OpenModelPartBuilder;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.item.ItemStack;
 
 import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class AdvancedItemGuideRenderer extends AbstractAdvancedGuideRenderer {
 
-    private final ModelPart armSolid;
-    private final ModelPart armTransparent;
+    private final OpenModelPart armSolid;
+    private final OpenModelPart armTransparent;
 
     public AdvancedItemGuideRenderer() {
-        armSolid = ModelPartBuilder.player().uv(40, 16).cube(-2, -10, -4, 4, 8, 4).offset(0, 0, 0).build();
-        armTransparent = ModelPartBuilder.player().uv(40, 24).cube(-2, -2, -4, 4, 4, 4).offset(0, 0, 0).build();
+        armSolid = OpenModelPartBuilder.player().uv(40, 16).cube(-2, -10, -4, 4, 8, 4).offset(0, 0, 0).build();
+        armTransparent = OpenModelPartBuilder.player().uv(40, 24).cube(-2, -2, -4, 4, 4, 4).offset(0, 0, 0).build();
     }
 
     @Override
-    public void render(SkinDocument document, PoseStack poseStack, int light, int overlay, MultiBufferSource buffers) {
+    public void render(SkinDocument document, IPoseStack poseStack, int light, int overlay, IBufferSource bufferSource) {
         SkinDocumentNode node = findItemNode(document.getRoot());
         if (node == null) {
             return;
@@ -41,27 +42,27 @@ public class AdvancedItemGuideRenderer extends AbstractAdvancedGuideRenderer {
         applyTransform(poseStack, node, document.getItemTransforms());
         applyOffset(poseStack);
 
-        renderModel(poseStack, light, overlay, buffers);
+        renderModel(poseStack, light, overlay, bufferSource);
 
         poseStack.popPose();
     }
 
-    protected void renderModel(PoseStack poseStack, int light, int overlay, MultiBufferSource buffers) {
-        armSolid.render(poseStack, buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), 0xf000f0, overlay);
-        armTransparent.render(poseStack, buffers.getBuffer(SkinRenderType.PLAYER_CUTOUT), 0xf000f0, overlay);
+    protected void renderModel(IPoseStack poseStack, int light, int overlay, IBufferSource bufferSource) {
+        armSolid.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_CUTOUT), 0xf000f0, overlay);
+        armTransparent.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_CUTOUT), 0xf000f0, overlay);
         //poseStack.translate(0, -0.001f * f, 0);
-        //armTransparent.render(poseStack, buffers.getBuffer(SkinRenderType.PLAYER_TRANSLUCENT), 0xf000f0, overlay, 1, 1, 1, 0.75f);
+        //armTransparent.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_TRANSLUCENT), 0xf000f0, overlay, 1, 1, 1, 0.75f);
     }
 
-    protected void applyTransform(PoseStack poseStack, SkinDocumentNode node, SkinItemTransforms itemTransforms) {
+    protected void applyTransform(IPoseStack poseStack, SkinDocumentNode node, SkinItemTransforms itemTransforms) {
         if (itemTransforms != null) {
             ITransformf itemTransform = itemTransforms.get(AbstractItemTransformType.THIRD_PERSON_RIGHT_HAND);
             if (itemTransform != null) {
-                poseStack.applyTransform(itemTransform);
+                itemTransform.apply(poseStack);
             }
         } else {
             auto entity = PlaceholderManager.MANNEQUIN.get();
-            auto model = SkinModelManager.getInstance().getModel(node.getType(), null, net.minecraft.world.item.ItemStack.EMPTY, entity);
+            auto model = SkinModelManager.getInstance().getModel(node.getType(), null, ItemStack.EMPTY, entity);
             float f1 = 16f;
             float f2 = 1 / 16f;
             poseStack.scale(f1, f1, f1);
@@ -70,10 +71,10 @@ public class AdvancedItemGuideRenderer extends AbstractAdvancedGuideRenderer {
         }
     }
 
-    protected void applyOffset(PoseStack poseStack) {
+    protected void applyOffset(IPoseStack poseStack) {
         poseStack.translate(0, 0, -2);
         poseStack.scale(16, 16, 16);
-        poseStack.mulPose(Vector3f.XP.rotationDegrees(-90));
+        poseStack.rotate(Vector3f.XP.rotationDegrees(-90));
     }
 
     protected SkinDocumentNode findItemNode(SkinDocumentNode node) {

@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractLivingEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
@@ -12,7 +14,6 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 
 import manifold.ext.rt.api.auto;
@@ -53,10 +54,10 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
     }
 
     @Override
-    public void render(T entity, float f, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int packedLightIn) {
+    public void render(T entity, float f, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource, int packedLightIn) {
         // when mannequin holding mannequin recursive rendering occurs, and we will enable the child renderer.
         if (this.enableChildRenderer) {
-            this.getChildRenderer().render(entity, f, partialTicks, poseStack, buffers, packedLightIn);
+            this.getChildRenderer().render(entity, f, partialTicks, poseStack, bufferSource, packedLightIn);
             return;
         }
         auto textureLoader = PlayerTextureLoader.getInstance();
@@ -65,7 +66,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
         this.setModel(getModel());
         super.getModel().setAllVisible(entity.isModelVisible());
         this.enableChildRenderer = true;
-        super.render(entity, f, partialTicks, poseStack, buffers, packedLightIn);
+        super.render(entity, f, partialTicks, poseStack, bufferSource, packedLightIn);
         this.enableChildRenderer = false;
         if (ModDebugger.mannequinCulling) {
             poseStack.pushPose();
@@ -74,7 +75,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
             double ty = -box.minY;
             double tz = -box.minZ - (box.maxZ - box.minZ) / 2;
             poseStack.translate((float) tx, (float) ty, (float) tz);
-            ShapeTesselator.stroke(box, UIColor.YELLOW, poseStack, buffers);
+            ShapeTesselator.stroke(box, UIColor.YELLOW, poseStack, bufferSource);
             poseStack.popPose();
         }
     }

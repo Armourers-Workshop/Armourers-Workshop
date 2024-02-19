@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.compatibility;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferBuilder;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderObject;
 import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import net.fabricmc.api.EnvType;
@@ -45,11 +45,10 @@ public class AbstractLightBufferObject extends SkinRenderObject {
             return;
         }
         int alignedCapacity = ((capacity / PAGE_SIZE) + 1) * PAGE_SIZE;
-        IBufferBuilder builder = BufferBuilder.createBuilderBuffer(alignedCapacity * getFormat().getVertexSize());
+        IBufferBuilder builder = new AbstractBufferBuilder(alignedCapacity * getFormat().getVertexSize());
         builder.begin(TYPE);
-        BufferBuilder bufferBuilder = builder.asBufferBuilder();
         for (int i = 0; i < alignedCapacity; ++i) {
-            bufferBuilder.uv2(light).endVertex();
+            builder.uv2(light).endVertex();
         }
         IRenderedBuffer renderedBuffer = builder.end();
         this.upload(renderedBuffer.vertexBuffer());

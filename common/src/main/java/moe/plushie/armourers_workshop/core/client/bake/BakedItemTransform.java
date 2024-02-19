@@ -6,8 +6,6 @@ import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinModelManager;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.PoseStackWrapper;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import net.minecraft.world.entity.Entity;
@@ -37,8 +35,7 @@ public class BakedItemTransform implements ISkinTransform {
 
     @Override
     public void apply(IPoseStack poseStack) {
-        PoseStackWrapper wrapper = ObjectUtils.safeCast(poseStack, PoseStackWrapper.class);
-        if (entity == null || wrapper == null) {
+        if (entity == null) {
             return;
         }
         auto model = SkinModelManager.getInstance().getModel(partType, itemModel, itemStack, entity);
@@ -46,14 +43,10 @@ public class BakedItemTransform implements ISkinTransform {
         float f2 = 1 / 16f;
         boolean flag = transformType.isLeftHand();
         poseStack.scale(f1, f1, f1);
-        model.applyTransform(wrapper.pose(), flag, transformType);
+        model.applyTransform(poseStack, flag, transformType);
         poseStack.scale(f2, f2, f2);
         if (flag) {
-            // we need mirror the skin of drawing,
-            // because the poseStack.scale have a bug,
-            // it will cause the x, y, z change as same time.
-            poseStack.multiply(OpenMatrix4f.createScaleMatrix(-1, 1, 1));
-            poseStack.multiply(OpenMatrix3f.createScaleMatrix(-1, 1, 1));
+            poseStack.scale(-1, 1, 1);
         }
     }
 }

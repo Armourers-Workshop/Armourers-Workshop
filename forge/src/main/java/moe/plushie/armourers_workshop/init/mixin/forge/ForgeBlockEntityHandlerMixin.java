@@ -12,17 +12,15 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(IBlockEntityHandler.class)
 public interface ForgeBlockEntityHandlerMixin extends AbstractForgeBlockEntity {
 
-    // @Override from IBlockEntityHandler
-    @SuppressWarnings("unused")
-    default AABB getDefaultRenderBoundingBox() {
-        return AbstractForgeBlockEntity.super.getRenderBoundingBox();
-    }
-
     @Override
     default AABB getRenderBoundingBox() {
         IBlockEntityHandler handler = ObjectUtils.unsafeCast(this);
         BlockEntity blockEntity = ObjectUtils.unsafeCast(this);
-        return handler.getCustomRenderBoundingBox(blockEntity.getBlockState());
+        AABB result = handler.getRenderBoundingBox(blockEntity.getBlockState());
+        if (result != null) {
+            return result;
+        }
+        return AbstractForgeBlockEntity.super.getRenderBoundingBox();
     }
 
     @Override

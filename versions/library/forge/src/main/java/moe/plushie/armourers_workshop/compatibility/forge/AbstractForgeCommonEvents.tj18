@@ -1,0 +1,52 @@
+package moe.plushie.armourers_workshop.compatibility.forge;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+
+@Available("[1.18, 1.19)")
+public class AbstractForgeCommonEvents {
+
+    public static final Class<ModConfigEvent> CONFIG = ModConfigEvent.class;
+    public static final Class<TickEvent.WorldTickEvent> TICK = TickEvent.WorldTickEvent.class;
+
+    public static final Class<FMLLoadCompleteEvent> FML_LOAD_COMPLETE = FMLLoadCompleteEvent.class;
+    public static final Class<FMLClientSetupEvent> FML_CLIENT_SETUP = FMLClientSetupEvent.class;
+    public static final Class<FMLCommonSetupEvent> FML_COMMON_SETUP = FMLCommonSetupEvent.class;
+
+    public static final Class<ServerAboutToStartEvent> SERVER_WILL_START = ServerAboutToStartEvent.class;
+    public static final Class<ServerStartedEvent> SERVER_DID_START = ServerStartedEvent.class;
+    public static final Class<ServerStoppingEvent> SERVER_WILL_STOP = ServerStoppingEvent.class;
+    public static final Class<ServerStoppedEvent> SERVER_DID_STOP = ServerStoppedEvent.class;
+
+    public static final Class<BlockEvent.BreakEvent> BLOCK_BREAK = BlockEvent.BreakEvent.class;
+    public static final Class<BlockEvent.EntityPlaceEvent> BLOCK_PLACE = BlockEvent.EntityPlaceEvent.class;
+
+    public static final Class<EntityJoinWorldEvent> ENTITY_JOIN = EntityJoinWorldEvent.class;
+    public static final Class<LivingDropsEvent> ENTITY_DROPS = LivingDropsEvent.class;
+    public static final Class<AttackEntityEvent> ENTITY_ATTACK = AttackEntityEvent.class;
+
+    public static final Class<PlayerEvent.PlayerLoggedInEvent> PLAYER_LOGIN = PlayerEvent.PlayerLoggedInEvent.class;
+    public static final Class<PlayerEvent.PlayerLoggedOutEvent> PLAYER_LOGOUT = PlayerEvent.PlayerLoggedOutEvent.class;
+    public static final Class<PlayerEvent.Clone> PLAYER_CLONE = PlayerEvent.Clone.class;
+    public static final Class<PlayerEvent.StartTracking> PLAYER_TRACKING = PlayerEvent.StartTracking.class;
+
+    public static final Class<RegisterCommandsEvent> COMMAND_REGISTRY = RegisterCommandsEvent.class;
+    public static final Class<AddReloadListenerEvent> DATA_PACK_REGISTRY = AddReloadListenerEvent.class;
+    public static final Class<EntityAttributeCreationEvent> ENTITY_ATTRIBUTE_REGISTRY = EntityAttributeCreationEvent.class;
+}

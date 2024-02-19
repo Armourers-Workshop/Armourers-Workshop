@@ -3,8 +3,7 @@
   "package": "moe.plushie.armourers_workshop.compatibility.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "Matrix3fMixin",
-    "Matrix4fMixin",
+    "EntityRenderDispatcherMixin",
     "RenderStateMixin",
     "ItemRendererMixin",
     "InventoryScreenMixin",

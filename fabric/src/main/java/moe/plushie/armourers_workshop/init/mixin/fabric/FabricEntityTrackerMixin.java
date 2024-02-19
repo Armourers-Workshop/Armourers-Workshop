@@ -19,7 +19,7 @@ public class FabricEntityTrackerMixin {
     private Entity entity;
 
     @Inject(method = "addPairing", at = @At("TAIL"))
-    private void aw$startTracking(ServerPlayer player, CallbackInfo ci) {
+    private void aw2$startTracking(ServerPlayer player, CallbackInfo ci) {
         // the fabric start tracking event is too early, it will callback before the vanilla handler,
         // so we need a new start tracking callback after the vanilla handler completed.
         EntityLifecycleEvents.DID_START_TRACKING.invoker().onStartTracking(this.entity, player);

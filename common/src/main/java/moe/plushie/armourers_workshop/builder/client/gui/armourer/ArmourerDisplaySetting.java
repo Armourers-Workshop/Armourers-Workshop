@@ -10,7 +10,6 @@ import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UITextField;
 import com.apple.library.uikit.UITextFieldDelegate;
-import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.ArmourerMenu;
 import moe.plushie.armourers_workshop.builder.network.UpdateArmourerPacket;
@@ -156,10 +155,10 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         PlayerTextureDescriptor descriptor = PlayerTextureDescriptor.EMPTY;
         if (Strings.isNotEmpty(value)) {
             if (source == PlayerTextureDescriptor.Source.URL) {
-                descriptor = new PlayerTextureDescriptor(value);
+                descriptor = PlayerTextureDescriptor.fromURL(value);
             }
             if (source == PlayerTextureDescriptor.Source.USER) {
-                descriptor = new PlayerTextureDescriptor(new GameProfile(null, value));
+                descriptor = PlayerTextureDescriptor.fromName(value);
             }
         }
         PlayerTextureLoader.getInstance().loadTextureDescriptor(descriptor, resolvedDescriptor -> {

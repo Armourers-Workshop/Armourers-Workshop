@@ -1,0 +1,45 @@
+package moe.plushie.armourers_workshop.compatibility.forge;
+
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.utils.TypedRegistry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
+
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+@Available("[1.16, 1.18)")
+public class AbstractForgeRegistry {
+
+    public static <T extends IForgeRegistryEntry<T>> TypedRegistry<T> create(Class<?> type, IForgeRegistry<T> registry) {
+        return new TypedRegistry<>(type, registry::getKey, registry::getValue, build(DeferredRegister.create(registry, ModConstants.MOD_ID)));
+    }
+
+    public static <T, V extends IForgeRegistryEntry<V>> TypedRegistry<T> createAndCast(Class<?> type, IForgeRegistry<V> registry, Function<V, T> t0, Function<T, V> t1) {
+        TypedRegistry.RegisterProvider<V> register = build(DeferredRegister.create(registry, ModConstants.MOD_ID));
+        return new TypedRegistry<>(type, null, null, new TypedRegistry.RegisterProvider<T>() {
+            @Override
+            public <I extends T> Supplier<I> register(ResourceLocation registryName, Supplier<? extends I> provider) {
+                Supplier<V> result = register.register(registryName, () -> t1.apply(provider.get()));
+                // noinspection unchecked
+                return () -> (I) t0.apply(result.get());
+            }
+        });
+    }
+
+    private static <T extends IForgeRegistryEntry<T>> TypedRegistry.RegisterProvider<T> build(DeferredRegister<T> register) {
+        // auto register
+        register.register(FMLJavaModLoadingContext.get().getModEventBus());
+        return new TypedRegistry.RegisterProvider<T>() {
+            @Override
+            public <I extends T> Supplier<I> register(ResourceLocation registryName, Supplier<? extends I> provider) {
+                return register.register(registryName.getPath(), provider);
+            }
+        };
+    }
+}

@@ -127,7 +127,7 @@ public class SkinExporterPolygon implements ISkinExporter {
 
     private void writeVert(OpenPoseStack poseStack, OutputStreamWriter os, float x, float y, float z, IPaintColor color) throws IOException {
         Vector4f q = new Vector4f(x, y, z, 1);
-        q.transform(poseStack.lastPose());
+        q.transform(poseStack.last().pose());
         os.write(String.format("%s %s %s %d %d %d", f2s(q.x()), f2s(q.y()), f2s(q.z()), color.getRed(), color.getGreen(), color.getBlue()) + CRLF);
     }
 

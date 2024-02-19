@@ -16,12 +16,12 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class FabricScreenMixin {
 
     @Inject(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;II)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void aw$renderTooltipPre(GuiGraphics guiGraphics, int i, int j, CallbackInfo ci, ItemStack itemStack) {
+    private void aw2$renderTooltipPre(GuiGraphics guiGraphics, int i, int j, CallbackInfo ci, ItemStack itemStack) {
         RenderTooltipEvents.TOOLTIP_ITEM_STACK = itemStack;
     }
 
     @Inject(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;II)V", shift = At.Shift.AFTER))
-    private void aw$renderTooltipPost(GuiGraphics guiGraphics, int i, int j, CallbackInfo ci) {
+    private void aw2$renderTooltipPost(GuiGraphics guiGraphics, int i, int j, CallbackInfo ci) {
         RenderTooltipEvents.TOOLTIP_ITEM_STACK = ItemStack.EMPTY;
     }
 }

@@ -4,7 +4,8 @@ import moe.plushie.armourers_workshop.api.common.ICapabilityType;
 import moe.plushie.armourers_workshop.api.registry.ICapabilityTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.init.ModConstants;
-import moe.plushie.armourers_workshop.init.platform.fabric.capability.CapabilityStorage;
+import moe.plushie.armourers_workshop.core.data.CapabilityStorage;
+import moe.plushie.armourers_workshop.init.ModLog;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
@@ -30,6 +31,7 @@ public class CapabilityTypeBuilderImpl<T> implements ICapabilityTypeBuilder<T> {
                 return CapabilityStorage.getCapability(entity, this);
             }
         };
+        ModLog.debug("Registering Capability Type '{}'", registryName);
         CapabilityStorage.registerCapability(registryName, capabilityType, factory);
         return new IRegistryKey<ICapabilityType<T>>() {
             @Override

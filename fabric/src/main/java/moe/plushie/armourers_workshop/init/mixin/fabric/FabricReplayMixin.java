@@ -12,12 +12,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class FabricReplayMixin {
 
     @Inject(method = "<init>*", at = @At("RETURN"), remap = false)
-    public void aw$startReplay(CallbackInfo ci) {
+    public void aw2$startReplay(CallbackInfo ci) {
         ReplayManager.startReplay();
     }
 
     @Inject(method = "endReplay", at = @At("HEAD"), remap = false)
-    public void aw$stopReplay(CallbackInfo ci) {
+    public void aw2$stopReplay(CallbackInfo ci) {
         ReplayManager.stopReplay();
     }
 }

@@ -11,6 +11,8 @@ import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIScreen;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
@@ -20,8 +22,6 @@ import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
@@ -132,7 +132,7 @@ public abstract class SkinPreviewList<T> extends UIView {
         if ((backgroundColor & 0xff000000) != 0) {
             context.fillRect(x, y, x + width, y + height, backgroundColor);
         }
-        auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+        auto buffers = AbstractBufferSource.defaultBufferSource();
         for (int i = 0; i < totalCount; ++i) {
             renderItem(context, i, false, buffers);
         }
@@ -142,7 +142,7 @@ public abstract class SkinPreviewList<T> extends UIView {
         }
     }
 
-    public void renderItem(CGGraphicsContext context, int index, boolean allowsHovered, MultiBufferSource.BufferSource buffers) {
+    public void renderItem(CGGraphicsContext context, int index, boolean allowsHovered, IBufferSource bufferSource) {
         if (index >= entries.size()) {
             return;
         }
@@ -165,14 +165,14 @@ public abstract class SkinPreviewList<T> extends UIView {
         if (isHovered) {
             context.addClip(clipBox.insetBy(1, 1, 1, 1));
         }
-        renderItemContent(ix, iy, iw, ih, isHovered, entry, buffers, context);
+        renderItemContent(ix, iy, iw, ih, isHovered, entry, bufferSource, context);
         if (isHovered) {
-            buffers.endBatch();
+            bufferSource.endBatch();
             context.removeClip();
         }
     }
 
-    public void renderItemContent(float x, float y, float width, float height, boolean isHovered, T entry, MultiBufferSource buffers, CGGraphicsContext context) {
+    public void renderItemContent(float x, float y, float width, float height, boolean isHovered, T entry, IBufferSource bufferSource, CGGraphicsContext context) {
         auto bakedSkin = SkinBakery.getInstance().loadSkin(getItemDescriptor(entry), loadTicket);
         if (bakedSkin == null) {
             int speed = 60;
@@ -204,7 +204,7 @@ public abstract class SkinPreviewList<T> extends UIView {
 
         float tx = dx - dw / 2;
         float ty = dy - dh / 2;
-        ExtendedItemRenderer.renderSkinInGUI(bakedSkin, tx, ty, 100, dw, dh, 20, 45, 0, context.state().ctm(), buffers);
+        ExtendedItemRenderer.renderSkinInGUI(bakedSkin, tx, ty, 100, dw, dh, 20, 45, 0, context.state().ctm(), bufferSource);
     }
 
     public void renderItemBackground(float x, float y, float width, float height, boolean isHovered, T entry, CGGraphicsContext context) {

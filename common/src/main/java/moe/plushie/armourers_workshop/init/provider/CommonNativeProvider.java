@@ -3,10 +3,9 @@ package moe.plushie.armourers_workshop.init.provider;
 import com.mojang.brigadier.CommandDispatcher;
 import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
+import moe.plushie.armourers_workshop.api.common.IBlockSnapshot;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -21,6 +20,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -73,7 +73,11 @@ public interface CommonNativeProvider {
         void register(EntityDataSerializer<?> arg);
     }
 
+    interface Dispatcher {
+        CompletableFuture<Void> enqueueWork(Runnable work);
+    }
+
     interface BlockSnapshot {
-        void snapshot(LevelAccessor level, BlockPos blockPos, BlockState oldBlockState, @Nullable CompoundTag oldBlockTag, @Nullable Player player, Component reason);
+        void snapshot(Player player, LevelAccessor level, BlockPos blockPos, @Nullable BlockState blockState, IBlockSnapshot snapshot);
     }
 }

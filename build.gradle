@@ -1,8 +1,8 @@
 plugins {
     id "java"
     id "architectury-plugin" version "3.4.+"
-    id "dev.architectury.loom" version "1.2.+" apply false
-    id "moe.plushie.armourers_workshop.loom" version "1.1.2" apply false
+    id "dev.architectury.loom" version "1.5.+" apply false
+    id "moe.plushie.armourers_workshop.loom" version "2.0.1" apply false
 }
 
 architectury {
@@ -13,13 +13,9 @@ subprojects {
     apply plugin: "dev.architectury.loom"
     apply plugin: 'moe.plushie.armourers_workshop.loom'
 
-    loom {
-        silentMojangMappingsLicense()
-    }
-
     sourceSets.forEach {
-        it.java.srcDirs "../versions/${rootProject.minecraft_version}/${project.name}/src/${it.name}/java"
-        it.resources.srcDirs "../versions/${rootProject.minecraft_version}/${project.name}/src/${it.name}/resources"
+        it.java.srcDirs "../versions/${rootProject.source_version}/${project.name}/src/${it.name}/java"
+        it.resources.srcDirs "../versions/${rootProject.source_version}/${project.name}/src/${it.name}/resources"
         it.java.srcDirs "../versions/library/${project.name}/src/${it.name}/java"
         it.resources.srcDirs "../versions/library/${project.name}/src/${it.name}/resources"
     }
@@ -55,6 +51,7 @@ allprojects {
         // See https://docs.gradle.org/current/userguide/declaring_repositories.html
         // for more information about repositories.
         mavenLocal()
+        maven { url "https://maven.neoforged.net/releases/" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://api.modrinth.com/maven/" }
         maven { url "https://cursemaven.com/" }

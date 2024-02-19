@@ -2,27 +2,22 @@ package moe.plushie.armourers_workshop.init.platform.forge.proxy;
 
 import moe.plushie.armourers_workshop.builder.client.render.PaintingHighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
-import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderArmEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 
 import manifold.ext.rt.api.auto;
 
-@OnlyIn(Dist.CLIENT)
 public class ClientProxyImpl {
 
     public static void init() {
@@ -30,11 +25,11 @@ public class ClientProxyImpl {
         EnvironmentExecutor.willSetup(EnvironmentType.CLIENT);
 
         // listen the fml events.
-        NotificationCenterImpl.observer(FMLClientSetupEvent.class, event -> EnvironmentExecutor.didInit(EnvironmentType.CLIENT));
-        NotificationCenterImpl.observer(FMLLoadCompleteEvent.class, event -> event.enqueueWork(() -> EnvironmentExecutor.didSetup(EnvironmentType.CLIENT)));
+        Registry.willClientSetupFO(event -> EnvironmentExecutor.didInit(EnvironmentType.CLIENT));
+        Registry.willLoadCompleteFO(event -> event.enqueueWork(() -> EnvironmentExecutor.didSetup(EnvironmentType.CLIENT)));
 
         // listen the block highlight events.
-        Registry.willRenderBlockHighlightFO((traceResult, camera, poseStack, buffers) -> {
+        Registry.willRenderBlockHighlightFO((traceResult, camera, poseStackIn, buffersIn) -> {
             Player player = Minecraft.getInstance().player;
             if (player == null) {
                 return;
@@ -47,6 +42,8 @@ public class ClientProxyImpl {
             //         return;
             //     }
             // }
+            auto poseStack = AbstractPoseStack.wrap(poseStackIn);
+            auto buffers = AbstractBufferSource.wrap(buffersIn);
             ItemStack itemStack = player.getMainHandItem();
             if (ModConfig.Client.enableEntityPlacementHighlight && itemStack.is(ModItems.MANNEQUIN.get())) {
                 HighlightPlacementRenderer.renderEntity(player, traceResult, camera, poseStack, buffers);
@@ -62,21 +59,15 @@ public class ClientProxyImpl {
         Registry.willRenderLivingEntityFO(ClientWardrobeHandler::onRenderLivingEntityPre);
         Registry.didRenderLivingEntityFO(ClientWardrobeHandler::onRenderLivingEntityPost);
 
-        NotificationCenterImpl.observer(RenderArmEvent.class, event -> {
+        Registry.willRenderSpecificHandFO((player, arm, light, poseStack, buffers, cancel) -> {
             if (!ModConfig.enableFirstPersonSkinRenderer()) {
                 return;
             }
-            int light = event.getPackedLight();
-            auto player = Minecraft.getInstance().player;
-            auto poseStack = event.getPoseStack();
-            auto buffers = event.getMultiBufferSource();
             auto transformType = AbstractItemTransformType.FIRST_PERSON_LEFT_HAND;
-            if (event.getArm() == HumanoidArm.RIGHT) {
+            if (arm == HumanoidArm.RIGHT) {
                 transformType = AbstractItemTransformType.FIRST_PERSON_RIGHT_HAND;
             }
-            ClientWardrobeHandler.onRenderSpecificHand(player, 0, light, transformType, poseStack, buffers, () -> {
-                event.setCanceled(true);
-            });
+            ClientWardrobeHandler.onRenderSpecificHand(player, 0, light, transformType, poseStack, buffers, cancel);
         });
     }
 }

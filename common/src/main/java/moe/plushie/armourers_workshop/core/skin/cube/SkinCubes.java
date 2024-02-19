@@ -42,7 +42,7 @@ public abstract class SkinCubes implements ISkinCubeProvider {
             poseStack.pushPose();
             OpenVoxelShape shape1 = OpenVoxelShape.box(rect);
             transform.apply(poseStack);
-            shape1.mul(poseStack.lastPose());
+            shape1.mul(poseStack.last().pose());
             poseStack.popPose();
             shape.add(shape1);
         }

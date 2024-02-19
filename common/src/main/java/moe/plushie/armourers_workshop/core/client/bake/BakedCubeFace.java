@@ -1,11 +1,10 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.common.ITextureKey;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
-import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
@@ -22,10 +21,7 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenRay;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
@@ -64,7 +60,7 @@ public class BakedCubeFace {
         this.texture = face.getTexture();
     }
 
-    public void render(BakedSkinPart part, ColorScheme scheme, int lightmap, int overlay, PoseStack poseStack, VertexConsumer builder) {
+    public void render(BakedSkinPart part, ColorScheme scheme, int lightmap, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
         auto resolvedColor = resolveColor(paintColor, scheme, part.getColorInfo(), part.getType(), 0);
         if (resolvedColor.getPaintType() == SkinPaintTypes.NONE) {
             return;
@@ -76,11 +72,10 @@ public class BakedCubeFace {
 
         if (transform != SkinTransform.IDENTITY) {
             poseStack.pushPose();
-            poseStack.applyTransform(transform);
+            transform.apply(poseStack);
         }
 
-        auto pose = poseStack.last().pose();
-        auto normal = poseStack.last().normal();
+        auto entry = poseStack.last();
 
         // https://learnopengl.com/Getting-started/Coordinate-Systems
         float x = shape.getX();
@@ -113,12 +108,12 @@ public class BakedCubeFace {
         float[][] uvs = SkinUtils.getRenderUVs(direction, resolveTextureRotation(resolvedTexture));
         float[][] vertexes = SkinUtils.getRenderVertexes(direction);
         for (int i = 0; i < 4; ++i) {
-            builder.vertex(pose, x + w * vertexes[i][0], y + h * vertexes[i][1], z + d * vertexes[i][2])
+            builder.vertex(entry, x + w * vertexes[i][0], y + h * vertexes[i][1], z + d * vertexes[i][2])
                     .color(r, g, b, a)
                     .uv((u + s * uvs[i][0]) / n, (v + t * uvs[i][1]) / m)
                     .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(lightmap)
-                    .normal(normal, vertexes[4][0], vertexes[4][1], vertexes[4][2])
+                    .normal(entry, vertexes[4][0], vertexes[4][1], vertexes[4][2])
                     .endVertex();
         }
 
@@ -193,35 +188,6 @@ public class BakedCubeFace {
             return SkinTextureManager.getInstance().prepareVariantTextures(texture.getProvider());
         }
         return null;
-    }
-
-    private void resolveTransform(PoseStack poseStack) {
-        IVector3f translate = transform.getTranslate();
-        if (translate != Vector3f.ZERO) {
-            poseStack.translate(translate.getX(), translate.getY(), translate.getZ());
-        }
-        IVector3f rotation = transform.getRotation();
-        if (rotation != Vector3f.ZERO) {
-            IVector3f pivot = transform.getPivot();
-            if (pivot != Vector3f.ZERO) {
-                poseStack.translate(pivot.getX(), pivot.getY(), pivot.getZ());
-            }
-            poseStack.mulPose(Vector3f.ZP.rotationDegrees(rotation.getZ()));
-            poseStack.mulPose(Vector3f.YP.rotationDegrees(rotation.getY()));
-            poseStack.mulPose(Vector3f.XP.rotationDegrees(rotation.getX()));
-            if (pivot != Vector3f.ZERO) {
-                poseStack.translate(-pivot.getX(), -pivot.getY(), -pivot.getZ());
-            }
-        }
-        IVector3f scale = transform.getScale();
-        if (scale != Vector3f.ONE) {
-            poseStack.mulPoseMatrix(OpenMatrix4f.createScaleMatrix(scale.getX(), scale.getY(), scale.getZ()));
-            poseStack.mulNormalMatrix(OpenMatrix3f.createScaleMatrix(scale.getX(), scale.getY(), scale.getZ()));
-        }
-        IVector3f offset = transform.getOffset();
-        if (offset != Vector3f.ZERO) {
-            poseStack.translate(offset.getX(), offset.getY(), offset.getZ());
-        }
     }
 
     private IPaintColor dye(IPaintColor source, IPaintColor destination, IPaintColor average) {

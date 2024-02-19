@@ -1,9 +1,10 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideDataProvider;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideRenderer;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
@@ -18,13 +19,12 @@ import moe.plushie.armourers_workshop.core.client.other.SkinDynamicTexture;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.TextureUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
@@ -46,7 +46,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
     }
 
     @Override
-    public void render(T entity, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T entity, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
         ISkinType skinType = entity.getSkinType();
         ISkinProperties skinProperties = entity.getSkinProperties();
 
@@ -57,8 +57,8 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         ResourceLocation playerTexture = renderData.displayTextureLocation;
         if (playerTexture != null) {
             override.setTexture(playerTexture);
-            override.setBuffers(buffers);
-            buffers = override;
+            override.setBuffers(bufferSource);
+            bufferSource = override;
         }
 
         boolean isMultiBlocks = skinProperties.get(SkinProperty.BLOCK_MULTIBLOCK);
@@ -113,7 +113,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
                     poseStack.pushPose();
                     poseStack.translate(0, -rect2.getMinY(), 0);
                     poseStack.scale(16, 16, 16);
-                    guideRenderer.render(poseStack, renderData, 0xf000f0, OverlayTexture.NO_OVERLAY, buffers);
+                    guideRenderer.render(poseStack, renderData, 0xf000f0, OverlayTexture.NO_OVERLAY, bufferSource);
                     poseStack.popPose();
                 }
             }
@@ -122,12 +122,12 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
 
             // render building grid
             if (isShowGuides) {
-                RenderSystem.drawCube(poseStack, rect, r, g, b, a, buffers);
-                RenderSystem.drawCube(poseStack, originBox, 0, 1, 0, 0.5f, buffers);
+                ShapeTesselator.cube(rect, r, g, b, a, poseStack, bufferSource);
+                ShapeTesselator.cube(originBox, 0, 1, 0, 0.5f, poseStack, bufferSource);
             }
             // render guide grid
             if (isShowModelGuides && isModelOverridden) {
-                RenderSystem.drawCube(poseStack, rect2, 0, 0, 1, 0.25f, buffers);
+                ShapeTesselator.cube(rect2, 0, 0, 1, 0.25f, poseStack, bufferSource);
             }
 
             poseStack.popPose();
@@ -137,9 +137,9 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         override.setBuffers(null);
     }
 
-    public void transform(PoseStack poseStack, T entity) {
+    public void transform(IPoseStack poseStack, T entity) {
         poseStack.translate(0, 1, 0); // apply height offset
-        poseStack.mulPose(CubeTransform.getRotationDegrees(entity.getFacing())); // apply facing rotation
+        poseStack.rotate(CubeTransform.getRotationDegrees(entity.getFacing())); // apply facing rotation
     }
 
     @Override
@@ -152,14 +152,14 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         return true;
     }
 
-    public static class PlayerTextureOverride implements MultiBufferSource {
+    public static class PlayerTextureOverride implements IBufferSource {
 
         protected final HashMap<RenderType, Supplier<RenderType>> overrides = new HashMap<>();
         protected ResourceLocation texture;
-        protected MultiBufferSource buffers;
+        protected IBufferSource bufferSource;
 
-        public void setBuffers(MultiBufferSource buffers) {
-            this.buffers = buffers;
+        public void setBuffers(IBufferSource bufferSource) {
+            this.bufferSource = bufferSource;
         }
 
         public void setTexture(ResourceLocation texture) {
@@ -173,12 +173,17 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         }
 
         @Override
-        public VertexConsumer getBuffer(RenderType renderType) {
+        public IVertexConsumer getBuffer(RenderType renderType) {
             Supplier<RenderType> overrideRenderType = overrides.get(renderType);
             if (overrideRenderType != null) {
                 renderType = overrideRenderType.get();
             }
-            return buffers.getBuffer(renderType);
+            return bufferSource.getBuffer(renderType);
+        }
+
+        @Override
+        public void endBatch() {
+            bufferSource.endBatch();
         }
     }
 

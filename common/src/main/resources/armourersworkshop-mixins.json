@@ -3,11 +3,8 @@
   "package": "moe.plushie.armourers_workshop.init.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "ArrowRendererMixin",
     "BlockEntityRenderDispatcherMixin",
-    "ThrownTridentRendererMixin",
     "FishingHookRendererMixin",
-    "BoatRendererMixin",
     "ClientDataAttachMixin"
   ],
   "mixins": [

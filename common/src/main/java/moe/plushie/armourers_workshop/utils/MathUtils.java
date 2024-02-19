@@ -213,27 +213,29 @@ public class MathUtils {
     }
 
     public static float fastInvSqrt(float v) {
-        float f = 0.5F * v;
+        float f = 0.5f * v;
         int i = Float.floatToIntBits(v);
         i = 1597463007 - (i >> 1);
         v = Float.intBitsToFloat(i);
-        return v * (1.5F - f * v * v);
+        return v * (1.5f - f * v * v);
     }
 
-    public static double fastInvSqrt(double p_181161_0_) {
-        double d0 = 0.5D * p_181161_0_;
-        long i = Double.doubleToRawLongBits(p_181161_0_);
-        i = 6910469410427058090L - (i >> 1);
-        p_181161_0_ = Double.longBitsToDouble(i);
-        return p_181161_0_ * (1.5D - d0 * p_181161_0_ * p_181161_0_);
+    public static double fastInvSqrt(double d) {
+        double e = 0.5 * d;
+        long l = Double.doubleToRawLongBits(d);
+        l = 6910469410427058090L - (l >> 1);
+        d = Double.longBitsToDouble(l);
+        d *= 1.5 - e * d * d;
+        return d;
     }
 
-    public static float fastInvCubeRoot(float p_226166_0_) {
-        int i = Float.floatToIntBits(p_226166_0_);
+    public static float fastInvCubeRoot(float f) {
+        int i = Float.floatToIntBits(f);
         i = 1419967116 - i / 3;
-        float f = Float.intBitsToFloat(i);
-        f = 0.6666667F * f + 1.0F / (3.0F * f * f * p_226166_0_);
-        return 0.6666667F * f + 1.0F / (3.0F * f * f * p_226166_0_);
+        float g = Float.intBitsToFloat(i);
+        g = 0.6666667F * g + 1.0F / (3.0F * g * g * f);
+        g = 0.6666667F * g + 1.0F / (3.0F * g * g * f);
+        return g;
     }
 
     public static double toDegrees(double angrad) {
@@ -242,6 +244,14 @@ public class MathUtils {
 
     public static float toRadians(double value) {
         return (float) Math.toRadians((value + 360) % 360);
+    }
+
+    public static void normalize(float[] values) {
+        float f = values[0] * values[0] + values[1] * values[1] + values[2] * values[2];
+        float g = fastInvCubeRoot(f);
+        values[0] *= g;
+        values[1] *= g;
+        values[2] *= g;
     }
 
     public static float fma(float a, float b, float c) {

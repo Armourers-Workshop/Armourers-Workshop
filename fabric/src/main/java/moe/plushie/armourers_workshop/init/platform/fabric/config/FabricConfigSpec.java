@@ -556,7 +556,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
         public Builder comment(String comment) {
             if (comment == null || comment.isEmpty()) {
                 comment = "No comment";
-                if (EnvironmentManager.isDevelopmentEnvironment()) {
+                if (EnvironmentManager.isDevelopment()) {
                     ModLog.error("Null comment for config option {}, this is invalid and may be disallowed in the future.",
                             DOT_JOINER.join(this.currentPath));
                 }
@@ -568,7 +568,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
         public Builder comment(String... comment) {
             if (comment == null || comment.length < 1 || (comment.length == 1 && comment[0].isEmpty())) {
                 comment = new String[]{"No comment"};
-                if (EnvironmentManager.isDevelopmentEnvironment()) {
+                if (EnvironmentManager.isDevelopment()) {
                     ModLog.error("Null comment for config option {}, this is invalid and may be disallowed in the future.",
                             DOT_JOINER.join(this.currentPath));
                 }

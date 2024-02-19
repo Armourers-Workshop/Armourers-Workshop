@@ -267,7 +267,7 @@ public class UIWindow extends UIView {
         // left: 0, right: 1, middle: 2
         private static final UIEvent.Type[] MOUSE_BUTTONS = {UIEvent.Type.MOUSE_LEFT_DOWN, UIEvent.Type.MOUSE_RIGHT_DOWN, UIEvent.Type.MOUSE_MIDDLE_DOWN, UIEvent.Type.MOUSE_LEFT_UP, UIEvent.Type.MOUSE_RIGHT_UP, UIEvent.Type.MOUSE_MIDDLE_UP,};
 
-        public static final UIEvent NULL_EVENT = new UIEvent(UIEvent.Type.MOUSE_MOVED, 0, 0, 0, CGPoint.ZERO);
+        public static final UIEvent NULL_EVENT = new UIEvent(UIEvent.Type.MOUSE_MOVED, 0, 0, CGPoint.ZERO, CGPoint.ZERO);
 
         public final UIWindow window;
 
@@ -343,7 +343,7 @@ public class UIWindow extends UIView {
 
         @Override
         public InvokerResult mouseDown(double mouseX, double mouseY, int button) {
-            UIEvent event = makeMouseEvent(mouseX, mouseY, button, 0, MOUSE_BUTTONS[(button % 3)]);
+            UIEvent event = makeMouseEvent(mouseX, mouseY, button, CGPoint.ZERO, MOUSE_BUTTONS[(button % 3)]);
             if (!window._sendGlobalEvent(UIControl.Event.of(event), event)) {
                 return checkEvent(event);
             }
@@ -368,7 +368,7 @@ public class UIWindow extends UIView {
 
         @Override
         public InvokerResult mouseMoved(double mouseX, double mouseY, int button) {
-            UIEvent event = makeMouseEvent(mouseX, mouseY, button, 0, UIEvent.Type.MOUSE_MOVED);
+            UIEvent event = makeMouseEvent(mouseX, mouseY, button, CGPoint.ZERO, UIEvent.Type.MOUSE_MOVED);
             if (!window._sendGlobalEvent(UIControl.Event.MOUSE_MOVED, event)) {
                 return checkEvent(event);
             }
@@ -385,7 +385,7 @@ public class UIWindow extends UIView {
 
         @Override
         public InvokerResult mouseUp(double mouseX, double mouseY, int button) {
-            UIEvent event = makeMouseEvent(mouseX, mouseY, button, 0, MOUSE_BUTTONS[(button % 3) + 3]);
+            UIEvent event = makeMouseEvent(mouseX, mouseY, button, CGPoint.ZERO, MOUSE_BUTTONS[(button % 3) + 3]);
             if (!window._sendGlobalEvent(UIControl.Event.of(event), event)) {
                 return checkEvent(event);
             }
@@ -399,7 +399,7 @@ public class UIWindow extends UIView {
         }
 
         @Override
-        public InvokerResult mouseWheel(double mouseX, double mouseY, double delta) {
+        public InvokerResult mouseWheel(double mouseX, double mouseY, CGPoint delta) {
             UIEvent event = makeMouseEvent(mouseX, mouseY, 0, delta, UIEvent.Type.MOUSE_WHEEL);
             if (!window._sendGlobalEvent(UIControl.Event.of(event), event)) {
                 return checkEvent(event);
@@ -418,9 +418,9 @@ public class UIWindow extends UIView {
 
         @Override
         public InvokerResult mouseIsInside(double mouseX, double mouseY, int button) {
-            UIEvent event = makeMouseEvent(mouseX, mouseY, button, 0, MOUSE_BUTTONS[(button % 3)]);
+            UIEvent event = makeMouseEvent(mouseX, mouseY, button, CGPoint.ZERO, MOUSE_BUTTONS[(button % 3)]);
             CGRect frame = window.frame();
-            UIView view = window.hitTest(new CGPoint((float) mouseX - frame.x, (float) mouseY - frame.y), event);
+            UIView view = window.hitTest(new CGPoint(mouseX - frame.x, mouseY - frame.y), event);
             if (view != null && view != window) {
                 return InvokerResult.SUCCESS;
             }
@@ -468,18 +468,18 @@ public class UIWindow extends UIView {
             window._setHoveredTooltipRender(findTooltipResponder(window, window.hoveredResponder, mouseX, mouseY, event));
         }
 
-        private UIEvent makeMouseEvent(double mouseX, double mouseY, int key, double delta, UIEvent.Type type) {
+        private UIEvent makeMouseEvent(double mouseX, double mouseY, int key, CGPoint delta, UIEvent.Type type) {
             return makeEvent(mouseX, mouseY, key, 0, delta, type);
         }
 
         private UIEvent makeKeyEvent(int key, int keyModifier, UIEvent.Type type) {
-            return makeEvent(0, 0, key, keyModifier, 0, type);
+            return makeEvent(0, 0, key, keyModifier, CGPoint.ZERO, type);
         }
 
-        private UIEvent makeEvent(double mouseX, double mouseY, int key, int keyModifier, double delta, UIEvent.Type type) {
+        private UIEvent makeEvent(double mouseX, double mouseY, int key, int keyModifier, CGPoint delta, UIEvent.Type type) {
             CGRect frame = window.frame();
-            CGPoint location = new CGPoint((float) mouseX - frame.x, (float) mouseY - frame.y);
-            return new UIEvent(type, key, keyModifier, delta, location);
+            CGPoint location = new CGPoint(mouseX - frame.x, mouseY - frame.y);
+            return new UIEvent(type, key, keyModifier, location, delta);
         }
 
         private InvokerResult checkEvent(UIEvent event) {

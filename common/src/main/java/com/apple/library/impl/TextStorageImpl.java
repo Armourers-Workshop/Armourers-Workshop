@@ -10,7 +10,7 @@ import com.apple.library.foundation.NSTextPosition;
 import com.apple.library.foundation.NSTextRange;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIFont;
-import moe.plushie.armourers_workshop.compatibility.AbstractShaderTesselator;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -31,10 +31,13 @@ public class TextStorageImpl {
     public CGPoint offset = CGPoint.ZERO;
     public int maxLength = 1000;
 
-    public BiConsumer<CGRect, CGSize> sizeDidChange = (c, s) -> {};
-    public BiConsumer<String, String> valueDidChange = (o, n) -> {};
+    public BiConsumer<CGRect, CGSize> sizeDidChange = (c, s) -> {
+    };
+    public BiConsumer<String, String> valueDidChange = (o, n) -> {
+    };
     public BiPredicate<NSRange, String> valueShouldChange = (o, n) -> true;
-    public Runnable selectionDidChange = () -> {};
+    public Runnable selectionDidChange = () -> {
+    };
 
     private String value = "";
 
@@ -162,9 +165,9 @@ public class TextStorageImpl {
         if (!isFocused || highlightedRects == null || highlightedRects.isEmpty()) {
             return;
         }
-        auto pose = context.state().ctm().last().pose();
-        auto tesselator = AbstractShaderTesselator.getInstance();
-        auto builder = tesselator.begin(SkinRenderType.GUI_HIGHLIGHTED_TEXT);
+        auto pose = context.state().ctm().last();
+        auto buffers = AbstractBufferSource.defaultBufferSource();
+        auto builder = buffers.getBuffer(SkinRenderType.GUI_HIGHLIGHTED_TEXT);
         for (CGRect rect : highlightedRects) {
             builder.vertex(pose, rect.getMinX(), rect.getMaxY(), 0).endVertex();
             builder.vertex(pose, rect.getMaxX(), rect.getMaxY(), 0).endVertex();
@@ -172,7 +175,7 @@ public class TextStorageImpl {
             builder.vertex(pose, rect.getMinX(), rect.getMinY(), 0).endVertex();
         }
         context.setBlendColor(AppearanceImpl.TEXT_HIGHLIGHTED_COLOR);
-        tesselator.end();
+        buffers.endBatch();
         context.setBlendColor(UIColor.WHITE);
     }
 

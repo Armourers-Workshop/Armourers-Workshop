@@ -9,7 +9,6 @@ import com.apple.library.uikit.UIComboItem;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UITextField;
 import com.apple.library.uikit.UITextFieldDelegate;
-import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
@@ -121,10 +120,10 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
         PlayerTextureDescriptor descriptor = PlayerTextureDescriptor.EMPTY;
         if (Strings.isNotEmpty(value)) {
             if (source == PlayerTextureDescriptor.Source.URL) {
-                descriptor = new PlayerTextureDescriptor(value);
+                descriptor = PlayerTextureDescriptor.fromURL(value);
             }
             if (source == PlayerTextureDescriptor.Source.USER) {
-                descriptor = new PlayerTextureDescriptor(new GameProfile(null, value));
+                descriptor = PlayerTextureDescriptor.fromName(value);
             }
         }
         PlayerTextureLoader.getInstance().loadTextureDescriptor(descriptor, resolvedDescriptor -> {

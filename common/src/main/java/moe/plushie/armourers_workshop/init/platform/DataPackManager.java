@@ -47,7 +47,7 @@ public class DataPackManager {
         public void build(TaskQueue taskQueue, ResourceManager resourceManager) {
             DataPackLoader loader = byType(DataPackType.BUNDLED_DATA);
             if (loader != null && !loader.isEmpty()) {
-                loader.build(taskQueue, ResourceManager.newBundleResourceManager(resourceManager));
+                loader.build(taskQueue, resourceManager);
             }
             super.build(taskQueue, resourceManager);
         }
@@ -59,7 +59,7 @@ public class DataPackManager {
         public void build(TaskQueue taskQueue, ResourceManager resourceManager) {
             DataPackLoader loader = byType(DataPackType.BUNDLED_DATA);
             if (loader != null && !loader.isEmpty()) {
-                loader.build(taskQueue, ResourceManager.newBundleResourceManager(resourceManager));
+                loader.build(taskQueue, resourceManager.asBundleManager());
             }
             super.build(taskQueue, resourceManager);
         }

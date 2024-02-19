@@ -91,6 +91,11 @@ public class OpenMatrix3f implements IMatrix3f {
     }
 
     @Override
+    public void set(IMatrix3f matrix) {
+        set(of(matrix));
+    }
+
+    @Override
     public void multiply(float[] values) {
         float x = values[0];
         float y = values[1];
@@ -266,6 +271,22 @@ public class OpenMatrix3f implements IMatrix3f {
         if (Math.abs(f) > 1.0E-6f) {
             multiply(f);
         }
+    }
+
+    @Override
+    public void transpose() {
+        // | m00 m01 m02 |    | m00 m10 m20 |
+        // | m10 m11 m12 | => | m01 m11 m21 |
+        // | m20 m21 m22 |    | m02 m12 m22 |
+        float f = m10;
+        m10 = m01;
+        m01 = f;
+        f = m20;
+        m20 = m02;
+        m02 = f;
+        f = m21;
+        m21 = m12;
+        m12 = f;
     }
 
     @Override

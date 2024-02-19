@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.texture;
 
 import com.google.common.hash.Hashing;
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.platform.NativeImage;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -32,6 +31,8 @@ import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
+import manifold.ext.rt.api.auto;
+
 @Environment(EnvType.CLIENT)
 public class PlayerTextureLoader {
 
@@ -53,12 +54,29 @@ public class PlayerTextureLoader {
         return LOADER;
     }
 
+
+    public GameProfile getGameProfile(PlayerTextureDescriptor descriptor) {
+        auto profile = descriptor.getProfile();
+        if (profile != null) {
+            return profile;
+        }
+        auto name = descriptor.getName();
+        if (name != null) {
+            auto profile1 = profiles.get(name.toLowerCase());
+            if (profile1 != null) {
+                return profile1.orElse(null);
+            }
+            loadGameProfileWithName(name, null);
+        }
+        return null;
+    }
+
     @Nullable
     public BakedEntityTexture getTextureModel(ResourceLocation location) {
         if (location == null) {
             return null;
         }
-        Optional<PlayerTexture> texture = bakedTextures.get(location);
+        auto texture = bakedTextures.get(location);
         if (texture != null) {
             return texture.map(PlayerTexture::getTexture).orElse(null);
         }
@@ -75,7 +93,7 @@ public class PlayerTextureLoader {
             }
         }
         if (entity instanceof AbstractClientPlayer) {
-            return ((AbstractClientPlayer) entity).getSkinTextureLocation();
+            return ((AbstractClientPlayer) entity).getSkin().texture();
         }
         return ModTextures.MANNEQUIN_DEFAULT;
     }
@@ -95,7 +113,7 @@ public class PlayerTextureLoader {
         if (descriptor.isEmpty()) {
             return null;
         }
-        Optional<PlayerTexture> texture = resolvedTextures.get(descriptor);
+        auto texture = resolvedTextures.get(descriptor);
         if (texture != null && texture.isPresent()) {
             return texture.orElse(null);
         }
@@ -105,70 +123,60 @@ public class PlayerTextureLoader {
     }
 
     public void loadTextureDescriptor(PlayerTextureDescriptor descriptor, Consumer<Optional<PlayerTextureDescriptor>> complete) {
-        Optional<PlayerTexture> texture = resolvedTextures.get(descriptor);
+        auto texture = resolvedTextures.get(descriptor);
         if (texture != null || descriptor.isEmpty() || !loadingTextures.add(descriptor)) {
             complete.accept(Optional.of(descriptor));
             return;
         }
-        // load from username
-        GameProfile profile = descriptor.getProfile();
-        if (profile != null) {
-            loadGameProfile(profile, profile1 -> complete.accept(profile1.map(resolvedProfile -> {
-                if (resolvedProfile.isComplete()) {
-                    loadVanillaTexture(resolvedProfile);
-                }
-                return new PlayerTextureDescriptor(resolvedProfile);
-            })));
-            return;
-        }
         // load from url
-        String url = descriptor.getURL();
+        auto url = descriptor.getURL();
         if (url != null) {
             try {
                 URL ignored = new URL(url);
-                loadCustomTexture(url);
-                complete.accept(Optional.of(descriptor));
+                loadCustomTextureWithURL(url, resolvedDescriptor -> {
+                    loadingTextures.remove(descriptor);
+                    complete.accept(resolvedDescriptor);
+                });
             } catch (MalformedURLException e) {
                 ModLog.info("input a invalid url '{}'", url);
                 complete.accept(Optional.empty());
             }
             return;
         }
+        // load from profile.
+        auto profile = descriptor.getProfile();
+        if (profile != null) {
+            loadCustomTextureWithProfile(profile, resolvedDescriptor -> {
+                loadingTextures.remove(descriptor);
+                complete.accept(resolvedDescriptor);
+            });
+            return;
+        }
+        // load from username.
+        auto name = descriptor.getName();
+        if (name != null) {
+            loadCustomTextureWithName(name, resolvedDescriptor -> {
+                loadingTextures.remove(descriptor);
+                complete.accept(resolvedDescriptor);
+            });
+            return;
+        }
         // ignore
         if (complete != null) {
-            complete.accept(Optional.of(descriptor));
+            complete.accept(Optional.empty());
         }
     }
 
-    public GameProfile loadGameProfile(GameProfile profile) {
-        if (profile.isComplete()) {
-            return profile;
-        }
-        String name = profile.getName().toLowerCase();
-        Optional<GameProfile> profile1 = profiles.get(name);
-        if (profile1 != null) {
-            return profile1.orElse(profile);
-        }
-        loadGameProfile(profile, null);
-        return profile;
-    }
-
-    public void loadGameProfile(GameProfile profile, @Nullable Consumer<Optional<GameProfile>> complete) {
-        if (profile.isComplete()) {
+    private void loadGameProfileWithName(String name, @Nullable Consumer<Optional<GameProfile>> complete) {
+        auto key = name.toLowerCase();
+        if (profiles.containsKey(key)) {
             if (complete != null) {
-                complete.accept(Optional.of(profile));
+                complete.accept(profiles.get(key));
             }
             return;
         }
-        String name = profile.getName().toLowerCase();
-        if (profiles.containsKey(name)) {
-            if (complete != null) {
-                complete.accept(profiles.get(name));
-            }
-            return;
-        }
-        profiles.put(name, Optional.empty());
-        loadVanillaGameProfile(profile, resolvedProfile -> {
+        profiles.put(key, Optional.empty());
+        workThread.execute(() -> SkullBlockEntity.loadCustomProfile(new GameProfile(PlayerTextureDescriptor.NIL_UUID, name), resolvedProfile -> {
             // when an exception occurs, we need to remove and later retry.
             if (resolvedProfile.isPresent()) {
                 profiles.put(name, resolvedProfile);
@@ -178,7 +186,7 @@ public class PlayerTextureLoader {
             if (complete != null) {
                 complete.accept(resolvedProfile);
             }
-        });
+        }));
     }
 
     public void loadDefaultTexture(ResourceLocation location) {
@@ -194,54 +202,50 @@ public class PlayerTextureLoader {
         });
     }
 
-    private void loadVanillaTexture(GameProfile profile) {
-        PlayerTextureDescriptor descriptor = new PlayerTextureDescriptor(profile);
-        Optional<PlayerTexture> texture = resolvedTextures.get(descriptor);
-        if (texture != null) {
-            return;
-        }
-        ModLog.debug("accept player texture load request => {}", profile);
-        SkinManager manager = Minecraft.getInstance().getSkinManager();
-        manager.registerSkins(profile, (type, location, profileTexture) -> {
-            if (type != MinecraftProfileTexture.Type.SKIN) {
-                return;
+    private void loadCustomTextureWithName(String name, Consumer<Optional<PlayerTextureDescriptor>> complete) {
+        loadGameProfileWithName(name, resolvedProfile -> {
+            if (resolvedProfile.isPresent()) {
+                loadCustomTextureWithProfile(resolvedProfile.get(), complete);
+            } else {
+                complete.accept(Optional.empty());
             }
-            String model = profileTexture.getMetadata("model");
-            if (model == null) {
-                model = "default";
-            }
-            ModLog.debug("receive player texture from vanilla loader => {}", location);
-            receivePlayerTexture(descriptor, location, profileTexture.getUrl(), model);
-        }, true);
+        });
     }
 
-    private void loadVanillaGameProfile(GameProfile profile, Consumer<Optional<GameProfile>> complete) {
-        workThread.execute(() -> {
-            //#if MC >= 11800
-            SkullBlockEntity.updateGameprofile(profile, resolvedProfile -> complete.accept(Optional.ofNullable(resolvedProfile)));
-            //#else
-            //# try {
-                //# complete.accept(Optional.ofNullable(SkullBlockEntity.updateGameprofile(profile)));
-            //# } catch (Exception exception) {
-                //# complete.accept(Optional.empty()); // we called mojang API, it will throw `com.mojang.authlib.exceptions.*`.
-            //# }
-            //#endif
+    private void loadCustomTextureWithProfile(GameProfile profile, Consumer<Optional<PlayerTextureDescriptor>> complete) {
+        PlayerTextureDescriptor descriptor = PlayerTextureDescriptor.fromProfile(profile);
+        Optional<PlayerTexture> texture = resolvedTextures.get(descriptor);
+        if (texture != null) {
+            complete.accept(Optional.of(descriptor));
+            return;
+        }
+        ModLog.debug("load player texture => {}", profile);
+        SkinManager manager = Minecraft.getInstance().getSkinManager();
+        manager.loadCustomSkin(profile, skin -> {
+            auto url = skin.textureUrl();
+            auto model = skin.model().id();
+            auto location = skin.texture();
+            ModLog.debug("receive player texture from vanilla loader => {}", location);
+            receivePlayerTexture(descriptor, location, url, model);
+            complete.accept(Optional.of(descriptor));
         });
     }
 
     @SuppressWarnings("UnstableApiUsage")
-    private void loadCustomTexture(String url) {
-        PlayerTextureDescriptor descriptor = new PlayerTextureDescriptor(url);
+    private void loadCustomTextureWithURL(String url, Consumer<Optional<PlayerTextureDescriptor>> complete) {
+        PlayerTextureDescriptor descriptor = PlayerTextureDescriptor.fromURL(url);
         Optional<PlayerTexture> texture = resolvedTextures.get(descriptor);
         if (texture != null) {
+            complete.accept(Optional.of(descriptor));
             return;
         }
-        ModLog.debug("accept player texture load request => {}", url);
+        ModLog.debug("load player texture => {}", url);
         String identifier = Hashing.sha1().hashUnencodedChars(url).toString();
         ResourceLocation location = new ResourceLocation("skins/aw-" + identifier);
         TextureManager textureManager = Minecraft.getInstance().getTextureManager();
         AbstractTexture processingTexture = textureManager.getTexture(location, null);
         if (processingTexture != null) {
+            complete.accept(Optional.of(descriptor));
             return;
         }
         String sub = identifier.length() > 2 ? identifier.substring(0, 2) : "xx";
@@ -249,6 +253,7 @@ public class PlayerTextureLoader {
         HttpTexture downloadingTexture = new HttpTexture(path, url, ModTextures.MANNEQUIN_DEFAULT, true, () -> {
             ModLog.debug("receive player texture from custom loader => {}", location);
             receivePlayerTexture(descriptor, location, url, null);
+            complete.accept(Optional.of(descriptor));
         });
         textureManager.register(location, downloadingTexture);
     }

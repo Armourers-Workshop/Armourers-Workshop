@@ -1,6 +1,7 @@
 package com.apple.library.impl;
 
 import com.apple.library.coregraphics.CGGraphicsContext;
+import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIView;
 
@@ -54,7 +55,7 @@ public class WindowDispatcherImpl {
         return InvokerResult.PASS;
     }
 
-    public InvokerResult mouseWheel(double mouseX, double mouseY, double delta) {
+    public InvokerResult mouseWheel(double mouseX, double mouseY, CGPoint delta) {
         return InvokerResult.PASS;
     }
 

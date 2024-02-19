@@ -1,18 +1,16 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeEnvironment;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.ConfigBuilderImpl;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.forgespi.language.IModFileInfo;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 
 import java.io.File;
+
+import manifold.ext.rt.api.auto;
 
 @SuppressWarnings("unused")
 public class EnvironmentManagerImpl {
@@ -20,7 +18,7 @@ public class EnvironmentManagerImpl {
     private static MinecraftServer CURRENT_SERVER;
 
     public static String getVersion() {
-        IModFileInfo fileInfo = ModList.get().getModFileById(ModConstants.MOD_ID);
+        auto fileInfo = AbstractForgeEnvironment.getModFileById(ModConstants.MOD_ID);
         if (fileInfo != null && fileInfo.getMods().size() != 0) {
             ArtifactVersion version = fileInfo.getMods().get(0).getVersion();
             return version.toString();
@@ -29,7 +27,7 @@ public class EnvironmentManagerImpl {
     }
 
     public static EnvironmentType getEnvironmentType() {
-        if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
+        if (AbstractForgeEnvironment.dist.isDedicatedServer()) {
             return EnvironmentType.SERVER;
         }
         return EnvironmentType.CLIENT;
@@ -40,11 +38,11 @@ public class EnvironmentManagerImpl {
     }
 
     public static File getRootDirectory() {
-        return new File(FMLPaths.GAMEDIR.get().toFile(), "armourers_workshop");
+        return new File(AbstractForgeEnvironment.GAMEDIR.get().toFile(), "armourers_workshop");
     }
 
-    public static boolean isDevelopmentEnvironment() {
-        return !FMLEnvironment.production;
+    public static boolean isDevelopment() {
+        return !AbstractForgeEnvironment.production;
     }
 
     public static IConfigSpec getClientConfigSpec() {
@@ -64,6 +62,6 @@ public class EnvironmentManagerImpl {
     }
 
     public static boolean isInstalled(String modId) {
-        return ModList.get().getModFileById(modId) != null;
+        return AbstractForgeEnvironment.getModFileById(modId) != null;
     }
 }

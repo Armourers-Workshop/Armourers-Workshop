@@ -62,6 +62,9 @@ public final class Constants {
         public static final String ENTITY = "EntityTag";
         public static final String BLOCK_ENTITY = "BlockEntityTag";
 
+        public static final String OLD_CAPABILITY = "ForgeCaps";
+        public static final String NEW_CAPABILITY = "neoforge:attachments";
+
         public static final String ENTITY_SCALE = "Scale";
 
         public static final String ENTITY_IS_SMALL = "Small";

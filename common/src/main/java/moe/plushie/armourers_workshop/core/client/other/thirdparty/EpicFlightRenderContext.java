@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.other.thirdparty;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformer;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightTransformProvider;
@@ -9,7 +10,6 @@ import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager2;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.Entity;
 
@@ -22,7 +22,7 @@ public class EpicFlightRenderContext {
     private boolean isActivate = false;
     private boolean isFirstPerson = false;
 
-    private PoseStack poseStack;
+    private IPoseStack poseStack;
     private final EpicFlightModel model;
     private final SkinRenderContext context;
     private final BakedArmatureTransformer transformer;
@@ -30,7 +30,6 @@ public class EpicFlightRenderContext {
     public EpicFlightRenderContext(EpicFlightModel model, SkinRenderContext context) {
         this.model = model;
         this.transformer = model.getTransformer();
-        this.poseStack = context.pose().pose();
         this.context = context;
     }
 
@@ -42,7 +41,7 @@ public class EpicFlightRenderContext {
         return null;
     }
 
-    public static EpicFlightRenderContext alloc(Entity entity, LivingEntityRenderer<?, ?> entityRenderer, int light, float partialTick, PoseStack poseStack, MultiBufferSource buffers) {
+    public static EpicFlightRenderContext alloc(Entity entity, LivingEntityRenderer<?, ?> entityRenderer, int light, float partialTick, IPoseStack poseStack, IBufferSource bufferSource) {
         SkinRenderData renderData = SkinRenderData.of(entity);
         EpicFlightModel model = EpicFlightModel.ofNullable(entityRenderer.getModel());
         if (renderData == null || model == null || model.isInvalid()) {
@@ -56,7 +55,7 @@ public class EpicFlightRenderContext {
             model.setInvalid(true);
             return null;
         }
-        SkinRenderContext context = SkinRenderContext.alloc(renderData, light, partialTick, AbstractItemTransformType.NONE, poseStack, buffers);
+        SkinRenderContext context = SkinRenderContext.alloc(renderData, light, partialTick, AbstractItemTransformType.NONE, poseStack, bufferSource);
         EpicFlightRenderContext context1 = new EpicFlightRenderContext(model, context);
         renderData.epicFlightContext = context1;
         return context1;
@@ -122,11 +121,11 @@ public class EpicFlightRenderContext {
         return context.getRenderData().getOverriddenManager();
     }
 
-    public void setPose(PoseStack poseStack) {
+    public void setPose(IPoseStack poseStack) {
         this.poseStack = poseStack;
     }
 
-    public PoseStack getPose() {
+    public IPoseStack getPose() {
         return poseStack;
     }
 }

@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.builder.data.undo.action;
 
 import moe.plushie.armourers_workshop.api.action.IUserAction;
-import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
@@ -18,11 +17,11 @@ public abstract class BlockUserAction implements IUserAction {
     }
 
     @Override
-    public void prepare() throws CommandRuntimeException {
+    public void prepare() throws RuntimeException {
         BlockEntity blockEntity = getBlockEntity();
         if (blockEntity == null) {
             String pos = String.format("x=%d, y=%d, z=%d", blockPos.getX(), blockPos.getY(), blockPos.getZ());
-            throw new CommandRuntimeException(Component.translatable("chat.armourers_workshop.undo.missingBlock", pos));
+            throw new ActionRuntimeException(Component.translatable("chat.armourers_workshop.undo.missingBlock", pos));
         }
     }
 

@@ -40,13 +40,13 @@ public abstract class ShaderUniform {
         ShaderUniform create(String name, int program, int location, Supplier<T> value);
     }
 
-    public static class Bool extends ShaderUniform {
+    public static class Int extends ShaderUniform {
 
         private final Supplier<Integer> value;
         private final Stack<Integer> cachedValues = new Stack<>();
         private int cachedValue = 0;
 
-        Bool(String name, int program, int location, Supplier<Integer> value) {
+        Int(String name, int program, int location, Supplier<Integer> value) {
             super(name, program, location);
             this.value = value;
         }
@@ -56,7 +56,7 @@ public abstract class ShaderUniform {
             int newValue = value.get();
             if (cachedValue != newValue) {
                 cachedValue = newValue;
-                GL20.glUniform1i(location, convert(newValue));
+                GL20.glUniform1i(location, newValue);
             }
         }
 
@@ -69,14 +69,7 @@ public abstract class ShaderUniform {
         public void pop() {
             int newValue = cachedValues.pop();
             cachedValue = newValue;
-            GL20.glUniform1i(location, convert(newValue));
-        }
-
-        private int convert(int newValue) {
-            if (newValue != 0) {
-                return GL20.GL_TRUE;
-            }
-            return GL20.GL_FALSE;
+            GL20.glUniform1i(location, newValue);
         }
     }
 
@@ -137,7 +130,7 @@ public abstract class ShaderUniform {
 
         public Loader(int programId) {
             this.programId = programId;
-            register("aw_MatrixFlags", RenderSystem::getExtendedMatrixFlags, Bool::new);
+            register("aw_MatrixFlags", RenderSystem::getExtendedMatrixFlags, Int::new);
             register("aw_LightmapTextureMatrix", RenderSystem::getExtendedLightmapTextureMatrix, Matrix4f::new);
             register("aw_TextureMatrix", RenderSystem::getExtendedTextureMatrix, Matrix4f::new);
             register("aw_NormalMatrix", RenderSystem::getExtendedNormalMatrix, Matrix3f::new);

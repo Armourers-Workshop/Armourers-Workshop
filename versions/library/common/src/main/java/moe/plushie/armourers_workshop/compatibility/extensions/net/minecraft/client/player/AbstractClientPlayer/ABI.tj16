@@ -1,0 +1,22 @@
+package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.client.player.AbstractClientPlayer;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.resources.ResourceLocation;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Extension
+@Available("[1.16, 1.21)")
+public class ABI {
+
+    public static Skin getSkin(@This AbstractClientPlayer player) {
+        return player::getSkinTextureLocation;
+    }
+
+    public interface Skin {
+
+        ResourceLocation texture();
+    }
+}

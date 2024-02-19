@@ -19,8 +19,8 @@ import com.apple.library.uikit.UITableViewDataSource;
 import com.apple.library.uikit.UITableViewDelegate;
 import com.apple.library.uikit.UIView;
 import com.apple.library.uikit.UIWindow;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -38,7 +38,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import manifold.ext.rt.api.auto;
 
@@ -261,7 +260,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             if (bakedSkin == null) {
                 return;
             }
-            auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+            auto buffers = AbstractBufferSource.defaultBufferSource();
             ExtendedItemRenderer.renderSkinInGUI(bakedSkin, x, y, 100, width, height - 1, 20, 45, 0, context.state().ctm(), buffers);
         }
 
@@ -281,11 +280,11 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             float dy = MathUtils.clamp(context.state().mousePos().getY() - size / 2f, 0, bounds.height - size);
             context.drawTilableImage(ModTextures.GUI_PREVIEW, dx, dy, size, size, 0, 0, 62, 62, 4, 4, 4, 4);
 
-            PoseStack poseStack = context.state().ctm();
-            List<NSString> tooltips = ObjectUtils.map(ItemTooltipManager.createSkinInfo(bakedSkin), NSString::new);
+            auto poseStack = context.state().ctm();
+            auto tooltips = ObjectUtils.map(ItemTooltipManager.createSkinInfo(bakedSkin), NSString::new);
             context.drawMultilineText(tooltips, dx + 4, dy + 4, size - 8, 0xffffffff, true, font, 0);
 
-            auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+            auto buffers = AbstractBufferSource.defaultBufferSource();
             ExtendedItemRenderer.renderSkinInGUI(bakedSkin, dx, dy, 100, size, size, 30, 45, 0, poseStack, buffers);
             buffers.endBatch();
         }

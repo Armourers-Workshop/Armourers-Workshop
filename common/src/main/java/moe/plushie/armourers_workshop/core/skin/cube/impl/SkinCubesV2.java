@@ -39,7 +39,7 @@ public class SkinCubesV2 extends SkinCubes {
             poseStack.pushPose();
             OpenVoxelShape shape1 = OpenVoxelShape.box(box.shape);
             box.transform.apply(poseStack);
-            shape1.mul(poseStack.lastPose());
+            shape1.mul(poseStack.last().pose());
             shape.add(shape1);
             poseStack.popPose();
         }

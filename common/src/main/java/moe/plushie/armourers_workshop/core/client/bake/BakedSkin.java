@@ -28,6 +28,7 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -161,7 +162,7 @@ public class BakedSkin implements IBakedSkin {
     public Rectangle3f getRenderBounds(SkinItemSource itemSource) {
         Vector3f rotation = itemSource.getRotation();
         Object key = SkinCache.borrowKey(rotation, itemSource.getTransformType());
-        Rectangle3f bounds = cachedBounds.get(rotation);
+        Rectangle3f bounds = cachedBounds.get(key);
         if (bounds != null) {
             SkinCache.returnKey(key);
             return bounds;
@@ -190,12 +191,11 @@ public class BakedSkin implements IBakedSkin {
         if (armature == null) {
             return OpenVoxelShape.empty();
         }
-
-        SkinRenderContext context = new SkinRenderContext(new PoseStack());
+        SkinRenderContext context = new SkinRenderContext();
         context.setReferenced(itemSource);
         context.setTransformType(itemSource.getTransformType());
         //context.setTransforms(entity, model);
-        setupAnim(entity, context.getPartialTicks(), context.getReferenced());
+        setupAnim(entity, 0, context.getReferenced());
         return SkinRenderer.getShape(entity, armature, this, context);
     }
 

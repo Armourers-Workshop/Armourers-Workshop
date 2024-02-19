@@ -1,0 +1,16 @@
+package moe.plushie.armourers_workshop.compatibility.forge;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraftforge.client.IItemRenderProperties;
+
+@Available("[1.18, 1.19)")
+public interface AbstractForgeItemRenderer extends IItemRenderProperties {
+
+    BlockEntityWithoutLevelRenderer getCustomRenderer();
+
+    @Override
+    default BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+        return getCustomRenderer();
+    }
+}

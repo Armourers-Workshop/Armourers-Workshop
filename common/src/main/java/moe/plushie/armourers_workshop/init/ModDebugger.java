@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -47,6 +48,7 @@ public class ModDebugger {
     public static boolean properties = false;
 
     public static boolean wireframeRender = false;
+    public static boolean vertexBufferObject = false;
 
     public static boolean viewHierarchy = false;
 

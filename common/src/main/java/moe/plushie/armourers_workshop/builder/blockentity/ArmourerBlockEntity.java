@@ -55,6 +55,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 
 import manifold.ext.rt.api.auto;
 
@@ -110,7 +111,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
     public void onPlace(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity) {
         remakeBoundingBoxes(null, getBoundingBoxes(), true);
         if (entity instanceof Player) {
-            setTextureDescriptor(new PlayerTextureDescriptor(((Player) entity).getGameProfile()));
+            setTextureDescriptor(PlayerTextureDescriptor.fromProfile(((Player) entity).getGameProfile()));
         }
     }
 
@@ -356,7 +357,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
 
     @Override
     @Environment(EnvType.CLIENT)
-    public AABB getCustomRenderBoundingBox(BlockState blockState) {
+    public AABB getRenderBoundingBox(BlockState blockState) {
         if (renderBoundingBox == null) {
             renderBoundingBox = new AABB(-32, -32, -44, 64, 64, 64);
             renderBoundingBox = renderBoundingBox.move(getBlockPos());

@@ -2,6 +2,7 @@ package com.apple.library.coregraphics;
 
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIFont;
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +14,7 @@ public interface CGGraphicsRenderer {
 
     void renderTooltip(ItemStack itemStack, CGRect rect, UIFont font, CGGraphicsContext context);
 
-    void renderEntity(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY, CGGraphicsContext context);
+    void renderEntity(LivingEntity entity, CGRect rect, int scale, Vector3f rotate, CGPoint focus, CGGraphicsContext context);
 
     void renderItem(ItemStack itemStack, int x, int y, CGGraphicsContext context);
 }

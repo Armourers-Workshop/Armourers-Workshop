@@ -5,7 +5,6 @@ import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModLog;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +25,7 @@ public class PacketSplitter {
     public PacketSplitter() {
     }
 
-    public void split(final CustomPacket message, Function<FriendlyByteBuf, Packet<?>> builder, int partSize, Consumer<Packet<?>> consumer) {
+    public <T> void split(final CustomPacket message, Function<FriendlyByteBuf, T> builder, int partSize, Consumer<T> consumer) {
         workThread.submit(() -> {
             FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
             writePacket(message, buffer);
@@ -34,7 +33,7 @@ public class PacketSplitter {
             // when packet exceeds the part size, it will be split automatically
             int bufferSize = buffer.readableBytes();
             if (bufferSize <= partSize) {
-                Packet<?> packet = builder.apply(buffer);
+                T packet = builder.apply(buffer);
                 consumer.accept(packet);
                 return;
             }
@@ -50,7 +49,7 @@ public class PacketSplitter {
                 int resolvedPartSize = Math.min(bufferSize - index, partSize);
                 ByteBuf buffer1 = Unpooled.wrappedBuffer(partPrefix, buffer.retainedSlice(buffer.readerIndex(), resolvedPartSize));
                 buffer.skipBytes(resolvedPartSize);
-                Packet<?> packet = builder.apply(new FriendlyByteBuf(buffer1));
+                T packet = builder.apply(new FriendlyByteBuf(buffer1));
                 consumer.accept(packet);
             }
             buffer.release();

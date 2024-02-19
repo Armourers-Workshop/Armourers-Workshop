@@ -1,0 +1,8 @@
+package moe.plushie.armourers_workshop.compatibility.forge;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraftforge.common.extensions.IForgeEntity;
+
+@Available("[1.16, 1.21)")
+public interface AbstractForgeEntity extends IForgeEntity {
+}

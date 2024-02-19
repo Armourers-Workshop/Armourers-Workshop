@@ -7,6 +7,7 @@ import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIEvent;
 import moe.plushie.armourers_workshop.core.client.render.MannequinEntityRenderer;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,15 +32,16 @@ public class EntityPreviewView extends UIControl {
         CGRect bounds = bounds();
         MannequinEntityRenderer.enableLimitScale = true;
         MannequinEntityRenderer.enableLimitYRot = true;
-        context.saveGraphicsState();
+//        context.saveGraphicsState();
         context.translateCTM(0, 0, 300);
-        context.translateCTM(bounds.width / 2f, bounds.height - 8, 50);
-        context.rotateCTM(-20, 0, 0);
-        context.rotateCTM(0, playerRotation, 0);
-        context.translateCTM(0, 0, -50);
-        context.drawEntity(entity, 0, 0, 45, 0, 0);
-
-        context.restoreGraphicsState();
+        context.drawEntity(entity, bounds, 45, new Vector3f(-20, playerRotation, 0), CGPoint.ZERO);
+        context.translateCTM(0, 0, -300);
+//        context.translateCTM(bounds.width / 2f, bounds.height - 8, 50);
+//        context.rotateCTM(-20, 0, 0);
+//        context.rotateCTM(0, playerRotation, 0);
+//        context.translateCTM(0, 0, -50);
+//        context.drawEntity(entity, 0, 0, 45, 0, 0);
+//        context.restoreGraphicsState();
         MannequinEntityRenderer.enableLimitYRot = false;
         MannequinEntityRenderer.enableLimitScale = false;
     }

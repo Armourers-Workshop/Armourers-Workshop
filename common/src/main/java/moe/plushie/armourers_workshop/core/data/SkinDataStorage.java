@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.data;
 
 import moe.plushie.armourers_workshop.api.data.IAssociatedObjectProvider;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobeJS;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.init.ModCapabilities;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class SkinDataStorage {
 
     protected LazyOptional<SkinWardrobe> wardrobe;
+    protected LazyOptional<SkinWardrobeJS> wardrobeJS;
     protected LazyOptional<SkinRenderData> renderData;
 
     protected int lastWardrobeTickCount = Integer.MAX_VALUE;
@@ -23,6 +25,7 @@ public class SkinDataStorage {
 
     public SkinDataStorage(Entity entity) {
         this.wardrobe = getLazyWardrobe(entity);
+        this.wardrobeJS = getLazyWardrobeJS(wardrobe);
         this.renderData = getLazyRenderData(entity);
     }
 
@@ -30,6 +33,14 @@ public class SkinDataStorage {
         SkinDataStorage storage = getDataStore(entity);
         if (storage.wardrobe != null) {
             return storage.wardrobe.resolve();
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<SkinWardrobeJS> getWardrobeJS(Entity entity) {
+        SkinDataStorage storage = getDataStore(entity);
+        if (storage.wardrobeJS != null) {
+            return storage.wardrobeJS.resolve();
         }
         return Optional.empty();
     }
@@ -67,6 +78,10 @@ public class SkinDataStorage {
             return LazyOptional.of(wardrobe::get);
         }
         return LazyOptional.empty();
+    }
+
+    private static LazyOptional<SkinWardrobeJS> getLazyWardrobeJS(LazyOptional<SkinWardrobe> provider) {
+        return LazyOptional.of(() -> new SkinWardrobeJS(provider.resolve().orElse(null)));
     }
 
     private static LazyOptional<SkinRenderData> getLazyRenderData(Entity entity) {

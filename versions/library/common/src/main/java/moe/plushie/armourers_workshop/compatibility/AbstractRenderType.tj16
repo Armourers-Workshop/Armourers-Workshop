@@ -3,11 +3,11 @@ package moe.plushie.armourers_workshop.compatibility;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IRenderTypeBuilder;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderFormat;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -33,7 +33,7 @@ public class AbstractRenderType extends RenderType {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);
         RenderSystem.pushMatrix();
         RenderSystem.loadIdentity();
-        RenderSystem.multMatrix(PoseStack.convertMatrix(RenderSystem.getExtendedTextureMatrix()));
+        RenderSystem.multMatrix(AbstractPoseStack.convertMatrix(RenderSystem.getExtendedTextureMatrix()));
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
     }, () -> {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);

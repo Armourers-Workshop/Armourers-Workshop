@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.api.action;
 
-import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,8 +10,8 @@ public interface IUserAction {
         return null;
     }
 
-    default void prepare() throws CommandRuntimeException {
+    default void prepare() throws RuntimeException {
     }
 
-    IUserAction apply() throws CommandRuntimeException;
+    IUserAction apply() throws RuntimeException;
 }

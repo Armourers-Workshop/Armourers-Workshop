@@ -66,7 +66,7 @@ public class ChunkTransform {
         FloatBuffer buffer = FloatBuffer.allocate(16);
         OpenPoseStack poseStack = new OpenPoseStack();
         transform.apply(poseStack);
-        poseStack.lastPose().store(buffer);
+        poseStack.last().pose().store(buffer);
         return new ChunkTransform(buffer);
     }
 

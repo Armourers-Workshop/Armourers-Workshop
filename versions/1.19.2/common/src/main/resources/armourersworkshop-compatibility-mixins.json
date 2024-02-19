@@ -4,8 +4,6 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "GlStateManagerMixin",
-    "Matrix3fMixin",
-    "Matrix4fMixin",
     "EntityRenderDispatcherMixin",
     "GameRendererMixin",
     "ShaderVanillaMixin",

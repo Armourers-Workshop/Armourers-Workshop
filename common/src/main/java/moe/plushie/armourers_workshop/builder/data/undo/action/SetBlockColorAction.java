@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.api.action.IUserAction;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
-import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -23,7 +22,7 @@ public class SetBlockColorAction extends BlockUserAction {
     }
 
     @Override
-    public IUserAction apply() throws CommandRuntimeException {
+    public IUserAction apply() throws RuntimeException {
         IPaintable target = (IPaintable) getBlockEntity();
         HashMap<Direction, IPaintColor> oldValue = new HashMap<>();
         for (Direction direction : newValue.keySet()) {

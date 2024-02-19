@@ -1,22 +1,13 @@
 package moe.plushie.armourers_workshop.core.armature;
 
-import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
+import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.core.AfterTransformModifier;
-import moe.plushie.armourers_workshop.core.armature.core.AllayBodyJointModifier;
-import moe.plushie.armourers_workshop.core.armature.core.AllayHeadJointModifier;
-import moe.plushie.armourers_workshop.core.armature.core.AllayWingJointModifier;
-import moe.plushie.armourers_workshop.core.armature.core.DefaultBabyJointModifier;
-import moe.plushie.armourers_workshop.core.armature.core.DefaultLayerArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultOverriddenArmaturePlugin;
-import moe.plushie.armourers_workshop.core.armature.core.DefaultSkirtJointModifier;
-import moe.plushie.armourers_workshop.core.armature.core.FlatWingJointModifier;
-import moe.plushie.armourers_workshop.core.armature.core.HorseBodyJointModifier;
-import moe.plushie.armourers_workshop.core.armature.core.VillagerModelArmaturePlugin;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.resources.ResourceLocation;
@@ -27,31 +18,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public abstract class ArmatureTransformerBuilder {
-
-    private static final ImmutableMap<String, Supplier<JointModifier>> FIXED_MODIFIERS = ImmutableMap.<String, Supplier<JointModifier>>builder()
-            .put("armourers_workshop:modifier/baby_head_apt", DefaultBabyJointModifier::new)
-            .put("armourers_workshop:modifier/body_to_skirt", DefaultSkirtJointModifier::new)
-            .put("armourers_workshop:modifier/body_to_flat_wing", FlatWingJointModifier::new)
-            .put("armourers_workshop:modifier/apply_ally_head", AllayHeadJointModifier::new)
-            .put("armourers_workshop:modifier/apply_ally_body", AllayBodyJointModifier::new)
-            .put("armourers_workshop:modifier/apply_ally_wing", AllayWingJointModifier::new)
-            .put("armourers_workshop:modifier/apply_horse_body", HorseBodyJointModifier::new)
-            .build();
-
-    private static final ImmutableMap<String, Function<IDataPackObject, JointModifier>> PARAMETERIZED_MODIFIERS = ImmutableMap.<String, Function<IDataPackObject, JointModifier>>builder()
-            .build();
-
-    private static final ImmutableMap<String, Supplier<ArmaturePlugin>> FIXED_PLUGIN = ImmutableMap.<String, Supplier<ArmaturePlugin>>builder()
-            .put("armourers_workshop:plugin/fix_villager_layer", DefaultLayerArmaturePlugin::villager)
-            .put("armourers_workshop:plugin/fix_mob_layer", DefaultLayerArmaturePlugin::mob)
-            .put("armourers_workshop:plugin/fix_slime_layer", DefaultLayerArmaturePlugin::slime)
-            .put("armourers_workshop:plugin/fix_villager_model", VillagerModelArmaturePlugin::new)
-            .build();
-
 
     protected ResourceLocation parent;
     protected Armature armature;
@@ -59,6 +28,7 @@ public abstract class ArmatureTransformerBuilder {
 
     protected final ResourceLocation name;
     protected final ArrayList<ResourceLocation> models = new ArrayList<>();
+    protected final ArrayList<IEntityTypeProvider<?>> entities = new ArrayList<>();
     protected final ArrayList<String> pluginModifiers = new ArrayList<>();
     protected final HashMap<String, Collection<String>> overrideModifiers = new HashMap<>();
     protected final HashMap<IJoint, Collection<JointModifier>> jointModifiers = new HashMap<>();
@@ -91,6 +61,9 @@ public abstract class ArmatureTransformerBuilder {
             if (models.isEmpty()) {
                 _mergeTo(builder.models, models); // only inherit when empty.
             }
+            if (entities.isEmpty()) {
+                _mergeTo(builder.entities, entities); // only inherit when empty.
+            }
         });
     }
 
@@ -116,7 +89,7 @@ public abstract class ArmatureTransformerBuilder {
     }
 
     protected ArmaturePlugin buildPlugin(String name) {
-        Supplier<ArmaturePlugin> builder = FIXED_PLUGIN.get(name);
+        Supplier<? extends ArmaturePlugin> builder = ArmatureSerializers.getPlugin(name);
         if (builder != null) {
             return builder.get();
         }
@@ -135,6 +108,10 @@ public abstract class ArmatureTransformerBuilder {
 
     public ArrayList<ResourceLocation> getModels() {
         return models;
+    }
+
+    public ArrayList<IEntityTypeProvider<?>> getEntities() {
+        return entities;
     }
 
     public ResourceLocation getParent() {
@@ -178,6 +155,7 @@ public abstract class ArmatureTransformerBuilder {
         object.get("override").entrySet().forEach(it -> overrideModifiers.put(it.getKey(), _parseOverrideModifiers(it.getValue())));
         object.get("plugin").allValues().forEach(it -> pluginModifiers.add(it.stringValue()));
         object.get("model").allValues().forEach(it -> models.add(ArmatureSerializers.readResourceLocation(it)));
+        object.get("entity").allValues().forEach(it -> entities.add(ArmatureSerializers.readEntityType(it)));
 
         // clear all contents.
         contents = null;
@@ -225,7 +203,7 @@ public abstract class ArmatureTransformerBuilder {
             case ARRAY: {
                 ArrayList<JointModifier> modifiers = new ArrayList<>();
                 object.allValues().forEach(it -> {
-                    Supplier<JointModifier> modifier = FIXED_MODIFIERS.get(it.stringValue());
+                    Supplier<? extends JointModifier> modifier = ArmatureSerializers.getModifier(it.stringValue());
                     if (modifier != null) {
                         modifiers.add(modifier.get());
                     }
@@ -235,12 +213,12 @@ public abstract class ArmatureTransformerBuilder {
             case DICTIONARY: {
                 ArrayList<JointModifier> modifiers = new ArrayList<>();
                 object.entrySet().forEach(it -> {
-                    Function<IDataPackObject, JointModifier> builder = PARAMETERIZED_MODIFIERS.get(it.getKey());
-                    if (builder != null) {
-                        modifiers.add(builder.apply(it.getValue()));
-                        return;
-                    }
-                    Supplier<JointModifier> modifier = FIXED_MODIFIERS.get(it.getKey());
+//                    Function<IDataPackObject, JointModifier> builder = PARAMETERIZED_MODIFIERS.get(it.getKey());
+//                    if (builder != null) {
+//                        modifiers.add(builder.apply(it.getValue()));
+//                        return;
+//                    }
+                    Supplier<? extends JointModifier> modifier = ArmatureSerializers.getModifier(it.getKey());
                     if (modifier != null) {
                         modifiers.add(modifier.get());
                     }

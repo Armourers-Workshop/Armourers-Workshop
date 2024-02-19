@@ -45,8 +45,8 @@ public class SkinWardrobeJS {
 
     private final SkinWardrobe wardrobe;
 
-    public SkinWardrobeJS(Entity entity) {
-        this.wardrobe = SkinWardrobe.of(entity);
+    public SkinWardrobeJS(SkinWardrobe wardrobe) {
+        this.wardrobe = wardrobe;
     }
 
     public SkinDescriptorJS loadSkin(String identifier) {

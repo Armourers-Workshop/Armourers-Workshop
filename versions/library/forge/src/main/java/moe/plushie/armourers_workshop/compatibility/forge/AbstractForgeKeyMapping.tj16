@@ -1,0 +1,39 @@
+package moe.plushie.armourers_workshop.compatibility.forge;
+
+import com.google.common.collect.ImmutableMap;
+import com.mojang.blaze3d.platform.InputConstants;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
+import moe.plushie.armourers_workshop.utils.ext.OpenKeyModifier;
+import net.minecraft.client.KeyMapping;
+import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.client.settings.KeyModifier;
+
+import java.util.Map;
+
+@Available("[1.16, 1.21)")
+public abstract class AbstractForgeKeyMapping extends KeyMapping {
+
+    private static final Map<IKeyModifier, KeyModifier> MODIFIERS1 = ImmutableMap.<IKeyModifier, KeyModifier>builder()
+            .put(OpenKeyModifier.CONTROL, KeyModifier.CONTROL)
+            .put(OpenKeyModifier.SHIFT, KeyModifier.SHIFT)
+            .put(OpenKeyModifier.ALT, KeyModifier.ALT)
+            .put(OpenKeyModifier.NONE, KeyModifier.NONE)
+            .build();
+
+    private static final Map<KeyModifier, IKeyModifier> MODIFIERS2 = ImmutableMap.<KeyModifier, IKeyModifier>builder()
+            .put(KeyModifier.CONTROL, OpenKeyModifier.CONTROL)
+            .put(KeyModifier.SHIFT, OpenKeyModifier.SHIFT)
+            .put(KeyModifier.ALT, OpenKeyModifier.ALT)
+            .put(KeyModifier.NONE, OpenKeyModifier.NONE)
+            .build();
+
+    public AbstractForgeKeyMapping(String description, IKeyModifier keyModifier, InputConstants.Key keyCode, String category) {
+        super(description, KeyConflictContext.IN_GAME, MODIFIERS1.getOrDefault(keyModifier, KeyModifier.NONE), keyCode, category);
+    }
+
+
+    public IKeyModifier getOpenKeyModifier() {
+        return MODIFIERS2.getOrDefault(getKeyModifier(), OpenKeyModifier.NONE);
+    }
+}

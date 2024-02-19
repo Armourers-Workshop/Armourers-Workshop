@@ -732,5 +732,7 @@
   "permission.armourers_workshop.skin-library-creative.open-gui": "Enables the user to use creative skin library",
   "permission.armourers_workshop.armourer.open-gui": "Enables the user to use armourer",
   "permission.armourers_workshop.dye-table.open-gui": "Enables the user to use dye table",
-  "permission.armourers_workshop.skin-library-global.open-gui": "Enables the user to use global skin library"
+  "permission.armourers_workshop.skin-library-global.open-gui": "Enables the user to use global skin library",
+  "fml.menu.mods.info.displayname.armourers_workshop": "Armourer's Workshop",
+  "fml.menu.mods.info.description.armourers_workshop": "Minecraft armour customization mod."
 }

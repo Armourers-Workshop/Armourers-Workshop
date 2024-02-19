@@ -3,8 +3,8 @@ package com.apple.library.impl;
 import com.apple.library.coregraphics.CGGraphicsState;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIFont;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.RectangleTesselator;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -38,20 +38,19 @@ public interface GraphicsContextImpl {
     }
 
     default void drawText(Collection<NSString> lines, float x, float y, int textColor, boolean shadow, UIFont font, float zLevel) {
-        PoseStack poseStack = state().ctm();
-
+        auto poseStack = state().ctm();
         float scale = font._getScale();
         poseStack.pushPose();
         poseStack.translate(x, y, zLevel);
         poseStack.scale(scale, scale, scale);
 
-        auto pose = poseStack.last().pose();
+        auto pose = AbstractPoseStack.unwrap(poseStack).last();
         auto buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
         auto renderer = font.impl();
 
         int dx = 0, dy = 0;
-        for (NSString line : lines) {
-            int qx = renderer.drawInBatch(line.characters(), dx, dy, textColor, shadow, pose, buffers, false, 0, 15728880);
+        for (auto line : lines) {
+            int qx = renderer.drawInBatch(line.characters(), dx, dy, textColor, shadow, pose.pose(), buffers, false, 0, 15728880);
             if (qx == dx) {
                 dy += 7;
             } else {
@@ -158,8 +157,8 @@ public interface GraphicsContextImpl {
         int g2 = color2 >> 8 & 0xff;
         int b2 = color2 & 0xff;
         auto state = state();
-        auto pose = state.ctm().last().pose();
-        auto buffer = state.buffers().getBuffer(SkinRenderType.GUI_COLOR);
+        auto pose = state.ctm().last();
+        auto buffer = state.bufferSource().getBuffer(SkinRenderType.GUI_COLOR);
         buffer.vertex(pose, minX, minY, zLevel).color(r1, g1, b1, a1).endVertex();
         buffer.vertex(pose, minX, maxY, zLevel).color(r2, g2, b2, a2).endVertex();
         buffer.vertex(pose, maxX, maxY, zLevel).color(r2, g2, b2, a2).endVertex();
@@ -173,8 +172,8 @@ public interface GraphicsContextImpl {
         int g1 = color >> 8 & 0xff;
         int b1 = color & 0xff;
         auto state = state();
-        auto pose = state.ctm().last().pose();
-        auto buffer = state.buffers().getBuffer(SkinRenderType.lineStrip());
+        auto pose = state.ctm().last();
+        auto buffer = state.bufferSource().getBuffer(SkinRenderType.lineStrip());
         buffer.vertex(pose, minX, minY, zLevel).color(r1, g1, b1, a1).endVertex();
         buffer.vertex(pose, minX, maxY, zLevel).color(r1, g1, b1, a1).endVertex();
         buffer.vertex(pose, maxX, maxY, zLevel).color(r1, g1, b1, a1).endVertex();
@@ -190,8 +189,8 @@ public interface GraphicsContextImpl {
         int b1 = color & 0xff;
         float sp = height * 0.5f;
         auto state = state();
-        auto pose = state.ctm().last().pose();
-        auto buffer = state.buffers().getBuffer(SkinRenderType.GUI_COLOR);
+        auto pose = state.ctm().last();
+        auto buffer = state.bufferSource().getBuffer(SkinRenderType.GUI_COLOR);
 
         buffer.vertex(pose, minX - sp, minY - sp, zLevel).color(r1, g1, b1, a1).endVertex();
         buffer.vertex(pose, minX - sp, maxY + sp, zLevel).color(r1, g1, b1, a1).endVertex();

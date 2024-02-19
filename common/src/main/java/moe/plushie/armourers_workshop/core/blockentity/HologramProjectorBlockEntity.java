@@ -244,7 +244,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public Rectangle3f getRenderBoundingBox(BlockState blockState) {
+    public Rectangle3f getRenderShape(BlockState blockState) {
         if (!isPowered()) {
             return null;
         }

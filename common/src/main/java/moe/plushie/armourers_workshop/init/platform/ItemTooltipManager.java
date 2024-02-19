@@ -3,10 +3,10 @@ package moe.plushie.armourers_workshop.init.platform;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.api.skin.ISkinEquipmentType;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
-import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -20,9 +20,9 @@ import moe.plushie.armourers_workshop.init.ModKeyBindings;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.utils.TypedRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -145,7 +145,7 @@ public class ItemTooltipManager {
             return;
         }
         if (flags.isAdvanced()) {
-            String registryName = RegistryManager.getKey(itemStack.getItem()).toString();
+            String registryName = TypedRegistry.findKey(itemStack.getItem()).toString();
             for (int index = tooltips.size(); index > 0; --index) {
                 Component text = tooltips.get(index - 1);
                 if (registryName.equals(text.getString())) {
@@ -161,12 +161,12 @@ public class ItemTooltipManager {
         if (!ModConfig.Client.skinPreEnabled) {
             return;
         }
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        SkinOptions options = descriptor.getOptions();
+        auto descriptor = SkinDescriptor.of(itemStack);
+        auto options = descriptor.getOptions();
         if (!options.contains(SkinOptions.TooltipFlags.PREVIEW)) {
             return;
         }
-        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.TOOLTIP);
+        auto bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.TOOLTIP);
         if (bakedSkin == null) {
             return;
         }
@@ -186,8 +186,8 @@ public class ItemTooltipManager {
         if (ModConfig.Client.skinPreDrawBackground) {
             context.drawTilableImage(ModTextures.GUI_PREVIEW, dx, dy, size, size, 0, 0, 62, 62, 4, 4, 4, 4, 400);
         }
-        ColorScheme colorScheme = descriptor.getColorScheme();
-        auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+        auto colorScheme = descriptor.getColorScheme();
+        auto buffers = AbstractBufferSource.defaultBufferSource();
         ExtendedItemRenderer.renderSkinInTooltip(bakedSkin, colorScheme, itemStack, dx, dy, 500, size, size, 30, 45, 0, 0, 0xf000f0, context.state().ctm(), buffers);
         buffers.endBatch();
     }

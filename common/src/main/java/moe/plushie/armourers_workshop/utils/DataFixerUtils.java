@@ -20,5 +20,4 @@ public class DataFixerUtils {
             ModLog.info("move {} items from {} - {}, to {} - {}, reason: {}", changes, src, src + size, dest, dest + size, reason);
         }
     }
-
 }

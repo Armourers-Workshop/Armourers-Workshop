@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
 import com.apple.library.uikit.UIColor;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
@@ -23,10 +22,12 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.ArrayList;
 
+import manifold.ext.rt.api.auto;
+
 @Environment(EnvType.CLIENT)
 public class PaintingHighlightPlacementRenderer {
 
-    public static void renderPaintTool(ItemStack itemStack, Player player, BlockHitResult traceResult, Camera renderInfo, PoseStack poseStack, MultiBufferSource buffers) {
+    public static void renderPaintTool(ItemStack itemStack, Player player, BlockHitResult traceResult, Camera renderInfo, IPoseStack poseStack, IBufferSource bufferSource) {
         Level level = player.getLevel();
         BlockPos pos = traceResult.getBlockPos();
         Direction direction = traceResult.getDirection();
@@ -46,8 +47,8 @@ public class PaintingHighlightPlacementRenderer {
 
         poseStack.pushPose();
 
-        Vector3f origin = new Vector3f(renderInfo.getPosition());
-        VertexConsumer builder = buffers.getBuffer(SkinRenderType.HIGHLIGHTED_LINES);
+        auto origin = new Vector3f(renderInfo.getPosition());
+        auto builder = bufferSource.getBuffer(SkinRenderType.HIGHLIGHTED_LINES);
 
         poseStack.translate(-origin.getX(), -origin.getY(), -origin.getZ());
         poseStack.translate(0.5f, 0.5f, 0.5f);

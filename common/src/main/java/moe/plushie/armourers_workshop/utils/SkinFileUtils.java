@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.utils;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.TagParser;
 import org.apache.commons.io.FileUtils;
@@ -217,7 +216,7 @@ public class SkinFileUtils {
                     FileInputStream fileinputstream = new FileInputStream(file);
                     DataInputStream datainputstream = new DataInputStream(fileinputstream)
             ) {
-                tag = NbtIo.read(datainputstream, NbtAccounter.UNLIMITED);
+                tag = NbtIo.read(datainputstream);
             }
 
             return tag;

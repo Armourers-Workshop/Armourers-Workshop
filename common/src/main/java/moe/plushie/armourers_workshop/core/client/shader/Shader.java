@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
-import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
@@ -40,7 +39,7 @@ public abstract class Shader {
     public void begin() {
         RenderSystem.backupExtendedMatrix();
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        RenderSystem.setExtendedMatrixFlags(1);
+        RenderSystem.setExtendedMatrixFlags(0x80);
         //RenderSystem.setExtendedTextureMatrix(OpenMatrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
         ShaderUniforms.begin();
 
@@ -54,7 +53,7 @@ public abstract class Shader {
             RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
         }
 
-        RenderSystem.setExtendedMatrixFlags(0);
+        RenderSystem.setExtendedMatrixFlags(0x00);
         ShaderUniforms.end();
         RenderSystem.restoreExtendedMatrix();
     }
@@ -83,14 +82,13 @@ public abstract class Shader {
     public void render(ShaderVertexObject object) {
         int vertexes = toTriangleVertex(object.getVertexCount());
         int maxVertexes = toTriangleVertex(lastMaxVertexCount);
-
-        OpenPoseStack poseStack = object.getPoseStack();
+        auto entry = object.getPoseStack().last();
 
         // we need fast update the uniforms,
         // so we're never using from vanilla uniforms.
         RenderSystem.setExtendedLightmapTextureMatrix(getLightmapTextureMatrix(object));
-        RenderSystem.setExtendedNormalMatrix(poseStack.lastNormal());
-        RenderSystem.setExtendedModelViewMatrix(poseStack.lastPose());
+        RenderSystem.setExtendedNormalMatrix(entry.normal());
+        RenderSystem.setExtendedModelViewMatrix(entry.pose());
 
         // yes, we need update the uniform every render call.
         // maybe need query uniform from current shader.

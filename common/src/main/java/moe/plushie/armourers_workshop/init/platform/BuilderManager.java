@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform;
 
+import com.mojang.serialization.Codec;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
@@ -72,7 +73,7 @@ public class BuilderManager {
 
         <T extends IKeyBinding> IKeyBindingBuilder<T> createKeyBindingBuilder(String key);
 
-        <T extends ILootFunction> ILootFunctionBuilder<T> createLootFunctionBuilder(Supplier<ILootFunction.Serializer<T>> serializer);
+        <T extends ILootFunction> ILootFunctionBuilder<T> createLootFunctionBuilder(Codec<? extends T> codec);
 
         <T extends IPermissionNode> IPermissionNodeBuilder<T> createPermissionBuilder();
 

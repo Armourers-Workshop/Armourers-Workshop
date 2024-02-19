@@ -93,4 +93,13 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
     public void _renderTooltip(PoseStack poseStack, List<? extends FormattedCharSequence> texts, int mouseX, int mouseY) {
         this.renderTooltip(poseStack, texts, mouseX, mouseY);
     }
+
+    @Override
+    public final boolean mouseScrolled(double d, double e, double f) {
+        return mouseScrolled(d, e, f, f);
+    }
+
+    public boolean mouseScrolled(double d, double e, double f, double g) {
+        return super.mouseScrolled(d, e, f);
+    }
 }

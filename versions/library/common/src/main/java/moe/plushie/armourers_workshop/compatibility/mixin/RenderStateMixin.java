@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.compatibility.mixin;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
+import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import net.minecraft.client.renderer.RenderStateShard;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,12 +13,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(RenderStateShard.class)
 public class RenderStateMixin implements IRenderAttachable {
 
-    private Runnable aw$attachment;
+    private Runnable aw2$attachment;
 
     @Override
-    public void attachRenderTask(VertexConsumer buffer, Runnable runnable) {
-        Runnable oldAttachment = aw$attachment;
-        aw$attachment = runnable;
+    public void attachRenderTask(IVertexConsumer buffer, Runnable runnable) {
+        Runnable oldAttachment = aw2$attachment;
+        aw2$attachment = runnable;
         if (oldAttachment != null) {
             return;
         }
@@ -31,9 +31,9 @@ public class RenderStateMixin implements IRenderAttachable {
 
     @Inject(method = "clearRenderState", at = @At("RETURN"))
     public void aw2$loadCallback(CallbackInfo ci) {
-        if (aw$attachment != null) {
-            aw$attachment.run();
-            aw$attachment = null;
+        if (aw2$attachment != null) {
+            aw2$attachment.run();
+            aw2$attachment = null;
         }
     }
 }

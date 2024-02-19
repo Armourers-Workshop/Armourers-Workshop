@@ -12,7 +12,7 @@ import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIScreen;
 import com.apple.library.uikit.UIView;
-import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
@@ -39,7 +39,6 @@ import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.util.Strings;
 
@@ -169,7 +168,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         if (playerTexture.isEmpty()) {
             ServerUser user = entry.getUser();
             if (!user.getName().isEmpty()) {
-                playerTexture = new PlayerTextureDescriptor(new GameProfile(null, user.getName()));
+                playerTexture = PlayerTextureDescriptor.fromName(user.getName());
             }
         }
         if (Strings.isNotBlank(playerTexture.getName())) {
@@ -196,7 +195,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
             float ty = rect.y;
             float tw = rect.width;
             float th = rect.height;
-            auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+            auto buffers = AbstractBufferSource.defaultBufferSource();
             ExtendedItemRenderer.renderSkinInGUI(bakedSkin, tx, ty, 100, tw, th, 20, 45, 0, context.state().ctm(), buffers);
             buffers.endBatch();
         }

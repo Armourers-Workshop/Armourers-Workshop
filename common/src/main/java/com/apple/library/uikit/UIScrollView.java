@@ -42,7 +42,7 @@ public class UIScrollView extends UIView {
     @Override
     public void mouseWheel(UIEvent event) {
         if (isVerticalScrollable()) {
-            double delta = event.delta() * bounds().getHeight() / 5;
+            double delta = event.delta().getY() * bounds().getHeight() / 5;
             float tx = contentOffset.x;
             float ty = contentOffset.y - (float) delta; // revert
             this.setContentOffset(new CGPoint(tx, ty));

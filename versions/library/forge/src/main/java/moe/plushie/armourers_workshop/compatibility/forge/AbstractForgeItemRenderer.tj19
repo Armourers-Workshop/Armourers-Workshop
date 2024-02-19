@@ -1,0 +1,8 @@
+package moe.plushie.armourers_workshop.compatibility.forge;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+
+@Available("[1.19, 1.21)")
+public interface AbstractForgeItemRenderer extends IClientItemExtensions {
+}

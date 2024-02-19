@@ -32,6 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -129,9 +130,9 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+    public BlockState destroyByPlayer(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         this.brokenByAnything(level, blockPos, blockState, player);
-        super.playerWillDestroy(level, blockPos, blockState, player);
+        return super.destroyByPlayer(level, blockPos, blockState, player);
     }
 
     @Override
@@ -187,7 +188,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState) {
+    public ItemStack getCloneItemStack(LevelReader blockGetter, BlockPos blockPos, BlockState blockState) {
         SkinnableBlockEntity blockEntity = getParentBlockEntity(blockGetter, blockPos);
         if (blockEntity != null) {
             return blockEntity.getDescriptor().asItemStack();

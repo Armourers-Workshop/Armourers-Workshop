@@ -603,6 +603,7 @@ public class SkinLoader {
         public Skin await(Request request) throws Exception {
             LockState state = new LockState(available);
             LOADER.waiting.put(request.identifier, (skin, exception) -> receive(request, state, skin, exception));
+            ModLog.debug("'{}' => await server response", request.identifier);
             boolean ignored = available.tryAcquire(30, TimeUnit.SECONDS);
             state.timeout();
             if (state.skin != null) {

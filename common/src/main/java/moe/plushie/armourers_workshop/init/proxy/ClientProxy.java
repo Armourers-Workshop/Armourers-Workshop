@@ -26,12 +26,12 @@ import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
-import moe.plushie.armourers_workshop.init.platform.RegistryManager;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.data.impl.MinecraftAuth;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TickUtils;
+import moe.plushie.armourers_workshop.utils.TypedRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -66,14 +66,14 @@ public class ClientProxy {
 
     private static void register(ClientNativeProvider registries) {
         // register custom item color.
-        registries.willRegisterItemColor(registry -> RegistryManager.getEntries(Item.class).forEach(it -> {
+        registries.willRegisterItemColor(registry -> TypedRegistry.findEntries(Item.class).forEach(it -> {
             Item item = it.get();
             if (item instanceof IItemTintColorProvider) {
                 registry.register(((IItemTintColorProvider) item), item);
             }
         }));
         // register custom item property.
-        registries.willRegisterItemProperty(registry -> RegistryManager.getEntries(Item.class).forEach(it -> {
+        registries.willRegisterItemProperty(registry -> TypedRegistry.findEntries(Item.class).forEach(it -> {
             Item item = it.get();
             IItemPropertiesProvider provider = ObjectUtils.safeCast(item, IItemPropertiesProvider.class);
             if (provider != null) {
@@ -83,7 +83,7 @@ public class ClientProxy {
         }));
 
         // register custom block color.
-        registries.willRegisterBlockColor(registry -> RegistryManager.getEntries(Block.class).forEach(it -> {
+        registries.willRegisterBlockColor(registry -> TypedRegistry.findEntries(Block.class).forEach(it -> {
             Block block = it.get();
             if (block instanceof IBlockTintColorProvider) {
                 registry.register(((IBlockTintColorProvider) block), block);

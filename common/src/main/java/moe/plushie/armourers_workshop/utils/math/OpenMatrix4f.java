@@ -104,6 +104,11 @@ public class OpenMatrix4f implements IMatrix4f {
     }
 
     @Override
+    public void set(IMatrix4f matrix) {
+        set(of(matrix));
+    }
+
+    @Override
     public void multiply(float[] values) {
         float x = values[0];
         float y = values[1];
@@ -355,6 +360,10 @@ public class OpenMatrix4f implements IMatrix4f {
     }
 
     public void transpose() {
+        // | m00 m01 m02 m03 |    | m00 m10 m20 m30 |
+        // | m10 m11 m12 m13 | => | m01 m11 m21 m31 |
+        // | m20 m21 m22 m23 |    | m02 m12 m22 m32 |
+        // | m30 m31 m32 m33 |    | m03 m13 m23 m33 |
         float f = m10;
         m10 = m01;
         m01 = f;

@@ -26,24 +26,24 @@ import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 public abstract class ForgeEpicFightRendererMixin {
 
     @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;Lyesman/epicfight/world/capabilities/entitypatch/LivingEntityPatch;Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;Lnet/minecraft/client/renderer/MultiBufferSource;Lcom/mojang/blaze3d/vertex/PoseStack;IF)V", at = @At("HEAD"), remap = false)
-    public void aw$renderPre(LivingEntity entityIn, LivingEntityPatch<?> entityPatch, LivingEntityRenderer<?, ?> renderer, MultiBufferSource buffers, PoseStack poseStack, int packedLightIn, float partialTicks, CallbackInfo ci) {
+    public void aw2$renderPre(LivingEntity entityIn, LivingEntityPatch<?> entityPatch, LivingEntityRenderer<?, ?> renderer, MultiBufferSource buffers, PoseStack poseStack, int packedLightIn, float partialTicks, CallbackInfo ci) {
         AbstractForgeEpicFightHandler.onRenderPre(entityIn, renderer, buffers, poseStack, packedLightIn, partialTicks, false);
     }
 
     @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;Lyesman/epicfight/world/capabilities/entitypatch/LivingEntityPatch;Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;Lnet/minecraft/client/renderer/MultiBufferSource;Lcom/mojang/blaze3d/vertex/PoseStack;IF)V", at = @At("RETURN"), remap = false)
-    public void aw$renderPost(LivingEntity entityIn, LivingEntityPatch<?> entityPatch, LivingEntityRenderer<?, ?> renderer, MultiBufferSource buffers, PoseStack poseStack, int packedLightIn, float partialTicks, CallbackInfo ci) {
+    public void aw2$renderPost(LivingEntity entityIn, LivingEntityPatch<?> entityPatch, LivingEntityRenderer<?, ?> renderer, MultiBufferSource buffers, PoseStack poseStack, int packedLightIn, float partialTicks, CallbackInfo ci) {
         AbstractForgeEpicFightHandler.onRenderPost(entityIn, renderer, buffers, poseStack, packedLightIn, partialTicks);
     }
 
     @Redirect(method = "render(Lnet/minecraft/world/entity/LivingEntity;Lyesman/epicfight/world/capabilities/entitypatch/LivingEntityPatch;Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;Lnet/minecraft/client/renderer/MultiBufferSource;Lcom/mojang/blaze3d/vertex/PoseStack;IF)V", at = @At(value = "INVOKE", target = "Lyesman/epicfight/api/client/model/AnimatedMesh;drawModelWithPose(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;IFFFFILyesman/epicfight/api/model/Armature;[Lyesman/epicfight/api/utils/math/OpenMatrix4f;)V", remap = false), remap = false)
-    public void aw$renderEntity(AnimatedMesh mesh, PoseStack poseStack, VertexConsumer builder, int packedLightIn, float r, float g, float b, float a, int overlayCoord, Armature armature, OpenMatrix4f[] poses, LivingEntity entityIn) {
+    public void aw2$renderEntity(AnimatedMesh mesh, PoseStack poseStack, VertexConsumer builder, int packedLightIn, float r, float g, float b, float a, int overlayCoord, Armature armature, OpenMatrix4f[] poses, LivingEntity entityIn) {
         CallbackInfoReturnable<OpenMatrix4f[]> cir = new CallbackInfoReturnable<>("poses", true, poses);
         AbstractForgeEpicFightHandler.onRenderEntity(entityIn, armature, builder, poseStack, packedLightIn, 0, cir);
         mesh.drawModelWithPose(poseStack, builder, packedLightIn, r, g, b, a, overlayCoord, armature, cir.getReturnValue());
     }
 
     @Inject(method = "<init>", at = @At("TAIL"), remap = false)
-    public void aw$init(CallbackInfo callbackInfo) {
+    public void aw2$init(CallbackInfo callbackInfo) {
         AbstractForgeEpicFightHandler.onInit();
     }
 }

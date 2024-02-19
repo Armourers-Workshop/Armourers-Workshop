@@ -4,10 +4,10 @@ import moe.plushie.armourers_workshop.api.action.IUserAction;
 import moe.plushie.armourers_workshop.api.common.IWorldUpdateTask;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
+import moe.plushie.armourers_workshop.builder.data.undo.action.ActionRuntimeException;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -68,7 +68,7 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
     }
 
     @Override
-    public void prepare() throws CommandRuntimeException {
+    public void prepare() throws RuntimeException {
         // only change colors or nbt, required a block entity
         if (!isChangeNBT()) {
             return;
@@ -80,12 +80,12 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity == null) {
             String value = String.format("x=%d, y=%d, z=%d", blockPos.getX(), blockPos.getY(), blockPos.getZ());
-            throw new CommandRuntimeException(Component.translatable("chat.armourers_workshop.undo.missingBlock", value));
+            throw new ActionRuntimeException(Component.translatable("chat.armourers_workshop.undo.missingBlock", value));
         }
     }
 
     @Override
-    public IUserAction apply() throws CommandRuntimeException {
+    public IUserAction apply() throws RuntimeException {
         boolean isChangedNBT = false;
         CubeChanges changes = new CubeChanges(level, blockPos);
         if (blockState != null) {

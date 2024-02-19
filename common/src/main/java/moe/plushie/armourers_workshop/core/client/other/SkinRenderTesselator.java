@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
@@ -11,7 +12,6 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 import manifold.ext.rt.api.auto;
 
@@ -46,12 +46,12 @@ public class SkinRenderTesselator extends SkinRenderContext {
         return new SkinRenderTesselator(bakedSkin, bakedArmature, mannequin);
     }
 
-    public int draw(PoseStack poseStack, MultiBufferSource buffers) {
+    public int draw(IPoseStack poseStack, IBufferSource bufferSource) {
         setPose(poseStack);
-        setBuffers(buffers);
+        setBuffers(bufferSource);
 //        setTransforms(mannequin, renderer.getOverrideModel(model));
 //        bakedArmature.setupAnim(mannequin, null, this);
-        bakedSkin.setupAnim(mannequin, getPartialTicks(), getReferenced());
+        bakedSkin.setupAnim(mannequin, getAnimationTicks(), getReferenced());
         return SkinRenderer.render(mannequin, bakedArmature, bakedSkin, getColorScheme(), this);
     }
 

@@ -58,7 +58,7 @@ jobs:
 
         files: fabric/build/libs/!(*-@(dev-shadow|sources|javadoc|)).jar
 
-        loaders: fabric
+        #loaders: fabric
         game-versions: ${{ matrix.version }}
 
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -82,7 +82,7 @@ jobs:
 
         files: forge/build/libs/!(*-@(dev-shadow|sources|javadoc)).jar
 
-        loaders: forge
+        #loaders: forge
         game-versions: ${{ matrix.version }}
 
         github-token: ${{ secrets.GITHUB_TOKEN }}

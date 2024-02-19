@@ -39,13 +39,11 @@ public interface FabricClientNativeProvider extends ClientNativeProvider {
 
     @Override
     default void willPlayerLogin(Consumer<Player> consumer) {
-        // TODO: test in server @SAGESSE
         ClientPlayConnectionEvents.INIT.register(((handler, client) -> consumer.accept(client.player)));
     }
 
     @Override
     default void willPlayerLogout(Consumer<Player> consumer) {
-        // TODO: test in server @SAGESSE
         ClientPlayConnectionEvents.DISCONNECT.register(((handler, client) -> consumer.accept(client.player)));
     }
 

@@ -5,10 +5,14 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
-@Available("[1.18, )")
+@Available("[1.21, )")
 public abstract class AbstractLivingEntity extends LivingEntity {
 
     public AbstractLivingEntity(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);
     }
+
+//    public double getPassengersRidingOffset() {
+//        return 0;
+//    }
 }

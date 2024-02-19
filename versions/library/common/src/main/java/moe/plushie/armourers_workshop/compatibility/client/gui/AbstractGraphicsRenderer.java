@@ -7,14 +7,17 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIFont;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
@@ -26,11 +29,15 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
 
     private final GuiGraphics graphics;
     private final CGPoint mousePos;
+    private final IPoseStack poseStack;
+    private final IBufferSource bufferSource;
     private final float partialTicks;
 
     public AbstractGraphicsRenderer(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         this.graphics = graphics;
         this.mousePos = new CGPoint(mouseX, mouseY);
+        this.poseStack = AbstractPoseStack.wrap(graphics.pose());
+        this.bufferSource = AbstractBufferSource.wrap(graphics.bufferSource());
         this.partialTicks = partialTicks;
     }
 
@@ -61,8 +68,8 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     }
 
     @Override
-    public void renderEntity(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY, CGGraphicsContext context) {
-        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, x, y, scale, mouseX, mouseY, entity);
+    public void renderEntity(LivingEntity entity, CGRect rect, int scale, Vector3f rotate, CGPoint focus, CGGraphicsContext context) {
+        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, rect, scale, rotate, focus, entity);
     }
 
     @Override
@@ -86,12 +93,12 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     }
 
     @Override
-    public MultiBufferSource buffers() {
-        return graphics.bufferSource();
+    public IBufferSource bufferSource() {
+        return bufferSource;
     }
 
     @Override
-    public PoseStack ctm() {
-        return graphics.pose();
+    public IPoseStack ctm() {
+        return poseStack;
     }
 }

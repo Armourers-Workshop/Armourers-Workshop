@@ -16,12 +16,12 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class FabricRecipeComponentMixin {
 
     @Inject(method = "renderGhostRecipeTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;renderComponentTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;II)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void aw$renderTooltipPre(GuiGraphics guiGraphics, int i, int j, int k, int l, CallbackInfo ci, ItemStack itemStack) {
+    private void aw2$renderTooltipPre(GuiGraphics guiGraphics, int i, int j, int k, int l, CallbackInfo ci, ItemStack itemStack) {
         RenderTooltipEvents.TOOLTIP_ITEM_STACK = itemStack;
     }
 
     @Inject(method = "renderGhostRecipeTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;renderComponentTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;II)V", shift = At.Shift.AFTER))
-    private void aw$renderTooltipPost(GuiGraphics guiGraphics, int i, int j, int k, int l, CallbackInfo ci) {
+    private void aw2$renderTooltipPost(GuiGraphics guiGraphics, int i, int j, int k, int l, CallbackInfo ci) {
         RenderTooltipEvents.TOOLTIP_ITEM_STACK = ItemStack.EMPTY;
     }
 }

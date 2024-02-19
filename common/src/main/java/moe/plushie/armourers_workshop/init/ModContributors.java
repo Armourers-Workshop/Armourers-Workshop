@@ -15,6 +15,8 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.UUID;
 
+import manifold.ext.rt.api.auto;
+
 public class ModContributors {
 
     public static Contributor dev;
@@ -54,13 +56,11 @@ public class ModContributors {
             .build();
 
     public static Contributor of(GameProfile gameProfile) {
-        if (gameProfile == null) {
-            return null;
-        }
-        gameProfile = PlayerTextureLoader.getInstance().loadGameProfile(gameProfile);
-        UUID uuid = gameProfile.getId();
-        if (uuid != null) {
-            return values.get(uuid);
+        if (gameProfile != null) {
+            UUID uuid = gameProfile.getId();
+            if (uuid != null) {
+                return values.get(uuid);
+            }
         }
         return null;
     }
@@ -68,9 +68,10 @@ public class ModContributors {
     @Environment(EnvType.CLIENT)
     public static Contributor by(Entity entity) {
         if (entity instanceof MannequinEntity) {
-            MannequinEntity mannequin = (MannequinEntity) entity;
+            auto mannequin = (MannequinEntity) entity;
             if (mannequin.isExtraRenderer()) {
-                return of(mannequin.getTextureDescriptor().getProfile());
+                auto descriptor = mannequin.getTextureDescriptor();
+                return of(PlayerTextureLoader.getInstance().getGameProfile(descriptor));
             }
             return null;
         }
@@ -82,14 +83,10 @@ public class ModContributors {
 
     @Environment(EnvType.CLIENT)
     public static Contributor getCurrentContributor() {
-        if (EnvironmentManager.isDevelopmentEnvironment()) {
+        if (EnvironmentManager.isDevelopment()) {
             return dev;
         }
-        LocalPlayer playerEntity = Minecraft.getInstance().player;
-        if (playerEntity != null) {
-            return of(playerEntity.getGameProfile());
-        }
-        return null;
+        return of(Minecraft.getInstance().getUser().getGameProfile());
     }
 
     public enum ContributionFlags {

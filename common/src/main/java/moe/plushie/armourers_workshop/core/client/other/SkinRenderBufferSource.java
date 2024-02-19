@@ -13,13 +13,6 @@ import org.jetbrains.annotations.NotNull;
 
 public interface SkinRenderBufferSource {
 
-    static SkinRenderBufferSource immediate(MultiBufferSource buffers) {
-        return skin -> {
-            SkinVertexBufferBuilder bufferBuilder = SkinVertexBufferBuilder.getBuffer(buffers);
-            return bufferBuilder.getBuffer(skin);
-        };
-    }
-
     ObjectBuilder getBuffer(@NotNull BakedSkin skin);
 
     interface ObjectBuilder {

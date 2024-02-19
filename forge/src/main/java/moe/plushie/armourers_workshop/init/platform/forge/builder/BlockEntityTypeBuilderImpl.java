@@ -6,12 +6,12 @@ import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBlockEntityRendererProvider;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeBlockEntity;
-import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeRegistryEntry;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeRegistries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.utils.TypedRegistry;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -48,13 +48,13 @@ public class BlockEntityTypeBuilderImpl<T extends BlockEntity> implements IBlock
 
     @Override
     public IRegistryKey<IBlockEntityType<T>> build(String name) {
-        IRegistryKey<BlockEntityType<T>> object = Registry.registerBlockEntityTypeFO(name, () -> {
+        IRegistryKey<BlockEntityType<T>> object = AbstractForgeRegistries.BLOCK_ENTITY_TYPES.register(name, () -> {
             Block[] blocks1 = blocks.stream().map(Supplier::get).toArray(Block[]::new);
             return AbstractForgeBlockEntity.createType(supplier, blocks1);
         });
         Proxy<T> proxy = new Proxy<>(object);
         EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
-        return AbstractForgeRegistryEntry.of(object.getRegistryName(), () -> proxy);
+        return TypedRegistry.Entry.of(object.getRegistryName(), () -> proxy);
     }
 
     public static class Proxy<T extends BlockEntity> implements IBlockEntityType<T> {

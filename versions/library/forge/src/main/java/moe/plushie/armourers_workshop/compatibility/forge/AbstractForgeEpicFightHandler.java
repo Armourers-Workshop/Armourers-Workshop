@@ -6,6 +6,8 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.model.CachedModel;
 import moe.plushie.armourers_workshop.core.client.other.thirdparty.EpicFlightModelPartBuilder;
 import moe.plushie.armourers_workshop.core.client.other.thirdparty.EpicFlightModelTransformer;
@@ -13,6 +15,7 @@ import moe.plushie.armourers_workshop.core.client.other.thirdparty.EpicFlightRen
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.PoseUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,7 +34,7 @@ public class AbstractForgeEpicFightHandler extends AbstractForgeEpicFightHandler
     private static final FloatBuffer AW_MAT_BUFFER4 = ObjectUtils.createFloatBuffer(16);
 
     public static void onRenderPre(LivingEntity entityIn, LivingEntityRenderer<?, ?> renderer, MultiBufferSource buffers, PoseStack poseStack, int packedLightIn, float partialTicks, boolean isFirstPerson) {
-        EpicFlightRenderContext context = EpicFlightRenderContext.alloc(entityIn, renderer, packedLightIn, partialTicks, poseStack, buffers);
+        EpicFlightRenderContext context = EpicFlightRenderContext.alloc(entityIn, renderer, packedLightIn, partialTicks, AbstractPoseStack.wrap(poseStack), AbstractBufferSource.wrap(buffers));
         if (context != null) {
             context.setFirstPerson(isFirstPerson);
             context.prepare(entityIn);
@@ -53,7 +56,7 @@ public class AbstractForgeEpicFightHandler extends AbstractForgeEpicFightHandler
             OpenMatrix4f[] poses = cir.getReturnValue();
             OpenMatrix4f[] overridePoses = Arrays.copyOf(poses, poses.length);
             HashMap<String, IJointTransform> transforms = new HashMap<>();
-            context.setPose(poseStack.copy());
+            context.setPose(new OpenPoseStack(AbstractPoseStack.wrap(poseStack)));
             context.setTransformProvider(name -> transforms.computeIfAbsent(name, it -> {
                 Joint joint = armature.searchJointByName(it);
                 if (joint == null) {

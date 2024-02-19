@@ -1,9 +1,9 @@
-architectury {
-    common(rootProject.enabled_platforms.split(","))
-}
-
-loom {
-    accessWidenerPath = file("src/main/resources/armourersworkshop.accesswidener")
+cocoon {
+    license()
+    common()
+    loom {
+        accessWidenerPath = file("src/main/resources/armourersworkshop.accesswidener")
+    }
 }
 
 dependencies {

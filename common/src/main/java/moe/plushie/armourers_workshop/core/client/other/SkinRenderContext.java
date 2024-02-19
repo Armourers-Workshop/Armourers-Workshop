@@ -1,16 +1,16 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import com.google.common.collect.Iterators;
-import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.PoseStackWrapper;
-import moe.plushie.armourers_workshop.utils.PoseUtils;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.MultiBufferSource;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -18,14 +18,15 @@ import java.util.Iterator;
 @Environment(EnvType.CLIENT)
 public class SkinRenderContext {
 
-    public static final SkinRenderContext EMPTY  = new SkinRenderContext(new PoseStack());
-    private static final Iterator<SkinRenderContext> POOL = Iterators.cycle(ObjectUtils.makeItems(100, i -> new SkinRenderContext(new PoseStack())));
+    public static final SkinRenderContext EMPTY  = new SkinRenderContext();
+    private static final Iterator<SkinRenderContext> POOL = Iterators.cycle(ObjectUtils.makeItems(100, i -> new SkinRenderContext()));
 
     private int lightmap = 0xf000f0;
     private int overlay = 0;
     private float partialTicks = 0;
+    private float animationTicks = 0;
 
-    private MultiBufferSource buffers;
+    private IBufferSource bufferSource;
 
     private SkinRenderData renderData;
     private SkinRenderBufferSource bufferProvider;
@@ -35,27 +36,32 @@ public class SkinRenderContext {
     private ColorScheme colorScheme = ColorScheme.EMPTY;
     private AbstractItemTransformType transformType = AbstractItemTransformType.NONE;
 
-    private final PoseStack defaultPoseStack;
-    private final PoseStackWrapper usingPoseStack;
+    private final IPoseStack defaultPoseStack;
+    private IPoseStack usingPoseStack;
 
-    public SkinRenderContext(PoseStack poseStack) {
-        this.defaultPoseStack = poseStack;
-        this.usingPoseStack = PoseUtils.wrap(poseStack);
+    public SkinRenderContext() {
+        this(new AbstractPoseStack());
     }
 
-    public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, AbstractItemTransformType transformType, PoseStack poseStack, MultiBufferSource buffers) {
+    public SkinRenderContext(IPoseStack poseStack) {
+        this.defaultPoseStack = poseStack;
+        this.usingPoseStack = defaultPoseStack;
+    }
+
+    public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, AbstractItemTransformType transformType, IPoseStack poseStack, IBufferSource bufferSource) {
         SkinRenderContext context = POOL.next();
         context.setRenderData(renderData);
         context.setLightmap(light);
         context.setPartialTicks(partialTick);
+        context.setAnimationTicks(TickUtils.ticks());
         context.setTransformType(transformType);
         context.setPose(poseStack);
-        context.setBuffers(buffers);
+        context.setBuffers(bufferSource);
         return context;
     }
 
-    public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, PoseStack poseStack, MultiBufferSource buffers) {
-        return alloc(renderData, light, partialTick, AbstractItemTransformType.NONE, poseStack, buffers);
+    public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, IPoseStack poseStack, IBufferSource bufferSource) {
+        return alloc(renderData, light, partialTick, AbstractItemTransformType.NONE, poseStack, bufferSource);
     }
 
     public void release() {
@@ -66,11 +72,11 @@ public class SkinRenderContext {
         this.transformType = AbstractItemTransformType.NONE;
         this.itemSource = SkinItemSource.EMPTY;
 
-        this.usingPoseStack.set(defaultPoseStack);
+        this.usingPoseStack = defaultPoseStack;
 
         this.bufferProvider = null;
         this.renderData = null;
-        this.buffers = null;
+        this.bufferSource = null;
     }
 
     public void pushPose() {
@@ -81,7 +87,7 @@ public class SkinRenderContext {
         usingPoseStack.popPose();
     }
 
-    public PoseStackWrapper pose() {
+    public IPoseStack pose() {
         return usingPoseStack;
     }
 
@@ -107,6 +113,14 @@ public class SkinRenderContext {
 
     public float getPartialTicks() {
         return partialTicks;
+    }
+
+    public void setAnimationTicks(float animationTicks) {
+        this.animationTicks = animationTicks;
+    }
+
+    public float getAnimationTicks() {
+        return animationTicks;
     }
 
     public void setColorScheme(ColorScheme colorScheme) {
@@ -145,23 +159,23 @@ public class SkinRenderContext {
         return renderData;
     }
 
-    public void setPose(PoseStack pose) {
-        this.usingPoseStack.set(pose);
+    public void setPose(IPoseStack pose) {
+        this.usingPoseStack = pose;
     }
 
-    public void setBuffers(MultiBufferSource buffers) {
-        this.buffers = buffers;
+    public void setBuffers(IBufferSource bufferSource) {
+        this.bufferSource = bufferSource;
     }
 
-    public MultiBufferSource getBuffers() {
-        return buffers;
+    public IBufferSource getBuffers() {
+        return bufferSource;
     }
 
     public SkinRenderBufferSource.ObjectBuilder getBuffer(@NotNull BakedSkin skin) {
         if (bufferProvider != null) {
             return bufferProvider.getBuffer(skin);
         }
-        SkinVertexBufferBuilder bufferBuilder = SkinVertexBufferBuilder.getBuffer(buffers);
+        SkinVertexBufferBuilder bufferBuilder = SkinVertexBufferBuilder.getBuffer(bufferSource);
         return bufferBuilder.getBuffer(skin);
     }
 

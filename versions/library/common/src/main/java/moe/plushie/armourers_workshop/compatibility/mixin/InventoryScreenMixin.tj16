@@ -15,11 +15,11 @@ public class InventoryScreenMixin {
 
     @Inject(method = "renderEntityInInventory", at = @At("HEAD"))
     private static void aw2$renderEntityInInventoryPre(int x, int y, int scale, float mouseX, float mouseY, LivingEntity entity, CallbackInfo ci) {
-        ClientWardrobeHandler.onRenderEntityInInventoryPre(entity, x, y, scale, mouseX, y);
+        ClientWardrobeHandler.onRenderInventoryEntityPre(entity, x, y, scale, mouseX, y);
     }
 
     @Inject(method = "renderEntityInInventory", at = @At("RETURN"))
     private static void aw2$renderEntityInInventoryPost(int x, int y, int scale, float mouseX, float mouseY, LivingEntity entity, CallbackInfo ci) {
-        ClientWardrobeHandler.onRenderEntityInInventoryPost(entity);
+        ClientWardrobeHandler.onRenderInventoryEntityPost(entity);
     }
 }

@@ -6,7 +6,6 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UILabelDelegate;
-import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -74,10 +73,8 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
 
     private void setupLibrary() {
         // welcome to global library :p
-        Minecraft minecraft = Minecraft.getInstance();
-        GameProfile gameProfile = minecraft.getUser().getGameProfile();
-        GlobalSkinLibrary.getInstance().executor(minecraft);
-        GlobalSkinLibrary.getInstance().connect(gameProfile, null);
+        GlobalSkinLibrary.getInstance().executor(Minecraft.getInstance());
+        GlobalSkinLibrary.getInstance().connect(Minecraft.getInstance().getUser().getGameProfile(), null);
     }
 
     private void setupUI() {

@@ -41,7 +41,7 @@ public class MannequinItem extends FlavouredItem {
             entityTag.putFloat(Constants.Key.ENTITY_SCALE, scale);
         }
         if (player != null) {
-            PlayerTextureDescriptor descriptor = new PlayerTextureDescriptor(player.getGameProfile());
+            PlayerTextureDescriptor descriptor = PlayerTextureDescriptor.fromProfile(player.getGameProfile());
             entityTag.put(Constants.Key.ENTITY_TEXTURE, descriptor.serializeNBT());
         }
         if (entityTag.size() != 0) {

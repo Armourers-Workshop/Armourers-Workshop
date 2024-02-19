@@ -4,15 +4,13 @@ import io.netty.buffer.Unpooled;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IPacketDistributor;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
-import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModConfig;
-import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.utils.PacketSplitter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginNetworking;
@@ -40,88 +38,39 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public class NetworkManagerImpl implements NetworkManager.Impl {
+public class NetworkManagerImpl {
 
-    private NetworkDispatcher dispatcher;
 
-    public static NetworkManager.Impl getInstance(String name, String version) {
-        NetworkManagerImpl impl = new NetworkManagerImpl();
-        impl.init(name, version);
-        return impl;
+    public static NetworkManager.Dispatcher createDispatcher(ResourceLocation registryName, String version) {
+        return new Dispatcher(registryName, version);
     }
 
-    public void init(String name, String version) {
-        dispatcher = new NetworkDispatcher(ModConstants.key(name), version);
-
-        ServerLoginConnectionEvents.QUERY_START.register(dispatcher::startServerHandshake);
-        ServerLoginNetworking.registerGlobalReceiver(dispatcher.channelName, dispatcher::onServerHandshake);
-
-        ServerPlayNetworking.registerGlobalReceiver(dispatcher.channelName, dispatcher::onServerEvent);
-
-        EnvironmentExecutor.runOn(EnvironmentType.CLIENT, () -> () -> {
-            ClientLoginNetworking.registerGlobalReceiver(dispatcher.channelName, dispatcher::onClientHandshake);
-            ClientPlayNetworking.registerGlobalReceiver(dispatcher.channelName, dispatcher::onClientEvent);
-        });
+    public static NetworkManager.Distributors createDistributors() {
+        return new Distributors();
     }
 
-    @Override
-    public void sendToTrackingChunk(CustomPacket message, LevelChunk chunk) {
-        ServerLevel serverLevel = (ServerLevel) chunk.getLevel();
-        Collection<ServerPlayer> players = PlayerLookup.tracking(serverLevel, chunk.getPos());
-        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, getSender(players));
-    }
+    public static class Dispatcher extends NetworkManager.Dispatcher {
 
-    @Override
-    public void sendToTracking(final CustomPacket message, final Entity entity) {
-        Collection<ServerPlayer> players = PlayerLookup.tracking(entity);
-        if (entity instanceof ServerPlayer) {
-            ArrayList<ServerPlayer> trackingAndSelf = new ArrayList<>(players);
-            trackingAndSelf.add((ServerPlayer) entity);
-            players = trackingAndSelf;
+        public Dispatcher(ResourceLocation channelName, String channelVersion) {
+            super(channelName, channelVersion);
         }
-        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, getSender(players));
-    }
 
-    @Override
-    public void sendTo(final CustomPacket message, final ServerPlayer player) {
-        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, getSender(Collections.singleton(player)));
-    }
+        @Override
+        public void register() {
+            ServerLoginConnectionEvents.QUERY_START.register(this::startServerHandshake);
+            ServerLoginNetworking.registerGlobalReceiver(channelName, this::onServerHandshake);
+            ServerPlayNetworking.registerGlobalReceiver(channelName, this::onServerEvent);
 
-    @Override
-    @Environment(EnvType.CLIENT)
-    public void sendToServer(final CustomPacket message) {
-        dispatcher.split(message, NetworkDirection.PLAY_TO_SERVER, ClientPlayNetworking.getSender()::sendPacket);
-    }
-
-    @Override
-    public void sendToAll(CustomPacket message) {
-        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, getSender(PlayerLookup.all(EnvironmentManager.getServer())));
-    }
-
-    private Consumer<Packet<?>> getSender(Collection<ServerPlayer> players) {
-        return packet -> players.forEach(player -> player.connection.send(packet));
-    }
-
-    public static class NetworkDispatcher implements IServerPacketHandler, IClientPacketHandler {
-
-        final UUID clientUUID = UUID.randomUUID();
-        final String channelVersion;
-        final ResourceLocation channelName;
-        final PacketSplitter splitter;
-
-        final int maxPartSize = 32000; // 32k
-
-        NetworkDispatcher(ResourceLocation channelName, String channelVersion) {
-            this.channelName = channelName;
-            this.channelVersion = channelVersion;
-            this.splitter = new PacketSplitter();
+            EnvironmentExecutor.runOn(EnvironmentType.CLIENT, () -> () -> {
+                ClientLoginNetworking.registerGlobalReceiver(channelName, this::onClientHandshake);
+                ClientPlayNetworking.registerGlobalReceiver(channelName, this::onClientEvent);
+            });
         }
 
         public void startServerHandshake(Object handler, MinecraftServer server, PacketSender sender, ServerLoginNetworking.LoginSynchronizer synchronizer) {
@@ -151,14 +100,14 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
         }
 
         public void onServerEvent(MinecraftServer server, ServerPlayer player, Object handler, FriendlyByteBuf buf, PacketSender responseSender) {
-            IServerPacketHandler packetHandler = this;
-            merge(player.getUUID(), buf, packet -> server.execute(() -> packet.accept(packetHandler, player)));
+            IServerPacketHandler packetHandler = server::execute;
+            didReceivePacket(packetHandler, buf, player);
         }
 
         @Environment(EnvType.CLIENT)
         public void onClientEvent(Minecraft client, Object handler, FriendlyByteBuf buf, PacketSender responseSender) {
-            IClientPacketHandler packetHandler = this;
-            merge(clientUUID, buf, packet -> client.execute(() -> packet.accept(packetHandler, getClientPlayer())));
+            IClientPacketHandler packetHandler = client::execute;
+            didReceivePacket(packetHandler, buf, getClientPlayer());
         }
 
         @Environment(EnvType.CLIENT)
@@ -168,18 +117,77 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
             // and then it will load lambda type on the server environment.
             return Minecraft.getInstance().player;
         }
+    }
 
-        public void merge(UUID uuid, FriendlyByteBuf buffer, Consumer<CustomPacket> consumer) {
-            splitter.merge(uuid, buffer, consumer);
+    public static class Distributor implements IPacketDistributor {
+
+        private final NetworkDirection direction;
+        private final Consumer<Packet<?>> target;
+        private final Packet<?> packet;
+
+        Distributor(NetworkDirection direction, Consumer<Packet<?>> target, Packet<?> packet) {
+            this.direction = direction;
+            this.target = target;
+            this.packet = packet;
         }
 
-        public void split(final CustomPacket message, NetworkDirection dir, Consumer<Packet<?>> consumer) {
-            int partSize = maxPartSize;
-            // download from the server side, the forge is resolved, the maximum packet size is than 10m.
-            if (dir == NetworkDirection.PLAY_TO_CLIENT) {
-                partSize = Integer.MAX_VALUE;
+        @Override
+        public IPacketDistributor add(ResourceLocation channel, FriendlyByteBuf buf) {
+            Packet<?> packet1 = direction.buildPacket(buf, channel);
+            return new Distributor(direction, target, packet1);
+        }
+
+        @Override
+        public void execute() {
+            if (packet != null) {
+                target.accept(packet);
             }
-            splitter.split(message, buf -> dir.buildPacket(buf, channelName), partSize, consumer);
+        }
+
+        @Override
+        public boolean isClientbound() {
+            return direction == NetworkDirection.PLAY_TO_CLIENT;
+        }
+    }
+
+    public static class Distributors implements NetworkManager.Distributors {
+
+        @Override
+        public IPacketDistributor trackingChunk(Supplier<LevelChunk> supplier) {
+            LevelChunk chunk = supplier.get();
+            ServerLevel serverLevel = (ServerLevel) chunk.getLevel();
+            Collection<ServerPlayer> players = PlayerLookup.tracking(serverLevel, chunk.getPos());
+            return new Distributor(NetworkDirection.PLAY_TO_CLIENT, dispatch(players), null);
+        }
+
+        @Override
+        public IPacketDistributor trackingEntityAndSelf(Supplier<Entity> supplier) {
+            Entity entity = supplier.get();
+            Collection<ServerPlayer> players = PlayerLookup.tracking(entity);
+            if (entity instanceof ServerPlayer) {
+                ArrayList<ServerPlayer> trackingAndSelf = new ArrayList<>(players);
+                trackingAndSelf.add((ServerPlayer) entity);
+                players = trackingAndSelf;
+            }
+            return new Distributor(NetworkDirection.PLAY_TO_CLIENT, dispatch(players), null);
+        }
+
+        @Override
+        public IPacketDistributor player(Supplier<ServerPlayer> supplier) {
+            ServerPlayer player = supplier.get();
+            return new Distributor(NetworkDirection.PLAY_TO_CLIENT, dispatch(Collections.singleton(player)), null);
+        }
+
+        public IPacketDistributor allPlayers() {
+            return new Distributor(NetworkDirection.PLAY_TO_CLIENT, dispatch(PlayerLookup.all(EnvironmentManager.getServer())), null);
+        }
+
+        public IPacketDistributor server() {
+            return new Distributor(NetworkDirection.PLAY_TO_SERVER, ClientPlayNetworking.getSender()::sendPacket, null);
+        }
+
+        private Consumer<Packet<?>> dispatch(Collection<ServerPlayer> players) {
+            return packet -> players.forEach(player -> player.connection.send(packet));
         }
     }
 

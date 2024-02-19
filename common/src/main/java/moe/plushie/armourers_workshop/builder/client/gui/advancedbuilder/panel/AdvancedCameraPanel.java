@@ -108,7 +108,7 @@ public class AdvancedCameraPanel extends UIView {
 
     @Override
     public void mouseWheel(UIEvent event) {
-        zoom(event.delta());
+        zoom(event.delta().getY());
     }
 
     @Override

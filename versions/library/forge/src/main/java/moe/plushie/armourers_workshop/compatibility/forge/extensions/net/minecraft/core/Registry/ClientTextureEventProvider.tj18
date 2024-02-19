@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.forge.extensions.net.minecraft.core.Registry;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeEventBus;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -16,7 +16,7 @@ import manifold.ext.rt.api.ThisClass;
 public class ClientTextureEventProvider {
 
     public static void willRegisterTextureFO(@ThisClass Class<?> clazz, Consumer<ClientNativeProvider.TextureRegistry> consumer) {
-        NotificationCenterImpl.observer(TextureStitchEvent.Pre.class, consumer, event -> registryName -> {
+        AbstractForgeEventBus.observer(TextureStitchEvent.Pre.class, consumer, event -> registryName -> {
             if (event.getAtlas().location().equals(InventoryMenu.BLOCK_ATLAS)) {
                 event.addSprite(registryName);
             }

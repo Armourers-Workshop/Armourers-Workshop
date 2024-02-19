@@ -30,7 +30,7 @@ public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemB
 
     @Override
     public IRegistryKey<T> build(String name) {
-        return Registry.registerItemFO(name, () -> {
+        return AbstractForgeRegistries.ITEMS.register(name, () -> {
             T value = supplier.apply(properties);
             if (group != null) {
                 group.get().add(() -> value);

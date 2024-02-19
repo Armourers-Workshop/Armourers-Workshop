@@ -47,7 +47,7 @@ public class EnvironmentManager {
     }
 
     @ExpectPlatform
-    public static boolean isDevelopmentEnvironment() {
+    public static boolean isDevelopment() {
         throw new AssertionError();
     }
 

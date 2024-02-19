@@ -1,9 +1,13 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.proxy;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.common.IEntityHandler;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.builder.client.render.PaintingHighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -85,16 +89,17 @@ public class ClientProxyImpl implements ClientModInitializer {
         //         return;
         //     }
         // }
-        PoseStack poseStack = context.matrixStack();
+        IPoseStack poseStack = AbstractPoseStack.wrap(context.matrixStack());
+        IBufferSource bufferSource = AbstractBufferSource.wrap(context.consumers());
         ItemStack itemStack = player.getMainHandItem();
         if (ModConfig.Client.enableEntityPlacementHighlight && itemStack.is(ModItems.MANNEQUIN.get())) {
-            HighlightPlacementRenderer.renderEntity(player, target, context.camera(), poseStack, context.consumers());
+            HighlightPlacementRenderer.renderEntity(player, target, context.camera(), poseStack, bufferSource);
         }
         if (ModConfig.Client.enableBlockPlacementHighlight && itemStack.is(ModItems.SKIN.get())) {
-            HighlightPlacementRenderer.renderBlock(itemStack, player, target, context.camera(), poseStack, context.consumers());
+            HighlightPlacementRenderer.renderBlock(itemStack, player, target, context.camera(), poseStack, bufferSource);
         }
         if (ModConfig.Client.enablePaintToolPlacementHighlight && itemStack.is(ModItems.BLENDING_TOOL.get())) {
-            PaintingHighlightPlacementRenderer.renderPaintTool(itemStack, player, target, context.camera(), poseStack, context.consumers());
+            PaintingHighlightPlacementRenderer.renderPaintTool(itemStack, player, target, context.camera(), poseStack, bufferSource);
         }
         return true;
     }

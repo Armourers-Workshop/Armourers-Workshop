@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.utils;
 
 import com.apple.library.coregraphics.CGGraphicsState;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
@@ -13,12 +13,12 @@ public class RectangleTesselator {
 
     private final CGGraphicsState state;
 
-    private final PoseStack.Pose pose;
+    private final IPoseStack.Pose pose;
 
     private float uScale;
     private float vScale;
     private ResourceLocation texture;
-    private VertexConsumer builder;
+    private IVertexConsumer builder;
 
     public RectangleTesselator(CGGraphicsState state) {
         this.state = state;
@@ -26,7 +26,7 @@ public class RectangleTesselator {
     }
 
     public void begin(RenderType renderType, ResourceLocation texture, float texWidth, float texHeight) {
-        this.builder = state.buffers().getBuffer(renderType);
+        this.builder = state.bufferSource().getBuffer(renderType);
         this.texture = texture;
         this.uScale = 1f / texWidth;
         this.vScale = 1f / texHeight;
@@ -37,10 +37,10 @@ public class RectangleTesselator {
     }
 
     public void blit(float x, float y, float width, float height, float u, float v, float texWidth, float texHeight, float zLevel) {
-        builder.vertex(pose.pose(), x, y + height, zLevel).uv(u * uScale, (v + texHeight) * vScale).endVertex();
-        builder.vertex(pose.pose(), x + width, y + height, zLevel).uv((u + texWidth) * uScale, (v + texHeight) * vScale).endVertex();
-        builder.vertex(pose.pose(), x + width, y, zLevel).uv((u + texWidth) * uScale, v * vScale).endVertex();
-        builder.vertex(pose.pose(), x, y, zLevel).uv(u * uScale, v * vScale).endVertex();
+        builder.vertex(pose, x, y + height, zLevel).uv(u * uScale, (v + texHeight) * vScale).endVertex();
+        builder.vertex(pose, x + width, y + height, zLevel).uv((u + texWidth) * uScale, (v + texHeight) * vScale).endVertex();
+        builder.vertex(pose, x + width, y, zLevel).uv((u + texWidth) * uScale, v * vScale).endVertex();
+        builder.vertex(pose, x, y, zLevel).uv(u * uScale, v * vScale).endVertex();
     }
 
     public void tile(float x, float y, float width, float height, float u, float v, float texWidth, float texHeight, float zLevel) {

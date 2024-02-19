@@ -8,16 +8,16 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin({Entity.class, ItemStack.class})
 public abstract class CommonDataAttachMixin implements IAssociatedObjectProvider {
 
-    private Object aw$associatedObject;
+    private Object aw2$associatedObject;
 
     @Override
     public <T> T getAssociatedObject() {
         // noinspection unchecked
-        return (T) aw$associatedObject;
+        return (T) aw2$associatedObject;
     }
 
     @Override
     public <T> void setAssociatedObject(T data) {
-        this.aw$associatedObject = data;
+        this.aw2$associatedObject = data;
     }
 }

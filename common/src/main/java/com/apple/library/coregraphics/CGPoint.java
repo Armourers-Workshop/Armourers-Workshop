@@ -17,6 +17,10 @@ public class CGPoint implements InterpolableImpl<CGPoint> {
         this.y = y;
     }
 
+    public CGPoint(double x, double y) {
+        this((float) x, (float) y);
+    }
+
     public void apply(CGAffineTransform t) {
         float tx = t.a * x + t.c * y + t.tx;
         float ty = t.b * x + t.d * y + t.ty;

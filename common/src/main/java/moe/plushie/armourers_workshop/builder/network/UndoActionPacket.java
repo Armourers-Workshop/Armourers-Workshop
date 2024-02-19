@@ -4,9 +4,9 @@ import moe.plushie.armourers_workshop.api.action.IUserAction;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.data.undo.UndoManager;
 import moe.plushie.armourers_workshop.builder.data.undo.UndoStack;
+import moe.plushie.armourers_workshop.builder.data.undo.action.ActionRuntimeException;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModPermissions;
-import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -48,7 +48,7 @@ public class UndoActionPacket extends CustomPacket {
                 message = Component.translatable("chat.armourers_workshop.undo.undoing", command.name());
             }
             player.sendSystemMessage(message);
-        } catch (CommandRuntimeException exception) {
+        } catch (ActionRuntimeException exception) {
             player.sendSystemMessage(exception.getComponent());
         } catch (Exception exception) {
             exception.printStackTrace();

@@ -11,7 +11,7 @@ public class ModLog {
 
     public static void debug(String message, Object... params) {
         // in the development mode, highlight from our debug log.
-        if (EnvironmentManager.isDevelopmentEnvironment()) {
+        if (EnvironmentManager.isDevelopment()) {
             LOGGER.info(message, params);
             return;
         }

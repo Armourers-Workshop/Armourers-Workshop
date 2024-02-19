@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
 import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.registry.IEntitySerializerBuilder;
-import net.minecraft.core.Registry;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
 
@@ -17,7 +17,7 @@ public class EntitySerializerBuilderImpl<T> implements IEntitySerializerBuilder<
     @Override
     public EntityDataSerializer<T> build(String name) {
         Proxy<T> proxy = new Proxy<>(serializer);
-        Registry.registerEntityDataSerializerFO(name, () -> proxy);
+        AbstractForgeRegistries.ENTITY_DATA_SERIALIZER.register(name, () -> proxy);
         return proxy;
     }
 

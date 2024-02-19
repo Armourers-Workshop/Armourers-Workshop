@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
@@ -12,12 +12,13 @@ import moe.plushie.armourers_workshop.init.ModItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class SkinCubeBlockRenderer<T extends BlockEntity & IPaintable> extends AbstractBlockEntityRenderer<T> {
@@ -64,14 +65,14 @@ public class SkinCubeBlockRenderer<T extends BlockEntity & IPaintable> extends A
     }
 
     @Override
-    public void render(T entity, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T entity, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
         updateAlpha(entity);
         if (!(markerAlpha > 0)) {
             return;
         }
         int alpha = (int) (markerAlpha * 255);
-        VertexConsumer builder = buffers.getBuffer(SkinRenderType.IMAGE_MARKER);
-        for (Direction direction : Direction.values()) {
+        auto builder = bufferSource.getBuffer(SkinRenderType.IMAGE_MARKER);
+        for (auto direction : Direction.values()) {
             if (!entity.shouldChangeColor(direction) || !entity.hasColor(direction)) {
                 continue;
             }

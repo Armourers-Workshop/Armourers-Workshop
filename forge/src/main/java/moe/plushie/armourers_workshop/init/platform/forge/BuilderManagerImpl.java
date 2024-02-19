@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
+import com.mojang.serialization.Codec;
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityType;
@@ -53,7 +54,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class BuilderManagerImpl implements BuilderManager.Impl {
@@ -120,8 +120,8 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     }
 
     @Override
-    public <T extends ILootFunction> ILootFunctionBuilder<T> createLootFunctionBuilder(Supplier<ILootFunction.Serializer<T>> serializer) {
-        return new LootFunctionBuilderImpl<>(serializer);
+    public <T extends ILootFunction> ILootFunctionBuilder<T> createLootFunctionBuilder(Codec<? extends T> codec) {
+        return new LootFunctionBuilderImpl<>(codec);
     }
 
     @Override

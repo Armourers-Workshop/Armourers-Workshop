@@ -4,9 +4,9 @@ import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.common.IItemGroupProvider;
 import moe.plushie.armourers_workshop.api.registry.IItemGroupBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
-import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistryEntry;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.TypedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -31,7 +31,7 @@ public class ItemGroupBuilderImpl<T extends IItemGroup> implements IItemGroupBui
 
     @Override
     public IRegistryKey<T> build(String name) {
-        return AbstractFabricRegistryEntry.cast(ModConstants.key(name), new ItemGroup(name));
+        return TypedRegistry.Entry.castValue(ModConstants.key(name), new ItemGroup(name));
     }
 
     public class ItemGroup implements IItemGroup {

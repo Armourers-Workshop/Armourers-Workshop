@@ -20,7 +20,7 @@ public final class TextureUtils {
 
     public static ResourceLocation getTexture(Entity entity) {
         if (entity instanceof AbstractClientPlayer) {
-            return ((AbstractClientPlayer) entity).getSkinTextureLocation();
+            return ((AbstractClientPlayer) entity).getSkin().texture();
         }
         return ModTextures.MANNEQUIN_DEFAULT;
     }

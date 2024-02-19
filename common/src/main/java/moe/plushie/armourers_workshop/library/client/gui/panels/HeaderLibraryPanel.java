@@ -73,7 +73,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
 
     private void renderPlayerProfile(CGGraphicsContext context, GameProfile gameProfile) {
         if (playerTexture == null) {
-            playerTexture = new PlayerTextureDescriptor(gameProfile);
+            playerTexture = PlayerTextureDescriptor.fromProfile(gameProfile);
         }
         float tx = 5;
         float ty = 5;
@@ -89,10 +89,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         CGRect rect = bounds();
         NSMutableString profile = new NSMutableString(" - ");
         profile.append(gameProfile.getName());
-        int textColor = 0xFFFFFF;
-        if (!gameProfile.isLegacy()) {
-            textColor = 0xFFAAAA;
-        }
+        int textColor = 0xFFAAAA;
         ServerUser user = library.getUser();
         if (user.isMember()) {
             textColor = 0xFFFFAA;

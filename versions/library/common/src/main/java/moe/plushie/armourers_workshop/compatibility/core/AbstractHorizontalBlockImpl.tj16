@@ -6,7 +6,12 @@ import moe.plushie.armourers_workshop.api.common.ILootContext;
 import moe.plushie.armourers_workshop.api.common.ILootContextParam;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -31,6 +36,25 @@ public abstract class AbstractHorizontalBlockImpl extends HorizontalDirectionalB
 
     public List<ItemStack> getDrops(BlockState blockState, ILootContext context) {
         return super.getDrops(blockState, ((LootContextBuilder) context).builder);
+    }
+
+    @Override
+    public final void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+        destroyByPlayer(level, blockPos, blockState, player);
+    }
+
+    public BlockState destroyByPlayer(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+        super.playerWillDestroy(level, blockPos, blockState, player);
+        return blockState;
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState) {
+        return getCloneItemStack((LevelReader) blockGetter, blockPos, blockState);
+    }
+
+    public ItemStack getCloneItemStack(LevelReader blockGetter, BlockPos blockPos, BlockState blockState) {
+        return super.getCloneItemStack(blockGetter, blockPos, blockState);
     }
 
     public static class LootContextBuilder implements ILootContext {

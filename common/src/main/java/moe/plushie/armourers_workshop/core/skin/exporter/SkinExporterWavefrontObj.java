@@ -188,13 +188,13 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
 
     private void writeVert(OpenPoseStack poseStack, OutputStreamWriter os, float x, float y, float z) throws IOException {
         Vector4f v = new Vector4f(x, y, z, 1);
-        v.transform(poseStack.lastPose());
+        v.transform(poseStack.last().pose());
         os.write(String.format("v %s %s %s", f2s(v.x()), f2s(v.y()), f2s(v.z())) + CRLF);
     }
 
     private void writeNormal(OpenPoseStack poseStack, OutputStreamWriter os, float x, float y, float z) throws IOException {
         Vector3f v = new Vector3f(x, y, z);
-        v.transform(poseStack.lastNormal());
+        v.transform(poseStack.last().normal());
         os.write(String.format("vn %s %s %s", f2s(v.x()), f2s(v.y()), f2s(v.z())) + CRLF);
     }
 

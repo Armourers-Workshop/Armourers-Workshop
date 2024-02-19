@@ -3,12 +3,10 @@ package moe.plushie.armourers_workshop.init.platform.forge.builder;
 import moe.plushie.armourers_workshop.api.config.IConfigBuilder;
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
 import moe.plushie.armourers_workshop.api.config.IConfigValue;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeConfig;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -22,15 +20,15 @@ import java.util.function.Supplier;
 
 public class ConfigBuilderImpl {
 
-    public static void reloadSpec(IConfigSpec spec, ForgeConfigSpec forgeSpec) {
+    public static void reloadSpec(IConfigSpec spec, AbstractForgeConfig.Spec forgeSpec) {
         SpecProxy proxy = ObjectUtils.safeCast(spec, SpecProxy.class);
-        if (proxy != null && proxy.spec == forgeSpec) {
+        if (proxy != null && proxy.spec.equals(forgeSpec)) {
             proxy.reload();
         }
     }
 
     public static IConfigSpec createClientSpec() {
-        return createSpec(ModConfig.Type.CLIENT, proxy -> new ModConfigSpec.Client() {
+        return createSpec(AbstractForgeConfig.Type.CLIENT, proxy -> new ModConfigSpec.Client() {
             public IConfigBuilder builder() {
                 return proxy;
             }
@@ -38,29 +36,29 @@ public class ConfigBuilderImpl {
     }
 
     public static IConfigSpec createCommonSpec() {
-        return createSpec(ModConfig.Type.COMMON, proxy -> new ModConfigSpec.Common() {
+        return createSpec(AbstractForgeConfig.Type.COMMON, proxy -> new ModConfigSpec.Common() {
             public IConfigBuilder builder() {
                 return proxy;
             }
         });
     }
 
-    private static <T extends IConfigBuilder> IConfigSpec createSpec(ModConfig.Type type, Function<BuilderProxy, T> applier) {
-        Pair<T, ForgeConfigSpec> pair = new ForgeConfigSpec.Builder().configure(builder -> applier.apply(new BuilderProxy(builder)));
+    private static <T extends IConfigBuilder> IConfigSpec createSpec(AbstractForgeConfig.Type type, Function<BuilderProxy, T> applier) {
+        Pair<T, AbstractForgeConfig.Spec> pair = AbstractForgeConfig.Builder.configure(builder -> applier.apply(new BuilderProxy(builder)));
         IConfigSpec spec = pair.getKey().build();
         if (spec instanceof SpecProxy) {
             SpecProxy proxy = (SpecProxy) spec;
             proxy.spec = pair.getValue();
-            proxy.type = type.extension();
+            proxy.type = type.getExtension();
         }
-        ModLoadingContext.get().registerConfig(type, pair.getValue());
+        AbstractForgeConfig.register(type, pair.getValue());
         return spec;
     }
 
     public static class SpecProxy implements IConfigSpec {
 
         private String type = "";
-        private ForgeConfigSpec spec;
+        private AbstractForgeConfig.Spec spec;
 
         private Map<String, Object> snapshot;
         private final ArrayList<Runnable> listeners = new ArrayList<>();
@@ -145,12 +143,12 @@ public class ConfigBuilderImpl {
     public static class ValueProxy<T> implements IConfigValue<T> {
 
         protected final String path;
-        protected final ForgeConfigSpec.ConfigValue<T> configValue;
+        protected final AbstractForgeConfig.ConfigValue<T> configValue;
 
         protected Consumer<T> setter;
         protected Supplier<T> getter;
 
-        public ValueProxy(String path, ForgeConfigSpec.ConfigValue<T> configValue) {
+        public ValueProxy(String path, AbstractForgeConfig.ConfigValue<T> configValue) {
             this.path = path;
             this.configValue = configValue;
         }
@@ -176,9 +174,9 @@ public class ConfigBuilderImpl {
 
         String root = "";
         HashMap<String, ValueProxy<Object>> values = new HashMap<>();
-        ForgeConfigSpec.Builder builder;
+        AbstractForgeConfig.Builder builder;
 
-        BuilderProxy(ForgeConfigSpec.Builder builder) {
+        BuilderProxy(AbstractForgeConfig.Builder builder) {
             this.builder = builder;
         }
 
@@ -223,7 +221,7 @@ public class ConfigBuilderImpl {
             return new SpecProxy(values);
         }
 
-        private <T> IConfigValue<T> put(String path, ForgeConfigSpec.ConfigValue<T> value) {
+        private <T> IConfigValue<T> put(String path, AbstractForgeConfig.ConfigValue<T> value) {
             ValueProxy<T> proxy = new ValueProxy<>(path, value);
             values.put(root + path, ObjectUtils.unsafeCast(proxy));
             return proxy;

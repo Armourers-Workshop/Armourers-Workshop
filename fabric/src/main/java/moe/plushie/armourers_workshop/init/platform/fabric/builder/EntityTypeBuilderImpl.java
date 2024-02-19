@@ -5,9 +5,9 @@ import moe.plushie.armourers_workshop.api.registry.IEntityTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererProvider;
-import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistryEntry;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.utils.TypedRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
@@ -95,7 +95,7 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
         IRegistryKey<EntityType<T>> object = Registry.registerEntityTypeFA(name, () -> builder.build());
         Proxy<T> proxy = new Proxy<>(object);
         EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
-        return AbstractFabricRegistryEntry.of(object.getRegistryName(), proxy);
+        return TypedRegistry.Entry.ofValue(object.getRegistryName(), proxy);
     }
 
     public static class Proxy<T extends Entity> implements IEntityType<T> {

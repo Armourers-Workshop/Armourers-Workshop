@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererProvider;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.model.AbstractPlayerModel;
 import moe.plushie.armourers_workshop.core.client.render.MannequinEntityRenderer;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;

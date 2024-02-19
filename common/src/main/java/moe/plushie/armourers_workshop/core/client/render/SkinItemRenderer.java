@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractItemStackRenderer;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
@@ -10,7 +11,6 @@ import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.ItemStack;
 
 import manifold.ext.rt.api.auto;
@@ -31,7 +31,8 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
     }
 
     @Override
-    public void renderByItem(ItemStack itemStack, AbstractItemTransformType transformType, PoseStack poseStack, MultiBufferSource renderTypeBuffer, int light, int overlay) {
+    public void renderByItem(ItemStack itemStack, AbstractItemTransformType transformType, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
+        // nop
     }
 
     public MannequinModel<?> getMannequinModel() {

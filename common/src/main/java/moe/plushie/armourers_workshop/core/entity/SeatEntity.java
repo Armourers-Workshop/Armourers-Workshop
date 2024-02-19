@@ -114,10 +114,11 @@ public class SeatEntity extends AbstractLivingEntity {
         return false;
     }
 
-    @Override
-    public double getPassengersRidingOffset() {
-        return -0.15f;
-    }
+    // REMOVE FROM 1.21
+//    @Override
+//    public double getPassengersRidingOffset() {
+//        return -0.15f;
+//    }
 
     @Override
     public HumanoidArm getMainArm() {

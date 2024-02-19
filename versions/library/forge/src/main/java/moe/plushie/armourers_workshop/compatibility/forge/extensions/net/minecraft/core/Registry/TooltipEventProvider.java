@@ -4,10 +4,10 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.client.gui.AbstractGraphicsRenderer;
-import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeClientEvents;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeEventBus;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import manifold.ext.rt.api.auto;
 public class TooltipEventProvider {
 
     public static void willRenderTooltipFO(@ThisClass Class<?> clazz, ClientNativeProvider.RenderTooltip consumer) {
-        NotificationCenterImpl.observer(RenderTooltipEvent.Pre.class, event -> {
+        AbstractForgeEventBus.observer(AbstractForgeClientEvents.RENDER_TOOLTIP_PRE, event -> {
             auto font = event.getFont();
             List<ClientTooltipComponent> tooltips = event.getComponents();
             int mouseX = event.getX();

@@ -2,7 +2,9 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
+import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.compatibility.AbstractShader;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexMerger;
@@ -34,14 +36,14 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         super(256);
     }
 
-    public static SkinVertexBufferBuilder getBuffer(MultiBufferSource buffers) {
-        attach(buffers, Sheets.solidBlockSheet(), SkinVertexBufferBuilder::renderSolid);
-//        attach(buffers, Sheets.translucentCullBlockSheet(), SkinVertexBufferBuilder::renderTranslucent);
+    public static SkinVertexBufferBuilder getBuffer(IBufferSource bufferSource) {
+        attach(bufferSource, Sheets.solidBlockSheet(), SkinVertexBufferBuilder::renderSolid);
+//        attach(bufferSource, Sheets.translucentCullBlockSheet(), SkinVertexBufferBuilder::renderTranslucent);
         return getInstance();
     }
 
-    private static void attach(MultiBufferSource buffers, RenderType renderType, Runnable action) {
-        VertexConsumer buffer = buffers.getBuffer(renderType);
+    private static void attach(IBufferSource bufferSource, RenderType renderType, Runnable action) {
+        IVertexConsumer buffer = bufferSource.getBuffer(renderType);
         IRenderAttachable attachable = ObjectUtils.safeCast(renderType, IRenderAttachable.class);
         if (attachable != null) {
             attachable.attachRenderTask(buffer, action);

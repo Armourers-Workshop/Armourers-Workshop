@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[36,)"
+loaderVersion = "[${forge_loader_version},)"
 issueTrackerURL = "https://github.com/Armourers-Workshop/Armourers-Workshop/issues"
 displayURL = "https://github.com/Armourers-Workshop/Armourers-Workshop"
 logoFile = "icon.png"

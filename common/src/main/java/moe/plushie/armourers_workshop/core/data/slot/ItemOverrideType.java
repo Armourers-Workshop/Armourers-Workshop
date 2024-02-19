@@ -5,8 +5,8 @@ import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItemMatchers;
 import moe.plushie.armourers_workshop.init.ModItemTags;
-import moe.plushie.armourers_workshop.init.platform.RegistryManager;
 import moe.plushie.armourers_workshop.utils.ItemMatcher;
+import moe.plushie.armourers_workshop.utils.TypedRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -54,7 +54,7 @@ public enum ItemOverrideType {
             return true;
         }
         // test by overrides of the config system.
-        ResourceLocation registryName = RegistryManager.getKey(itemStack.getItem());
+        ResourceLocation registryName = TypedRegistry.findKey(itemStack.getItem());
         if (ModConfig.Common.overrides.contains(name + ":" + registryName)) {
             return true;
         }

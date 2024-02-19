@@ -8,10 +8,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.extensions.IForgeBlockEntity;
+import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.common.extensions.IBlockEntityExtension;
 
-@Available("[1.18, )")
-public interface AbstractForgeBlockEntity extends IForgeBlockEntity {
+@Available("[1.21, )")
+public interface AbstractForgeBlockEntity extends IBlockEntityExtension {
 
     static <T extends BlockEntity> T create(BlockEntityType<T> entityType, BlockGetter level, BlockPos blockPos, BlockState blockState) {
         return entityType.create(blockPos, blockState);
@@ -22,5 +23,9 @@ public interface AbstractForgeBlockEntity extends IForgeBlockEntity {
         BlockEntityType<T> entityType = BlockEntityType.Builder.of((blockPos, blockState) -> supplier.create(entityTypes[0], blockPos, blockState), blocks).build(null);
         entityTypes[0] = entityType;
         return entityType;
+    }
+
+    default AABB getRenderBoundingBox() {
+        return null;
     }
 }

@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -89,6 +90,10 @@ public interface ClientNativeProvider {
 
     interface RenderLivingEntity {
         void render(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStack, MultiBufferSource buffers, LivingEntityRenderer<?, ?> entityRenderer);
+    }
+
+    interface RenderSpecificHand {
+        void render(Player player, HumanoidArm arm, int packedLight, PoseStack poseStack, MultiBufferSource buffers, Runnable cancelHandler);
     }
 
 

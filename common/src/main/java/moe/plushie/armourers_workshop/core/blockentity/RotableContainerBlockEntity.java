@@ -11,6 +11,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
+import java.util.Optional;
+
 public abstract class RotableContainerBlockEntity extends UpdatableContainerBlockEntity implements IBlockEntityHandler {
 
     public static final AABB ZERO_BOX = new AABB(0, 0, 0, 0, 0, 0);
@@ -31,17 +33,16 @@ public abstract class RotableContainerBlockEntity extends UpdatableContainerBloc
     }
 
     @Environment(EnvType.CLIENT)
-    public Rectangle3f getRenderBoundingBox(BlockState blockState) {
+    public Rectangle3f getRenderShape(BlockState blockState) {
         return null;
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public AABB getCustomRenderBoundingBox(BlockState blockState) {
+    public AABB getRenderBoundingBox(BlockState blockState) {
         if (renderBoundingBox != null) {
             return renderBoundingBox;
         }
-        Rectangle3f rect = getRenderBoundingBox(blockState);
+        Rectangle3f rect = getRenderShape(blockState);
         if (rect == null) {
             return ZERO_BOX;
         }

@@ -1,9 +1,13 @@
 package moe.plushie.armourers_workshop.init.function;
 
 import com.google.common.collect.ImmutableList;
-import moe.plushie.armourers_workshop.api.common.ILootConditionalFunction;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import moe.plushie.armourers_workshop.api.common.ILootFunction;
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
-import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
@@ -51,11 +55,15 @@ import java.util.function.Function;
  * }
  * </code>
  */
-public class SkinRandomlyFunction implements ILootConditionalFunction {
+public class SkinRandomlyFunction implements ILootFunction {
+
+    public static final Codec<SkinRandomlyFunction> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            SkinSource.CODEC.listOf().fieldOf("skins").forGetter(SkinRandomlyFunction::getSources)
+    ).apply(instance, SkinRandomlyFunction::new));
 
     public final List<SkinSource> sources;
 
-    SkinRandomlyFunction(Collection<SkinSource> sources) {
+    public SkinRandomlyFunction(Collection<SkinSource> sources) {
         this.sources = ImmutableList.copyOf(sources);
     }
 
@@ -80,6 +88,10 @@ public class SkinRandomlyFunction implements ILootConditionalFunction {
         return itemStack;
     }
 
+    public List<SkinSource> getSources() {
+        return sources;
+    }
+
     @Override
     public Set<LootContextParam<?>> getReferencedContextParams() {
         return new HashSet<>(ObjectUtils.compactMap(sources, SkinSource::getParam));
@@ -87,38 +99,49 @@ public class SkinRandomlyFunction implements ILootConditionalFunction {
 
     public static class SkinSource implements IResultHandler<SkinDescriptor> {
 
+        public static final Codec<SkinSource> CODEC = new Codec<SkinSource>() {
+
+            final Codec<SkinSource> simple = Codec.STRING.xmap(SkinSource::new, it -> null);
+            final Codec<SkinSource> complex = RecordCodecBuilder.create(instance -> instance.group(
+                    SkinSlotType.CODEC.fieldOf("type").forGetter(it -> null),
+                    Codec.INT.optionalFieldOf("slot", 0).forGetter(it -> 0)
+            ).apply(instance, SkinSource::new));
+
+            @Override
+            public <T> DataResult<Pair<SkinSource, T>> decode(DynamicOps<T> ops, T input) {
+                DataResult<Pair<SkinSource, T>> result = simple.decode(ops, input);
+                if (result.result().isPresent()) {
+                    return result;
+                }
+                return complex.decode(ops, input);
+            }
+
+            @Override
+            public <T> DataResult<T> encode(SkinSource input, DynamicOps<T> ops, T prefix) {
+                throw new RuntimeException("why you needs serializer?");
+            }
+        };
+
         private SkinDescriptor provider;
         private Function<LootContext, SkinDescriptor> searcher;
         private LootContextParam<?> param;
 
-        public SkinSource(IDataPackObject object) {
-            switch (object.type()) {
-                case STRING: {
-                    // "ks:10830"
-                    // "ws:/path/to/skin.armour"
-                    String identifier = object.stringValue();
-                    if (!identifier.isEmpty()) {
-                        // direct load will take a long time, so we need to preload.
-                        // during the loading, the current source is disabled.
-                        SkinLoader.getInstance().submit(() -> SkinLoader.getInstance().loadSkinFromDB(identifier, ColorScheme.EMPTY, this));
-                    }
-                    break;
-                }
-                case DICTIONARY: {
-                    // {"type": "any"}              // any type, any slot
-                    // {"type": "outfit"}           // in outfit, any slot
-                    // {"type": "sword", "slot": 1} // in sword, first slot
-                    int slot = object.get("slot").intValue();
-                    SkinSlotType slotType = SkinSlotType.byName(object.get("type").stringValue());
-                    searcher = context -> search(context, slotType, slot);
-                    param = LootContextParams.THIS_ENTITY;
-                    break;
-                }
-                default: {
-                    // ignore
-                    break;
-                }
+        public SkinSource(String identifier) {
+            // "ks:10830"
+            // "ws:/path/to/skin.armour"
+            if (!identifier.isEmpty()) {
+                // direct load will take a long time, so we need to preload.
+                // during the loading, the current source is disabled.
+                SkinLoader.getInstance().submit(() -> SkinLoader.getInstance().loadSkinFromDB(identifier, ColorScheme.EMPTY, this));
             }
+        }
+
+        public SkinSource(SkinSlotType slotType, int slot) {
+            // {"type": "any"}              // any type, any slot
+            // {"type": "outfit"}           // in outfit, any slot
+            // {"type": "sword", "slot": 1} // in sword, first slot
+            searcher = context -> search(context, slotType, slot);
+            param = LootContextParams.THIS_ENTITY;
         }
 
         public SkinDescriptor apply(LootContext lootContext) {
@@ -178,24 +201,6 @@ public class SkinRandomlyFunction implements ILootConditionalFunction {
 
         public LootContextParam<?> getParam() {
             return param;
-        }
-    }
-
-    public static class Serializer implements ILootConditionalFunction.Serializer<SkinRandomlyFunction> {
-
-        @Override
-        public void serialize(IDataPackObject object, SkinRandomlyFunction function) {
-            if (function.sources.isEmpty()) {
-                return;
-            }
-            // TODO: why need serialize @SAGESSE
-        }
-
-        @Override
-        public SkinRandomlyFunction deserialize(IDataPackObject object) {
-            ArrayList<SkinSource> list = new ArrayList<>();
-            object.get("skins").allValues().forEach(it -> list.add(new SkinSource(it)));
-            return new SkinRandomlyFunction(list);
         }
     }
 }

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.gui.widget;
 
 import com.apple.library.coregraphics.CGGraphicsContext;
+import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIWindow;
@@ -83,8 +84,8 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        return manager.mouseWheel(mouseX, mouseY, delta, this::_mouseScrolled);
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        return manager.mouseWheel(mouseX, mouseY, new CGPoint(deltaX, deltaY), this::_mouseScrolled);
     }
 
     @Override
@@ -178,8 +179,8 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
         return true;
     }
 
-    protected boolean _mouseScrolled(double mouseX, double mouseY, double delta) {
-        return super.mouseScrolled(mouseX, mouseY, delta);
+    protected boolean _mouseScrolled(double mouseX, double mouseY, CGPoint delta) {
+        return super.mouseScrolled(mouseX, mouseY, delta.x, delta.y);
     }
 
     protected boolean _mouseReleased(double mouseX, double mouseY, int button) {

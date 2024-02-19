@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.compatibility;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexIndexBuffer;
 import moe.plushie.armourers_workshop.core.client.shader.Shader;
@@ -59,7 +59,7 @@ public class AbstractShader extends Shader {
 
         OpenPoseStack poseStack = object.getPoseStack();
         RenderSystem.pushMatrix();
-        RenderSystem.multMatrix(PoseStack.convertMatrix(poseStack.lastPose()));
+        RenderSystem.multMatrix(AbstractPoseStack.convertMatrix(poseStack.last().pose()));
         RenderSystem.drawArrays(object.getType().mode(), 0, object.getVertexCount());
         RenderSystem.popMatrix();
 

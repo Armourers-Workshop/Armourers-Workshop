@@ -11,6 +11,7 @@ import com.apple.library.uikit.UIImageView;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UITextField;
 import com.apple.library.uikit.UITextFieldDelegate;
+import com.google.common.collect.ImmutableList;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
@@ -30,12 +31,30 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFieldDelegate {
+
+    private static final List<ISkinType> SUPPORTED_SKIN_TYPES = new ImmutableList.Builder<ISkinType>()
+            .add(SkinTypes.ARMOR_HEAD)
+            .add(SkinTypes.ARMOR_CHEST)
+            .add(SkinTypes.ARMOR_LEGS)
+            .add(SkinTypes.ARMOR_FEET)
+            .add(SkinTypes.ARMOR_WINGS)
+            .add(SkinTypes.ITEM_SWORD)
+            .add(SkinTypes.ITEM_SHIELD)
+            .add(SkinTypes.ITEM_BOW)
+            .add(SkinTypes.ITEM_TRIDENT)
+            .add(SkinTypes.ITEM_PICKAXE)
+            .add(SkinTypes.ITEM_AXE)
+            .add(SkinTypes.ITEM_SHOVEL)
+            .add(SkinTypes.ITEM_HOE)
+            .add(SkinTypes.ITEM)
+            .add(SkinTypes.BLOCK)
+            .add(SkinTypes.ADVANCED)
+            .build();
 
     private final UITextField nameTextField = new UITextField(new CGRect(8, 58, 158, 16));
     private final UITextField flavorTextField = new UITextField(new CGRect(8, 90, 158, 16));
@@ -56,16 +75,6 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
         if (this.blockEntity != null) {
             this.skinType = blockEntity.getSkinType();
         }
-    }
-
-    private static List<ISkinType> getSkinTypes() {
-        ArrayList<ISkinType> skinTypes = new ArrayList<>();
-        for (ISkinType skinType : SkinTypes.values()) {
-            if (skinType != SkinTypes.UNKNOWN && skinType != SkinTypes.OUTFIT) {
-                skinTypes.add(skinType);
-            }
-        }
-        return skinTypes;
     }
 
     public void init() {
@@ -111,7 +120,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
         setupHelpView(81, 30, "help.load");
 
         skinTypeBox.setMaxRows(7);
-        skinTypeBox.reloadSkins(getSkinTypes());
+        skinTypeBox.reloadSkins(SUPPORTED_SKIN_TYPES);
         skinTypeBox.setSelectedSkin(skinType);
         skinTypeBox.addTarget(this, UIControl.Event.VALUE_CHANGED, ArmourerMainSetting::updateSkinType);
         addSubview(skinTypeBox);
@@ -160,7 +169,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
     }
 
     private void updateSkinType(UIControl control) {
-        ISkinType skinType = skinTypeBox.selectedSkin();;
+        ISkinType skinType = skinTypeBox.selectedSkin();
         if (Objects.equals(skinType, this.skinType)) {
             return; // no changes
         }

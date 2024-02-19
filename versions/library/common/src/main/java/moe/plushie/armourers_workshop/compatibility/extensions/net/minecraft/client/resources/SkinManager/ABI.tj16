@@ -1,0 +1,74 @@
+package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.client.resources.SkinManager;
+
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.resources.SkinManager;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.entity.SkullBlockEntity;
+
+import java.util.Optional;
+import java.util.function.Consumer;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Extension
+@Available("[1.16, 1.21)")
+public class ABI {
+
+    public static void loadCustomSkin(@This SkinManager skinManager, GameProfile profile, Consumer<PlayerSkin> handler) {
+        skinManager.registerSkins(profile, (type, location, profileTexture) -> {
+            if (type == MinecraftProfileTexture.Type.SKIN) {
+                handler.accept(new PlayerSkin(location, profileTexture));
+            }
+        }, true);
+    }
+
+    public static class PlayerSkin {
+
+        private final ResourceLocation location;
+        private final MinecraftProfileTexture texture;
+        private final Model model;
+
+        public PlayerSkin(ResourceLocation location, MinecraftProfileTexture texture) {
+            this.model = Model.byName(texture.getMetadata("model"));
+            this.location = location;
+            this.texture = texture;
+        }
+
+        public Model model() {
+            return model;
+        }
+
+        public ResourceLocation texture() {
+            return location;
+        }
+
+        public String textureUrl() {
+            return texture.getUrl();
+        }
+
+        public enum Model {
+            SLIM("slim"),
+            DEFAULT("default");
+
+            private final String id;
+
+            Model(String id) {
+                this.id = id;
+            }
+
+            static Model byName(String name) {
+                if (name != null && name.equalsIgnoreCase("slim")) {
+                    return SLIM;
+                }
+                return DEFAULT;
+            }
+
+            public String id() {
+                return id;
+            }
+        }
+    }
+}

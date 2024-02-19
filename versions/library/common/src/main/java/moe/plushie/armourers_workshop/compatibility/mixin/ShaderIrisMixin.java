@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public class ShaderIrisMixin {
 
     @ModifyVariable(method = "<init>", at = @At(value = "HEAD"), argsOnly = true, remap = false)
-    private static ResourceProvider aw$createIrisShader(ResourceProvider arg1, ResourceProvider arg2, String arg3, VertexFormat arg4) {
+    private static ResourceProvider aw2$createIrisShader(ResourceProvider arg1, ResourceProvider arg2, String arg3, VertexFormat arg4) {
         ShaderUniforms.clear();
         return new AbstractProgramProvider("vsh", new ShaderPreprocessor("iris_"), arg1);
     }

@@ -193,18 +193,18 @@ public class SkinDocumentNode {
         return rotation;
     }
 
-    public void setScale(Vector3f value) {
-        scale = value;
+    public void setScale(float value) {
+        scale = new Vector3f(value, value, value);
         transform = null;
         if (listener != null) {
             CompoundTag tag = new CompoundTag();
-            tag.putOptionalVector3f(Keys.SCALE, value, null);
+            tag.putOptionalVector3f(Keys.SCALE, scale, null);
             listener.documentDidUpdateNode(this, tag);
         }
     }
 
-    public Vector3f getScale() {
-        return scale;
+    public float getScale() {
+        return scale.getX();
     }
 
     public void setPivot(Vector3f value) {

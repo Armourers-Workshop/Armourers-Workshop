@@ -5,24 +5,29 @@ import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Stack;
 
 @SuppressWarnings("unused")
 public class OpenPoseStack implements IPoseStack {
 
-    private OpenMatrix4f poseMatrix = OpenMatrix4f.createScaleMatrix(1, 1, 1);
-    private OpenMatrix3f normalMatrix = OpenMatrix3f.createScaleMatrix(1, 1, 1);
+    private Pose entry = new Pose();
+    private Stack<Pose> stack;
 
-    private Stack<Pair<OpenMatrix3f, OpenMatrix4f>> stack;
+    public OpenPoseStack() {
+    }
+
+    public OpenPoseStack(IPoseStack poseStack) {
+        entry.set(poseStack.last());
+    }
 
     @Override
     public void pushPose() {
         if (stack == null) {
             stack = new Stack<>();
         }
-        stack.push(Pair.of(normalMatrix.copy(), poseMatrix.copy()));
+        stack.push(entry);
+        entry = new Pose(entry);
     }
 
     @Override
@@ -30,60 +35,124 @@ public class OpenPoseStack implements IPoseStack {
         if (stack == null || stack.isEmpty()) {
             return;
         }
-        Pair<OpenMatrix3f, OpenMatrix4f> pair = stack.pop();
-        normalMatrix = pair.getLeft();
-        poseMatrix = pair.getRight();
+        entry = stack.pop();
     }
 
+    @Override
     public void setIdentity() {
-        poseMatrix.setIdentity();
-        normalMatrix.setIdentity();
+        entry.pose.setIdentity();
+        entry.normal.setIdentity();
+        entry.properties = 0;
     }
 
     @Override
     public void translate(float x, float y, float z) {
-        poseMatrix.multiply(OpenMatrix4f.createTranslateMatrix(x, y, z));
+        entry.pose.multiply(OpenMatrix4f.createTranslateMatrix(x, y, z));
     }
 
     @Override
     public void scale(float x, float y, float z) {
-        poseMatrix.multiply(OpenMatrix4f.createScaleMatrix(x, y, z));
-        if (x == y && y == z) {
-            if (x > 0.0F) {
-                return;
+        // https://web.archive.org/web/20240125142900/http://www.songho.ca/opengl/gl_normaltransform.html
+        entry.pose.scale(x, y, z);
+        if (Math.abs(x) == Math.abs(y) && Math.abs(y) == Math.abs(z)) {
+            if (x < 0.0f || y < 0.0f || z < 0.0f) {
+                entry.normal.scale(Math.signum(x), Math.signum(y), Math.signum(z));
             }
-            normalMatrix.multiply(-1.0F);
+        } else {
+            entry.normal.scale(1.0f / x, 1.0f / y, 1.0f / z);
+            entry.properties |= 0x02;
         }
-        float f = 1.0F / x;
-        float f1 = 1.0F / y;
-        float f2 = 1.0F / z;
-        float f3 = MathUtils.fastInvCubeRoot(f * f1 * f2);
-        normalMatrix.multiply(OpenMatrix3f.createScaleMatrix(f3 * f, f3 * f1, f3 * f2));
     }
 
     @Override
     public void rotate(IQuaternionf quaternion) {
-        poseMatrix.rotate(quaternion);
-        normalMatrix.rotate(quaternion);
+        entry.pose.rotate(quaternion);
+        entry.normal.rotate(quaternion);
     }
 
     @Override
     public void multiply(IMatrix3f matrix) {
-        normalMatrix.multiply(OpenMatrix3f.of(matrix));
+        entry.normal.multiply(OpenMatrix3f.of(matrix));
     }
 
     @Override
     public void multiply(IMatrix4f matrix) {
-        poseMatrix.multiply(OpenMatrix4f.of(matrix));
+        entry.pose.multiply(OpenMatrix4f.of(matrix));
+        //        if (!MatrixUtil.isTranslation(matrix)) {
+//            if (MatrixUtil.isOrthonormal(matrix)) {
+//                entry.normalMatrix.mul(new Matrix3f(matrix));
+//            } else {
+//                entry.computeNormal();
+//            }
+//        }
     }
 
     @Override
-    public OpenMatrix4f lastPose() {
-        return poseMatrix;
+    public Pose last() {
+        return entry;
     }
 
-    @Override
-    public OpenMatrix3f lastNormal() {
-        return normalMatrix;
+    public static class Pose implements IPoseStack.Pose {
+
+        private final OpenMatrix4f pose;
+        private final OpenMatrix3f normal;
+        private int properties;
+
+        public Pose() {
+            this.pose = OpenMatrix4f.createScaleMatrix(1, 1, 1);
+            this.normal = OpenMatrix3f.createScaleMatrix(1, 1, 1);
+        }
+
+        public Pose(IPoseStack.Pose entry) {
+            this.pose = new OpenMatrix4f(entry.pose());
+            this.normal = new OpenMatrix3f(entry.normal());
+            this.properties = entry.properties();
+        }
+
+        //void computeNormal() {
+        //    normal.set(pose);
+        //    normal.invert();
+        //    normal.transpose();
+        //    properties |= 0x02;
+        //}
+
+        @Override
+        public void transformPose(float[] values) {
+            pose.multiply(values);
+        }
+
+        @Override
+        public void transformNormal(float[] values) {
+            normal.multiply(values);
+            if ((properties & 0x02) != 0) {
+                MathUtils.normalize(values);
+            }
+        }
+
+        @Override
+        public void set(IPoseStack.Pose entry) {
+            pose.set(entry.pose());
+            normal.set(entry.normal());
+            properties = entry.properties();
+        }
+
+        @Override
+        public OpenMatrix4f pose() {
+            return pose;
+        }
+
+        @Override
+        public OpenMatrix3f normal() {
+            return normal;
+        }
+
+        public void setProperties(int properties) {
+            this.properties = properties;
+        }
+
+        @Override
+        public int properties() {
+            return properties;
+        }
     }
 }

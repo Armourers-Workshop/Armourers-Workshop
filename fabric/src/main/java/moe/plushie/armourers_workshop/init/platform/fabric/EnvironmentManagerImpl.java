@@ -40,7 +40,7 @@ public class EnvironmentManagerImpl {
         return CURRENT_SERVER;
     }
 
-    public static boolean isDevelopmentEnvironment() {
+    public static boolean isDevelopment() {
         return FabricLoader.getInstance().isDevelopmentEnvironment();
     }
 

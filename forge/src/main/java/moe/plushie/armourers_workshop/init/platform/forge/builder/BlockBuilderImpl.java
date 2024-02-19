@@ -5,11 +5,11 @@ import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterial;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterialColor;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeRegistries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.Registry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -168,7 +168,7 @@ public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
 
     @Override
     public IRegistryKey<T> build(String name) {
-        IRegistryKey<T> object = Registry.registerBlockFO(name, () -> supplier.apply(properties));
+        IRegistryKey<T> object = AbstractForgeRegistries.BLOCKS.register(name, () -> supplier.apply(properties));
         EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
         return object;
     }

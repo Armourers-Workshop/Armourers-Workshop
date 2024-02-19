@@ -33,6 +33,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements IBlockEntityHandler, SkinDocumentProvider {
 
@@ -119,7 +120,7 @@ public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements 
                     String identifier = SkinLoader.getInstance().saveSkin("", skin);
                     SkinDescriptor descriptor = new SkinDescriptor(identifier, skin.getType());
                     ItemStack itemStack = descriptor.asItemStack();
-                    SkinUtils.giveTo(itemStack, player);
+                    player.giveItem(itemStack);
                 });
             } catch (TranslatableException exception) {
                 UserNotifications.sendErrorMessage(exception.getComponent(), player);
@@ -134,7 +135,7 @@ public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements 
 
     @Override
     @Environment(EnvType.CLIENT)
-    public AABB getCustomRenderBoundingBox(BlockState blockState) {
+    public AABB getRenderBoundingBox(BlockState blockState) {
         if (renderBoundingBox != null) {
             return renderBoundingBox;
         }

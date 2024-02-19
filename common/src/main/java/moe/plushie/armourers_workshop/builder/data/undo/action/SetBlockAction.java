@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.builder.data.undo.action;
 
 import moe.plushie.armourers_workshop.api.action.IUserAction;
 import moe.plushie.armourers_workshop.utils.Constants;
-import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
@@ -21,7 +20,7 @@ public class SetBlockAction extends BlockUserAction {
     }
 
     @Override
-    public void prepare() throws CommandRuntimeException {
+    public void prepare() throws RuntimeException {
         // no need any checks
     }
 

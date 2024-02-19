@@ -1,9 +1,10 @@
 package moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide;
 
 import com.apple.library.uikit.UIColor;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.armature.Armature;
 import moe.plushie.armourers_workshop.core.armature.JointShape;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
@@ -17,7 +18,6 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.texture.TextureData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
@@ -44,7 +44,7 @@ public abstract class AdvancedEntityGuideRenderer extends AbstractAdvancedGuideR
     public abstract BakedArmature getArmature();
 
     @Override
-    public void render(SkinDocument document, PoseStack poseStack, int light, int overlay, MultiBufferSource buffers) {
+    public void render(SkinDocument document, IPoseStack poseStack, int light, int overlay, IBufferSource bufferSource) {
         poseStack.pushPose();
         IJointTransform[] transforms = armature.getTransforms();
         Armature armature1 = armature.getArmature();
@@ -53,47 +53,46 @@ public abstract class AdvancedEntityGuideRenderer extends AbstractAdvancedGuideR
             IJointTransform transform = transforms[joint.getId()];
             if (shape != null && transform != null) {
                 poseStack.pushPose();
-                poseStack.applyTransform(transform);
-                renderShape(shape, ColorUtils.getPaletteColor(joint.getId()), poseStack, buffers);
+                transform.apply(poseStack);
+                renderShape(shape, ColorUtils.getPaletteColor(joint.getId()), poseStack, bufferSource);
                 poseStack.popPose();
             }
         }
         poseStack.popPose();
     }
 
-    protected void renderShape(JointShape shape, UIColor color, PoseStack poseStack, MultiBufferSource buffers) {
+    protected void renderShape(JointShape shape, UIColor color, IPoseStack poseStack, IBufferSource bufferSource) {
         poseStack.pushPose();
         Rectangle3f rect = shape.bounds();
-        poseStack.applyTransform(shape.transform());
-        renderCube(shape, poseStack, buffers);
-        renderOutline(rect, color, poseStack, buffers);
+        shape.transform().apply(poseStack);
+        renderCube(shape, poseStack, bufferSource);
+        renderOutline(rect, color, poseStack, bufferSource);
         poseStack.translate(rect.getX(), rect.getY(), rect.getZ());
         for (JointShape shape1 : shape.children()) {
-            renderShape(shape1, color, poseStack, buffers);
+            renderShape(shape1, color, poseStack, bufferSource);
         }
         poseStack.popPose();
     }
 
-    protected void renderOutline(Rectangle3f rect, UIColor color, PoseStack poseStack, MultiBufferSource buffers) {
-        ShapeTesselator.stroke(rect, color, poseStack, buffers);
+    protected void renderOutline(Rectangle3f rect, UIColor color, IPoseStack poseStack, IBufferSource bufferSource) {
+        ShapeTesselator.stroke(rect, color, poseStack, bufferSource);
     }
 
-    protected void renderCube(JointShape shape, PoseStack poseStack, MultiBufferSource buffers) {
+    protected void renderCube(JointShape shape, IPoseStack poseStack, IBufferSource bufferSource) {
         for (Direction dir : Direction.values()) {
-            renderCube(shape, dir, poseStack, buffers);
+            renderCube(shape, dir, poseStack, bufferSource);
         }
     }
 
-    private void renderCube(JointShape shape, Direction dir, PoseStack poseStack, MultiBufferSource buffers) {
+    private void renderCube(JointShape shape, Direction dir, IPoseStack poseStack, IBufferSource bufferSource) {
         Rectangle3f rect = shape.bounds();
         Rectangle2f uv = shape.getUV(dir);
         if (uv == null) {
             return;
         }
 
-        auto pose = poseStack.last().pose();
-        auto normal = poseStack.last().normal();
-        auto builder = buffers.getBuffer(renderType);
+        auto entry = poseStack.last();
+        auto builder = bufferSource.getBuffer(renderType);
 
         float x = rect.getX();
         float y = rect.getY();
@@ -112,12 +111,12 @@ public abstract class AdvancedEntityGuideRenderer extends AbstractAdvancedGuideR
         float[][] uvs = SkinUtils.getRenderUVs(dir);
         float[][] vertexes = SkinUtils.getRenderVertexes(dir);
         for (int i = 0; i < 4; ++i) {
-            builder.vertex(pose, x + w * vertexes[i][0], y + h * vertexes[i][1], z + d * vertexes[i][2])
+            builder.vertex(entry, x + w * vertexes[i][0], y + h * vertexes[i][1], z + d * vertexes[i][2])
                     .color(255, 255, 255, 255)
                     .uv((u + s * uvs[i][0]) / n, (v + t * uvs[i][1]) / m)
                     .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(0xf000f0)
-                    .normal(normal, vertexes[4][0], vertexes[4][1], vertexes[4][2])
+                    .normal(entry, vertexes[4][0], vertexes[4][1], vertexes[4][2])
                     .endVertex();
         }
     }

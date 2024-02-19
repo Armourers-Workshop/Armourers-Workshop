@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.minecraft.core.Direction;
+import net.minecraft.server.commands.GiveCommand;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.CrossbowItem;
@@ -230,26 +232,6 @@ public final class SkinUtils {
         }
     }
 
-    public static void giveTo(ItemStack itemStack, Player player) {
-        boolean flag = player.getInventory().add(itemStack);
-        if (flag && itemStack.isEmpty()) {
-            itemStack.setCount(1);
-            ItemEntity itemEntity1 = player.drop(itemStack, false);
-            if (itemEntity1 != null) {
-                itemEntity1.makeFakeItem();
-            }
-            player.getLevel().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-            player.inventoryMenu.broadcastChanges();
-        } else {
-            ItemEntity itemEntity = player.drop(itemStack, false);
-            if (itemEntity != null) {
-                itemEntity.setNoPickUpDelay();
-                //itemEntity.setOwner(player.getUUID());
-                itemEntity.setThrower(player.getUUID());
-            }
-        }
-    }
-
     public static void copySkinFromOwner(Entity entity) {
         Projectile projectile = ObjectUtils.safeCast(entity, Projectile.class);
         if (projectile == null) {
@@ -264,6 +246,14 @@ public final class SkinUtils {
             copySkin(owner, entity, SkinSlotType.BOW, 0, SkinSlotType.UNKNOWN, 0);
             return;
         }
+        if (entity instanceof FishingHook && owner instanceof LivingEntity) {
+            ItemStack itemStack = ((LivingEntity) owner).getMainHandItem();
+            if (!itemStack.is(Items.FISHING_ROD)) {
+                itemStack = ((LivingEntity) owner).getOffhandItem();
+            }
+            copySkin(entity, itemStack, SkinSlotType.UNKNOWN, 0);
+            return;
+        }
         // no supported projectile entity.
     }
 
@@ -272,12 +262,17 @@ public final class SkinUtils {
         if (itemStack.isEmpty()) {
             return;
         }
+        copySkin(dest, itemStack, toSlotType, toIndex);
+    }
+
+    public static void copySkin(Entity dest, ItemStack itemStack, SkinSlotType toSlotType, int toIndex) {
         SkinWardrobe wardrobe = SkinWardrobe.of(dest);
         if (wardrobe != null) {
             wardrobe.setItem(toSlotType, toIndex, itemStack.copy());
             wardrobe.broadcast();
         }
     }
+
 
     public static Skin copySkin(Skin skin) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

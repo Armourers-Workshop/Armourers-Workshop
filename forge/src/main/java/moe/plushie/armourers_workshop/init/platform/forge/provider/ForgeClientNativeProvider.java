@@ -1,12 +1,9 @@
 package moe.plushie.armourers_workshop.init.platform.forge.provider;
 
-import moe.plushie.armourers_workshop.init.platform.forge.NotificationCenterImpl;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 import java.util.function.Consumer;
 
@@ -32,25 +29,17 @@ public interface ForgeClientNativeProvider extends ClientNativeProvider {
 
     @Override
     default void willTick(Consumer<Boolean> consumer) {
-        NotificationCenterImpl.observer(TickEvent.RenderTickEvent.class, event -> {
-            if (event.phase == TickEvent.Phase.START) {
-                consumer.accept(Minecraft.getInstance().isPaused());
-            }
-        });
+        Registry.willRenderTickStartFO(minecraft -> consumer.accept(minecraft.isPaused()));
     }
 
     @Override
     default void willInput(Consumer<Minecraft> consumer) {
-        NotificationCenterImpl.observer(TickEvent.ClientTickEvent.class, event -> {
-            if (event.phase == TickEvent.Phase.END) {
-                consumer.accept(Minecraft.getInstance());
-            }
-        });
+        Registry.willRenderTickEndFO(consumer);
     }
 
     @Override
     default void willGatherTooltip(GatherTooltip consumer) {
-        NotificationCenterImpl.observer(ItemTooltipEvent.class, event -> consumer.gather(event.getItemStack(), event.getToolTip(), event.getFlags()));
+        Registry.willRegisterItemTooltipFO(consumer);
     }
 
     @Override

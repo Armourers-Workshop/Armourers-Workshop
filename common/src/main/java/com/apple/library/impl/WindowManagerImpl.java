@@ -1,6 +1,7 @@
 package com.apple.library.impl;
 
 import com.apple.library.coregraphics.CGGraphicsContext;
+import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIView;
 import com.apple.library.uikit.UIWindow;
@@ -158,7 +159,7 @@ public class WindowManagerImpl {
         return dispatchers.invoke(mouseX, mouseY, button, invoker, WindowDispatcherImpl::mouseMoved);
     }
 
-    public boolean mouseWheel(double mouseX, double mouseY, double delta, Invoker<Double, Double, Double, Boolean> invoker) {
+    public boolean mouseWheel(double mouseX, double mouseY, CGPoint delta, Invoker<Double, Double, CGPoint, Boolean> invoker) {
         return dispatchers.invoke(mouseX, mouseY, delta, invoker, WindowDispatcherImpl::mouseWheel);
     }
 

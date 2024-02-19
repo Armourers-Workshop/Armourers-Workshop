@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.data.slot;
 
+import com.mojang.serialization.Codec;
 import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -44,6 +45,7 @@ public enum SkinSlotType {
     private final int index;
     private final int size;
     private final ISkinType skinType;
+    public static final Codec<SkinSlotType> CODEC = Codec.STRING.xmap(Helper::decode, Helper::encode);
 
     SkinSlotType(int id, int index, int size, String name, ISkinType skinType) {
         this.id = id;
@@ -165,5 +167,13 @@ public enum SkinSlotType {
                 SkinPaintTypes.MISC_4
         };
         static int TOTAL_SIZE = 0;
+
+        static SkinSlotType decode(String name) {
+            return NAMED_SLOTS.getOrDefault(name, SkinSlotType.UNKNOWN);
+        }
+
+        static String encode(SkinSlotType type) {
+            return type.getName();
+        }
     }
 }

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public class ShaderOptifineMixin {
 
     @ModifyArg(method = "createVertShader", at = @At(value = "INVOKE", target = "Lnet/optifine/shaders/Shaders;shaderSource(ILjava/lang/String;)V"), remap = false)
-    private static String aw$createVertShader(int shader, String value) {
+    private static String aw2$createVertShader(int shader, String value) {
         ShaderUniforms.clear();
         return new ShaderPreprocessor("va").process(value);
     }

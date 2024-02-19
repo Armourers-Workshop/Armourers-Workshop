@@ -16,18 +16,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.server.ServerLifecycleHooks;
-import net.minecraftforge.server.permission.PermissionAPI;
-import net.minecraftforge.server.permission.events.PermissionGatherEvent;
-import net.minecraftforge.server.permission.nodes.PermissionDynamicContext;
-import net.minecraftforge.server.permission.nodes.PermissionDynamicContextKey;
-import net.minecraftforge.server.permission.nodes.PermissionNode;
-import net.minecraftforge.server.permission.nodes.PermissionTypes;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.permission.PermissionAPI;
+import net.neoforged.neoforge.server.permission.events.PermissionGatherEvent;
+import net.neoforged.neoforge.server.permission.nodes.PermissionDynamicContext;
+import net.neoforged.neoforge.server.permission.nodes.PermissionDynamicContextKey;
+import net.neoforged.neoforge.server.permission.nodes.PermissionNode;
+import net.neoforged.neoforge.server.permission.nodes.PermissionTypes;
 
 import java.util.ArrayList;
 
-@Available("[1.18, )")
+@Available("[1.21, )")
 public abstract class AbstractForgePermissionManager {
 
     private static final ArrayList<PermissionNode<?>> PENDING = makeRegisterQueue();
@@ -98,11 +97,7 @@ public abstract class AbstractForgePermissionManager {
     }
 
     private static ArrayList<PermissionNode<?>> makeRegisterQueue() {
-        MinecraftForge.EVENT_BUS.addListener(AbstractForgePermissionManager::registerNodes);
+        AbstractForgeEventBus.observer(PermissionGatherEvent.Nodes.class, event -> event.addNodes(PENDING));
         return new ArrayList<>();
-    }
-
-    private static void registerNodes(PermissionGatherEvent.Nodes event) {
-        event.addNodes(PENDING);
     }
 }

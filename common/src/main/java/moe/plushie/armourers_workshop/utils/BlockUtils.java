@@ -1,18 +1,21 @@
 package moe.plushie.armourers_workshop.utils;
 
+import moe.plushie.armourers_workshop.api.common.IBlockSnapshot;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
+import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.builder.data.undo.UndoManager;
-import moe.plushie.armourers_workshop.builder.data.undo.action.SetBlockAction;
 import moe.plushie.armourers_workshop.builder.data.undo.action.NamedUserAction;
+import moe.plushie.armourers_workshop.builder.data.undo.action.SetBlockAction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,12 +43,26 @@ public final class BlockUtils {
         queue.put(blockEntity, handler);
     }
 
-    public static void snapshot(LevelAccessor level, BlockPos blockPos, BlockState blockState, CompoundTag tag, Player player, Component reason) {
-        if (level == null) {
+    public static void snapshot(Player player, LevelAccessor level, BlockPos blockPos, @Nullable BlockState blockState, IBlockSnapshot snapshot) {
+        Component reason = null;
+        // only work in server side
+        if (!(player instanceof ServerPlayer) || !(level instanceof Level)) {
+            return;
+        }
+        // is place skin cube block.
+        if (blockState != null && blockState.getBlock() instanceof SkinCubeBlock) {
+            reason = Component.translatable("chat.armourers_workshop.undo.placeBlock");
+        }
+        // is break skin cube block.
+        if (blockState == null && snapshot.getState().getBlock() instanceof SkinCubeBlock) {
+            reason = Component.translatable("chat.armourers_workshop.undo.breakBlock");
+        }
+        // when reason is null, we can't snapshot it.
+        if (reason == null) {
             return;
         }
         NamedUserAction group = new NamedUserAction(reason);
-        group.push(new SetBlockAction((Level) level, blockPos, blockState, tag));
+        group.push(new SetBlockAction((Level) level, blockPos, snapshot.getState(), snapshot.getTag()));
         UndoManager.of(player.getUUID()).push(group);
     }
 

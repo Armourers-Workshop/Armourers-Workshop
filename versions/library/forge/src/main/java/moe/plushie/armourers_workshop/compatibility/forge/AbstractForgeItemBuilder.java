@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractItemStackRend
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 
 import java.util.function.Function;
@@ -38,7 +37,7 @@ public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemB
 
     @Override
     public IRegistryKey<T> build(String name) {
-        IRegistryKey<T> item = Registry.registerItemFO(name, () -> {
+        IRegistryKey<T> item = AbstractForgeRegistries.ITEMS.register(name, () -> {
             T value = supplier.apply(properties);
             if (group != null) {
                 group.get().add(() -> value);

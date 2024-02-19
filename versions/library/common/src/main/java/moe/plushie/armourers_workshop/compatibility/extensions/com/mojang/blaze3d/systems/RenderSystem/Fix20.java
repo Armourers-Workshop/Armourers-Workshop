@@ -10,10 +10,8 @@ import manifold.ext.rt.api.ThisClass;
 public class Fix20 {
 
     public static void disableTexture(@ThisClass Class<?> clazz) {
-        // TODO: @SAGESSE
     }
 
     public static void enableTexture(@ThisClass Class<?> clazz) {
-        // TODO: @SAGESSE
     }
 }

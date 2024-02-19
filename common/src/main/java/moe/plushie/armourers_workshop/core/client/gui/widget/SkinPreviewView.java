@@ -4,13 +4,13 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIControl;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 
 import manifold.ext.rt.api.auto;
@@ -42,7 +42,7 @@ public class SkinPreviewView extends UIControl {
         auto poseStack = context.state().ctm();
         auto colorScheme = descriptor.getColorScheme();
         auto itemStack = ItemStack.EMPTY;
-        auto buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+        auto buffers = AbstractBufferSource.defaultBufferSource();
         ExtendedItemRenderer.renderSkinInGUI(bakedSkin, colorScheme, itemStack, tx, ty, 200, tw, th, 20, 45, 0, 0, 0xf000f0, poseStack, buffers);
         buffers.endBatch();
     }

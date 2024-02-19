@@ -3,16 +3,14 @@ package moe.plushie.armourers_workshop.core.client.skinrender;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
 import moe.plushie.armourers_workshop.core.client.layer.SkinWardrobeLayer;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
+import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -22,74 +20,73 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
-import java.util.function.Supplier;
 
 import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class SkinRendererManager {
 
-    private static final SkinRendererManager INSTANCE = new SkinRendererManager();
+    private static boolean IS_READY = false;
 
-    private boolean isReady = false;
+    private static final HashMap<EntityType<?>, BakedArmatureTransformer> FALLBACK_TRANSFORMERS = new HashMap<>();
+    private static final HashMap<IEntityTypeProvider<?>, EntityProfile> ENTITIES = new HashMap<>();
 
-    private final HashMap<IEntityTypeProvider<?>, EntityProfile> entities = new HashMap<>();
-
-    public static SkinRendererManager getInstance() {
-        return INSTANCE;
+    public static void init() {
+        ModEntityProfiles.addListener(SkinRendererManager::unbind, SkinRendererManager::bind);
+        SkinRendererManager.reload();
     }
 
-    public void reload() {
+    public static void reload() {
         EntityRenderDispatcher entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
         if (entityRenderManager == null) {
             // call again later!!!
-            RenderSystem.recordRenderCall(this::reload);
+            RenderSystem.recordRenderCall(SkinRendererManager::reload);
             return;
         }
         RenderSystem.recordRenderCall(() -> _reload(entityRenderManager));
     }
 
-    private void _reload(EntityRenderDispatcher entityRenderManager) {
-        SkinRendererManager skinRendererManager = getInstance();
+    private static void _reload(EntityRenderDispatcher entityRenderManager) {
 
         for (EntityRenderer<? extends Player> renderer : entityRenderManager.playerRenderers.values()) {
             if (renderer instanceof LivingEntityRenderer<?, ?>) {
-                skinRendererManager.setupRenderer(EntityType.PLAYER, (LivingEntityRenderer<?, ?>) renderer, true);
+                setupRenderer(EntityType.PLAYER, (LivingEntityRenderer<?, ?>) renderer, true);
             }
         }
 
         entityRenderManager.renderers.forEach((entityType1, entityRenderer) -> {
             if (entityRenderer instanceof LivingEntityRenderer<?, ?>) {
-                skinRendererManager.setupRenderer(entityType1, (LivingEntityRenderer<?, ?>) entityRenderer, true);
+                setupRenderer(entityType1, (LivingEntityRenderer<?, ?>) entityRenderer, true);
             }
         });
 
         // execute the pending tasks.
-        entities.forEach(this::_bind);
-        isReady = true;
+        IS_READY = false;
+        FALLBACK_TRANSFORMERS.clear();
+        ENTITIES.forEach(SkinRendererManager::_bind);
+        IS_READY = true;
     }
 
-    public void unbind(IEntityTypeProvider<?> entityType, EntityProfile entityProfile) {
+    public static void unbind(IEntityTypeProvider<?> entityType, EntityProfile entityProfile) {
         ModLog.debug("Detach Entity Renderer '{}'", entityType.getRegistryName());
-        entities.remove(entityType);
-        if (isReady) {
+        ENTITIES.remove(entityType);
+        if (IS_READY) {
             // TODO: remove layer in the entity renderer.
         }
     }
 
-    public void bind(IEntityTypeProvider<?> entityType, EntityProfile entityProfile) {
+    public static void bind(IEntityTypeProvider<?> entityType, EntityProfile entityProfile) {
         ModLog.debug("Attach Entity Renderer '{}'", entityType.getRegistryName());
-        entities.put(entityType, entityProfile);
+        ENTITIES.put(entityType, entityProfile);
         // try call once _bind to avoid the bind method being called after init.
-        if (isReady) {
+        if (IS_READY) {
             _bind(entityType, entityProfile);
         }
     }
 
-    private void _bind(IEntityTypeProvider<?> entityType, EntityProfile entityProfile) {
+    private static void _bind(IEntityTypeProvider<?> entityType, EntityProfile entityProfile) {
         EntityType<?> resolvedEntityType = entityType.get();
         if (resolvedEntityType == null) {
             return;
@@ -111,12 +108,14 @@ public class SkinRendererManager {
             if (resolvedEntityType.equals(entityType1)) {
                 if (renderer instanceof LivingEntityRenderer<?, ?>) {
                     setupRenderer(resolvedEntityType, (LivingEntityRenderer<?, ?>) renderer, false);
+                } else {
+                    setupFallbackRenderer(resolvedEntityType, renderer);
                 }
             }
         });
     }
 
-    private <T extends LivingEntity, V extends EntityModel<T>> void setupRenderer(EntityType<?> entityType, LivingEntityRenderer<T, V> livingRenderer, boolean autoInject) {
+    private static <T extends LivingEntity, V extends EntityModel<T>> void setupRenderer(EntityType<?> entityType, LivingEntityRenderer<T, V> livingRenderer, boolean autoInject) {
         RenderLayer<T, V> armorLayer = null;
         for (RenderLayer<T, V> layerRenderer : livingRenderer.layers) {
             if (layerRenderer instanceof HumanoidArmorLayer<?, ?, ?>) {
@@ -135,31 +134,15 @@ public class SkinRendererManager {
         }
     }
 
-
-    public void willRender(Entity entity, Model entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
-        BakedArmatureTransformer transformer = BakedArmatureTransformer.defaultBy(entity, entityModel, entityRenderer);
+    private static <T extends Entity> void setupFallbackRenderer(EntityType<?> entityType, EntityRenderer<T> renderer) {
+        auto transformer = BakedArmatureTransformer.defaultBy(entityType, null, renderer);
         if (transformer != null) {
-            SkinRenderContext context1 = context.get();
-            transformer.prepare(entity, context1);
-            context1.release();
+            FALLBACK_TRANSFORMERS.put(entityType, transformer);
         }
     }
 
-    public void willRenderModel(Entity entity, Model entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
-        BakedArmatureTransformer transformer = BakedArmatureTransformer.defaultBy(entity, entityModel, entityRenderer);
-        if (transformer != null) {
-            SkinRenderContext context1 = context.get();
-            transformer.activate(entity, context1);
-            context1.release();
-        }
+    public static BakedArmatureTransformer getFallbackTransformer(EntityType<?> entityType) {
+        return FALLBACK_TRANSFORMERS.get(entityType);
     }
 
-    public void didRender(Entity entity, Model entityModel, @Nullable EntityRenderer<?> entityRenderer, SkinRenderData renderData, Supplier<SkinRenderContext> context) {
-        BakedArmatureTransformer transformer = BakedArmatureTransformer.defaultBy(entity, entityModel, entityRenderer);
-        if (transformer != null) {
-            SkinRenderContext context1 = context.get();
-            transformer.deactivate(entity, context1);
-            context1.release();
-        }
-    }
 }

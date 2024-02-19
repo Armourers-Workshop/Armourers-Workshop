@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import net.minecraft.core.Direction;
@@ -56,12 +56,11 @@ public class ExtendedFaceRenderer {
         }
     }
 */
-    public static void renderMarker(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, PoseStack poseStack, VertexConsumer builder) {
+    public static void renderMarker(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
         if (paintColor.getPaintType() == SkinPaintTypes.NORMAL) {
             return;
         }
-        auto pose = poseStack.last().pose();
-        auto normal = poseStack.last().normal();
+        auto pose = poseStack.last();
         auto paintType = paintColor.getPaintType();
         int u = paintType.getIndex() % 8;
         int v = paintType.getIndex() / 8;
@@ -72,25 +71,24 @@ public class ExtendedFaceRenderer {
                     .uv((u + FACE_MARK_TEXTURES[i][0]) / 8f, (v + FACE_MARK_TEXTURES[i][1]) / 8f)
                     .overlayCoords(overlay)
                     .uv2(light)
-                    .normal(normal, vertexes[4][0], vertexes[4][1], vertexes[4][2])
+                    .normal(pose, vertexes[4][0], vertexes[4][1], vertexes[4][2])
                     .endVertex();
         }
     }
 
-    public static void render2(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, PoseStack poseStack, VertexConsumer builder) {
-        auto pose = poseStack.last().pose();
-        auto normal = poseStack.last().normal();
+    public static void render2(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
+        auto entry = poseStack.last();
         int u = 0;
         int v = 0;
         int color = paintColor.getRGB();
         auto vertexes = FACE_MARK_VERTEXES[direction.get3DDataValue()];
         for (int i = 0; i < 4; ++i) {
-            builder.vertex(pose, x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
+            builder.vertex(entry, x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
                     .color(color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff, alpha & 0xff)
                     .uv((u + FACE_MARK_TEXTURES[i][0]), (v + FACE_MARK_TEXTURES[i][1]))
                     .overlayCoords(overlay)
                     .uv2(light)
-                    .normal(normal, vertexes[4][0], vertexes[4][1], vertexes[4][2])
+                    .normal(entry, vertexes[4][0], vertexes[4][1], vertexes[4][2])
                     .endVertex();
         }
     }

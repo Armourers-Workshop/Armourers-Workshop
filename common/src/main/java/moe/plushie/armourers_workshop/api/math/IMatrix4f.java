@@ -4,6 +4,8 @@ import java.nio.FloatBuffer;
 
 public interface IMatrix4f {
 
+    void set(IMatrix4f matrix);
+
     void load(FloatBuffer buffer);
 
     void store(FloatBuffer buffer);
@@ -19,4 +21,6 @@ public interface IMatrix4f {
     void multiply(float[] values);
 
     void invert();
+
+    void transpose();
 }

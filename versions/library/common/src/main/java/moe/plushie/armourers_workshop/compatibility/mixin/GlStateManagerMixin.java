@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GlStateManagerMixin {
 
     @Inject(method = "_drawElements", at = @At("RETURN"), remap = false)
-    private static void aw$drawElements(int i, int j, int k, long l, CallbackInfo ci) {
+    private static void aw2$drawElements(int i, int j, int k, long l, CallbackInfo ci) {
         SkinRenderExecutor.resume();
     }
 }

@@ -2,21 +2,39 @@ package moe.plushie.armourers_workshop.init.platform;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
+import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IPacketDistributor;
+import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.network.CustomReplyPacket;
+import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.utils.PacketSplitter;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 
+import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+
 public class NetworkManager {
 
-    private static Impl IMPL;
+    private static Dispatcher dispatcher;
+    private static Distributors distributors;
 
     public static void init(String name, String version) {
-        IMPL = getInstance(name, version);
+        dispatcher = createDispatcher(ModConstants.key(name), version);
+        distributors = createDistributors();
+        dispatcher.register();
     }
 
     public static void sendToTrackingBlock(final CustomPacket message, final BlockEntity blockEntity) {
@@ -24,23 +42,24 @@ public class NetworkManager {
         if (level == null) {
             return;
         }
-        IMPL.sendToTrackingChunk(message, level.getChunkAt(blockEntity.getBlockPos()));
+        LevelChunk chunk = level.getChunkAt(blockEntity.getBlockPos());
+        dispatcher.split(message, distributors.trackingChunk(() -> chunk));
     }
 
     public static void sendToTracking(final CustomPacket message, final Entity entity) {
-        IMPL.sendToTracking(message, entity);
+        dispatcher.split(message, distributors.trackingEntityAndSelf(() -> entity));
     }
 
     public static void sendTo(final CustomPacket message, final ServerPlayer player) {
-        IMPL.sendTo(message, player);
+        dispatcher.split(message, distributors.player(() -> player));
     }
 
     public static void sendToServer(final CustomPacket message) {
-        IMPL.sendToServer(message);
+        dispatcher.split(message, distributors.server());
     }
 
     public static void sendToAll(final CustomPacket message) {
-        IMPL.sendToAll(message);
+        dispatcher.split(message, distributors.allPlayers());
     }
 
     public static void sendWardrobeTo(Entity entity, ServerPlayer player) {
@@ -61,21 +80,66 @@ public class NetworkManager {
     }
 
     @ExpectPlatform
-    public static Impl getInstance(String name, String version) {
+    public static Dispatcher createDispatcher(ResourceLocation registryName, String version) {
         throw new AssertionError();
     }
 
-    public interface Impl {
+    @ExpectPlatform
+    public static Distributors createDistributors() {
+        throw new AssertionError();
+    }
 
-        void sendToTrackingChunk(final CustomPacket message, final LevelChunk chunk);
+    public static abstract class Dispatcher {
 
-        void sendToTracking(final CustomPacket message, final Entity entity);
+        protected final UUID clientUUID = UUID.randomUUID();
+        protected final String channelVersion;
+        protected final ResourceLocation channelName;
+        protected final PacketSplitter splitter;
 
-        void sendTo(final CustomPacket message, final ServerPlayer player);
+        protected final int maxPartSize = 32000; // 32k
 
-        void sendToServer(final CustomPacket message);
+        public Dispatcher(ResourceLocation channelName, String channelVersion) {
+            this.channelName = channelName;
+            this.channelVersion = channelVersion;
+            this.splitter = new PacketSplitter();
+        }
 
-        void sendToAll(final CustomPacket message);
+        public abstract void register();
+
+        public void didReceivePacket(IServerPacketHandler packetHandler, FriendlyByteBuf payload, ServerPlayer player) {
+            merge(player.getUUID(), payload, packet -> packetHandler.enqueueWork(() -> packet.accept(packetHandler, player)));
+        }
+
+        @Environment(EnvType.CLIENT)
+        public void didReceivePacket(IClientPacketHandler packetHandler, FriendlyByteBuf payload, Player player) {
+            merge(clientUUID, payload, packet -> packetHandler.enqueueWork(() -> packet.accept(packetHandler, player)));
+        }
+
+        public void merge(UUID uuid, FriendlyByteBuf buffer, Consumer<CustomPacket> consumer) {
+            splitter.merge(uuid, buffer, consumer);
+        }
+
+        public void split(final CustomPacket message, IPacketDistributor distributor) {
+            int partSize = maxPartSize;
+            // download from the server side, the forge is resolved, the maximum packet size is than 10m.
+            if (distributor.isClientbound()) {
+                partSize = Integer.MAX_VALUE;
+            }
+            splitter.split(message, buf -> distributor.add(channelName, buf), partSize, IPacketDistributor::execute);
+        }
+    }
+
+    public interface Distributors {
+
+        IPacketDistributor trackingChunk(Supplier<LevelChunk> supplier);
+
+        IPacketDistributor trackingEntityAndSelf(Supplier<Entity> supplier);
+
+        IPacketDistributor player(Supplier<ServerPlayer> supplier);
+
+        IPacketDistributor allPlayers();
+
+        IPacketDistributor server();
     }
 }
 

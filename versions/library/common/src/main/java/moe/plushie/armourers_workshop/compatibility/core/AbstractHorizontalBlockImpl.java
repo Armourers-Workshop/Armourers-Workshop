@@ -1,13 +1,18 @@
 package moe.plushie.armourers_workshop.compatibility.core;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.serialization.MapCodec;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.ILootContext;
 import moe.plushie.armourers_workshop.api.common.ILootContextParam;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
@@ -16,12 +21,18 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Function;
 
-@Available("[1.20, )")
+@Available("[1.21, )")
 public abstract class AbstractHorizontalBlockImpl extends HorizontalDirectionalBlock {
 
     public AbstractHorizontalBlockImpl(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public MapCodec<? extends AbstractHorizontalBlockImpl> codec() {
+        return null;
     }
 
     @Override
@@ -31,6 +42,15 @@ public abstract class AbstractHorizontalBlockImpl extends HorizontalDirectionalB
 
     public List<ItemStack> getDrops(BlockState blockState, ILootContext context) {
         return super.getDrops(blockState, ((LootContextBuilder) context).builder);
+    }
+
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+        return destroyByPlayer(level, blockPos, blockState, player);
+    }
+
+    public BlockState destroyByPlayer(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+        return super.playerWillDestroy(level, blockPos, blockState, player);
     }
 
     public static class LootContextBuilder implements ILootContext {

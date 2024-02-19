@@ -6,10 +6,9 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IItemTag;
 import moe.plushie.armourers_workshop.api.registry.IRegistry;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
-import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistry;
-import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistryEntry;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.utils.TypedRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -40,14 +39,14 @@ import java.util.function.Supplier;
 @Extension
 public class FabricProvider {
 
-    public static final IRegistry<Block> BLOCKS = new AbstractFabricRegistry<>(Block.class, BuiltInRegistries.BLOCK);
-    public static final IRegistry<Item> ITEMS = new AbstractFabricRegistry<>(Item.class, BuiltInRegistries.ITEM);
-    public static final IRegistry<CreativeModeTab> ITEM_GROUPS = new AbstractFabricRegistry<>(CreativeModeTab.class, BuiltInRegistries.CREATIVE_MODE_TAB);
-    public static final IRegistry<MenuType<?>> MENU_TYPES = new AbstractFabricRegistry<>(MenuType.class, BuiltInRegistries.MENU);
-    public static final IRegistry<EntityType<?>> ENTITY_TYPES = new AbstractFabricRegistry<>(EntityType.class, BuiltInRegistries.ENTITY_TYPE);
-    public static final IRegistry<BlockEntityType<?>> BLOCK_ENTITY_TYPES = new AbstractFabricRegistry<>(BlockEntityType.class, BuiltInRegistries.BLOCK_ENTITY_TYPE);
-    public static final IRegistry<SoundEvent> SOUND_EVENTS = new AbstractFabricRegistry<>(SoundEvent.class, BuiltInRegistries.SOUND_EVENT);
-    public static final IRegistry<LootItemFunctionType> ITEM_LOOT_FUNCTIONS = new AbstractFabricRegistry<>(LootItemFunctionType.class, BuiltInRegistries.LOOT_FUNCTION_TYPE);
+    public static final IRegistry<Block> BLOCKS = TypedRegistry.create(Block.class, BuiltInRegistries.BLOCK);
+    public static final IRegistry<Item> ITEMS = TypedRegistry.create(Item.class, BuiltInRegistries.ITEM);
+    public static final IRegistry<CreativeModeTab> ITEM_GROUPS = TypedRegistry.create(CreativeModeTab.class, BuiltInRegistries.CREATIVE_MODE_TAB);
+    public static final IRegistry<MenuType<?>> MENU_TYPES = TypedRegistry.create(MenuType.class, BuiltInRegistries.MENU);
+    public static final IRegistry<EntityType<?>> ENTITY_TYPES = TypedRegistry.create(EntityType.class, BuiltInRegistries.ENTITY_TYPE);
+    public static final IRegistry<BlockEntityType<?>> BLOCK_ENTITY_TYPES = TypedRegistry.create(BlockEntityType.class, BuiltInRegistries.BLOCK_ENTITY_TYPE);
+    public static final IRegistry<SoundEvent> SOUND_EVENTS = TypedRegistry.create(SoundEvent.class, BuiltInRegistries.SOUND_EVENT);
+    public static final IRegistry<LootItemFunctionType> ITEM_LOOT_FUNCTIONS = TypedRegistry.create(LootItemFunctionType.class, BuiltInRegistries.LOOT_FUNCTION_TYPE);
 
     public static <T extends Item> IRegistryKey<T> registerItemFA(@ThisClass Class<?> clazz, String name, Supplier<T> supplier) {
         return ITEMS.register(name, supplier);
@@ -57,7 +56,7 @@ public class FabricProvider {
         ResourceLocation registryName = ModConstants.key(name);
         TagKey<Item> tag = TagKey.create(Registries.ITEM, registryName);
         ModLog.debug("Registering Item Tag '{}'", registryName);
-        return AbstractFabricRegistryEntry.cast(registryName, (IItemTag) itemStack -> itemStack.is(tag));
+        return TypedRegistry.Entry.castValue(registryName, (IItemTag) itemStack -> itemStack.is(tag));
     }
 
     public static <T extends CreativeModeTab> IRegistryKey<CreativeModeTab> registerItemGroupFA(@ThisClass Class<?> clazz, String name, Supplier<Supplier<ItemStack>> icon, Consumer<List<ItemStack>> itemProvider) {
@@ -96,7 +95,7 @@ public class FabricProvider {
         ResourceLocation registryName = ModConstants.key(name);
         EntityDataSerializers.registerSerializer(value);
         ModLog.debug("Registering Entity Data Serializer '{}'", registryName);
-        return AbstractFabricRegistryEntry.of(registryName, value);
+        return TypedRegistry.Entry.ofValue(registryName, value);
     }
 
     public static <T extends AbstractContainerMenu, V extends MenuType<T>> IRegistryKey<V> registerMenuTypeFA(@ThisClass Class<?> clazz, String name, Supplier<V> supplier) {

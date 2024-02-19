@@ -4,7 +4,8 @@ import com.apple.library.uikit.UIColor;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedBuilderBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AbstractAdvancedGuideRenderer;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AdvancedBlockGuideRenderer;
@@ -12,20 +13,15 @@ import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.A
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AdvancedHorseGuideRenderer;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AdvancedHumanGuideRenderer;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AdvancedItemGuideRenderer;
-import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRendererManager;
-import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
-import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
-import moe.plushie.armourers_workshop.core.client.other.SkinModelManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderBufferSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
-import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
@@ -35,22 +31,17 @@ import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentTypes;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-
-import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> extends AbstractBlockEntityRenderer<T> {
@@ -86,8 +77,6 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
     public static ArrayList<Vector3f> OUTPUTS = new ArrayList<>();
     public static HashSet<BakedSkinPart> RESULTS = new HashSet<>();
 
-    private final GuideRendererManager rendererManager = new GuideRendererManager();
-
     public static void setOutput(int i, Vector3f pt) {
         while (i >= OUTPUTS.size()) {
             OUTPUTS.add(Vector3f.ZERO);
@@ -105,14 +94,13 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
     }
 
     @Override
-    public void render(T entity, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T entity, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
         poseStack.pushPose();
         poseStack.translate(entity.offset.getX(), entity.offset.getY(), entity.offset.getZ());
         poseStack.translate(0.5f, 0.5f, 0.5f);
         poseStack.scale(entity.carmeScale.getX(), entity.carmeScale.getY(), entity.carmeScale.getZ());
 
         poseStack.scale(-MathUtils.SCALE, -MathUtils.SCALE, MathUtils.SCALE);
-
 
         SkinDocument document = entity.getDocument();
         SkinDocumentSettings settings = document.getSettings();
@@ -129,18 +117,18 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
         if (settings.showsHelperModel()) {
             AbstractAdvancedGuideRenderer guideRenderer = GUIDES.get(document.getType());
             if (guideRenderer != null) {
-                guideRenderer.render(document, poseStack, light, overlay, buffers);
+                guideRenderer.render(document, poseStack, light, overlay, bufferSource);
             }
         }
 
         if (settings.showsOrigin()) {
             poseStack.scale(-1, -1, 1);
-            ShapeTesselator.vector(Vector3f.ZERO, 16, poseStack, buffers);
+            ShapeTesselator.vector(Vector3f.ZERO, 16, poseStack, bufferSource);
             poseStack.scale(-1, -1, 1);
         }
 
         BakedArmature armature = BakedArmature.defaultBy(document.getType().getSkinType());
-        renderNode(document.getRoot(), armature, 0, poseStack, buffers, light, overlay);
+        renderNode(document.getRoot(), armature, 0, poseStack, bufferSource, light, overlay);
 
         poseStack.popPose();
 
@@ -149,13 +137,13 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
             BlockPos pos = entity.getBlockPos();
             poseStack.pushPose();
             poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-            ShapeTesselator.stroke(entity.getCustomRenderBoundingBox(blockState), UIColor.RED, poseStack, buffers);
+            ShapeTesselator.stroke(entity.getRenderBoundingBox(blockState), UIColor.RED, poseStack, bufferSource);
             Vector3f origin = entity.getRenderOrigin();
             poseStack.translate(origin.getX(), origin.getY(), origin.getZ());
-            ShapeTesselator.vector(Vector3f.ZERO, 1, poseStack, buffers);
+            ShapeTesselator.vector(Vector3f.ZERO, 1, poseStack, bufferSource);
             poseStack.translate(entity.carmeOffset.getX(), entity.carmeOffset.getY(), entity.carmeOffset.getZ());
 //            poseStack.mulPose(new OpenQuaternionf(-entity.carmeRot.getX(), entity.carmeRot.getY(), entity.carmeRot.getZ(), true));
-            ShapeTesselator.vector(Vector3f.ZERO, 1, poseStack, buffers);
+            ShapeTesselator.vector(Vector3f.ZERO, 1, poseStack, bufferSource);
 
             poseStack.popPose();
         }
@@ -164,7 +152,7 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
     }
 
 
-    protected void renderNode(SkinDocumentNode node, BakedArmature armature, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
+    protected void renderNode(SkinDocumentNode node, BakedArmature armature, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
         // when the node is disabled, it does not to rendering.
         if (!node.isEnabled()) {
             return;
@@ -175,22 +163,21 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
         if (armature != null && node.isLocked()) {
             IJointTransform transform = armature.getTransform(node.getType());
             if (transform != null) {
-                poseStack.applyTransform(transform);
+                transform.apply(poseStack);
             }
         }
 
         // apply node transform.
-        poseStack.applyTransform(node.getTransform());
+        node.getTransform().apply(poseStack);
 
         if (node.isLocator()) {
             poseStack.scale(-1, -1, 1);
-            ShapeTesselator.vector(Vector3f.ZERO, 16, poseStack, buffers);
+            ShapeTesselator.vector(Vector3f.ZERO, 16, poseStack, bufferSource);
             poseStack.scale(-1, -1, 1);
         }
 
         if (node.isMirror()) {
-            poseStack.mulPoseMatrix(OpenMatrix4f.createScaleMatrix(-1, 1, 1));
-            poseStack.mulNormalMatrix(OpenMatrix3f.createScaleMatrix(-1, 1, 1));
+            poseStack.scale(-1, 1, 1);
         }
 
         SkinDescriptor descriptor = node.getSkin();
@@ -198,11 +185,11 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
         if (tesselator != null) {
             tesselator.setLightmap(0xf000f0);
             tesselator.setPartialTicks(partialTicks);
-            tesselator.setPartialTicks(0);
-            tesselator.draw(poseStack, buffers);
+            tesselator.setAnimationTicks(0);
+            tesselator.draw(poseStack, bufferSource);
         }
         for (SkinDocumentNode child : node.children()) {
-            renderNode(child, armature, partialTicks, poseStack, buffers, light, overlay);
+            renderNode(child, armature, partialTicks, poseStack, bufferSource, light, overlay);
         }
         poseStack.popPose();
     }
@@ -237,11 +224,6 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
 
         public OutlineObjectBuilder(SkinRenderBufferSource.ObjectBuilder builder) {
             this.builder = builder;
-        }
-
-        public static SkinRenderBufferSource immediate(MultiBufferSource buffers) {
-            SkinRenderBufferSource source = SkinRenderBufferSource.immediate(buffers);
-            return skin -> new OutlineObjectBuilder(source.getBuffer(skin));
         }
 
         @Override

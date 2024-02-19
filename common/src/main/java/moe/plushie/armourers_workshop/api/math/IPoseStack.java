@@ -16,7 +16,22 @@ public interface IPoseStack {
 
     void multiply(IMatrix4f matrix);
 
-    IMatrix4f lastPose();
+    void setIdentity();
 
-    IMatrix3f lastNormal();
+    Pose last();
+
+    interface Pose {
+
+        int properties();
+
+        IMatrix4f pose();
+
+        IMatrix3f normal();
+
+        void set(Pose pose);
+
+        void transformPose(float[] values);
+
+        void transformNormal(float[] values);
+    }
 }

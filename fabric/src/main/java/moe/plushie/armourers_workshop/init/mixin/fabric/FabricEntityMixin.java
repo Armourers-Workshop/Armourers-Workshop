@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.mixin.fabric;
 
-import moe.plushie.armourers_workshop.init.platform.fabric.capability.CapabilityStorage;
+import moe.plushie.armourers_workshop.core.data.CapabilityStorage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,14 +12,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public class FabricEntityMixin implements CapabilityStorage.Provider {
 
-    public CapabilityStorage aw$capabilityData;
+    public CapabilityStorage aw2$capabilityStorage;
 
     @Override
     public CapabilityStorage getCapabilityStorage() {
-        if (aw$capabilityData == null) {
-            aw$capabilityData = CapabilityStorage.attachCapability(Entity.class.cast(this));
+        if (aw2$capabilityStorage == null) {
+            aw2$capabilityStorage = CapabilityStorage.attachCapability(Entity.class.cast(this));
         }
-        return aw$capabilityData;
+        return aw2$capabilityStorage;
     }
 
     @Inject(method = "saveWithoutId", at = @At(value = "RETURN"))

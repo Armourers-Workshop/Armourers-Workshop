@@ -1,19 +1,20 @@
 package moe.plushie.armourers_workshop.core.armature;
 
 import moe.plushie.armourers_workshop.api.client.model.IModel;
+import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
-import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager2;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 public abstract class ArmatureTransformerManager {
 
     private final HashMap<ResourceLocation, ArmatureTransformerBuilder> pendingBuilders = new HashMap<>();
 
+    private final HashMap<IEntityTypeProvider<?>, ArrayList<ArmatureTransformerBuilder>> entityBuilders = new HashMap<>();
     private final HashMap<Class<?>, ArrayList<ArmatureTransformerBuilder>> modelBuilders = new HashMap<>();
 
     private int version = 0;
@@ -50,22 +51,18 @@ public abstract class ArmatureTransformerManager {
         });
         pendingBuilders.clear();
         builders1.forEach((name, builder) -> {
-            int used = 0;
-//            Collection<IEntityTypeProvider<?>> entities = builder.getEntities();
-//            if (!entities.isEmpty()) {
-//                entities.forEach(entityType -> entityBuilders.put(entityType, builder));
-//                used += 1;
-//            }
-            Collection<ResourceLocation> models = builder.getModels();
-            if (!models.isEmpty()) {
-                models.forEach(model -> {
-                    Class<?> clazz = SkinRendererManager2.NAMED_CLASSES.get(model);
-                    if (clazz != null) {
-                        modelBuilders.computeIfAbsent(clazz, k -> new ArrayList<>()).add(builder);
-                    }
-                });
-//                used += 1;
-            }
+            // ...
+            builder.getEntities().forEach(entityType -> {
+                // ...
+                entityBuilders.computeIfAbsent(entityType, it -> new ArrayList<>()).add(builder);
+            });
+            // ...
+            builder.getModels().forEach(model -> {
+                Class<?> clazz = ArmatureSerializers.getClass(model);
+                if (clazz != null) {
+                    modelBuilders.computeIfAbsent(clazz, k -> new ArrayList<>()).add(builder);
+                }
+            });
 //            if (used == 0) {
 //                defaultBuilders.add(builder);
 //            }
@@ -76,17 +73,25 @@ public abstract class ArmatureTransformerManager {
     public ArmatureTransformer getTransformer(EntityType<?> entityType, IModel entityModel) {
         ArrayList<Class<?>> classes = new ArrayList<>();
         ArrayList<ArmatureTransformerBuilder> finalBuilders = new ArrayList<>();
-        modelBuilders.forEach((clazz, builders) -> {
-            if (clazz.isAssignableFrom(entityModel.getType())) {
-                for (Class<?> parent : classes) {
-                    if (clazz.isAssignableFrom(parent)) {
-                        return;
+        if (entityModel != null) {
+            modelBuilders.forEach((clazz, builders) -> {
+                if (clazz.isAssignableFrom(entityModel.getType())) {
+                    for (Class<?> parent : classes) {
+                        if (clazz.isAssignableFrom(parent)) {
+                            return;
+                        }
                     }
+                    classes.add(clazz);
+                    finalBuilders.addAll(builders);
                 }
-                classes.add(clazz);
-                finalBuilders.addAll(builders);
+            });
+        }
+        if (entityType != null) {
+            ArrayList<ArmatureTransformerBuilder> resultBuilders = ObjectUtils.find(entityBuilders, entityType, IEntityTypeProvider::get);
+            if (resultBuilders != null) {
+                finalBuilders.addAll(resultBuilders);
             }
-        });
+        }
         if (finalBuilders.size() >= 1) {
             return finalBuilders.get(finalBuilders.size() - 1).build(entityModel);
         }

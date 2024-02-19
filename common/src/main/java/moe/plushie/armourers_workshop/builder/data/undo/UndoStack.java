@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.builder.data.undo;
 
 import moe.plushie.armourers_workshop.api.action.IUserAction;
+import moe.plushie.armourers_workshop.builder.data.undo.action.ActionRuntimeException;
 import moe.plushie.armourers_workshop.init.ModConfig;
-import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.network.chat.Component;
 
 import java.util.Stack;
@@ -12,9 +12,9 @@ public class UndoStack {
     private final Stack<IUserAction> undoStack = new Stack<>();
     private final Stack<IUserAction> redoStack = new Stack<>();
 
-    public IUserAction undo() throws Exception {
+    public IUserAction undo() throws RuntimeException {
         if (undoStack.isEmpty()) {
-            throw new CommandRuntimeException(Component.translatable("chat.armourers_workshop.undo.outOfUndos"));
+            throw new ActionRuntimeException(Component.translatable("chat.armourers_workshop.undo.outOfUndos"));
         }
         IUserAction changes = undoStack.peek();
         redoStack.push(changes.apply());
@@ -22,9 +22,9 @@ public class UndoStack {
         return changes;
     }
 
-    public IUserAction redo() throws Exception {
+    public IUserAction redo() throws RuntimeException {
         if (redoStack.isEmpty()) {
-            throw new CommandRuntimeException(Component.translatable("chat.armourers_workshop.undo.outOfRedos"));
+            throw new ActionRuntimeException(Component.translatable("chat.armourers_workshop.undo.outOfRedos"));
         }
         IUserAction changes = redoStack.peek();
         undoStack.push(changes.apply());

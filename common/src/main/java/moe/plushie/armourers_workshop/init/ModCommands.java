@@ -35,13 +35,12 @@ import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.init.platform.RegistryManager;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.utils.TypedRegistry;
 import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -230,7 +229,7 @@ public class ModCommands {
             }
             ItemStack itemStack = descriptor.asItemStack();
             for (Player player : EntityArgument.getPlayers(context, "targets")) {
-                SkinUtils.giveTo(itemStack, player);
+                player.giveItem(itemStack);
                 context.getSource().sendSuccess(Component.translatable("commands.give.success.single", 1, itemStack.getDisplayName(), player.getDisplayName()), true);
             }
             return 1;
@@ -322,7 +321,7 @@ public class ModCommands {
             if (overrideType == null || itemStack.isEmpty()) {
                 throw ERROR_MISSING_ITEM_STACK.create(player.getScoreboardName());
             }
-            ResourceLocation identifier = RegistryManager.getKey(itemStack.getItem());
+            ResourceLocation identifier = TypedRegistry.findKey(itemStack.getItem());
             String key = String.format("%s:%s", overrideType.getName(), identifier);
             // we always remove and then add again
             if (operator.equals("add")) {

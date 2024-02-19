@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public class CameraMixin {
 
     @ModifyVariable(method = "getMaxZoom", at = @At("HEAD"), argsOnly = true)
-    private double aw$getMaxZoom(double zoom) {
+    private double aw2$getMaxZoom(double zoom) {
         Camera camera = ObjectUtils.unsafeCast(this);
         CameraEntity cameraEntity = ObjectUtils.safeCast(camera.getEntity(), CameraEntity.class);
         if (cameraEntity != null) {

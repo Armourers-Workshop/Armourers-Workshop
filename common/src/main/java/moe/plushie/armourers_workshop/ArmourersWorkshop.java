@@ -35,7 +35,6 @@ import net.minecraft.resources.ResourceLocation;
 public class ArmourersWorkshop {
 
     public static void init() {
-
         ModItemGroups.init();
         ModItems.init();
         ModBlocks.init();
@@ -66,7 +65,7 @@ public class ArmourersWorkshop {
         // setup client object.
         EnvironmentExecutor.willInit(EnvironmentType.CLIENT, () -> ClientProxy::init);
         EnvironmentExecutor.didSetup(EnvironmentType.CLIENT, () -> () -> {
-            // setup skin manager.
+            // setup skin renderer manager.
             RenderSystem.init();
             RendererManager.init();
         });

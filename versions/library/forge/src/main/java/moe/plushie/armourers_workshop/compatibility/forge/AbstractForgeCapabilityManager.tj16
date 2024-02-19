@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.api.common.ICapabilityType;
 import moe.plushie.armourers_workshop.api.common.ITagRepresentable;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.Tag;
@@ -34,17 +33,16 @@ public abstract class AbstractForgeCapabilityManager {
     @CapabilityInject(SkinWardrobe.class)
     public static Capability<SkinWardrobe> WARDROBE_KEY;
 
-    public static <T> IRegistryKey<ICapabilityType<T>> register(String name, Class<T> type, Function<Entity, Optional<T>> factory) {
+    public static <T> IRegistryKey<ICapabilityType<T>> register(ResourceLocation registryName, Class<T> type, Function<Entity, Optional<T>> factory) {
         if (type == SkinWardrobe.class) {
-            return ObjectUtils.unsafeCast(createWardrobeCapabilityType(name, ObjectUtils.unsafeCast(factory)));
+            return ObjectUtils.unsafeCast(createWardrobeCapabilityType(registryName, ObjectUtils.unsafeCast(factory)));
         }
         throw new AssertionError();
     }
 
-    private static IRegistryKey<ICapabilityType<SkinWardrobe>> createWardrobeCapabilityType(String registryName, Function<Entity, Optional<SkinWardrobe>> provider) {
-        ResourceLocation name = ModConstants.key(registryName);
+    private static IRegistryKey<ICapabilityType<SkinWardrobe>> createWardrobeCapabilityType(ResourceLocation registryName, Function<Entity, Optional<SkinWardrobe>> provider) {
         ICapabilityType<SkinWardrobe> capabilityType = entity -> entity.getCapability(WARDROBE_KEY).resolve();
-        return new RegistryObjectProxy<>(name, SkinWardrobe.class, provider, capabilityType, () -> WARDROBE_KEY);
+        return new RegistryObjectProxy<>(registryName, SkinWardrobe.class, provider, capabilityType, () -> WARDROBE_KEY);
     }
 
     public static class RegistryObjectProxy<N extends Tag, T extends ITagRepresentable<N>> implements IRegistryKey<ICapabilityType<T>> {

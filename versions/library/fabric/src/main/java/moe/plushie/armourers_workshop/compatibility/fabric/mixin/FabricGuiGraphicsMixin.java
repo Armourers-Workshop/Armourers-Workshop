@@ -22,7 +22,7 @@ import java.util.List;
 public class FabricGuiGraphicsMixin {
 
     @Inject(method = "renderTooltipInternal", at = @At("RETURN"))
-    private void aw$renderTooltipInternal(Font font, List<ClientTooltipComponent> tooltips, int mouseX, int mouseY, ClientTooltipPositioner positioner, CallbackInfo ci) {
+    private void aw2$renderTooltipInternal(Font font, List<ClientTooltipComponent> tooltips, int mouseX, int mouseY, ClientTooltipPositioner positioner, CallbackInfo ci) {
         if (tooltips.isEmpty()) {
             return;
         }
@@ -55,12 +55,12 @@ public class FabricGuiGraphicsMixin {
     }
 
     @Inject(method = "renderTooltip(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V", at = @At("HEAD"))
-    private void aw$renderTooltipPre(Font font, ItemStack itemStack, int i, int j, CallbackInfo ci) {
+    private void aw2$renderTooltipPre(Font font, ItemStack itemStack, int i, int j, CallbackInfo ci) {
         RenderTooltipEvents.TOOLTIP_ITEM_STACK = itemStack;
     }
 
     @Inject(method = "renderTooltip(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V", at = @At("RETURN"))
-    private void aw$renderTooltipPost(Font font, ItemStack itemStack, int i, int j, CallbackInfo ci) {
+    private void aw2$renderTooltipPost(Font font, ItemStack itemStack, int i, int j, CallbackInfo ci) {
         RenderTooltipEvents.TOOLTIP_ITEM_STACK = ItemStack.EMPTY;
     }
 }

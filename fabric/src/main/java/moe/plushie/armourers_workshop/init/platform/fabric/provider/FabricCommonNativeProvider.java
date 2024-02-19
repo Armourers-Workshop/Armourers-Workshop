@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.provider;
 
 import com.mojang.brigadier.CommandDispatcher;
-import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
+import moe.plushie.armourers_workshop.api.common.IBlockSnapshot;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityLifecycleEvents;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.PlayerBlockPlaceEvents;
@@ -19,11 +19,9 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -31,7 +29,6 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -119,20 +116,24 @@ public interface FabricCommonNativeProvider extends CommonNativeProvider {
     @Override
     default void willBlockPlace(BlockSnapshot consumer) {
         PlayerBlockPlaceEvents.BEFORE.register((context, blockState) -> {
-            Block block = blockState.getBlock();
             Player player = context.getPlayer();
-            if (player instanceof ServerPlayer && block instanceof SkinCubeBlock) {
-                Level level = context.getLevel();
-                BlockPos blockPos = context.getClickedPos();
-                BlockState oldState = level.getBlockState(blockPos);
-                BlockEntity oldBlockEntity = level.getBlockEntity(blockPos);
-                CompoundTag oldNBT = null;
-                if (oldBlockEntity != null) {
-                    oldNBT = oldBlockEntity.saveWithFullMetadata();
+            Level level = context.getLevel();
+            BlockPos blockPos = context.getClickedPos();
+            consumer.snapshot(player, level, blockPos, blockState, new IBlockSnapshot() {
+                @Override
+                public BlockState getState() {
+                    return level.getBlockState(blockPos);
                 }
-                Component reason = Component.translatable("chat.armourers_workshop.undo.placeBlock");
-                consumer.snapshot(level, blockPos, oldState, oldNBT, player, reason);
-            }
+
+                @Override
+                public CompoundTag getTag() {
+                    BlockEntity oldBlockEntity = level.getBlockEntity(blockPos);
+                    if (oldBlockEntity != null) {
+                        return oldBlockEntity.saveWithFullMetadata();
+                    }
+                    return null;
+                }
+            });
             return true;
         });
     }
@@ -140,16 +141,21 @@ public interface FabricCommonNativeProvider extends CommonNativeProvider {
     @Override
     default void willBlockBreak(BlockSnapshot consumer) {
         PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) -> {
-            Block block = state.getBlock();
-            if (player instanceof ServerPlayer && block instanceof SkinCubeBlock) {
-                BlockEntity oldBlockEntity = level.getBlockEntity(pos);
-                CompoundTag oldNBT = null;
-                if (oldBlockEntity != null) {
-                    oldNBT = oldBlockEntity.saveWithFullMetadata();
+            consumer.snapshot(player, level, pos, null, new IBlockSnapshot() {
+
+                @Override
+                public BlockState getState() {
+                    return state;
                 }
-                Component reason = Component.translatable("chat.armourers_workshop.undo.breakBlock");
-                consumer.snapshot(level, pos, state, oldNBT, player, reason);
-            }
+
+                @Override
+                public CompoundTag getTag() {
+                    if (blockEntity != null) {
+                        return blockEntity.saveWithFullMetadata();
+                    }
+                    return null;
+                }
+            });
             return true;
         });
     }
