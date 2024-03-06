@@ -23,7 +23,7 @@ public class JEIAddon implements IModPlugin {
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
         registration.addGuiScreenHandler(SlotListView.DelegateScreen.class, screen -> null);
         registration.addGuiScreenHandler(ContainerMenuScreen.class, screen -> {
-            if (screen.shouldDrawPluginScreen()) {
+            if (screen.shouldRenderExtendScreen()) {
                 return new GuiProperties(screen);
             }
             return null;

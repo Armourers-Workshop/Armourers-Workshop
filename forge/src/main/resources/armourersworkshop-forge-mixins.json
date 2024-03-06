@@ -5,6 +5,7 @@
   "client": [
     "ForgeLivingRendererMixin",
     "ForgeScreenREIMixin",
+    "ForgeScreenFTBMixin",
     "ForgeReplayMixin"
   ],
   "mixins": [

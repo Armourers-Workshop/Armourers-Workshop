@@ -127,7 +127,7 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
         return manager.changeKeyView(bl);
     }
 
-    public boolean shouldDrawPluginScreen() {
+    public boolean shouldRenderExtendScreen() {
         if (menuWindow != null) {
             return menuWindow.shouldRenderExtendScreen();
         }

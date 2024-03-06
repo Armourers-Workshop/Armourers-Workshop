@@ -9,14 +9,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Pseudo
-@Mixin(targets = "me.shedaniel.rei.RoughlyEnoughItemsCoreClient")
-public class ForgeScreenREIMixin {
+@Mixin(targets = "dev.ftb.mods.ftblibrary.FTBLibraryClient")
+public class ForgeScreenFTBMixin {
 
-    // https://github.com/shedaniel/RoughlyEnoughItems/blob/6.x/runtime/src/main/java/me/shedaniel/rei/RoughlyEnoughItemsCoreClient.java#L285
-    @Inject(method = "shouldReturn", at = @At("HEAD"), cancellable = true, remap = false)
-    private static void aw2$shouldReturn(Screen screen, CallbackInfoReturnable<Boolean> cir) {
+    // https://github.com/FTBTeam/FTB-Library/blob/1.16/main/common/src/main/java/dev/ftb/mods/ftblibrary/FTBLibraryClient.java#L127
+    @Inject(method = "areButtonsVisible", at = @At("HEAD"), cancellable = true, remap = false)
+    private static void aw2$areButtonsVisible(Screen screen, CallbackInfoReturnable<Boolean> cir) {
         if (!ClientMenuHandler.shouldRenderExtendScreen(screen)) {
-            cir.setReturnValue(true);
+            cir.setReturnValue(false);
         }
     }
 }
