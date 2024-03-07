@@ -18,7 +18,7 @@ public final class SkinSerializerV20 implements ISkinSerializer {
     public static final int FILE_HEADER = 0x534b494e; // SKIN
 
     public static final int FILE_VERSION = 20;
-    public static final int MAX_FILE_VERSION = 20;
+    public static final int FILE_MIN_VERSION = 20;
 
     public SkinSerializerV20() {
     }
@@ -49,11 +49,11 @@ public final class SkinSerializerV20 implements ISkinSerializer {
     public SkinFileHeader readInfoFromStream(IInputStream stream, int fileVersion) throws IOException {
         // read the correct file version.
         fileVersion = stream.readInt();
-        stream.readInt();
-        stream.readInt();
+        stream.readInt(); // reserved data 1
+        stream.readInt(); // reserved data 2
         ChunkContext context = ChunkCubeCoders.createDecodeContext(fileVersion);
         Pair<ISkinType, ISkinProperties> pair = ChunkSerializers.readInfoFromStream(stream, context);
-        return SkinFileHeader.of(fileVersion, pair.getKey(), pair.getValue());
+        return SkinFileHeader.optimized(fileVersion, pair.getKey(), pair.getValue());
     }
 
     @Override

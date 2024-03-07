@@ -9,9 +9,9 @@ import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBloc
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedFaceRenderer;
 import moe.plushie.armourers_workshop.init.ModItems;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -50,7 +50,7 @@ public class SkinCubeBlockRenderer<T extends BlockEntity & IPaintable> extends A
     }
 
     private static boolean isPlayerHoldingPaintingTool() {
-        Player player = Minecraft.getInstance().player;
+        Player player = EnvironmentManager.getPlayer();
         if (player == null) {
             return false;
         }

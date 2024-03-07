@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.core.client.bake;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Inventory;
 
 import manifold.ext.rt.api.auto;
@@ -29,7 +29,7 @@ public class SkinPreloadManager {
         }
         // we need to preload all skin in the current player's inventory.
         if (lastInventoryVersion == null) {
-            auto player = Minecraft.getInstance().player;
+            auto player = EnvironmentManager.getPlayer();
             if (player != null) {
                 Inventory inventory = player.getInventory();
                 int inventoryVersion = inventory.getTimesChanged();

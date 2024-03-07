@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
-import net.minecraft.client.Minecraft;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.minecraft.core.Registry;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +30,7 @@ public class ClientProxyImpl {
 
         // listen the block highlight events.
         Registry.willRenderBlockHighlightFO((traceResult, camera, poseStackIn, buffersIn) -> {
-            Player player = Minecraft.getInstance().player;
+            Player player = EnvironmentManager.getPlayer();
             if (player == null) {
                 return;
             }

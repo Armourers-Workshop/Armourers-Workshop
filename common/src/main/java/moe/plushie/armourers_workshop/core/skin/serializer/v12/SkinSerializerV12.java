@@ -3,14 +3,14 @@ package moe.plushie.armourers_workshop.core.skin.serializer.v12;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
-import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
-import moe.plushie.armourers_workshop.core.skin.serializer.io.ISkinSerializer;
-import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileHeader;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileHeader;
+import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
+import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
+import moe.plushie.armourers_workshop.core.skin.serializer.io.ISkinSerializer;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
 import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
@@ -344,7 +344,7 @@ public final class SkinSerializerV12 implements ISkinSerializer {
                 ModLog.info("got failed type " + equipmentSkinType);
             }
         }
-        return SkinFileHeader.of(fileVersion, equipmentSkinType, properties);
+        return SkinFileHeader.optimized(fileVersion, equipmentSkinType, properties);
     }
 
     @Override

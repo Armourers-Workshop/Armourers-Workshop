@@ -12,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.thread.BlockableEventLoop;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.neoforged.neoforge.common.util.LogicalSidedProvider;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -53,12 +52,8 @@ public class AbstractForgeNetwork {
         }
 
         public void handleClientData(Proxy proxy, PlayPayloadContext context) {
-            Player player = context.player().orElse(null);
-            if (player == null) {
-                return;
-            }
             IClientPacketHandler packetHandler = context.workHandler()::submitAsync;
-            didReceivePacket(packetHandler, proxy.payload, player);
+            didReceivePacket(packetHandler, proxy.payload, null);
         }
     }
 

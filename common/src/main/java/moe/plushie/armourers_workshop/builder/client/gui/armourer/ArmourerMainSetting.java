@@ -197,7 +197,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
     }
 
     private void loadSkin(UIControl sender) {
-        Player player = Minecraft.getInstance().player;
+        Player player = EnvironmentManager.getPlayer();
         if (player == null || !container.shouldLoadArmourItem(player)) {
             return;
         }
@@ -207,7 +207,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
     }
 
     private void saveSkin(UIControl sender) {
-        Player player = Minecraft.getInstance().player;
+        Player player = EnvironmentManager.getPlayer();
         if (player == null || !container.shouldSaveArmourItem(player)) {
             return;
         }

@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.api.network.IPacketDistributor;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
@@ -72,7 +71,7 @@ public class AbstractForgeNetwork {
             }
             NetworkEvent.Context context = event.getSource().get();
             IClientPacketHandler packetHandler = context::enqueueWork;
-            didReceivePacket(packetHandler, event.getPayload(), Minecraft.getInstance().player);
+            didReceivePacket(packetHandler, event.getPayload(), null);
             context.setPacketHandled(true);
         }
     }

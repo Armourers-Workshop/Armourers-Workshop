@@ -8,9 +8,9 @@ import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.item.MannequinItem;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 
 import manifold.ext.rt.api.auto;
@@ -50,7 +50,7 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
 
     public ItemStack getPlayerMannequinItem() {
         if (playerMannequinItem == null) {
-            auto player = Minecraft.getInstance().player;
+            auto player = EnvironmentManager.getPlayer();
             if (player == null) {
                 return ItemStack.EMPTY;
             }

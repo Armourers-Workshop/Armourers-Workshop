@@ -13,8 +13,7 @@ import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -127,8 +126,8 @@ public class CGGraphicsContext implements GraphicsContextImpl {
         // not supported contents.
     }
 
-    public void drawEntity(LivingEntity entity, CGRect rect, int scale, Vector3f rotate, CGPoint focus) {
-        renderer.renderEntity(entity, rect, scale, rotate, focus, this);
+    public void drawEntity(Entity entity, CGPoint offset, int scale, CGPoint focus) {
+        renderer.renderEntity(entity, offset, scale, focus, this);
     }
 
     public void drawItem(ItemStack itemStack, int x, int y) {

@@ -107,12 +107,16 @@ public class NetworkManager {
         public abstract void register();
 
         public void didReceivePacket(IServerPacketHandler packetHandler, FriendlyByteBuf payload, ServerPlayer player) {
-            merge(player.getUUID(), payload, packet -> packetHandler.enqueueWork(() -> packet.accept(packetHandler, player)));
+            merge(player.getUUID(), payload, packet -> packetHandler.enqueueWork(() -> {
+                packet.accept(packetHandler, player);
+            }));
         }
 
         @Environment(EnvType.CLIENT)
         public void didReceivePacket(IClientPacketHandler packetHandler, FriendlyByteBuf payload, Player player) {
-            merge(clientUUID, payload, packet -> packetHandler.enqueueWork(() -> packet.accept(packetHandler, player)));
+            merge(clientUUID, payload, packet -> packetHandler.enqueueWork(() -> {
+                packet.accept(packetHandler, EnvironmentManager.getPlayer());
+            }));
         }
 
         public void merge(UUID uuid, FriendlyByteBuf buffer, Consumer<CustomPacket> consumer) {

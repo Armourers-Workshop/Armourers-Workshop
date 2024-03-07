@@ -6,6 +6,7 @@ import com.apple.library.coregraphics.CGGraphicsState;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
+import com.apple.library.impl.EntityRendererImpl;
 import com.apple.library.uikit.UIFont;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
@@ -17,8 +18,7 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 
 import manifold.ext.rt.api.auto;
@@ -68,8 +68,9 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     }
 
     @Override
-    public void renderEntity(LivingEntity entity, CGRect rect, int scale, Vector3f rotate, CGPoint focus, CGGraphicsContext context) {
-        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, rect, scale, rotate, focus, entity);
+    public void renderEntity(Entity entity, CGPoint offset, int scale, CGPoint focus, CGGraphicsContext context) {
+        EntityRendererImpl<Entity> renderer = AbstractGraphicsRendererImpl.getRenderer(entity);
+        renderer.render(entity, offset, scale, focus, context);
     }
 
     @Override

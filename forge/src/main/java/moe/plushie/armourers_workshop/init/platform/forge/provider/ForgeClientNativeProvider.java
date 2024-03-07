@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform.forge.provider;
 
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
@@ -12,7 +13,7 @@ public interface ForgeClientNativeProvider extends ClientNativeProvider {
     @Override
     default void willPlayerLogin(Consumer<Player> consumer) {
         Registry.willPlayerEnterFO(player -> {
-            if (player != null && player.equals(Minecraft.getInstance().player)) {
+            if (player != null && player.equals(EnvironmentManager.getPlayer())) {
                 consumer.accept(player);
             }
         });
@@ -21,7 +22,7 @@ public interface ForgeClientNativeProvider extends ClientNativeProvider {
     @Override
     default void willPlayerLogout(Consumer<Player> consumer) {
         Registry.willPlayerLeaveFO(player -> {
-            if (player == null || player.equals(Minecraft.getInstance().player)) {
+            if (player == null || player.equals(EnvironmentManager.getPlayer())) {
                 consumer.accept(player);
             }
         });

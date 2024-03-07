@@ -7,16 +7,17 @@ import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIEvent;
 import moe.plushie.armourers_workshop.core.client.render.MannequinEntityRenderer;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 
 @Environment(EnvType.CLIENT)
 public class EntityPreviewView extends UIControl {
 
     private CGPoint lastMousePos;
-    private float playerRotation = 45.0f;
+    private Vector3f lastPlayerRotation = new Vector3f(-20, 45, 0);
 
     public EntityPreviewView(CGRect frame) {
         super(frame);
@@ -25,25 +26,27 @@ public class EntityPreviewView extends UIControl {
 
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
-        LivingEntity entity = ObjectUtils.safeCast(contents(), LivingEntity.class);
+        Entity entity = ObjectUtils.safeCast(contents(), Entity.class);
         if (entity == null) {
             return;
         }
         CGRect bounds = bounds();
+        RenderSystem.setExtendedScissorFlags(1);
         MannequinEntityRenderer.enableLimitScale = true;
         MannequinEntityRenderer.enableLimitYRot = true;
-//        context.saveGraphicsState();
+        context.saveGraphicsState();
+
         context.translateCTM(0, 0, 300);
-        context.drawEntity(entity, bounds, 45, new Vector3f(-20, playerRotation, 0), CGPoint.ZERO);
-        context.translateCTM(0, 0, -300);
-//        context.translateCTM(bounds.width / 2f, bounds.height - 8, 50);
-//        context.rotateCTM(-20, 0, 0);
-//        context.rotateCTM(0, playerRotation, 0);
-//        context.translateCTM(0, 0, -50);
-//        context.drawEntity(entity, 0, 0, 45, 0, 0);
-//        context.restoreGraphicsState();
+        context.translateCTM(bounds.getMidX(), bounds.getMidY(), 50);
+        context.rotateCTM(lastPlayerRotation.getX(), 0, 0);
+        context.rotateCTM(0, lastPlayerRotation.getY(), 0);
+        context.translateCTM(0, 0, -50);
+        context.drawEntity(entity, CGPoint.ZERO, 45, CGPoint.ZERO);
+
+        context.restoreGraphicsState();
         MannequinEntityRenderer.enableLimitYRot = false;
         MannequinEntityRenderer.enableLimitScale = false;
+        RenderSystem.setExtendedScissorFlags(0);
     }
 
     @Override
@@ -68,7 +71,8 @@ public class EntityPreviewView extends UIControl {
         if (oldMousePos == null) {
             return;
         }
+        float yRot = lastPlayerRotation.getY();
         this.lastMousePos = event.locationInWindow();
-        this.playerRotation = (playerRotation + (lastMousePos.x - oldMousePos.x) + 360) % 360;
+        this.lastPlayerRotation.setY((yRot + (lastMousePos.x - oldMousePos.x) + 360) % 360);
     }
 }

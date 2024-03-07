@@ -261,7 +261,7 @@ public class OpenQuaternionf implements IQuaternionf {
         return x * other.x + y * other.y + z * other.z + w * other.w;
     }
 
-    public OpenQuaternionf conj() {
+    public OpenQuaternionf conjugate() {
         this.x = -this.x;
         this.y = -this.y;
         this.z = -this.z;
@@ -269,7 +269,7 @@ public class OpenQuaternionf implements IQuaternionf {
     }
 
     public OpenQuaternionf inverse() {
-        return this.conj();
+        return this.conjugate();
     }
 
     public void set(float f, float g, float h, float i) {

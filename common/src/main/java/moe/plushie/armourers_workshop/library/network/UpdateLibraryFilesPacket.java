@@ -5,24 +5,24 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileHeader;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.library.data.SkinLibrary;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileHeader;
+import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
+import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryFile;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.data.SkinLibrarySetting;
 import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -31,7 +31,8 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
 
     private final ArrayList<SkinLibraryFile> publicFiles;
     private final ArrayList<SkinLibraryFile> privateFiles;
-    private SkinLibrarySetting setting;
+
+    private final SkinLibrarySetting setting;
 
     public UpdateLibraryFilesPacket(ArrayList<SkinLibraryFile> publicFiles, ArrayList<SkinLibraryFile> privateFiles, SkinLibrarySetting setting) {
         this.setting = setting;
@@ -70,28 +71,20 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
     private void writeCompressedBuffer(ByteBufOutputStream stream, Iterable<SkinLibraryFile> files, int totalSize) {
         try {
             stream.writeInt(totalSize);
-            GZIPOutputStream go = new GZIPOutputStream(stream);
-            ObjectOutputStream oo = new ObjectOutputStream(go);
+            DataOutputStream dataStream = new DataOutputStream(new GZIPOutputStream(stream));
+            IOutputStream outputStream = IOutputStream.of(dataStream);
             for (SkinLibraryFile file : files) {
-                ArrayList<String> values = new ArrayList<>();
-                ISkinProperties properties = file.getSkinProperties();
+                SkinProperties properties = ObjectUtils.safeCast(file.getSkinProperties(), SkinProperties.class);
+                outputStream.writeString(file.getPath());
+                outputStream.writeBoolean(properties == null); // is directory
                 if (properties != null) {
-                    values.add(file.getSkinType().toString());
-                    values.add(properties.get(SkinProperty.ALL_CUSTOM_NAME));
-                    values.add(properties.get(SkinProperty.ALL_AUTHOR_NAME));
-                    values.add(properties.get(SkinProperty.ALL_FLAVOUR_TEXT));
-                }
-                oo.writeUTF(file.getPath());
-                oo.writeByte(values.size());
-                for (String value : values) {
-                    oo.writeUTF(value);
-                }
-                if (values.size() != 0) {
-                    oo.writeInt(file.getSkinVersion());
-                    oo.writeInt(file.getLastModified());
+                    outputStream.writeType(file.getSkinType());
+                    outputStream.writeInt(file.getSkinVersion());
+                    outputStream.writeInt(file.getLastModified());
+                    properties.writeToStream(outputStream);
                 }
             }
-            oo.close();
+            dataStream.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,22 +94,20 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
         ArrayList<SkinLibraryFile> files = new ArrayList<>();
         try {
             int totalSize = stream.readInt();
-            GZIPInputStream gi = new GZIPInputStream(stream);
-            ObjectInputStream oi = new ObjectInputStream(gi);
+            DataInputStream dataStream = new DataInputStream(new GZIPInputStream(stream));
+            IInputStream inputStream = IInputStream.of(dataStream);
             for (int index = 0; index < totalSize; ++index) {
-                String path = oi.readUTF();
+                String path = inputStream.readString();
                 String basename = SkinFileUtils.getBaseName(path);
-                if (oi.readByte() == 0) {
+                if (inputStream.readBoolean()) { // is directory
                     files.add(new SkinLibraryFile(DataDomain.DEDICATED_SERVER, basename, path));
                     continue;
                 }
-                ISkinType skinType = SkinTypes.byName(oi.readUTF());
-                ISkinProperties properties = new SkinProperties();
-                properties.put(SkinProperty.ALL_CUSTOM_NAME, oi.readUTF());
-                properties.put(SkinProperty.ALL_AUTHOR_NAME, oi.readUTF());
-                properties.put(SkinProperty.ALL_FLAVOUR_TEXT, oi.readUTF());
-                int fileVersion = oi.readInt();
-                int lastModified = oi.readInt();
+                ISkinType skinType = inputStream.readType(SkinTypes::byName);
+                int fileVersion = inputStream.readInt();
+                int lastModified = inputStream.readInt();
+                SkinProperties properties = new SkinProperties();
+                properties.readFromStream(inputStream);
                 SkinFileHeader header = SkinFileHeader.of(fileVersion, skinType, properties);
                 header.setLastModified(lastModified);
                 files.add(new SkinLibraryFile(DataDomain.DEDICATED_SERVER, basename, path, header));

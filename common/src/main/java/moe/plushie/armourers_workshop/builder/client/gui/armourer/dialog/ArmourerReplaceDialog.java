@@ -17,9 +17,9 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.PlayerInventoryView
 import moe.plushie.armourers_workshop.core.client.gui.widget.SlotListView;
 import moe.plushie.armourers_workshop.core.menu.AbstractContainerMenu;
 import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -27,8 +27,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class ArmourerReplaceDialog extends ConfirmDialog {
@@ -45,7 +43,7 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
     public ArmourerReplaceDialog() {
         super();
         this.setFrame(new CGRect(0, 0, 240, 130));
-        Player player = Objects.requireNonNull(Minecraft.getInstance().player);
+        Player player = EnvironmentManager.getPlayer();
         this.playerInventory = player.getInventory();
         this.inventory = createBackup(playerInventory);
         this.listView = new SlotListView<>(new PickerContainer(inventory), playerInventory, bounds());

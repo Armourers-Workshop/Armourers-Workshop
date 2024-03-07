@@ -4,7 +4,11 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.utils.Constants;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.entity.player.Player;
 
 import java.io.File;
 
@@ -40,6 +44,11 @@ public class EnvironmentManager {
     @ExpectPlatform
     public static MinecraftServer getServer() {
         throw new AssertionError();
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static Player getPlayer() {
+        return Minecraft.getInstance().player;
     }
 
     public static boolean isDedicatedServer() {

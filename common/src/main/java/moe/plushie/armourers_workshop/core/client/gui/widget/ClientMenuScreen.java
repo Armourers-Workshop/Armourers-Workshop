@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.gui.widget;
 
 import moe.plushie.armourers_workshop.core.menu.AbstractContainerMenu;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +16,7 @@ public class ClientMenuScreen extends ContainerMenuScreen<AbstractContainerMenu,
     }
 
     public static Inventory getEmptyInventory() {
-        Player player = Minecraft.getInstance().player;
+        Player player = EnvironmentManager.getPlayer();
         if (player != null) {
             return player.getInventory();
         }

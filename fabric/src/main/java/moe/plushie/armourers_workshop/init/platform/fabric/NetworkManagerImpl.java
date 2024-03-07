@@ -31,7 +31,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
 
@@ -107,15 +106,7 @@ public class NetworkManagerImpl {
         @Environment(EnvType.CLIENT)
         public void onClientEvent(Minecraft client, Object handler, FriendlyByteBuf buf, PacketSender responseSender) {
             IClientPacketHandler packetHandler = client::execute;
-            didReceivePacket(packetHandler, buf, getClientPlayer());
-        }
-
-        @Environment(EnvType.CLIENT)
-        public Player getClientPlayer() {
-            // a better solution is use the player directly, but it's a trap.
-            // java will generate an anonymous lambda for we source code,
-            // and then it will load lambda type on the server environment.
-            return Minecraft.getInstance().player;
+            didReceivePacket(packetHandler, buf, null);
         }
     }
 

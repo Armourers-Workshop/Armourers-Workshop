@@ -159,7 +159,7 @@ public class Vector4f {
         OpenQuaternionf quaternion = new OpenQuaternionf(q);
         quaternion.mul(new OpenQuaternionf(x, y, z, 0.0F));
         OpenQuaternionf quaternion1 = new OpenQuaternionf(q);
-        quaternion1.conj();
+        quaternion1.conjugate();
         quaternion.mul(quaternion1);
         set(quaternion.x(), quaternion.y(), quaternion.z(), w);
     }

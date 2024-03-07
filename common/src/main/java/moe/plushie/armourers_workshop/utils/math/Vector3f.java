@@ -189,7 +189,7 @@ public class Vector3f implements IVector3f, Position {
         OpenQuaternionf quaternion = new OpenQuaternionf(value);
         quaternion.mul(new OpenQuaternionf(x, y, z, 0.0F));
         OpenQuaternionf quaternion1 = new OpenQuaternionf(value);
-        quaternion1.conj();
+        quaternion1.conjugate();
         quaternion.mul(quaternion1);
         set(quaternion.x(), quaternion.y(), quaternion.z());
     }

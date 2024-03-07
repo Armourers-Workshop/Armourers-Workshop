@@ -2,15 +2,15 @@ package moe.plushie.armourers_workshop.core.skin.serializer;
 
 import com.google.common.collect.ImmutableList;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
+import moe.plushie.armourers_workshop.core.skin.exception.NewerFileVersionException;
+import moe.plushie.armourers_workshop.core.skin.exception.UnsupportedFileFormatException;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.ISkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.serializer.v12.SkinSerializerV12;
 import moe.plushie.armourers_workshop.core.skin.serializer.v13.SkinSerializerV13;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.SkinSerializerV20;
-import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
-import moe.plushie.armourers_workshop.core.skin.exception.NewerFileVersionException;
-import moe.plushie.armourers_workshop.core.skin.exception.UnsupportedFileFormatException;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -26,7 +26,7 @@ public class SkinSerializer {
 
     public static void writeToStream(Skin skin, DataOutputStream stream) throws IOException {
         int fileVersion = skin.getVersion();
-        if (fileVersion >= SkinSerializerV20.FILE_VERSION) {
+        if (fileVersion >= SkinSerializerV20.FILE_MIN_VERSION) {
             fileVersion = SkinSerializerV20.FILE_HEADER;
         }
         writeToStream(skin, stream, fileVersion);

@@ -6,6 +6,7 @@ import com.apple.library.coregraphics.CGGraphicsState;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
+import com.apple.library.impl.EntityRendererImpl;
 import com.apple.library.uikit.UIFont;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -15,19 +16,16 @@ import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-@Available("[1.16, 1.18)")
+@Available("[1.16, 1.20)")
 @Environment(EnvType.CLIENT)
 public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsState {
 
@@ -73,17 +71,9 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     }
 
     @Override
-    public void renderEntity(LivingEntity entity, CGRect rect, int scale, Vector3f rotate, CGPoint focus, CGGraphicsContext context) {
-        context.saveGraphicsState();
-        context.translateCTM(rect.getWidth() / 2f, rect.getHeight() - 8, 50);
-        context.rotateCTM(rotate.getX(), 0, 0);
-        context.rotateCTM(0, rotate.getY(), 0);
-        context.translateCTM(0, 0, -50);
-        RenderSystem.pushMatrix();
-        RenderSystem.multMatrix(originPoseStack.last().pose());
-        InventoryScreen.renderEntityInInventory(0, 0, scale, focus.x, focus.y, entity);
-        RenderSystem.popMatrix();
-        context.restoreGraphicsState();
+    public void renderEntity(Entity entity, CGPoint offset, int scale, CGPoint focus, CGGraphicsContext context) {
+        EntityRendererImpl<Entity> renderer = AbstractGraphicsRendererImpl.getRenderer(entity);
+        renderer.render(entity, offset, scale, focus, context);
     }
 
     @Override
