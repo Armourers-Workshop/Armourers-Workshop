@@ -205,7 +205,7 @@
   "item.armourers_workshop.paintbrush": "Brocha de Pintura",
   "item.armourers_workshop.paintbrush.flavour": "Pinta un bloque a la vez.",
   "item.armourers_workshop.rollover.empty": "§6Vacio.",
-  "item.armourers_workshop.rollover.hasSkin": "§6Contiene aspecto de Armouerer's Workshop",
+  "item.armourers_workshop.rollover.hasSkin": "§6Contiene aspecto de Armourer's Workshop",
   "item.armourers_workshop.rollover.hex": "§6Hexadecimal:§r %s",
   "item.armourers_workshop.rollover.intensity": "§6Intensidad:§r %s",
   "item.armourers_workshop.rollover.noSettingsSaved": "§cSin Configuración Guardada.",
