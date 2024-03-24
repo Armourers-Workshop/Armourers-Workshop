@@ -328,7 +328,7 @@
   "item.armourers_workshop.rollover.colour": "§6Cor:§r %s",
   "item.armourers_workshop.rollover.effectRadius": "§6Raio do efeito:§r %d",
   "item.armourers_workshop.rollover.empty": "§6Vazio.",
-  "item.armourers_workshop.rollover.hasSkin": "§6Possui visual do Armouerer's Workshop",
+  "item.armourers_workshop.rollover.hasSkin": "§6Possui visual do Armourer's Workshop",
   "item.armourers_workshop.rollover.intensity": "§6Intensidade:§r %s",
   "item.armourers_workshop.rollover.noSettingsSaved": "§cSem configuração salva.",
   "item.armourers_workshop.rollover.nopaint": "§6Sem pintura.",

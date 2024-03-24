@@ -395,7 +395,7 @@
   "item.armourers_workshop.rollover.effectRadius": "§6Effect Radius:§r %d",
   "item.armourers_workshop.rollover.empty": "§6Empty.",
   "item.armourers_workshop.rollover.flavour": "§5§o%s",
-  "item.armourers_workshop.rollover.hasSkin": "§6Has Armouerer's Workshop Skin",
+  "item.armourers_workshop.rollover.hasSkin": "§6Has Armourer's Workshop Skin",
   "item.armourers_workshop.rollover.hex": "§6Hex:§r %s",
   "item.armourers_workshop.rollover.intensity": "§6Intensity:§r %s",
   "item.armourers_workshop.rollover.noSettingsSaved": "§cNo Settings Saved.",

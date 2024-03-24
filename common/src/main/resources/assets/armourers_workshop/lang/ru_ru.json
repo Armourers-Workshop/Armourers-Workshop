@@ -362,7 +362,7 @@
   "item.armourers_workshop.rollover.colour": "§6Цвет:§r %s",
   "item.armourers_workshop.rollover.effectRadius": "§6Радиус эффекта:§r %d",
   "item.armourers_workshop.rollover.empty": "§6Пусто.",
-  "item.armourers_workshop.rollover.hasSkin": "§6Применён скин из Armouerer's Workshop",
+  "item.armourers_workshop.rollover.hasSkin": "§6Применён скин из Armourer's Workshop",
   "item.armourers_workshop.rollover.intensity": "§6Интенсивность:§r %s",
   "item.armourers_workshop.rollover.noSettingsSaved": "§cНастройки не сохранены.",
   "item.armourers_workshop.rollover.nopaint": "§6Нет краски.",
