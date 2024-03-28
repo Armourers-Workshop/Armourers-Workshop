@@ -20,13 +20,13 @@ import java.util.LinkedHashMap;
 public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
 
     private final ArrayList<IModelPart> applying = new ArrayList<>();
-    private final HashMap<ISkinProperty<Boolean>, Collection<IModelPart>> overrides = new HashMap<>();
+    private final HashMap<ISkinProperty<Boolean>, Collection<? extends IModelPart>> overrides = new HashMap<>();
 
     public DefaultOverriddenArmaturePlugin(IModel model, HashMap<String, Collection<String>> overrides) {
         overrides.forEach((key, names) -> {
             // NOTE: we assume that all default values is false.
             ISkinProperty<Boolean> property = SkinProperty.normal(key, false);
-            Collection<IModelPart> parts = buildParts(names, model);
+            Collection<? extends IModelPart> parts = buildParts(names, model);
             this.overrides.put(property, parts);
         });
     }
@@ -80,7 +80,7 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
         }
     }
 
-    private Collection<IModelPart> buildParts(Collection<String> names, IModel model) {
+    private Collection<? extends IModelPart> buildParts(Collection<String> names, IModel model) {
         // '*' will wildcard all parts.
         if (names.contains("*")) {
             return model.getAllParts();

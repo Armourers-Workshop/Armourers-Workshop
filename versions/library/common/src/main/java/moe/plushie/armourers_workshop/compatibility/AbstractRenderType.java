@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderFormat;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -91,8 +92,13 @@ public class AbstractRenderType extends RenderType {
 
 
         private static final Map<Target, OutputStateShard> TABLE_OUTPUT = _make(it -> {
-            it.put(Target.TRANSLUCENT, TRANSLUCENT_TARGET);
             it.put(Target.MAIN, MAIN_TARGET);
+            it.put(Target.OUTLINE, OUTLINE_TARGET);
+            it.put(Target.TRANSLUCENT, TRANSLUCENT_TARGET);
+            it.put(Target.CLOUDS, CLOUDS_TARGET);
+            it.put(Target.WEATHER, WEATHER_TARGET);
+            it.put(Target.PARTICLES, PARTICLES_TARGET);
+            it.put(Target.ITEM_ENTITY, ITEM_ENTITY_TARGET);
         });
 
         private static final Map<Transparency, TransparencyStateShard> TABLE_TRANSPARENCY = _make(it -> {

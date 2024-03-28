@@ -9,8 +9,10 @@
     "Paddle_L": "left_paddle",
     "Paddle_R": "right_paddle"
   },
-  "model": [
-    "minecraft:model/boat",
-    "minecraft:model/raft"
+  "plugin": [
+    "armourers_workshop:plugin/fix_boat_model"
+  ],
+  "entity": [
+    "minecraft:boat"
   ]
 }

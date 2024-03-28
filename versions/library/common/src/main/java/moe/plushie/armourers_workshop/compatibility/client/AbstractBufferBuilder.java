@@ -22,6 +22,10 @@ public class AbstractBufferBuilder extends AbstractVertexConsumer implements IBu
         this.bufferBuilder = bufferBuilder;
     }
 
+    public static void upload(RenderType renderType, AbstractBufferBuilder builder) {
+        renderType.end(builder.bufferBuilder, 0, 0, 0);
+    }
+
     @Override
     public void begin(RenderType renderType) {
         bufferBuilder.begin(renderType.mode(), renderType.format());

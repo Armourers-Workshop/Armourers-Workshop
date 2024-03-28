@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.init.mixin;
+package moe.plushie.armourers_workshop.compatibility.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;

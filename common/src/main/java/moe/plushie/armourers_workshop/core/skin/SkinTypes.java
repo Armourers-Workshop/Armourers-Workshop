@@ -39,7 +39,7 @@ public final class SkinTypes {
     public static final ISkinType ITEM_SHOVEL = registerItem("shovel", 12, ItemOverrideType.SHOVEL, SkinPartTypes.ITEM_SHOVEL);
     public static final ISkinType ITEM_HOE = registerItem("hoe", 13, ItemOverrideType.HOE, SkinPartTypes.ITEM_HOE);
 
-    public static final ISkinType ITEM_BOAT = registerItem("boat", 19, ItemOverrideType.FISHING_ROD, SkinPartTypes.ITEM_BOAT_BODY, SkinPartTypes.ITEM_BOAT_LEFT_PADDLE, SkinPartTypes.ITEM_BOAT_RIGHT_PADDLE);
+    public static final ISkinType ITEM_BOAT = registerItem("boat", 19, ItemOverrideType.BOAT, SkinPartTypes.ITEM_BOAT_BODY, SkinPartTypes.ITEM_BOAT_LEFT_PADDLE, SkinPartTypes.ITEM_BOAT_RIGHT_PADDLE);
     public static final ISkinType ITEM_FISHING = registerItem("fishing", 20, ItemOverrideType.FISHING_ROD, SkinPartTypes.ITEM_FISHING_ROD, SkinPartTypes.ITEM_FISHING_HOOK);
 
     public static final ISkinType ITEM = register("item", 14, SkinPartTypes.ITEM);

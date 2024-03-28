@@ -7,20 +7,21 @@ import moe.plushie.armourers_workshop.compatibility.client.model.AbstractSkinnab
 import moe.plushie.armourers_workshop.core.armature.ArmatureSerializers;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerManager;
 import moe.plushie.armourers_workshop.core.armature.Armatures;
+import moe.plushie.armourers_workshop.core.armature.core.DefaultArmatureTransformerManager;
+import moe.plushie.armourers_workshop.core.armature.core.DefaultLayerArmaturePlugin;
+import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightArmatureTransformerManager;
 import moe.plushie.armourers_workshop.core.client.skinrender.modifier.AllayBodyJointModifier;
 import moe.plushie.armourers_workshop.core.client.skinrender.modifier.AllayHeadJointModifier;
 import moe.plushie.armourers_workshop.core.client.skinrender.modifier.AllayWingJointModifier;
-import moe.plushie.armourers_workshop.core.armature.core.DefaultArmatureTransformerManager;
 import moe.plushie.armourers_workshop.core.client.skinrender.modifier.DefaultBabyJointModifier;
-import moe.plushie.armourers_workshop.core.armature.core.DefaultLayerArmaturePlugin;
 import moe.plushie.armourers_workshop.core.client.skinrender.modifier.DefaultSkirtJointModifier;
 import moe.plushie.armourers_workshop.core.client.skinrender.modifier.FlatWingJointModifier;
 import moe.plushie.armourers_workshop.core.client.skinrender.modifier.HorseBodyJointModifier;
-import moe.plushie.armourers_workshop.core.client.skinrender.plugin.FishingModelArmaturePlugin;
-import moe.plushie.armourers_workshop.core.client.skinrender.plugin.VillagerModelArmaturePlugin;
-import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightArmatureTransformerManager;
 import moe.plushie.armourers_workshop.core.client.skinrender.plugin.ArrowModelArmaturePlugin;
+import moe.plushie.armourers_workshop.core.client.skinrender.plugin.BoatModelArmaturePlugin;
+import moe.plushie.armourers_workshop.core.client.skinrender.plugin.FishingModelArmaturePlugin;
 import moe.plushie.armourers_workshop.core.client.skinrender.plugin.TridentModelArmaturePlugin;
+import moe.plushie.armourers_workshop.core.client.skinrender.plugin.VillagerModelArmaturePlugin;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import net.minecraft.resources.ResourceLocation;
@@ -66,6 +67,7 @@ public class SkinRendererManager2 extends ArmatureSerializers {
         registerPlugin("armourers_workshop:plugin/fix_trident_model", TridentModelArmaturePlugin::new);
         registerPlugin("armourers_workshop:plugin/fix_arrow_model", ArrowModelArmaturePlugin::new);
         registerPlugin("armourers_workshop:plugin/fix_fishing_model", FishingModelArmaturePlugin::new);
+        registerPlugin("armourers_workshop:plugin/fix_boat_model", BoatModelArmaturePlugin::new);
     }
 
     private static void registerClasses() {

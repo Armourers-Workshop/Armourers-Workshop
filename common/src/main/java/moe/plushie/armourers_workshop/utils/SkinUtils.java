@@ -10,17 +10,16 @@ import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.minecraft.core.Direction;
-import net.minecraft.server.commands.GiveCommand;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrownTrident;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -229,6 +228,38 @@ public final class SkinUtils {
         SkinWardrobe oldWardrobe = SkinWardrobe.of(player);
         if (oldWardrobe != null) {
             oldWardrobe.dropAll(player::spawnAtLocation);
+        }
+    }
+
+    public static void saveVehicleSkin(Entity entity, ItemStack itemStack) {
+        // only allow of the boat
+        if (!(entity instanceof Boat || entity instanceof AbstractMinecart)) {
+            return;
+        }
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        if (wardrobe != null) {
+            ItemStack itemStack1 = wardrobe.getItem(SkinSlotType.UNKNOWN, 0);
+            SkinDescriptor descriptor = SkinDescriptor.of(itemStack1);
+            if (!descriptor.isEmpty()) {
+                SkinDescriptor.setDescriptor(itemStack, descriptor);
+            }
+        }
+    }
+
+    public static void copyVehicleSkin(Entity entity, CompoundTag tag) {
+        // only allow of the boat
+        if (!(entity instanceof Boat || entity instanceof AbstractMinecart)) {
+            return;
+        }
+        // when not provide skin descriptor, ignore it.
+        if (tag == null || !tag.contains(Constants.Key.SKIN, Constants.TagFlags.COMPOUND)) {
+            return;
+        }
+        SkinDescriptor descriptor = new SkinDescriptor(tag.getCompound(Constants.Key.SKIN));
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        if (wardrobe != null) {
+            wardrobe.setItem(SkinSlotType.UNKNOWN, 0, descriptor.asItemStack());
+            wardrobe.broadcast();
         }
     }
 

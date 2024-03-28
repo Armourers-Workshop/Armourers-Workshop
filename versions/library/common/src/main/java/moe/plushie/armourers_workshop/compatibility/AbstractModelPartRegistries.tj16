@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.compatibility;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.client.model.AbstractSkinnableModels;
-import moe.plushie.armourers_workshop.core.client.model.CachedModel;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.ListModel;
@@ -12,7 +11,7 @@ public abstract class AbstractModelPartRegistries {
 
     public static void init() {
 
-        ModelHolder.register(EntityModel.class, CachedModel::new, (model, it) -> {
+        ModelHolder.register(EntityModel.class, (model, it) -> {
             // noop
         });
 
@@ -20,7 +19,7 @@ public abstract class AbstractModelPartRegistries {
             it.unnamed(model.parts());
         });
 
-        ModelHolder.register(AbstractSkinnableModels.HUMANOID, CachedModel.Humanoid::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.HUMANOID, (model, it) -> {
             it.put("hat", model.hat);
             it.put("head", model.head);
             it.put("body", model.body);
@@ -29,7 +28,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("left_leg", model.leftLeg);
             it.put("right_leg", model.rightLeg);
         });
-        ModelHolder.register(AbstractSkinnableModels.PLAYER, CachedModel.Player::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.PLAYER, (model, it) -> {
             it.put("left_sleeve", model.leftSleeve);
             it.put("right_sleeve", model.rightSleeve);
             it.put("left_pants", model.leftPants);
@@ -37,7 +36,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("jacket", model.jacket);
         });
 
-        ModelHolder.register(AbstractSkinnableModels.VILLAGER, CachedModel.Humanoid::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.VILLAGER, (model, it) -> {
             it.put("hat", model.hat);
             it.put("hat_rim", model.hatRim);
             it.put("head", model.head);
@@ -50,7 +49,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("jacket", model.jacket);
         });
 
-        ModelHolder.register(AbstractSkinnableModels.ILLAGER, CachedModel.Humanoid::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.ILLAGER, (model, it) -> {
             it.put("hat", model.hat);
             it.put("head", model.head);
             it.put("body", model.body);
@@ -76,7 +75,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("tail", model.tail);
         });
 
-        ModelHolder.register(AbstractSkinnableModels.IRON_GOLEM, CachedModel.Humanoid::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.IRON_GOLEM, (model, it) -> {
             it.put("head", model.head);
             it.put("body", model.body);
             it.put("left_arm", model.arm1);

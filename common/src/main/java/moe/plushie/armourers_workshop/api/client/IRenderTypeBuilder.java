@@ -47,7 +47,7 @@ public interface IRenderTypeBuilder {
     RenderType build(String name);
 
     enum Target {
-        MAIN, TRANSLUCENT
+        MAIN, OUTLINE, TRANSLUCENT, CLOUDS, WEATHER, PARTICLES, ITEM_ENTITY
     }
 
     enum Transparency {

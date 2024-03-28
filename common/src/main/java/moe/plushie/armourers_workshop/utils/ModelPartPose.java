@@ -6,9 +6,9 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 
 public class ModelPartPose implements IModelPartPose {
 
-    private final float x;
-    private final float y;
-    private final float z;
+    private float x;
+    private float y;
+    private float z;
     private float xRot;
     private float yRot;
     private float zRot;
@@ -66,6 +66,12 @@ public class ModelPartPose implements IModelPartPose {
         if (xRot != 0) {
             poseStack.rotate(Vector3f.XP.rotation(xRot));
         }
+    }
+
+    public void setPosition(IModelPartPose partPose) {
+        x = partPose.getX();
+        y = partPose.getY();
+        z = partPose.getZ();
     }
 
     @Override

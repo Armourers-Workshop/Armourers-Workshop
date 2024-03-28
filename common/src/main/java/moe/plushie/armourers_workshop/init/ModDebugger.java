@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.fabricmc.api.EnvType;
@@ -62,14 +63,26 @@ public class ModDebugger {
     public static boolean skinRenderBounds;
     public static boolean sortOrderToolTip;
 
+    public static void rotate(IPoseStack poseStack) {
+        poseStack.rotate(new OpenQuaternionf(rx, ry, rz, true));
+    }
+
     @Environment(EnvType.CLIENT)
     public static void rotate(PoseStack poseStack) {
         poseStack.mulPose(new OpenQuaternionf(rx, ry, rz, true));
     }
 
+    public static void scale(IPoseStack poseStack) {
+        poseStack.scale(sx, sy, sz);
+    }
+
     @Environment(EnvType.CLIENT)
     public static void scale(PoseStack poseStack) {
         poseStack.scale(sx, sy, sz);
+    }
+
+    public static void translate(IPoseStack poseStack) {
+        poseStack.translate(tx, ty, tz);
     }
 
     @Environment(EnvType.CLIENT)

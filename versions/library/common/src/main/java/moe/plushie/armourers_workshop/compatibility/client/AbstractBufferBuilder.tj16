@@ -1,12 +1,11 @@
 package moe.plushie.armourers_workshop.compatibility.client;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
-import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractVertexConsumer;
-import net.minecraft.client.renderer.RenderType;
 import com.mojang.datafixers.util.Pair;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
+import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
+import net.minecraft.client.renderer.RenderType;
 
 import java.nio.ByteBuffer;
 
@@ -22,6 +21,10 @@ public class AbstractBufferBuilder extends AbstractVertexConsumer implements IBu
     public AbstractBufferBuilder(BufferBuilder bufferBuilder) {
         super(bufferBuilder);
         this.bufferBuilder = bufferBuilder;
+    }
+
+    public static void upload(RenderType renderType, AbstractBufferBuilder builder) {
+        renderType.end(builder.bufferBuilder, 0, 0, 0);
     }
 
     @Override

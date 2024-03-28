@@ -57,17 +57,18 @@ public class AbstractPoseStack extends AbstractPoseStackImpl implements IPoseSta
     }
 
     public void scale(float x, float y, float z) {
-        // https://web.archive.org/web/20240125142900/http://www.songho.ca/opengl/gl_normaltransform.html
-        auto entry = last();
-        entry.pose.scale(x, y, z);
-        if (Math.abs(x) == Math.abs(y) && Math.abs(y) == Math.abs(z)) {
-            if (x < 0.0f || y < 0.0f || z < 0.0f) {
-                entry.normal.scale(Math.signum(x), Math.signum(y), Math.signum(z));
-            }
-        } else {
-            entry.normal.scale(1.0f / x, 1.0f / y, 1.0f / z);
-            entry.properties |= 0x02;
-        }
+        stack.scale(x, y, z);
+//        // https://web.archive.org/web/20240125142900/http://www.songho.ca/opengl/gl_normaltransform.html
+//        auto entry = last();
+//        entry.pose.scale(x, y, z);
+//        if (Math.abs(x) == Math.abs(y) && Math.abs(y) == Math.abs(z)) {
+//            if (x < 0.0f || y < 0.0f || z < 0.0f) {
+//                entry.normal.scale(Math.signum(x), Math.signum(y), Math.signum(z));
+//            }
+//        } else {
+//            entry.normal.scale(1.0f / x, 1.0f / y, 1.0f / z);
+//            entry.properties |= 0x02;
+//        }
     }
 
     public void rotate(IQuaternionf quaternion) {

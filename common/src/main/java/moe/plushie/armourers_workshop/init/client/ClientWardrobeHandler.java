@@ -72,7 +72,7 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderSpecificHand(LivingEntity entity, float partialTicks, int packedLight, AbstractItemTransformType transformType, PoseStack poseStackIn, MultiBufferSource buffersIn, Runnable cancelHandler) {
-        SkinRenderData renderData = SkinRenderData.of(entity);
+        auto renderData = SkinRenderData.of(entity);
         if (renderData == null) {
             return;
         }
@@ -95,7 +95,7 @@ public class ClientWardrobeHandler {
 
 
     public static void onRenderEntityPre(Entity entity, float f, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight) {
-        BakedArmatureTransformer transformer = SkinRendererManager.getFallbackTransformer(entity.getType());
+        auto transformer = SkinRendererManager.getFallbackTransformer(entity.getType());
         if (transformer != null) {
             poseStackIn.pushPose();
             CallbackInfo callbackInfo = new CallbackInfo("", true);
@@ -149,7 +149,7 @@ public class ClientWardrobeHandler {
 
 
     public static void onRenderLivingEntityPre(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
-        SkinRenderData renderData = SkinRenderData.of(entity);
+        auto renderData = SkinRenderData.of(entity);
         if (renderData != null) {
             BakedArmatureTransformer transformer = BakedArmatureTransformer.defaultBy(entity, entityRenderer.getModel(), entityRenderer);
             if (transformer != null) {
@@ -163,7 +163,7 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderLivingEntity(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
-        SkinRenderData renderData = SkinRenderData.of(entity);
+        auto renderData = SkinRenderData.of(entity);
         if (renderData != null) {
             BakedArmatureTransformer transformer = BakedArmatureTransformer.defaultBy(entity, entityRenderer.getModel(), entityRenderer);
             if (transformer != null) {
@@ -177,7 +177,7 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderLivingEntityPost(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
-        SkinRenderData renderData = SkinRenderData.of(entity);
+        auto renderData = SkinRenderData.of(entity);
         if (renderData != null) {
             BakedArmatureTransformer transformer = BakedArmatureTransformer.defaultBy(entity, entityRenderer.getModel(), entityRenderer);
             if (transformer != null) {
@@ -195,14 +195,14 @@ public class ClientWardrobeHandler {
         if (RENDERING_GUI_ITEM != itemStack) {
             // when the wardrobe has override skin of the item,
             // we easily got a conclusion of the needs embedded skin.
-            SkinRenderData renderData = SkinRenderData.of(entity);
+            auto renderData = SkinRenderData.of(entity);
             if (renderData != null) {
-                for (SkinRenderData.Entry entry : renderData.getItemSkins(itemStack, entity instanceof MannequinEntity)) {
+                for (auto entry : renderData.getItemSkins(itemStack, entity instanceof MannequinEntity)) {
                     return new EmbeddedSkinStack(0, entry);
                 }
             }
         }
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        auto descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
             return null;
         }
@@ -248,7 +248,7 @@ public class ClientWardrobeHandler {
                     }
                     break;
                 }
-                SkinRenderData renderData = SkinRenderData.of(entity);
+                auto renderData = SkinRenderData.of(entity);
                 if (renderData != null) {
 //                    poseStack.translate(0, 1, -2);
 //                    RenderUtils.drawPoint(poseStack, null, 2, buffers);
@@ -378,9 +378,10 @@ public class ClientWardrobeHandler {
 
     private static int render(Entity entity, BakedArmature bakedArmature, SkinRenderContext context, Supplier<Iterable<SkinRenderData.Entry>> provider) {
         int r = 0;
-        for (SkinRenderData.Entry entry : provider.get()) {
-            SkinItemSource itemSource = context.getReferenced();
-            ItemStack itemStack = itemSource.getItem();
+        for (auto entry : provider.get()) {
+            auto bakedSkin = entry.getBakedSkin();
+            auto itemSource = context.getReferenced();
+            auto itemStack = itemSource.getItem();
             if (itemStack.isEmpty()) {
                 itemStack = entry.getItemStack();
             }
@@ -390,7 +391,6 @@ public class ClientWardrobeHandler {
             itemSource.setItem(itemStack);
             itemSource.setRenderPriority(entry.getRenderPriority());
             context.setReferenced(itemSource);
-            auto bakedSkin = entry.getBakedSkin();
             bakedSkin.setupAnim(entity, context.getAnimationTicks(), itemSource);
             r += SkinRenderer.render(entity, bakedArmature, bakedSkin, entry.getBakedScheme(), context);
         }
@@ -402,7 +402,10 @@ public class ClientWardrobeHandler {
         if (embeddedStack.getMode() == 2) {
             return true;
         }
-        ISkinType skinType = embeddedStack.getDescriptor().getType();
+        auto skinType = embeddedStack.getDescriptor().getType();
+        if (skinType == SkinTypes.ITEM_BOAT || skinType == SkinTypes.ITEM_FISHING || skinType == SkinTypes.HORSE) {
+            return true;
+        }
         // for the tool type skin, don't render in the box.
         if (skinType instanceof ISkinToolType) {
             return false;

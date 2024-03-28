@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.compatibility;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.client.model.AbstractSkinnableModels;
-import moe.plushie.armourers_workshop.core.client.model.CachedModel;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,7 +18,7 @@ public abstract class AbstractModelPartRegistries {
 
     public static void init() {
 
-        ModelHolder.register(EntityModel.class, CachedModel::new, (model, it) -> {
+        ModelHolder.register(EntityModel.class, (model, it) -> {
             // noop
         });
 
@@ -27,7 +26,7 @@ public abstract class AbstractModelPartRegistries {
             it.unnamed(model.root().getAllParts().collect(Collectors.toList()));
         });
 
-        ModelHolder.register(AbstractSkinnableModels.HUMANOID, CachedModel.Humanoid::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.HUMANOID, (model, it) -> {
             it.put("hat", model.hat);
             it.put("head", model.head);
             it.put("body", model.body);
@@ -36,7 +35,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("left_leg", model.leftLeg);
             it.put("right_leg", model.rightLeg);
         });
-        ModelHolder.register(AbstractSkinnableModels.PLAYER, CachedModel.Player::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.PLAYER, (model, it) -> {
             it.put("left_sleeve", model.leftSleeve);
             it.put("right_sleeve", model.rightSleeve);
             it.put("left_pants", model.leftPants);
@@ -78,7 +77,7 @@ public abstract class AbstractModelPartRegistries {
         });
 
 
-        ModelHolder.register(AbstractSkinnableModels.VILLAGER, CachedModel.Humanoid::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.VILLAGER, (model, it) -> {
             ModelPart root = model.root();
             ModelPart head = root.getSafeChild("head");
             ModelPart hat = head.getSafeChild("hat");
@@ -95,7 +94,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("jacket", body.getSafeChild("jacket"));
         });
 
-        ModelHolder.register(AbstractSkinnableModels.ILLAGER, CachedModel.Humanoid::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.ILLAGER, (model, it) -> {
             ModelPart root = model.root();
             ModelPart head = root.getSafeChild("head");
             ModelPart hat = head.getSafeChild("hat");
@@ -109,7 +108,7 @@ public abstract class AbstractModelPartRegistries {
             it.put("right_leg", root.getSafeChild("right_leg"));
         });
 
-        ModelHolder.register(AbstractSkinnableModels.IRON_GOLEM, CachedModel.Humanoid::new, (model, it) -> {
+        ModelHolder.register(AbstractSkinnableModels.IRON_GOLEM, (model, it) -> {
             ModelPart root = model.root();
             it.put("hat", root.getSafeChild("head"));
             it.put("head", root.getSafeChild("head"));
@@ -130,14 +129,14 @@ public abstract class AbstractModelPartRegistries {
             it.put("left_paddle", parts.get(5));
             it.put("right_paddle", parts.get(6));
         });
-//        ModelHolder.register(AbstractSkinnableModels.RAFT, CachedModel.Humanoid::new, (model, it) -> {
+//        ModelHolder.register(AbstractSkinnableModels.RAFT, (model, it) -> {
 //            List<ModelPart> parts = model.parts();
 //            it.put("bottom", parts.get(0));
 //            it.put("left_paddle", parts.get(1));
 //            it.put("right_paddle", parts.get(2));
 //        });
 
-        ModelHolder.registerOptional(AbstractSkinnableModels.ALLAY, CachedModel.Humanoid::new, (model, it) -> {
+        ModelHolder.registerOptional(AbstractSkinnableModels.ALLAY, (model, it) -> {
             ModelPart root = model.root();
             ModelPart body = root.getSafeChild("body");
             it.put("root", root);

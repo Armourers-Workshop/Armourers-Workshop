@@ -45,16 +45,12 @@ public class ModelHolder {
     }
 
     public static <T extends Model> void register(Class<T> clazz, BiConsumer<T, Container> builder) {
-        register(clazz, null, builder);
+        ENTRIES.put(clazz, new Entry<>(clazz, null, builder));
     }
 
-    public static <T extends Model> void register(Class<T> clazz, Function<Container, IModel> factory, BiConsumer<T, Container> builder) {
-        ENTRIES.put(clazz, new Entry<>(clazz, factory, builder));
-    }
-
-    public static <T extends Model> void registerOptional(Class<T> clazz, Function<Container, IModel> factory, BiConsumer<T, Container> builder) {
+    public static <T extends Model> void registerOptional(Class<T> clazz, BiConsumer<T, Container> builder) {
         if (clazz != null) {
-            register(clazz, factory, builder);
+            register(clazz, builder);
         }
     }
 

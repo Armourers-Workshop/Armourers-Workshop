@@ -3,6 +3,8 @@
   "package": "moe.plushie.armourers_workshop.compatibility.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
+    "FishingHookRendererMixin",
+    "BoatRendererMixin",
     "GlStateManagerMixin",
     "EntityRenderDispatcherMixin",
     "GameRendererMixin",
@@ -17,7 +19,9 @@
     "CameraMixin"
   ],
   "mixins": [
-    "EntityJSMixin"
+    "EntityJSMixin",
+    "VehicleEntityPlaceMixin",
+    "VehicleEntityBreakMixin"
   ],
   "injectors": {
     "defaultRequire": 1

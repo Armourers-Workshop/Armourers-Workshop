@@ -1,25 +1,25 @@
-package moe.plushie.armourers_workshop.core.client.other.thirdparty;
+package moe.plushie.armourers_workshop.core.client.model;
 
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.api.client.model.IModelPartPose;
 
-public class EpicFlightModelPart implements IModelPart {
+public class LinkedModelPart implements IModelPart {
 
     private final IModelPart parent;
-    private IModelPart child;
+    private IModelPart target;
 
-    public EpicFlightModelPart(IModelPart parent) {
+    public LinkedModelPart(IModelPart parent) {
         this.parent = parent;
     }
 
     public void linkTo(IModelPart child) {
-        this.child = child;
+        this.target = child;
     }
 
     @Override
     public boolean isVisible() {
-        if (child != null) {
-            return child.isVisible();
+        if (target != null) {
+            return target.isVisible();
         }
         if (parent != null) {
             return parent.isVisible();
@@ -29,8 +29,8 @@ public class EpicFlightModelPart implements IModelPart {
 
     @Override
     public void setVisible(boolean visible) {
-        if (child != null) {
-            child.setVisible(visible);
+        if (target != null) {
+            target.setVisible(visible);
         }
         if (parent != null) {
             parent.setVisible(visible);
@@ -39,8 +39,8 @@ public class EpicFlightModelPart implements IModelPart {
 
     @Override
     public IModelPartPose pose() {
-        if (child != null) {
-            return child.pose();
+        if (target != null) {
+            return target.pose();
         }
         if (parent != null) {
             return parent.pose();

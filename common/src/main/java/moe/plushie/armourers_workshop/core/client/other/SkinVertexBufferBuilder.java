@@ -1,18 +1,17 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.compatibility.AbstractShader;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferBuilder;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexMerger;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import org.jetbrains.annotations.NotNull;
@@ -20,20 +19,19 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 
 @Environment(EnvType.CLIENT)
-public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBufferSource {
+public class SkinVertexBufferBuilder implements IBufferSource {
 
     private static SkinVertexBufferBuilder MERGED_VERTEX_BUILDER;
 
     protected final Pipeline pipeline = new Pipeline();
 
     protected final HashMap<BakedSkin, SkinRenderObjectBuilder> cachingBuilders = new HashMap<>();
-    protected final HashMap<RenderType, BufferBuilder> cachingBuilders2 = new HashMap<>();
+    protected final HashMap<RenderType, AbstractBufferBuilder> cachingBuilders2 = new HashMap<>();
 
     protected final HashMap<BakedSkin, SkinRenderObjectBuilder> pendingBuilders = new HashMap<>();
-    protected final HashMap<RenderType, BufferBuilder> pendingBuilders2 = new HashMap<>();
+    protected final HashMap<RenderType, AbstractBufferBuilder> pendingBuilders2 = new HashMap<>();
 
     public SkinVertexBufferBuilder() {
-        super(256);
     }
 
     public static SkinVertexBufferBuilder getBuffer(IBufferSource bufferSource) {
@@ -51,11 +49,11 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
     }
 
     public static void renderSolid() {
-        getInstance().flush();
+        getInstance().endBatch();
     }
 
     public static void renderTranslucent() {
-        getInstance().flush();
+        getInstance().endBatch();
     }
 
     public static SkinVertexBufferBuilder getInstance() {
@@ -74,14 +72,13 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
     }
 
     @NotNull
-    @Override
-    public VertexConsumer getBuffer(@NotNull RenderType renderType) {
-        BufferBuilder buffer = pendingBuilders2.get(renderType);
+    public IBufferBuilder getBuffer(@NotNull RenderType renderType) {
+        AbstractBufferBuilder buffer = pendingBuilders2.get(renderType);
         if (buffer != null) {
             return buffer;
         }
-        buffer = cachingBuilders2.computeIfAbsent(renderType, k -> new BufferBuilder(k.bufferSize()));
-        buffer.begin(renderType.mode(), renderType.format());
+        buffer = cachingBuilders2.computeIfAbsent(renderType, k -> new AbstractBufferBuilder(k.bufferSize()));
+        buffer.begin(renderType);
         pendingBuilders2.put(renderType, buffer);
         return buffer;
     }
@@ -96,7 +93,8 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         return bufferBuilder;
     }
 
-    public void flush() {
+    @Override
+    public void endBatch() {
         if (!pendingBuilders.isEmpty()) {
             for (SkinRenderObjectBuilder builder : pendingBuilders.values()) {
                 builder.endBatch(pipeline);
@@ -105,7 +103,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
             pipeline.end();
         }
         if (!pendingBuilders2.isEmpty()) {
-            pendingBuilders2.forEach((key, value) -> key.end(value, 0, 0, 0));
+            pendingBuilders2.forEach(AbstractBufferBuilder::upload);
             pendingBuilders2.clear();
         }
     }
@@ -133,7 +131,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         }
 
         public void clear() {
-           merger.clear();
+            merger.clear();
         }
     }
 }

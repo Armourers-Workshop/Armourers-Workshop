@@ -288,7 +288,11 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
         if (!replaceSkinItem && itemStack.is(ModItems.SKIN.get())) {
             return SkinDescriptor.EMPTY;
         }
-        return SkinDescriptor.of(itemStack);
+        auto target = SkinDescriptor.of(itemStack);
+        if (target.getType() == SkinTypes.ITEM_BOAT || target.getType() == SkinTypes.ITEM_FISHING || target.getType() == SkinTypes.HORSE) {
+            return SkinDescriptor.EMPTY;
+        }
+        return target;
     }
 
     public Iterable<Entry> getItemSkins(ItemStack itemStack, boolean replaceSkinItem) {
