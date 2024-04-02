@@ -1,0 +1,16 @@
+package moe.plushie.armourers_workshop.compatibility.extensions.com.mojang.blaze3d.vertex.VertexFormatElement;
+
+import com.mojang.blaze3d.vertex.VertexFormatElement;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Extension
+@Available("[1.16, 1.18)")
+public class SetupProvider {
+
+    public static void setupBufferState(@This VertexFormatElement element, int index, long offset, int strict) {
+        element.setupBufferState(offset, strict);
+    }
+}

@@ -1,0 +1,98 @@
+package moe.plushie.armourers_workshop.compatibility.extensions.com.mojang.blaze3d.systems.RenderSystem;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+
+import java.util.function.IntConsumer;
+import java.util.function.IntSupplier;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+
+@Available("[1.16, 1.18)")
+@Extension
+public class Fix16 {
+
+    public static PoseStack modelViewStack = new Proxy();
+
+    public static void assertOnRenderThread(@ThisClass Class<?> clazz) {
+        RenderSystem.assertThread(RenderSystem::isOnGameThread);
+    }
+
+    public static void setShaderTexture(@ThisClass Class<?> clazz, int i, ResourceLocation texture) {
+        Minecraft.getInstance().getTextureManager().bind(texture);
+    }
+
+    public static void setShaderColor(@ThisClass Class<?> clazz, float r, float g, float b, float a) {
+        RenderSystem.color4f(r, g, b, a);
+    }
+
+
+    public static void glGenVertexArrays(@ThisClass Class<?> clazz, IntConsumer consumer) {
+        // ignored
+    }
+
+    public static void glBindVertexArray(@ThisClass Class<?> clazz, IntSupplier supplier) {
+        // ignored
+    }
+
+//    public static void disableAlphaTest(@ThisClass Class<?> clazz) {
+//        RenderSystem.assertThread(RenderSystem::isOnGameThread);
+//        GL11.glDisable(GL11.GL_ALPHA_TEST);
+//    }
+//
+//    public static void enableAlphaTest(@ThisClass Class<?> clazz) {
+//        RenderSystem.assertThread(RenderSystem::isOnGameThread);
+//        GL11.glEnable(GL11.GL_ALPHA_TEST);
+//    }
+//
+//    public static void disableRescaleNormal(@ThisClass Class<?> clazz) {
+//        RenderSystem.assertThread(RenderSystem::isOnGameThread);
+//        GL11.glDisable(GL15.GL_RESCALE_NORMAL);
+//    }
+//
+//    public static void enableRescaleNormal(@ThisClass Class<?> clazz) {
+//        RenderSystem.assertThread(RenderSystem::isOnGameThread);
+//        GL11.glEnable(GL15.GL_RESCALE_NORMAL);
+//    }
+
+    public static void applyModelViewMatrix(@ThisClass Class<?> clazz) {
+    }
+
+    public static PoseStack getModelViewStack(@ThisClass Class<?> clazz) {
+        return modelViewStack;
+    }
+
+    public static class Proxy extends PoseStack {
+
+        @Override
+        public void pushPose() {
+            RenderSystem.pushMatrix();
+        }
+
+        @Override
+        public void popPose() {
+            RenderSystem.popMatrix();
+        }
+
+        @Override
+        public void translate(double x, double y, double z) {
+            RenderSystem.translated(x, y, z);
+        }
+
+        @Override
+        public void scale(float x, float y, float z) {
+            RenderSystem.scalef(x, y, z);
+        }
+
+        @Override
+        public void mulPose(Quaternion quaternion) {
+            RenderSystem.multMatrix(new Matrix4f(quaternion));
+        }
+    }
+}

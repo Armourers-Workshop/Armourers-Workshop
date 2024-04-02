@@ -1,0 +1,22 @@
+package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.client.renderer.block.model.ItemOverrides;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Extension
+@Available("[1.16, 1.18)")
+public class Resolver {
+
+    @Nullable
+    public static BakedModel resolve(@This ItemOverrides itemOverrides, BakedModel bakedModel, ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity, int index) {
+        return itemOverrides.resolve(bakedModel, itemStack, clientLevel, livingEntity);
+    }
+}
