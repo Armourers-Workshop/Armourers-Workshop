@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.permission;
 
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -30,8 +31,11 @@ public abstract class Permission {
     }
 
     protected boolean eval(IPermissionNode node, Player player, @Nullable PlayerPermissionContext context) {
-//        return PermissionManager.hasPermission(player.getGameProfile(), node, context);
-        return node.resolve(player, context);
+        // we allow server owner turn off permission checks.
+        if (ModConfig.Common.enablePermissionCheck) {
+            return node.resolve(player, context);
+        }
+        return true;
     }
 
     private IPermissionNode makeNode(String path) {
