@@ -17,7 +17,7 @@ import manifold.ext.rt.api.This;
 public class SleepModifier {
 
     public static void stopSleeping(@This LivingEntity entity, BlockPos blockPos) {
-        entity.stopSleeping();
+        //entity.stopSleeping();
         BlockState blockState = entity.getLevel().getBlockState(blockPos);
         if (blockState.getBlock() instanceof BedBlock) {
             Direction direction = blockState.getValue(BedBlock.FACING);
