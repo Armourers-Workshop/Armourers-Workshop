@@ -26,5 +26,4 @@ public interface ForgeBlockHandlerMixin extends AbstractForgeBlock {
         IBlockHandler handler = ObjectUtils.unsafeCast(this);
         return handler.isCustomLadder(level, pos, state, entity);
     }
-
 }

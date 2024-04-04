@@ -3,6 +3,7 @@
   "package": "moe.plushie.armourers_workshop.compatibility.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
+    "PoseStackMixin",
     "FishingHookRendererMixin",
     "BoatRendererMixin",
     "GlStateManagerMixin",
