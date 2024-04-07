@@ -1,12 +1,13 @@
 package moe.plushie.armourers_workshop.core.data;
 
+import moe.plushie.armourers_workshop.api.skin.ISkinFileManager;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinUUID;
 import net.minecraft.nbt.CompoundTag;
 
@@ -22,7 +23,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class LocalDataService {
+public class LocalDataService implements ISkinFileManager {
 
     private static LocalDataService RUNNING;
 
@@ -128,7 +129,7 @@ public class LocalDataService {
             return null;
         }
         Node node = new Node(identifier, skin.getType(), bytes, skin.getProperties());
-        node.save(bytes);
+        node.save(new ByteArrayInputStream(bytes));
         return node;
     }
 
@@ -136,7 +137,52 @@ public class LocalDataService {
         return new File(rootPath, "objects");
     }
 
-    public InputStream getFile(String identifier) throws IOException {
+    public String saveSkinFile(Skin skin) {
+        // save file first.
+        ByteArrayOutputStream stream = new ByteArrayOutputStream(5 * 1024);
+        SkinFileStreamUtils.saveSkinToStream(stream, skin);
+        byte[] bytes = stream.toByteArray();
+        // check whether the files are the same as those in the db.
+        Node newNode = new Node(getFreeUUID(), skin.getType(), bytes, skin.getProperties());
+        for (Node node : nodes.values()) {
+            if (node.isValid() && node.equals(newNode) && node.equalContents(bytes)) {
+                return node.id;
+            }
+        }
+        try {
+            saveSkinFile(newNode.id, new ByteArrayInputStream(bytes), newNode);
+            nodes.put(newNode.id, newNode);
+            return newNode.id;
+        } catch (Exception exception) {
+            ModLog.error("can't save file: {}, pls try fix or remove it.", newNode.getFile().getParentFile());
+        }
+        return null;
+    }
+
+    @Override
+    public void saveSkinFile(String identifier, InputStream inputStream, Object context) throws Exception {
+        ModLog.debug("Save skin into db {}", identifier);
+        // fast save the skin data.
+        if (context instanceof Node) {
+            ((Node) context).save(inputStream);
+            return;
+        }
+        // we need to read some skin info and check it is valid.
+        byte[] bytes = SkinFileUtils.readStreamToByteArray(inputStream);
+        ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
+        Skin skin = SkinFileStreamUtils.loadSkinFromStream2(stream);
+        if (skin == null) {
+            return;
+        }
+        // we without checking it again, overwrite it when node exists.
+        Node newNode = new Node(identifier, skin.getType(), bytes, skin.getProperties());
+        newNode.save(new ByteArrayInputStream(bytes));
+        nodes.put(newNode.id, newNode);
+    }
+
+    @Override
+    public InputStream loadSkinFile(String identifier, Object context) throws Exception {
+        ModLog.debug("Load skin from db {}", identifier);
         Node node = nodes.get(identifier);
         if (node == null) {
             // when the identifier not found in the nodes,
@@ -153,30 +199,9 @@ public class LocalDataService {
         throw new FileNotFoundException("the node '" + identifier + "' not found!");
     }
 
-    public String addFile(Skin skin) {
-        // save file first.
-        ByteArrayOutputStream stream = new ByteArrayOutputStream(5 * 1024);
-        SkinFileStreamUtils.saveSkinToStream(stream, skin);
-        byte[] bytes = stream.toByteArray();
-        // check whether the files are the same as those in the db.
-        Node tmp = new Node(getFreeUUID(), skin.getType(), bytes, skin.getProperties());
-        for (Node node : nodes.values()) {
-            if (node.isValid() && node.equals(tmp) && node.equalContents(bytes)) {
-                return node.id;
-            }
-        }
-        ModLog.debug("Save skin into db {}", tmp.id);
-        try {
-            tmp.save(bytes);
-            nodes.put(tmp.id, tmp);
-            return tmp.id;
-        } catch (IOException exception) {
-            ModLog.error("can't save file: {}, pls try fix or remove it.", tmp.getFile().getParentFile());
-        }
-        return null;
-    }
-
-    public void removeFile(String identifier) {
+    @Override
+    public void removeSkinFile(String identifier, Object context) throws Exception {
+        ModLog.debug("Remove skin from db {}", identifier);
         Node node = nodes.get(identifier);
         if (node != null) {
             node.remove();
@@ -246,10 +271,10 @@ public class LocalDataService {
             return nbt;
         }
 
-        public void save(byte[] bytes) throws IOException {
+        public void save(InputStream inputStream) throws IOException {
             SkinFileUtils.forceMkdirParent(getFile());
             FileOutputStream fs = new FileOutputStream(getFile());
-            fs.write(bytes);
+            SkinFileUtils.transferTo(inputStream, fs);
             SkinFileUtils.writeNBT(serializeNBT(), getIndexFile());
         }
 

@@ -13,8 +13,8 @@ import moe.plushie.armourers_workshop.init.ModContext;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.WorkQueue;
@@ -166,7 +166,7 @@ public class SkinLoader {
         if (DataDomain.isDatabase(identifier)) {
             return identifier;
         }
-        String newIdentifier = LocalDataService.getInstance().addFile(skin);
+        String newIdentifier = LocalDataService.getInstance().saveSkinFile(skin);
         if (newIdentifier != null) {
             identifier = DataDomain.DATABASE.normalize(newIdentifier);
             addSkin(identifier, skin);

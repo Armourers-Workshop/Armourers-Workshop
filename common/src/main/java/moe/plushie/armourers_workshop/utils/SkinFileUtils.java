@@ -8,6 +8,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -141,7 +142,20 @@ public class SkinFileUtils {
     }
 
     /**
-     * Copies bytes from an InputStream source to a file destination. The directories up to destination will be created if they don't already exist. destination will be overwritten if it already exists.
+     * Reads the contents of input stream into a byte array.
+     * The input stream is always closed.
+     */
+    public static byte[] readStreamToByteArray(final InputStream inputStream) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(5 * 1024);
+        SkinFileUtils.transferTo(inputStream, outputStream);
+        IOUtils.closeQuietly(inputStream);
+        return outputStream.toByteArray();
+    }
+
+    /**
+     * Copies bytes from an InputStream source to a file destination.
+     * The directories up to destination will be created if they don't already exist.
+     * destination will be overwritten if it already exists.
      * The source stream is closed.
      */
     public static void copyInputStreamToFile(final InputStream inputStream, final File destination) throws IOException {
@@ -155,6 +169,17 @@ public class SkinFileUtils {
         }
         IOUtils.closeQuietly(inputStream);
         IOUtils.closeQuietly(outputStream);
+    }
+
+    /**
+     * Copies bytes from an InputStream to an OutputStream.
+     * This method buffers the input internally, so there is no need to use a BufferedInputStream.
+     * Large streams (over 2GB) will return a bytes copied value of -1 after the copy has completed
+     * since the correct number of bytes cannot be returned as an int.
+     * For large streams use the copyLarge(InputStream, OutputStream) method.
+     */
+    public static void transferTo(final InputStream inputStream, final OutputStream outputStream) throws IOException {
+        IOUtils.copy(inputStream, outputStream);
     }
 
     public static void writeNBT(CompoundTag compoundTag, File file) throws IOException {

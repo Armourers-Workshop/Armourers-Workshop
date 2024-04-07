@@ -127,11 +127,11 @@ public class DataManager {
 //        }
 //    }
 
-    public InputStream loadSkinData(String identifier) throws IOException {
+    public InputStream loadSkinData(String identifier) throws Exception {
         ModLog.debug("'{}' => get skin input stream from data manager", identifier);
         if (DataDomain.isDatabase(identifier)) {
             String path = DataDomain.getPath(identifier);
-            return LocalDataService.getInstance().getFile(path);
+            return LocalDataService.getInstance().loadSkinFile(path, null);
         } else {
             String path = SkinFileUtils.normalize(DataDomain.getPath(identifier));
             return loadStreamFromPath(path);
