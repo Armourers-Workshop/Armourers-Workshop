@@ -272,8 +272,11 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
 
         @Override
         public boolean shouldMaintenanceFile(Player player) {
-            // super op can manage the public folder.
-            return ModConfig.Common.allowLibraryRemoteManage && player.hasPermissions(5);
+            if (ModConfig.Common.allowLibraryRemoteManage) {
+                // super op can manage the public folder.
+                return player != null && player.hasPermissions(5);
+            }
+            return false;
         }
 
         public LocalDataService getDatabaseLibrary() {
