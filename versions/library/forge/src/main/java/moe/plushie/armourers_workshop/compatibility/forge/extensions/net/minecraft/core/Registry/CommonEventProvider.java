@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeConfig;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeEventBus;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeRegistries;
 import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
@@ -115,11 +116,11 @@ public class CommonEventProvider {
 
     public static void willBlockPlaceFO(@ThisClass Class<?> clazz, CommonNativeProvider.BlockSnapshot consumer) {
         AbstractForgeEventBus.observer(AbstractForgeCommonEvents.BLOCK_PLACE, event -> {
-            if (event.getEntity() instanceof Player) {
+            LevelAccessor level = event.getLevel();
+            Player player = ObjectUtils.safeCast(event.getEntity(), Player.class);
+            if (player == null) {
                 return;
             }
-            Player player = (Player) event.getEntity();
-            LevelAccessor level = event.getLevel();
             consumer.snapshot(player, level, event.getPos(), event.getState(), new IBlockSnapshot() {
                 @Override
                 public BlockState getState() {
