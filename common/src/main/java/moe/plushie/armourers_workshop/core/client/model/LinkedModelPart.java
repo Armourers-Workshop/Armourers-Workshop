@@ -5,14 +5,17 @@ import moe.plushie.armourers_workshop.api.client.model.IModelPartPose;
 
 public class LinkedModelPart implements IModelPart {
 
+    private final LinkedModelPartPose pose;
     private final IModelPart parent;
     private IModelPart target;
 
     public LinkedModelPart(IModelPart parent) {
         this.parent = parent;
+        this.pose = new LinkedModelPartPose(parent);
     }
 
     public void linkTo(IModelPart child) {
+        this.pose.linkTo(child);
         this.target = child;
     }
 
@@ -39,12 +42,6 @@ public class LinkedModelPart implements IModelPart {
 
     @Override
     public IModelPartPose pose() {
-        if (target != null) {
-            return target.pose();
-        }
-        if (parent != null) {
-            return parent.pose();
-        }
-        return null;
+        return pose;
     }
 }

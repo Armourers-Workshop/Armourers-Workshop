@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
 import com.google.common.collect.Range;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
@@ -28,7 +27,6 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
-import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;

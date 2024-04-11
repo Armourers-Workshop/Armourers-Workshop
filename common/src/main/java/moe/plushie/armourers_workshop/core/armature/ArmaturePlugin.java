@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.world.entity.Entity;
 
-public class ArmaturePlugin {
+public abstract class ArmaturePlugin {
 
     public void prepare(Entity entity, SkinRenderContext context) {
     }
@@ -14,14 +14,6 @@ public class ArmaturePlugin {
     }
 
     public void deactivate(Entity entity, SkinRenderContext context) {
-    }
-
-    public IModel apply(IModel model) {
-        return model;
-    }
-
-    public EntityRenderer<?> apply(EntityRenderer<?> entityRenderer) {
-        return entityRenderer;
     }
 
     public boolean freeze() {

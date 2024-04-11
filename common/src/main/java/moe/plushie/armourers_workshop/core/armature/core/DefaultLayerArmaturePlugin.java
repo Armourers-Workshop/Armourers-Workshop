@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.armature.core;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
+import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.layer.PlaceholderLayer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -29,22 +30,28 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
     private final ArrayList<Entry> entries = new ArrayList<>();
     private final ArrayList<EntryImpl<?, ?>> applying = new ArrayList<>();
 
-    public static DefaultLayerArmaturePlugin villager() {
+    public static DefaultLayerArmaturePlugin villager(ArmatureTransformerContext context) {
         DefaultLayerArmaturePlugin plugin = new DefaultLayerArmaturePlugin();
         plugin.register(VillagerProfessionLayer.class, plugin::whenHeadVisible);
+        context.addEntityModelListener(plugin::setEntityModel);
+        context.addEntityRendererListener(plugin::setEntityRenderer);
         return plugin;
     }
 
-    public static DefaultLayerArmaturePlugin slime() {
+    public static DefaultLayerArmaturePlugin slime(ArmatureTransformerContext context) {
         DefaultLayerArmaturePlugin plugin = new DefaultLayerArmaturePlugin();
         plugin.register(SlimeOuterLayer.class, plugin::whenAnyVisible);
+        context.addEntityModelListener(plugin::setEntityModel);
+        context.addEntityRendererListener(plugin::setEntityRenderer);
         return plugin;
     }
 
-    public static DefaultLayerArmaturePlugin mob() {
+    public static DefaultLayerArmaturePlugin mob(ArmatureTransformerContext context) {
         DefaultLayerArmaturePlugin plugin = new DefaultLayerArmaturePlugin();
         plugin.register(StrayClothingLayer.class, plugin::whenBodyVisible);
         plugin.register(DrownedOuterLayer.class, plugin::whenBodyVisible);
+        context.addEntityModelListener(plugin::setEntityModel);
+        context.addEntityRendererListener(plugin::setEntityRenderer);
         return plugin;
     }
 
@@ -62,21 +69,6 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
     public void deactivate(Entity entity, SkinRenderContext context) {
         applying.forEach(EntryImpl::deactivate);
         applying.clear();
-    }
-
-    @Override
-    public IModel apply(IModel model) {
-        entries.forEach(it -> it.tester = it.testFactory.apply(model));
-        return model;
-    }
-
-    @Override
-    public EntityRenderer<?> apply(EntityRenderer<?> entityRenderer) {
-        LivingEntityRenderer<?, ?> livingEntityRenderer = ObjectUtils.safeCast(entityRenderer, LivingEntityRenderer.class);
-        if (livingEntityRenderer != null) {
-            apply(livingEntityRenderer);
-        }
-        return entityRenderer;
     }
 
     @Override
@@ -101,6 +93,16 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
         }
     }
 
+    private void setEntityModel(IModel model) {
+        entries.forEach(it -> it.tester = it.testFactory.apply(model));
+    }
+
+    private void setEntityRenderer(EntityRenderer<?> entityRenderer) {
+        LivingEntityRenderer<?, ?> livingEntityRenderer = ObjectUtils.safeCast(entityRenderer, LivingEntityRenderer.class);
+        if (livingEntityRenderer != null) {
+            apply(livingEntityRenderer);
+        }
+    }
 
     private void register(Class<?> clazz, Function<IModel, Supplier<Boolean>> testFactory) {
         Entry entry = new Entry();

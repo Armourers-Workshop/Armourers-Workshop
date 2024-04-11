@@ -53,6 +53,20 @@ public class ModelPartPose implements IModelPartPose {
     }
 
     @Override
+    public void setPos(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    @Override
+    public void setRotation(float xRot, float yRot, float zRot) {
+        this.xRot = xRot;
+        this.yRot = yRot;
+        this.zRot = zRot;
+    }
+
+    @Override
     public void transform(IPoseStack poseStack) {
         if (x != 0 || y != 0 || z != 0) {
             poseStack.translate(x, y, z);
@@ -66,18 +80,5 @@ public class ModelPartPose implements IModelPartPose {
         if (xRot != 0) {
             poseStack.rotate(Vector3f.XP.rotation(xRot));
         }
-    }
-
-    public void setPosition(IModelPartPose partPose) {
-        x = partPose.getX();
-        y = partPose.getY();
-        z = partPose.getZ();
-    }
-
-    @Override
-    public void setRotations(IModelPartPose partPose) {
-        xRot = partPose.getXRot();
-        yRot = partPose.getYRot();
-        zRot = partPose.getZRot();
     }
 }

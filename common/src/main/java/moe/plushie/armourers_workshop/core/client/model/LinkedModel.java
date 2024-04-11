@@ -7,14 +7,17 @@ import moe.plushie.armourers_workshop.api.data.IAssociatedContainerKey;
 import moe.plushie.armourers_workshop.utils.DataStorage;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class LinkedModel implements IModel {
 
     private final IModel parent;
     private final DataStorage storage = new DataStorage();
     private final HashMap<String, LinkedModelPart> namedParts = new HashMap<>();
+    private final ArrayList<LinkedModelPart> allParts = new ArrayList<>();
 
     private IModel target;
 
@@ -23,9 +26,26 @@ public class LinkedModel implements IModel {
     }
 
     public void linkTo(IModel target) {
-        if (this.target != target) {
-            this.target = target;
-            this.namedParts.forEach((key, value) -> value.linkTo(target.getPart(key)));
+        if (this.target == target) {
+            return;
+        }
+        HashSet<IModelPart> exists = new HashSet<>();
+        this.target = target;
+        this.allParts.clear();
+        // link named parts.
+        this.namedParts.forEach((key, value) -> {
+            IModelPart part = target.getPart(key);
+            value.linkTo(part);
+            allParts.add(value);
+            exists.add(part);
+        });
+        // link unnamed parts.
+        for (IModelPart part : target.getAllParts()) {
+            if (!exists.contains(part)) {
+                LinkedModelPart linkedPart = new LinkedModelPart(part);
+                linkedPart.linkTo(part);
+                allParts.add(linkedPart);
+            }
         }
     }
 
@@ -48,19 +68,15 @@ public class LinkedModel implements IModel {
             if (parent != null) {
                 part = parent.getPart(name);
             }
-            return new LinkedModelPart(part);
+            LinkedModelPart linkedPart = new LinkedModelPart(part);
+            allParts.add(linkedPart);
+            return linkedPart;
         });
     }
 
     @Override
     public Collection<? extends IModelPart> getAllParts() {
-        if (parent != null) {
-            return parent.getAllParts();
-        }
-        if (target != null) {
-            return target.getAllParts();
-        }
-        return null;
+        return allParts;
     }
 
     @Override

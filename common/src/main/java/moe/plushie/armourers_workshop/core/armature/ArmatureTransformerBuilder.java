@@ -18,7 +18,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Supplier;
+
+import manifold.ext.rt.api.auto;
 
 public abstract class ArmatureTransformerBuilder {
 
@@ -67,36 +68,29 @@ public abstract class ArmatureTransformerBuilder {
         });
     }
 
-    public ArmatureTransformer build(IModel model) {
+    public ArmatureTransformer build(ArmatureTransformerContext context) {
         ArrayList<ArmaturePlugin> plugins = new ArrayList<>();
         HashMap<IJoint, ArrayList<JointModifier>> modifiers = new HashMap<>();
-        plugins.add(new DefaultOverriddenArmaturePlugin(model, overrideModifiers));
+        plugins.add(new DefaultOverriddenArmaturePlugin(overrideModifiers, context));
         jointModifiers.forEach((joint, modifiers1) -> modifiers.computeIfAbsent(joint, k -> new ArrayList<>()).addAll(modifiers1));
         transformModifiers.forEach((joint, modifiers1) -> modifiers.computeIfAbsent(joint, k -> new ArrayList<>()).addAll(modifiers1));
-        pluginModifiers.forEach(it -> plugins.add(buildPlugin(it)));
+        pluginModifiers.forEach(it -> plugins.add(buildPlugin(it, context)));
         plugins.removeIf(Objects::isNull);
-        IModel model1 = buildModel(model, plugins);
-        ArmatureTransformer transformer = new ArmatureTransformer(armature, plugins);
-        modifiers.forEach((joint, values) -> transformer.put(joint, buildTransform(joint, model1, values)));
+        ArmatureTransformer transformer = new ArmatureTransformer(armature, plugins, context);
+        modifiers.forEach((joint, values) -> transformer.put(joint, buildTransform(joint, values, context)));
         return transformer;
     }
 
-    protected IModel buildModel(IModel model, Collection<ArmaturePlugin> plugins) {
-        for (ArmaturePlugin plugin : plugins) {
-            model = plugin.apply(model);
-        }
-        return model;
-    }
-
-    protected ArmaturePlugin buildPlugin(String name) {
-        Supplier<? extends ArmaturePlugin> builder = ArmatureSerializers.getPlugin(name);
+    protected ArmaturePlugin buildPlugin(String name, ArmatureTransformerContext context) {
+        auto builder = ArmatureSerializers.getPlugin(name);
         if (builder != null) {
-            return builder.get();
+            return builder.apply(context);
         }
         return null;
     }
 
-    protected IJointTransform buildTransform(IJoint joint, IModel model, Collection<JointModifier> modifiers) {
+    protected IJointTransform buildTransform(IJoint joint, Collection<JointModifier> modifiers, ArmatureTransformerContext context) {
+        IModel model = context.getEntityModel();
         IJointTransform transform = IJointTransform.NONE;
         for (JointModifier modifier : modifiers) {
             transform = modifier.apply(joint, model, transform);
@@ -203,7 +197,7 @@ public abstract class ArmatureTransformerBuilder {
             case ARRAY: {
                 ArrayList<JointModifier> modifiers = new ArrayList<>();
                 object.allValues().forEach(it -> {
-                    Supplier<? extends JointModifier> modifier = ArmatureSerializers.getModifier(it.stringValue());
+                    auto modifier = ArmatureSerializers.getModifier(it.stringValue());
                     if (modifier != null) {
                         modifiers.add(modifier.get());
                     }
@@ -218,7 +212,7 @@ public abstract class ArmatureTransformerBuilder {
 //                        modifiers.add(builder.apply(it.getValue()));
 //                        return;
 //                    }
-                    Supplier<? extends JointModifier> modifier = ArmatureSerializers.getModifier(it.getKey());
+                    auto modifier = ArmatureSerializers.getModifier(it.getKey());
                     if (modifier != null) {
                         modifiers.add(modifier.get());
                     }

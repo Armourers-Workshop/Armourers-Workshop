@@ -86,18 +86,25 @@ public class ModelPartHolder implements IModelPart, IModelPartPose {
         return modelPart.zRot;
     }
 
-    @Override
-    public void setRotations(IModelPartPose partPose) {
-        modelPart.xRot = partPose.getXRot();
-        modelPart.yRot = partPose.getYRot();
-        modelPart.zRot = partPose.getZRot();
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public void setPos(float x, float y, float z) {
+        modelPart.x = x;
+        modelPart.y = y;
+        modelPart.z = z;
+    }
+
+    @Override
+    public void setRotation(float xRot, float yRot, float zRot) {
+        modelPart.xRot = xRot;
+        modelPart.yRot = yRot;
+        modelPart.zRot = zRot;
     }
 }

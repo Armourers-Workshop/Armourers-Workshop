@@ -2,14 +2,12 @@ package moe.plushie.armourers_workshop.core.armature.thirdparty;
 
 import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
-import moe.plushie.armourers_workshop.api.client.model.IModel;
-import moe.plushie.armourers_workshop.api.data.IDataPackObject;
-import moe.plushie.armourers_workshop.core.armature.JointModifier;
+import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerBuilder;
+import moe.plushie.armourers_workshop.core.armature.JointModifier;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
-import java.util.Collections;
 
 public class EpicFightArmatureTransformerBuilder extends ArmatureTransformerBuilder {
 
@@ -18,8 +16,8 @@ public class EpicFightArmatureTransformerBuilder extends ArmatureTransformerBuil
     }
 
     @Override
-    protected IJointTransform buildTransform(IJoint joint, IModel model, Collection<JointModifier> modifiers) {
-        IJointTransform transform = super.buildTransform(joint, model, modifiers);
+    protected IJointTransform buildTransform(IJoint joint, Collection<JointModifier> modifiers, ArmatureTransformerContext context) {
+        IJointTransform transform = super.buildTransform(joint, modifiers, context);
         return poseStack -> {
             transform.apply(poseStack);
             poseStack.scale(-1, -1, 1);

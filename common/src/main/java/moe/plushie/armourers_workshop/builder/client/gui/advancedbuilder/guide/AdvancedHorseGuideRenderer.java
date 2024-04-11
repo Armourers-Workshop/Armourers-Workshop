@@ -6,8 +6,6 @@ import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.texture.TextureData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
 public class AdvancedHorseGuideRenderer extends AdvancedEntityGuideRenderer {

@@ -14,7 +14,8 @@ import java.util.HashMap;
 
 public class BakedArmature {
 
-    private static final HashMap<Armature, BakedArmature> DEFAULT_ARMATURES = new HashMap<>();
+    private static final HashMap<Armature, BakedArmature> DEFAULT_IMMUTABLE_ARMATURES = new HashMap<>();
+    private static final HashMap<Armature, BakedArmature> DEFAULT_MUTABLE_ARMATURES = new HashMap<>();
 
     private final Armature armature;
     private final IJointTransform[] defaultTransforms;
@@ -33,11 +34,19 @@ public class BakedArmature {
     }
 
     public static BakedArmature defaultBy(Armature armature) {
-        return DEFAULT_ARMATURES.computeIfAbsent(armature, BakedArmature::new);
+        return DEFAULT_IMMUTABLE_ARMATURES.computeIfAbsent(armature, BakedArmature::new);
     }
 
     public static BakedArmature defaultBy(ISkinType skinType) {
         return defaultBy(Armatures.byType(skinType));
+    }
+
+    public static BakedArmature mutableBy(Armature armature) {
+        return DEFAULT_MUTABLE_ARMATURES.computeIfAbsent(armature, BakedArmature::new);
+    }
+
+    public static BakedArmature mutableBy(ISkinType skinType) {
+        return mutableBy(Armatures.byType(skinType));
     }
 
     public void setFilter(IJointFilter filter) {

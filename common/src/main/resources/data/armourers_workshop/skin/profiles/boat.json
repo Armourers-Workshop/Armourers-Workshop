@@ -4,6 +4,7 @@
     "unknown": 1
   },
   "entities": [
-    "minecraft:boat"
+    "minecraft:boat",
+    "minecraft:chest_boat"
   ]
 }

@@ -122,10 +122,10 @@ public abstract class AbstractModelPartRegistries {
         ModelHolder.register(AbstractSkinnableModels.BOAT, (model, it) -> {
             List<ModelPart> parts = model.parts();
             it.put("bottom", parts.get(0));
-            //it.put("back", parts.get(1));
-            //it.put("front", parts.get(2));
-            //it.put("right", parts.get(3));
-            //it.put("left", parts.get(4));
+            it.put("back", parts.get(1));
+            it.put("front", parts.get(2));
+            it.put("right", parts.get(3));
+            it.put("left", parts.get(4));
             it.put("left_paddle", parts.get(5));
             it.put("right_paddle", parts.get(6));
         });

@@ -29,15 +29,6 @@ public class BoatRendererMixin<T extends Boat> implements IEntityModelProvider<B
     @Final
     protected BoatModel model;
 
-    @Inject(method = "render(Lnet/minecraft/world/entity/vehicle/Boat;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/Boat;isUnderWater()Z"))
-    public void aw2$render(T entity, float p_225623_2_, float partialTicks, PoseStack poseStack, MultiBufferSource renderType, int light, CallbackInfo ci) {
-        auto originStack = ClientWardrobeHandler.RENDERING_POSE_STACK;
-        if (originStack != null) {
-            IPoseStack resultStack = AbstractPoseStack.wrap(poseStack);
-            resultStack.last().set(originStack.last());
-        }
-    }
-
     @Unique
     @Override
     public ListModel<Boat> getModel(Boat entity) {

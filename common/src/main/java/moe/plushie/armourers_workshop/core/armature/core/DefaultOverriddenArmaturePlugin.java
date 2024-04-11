@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
+import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
@@ -16,18 +17,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
 
     private final ArrayList<IModelPart> applying = new ArrayList<>();
     private final HashMap<ISkinProperty<Boolean>, Collection<? extends IModelPart>> overrides = new HashMap<>();
 
-    public DefaultOverriddenArmaturePlugin(IModel model, HashMap<String, Collection<String>> overrides) {
-        overrides.forEach((key, names) -> {
-            // NOTE: we assume that all default values is false.
-            ISkinProperty<Boolean> property = SkinProperty.normal(key, false);
-            Collection<? extends IModelPart> parts = buildParts(names, model);
-            this.overrides.put(property, parts);
+    public DefaultOverriddenArmaturePlugin(Map<String, Collection<String>> keys, ArmatureTransformerContext context) {
+        // when entity model change.
+        context.addEntityModelListener(model -> {
+            overrides.clear();
+            keys.forEach((key, names) -> {
+                // NOTE: we assume that all default values is false.
+                ISkinProperty<Boolean> property = SkinProperty.normal(key, false);
+                Collection<? extends IModelPart> parts = buildParts(names, model);
+                overrides.put(property, parts);
+            });
         });
     }
 
@@ -67,6 +73,10 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
 
         applying.forEach(it -> it.setVisible(true));
         applying.clear();
+    }
+
+    public boolean isEmpty() {
+        return overrides.isEmpty();
     }
 
     private void hidden(IModelPart part) {

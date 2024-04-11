@@ -18,7 +18,7 @@ import java.util.Iterator;
 @Environment(EnvType.CLIENT)
 public class SkinRenderContext {
 
-    public static final SkinRenderContext EMPTY  = new SkinRenderContext();
+    public static final SkinRenderContext EMPTY = new SkinRenderContext();
     private static final Iterator<SkinRenderContext> POOL = Iterators.cycle(ObjectUtils.makeItems(100, i -> new SkinRenderContext()));
 
     private int lightmap = 0xf000f0;
@@ -142,7 +142,6 @@ public class SkinRenderContext {
     public void setReferenced(SkinItemSource itemSource) {
         this.itemSource = itemSource;
     }
-
 
     public SkinItemSource getReferenced() {
         if (this.itemSource != null) {

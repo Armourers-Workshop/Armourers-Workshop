@@ -16,7 +16,9 @@ public interface IModelPartPose {
 
     float getZRot();
 
-    void transform(IPoseStack poseStack);
+    void setPos(float x, float y, float z);
 
-    void setRotations(IModelPartPose partPose);
+    void setRotation(float xRot, float yRot, float zRot);
+
+    void transform(IPoseStack poseStack);
 }

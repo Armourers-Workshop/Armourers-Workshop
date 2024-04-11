@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.api.common.ITextureKey;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
 import moe.plushie.armourers_workshop.utils.math.Vector2f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -18,12 +17,14 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ArmatureSerializers {
 
     private static final HashMap<ResourceLocation, Class<?>> NAMED_CLASSES = new HashMap<>();
-    private static final HashMap<Class<?>, HashMap<String, Supplier<?>>> NAMED_PROVIDERS = new HashMap<>();
+    private static final HashMap<String, Supplier<? extends JointModifier>> NAMED_MODIFIERS = new HashMap<>();
+    private static final HashMap<String, Function<ArmatureTransformerContext, ? extends ArmaturePlugin>> NAMED_PLUGINS = new HashMap<>();
 
     public static Vector3f readVector(IDataPackObject object, Vector3f defaultValue) {
         switch (object.type()) {
@@ -147,31 +148,23 @@ public class ArmatureSerializers {
     }
 
     public static void registerPlugin(String registryName, Supplier<? extends ArmaturePlugin> provider) {
-        registerProvider(ArmaturePlugin.class, registryName, provider);
+        registerPlugin(registryName, context -> provider.get());
     }
 
-    public static Supplier<? extends ArmaturePlugin> getPlugin(String registryName) {
-        return getProvider(ArmaturePlugin.class, registryName);
+    public static void registerPlugin(String registryName, Function<ArmatureTransformerContext, ? extends ArmaturePlugin> provider) {
+        NAMED_PLUGINS.put(registryName, provider);
+    }
+
+    public static Function<ArmatureTransformerContext, ? extends ArmaturePlugin> getPlugin(String registryName) {
+        return NAMED_PLUGINS.get(registryName);
     }
 
     public static void registerModifier(String registryName, Supplier<? extends JointModifier> provider) {
-        registerProvider(JointModifier.class, registryName, provider);
+        NAMED_MODIFIERS.put(registryName, provider);
     }
 
     public static Supplier<? extends JointModifier> getModifier(String registryName) {
-        return getProvider(JointModifier.class, registryName);
-    }
-
-    private static <T> void registerProvider(Class<T> type, String registryName, Supplier<? extends T> provider) {
-        NAMED_PROVIDERS.computeIfAbsent(type, it -> new HashMap<>()).put(registryName, provider);
-    }
-
-    private static <T> Supplier<? extends T> getProvider(Class<T> type, String registryName) {
-        HashMap<String, Supplier<?>> providers = NAMED_PROVIDERS.get(type);
-        if (providers != null) {
-            return ObjectUtils.unsafeCast(providers.get(registryName));
-        }
-        return null;
+        return NAMED_MODIFIERS.get(registryName);
     }
 }
 

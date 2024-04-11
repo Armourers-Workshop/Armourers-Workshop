@@ -21,12 +21,12 @@ public class EntityRenderDispatcherMixin {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;render(Lnet/minecraft/world/entity/Entity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", shift = At.Shift.BEFORE))
     private void aw2$renderPre(Entity entity, double d, double e, double f, float g, float h, PoseStack poseStack, MultiBufferSource buffers, int i, CallbackInfo ci) {
-        ClientWardrobeHandler.onRenderEntityPre(entity, g, h, poseStack, buffers, i);
+        ClientWardrobeHandler.onRenderEntityPre(entity, h, poseStack, buffers, i);
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;render(Lnet/minecraft/world/entity/Entity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", shift = At.Shift.AFTER))
     private void aw2$renderPost(Entity entity, double d, double e, double f, float g, float h, PoseStack poseStack, MultiBufferSource buffers, int i, CallbackInfo ci) {
-        ClientWardrobeHandler.onRenderEntityPost(entity, g, h, poseStack, buffers, i);
+        ClientWardrobeHandler.onRenderEntityPost(entity, h, poseStack, buffers, i);
     }
 
     @Inject(method = "onResourceManagerReload", at = @At("RETURN"))

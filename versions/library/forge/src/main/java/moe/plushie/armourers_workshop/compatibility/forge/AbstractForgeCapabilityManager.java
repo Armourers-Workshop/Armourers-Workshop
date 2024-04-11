@@ -122,7 +122,10 @@ public class AbstractForgeCapabilityManager {
 
         @Override
         public CompoundTag serializeNBT() {
-            return value.serializeNBT();
+            if (value != null) {
+                return value.serializeNBT();
+            }
+            return null;
         }
 
         @Override

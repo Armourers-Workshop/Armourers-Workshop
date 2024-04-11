@@ -89,22 +89,25 @@ public class SkinOverriddenManager {
         disabledEquipmentSlots.remove(slotType);
     }
 
+    public void addProperty(ISkinProperty<Boolean> property) {
+        disabledProperties.add(property);
+        // when equipment required hide, we need synchronize it to slot.
+        auto equipmentSlot = OVERRIDDEN_EQUIPMENT_TO_SLOT.get(property);
+        if (equipmentSlot != null) {
+            disabledEquipmentSlotsByProperties.add(equipmentSlot);
+        }
+        // when model part required hide, we need synchronize it to overlay.
+        auto overlayProperties = OVERRIDDEN_MODEL_TO_OVERLAY.get(property);
+        if (overlayProperties != null) {
+            disabledModelByProperties.add(property);
+            disabledProperties.addAll(overlayProperties);
+        }
+    }
+
     public void merge(ISkinProperties properties) {
         for (ISkinProperty<Boolean> property : OVERRIDDEN_PROPERTIES) {
-            if (!properties.get(property)) {
-                continue;
-            }
-            disabledProperties.add(property);
-            // when equipment required hide, we need synchronize it to slot.
-            auto equipmentSlot = OVERRIDDEN_EQUIPMENT_TO_SLOT.get(property);
-            if (equipmentSlot != null) {
-                disabledEquipmentSlotsByProperties.add(equipmentSlot);
-            }
-            // when model part required hide, we need synchronize it to overlay.
-            auto overlayProperties = OVERRIDDEN_MODEL_TO_OVERLAY.get(property);
-            if (overlayProperties != null) {
-                disabledModelByProperties.add(property);
-                disabledProperties.addAll(overlayProperties);
+            if (properties.get(property)) {
+                addProperty(property);
             }
         }
     }

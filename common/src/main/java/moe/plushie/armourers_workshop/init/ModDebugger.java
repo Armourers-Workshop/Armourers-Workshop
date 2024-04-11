@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.init;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

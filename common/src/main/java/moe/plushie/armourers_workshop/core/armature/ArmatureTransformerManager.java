@@ -93,7 +93,8 @@ public abstract class ArmatureTransformerManager {
             }
         }
         if (finalBuilders.size() >= 1) {
-            return finalBuilders.get(finalBuilders.size() - 1).build(entityModel);
+            ArmatureTransformerContext context = new ArmatureTransformerContext(entityType, entityModel);
+            return finalBuilders.get(finalBuilders.size() - 1).build(context);
         }
         return null;
     }

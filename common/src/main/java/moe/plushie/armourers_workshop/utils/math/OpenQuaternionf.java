@@ -102,7 +102,16 @@ public class OpenQuaternionf implements IQuaternionf {
         return new OpenQuaternionf(x * cz + y * sz, y * cz - x * sz, w * sz - z * cz, w * cz + z * sz);
     }
 
-//    public static OpenQuaternionf fromYXZ(float f, float g, float h) {
+//    public Quaternionf setAngleAxis(float angle, float x, float y, float z) {
+//        float s = Math.sin(angle * 0.5f);
+//        this.x = x * s;
+//        this.y = y * s;
+//        this.z = z * s;
+//        this.w = Math.cosFromSin(s, angle * 0.5f);
+//        return this;
+
+
+    //    public static OpenQuaternionf fromYXZ(float f, float g, float h) {
 //        OpenQuaternionf quaternion = ONE.copy();
 //        quaternion.mul(new OpenQuaternionf(0.0f, (float) Math.sin(f / 2.0f), 0.0f, (float) Math.cos(f / 2.0f)));
 //        quaternion.mul(new OpenQuaternionf((float) Math.sin(g / 2.0f), 0.0f, 0.0f, (float) Math.cos(g / 2.0f)));

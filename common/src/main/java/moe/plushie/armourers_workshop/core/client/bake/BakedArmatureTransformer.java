@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
 import com.google.common.collect.Lists;
-import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointFilter;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
@@ -24,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.function.Predicate;
 
 import manifold.ext.rt.api.auto;
 
@@ -56,7 +54,7 @@ public class BakedArmatureTransformer {
             return null;
         }
         ArrayList<ArmaturePlugin> plugins = Lists.newArrayList(transformer.getPlugins());
-        plugins.forEach(plugin -> plugin.apply(entityRenderer));
+        transformer.getContext().setEntityRenderer(entityRenderer);
         plugins.removeIf(plugin -> !plugin.freeze());
         BakedArmatureTransformer armatureTransformer1 = new BakedArmatureTransformer(transformer);
         armatureTransformer1.setPlugins(plugins);

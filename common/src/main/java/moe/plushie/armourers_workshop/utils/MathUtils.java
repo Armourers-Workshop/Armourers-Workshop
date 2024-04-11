@@ -268,6 +268,10 @@ public class MathUtils {
         return -Math.floorDiv(-i, j);
     }
 
+    public static boolean equal(float f, float g) {
+        return Math.abs(g - f) < 1.0E-5f;
+    }
+
     static {
         for (int i = 0; i < 257; ++i) {
             double d = (double) i / 256.0;
