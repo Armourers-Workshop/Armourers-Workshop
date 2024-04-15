@@ -2,12 +2,16 @@ package moe.plushie.armourers_workshop.core.armature.core;
 
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import net.minecraft.world.entity.Entity;
@@ -23,18 +27,12 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
 
     private final ArrayList<IModelPart> applying = new ArrayList<>();
     private final HashMap<ISkinProperty<Boolean>, Collection<? extends IModelPart>> overrides = new HashMap<>();
+    private final HashMap<ISkinType, Collection<? extends IModelPart>> skinTypeToOverrides = new HashMap<>();
+    private final HashMap<ISkinPartType, Collection<? extends IModelPart>> skinPartTypeToOverrides = new HashMap<>();
 
     public DefaultOverriddenArmaturePlugin(Map<String, Collection<String>> keys, ArmatureTransformerContext context) {
         // when entity model change.
-        context.addEntityModelListener(model -> {
-            overrides.clear();
-            keys.forEach((key, names) -> {
-                // NOTE: we assume that all default values is false.
-                ISkinProperty<Boolean> property = SkinProperty.normal(key, false);
-                Collection<? extends IModelPart> parts = buildParts(names, model);
-                overrides.put(property, parts);
-            });
-        });
+        context.addEntityModelListener(model -> buildOverrides(model, keys));
     }
 
     @Override
@@ -59,7 +57,20 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
         // apply all visible part to hidden.
         overrides.forEach((key, value) -> {
             if (overriddenManager.contains(key)) {
-                value.forEach(this::hidden);
+                hidden(value);
+            }
+        });
+
+        // apply all visible part to hidden if the specified skin type exists.
+        skinTypeToOverrides.forEach((key, value) -> {
+            if (has(key, SkinTypes.UNKNOWN, renderData.getUsingTypes())) {
+                hidden(value);
+            }
+        });
+        // apply all visible part to hidden if the specified skin part type exists.
+        skinPartTypeToOverrides.forEach((key, value) -> {
+            if (has(key, SkinPartTypes.UNKNOWN, renderData.getUsingPartTypes())) {
+                hidden(value);
             }
         });
     }
@@ -79,15 +90,43 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
         return overrides.isEmpty();
     }
 
-    private void hidden(IModelPart part) {
+    private <T> boolean has(T value, T anyValue, Collection<T> list) {
+        if (value != anyValue) {
+            return list.contains(value);
+        }
+        return !list.isEmpty();
+    }
+
+    private void hidden(Collection<? extends IModelPart> parts) {
         // ..
         if (ModDebugger.modelOverride) {
             return;
         }
-        if (part.isVisible()) {
-            part.setVisible(false);
-            applying.add(part);
+        for (IModelPart part : parts) {
+            if (part.isVisible()) {
+                part.setVisible(false);
+                applying.add(part);
+            }
         }
+    }
+
+    private void buildOverrides(IModel model, Map<String, Collection<String>> keys) {
+        overrides.clear();
+        keys.forEach((key, names) -> {
+            if (key.startsWith("hasType.")) {
+                ISkinType skinType = SkinTypes.byName(key.replace("hasType.", "armourers:"));
+                skinTypeToOverrides.put(skinType, buildParts(names, model));
+                return;
+            }
+            if (key.startsWith("hasPart.")) {
+                ISkinPartType skinPartType = SkinPartTypes.byName(key.replace("hasPart.", "armourers:"));
+                skinPartTypeToOverrides.put(skinPartType, buildParts(names, model));
+                return;
+            }
+            // NOTE: we assume that all default values is false.
+            ISkinProperty<Boolean> property = SkinProperty.normal(key, false);
+            overrides.put(property, buildParts(names, model));
+        });
     }
 
     private Collection<? extends IModelPart> buildParts(Collection<String> names, IModel model) {

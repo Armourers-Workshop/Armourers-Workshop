@@ -1,0 +1,9 @@
+{
+  "locked": true,
+  "slots": {
+    "unknown": 1
+  },
+  "entities": [
+    "minecraft:minecart"
+  ]
+}

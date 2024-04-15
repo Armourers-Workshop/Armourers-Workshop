@@ -48,6 +48,7 @@ public class ModTextures {
     public static final ResourceLocation MANNEQUIN_HIGHLIGHT = res("textures/entity/mannequin_h.png");
     public static final ResourceLocation HORSE_DEFAULT = res("textures/entity/horse.png");
     public static final ResourceLocation BOAT_DEFAULT = res("textures/entity/boat.png");
+    public static final ResourceLocation MINECART_DEFAULT = res("textures/entity/minecart.png");
 
     public static final ResourceLocation GUI_PREVIEW = res("textures/gui/skin-preview.png");
     public static final ResourceLocation SKIN_PANEL = res("textures/gui/controls/skin-panel.png");

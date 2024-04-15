@@ -19,7 +19,8 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
-import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
+import moe.plushie.armourers_workshop.core.client.skinrender.patch.FallbackEntityRenderPatch;
+import moe.plushie.armourers_workshop.core.client.skinrender.patch.LivingEntityRenderPatch;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
@@ -49,14 +50,12 @@ import java.util.function.Supplier;
 
 import manifold.ext.rt.api.auto;
 
+@SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
 public class ClientWardrobeHandler {
 
     private static Runnable INVENTORY_RENDER_POST_EVENT = null;
     public static ItemStack RENDERING_GUI_ITEM = null;
-
-    private static OpenPoseStack LAST_RENDERING_POSE_STACK = new OpenPoseStack();
-    public static OpenPoseStack RENDERING_POSE_STACK = null;
 
     public static final float SCALE = 1 / 16f;
 
@@ -95,109 +94,28 @@ public class ClientWardrobeHandler {
 
 
     public static void onRenderEntityPre(Entity entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight) {
-        auto transformer = SkinRendererManager.getFallbackTransformer(entity.getType());
-        if (transformer == null) {
-            return;
-        }
-        auto renderData = SkinRenderData.of(entity);
-        if (renderData == null) {
-            return;
-        }
+        FallbackEntityRenderPatch.activate(entity, partialTicks, packedLight, poseStackIn, buffersIn);
+    }
 
-        auto poseStack = AbstractPoseStack.wrap(poseStackIn);
-        auto buffers = AbstractBufferSource.wrap(buffersIn);
-        auto context = SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers);
-
-        transformer.prepare(entity, context);
-
-        poseStack.pushPose();
-
-        transformer.activate(entity, context);
-
-        poseStack.scale(-SCALE, -SCALE, SCALE);
-
-        auto armature = BakedArmature.mutableBy(transformer.getArmature());
-        transformer.applyTo(armature);
-
-        int count = render(entity, armature, context, renderData::getItemSkins);
-
-        poseStack.popPose();
-        context.release();
-
-        if (count != 0 && !ModDebugger.modelOverride) {
-            // when the model part is not supported, we hide it by the scale to 0.
-            if (!shouldOverriddenModel(transformer)) {
-                LAST_RENDERING_POSE_STACK.last().set(poseStack.last());
-                RENDERING_POSE_STACK = LAST_RENDERING_POSE_STACK;
-                poseStack.pushPose();
-                poseStack.scale(0, 0, 0);
-            }
-        }
+    public static void onRenderEntity(Entity entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight) {
+        FallbackEntityRenderPatch.render(entity);
     }
 
     public static void onRenderEntityPost(Entity entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight) {
-        auto transformer = SkinRendererManager.getFallbackTransformer(entity.getType());
-        if (transformer == null) {
-            return;
-        }
-        auto renderData = SkinRenderData.of(entity);
-        if (renderData == null) {
-            return;
-        }
-        auto poseStack = AbstractPoseStack.wrap(poseStackIn);
-        auto buffers = AbstractBufferSource.wrap(buffersIn);
-        auto context = SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers);
-
-        transformer.deactivate(entity, context);
-        context.release();
-
-        if (RENDERING_POSE_STACK != null) {
-            RENDERING_POSE_STACK = null;
-            poseStack.popPose();
-        }
+        FallbackEntityRenderPatch.deactivate(entity);
     }
 
 
     public static void onRenderLivingEntityPre(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
-        auto renderData = SkinRenderData.of(entity);
-        if (renderData != null) {
-            BakedArmatureTransformer transformer = BakedArmatureTransformer.defaultBy(entity, entityRenderer.getModel(), entityRenderer);
-            if (transformer != null) {
-                auto poseStack = AbstractPoseStack.wrap(poseStackIn);
-                auto buffers = AbstractBufferSource.wrap(buffersIn);
-                SkinRenderContext context1 = SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers);
-                transformer.prepare(entity, context1);
-                context1.release();
-            }
-        }
+        LivingEntityRenderPatch.activate(entity, partialTicks, packedLight, poseStackIn, buffersIn, entityRenderer);
     }
 
     public static void onRenderLivingEntity(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
-        auto renderData = SkinRenderData.of(entity);
-        if (renderData != null) {
-            BakedArmatureTransformer transformer = BakedArmatureTransformer.defaultBy(entity, entityRenderer.getModel(), entityRenderer);
-            if (transformer != null) {
-                auto poseStack = AbstractPoseStack.wrap(poseStackIn);
-                auto buffers = AbstractBufferSource.wrap(buffersIn);
-                SkinRenderContext context1 = SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers);
-                transformer.activate(entity, context1);
-                context1.release();
-            }
-        }
+        LivingEntityRenderPatch.render(entity);
     }
 
     public static void onRenderLivingEntityPost(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
-        auto renderData = SkinRenderData.of(entity);
-        if (renderData != null) {
-            BakedArmatureTransformer transformer = BakedArmatureTransformer.defaultBy(entity, entityRenderer.getModel(), entityRenderer);
-            if (transformer != null) {
-                auto poseStack = AbstractPoseStack.wrap(poseStackIn);
-                auto buffers = AbstractBufferSource.wrap(buffersIn);
-                SkinRenderContext context1 = SkinRenderContext.alloc(renderData, packedLight, partialTicks, poseStack, buffers);
-                transformer.deactivate(entity, context1);
-                context1.release();
-            }
-        }
+       LivingEntityRenderPatch.deactivate(entity);
     }
 
     @Nullable
@@ -386,7 +304,7 @@ public class ClientWardrobeHandler {
         }
     }
 
-    private static int render(Entity entity, BakedArmature bakedArmature, SkinRenderContext context, Supplier<Iterable<SkinRenderData.Entry>> provider) {
+    public static int render(Entity entity, BakedArmature bakedArmature, SkinRenderContext context, Supplier<Iterable<SkinRenderData.Entry>> provider) {
         int r = 0;
         for (auto entry : provider.get()) {
             auto bakedSkin = entry.getBakedSkin();
@@ -405,15 +323,6 @@ public class ClientWardrobeHandler {
             r += SkinRenderer.render(entity, bakedArmature, bakedSkin, entry.getBakedScheme(), context);
         }
         return r;
-    }
-
-    private static boolean shouldOverriddenModel(BakedArmatureTransformer transformer) {
-        for (ArmaturePlugin plugin : transformer.getPlugins()) {
-            if (plugin instanceof DefaultOverriddenArmaturePlugin) {
-                return !((DefaultOverriddenArmaturePlugin) plugin).isEmpty();
-            }
-        }
-        return false;
     }
 
     private static boolean shouldRenderInBox(EmbeddedSkinStack embeddedStack) {

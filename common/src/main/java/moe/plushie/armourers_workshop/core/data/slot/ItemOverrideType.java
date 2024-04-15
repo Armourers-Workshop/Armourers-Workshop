@@ -23,8 +23,9 @@ public enum ItemOverrideType {
     SHOVEL("shovel", ModItemTags.SHOVELS, ModItemMatchers.SHOVELS),
     HOE("hoe", ModItemTags.HOES, ModItemMatchers.HOES),
 
-    BOAT("boat", ModItemTags.BOATS, ModItemMatchers.BOATS),
-    FISHING_ROD("fishing_rod", ModItemTags.FISHING_RODS, ModItemMatchers.FISHING_RODS),
+    BOAT("boat", ModItemTags.BOATS, null),
+    MINECART("minecart", ModItemTags.MINECARTS, null),
+    FISHING_ROD("fishing_rod", ModItemTags.FISHING_RODS, null),
 
     ITEM("item", null, null);
 
@@ -63,7 +64,10 @@ public enum ItemOverrideType {
             return true;
         }
         // test by item id matching system.
-        return matcher.test(registryName, itemStack);
+        if (matcher != null) {
+            return matcher.test(registryName, itemStack);
+        }
+        return false;
     }
 
     public String getName() {

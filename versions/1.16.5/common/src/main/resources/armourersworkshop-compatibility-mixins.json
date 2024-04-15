@@ -4,13 +4,15 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "PoseStackMixin",
-    "FishingHookRendererMixin",
-    "BoatRendererMixin",
-    "EntityRenderDispatcherMixin",
     "RenderStateMixin",
     "ItemRendererMixin",
     "InventoryScreenMixin",
-    "HttpTextureMixin"
+    "HttpTextureMixin",
+    "patch/ArrowRendererMixin",
+    "patch/BoatRendererMixin",
+    "patch/FishingHookRendererMixin",
+    "patch/MinecartRendererMixin",
+    "patch/ThrownTridentRendererMixin"
   ],
   "mixins": [
     "ServerGameMixin",

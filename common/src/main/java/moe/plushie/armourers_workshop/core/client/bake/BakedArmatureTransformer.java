@@ -4,11 +4,11 @@ import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.api.armature.IJointFilter;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
-import moe.plushie.armourers_workshop.api.data.IAssociatedObjectProvider;
 import moe.plushie.armourers_workshop.core.armature.Armature;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
+import moe.plushie.armourers_workshop.core.client.render.EntityRendererStorage;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager2;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import net.minecraft.client.Minecraft;
@@ -22,7 +22,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 
 import manifold.ext.rt.api.auto;
 
@@ -82,8 +81,8 @@ public class BakedArmatureTransformer {
         // in the normal, the entityRenderer only have a model type,
         // but some mods(Custom NPC) generate dynamically models,
         // so we need to be compatible with that
-        auto storage = getStorage(entityRenderer);
-        return storage.computeIfAbsent(entityModel, (it) -> {
+        auto storage = EntityRendererStorage.of(entityRenderer);
+        return storage.computeTransformerIfAbsent(entityModel, it -> {
             // if it can't transform this, it means we do not support this renderer.
             IModel model = ModelHolder.ofNullable(entityModel);
             ArmatureTransformer transformer = SkinRendererManager2.DEFAULT.getTransformer(entityType, model);
@@ -140,16 +139,6 @@ public class BakedArmatureTransformer {
 
     public Armature getArmature() {
         return armature;
-    }
-
-    private static HashMap<Object, BakedArmatureTransformer> getStorage(EntityRenderer<?> entityRenderer) {
-        IAssociatedObjectProvider dataProvider = (IAssociatedObjectProvider) entityRenderer;
-        HashMap<Object, BakedArmatureTransformer> storage = dataProvider.getAssociatedObject();
-        if (storage == null) {
-            storage = new HashMap<>();
-            dataProvider.setAssociatedObject(storage);
-        }
-        return storage;
     }
 
     private static EntityModel<?> getModel(EntityRenderer<?> entityRenderer) {

@@ -18,6 +18,7 @@ public class ModItemTags {
     public static final IRegistryKey<IItemTag> HOES = skinnable("hoes");
 
     public static final IRegistryKey<IItemTag> BOATS = skinnable("boats");
+    public static final IRegistryKey<IItemTag> MINECARTS = skinnable("minecarts");
     public static final IRegistryKey<IItemTag> FISHING_RODS = skinnable("fishings");
 
     private static IRegistryKey<IItemTag> skinnable(String name) {

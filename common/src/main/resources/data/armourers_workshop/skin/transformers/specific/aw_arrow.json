@@ -1,6 +1,9 @@
 {
   "type": "armourers_workshop:armature",
   "target": "armourers_workshop:any",
+  "override": {
+    "hasPart.bow.arrow": "*"
+  },
   "plugin": [
     "armourers_workshop:plugin/fix_arrow_model"
   ],

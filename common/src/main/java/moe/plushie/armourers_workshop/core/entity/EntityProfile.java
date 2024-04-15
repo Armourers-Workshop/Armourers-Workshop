@@ -29,6 +29,10 @@ public class EntityProfile {
         return locked;
     }
 
+    public boolean isSupported(SkinSlotType slotType) {
+        return supports.containsKey(slotType);
+    }
+
     public int getMaxCount(SkinSlotType slotType) {
         auto provider = supports.get(slotType);
         if (provider != null) {

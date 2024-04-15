@@ -6,12 +6,15 @@ import moe.plushie.armourers_workshop.api.data.IAssociatedContainerKey;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.other.thirdparty.EpicFlightRenderContext;
+import moe.plushie.armourers_workshop.core.client.skinrender.patch.EntityRenderPatch;
 import moe.plushie.armourers_workshop.core.data.ItemStackProvider;
 import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -39,8 +42,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.function.BiConsumer;
 
 import manifold.ext.rt.api.auto;
@@ -59,6 +64,8 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
     private final ArrayList<ItemStack> lastEquipmentSlots = new ArrayList<>();
 
     private final BitSet lastWardrobeFlags = new BitSet();
+    private final HashSet<ISkinType> lastSkinTypes = new HashSet<>();
+    private final HashSet<ISkinPartType> lastSkinPartTypes = new HashSet<>();
 
     private final Ticket loadTicket = Ticket.wardrobe();
     private final IItemStackProvider itemProvider = ItemStackProvider.getInstance();
@@ -75,6 +82,8 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
 
     private int version = 0;
     private int lastVersion = Integer.MAX_VALUE;
+
+    private EntityRenderPatch<Entity> renderPatch;
 
     public EpicFlightRenderContext epicFlightContext;
 
@@ -174,6 +183,9 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
         lastVersion = Integer.MAX_VALUE;
         isLimitLimbs = false;
 
+        lastSkinTypes.clear();
+        lastSkinPartTypes.clear();
+
         dyeColors.clear();
         missingSkins.clear();
         armorSkins.clear();
@@ -266,20 +278,25 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
         // If held a skin of armor type, nothing happen
         if (type instanceof ISkinArmorType && !isHeld) {
             armorSkins.add(new Entry(itemStack, descriptor, bakedSkin, colorScheme, renderPriority, false));
-            loadSkinPart(bakedSkin);
+            loadSkinInfo(bakedSkin);
         }
         if (type instanceof ISkinToolType || type == SkinTypes.ITEM) {
             itemSkins.add(new Entry(itemStack, descriptor, bakedSkin, colorScheme, renderPriority, isHeld));
-            loadSkinPart(bakedSkin);
+            loadSkinInfo(bakedSkin);
         }
     }
 
-    private void loadSkinPart(BakedSkin skin) {
+    private void loadSkinInfo(BakedSkin skin) {
         // check all part status, some skin only one part, but overridden all the models/overlays
         SkinProperties properties = skin.getSkin().getProperties();
         overriddenManager.merge(properties);
         if (!isLimitLimbs) {
             isLimitLimbs = properties.get(SkinProperty.LIMIT_LEGS_LIMBS);
+        }
+        // collect the skin and skin part type info.
+        lastSkinTypes.add(skin.getType());
+        for (BakedSkinPart skinPart : skin.getParts()) {
+            lastSkinPartTypes.add(skinPart.getType());
         }
     }
 
@@ -350,6 +367,23 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
         return isRenderExtra;
     }
 
+
+    public void setRenderPatch(EntityRenderPatch<Entity> renderPatch) {
+        this.renderPatch = renderPatch;
+    }
+
+    public EntityRenderPatch<Entity> getRenderPatch() {
+        return renderPatch;
+    }
+
+    public Collection<ISkinType> getUsingTypes() {
+        return lastSkinTypes;
+    }
+
+    public Collection<ISkinPartType> getUsingPartTypes() {
+        return lastSkinPartTypes;
+    }
+
     @Override
     public <T> T getAssociatedObject(IAssociatedContainerKey<T> key) {
         return dataStorage.getAssociatedObject(key);
@@ -377,12 +411,16 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
             this.itemStack = itemStack;
             this.descriptor = descriptor;
             this.bakedSkin = bakedSkin;
-            this.bakedScheme = baking(descriptor.getColorScheme(), entityScheme);
+            this.bakedScheme = baking(descriptor.getColorScheme(), entityScheme, isHeld);
             this.renderPriority = renderPriority;
             this.isHeld = isHeld;
         }
 
-        public static ColorScheme baking(ColorScheme skinScheme, ColorScheme entityScheme) {
+        public static ColorScheme baking(ColorScheme skinScheme, ColorScheme entityScheme, boolean isHeld) {
+            // when player held item we can't use the entity scheme.
+            if (isHeld) {
+                return skinScheme;
+            }
             if (skinScheme.isEmpty()) {
                 return entityScheme;
             }

@@ -1,0 +1,13 @@
+{
+  "type": "armourers_workshop:armature",
+  "target": "armourers_workshop:minecart",
+  "override": {
+    "hasPart.minecart.base": "*"
+  },
+  "plugin": [
+    "armourers_workshop:plugin/fix_minecart_model"
+  ],
+  "entity": [
+    "minecraft:minecart"
+  ]
+}

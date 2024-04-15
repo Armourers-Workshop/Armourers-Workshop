@@ -81,14 +81,14 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
     }
 
     public ItemStack getItem(SkinSlotType slotType, int slot) {
-        if (slot >= getUnlockedSize(slotType)) {
+        if (slot < 0 || slot >= getUnlockedSize(slotType)) {
             return ItemStack.EMPTY;
         }
         return inventory.getItem(slotType.getIndex() + slot);
     }
 
     public void setItem(SkinSlotType slotType, int slot, ItemStack itemStack) {
-        if (slot >= getUnlockedSize(slotType)) {
+        if (slot < 0 || slot >= getUnlockedSize(slotType)) {
             return;
         }
         inventory.setItem(slotType.getIndex() + slot, itemStack);
@@ -223,6 +223,10 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
             return false;
         }
         return !getProfile().isLocked();
+    }
+
+    public boolean isSupported(SkinSlotType slotType) {
+        return profile.isSupported(slotType);
     }
 
     @Override

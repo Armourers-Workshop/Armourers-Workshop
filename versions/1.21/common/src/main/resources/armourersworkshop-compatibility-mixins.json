@@ -4,10 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "PoseStackMixin",
-    "FishingHookRendererMixin",
-    "BoatRendererMixin",
-    "GlStateManagerMixin",
     "EntityRenderDispatcherMixin",
+    "GlStateManagerMixin",
     "GameRendererMixin",
     "ShaderVanillaMixin",
     "ShaderOptifineMixin",
@@ -17,7 +15,12 @@
     "InventoryScreenMixin",
     "GuiGraphicsMixin",
     "HttpTextureMixin",
-    "CameraMixin"
+    "CameraMixin",
+    "patch/ArrowRendererMixin",
+    "patch/BoatRendererMixin",
+    "patch/FishingHookRendererMixin",
+    "patch/MinecartRendererMixin",
+    "patch/ThrownTridentRendererMixin"
   ],
   "mixins": [
     "EntityJSMixin",

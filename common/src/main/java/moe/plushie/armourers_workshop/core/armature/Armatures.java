@@ -27,6 +27,7 @@ public class Armatures {
     public static final Armature HUMANOID = Builder.named("humanoid");
     public static final Armature HORSE = Builder.named("horse");
     public static final Armature BOAT = Builder.named("boat");
+    public static final Armature MINECART = Builder.named("minecart");
 
     public static final Armature ANY = Builder.named("any");
     public static final Armature HAND = Builder.named("hand");

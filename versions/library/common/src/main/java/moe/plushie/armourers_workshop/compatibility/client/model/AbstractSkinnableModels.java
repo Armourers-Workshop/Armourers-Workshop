@@ -14,6 +14,7 @@ import net.minecraft.client.model.HorseModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.IllagerModel;
 import net.minecraft.client.model.IronGolemModel;
+import net.minecraft.client.model.MinecartModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.SlimeModel;
 import net.minecraft.client.model.VillagerModel;

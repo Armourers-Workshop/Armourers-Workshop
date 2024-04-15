@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.core.client.skinrender.modifier.HorseBodyJ
 import moe.plushie.armourers_workshop.core.client.skinrender.plugin.ArrowModelArmaturePlugin;
 import moe.plushie.armourers_workshop.core.client.skinrender.plugin.BoatModelArmaturePlugin;
 import moe.plushie.armourers_workshop.core.client.skinrender.plugin.FishingModelArmaturePlugin;
+import moe.plushie.armourers_workshop.core.client.skinrender.plugin.MinecartModelArmaturePlugin;
 import moe.plushie.armourers_workshop.core.client.skinrender.plugin.TridentModelArmaturePlugin;
 import moe.plushie.armourers_workshop.core.client.skinrender.plugin.VillagerModelArmaturePlugin;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
@@ -68,6 +69,7 @@ public class SkinRendererManager2 extends ArmatureSerializers {
         registerPlugin("armourers_workshop:plugin/fix_arrow_model", ArrowModelArmaturePlugin::new);
         registerPlugin("armourers_workshop:plugin/fix_fishing_model", FishingModelArmaturePlugin::new);
         registerPlugin("armourers_workshop:plugin/fix_boat_model", BoatModelArmaturePlugin::new);
+        registerPlugin("armourers_workshop:plugin/fix_minecart_model", MinecartModelArmaturePlugin::new);
     }
 
     private static void registerClasses() {

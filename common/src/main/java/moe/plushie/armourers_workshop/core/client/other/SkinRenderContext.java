@@ -21,23 +21,23 @@ public class SkinRenderContext {
     public static final SkinRenderContext EMPTY = new SkinRenderContext();
     private static final Iterator<SkinRenderContext> POOL = Iterators.cycle(ObjectUtils.makeItems(100, i -> new SkinRenderContext()));
 
-    private int lightmap = 0xf000f0;
-    private int overlay = 0;
-    private float partialTicks = 0;
-    private float animationTicks = 0;
+    protected int lightmap = 0xf000f0;
+    protected int overlay = 0;
+    protected float partialTicks = 0;
+    protected float animationTicks = 0;
 
-    private IBufferSource bufferSource;
+    protected IBufferSource bufferSource;
 
-    private SkinRenderData renderData;
-    private SkinRenderBufferSource bufferProvider;
+    protected SkinRenderData renderData;
+    protected SkinRenderBufferSource bufferProvider;
 
-    private SkinItemSource itemSource;
+    protected SkinItemSource itemSource;
 
-    private ColorScheme colorScheme = ColorScheme.EMPTY;
-    private AbstractItemTransformType transformType = AbstractItemTransformType.NONE;
+    protected ColorScheme colorScheme = ColorScheme.EMPTY;
+    protected AbstractItemTransformType transformType = AbstractItemTransformType.NONE;
 
-    private final IPoseStack defaultPoseStack;
-    private IPoseStack usingPoseStack;
+    protected final IPoseStack defaultPoseStack;
+    protected IPoseStack poseStack;
 
     public SkinRenderContext() {
         this(new AbstractPoseStack());
@@ -45,7 +45,7 @@ public class SkinRenderContext {
 
     public SkinRenderContext(IPoseStack poseStack) {
         this.defaultPoseStack = poseStack;
-        this.usingPoseStack = defaultPoseStack;
+        this.poseStack = defaultPoseStack;
     }
 
     public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, AbstractItemTransformType transformType, IPoseStack poseStack, IBufferSource bufferSource) {
@@ -72,7 +72,7 @@ public class SkinRenderContext {
         this.transformType = AbstractItemTransformType.NONE;
         this.itemSource = SkinItemSource.EMPTY;
 
-        this.usingPoseStack = defaultPoseStack;
+        this.poseStack = defaultPoseStack;
 
         this.bufferProvider = null;
         this.renderData = null;
@@ -80,15 +80,15 @@ public class SkinRenderContext {
     }
 
     public void pushPose() {
-        usingPoseStack.pushPose();
+        poseStack.pushPose();
     }
 
     public void popPose() {
-        usingPoseStack.popPose();
+        poseStack.popPose();
     }
 
     public IPoseStack pose() {
-        return usingPoseStack;
+        return poseStack;
     }
 
     public void setLightmap(int lightmap) {
@@ -159,7 +159,7 @@ public class SkinRenderContext {
     }
 
     public void setPose(IPoseStack pose) {
-        this.usingPoseStack = pose;
+        this.poseStack = pose;
     }
 
     public void setBuffers(IBufferSource bufferSource) {

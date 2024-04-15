@@ -1,6 +1,9 @@
 {
   "type": "armourers_workshop:armature",
   "target": "armourers_workshop:any",
+  "override": {
+    "hasPart.fishing.hook": "*"
+  },
   "plugin": [
     "armourers_workshop:plugin/fix_fishing_model"
   ],

@@ -75,10 +75,6 @@ public final class SkinPartTypes {
     public static final ISkinPartType ITEM_SHIELD = register("shield.base", new ShieldPartType());
     public static final ISkinPartType ITEM_TRIDENT = register("trident.base", new ItemPartType());
 
-    public static final ISkinPartType ITEM_BOAT_BODY = register("boat.base", new ItemPartType());
-    public static final ISkinPartType ITEM_BOAT_LEFT_PADDLE = register("boat.leftPaddle", new ItemPartType());
-    public static final ISkinPartType ITEM_BOAT_RIGHT_PADDLE = register("boat.rightPaddle", new ItemPartType());
-
     public static final ISkinPartType ITEM_FISHING_ROD = register("fishing.rod", new ItemPartType());
     public static final ISkinPartType ITEM_FISHING_HOOK = register("fishing.hook", new ItemPartType());
 
@@ -98,6 +94,12 @@ public final class SkinPartTypes {
 
     public static final ISkinPartType ADVANCED = register("part.advanced_part", new AdvancedPartType());
     public static final ISkinPartType ADVANCED_LOCATOR = register("part.advanced_locator", new AdvancedPartType());
+
+    public static final ISkinPartType BOAT_BODY = register("boat.base", new ItemPartType());
+    public static final ISkinPartType BOAT_LEFT_PADDLE = register("boat.leftPaddle", new ItemPartType());
+    public static final ISkinPartType BOAT_RIGHT_PADDLE = register("boat.rightPaddle", new ItemPartType());
+
+    public static final ISkinPartType MINECART_BODY = register("minecart.base", new ItemPartType());
 
     public static final ISkinPartType HORSE_HEAD = register("horse.head", new AdvancedPartType());
     public static final ISkinPartType HORSE_NECK = register("horse.neck", new AdvancedPartType());

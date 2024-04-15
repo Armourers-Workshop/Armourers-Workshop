@@ -1,0 +1,56 @@
+{
+  "joint": {
+    "Body": {
+      "id": "armourers:minecart.base",
+      "cube": {
+        "name": "body",
+        "children": [
+          {
+            "name": "bottom",
+            "origin": [ -10, -8, 1 ],
+            "size": [  20, 16, 2 ],
+            "uv": [ 0, 10 ],
+            "translate": [ 0, 4, 0 ],
+            "rotation": [ 90, 0, 0 ]
+          },
+          {
+            "name": "left",
+            "origin": [ -8, -9, -1 ],
+            "size": [  16, 8, 2 ],
+            "uv": [ 0, 0 ],
+            "translate": [ 0, 3, -7 ],
+            "rotation": [ 0, 180, 0 ]
+          },
+          {
+            "name": "right",
+            "origin": [ -8, -9, -1 ],
+            "size": [  16, 8, 2 ],
+            "uv": [ 0, 0 ],
+            "translate": [ 0, 3, 7 ],
+            "rotation": [ 0, 0, 0 ]
+          },
+          {
+            "name": "front",
+            "origin": [ -8, -9, -1 ],
+            "size": [  16, 8, 2 ],
+            "uv": [ 0, 0 ],
+            "translate": [ -9, 3, 0 ],
+            "rotation": [ 0, 270, 0 ]
+          },
+          {
+            "name": "back",
+            "origin": [ -8, -9, -1 ],
+            "size": [ 16, 8, 2 ],
+            "uv": [ 0, 0 ],
+            "translate": [ 9, 3, 0 ],
+            "rotation": [ 0, 90, 0 ]
+          }
+        ]
+      }
+    }
+  },
+  "type": [
+    "armourers:minecart"
+  ]
+}
+

@@ -141,7 +141,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
             return itemStack.copy();
         }
         SkinSlotType slotType = SkinSlotType.byItem(itemStack);
-        if (slotType != null) {
+        if (slotType != null && wardrobe.isSupported(slotType)) {
             int startIndex = getFreeSlot(slotType);
             if (!moveItemStackTo(itemStack, startIndex, startIndex + 1, false)) {
                 return ItemStack.EMPTY;

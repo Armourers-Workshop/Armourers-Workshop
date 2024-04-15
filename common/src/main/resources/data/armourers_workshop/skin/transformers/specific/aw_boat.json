@@ -10,7 +10,15 @@
     }
   },
   "override": {
-    "overrideModelChest": "*"
+    "hasPart.boat.leftPaddle": "left_paddle",
+    "hasPart.boat.rightPaddle": "right_paddle",
+    "hasPart.boat.base": [
+      "bottom",
+      "left",
+      "right",
+      "front",
+      "back"
+    ]
   },
   "plugin": [
     "armourers_workshop:plugin/fix_boat_model"

@@ -82,7 +82,7 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
             return InteractionResultHolder.pass(itemStack);
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(player);
-        if (wardrobe == null || !wardrobe.isEditable(player)) {
+        if (wardrobe == null || !wardrobe.isEditable(player) || !wardrobe.isSupported(slotType)) {
             return InteractionResultHolder.pass(itemStack);
         }
         int slot = wardrobe.getFreeSlot(slotType);

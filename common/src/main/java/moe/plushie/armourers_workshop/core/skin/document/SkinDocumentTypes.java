@@ -40,9 +40,9 @@ public class SkinDocumentTypes {
     public static final SkinDocumentType ITEM_AXE = register("item", SkinTypes.ITEM_AXE);
     public static final SkinDocumentType ITEM_SHOVEL = register("item", SkinTypes.ITEM_SHOVEL);
     public static final SkinDocumentType ITEM_HOE = register("item", SkinTypes.ITEM_HOE);
-
-    public static final SkinDocumentType ITEM_BOAT = register("item", SkinTypes.ITEM_BOAT);
     public static final SkinDocumentType ITEM_FISHING = register("item", SkinTypes.ITEM_FISHING);
+    public static final SkinDocumentType ITEM_BOAT = register("item", SkinTypes.ITEM_BOAT);
+    public static final SkinDocumentType ITEM_MINECART = register("item", SkinTypes.ITEM_MINECART);
 
     public static final SkinDocumentType ENTITY_HORSE = register("entity", SkinTypes.HORSE);
 
