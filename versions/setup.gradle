@@ -44,15 +44,19 @@ static def parseVersionFromFile(file) {
     return null
 }
 
-static def parseMinecraftVersion(file) {
+static def readVersionFromDir(project) {
+    def input = project.file("gradle.properties")
     def properties = new Properties()
-    properties.load(file.newDataInputStream())
-    return properties.minecraft_version
+    properties.load(input.newDataInputStream())
+    def version = properties.target_minecraft_version
+    if (version != null && version != "") {
+        return version
+    }
+    return project.rootDir.getName()
 }
 
 // we needs convert the version to number, for example: 1.16.5 => 11605.
-def minecraft_version = rootDir.getName()
-def minecraft_version_last = parseMinecraftVersion(file("../../gradle.properties"))
+def minecraft_version = readVersionFromDir(project)
 def minecraft_version_number = parseVersion(minecraft_version, 0)
 
 def targets = ["common", "forge", "fabric"]
@@ -139,7 +143,6 @@ task applyCoreProperties {
         def contents = target.getText("UTF-8")
         def properties = new Properties()
         properties.load(it.newDataInputStream())
-        properties.setProperty("source_version", minecraft_version)
         properties.forEach { key, value ->
             contents = contents.replaceAll("\\b${key}\\b=[^#\\n]*", "${key}=${value}")
         }
@@ -150,8 +153,15 @@ task applyCoreProperties {
 task applyCoreConfigurations {
     doLast {
         def target = "../../.idea/runConfigurations"
-        ant.move(file: file(target), tofile: file(target + "-${minecraft_version_last}"), failonerror: false, quiet: true)
+        def version_file = file("../../.idea/versions.txt");
+        if (version_file.exists()) {
+            def old_version = version_file.getText("UTF-8")
+            ant.move(file: file(target), tofile: file(target + "-${old_version}"), failonerror: false, quiet: true)
+        }
         ant.move(file: file(target + "-${minecraft_version}"), tofile: file(target), failonerror: false, quiet: true)
+        // save the version info.
+        version_file.parentFile.mkdirs()
+        version_file.setText("${minecraft_version}", "UTF-8")
     }
 }
 
