@@ -109,10 +109,10 @@ public final class SkinPartTypes {
     public static final ISkinPartType HORSE_RIGHT_FRONT_THIGH = register("horse.right_front_leg", new AdvancedPartType());
     public static final ISkinPartType HORSE_LEFT_HIND_THIGH = register("horse.left_hind_leg", new AdvancedPartType());
     public static final ISkinPartType HORSE_RIGHT_HIND_THIGH = register("horse.right_hind_leg", new AdvancedPartType());
-    public static final ISkinPartType HORSE_LEFT_FRONT_LEG = register("horse.left_front_leg2", new AdvancedPartType());
-    public static final ISkinPartType HORSE_RIGHT_FRONT_LEG = register("horse.right_front_leg2", new AdvancedPartType());
-    public static final ISkinPartType HORSE_LEFT_HIND_LEG = register("horse.left_hind_leg2", new AdvancedPartType());
-    public static final ISkinPartType HORSE_RIGHT_HIND_LEG = register("horse.right_hind_leg2", new AdvancedPartType());
+    public static final ISkinPartType HORSE_LEFT_FRONT_LEG = register("horse.left_front_leg2", new PartitionPartType(HORSE_LEFT_FRONT_THIGH));
+    public static final ISkinPartType HORSE_RIGHT_FRONT_LEG = register("horse.right_front_leg2", new PartitionPartType(HORSE_RIGHT_FRONT_THIGH));
+    public static final ISkinPartType HORSE_LEFT_HIND_LEG = register("horse.left_hind_leg2", new PartitionPartType(HORSE_LEFT_HIND_THIGH));
+    public static final ISkinPartType HORSE_RIGHT_HIND_LEG = register("horse.right_hind_leg2", new PartitionPartType(HORSE_RIGHT_HIND_THIGH));
     //public static final ISkinPartType HORSE_SADDLE = register("horse.saddle", new AdvancedPartType());
     public static final ISkinPartType HORSE_TAIL = register("horse.tail", new AdvancedPartType());
 

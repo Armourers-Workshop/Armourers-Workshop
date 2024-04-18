@@ -139,9 +139,7 @@ public class DocumentImporter {
                     Vector3f rotation = transform.getRotation();
                     Vector3f scale = transform.getScale();
                     SkinTransform transform1 = SkinTransform.create(translation, rotation, scale);
-                    if (!transform1.isIdentity()) {
-                        exporter.add(name, transform1);
-                    }
+                    exporter.add(name, transform1);
                 });
             }
         });
@@ -154,11 +152,6 @@ public class DocumentImporter {
 //        if (origin.getId() != null) {
 //            exporter.add(SkinProperty.ALL_AUTHOR_UUID, origin.getId().toString());
 //        }
-
-        if (skinType == SkinTypes.OUTFIT) {
-            // because the entity origin is at (0, 24, 0).
-            exporter.move(new Vector3f(0, -24, 0));
-        }
 
 //        values.forEach(exporter::add);
         exporter.setKeepItemTransforms(isKeepItemTransforms());

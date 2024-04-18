@@ -43,7 +43,6 @@ public class SkinRendererManager2 extends ArmatureSerializers {
         registerModifiers();
         registerPlugins();
         registerClasses();
-        Armatures.init();
         DataPackManager.register(DataPackType.BUNDLED_DATA, "skin/transformers", SimpleLoader::new, SimpleLoader::clean, SimpleLoader::freeze, 0);
     }
 

@@ -12,6 +12,7 @@ import java.util.Map;
 public class Armature {
 
     private final IJoint[] joints;
+    private final ISkinPartType[] partTypes;
     private final Map<String, IJoint> namedJoints;
     private final Map<ISkinPartType, IJoint> linkedJoints;
     private final IJoint wildcardJoint;
@@ -23,6 +24,7 @@ public class Armature {
 
     public Armature(Map<String, Joint> joints, Map<Joint, IJointTransform> transforms, Map<ISkinPartType, Joint> linkedJoints, @Nullable Joint wildcardJoint, Map<Joint, JointShape> shapes) {
         this.joints = new IJoint[joints.size()];
+        this.partTypes = new ISkinPartType[joints.size()];
         this.localTransforms = new IJointTransform[joints.size()];
         this.globalTransforms = new IJointTransform[joints.size()];
         this.namedJoints = new LinkedHashMap<>(joints);
@@ -36,6 +38,10 @@ public class Armature {
             this.localTransforms[id] = transforms.getOrDefault(joint, IJointTransform.NONE);
             this.globalTransforms[id] = calcTransform(joint, transforms);
             joint.setId(id++);
+        }
+        for (Map.Entry<ISkinPartType, Joint> entry : linkedJoints.entrySet()) {
+            Joint joint = entry.getValue();
+            partTypes[joint.getId()] = entry.getKey();
         }
     }
 
@@ -52,6 +58,11 @@ public class Armature {
     public IJoint getJoint(ISkinPartType partType) {
         // ...
         return linkedJoints.getOrDefault(partType, wildcardJoint);
+    }
+
+    @Nullable
+    public ISkinPartType getPartType(IJoint joint) {
+        return partTypes[joint.getId()];
     }
 
     public IJointTransform getLocalTransform(int id) {

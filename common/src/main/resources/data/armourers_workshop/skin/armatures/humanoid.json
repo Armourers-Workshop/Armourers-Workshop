@@ -148,8 +148,8 @@
         }
       },
       "transform": {
-        "translate": [ -1.9, 12, 0 ],
-        "rotation": [ 1, 0, 1 ]
+        "translate": [ 1.9, 12, 0 ],
+        "rotation": [ -1, 0, -1 ]
       }
     },
     "Thigh_R": {
@@ -167,8 +167,8 @@
         }
       },
       "transform": {
-        "translate": [ 1.9, 12, 0 ],
-        "rotation": [ -1, 0, -1 ]
+        "translate": [ -1.9, 12, 0 ],
+        "rotation": [ 1, 0, 1 ]
       }
     },
     "Leg_L": {

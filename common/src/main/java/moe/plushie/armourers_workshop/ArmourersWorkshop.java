@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModArgumentTypes;
@@ -59,6 +60,7 @@ public class ArmourersWorkshop {
             ModHolidays.init();
             ModPermissions.init();
             SkinningRecipes.init();
+            Armatures.init();
 
             EnvironmentExecutor.run(() -> SkinLibraryManager::startClient, () -> SkinLibraryManager::startServer);
         });

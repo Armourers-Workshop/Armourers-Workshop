@@ -129,7 +129,6 @@ public class ArmatureSerializers {
         return null;
     }
 
-
     public static IEntityTypeProvider<?> readEntityType(IDataPackObject object) {
         return IEntityTypeProvider.of(object.stringValue());
     }
