@@ -7,8 +7,17 @@
     "minecraft:acacia_boat",
     "minecraft:dark_oak_boat",
     "minecraft:acacia_boat",
-    "minecraft:mangrove_boat",
-    "minecraft:cherry_boat",
-    "minecraft:bamboo_raft"
+    {
+      "id": "minecraft:mangrove_boat",
+      "required": false
+    },
+    {
+      "id": "minecraft:cherry_boat",
+      "required": false
+    },
+    {
+      "id": "minecraft:bamboo_raft",
+      "required": false
+    }
   ]
 }
