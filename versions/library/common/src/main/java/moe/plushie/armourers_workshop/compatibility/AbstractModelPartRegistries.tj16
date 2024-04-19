@@ -5,6 +5,9 @@ import moe.plushie.armourers_workshop.compatibility.client.model.AbstractSkinnab
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.ListModel;
+import net.minecraft.client.model.geom.ModelPart;
+
+import java.util.List;
 
 @Available("[1.16, 1.18)")
 public abstract class AbstractModelPartRegistries {
@@ -99,5 +102,17 @@ public abstract class AbstractModelPartRegistries {
             it.put("head", model.head);
             it.put("hair", model.hair);
         });
+
+        ModelHolder.register(AbstractSkinnableModels.BOAT, (model, it) -> {
+            List<ModelPart> parts = model.parts();
+            it.put("bottom", parts.get(0));
+            it.put("back", parts.get(1));
+            it.put("front", parts.get(2));
+            it.put("right", parts.get(3));
+            it.put("left", parts.get(4));
+            it.put("left_paddle", parts.get(5));
+            it.put("right_paddle", parts.get(6));
+        });
+
     }
 }

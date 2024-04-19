@@ -22,7 +22,9 @@
   ],
   "mixins": [
     "EntityJSMixin",
-    "VehicleEntityPlaceMixin",
+    "VehicleEntityPlaceMixin$BoatPatch",
+    "VehicleEntityPlaceMixin$MinecartPatch",
+    "VehicleEntityPlaceMixin$MinecartDispensePatch",
     "VehicleEntityBreakMixin"
   ],
   "injectors": {
