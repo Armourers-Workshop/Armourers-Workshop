@@ -21,13 +21,12 @@ import net.minecraft.world.entity.LivingEntity;
 @Environment(EnvType.CLIENT)
 public class AbstractGraphicsRendererImpl {
 
-    private static final EntityRendererImpl<LivingEntity> DEFAULT_ENTITY_RENDERER = (entity, offset, scale, focus, context) -> {
+    private static final EntityRendererImpl<LivingEntity> DEFAULT_ENTITY_RENDERER = (entity, origin, scale, focus, context) -> {
         // forward to vanilla implements.
         PoseStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushPose();
         modelViewStack.mulPoseMatrix(AbstractGraphicsRenderer.of(context).last().pose());
-        modelViewStack.translate(0, getRenderOffset(entity) * scale, 0); // reset to center
-        modelViewStack.translate(offset.x, offset.y, 0);
+        modelViewStack.translate(origin.x, origin.y, 0);
         RenderSystem.applyModelViewMatrix();
 
         InventoryScreen.renderEntityInInventory(0, 0, scale, focus.x, focus.y, entity);
@@ -36,12 +35,11 @@ public class AbstractGraphicsRendererImpl {
         RenderSystem.applyModelViewMatrix();
     };
 
-    private static final EntityRendererImpl<Entity> CUSTOM_ENTITY_RENDERER = (entity, offset, scale, focus, context) -> {
+    private static final EntityRendererImpl<Entity> CUSTOM_ENTITY_RENDERER = (entity, origin, scale, focus, context) -> {
         PoseStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushPose();
         modelViewStack.mulPoseMatrix(AbstractGraphicsRenderer.of(context).last().pose());
-        modelViewStack.translate(0, getRenderOffset(entity) * scale, 0); // reset to center
-        modelViewStack.translate(offset.x, offset.y, 1050.0f);
+        modelViewStack.translate(origin.x, origin.y, 1050.0f);
         modelViewStack.scale(1, 1, -1);
         RenderSystem.applyModelViewMatrix();
 
@@ -94,9 +92,5 @@ public class AbstractGraphicsRendererImpl {
             return (EntityRendererImpl<T>) DEFAULT_ENTITY_RENDERER;
         }
         return (EntityRendererImpl<T>) CUSTOM_ENTITY_RENDERER;
-    }
-
-    private static float getRenderOffset(Entity entity) {
-        return entity.getBbHeight() / 2.0f + 0.0625f;
     }
 }

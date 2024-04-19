@@ -20,21 +20,19 @@ import net.minecraft.world.entity.LivingEntity;
 @Environment(EnvType.CLIENT)
 public class AbstractGraphicsRendererImpl {
 
-    private static final EntityRendererImpl<LivingEntity> DEFAULT_ENTITY_RENDERER = (entity, offset, scale, focus, context) -> {
+    private static final EntityRendererImpl<LivingEntity> DEFAULT_ENTITY_RENDERER = (entity, origin, scale, focus, context) -> {
         // forward to vanilla implements.
         RenderSystem.pushMatrix();
         RenderSystem.multMatrix(AbstractGraphicsRenderer.of(context).last().pose());
-        RenderSystem.translatef(0, getRenderOffset(entity) * scale, 0); // reset to center
-        RenderSystem.translatef(offset.x, offset.y, 0);
+        RenderSystem.translatef(origin.x, origin.y, 0);
         InventoryScreen.renderEntityInInventory(0, 0, scale, focus.x, focus.y, entity);
         RenderSystem.popMatrix();
     };
 
-    private static final EntityRendererImpl<Entity> CUSTOM_ENTITY_RENDERER = (entity, offset, scale, focus, context) -> {
+    private static final EntityRendererImpl<Entity> CUSTOM_ENTITY_RENDERER = (entity, origin, scale, focus, context) -> {
         RenderSystem.pushMatrix();
         RenderSystem.multMatrix(AbstractGraphicsRenderer.of(context).last().pose());
-        RenderSystem.translatef(0, getRenderOffset(entity) * scale, 0); // reset to center
-        RenderSystem.translatef(offset.x, offset.y, 1050.0f);
+        RenderSystem.translatef(origin.x, origin.y, 1050.0f);
         RenderSystem.scalef(1, 1, -1);
 
         // custom entity renderer from the InventoryScreen.renderEntityInInventory
@@ -83,9 +81,5 @@ public class AbstractGraphicsRendererImpl {
             return (EntityRendererImpl<T>) DEFAULT_ENTITY_RENDERER;
         }
         return (EntityRendererImpl<T>) CUSTOM_ENTITY_RENDERER;
-    }
-
-    private static float getRenderOffset(Entity entity) {
-        return entity.getBbHeight() / 2.0f + 0.0625f;
     }
 }

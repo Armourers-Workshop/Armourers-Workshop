@@ -126,8 +126,8 @@ public class CGGraphicsContext implements GraphicsContextImpl {
         // not supported contents.
     }
 
-    public void drawEntity(Entity entity, CGPoint offset, int scale, CGPoint focus) {
-        renderer.renderEntity(entity, offset, scale, focus, this);
+    public void drawEntity(Entity entity, CGPoint origin, int scale, CGPoint focus) {
+        renderer.renderEntity(entity, origin, scale, focus, this);
     }
 
     public void drawItem(ItemStack itemStack, int x, int y) {
@@ -189,6 +189,10 @@ public class CGGraphicsContext implements GraphicsContextImpl {
 
     public void translateCTM(float x, float y, float z) {
         state.translate(x, y, z);
+    }
+
+    public void scaleCTM(float x, float y, float z) {
+        state.scale(x, y, z);
     }
 
     public void rotateCTM(float x, float y, float z) {

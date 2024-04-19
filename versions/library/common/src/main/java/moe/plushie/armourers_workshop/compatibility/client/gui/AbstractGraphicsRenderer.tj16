@@ -71,9 +71,9 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     }
 
     @Override
-    public void renderEntity(Entity entity, CGPoint offset, int scale, CGPoint focus, CGGraphicsContext context) {
+    public void renderEntity(Entity entity, CGPoint origin, int scale, CGPoint focus, CGGraphicsContext context) {
         EntityRendererImpl<Entity> renderer = AbstractGraphicsRendererImpl.getRenderer(entity);
-        renderer.render(entity, offset, scale, focus, context);
+        renderer.render(entity, origin, scale, focus, context);
     }
 
     @Override

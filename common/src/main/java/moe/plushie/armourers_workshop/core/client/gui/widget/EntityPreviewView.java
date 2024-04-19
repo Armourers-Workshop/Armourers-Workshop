@@ -37,7 +37,7 @@ public class EntityPreviewView extends UIControl {
         context.saveGraphicsState();
 
         context.translateCTM(0, 0, 300);
-        context.translateCTM(bounds.getMidX(), bounds.getMidY(), 50);
+        context.translateCTM(bounds.getMidX(), bounds.getMaxY() - 8, 50);
         context.rotateCTM(lastPlayerRotation.getX(), 0, 0);
         context.rotateCTM(0, lastPlayerRotation.getY(), 0);
         context.translateCTM(0, 0, -50);

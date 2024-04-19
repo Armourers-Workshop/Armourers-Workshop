@@ -28,6 +28,12 @@ public interface CGGraphicsState {
         }
     }
 
+    default void scale(float x, float y, float z) {
+        if (x != 1 || y != 1 || z != 1) {
+            ctm().scale(x, y, z);
+        }
+    }
+
     default void rotate(float x, float y, float z) {
         if (x != 0) {
             ctm().rotate(Vector3f.XP.rotationDegrees(x));

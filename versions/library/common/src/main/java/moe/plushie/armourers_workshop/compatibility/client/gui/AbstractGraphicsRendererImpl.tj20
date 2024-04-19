@@ -22,11 +22,10 @@ import org.joml.Matrix4f;
 @Environment(EnvType.CLIENT)
 public class AbstractGraphicsRendererImpl {
 
-    private static final EntityRendererImpl<LivingEntity> DEFAULT_ENTITY_RENDERER = (entity, offset, scale, focus, context) -> {
+    private static final EntityRendererImpl<LivingEntity> DEFAULT_ENTITY_RENDERER = (entity, origin, scale, focus, context) -> {
         // forward to vanilla implements.
         context.saveGraphicsState();
-        context.translateCTM(0, getRenderOffset(entity) * scale, 0); // reset to center
-        context.translateCTM(offset.x, offset.y, 0);
+        context.translateCTM(origin.x, origin.y, 0);
 
         InventoryScreen.renderEntityInInventoryFollowsMouse(AbstractGraphicsRenderer.of(context), 0, 0, scale, focus.getX(), focus.getY(), entity);
 
@@ -34,10 +33,9 @@ public class AbstractGraphicsRendererImpl {
     };
 
 
-    private static final EntityRendererImpl<Entity> CUSTOM_ENTITY_RENDERER = (entity, offset, scale, focus, context) -> {
+    private static final EntityRendererImpl<Entity> CUSTOM_ENTITY_RENDERER = (entity, origin, scale, focus, context) -> {
         context.saveGraphicsState();
-        context.translateCTM(0, getRenderOffset(entity) * scale, 0); // reset to center
-        context.translateCTM(offset.x, offset.y, 0);
+        context.translateCTM(origin.x, origin.y, 0);
 
         // custom entity renderer from the InventoryScreen.renderEntityInInventory
         float p = (float) Math.atan((0 - focus.getX()) / 40.0f);
@@ -87,9 +85,5 @@ public class AbstractGraphicsRendererImpl {
             return (EntityRendererImpl<T>) DEFAULT_ENTITY_RENDERER;
         }
         return (EntityRendererImpl<T>) CUSTOM_ENTITY_RENDERER;
-    }
-
-    private static float getRenderOffset(Entity entity) {
-        return entity.getBbHeight() / 2.0f + 0.0625f;
     }
 }

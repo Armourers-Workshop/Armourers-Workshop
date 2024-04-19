@@ -6,5 +6,5 @@ import net.minecraft.world.entity.Entity;
 
 public interface EntityRendererImpl<T extends Entity> {
 
-    void render(T entity, CGPoint offset, int scale, CGPoint focus, CGGraphicsContext context);
+    void render(T entity, CGPoint origin, int scale, CGPoint focus, CGGraphicsContext context);
 }

@@ -22,15 +22,16 @@ import org.joml.Matrix4f;
 @Environment(EnvType.CLIENT)
 public class AbstractGraphicsRendererImpl {
 
-    private static final EntityRendererImpl<LivingEntity> DEFAULT_ENTITY_RENDERER = (entity, offset, scale, focus, context) -> {
+    private static final EntityRendererImpl<LivingEntity> DEFAULT_ENTITY_RENDERER = (entity, origin, scale, focus, context) -> {
         // forward to vanilla implements.
-        int tx = (int) offset.x;
-        int ty = (int) offset.y;
+        int tx = (int) origin.x;
+        int ty = (int) origin.y;
+        float f = -entity.getBbHeight() / 2.0f; // remove internal offset.
         GuiGraphics guiGraphics = AbstractGraphicsRenderer.of(context);
-        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, tx, ty, tx, ty, scale, 0.0625f, focus.getX(), focus.getY(), entity);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, tx, ty, tx, ty, scale, f, focus.getX(), focus.getY(), entity);
     };
 
-    private static final EntityRendererImpl<Entity> CUSTOM_ENTITY_RENDERER = (entity, offset, scale, focus, context) -> {
+    private static final EntityRendererImpl<Entity> CUSTOM_ENTITY_RENDERER = (entity, origin, scale, focus, context) -> {
         // custom entity renderer from the InventoryScreen.renderEntityInInventory
         float p = (float) Math.atan((0 - focus.getX()) / 40.0f);
         float q = (float) Math.atan((0 - focus.getY()) / 40.0f);
@@ -38,7 +39,6 @@ public class AbstractGraphicsRendererImpl {
         OpenQuaternionf quaternion2 = Vector3f.XP.rotationDegrees(q * 20.0f);
         quaternion.mul(Vector3f.YP.rotationDegrees(180.0f));
         quaternion.mul(quaternion2);
-        float f = 0.0625f;
         //float m = livingEntity.yBodyRot;
         float s = entity.getYRot();
         float t = entity.getXRot();
@@ -52,9 +52,9 @@ public class AbstractGraphicsRendererImpl {
         GuiGraphics guiGraphics = AbstractGraphicsRenderer.of(context);
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
-        poseStack.translate(offset.x, offset.y, 50.0);
+        poseStack.translate(origin.x, origin.y, 50.0);
         poseStack.mulPoseMatrix(new Matrix4f().scaling(scale, scale, -scale));
-        poseStack.translate(0, getRenderOffset(entity), 0);
+        //poseStack.translate(0, center, 0);
         poseStack.mulPose(quaternion);
         Lighting.setupForEntityInInventory();
         EntityRenderDispatcher renderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
@@ -79,9 +79,5 @@ public class AbstractGraphicsRendererImpl {
             return (EntityRendererImpl<T>) DEFAULT_ENTITY_RENDERER;
         }
         return (EntityRendererImpl<T>) CUSTOM_ENTITY_RENDERER;
-    }
-
-    private static float getRenderOffset(Entity entity) {
-        return entity.getBbHeight() / 2.0f + 0.0625f;
     }
 }
