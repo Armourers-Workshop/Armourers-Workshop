@@ -30,6 +30,10 @@ public class ArmatureTransformerContext {
         this.entityModelListeners.forEach(it -> it.accept(entityModel));
     }
 
+    public void setEntityModel0(IModel entityModel) {
+        this.entityModel = entityModel;
+    }
+
     public IModel getEntityModel() {
         return entityModel;
     }
@@ -37,6 +41,10 @@ public class ArmatureTransformerContext {
     public void setEntityRenderer(EntityRenderer<?> entityRenderer) {
         this.entityRenderer = entityRenderer;
         this.entityRendererListeners.forEach(it -> it.accept(entityRenderer));
+    }
+
+    public void setEntityRenderer0(EntityRenderer<?> entityRenderer) {
+        this.entityRenderer = entityRenderer;
     }
 
     public EntityRenderer<?> getEntityRenderer() {

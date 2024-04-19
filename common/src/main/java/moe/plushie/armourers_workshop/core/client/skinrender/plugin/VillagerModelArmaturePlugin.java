@@ -24,7 +24,7 @@ public class VillagerModelArmaturePlugin extends ArmaturePlugin {
         IModel transformModel = ModelHolder.of(transformModelRef);
         sourcePart = model.getPart("head");
         destinationPart = transformModel.getPart("head");
-        context.setEntityModel(transformModel);
+        context.setEntityModel0(transformModel);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class VillagerModelArmaturePlugin extends ArmaturePlugin {
         if (sourcePart != null && destinationPart != null) {
             auto src = sourcePart.pose();
             auto dest = destinationPart.pose();
-            dest.setPos(src.getXRot(), src.getYRot(), src.getZRot());
+            dest.setRotation(src.getXRot(), src.getYRot(), src.getZRot());
         }
     }
 }
