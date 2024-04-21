@@ -28,6 +28,7 @@ import manifold.ext.rt.api.auto;
 @Environment(EnvType.CLIENT)
 public class SkinRendererManager {
 
+    private static int VERSION = 0;
     private static boolean IS_READY = false;
 
     private static final HashMap<EntityType<?>, BakedArmatureTransformer> FALLBACK_TRANSFORMERS = new HashMap<>();
@@ -66,6 +67,7 @@ public class SkinRendererManager {
         IS_READY = false;
         FALLBACK_TRANSFORMERS.clear();
         ENTITIES.forEach(SkinRendererManager::_bind);
+        VERSION += 1;
         IS_READY = true;
     }
 
@@ -145,4 +147,7 @@ public class SkinRendererManager {
         return FALLBACK_TRANSFORMERS.get(entityType);
     }
 
+    public static int getVersion() {
+        return VERSION;
+    }
 }

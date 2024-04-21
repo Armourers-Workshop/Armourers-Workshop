@@ -31,7 +31,7 @@ public class FallbackEntityRenderPatch extends EntityRenderPatch<Entity> {
             return;
         }
         auto renderPatch = renderData.getRenderPatch();
-        if (renderPatch == null) {
+        if (renderPatch == null || !renderPatch.isValid()) {
             auto transformer = SkinRendererManager.getFallbackTransformer(entity.getType());
             if (transformer == null) {
                 return;

@@ -28,7 +28,7 @@ public class LivingEntityRenderPatch extends EntityRenderPatch<LivingEntity> {
             return;
         }
         auto renderPatch = renderData.getRenderPatch();
-        if (renderPatch == null) {
+        if (renderPatch == null || !renderPatch.isValid()) {
             auto renderPatch1 = new LivingEntityRenderPatch(renderData, entityRenderer);
             renderPatch = ObjectUtils.unsafeCast(renderPatch1);
             renderData.setRenderPatch(renderPatch);
