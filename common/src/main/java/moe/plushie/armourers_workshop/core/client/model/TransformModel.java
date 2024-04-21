@@ -14,7 +14,7 @@ public class TransformModel<T extends LivingEntity> extends AbstractPlayerModel<
     }
 
     protected TransformModel(AbstractEntityRendererProvider.Context context, float scale) {
-        super(context, scale, false);
+        super(context, scale, Type.NORMAL);
     }
 
     public void setup(T entity, int light, float partialRenderTick) {

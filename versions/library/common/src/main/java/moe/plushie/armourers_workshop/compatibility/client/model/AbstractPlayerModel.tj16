@@ -11,7 +11,12 @@ import net.minecraft.world.entity.LivingEntity;
 @Environment(EnvType.CLIENT)
 public abstract class AbstractPlayerModel<T extends LivingEntity> extends PlayerModel<T> {
 
-    public AbstractPlayerModel(AbstractEntityRendererProvider.Context context, float scale, boolean slim) {
-        super(scale, slim);
+    public AbstractPlayerModel(AbstractEntityRendererProvider.Context context, float scale, Type type) {
+        super(scale, type == Type.SLIM);
+    }
+
+    public enum Type {
+        NORMAL,
+        SLIM
     }
 }

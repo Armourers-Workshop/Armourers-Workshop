@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
 
 import manifold.ext.rt.api.auto;
@@ -29,23 +30,31 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
     private final MannequinModel<T> normalModel;
     private final MannequinModel<T> slimModel;
 
+    private final RenderLayer<T, MannequinModel<T>> normalArmorLayer;
+    private final RenderLayer<T, MannequinModel<T>> slimArmorLayer;
+
     private MannequinEntityRenderer<T> mannequinRenderer;
 
     private ResourceLocation texture;
     private BakedEntityTexture bakedTexture;
 
+    private boolean modelState = false;
     private boolean enableChildRenderer = false;
 
     public MannequinEntityRenderer(Context context) {
-        super(context, new MannequinModel<>(context, 0, false), 0.0f);
-        this.addLayer(getLayerProvider().createHumanoidArmorLayer(context, MannequinArmorModel.innerModel(context), MannequinArmorModel.outerModel(context)));
-        this.addLayer(getLayerProvider().createItemInHandLayer(context));
-        this.addLayer(getLayerProvider().createElytraLayer(context));
-        this.addLayer(getLayerProvider().createCustomHeadLayer(context));
+        super(context, MannequinModel.normal(context), 0.0f);
         // two models by mannequin, only deciding which model using when texture specified.
-        this.normalModel = super.getModel();
-        this.slimModel = new MannequinModel<>(context, 0, true);
+        auto provider = getLayerProvider();
         this.context = context;
+        this.normalModel = super.getModel();
+        this.slimModel = MannequinModel.slim(context);
+        this.normalArmorLayer = provider.createHumanoidArmorLayer(context, MannequinArmorModel.normalInner(context), MannequinArmorModel.normalOuter(context));
+        this.slimArmorLayer = provider.createHumanoidArmorLayer(context, MannequinArmorModel.slimInner(context), MannequinArmorModel.slimOuter(context));
+        // add
+        this.addLayer(normalArmorLayer);
+        this.addLayer(provider.createItemInHandLayer(context));
+        this.addLayer(provider.createElytraLayer(context));
+        this.addLayer(provider.createCustomHeadLayer(context));
     }
 
     @Override
@@ -63,7 +72,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
         auto textureLoader = PlayerTextureLoader.getInstance();
         this.texture = textureLoader.getTextureLocation(entity);
         this.bakedTexture = textureLoader.getTextureModel(texture);
-        this.setModel(getModel());
+        this.applyTextureModel(bakedTexture);
         super.getModel().setAllVisible(entity.isModelVisible());
         this.enableChildRenderer = true;
         super.render(entity, f, partialTicks, poseStack, bufferSource, packedLightIn);
@@ -94,18 +103,32 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
         return texture;
     }
 
-    @Override
-    public MannequinModel<T> getModel() {
-        if (bakedTexture != null && bakedTexture.isSlimModel()) {
-            return slimModel;
-        }
-        return normalModel;
-    }
-
     public MannequinEntityRenderer<T> getChildRenderer() {
         if (mannequinRenderer == null) {
             mannequinRenderer = new MannequinEntityRenderer<>(context);
         }
         return mannequinRenderer;
+    }
+
+    private void applyTextureModel(BakedEntityTexture texture) {
+        boolean newModelState = texture != null && texture.isSlimModel();
+        if (modelState == newModelState) {
+            return;
+        }
+        modelState = newModelState;
+        if (modelState) {
+            setModel(slimModel);
+            replaceLayer(slimArmorLayer, normalArmorLayer);
+        } else {
+            setModel(normalModel);
+            replaceLayer(normalArmorLayer, slimArmorLayer);
+        }
+    }
+
+    private void replaceLayer(RenderLayer<T, MannequinModel<T>> toLayer, RenderLayer<T, MannequinModel<T>> fromLayer) {
+        int index = layers.indexOf(fromLayer);
+        if (index >= 0) {
+            layers[index] = toLayer;
+        }
     }
 }

@@ -18,7 +18,10 @@ public abstract class AbstractMannequinArmorModel<T extends MannequinEntity> ext
     }
 
     public enum Type {
-        INNER(ModelLayers.PLAYER_INNER_ARMOR), OUTER(ModelLayers.PLAYER_OUTER_ARMOR);
+        NORMAL_INNER(ModelLayers.PLAYER_INNER_ARMOR),
+        NORMAL_OUTER(ModelLayers.PLAYER_OUTER_ARMOR),
+        SLIM_INNER(ModelLayers.PLAYER_SLIM_INNER_ARMOR),
+        SLIM_OUTER(ModelLayers.PLAYER_SLIM_OUTER_ARMOR);
 
         final ModelLayerLocation layer;
 

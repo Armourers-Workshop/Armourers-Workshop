@@ -16,7 +16,10 @@ public abstract class AbstractMannequinArmorModel<T extends MannequinEntity> ext
     }
 
     public enum Type {
-        INNER(0.5f), OUTER(1.0f);
+        NORMAL_INNER(0.5f),
+        NORMAL_OUTER(1.0f),
+        SLIM_INNER(0.5f),
+        SLIM_OUTER(1.0f);
 
         final float scale;
 

@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.client.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererProvider;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.model.AbstractPlayerModel;
 import moe.plushie.armourers_workshop.core.client.render.MannequinEntityRenderer;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
@@ -18,13 +17,22 @@ public class MannequinModel<T extends MannequinEntity> extends AbstractPlayerMod
 
     private Rotations mainPose;
 
-    public MannequinModel() {
-        this(AbstractEntityRendererProvider.Context.sharedContext(), 0, false);
+    public MannequinModel(AbstractEntityRendererProvider.Context context, float scale, Type type) {
+        super(context, scale, type);
     }
 
-    public MannequinModel(AbstractEntityRendererProvider.Context context, float scale, boolean slim) {
-        super(context, scale, slim);
+    public static <T extends MannequinEntity> MannequinModel<T> placeholder() {
+        return normal(AbstractEntityRendererProvider.Context.sharedContext());
     }
+
+    public static <T extends MannequinEntity> MannequinModel<T> normal(AbstractEntityRendererProvider.Context context) {
+        return new MannequinModel<>(context, 0, Type.NORMAL);
+    }
+
+    public static <T extends MannequinEntity> MannequinModel<T> slim(AbstractEntityRendererProvider.Context context) {
+        return new MannequinModel<>(context, 0, Type.SLIM);
+    }
+
 
     @Override
     public void setupAnim(T entity, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {

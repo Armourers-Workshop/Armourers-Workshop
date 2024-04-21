@@ -38,7 +38,7 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
     public MannequinModel<?> getMannequinModel() {
         auto entity = PlaceholderManager.MANNEQUIN.get();
         if (model == null && entity != null) {
-            model = new MannequinModel<>();
+            model = MannequinModel.placeholder();
             model.young = false;
             model.crouching = false;
             model.riding = false;

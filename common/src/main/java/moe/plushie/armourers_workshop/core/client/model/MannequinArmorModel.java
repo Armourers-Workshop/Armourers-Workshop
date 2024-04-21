@@ -14,12 +14,20 @@ public class MannequinArmorModel<T extends MannequinEntity> extends AbstractMann
         super(context, type);
     }
 
-    public static <T extends MannequinEntity> MannequinArmorModel<T> innerModel(AbstractEntityRendererProvider.Context context) {
-        return new MannequinArmorModel<>(context, Type.INNER);
+    public static <T extends MannequinEntity> MannequinArmorModel<T> normalInner(AbstractEntityRendererProvider.Context context) {
+        return new MannequinArmorModel<>(context, Type.NORMAL_INNER);
     }
 
-    public static <T extends MannequinEntity> MannequinArmorModel<T> outerModel(AbstractEntityRendererProvider.Context context) {
-        return new MannequinArmorModel<>(context, Type.OUTER);
+    public static <T extends MannequinEntity> MannequinArmorModel<T> normalOuter(AbstractEntityRendererProvider.Context context) {
+        return new MannequinArmorModel<>(context, Type.NORMAL_OUTER);
+    }
+
+    public static <T extends MannequinEntity> MannequinArmorModel<T> slimInner(AbstractEntityRendererProvider.Context context) {
+        return new MannequinArmorModel<>(context, Type.SLIM_INNER);
+    }
+
+    public static <T extends MannequinEntity> MannequinArmorModel<T> slimOuter(AbstractEntityRendererProvider.Context context) {
+        return new MannequinArmorModel<>(context, Type.SLIM_OUTER);
     }
 
     @Override
@@ -40,5 +48,9 @@ public class MannequinArmorModel<T extends MannequinEntity> extends AbstractMann
         this.rightLeg.yRot = MathUtils.toRadians(entity.getRightLegPose().getY());
         this.rightLeg.zRot = MathUtils.toRadians(entity.getRightLegPose().getZ());
         this.hat.copyFrom(this.head);
+    }
+
+    public static class Slim {
+
     }
 }
