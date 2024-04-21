@@ -36,6 +36,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import java.nio.file.attribute.UserPrincipal;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -67,12 +68,17 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
     @Override
     public void createToolProperties(Consumer<IConfigurableToolProperty<?>> builder) {
         builder.accept(PaintingToolOptions.FULL_BLOCK_MODE);
+        builder.accept(PaintingToolOptions.CHANGE_PAINT_COLOR);
+        builder.accept(PaintingToolOptions.CHANGE_PAINT_TYPE);
     }
 
     @Override
     public IPaintToolAction createPaintToolAction(UseOnContext context) {
-        IPaintColor paintColor = getItemColor(context.getItemInHand(), PaintColor.WHITE);
-        return new CubePaintingEvent.SetAction(paintColor);
+        ItemStack itemStack = context.getItemInHand();
+        IPaintColor paintColor = getItemColor(itemStack, PaintColor.WHITE);
+        boolean usePaintColor = PaintingToolOptions.CHANGE_PAINT_COLOR.get(itemStack);
+        boolean usePaintType = PaintingToolOptions.CHANGE_PAINT_TYPE.get(itemStack);
+        return new CubePaintingEvent.SetAction(paintColor, usePaintColor, usePaintType);
     }
 
     @Override

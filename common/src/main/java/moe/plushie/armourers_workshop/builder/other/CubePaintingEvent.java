@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.builder.other;
 
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
+import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.builder.blockentity.BoundingBoxBlockEntity;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
@@ -151,24 +152,54 @@ public class CubePaintingEvent {
 
         final IPaintColor destinationColor;
 
+        final boolean usePaintColor;
+        final boolean usePaintType;
+
         public SetAction(IPaintColor paintColor) {
+            this(paintColor, true, true);
+        }
+
+        public SetAction(IPaintColor paintColor, boolean usePaintColor, boolean usePaintType) {
             this.destinationColor = paintColor;
+            this.usePaintColor = usePaintColor;
+            this.usePaintType = usePaintType;
         }
 
         public SetAction(FriendlyByteBuf buffer) {
             this.destinationColor = PaintColor.of(buffer.readInt());
+            this.usePaintColor = buffer.readBoolean();
+            this.usePaintType = buffer.readBoolean();
         }
 
         @Override
         public void encode(FriendlyByteBuf buffer) {
             buffer.writeInt(destinationColor.getRawValue());
+            buffer.writeBoolean(usePaintColor);
+            buffer.writeBoolean(usePaintType);
         }
 
         @Override
         public void apply(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
             if (provider.shouldChangeColor(dir)) {
-                provider.setColor(dir, destinationColor);
+                provider.setColor(dir, resolve(pos, dir, provider));
             }
+        }
+
+        public IPaintColor resolve(BlockPos pos, Direction dir, IPaintable provider) {
+            // when no needs processing required, ignore.
+            if (usePaintType && usePaintColor) {
+                return destinationColor;
+            }
+            IPaintColor oldValue = provider.getColor(dir);
+            ISkinPaintType paintType = oldValue.getPaintType();
+            int paintColor = oldValue.getRGB();
+            if (usePaintColor) {
+                paintColor = destinationColor.getRGB();
+            }
+            if (usePaintType) {
+                paintType = destinationColor.getPaintType();
+            }
+            return PaintColor.of(paintColor, paintType);
         }
     }
 

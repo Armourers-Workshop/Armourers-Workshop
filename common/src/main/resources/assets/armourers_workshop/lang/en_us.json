@@ -703,6 +703,7 @@
   "inventory.armourers_workshop.toolOptions.changeBrightness": "Change Brightness",
   "inventory.armourers_workshop.toolOptions.changeHue": "Change Hue",
   "inventory.armourers_workshop.toolOptions.changePaintType": "Change Paint Type",
+  "inventory.armourers_workshop.toolOptions.changePaintColor": "Change Paint Color",
   "inventory.armourers_workshop.toolOptions.changeSaturation": "Change Saturation",
   "inventory.armourers_workshop.toolOptions.effectRadius": "Effect Radius",
   "inventory.armourers_workshop.toolOptions.fullBlockMode": "Full block mode",

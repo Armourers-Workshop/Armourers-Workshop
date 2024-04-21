@@ -9,6 +9,7 @@ public class PaintingToolOptions {
     public static final BooleanToolProperty CHANGE_HUE = new BooleanToolProperty("changeHue", false);
     public static final BooleanToolProperty CHANGE_SATURATION = new BooleanToolProperty("changeSaturation", true);
     public static final BooleanToolProperty CHANGE_BRIGHTNESS = new BooleanToolProperty("changeBrightness", true);
+    public static final BooleanToolProperty CHANGE_PAINT_COLOR = new BooleanToolProperty("changePaintColor", true);
     public static final BooleanToolProperty CHANGE_PAINT_TYPE = new BooleanToolProperty("changePaintType", true);
 
     public static final IntegerToolProperty INTENSITY = new IntegerToolProperty("intensity", 16, 1, 64);
