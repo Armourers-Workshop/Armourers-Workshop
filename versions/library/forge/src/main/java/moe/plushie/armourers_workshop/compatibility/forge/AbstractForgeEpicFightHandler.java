@@ -6,12 +6,11 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.model.CachedModel;
 import moe.plushie.armourers_workshop.core.client.other.thirdparty.EpicFlightModelPartBuilder;
 import moe.plushie.armourers_workshop.core.client.other.thirdparty.EpicFlightModelTransformer;
-import moe.plushie.armourers_workshop.core.client.other.thirdparty.EpicFlightRenderContext;
+import moe.plushie.armourers_workshop.core.client.skinrender.patch.EpicFightEntityRendererPatch;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.PoseUtils;
@@ -34,30 +33,18 @@ public class AbstractForgeEpicFightHandler extends AbstractForgeEpicFightHandler
     private static final FloatBuffer AW_MAT_BUFFER4 = ObjectUtils.createFloatBuffer(16);
 
     public static void onRenderPre(LivingEntity entityIn, LivingEntityRenderer<?, ?> renderer, MultiBufferSource buffers, PoseStack poseStack, int packedLightIn, float partialTicks, boolean isFirstPerson) {
-        EpicFlightRenderContext context = EpicFlightRenderContext.alloc(entityIn, renderer, packedLightIn, partialTicks, AbstractPoseStack.wrap(poseStack), AbstractBufferSource.wrap(buffers));
-        if (context != null) {
-            context.setFirstPerson(isFirstPerson);
-            context.prepare(entityIn);
-        }
-    }
-
-    public static void onRenderPost(LivingEntity entityIn, LivingEntityRenderer<?, ?> renderer, MultiBufferSource buffers, PoseStack poseStack, int packedLightIn, float partialTicks) {
-        EpicFlightRenderContext context = EpicFlightRenderContext.of(entityIn);
-        if (context != null) {
-            context.setTransformProvider(null);
-            context.deactivate(entityIn);
-            EpicFlightRenderContext.release(entityIn);
-        }
+        EpicFightEntityRendererPatch.activate(entityIn, partialTicks, packedLightIn, poseStack, buffers, renderer, patch -> {
+            patch.setFirstPerson(isFirstPerson);
+        });
     }
 
     public static void onRenderEntity(LivingEntity entityIn, Armature armature, VertexConsumer builder, PoseStack poseStack, int packedLightIn, float partialTicks, CallbackInfoReturnable<OpenMatrix4f[]> cir) {
-        EpicFlightRenderContext context = EpicFlightRenderContext.of(entityIn);
-        if (context != null) {
+        EpicFightEntityRendererPatch.apply(entityIn, patch -> {
             OpenMatrix4f[] poses = cir.getReturnValue();
             OpenMatrix4f[] overridePoses = Arrays.copyOf(poses, poses.length);
             HashMap<String, IJointTransform> transforms = new HashMap<>();
-            context.setPose(new OpenPoseStack(AbstractPoseStack.wrap(poseStack)));
-            context.setTransformProvider(name -> transforms.computeIfAbsent(name, it -> {
+            patch.setOverridePose(new OpenPoseStack(AbstractPoseStack.wrap(poseStack)));
+            patch.setTransformProvider(name -> transforms.computeIfAbsent(name, it -> {
                 Joint joint = armature.searchJointByName(it);
                 if (joint == null) {
                     return IJointTransform.NONE;
@@ -70,16 +57,23 @@ public class AbstractForgeEpicFightHandler extends AbstractForgeEpicFightHandler
                     poseStack1.multiply(normalMatrix);
                 };
             }));
-            context.setMesh(new EpicFlightModelPartBuilder(name -> {
+            patch.setMesh(new EpicFlightModelPartBuilder(name -> {
                 Joint joint = armature.searchJointByName(name);
                 if (joint != null) {
                     return visible -> overridePoses[joint.getId()] = OpenMatrix4f.createScale(0, 0, 0);
                 }
                 return null;
             }));
-            context.activate(entityIn);
             cir.setReturnValue(overridePoses);
-        }
+        });
+    }
+
+    public static void onRenderPost(LivingEntity entityIn, LivingEntityRenderer<?, ?> renderer, MultiBufferSource buffers, PoseStack poseStack, int packedLightIn, float partialTicks) {
+        EpicFightEntityRendererPatch.deactivate(entityIn, patch -> {
+            patch.setFirstPerson(false);
+            patch.setOverridePose(null);
+            patch.setTransformProvider(null);
+        });
     }
 
     public static void onInit() {

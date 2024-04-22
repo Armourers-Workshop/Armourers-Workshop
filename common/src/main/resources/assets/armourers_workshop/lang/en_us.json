@@ -75,7 +75,7 @@
   "exception.armourers_workshop.save.tooManyMarkers": "Too many markers for %s.",
   "exception.armourers_workshop.load.notFound": "Skin file not found.",
   "exception.armourers_workshop.load.notSupported": "Skin type not supported.",
-  "exception.armourers_workshop.load.notEditable": "Skin edit not supported.",
+  "exception.armourers_workshop.load.notEditable": "Skin edit not editable.",
   "exception.armourers_workshop.load.notFoundNodePart": "Can't load Skin \"%1$s\" for node \"%2$s\".",
   "action.armourers_workshop.block.load": "Load blocks from skin",
   "action.armourers_workshop.block.clear": "Clear blocks",

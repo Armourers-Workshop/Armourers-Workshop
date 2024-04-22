@@ -13,8 +13,10 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
+import moe.plushie.armourers_workshop.core.client.skinrender.patch.EpicFightEntityRendererPatch;
 import moe.plushie.armourers_workshop.init.ModContributors;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -29,13 +31,11 @@ import manifold.ext.rt.api.auto;
 public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M extends IModel> extends AbstractRenderLayer<T, V> {
 
     protected final BakedArmature armature;
-    protected final BakedArmatureTransformer armatureTransformer;
     protected final RenderLayerParent<T, V> entityRenderer;
 
     public SkinWardrobeLayer(BakedArmatureTransformer armatureTransformer, RenderLayerParent<T, V> renderer) {
         super(renderer);
         this.armature = new BakedArmature(armatureTransformer.getArmature());
-        this.armatureTransformer = armatureTransformer;
         this.entityRenderer = renderer;
     }
 
@@ -50,11 +50,14 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         if (renderData == null) {
             return;
         }
-        auto finalTransformer = armatureTransformer;
-        auto epicFlightContext = renderData.epicFlightContext;
+        auto renderPatch = renderData.getRenderPatch();
+        if (renderPatch == null) {
+            return;
+        }
+        auto transformer = renderPatch.getTransformer();
+        auto epicFlightContext = ObjectUtils.safeCast(renderPatch, EpicFightEntityRendererPatch.class);
         if (epicFlightContext != null) {
-            poseStack = epicFlightContext.getPose();
-            finalTransformer = epicFlightContext.getTransformer();
+            poseStack = epicFlightContext.getOverridePose();
         }
 
         poseStack.pushPose();
@@ -73,7 +76,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         float f = 1 / 16f;
         poseStack.scale(f, f, f);
 
-        finalTransformer.applyTo(armature);
+        transformer.applyTo(armature);
         auto context = SkinRenderContext.alloc(renderData, packedLightIn, partialTicks, null, poseStack, bufferSource);
         for (auto entry : renderData.getArmorSkins()) {
             context.setReferenced(SkinItemSource.create(entry.getRenderPriority(), entry.getItemStack()));

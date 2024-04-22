@@ -13,8 +13,8 @@ import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
-import moe.plushie.armourers_workshop.core.client.other.thirdparty.EpicFlightRenderContext;
 import moe.plushie.armourers_workshop.core.client.skinrender.patch.EntityRenderPatch;
+import moe.plushie.armourers_workshop.core.client.skinrender.patch.EpicFightEntityRendererPatch;
 import moe.plushie.armourers_workshop.core.data.ItemStackProvider;
 import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -83,9 +83,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
     private int version = 0;
     private int lastVersion = Integer.MAX_VALUE;
 
-    private EntityRenderPatch<Entity> renderPatch;
-
-    public EpicFlightRenderContext epicFlightContext;
+    private EntityRenderPatch<? super Entity> renderPatch;
 
     public SkinRenderData(EntityType<?> entityType) {
     }
@@ -351,10 +349,8 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
             return false;
         }
         // in EF doesn't need to limit limbs.
-        if (epicFlightContext != null) {
-            if (!epicFlightContext.isLimitLimbs) {
-                return false;
-            }
+        if (renderPatch instanceof EpicFightEntityRendererPatch) {
+            return false;
         }
         return isLimitLimbs;
     }
@@ -368,11 +364,11 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
     }
 
 
-    public void setRenderPatch(EntityRenderPatch<Entity> renderPatch) {
+    public void setRenderPatch(EntityRenderPatch<? super Entity> renderPatch) {
         this.renderPatch = renderPatch;
     }
 
-    public EntityRenderPatch<Entity> getRenderPatch() {
+    public EntityRenderPatch<? super Entity> getRenderPatch() {
         return renderPatch;
     }
 

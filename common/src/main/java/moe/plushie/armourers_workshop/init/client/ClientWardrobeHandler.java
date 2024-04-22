@@ -5,11 +5,8 @@ import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
-import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.Armatures;
-import moe.plushie.armourers_workshop.core.armature.core.DefaultOverriddenArmaturePlugin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
-import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
 import moe.plushie.armourers_workshop.core.client.bake.BakedFirstPersonArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedItemModel;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
@@ -31,7 +28,6 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.EmbeddedSkinStack;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -94,28 +90,28 @@ public class ClientWardrobeHandler {
 
 
     public static void onRenderEntityPre(Entity entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight) {
-        FallbackEntityRenderPatch.activate(entity, partialTicks, packedLight, poseStackIn, buffersIn);
+        FallbackEntityRenderPatch.activate(entity, partialTicks, packedLight, poseStackIn, buffersIn, null);
     }
 
     public static void onRenderEntity(Entity entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight) {
-        FallbackEntityRenderPatch.render(entity);
+        FallbackEntityRenderPatch.apply(entity, null);
     }
 
     public static void onRenderEntityPost(Entity entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight) {
-        FallbackEntityRenderPatch.deactivate(entity);
+        FallbackEntityRenderPatch.deactivate(entity, null);
     }
 
 
     public static void onRenderLivingEntityPre(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
-        LivingEntityRenderPatch.activate(entity, partialTicks, packedLight, poseStackIn, buffersIn, entityRenderer);
+        LivingEntityRenderPatch.activate(entity, partialTicks, packedLight, poseStackIn, buffersIn, entityRenderer, null);
     }
 
     public static void onRenderLivingEntity(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
-        LivingEntityRenderPatch.render(entity);
+        LivingEntityRenderPatch.apply(entity, null);
     }
 
     public static void onRenderLivingEntityPost(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
-       LivingEntityRenderPatch.deactivate(entity);
+        LivingEntityRenderPatch.deactivate(entity, null);
     }
 
     @Nullable

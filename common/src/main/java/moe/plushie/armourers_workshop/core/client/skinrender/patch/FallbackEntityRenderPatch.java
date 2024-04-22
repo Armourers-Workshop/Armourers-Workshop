@@ -6,18 +6,18 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
 
+import java.util.function.Consumer;
+
 import manifold.ext.rt.api.auto;
 
-public class FallbackEntityRenderPatch extends EntityRenderPatch<Entity> {
+public class FallbackEntityRenderPatch<T extends Entity> extends EntityRenderPatch<T> {
 
     private static final float SCALE = 1 / 16f;
 
     private final BakedArmature armature;
-    private final BakedArmatureTransformer transformer;
 
     public FallbackEntityRenderPatch(BakedArmatureTransformer transformer, SkinRenderData renderData) {
         super(renderData);
@@ -25,58 +25,26 @@ public class FallbackEntityRenderPatch extends EntityRenderPatch<Entity> {
         this.armature = BakedArmature.mutableBy(transformer.getArmature());
     }
 
-    public static void activate(Entity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn) {
-        auto renderData = SkinRenderData.of(entity);
-        if (renderData == null) {
-            return;
-        }
-        auto renderPatch = renderData.getRenderPatch();
-        if (renderPatch == null || !renderPatch.isValid()) {
+    public static <T extends Entity> void activate(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, Consumer<FallbackEntityRenderPatch<T>> handler) {
+        _activate(FallbackEntityRenderPatch.class, entity, partialTicks, packedLight, poseStackIn, buffersIn, handler, renderData -> {
             auto transformer = SkinRendererManager.getFallbackTransformer(entity.getType());
-            if (transformer == null) {
-                return;
+            if (transformer != null) {
+                return new FallbackEntityRenderPatch<>(transformer, renderData);
             }
-            auto renderPatch1 = new FallbackEntityRenderPatch(transformer, renderData);
-            renderPatch = ObjectUtils.unsafeCast(renderPatch1);
-            renderData.setRenderPatch(renderPatch);
-        }
-
-        renderPatch.onInit(entity, partialTicks, packedLight, poseStackIn, buffersIn);
-        renderPatch.onActivate(entity);
+            return null;
+        });
     }
 
-    public static void render(Entity entity) {
-        auto renderData = SkinRenderData.of(entity);
-        if (renderData != null) {
-            auto renderPatch = renderData.getRenderPatch();
-            if (renderPatch != null) {
-                renderPatch.onRender(entity);
-            }
-        }
+    public static <T extends Entity> void apply(T entity, Consumer<FallbackEntityRenderPatch<T>> handler) {
+        _apply(FallbackEntityRenderPatch.class, entity, handler);
     }
 
-    public static void deactivate(Entity entity) {
-        auto renderData = SkinRenderData.of(entity);
-        if (renderData != null) {
-            auto renderPatch = renderData.getRenderPatch();
-            if (renderPatch != null) {
-                renderPatch.onDeactivate(entity);
-            }
-        }
+    public static <T extends Entity> void deactivate(T entity, Consumer<FallbackEntityRenderPatch<T>> handler) {
+        _deactivate(FallbackEntityRenderPatch.class, entity, handler);
     }
 
     @Override
-    protected void onActivate(Entity entity) {
-        transformer.prepare(entity, this);
-    }
-
-    @Override
-    protected void onDeactivate(Entity entity) {
-        transformer.deactivate(entity, this);
-    }
-
-    @Override
-    protected void onRender(Entity entity) {
+    protected void onApply(Entity entity) {
         poseStack.pushPose();
 
         transformer.activate(entity, this);

@@ -52,11 +52,7 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
             return false;
         }
         SkinDescriptor descriptor = SkinDescriptor.of(stackInput);
-        if (descriptor.isEmpty()) {
-            return false;
-        }
-//        return descriptor.getType() == blockEntity.getSkinType();
-        return true;
+        return !descriptor.isEmpty();
     }
 
     public boolean shouldSaveArmourItem(Player player) {
