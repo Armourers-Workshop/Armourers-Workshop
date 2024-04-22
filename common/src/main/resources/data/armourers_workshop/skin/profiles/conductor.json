@@ -1,0 +1,13 @@
+{
+  "slots": {
+    "head": "default_mob_slots",
+    "chest": "default_mob_slots",
+    "legs": "default_mob_slots",
+    "feet": "default_mob_slots",
+    "wings": "default_mob_slots",
+    "outfit": "default_mob_slots"
+  },
+  "entities": [
+    "railways:conductor"
+  ]
+}
