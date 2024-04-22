@@ -1,0 +1,27 @@
+package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.world.level.block.entity.BlockEntity;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRendererImpl;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.level.block.entity.BlockEntity;
+
+import java.util.function.DoubleSupplier;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Available("[1.16, 1.18)")
+@Extension
+public class ClientDataProvider {
+
+    @Environment(EnvType.CLIENT)
+    public static DoubleSupplier createViewDistanceProvider(@This BlockEntity blockEntity) {
+        Object blockEntityRenderer = BlockEntityRenderDispatcher.instance.getRenderer(blockEntity);
+        if (blockEntityRenderer instanceof AbstractBlockEntityRendererImpl) {
+            return ((AbstractBlockEntityRendererImpl<?>) blockEntityRenderer)::getViewDistance;
+        }
+        return () -> 64;
+    }
+}

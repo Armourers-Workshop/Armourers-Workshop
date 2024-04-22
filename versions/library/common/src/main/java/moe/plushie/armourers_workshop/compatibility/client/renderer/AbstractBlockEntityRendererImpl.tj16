@@ -15,8 +15,8 @@ public abstract class AbstractBlockEntityRendererImpl<T extends BlockEntity> ext
         super(context.getBlockEntityRenderDispatcher());
     }
 
-    // TODO: NO IMP @SAGESSE
     public int getViewDistance() {
         return 64;
     }
 }
+

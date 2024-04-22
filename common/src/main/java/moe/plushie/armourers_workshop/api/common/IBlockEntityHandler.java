@@ -5,7 +5,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.Nullable;
 
 public interface IBlockEntityHandler {
 
@@ -26,9 +25,5 @@ public interface IBlockEntityHandler {
      */
     default AABB getRenderBoundingBox(BlockState blockState) {
         return null;
-    }
-
-    default double getViewDistance() {
-        return 64;
     }
 }

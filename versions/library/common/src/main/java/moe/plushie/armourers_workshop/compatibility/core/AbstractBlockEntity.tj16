@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.compatibility.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -9,8 +11,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.function.DoubleSupplier;
+
 @Available("[1.16, 1.18)")
 public abstract class AbstractBlockEntity extends BlockEntity implements IBlockEntityHandler {
+
+    private DoubleSupplier viewDistanceProvider;
 
     public AbstractBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType);
@@ -51,5 +57,14 @@ public abstract class AbstractBlockEntity extends BlockEntity implements IBlockE
     @Override
     public CompoundTag getUpdateTag() {
         return this.saveWithFullMetadata();
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public double getViewDistance() {
+        if (viewDistanceProvider == null) {
+            viewDistanceProvider = createViewDistanceProvider();
+        }
+        return viewDistanceProvider.getAsDouble();
     }
 }

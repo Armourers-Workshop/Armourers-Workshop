@@ -271,6 +271,11 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
         return 272;
     }
 
+    @Override
+    public boolean shouldRenderOffScreen(T entity) {
+        return true;
+    }
+
     public static class OutlineObjectBuilder implements SkinRenderBufferSource.ObjectBuilder {
 
         private final SkinRenderBufferSource.ObjectBuilder builder;

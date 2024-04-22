@@ -365,11 +365,6 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
         return renderBoundingBox;
     }
 
-    @Override
-    public double getViewDistance() {
-        return 128;
-    }
-
     private void remakeSkinProperties() {
         String name = skinProperties.get(SkinProperty.ALL_CUSTOM_NAME);
         String flavour = skinProperties.get(SkinProperty.ALL_FLAVOUR_TEXT);
