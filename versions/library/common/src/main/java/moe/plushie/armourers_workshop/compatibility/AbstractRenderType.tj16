@@ -75,7 +75,7 @@ public class AbstractRenderType extends RenderType {
 
         it.put(SkinRenderFormat.IMAGE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
 
-        it.put(SkinRenderFormat.BLIT_MASK, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
+        it.put(SkinRenderFormat.BLIT_MASK, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_TRIANGLES, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
 
         it.put(SkinRenderFormat.GUI_IMAGE, () -> _builder(DefaultVertexFormat.POSITION_TEX, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTextureState(EMPTY_TEXTURE)));
         it.put(SkinRenderFormat.GUI_COLOR, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_QUADS, builder -> builder.setTransparencyState(DEFAULT_TRANSPARENCY)));
