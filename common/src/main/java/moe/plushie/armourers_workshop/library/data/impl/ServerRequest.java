@@ -50,8 +50,8 @@ public class ServerRequest {
         }
         // when body is not required, we will create a simple request.
         if (body.isEmpty()) {
-            URL url = new URL(builder.toString());
-            return url::openStream;
+            SinglePart part = new SinglePart(new URL(builder.toString()));
+            return part::upload;
         }
         MultipartForm multipartForm = new MultipartForm(builder.toString());
         for (String it : body) {
@@ -121,6 +121,22 @@ public class ServerRequest {
         }
         return "";
 
+    }
+
+    public static class SinglePart {
+
+        private final URL url;
+
+        public SinglePart(URL url) {
+            this.url = url;
+        }
+
+        public InputStream upload() throws IOException {
+            URLConnection connection = url.openConnection();
+            connection.setConnectTimeout(15000);
+            connection.setReadTimeout(15000);
+            return connection.getInputStream();
+        }
     }
 
     public static class MultipartForm {
