@@ -8,6 +8,7 @@
     "ItemRendererMixin",
     "InventoryScreenMixin",
     "HttpTextureMixin",
+    "CameraMixin",
     "patch/ArrowRendererMixin",
     "patch/BoatRendererMixin",
     "patch/FishingHookRendererMixin",
