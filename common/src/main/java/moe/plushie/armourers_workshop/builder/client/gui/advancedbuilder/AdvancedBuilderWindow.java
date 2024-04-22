@@ -36,7 +36,7 @@ import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentListener;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentType;
-import moe.plushie.armourers_workshop.init.ModOptions;
+import moe.plushie.armourers_workshop.init.ModMenuOptions;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
@@ -360,12 +360,12 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
 
         public Options(String key) {
             this.key = key;
-            this.value = ModOptions.getInstance().getBoolean(key);
+            this.value = ModMenuOptions.getInstance().getBoolean(key, true);
         }
 
         public void set(boolean value) {
             this.value = value;
-            ModOptions.getInstance().putBoolean(key, value);
+            ModMenuOptions.getInstance().putBoolean(key, value);
         }
 
         public boolean get() {
