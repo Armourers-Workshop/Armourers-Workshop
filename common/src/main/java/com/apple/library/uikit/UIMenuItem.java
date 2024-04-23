@@ -134,7 +134,7 @@ public class UIMenuItem {
                         names.add(new NSString(name.get()));
                     }
                 } else {
-                    InputKeyImpl key = new InputKeyImpl(keyName);
+                    InputKeyImpl key = InputKeyImpl.get(keyName);
                     conditions.add(event -> key.test(event.key(), event.keyModifier()));
                     names.add(new NSString(key.getName()));
                 }
