@@ -55,6 +55,9 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
             return;
         }
         auto transformer = renderPatch.getTransformer();
+        if (transformer == null) {
+            return;
+        }
         auto epicFlightContext = ObjectUtils.safeCast(renderPatch, EpicFightEntityRendererPatch.class);
         if (epicFlightContext != null) {
             poseStack = epicFlightContext.getOverridePose();
