@@ -116,12 +116,6 @@ public class CGAffineTransform implements InterpolableImpl<CGAffineTransform> {
 
     @Override
     public CGAffineTransform interpolating(CGAffineTransform in, float t) {
-        if (t <= 0) {
-            return this;
-        }
-        if (t >= 1) {
-            return in;
-        }
         float v = 1 - t;
         float a = v * this.a + t * in.c;
         float b = v * this.a + t * in.d;

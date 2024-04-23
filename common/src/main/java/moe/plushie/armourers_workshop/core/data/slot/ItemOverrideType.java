@@ -27,6 +27,8 @@ public enum ItemOverrideType {
     MINECART("minecart", ModItemTags.MINECARTS, null),
     FISHING_ROD("fishing_rod", ModItemTags.FISHING_RODS, null),
 
+    HORSE_ARMOR("horse_armor", ModItemTags.HORSE_ARMORS, null),
+
     ITEM("item", null, null);
 
     private final IRegistryKey<IItemTag> tag;

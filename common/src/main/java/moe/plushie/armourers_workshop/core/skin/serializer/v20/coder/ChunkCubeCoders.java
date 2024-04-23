@@ -44,7 +44,7 @@ public class ChunkCubeCoders {
         ChunkContext context = new ChunkContext(skin.getVersion());
         // when the skin using multiple data sources, we can't enable fast encoder,
         // because it must to recompile and resort it.
-        if (getDataSourceCount(skin.getParts(), null) > 1) {
+        if (getDataSourceCount(skin.getParts(), new HashSet<>()) > 1) {
             context.setFastEncoder(false);
         }
         return context;
@@ -63,9 +63,6 @@ public class ChunkCubeCoders {
     }
 
     private static int getDataSourceCount(List<SkinPart> parts, HashSet<SkinCubes> dataSources) {
-        if (dataSources == null) {
-            dataSources = new HashSet<>();
-        }
         for (SkinPart part : parts) {
             SkinCubes cubes = part.getCubeData();
             if (cubes.getCubeTotal() != 0) {

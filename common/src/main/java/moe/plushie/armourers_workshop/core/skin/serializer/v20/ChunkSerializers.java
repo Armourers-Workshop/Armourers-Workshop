@@ -42,14 +42,14 @@ import java.util.Collection;
  * palette data:          | length | PALE | flag | opt(VB)/reserved(VB) |< paint type(1B)/used bytes(1B) >[ palette entry(VB) ]|
  * chunk flag:            1 encrypt, 2 gzip, 3 encrypt+gzip
  * cube entry:            x(1B)/y(1B)/z(1B)
- * origin(12B)/size(12B), type(4b)/translate(12B)/rotation(12B)/scale(12B)/pivot(12B)/offset(12B)
+ *                        origin(12B)/size(12B), type(4b)/translate(12B)/rotation(12B)/scale(12B)/pivot(12B)/offset(12B)
  * cube face entry:       color index(VB)
- * first: u(VB)/v(VB), second: s(VB)/t(VB)
+ *                        first: u(VB)/v(VB), second: s(VB)/t(VB)
  * palette entry:         RRGGBB/AARRGGBB
- * id(VB)/parent id(VB)/x(4B)/y(4B)/w(4B)/h(4B)/ani(4B)/opt(4B)/bytes(4B) | raw data(nB)
+ *                        id(VB)/parent id(VB)/x(4B)/y(4B)/w(4B)/h(4B)/ani(4B)/opt(4B)/bytes(4B) | raw data(nB)
  * symbol:                {n} = (length(4B) + byte[length]) * n + 0(4B)
- * [data] = count(VB) + data[count]
- * <header>[data] = (count(VB) + header + data[count]) * n + 0(VB)
+ *                        [data] = count(VB) + data[count]
+ *                        <header>[data] = (count(VB) + header + data[count]) * n + 0(VB)
  */
 @SuppressWarnings("unused")
 public class ChunkSerializers {
