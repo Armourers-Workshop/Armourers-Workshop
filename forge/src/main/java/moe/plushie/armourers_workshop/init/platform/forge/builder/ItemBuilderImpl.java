@@ -22,12 +22,6 @@ public class ItemBuilderImpl<T extends Item> extends AbstractForgeItemBuilder<T>
     }
 
     @Override
-    public IItemBuilder<T> defaultDurability(int i) {
-        this.properties = properties.defaultDurability(i);
-        return this;
-    }
-
-    @Override
     public IItemBuilder<T> durability(int i) {
         this.properties = properties.durability(i);
         return this;

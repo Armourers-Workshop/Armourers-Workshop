@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.blockentity;
 
 import com.google.common.collect.ImmutableMap;
+import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
@@ -8,6 +9,8 @@ import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
+import moe.plushie.armourers_workshop.utils.DataSerializerKey;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -17,8 +20,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -27,6 +28,15 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
+
+    private static final DataSerializerKey<Vector3f> ANGLE_KEY = DataSerializerKey.create("Angle", DataTypeCodecs.VECTOR_3F, Vector3f.ZERO);
+    private static final DataSerializerKey<Vector3f> OFFSET_KEY = DataSerializerKey.create("Offset", DataTypeCodecs.VECTOR_3F, Vector3f.ZERO);
+    private static final DataSerializerKey<Vector3f> ROTATION_SPEED_KEY = DataSerializerKey.create("RotSpeed", DataTypeCodecs.VECTOR_3F, Vector3f.ZERO);
+    private static final DataSerializerKey<Vector3f> ROTATION_OFFSET_KEY = DataSerializerKey.create("RotOffset", DataTypeCodecs.VECTOR_3F, Vector3f.ZERO);
+    private static final DataSerializerKey<Boolean> IS_GLOWING_KEY = DataSerializerKey.create("Glowing", DataTypeCodecs.BOOL, true);
+    private static final DataSerializerKey<Boolean> IS_POWERED_KEY = DataSerializerKey.create("Powered", DataTypeCodecs.BOOL, false);
+    private static final DataSerializerKey<Float> SCALE_KEY = DataSerializerKey.create("Scale", DataTypeCodecs.FLOAT, 1.0f);
+    private static final DataSerializerKey<Integer> POWER_MODE_KEY = DataSerializerKey.create("PowerMode", DataTypeCodecs.INT, 0);
 
     private static final ImmutableMap<?, Vector3f> FACING_TO_ROT = new ImmutableMap.Builder<Object, Vector3f>()
             .put(Pair.of(AttachFace.CEILING, Direction.EAST), new Vector3f(180, 270, 0))
@@ -65,30 +75,30 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     }
 
     @Override
-    public void readFromNBT(CompoundTag tag) {
-        ContainerHelper.loadAllItems(tag, items);
-        modelAngle = tag.getOptionalVector3f(Constants.Key.BLOCK_ENTITY_ANGLE, Vector3f.ZERO);
-        modelOffset = tag.getOptionalVector3f(Constants.Key.BLOCK_ENTITY_OFFSET, Vector3f.ZERO);
-        rotationSpeed = tag.getOptionalVector3f(Constants.Key.BLOCK_ENTITY_ROTATION_SPEED, Vector3f.ZERO);
-        rotationOffset = tag.getOptionalVector3f(Constants.Key.BLOCK_ENTITY_ROTATION_OFFSET, Vector3f.ZERO);
-        isGlowing = tag.getOptionalBoolean(Constants.Key.BLOCK_ENTITY_IS_GLOWING, true);
-        isPowered = tag.getOptionalBoolean(Constants.Key.BLOCK_ENTITY_IS_POWERED, false);
-        modelScale = tag.getOptionalFloat(Constants.Key.ENTITY_SCALE, 1.0f);
-        powerMode = tag.getOptionalInt(Constants.Key.BLOCK_ENTITY_POWER_MODE, 0);
+    public void readAdditionalData(IDataSerializer serializer) {
+        serializer.readItemList(items);
+        modelAngle = serializer.read(ANGLE_KEY);
+        modelOffset = serializer.read(OFFSET_KEY);
+        rotationSpeed = serializer.read(ROTATION_SPEED_KEY);
+        rotationOffset = serializer.read(ROTATION_OFFSET_KEY);
+        isGlowing = serializer.read(IS_GLOWING_KEY);
+        isPowered = serializer.read(IS_POWERED_KEY);
+        modelScale = serializer.read(SCALE_KEY);
+        powerMode = serializer.read(POWER_MODE_KEY);
         setRenderChanged();
     }
 
     @Override
-    public void writeToNBT(CompoundTag tag) {
-        ContainerHelper.saveAllItems(tag, items);
-        tag.putOptionalVector3f(Constants.Key.BLOCK_ENTITY_ANGLE, modelAngle, Vector3f.ZERO);
-        tag.putOptionalVector3f(Constants.Key.BLOCK_ENTITY_OFFSET, modelOffset, Vector3f.ZERO);
-        tag.putOptionalVector3f(Constants.Key.BLOCK_ENTITY_ROTATION_SPEED, rotationSpeed, Vector3f.ZERO);
-        tag.putOptionalVector3f(Constants.Key.BLOCK_ENTITY_ROTATION_OFFSET, rotationOffset, Vector3f.ZERO);
-        tag.putOptionalBoolean(Constants.Key.BLOCK_ENTITY_IS_GLOWING, isGlowing, true);
-        tag.putOptionalBoolean(Constants.Key.BLOCK_ENTITY_IS_POWERED, isPowered, false);
-        tag.putOptionalFloat(Constants.Key.ENTITY_SCALE, modelScale, 1.0f);
-        tag.putOptionalInt(Constants.Key.BLOCK_ENTITY_POWER_MODE, powerMode, 0);
+    public void writeAdditionalData(IDataSerializer serializer) {
+        serializer.writeItemList(items);
+        serializer.write(ANGLE_KEY, modelAngle);
+        serializer.write(OFFSET_KEY, modelOffset);
+        serializer.write(ROTATION_SPEED_KEY, rotationSpeed);
+        serializer.write(ROTATION_OFFSET_KEY, rotationOffset);
+        serializer.write(IS_GLOWING_KEY, isGlowing);
+        serializer.write(IS_POWERED_KEY, isPowered);
+        serializer.write(SCALE_KEY, modelScale);
+        serializer.write(POWER_MODE_KEY, powerMode);
     }
 
     public void updatePowerStats() {

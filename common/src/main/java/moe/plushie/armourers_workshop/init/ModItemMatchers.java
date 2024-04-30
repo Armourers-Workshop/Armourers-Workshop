@@ -1,9 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.utils.ItemMatcher;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -40,7 +37,6 @@ public class ModItemMatchers {
             .match("ninjato")
             .match("scimitar")
             .match("shamshir")
-            .required(Attributes.ATTACK_DAMAGE)
             .build();
 
     public static final ItemMatcher TRIDENTS = builder()
@@ -48,7 +44,6 @@ public class ModItemMatchers {
             .match("lance")
             .match("halbred")
             .match("spear")
-            .required(Attributes.ATTACK_DAMAGE)
             .build();
 
     public static final ItemMatcher SHIELDS = simple("shield");
@@ -77,11 +72,6 @@ public class ModItemMatchers {
 
         private MatcherBuilder() {
             buffer = new StringBuffer();
-        }
-
-        private MatcherBuilder required(Attribute attr) {
-            requirements = item -> item.getAttributeModifiers(EquipmentSlot.MAINHAND).containsKey(attr);
-            return this;
         }
 
         private MatcherBuilder match(String tag) {

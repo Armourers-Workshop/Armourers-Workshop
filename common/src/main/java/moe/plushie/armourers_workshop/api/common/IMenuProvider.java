@@ -6,5 +6,5 @@ import net.minecraft.world.inventory.MenuType;
 @FunctionalInterface
 public interface IMenuProvider<C, T> {
 
-    C createMenu(MenuType<?> menuType, int containerId, Inventory inventory, T hostObject);
+    C createMenu(MenuType<?> menuType, int containerId, Inventory inventory, T value);
 }

@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
@@ -18,7 +19,6 @@ import moe.plushie.armourers_workshop.library.data.SkinLibrarySetting;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
 import java.io.DataInputStream;
@@ -40,11 +40,11 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
         this.privateFiles = privateFiles;
     }
 
-    public UpdateLibraryFilesPacket(FriendlyByteBuf buffer) {
+    public UpdateLibraryFilesPacket(IFriendlyByteBuf buffer) {
         this.setting = new SkinLibrarySetting(buffer.readNbt());
         this.publicFiles = new ArrayList<>();
         this.privateFiles = new ArrayList<>();
-        for (SkinLibraryFile file : readCompressedBuffer(new ByteBufInputStream(buffer))) {
+        for (SkinLibraryFile file : readCompressedBuffer(new ByteBufInputStream(buffer.asByteBuf()))) {
             if (file.getPath().startsWith(Constants.PRIVATE)) {
                 privateFiles.add(file);
             } else {
@@ -54,10 +54,10 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         int totalSize = publicFiles.size() + privateFiles.size();
         buffer.writeNbt(setting.serializeNBT());
-        writeCompressedBuffer(new ByteBufOutputStream(buffer), Iterables.concat(publicFiles, privateFiles), totalSize);
+        writeCompressedBuffer(new ByteBufOutputStream(buffer.asByteBuf()), Iterables.concat(publicFiles, privateFiles), totalSize);
     }
 
     @Override

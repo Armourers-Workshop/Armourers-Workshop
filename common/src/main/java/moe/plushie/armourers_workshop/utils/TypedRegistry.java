@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -46,13 +47,24 @@ public class TypedRegistry<T> implements IRegistry<T> {
         });
     }
 
-    public static <T> TypedRegistry<T> factory(Class<?> type, Function<ResourceLocation, T> factory) {
+    public static <T> TypedRegistry<T> factory(Class<? extends T> type, Function<ResourceLocation, T> factory) {
         return new TypedRegistry<>(type, null, null, new RegisterProvider<T>() {
             @Override
             public <I extends T> Supplier<I> register(ResourceLocation registryName, Supplier<? extends I> provider) {
                 T value = factory.apply(registryName);
                 // noinspection unchecked
                 return () -> (I) value;
+            }
+        });
+    }
+
+    public static <T> TypedRegistry<T> map(Class<? extends T> type, BiConsumer<ResourceLocation, T> consumer) {
+        return new TypedRegistry<>(type, null, null, new RegisterProvider<T>() {
+            @Override
+            public <I extends T> Supplier<I> register(ResourceLocation registryName, Supplier<? extends I> provider) {
+                I value = provider.get();
+                consumer.accept(registryName, value);
+                return () -> value;
             }
         });
     }

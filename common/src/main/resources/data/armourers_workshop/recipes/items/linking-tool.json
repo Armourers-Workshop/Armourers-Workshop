@@ -7,10 +7,10 @@
   ],
   "key": {
     "I": {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     },
     "X": {
-      "tag": "c:wooden_chests"
+      "tag": "c:chests/wooden"
     },
     "T": {
       "tag": "armourers_workshop:skin_cubes"
@@ -20,6 +20,6 @@
     }
   },
   "result": {
-    "item": "armourers_workshop:linking-tool"
+    "id": "armourers_workshop:linking-tool"
   }
 }

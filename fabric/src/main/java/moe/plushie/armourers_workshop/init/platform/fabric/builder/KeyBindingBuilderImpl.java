@@ -4,11 +4,11 @@ import com.mojang.blaze3d.platform.InputConstants;
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
 import moe.plushie.armourers_workshop.api.registry.IKeyBindingBuilder;
-import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
+import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricKeyMapping;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
+import moe.plushie.armourers_workshop.init.platform.event.client.RenderFrameEvent;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.ext.OpenKeyModifier;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.tuple.Pair;
@@ -16,15 +16,14 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
-@Environment(EnvType.CLIENT)
 public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBindingBuilder<T> {
 
     private static final ArrayList<Pair<KeyMapping, Supplier<Runnable>>> INPUTS = createAndAttach();
 
+    private final String key;
     private IKeyModifier modifier = OpenKeyModifier.NONE;
     private String category = "";
     private Supplier<Runnable> handler;
-    private final String key;
 
     public KeyBindingBuilderImpl(String key) {
         this.key = key;
@@ -57,7 +56,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         if (handler != null) {
             INPUTS.add(Pair.of(binding, handler));
         }
-        ClientNativeManager.getProvider().willRegisterKeyMapping(registry -> registry.register(binding));
+        AbstractFabricKeyMapping.register(name, binding);
         IKeyBinding binding1 = new IKeyBinding() {
 
             @Override
@@ -73,7 +72,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         return ObjectUtils.unsafeCast(binding1);
     }
 
-    public static class OnceKeyBinding extends KeyMapping {
+    public static class OnceKeyBinding extends AbstractFabricKeyMapping {
 
         // Once consumed, must need to release the key to reset this flags.
         private boolean canConsumeClick = true;
@@ -106,7 +105,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
 
     private static <T> ArrayList<T> createAndAttach() {
         // attach the input event to client.
-        ClientNativeManager.getProvider().willInput(ignored -> INPUTS.forEach(pair -> {
+        EventManager.listen(RenderFrameEvent.Post.class, event -> INPUTS.forEach(pair -> {
             if (pair.getKey().consumeClick()) {
                 pair.getValue().get().run();
             }

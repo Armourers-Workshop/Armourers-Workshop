@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.network;
 
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 
 public class RequestSkinPacket extends CustomPacket {
@@ -15,12 +15,12 @@ public class RequestSkinPacket extends CustomPacket {
         this.identifier = identifier;
     }
 
-    public RequestSkinPacket(FriendlyByteBuf buffer) {
-        this.identifier = buffer.readUtf(Short.MAX_VALUE);
+    public RequestSkinPacket(IFriendlyByteBuf buffer) {
+        this.identifier = buffer.readUtf();
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeUtf(identifier);
     }
 

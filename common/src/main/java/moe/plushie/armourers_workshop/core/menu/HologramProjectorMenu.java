@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.menu;
 
-import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
+import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,7 +16,7 @@ public class HologramProjectorMenu extends AbstractBlockEntityMenu<HologramProje
     private final Container inventory;
     private int group;
 
-    public HologramProjectorMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess worldPos) {
+    public HologramProjectorMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos worldPos) {
         super(menuType, block, containerId, worldPos);
         this.playerInventory = playerInventory;
         this.inventory = blockEntity.getInventory();

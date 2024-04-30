@@ -9,17 +9,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class RenderSpecificArmEvents {
 
-    public static final Event<SpecificArm> MAIN_HAND = EventFactory.createArrayBacked(SpecificArm.class, callbacks -> (poseStack, buffers, i, player, hand) -> {
-        for (SpecificArm callback : callbacks) {
-            boolean result = callback.render(poseStack, buffers, i, player, hand);
-            if (!result) {
-                return false;
-            }
-        }
-        return true;
-    });
-
-    public static final Event<SpecificArm> OFF_HAND = EventFactory.createArrayBacked(SpecificArm.class, callbacks -> (poseStack, buffers, i, player, hand) -> {
+    public static final Event<SpecificArm> ARM = EventFactory.createArrayBacked(SpecificArm.class, callbacks -> (poseStack, buffers, i, player, hand) -> {
         for (SpecificArm callback : callbacks) {
             boolean result = callback.render(poseStack, buffers, i, player, hand);
             if (!result) {

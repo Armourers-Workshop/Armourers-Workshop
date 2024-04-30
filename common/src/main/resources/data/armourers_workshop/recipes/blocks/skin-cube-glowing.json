@@ -7,14 +7,14 @@
   ],
   "key": {
     "X": {
-      "tag": "c:glowstone_dusts"
+      "tag": "c:dusts/glowstone"
     },
     "#": {
       "item": "armourers_workshop:skin-cube"
     }
   },
   "result": {
-    "item": "armourers_workshop:skin-cube-glowing",
+    "id": "armourers_workshop:skin-cube-glowing",
     "count": 8
   }
 }

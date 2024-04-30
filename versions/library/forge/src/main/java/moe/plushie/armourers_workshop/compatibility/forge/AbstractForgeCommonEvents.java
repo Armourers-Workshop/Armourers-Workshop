@@ -1,52 +1,60 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
-import moe.plushie.armourers_workshop.api.annotation.Available;
-import net.neoforged.fml.event.config.ModConfigEvent;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.TickEvent;
-import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
-import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
-import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
-import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
-import net.neoforged.neoforge.event.server.ServerStartedEvent;
-import net.neoforged.neoforge.event.server.ServerStoppedEvent;
-import net.neoforged.neoforge.event.server.ServerStoppingEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.common.AbstractForgePlayerEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.common.AbstractForgeServerLevelEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.common.AbstractForgeBlockEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.common.AbstractForgeConfigEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.common.AbstractForgeLauncherLifecycleEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.common.AbstractForgeRegisterCommandsEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.common.AbstractForgeRegisterDataPackEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.common.AbstractForgeRegisterEntityAttributesEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.common.AbstractForgeServerLifecycleEvent;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
+import moe.plushie.armourers_workshop.init.platform.event.common.BlockEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.LauncherClientSetupEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.LauncherCommonSetupEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.LauncherConfigSetupEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.LauncherLoadCompleteEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.PlayerEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.RegisterCommandsEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.RegisterDataPackEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.RegisterEntityAttributesEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartingEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerLevelAddEntityEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerLevelTickEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartedEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppedEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppingEvent;
 
-@Available("[1.21, )")
-public class AbstractForgeCommonEvents {
+public class AbstractForgeCommonEvents extends AbstractForgeCommonEventsImpl {
 
-    public static final Class<ModConfigEvent> CONFIG = ModConfigEvent.class;
-    public static final Class<TickEvent.LevelTickEvent> TICK = TickEvent.LevelTickEvent.class;
+    public static void init() {
+        EventManager.post(LauncherConfigSetupEvent.class, AbstractForgeConfigEvent.registryFactory());
 
-    public static final Class<FMLLoadCompleteEvent> FML_LOAD_COMPLETE = FMLLoadCompleteEvent.class;
-    public static final Class<FMLClientSetupEvent> FML_CLIENT_SETUP = FMLClientSetupEvent.class;
-    public static final Class<FMLCommonSetupEvent> FML_COMMON_SETUP = FMLCommonSetupEvent.class;
+        EventManager.post(LauncherClientSetupEvent.class, AbstractForgeLauncherLifecycleEvent.clientSetupFactory());
+        EventManager.post(LauncherCommonSetupEvent.class, AbstractForgeLauncherLifecycleEvent.commonSetupFactory());
+        EventManager.post(LauncherLoadCompleteEvent.class, AbstractForgeLauncherLifecycleEvent.loadCompleteFactory());
 
-    public static final Class<ServerAboutToStartEvent> SERVER_WILL_START = ServerAboutToStartEvent.class;
-    public static final Class<ServerStartedEvent> SERVER_DID_START = ServerStartedEvent.class;
-    public static final Class<ServerStoppingEvent> SERVER_WILL_STOP = ServerStoppingEvent.class;
-    public static final Class<ServerStoppedEvent> SERVER_DID_STOP = ServerStoppedEvent.class;
+        EventManager.post(ServerStartingEvent.class, AbstractForgeServerLifecycleEvent.aboutToStartFactory());
+        EventManager.post(ServerStartedEvent.class, AbstractForgeServerLifecycleEvent.startedFactory());
+        EventManager.post(ServerStoppingEvent.class, AbstractForgeServerLifecycleEvent.stoppingFactory());
+        EventManager.post(ServerStoppedEvent.class, AbstractForgeServerLifecycleEvent.stoppedFactory());
 
-    public static final Class<BlockEvent.BreakEvent> BLOCK_BREAK = BlockEvent.BreakEvent.class;
-    public static final Class<BlockEvent.EntityPlaceEvent> BLOCK_PLACE = BlockEvent.EntityPlaceEvent.class;
+        EventManager.post(ServerLevelTickEvent.class, AbstractForgeServerLevelEvent.startTickFactory());
+        EventManager.post(ServerLevelAddEntityEvent.class, AbstractForgeServerLevelEvent.addEntityFactory());
 
-    public static final Class<EntityJoinLevelEvent> ENTITY_JOIN = EntityJoinLevelEvent.class;
-    public static final Class<LivingDropsEvent> ENTITY_DROPS = LivingDropsEvent.class;
-    public static final Class<AttackEntityEvent> ENTITY_ATTACK = AttackEntityEvent.class;
+        EventManager.post(BlockEvent.Break.class, AbstractForgeBlockEvent.breakFactory());
+        EventManager.post(BlockEvent.Place.class, AbstractForgeBlockEvent.placeFactory());
 
-    public static final Class<PlayerEvent.PlayerLoggedInEvent> PLAYER_LOGIN = PlayerEvent.PlayerLoggedInEvent.class;
-    public static final Class<PlayerEvent.PlayerLoggedOutEvent> PLAYER_LOGOUT = PlayerEvent.PlayerLoggedOutEvent.class;
-    public static final Class<PlayerEvent.Clone> PLAYER_CLONE = PlayerEvent.Clone.class;
-    public static final Class<PlayerEvent.StartTracking> PLAYER_TRACKING = PlayerEvent.StartTracking.class;
+        EventManager.post(PlayerEvent.LoggingIn.class, AbstractForgePlayerEvent.loggingInFactory());
+        EventManager.post(PlayerEvent.LoggingOut.class, AbstractForgePlayerEvent.loggingOutFactory());
+        EventManager.post(PlayerEvent.Death.class, AbstractForgePlayerEvent.deathFactory());
+        EventManager.post(PlayerEvent.Clone.class, AbstractForgePlayerEvent.cloneFactory());
+        EventManager.post(PlayerEvent.Attack.class, AbstractForgePlayerEvent.attackFactory());
+        EventManager.post(PlayerEvent.StartTracking.class, AbstractForgePlayerEvent.startTrackingFactory());
 
-    public static final Class<RegisterCommandsEvent> COMMAND_REGISTRY = RegisterCommandsEvent.class;
-    public static final Class<AddReloadListenerEvent> DATA_PACK_REGISTRY = AddReloadListenerEvent.class;
-    public static final Class<EntityAttributeCreationEvent> ENTITY_ATTRIBUTE_REGISTRY = EntityAttributeCreationEvent.class;
+        EventManager.post(RegisterCommandsEvent.class, AbstractForgeRegisterCommandsEvent.registryFactory());
+        EventManager.post(RegisterDataPackEvent.class, AbstractForgeRegisterDataPackEvent.registryFactory());
+        EventManager.post(RegisterEntityAttributesEvent.class, AbstractForgeRegisterEntityAttributesEvent.registryFactory());
+    }
 }

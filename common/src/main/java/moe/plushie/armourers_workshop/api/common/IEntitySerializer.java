@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.api.common;
 
-import net.minecraft.network.FriendlyByteBuf;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 
 public interface IEntitySerializer<T> {
 
-    T read(FriendlyByteBuf buffer);
+    T read(IFriendlyByteBuf buffer);
 
-    void write(FriendlyByteBuf buffer, T descriptor);
+    void write(IFriendlyByteBuf buffer, T value);
 }

@@ -37,8 +37,11 @@ public abstract class Shader {
     });
 
     public void begin() {
+        RenderSystem.backupExtendedFog();
         RenderSystem.backupExtendedMatrix();
         RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.setShaderFogStart(Float.MAX_VALUE);
+        RenderSystem.setShaderFogEnd(Float.MAX_VALUE);
         RenderSystem.setExtendedMatrixFlags(0x80);
         //RenderSystem.setExtendedTextureMatrix(OpenMatrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
         ShaderUniforms.begin();
@@ -56,6 +59,7 @@ public abstract class Shader {
         RenderSystem.setExtendedMatrixFlags(0x00);
         ShaderUniforms.end();
         RenderSystem.restoreExtendedMatrix();
+        RenderSystem.restoreExtendedFog();
     }
 
     protected void prepare(ShaderVertexGroup group) {

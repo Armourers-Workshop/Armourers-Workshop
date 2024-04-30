@@ -1,16 +1,23 @@
 package moe.plushie.armourers_workshop.core.skin.document;
 
+import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.utils.DataSerializerKey;
+import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
-
 public class SkinDocument {
+
+    private static final DataSerializerKey<SkinDocumentType> TYPE_KEY = DataSerializerKey.create("Type", DataTypeCodecs.SKIN_DOCUMENT_TYPE, SkinDocumentTypes.GENERAL_ARMOR_HEAD);
+    private static final DataSerializerKey<SkinDocumentNode> NODES_KEY = DataSerializerKey.create("Nodes", DataTypeCodecs.SKIN_DOCUMENT_NODE, null);
+    private static final DataSerializerKey<SkinDocumentSettings> SETTINGS_KEY = DataSerializerKey.create("Settings", DataTypeCodecs.SKIN_DOCUMENT_SETTINGS, null, SkinDocumentSettings::new);
+    private static final DataSerializerKey<SkinProperties> PROPERTIES_KEY = DataSerializerKey.create("Properties", DataTypeCodecs.SKIN_PROPERTIES, SkinProperties.EMPTY, SkinProperties::new);
 
     private SkinDocumentType type;
     private SkinDocumentNode nodes;
@@ -37,26 +44,18 @@ public class SkinDocument {
         this.listener.documentDidChangeType(type);
     }
 
-    public void serializeNBT(CompoundTag tag) {
-        tag.putOptionalType(Keys.TYPE, type, null);
-        tag.put(Keys.NODES, nodes.serializeNBT());
-        tag.put(Keys.SETTINGS, settings.serializeNBT());
-        tag.putOptionalSkinProperties(Keys.PROPERTIES, properties);
+    public void serialize(IDataSerializer serializer) {
+        serializer.write(TYPE_KEY, type);
+        serializer.write(NODES_KEY, nodes);
+        serializer.write(SETTINGS_KEY, settings);
+        serializer.write(PROPERTIES_KEY, properties);
     }
 
-    public void deserializeNBT(CompoundTag tag) {
-        type = tag.getOptionalType(Keys.TYPE, SkinDocumentTypes.GENERAL_ARMOR_HEAD, SkinDocumentTypes::byName);
-        settings = new SkinDocumentSettings(tag.getCompound(Keys.SETTINGS));
-        properties = tag.getOptionalSkinProperties(Keys.PROPERTIES);
-        try {
-            nodes = null;
-            CompoundTag rootTag = tag.getCompound(Keys.NODES);
-            if (!rootTag.isEmpty()) {
-                nodes = new SkinDocumentNode(rootTag);
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
+    public void deserialize(IDataSerializer serializer) {
+        type = serializer.read(TYPE_KEY);
+        settings = serializer.read(SETTINGS_KEY);
+        properties = serializer.read(PROPERTIES_KEY);
+        nodes = serializer.read(NODES_KEY);
         if (nodes == null) {
             nodes = _generateDefaultNode(type);
         }
@@ -179,12 +178,5 @@ public class SkinDocument {
         root.add(new SkinDocumentNode("float", null));
         root.add(new SkinDocumentNode("static", null));
         return root;
-    }
-
-    protected static class Keys {
-        public static final String NODES = "Nodes";
-        public static final String TYPE = "Type";
-        public static final String SETTINGS = "Settings";
-        public static final String PROPERTIES = "Properties";
     }
 }

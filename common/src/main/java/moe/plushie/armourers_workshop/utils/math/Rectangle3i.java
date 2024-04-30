@@ -1,10 +1,12 @@
 package moe.plushie.armourers_workshop.utils.math;
 
 import com.apple.library.coregraphics.CGRect;
+import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
@@ -28,7 +30,6 @@ public class Rectangle3i implements IRectangle3i {
         this.depth = depth;
     }
 
-
     public Rectangle3i(IRectangle3i rect) {
         this(rect.getX(), rect.getY(), rect.getZ(), rect.getWidth(), rect.getHeight(), rect.getDepth());
     }
@@ -40,6 +41,10 @@ public class Rectangle3i implements IRectangle3i {
 //    public Rectangle3i(AABB box) {
 //        this((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.getXsize(), (int) box.getYsize(), (int) box.getZsize());
 //    }
+
+    public Rectangle3i(List<Integer> list) {
+        this(list[0], list[1], list[2], list[3], list[4], list[5]);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -223,6 +228,10 @@ public class Rectangle3i implements IRectangle3i {
                 return new Vector3i(dx, dy, dz);
             }
         };
+    }
+
+    public List<Integer> toList() {
+        return Lists.newArrayList(x, y, z, width, height, depth);
     }
 
     @Override

@@ -17,6 +17,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +32,7 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
         this.builder = EntityType.Builder.of(serializer::create, mobCategory);
     }
 
+    @Override
     public IEntityTypeBuilder<T> fixed(float f, float g) {
         this.builder = builder.sized(f, g);
         return this;
@@ -104,8 +106,8 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
         }
 
         @Override
-        public T create(ServerLevel level, BlockPos pos, @Nullable CompoundTag tag, MobSpawnType spawnType) {
-            return object.get().create(level, pos, tag, spawnType);
+        public T create(ServerLevel level, BlockPos pos, @Nullable ItemStack itemStack, MobSpawnType spawnType) {
+            return object.get().create(level, pos, itemStack, spawnType);
         }
 
         @Override

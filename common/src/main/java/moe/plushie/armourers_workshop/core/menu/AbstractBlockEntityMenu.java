@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.menu;
 
-import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
+import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.Level;
@@ -11,7 +11,7 @@ public abstract class AbstractBlockEntityMenu<T extends BlockEntity> extends Abs
 
     protected final T blockEntity;
 
-    public AbstractBlockEntityMenu(MenuType menuType, Block block, int containerId, IContainerLevelAccess access) {
+    public AbstractBlockEntityMenu(MenuType menuType, Block block, int containerId, IGlobalPos access) {
         super(menuType, block, containerId, access);
         this.blockEntity = ObjectUtils.unsafeCast(access.evaluate(Level::getBlockEntity, null));
     }

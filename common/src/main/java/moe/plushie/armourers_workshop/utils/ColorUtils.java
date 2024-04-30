@@ -5,12 +5,9 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.data.ItemStackStorage;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
-import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.init.ModDataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NumericTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -236,12 +233,11 @@ public class ColorUtils {
     }
 
     public static boolean hasColor(ItemStack itemStack) {
-        CompoundTag tag = itemStack.getTag();
-        return tag != null && tag.contains(Constants.Key.COLOR, Constants.TagFlags.INT);
+        return itemStack.has(ModDataComponents.TOOL_COLOR.get());
     }
 
     public static void setColor(ItemStack itemStack, IPaintColor color) {
-        itemStack.getOrCreateTag().putOptionalPaintColor(Constants.Key.COLOR, color, null);
+        itemStack.set(ModDataComponents.TOOL_COLOR.get(), color);
     }
 
     @Nullable
@@ -250,45 +246,54 @@ public class ColorUtils {
         if (storage.paintColor != null) {
             return storage.paintColor.orElse(null);
         }
-        IPaintColor paintColor = getColor(itemStack, null);
+        IPaintColor paintColor = itemStack.get(ModDataComponents.TOOL_COLOR.get());
+//        IPaintColor paintColor = getColor(itemStack, null);
         storage.paintColor = Optional.ofNullable(paintColor);
         return paintColor;
     }
 
-    public static void setColor(ItemStack itemStack, @Nullable String rootPath, IPaintColor color) {
-        CompoundTag tag = itemStack.getOrCreateTag();
-        if (rootPath != null) {
-            if (tag.contains(rootPath)) {
-                tag = tag.getCompound(rootPath);
-            } else {
-                CompoundTag newTag = new CompoundTag();
-                tag.put(rootPath, newTag);
-                tag = newTag;
-            }
+    public static IPaintColor getColorOrDefault(ItemStack itemStack, IPaintColor defaultColor) {
+        IPaintColor paintColor = getColor(itemStack);
+        if (paintColor != null) {
+            return paintColor;
         }
-        tag.putOptionalPaintColor(Constants.Key.COLOR, color, null);
+        return defaultColor;
     }
 
-    @Nullable
-    public static IPaintColor getColor(ItemStack itemStack, @Nullable String rootPath) {
-        CompoundTag tag = itemStack.getTag();
-        if (tag != null && rootPath != null) {
-            tag = tag.getCompound(rootPath);
-        }
-        if (tag != null && tag.contains(Constants.Key.COLOR)) {
-            Tag nbt = tag.get(Constants.Key.COLOR);
-            if (nbt instanceof NumericTag) {
-                return PaintColor.of(((NumericTag) nbt).getAsInt());
-            }
-            if (nbt instanceof StringTag) {
-                UIColor color = ColorUtils.parseColor(nbt.getAsString());
-                tag.putInt(Constants.Key.COLOR, color.getRGB());
-                return PaintColor.of(color.getRGB());
-            }
-            tag.remove(Constants.Key.COLOR);
-        }
-        return null;
-    }
+//    public static void setColor(ItemStack itemStack, @Nullable String rootPath, IPaintColor color) {
+//        CompoundTag tag = itemStack.getOrCreateTag();
+//        if (rootPath != null) {
+//            if (tag.contains(rootPath)) {
+//                tag = tag.getCompound(rootPath);
+//            } else {
+//                CompoundTag newTag = new CompoundTag();
+//                tag.put(rootPath, newTag);
+//                tag = newTag;
+//            }
+//        }
+//        tag.putOptionalPaintColor(Constants.Key.COLOR, color, null);
+//    }
+//
+//    @Nullable
+//    public static IPaintColor getColor(ItemStack itemStack, @Nullable String rootPath) {
+//        CompoundTag tag = itemStack.getTag();
+//        if (tag != null && rootPath != null) {
+//            tag = tag.getCompound(rootPath);
+//        }
+//        if (tag != null && tag.contains(Constants.Key.COLOR)) {
+//            Tag nbt = tag.get(Constants.Key.COLOR);
+//            if (nbt instanceof NumericTag) {
+//                return PaintColor.of(((NumericTag) nbt).getAsInt());
+//            }
+//            if (nbt instanceof StringTag) {
+//                UIColor color = ColorUtils.parseColor(nbt.getAsString());
+//                tag.putInt(Constants.Key.COLOR, color.getRGB());
+//                return PaintColor.of(color.getRGB());
+//            }
+//            tag.remove(Constants.Key.COLOR);
+//        }
+//        return null;
+//    }
 
     @Nullable
     public static BlockPaintColor getBlockColor(ItemStack itemStack) {
@@ -297,7 +302,7 @@ public class ColorUtils {
             return storage.blockPaintColor.orElse(null);
         }
         BlockPaintColor color = null;
-        CompoundTag tag = itemStack.getTagElement(Constants.Key.BLOCK_ENTITY);
+        CompoundTag tag = itemStack.get(ModDataComponents.BLOCK_ENTITY_DATA.get());
         if (tag != null) {
             color = tag.getOptionalBlockPaintColor(Constants.Key.COLOR, null);
         }
@@ -324,18 +329,30 @@ public class ColorUtils {
         return (int) (a * (1 - q) + b * q);
     }
 
-    // #[A]RGB or 0x[A]RGB
-    public static UIColor parseColor(String colorString) {
+    public static int parseColor(String colorString) {
         try {
-            long value = Long.decode(colorString);
+            int value = Integer.decode(colorString);
             if ((value & 0xff000000) == 0) {
                 value |= 0xff000000;
             }
-            return new UIColor((int) value, true);
+            return value;
         } catch (NumberFormatException e) {
-            return UIColor.BLACK;
+            return 0;
         }
     }
+
+//    // #[A]RGB or 0x[A]RGB
+//    public static UIColor parseColor(String colorString) {
+//        try {
+//            long value = Long.decode(colorString);
+//            if ((value & 0xff000000) == 0) {
+//                value |= 0xff000000;
+//            }
+//            return new UIColor((int) value, true);
+//        } catch (NumberFormatException e) {
+//            return UIColor.BLACK;
+//        }
+//    }
 
     public static int HSBtoRGB(float[] hsb) {
         return UIColor.HSBtoRGB(hsb[0], hsb[1], hsb[2]);

@@ -1,11 +1,12 @@
 package moe.plushie.armourers_workshop.core.data;
 
 import moe.plushie.armourers_workshop.api.common.ICapabilityType;
-import moe.plushie.armourers_workshop.api.common.ITagRepresentable;
+import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractCapabilityStorage;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import org.apache.commons.lang3.tuple.Pair;
@@ -60,21 +61,20 @@ public class CapabilityStorage {
         if (this == NONE) {
             return;
         }
-        CompoundTag caps = tag.getCompound(Constants.Key.OLD_CAPABILITY);
+        String capsKey = AbstractCapabilityStorage.KEY;
+        CompoundTag caps = tag.getCompound(capsKey);
         capabilities.values().forEach(pair -> {
-            Object value = pair.getValue().orElse(null);
-            if (value instanceof ITagRepresentable) {
-                ITagRepresentable<Tag> value1 = ObjectUtils.unsafeCast(value);
-                Tag tag1 = value1.serializeNBT();
-                if (tag1 != null) {
-                    caps.put(pair.getKey().registryName.toString(), tag1);
-                }
+            IDataSerializerProvider provider = ObjectUtils.safeCast(pair.getValue().orElse(null), IDataSerializerProvider.class);
+            if (provider != null) {
+                CompoundTag tag1 = new CompoundTag();
+                provider.serialize(AbstractDataSerializer.wrap(tag1, entity));
+                caps.put(pair.getKey().registryName.toString(), tag1);
             }
         });
         if (!caps.isEmpty()) {
-            tag.put(Constants.Key.OLD_CAPABILITY, caps);
+            tag.put(capsKey, caps);
         } else {
-            tag.remove(Constants.Key.OLD_CAPABILITY);
+            tag.remove(capsKey);
         }
     }
 
@@ -87,12 +87,11 @@ public class CapabilityStorage {
             return;
         }
         capabilities.values().forEach(pair -> {
-            Object value = pair.getValue().orElse(null);
-            if (value instanceof ITagRepresentable) {
-                Tag tag1 = caps.get(pair.getKey().registryName.toString());
+            IDataSerializerProvider provider = ObjectUtils.safeCast(pair.getValue().orElse(null), IDataSerializerProvider.class);
+            if (provider != null) {
+                CompoundTag tag1 = ObjectUtils.safeCast(caps.get(pair.getKey().registryName.toString()), CompoundTag.class);
                 if (tag1 != null) {
-                    ITagRepresentable<Tag> value1 = ObjectUtils.unsafeCast(value);
-                    value1.deserializeNBT(tag1);
+                    provider.deserialize(AbstractDataSerializer.wrap(tag1, entity));
                 }
             }
         });

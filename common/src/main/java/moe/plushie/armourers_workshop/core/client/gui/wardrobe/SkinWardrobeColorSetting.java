@@ -20,7 +20,6 @@ import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
-import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
@@ -30,7 +29,6 @@ import moe.plushie.armourers_workshop.utils.TextureUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -215,12 +213,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
             if (Objects.equals(getColor(), newValue)) {
                 return;
             }
-            ItemStack itemStack = ItemStack.EMPTY;
-            if (newValue != null) {
-                itemStack = new ItemStack(ModItems.BOTTLE.get());
-                ColorUtils.setColor(itemStack, newValue);
-            }
-            NetworkManager.sendToServer(UpdateWardrobePacket.pick(wardrobe, slot, itemStack));
+            NetworkManager.sendToServer(UpdateWardrobePacket.dying(wardrobe, slot, newValue));
         }
 
         private void updateColor(IPaintColor paintColor) {

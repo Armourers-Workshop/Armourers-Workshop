@@ -6,12 +6,12 @@ import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBlockEntityRendererProvider;
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricBlockEntity;
+import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.utils.TypedRegistry;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -46,10 +46,9 @@ public class BlockEntityTypeBuilderImpl<T extends BlockEntity> implements IBlock
         return this;
     }
 
-
     @Override
     public IRegistryKey<IBlockEntityType<T>> build(String name) {
-        IRegistryKey<BlockEntityType<T>> object = Registry.registerBlockEntityTypeFA(name, () -> {
+        IRegistryKey<BlockEntityType<T>> object = AbstractFabricRegistries.BLOCK_ENTITY_TYPES.register(name, () -> {
             Block[] blocks1 = blocks.stream().map(Supplier::get).toArray(Block[]::new);
             return AbstractFabricBlockEntity.createType(supplier, blocks1);
         });

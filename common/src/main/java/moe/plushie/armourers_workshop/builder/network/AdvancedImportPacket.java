@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.builder.network;
 
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedBuilderBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.AdvancedBuilderMenu;
@@ -14,7 +15,6 @@ import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -35,14 +35,14 @@ public class AdvancedImportPacket extends CustomPacket {
         this.target = target;
     }
 
-    public AdvancedImportPacket(FriendlyByteBuf buffer) {
+    public AdvancedImportPacket(IFriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
         this.target = buffer.readUtf();
         this.skin = decodeSkin(buffer);
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeBlockPos(pos);
         buffer.writeUtf(target);
         encodeSkin(buffer);
@@ -97,9 +97,9 @@ public class AdvancedImportPacket extends CustomPacket {
         ModLog.info("abort {} request of the '{}', reason: '{}'", op, playerName, reason);
     }
 
-    private void encodeSkin(FriendlyByteBuf buffer) {
+    private void encodeSkin(IFriendlyByteBuf buffer) {
         try {
-            GZIPOutputStream stream = new GZIPOutputStream(new ByteBufOutputStream(buffer));
+            GZIPOutputStream stream = new GZIPOutputStream(new ByteBufOutputStream(buffer.asByteBuf()));
             SkinFileStreamUtils.saveSkinToStream(stream, skin);
             stream.close();
         } catch (Exception e) {
@@ -107,10 +107,10 @@ public class AdvancedImportPacket extends CustomPacket {
         }
     }
 
-    private Skin decodeSkin(FriendlyByteBuf buffer) {
+    private Skin decodeSkin(IFriendlyByteBuf buffer) {
         Skin skin = null;
         try {
-            GZIPInputStream stream = new GZIPInputStream(new ByteBufInputStream(buffer));
+            GZIPInputStream stream = new GZIPInputStream(new ByteBufInputStream(buffer.asByteBuf()));
             skin = SkinFileStreamUtils.loadSkinFromStream(stream);
             stream.close();
         } catch (IOException e) {

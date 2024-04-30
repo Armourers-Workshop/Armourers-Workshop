@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.blockentity;
 
 import moe.plushie.armourers_workshop.api.client.IBlockEntityExtendedRenderer;
+import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
@@ -9,7 +10,8 @@ import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
-import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
+import moe.plushie.armourers_workshop.utils.DataSerializerKey;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -21,6 +23,8 @@ import java.util.Map;
 
 public class SkinCubeBlockEntity extends UpdatableBlockEntity implements IPaintable, IBlockEntityExtendedRenderer {
 
+    private static final DataSerializerKey<CompoundTag> COLORS_KEY = DataSerializerKey.create("Color", DataTypeCodecs.COMPOUND_TAG, new CompoundTag());
+
     protected BlockPaintColor colors = new BlockPaintColor(PaintColor.WHITE);
     protected boolean customRenderer = false;
 
@@ -28,17 +32,17 @@ public class SkinCubeBlockEntity extends UpdatableBlockEntity implements IPainta
         super(blockEntityType, blockPos, blockState);
     }
 
-    public void readFromNBT(CompoundTag nbt) {
-        colors.deserializeNBT(nbt.getCompound(Constants.Key.COLOR));
+    public void readAdditionalData(IDataSerializer serializer) {
+        colors.deserializeNBT(serializer.read(COLORS_KEY));
         customRenderer = checkRendererFromColors();
     }
 
-    public void writeToNBT(CompoundTag nbt) {
-        nbt.put(Constants.Key.COLOR, colors.serializeNBT());
+    public void writeAdditionalData(IDataSerializer serializer) {
+        serializer.write(COLORS_KEY, colors.serializeNBT());
 //        // we must need to tracking the facing at the save it,
 //        // because we need to get the colors based facing from copied NBT.
 //        // we can know the direction has been changed when the load copied NBT.
-//        nbt.putString(AWConstants.NBT.FACING, getDirection().name());
+//        nbt.putString(Constants.NBT.FACING, getDirection().name());
     }
 
     private boolean checkRendererFromColors() {

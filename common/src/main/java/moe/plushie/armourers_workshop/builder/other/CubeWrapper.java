@@ -94,7 +94,7 @@ public class CubeWrapper implements IPaintable {
     public CompoundTag getBlockTag() {
         BlockEntity blockEntity = getBlockEntity();
         if (blockEntity != null) {
-            return blockEntity.saveWithFullMetadata();
+            return blockEntity.saveFullData(level.registryAccess());
         }
         return null;
     }

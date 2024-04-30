@@ -7,14 +7,14 @@
   ],
   "key": {
     "X": {
-      "tag": "c:glass"
+      "tag": "c:glass_blocks"
     },
     "#": {
       "item": "armourers_workshop:skin-cube-glowing"
     }
   },
   "result": {
-    "item": "armourers_workshop:skin-cube-glass-glowing",
+    "id": "armourers_workshop:skin-cube-glass-glowing",
     "count": 8
   }
 }

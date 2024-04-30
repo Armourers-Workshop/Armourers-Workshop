@@ -1,0 +1,15 @@
+package moe.plushie.armourers_workshop.compatibility.fabric.event.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.registry.IEventHandler;
+import moe.plushie.armourers_workshop.init.platform.event.client.RegisterItemPropertyEvent;
+import moe.plushie.armourers_workshop.init.platform.fabric.EventManagerImpl;
+import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
+
+@Available("[1.16, 1.18)")
+public class AbstractFabricRegisterItemPropertyEvent {
+
+    public static IEventHandler<RegisterItemPropertyEvent> propertyFactory() {
+        return EventManagerImpl.factory(() -> ((registryName, item, property) -> FabricModelPredicateProviderRegistry.register(item, registryName, (itemStack, level, entity) -> property.getValue(itemStack, level, entity, 0))));
+    }
+}

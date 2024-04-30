@@ -2,11 +2,16 @@ package moe.plushie.armourers_workshop.core.network;
 
 import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractEntityDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.menu.SkinWardrobeMenu;
+import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
@@ -14,7 +19,6 @@ import moe.plushie.armourers_workshop.utils.DataAccessor;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -35,38 +39,41 @@ public class UpdateWardrobePacket extends CustomPacket {
     private final Field field;
     private final Object fieldValue;
 
-    private final CompoundTag compoundNBT;
+    private final CompoundTag compoundTag;
 
-    public UpdateWardrobePacket(FriendlyByteBuf buffer) {
+    public UpdateWardrobePacket(IFriendlyByteBuf buffer) {
         this.type = buffer.readEnum(Type.class);
         this.entityId = buffer.readInt();
         if (this.type != Type.SYNC_OPTION) {
             this.fieldValue = null;
             this.field = null;
-            this.compoundNBT = buffer.readNbt();
+            this.compoundTag = buffer.readNbt();
         } else {
             this.field = buffer.readEnum(Field.class);
             this.fieldValue = field.accessor.read(buffer);
-            this.compoundNBT = null;
+            this.compoundTag = null;
         }
     }
 
-    public UpdateWardrobePacket(SkinWardrobe wardrobe, Type mode, CompoundTag compoundNBT, Field field, Object fieldValue) {
+    public UpdateWardrobePacket(SkinWardrobe wardrobe, Type mode, CompoundTag compoundTag, Field field, Object fieldValue) {
         this.type = mode;
         this.entityId = wardrobe.getId();
         this.field = field;
         this.fieldValue = fieldValue;
-        this.compoundNBT = compoundNBT;
+        this.compoundTag = compoundTag;
     }
 
     public static UpdateWardrobePacket sync(SkinWardrobe wardrobe) {
-        return new UpdateWardrobePacket(wardrobe, Type.SYNC, wardrobe.serializeNBT(), null, null);
+        CompoundTag tag = new CompoundTag();
+        AbstractDataSerializer serializer = AbstractDataSerializer.wrap(tag, wardrobe.getEntity());
+        wardrobe.serialize(serializer);
+        return new UpdateWardrobePacket(wardrobe, Type.SYNC, tag, null, null);
     }
 
-    public static UpdateWardrobePacket pick(SkinWardrobe wardrobe, int slot, ItemStack itemStack) {
+    public static UpdateWardrobePacket dying(SkinWardrobe wardrobe, int slot, IPaintColor color) {
         CompoundTag compoundNBT = new CompoundTag();
         compoundNBT.putInt("Slot", slot);
-        compoundNBT.put("Item", itemStack.save(new CompoundTag()));
+        compoundNBT.putOptionalPaintColor("Color", color, null);
         return new UpdateWardrobePacket(wardrobe, Type.SYNC_ITEM, compoundNBT, null, null);
     }
 
@@ -75,11 +82,11 @@ public class UpdateWardrobePacket extends CustomPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeEnum(type);
         buffer.writeInt(entityId);
-        if (compoundNBT != null) {
-            buffer.writeNbt(compoundNBT);
+        if (compoundTag != null) {
+            buffer.writeNbt(compoundTag);
         }
         if (field != null) {
             buffer.writeEnum(field);
@@ -92,14 +99,14 @@ public class UpdateWardrobePacket extends CustomPacket {
         // We can't allow wardrobe updates without container.
         String playerName = player.getDisplayName().getString();
         if (!(player.containerMenu instanceof SkinWardrobeMenu)) {
-            ModLog.info("the wardrobe {} operation rejected for '{}'", getOperator(), playerName);
+            ModLog.info("reject {} operation for '{}'", getOperator(), playerName);
             return;
         }
         if (!checkSecurityByServer()) {
-            ModLog.info("the wardrobe {} operation rejected for '{}', for security reasons.", getOperator(), playerName);
+            ModLog.info("reject {} operation for '{}', for security reasons.", getOperator(), playerName);
             return;
         }
-        ModLog.debug("the wardrobe {} operation accepted for '{}'", getOperator(), playerName);
+        ModLog.debug("accept {} operation for '{}'", getOperator(), playerName);
         SkinWardrobe wardrobe = apply(player);
         if (wardrobe != null) {
             NetworkManager.sendToTracking(this, player);
@@ -119,14 +126,20 @@ public class UpdateWardrobePacket extends CustomPacket {
         }
         switch (type) {
             case SYNC: {
-                wardrobe.deserializeNBT(compoundNBT);
+                wardrobe.deserialize(AbstractDataSerializer.wrap(compoundTag, player));
                 return wardrobe;
             }
             case SYNC_ITEM: {
                 Container inventory = wardrobe.getInventory();
-                int slot = compoundNBT.getInt("Slot");
+                int slot = compoundTag.getInt("Slot");
                 if (slot < inventory.getContainerSize()) {
-                    inventory.setItem(slot, ItemStack.of(compoundNBT.getCompound("Item")));
+                    IPaintColor color = compoundTag.getOptionalPaintColor("Color", null);
+                    ItemStack itemStack = ItemStack.EMPTY;
+                    if (color != null) {
+                        itemStack = new ItemStack(ModItems.BOTTLE.get());
+                        itemStack.set(ModDataComponents.TOOL_COLOR.get(), color);
+                    }
+                    inventory.setItem(slot, itemStack);
                     return wardrobe;
                 }
                 break;
@@ -149,18 +162,13 @@ public class UpdateWardrobePacket extends CustomPacket {
                 return false;
             }
             case SYNC_ITEM: {
-                int slot = compoundNBT.getInt("Slot");
+                int slot = compoundTag.getInt("Slot");
                 // for security reasons we need to check the position of the slot.
                 int index = slot - SkinSlotType.DYE.getIndex();
                 if (index < 8 || index >= SkinSlotType.DYE.getMaxSize()) {
                     return false;
                 }
-                // for security reasons we only allows the player upload the bottle item.
-                ItemStack itemStack = ItemStack.of(compoundNBT.getCompound("Item"));
-                if (itemStack.isEmpty()) {
-                    return true;
-                }
-                return itemStack.is(ModItems.BOTTLE.get());
+                return true;
             }
             case SYNC_OPTION: {
                 return true;
@@ -226,7 +234,7 @@ public class UpdateWardrobePacket extends CustomPacket {
         }
 
         <T> Field(EntityDataAccessor<T> dataParameter) {
-            this(e -> e.getEntityData().get(dataParameter), (e, v) -> e.getEntityData().set(dataParameter, v), DataSerializers.of(dataParameter.getSerializer()));
+            this(e -> e.getEntityData().get(dataParameter), (e, v) -> e.getEntityData().set(dataParameter, v), AbstractEntityDataSerializer.wrap(dataParameter));
         }
 
         @Override

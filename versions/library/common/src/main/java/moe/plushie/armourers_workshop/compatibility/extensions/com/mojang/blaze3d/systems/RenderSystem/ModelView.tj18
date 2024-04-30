@@ -1,0 +1,20 @@
+package moe.plushie.armourers_workshop.compatibility.extensions.com.mojang.blaze3d.systems.RenderSystem;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+
+@Available("[1.18, 1.21)")
+@Extension
+public class ModelView {
+
+    public static IPoseStack modelViewStack = AbstractPoseStack.wrap(RenderSystem.getModelViewStack());
+
+    public static IPoseStack getExtendedModelViewStack(@ThisClass Class<?> clazz) {
+        return modelViewStack;
+    }
+}

@@ -31,6 +31,11 @@ public class SkinProperties implements ISkinProperties {
         this.properties = new LinkedHashMap<>();
     }
 
+    public SkinProperties(CompoundTag tag) {
+        this();
+        this.readFromNBT(tag);
+    }
+
     public SkinProperties(LinkedHashMap<String, Object> properties) {
         this.properties = properties;
     }
@@ -122,9 +127,8 @@ public class SkinProperties implements ISkinProperties {
                 stream.writeBoolean((Boolean) value);
             }
             if (value instanceof CompoundTag) {
-                //stream.writeByte(DataTypes.COMPOUND_TAG.ordinal());
-                //stream.writeTag((CompoundTag) value);
-                // TODO: @SAGESSE
+                stream.writeByte(DataTypes.COMPOUND_TAG.ordinal());
+                stream.writeCompoundTag((CompoundTag) value);
             }
         }
     }
@@ -154,7 +158,7 @@ public class SkinProperties implements ISkinProperties {
                     value = stream.readBoolean();
                     break;
                 case COMPOUND_TAG:
-                    // value = stream.readTag();
+                    value = stream.readCompoundTag();
                     break;
             }
             properties.put(key, value);
@@ -167,6 +171,12 @@ public class SkinProperties implements ISkinProperties {
 
     public SkinProperties copy() {
         return new SkinProperties(new LinkedHashMap<>(properties));
+    }
+
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        writeToNBT(tag);
+        return tag;
     }
 
     @Override
@@ -307,6 +317,7 @@ public class SkinProperties implements ISkinProperties {
 
         public Changes() {
         }
+
         public Changes(CompoundTag tag) {
             readFromNBT(tag);
         }

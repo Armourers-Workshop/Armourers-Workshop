@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 cocoon {
@@ -15,7 +15,10 @@ repositories {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_api_version}"
+    forge "net.minecraftforge:forge:${rootProject.minecraft_api_version}-${rootProject.forge_api_version}"
+
+    // molang support for advanced skin.
+    //modShadow "gg.moonflower:molang-compiler:${rootProject.molang_version}"
 
     //modCompileOnly "com.sk89q.worldedit:worldedit-core:7.2.5-SNAPSHOT"
 
@@ -46,6 +49,8 @@ processResources {
 shadowJar {
     exclude "fabric.mod.json"
     exclude "architectury.common.json"
+
+    //relocate 'gg.moonflower', 'moe.plushie.armourers_workshop.runtime'
 }
 
 publishing {

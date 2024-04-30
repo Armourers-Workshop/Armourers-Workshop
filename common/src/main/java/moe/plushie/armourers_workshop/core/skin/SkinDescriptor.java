@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.data.ItemStackStorage;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
+import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.nbt.CompoundTag;
@@ -61,25 +62,9 @@ public class SkinDescriptor implements ISkinDescriptor {
         if (descriptor != null) {
             return descriptor;
         }
-        CompoundTag tag = itemStack.getTag();
-        if (tag == null || !tag.contains(Constants.Key.SKIN)) {
-            storage.skinDescriptor = EMPTY;
-            return EMPTY;
-        }
-        descriptor = tag.getOptionalSkinDescriptor(Constants.Key.SKIN);
+        descriptor = itemStack.getOrDefault(ModDataComponents.SKIN.get(), EMPTY);
         storage.skinDescriptor = descriptor;
         return descriptor;
-    }
-
-    public static void setDescriptor(ItemStack itemStack, SkinDescriptor descriptor) {
-        if (itemStack.isEmpty()) {
-            return;
-        }
-        if (descriptor.isEmpty()) {
-            itemStack.removeTagKey(Constants.Key.SKIN);
-            return;
-        }
-        itemStack.addTagElement(Constants.Key.SKIN, descriptor.serializeNBT());
     }
 
     public boolean accept(ItemStack itemStack) {
@@ -116,7 +101,7 @@ public class SkinDescriptor implements ISkinDescriptor {
             return skinItemStack;
         }
         ItemStack itemStack = new ItemStack(ModItems.SKIN.get());
-        setDescriptor(itemStack, this);
+        itemStack.set(ModDataComponents.SKIN.get(), this);
         skinItemStack = itemStack;
         return itemStack;
     }

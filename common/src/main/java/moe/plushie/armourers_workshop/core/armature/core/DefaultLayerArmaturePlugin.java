@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.armature.core;
 
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
+import moe.plushie.armourers_workshop.compatibility.client.layer.AbstractSkinnableLayers;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.layer.PlaceholderLayer;
@@ -10,11 +11,7 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.DrownedOuterLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.renderer.entity.layers.SlimeOuterLayer;
-import net.minecraft.client.renderer.entity.layers.StrayClothingLayer;
-import net.minecraft.client.renderer.entity.layers.VillagerProfessionLayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -32,7 +29,7 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
 
     public static DefaultLayerArmaturePlugin villager(ArmatureTransformerContext context) {
         DefaultLayerArmaturePlugin plugin = new DefaultLayerArmaturePlugin();
-        plugin.register(VillagerProfessionLayer.class, plugin::whenHeadVisible);
+        plugin.register(AbstractSkinnableLayers.VILLAGER_PROFESSION, plugin::whenHeadVisible);
         context.addEntityModelListener(plugin::setEntityModel);
         context.addEntityRendererListener(plugin::setEntityRenderer);
         return plugin;
@@ -40,7 +37,7 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
 
     public static DefaultLayerArmaturePlugin slime(ArmatureTransformerContext context) {
         DefaultLayerArmaturePlugin plugin = new DefaultLayerArmaturePlugin();
-        plugin.register(SlimeOuterLayer.class, plugin::whenAnyVisible);
+        plugin.register(AbstractSkinnableLayers.SLIME_OUTER, plugin::whenAnyVisible);
         context.addEntityModelListener(plugin::setEntityModel);
         context.addEntityRendererListener(plugin::setEntityRenderer);
         return plugin;
@@ -48,8 +45,8 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
 
     public static DefaultLayerArmaturePlugin mob(ArmatureTransformerContext context) {
         DefaultLayerArmaturePlugin plugin = new DefaultLayerArmaturePlugin();
-        plugin.register(StrayClothingLayer.class, plugin::whenBodyVisible);
-        plugin.register(DrownedOuterLayer.class, plugin::whenBodyVisible);
+        plugin.register(AbstractSkinnableLayers.STRAY_CLOTHING, plugin::whenBodyVisible);
+        plugin.register(AbstractSkinnableLayers.DROWNED_OUTER, plugin::whenBodyVisible);
         context.addEntityModelListener(plugin::setEntityModel);
         context.addEntityRendererListener(plugin::setEntityRenderer);
         return plugin;
@@ -105,10 +102,12 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
     }
 
     private void register(Class<?> clazz, Function<IModel, Supplier<Boolean>> testFactory) {
-        Entry entry = new Entry();
-        entry.layerClass = clazz;
-        entry.testFactory = testFactory;
-        entries.add(entry);
+        if (clazz != null) {
+            Entry entry = new Entry();
+            entry.layerClass = clazz;
+            entry.testFactory = testFactory;
+            entries.add(entry);
+        }
     }
 
     private Supplier<Boolean> whenHeadVisible(IModel model) {

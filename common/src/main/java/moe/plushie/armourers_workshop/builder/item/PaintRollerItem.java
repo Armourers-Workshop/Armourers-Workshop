@@ -32,13 +32,13 @@ public class PaintRollerItem extends PaintbrushItem {
     public IPaintToolSelector createPaintToolSelector(UseOnContext context) {
         ItemStack itemStack = context.getItemInHand();
         BlockPos pos = context.getClickedPos();
-        int radius = PaintingToolOptions.RADIUS.get(itemStack);
+        int radius = itemStack.get(PaintingToolOptions.RADIUS);
         return CubeSelector.plane(pos, radius, shouldUseFullMode(context));
     }
 
     @Override
     public void appendSettingHoverText(ItemStack itemStack, List<Component> tooltips) {
-        int radius = PaintingToolOptions.RADIUS.get(itemStack);
+        int radius = itemStack.get(PaintingToolOptions.RADIUS);
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.area", radius * 2 - 1, radius * 2 - 1, 1));
         super.appendSettingHoverText(itemStack, tooltips);
     }

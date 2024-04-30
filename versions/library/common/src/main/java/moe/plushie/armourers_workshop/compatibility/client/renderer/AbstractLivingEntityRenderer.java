@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.compatibility.client.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererLayerProvider;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererLayerProvider;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,16 +27,6 @@ public abstract class AbstractLivingEntityRenderer<T extends LivingEntity, M ext
 
     public void render(T entity, float f, float g, IPoseStack poseStack, IBufferSource multiBufferSource, int i) {
         super.render(entity, f, g, AbstractPoseStack.unwrap(poseStack), AbstractBufferSource.unwrap(multiBufferSource), i);
-    }
-
-    @Override
-    public void scale(T livingEntity, PoseStack poseStack, float f) {
-        super.scale(livingEntity, poseStack, f);
-    }
-
-    @Override
-    public void setupRotations(T entity, PoseStack poseStack, float f, float g, float h) {
-        super.setupRotations(entity, poseStack, f, g, h);
     }
 
     public void setModel(M model) {

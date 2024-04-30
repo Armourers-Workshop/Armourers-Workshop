@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.builder.network;
 
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedBuilderBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.AdvancedBuilderMenu;
@@ -7,7 +8,6 @@ import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,12 +20,12 @@ public class AdvancedExportPacket extends CustomPacket {
         this.pos = blockEntity.getBlockPos();
     }
 
-    public AdvancedExportPacket(FriendlyByteBuf buffer) {
+    public AdvancedExportPacket(IFriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeBlockPos(pos);
     }
 

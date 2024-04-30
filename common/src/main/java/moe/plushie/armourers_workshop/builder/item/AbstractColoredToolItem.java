@@ -32,6 +32,6 @@ public abstract class AbstractColoredToolItem extends AbstractPaintToolItem impl
     }
 
     public boolean shouldUseFullMode(UseOnContext context) {
-        return PaintingToolOptions.FULL_BLOCK_MODE.get(context.getItemInHand());
+        return context.getItemInHand().get(PaintingToolOptions.FULL_BLOCK_MODE);
     }
 }

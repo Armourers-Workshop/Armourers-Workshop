@@ -7,22 +7,22 @@
   ],
   "key": {
     "R": {
-      "tag": "c:red_dyes"
+      "tag": "c:dyes/red"
     },
     "G": {
-      "tag": "c:green_dyes"
+      "tag": "c:dyes/green"
     },
     "B": {
-      "tag": "c:blue_dyes"
+      "tag": "c:dyes/blue"
     },
     "X": {
       "tag": "armourers_workshop:skin_cubes"
     },
     "#": {
-      "tag": "c:stone"
+      "tag": "c:stones"
     }
   },
   "result": {
-    "item": "armourers_workshop:colour-mixer"
+    "id": "armourers_workshop:colour-mixer"
   }
 }

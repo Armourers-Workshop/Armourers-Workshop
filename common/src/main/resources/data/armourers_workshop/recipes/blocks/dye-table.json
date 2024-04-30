@@ -16,10 +16,10 @@
       "tag": "minecraft:planks"
     },
     "#": {
-      "tag": "c:stone"
+      "tag": "c:stones"
     }
   },
   "result": {
-    "item": "armourers_workshop:dye-table"
+    "id": "armourers_workshop:dye-table"
   }
 }

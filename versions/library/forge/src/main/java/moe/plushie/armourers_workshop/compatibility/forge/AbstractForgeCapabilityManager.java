@@ -2,14 +2,14 @@ package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.ICapabilityType;
-import moe.plushie.armourers_workshop.api.common.ITagRepresentable;
+import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -27,33 +27,6 @@ import java.util.function.Supplier;
 @Available("[1.21, )")
 public class AbstractForgeCapabilityManager {
 
-    // migrate `ForgeCap` to `neoforge:attachments`.
-    public static void migrate(Entity entity, CompoundTag src, CompoundTag dest, String reason) {
-        // fast check by the old key.
-        if (!src.contains(Constants.Key.OLD_CAPABILITY, Constants.TagFlags.COMPOUND)) {
-            return;
-        }
-        CompoundTag oldCaps = src.getCompound(Constants.Key.OLD_CAPABILITY);
-        CompoundTag newCaps = new CompoundTag();
-        // we only copy we own data.
-        Serializer.DATA_KEYS.forEach(key -> {
-            Tag tag = oldCaps.get(key);
-            if (tag != null) {
-                newCaps.put(key, tag);
-            }
-        });
-        if (newCaps.isEmpty()) {
-            return;
-        }
-        // add or merge to `neoforge:attachments`.
-        if (dest.contains(Constants.Key.NEW_CAPABILITY, Constants.TagFlags.COMPOUND)) {
-            CompoundTag caps1 = dest.getCompound(Constants.Key.NEW_CAPABILITY);
-            caps1.merge(newCaps);
-        } else {
-            dest.put(Constants.Key.NEW_CAPABILITY, newCaps);
-        }
-    }
-
     public static <T> IRegistryKey<ICapabilityType<T>> register(ResourceLocation registryName, Class<T> type, Function<Entity, Optional<T>> factory) {
         if (type == SkinWardrobe.class) {
             return ObjectUtils.unsafeCast(createWardrobeCapabilityType(registryName, ObjectUtils.unsafeCast(factory)));
@@ -67,7 +40,7 @@ public class AbstractForgeCapabilityManager {
         return new Proxy<>(registryName, SkinWardrobe.class, provider, capabilityType, () -> capability);
     }
 
-    public static class Proxy<T extends ITagRepresentable<CompoundTag>> implements IRegistryKey<ICapabilityType<T>> {
+    public static class Proxy<T extends IDataSerializerProvider> implements IRegistryKey<ICapabilityType<T>> {
 
         final ResourceLocation registryName;
         final Supplier<EntityCapability<T, Void>> capability;
@@ -104,7 +77,7 @@ public class AbstractForgeCapabilityManager {
         }
     }
 
-    public static class Serializer<T extends ITagRepresentable<CompoundTag>> implements INBTSerializable<CompoundTag> {
+    public static class Serializer<T extends IDataSerializerProvider> implements INBTSerializable<CompoundTag> {
 
         protected static final ArrayList<String> DATA_KEYS = new ArrayList<>();
 
@@ -114,23 +87,25 @@ public class AbstractForgeCapabilityManager {
             this.value = value;
         }
 
-        public static <T extends ITagRepresentable<CompoundTag>> IRegistryKey<AttachmentType<Serializer<T>>> register(ResourceLocation registryName, Function<Entity, Optional<T>> factory) {
+        public static <T extends IDataSerializerProvider> IRegistryKey<AttachmentType<Serializer<T>>> register(ResourceLocation registryName, Function<Entity, Optional<T>> factory) {
             DATA_KEYS.add(registryName.toString());
             Function<IAttachmentHolder, Serializer<T>> transformer = holder -> new Serializer<>(factory.apply((Entity) holder).orElse(null));
             return AbstractForgeRegistries.ATTACHMENT_TYPES.register(registryName.getPath(), () -> AttachmentType.serializable(transformer).build());
         }
 
         @Override
-        public CompoundTag serializeNBT() {
+        public CompoundTag serializeNBT(HolderLookup.Provider provider) {
             if (value != null) {
-                return value.serializeNBT();
+                CompoundTag tag = new CompoundTag();
+                value.serialize(AbstractDataSerializer.wrap(tag, provider));
+                return tag;
             }
             return null;
         }
 
         @Override
-        public void deserializeNBT(CompoundTag tag) {
-            value.deserializeNBT(tag);
+        public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
+            value.deserialize(AbstractDataSerializer.wrap(tag, provider));
         }
 
         public T getValue() {

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.library.network;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
@@ -16,9 +17,8 @@ import moe.plushie.armourers_workshop.library.data.SkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.menu.SkinLibraryMenu;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
-import net.minecraft.network.FriendlyByteBuf;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -47,7 +47,7 @@ public class SaveSkinPacket extends CustomPacket {
         }
     }
 
-    public SaveSkinPacket(FriendlyByteBuf buffer) {
+    public SaveSkinPacket(IFriendlyByteBuf buffer) {
         this.source = decodeResourceLocation(buffer);
         this.destination = decodeResourceLocation(buffer);
         this.mode = buffer.readEnum(Mode.class);
@@ -70,7 +70,7 @@ public class SaveSkinPacket extends CustomPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeUtf(source);
         buffer.writeUtf(destination);
         encodeSkin(buffer);
@@ -183,14 +183,14 @@ public class SaveSkinPacket extends CustomPacket {
         ModLog.info("abort {} request of the '{}', reason: '{}', from: '{}', to: '{}'", op, playerName, reason, source, destination);
     }
 
-    private void encodeSkin(FriendlyByteBuf buffer) {
+    private void encodeSkin(IFriendlyByteBuf buffer) {
         if (skin == null) {
             buffer.writeEnum(Mode.NONE);
             return;
         }
         try {
             buffer.writeEnum(mode);
-            GZIPOutputStream stream = new GZIPOutputStream(new ByteBufOutputStream(buffer));
+            GZIPOutputStream stream = new GZIPOutputStream(new ByteBufOutputStream(buffer.asByteBuf()));
             SkinFileStreamUtils.saveSkinToStream(stream, skin);
             stream.close();
         } catch (Exception e) {
@@ -198,10 +198,10 @@ public class SaveSkinPacket extends CustomPacket {
         }
     }
 
-    private Skin decodeSkin(FriendlyByteBuf buffer) {
+    private Skin decodeSkin(IFriendlyByteBuf buffer) {
         Skin skin = null;
         try {
-            GZIPInputStream stream = new GZIPInputStream(new ByteBufInputStream(buffer));
+            GZIPInputStream stream = new GZIPInputStream(new ByteBufInputStream(buffer.asByteBuf()));
             skin = SkinFileStreamUtils.loadSkinFromStream(stream);
             stream.close();
         } catch (IOException e) {
@@ -210,8 +210,8 @@ public class SaveSkinPacket extends CustomPacket {
         return skin;
     }
 
-    private String decodeResourceLocation(FriendlyByteBuf buffer) {
-        String location = buffer.readUtf(Short.MAX_VALUE);
+    private String decodeResourceLocation(IFriendlyByteBuf buffer) {
+        String location = buffer.readUtf();
         int index = location.indexOf(':');
         if (index < 0) {
             return "";

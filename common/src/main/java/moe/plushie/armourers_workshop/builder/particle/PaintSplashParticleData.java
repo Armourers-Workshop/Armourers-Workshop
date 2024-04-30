@@ -7,7 +7,7 @@
 //import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 //import moe.plushie.armourers_workshop.init.common.ModParticleTypes;
 //import moe.plushie.armourers_workshop.utils.color.PaintColor;
-//import net.minecraft.network.FriendlyByteBuf;
+//import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 //import net.minecraft.particles.IParticleData;
 //import net.minecraft.particles.ParticleType;
 //import net.minecraft.util.Direction;
@@ -34,7 +34,7 @@
 //        }
 //
 //        @Override
-//        public PaintSplashParticleData fromNetwork(ParticleType<PaintSplashParticleData> particleType, FriendlyByteBuf buffer) {
+//        public PaintSplashParticleData fromNetwork(ParticleType<PaintSplashParticleData> particleType, IFriendlyByteBuf buffer) {
 //            Direction dir = buffer.readEnum(Direction.class);
 //            int color = buffer.readInt() & 0xffffff;
 //            return new PaintSplashParticleData(dir, PaintColor.of(color));
@@ -55,7 +55,7 @@
 //    }
 //
 //    @Override
-//    public void writeToNetwork(FriendlyByteBuf buffer) {
+//    public void writeToNetwork(IFriendlyByteBuf buffer) {
 //        buffer.writeEnum(direction);
 //        buffer.writeInt(paintColor.getRGB());
 //    }

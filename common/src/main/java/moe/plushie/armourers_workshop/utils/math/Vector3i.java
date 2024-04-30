@@ -1,10 +1,13 @@
 package moe.plushie.armourers_workshop.utils.math;
 
+import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
+
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class Vector3i implements Comparable<Vector3i>, IVector3i, Position {
@@ -31,6 +34,10 @@ public class Vector3i implements Comparable<Vector3i>, IVector3i, Position {
 
     public Vector3i(IVector3i pos) {
         this(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    public Vector3i(List<Integer> values) {
+        this(values[0], values[1], values[2]);
     }
 
     public boolean equals(Object other) {
@@ -172,6 +179,10 @@ public class Vector3i implements Comparable<Vector3i>, IVector3i, Position {
         float f1 = (float) Math.abs(pos.getY() - getY());
         float f2 = (float) Math.abs(pos.getZ() - getZ());
         return (int) (f + f1 + f2);
+    }
+
+    public List<Integer> toList() {
+        return Lists.newArrayList(x, y, z);
     }
 
     @Override

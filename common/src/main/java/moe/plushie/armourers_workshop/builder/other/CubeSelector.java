@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.other;
 
 import com.google.common.collect.Lists;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
@@ -8,7 +9,6 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
@@ -45,7 +45,7 @@ public class CubeSelector implements IPaintToolSelector {
         this.rects = Lists.newArrayList(rects);
     }
 
-    protected CubeSelector(FriendlyByteBuf buffer) {
+    protected CubeSelector(IFriendlyByteBuf buffer) {
         this.blockPos = buffer.readBlockPos();
         this.mode = buffer.readEnum(MatchMode.class);
         this.radius = buffer.readInt();
@@ -66,7 +66,7 @@ public class CubeSelector implements IPaintToolSelector {
         }
     }
 
-    public static CubeSelector from(FriendlyByteBuf buffer) {
+    public static CubeSelector from(IFriendlyByteBuf buffer) {
         return new CubeSelector(buffer);
     }
 
@@ -90,7 +90,7 @@ public class CubeSelector implements IPaintToolSelector {
         return new CubeSelector(MatchMode.TOUCHING, pos, radius, isApplyAllFaces, isPlaneOnly);
     }
 
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeBlockPos(blockPos);
         buffer.writeEnum(mode);
         buffer.writeInt(radius);

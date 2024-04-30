@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.texture;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.nbt.CompoundTag;
@@ -58,7 +59,7 @@ public class PlayerTextureDescriptor {
         if (!itemStack.is(ModItems.MANNEQUIN.get())) {
             return EMPTY;
         }
-        CompoundTag entityTag = itemStack.getTagElement(Constants.Key.ENTITY);
+        CompoundTag entityTag = itemStack.get(ModDataComponents.ENTITY_DATA.get());
         if (entityTag == null || !entityTag.contains(Constants.Key.ENTITY_TEXTURE, Constants.TagFlags.COMPOUND)) {
             return EMPTY;
         }

@@ -34,12 +34,6 @@ public class CameraEntity extends SeatEntity {
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
-        // the camera object no eyes.
-        return 0f;
-    }
-
-    @Override
     public float getViewXRot(float f) {
         return getXRot();
     }

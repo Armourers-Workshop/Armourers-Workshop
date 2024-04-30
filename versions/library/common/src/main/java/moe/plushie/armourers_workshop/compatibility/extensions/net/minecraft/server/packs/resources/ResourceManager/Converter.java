@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.server.packs.resources.ResourceManager;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import net.minecraft.server.packs.FilePackResources;
+import moe.plushie.armourers_workshop.api.common.IPackResources;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
-@Available("[1.20, )")
+@Available("[1.18, )")
 @Extension
 public class Converter {
 
@@ -21,7 +21,8 @@ public class Converter {
         ArrayList<PackResources> resources = new ArrayList<>();
         resourceManager.listPacks().forEach(it -> {
             // bundle data only contain data pack on mods.
-            if (it.isBuiltin() || (!(it instanceof FilePackResources) && !(it instanceof PathPackResources))) {
+            IPackResources res = ObjectUtils.safeCast(it, IPackResources.class);
+            if (res != null && res.isModBundled()) {
                 resources.add(it);
             }
         });

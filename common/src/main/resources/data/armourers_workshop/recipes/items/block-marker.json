@@ -7,13 +7,13 @@
   ],
   "key": {
     "D": {
-      "tag": "c:black_dyes"
+      "tag": "c:dyes/black"
     },
     "C": {
       "tag": "armourers_workshop:skin_cubes"
     }
   },
   "result": {
-    "item": "armourers_workshop:block-marker"
+    "id": "armourers_workshop:block-marker"
   }
 }

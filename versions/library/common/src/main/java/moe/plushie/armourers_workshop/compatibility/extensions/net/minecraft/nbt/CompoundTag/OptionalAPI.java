@@ -365,7 +365,7 @@ public class OptionalAPI {
     }
 
     public static SkinDescriptor getOptionalSkinDescriptor(@This CompoundTag tag, String key, SkinDescriptor defaultValue) {
-        CompoundTag parsedTag = _parseCompoundTag(tag, key);
+        CompoundTag parsedTag = _parseCompoundTagFromSNBT(tag, key);
         if (parsedTag != null) {
             if (!parsedTag.isEmpty()) {
                 return new SkinDescriptor(parsedTag);
@@ -455,7 +455,7 @@ public class OptionalAPI {
         return true;
     }
 
-    private static CompoundTag _parseCompoundTag(CompoundTag tag, String key) {
+    private static CompoundTag _parseCompoundTagFromSNBT(CompoundTag tag, String key) {
         if (tag.contains(key, Constants.TagFlags.COMPOUND)) {
             return tag.getCompound(key);
         }

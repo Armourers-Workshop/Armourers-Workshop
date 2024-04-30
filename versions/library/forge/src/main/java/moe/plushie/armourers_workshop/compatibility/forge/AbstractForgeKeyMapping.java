@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.InputConstants;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
+import moe.plushie.armourers_workshop.init.platform.event.client.RegisterKeyMappingsEvent;
 import moe.plushie.armourers_workshop.utils.ext.OpenKeyModifier;
 import net.minecraft.client.KeyMapping;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
@@ -38,14 +40,18 @@ public abstract class AbstractForgeKeyMapping extends KeyMapping {
 
     public AbstractForgeKeyMapping(String description, IKeyModifier keyModifier, InputConstants.Key keyCode, String category) {
         super(description, KeyConflictContext.IN_GAME, MODIFIERS1.getOrDefault(keyModifier, KeyModifier.NONE), keyCode, category);
-        register(keyCode, this);
+        bind(keyCode, this);
     }
 
-    private static void register(InputConstants.Key keyCode, KeyMapping keyMapping) {
+    public static void register(String key, KeyMapping keyMapping) {
+        EventManager.listen(RegisterKeyMappingsEvent.class, event -> event.register(keyMapping));
+    }
+
+    private static void bind(InputConstants.Key keyCode, KeyMapping keyMapping) {
         MAPPINGS.computeIfAbsent(keyCode, k -> new ArrayList<>()).add(keyMapping);
     }
 
-    private static void unregister(InputConstants.Key keyCode, KeyMapping keyMapping) {
+    private static void unbind(InputConstants.Key keyCode, KeyMapping keyMapping) {
         auto mappings = MAPPINGS.get(keyCode);
         if (mappings != null) {
             mappings.remove(keyMapping);
@@ -75,8 +81,8 @@ public abstract class AbstractForgeKeyMapping extends KeyMapping {
 
     @Override
     public void setKeyModifierAndCode(KeyModifier keyModifier, InputConstants.Key keyCode) {
-        unregister(getKey(), this);
+        unbind(getKey(), this);
         super.setKeyModifierAndCode(keyModifier, keyCode);
-        register(getKey(), this);
+        bind(getKey(), this);
     }
 }

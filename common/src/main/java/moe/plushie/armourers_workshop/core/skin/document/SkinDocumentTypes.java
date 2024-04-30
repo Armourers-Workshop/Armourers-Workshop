@@ -61,7 +61,7 @@ public class SkinDocumentTypes {
             return new ArrayList<>();
         };
 
-        ALL_TYPES.forEach((key, it) -> sections.computeIfAbsent(it.getName(), builder).add(it));
+        ALL_TYPES.forEach((key, it) -> sections.computeIfAbsent(it.getCategory(), builder).add(it));
 
         for (String name : names) {
             consumer.accept(name, sections.get(name));

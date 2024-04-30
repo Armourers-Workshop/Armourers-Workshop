@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
-import net.minecraft.world.entity.Entity;
+import moe.plushie.armourers_workshop.init.ModDataComponents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -137,11 +137,11 @@ public class SkinWardrobeJS {
         }
 
         public void addTo(ItemStack itemStack) {
-            SkinDescriptor.setDescriptor(itemStack, descriptor);
+            itemStack.set(ModDataComponents.SKIN.get(), descriptor);
         }
 
         public void removeFrom(ItemStack itemStack) {
-            SkinDescriptor.setDescriptor(itemStack, SkinDescriptor.EMPTY);
+            itemStack.remove(ModDataComponents.SKIN.get());
         }
 
         public String getIdentifier() {

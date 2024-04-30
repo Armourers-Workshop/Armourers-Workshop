@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderFormat;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -223,7 +224,11 @@ public class AbstractRenderType extends RenderType {
 
         @Override
         public IRenderTypeBuilder colorLogic(ColorLogic state) {
-            this.stateBuilder = stateBuilder.setColorLogicState(state);
+            if (state == ColorLogic.OR_REVERSE) {
+                this.stateBuilder = stateBuilder.setTexturingState(OR_REVERSE);
+            } else {
+                this.stateBuilder = stateBuilder.setTexturingState(DEFAULT_TEXTURING);
+            }
             return this;
         }
 

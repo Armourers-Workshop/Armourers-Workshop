@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.server.packs.resources.ResourceManager;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import net.minecraft.server.packs.FilePackResources;
-import net.minecraft.server.packs.FolderPackResources;
+import moe.plushie.armourers_workshop.api.common.IPackResources;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleReloadableResourceManager;
@@ -18,7 +18,8 @@ public class Converter {
         SimpleReloadableResourceManager resourceManager1 = new SimpleReloadableResourceManager(PackType.SERVER_DATA);
         resourceManager.listPacks().forEach(it -> {
             // bundle data only contain data pack on mods.
-            if (!(it instanceof FilePackResources) && !(it instanceof FolderPackResources)) {
+            IPackResources res = ObjectUtils.safeCast(it, IPackResources.class);
+            if (res != null && res.isModBundled()) {
                 resourceManager1.add(it);
             }
         });

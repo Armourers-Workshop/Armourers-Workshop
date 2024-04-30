@@ -10,15 +10,16 @@ import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIWindow;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.function.Consumer;
 
 public class ToastWindow extends UIWindow {
-
 
     protected final UILabel titleLabel = new UILabel(CGRect.ZERO);
     protected final UILabel messageLabel = new UILabel(CGRect.ZERO);
@@ -107,8 +108,9 @@ public class ToastWindow extends UIWindow {
         if (tag.contains("Image")) {
             this.icon = new CustomTexture(tag);
         }
-        if (tag.contains("id")) {
-            this.icon = ItemStack.of(tag);
+        Level level = Minecraft.getInstance().level;
+        if (tag.contains("id") && level != null) {
+            this.icon = ItemStack.parseOptional(level.registryAccess(), tag);
         }
         this.updateIconRect();
     }

@@ -4,10 +4,8 @@ import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProv
 import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
-import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -49,7 +47,7 @@ public class AdvancedBuilderBlock extends AbstractHorizontalBlock implements Abs
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        return MenuManager.openMenu(ModMenuTypes.ADVANCED_SKIN_BUILDER, level.getBlockEntity(blockPos), player);
+    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
+        return ModMenuTypes.ADVANCED_SKIN_BUILDER.get().openMenu(player, level.getBlockEntity(blockPos));
     }
 }

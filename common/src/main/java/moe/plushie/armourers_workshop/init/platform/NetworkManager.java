@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.init.platform;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IPacketDistributor;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
@@ -12,7 +13,6 @@ import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.PacketSplitter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -106,20 +106,20 @@ public class NetworkManager {
 
         public abstract void register();
 
-        public void didReceivePacket(IServerPacketHandler packetHandler, FriendlyByteBuf payload, ServerPlayer player) {
+        public void didReceivePacket(IServerPacketHandler packetHandler, IFriendlyByteBuf payload, ServerPlayer player) {
             merge(player.getUUID(), payload, packet -> packetHandler.enqueueWork(() -> {
                 packet.accept(packetHandler, player);
             }));
         }
 
         @Environment(EnvType.CLIENT)
-        public void didReceivePacket(IClientPacketHandler packetHandler, FriendlyByteBuf payload, Player player) {
+        public void didReceivePacket(IClientPacketHandler packetHandler, IFriendlyByteBuf payload, Player player) {
             merge(clientUUID, payload, packet -> packetHandler.enqueueWork(() -> {
                 packet.accept(packetHandler, EnvironmentManager.getPlayer());
             }));
         }
 
-        public void merge(UUID uuid, FriendlyByteBuf buffer, Consumer<CustomPacket> consumer) {
+        public void merge(UUID uuid, IFriendlyByteBuf buffer, Consumer<CustomPacket> consumer) {
             splitter.merge(uuid, buffer, consumer);
         }
 

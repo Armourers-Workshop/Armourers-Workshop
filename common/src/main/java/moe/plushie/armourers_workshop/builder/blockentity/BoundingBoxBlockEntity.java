@@ -1,17 +1,18 @@
 package moe.plushie.armourers_workshop.builder.blockentity;
 
 import moe.plushie.armourers_workshop.api.client.IBlockEntityExtendedRenderer;
+import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.builder.data.BoundingBox;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
-import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
-import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
+import moe.plushie.armourers_workshop.utils.DataSerializerKey;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TextureUtils;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
@@ -20,7 +21,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -31,10 +31,12 @@ import java.util.Map;
 
 public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPaintable, IBlockEntityExtendedRenderer {
 
-    protected static final BlockPos INVALID = BlockPos.of(-1);
+    public static final DataSerializerKey<BlockPos> REFER_KEY = DataSerializerKey.create("Refer", DataTypeCodecs.BLOCK_POS, null);
+    public static final DataSerializerKey<Vector3i> OFFSET_KEY = DataSerializerKey.create("Offset", DataTypeCodecs.VECTOR_3I, Vector3i.ZERO);
+    public static final DataSerializerKey<ISkinPartType> PART_TYPE_KEY = DataSerializerKey.create("PartType", DataTypeCodecs.SKIN_PART_TYPE, SkinPartTypes.UNKNOWN);
 
     protected Vector3i guide = Vector3i.ZERO;
-    protected BlockPos parent = INVALID;
+    protected BlockPos parent = null;
 
     protected ISkinPartType partType = SkinPartTypes.UNKNOWN;
 
@@ -45,18 +47,18 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
         super(blockEntityType, blockPos, blockState);
     }
 
-    public void readFromNBT(CompoundTag tag) {
-        parent = tag.getOptionalBlockPos(Constants.Key.BLOCK_ENTITY_REFER, INVALID);
-        guide = tag.getOptionalVector3i(Constants.Key.BLOCK_ENTITY_OFFSET, Vector3i.ZERO);
-        partType = SkinPartTypes.byName(tag.getOptionalString(Constants.Key.SKIN_PART_TYPE, SkinTypes.UNKNOWN.getRegistryName().toString()));
+    public void readAdditionalData(IDataSerializer serializer) {
+        parent = serializer.read(REFER_KEY);
+        guide = serializer.read(OFFSET_KEY);
+        partType = serializer.read(PART_TYPE_KEY);
         customRenderer = Arrays.stream(Direction.values()).anyMatch(this::shouldChangeColor);
         cachedParentBlockEntity = null;
     }
 
-    public void writeToNBT(CompoundTag tag) {
-        tag.putOptionalBlockPos(Constants.Key.BLOCK_ENTITY_REFER, parent, INVALID);
-        tag.putOptionalVector3i(Constants.Key.BLOCK_ENTITY_OFFSET, guide, Vector3i.ZERO);
-        tag.putOptionalString(Constants.Key.SKIN_PART_TYPE, partType.getRegistryName().toString(), SkinTypes.UNKNOWN.getRegistryName().toString());
+    public void writeAdditionalData(IDataSerializer serializer) {
+        serializer.write(REFER_KEY, parent);
+        serializer.write(OFFSET_KEY, guide);
+        serializer.write(PART_TYPE_KEY, partType);
     }
 
     public ISkinPartType getPartType() {
@@ -219,7 +221,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
             return cachedParentBlockEntity;
         }
         Level level = getLevel();
-        if (level == null || parent.equals(INVALID)) {
+        if (level == null || parent == null) {
             return null;
         }
         BlockPos target = getBlockPos().subtract(parent);

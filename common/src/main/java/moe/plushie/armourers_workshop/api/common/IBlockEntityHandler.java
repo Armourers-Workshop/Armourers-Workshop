@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.api.common;
 
+import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -14,7 +15,7 @@ public interface IBlockEntityHandler {
      * be the remote server. On the server, it will be whomever is responsible for
      * sending the packet.
      */
-    default void handleUpdatePacket(BlockState state, CompoundTag tag) {
+    default void handleUpdatePacket(BlockState state, IDataSerializer serializer) {
     }
 
     /**

@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.init.platform;
 
-import com.apple.library.coregraphics.CGGraphicsContext;
-import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.api.skin.ISkinEquipmentType;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -18,6 +16,7 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModKeyBindings;
 import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.init.platform.event.client.ItemTooltipEvent;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.TypedRegistry;
@@ -26,7 +25,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
@@ -139,12 +137,14 @@ public class ItemTooltipManager {
         return tooltip;
     }
 
-    public static void gatherSkinTooltip(ItemStack itemStack, List<Component> tooltips, TooltipFlag flags) {
+    public static void gatherSkinTooltip(ItemTooltipEvent.Gather event) {
+        ItemStack itemStack = event.getItemStack();
         List<Component> newTooltips = createSkinTooltip(itemStack);
         if (newTooltips.isEmpty()) {
             return;
         }
-        if (flags.isAdvanced()) {
+        List<Component> tooltips = event.getTooltips();
+        if (event.getContext().getFlags().isAdvanced()) {
             String registryName = TypedRegistry.findKey(itemStack.getItem()).toString();
             for (int index = tooltips.size(); index > 0; --index) {
                 Component text = tooltips.get(index - 1);
@@ -157,10 +157,11 @@ public class ItemTooltipManager {
         tooltips.addAll(newTooltips);
     }
 
-    public static void renderSkinTooltip(ItemStack itemStack, CGRect frame, float screenWidth, float screenHeight, CGGraphicsContext context) {
+    public static void renderSkinTooltip(ItemTooltipEvent.Render event) {
         if (!ModConfig.Client.skinPreEnabled) {
             return;
         }
+        auto itemStack = event.getItemStack();
         auto descriptor = SkinDescriptor.of(itemStack);
         auto options = descriptor.getOptions();
         if (!options.contains(SkinOptions.TooltipFlags.PREVIEW)) {
@@ -170,6 +171,10 @@ public class ItemTooltipManager {
         if (bakedSkin == null) {
             return;
         }
+        auto frame = event.getFrame();
+        auto context = event.getContext();
+        float screenHeight = event.getScreenHeight();
+        float screenWidth = event.getScreenWidth();
         float dx, dy;
         float size = ModConfig.Client.skinPreSize;
         if (ModConfig.Client.skinPreLocFollowMouse) {

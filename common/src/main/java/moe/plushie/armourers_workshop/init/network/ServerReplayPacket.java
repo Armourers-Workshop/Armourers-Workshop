@@ -1,10 +1,11 @@
 package moe.plushie.armourers_workshop.init.network;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.platform.ReplayManager;
-import net.minecraft.network.FriendlyByteBuf;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.function.Consumer;
@@ -12,30 +13,30 @@ import java.util.function.Consumer;
 public class ServerReplayPacket extends CustomPacket {
 
     private final Event event;
-    private final FriendlyByteBuf parameters;
+    private final ByteBuf parameters;
 
-    public ServerReplayPacket(Event event, Consumer<FriendlyByteBuf> consumer) {
+    public ServerReplayPacket(Event event, Consumer<IFriendlyByteBuf> consumer) {
         this.event = event;
         if (consumer != null) {
-            this.parameters = new FriendlyByteBuf(Unpooled.buffer());
-            consumer.accept(this.parameters);
+            this.parameters = Unpooled.buffer();
+            consumer.accept(IFriendlyByteBuf.wrap(this.parameters));
         } else {
             this.parameters = null;
         }
     }
 
-    public ServerReplayPacket(FriendlyByteBuf buffer) {
+    public ServerReplayPacket(IFriendlyByteBuf buffer) {
         this.event = buffer.readEnum(Event.class);
         int size = buffer.readInt();
         if (size != 0) {
-            this.parameters = new FriendlyByteBuf(buffer.readBytes(size));
+            this.parameters = Unpooled.wrappedBuffer(buffer.readBytes(size));
         } else {
             this.parameters = null;
         }
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeEnum(event);
         if (parameters != null) {
             buffer.writeInt(parameters.readableBytes());
@@ -54,7 +55,7 @@ public class ServerReplayPacket extends CustomPacket {
         return event;
     }
 
-    public FriendlyByteBuf getParameters() {
+    public ByteBuf getParameters() {
         return parameters;
     }
 

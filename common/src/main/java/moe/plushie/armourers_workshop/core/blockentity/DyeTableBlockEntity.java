@@ -1,9 +1,8 @@
 package moe.plushie.armourers_workshop.core.blockentity;
 
+import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,13 +16,13 @@ public class DyeTableBlockEntity extends UpdatableContainerBlockEntity {
     }
 
     @Override
-    public void readFromNBT(CompoundTag nbt) {
-        ContainerHelper.loadAllItems(nbt, items);
+    public void readAdditionalData(IDataSerializer serializer) {
+        serializer.readItemList(items);
     }
 
     @Override
-    public void writeToNBT(CompoundTag nbt) {
-        ContainerHelper.saveAllItems(nbt, items);
+    public void writeAdditionalData(IDataSerializer serializer) {
+        serializer.writeItemList(items);
     }
 
     @Override

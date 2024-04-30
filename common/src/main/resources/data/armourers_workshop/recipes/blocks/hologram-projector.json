@@ -10,16 +10,16 @@
       "item": "minecraft:beacon"
     },
     "H": {
-      "tag": "c:iron_blocks"
+      "tag": "c:storage_blocks/iron"
     },
     "=": {
       "tag": "armourers_workshop:skin_cubes"
     },
     "#": {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     }
   },
   "result": {
-    "item": "armourers_workshop:hologram-projector"
+    "id": "armourers_workshop:hologram-projector"
   }
 }

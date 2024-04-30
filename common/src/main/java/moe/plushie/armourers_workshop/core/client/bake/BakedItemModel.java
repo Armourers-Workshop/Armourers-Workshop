@@ -72,8 +72,7 @@ public class BakedItemModel extends BuiltInModel {
         }
 
         public boolean test(ItemStack itemStack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int i) {
-            Item item = itemStack.getItem();
-            auto func = ItemProperties.getProperty(item, name);
+            auto func = ItemProperties.getProperty(itemStack, name);
             if (func != null) {
                 return func.call(itemStack, level, entity, i) >= 1;
             }

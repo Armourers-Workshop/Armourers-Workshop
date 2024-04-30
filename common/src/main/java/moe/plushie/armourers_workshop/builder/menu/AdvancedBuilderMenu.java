@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.builder.menu;
 
-import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
+import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedBuilderBlockEntity;
 import moe.plushie.armourers_workshop.core.menu.AbstractBlockEntityMenu;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.Block;
 
 public class AdvancedBuilderMenu extends AbstractBlockEntityMenu<AdvancedBuilderBlockEntity> implements SkinDocumentProvider {
 
-    public AdvancedBuilderMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess access) {
+    public AdvancedBuilderMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
         super(menuType, block, containerId, access);
     }
 

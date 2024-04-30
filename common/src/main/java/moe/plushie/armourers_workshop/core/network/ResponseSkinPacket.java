@@ -3,12 +3,12 @@ package moe.plushie.armourers_workshop.core.network;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
 import java.io.InputStream;
@@ -34,8 +34,8 @@ public class ResponseSkinPacket extends CustomPacket {
         this.compress = ModConfig.Common.enableServerCompressesSkins;
     }
 
-    public ResponseSkinPacket(FriendlyByteBuf buffer) {
-        this.identifier = buffer.readUtf(Short.MAX_VALUE);
+    public ResponseSkinPacket(IFriendlyByteBuf buffer) {
+        this.identifier = buffer.readUtf();
         this.mode = buffer.readEnum(Mode.class);
         this.compress = buffer.readBoolean();
         this.exp = readException(buffer);
@@ -43,7 +43,7 @@ public class ResponseSkinPacket extends CustomPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeUtf(identifier);
         buffer.writeEnum(mode);
         buffer.writeBoolean(compress);
@@ -56,7 +56,7 @@ public class ResponseSkinPacket extends CustomPacket {
         SkinLoader.getInstance().addSkin(identifier, skin, exp);
     }
 
-    private Exception readException(FriendlyByteBuf buffer) {
+    private Exception readException(IFriendlyByteBuf buffer) {
         if (mode != Mode.EXCEPTION) {
             return null;
         }
@@ -73,7 +73,7 @@ public class ResponseSkinPacket extends CustomPacket {
         }
     }
 
-    private void writeException(FriendlyByteBuf buffer, Exception exception) {
+    private void writeException(IFriendlyByteBuf buffer, Exception exception) {
         if (mode != Mode.EXCEPTION) {
             return;
         }
@@ -90,7 +90,7 @@ public class ResponseSkinPacket extends CustomPacket {
         }
     }
 
-    private Skin readSkinStream(FriendlyByteBuf buffer) {
+    private Skin readSkinStream(IFriendlyByteBuf buffer) {
         if (mode != Mode.STREAM) {
             return null;
         }
@@ -106,7 +106,7 @@ public class ResponseSkinPacket extends CustomPacket {
         return null;
     }
 
-    private void writeSkinStream(FriendlyByteBuf buffer, Skin skin) {
+    private void writeSkinStream(IFriendlyByteBuf buffer, Skin skin) {
         if (mode != Mode.STREAM) {
             return;
         }
@@ -121,16 +121,16 @@ public class ResponseSkinPacket extends CustomPacket {
         }
     }
 
-    private InputStream createInputStream(FriendlyByteBuf buffer) throws Exception {
-        InputStream inputStream = new ByteBufInputStream(buffer);
+    private InputStream createInputStream(IFriendlyByteBuf buffer) throws Exception {
+        InputStream inputStream = new ByteBufInputStream(buffer.asByteBuf());
         if (this.compress) {
             return new GZIPInputStream(inputStream);
         }
         return inputStream;
     }
 
-    private OutputStream createOutputStream(FriendlyByteBuf buffer) throws Exception {
-        ByteBufOutputStream outputStream = new ByteBufOutputStream(buffer);
+    private OutputStream createOutputStream(IFriendlyByteBuf buffer) throws Exception {
+        ByteBufOutputStream outputStream = new ByteBufOutputStream(buffer.asByteBuf());
         if (this.compress) {
             return new GZIPOutputStream(outputStream);
         }

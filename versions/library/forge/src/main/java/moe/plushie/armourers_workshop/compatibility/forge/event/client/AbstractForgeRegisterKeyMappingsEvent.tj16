@@ -1,0 +1,15 @@
+package moe.plushie.armourers_workshop.compatibility.forge.event.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.registry.IEventHandler;
+import moe.plushie.armourers_workshop.init.platform.event.client.RegisterKeyMappingsEvent;
+import moe.plushie.armourers_workshop.init.platform.forge.EventManagerImpl;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+
+@Available("[1.16, 1.18)")
+public class AbstractForgeRegisterKeyMappingsEvent {
+
+    public static IEventHandler<RegisterKeyMappingsEvent> registryFactory() {
+        return EventManagerImpl.factory(() -> ClientRegistry::registerKeyBinding);
+    }
+}

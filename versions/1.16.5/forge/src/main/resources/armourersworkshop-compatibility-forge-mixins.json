@@ -8,6 +8,8 @@
     "ForgeCuriosAddonMixin"
   ],
   "mixins": [
+    "ForgePackResourcesMixin",
+    "ForgeBlockEntityHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

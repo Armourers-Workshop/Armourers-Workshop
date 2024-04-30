@@ -1,17 +1,11 @@
 set -e
-if [[ "$1" == "" ]]; then
-  echo "$0 <version>"
-  exit -1;
-fi
- 
-
 
 mod_version=$1
-minecraft_supportd_versions="1.16.5 1.18.2 1.19.2 1.20.1 1.20.4"
+minecraft_supportd_versions="1.16.5 1.18.2 1.19.2 1.20.1 1.21"
 minecraft_versions="${2:-$minecraft_supportd_versions}"
 release_path="build/release/$mod_version"
 
-if [[ "$mod_version" == "homebaked" ]]; then
+if [[ "$1" == "" ]]; then
   for minecraft_version in $minecraft_versions; do
     ./gradlew -p versions/$minecraft_version
     ./gradlew build

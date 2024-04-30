@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": [
-    "#forge:glass_panes"
+    {
+      "id": "#forge:glass_panes",
+      "required": false
+    }
   ]
 }

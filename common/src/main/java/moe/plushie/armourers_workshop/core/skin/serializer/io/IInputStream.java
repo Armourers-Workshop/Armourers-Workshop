@@ -5,12 +5,14 @@ import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.utils.texture.TextureProperties;
+import net.minecraft.nbt.CompoundTag;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -184,5 +186,9 @@ public interface IInputStream {
         TextureProperties properties = new TextureProperties();
         properties.readFromStream(this);
         return properties;
+    }
+
+    default CompoundTag readCompoundTag() throws IOException {
+        return SkinFileUtils.readNBT(getInputStream());
     }
 }

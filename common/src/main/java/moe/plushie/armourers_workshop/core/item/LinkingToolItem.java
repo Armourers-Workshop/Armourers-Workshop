@@ -5,9 +5,8 @@ import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.init.ModConstants;
-import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.init.ModDataComponents;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
@@ -16,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
@@ -26,24 +24,10 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
         super(properties);
     }
 
-    public static void setLinkedBlockPos(ItemStack itemStack, BlockPos pos) {
-        itemStack.getOrCreateTag().putOptionalBlockPos(Constants.Key.BLOCK_ENTITY_LINKED_POS, pos, null);
-    }
-
-    @Nullable
-    public static BlockPos getLinkedBlockPos(ItemStack itemStack) {
-        CompoundTag tag = itemStack.getTag();
-        if (tag != null) {
-            return tag.getOptionalBlockPos(Constants.Key.BLOCK_ENTITY_LINKED_POS, null);
-        }
-        return null;
-    }
-
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
         builder.accept(ModConstants.key("empty"), (itemStack, level, entity, id) -> {
-            CompoundTag tag = itemStack.getTag();
-            if (tag != null && tag.contains(Constants.Key.BLOCK_ENTITY_LINKED_POS)) {
+            if (itemStack.has(ModDataComponents.LINKED_POS.get())) {
                 return 0;
             }
             return 1;
@@ -57,7 +41,7 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
         if (level.isClientSide() || player == null) {
             return InteractionResult.SUCCESS;
         }
-        BlockPos linkedBlockPos = getLinkedBlockPos(itemStack);
+        BlockPos linkedBlockPos = itemStack.get(ModDataComponents.LINKED_POS.get());
         SkinnableBlockEntity blockEntity = getTitleEntity(level, context.getClickedPos());
         if (blockEntity != null && player.isSecondaryUseActive()) {
             blockEntity.setLinkedBlockPos(null);
@@ -65,7 +49,7 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
             return InteractionResult.SUCCESS;
         }
         if (linkedBlockPos != null) {
-            setLinkedBlockPos(itemStack, null);
+            itemStack.remove(ModDataComponents.LINKED_POS.get());
             if (blockEntity != null) {
                 blockEntity.setLinkedBlockPos(linkedBlockPos);
                 player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.linking-tool.finish"));
@@ -78,7 +62,7 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
             player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.linking-tool.linkedToSkinnable"));
             return InteractionResult.FAIL;
         }
-        setLinkedBlockPos(itemStack, context.getClickedPos());
+        itemStack.set(ModDataComponents.LINKED_POS.get(), context.getClickedPos());
         player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.linking-tool.start"));
         return InteractionResult.SUCCESS;
     }

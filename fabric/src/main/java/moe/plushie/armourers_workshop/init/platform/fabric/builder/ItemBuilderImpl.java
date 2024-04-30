@@ -5,11 +5,10 @@ import moe.plushie.armourers_workshop.api.registry.IItemBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractItemStackRendererProvider;
+import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
@@ -18,7 +17,7 @@ import java.util.function.Supplier;
 
 public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
 
-    private Item.Properties properties = new FabricItemSettings();
+    private Item.Properties properties = new Item.Properties();
     private IRegistryBinder<T> binder;
     private IRegistryKey<IItemGroup> group;
     private final Function<Item.Properties, T> supplier;
@@ -30,12 +29,6 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
     @Override
     public IItemBuilder<T> stacksTo(int i) {
         this.properties = properties.stacksTo(i);
-        return this;
-    }
-
-    @Override
-    public IItemBuilder<T> defaultDurability(int i) {
-        this.properties = properties.defaultDurability(i);
         return this;
     }
 
@@ -80,7 +73,7 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
 
     @Override
     public IRegistryKey<T> build(String name) {
-        IRegistryKey<T> object = Registry.registerItemFA(name, () -> supplier.apply(properties));
+        IRegistryKey<T> object = AbstractFabricRegistries.ITEMS.register(name, () -> supplier.apply(properties));
         if (group != null) {
             group.get().add(object::get);
         }

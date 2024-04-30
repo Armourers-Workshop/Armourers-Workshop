@@ -1,0 +1,76 @@
+package moe.plushie.armourers_workshop.compatibility.core.data;
+
+import com.mojang.serialization.Codec;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IDataComponentType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
+
+import manifold.ext.rt.api.auto;
+
+@Available("[1.16, 1.21)")
+public class AbstractDataComponentType<T> implements IDataComponentType<T> {
+
+    private final String name;
+    private final Codec<T> codec;
+
+    public AbstractDataComponentType(String name, Codec<T> codec) {
+        this.name = name;
+        this.codec = codec;
+    }
+
+    public static <T> AbstractDataComponentType<T> create(String name, Codec<T> codec) {
+        return new AbstractDataComponentType<>(name, codec);
+    }
+
+    @Override
+    public boolean has(ItemStack itemStack) {
+        auto tag = itemStack.getTag();
+        return tag != null && tag.contains(name);
+    }
+
+    @Override
+    public void set(ItemStack itemStack, @Nullable T value) {
+        if (value != null) {
+            auto tag = itemStack.getOrCreateTag();
+            codec.encodeStart(NbtOps.INSTANCE, value).get().ifLeft(it -> {
+                // we need to merge new value into the item.
+                tag.put(name, it);
+            });
+        } else {
+            remove(itemStack);
+        }
+    }
+
+    @Nullable
+    @Override
+    public T get(ItemStack itemStack) {
+        CompoundTag tag = itemStack.getTag();
+        if (tag != null && tag.contains(name)) {
+            auto value = codec.decode(NbtOps.INSTANCE, tag.get(name)).get().left();
+            if (value.isPresent()) {
+                return value.get().getFirst();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public T getOrDefault(ItemStack itemStack, T defaultValue) {
+        T value = get(itemStack);
+        if (value != null) {
+            return value;
+        }
+        return defaultValue;
+    }
+
+    @Override
+    public void remove(ItemStack itemStack) {
+        auto tag = itemStack.getTag();
+        if (tag != null) {
+            tag.remove(name);
+        }
+    }
+}

@@ -28,6 +28,9 @@ public final class RenderSystem extends AbstractRenderSystem {
     private static final Storage<OpenMatrix4f> extendedModelViewMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
     private static final Storage<PaintColor> extendedTintColor = new Storage<>(PaintColor.WHITE);
 
+    private static final Storage<Float> extendedFogStart = new Storage<>(0.0f);
+    private static final Storage<Float> extendedFogEnd = new Storage<>(0.0f);
+
     private static final FloatBuffer BUFFER = ObjectUtils.createFloatBuffer(3);
 
     public static void call(Runnable task) {
@@ -142,6 +145,16 @@ public final class RenderSystem extends AbstractRenderSystem {
         extendedLightmapTextureMatrix.load();
         extendedModelViewMatrix.load();
         extendedTintColor.load();
+    }
+
+    public static void backupExtendedFog() {
+        extendedFogStart.value = getShaderFogStart();
+        extendedFogEnd.value = getShaderFogEnd();
+    }
+
+    public static void restoreExtendedFog() {
+        setShaderFogStart(extendedFogStart.value);
+        setShaderFogEnd(extendedFogEnd.value);
     }
 
     public static class Storage<T> {

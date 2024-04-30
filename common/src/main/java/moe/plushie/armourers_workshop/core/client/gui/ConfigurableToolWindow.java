@@ -68,10 +68,10 @@ public class ConfigurableToolWindow extends MenuWindow<AbstractContainerMenu> {
             BooleanToolProperty property1 = (BooleanToolProperty) property;
             UICheckBox checkBox = new UICheckBox(new CGRect(8, contentHeight, contentWidth - 16, 9));
             checkBox.setTitle(name);
-            checkBox.setSelected(property1.get(itemStack));
+            checkBox.setSelected(itemStack.get(property1));
             checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, sender) -> {
                 boolean value = sender.isSelected();
-                property1.set(itemStack, value);
+                itemStack.set(property1, value);
                 sendToServer();
             });
             return checkBox;
@@ -89,10 +89,10 @@ public class ConfigurableToolWindow extends MenuWindow<AbstractContainerMenu> {
             slider.setSmall(true);
             slider.setMinValue(property1.getMinValue());
             slider.setMaxValue(property1.getMaxValue());
-            slider.setValue(property1.get(itemStack));
+            slider.setValue(itemStack.get(property1));
             slider.addTarget(this, UIControl.Event.EDITING_DID_END, (self, sender) -> {
                 int value = (int) ((UISliderBox) sender).value();
-                property1.set(itemStack, value);
+                itemStack.set(property1, value);
                 sendToServer();
             });
             return slider;

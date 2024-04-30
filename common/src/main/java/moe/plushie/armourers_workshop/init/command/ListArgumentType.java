@@ -10,9 +10,9 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,18 +55,18 @@ public class ListArgumentType implements IArgumentType<String> {
     public static class Serializer implements IArgumentSerializer<ListArgumentType> {
 
         @Override
-        public void serializeToNetwork(ListArgumentType argument, FriendlyByteBuf buffer) {
+        public void serializeToNetwork(ListArgumentType argument, IFriendlyByteBuf buffer) {
             ArrayList<String> lists = new ArrayList<>(argument.list);
             buffer.writeInt(lists.size());
             lists.forEach(buffer::writeUtf);
         }
 
         @Override
-        public ListArgumentType deserializeFromNetwork(FriendlyByteBuf buffer) {
+        public ListArgumentType deserializeFromNetwork(IFriendlyByteBuf buffer) {
             int size = buffer.readInt();
             ArrayList<String> lists = new ArrayList<>(size);
             for (int i = 0; i < size; ++i) {
-                lists.add(buffer.readUtf(Short.MAX_VALUE));
+                lists.add(buffer.readUtf());
             }
             return new ListArgumentType(lists);
         }

@@ -25,13 +25,6 @@ import java.util.function.Supplier;
 
 public class ConfigBuilderImpl {
 
-    public static void reloadSpec(IConfigSpec spec, FabricConfigSpec forgeSpec) {
-        SpecProxy proxy = ObjectUtils.safeCast(spec, SpecProxy.class);
-        if (proxy != null && proxy.spec == forgeSpec) {
-            proxy.reload();
-        }
-    }
-
     public static IConfigSpec createClientSpec() {
         return createSpec(FabricConfig.Type.CLIENT, proxy -> new ModConfigSpec.Client() {
             public IConfigBuilder builder() {

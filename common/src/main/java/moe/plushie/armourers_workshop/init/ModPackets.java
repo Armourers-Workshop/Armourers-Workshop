@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.builder.network.AdvancedExportPacket;
 import moe.plushie.armourers_workshop.builder.network.AdvancedImportPacket;
 import moe.plushie.armourers_workshop.builder.network.UndoActionPacket;
@@ -25,7 +26,6 @@ import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilePacket;
 import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilesPacket;
 import moe.plushie.armourers_workshop.library.network.UploadSkinPacket;
 import moe.plushie.armourers_workshop.library.network.UploadSkinPrePacket;
-import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.function.Function;
 
@@ -70,7 +70,7 @@ public enum ModPackets {
 
     REPLAY_EVENT(0xf0, ServerReplayPacket.class, ServerReplayPacket::new);
 
-    ModPackets(int index, Class<? extends CustomPacket> packetClass, Function<FriendlyByteBuf, CustomPacket> factory) {
+    ModPackets(int index, Class<? extends CustomPacket> packetClass, Function<IFriendlyByteBuf, CustomPacket> factory) {
         CustomPacket.register(index, packetClass, factory);
     }
 

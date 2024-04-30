@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.init.platform.EventManager;
+import moe.plushie.armourers_workshop.init.platform.event.common.LauncherConfigSetupEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
@@ -164,6 +166,16 @@ public class ModConfig {
 
     public static void init() {
         ModConfigSpec.init();
+
+        // listen the config changes events.
+        EventManager.listen(LauncherConfigSetupEvent.class, event -> {
+            if (ModConfigSpec.CLIENT.equals(event.getSpec())) {
+                ModConfigSpec.CLIENT.reload();
+            }
+            if (ModConfigSpec.COMMON.equals(event.getSpec())) {
+                ModConfigSpec.COMMON.reload();
+            }
+        });
     }
 
     public static boolean enableEmbeddedSkinRenderer() {

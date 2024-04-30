@@ -8,12 +8,12 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.Collection;
 import java.util.Map;
@@ -62,11 +62,11 @@ public class ColorSchemeArgumentType implements IArgumentType<ColorScheme> {
     public static class Serializer implements IArgumentSerializer<ColorSchemeArgumentType> {
 
         @Override
-        public void serializeToNetwork(ColorSchemeArgumentType argument, FriendlyByteBuf buffer) {
+        public void serializeToNetwork(ColorSchemeArgumentType argument, IFriendlyByteBuf buffer) {
         }
 
         @Override
-        public ColorSchemeArgumentType deserializeFromNetwork(FriendlyByteBuf buffer) {
+        public ColorSchemeArgumentType deserializeFromNetwork(IFriendlyByteBuf buffer) {
             return new ColorSchemeArgumentType();
         }
 

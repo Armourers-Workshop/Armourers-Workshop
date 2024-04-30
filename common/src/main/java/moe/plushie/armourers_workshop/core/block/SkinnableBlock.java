@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.common.IBlockHandler;
 import moe.plushie.armourers_workshop.api.common.ILootContext;
 import moe.plushie.armourers_workshop.api.common.ILootContextParam;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
@@ -14,7 +15,6 @@ import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.ModPermissions;
-import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3d;
@@ -22,7 +22,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -89,7 +88,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
             level.setBlock(target, blockState, 11);
             SkinnableBlockEntity blockEntity = getBlockEntity(level, target);
             if (blockEntity != null) {
-                blockEntity.readFromNBT(p.getEntityTag());
+                blockEntity.readAdditionalData(AbstractDataSerializer.wrap(p.getEntityTag(), level));
                 blockEntity.updateBlockStates();
             }
         });
@@ -136,7 +135,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult traceResult) {
+    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
         SkinnableBlockEntity blockEntity = getBlockEntity(level, blockPos);
         if (blockEntity == null) {
             return InteractionResult.FAIL;
@@ -144,11 +143,12 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
         if (blockEntity.isLinked()) {
             BlockPos linkedPos = blockEntity.getLinkedBlockPos();
             BlockState linkedState = level.getBlockState(linkedPos);
-            return linkedState.getBlock().use(linkedState, level, linkedPos, player, hand, traceResult);
+            return super.useWithoutItem(linkedState, level, linkedPos, player, blockHitResult);
         }
         if (blockEntity.isBed() && !player.isSecondaryUseActive()) {
             if (ModPermissions.SKINNABLE_SLEEP.accept(blockEntity, player)) {
-                return Blocks.RED_BED.use(blockState, level, blockEntity.getBedPos(), player, hand, traceResult);
+                BlockState bedState = Blocks.RED_BED.defaultBlockState();
+                return super.useWithoutItem(bedState, level, blockEntity.getBedPos(), player, blockHitResult);
             }
         }
         if (blockEntity.isSeat() && !player.isSecondaryUseActive()) {
@@ -166,7 +166,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
             }
         }
         if (blockEntity.isInventory()) {
-            InteractionResult result = MenuManager.openMenu(ModMenuTypes.SKINNABLE, level.getBlockEntity(blockPos), player);
+            InteractionResult result = ModMenuTypes.SKINNABLE.get().openMenu(player, level.getBlockEntity(blockPos));
             if (result.consumesAction()) {
                 player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
             }

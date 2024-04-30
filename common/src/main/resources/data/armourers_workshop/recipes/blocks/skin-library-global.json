@@ -16,10 +16,10 @@
       "tag": "armourers_workshop:skin_cubes"
     },
     "#": {
-      "tag": "c:stone"
+      "tag": "c:stones"
     }
   },
   "result": {
-    "item": "armourers_workshop:skin-library-global"
+    "id": "armourers_workshop:skin-library-global"
   }
 }

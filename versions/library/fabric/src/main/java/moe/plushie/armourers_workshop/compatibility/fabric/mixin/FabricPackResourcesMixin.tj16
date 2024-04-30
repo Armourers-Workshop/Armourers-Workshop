@@ -1,0 +1,18 @@
+package moe.plushie.armourers_workshop.compatibility.fabric.mixin;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IPackResources;
+import net.minecraft.server.packs.FilePackResources;
+import net.minecraft.server.packs.FolderPackResources;
+import net.minecraft.server.packs.PackResources;
+import org.spongepowered.asm.mixin.Mixin;
+
+@Available("[1.16, 1.20)")
+@Mixin(PackResources.class)
+public interface FabricPackResourcesMixin extends IPackResources {
+
+    @Override
+    default boolean isModBundled() {
+        return !(this instanceof FilePackResources || this instanceof FolderPackResources);
+    }
+}

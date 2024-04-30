@@ -11,13 +11,13 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 
 import java.io.File;
@@ -171,18 +171,18 @@ public class FileArgumentType implements IArgumentType<String> {
     public static class Serializer implements IArgumentSerializer<FileArgumentType> {
 
         @Override
-        public void serializeToNetwork(FileArgumentType argument, FriendlyByteBuf buffer) {
+        public void serializeToNetwork(FileArgumentType argument, IFriendlyByteBuf buffer) {
             ArrayList<String> lists = argument.getFileList("/");
             buffer.writeInt(lists.size());
             lists.forEach(buffer::writeUtf);
         }
 
         @Override
-        public FileArgumentType deserializeFromNetwork(FriendlyByteBuf buffer) {
+        public FileArgumentType deserializeFromNetwork(IFriendlyByteBuf buffer) {
             int size = buffer.readInt();
             ArrayList<String> lists = new ArrayList<>(size);
             for (int i = 0; i < size; ++i) {
-                lists.add(buffer.readUtf(Short.MAX_VALUE));
+                lists.add(buffer.readUtf());
             }
             return new FileArgumentType(lists);
         }

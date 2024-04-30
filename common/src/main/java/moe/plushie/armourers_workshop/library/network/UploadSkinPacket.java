@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.library.network;
 
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.library.menu.GlobalSkinLibraryMenu;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 
 public class UploadSkinPacket extends CustomPacket {
@@ -12,11 +12,11 @@ public class UploadSkinPacket extends CustomPacket {
     public UploadSkinPacket() {
     }
 
-    public UploadSkinPacket(FriendlyByteBuf buffer) {
+    public UploadSkinPacket(IFriendlyByteBuf buffer) {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
     }
 
     @Override

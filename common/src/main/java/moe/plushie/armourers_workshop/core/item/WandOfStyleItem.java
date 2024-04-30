@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.item;
 import moe.plushie.armourers_workshop.api.common.IItemHandler;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
-import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -36,7 +35,7 @@ public class WandOfStyleItem extends FlavouredItem implements IItemHandler {
     private void openGUI(Player player, Entity entity) {
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe != null && wardrobe.isEditable(player)) {
-            MenuManager.openMenu(ModMenuTypes.WARDROBE, player, wardrobe);
+            ModMenuTypes.WARDROBE.get().openMenu(player, wardrobe);
         }
     }
 }

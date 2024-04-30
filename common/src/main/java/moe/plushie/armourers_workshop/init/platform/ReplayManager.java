@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinServerType;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.network.ServerReplayPacket;
-import net.minecraft.network.FriendlyByteBuf;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -36,7 +36,7 @@ public class ReplayManager {
             case START_RECORDING: {
                 clean();
                 // if record an integrated server, we need to launch the data service.
-                FriendlyByteBuf param = packet.getParameters();
+                IFriendlyByteBuf param = IFriendlyByteBuf.wrap(packet.getParameters());
                 SkinServerType clientType = param.readEnum(SkinServerType.class);
                 if (clientType == SkinServerType.INTEGRATED_SERVER) {
                     File dbPath = new File(param.readUtf());
@@ -88,7 +88,7 @@ public class ReplayManager {
         sendTo(player, ServerReplayPacket.Event.STOP_RECORDING, null);
     }
 
-    private static void sendTo(Player player, ServerReplayPacket.Event event, Consumer<FriendlyByteBuf> consumer) {
+    private static void sendTo(Player player, ServerReplayPacket.Event event, Consumer<IFriendlyByteBuf> consumer) {
         NetworkManager.sendTo(new ServerReplayPacket(event, consumer), (ServerPlayer) player);
     }
 

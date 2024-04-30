@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.network.FriendlyByteBuf;
@@ -18,13 +19,13 @@ public class AbstractArgumentTypeInfo<A extends IArgumentType<?>> implements Arg
     }
 
     @Override
-    public void serializeToNetwork(Template<A> template, FriendlyByteBuf friendlyByteBuf) {
-        serializer.serializeToNetwork(template.instance, friendlyByteBuf);
+    public void serializeToNetwork(Template<A> template, FriendlyByteBuf byteBuf) {
+        serializer.serializeToNetwork(template.instance, IFriendlyByteBuf.wrap(byteBuf));
     }
 
     @Override
-    public Template<A> deserializeFromNetwork(FriendlyByteBuf friendlyByteBuf) {
-        return unpack(serializer.deserializeFromNetwork(friendlyByteBuf));
+    public Template<A> deserializeFromNetwork(FriendlyByteBuf byteBuf) {
+        return unpack(serializer.deserializeFromNetwork(IFriendlyByteBuf.wrap(byteBuf)));
     }
 
     @Override

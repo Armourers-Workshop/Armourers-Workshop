@@ -1,8 +1,10 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractSavedData;
 import moe.plushie.armourers_workshop.utils.Constants;
-import net.minecraft.nbt.CompoundTag;
+import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
+import moe.plushie.armourers_workshop.utils.DataSerializerKey;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.codec.binary.Hex;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +16,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class ModContext extends AbstractSavedData {
+
+    private static final DataSerializerKey<UUID> T0_KEY = DataSerializerKey.create("t0", DataTypeCodecs.UUID, null);
+    private static final DataSerializerKey<UUID> T1_KEY = DataSerializerKey.create("t1", DataTypeCodecs.UUID, null);
 
     private static ModContext current;
 
@@ -145,14 +150,14 @@ public class ModContext extends AbstractSavedData {
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void readAdditionalData(IDataSerializer serializer) {
         int count = 0;
-        if (tag.hasUUID("t0")) {
-            t0 = tag.getUUID("t0");
+        t0 = serializer.read(T0_KEY);
+        if (t0 != null) {
             count += 1;
         }
-        if (tag.hasUUID("t1")) {
-            t1 = tag.getUUID("t1");
+        t1 = serializer.read(T1_KEY);
+        if (t1 != null) {
             count += 1;
         }
         if (count != 2) {
@@ -163,9 +168,8 @@ public class ModContext extends AbstractSavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag nbt) {
-        nbt.putUUID("t0", t0);
-        nbt.putUUID("t1", t1);
-        return nbt;
+    public void writeAdditionalData(IDataSerializer serializer) {
+        serializer.write(T0_KEY, t0);
+        serializer.write(T1_KEY, t1);
     }
 }

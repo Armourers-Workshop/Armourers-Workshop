@@ -3,12 +3,12 @@ package moe.plushie.armourers_workshop.core.network;
 import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -28,13 +28,13 @@ public class CustomReplyPacket<R> extends CustomPacket {
         this.serializer = serializer;
     }
 
-    public CustomReplyPacket(IEntitySerializer<R> serializer, FriendlyByteBuf buffer) {
+    public CustomReplyPacket(IEntitySerializer<R> serializer, IFriendlyByteBuf buffer) {
         this.id = buffer.readInt();
         this.serializer = serializer;
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeInt(id);
     }
 
@@ -66,14 +66,14 @@ public class CustomReplyPacket<R> extends CustomPacket {
             this.serializer = Optional.of(packet).map(f -> f.serializer).orElse(null);
         }
 
-        public static <R> R read(Request<R> request, FriendlyByteBuf buf) {
+        public static <R> R read(Request<R> request, IFriendlyByteBuf buf) {
             if (request != null && request.serializer != null) {
                 return request.serializer.read(buf);
             }
             return null;
         }
 
-        public static <R> void write(Request<R> request, FriendlyByteBuf buf, R result) {
+        public static <R> void write(Request<R> request, IFriendlyByteBuf buf, R result) {
             if (request != null && request.serializer != null) {
                 request.serializer.write(buf, result);
             }
@@ -99,7 +99,7 @@ public class CustomReplyPacket<R> extends CustomPacket {
             this.request = new Request<>(packet, null);
         }
 
-        public Receiver(FriendlyByteBuf buffer) {
+        public Receiver(IFriendlyByteBuf buffer) {
             this.id = buffer.readInt();
             this.request = popPendingRequest();
             if (buffer.readBoolean()) {
@@ -126,7 +126,7 @@ public class CustomReplyPacket<R> extends CustomPacket {
         }
 
         @Override
-        public void encode(FriendlyByteBuf buffer) {
+        public void encode(IFriendlyByteBuf buffer) {
             buffer.writeInt(id);
             if (result != null) {
                 // request executed successfully.

@@ -5,12 +5,10 @@ import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
-import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.library.blockentity.SkinLibraryBlockEntity;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -32,12 +30,12 @@ public class SkinLibraryBlock extends AbstractHorizontalBlock implements Abstrac
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
         if (this == ModBlocks.SKIN_LIBRARY_CREATIVE.get()) {
-            return MenuManager.openMenu(ModMenuTypes.SKIN_LIBRARY_CREATIVE, level.getBlockEntity(blockPos), player);
+            return ModMenuTypes.SKIN_LIBRARY_CREATIVE.get().openMenu(player, level.getBlockEntity(blockPos));
         }
         if (this == ModBlocks.SKIN_LIBRARY.get()) {
-            return MenuManager.openMenu(ModMenuTypes.SKIN_LIBRARY, level.getBlockEntity(blockPos), player);
+            return ModMenuTypes.SKIN_LIBRARY.get().openMenu(player, level.getBlockEntity(blockPos));
         }
         return InteractionResult.CONSUME;
     }

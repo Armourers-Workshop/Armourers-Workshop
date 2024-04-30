@@ -20,8 +20,8 @@ public class AbstractShader extends Shader {
     public void begin() {
         super.begin();
         // yep we reset it.
-        RenderSystem.getModelViewStack().pushPose();
-        RenderSystem.getModelViewStack().setIdentity();
+        RenderSystem.getExtendedModelViewStack().pushPose();
+        RenderSystem.getExtendedModelViewStack().setIdentity();
         RenderSystem.applyModelViewMatrix();
         RenderSystem.resetTextureMatrix();
         // ..
@@ -32,7 +32,7 @@ public class AbstractShader extends Shader {
     public void end() {
         super.end();
         // ..
-        RenderSystem.getModelViewStack().popPose();
+        RenderSystem.getExtendedModelViewStack().popPose();
         RenderSystem.applyModelViewMatrix();
     }
 

@@ -1,42 +1,59 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
-import moe.plushie.armourers_workshop.api.annotation.Available;
-import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.ModelEvent;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.event.RenderArmEvent;
-import net.neoforged.neoforge.client.event.RenderHighlightEvent;
-import net.neoforged.neoforge.client.event.RenderLivingEvent;
-import net.neoforged.neoforge.client.event.RenderTooltipEvent;
-import net.neoforged.neoforge.event.TickEvent;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.client.AbstractForgeClientPlayerEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.client.AbstractForgeItemTooltipEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.client.AbstractForgeRegisterColorHandlersEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.client.AbstractForgeRegisterItemPropertyEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.client.AbstractForgeRegisterKeyMappingsEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.client.AbstractForgeRegisterModelEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.client.AbstractForgeRegisterScreensEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.client.AbstractForgeRegisterTextureEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.client.AbstractForgeRenderFrameEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.client.AbstractForgeRenderHighlightEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.client.AbstractForgeRenderLivingEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.client.AbstractForgeRenderSpecificHandEvent;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
+import moe.plushie.armourers_workshop.init.platform.event.client.ClientPlayerEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.ItemTooltipEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RegisterColorHandlersEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RegisterItemPropertyEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RegisterKeyMappingsEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RegisterModelEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RegisterScreensEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RegisterTextureEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RenderFrameEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RenderHighlightEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RenderLivingEntityEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RenderSpecificHandEvent;
 
-@Available("[1.21, )")
 public class AbstractForgeClientEvents {
 
-    public static final Class<TickEvent.RenderTickEvent> TICK = TickEvent.RenderTickEvent.class;
+    public static void init() {
+        EventManager.post(RegisterColorHandlersEvent.Item.class, AbstractForgeRegisterColorHandlersEvent.itemFactory());
+        EventManager.post(RegisterColorHandlersEvent.Block.class, AbstractForgeRegisterColorHandlersEvent.blockFactory());
 
-    public static final TickEvent.Phase TICK_PHASE_START = TickEvent.Phase.START;
-    public static final TickEvent.Phase TICK_PHASE_END = TickEvent.Phase.END;
+        EventManager.post(ClientPlayerEvent.LoggingIn.class, AbstractForgeClientPlayerEvent.loggingInFactory());
+        EventManager.post(ClientPlayerEvent.LoggingOut.class, AbstractForgeClientPlayerEvent.loggingOutFactory());
 
+        EventManager.post(RenderFrameEvent.Pre.class, AbstractForgeRenderFrameEvent.preFactory());
+        EventManager.post(RenderFrameEvent.Post.class, AbstractForgeRenderFrameEvent.postFactory());
 
-    public static final Class<ClientPlayerNetworkEvent.LoggingIn> PLAYER_LOGIN = ClientPlayerNetworkEvent.LoggingIn.class;
-    public static final Class<ClientPlayerNetworkEvent.LoggingOut> PLAYER_LOGOUT = ClientPlayerNetworkEvent.LoggingOut.class;
+        EventManager.post(ItemTooltipEvent.Gather.class, AbstractForgeItemTooltipEvent.gatherFactory());
+        EventManager.post(ItemTooltipEvent.Render.class, AbstractForgeItemTooltipEvent.renderFactory());
 
-    public static final Class<RegisterColorHandlersEvent.Item> ITEM_COLOR_REGISTRY = RegisterColorHandlersEvent.Item.class;
-    public static final Class<RegisterColorHandlersEvent.Block> BLOCK_COLOR_REGISTRY = RegisterColorHandlersEvent.Block.class;
-    public static final Class<ModelEvent.RegisterAdditional> MODEL_REGISTRY = ModelEvent.RegisterAdditional.class;
-    public static final Class<RegisterKeyMappingsEvent> KEY_REGISTRY = RegisterKeyMappingsEvent.class;
-    public static final Class<ItemTooltipEvent> ITEM_TOOLTIP_REGISTRY = ItemTooltipEvent.class;
-    public static final Class<EntityRenderersEvent.RegisterRenderers> ENTITY_RENDERER_REGISTRY = EntityRenderersEvent.RegisterRenderers.class;
+        EventManager.post(RenderHighlightEvent.Block.class, AbstractForgeRenderHighlightEvent.blockFactory());
 
-    public static final Class<RenderHighlightEvent.Block> RENDER_HIGHLIGHT = RenderHighlightEvent.Block.class;
-    public static final Class<RenderTooltipEvent.Pre> RENDER_TOOLTIP_PRE = RenderTooltipEvent.Pre.class;
+        EventManager.post(RenderLivingEntityEvent.Pre.class, AbstractForgeRenderLivingEvent.preFactory());
+        EventManager.post(RenderLivingEntityEvent.Post.class, AbstractForgeRenderLivingEvent.postFactory());
 
-    public static final Class<RenderArmEvent> RENDER_SPECIFIC_HAND = RenderArmEvent.class;
+        EventManager.post(RenderSpecificHandEvent.class, AbstractForgeRenderSpecificHandEvent.armFactory());
 
-    public static final Class<RenderLivingEvent.Pre> RENDER_LIVING_ENTITY_PRE = RenderLivingEvent.Pre.class;
-    public static final Class<RenderLivingEvent.Post> RENDER_LIVING_ENTITY_POST = RenderLivingEvent.Post.class;
+        EventManager.post(RegisterModelEvent.class, AbstractForgeRegisterModelEvent.registryFactory());
+        EventManager.post(RegisterTextureEvent.class, AbstractForgeRegisterTextureEvent.registryFactory());
+
+        EventManager.post(RegisterItemPropertyEvent.class, AbstractForgeRegisterItemPropertyEvent.propertyFactory());
+
+        EventManager.post(RegisterScreensEvent.class, AbstractForgeRegisterScreensEvent.registryFactory());
+        EventManager.post(RegisterKeyMappingsEvent.class, AbstractForgeRegisterKeyMappingsEvent.registryFactory());
+    }
 }

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.crafting.recipe;
 
 import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
 import net.minecraft.world.item.ItemStack;
 
@@ -15,7 +16,8 @@ public class SkinningClearRecipe extends SkinningRecipe {
     protected ItemStack build(ItemStack targetStack, ItemStack skinStack) {
         ItemStack newItemStack = skinStack.copy();
         newItemStack.setCount(1);
-        return SkinItem.replace(newItemStack, ItemStack.EMPTY);
+        newItemStack.remove(ModDataComponents.SKIN.get());
+        return newItemStack;
     }
 
     @Override

@@ -23,8 +23,10 @@ import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 
@@ -103,18 +105,19 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
         ArmourerReplaceDialog dialog = new ArmourerReplaceDialog();
         dialog.setTitle(NSString.localizedString("armourer.dialog.replace.title"));
         dialog.showInView(this, () -> {
-            if (dialog.isCancelled()) {
+            Level level = Minecraft.getInstance().level;
+            if (dialog.isCancelled() || level == null) {
                 return;
             }
             CompoundTag source = new CompoundTag();
             ItemStack selector = dialog.getSelector();
             if (selector.getItem() instanceof IItemColorProvider) {
-                selector.save(source);
+                selector.save(level.registryAccess(), source);
             }
             CompoundTag destination = new CompoundTag();
             ItemStack applier = dialog.getApplier();
             if (applier.getItem() instanceof IItemColorProvider) {
-                applier.save(destination);
+                applier.save(level.registryAccess(), destination);
             }
             if (source.isEmpty() && destination.isEmpty()) {
                 return;

@@ -1,17 +1,20 @@
 package moe.plushie.armourers_workshop.builder.blockentity;
 
+import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
-import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
+import moe.plushie.armourers_workshop.utils.DataSerializerKey;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class ColorMixerBlockEntity extends UpdatableBlockEntity implements IPaintProvider {
+
+    private static final DataSerializerKey<IPaintColor> COLOR_KEY = DataSerializerKey.create("Color", DataTypeCodecs.PAINT_COLOR, PaintColor.WHITE);
 
     private IPaintColor color = PaintColor.WHITE;
 
@@ -19,12 +22,12 @@ public class ColorMixerBlockEntity extends UpdatableBlockEntity implements IPain
         super(blockEntityType, blockPos, blockState);
     }
 
-    public void readFromNBT(CompoundTag nbt) {
-        color = nbt.getOptionalPaintColor(Constants.Key.COLOR, PaintColor.WHITE);
+    public void readAdditionalData(IDataSerializer serializer) {
+        color = serializer.read(COLOR_KEY);
     }
 
-    public void writeToNBT(CompoundTag nbt) {
-        nbt.putOptionalPaintColor(Constants.Key.COLOR, color, PaintColor.WHITE);
+    public void writeAdditionalData(IDataSerializer serializer) {
+        serializer.write(COLOR_KEY, color);
     }
 
     @Override

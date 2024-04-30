@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.utils.math;
 
+import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -42,6 +43,10 @@ public class Rectangle3f implements IRectangle3f {
 
     public Rectangle3f(AABB box) {
         this((float) box.minX, (float) box.minY, (float) box.minZ, (float) box.getXsize(), (float) box.getYsize(), (float) box.getZsize());
+    }
+
+    public Rectangle3f(List<Float> list) {
+        this(list[0], list[1], list[2], list[3], list[4], list[5]);
     }
 
     public float getX() {
@@ -217,6 +222,10 @@ public class Rectangle3f implements IRectangle3f {
 
     public AABB asAABB() {
         return new AABB(x, y, z, x + width, y + height, z + depth);
+    }
+
+    public List<Float> toList() {
+        return Lists.newArrayList(x, y, z, width, height, depth);
     }
 
     @Override

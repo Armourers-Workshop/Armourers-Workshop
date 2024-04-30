@@ -3,11 +3,11 @@ package moe.plushie.armourers_workshop.init.network;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
@@ -31,10 +31,10 @@ public class ExecuteCommandPacket extends CustomPacket {
         this.value = value;
     }
 
-    public ExecuteCommandPacket(FriendlyByteBuf buffer) {
+    public ExecuteCommandPacket(IFriendlyByteBuf buffer) {
         this.object = readClass(buffer);
         this.mode = buffer.readEnum(Mode.class);
-        this.key = buffer.readUtf(Short.MAX_VALUE);
+        this.key = buffer.readUtf();
         this.value = readObject(buffer);
     }
 
@@ -52,7 +52,7 @@ public class ExecuteCommandPacket extends CustomPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeUtf(object.getName());
         buffer.writeEnum(mode);
         buffer.writeUtf(key);
@@ -93,14 +93,14 @@ public class ExecuteCommandPacket extends CustomPacket {
         }
     }
 
-    private Object readObject(FriendlyByteBuf buffer) {
+    private Object readObject(IFriendlyByteBuf buffer) {
         if (mode != Mode.SET) {
             return null;
         }
         InputStream inputStream = null;
         ObjectInputStream objectInputStream = null;
         try {
-            inputStream = new ByteBufInputStream(buffer);
+            inputStream = new ByteBufInputStream(buffer.asByteBuf());
             objectInputStream = new ObjectInputStream(inputStream);
             return objectInputStream.readObject();
         } catch (Exception exception) {
@@ -110,14 +110,14 @@ public class ExecuteCommandPacket extends CustomPacket {
         }
     }
 
-    private void writeObject(FriendlyByteBuf buffer, Object object) {
+    private void writeObject(IFriendlyByteBuf buffer, Object object) {
         if (mode != Mode.SET) {
             return;
         }
         OutputStream outputStream = null;
         ObjectOutputStream objectOutputStream = null;
         try {
-            outputStream = new ByteBufOutputStream(buffer);
+            outputStream = new ByteBufOutputStream(buffer.asByteBuf());
             objectOutputStream = new ObjectOutputStream(outputStream);
             objectOutputStream.writeObject(object);
         } catch (Exception exception1) {
@@ -127,9 +127,9 @@ public class ExecuteCommandPacket extends CustomPacket {
         }
     }
 
-    private Class<?> readClass(FriendlyByteBuf buffer) {
+    private Class<?> readClass(IFriendlyByteBuf buffer) {
         try {
-            return Class.forName(buffer.readUtf(Short.MAX_VALUE));
+            return Class.forName(buffer.readUtf());
         } catch (ClassNotFoundException e) {
             return null;
         }

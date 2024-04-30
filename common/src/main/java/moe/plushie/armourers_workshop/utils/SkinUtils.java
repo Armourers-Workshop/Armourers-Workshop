@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModConfig;
+import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.minecraft.core.Direction;
@@ -241,7 +242,7 @@ public final class SkinUtils {
             ItemStack itemStack1 = wardrobe.getItem(SkinSlotType.UNKNOWN, 0);
             SkinDescriptor descriptor = SkinDescriptor.of(itemStack1);
             if (!descriptor.isEmpty()) {
-                SkinDescriptor.setDescriptor(itemStack, descriptor);
+                itemStack.set(ModDataComponents.SKIN.get(), descriptor);
             }
         }
     }

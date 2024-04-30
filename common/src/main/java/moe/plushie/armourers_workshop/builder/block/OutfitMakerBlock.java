@@ -4,9 +4,7 @@ import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProv
 import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
-import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -28,7 +26,7 @@ public class OutfitMakerBlock extends AbstractHorizontalBlock implements Abstrac
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        return MenuManager.openMenu(ModMenuTypes.OUTFIT_MAKER, level.getBlockEntity(blockPos), player);
+    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
+        return ModMenuTypes.OUTFIT_MAKER.get().openMenu(player, level.getBlockEntity(blockPos));
     }
 }

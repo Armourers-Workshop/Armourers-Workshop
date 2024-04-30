@@ -9,7 +9,6 @@
     "ForgeReplayMixin"
   ],
   "mixins": [
-    "ForgeBlockEntityHandlerMixin",
     "ForgeBlockHandlerMixin",
     "ForgeEntityHandlerMixin",
     "ForgeItemHandlerMixin"

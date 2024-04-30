@@ -2,9 +2,7 @@ package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
 import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
-import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
-import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
@@ -20,6 +18,8 @@ import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModSounds;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutorIO;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
+import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
+import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -36,7 +36,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import java.nio.file.attribute.UserPrincipal;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -76,14 +75,14 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
     public IPaintToolAction createPaintToolAction(UseOnContext context) {
         ItemStack itemStack = context.getItemInHand();
         IPaintColor paintColor = getItemColor(itemStack, PaintColor.WHITE);
-        boolean usePaintColor = PaintingToolOptions.CHANGE_PAINT_COLOR.get(itemStack);
-        boolean usePaintType = PaintingToolOptions.CHANGE_PAINT_TYPE.get(itemStack);
+        boolean usePaintColor = itemStack.get(PaintingToolOptions.CHANGE_PAINT_COLOR);
+        boolean usePaintType = itemStack.get(PaintingToolOptions.CHANGE_PAINT_TYPE);
         return new CubePaintingEvent.SetAction(paintColor, usePaintColor, usePaintType);
     }
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ModConstants.key("small"), (itemStack, level, entity, id) -> PaintingToolOptions.FULL_BLOCK_MODE.get(itemStack) ? 0 : 1);
+        builder.accept(ModConstants.key("small"), (itemStack, level, entity, id) -> itemStack.get(PaintingToolOptions.FULL_BLOCK_MODE) ? 0 : 1);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
 import com.google.common.collect.Lists;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -19,7 +18,6 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.slot.ItemOverrideType;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
-import moe.plushie.armourers_workshop.core.network.ExecuteAlertPacket;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -27,14 +25,12 @@ import moe.plushie.armourers_workshop.core.skin.exporter.SkinExportManager;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.command.ColorArgumentType;
 import moe.plushie.armourers_workshop.init.command.ColorSchemeArgumentType;
-import moe.plushie.armourers_workshop.init.command.ComponentArgumentType;
 import moe.plushie.armourers_workshop.init.command.FileArgumentType;
 import moe.plushie.armourers_workshop.init.command.ListArgumentType;
 import moe.plushie.armourers_workshop.init.command.ReflectArgumentBuilder;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import moe.plushie.armourers_workshop.init.platform.MenuManager;
-import moe.plushie.armourers_workshop.init.platform.NetworkManager;
+import moe.plushie.armourers_workshop.init.platform.event.common.RegisterCommandsEvent;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
@@ -44,7 +40,6 @@ import moe.plushie.armourers_workshop.utils.TypedRegistry;
 import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -81,8 +76,8 @@ public class ModCommands {
         return Component.translatable("commands.armourers_workshop.armourers.error.missingItemSkinnable", ob);
     });
 
-    public static void init(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(commands());
+    public static void init(RegisterCommandsEvent event) {
+        event.register(commands());
     }
 
     // :/armourers setSkin|giveSkin|clearSkin
@@ -100,16 +95,7 @@ public class ModCommands {
                 .then(Commands.literal("rsyncWardrobe").then(players().executes(Executor::resyncWardrobe)))
                 .then(Commands.literal("openWardrobe").then(entities().executes(Executor::openWardrobe)))
                 .then(Commands.literal("itemSkinnable").then(addOrRemote().then(overrideTypes().executes(Executor::setItemSkinnable))))
-                .then(Commands.literal("notify").then(Commands.literal("alert").then(alertNotifyArgs())).then(Commands.literal("toast").then(toastNotifyArgs())))
                 .then(Commands.literal("setUnlockedSlots").then(entities().then(resizableSlotNames().then(resizableSlotAmounts().executes(Executor::setUnlockedWardrobeSlots)))));
-    }
-
-    public static ArgumentBuilder<CommandSourceStack, ?> alertNotifyArgs() {
-        return players().then(textInput("message").then(textInput("title").then(textInput("confirm").executes(Executor::sendAlertNotify)).executes(Executor::sendAlertNotify)).executes(Executor::sendAlertNotify));
-    }
-
-    public static ArgumentBuilder<CommandSourceStack, ?> toastNotifyArgs() {
-        return players().then(textInput("message").then(textInput("title").then(nbtInput("icon").executes(Executor::sendToastNotify)).executes(Executor::sendToastNotify)).executes(Executor::sendToastNotify));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> players() {
@@ -138,14 +124,6 @@ public class ModCommands {
 
     static ArgumentBuilder<CommandSourceStack, ?> dyeColor() {
         return Commands.argument("color", new ColorArgumentType());
-    }
-
-    static ArgumentBuilder<CommandSourceStack, ?> textInput(String key) {
-        return Commands.argument(key, ComponentArgumentType.textComponent());
-    }
-
-    static ArgumentBuilder<CommandSourceStack, ?> nbtInput(String key) {
-        return Commands.argument(key, CompoundTagArgument.compoundTag());
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> scale() {
@@ -358,38 +336,9 @@ public class ModCommands {
             for (Entity entity : EntityArgument.getEntities(context, "entities")) {
                 SkinWardrobe wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe != null) {
-                    MenuManager.openMenu(ModMenuTypes.WARDROBE_OP, player, wardrobe);
+                    ModMenuTypes.WARDROBE_OP.get().openMenu(player, wardrobe);
                     break;
                 }
-            }
-            return 1;
-        }
-
-        static int sendToastNotify(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            return sendUserNotify(context, 0x80000000);
-        }
-
-        static int sendAlertNotify(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            return sendUserNotify(context, 0x00000000);
-        }
-
-        static int sendUserNotify(CommandContext<CommandSourceStack> context, int type) throws CommandSyntaxException {
-            // read context from command
-            Component message1 = ComponentArgumentType.getComponent(context, "message");
-            Component title1 = Component.translatable("commands.armourers_workshop.notify.title");
-            Component confirm1 = Component.translatable("commands.armourers_workshop.notify.confirm");
-            CompoundTag icon1 = null;
-            if (containsNode(context, "title")) {
-                title1 = ComponentArgumentType.getComponent(context, "title");
-            }
-            if (containsNode(context, "confirm")) {
-                confirm1 = ComponentArgumentType.getComponent(context, "confirm");
-            }
-            if (containsNode(context, "icon")) {
-                icon1 = CompoundTagArgument.getCompoundTag(context, "icon");
-            }
-            for (ServerPlayer player : EntityArgument.getPlayers(context, "targets")) {
-                NetworkManager.sendTo(new ExecuteAlertPacket(title1, message1, confirm1, type, icon1), player);
             }
             return 1;
         }

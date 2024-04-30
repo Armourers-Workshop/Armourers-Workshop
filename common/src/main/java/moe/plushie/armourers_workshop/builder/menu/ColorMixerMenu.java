@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.builder.menu;
 
-import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
+import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
@@ -26,7 +26,7 @@ public class ColorMixerMenu extends AbstractBlockEntityMenu<ColorMixerBlockEntit
 
     private final Container inventory = new SimpleContainer(2);
 
-    public ColorMixerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess access) {
+    public ColorMixerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
         super(menuType, block, containerId, access);
         this.addPlayerSlots(playerInventory, 48, 158);
         this.addCustomSlot(inventory, 0, 83, 101);

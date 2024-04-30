@@ -1,0 +1,69 @@
+package moe.plushie.armourers_workshop.compatibility.core.data;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializer;
+
+@Available("[1.16, 1.21)")
+public class AbstractEntityDataSerializer<T> implements IEntitySerializer<T> {
+
+    private final EntityDataSerializer<T> serializer;
+
+    protected AbstractEntityDataSerializer(EntityDataSerializer<T> serializer) {
+        this.serializer = serializer;
+    }
+
+    public static <T> Proxy<T> create(IEntitySerializer<T> serializer) {
+        return new Proxy<>(serializer);
+    }
+
+    public static <T> AbstractEntityDataSerializer<T> wrap(EntityDataAccessor<T> accessor) {
+        return wrap(accessor.getSerializer());
+    }
+
+    public static <T> AbstractEntityDataSerializer<T> wrap(EntityDataSerializer<T> serializer) {
+        return new AbstractEntityDataSerializer<>(serializer);
+    }
+
+    @Override
+    public T read(IFriendlyByteBuf buffer) {
+        return serializer.read((FriendlyByteBuf) buffer.asByteBuf());
+    }
+
+    @Override
+    public void write(IFriendlyByteBuf buffer, T value) {
+        serializer.write((FriendlyByteBuf) buffer.asByteBuf(), value);
+    }
+
+    public static class Proxy<T> implements EntityDataSerializer<T> {
+
+        private final IEntitySerializer<T> serializer;
+
+        public Proxy(IEntitySerializer<T> serializer) {
+            this.serializer = serializer;
+        }
+
+        @Override
+        public void write(FriendlyByteBuf buf, T object) {
+            serializer.write(AbstractFriendlyByteBuf.wrap(buf), object);
+        }
+
+        @Override
+        public T read(FriendlyByteBuf buf) {
+            return serializer.read(AbstractFriendlyByteBuf.wrap(buf));
+        }
+
+        @Override
+        public T copy(T object) {
+            return object;
+        }
+
+        @Override
+        public String toString() {
+            return serializer.toString();
+        }
+    }
+}

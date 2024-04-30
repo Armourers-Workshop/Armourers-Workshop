@@ -97,7 +97,7 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
         }
         if (isChangedNBT) {
             ObjectUtils.ifPresent(level.getBlockEntity(blockPos), blockEntity -> {
-                CompoundTag newTag = blockEntity.saveWithFullMetadata();
+                CompoundTag newTag = blockEntity.saveFullData(level.registryAccess());
                 changes.setCompoundTag(newTag);
             });
         } else if (colors != null) {
@@ -140,7 +140,7 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
         }
         if (nbt != null) {
             if (blockEntity != null) {
-                blockEntity.load(nbt);
+                blockEntity.loadFullData(nbt, level.registryAccess());
                 changes += 1;
             }
         }

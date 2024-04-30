@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 cocoon {
@@ -17,23 +17,16 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 
-    modInclude "com.electronwill.night-config:core:${project.night_config}"
-    modInclude "com.electronwill.night-config:toml:${project.night_config}"
+    // molang support for advanced skin.
+    //modShadow "gg.moonflower:molang-compiler:${rootProject.molang_version}"
+
+    modShadow "com.electronwill.night-config:core:${project.night_config}"
+    modShadow "com.electronwill.night-config:toml:${project.night_config}"
 
     modOptionalCompileOnly project.trinkets_api_version
 
 //    modLocalRuntime "net.coderbot.iris:iris:mc1.18.2-1.3.1"
 //    modLocalRuntime "me.jellysquid.mods.sodium:sodium:fabric-mc1.18.2-0.4.1+build.15"
-}
-
-// The architectury-loom 1.1 can't launch the 1.16.5 fabric,
-// force specifed version to solve this problem.
-if (rootProject.minecraft_version == "1.16.5") {
-    configurations.configureEach {
-        resolutionStrategy {
-            force "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
-        }
-    }
 }
 
 processResources {
@@ -49,6 +42,9 @@ processResources {
 
 shadowJar {
     exclude "architectury.common.json"
+
+    //relocate 'gg.moonflower', 'moe.plushie.armourers_workshop.runtime'
+    relocate 'com.electronwill', 'moe.plushie.armourers_workshop.runtime'
 }
 
 publishing {

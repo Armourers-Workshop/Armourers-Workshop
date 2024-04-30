@@ -5,7 +5,8 @@ import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
 import moe.plushie.armourers_workshop.api.registry.IKeyBindingBuilder;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeKeyMapping;
-import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
+import moe.plushie.armourers_workshop.init.platform.event.client.RenderFrameEvent;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.ext.OpenKeyModifier;
 import net.minecraft.client.KeyMapping;
@@ -55,7 +56,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         if (handler != null) {
             INPUTS.add(Pair.of(binding, handler));
         }
-        ClientNativeManager.getProvider().willRegisterKeyMapping(registry -> registry.register(binding));
+        AbstractForgeKeyMapping.register(name, binding);
         IKeyBinding binding1 = new IKeyBinding() {
 
             @Override
@@ -104,7 +105,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
 
     private static <T> ArrayList<T> createAndAttach() {
         // attach the input event to client.
-        ClientNativeManager.getProvider().willInput(ignored -> INPUTS.forEach(pair -> {
+        EventManager.listen(RenderFrameEvent.Post.class, event -> INPUTS.forEach(pair -> {
             if (pair.getKey().consumeClick()) {
                 pair.getValue().get().run();
             }

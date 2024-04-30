@@ -2,8 +2,9 @@ package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.ICapabilityType;
-import moe.plushie.armourers_workshop.api.common.ITagRepresentable;
+import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.Direction;
@@ -37,12 +38,13 @@ public class AbstractForgeCapabilityManager {
     }
 
     private static IRegistryKey<ICapabilityType<SkinWardrobe>> createWardrobeCapabilityType(ResourceLocation registryName, Function<Entity, Optional<SkinWardrobe>> provider) {
-        Capability<SkinWardrobe> capability = CapabilityManager.get(new CapabilityToken<SkinWardrobe>() {});
+        Capability<SkinWardrobe> capability = CapabilityManager.get(new CapabilityToken<SkinWardrobe>() {
+        });
         ICapabilityType<SkinWardrobe> capabilityType = entity -> entity.getCapability(capability).resolve();
         return new RegistryObjectProxy<>(registryName, SkinWardrobe.class, provider, capabilityType, () -> capability);
     }
 
-    public static class RegistryObjectProxy<N extends CompoundTag, T extends ITagRepresentable<N>> implements IRegistryKey<ICapabilityType<T>> {
+    public static class RegistryObjectProxy<T extends IDataSerializerProvider> implements IRegistryKey<ICapabilityType<T>> {
 
         final ResourceLocation registryName;
         final Supplier<Capability<T>> capability;
@@ -84,7 +86,7 @@ public class AbstractForgeCapabilityManager {
             if (!value.isPresent()) {
                 return;
             }
-            event.addCapability(registryName, new CapabilityProviderProxy<N, T>(value.get()) {
+            event.addCapability(registryName, new CapabilityProviderProxy<T>(value.get()) {
                 @Override
                 public Capability<T> getCapability() {
                     return capability.get();
@@ -103,7 +105,7 @@ public class AbstractForgeCapabilityManager {
         }
     }
 
-    public static abstract class CapabilityProviderProxy<N extends CompoundTag, T extends ITagRepresentable<N>> implements ICapabilityProvider, INBTSerializable<N> {
+    public static abstract class CapabilityProviderProxy<T extends IDataSerializerProvider> implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
         protected final T value;
 
@@ -112,13 +114,15 @@ public class AbstractForgeCapabilityManager {
         }
 
         @Override
-        public N serializeNBT() {
-            return value.serializeNBT();
+        public CompoundTag serializeNBT() {
+            CompoundTag tag = new CompoundTag();
+            value.serialize(AbstractDataSerializer.wrap(tag, value));
+            return tag;
         }
 
         @Override
-        public void deserializeNBT(N nbt) {
-            value.deserializeNBT(nbt);
+        public void deserializeNBT(CompoundTag nbt) {
+            value.deserialize(AbstractDataSerializer.wrap(nbt, value));
         }
 
         @Override

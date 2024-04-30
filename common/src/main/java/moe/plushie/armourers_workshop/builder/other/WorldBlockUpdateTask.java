@@ -74,7 +74,7 @@ public class WorldBlockUpdateTask implements IWorldUpdateTask {
         if (nbt != null) {
             BlockEntity blockEntity = level.getBlockEntity(blockPos);
             if (blockEntity != null) {
-                blockEntity.load(nbt);
+                blockEntity.loadFullData(nbt, level.registryAccess());
             }
         }
         if (modifier != null) {

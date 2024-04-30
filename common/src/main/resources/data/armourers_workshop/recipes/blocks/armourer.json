@@ -7,7 +7,7 @@
   ],
   "key": {
     "N": {
-      "tag": "c:diamonds"
+      "tag": "c:gems/diamond"
     },
     "X": {
       "tag": "armourers_workshop:skin_cubes"
@@ -16,10 +16,10 @@
       "tag": "c:ender_pearls"
     },
     "#": {
-      "tag": "c:stone"
+      "tag": "c:stones"
     }
   },
   "result": {
-    "item": "armourers_workshop:armourer"
+    "id": "armourers_workshop:armourer"
   }
 }

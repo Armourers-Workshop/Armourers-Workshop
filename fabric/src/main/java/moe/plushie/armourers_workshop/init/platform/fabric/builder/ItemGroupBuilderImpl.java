@@ -4,10 +4,10 @@ import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.common.IItemGroupProvider;
 import moe.plushie.armourers_workshop.api.registry.IItemGroupBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistries;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TypedRegistry;
-import net.minecraft.core.Registry;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +31,8 @@ public class ItemGroupBuilderImpl<T extends IItemGroup> implements IItemGroupBui
 
     @Override
     public IRegistryKey<T> build(String name) {
-        return TypedRegistry.Entry.castValue(ModConstants.key(name), new ItemGroup(name));
+        ItemGroup group = new ItemGroup(name);
+        return TypedRegistry.Entry.cast(ModConstants.key(name), () -> group);
     }
 
     public class ItemGroup implements IItemGroup {
@@ -40,7 +41,7 @@ public class ItemGroupBuilderImpl<T extends IItemGroup> implements IItemGroupBui
         private final ArrayList<Supplier<Item>> items = new ArrayList<>();
 
         public ItemGroup(String name) {
-            this.tab = Registry.registerItemGroupFA(name, icon, this::fill);
+            this.tab = AbstractFabricRegistries.ITEM_GROUPS.register(name, CreativeModeTab.createCreativeModeTabFA(name, icon, this::fill));
         }
 
         public void fill(List<ItemStack> results) {

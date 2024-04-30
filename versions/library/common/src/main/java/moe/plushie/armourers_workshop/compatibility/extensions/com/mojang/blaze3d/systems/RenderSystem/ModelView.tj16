@@ -1,0 +1,59 @@
+package moe.plushie.armourers_workshop.compatibility.extensions.com.mojang.blaze3d.systems.RenderSystem;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.math.Matrix4f;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.math.IQuaternionf;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+
+@Available("[1.16, 1.18)")
+@Extension
+public class ModelView {
+
+    public static IPoseStack modelViewStack = new Proxy();
+
+    public static void applyModelViewMatrix(@ThisClass Class<?> clazz) {
+    }
+
+    public static IPoseStack getExtendedModelViewStack(@ThisClass Class<?> clazz) {
+        return modelViewStack;
+    }
+
+    public static class Proxy extends OpenPoseStack {
+
+        @Override
+        public void pushPose() {
+            RenderSystem.pushMatrix();
+        }
+
+        @Override
+        public void popPose() {
+            RenderSystem.popMatrix();
+        }
+
+        @Override
+        public void translate(float x, float y, float z) {
+            RenderSystem.translated(x, y, z);
+        }
+
+        @Override
+        public void rotate(IQuaternionf quaternion) {
+            RenderSystem.multMatrix(new Matrix4f(AbstractPoseStack.convertQuaternion(quaternion)));
+        }
+
+        @Override
+        public void scale(float x, float y, float z) {
+            RenderSystem.scalef(x, y, z);
+        }
+
+        @Override
+        public void setIdentity() {
+            RenderSystem.loadIdentity();
+        }
+    }
+}

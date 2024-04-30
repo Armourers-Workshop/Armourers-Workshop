@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.builder.blockentity;
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
 import moe.plushie.armourers_workshop.api.common.IWorldUpdateTask;
+import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
@@ -29,7 +30,8 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
-import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
+import moe.plushie.armourers_workshop.utils.DataSerializerKey;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
@@ -41,7 +43,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
@@ -55,11 +56,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.Optional;
 
 import manifold.ext.rt.api.auto;
 
 public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockEntityHandler, IPaintToolSelector.Provider {
+
+    private static final DataSerializerKey<ISkinType> SKIN_TYPE_KEY = DataSerializerKey.create("SkinType", DataTypeCodecs.SKIN_TYPE, SkinTypes.UNKNOWN);
+    private static final DataSerializerKey<SkinProperties> SKIN_PROPERTIES_KEY = DataSerializerKey.create("SkinProperties", DataTypeCodecs.SKIN_PROPERTIES, SkinProperties.EMPTY, SkinProperties::new);
+    private static final DataSerializerKey<PlayerTextureDescriptor> PLAYER_TEXTURE_KEY = DataSerializerKey.create("Texture", DataTypeCodecs.TEXTURE_DESCRIPTOR, PlayerTextureDescriptor.EMPTY);
+    private static final DataSerializerKey<SkinPaintData> PAINT_DATA_KEY = DataSerializerKey.create("PaintData", DataTypeCodecs.SKIN_PAINT_DATA, null);
+    private static final DataSerializerKey<Integer> FLAGS_KEY = DataSerializerKey.create("Flags", DataTypeCodecs.INT, 0);
+    private static final DataSerializerKey<Integer> VERSION_KEY = DataSerializerKey.create("DataVersion", DataTypeCodecs.INT, 0);
 
     private static final ImmutableMap<ISkinPartType, ISkinProperty<Boolean>> PART_TO_MODEL = new ImmutableMap.Builder<ISkinPartType, ISkinProperty<Boolean>>()
             .put(SkinPartTypes.BIPPED_HEAD, SkinProperty.OVERRIDE_MODEL_HEAD)
@@ -89,23 +96,27 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
     }
 
     @Override
-    public void readFromNBT(CompoundTag tag) {
-        this.skinType = SkinTypes.byName(tag.getOptionalString(Constants.Key.SKIN_TYPE, SkinTypes.ARMOR_HEAD.getRegistryName().toString()));
-        this.skinProperties = tag.getOptionalSkinProperties(Constants.Key.SKIN_PROPERTIES);
-        this.textureDescriptor = tag.getOptionalTextureDescriptor(Constants.Key.ENTITY_TEXTURE, PlayerTextureDescriptor.EMPTY);
-        this.flags = tag.getOptionalInt(Constants.Key.FLAGS, 0);
-        this.version = tag.getOptionalInt(Constants.Key.DATA_VERSION, 0);
-        this.paintData = tag.getOptionalPaintData(Constants.Key.PAINT_DATA);
+    public void readAdditionalData(IDataSerializer serializer) {
+        this.skinType = serializer.read(SKIN_TYPE_KEY);
+        this.skinProperties = serializer.read(SKIN_PROPERTIES_KEY);
+        this.textureDescriptor = serializer.read(PLAYER_TEXTURE_KEY);
+        this.flags = serializer.read(FLAGS_KEY);
+        this.version = serializer.read(VERSION_KEY);
+        this.paintData = serializer.read(PAINT_DATA_KEY);
+        // when no skin type is provided, default select head.
+        if (this.skinType == SkinTypes.UNKNOWN) {
+            this.skinType = SkinTypes.ARMOR_HEAD;
+        }
     }
 
     @Override
-    public void writeToNBT(CompoundTag tag) {
-        tag.putOptionalString(Constants.Key.SKIN_TYPE, skinType.getRegistryName().toString(), null);
-        tag.putOptionalSkinProperties(Constants.Key.SKIN_PROPERTIES, skinProperties);
-        tag.putOptionalTextureDescriptor(Constants.Key.ENTITY_TEXTURE, textureDescriptor, PlayerTextureDescriptor.EMPTY);
-        tag.putOptionalInt(Constants.Key.FLAGS, flags, 0);
-        tag.putOptionalInt(Constants.Key.DATA_VERSION, version, 0);
-        tag.putOptionalPaintData(Constants.Key.PAINT_DATA, paintData);
+    public void writeAdditionalData(IDataSerializer serializer) {
+        serializer.write(SKIN_TYPE_KEY, skinType);
+        serializer.write(SKIN_PROPERTIES_KEY, skinProperties);
+        serializer.write(PLAYER_TEXTURE_KEY, textureDescriptor);
+        serializer.write(FLAGS_KEY, flags);
+        serializer.write(VERSION_KEY, version);
+        serializer.write(PAINT_DATA_KEY, paintData);
     }
 
     public void onPlace(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity) {

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.builder.network;
 
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
@@ -19,11 +20,11 @@ import moe.plushie.armourers_workshop.utils.DataAccessor;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.function.BiConsumer;
@@ -35,7 +36,7 @@ public class UpdateArmourerPacket extends CustomPacket {
     private final Field field;
     private final Object fieldValue;
 
-    public UpdateArmourerPacket(FriendlyByteBuf buffer) {
+    public UpdateArmourerPacket(IFriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
         this.field = buffer.readEnum(Field.class);
         this.fieldValue = field.accessor.read(buffer);
@@ -48,7 +49,7 @@ public class UpdateArmourerPacket extends CustomPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeBlockPos(pos);
         buffer.writeEnum(field);
         field.accessor.write(buffer, fieldValue);
@@ -67,8 +68,9 @@ public class UpdateArmourerPacket extends CustomPacket {
     }
 
     private void acceptFieldUpdate(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container) {
+        Level level = player.getLevel();
         String playerName = player.getDisplayName().getString();
-        if (!field.permission.accept(blockEntity, player)) {
+        if (level == null || !field.permission.accept(blockEntity, player)) {
             return;
         }
         switch (field) {
@@ -123,8 +125,8 @@ public class UpdateArmourerPacket extends CustomPacket {
                 CompoundTag nbt = (CompoundTag) fieldValue;
                 ModLog.info("accept replace action of the {}, nbt: {}", playerName, nbt);
                 try {
-                    ItemStack source = ItemStack.of(nbt.getCompound(Constants.Key.SOURCE));
-                    ItemStack destination = ItemStack.of(nbt.getCompound(Constants.Key.DESTINATION));
+                    ItemStack source = ItemStack.parseOptional(level.registryAccess(), nbt.getCompound(Constants.Key.SOURCE));
+                    ItemStack destination = ItemStack.parseOptional(level.registryAccess(), nbt.getCompound(Constants.Key.DESTINATION));
                     CubeReplacingEvent event = new CubeReplacingEvent(source, destination);
                     event.keepColor = nbt.getBoolean(Constants.Key.KEEP_COLOR);
                     event.keepPaintType = nbt.getBoolean(Constants.Key.KEEP_PAINT_TYPE);

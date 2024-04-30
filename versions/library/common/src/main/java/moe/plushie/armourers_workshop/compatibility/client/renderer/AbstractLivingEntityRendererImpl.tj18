@@ -1,0 +1,32 @@
+package moe.plushie.armourers_workshop.compatibility.client.renderer;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererProviderImpl;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.world.entity.LivingEntity;
+
+@Available("[1.18, 1.21)")
+@Environment(EnvType.CLIENT)
+public abstract class AbstractLivingEntityRendererImpl<T extends LivingEntity, M extends EntityModel<T>> extends LivingEntityRenderer<T, M> implements AbstractEntityRendererProviderImpl {
+
+    public AbstractLivingEntityRendererImpl(Context context, M entityModel, float f) {
+        super(context, entityModel, f);
+    }
+
+    public float getEntityScale(T entity) {
+        return entity.getScale();
+    }
+
+    @Override
+    protected final void scale(T entity, PoseStack poseStack, float f) {
+        float scale = getEntityScale(entity);
+        if (scale != 1.0F) {
+            poseStack.scale(scale, scale, scale);
+        }
+        super.scale(entity, poseStack, f);
+    }
+}

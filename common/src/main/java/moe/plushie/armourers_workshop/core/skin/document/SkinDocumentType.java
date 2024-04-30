@@ -34,20 +34,24 @@ public class SkinDocumentType implements IRegistryEntry {
             .add(SkinPartTypes.BLOCK_MULTI)
             .build();
 
-    private final String name;
+    private final String category;
     private final ISkinType skinType;
     private final ArrayList<ISkinPartType> skinPartTypes;
 
     private ResourceLocation registryName;
 
-    public SkinDocumentType(String name, ISkinType type) {
-        this.name = name;
+    public SkinDocumentType(String category, ISkinType type) {
+        this.category = category;
         this.skinType = type;
         this.skinPartTypes = generatePartTypes(type);
     }
 
     public String getName() {
-        return name;
+        return registryName.toString();
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public ISkinType getSkinType() {
@@ -73,7 +77,7 @@ public class SkinDocumentType implements IRegistryEntry {
 
     @Override
     public String toString() {
-        return ObjectUtils.makeDescription(this, "name", name, "id", registryName);
+        return ObjectUtils.makeDescription(this, "name", category, "id", registryName);
     }
 
     private ArrayList<ISkinPartType> generatePartTypes(ISkinType type) {

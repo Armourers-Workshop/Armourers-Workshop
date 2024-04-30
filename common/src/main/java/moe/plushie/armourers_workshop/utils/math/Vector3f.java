@@ -1,10 +1,13 @@
 package moe.plushie.armourers_workshop.utils.math;
 
+import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.minecraft.core.Position;
+
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class Vector3f implements IVector3f, Position {
@@ -40,6 +43,10 @@ public class Vector3f implements IVector3f, Position {
 
     public Vector3f(Position pos) {
         this((float) pos.x(), (float) pos.y(), (float) pos.z());
+    }
+
+    public Vector3f(List<Float> values) {
+        this(values[0], values[1], values[2]);
     }
 
     public Vector3f(float[] values) {
@@ -347,6 +354,10 @@ public class Vector3f implements IVector3f, Position {
 
     public Vector3f copy() {
         return new Vector3f(x, y, z);
+    }
+
+    public List<Float> toList() {
+        return Lists.newArrayList(x, y, z);
     }
 
     @Override

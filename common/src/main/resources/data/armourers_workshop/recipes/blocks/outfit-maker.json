@@ -7,7 +7,7 @@
   ],
   "key": {
     "M": {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     },
     "X": {
       "tag": "armourers_workshop:skin_cubes"
@@ -17,6 +17,6 @@
     }
   },
   "result": {
-    "item": "armourers_workshop:outfit-maker"
+    "id": "armourers_workshop:outfit-maker"
   }
 }

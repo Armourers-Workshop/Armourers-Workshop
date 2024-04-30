@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IDataComponentType;
 import moe.plushie.armourers_workshop.api.common.IItemTag;
-import moe.plushie.armourers_workshop.api.registry.IRegistry;
 import moe.plushie.armourers_workshop.utils.TypedRegistry;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.core.Registry;
@@ -23,19 +23,22 @@ import manifold.ext.rt.api.auto;
 @Available("[1.19, 1.20)")
 public class AbstractForgeRegistries {
 
-    public static final IRegistry<Block> BLOCKS = AbstractForgeRegistry.create(Block.class, ForgeRegistries.BLOCKS);
-    public static final IRegistry<Item> ITEMS = AbstractForgeRegistry.create(Item.class, ForgeRegistries.ITEMS);
-    public static final IRegistry<MenuType<?>> MENU_TYPES = AbstractForgeRegistry.create(MenuType.class, ForgeRegistries.MENU_TYPES);
-    public static final IRegistry<EntityType<?>> ENTITY_TYPES = AbstractForgeRegistry.create(EntityType.class, ForgeRegistries.ENTITY_TYPES);
-    public static final IRegistry<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZER = AbstractForgeRegistry.create(EntityDataSerializer.class, ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS);
-    public static final IRegistry<BlockEntityType<?>> BLOCK_ENTITY_TYPES = AbstractForgeRegistry.create(BlockEntityType.class, ForgeRegistries.BLOCK_ENTITY_TYPES);
-    public static final IRegistry<SoundEvent> SOUND_EVENTS = AbstractForgeRegistry.create(SoundEvent.class, ForgeRegistries.SOUND_EVENTS);
-    public static final IRegistry<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENT_TYPES = AbstractForgeRegistry.create(ArgumentTypeInfo.class, ForgeRegistries.COMMAND_ARGUMENT_TYPES);
+    public static final auto BLOCKS = AbstractForgeRegistry.create(Block.class, ForgeRegistries.BLOCKS);
 
-    public static final IRegistry<LootItemFunctionType> ITEM_LOOT_FUNCTIONS = AbstractForgeRegistry.create(LootItemFunctionType.class, Registry.LOOT_FUNCTION_REGISTRY);
-    public static final IRegistry<CreativeModeTab> ITEM_GROUPS = TypedRegistry.passthrough(CreativeModeTab.class);
-    public static final IRegistry<IItemTag> ITEM_TAGS = TypedRegistry.factory(TagKey.class, registryName -> {
+    public static final auto ITEMS = AbstractForgeRegistry.create(Item.class, ForgeRegistries.ITEMS);
+    public static final auto ITEM_GROUPS = TypedRegistry.passthrough(CreativeModeTab.class);
+    public static final auto ITEM_LOOT_FUNCTIONS = AbstractForgeRegistry.create(LootItemFunctionType.class, Registry.LOOT_FUNCTION_REGISTRY);
+    public static final auto ITEM_TAGS = TypedRegistry.factory(IItemTag.class, registryName -> {
         TagKey<Item> tag = TagKey.create(ForgeRegistries.Keys.ITEMS, registryName);
         return itemStack -> itemStack.is(tag);
     });
+
+    public static final auto MENU_TYPES = AbstractForgeRegistry.create(MenuType.class, ForgeRegistries.MENU_TYPES);
+    public static final auto ENTITY_TYPES = AbstractForgeRegistry.create(EntityType.class, ForgeRegistries.ENTITY_TYPES);
+    public static final auto ENTITY_DATA_SERIALIZER = AbstractForgeRegistry.create(EntityDataSerializer.class, ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS);
+    public static final auto BLOCK_ENTITY_TYPES = AbstractForgeRegistry.create(BlockEntityType.class, ForgeRegistries.BLOCK_ENTITY_TYPES);
+    public static final auto SOUND_EVENTS = AbstractForgeRegistry.create(SoundEvent.class, ForgeRegistries.SOUND_EVENTS);
+    public static final auto COMMAND_ARGUMENT_TYPES = AbstractForgeRegistry.create(ArgumentTypeInfo.class, ForgeRegistries.COMMAND_ARGUMENT_TYPES);
+
+    public static final auto DATA_COMPONENT_TYPES = TypedRegistry.passthrough(IDataComponentType.class);
 }

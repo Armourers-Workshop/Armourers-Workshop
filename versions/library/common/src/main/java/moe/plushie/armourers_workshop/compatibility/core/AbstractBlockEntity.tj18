@@ -1,0 +1,57 @@
+package moe.plushie.armourers_workshop.compatibility.core;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
+import moe.plushie.armourers_workshop.api.data.IDataSerializer;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+
+@Available("[1.18, 1.21)")
+public abstract class AbstractBlockEntity extends BlockEntity implements IBlockEntityHandler {
+
+    public AbstractBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
+        super(blockEntityType, blockPos, blockState);
+    }
+
+    public abstract void readAdditionalData(IDataSerializer serializer);
+
+    public abstract void writeAdditionalData(IDataSerializer serializer);
+
+    public abstract void sendBlockUpdates();
+
+    @Override
+    public final void load(CompoundTag tag) {
+        super.load(tag);
+        this.readAdditionalData(AbstractDataSerializer.wrap(tag, null));
+    }
+
+    @Override
+    protected final void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        this.writeAdditionalData(AbstractDataSerializer.wrap(tag, null));
+    }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        CompoundTag tag = new CompoundTag();
+        this.writeAdditionalData(AbstractDataSerializer.wrap(tag, null));
+        return ClientboundBlockEntityDataPacket.create(this, be -> tag);
+    }
+
+    @Override
+    public void handleUpdatePacket(BlockState state, IDataSerializer serializer) {
+        this.readAdditionalData(serializer);
+        this.sendBlockUpdates();
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveFullData(null);
+    }
+}
+

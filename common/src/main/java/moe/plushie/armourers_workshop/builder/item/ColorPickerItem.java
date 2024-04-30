@@ -2,9 +2,7 @@ package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
 import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
-import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
-import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
@@ -20,6 +18,8 @@ import moe.plushie.armourers_workshop.init.ModSounds;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
+import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -73,7 +73,7 @@ public class ColorPickerItem extends AbstractPaintToolItem implements IItemTintC
                 // this is an empty color picker, we don't need to do anything.
                 return InteractionResult.CONSUME;
             }
-            if (!PaintingToolOptions.CHANGE_PAINT_TYPE.get(itemStack)) {
+            if (!itemStack.get(PaintingToolOptions.CHANGE_PAINT_TYPE)) {
                 newColor = PaintColor.of(newColor.getRGB(), provider.getColor().getPaintType());
             }
             provider.setColor(newColor);

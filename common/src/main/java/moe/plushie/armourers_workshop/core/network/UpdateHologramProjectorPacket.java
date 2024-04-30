@@ -1,12 +1,13 @@
 package moe.plushie.armourers_workshop.core.network;
 
 import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.utils.DataAccessor;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -19,7 +20,7 @@ public class UpdateHologramProjectorPacket extends CustomPacket {
     private final Field field;
     private final Object fieldValue;
 
-    public UpdateHologramProjectorPacket(FriendlyByteBuf buffer) {
+    public UpdateHologramProjectorPacket(IFriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
         this.field = buffer.readEnum(Field.class);
         this.fieldValue = field.accessor.read(buffer);
@@ -32,7 +33,7 @@ public class UpdateHologramProjectorPacket extends CustomPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeBlockPos(pos);
         buffer.writeEnum(field);
         field.accessor.write(buffer, fieldValue);

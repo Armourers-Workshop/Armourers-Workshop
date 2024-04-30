@@ -1,20 +1,19 @@
 package moe.plushie.armourers_workshop.api.common;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.syncher.EntityDataSerializer;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
-public interface IPlayerDataSerializer<T> extends EntityDataSerializer<T>, IEntitySerializer<T> {
+public interface IPlayerDataSerializer<T> extends IEntitySerializer<T> {
 
-    void write(FriendlyByteBuf buffer, Player player, T value);
+    void write(IFriendlyByteBuf buffer, Player player, T value);
 
-    T read(FriendlyByteBuf buffer, Player player);
+    T read(IFriendlyByteBuf buffer, Player player);
 
-    default void write(FriendlyByteBuf buffer, T value) {
+    default void write(IFriendlyByteBuf buffer, T value) {
         write(buffer, null, value);
     }
 
-    default T read(FriendlyByteBuf buffer) {
+    default T read(IFriendlyByteBuf buffer) {
         return read(buffer, null);
     }
 

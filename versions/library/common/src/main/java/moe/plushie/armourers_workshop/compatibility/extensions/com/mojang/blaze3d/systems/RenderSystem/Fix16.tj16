@@ -1,9 +1,6 @@
 package moe.plushie.armourers_workshop.compatibility.extensions.com.mojang.blaze3d.systems.RenderSystem;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -14,11 +11,9 @@ import java.util.function.IntSupplier;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.16, 1.18)")
 @Extension
+@Available("[1.16, 1.18)")
 public class Fix16 {
-
-    public static PoseStack modelViewStack = new Proxy();
 
     public static void assertOnRenderThread(@ThisClass Class<?> clazz) {
         RenderSystem.assertThread(RenderSystem::isOnGameThread);
@@ -36,6 +31,19 @@ public class Fix16 {
         RenderSystem.color4f(r, g, b, a);
     }
 
+    public static void setShaderFogStart(@ThisClass Class<?> clazz, float val) {
+    }
+
+    public static float getShaderFogStart(@ThisClass Class<?> clazz) {
+        return 0;
+    }
+
+    public static void setShaderFogEnd(@ThisClass Class<?> clazz, float val) {
+    }
+
+    public static float getShaderFogEnd(@ThisClass Class<?> clazz) {
+        return 0;
+    }
 
     public static void glGenVertexArrays(@ThisClass Class<?> clazz, IntConsumer consumer) {
         // ignored
@@ -65,38 +73,5 @@ public class Fix16 {
 //        GL11.glEnable(GL15.GL_RESCALE_NORMAL);
 //    }
 
-    public static void applyModelViewMatrix(@ThisClass Class<?> clazz) {
-    }
 
-    public static PoseStack getModelViewStack(@ThisClass Class<?> clazz) {
-        return modelViewStack;
-    }
-
-    public static class Proxy extends PoseStack {
-
-        @Override
-        public void pushPose() {
-            RenderSystem.pushMatrix();
-        }
-
-        @Override
-        public void popPose() {
-            RenderSystem.popMatrix();
-        }
-
-        @Override
-        public void translate(double x, double y, double z) {
-            RenderSystem.translated(x, y, z);
-        }
-
-        @Override
-        public void scale(float x, float y, float z) {
-            RenderSystem.scalef(x, y, z);
-        }
-
-        @Override
-        public void mulPose(Quaternion quaternion) {
-            RenderSystem.multMatrix(new Matrix4f(quaternion));
-        }
-    }
 }

@@ -7,14 +7,14 @@
   ],
   "key": {
     "X": {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     },
     "#": {
       "tag": "minecraft:wool"
     }
   },
   "result": {
-    "item": "armourers_workshop:skin-cube",
+    "id": "armourers_workshop:skin-cube",
     "count": 16
   }
 }

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.utils;
 
 import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
-import net.minecraft.network.FriendlyByteBuf;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -25,11 +25,11 @@ public class DataAccessor<S, T> {
     }
 
 
-    public T read(FriendlyByteBuf buf) {
+    public T read(IFriendlyByteBuf buf) {
         return serializer.read(buf);
     }
 
-    public void write(FriendlyByteBuf buf, T value) {
+    public void write(IFriendlyByteBuf buf, T value) {
         serializer.write(buf, value);
     }
 

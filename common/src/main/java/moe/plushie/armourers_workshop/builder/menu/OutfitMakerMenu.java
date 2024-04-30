@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.builder.menu;
 
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
+import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.api.math.ITexturePos;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartTypeTextured;
@@ -37,7 +37,7 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
 
     private final Container inventory;
 
-    public OutfitMakerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess access) {
+    public OutfitMakerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
         super(menuType, block, containerId, access);
         this.inventory = blockEntity.getInventory();
         this.addPlayerSlots(playerInventory, 8, 158);

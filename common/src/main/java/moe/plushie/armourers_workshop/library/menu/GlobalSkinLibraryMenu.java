@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.library.menu;
 
-import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
+import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.core.menu.AbstractBlockEntityMenu;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.library.blockentity.GlobalSkinLibraryBlockEntity;
@@ -23,7 +23,7 @@ public class GlobalSkinLibraryMenu extends AbstractBlockEntityMenu<GlobalSkinLib
 
     private boolean isVisible = false;
 
-    public GlobalSkinLibraryMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess access) {
+    public GlobalSkinLibraryMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
         super(menuType, block, containerId, access);
         this.playerInventory = playerInventory;
         this.reload(0, 0, 240, 240);

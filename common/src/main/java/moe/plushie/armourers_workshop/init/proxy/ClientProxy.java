@@ -5,9 +5,14 @@ import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.IResourceManager;
+import moe.plushie.armourers_workshop.builder.client.render.PaintingHighlightPlacementRenderer;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.bake.SkinPreloadManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinTextureManager;
+import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager2;
 import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
@@ -15,18 +20,30 @@ import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModContext;
 import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModKeyBindings;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
-import moe.plushie.armourers_workshop.init.platform.ClientNativeManager;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
 import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
-import moe.plushie.armourers_workshop.init.provider.ClientNativeProvider;
+import moe.plushie.armourers_workshop.init.platform.event.client.ClientPlayerEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.ItemTooltipEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RegisterColorHandlersEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RegisterItemPropertyEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RegisterModelEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RegisterTextureEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RenderFrameEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RenderHighlightEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RenderLivingEntityEvent;
+import moe.plushie.armourers_workshop.init.platform.event.client.RenderSpecificHandEvent;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.data.impl.MinecraftAuth;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -38,11 +55,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 
 import java.util.stream.Stream;
+
+import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class ClientProxy {
@@ -61,54 +83,61 @@ public class ClientProxy {
             ((ReloadableResourceManager) resourceManager).registerReloadListener(packLoader);
         });
 
-        register(ClientNativeManager.getProvider());
+        register();
     }
 
-    private static void register(ClientNativeProvider registries) {
-        // register custom item color.
-        registries.willRegisterItemColor(registry -> TypedRegistry.findEntries(Item.class).forEach(it -> {
-            Item item = it.get();
-            if (item instanceof IItemTintColorProvider) {
-                registry.register(((IItemTintColorProvider) item), item);
-            }
-        }));
+    private static void register() {
         // register custom item property.
-        registries.willRegisterItemProperty(registry -> TypedRegistry.findEntries(Item.class).forEach(it -> {
+        EventManager.listen(RegisterItemPropertyEvent.class, event -> TypedRegistry.findEntries(Item.class).forEach(it -> {
             Item item = it.get();
             IItemPropertiesProvider provider = ObjectUtils.safeCast(item, IItemPropertiesProvider.class);
             if (provider != null) {
-                provider.createModelProperties((key, property) -> registry.register(key, item, property));
+                provider.createModelProperties((key, property) -> event.register(key, item, property));
             }
-            registry.register(ModConstants.key("type"), Items.CROSSBOW, ((itemStack, level, entity, id) -> 1));
+            event.register(ModConstants.key("type"), Items.CROSSBOW, ((itemStack, level, entity, id) -> 1));
         }));
 
-        // register custom block color.
-        registries.willRegisterBlockColor(registry -> TypedRegistry.findEntries(Block.class).forEach(it -> {
+        // register item/block color handler.
+        EventManager.listen(RegisterColorHandlersEvent.Item.class, event -> TypedRegistry.findEntries(Item.class).forEach(it -> {
+            Item item = it.get();
+            if (item instanceof IItemTintColorProvider) {
+                event.register(((IItemTintColorProvider) item), item);
+            }
+        }));
+        EventManager.listen(RegisterColorHandlersEvent.Block.class, event -> TypedRegistry.findEntries(Block.class).forEach(it -> {
             Block block = it.get();
             if (block instanceof IBlockTintColorProvider) {
-                registry.register(((IBlockTintColorProvider) block), block);
+                event.register(((IBlockTintColorProvider) block), block);
             }
         }));
 
         // register custom model.
-        registries.willRegisterModel(registry -> SkinPartTypes.registeredTypes().forEach(partType -> {
+        EventManager.listen(RegisterModelEvent.class, event -> SkinPartTypes.registeredTypes().forEach(partType -> {
             ResourceLocation rl = ArmourersWorkshop.getCustomModel(partType.getRegistryName());
-            IResourceManager resourceManager = ClientNativeManager.getResourceManager();
+            IResourceManager resourceManager = Minecraft.getInstance().getResourceManager().asResourceManager();
             if (resourceManager.hasResource(new ResourceLocation(rl.getNamespace(), "models/item/" + rl.getPath() + ".json"))) {
-                registry.register(rl);
+                event.register(rl);
             }
         }));
         // register custom sprite
-        registries.willRegisterTexture(registry -> Stream.of(SkinSlotType.values()).forEach(slotType -> {
-            registry.register(slotType.getIconSprite());
+        EventManager.listen(RegisterTextureEvent.class, event -> Stream.of(SkinSlotType.values()).forEach(slotType -> {
+            event.register(slotType.getIconSprite());
         }));
 
-        registries.willPlayerLogin(player -> {
+        EventManager.listen(ClientPlayerEvent.LoggingIn.class, event -> {
+            Player player = event.getPlayer();
+            if (player == null || !player.equals(EnvironmentManager.getPlayer())) {
+                return; // other players join
+            }
             SkinBakery.start();
             SkinPreloadManager.start();
             SkinTextureManager.getInstance().start();
         });
-        registries.willPlayerLogout(player -> {
+        EventManager.listen(ClientPlayerEvent.LoggingOut.class, event -> {
+            Player player = event.getPlayer();
+            if (player != null && player.equals(EnvironmentManager.getPlayer())) {
+                return; // other players leave
+            }
             SkinPreloadManager.stop();
             SkinBakery.stop();
             Tickets.invalidateAll();
@@ -120,12 +149,65 @@ public class ClientProxy {
             ModConfigSpec.COMMON.apply(null);
         });
 
-        registries.willTick(isPaused -> {
+        EventManager.listen(RenderFrameEvent.Pre.class, event -> {
+            boolean isPaused = Minecraft.getInstance().isPaused();
             TickUtils.tick(isPaused);
             SkinPreloadManager.tick(isPaused);
         });
 
-        registries.willGatherTooltip(ItemTooltipManager::gatherSkinTooltip);
-        registries.willRenderTooltip(ItemTooltipManager::renderSkinTooltip);
+
+        // listen the block highlight events.
+        EventManager.listen(RenderHighlightEvent.Block.class, event -> {
+            auto player = EnvironmentManager.getPlayer();
+            if (player == null) {
+                return;
+            }
+            // hidden hit box at inside
+            // if (event.getTarget().isInside()) {
+            //     BlockState state = player.level.getBlockState(event.getTarget().getBlockPos());
+            //     if (state.is(ModBlocks.BOUNDING_BOX)) {
+            //         event.setCanceled(true);
+            //         return;
+            //     }
+            // }
+            auto poseStack = AbstractPoseStack.wrap(event.getPoseStack());
+            auto buffers = AbstractBufferSource.wrap(event.getMultiBufferSource());
+            ItemStack itemStack = player.getMainHandItem();
+            if (ModConfig.Client.enableEntityPlacementHighlight && itemStack.is(ModItems.MANNEQUIN.get())) {
+                HighlightPlacementRenderer.renderEntity(player, event.getTarget(), event.getCamera(), poseStack, buffers);
+            }
+            if (ModConfig.Client.enableBlockPlacementHighlight && itemStack.is(ModItems.SKIN.get())) {
+                HighlightPlacementRenderer.renderBlock(itemStack, player, event.getTarget(), event.getCamera(), poseStack, buffers);
+            }
+            if (ModConfig.Client.enablePaintToolPlacementHighlight && itemStack.is(ModItems.BLENDING_TOOL.get())) {
+                PaintingHighlightPlacementRenderer.renderPaintTool(itemStack, player, event.getTarget(), event.getCamera(), poseStack, buffers);
+            }
+        });
+
+        EventManager.listen(RenderLivingEntityEvent.Pre.class, event -> {
+            ClientWardrobeHandler.onRenderLivingEntityPre(event.getEntity(), event.getPartialTicks(), event.getPackedLight(), event.getPoseStack(), event.getMultiBufferSource(), event.getRenderer());
+        });
+        EventManager.listen(RenderLivingEntityEvent.Setup.class, event -> {
+            ClientWardrobeHandler.onRenderLivingEntity(event.getEntity(), event.getPartialTicks(), event.getPackedLight(), event.getPoseStack(), event.getMultiBufferSource(), event.getRenderer());
+        });
+        EventManager.listen(RenderLivingEntityEvent.Post.class, event -> {
+            ClientWardrobeHandler.onRenderLivingEntityPost(event.getEntity(), event.getPartialTicks(), event.getPackedLight(), event.getPoseStack(), event.getMultiBufferSource(), event.getRenderer());
+        });
+
+        EventManager.listen(RenderSpecificHandEvent.class, event -> {
+            if (!ModConfig.enableFirstPersonSkinRenderer()) {
+                return;
+            }
+            auto transformType = AbstractItemTransformType.FIRST_PERSON_LEFT_HAND;
+            if (event.getHand() == InteractionHand.MAIN_HAND) {
+                transformType = AbstractItemTransformType.FIRST_PERSON_RIGHT_HAND;
+            }
+            ClientWardrobeHandler.onRenderSpecificHand(event.getPlayer(), 0, event.getPackedLight(), transformType, event.getPoseStack(), event.getMultiBufferSource(), () -> {
+                event.setCancelled(true);
+            });
+        });
+
+        EventManager.listen(ItemTooltipEvent.Gather.class, ItemTooltipManager::gatherSkinTooltip);
+        EventManager.listen(ItemTooltipEvent.Render.class, ItemTooltipManager::renderSkinTooltip);
     }
 }

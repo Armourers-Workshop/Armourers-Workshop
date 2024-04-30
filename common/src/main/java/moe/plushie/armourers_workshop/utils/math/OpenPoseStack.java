@@ -103,6 +103,11 @@ public class OpenPoseStack implements IPoseStack {
             this.normal = OpenMatrix3f.createScaleMatrix(1, 1, 1);
         }
 
+        public Pose(OpenMatrix4f pose, OpenMatrix3f normal) {
+            this.pose = pose;
+            this.normal = normal;
+        }
+
         public Pose(IPoseStack.Pose entry) {
             this.pose = new OpenMatrix4f(entry.pose());
             this.normal = new OpenMatrix3f(entry.normal());

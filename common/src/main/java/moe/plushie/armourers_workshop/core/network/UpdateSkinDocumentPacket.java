@@ -1,18 +1,17 @@
 package moe.plushie.armourers_workshop.core.network;
 
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentProvider;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentType;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentTypes;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -29,7 +28,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
     private final BlockPos pos;
     private final Action action;
 
-    public UpdateSkinDocumentPacket(FriendlyByteBuf buffer) {
+    public UpdateSkinDocumentPacket(IFriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
         this.operator = buffer.readUtf();
         Mode mode = buffer.readEnum(Mode.class);
@@ -43,7 +42,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeBlockPos(pos);
         buffer.writeUtf(operator);
         buffer.writeEnum(ALL_ACTIONS.getOrDefault(action.getClass(), Mode.CHANGE_TYPE));
@@ -95,21 +94,21 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
         REMOVE_NODE(RemoveNodeAction.class, RemoveNodeAction::new),
         MOVE_NODE(MoveNodeAction.class, MoveNodeAction::new);
 
-        final Function<FriendlyByteBuf, ? extends Action> actionFactory;
+        final Function<IFriendlyByteBuf, ? extends Action> actionFactory;
 
-        Mode(Class<? extends Action> actionClass, Function<FriendlyByteBuf, Action> actionFactory) {
+        Mode(Class<? extends Action> actionClass, Function<IFriendlyByteBuf, Action> actionFactory) {
             this.actionFactory = actionFactory;
             ALL_ACTIONS.put(actionClass, this);
         }
 
-        public Action read(FriendlyByteBuf buf) {
+        public Action read(IFriendlyByteBuf buf) {
             return actionFactory.apply(buf);
         }
     }
 
     public static abstract class Action {
 
-        public abstract void encode(final FriendlyByteBuf buffer);
+        public abstract void encode(final IFriendlyByteBuf buffer);
 
         public abstract void execute(final SkinDocument document, final Player player);
 
@@ -138,12 +137,12 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
             this.type = type;
         }
 
-        public ChangeTypeAction(FriendlyByteBuf buf) {
+        public ChangeTypeAction(IFriendlyByteBuf buf) {
             this.type = SkinDocumentTypes.byName(buf.readUtf());
         }
 
         @Override
-        public void encode(FriendlyByteBuf buffer) {
+        public void encode(IFriendlyByteBuf buffer) {
             buffer.writeUtf(type.getRegistryName().toString());
         }
 
@@ -166,12 +165,12 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
             this.tag = tag;
         }
 
-        public UpdateSettingsAction(FriendlyByteBuf buf) {
+        public UpdateSettingsAction(IFriendlyByteBuf buf) {
             this.tag = buf.readNbt();
         }
 
         @Override
-        public void encode(FriendlyByteBuf buf) {
+        public void encode(IFriendlyByteBuf buf) {
             buf.writeNbt(tag);
         }
 
@@ -194,12 +193,12 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
             this.tag = tag;
         }
 
-        public UpdatePropertiesAction(FriendlyByteBuf buf) {
+        public UpdatePropertiesAction(IFriendlyByteBuf buf) {
             this.tag = buf.readNbt();
         }
 
         @Override
-        public void encode(FriendlyByteBuf buf) {
+        public void encode(IFriendlyByteBuf buf) {
             buf.writeNbt(tag);
         }
 
@@ -226,14 +225,14 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
             this.tag = tag;
         }
 
-        public InsertNodeAction(FriendlyByteBuf buf) {
+        public InsertNodeAction(IFriendlyByteBuf buf) {
             this.id = buf.readUtf();
             this.targetIndex = buf.readInt();
             this.tag = buf.readNbt();
         }
 
         @Override
-        public void encode(FriendlyByteBuf buf) {
+        public void encode(IFriendlyByteBuf buf) {
             buf.writeUtf(id);
             buf.writeInt(targetIndex);
             buf.writeNbt(tag);
@@ -264,13 +263,13 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
             this.tag = tag;
         }
 
-        public UpdateNodeAction(FriendlyByteBuf buf) {
+        public UpdateNodeAction(IFriendlyByteBuf buf) {
             this.id = buf.readUtf();
             this.tag = buf.readNbt();
         }
 
         @Override
-        public void encode(FriendlyByteBuf buf) {
+        public void encode(IFriendlyByteBuf buf) {
             buf.writeUtf(id);
             buf.writeNbt(tag);
         }
@@ -297,12 +296,12 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
             this.id = id;
         }
 
-        public RemoveNodeAction(FriendlyByteBuf buf) {
+        public RemoveNodeAction(IFriendlyByteBuf buf) {
             this.id = buf.readUtf();
         }
 
         @Override
-        public void encode(FriendlyByteBuf buf) {
+        public void encode(IFriendlyByteBuf buf) {
             buf.writeUtf(id);
         }
 
@@ -332,14 +331,14 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
             this.targetIndex = targetIndex;
         }
 
-        public MoveNodeAction(FriendlyByteBuf buf) {
+        public MoveNodeAction(IFriendlyByteBuf buf) {
             this.id = buf.readUtf();
             this.targetId = buf.readUtf();
             this.targetIndex = buf.readInt();
         }
 
         @Override
-        public void encode(FriendlyByteBuf buf) {
+        public void encode(IFriendlyByteBuf buf) {
             buf.writeUtf(id);
             buf.writeUtf(targetId);
             buf.writeInt(targetIndex);

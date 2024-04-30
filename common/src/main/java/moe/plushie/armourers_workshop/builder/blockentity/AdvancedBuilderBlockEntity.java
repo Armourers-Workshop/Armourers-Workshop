@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.blockentity;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
+import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.UserNotifications;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
@@ -33,7 +34,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements IBlockEntityHandler, SkinDocumentProvider {
 
@@ -62,13 +62,13 @@ public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements 
     }
 
     @Override
-    public void readFromNBT(CompoundTag tag) {
-        document.deserializeNBT(tag);
+    public void readAdditionalData(IDataSerializer serializer) {
+        document.deserialize(serializer);
     }
 
     @Override
-    public void writeToNBT(CompoundTag tag) {
-        document.serializeNBT(tag);
+    public void writeAdditionalData(IDataSerializer serializer) {
+        document.serialize(serializer);
     }
 
     public void importToNode(String identifier, Skin skin, SkinDocumentNode node) {

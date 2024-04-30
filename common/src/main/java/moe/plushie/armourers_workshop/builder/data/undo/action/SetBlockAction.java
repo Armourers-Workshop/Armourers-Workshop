@@ -30,14 +30,14 @@ public class SetBlockAction extends BlockUserAction {
         CompoundTag oldNBT = null;
         BlockEntity oldBlockEntity = level.getBlockEntity(blockPos);
         if (oldBlockEntity != null) {
-            oldNBT = oldBlockEntity.saveWithFullMetadata();
+            oldNBT = oldBlockEntity.saveFullData(level.registryAccess());
         }
         SetBlockAction oldChanges = new SetBlockAction(level, blockPos, oldState, oldNBT);
         level.setBlock(blockPos, newValue, Constants.BlockFlags.DEFAULT_AND_RERENDER);
         if (newValueNBT != null) {
             BlockEntity blockEntity = level.getBlockEntity(blockPos);
             if (blockEntity != null) {
-                blockEntity.load(newValueNBT);
+                blockEntity.loadFullData(newValueNBT, level.registryAccess());
             }
         }
         return oldChanges;

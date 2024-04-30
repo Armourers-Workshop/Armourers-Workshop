@@ -25,6 +25,10 @@ public abstract class AbstractPoseStackImpl {
     private static final FloatBuffer BUFFER3x3 = ObjectUtils.createFloatBuffer(9);
     private static final FloatBuffer BUFFER4x4 = ObjectUtils.createFloatBuffer(16);
 
+    public static AbstractMatrix3f convertMatrix(Matrix3f mat) {
+        return new AbstractMatrix3f(mat);
+    }
+
     public static Matrix3f convertMatrix(IMatrix3f mat) {
         AbstractMatrix3f newValue = ObjectUtils.safeCast(mat, AbstractMatrix3f.class);
         if (newValue != null) {
@@ -33,6 +37,10 @@ public abstract class AbstractPoseStackImpl {
         mat.store(BUFFER3x3);
         CONVERTER_MAT3.set(BUFFER3x3);
         return CONVERTER_MAT3;
+    }
+
+    public static AbstractMatrix4f convertMatrix(Matrix4f mat) {
+        return new AbstractMatrix4f(mat);
     }
 
     public static Matrix4f convertMatrix(IMatrix4f mat) {
@@ -85,7 +93,6 @@ public abstract class AbstractPoseStackImpl {
         public void set(IMatrix4f matrix) {
             mat.set(convertMatrix(matrix));
         }
-
 
         @Override
         public void multiply(IMatrix3f matrix) {

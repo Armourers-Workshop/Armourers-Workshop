@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.builder.other;
 
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
@@ -12,7 +13,7 @@ import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.FriendlyByteBuf;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -40,7 +41,7 @@ public class CubePaintingEvent {
         this.action = action;
     }
 
-    public CubePaintingEvent(FriendlyByteBuf buffer) {
+    public CubePaintingEvent(IFriendlyByteBuf buffer) {
         this.selector = CubeSelector.from(buffer);
         this.action = Action.fromBuffer(buffer);
         // read and remapping actions.
@@ -58,7 +59,7 @@ public class CubePaintingEvent {
         }
     }
 
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         this.selector.encode(buffer);
         Action.writeBuffer(action, buffer);
         // sort and write actions.
@@ -102,12 +103,12 @@ public class CubePaintingEvent {
 
     public static abstract class Action implements IPaintToolAction {
 
-        public static Action fromBuffer(FriendlyByteBuf buffer) {
+        public static Action fromBuffer(IFriendlyByteBuf buffer) {
             auto type = buffer.readEnum(ActionTypes.class);
             return type.factory.apply(buffer);
         }
 
-        public static void writeBuffer(IPaintToolAction action, FriendlyByteBuf buffer) {
+        public static void writeBuffer(IPaintToolAction action, IFriendlyByteBuf buffer) {
             buffer.writeEnum(ActionTypes.getType(action.getClass()));
             action.encode(buffer);
         }
@@ -118,7 +119,7 @@ public class CubePaintingEvent {
             return this;
         }
 
-        public abstract void encode(final FriendlyByteBuf buffer);
+        public abstract void encode(final IFriendlyByteBuf buffer);
     }
 
     public static abstract class MixedAction extends Action {
@@ -165,14 +166,14 @@ public class CubePaintingEvent {
             this.usePaintType = usePaintType;
         }
 
-        public SetAction(FriendlyByteBuf buffer) {
+        public SetAction(IFriendlyByteBuf buffer) {
             this.destinationColor = PaintColor.of(buffer.readInt());
             this.usePaintColor = buffer.readBoolean();
             this.usePaintType = buffer.readBoolean();
         }
 
         @Override
-        public void encode(FriendlyByteBuf buffer) {
+        public void encode(IFriendlyByteBuf buffer) {
             buffer.writeInt(destinationColor.getRawValue());
             buffer.writeBoolean(usePaintColor);
             buffer.writeBoolean(usePaintType);
@@ -208,11 +209,11 @@ public class CubePaintingEvent {
         public ClearAction() {
         }
 
-        public ClearAction(FriendlyByteBuf buffer) {
+        public ClearAction(IFriendlyByteBuf buffer) {
         }
 
         @Override
-        public void encode(FriendlyByteBuf buffer) {
+        public void encode(IFriendlyByteBuf buffer) {
         }
 
         @Override
@@ -235,12 +236,12 @@ public class CubePaintingEvent {
             this.intensity = intensity;
         }
 
-        public BrightnessAction(FriendlyByteBuf buffer) {
+        public BrightnessAction(IFriendlyByteBuf buffer) {
             this.intensity = buffer.readInt();
         }
 
         @Override
-        public void encode(FriendlyByteBuf buffer) {
+        public void encode(IFriendlyByteBuf buffer) {
             buffer.writeInt(intensity);
         }
 
@@ -265,14 +266,14 @@ public class CubePaintingEvent {
             this.seed = random.nextInt();
         }
 
-        public NoiseAction(FriendlyByteBuf buffer) {
+        public NoiseAction(IFriendlyByteBuf buffer) {
             this.intensity = buffer.readInt();
             this.isShadeOnly = buffer.readBoolean();
             this.seed = buffer.readInt();
         }
 
         @Override
-        public void encode(FriendlyByteBuf buffer) {
+        public void encode(IFriendlyByteBuf buffer) {
             buffer.writeInt(intensity);
             buffer.writeBoolean(isShadeOnly);
             buffer.writeInt(seed);
@@ -314,7 +315,7 @@ public class CubePaintingEvent {
             this.changePaintType = paintType;
         }
 
-        public HueAction(FriendlyByteBuf buffer) {
+        public HueAction(IFriendlyByteBuf buffer) {
             this.destinationColor = PaintColor.of(buffer.readInt());
             this.changeHue = buffer.readBoolean();
             this.changeSaturation = buffer.readBoolean();
@@ -323,7 +324,7 @@ public class CubePaintingEvent {
         }
 
         @Override
-        public void encode(FriendlyByteBuf buffer) {
+        public void encode(IFriendlyByteBuf buffer) {
             buffer.writeInt(destinationColor.getRawValue());
             buffer.writeBoolean(changeHue);
             buffer.writeBoolean(changeSaturation);
@@ -362,13 +363,13 @@ public class CubePaintingEvent {
             this.intensity = intensity;
         }
 
-        public BlendingAction(FriendlyByteBuf buffer) {
+        public BlendingAction(IFriendlyByteBuf buffer) {
             this.destinationColor = PaintColor.of(buffer.readInt());
             this.intensity = buffer.readInt();
         }
 
         @Override
-        public void encode(FriendlyByteBuf buffer) {
+        public void encode(IFriendlyByteBuf buffer) {
             buffer.writeInt(destinationColor.getRawValue());
             buffer.writeInt(intensity);
         }
@@ -410,9 +411,9 @@ public class CubePaintingEvent {
         SET_BLENDING(BlendingAction.class, BlendingAction::new),
         CLEAR_COLOR(ClearAction.class, ClearAction::new);
 
-        private final Function<FriendlyByteBuf, Action> factory;
+        private final Function<IFriendlyByteBuf, Action> factory;
 
-        ActionTypes(Class<? extends Action> packetClass, Function<FriendlyByteBuf, Action> factory) {
+        ActionTypes(Class<? extends Action> packetClass, Function<IFriendlyByteBuf, Action> factory) {
             this.factory = factory;
             REVERSE_LOOKUP.put(packetClass, this);
         }

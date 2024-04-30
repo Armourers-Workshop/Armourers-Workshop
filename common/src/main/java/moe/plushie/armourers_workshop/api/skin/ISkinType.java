@@ -8,5 +8,7 @@ public interface ISkinType extends IRegistryEntry {
 
     int getId();
 
+    String getName();
+
     List<? extends ISkinPartType> getParts();
 }

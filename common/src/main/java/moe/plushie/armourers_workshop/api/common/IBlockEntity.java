@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.api.common;
 
+import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -11,9 +11,9 @@ public interface IBlockEntity {
 
     void sendBlockUpdates();
 
-    void readFromNBT(CompoundTag tag);
+    void readAdditionalData(IDataSerializer serializer);
 
-    void writeToNBT(CompoundTag tag);
+    void writeAdditionalData(IDataSerializer serializer);
 
     boolean isRemoved();
 

@@ -1,0 +1,102 @@
+package moe.plushie.armourers_workshop.compatibility.core;
+
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.MapCodec;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.ILootFunction;
+import moe.plushie.armourers_workshop.api.common.ILootFunctionType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.ValidationContext;
+import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+
+import java.util.Set;
+import java.util.function.Supplier;
+
+@Available("[1.16, 1.21)")
+public class AbstractLootItemFunctionType<T extends ILootFunction> implements ILootFunctionType<T> {
+
+    private final LootItemFunctionType type;
+
+    public AbstractLootItemFunctionType(LootItemFunctionType type) {
+        this.type = type;
+    }
+
+    public LootItemFunctionType getType() {
+        return type;
+    }
+
+    public static <T extends ILootFunction> AbstractLootItemFunctionType<T> conditional(MapCodec<T> codec) {
+        LootItemFunctionType[] type = {null};
+        Supplier<LootItemFunctionType> getter = () -> type[0];
+        type[0] = new LootItemFunctionType(new ConditionalFunction.Factory<>(getter, codec.codec()));
+        return new AbstractLootItemFunctionType<>(type[0]);
+    }
+
+    public static class ConditionalFunction<T extends ILootFunction> extends LootItemConditionalFunction {
+
+        private final T value;
+        private final Supplier<LootItemFunctionType> type;
+
+        protected ConditionalFunction(T value, LootItemCondition[] args, Supplier<LootItemFunctionType> type) {
+            super(args);
+            this.type = type;
+            this.value = value;
+        }
+
+        @Override
+        protected ItemStack run(ItemStack arg, LootContext arg2) {
+            return value.apply(arg, arg2);
+        }
+
+        @Override
+        public void validate(ValidationContext arg) {
+            value.validate(arg);
+        }
+
+        @Override
+        public Set<LootContextParam<?>> getReferencedContextParams() {
+            return value.getReferencedContextParams();
+        }
+
+        @Override
+        public LootItemFunctionType getType() {
+            return type.get();
+        }
+
+        public static class Factory<T extends ILootFunction> extends LootItemConditionalFunction.Serializer<ConditionalFunction<T>> {
+
+            private final Supplier<LootItemFunctionType> type;
+            private final Codec<T> codec;
+
+            public Factory(Supplier<LootItemFunctionType> type, Codec<T> codec) {
+                this.type = type;
+                this.codec = codec;
+            }
+
+            @Override
+            public void serialize(JsonObject object, ConditionalFunction<T> arg, JsonSerializationContext context) {
+                super.serialize(object, arg, context);
+                codec.encodeStart(JsonOps.INSTANCE, arg.value)
+                        .get()
+                        .ifLeft(it -> ((JsonObject) it).entrySet().forEach(entry -> {
+                            // override all key/value
+                            object.add(entry.getKey(), entry.getValue());
+                        }));
+            }
+
+            @Override
+            public ConditionalFunction<T> deserialize(JsonObject object, JsonDeserializationContext context, LootItemCondition[] args) {
+                T value = codec.parse(JsonOps.INSTANCE, object).result().orElse(null);
+                return new ConditionalFunction<>(value, args, type);
+            }
+        }
+    }
+}

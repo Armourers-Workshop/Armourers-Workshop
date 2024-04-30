@@ -201,25 +201,25 @@ public class SkinFileUtils {
     }
 
     public static void writeNBT(CompoundTag compoundTag, File file) throws IOException {
-        try (FileOutputStream fileOutputStream = new FileOutputStream(file);
-             DataOutputStream dataOutputStream = new DataOutputStream(fileOutputStream)) {
+        writeNBT(compoundTag, new FileOutputStream(file));
+    }
+
+    public static void writeNBT(CompoundTag compoundTag, OutputStream outputStream) throws IOException {
+        try (DataOutputStream dataOutputStream = new DataOutputStream(outputStream)) {
             NbtIo.write(compoundTag, dataOutputStream);
         }
     }
 
     public static CompoundTag readNBT(File file) throws IOException {
-        if (!file.exists()) {
-            return null;
-        } else {
-            CompoundTag tag;
-            try (
-                    FileInputStream fileinputstream = new FileInputStream(file);
-                    DataInputStream datainputstream = new DataInputStream(fileinputstream)
-            ) {
-                tag = NbtIo.read(datainputstream);
-            }
+        if (file.exists()) {
+            return readNBT(new FileInputStream(file));
+        }
+        return null;
+    }
 
-            return tag;
+    public static CompoundTag readNBT(InputStream inputStream) throws IOException {
+        try (DataInputStream datainputstream = new DataInputStream(inputStream)) {
+            return NbtIo.read(datainputstream);
         }
     }
 

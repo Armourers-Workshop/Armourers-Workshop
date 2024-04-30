@@ -30,13 +30,14 @@ public class ShadeNoiseToolItem extends AbstractColoredToolItem implements IBloc
 
     @Override
     public IPaintToolAction createPaintToolAction(UseOnContext context) {
-        int intensity = PaintingToolOptions.INTENSITY.get(context.getItemInHand());
+        ItemStack itemStack = context.getItemInHand();
+        int intensity = itemStack.get(PaintingToolOptions.INTENSITY);
         return new CubePaintingEvent.NoiseAction(intensity, true);
     }
 
     @Override
     public void appendSettingHoverText(ItemStack itemStack, List<Component> tooltips) {
-        int intensity = PaintingToolOptions.INTENSITY.get(itemStack);
+        int intensity = itemStack.get(PaintingToolOptions.INTENSITY);
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.intensity", intensity));
         super.appendSettingHoverText(itemStack, tooltips);
     }

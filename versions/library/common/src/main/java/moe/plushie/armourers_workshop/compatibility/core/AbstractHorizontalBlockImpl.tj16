@@ -4,11 +4,17 @@ import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.ILootContext;
 import moe.plushie.armourers_workshop.api.common.ILootContextParam;
+import moe.plushie.armourers_workshop.api.common.ITooltipContext;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractTooltipContext;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -17,6 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,13 +55,37 @@ public abstract class AbstractHorizontalBlockImpl extends HorizontalDirectionalB
         return blockState;
     }
 
+    public ItemStack getCloneItemStack(LevelReader blockGetter, BlockPos blockPos, BlockState blockState) {
+        return super.getCloneItemStack(blockGetter, blockPos, blockState);
+    }
+
     @Override
-    public ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState) {
+    public final ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState) {
         return getCloneItemStack((LevelReader) blockGetter, blockPos, blockState);
     }
 
-    public ItemStack getCloneItemStack(LevelReader blockGetter, BlockPos blockPos, BlockState blockState) {
-        return super.getCloneItemStack(blockGetter, blockPos, blockState);
+    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
+        // If user is rewritten, forward it.
+        InteractionHand interactionHand = InteractionHand.MAIN_HAND;
+        if (blockState.getBlock() != this) {
+            return blockState.getBlock().use(blockState, level, blockPos, player, interactionHand, blockHitResult.withPosition(blockPos));
+        }
+        return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
+    }
+
+    @Override
+    public final InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        return this.useWithoutItem(blockState, level, blockPos, player, blockHitResult);
+    }
+
+    public void appendHoverText(ItemStack itemStack, List<Component> tooltips, ITooltipContext context) {
+        AbstractTooltipContext<BlockGetter> context1 = ObjectUtils.unsafeCast(context);
+        super.appendHoverText(itemStack, context1.context, tooltips, context1.flag);
+    }
+
+    @Override
+    public final void appendHoverText(ItemStack itemStack, @Nullable BlockGetter blockGetter, List<Component> tooltips, TooltipFlag tooltipFlag) {
+        this.appendHoverText(itemStack, tooltips, new AbstractTooltipContext<>(blockGetter, tooltipFlag));
     }
 
     public static class LootContextBuilder implements ILootContext {

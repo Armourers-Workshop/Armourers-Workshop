@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.wo
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractSavedData;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 
 import java.util.function.Supplier;
@@ -15,9 +16,9 @@ public class DataProvider {
 
     public static <T extends AbstractSavedData> T computeIfAbsent(@This DimensionDataStorage storage, Supplier<T> provider, int flags, String name) {
         return storage.computeIfAbsent(tag -> {
-           T value = provider.get();
-           value.load(tag);
-           return value;
+            T value = provider.get();
+            value.readAdditionalData(AbstractDataSerializer.wrap(tag, null));
+            return value;
         }, provider, name);
     }
 }

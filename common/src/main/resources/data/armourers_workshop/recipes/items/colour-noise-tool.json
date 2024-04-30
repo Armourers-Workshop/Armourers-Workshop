@@ -7,10 +7,10 @@
   ],
   "key": {
     "T": {
-      "tag": "c:sandstone"
+      "tag": "c:sandstone/blocks"
     },
     "X": {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     },
     "C": {
       "tag": "armourers_workshop:skin_cubes"
@@ -20,6 +20,6 @@
     }
   },
   "result": {
-    "item": "armourers_workshop:colour-noise-tool"
+    "id": "armourers_workshop:colour-noise-tool"
   }
 }

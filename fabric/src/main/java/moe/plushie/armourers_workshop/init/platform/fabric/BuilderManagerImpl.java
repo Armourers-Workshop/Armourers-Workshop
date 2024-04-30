@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.fabric;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityType;
@@ -10,19 +11,20 @@ import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.common.IItemTag;
 import moe.plushie.armourers_workshop.api.common.ILootFunction;
 import moe.plushie.armourers_workshop.api.common.IMenuProvider;
-import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
+import moe.plushie.armourers_workshop.api.common.IMenuSerializer;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.api.registry.IArgumentTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IBlockBuilder;
 import moe.plushie.armourers_workshop.api.registry.IBlockEntityTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.ICapabilityTypeBuilder;
+import moe.plushie.armourers_workshop.api.registry.IDataComponentTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IEntitySerializerBuilder;
 import moe.plushie.armourers_workshop.api.registry.IEntityTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IItemBuilder;
 import moe.plushie.armourers_workshop.api.registry.IItemGroupBuilder;
 import moe.plushie.armourers_workshop.api.registry.IItemTagBuilder;
 import moe.plushie.armourers_workshop.api.registry.IKeyBindingBuilder;
-import moe.plushie.armourers_workshop.api.registry.ILootFunctionBuilder;
+import moe.plushie.armourers_workshop.api.registry.ILootFunctionTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IPermissionNodeBuilder;
 import moe.plushie.armourers_workshop.api.registry.ISoundEventBuilder;
@@ -33,13 +35,14 @@ import moe.plushie.armourers_workshop.init.platform.fabric.builder.ArgumentTypeB
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.BlockBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.BlockEntityTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.CapabilityTypeBuilderImpl;
+import moe.plushie.armourers_workshop.init.platform.fabric.builder.DataComponentTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.EntitySerializerBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.EntityTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.ItemBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.ItemGroupBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.ItemTagBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.KeyBindingBuilderImpl;
-import moe.plushie.armourers_workshop.init.platform.fabric.builder.LootFunctionBuilderImpl;
+import moe.plushie.armourers_workshop.init.platform.fabric.builder.LootFunctionTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.MenuTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.PermissionNodeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.SoundEventBuilderImpl;
@@ -100,7 +103,7 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     }
 
     @Override
-    public <T extends AbstractContainerMenu, D> IMenuTypeBuilder<T> createMenuTypeBuilder(IMenuProvider<T, D> factory, IPlayerDataSerializer<D> serializer) {
+    public <T extends AbstractContainerMenu, D> IMenuTypeBuilder<T> createMenuTypeBuilder(IMenuProvider<T, D> factory, IMenuSerializer<D> serializer) {
         return new MenuTypeBuilderImpl<>(factory, serializer);
     }
 
@@ -120,13 +123,18 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     }
 
     @Override
-    public <T extends ILootFunction> ILootFunctionBuilder<T> createLootFunctionBuilder(Codec<? extends T> codec) {
-        return new LootFunctionBuilderImpl<>(codec);
+    public <T extends ILootFunction> ILootFunctionTypeBuilder<T> createLootFunctionTypeBuilder(MapCodec<T> codec) {
+        return new LootFunctionTypeBuilderImpl<>(codec);
     }
 
     @Override
     public <T extends IPermissionNode> IPermissionNodeBuilder<T> createPermissionBuilder() {
         return new PermissionNodeBuilderImpl<>();
+    }
+
+    @Override
+    public <T> IDataComponentTypeBuilder<T> createDataComponentTypeBuilder(Codec<T> codec) {
+        return new DataComponentTypeBuilderImpl<>(codec);
     }
 
     @Override

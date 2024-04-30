@@ -48,7 +48,7 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
 
     protected CubeSelector createColorApplierSelector(int radius, UseOnContext context) {
         ItemStack itemStack = context.getItemInHand();
-        boolean restrictPlane = PaintingToolOptions.PLANE_RESTRICT.get(itemStack);
+        boolean restrictPlane = itemStack.get(PaintingToolOptions.PLANE_RESTRICT);
         boolean isFullMode = shouldUseFullMode(context);
         return CubeSelector.touching(context.getClickedPos(), radius, isFullMode, restrictPlane);
     }
@@ -64,15 +64,15 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
     @Override
     public IPaintToolSelector createPaintToolSelector(UseOnContext context) {
         ItemStack itemStack = context.getItemInHand();
-        int radiusEffect = PaintingToolOptions.RADIUS_EFFECT.get(itemStack);
+        int radiusEffect = itemStack.get(PaintingToolOptions.RADIUS_EFFECT);
         return createColorApplierSelector(radiusEffect, context);
     }
 
     @Override
     public IPaintToolAction createPaintToolAction(UseOnContext context) {
         ItemStack itemStack = context.getItemInHand();
-        int intensity = PaintingToolOptions.INTENSITY.get(itemStack);
-        int radiusSample = PaintingToolOptions.RADIUS_SAMPLE.get(itemStack);
+        int intensity = itemStack.get(PaintingToolOptions.INTENSITY);
+        int radiusSample = itemStack.get(PaintingToolOptions.RADIUS_SAMPLE);
         // we need to complete sampling before we can use blending tool.
         ArrayList<Integer> colors = new ArrayList<>();
         CubeChangesCollector collector = new CubeChangesCollector(context.getLevel());
@@ -91,9 +91,9 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
 
     @Override
     public void appendSettingHoverText(ItemStack itemStack, List<Component> tooltips) {
-        int intensity = PaintingToolOptions.INTENSITY.get(itemStack);
-        int radiusSample = PaintingToolOptions.RADIUS_SAMPLE.get(itemStack);
-        int radiusEffect = PaintingToolOptions.RADIUS_EFFECT.get(itemStack);
+        int intensity = itemStack.get(PaintingToolOptions.INTENSITY);
+        int radiusSample = itemStack.get(PaintingToolOptions.RADIUS_SAMPLE);
+        int radiusEffect = itemStack.get(PaintingToolOptions.RADIUS_EFFECT);
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.intensity", intensity));
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.sampleRadius", radiusSample, radiusSample, 1));
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.effectRadius", radiusEffect, radiusEffect, 1));

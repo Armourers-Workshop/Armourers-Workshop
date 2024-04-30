@@ -52,7 +52,7 @@ public final class TranslateUtils {
         }
 
         public static MutableComponent of(SkinDocumentType documentType) {
-            Component lhs = title("documentType.armourers_workshop.category." + documentType.getName());
+            Component lhs = title("documentType.armourers_workshop.category." + documentType.getCategory());
             Component rhs = of(documentType.getSkinType());
             return title("documentType.armourers_workshop.category", lhs, rhs);
         }

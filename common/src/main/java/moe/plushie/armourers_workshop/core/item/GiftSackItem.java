@@ -2,12 +2,11 @@ package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.common.IItemGroupProvider;
-import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.core.holiday.Holiday;
+import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModHolidays;
 import moe.plushie.armourers_workshop.init.ModItems;
-import moe.plushie.armourers_workshop.utils.Constants;
-import net.minecraft.nbt.CompoundTag;
+import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -25,33 +24,20 @@ public class GiftSackItem extends FlavouredItem implements IItemGroupProvider, I
 
     public static ItemStack of(Holiday holiday) {
         ItemStack stack = new ItemStack(ModItems.GIFT_SACK.get());
-        CompoundTag nbt = stack.getOrCreateTag();
-        nbt.putString(Constants.Key.HOLIDAY, holiday.getName());
+        stack.set(ModDataComponents.HOLIDAY.get(), holiday);
         if (holiday.getHandler() != null) {
-            nbt.putInt(Constants.Key.COLOR_1, holiday.getHandler().getBackgroundColor());
-            nbt.putInt(Constants.Key.COLOR_2, holiday.getHandler().getForegroundColor());
+            stack.set(ModDataComponents.GIFT_COLOR_BG.get(), holiday.getHandler().getBackgroundColor());
+            stack.set(ModDataComponents.GIFT_COLOR_FG.get(), holiday.getHandler().getForegroundColor());
         }
         return stack;
     }
 
     public static ItemStack getGift(ItemStack itemStack, Player player) {
-        Holiday holiday = getHoliday(itemStack);
+        Holiday holiday = itemStack.get(ModDataComponents.HOLIDAY.get());
         if (holiday != null && holiday.getHandler() != null) {
             return holiday.getHandler().getGift(player);
         }
-        CompoundTag itemNBT = itemStack.getTagElement(Constants.Key.GIFT);
-        if (itemNBT != null) {
-            return ItemStack.of(itemNBT);
-        }
-        return ItemStack.EMPTY;
-    }
-
-    public static Holiday getHoliday(ItemStack itemStack) {
-        CompoundTag nbt = itemStack.getTag();
-        if (nbt != null) {
-            return ModHolidays.byName(nbt.getString(Constants.Key.HOLIDAY));
-        }
-        return null;
+        return itemStack.getOrDefault(ModDataComponents.GIFT.get(), ItemStack.EMPTY);
     }
 
     @Override
@@ -83,13 +69,9 @@ public class GiftSackItem extends FlavouredItem implements IItemGroupProvider, I
 
     @Override
     public int getTintColor(ItemStack itemStack, int index) {
-        CompoundTag tag = itemStack.getTag();
-        if (tag == null) {
-            return 0xffffffff;
-        }
         if (index == 1) {
-            return tag.getOptionalInt(Constants.Key.COLOR_2, 0x333333) | 0xff000000;
+            return itemStack.getOrDefault(ModDataComponents.GIFT_COLOR_FG.get(), 0x333333) | 0xff000000;
         }
-        return tag.getOptionalInt(Constants.Key.COLOR_1, 0xffffff) | 0xff000000;
+        return itemStack.getOrDefault(ModDataComponents.GIFT_COLOR_BG.get(), 0xffffff) | 0xff000000;
     }
 }

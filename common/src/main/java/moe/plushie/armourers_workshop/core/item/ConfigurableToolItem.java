@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.api.common.IConfigurableTool;
 import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
+import moe.plushie.armourers_workshop.api.common.ITooltipContext;
 import moe.plushie.armourers_workshop.core.client.gui.ConfigurableToolWindow;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
@@ -43,8 +44,8 @@ public abstract class ConfigurableToolItem extends FlavouredItem implements ICon
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltips, TooltipFlag flags) {
-        super.appendHoverText(itemStack, level, tooltips, flags);
+    public void appendHoverText(ItemStack itemStack, List<Component> tooltips, ITooltipContext context) {
+        super.appendHoverText(itemStack, tooltips, context);
         appendColorHoverText(itemStack, tooltips);
         appendSettingHoverText(itemStack, tooltips);
     }

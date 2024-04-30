@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "package": "moe.plushie.armourers_workshop.compatibility.forge.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "ForgeItemRendererMixin",
+    "ForgeBlockEntityRendererMixin",
+    "ForgeEpicFightRendererMixin",
+    "ForgeEpicFightFirstPersonRendererMixin",
+    "ForgeCuriosAddonMixin",
+    "ForgeKeyMappingMixin"
+  ],
+  "mixins": [
+    "ForgePackResourcesMixin",
+    "ForgeBlockEntityHandlerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

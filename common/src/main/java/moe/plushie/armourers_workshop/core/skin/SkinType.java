@@ -31,6 +31,11 @@ public class SkinType implements ISkinType {
     }
 
     @Override
+    public String getName() {
+        return registryName.toString();
+    }
+
+    @Override
     public ResourceLocation getRegistryName() {
         return registryName;
     }

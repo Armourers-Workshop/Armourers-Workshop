@@ -1,0 +1,67 @@
+package moe.plushie.armourers_workshop.compatibility.core.data;
+
+import io.netty.buffer.ByteBuf;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+
+@Available("[1.16, 1.19)")
+public abstract class AbstractFriendlyByteBufImpl implements IFriendlyByteBuf {
+
+    protected final FriendlyByteBuf source;
+
+    protected AbstractFriendlyByteBufImpl(FriendlyByteBuf source) {
+        this.source = source;
+    }
+
+    protected static FriendlyByteBuf cast(ByteBuf buf) {
+        FriendlyByteBuf source = ObjectUtils.safeCast(buf, FriendlyByteBuf.class);
+        if (source == null) {
+            source = new FriendlyByteBuf(buf);
+        }
+        return source;
+    }
+
+    @Override
+    public GlobalPos readGlobalPos() {
+        try {
+            return source.readWithCodec(GlobalPos.CODEC);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public void writeGlobalPos(GlobalPos value) {
+        try {
+            source.writeWithCodec(GlobalPos.CODEC, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public ItemStack readItem() {
+        return source.readItem();
+    }
+
+    @Override
+    public void writeItem(ItemStack value) {
+        source.writeItem(value);
+    }
+
+    @Override
+    public Component readComponent() {
+        return source.readComponent();
+    }
+
+    @Override
+    public void writeComponent(Component component) {
+        source.writeComponent(component);
+    }
+}

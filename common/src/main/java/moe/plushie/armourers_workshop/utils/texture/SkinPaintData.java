@@ -2,8 +2,17 @@ package moe.plushie.armourers_workshop.utils.texture;
 
 import moe.plushie.armourers_workshop.api.math.ITexturePos;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class SkinPaintData {
 
@@ -36,6 +45,26 @@ public class SkinPaintData {
 
     public static SkinPaintData v2() {
         return new SkinPaintData(TEXTURE_WIDTH, TEXTURE_HEIGHT);
+    }
+
+    public static SkinPaintData uncompress(ByteBuffer buffer) {
+        try {
+            ByteArrayInputStream bufferedStream = new ByteArrayInputStream(buffer.array());
+            GZIPInputStream compressedStream = new GZIPInputStream(bufferedStream);
+            DataInputStream dataStream = new DataInputStream(compressedStream);
+            SkinPaintData paintData = SkinPaintData.v2();
+            int length = dataStream.readInt();
+            int[] colors = paintData.getData();
+            for (int i = 0; i < length; ++i) {
+                if (i < colors.length) {
+                    colors[i] = dataStream.readInt();
+                }
+            }
+            StreamUtils.closeQuietly(dataStream, compressedStream, bufferedStream);
+            return paintData;
+        } catch (IOException exception) {
+            return null;
+        }
     }
 
     @Override
@@ -115,5 +144,22 @@ public class SkinPaintData {
 
     public int[] getData() {
         return data;
+    }
+
+    public ByteBuffer compress() {
+        try {
+            int[] colors = getData();
+            ByteArrayOutputStream bufferedStream = new ByteArrayOutputStream();
+            GZIPOutputStream compressedStream = new GZIPOutputStream(bufferedStream);
+            DataOutputStream dataStream = new DataOutputStream(compressedStream);
+            dataStream.writeInt(colors.length);
+            for (int color : colors) {
+                dataStream.writeInt(color);
+            }
+            StreamUtils.closeQuietly(dataStream, compressedStream, bufferedStream);
+            return ByteBuffer.wrap(bufferedStream.toByteArray());
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

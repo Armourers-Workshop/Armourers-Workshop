@@ -5,10 +5,8 @@ import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProv
 import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
-import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -37,8 +35,8 @@ public class ArmourerBlock extends AbstractHorizontalBlock implements AbstractBl
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult traceResult) {
-        return MenuManager.openMenu(ModMenuTypes.ARMOURER, level.getBlockEntity(blockPos), player);
+    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
+        return ModMenuTypes.ARMOURER.get().openMenu(player, level.getBlockEntity(blockPos));
     }
 
     @Override

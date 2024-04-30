@@ -102,7 +102,6 @@ accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/St
 ### accessible field net/minecraft/client/model/IronGolemModel leg1 Lnet/minecraft/client/model/geom/ModelPart;
 ##endif
 
-
 ##if MC < 12000
 ### accessible field com/mojang/math/Matrix3f m00 F
 ### accessible field com/mojang/math/Matrix3f m01 F

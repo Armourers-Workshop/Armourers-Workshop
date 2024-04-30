@@ -2,8 +2,10 @@ package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IPacketDistributor;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractFriendlyByteBuf;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.minecraft.network.FriendlyByteBuf;
@@ -59,7 +61,8 @@ public class AbstractForgeNetwork {
                 return;
             }
             IServerPacketHandler packetHandler = context::enqueueWork;
-            didReceivePacket(packetHandler, event.getPayload(), player);
+            AbstractFriendlyByteBuf payload = AbstractFriendlyByteBuf.wrap(event.getPayload());
+            didReceivePacket(packetHandler, payload, player);
             context.setPacketHandled(true);
         }
 
@@ -71,7 +74,8 @@ public class AbstractForgeNetwork {
             }
             NetworkEvent.Context context = event.getSource().get();
             IClientPacketHandler packetHandler = context::enqueueWork;
-            didReceivePacket(packetHandler, event.getPayload(), null);
+            AbstractFriendlyByteBuf payload = AbstractFriendlyByteBuf.wrap(event.getPayload());
+            didReceivePacket(packetHandler, payload, null);
             context.setPacketHandled(true);
         }
     }
@@ -87,9 +91,10 @@ public class AbstractForgeNetwork {
         }
 
         @Override
-        public IPacketDistributor add(ResourceLocation channel, FriendlyByteBuf buf) {
+        public IPacketDistributor add(ResourceLocation channel, IFriendlyByteBuf buf) {
             NetworkDirection direction = target.getDirection();
-            Packet<?> packet1 = direction.buildPacket(Pair.of(buf, 0), channel).getThis();
+            FriendlyByteBuf buf1 = (FriendlyByteBuf) buf.asByteBuf();
+            Packet<?> packet1 = direction.buildPacket(Pair.of(buf1, 0), channel).getThis();
             return new Distributor(target, packet1);
         }
 

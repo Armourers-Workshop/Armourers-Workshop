@@ -6,6 +6,8 @@ import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 
 public interface ISkinPartType extends IRegistryEntry {
 
+    String getName();
+
     /**
      * The last 3 values are used to define the size of this part, the first 3
      * values will change the origin. Example -5, -5, -5, 10, 10, 10, Will create a

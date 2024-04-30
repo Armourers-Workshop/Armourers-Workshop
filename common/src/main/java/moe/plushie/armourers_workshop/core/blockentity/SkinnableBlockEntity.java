@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.blockentity;
 
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.client.IBlockEntityExtendedRenderer;
+import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
@@ -12,6 +13,8 @@ import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.utils.DataSerializerKey;
+import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
@@ -24,9 +27,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
@@ -40,11 +41,19 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 
 public class SkinnableBlockEntity extends RotableContainerBlockEntity implements IBlockEntityExtendedRenderer {
 
-    private static final BlockPos INVALID = BlockPos.of(-1);
+    private static final DataSerializerKey<BlockPos> REFERENCE_KEY = DataSerializerKey.create("Refer", DataTypeCodecs.BLOCK_POS, BlockPos.ZERO);
+    private static final DataSerializerKey<Rectangle3i> SHAPE_KEY = DataSerializerKey.create("Shape", DataTypeCodecs.RECTANGLE_3I, Rectangle3i.ZERO);
+    private static final DataSerializerKey<BlockPos> LINKED_POS_KEY = DataSerializerKey.create("LinkedPos", DataTypeCodecs.BLOCK_POS, null);
+    private static final DataSerializerKey<SkinDescriptor> SKIN_KEY = DataSerializerKey.create("Skin", DataTypeCodecs.SKIN_DESCRIPTOR, SkinDescriptor.EMPTY);
+    private static final DataSerializerKey<SkinProperties> SKIN_PROPERTIES_KEY = DataSerializerKey.create("SkinProperties", DataTypeCodecs.SKIN_PROPERTIES, SkinProperties.EMPTY, SkinProperties::new);
+    private static final DataSerializerKey<List<BlockPos>> REFERS_KEY = DataSerializerKey.create("Refers", DataTypeCodecs.BLOCK_POS.listOf(), Collections.emptyList());
+    private static final DataSerializerKey<List<SkinMarker>> MARKERS_KEY = DataSerializerKey.create("Markers", DataTypeCodecs.SKIN_MARKER.listOf(), Collections.emptyList());
 
     private static final ImmutableMap<?, Vector3f> FACING_TO_ROT = new ImmutableMap.Builder<Object, Vector3f>()
             .put(Pair.of(AttachFace.CEILING, Direction.EAST), new Vector3f(180, 270, 0))
@@ -61,12 +70,12 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
             .put(Pair.of(AttachFace.FLOOR, Direction.NORTH), new Vector3f(0, 0, 0))
             .build();
 
-    private BlockPos refer = INVALID;
-    private Rectangle3i shape = Rectangle3i.ZERO;
+    private BlockPos reference = BlockPos.ZERO;
+    private Rectangle3i collisionShape = Rectangle3i.ZERO;
 
     private NonNullList<ItemStack> items;
-    private Collection<BlockPos> refers;
-    private Collection<SkinMarker> markers;
+    private List<BlockPos> refers;
+    private List<SkinMarker> markers;
 
     private BlockPos linkedBlockPos = null;
 
@@ -91,42 +100,42 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     @Override
-    public void readFromNBT(CompoundTag tag) {
-        refer = tag.getOptionalBlockPos(Constants.Key.BLOCK_ENTITY_REFER, INVALID);
-        shape = tag.getOptionalRectangle3i(Constants.Key.BLOCK_ENTITY_SHAPE, Rectangle3i.ZERO);
+    public void readAdditionalData(IDataSerializer serializer) {
+        reference = serializer.read(REFERENCE_KEY);
+        collisionShape = serializer.read(SHAPE_KEY);
         renderVoxelShape = null;
-        isParent = BlockPos.ZERO.equals(refer);
+        isParent = BlockPos.ZERO.equals(reference);
         if (!isParent()) {
             return;
         }
         SkinProperties oldProperties = properties;
-        refers = tag.getOptionalBlockPosArray(Constants.Key.BLOCK_ENTITY_REFERS);
-        markers = tag.getOptionalSkinMarkerArray(Constants.Key.BLOCK_ENTITY_MARKERS);
-        descriptor = tag.getOptionalSkinDescriptor(Constants.Key.BLOCK_ENTITY_SKIN);
-        properties = tag.getOptionalSkinProperties(Constants.Key.BLOCK_ENTITY_SKIN_PROPERTIES);
-        linkedBlockPos = tag.getOptionalBlockPos(Constants.Key.BLOCK_ENTITY_LINKED_POS, null);
+        refers = serializer.read(REFERS_KEY);
+        markers = serializer.read(MARKERS_KEY);
+        descriptor = serializer.read(SKIN_KEY);
+        properties = serializer.read(SKIN_PROPERTIES_KEY);
+        linkedBlockPos = serializer.read(LINKED_POS_KEY);
         if (oldProperties != null) {
             oldProperties.clear();
             oldProperties.putAll(properties);
             properties = oldProperties;
         }
-        ContainerHelper.loadAllItems(tag, getOrCreateItems());
+        serializer.readItemList(getOrCreateItems());
     }
 
     @Override
-    public void writeToNBT(CompoundTag tag) {
-        tag.putOptionalBlockPos(Constants.Key.BLOCK_ENTITY_REFER, refer, INVALID);
-        tag.putOptionalRectangle3i(Constants.Key.BLOCK_ENTITY_SHAPE, shape, Rectangle3i.ZERO);
+    public void writeAdditionalData(IDataSerializer serializer) {
+        serializer.write(REFERENCE_KEY, reference);
+        serializer.write(SHAPE_KEY, collisionShape);
         if (!isParent()) {
             return;
         }
-        tag.putOptionalBlockPosArray(Constants.Key.BLOCK_ENTITY_REFERS, refers);
-        tag.putOptionalSkinMarkerArray(Constants.Key.BLOCK_ENTITY_MARKERS, markers);
-        tag.putOptionalSkinDescriptor(Constants.Key.BLOCK_ENTITY_SKIN, descriptor);
-        tag.putOptionalSkinProperties(Constants.Key.BLOCK_ENTITY_SKIN_PROPERTIES, properties);
-        tag.putOptionalBlockPos(Constants.Key.BLOCK_ENTITY_LINKED_POS, linkedBlockPos, null);
+        serializer.write(REFERS_KEY, refers);
+        serializer.write(MARKERS_KEY, markers);
+        serializer.write(SKIN_KEY, descriptor);
+        serializer.write(SKIN_PROPERTIES_KEY, properties);
+        serializer.write(LINKED_POS_KEY, linkedBlockPos);
 
-        ContainerHelper.saveAllItems(tag, getOrCreateItems());
+        serializer.writeItemList(getOrCreateItems());
     }
 
     public void updateBlockStates() {
@@ -152,22 +161,22 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         if (renderVoxelShape != null) {
             return renderVoxelShape;
         }
-        if (shape.equals(Rectangle3i.ZERO)) {
+        if (collisionShape.equals(Rectangle3i.ZERO)) {
             renderVoxelShape = Shapes.block();
             return renderVoxelShape;
         }
-        float minX = shape.getMinX() / 16f + 0.5f;
-        float minY = shape.getMinY() / 16f + 0.5f;
-        float minZ = shape.getMinZ() / 16f + 0.5f;
-        float maxX = shape.getMaxX() / 16f + 0.5f;
-        float maxY = shape.getMaxY() / 16f + 0.5f;
-        float maxZ = shape.getMaxZ() / 16f + 0.5f;
+        float minX = collisionShape.getMinX() / 16f + 0.5f;
+        float minY = collisionShape.getMinY() / 16f + 0.5f;
+        float minZ = collisionShape.getMinZ() / 16f + 0.5f;
+        float maxX = collisionShape.getMaxX() / 16f + 0.5f;
+        float maxY = collisionShape.getMaxY() / 16f + 0.5f;
+        float maxZ = collisionShape.getMaxZ() / 16f + 0.5f;
         renderVoxelShape = Shapes.box(minX, minY, minZ, maxX, maxY, maxZ);
         return renderVoxelShape;
     }
 
     public void setShape(Rectangle3i shape) {
-        this.shape = shape;
+        this.collisionShape = shape;
         this.renderVoxelShape = null;
     }
 
@@ -215,7 +224,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     public BlockPos getParentPos() {
-        return getBlockPos().subtract(refer);
+        return getBlockPos().subtract(reference);
     }
 
     public Vector3d getSeatPos() {
@@ -262,7 +271,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         if (isParent()) {
             return this;
         }
-        if (getLevel() != null && refer != INVALID) {
+        if (getLevel() != null) {
             return ObjectUtils.safeCast(getLevel().getBlockEntity(getParentPos()), SkinnableBlockEntity.class);
         }
         return null;

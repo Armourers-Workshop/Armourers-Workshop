@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class VehicleEntityPlaceMixin {
 
     @Inject(method = "updateCustomEntityTag", at = @At("HEAD"))
-    private static void aw2$updateCustomEntityTag(Level level, Player player, Entity entity, CompoundTag compoundTag, CallbackInfo ci) {
-        SkinUtils.copyVehicleSkin(entity, compoundTag);
+    private static void aw2$updateCustomEntityTag(Level level, Player player, Entity entity, CustomData customData, CallbackInfo ci) {
+        SkinUtils.copyVehicleSkin(entity, customData.copyTag());
     }
 }

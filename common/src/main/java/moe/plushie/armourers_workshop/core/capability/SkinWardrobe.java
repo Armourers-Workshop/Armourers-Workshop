@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.capability;
 
-import moe.plushie.armourers_workshop.api.common.ITagRepresentable;
+import moe.plushie.armourers_workshop.api.data.IDataSerializer;
+import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
 import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
@@ -10,7 +11,6 @@ import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
+public class SkinWardrobe implements IDataSerializerProvider {
 
     private final BitSet flags = new BitSet(6);
 
@@ -60,6 +60,22 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
             return Optional.of(new SkinWardrobe(entity, profile));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public void serialize(IDataSerializer serializer) {
+        SkinWardrobeStorage.saveSkinSlots(skinSlots, serializer);
+        SkinWardrobeStorage.saveFlags(flags, serializer);
+        SkinWardrobeStorage.saveInventoryItems(inventory, serializer);
+        SkinWardrobeStorage.saveDataFixer(this, serializer);
+    }
+
+    @Override
+    public void deserialize(IDataSerializer serializer) {
+        SkinWardrobeStorage.loadSkinSlots(skinSlots, serializer);
+        SkinWardrobeStorage.loadFlags(flags, serializer);
+        SkinWardrobeStorage.loadInventoryItems(inventory, serializer);
+        SkinWardrobeStorage.loadDataFixer(this, serializer);
     }
 
     public void setProfile(EntityProfile profile) {
@@ -211,7 +227,7 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
     }
 
     public boolean isEditable(Player player) {
-        if (!ModPermissions.OPEN.accept(ModMenuTypes.WARDROBE, getEntity(), player)) {
+        if (!ModPermissions.OPEN.accept(ModMenuTypes.WARDROBE.get(), getEntity(), player)) {
             return false;
         }
         // can't edit another player's wardrobe
@@ -229,22 +245,5 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
         return profile.isSupported(slotType);
     }
 
-    @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
-        SkinWardrobeStorage.saveSkinSlots(skinSlots, nbt);
-        SkinWardrobeStorage.saveFlags(flags, nbt);
-        SkinWardrobeStorage.saveInventoryItems(inventory, nbt);
-        SkinWardrobeStorage.saveDataFixer(this, nbt);
-        return nbt;
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        SkinWardrobeStorage.loadSkinSlots(skinSlots, nbt);
-        SkinWardrobeStorage.loadFlags(flags, nbt);
-        SkinWardrobeStorage.loadInventoryItems(inventory, nbt);
-        SkinWardrobeStorage.loadDataFixer(this, nbt);
-    }
 }
 

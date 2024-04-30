@@ -24,6 +24,11 @@ public abstract class SkinPartType implements ISkinPartType {
     }
 
     @Override
+    public String getName() {
+        return registryName.toString();
+    }
+
+    @Override
     public ResourceLocation getRegistryName() {
         return registryName;
     }

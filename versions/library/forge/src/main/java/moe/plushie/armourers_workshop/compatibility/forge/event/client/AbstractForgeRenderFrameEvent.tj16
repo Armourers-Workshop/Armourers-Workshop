@@ -1,0 +1,29 @@
+package moe.plushie.armourers_workshop.compatibility.forge.event.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.registry.IEventHandler;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeClientEventsImpl;
+import moe.plushie.armourers_workshop.init.platform.event.client.RenderFrameEvent;
+import net.minecraftforge.event.TickEvent;
+
+@Available("[1.16, 1.21)")
+public class AbstractForgeRenderFrameEvent {
+
+    public static IEventHandler<RenderFrameEvent.Pre> preFactory() {
+        return AbstractForgeClientEventsImpl.RENDER_FRAME_PRE.flatMap(event -> {
+            if (event.phase == TickEvent.Phase.START) {
+                return () -> 0;
+            }
+            return null;
+        });
+    }
+
+    public static IEventHandler<RenderFrameEvent.Post> postFactory() {
+        return AbstractForgeClientEventsImpl.RENDER_FRAME_POST.flatMap(event -> {
+            if (event.phase == TickEvent.Phase.END) {
+                return () -> 0;
+            }
+            return null;
+        });
+    }
+}

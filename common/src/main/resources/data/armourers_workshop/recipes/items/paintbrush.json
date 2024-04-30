@@ -7,7 +7,7 @@
   ],
   "key": {
     "X": {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     },
     "C": {
       "tag": "armourers_workshop:skin_cubes"
@@ -17,6 +17,6 @@
     }
   },
   "result": {
-    "item": "armourers_workshop:paintbrush"
+    "id": "armourers_workshop:paintbrush"
   }
 }

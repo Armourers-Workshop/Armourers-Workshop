@@ -5,10 +5,8 @@ import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock
 import moe.plushie.armourers_workshop.core.blockentity.DyeTableBlockEntity;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
-import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -30,8 +28,8 @@ public class DyeTableBlock extends AbstractHorizontalBlock implements AbstractBl
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        return MenuManager.openMenu(ModMenuTypes.DYE_TABLE, level.getBlockEntity(blockPos), player);
+    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
+        return ModMenuTypes.DYE_TABLE.get().openMenu(player, level.getBlockEntity(blockPos));
     }
 
     @Override

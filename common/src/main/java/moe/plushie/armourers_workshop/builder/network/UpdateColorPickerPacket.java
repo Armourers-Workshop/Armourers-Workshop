@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.builder.network;
 
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +14,7 @@ public class UpdateColorPickerPacket extends CustomPacket {
     final InteractionHand hand;
     final ItemStack itemStack;
 
-    public UpdateColorPickerPacket(FriendlyByteBuf buffer) {
+    public UpdateColorPickerPacket(IFriendlyByteBuf buffer) {
         this.hand = buffer.readEnum(InteractionHand.class);
         this.itemStack = buffer.readItem();
     }
@@ -25,7 +25,7 @@ public class UpdateColorPickerPacket extends CustomPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeEnum(hand);
         buffer.writeItem(itemStack);
     }

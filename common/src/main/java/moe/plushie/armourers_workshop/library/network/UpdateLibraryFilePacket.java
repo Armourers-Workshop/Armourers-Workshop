@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.library.network;
 
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.permission.BlockPermission;
@@ -9,7 +10,6 @@ import moe.plushie.armourers_workshop.library.data.SkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryFile;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -27,7 +27,7 @@ public class UpdateLibraryFilePacket extends CustomPacket {
         this.destination = destination;
     }
 
-    public UpdateLibraryFilePacket(FriendlyByteBuf buffer) {
+    public UpdateLibraryFilePacket(IFriendlyByteBuf buffer) {
         this.mode = buffer.readEnum(Mode.class);
         if ((mode.flag & 1) != 0) {
             this.destination = decodePath(buffer);
@@ -42,7 +42,7 @@ public class UpdateLibraryFilePacket extends CustomPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeEnum(mode);
         if ((mode.flag & 1) != 0) {
             buffer.writeUtf(destination);
@@ -84,8 +84,8 @@ public class UpdateLibraryFilePacket extends CustomPacket {
         }
     }
 
-    private String decodePath(FriendlyByteBuf buffer) {
-        String path = SkinFileUtils.normalize(buffer.readUtf(Short.MAX_VALUE), true); // security check
+    private String decodePath(IFriendlyByteBuf buffer) {
+        String path = SkinFileUtils.normalize(buffer.readUtf(), true); // security check
         if (path != null) {
             return path;
         }

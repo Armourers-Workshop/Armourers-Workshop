@@ -109,9 +109,10 @@ public class SkinDynamicTexture extends DynamicTexture {
         return downloadedImage;
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        releaseId();
-        super.finalize();
-    }
+    // TODO: @SAGESSE replace to new impl.
+//    @Override
+//    protected void finalize() throws Throwable {
+//        releaseId();
+//        super.finalize();
+//    }
 }

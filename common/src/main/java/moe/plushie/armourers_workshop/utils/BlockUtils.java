@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -43,10 +44,10 @@ public final class BlockUtils {
         queue.put(blockEntity, handler);
     }
 
-    public static void snapshot(Player player, LevelAccessor level, BlockPos blockPos, @Nullable BlockState blockState, IBlockSnapshot snapshot) {
+    public static void snapshot(Entity entity, LevelAccessor level, BlockPos blockPos, @Nullable BlockState blockState, IBlockSnapshot snapshot) {
         Component reason = null;
         // only work in server side
-        if (!(player instanceof ServerPlayer) || !(level instanceof Level)) {
+        if (!(entity instanceof ServerPlayer) || !(level instanceof Level)) {
             return;
         }
         // is place skin cube block.
@@ -61,6 +62,7 @@ public final class BlockUtils {
         if (reason == null) {
             return;
         }
+        ServerPlayer player = (ServerPlayer) entity;
         NamedUserAction group = new NamedUserAction(reason);
         group.push(new SetBlockAction((Level) level, blockPos, snapshot.getState(), snapshot.getTag()));
         UndoManager.of(player.getUUID()).push(group);

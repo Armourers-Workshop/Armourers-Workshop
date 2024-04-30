@@ -1,0 +1,14 @@
+package moe.plushie.armourers_workshop.compatibility.fabric.event.common;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.registry.IEventHandler;
+import moe.plushie.armourers_workshop.init.platform.event.common.RegisterCommandsEvent;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+
+@Available("[1.16, 1.19)")
+public class AbstractFabricRegisterCommandsEvent {
+
+    public static IEventHandler<RegisterCommandsEvent> registryFactory() {
+        return subscriber -> CommandRegistrationCallback.EVENT.register(((dispatcher, dedicated) -> subscriber.accept(dispatcher::register)));
+    }
+}

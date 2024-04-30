@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModCapabilities;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModEntitySerializers;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
@@ -23,7 +24,6 @@ import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.init.ModSounds;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
-import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.init.platform.RendererManager;
 import moe.plushie.armourers_workshop.init.proxy.ClientProxy;
@@ -36,6 +36,7 @@ import net.minecraft.resources.ResourceLocation;
 public class ArmourersWorkshop {
 
     public static void init() {
+        ModDataComponents.init();
         ModItemGroups.init();
         ModItems.init();
         ModBlocks.init();
@@ -56,7 +57,6 @@ public class ArmourersWorkshop {
             ModPackets.init();
             NetworkManager.init("play", ModConstants.MOD_NET_ID);
 
-            DataPackManager.init();
             ModHolidays.init();
             ModPermissions.init();
             SkinningRecipes.init();
@@ -86,5 +86,4 @@ public class ArmourersWorkshop {
         name = name.replaceAll("\\.", "_");
         return new ModelResourceLocation(ModConstants.key("skin/" + name), "inventory");
     }
-
 }

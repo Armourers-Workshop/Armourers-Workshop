@@ -217,11 +217,12 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
             return String.format("aw-armourer-%d-%d-%d", pos.getX(), pos.getY(), pos.getZ());
         }
 
-        @Override
-        protected void finalize() throws Throwable {
-            Minecraft.getInstance().getTextureManager().release(displayTextureLocation);
-            super.finalize();
-        }
+        // TODO: @SAGESSE replace to new impl.
+//        @Override
+//        protected void finalize() throws Throwable {
+//            Minecraft.getInstance().getTextureManager().release(displayTextureLocation);
+//            super.finalize();
+//        }
 
         public void tick() {
             this.displayTexture.setRefer(TextureUtils.getPlayerTextureLocation(blockEntity.getTextureDescriptor()));

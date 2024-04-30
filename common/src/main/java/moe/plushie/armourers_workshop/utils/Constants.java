@@ -57,7 +57,8 @@ public final class Constants {
         public static final String HOLIDAY_TRACKER = "HolidayTracker";
         public static final String HOLIDAY_LOGS = "Logs";
 
-        public static final String FLAGS = "Flags";
+        public static final String TOOL_FLAGS = "Flags";
+        public static final String TOOL_OPTIONS = "Options";
 
         public static final String ENTITY = "EntityTag";
         public static final String BLOCK_ENTITY = "BlockEntityTag";

@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.InputConstants;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
+import moe.plushie.armourers_workshop.init.platform.event.client.RegisterKeyMappingsEvent;
 import moe.plushie.armourers_workshop.utils.ext.OpenKeyModifier;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -32,6 +34,9 @@ public abstract class AbstractForgeKeyMapping extends KeyMapping {
         super(description, KeyConflictContext.IN_GAME, MODIFIERS1.getOrDefault(keyModifier, KeyModifier.NONE), keyCode, category);
     }
 
+    public static void register(String name, KeyMapping keyMapping) {
+        EventManager.listen(RegisterKeyMappingsEvent.class, event -> event.register(keyMapping));
+    }
 
     public IKeyModifier getOpenKeyModifier() {
         return MODIFIERS2.getOrDefault(getKeyModifier(), OpenKeyModifier.NONE);

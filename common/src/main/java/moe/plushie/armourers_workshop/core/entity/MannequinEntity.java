@@ -1,14 +1,16 @@
 package moe.plushie.armourers_workshop.core.entity;
 
+import moe.plushie.armourers_workshop.api.common.IEntityDataBuilder;
 import moe.plushie.armourers_workshop.api.common.IEntityHandler;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractLivingEntity;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.item.option.MannequinToolOptions;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModEntitySerializers;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutorIO;
-import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
@@ -16,7 +18,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Rotations;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.Container;
@@ -28,7 +29,6 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,7 +41,7 @@ import net.minecraft.world.phys.Vec3;
 import manifold.ext.rt.api.auto;
 
 @SuppressWarnings("unused")
-public class MannequinEntity extends ArmorStand implements IEntityHandler {
+public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements IEntityHandler {
 
     public static final Rotations DEFAULT_HEAD_POSE = new Rotations(0.0f, 0.0f, 0.0f);
     public static final Rotations DEFAULT_BODY_POSE = new Rotations(0.0f, 0.0f, 0.0f);
@@ -50,9 +50,9 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
     public static final Rotations DEFAULT_LEFT_LEG_POSE = new Rotations(-1.0f, 0.0f, -1.0f);
     public static final Rotations DEFAULT_RIGHT_LEG_POSE = new Rotations(1.0f, 0.0f, 1.0f);
 
-    public static final EntityDimensions MARKER_DIMENSIONS = new EntityDimensions(0.0f, 0.0f, true);
-    public static final EntityDimensions BABY_DIMENSIONS = EntityDimensions.scalable(0.5f, 1.0f);
-    public static final EntityDimensions STANDING_DIMENSIONS = EntityDimensions.scalable(0.6f, 1.88f);
+    public static final EntityDimensions MARKER_DIMENSIONS = EntityDimensions.fixed(0.0f, 0.0f);
+    public static final EntityDimensions BABY_DIMENSIONS = EntityDimensions.scalable(0.5f, 1.0f).withEyeHeight(0.88f);
+    public static final EntityDimensions STANDING_DIMENSIONS = EntityDimensions.scalable(0.6f, 1.88f).withEyeHeight(1.62f);
 
     public static final EntityDataAccessor<Boolean> DATA_IS_CHILD = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> DATA_IS_FLYING = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.BOOLEAN);
@@ -70,15 +70,15 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_IS_CHILD, false);
-        this.entityData.define(DATA_IS_FLYING, false);
-        this.entityData.define(DATA_IS_GHOST, false);
-        this.entityData.define(DATA_IS_VISIBLE, true);
-        this.entityData.define(DATA_EXTRA_RENDERER, true);
-        this.entityData.define(DATA_SCALE, 1.0f);
-        this.entityData.define(DATA_TEXTURE, PlayerTextureDescriptor.EMPTY);
+    protected void defineSynchedData(IEntityDataBuilder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_IS_CHILD, false);
+        builder.define(DATA_IS_FLYING, false);
+        builder.define(DATA_IS_GHOST, false);
+        builder.define(DATA_IS_VISIBLE, true);
+        builder.define(DATA_EXTRA_RENDERER, true);
+        builder.define(DATA_SCALE, 1.0f);
+        builder.define(DATA_TEXTURE, PlayerTextureDescriptor.EMPTY);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
     }
 
     @Override
-    public EntityDimensions getDimensions(Pose pose) {
+    public EntityDimensions getDefaultDimensions(Pose pose) {
         if (isMarker()) {
             return MARKER_DIMENSIONS;
         }
@@ -171,16 +171,7 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
         if (isBaby()) {
             entitySize = BABY_DIMENSIONS;
         }
-        return entitySize.scale(getScale());
-    }
-
-    @Override
-    public float getStandingEyeHeight(Pose pose, EntityDimensions entitySize) {
-        float eyeHeight = 1.62f;
-        if (isBaby()) {
-            eyeHeight = 0.88f;
-        }
-        return eyeHeight * getScale();
+        return entitySize;
     }
 
     @Override
@@ -190,7 +181,7 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
         if (EnvironmentExecutorIO.hasSprintDown()) {
             CompoundTag entityTag = new CompoundTag();
             addAdditionalSaveData(entityTag);
-            itemStack.getOrCreateTag().put(Constants.Key.ENTITY, entityTag);
+            itemStack.set(ModDataComponents.ENTITY_DATA.get(), entityTag);
         }
         return itemStack;
     }
@@ -229,12 +220,8 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
             return InteractionResult.PASS;
         }
         if (itemStack.is(Items.NAME_TAG)) {
-            Component customName = null;
-            if (itemStack.hasCustomHoverName() && !player.isSecondaryUseActive()) {
-                customName = itemStack.getHoverName();
-            }
-            setCustomName(customName);
-            return InteractionResult.sidedSuccess(getLevel().isClientSide());
+            // forward to vanilla `NameTagItem` implementations.
+            return itemStack.interactLivingEntity(player, this, hand);
         }
         if (player.isSecondaryUseActive()) {
             double ry = TrigUtils.getAngleDegrees(player.getX(), player.getZ(), getX(), getZ()) + 90.0;
@@ -245,7 +232,7 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(this);
         if (wardrobe != null && wardrobe.isEditable(player)) {
-            MenuManager.openMenu(ModMenuTypes.WARDROBE, player, wardrobe);
+            ModMenuTypes.WARDROBE.get().openMenu(player, wardrobe);
             return InteractionResult.sidedSuccess(getLevel().isClientSide());
         }
         return InteractionResult.PASS;
@@ -276,9 +263,10 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
 
     protected ItemStack createMannequinStack() {
         ItemStack itemStack = new ItemStack(ModItems.MANNEQUIN.get());
-        CompoundTag entityTag = itemStack.getOrCreateTagElement(Constants.Key.ENTITY);
+        CompoundTag entityTag = new CompoundTag();
         entityTag.putOptionalFloat(Constants.Key.ENTITY_SCALE, getScale(), 1.0f);
         entityTag.putOptionalTextureDescriptor(Constants.Key.ENTITY_TEXTURE, getTextureDescriptor(), PlayerTextureDescriptor.EMPTY);
+        itemStack.set(ModDataComponents.ENTITY_DATA.get(), entityTag);
         return itemStack;
     }
 
@@ -345,21 +333,21 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
 
     public void readMannequinToolData(CompoundTag entityTag, ItemStack itemStack) {
         CompoundTag newEntityTag = new CompoundTag();
-        if (MannequinToolOptions.CHANGE_OPTION.get(itemStack)) {
+        if (itemStack.get(MannequinToolOptions.CHANGE_OPTION)) {
             newEntityTag.merge(entityTag);
             newEntityTag.remove(Constants.Key.ENTITY_SCALE);
             newEntityTag.remove(Constants.Key.ENTITY_POSE);
             newEntityTag.remove(Constants.Key.ENTITY_TEXTURE);
         }
-        if (MannequinToolOptions.CHANGE_SCALE.get(itemStack)) {
+        if (itemStack.get(MannequinToolOptions.CHANGE_SCALE)) {
             auto oldValue = entityTag.get(Constants.Key.ENTITY_SCALE);
             if (oldValue != null) {
                 newEntityTag.put(Constants.Key.ENTITY_SCALE, oldValue);
             }
         }
-        if (MannequinToolOptions.CHANGE_ROTATION.get(itemStack)) {
+        if (itemStack.get(MannequinToolOptions.CHANGE_ROTATION)) {
             auto oldValue = entityTag.getCompound(Constants.Key.ENTITY_POSE);
-            if (MannequinToolOptions.MIRROR_MODE.get(itemStack) && !oldValue.isEmpty()) {
+            if (itemStack.get(MannequinToolOptions.MIRROR_MODE) && !oldValue.isEmpty()) {
                 CompoundTag newPoseTag = oldValue.copy();
                 DataSerializers.mirrorRotations(oldValue, Constants.Key.ENTITY_POSE_HEAD, DEFAULT_HEAD_POSE, newPoseTag, Constants.Key.ENTITY_POSE_HEAD, DEFAULT_HEAD_POSE);
                 DataSerializers.mirrorRotations(oldValue, Constants.Key.ENTITY_POSE_BODY, DEFAULT_BODY_POSE, newPoseTag, Constants.Key.ENTITY_POSE_BODY, DEFAULT_BODY_POSE);
@@ -371,7 +359,7 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
             }
             newEntityTag.put(Constants.Key.ENTITY_POSE, oldValue);
         }
-        if (MannequinToolOptions.CHANGE_TEXTURE.get(itemStack)) {
+        if (itemStack.get(MannequinToolOptions.CHANGE_TEXTURE)) {
             auto oldValue = entityTag.get(Constants.Key.ENTITY_TEXTURE);
             if (oldValue != null) {
                 newEntityTag.put(Constants.Key.ENTITY_TEXTURE, oldValue);

@@ -1,9 +1,10 @@
 package moe.plushie.armourers_workshop.init.proxy;
 
+import moe.plushie.armourers_workshop.api.common.IItemHandler;
 import moe.plushie.armourers_workshop.builder.other.WorldUpdater;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
-import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
@@ -11,31 +12,47 @@ import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinServerType;
 import moe.plushie.armourers_workshop.init.ModCommands;
+import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.init.ModContext;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import moe.plushie.armourers_workshop.init.ModHolidays;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.network.UpdateContextPacket;
-import moe.plushie.armourers_workshop.init.platform.CommonNativeManager;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.init.platform.ReplayManager;
-import moe.plushie.armourers_workshop.init.provider.CommonNativeProvider;
+import moe.plushie.armourers_workshop.init.platform.event.common.BlockEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.LauncherConfigSetupEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.PlayerEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.RegisterCommandsEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.RegisterDataPackEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.RegisterEntityAttributesEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartingEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerLevelAddEntityEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerLevelTickEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartedEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppedEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppingEvent;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 public class CommonProxy {
 
     public static void init() {
         setup();
-        register(CommonNativeManager.getProvider());
+        register();
     }
 
     private static void setup() {
@@ -45,83 +62,103 @@ public class CommonProxy {
         ReplayManager.init();
     }
 
-    private static void register(CommonNativeProvider registries) {
+    private static void register() {
 
-        registries.willRegisterCommand(ModCommands::init);
-        registries.willRegisterCustomDataPack(() -> DataPackManager.byType(DataPackType.SERVER_DATA));
-        registries.willRegisterEntityAttributes(registry -> {
-            registry.register(ModEntityTypes.MANNEQUIN.get().get(), MannequinEntity.createLivingAttributes());
-            registry.register(ModEntityTypes.SEAT.get().get(), SeatEntity.createLivingAttributes());
+        EventManager.listen(RegisterCommandsEvent.class, ModCommands::init);
+        EventManager.listen(RegisterDataPackEvent.class, DataPackManager::init);
+
+        EventManager.listen(RegisterEntityAttributesEvent.class, event -> {
+            event.register(ModEntityTypes.MANNEQUIN.get().get(), MannequinEntity.createLivingAttributes());
+            event.register(ModEntityTypes.SEAT.get().get(), SeatEntity.createLivingAttributes());
         });
 
-        registries.willServerTick(WorldUpdater.getInstance()::tick);
-
-        registries.willServerStart(server -> {
+        EventManager.listen(ServerStartingEvent.class, event -> {
             ModLog.debug("hello");
             LocalDataService.start(EnvironmentManager.getSkinDatabaseDirectory());
-            SkinLoader.getInstance().prepare(SkinServerType.of(server));
+            SkinLoader.getInstance().prepare(SkinServerType.of(event.getServer()));
         });
-        registries.didServerStart(server -> {
+        EventManager.listen(ServerStartedEvent.class, event -> {
             ModLog.debug("init");
-            ModContext.init(server);
+            ModContext.init(event.getServer());
             SkinLoader.getInstance().start();
         });
 
-        registries.willServerStop(server -> {
+        EventManager.listen(ServerStoppingEvent.class, event -> {
             ModLog.debug("wait");
             // before server stopping, we need to sure that all data saved.
-            for (ServerLevel level : server.getAllLevels()) {
+            for (ServerLevel level : event.getServer().getAllLevels()) {
                 WorldUpdater.getInstance().drain(level);
             }
             LocalDataService.stop();
             SkinLoader.getInstance().stop();
         });
-        registries.didServerStop(server -> {
+        EventManager.listen(ServerStoppedEvent.class, event -> {
             ModLog.debug("bye");
             ModContext.reset();
         });
 
-        registries.willBlockPlace(BlockUtils::snapshot);
-        registries.willBlockBreak(BlockUtils::snapshot);
-
-        registries.willPlayerLogin(player -> {
+        EventManager.listen(PlayerEvent.LoggingIn.class, event -> {
             // when the player login, check and give gifts for holiday
-            ModLog.debug("welcome back {}", player.getScoreboardName());
-            ReplayManager.startRecording(player.getServer(), player);
-            ModHolidays.welcome(player);
+            ModLog.debug("welcome back {}", event.getPlayer().getScoreboardName());
+            ReplayManager.startRecording(event.getPlayer().getServer(), event.getPlayer());
+            ModHolidays.welcome(event.getPlayer());
         });
-        registries.willPlayerLogout(player -> {
-            ModLog.debug("good bye {}", player.getScoreboardName());
-            SkinLibraryManager.getServer().remove(player);
-            ReplayManager.stopRecording(player.getServer(), player);
+        EventManager.listen(PlayerEvent.LoggingOut.class, event -> {
+            ModLog.debug("good bye {}", event.getPlayer().getScoreboardName());
+            SkinLibraryManager.getServer().remove(event.getPlayer());
+            ReplayManager.stopRecording(event.getPlayer().getServer(), event.getPlayer());
         });
-        registries.willPlayerDeath(player -> {
-            ModLog.debug("keep careful {}", player.getScoreboardName());
-            SkinUtils.dropAll(player);
+        EventManager.listen(PlayerEvent.Death.class, event -> {
+            ModLog.debug("keep careful {}", event.getPlayer().getScoreboardName());
+            SkinUtils.dropAll(event.getPlayer());
         });
-        registries.willPlayerClone((oldPlayer, newPlayer) -> {
-            ModLog.debug("woa {}", newPlayer.getScoreboardName());
-            SkinWardrobe oldWardrobe = SkinWardrobe.of(oldPlayer);
-            SkinWardrobe newWardrobe = SkinWardrobe.of(newPlayer);
+        EventManager.listen(PlayerEvent.Clone.class, event -> {
+            ModLog.debug("woa {}", event.getPlayer().getScoreboardName());
+            SkinWardrobe oldWardrobe = SkinWardrobe.of(event.getOriginal());
+            SkinWardrobe newWardrobe = SkinWardrobe.of(event.getPlayer());
             if (newWardrobe != null && oldWardrobe != null) {
-                newWardrobe.deserializeNBT(oldWardrobe.serializeNBT());
+                CompoundTag tag = new CompoundTag();
+                oldWardrobe.serialize(AbstractDataSerializer.wrap(tag, event.getPlayer()));
+                newWardrobe.deserialize(AbstractDataSerializer.wrap(tag, event.getPlayer()));
                 newWardrobe.broadcast();
             }
         });
 
-        registries.didEntityTacking((entity, player) -> {
-            EntityProfile entityProfile = ModEntityProfiles.getProfile(entity);
-            if (entityProfile != null) {
-                NetworkManager.sendWardrobeTo(entity, (ServerPlayer) player);
+        EventManager.listen(PlayerEvent.Attack.class, event -> {
+            Player player = event.getPlayer();
+            if (player == null || player.isSpectator()) {
+                return;
+            }
+            ItemStack itemStack = player.getMainHandItem();
+            IItemHandler handler = ObjectUtils.safeCast(itemStack.getItem(), IItemHandler.class);
+            if (handler != null) {
+                InteractionResult result = handler.attackLivingEntity(itemStack, player, event.getTarget());
+                if (result.consumesAction()) {
+                    event.setCancelled(true);
+                }
             }
         });
-        registries.didEntityJoin(entity -> {
-            SkinUtils.copySkinFromOwner(entity);
-            ServerPlayer player = ObjectUtils.safeCast(entity, ServerPlayer.class);
+
+        EventManager.listen(PlayerEvent.StartTracking.class, event -> {
+            EntityProfile entityProfile = ModEntityProfiles.getProfile(event.getTarget());
+            if (entityProfile != null) {
+                NetworkManager.sendWardrobeTo(event.getTarget(), (ServerPlayer) event.getPlayer());
+            }
+        });
+
+        EventManager.listen(ServerLevelTickEvent.class, event -> {
+            WorldUpdater.getInstance().tick(event.getLevel());
+        });
+        EventManager.listen(ServerLevelAddEntityEvent.class, event -> {
+            SkinUtils.copySkinFromOwner(event.getEntity());
+            ServerPlayer player = ObjectUtils.safeCast(event.getEntity(), ServerPlayer.class);
             if (player != null) {
                 NetworkManager.sendTo(new UpdateContextPacket(player), player);
                 NetworkManager.sendWardrobeTo(player, player);
             }
         });
+
+        EventManager.listen(BlockEvent.Place.class, event -> BlockUtils.snapshot(event.getEntity(), event.getLevel(), event.getPos(), event.getState(), event.getSnapshot()));
+        EventManager.listen(BlockEvent.Break.class, event -> BlockUtils.snapshot(event.getEntity(), event.getLevel(), event.getPos(), event.getState(), event.getSnapshot()));
     }
 }

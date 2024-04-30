@@ -7,7 +7,7 @@
   ],
   "key": {
     "X": {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     },
     "B": {
       "item": "armourers_workshop:dye-bottle"
@@ -23,6 +23,6 @@
     }
   },
   "result": {
-    "item": "armourers_workshop:wand-of-style"
+    "id": "armourers_workshop:wand-of-style"
   }
 }

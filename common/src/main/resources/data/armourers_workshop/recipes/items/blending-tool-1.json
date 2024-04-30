@@ -7,13 +7,13 @@
   ],
   "key": {
     "W": {
-      "tag": "c:white_dyes"
+      "tag": "c:dyes/white"
     },
     "B": {
-      "tag": "c:black_dyes"
+      "tag": "c:dyes/black"
     },
     "X": {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     },
     "T": {
       "tag": "armourers_workshop:skin_cubes"
@@ -23,6 +23,6 @@
     }
   },
   "result": {
-    "item": "armourers_workshop:blending-tool"
+    "id": "armourers_workshop:blending-tool"
   }
 }

@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.library.menu;
 
-import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
-import moe.plushie.armourers_workshop.core.item.SkinItem;
+import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.core.menu.AbstractBlockEntityMenu;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.library.blockentity.SkinLibraryBlockEntity;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
@@ -26,7 +26,7 @@ public class SkinLibraryMenu extends AbstractBlockEntityMenu<SkinLibraryBlockEnt
 
     private int libraryVersion = 0;
 
-    public SkinLibraryMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IContainerLevelAccess access) {
+    public SkinLibraryMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
         super(menuType, block, containerId, access);
         this.inventory = blockEntity.getInventory();
         this.playerInventory = playerInventory;
@@ -103,12 +103,27 @@ public class SkinLibraryMenu extends AbstractBlockEntityMenu<SkinLibraryBlockEnt
         ItemStack newItemStack = itemStack.copy();
         if (descriptor != null) {
             // only consumes the template
-            newItemStack = SkinItem.replace(itemStack.copy(), descriptor);
+            newItemStack = create(newItemStack, descriptor);
             consume = itemStack.is(ModItems.SKIN_TEMPLATE.get());
         }
         inventory.setItem(1, newItemStack);
         if (consume) {
             itemStack.shrink(1);
         }
+    }
+
+    private ItemStack create(ItemStack targetStack, SkinDescriptor descriptor) {
+        if (targetStack.isEmpty()) {
+            return descriptor.asItemStack();
+        }
+        if (targetStack.is(ModItems.SKIN_TEMPLATE.get())) {
+            return descriptor.asItemStack();
+        }
+        if (descriptor.isEmpty()) {
+            targetStack.remove(ModDataComponents.SKIN.get());
+        } else {
+            targetStack.set(ModDataComponents.SKIN.get(), descriptor);
+        }
+        return targetStack;
     }
 }

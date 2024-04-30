@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.builder.network;
 
 import moe.plushie.armourers_workshop.api.common.IItemParticleProvider;
 import moe.plushie.armourers_workshop.api.common.IItemSoundProvider;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.other.CubeChangesCollector;
@@ -9,7 +10,6 @@ import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
@@ -26,7 +26,7 @@ public class UpdateBlockColorPacket extends CustomPacket {
     final BlockHitResult traceResult;
     final CubePaintingEvent paintingEvent;
 
-    public UpdateBlockColorPacket(FriendlyByteBuf buffer) {
+    public UpdateBlockColorPacket(IFriendlyByteBuf buffer) {
         this.hand = buffer.readEnum(InteractionHand.class);
         this.clickedPos = buffer.readGlobalPos();
         this.traceResult = buffer.readBlockHitResult();
@@ -41,7 +41,7 @@ public class UpdateBlockColorPacket extends CustomPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeEnum(hand);
         buffer.writeGlobalPos(clickedPos);
         buffer.writeBlockHitResult(traceResult);

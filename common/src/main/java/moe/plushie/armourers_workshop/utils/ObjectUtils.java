@@ -8,13 +8,11 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -39,7 +37,11 @@ public class ObjectUtils {
     }
 
     public static String readableName(Class<?> clazz) {
-        return clazz.getSimpleName().replaceAll("([a-z]+)([A-Z]+)", "$1 $2");
+        String simpleName = clazz.getSimpleName();
+        if (simpleName.matches("^I[A-Z].+$") && clazz.isInterface()) {
+            simpleName = simpleName.substring(1);
+        }
+        return simpleName.replaceAll("([a-z]+)([A-Z]+)", "$1 $2");
     }
 
     public static <K, V> Map<K, V> toMap(K key, V value) {

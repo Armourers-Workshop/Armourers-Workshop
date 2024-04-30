@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.compatibility.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
+import moe.plushie.armourers_workshop.api.data.IDataSerializer;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -22,41 +24,41 @@ public abstract class AbstractBlockEntity extends BlockEntity implements IBlockE
         super(blockEntityType);
     }
 
-    public abstract void readFromNBT(CompoundTag nbt);
+    public abstract void readAdditionalData(IDataSerializer serializer);
 
-    public abstract void writeToNBT(CompoundTag nbt);
+    public abstract void writeAdditionalData(IDataSerializer serializer);
 
     public abstract void sendBlockUpdates();
 
     @Override
-    public void load(BlockState state, CompoundTag compoundTag) {
-        super.load(state, compoundTag);
-        this.readFromNBT(compoundTag);
+    public void load(BlockState state, CompoundTag tag) {
+        super.load(state, tag);
+        this.readAdditionalData(AbstractDataSerializer.wrap(tag, null));
     }
 
     @Override
-    public CompoundTag save(CompoundTag compoundTag) {
-        super.save(compoundTag);
-        this.writeToNBT(compoundTag);
-        return compoundTag;
+    public CompoundTag save(CompoundTag tag) {
+        super.save(tag);
+        this.writeAdditionalData(AbstractDataSerializer.wrap(tag, null));
+        return tag;
     }
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         CompoundTag tag = new CompoundTag();
-        this.writeToNBT(tag);
+        this.writeAdditionalData(AbstractDataSerializer.wrap(tag, null));
         return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, tag);
     }
 
     @Override
-    public void handleUpdatePacket(BlockState state, CompoundTag tag) {
-        this.readFromNBT(tag);
+    public void handleUpdatePacket(BlockState state, IDataSerializer serializer) {
+        this.readAdditionalData(serializer);
         this.sendBlockUpdates();
     }
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.saveWithFullMetadata();
+        return this.saveFullData(null);
     }
 
     @Override

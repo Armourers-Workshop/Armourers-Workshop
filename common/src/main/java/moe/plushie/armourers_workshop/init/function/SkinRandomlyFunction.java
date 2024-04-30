@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import moe.plushie.armourers_workshop.api.common.ILootFunction;
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
@@ -13,6 +14,7 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -57,8 +59,8 @@ import java.util.function.Function;
  */
 public class SkinRandomlyFunction implements ILootFunction {
 
-    public static final Codec<SkinRandomlyFunction> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            SkinSource.CODEC.listOf().fieldOf("skins").forGetter(SkinRandomlyFunction::getSources)
+    public static final MapCodec<SkinRandomlyFunction> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            SkinSource.MAP_CODEC.listOf().fieldOf("skins").forGetter(SkinRandomlyFunction::getSources)
     ).apply(instance, SkinRandomlyFunction::new));
 
     public final List<SkinSource> sources;
@@ -84,7 +86,7 @@ public class SkinRandomlyFunction implements ILootFunction {
         }
 
         // attach the skin to the item stack.
-        SkinDescriptor.setDescriptor(itemStack, descriptor);
+        itemStack.set(ModDataComponents.SKIN.get(), descriptor);
         return itemStack;
     }
 
@@ -99,7 +101,7 @@ public class SkinRandomlyFunction implements ILootFunction {
 
     public static class SkinSource implements IResultHandler<SkinDescriptor> {
 
-        public static final Codec<SkinSource> CODEC = new Codec<SkinSource>() {
+        public static final Codec<SkinSource> MAP_CODEC = new Codec<SkinSource>() {
 
             final Codec<SkinSource> simple = Codec.STRING.xmap(SkinSource::new, it -> null);
             final Codec<SkinSource> complex = RecordCodecBuilder.create(instance -> instance.group(

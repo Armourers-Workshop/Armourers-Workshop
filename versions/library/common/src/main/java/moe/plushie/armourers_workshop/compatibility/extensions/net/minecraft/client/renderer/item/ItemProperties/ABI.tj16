@@ -1,0 +1,19 @@
+package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.client.renderer.item.ItemProperties;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.item.ItemPropertyFunction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+
+@Extension
+@Available("[1.16, 1.21)")
+public class ABI {
+
+    public static ItemPropertyFunction getProperty(@ThisClass Class<?> clazz, ItemStack itemStack, ResourceLocation resourceLocation) {
+        return ItemProperties.getProperty(itemStack.getItem(), resourceLocation);
+    }
+}

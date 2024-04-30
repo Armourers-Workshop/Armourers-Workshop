@@ -1,14 +1,12 @@
 package moe.plushie.armourers_workshop.core.network;
 
 import moe.plushie.armourers_workshop.api.common.IConfigurableTool;
-import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
+import moe.plushie.armourers_workshop.api.common.IDataComponentType;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
+import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -19,7 +17,7 @@ public class UpdateConfigurableToolPacket extends CustomPacket {
     private final InteractionHand hand;
     private final ItemStack itemStack;
 
-    public UpdateConfigurableToolPacket(FriendlyByteBuf buffer) {
+    public UpdateConfigurableToolPacket(IFriendlyByteBuf buffer) {
         this.hand = buffer.readEnum(InteractionHand.class);
         this.itemStack = buffer.readItem();
     }
@@ -30,7 +28,7 @@ public class UpdateConfigurableToolPacket extends CustomPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeEnum(hand);
         buffer.writeItem(itemStack);
     }
@@ -49,26 +47,14 @@ public class UpdateConfigurableToolPacket extends CustomPacket {
             return;
         }
         ItemStack newItemStack = oldItemStack.copy();
-        copyTo(itemStack, newItemStack, IConfigurableToolProperty.OPTIONS_KEY);
-        copyTo(itemStack, newItemStack, Constants.Key.COLOR);
+        copyTo(itemStack, newItemStack, ModDataComponents.TOOL_OPTIONS.get());
+        copyTo(itemStack, newItemStack, ModDataComponents.TOOL_COLOR.get());
         player.setItemInHand(hand, newItemStack);
     }
 
-    private void copyTo(ItemStack fromItemStack, ItemStack toItemStack, String key) {
-        CompoundTag nbt = fromItemStack.getTag();
-        Tag value = null;
-        if (nbt != null) {
-            value = nbt.get(key);
-        }
-        if (value != null) {
-            CompoundTag itemTag = toItemStack.getOrCreateTag();
-            itemTag.put(key, value);
-        } else {
-            CompoundTag itemTag = toItemStack.getTag();
-            if (itemTag != null) {
-                itemTag.remove(key);
-            }
-        }
+    private <T> void copyTo(ItemStack fromItemStack, ItemStack toItemStack, IDataComponentType<T> key) {
+        T value = fromItemStack.get(key);
+        toItemStack.set(key, value);
     }
 
     private void abort(Player player, String op, String reason) {

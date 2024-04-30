@@ -38,9 +38,9 @@ public class PaintingHighlightPlacementRenderer {
             return;
         }
 
-        int radiusSample = PaintingToolOptions.RADIUS_SAMPLE.get(itemStack);
-        int radiusEffect = PaintingToolOptions.RADIUS_EFFECT.get(itemStack);
-        boolean restrictPlane = PaintingToolOptions.PLANE_RESTRICT.get(itemStack);
+        int radiusSample = itemStack.get(PaintingToolOptions.RADIUS_SAMPLE);
+        int radiusEffect = itemStack.get(PaintingToolOptions.RADIUS_EFFECT);
+        boolean restrictPlane = itemStack.get(PaintingToolOptions.PLANE_RESTRICT);
 
         ArrayList<BlockPos> blockSamples = BlockUtils.findTouchingBlockFaces(level, pos, direction, radiusSample, restrictPlane);
         ArrayList<BlockPos> blockEffects = BlockUtils.findTouchingBlockFaces(level, pos, direction, radiusEffect, restrictPlane);

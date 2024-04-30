@@ -1,15 +1,16 @@
 package moe.plushie.armourers_workshop.init.network;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModContext;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
 import java.io.ObjectInputStream;
@@ -21,7 +22,7 @@ import java.util.UUID;
 public class UpdateContextPacket extends CustomPacket {
 
     private UUID token = null;
-    private FriendlyByteBuf buffer = null;
+    private ByteBuf buffer = null;
 
     public UpdateContextPacket() {
     }
@@ -30,13 +31,13 @@ public class UpdateContextPacket extends CustomPacket {
         this.token = player.getUUID();
     }
 
-    public UpdateContextPacket(FriendlyByteBuf buffer) {
-        this.buffer = buffer;
+    public UpdateContextPacket(IFriendlyByteBuf buffer) {
+        this.buffer = buffer.asByteBuf();
         this.buffer.retain();
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         if (token != null) {
             buffer.writeBoolean(true);
             buffer.writeUUID(ModContext.t2(token));
@@ -51,16 +52,17 @@ public class UpdateContextPacket extends CustomPacket {
     @Override
     public void accept(IClientPacketHandler packetHandler, Player player) {
         if (buffer != null) {
+            IFriendlyByteBuf reader = IFriendlyByteBuf.wrap(buffer);
             if (buffer.readBoolean()) {
-                ModContext.init(buffer.readUUID(), buffer.readUUID());
-                checkNetworkVersion(buffer.readUtf());
+                ModContext.init(reader.readUUID(), reader.readUUID());
+                checkNetworkVersion(reader.readUtf());
             }
-            readConfigSpec(buffer);
+            readConfigSpec(reader);
             buffer.release();
         }
     }
 
-    private void writeConfigSpec(FriendlyByteBuf buffer) {
+    private void writeConfigSpec(IFriendlyByteBuf buffer) {
         try {
             Map<String, Object> fields = new HashMap<>();
             if (EnvironmentManager.isDedicatedServer()) {
@@ -70,7 +72,7 @@ public class UpdateContextPacket extends CustomPacket {
             if (fields.size() == 0) {
                 return;
             }
-            ByteBufOutputStream bo = new ByteBufOutputStream(buffer);
+            ByteBufOutputStream bo = new ByteBufOutputStream(buffer.asByteBuf());
             ObjectOutputStream oo = new ObjectOutputStream(bo);
             for (Map.Entry<String, Object> entry : fields.entrySet()) {
                 oo.writeUTF(entry.getKey());
@@ -82,14 +84,14 @@ public class UpdateContextPacket extends CustomPacket {
         }
     }
 
-    private void readConfigSpec(FriendlyByteBuf buffer) {
+    private void readConfigSpec(IFriendlyByteBuf buffer) {
         int size = buffer.readInt();
         if (size == 0) {
             return;
         }
         try {
             HashMap<String, Object> fields = new HashMap<>();
-            ByteBufInputStream bi = new ByteBufInputStream(buffer);
+            ByteBufInputStream bi = new ByteBufInputStream(buffer.asByteBuf());
             ObjectInputStream oi = new ObjectInputStream(bi);
             for (int i = 0; i < size; ++i) {
                 String name = oi.readUTF();

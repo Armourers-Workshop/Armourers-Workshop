@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.init.mixin.fabric;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
+import moe.plushie.armourers_workshop.init.platform.event.client.RenderLivingEntityEvent;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderLivingEntityEvents;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,16 +17,47 @@ public class FabricLivingRendererMixin<T extends LivingEntity> {
 
     @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "HEAD"))
     private void aw2$renderPre(T entity, float p_225623_2_, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, CallbackInfo ci) {
-        ClientWardrobeHandler.onRenderLivingEntityPre(entity, partialTicks, light, poseStack, buffers, LivingEntityRenderer.class.cast(this));
+        RenderLivingEntityEvents.PRE.invoker().render(entity, partialTicks, light, poseStack, buffers, LivingEntityRenderer.class.cast(this));
     }
 
     @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;setupAnim(Lnet/minecraft/world/entity/Entity;FFFFF)V", shift = At.Shift.AFTER))
     private void aw2$render(T entity, float p_225623_2_, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, CallbackInfo ci) {
-        ClientWardrobeHandler.onRenderLivingEntity(entity, partialTicks, light, poseStack, buffers, LivingEntityRenderer.class.cast(this));
+        LivingEntityRenderer<?, ?> renderer = LivingEntityRenderer.class.cast(this);
+        EventManager.post(RenderLivingEntityEvent.Setup.class, new RenderLivingEntityEvent.Setup() {
+            @Override
+            public float getPartialTicks() {
+                return partialTicks;
+            }
+
+            @Override
+            public int getPackedLight() {
+                return light;
+            }
+
+            @Override
+            public LivingEntity getEntity() {
+                return entity;
+            }
+
+            @Override
+            public LivingEntityRenderer<?, ?> getRenderer() {
+                return renderer;
+            }
+
+            @Override
+            public PoseStack getPoseStack() {
+                return poseStack;
+            }
+
+            @Override
+            public MultiBufferSource getMultiBufferSource() {
+                return buffers;
+            }
+        });
     }
 
     @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "RETURN"))
     private void aw2$renderPost(T entity, float p_225623_2_, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, CallbackInfo ci) {
-        ClientWardrobeHandler.onRenderLivingEntityPost(entity, partialTicks, light, poseStack, buffers, LivingEntityRenderer.class.cast(this));
+        RenderLivingEntityEvents.POST.invoker().render(entity, partialTicks, light, poseStack, buffers, LivingEntityRenderer.class.cast(this));
     }
 }

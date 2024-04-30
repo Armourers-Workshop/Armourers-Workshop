@@ -1,12 +1,12 @@
 plugins {
     id "java"
-    id "architectury-plugin" version "3.4.+"
-    id "dev.architectury.loom" version "1.5.+" apply false
-    id "moe.plushie.armourers_workshop.loom" version "2.0.1" apply false
+    id "architectury-plugin" version "3.4.155"
+    id "dev.architectury.loom" version "1.6.397" apply false
+    id "moe.plushie.armourers_workshop.loom" version "2.1.1" apply false
 }
 
 architectury {
-    minecraft = rootProject.minecraft_version
+    minecraft = rootProject.minecraft_api_version
 }
 
 subprojects {
@@ -21,7 +21,7 @@ subprojects {
     }
 
     dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        minecraft "com.mojang:minecraft:${rootProject.minecraft_api_version}"
         // The following line declares the mojmap mappings, you may use other mappings as well
         mappings loom.officialMojangMappings()
         // The following line declares the yarn mappings you may select this one as well.
@@ -55,6 +55,7 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://api.modrinth.com/maven/" }
         maven { url "https://cursemaven.com/" }
+        maven { url "https://maven.blamejared.com/" }
     }
 
     dependencies {

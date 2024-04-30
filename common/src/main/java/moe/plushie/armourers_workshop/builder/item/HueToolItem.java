@@ -36,10 +36,10 @@ public class HueToolItem extends PaintbrushItem {
     public IPaintToolAction createPaintToolAction(UseOnContext context) {
         ItemStack itemStack = context.getItemInHand();
         IPaintColor paintColor = getItemColor(itemStack, PaintColor.WHITE);
-        boolean hue = PaintingToolOptions.CHANGE_HUE.get(itemStack);
-        boolean saturation = PaintingToolOptions.CHANGE_SATURATION.get(itemStack);
-        boolean brightness = PaintingToolOptions.CHANGE_BRIGHTNESS.get(itemStack);
-        boolean paintType = PaintingToolOptions.CHANGE_PAINT_TYPE.get(itemStack);
+        boolean hue = itemStack.get(PaintingToolOptions.CHANGE_HUE);
+        boolean saturation = itemStack.get(PaintingToolOptions.CHANGE_SATURATION);
+        boolean brightness = itemStack.get(PaintingToolOptions.CHANGE_BRIGHTNESS);
+        boolean paintType = itemStack.get(PaintingToolOptions.CHANGE_PAINT_TYPE);
         return new CubePaintingEvent.HueAction(paintColor, hue, saturation, brightness, paintType);
     }
 

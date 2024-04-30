@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.block;
 
+import moe.plushie.armourers_workshop.api.common.ITooltipContext;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
@@ -53,8 +54,8 @@ public abstract class AbstractAttachedHorizontalBlock extends AbstractHorizontal
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendHoverText(ItemStack itemStack, BlockGetter blockGetter, List<Component> tooltips, TooltipFlag tooltipFlag) {
-        super.appendHoverText(itemStack, blockGetter, tooltips, tooltipFlag);
+    public void appendHoverText(ItemStack itemStack, List<Component> tooltips, ITooltipContext context) {
+        super.appendHoverText(itemStack, tooltips, context);
         tooltips.addAll(TranslateUtils.subtitles(getDescriptionId() + ".flavour"));
     }
 }

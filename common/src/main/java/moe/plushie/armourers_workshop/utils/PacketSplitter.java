@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.utils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModLog;
-import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,15 +25,15 @@ public class PacketSplitter {
     public PacketSplitter() {
     }
 
-    public <T> void split(final CustomPacket message, Function<FriendlyByteBuf, T> builder, int partSize, Consumer<T> consumer) {
+    public <T> void split(final CustomPacket message, Function<IFriendlyByteBuf, T> builder, int partSize, Consumer<T> consumer) {
         workThread.submit(() -> {
-            FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
+            ByteBuf buffer = Unpooled.buffer();
             writePacket(message, buffer);
             buffer.capacity(buffer.readableBytes());
             // when packet exceeds the part size, it will be split automatically
             int bufferSize = buffer.readableBytes();
             if (bufferSize <= partSize) {
-                T packet = builder.apply(buffer);
+                T packet = builder.apply(IFriendlyByteBuf.wrap(buffer));
                 consumer.accept(packet);
                 return;
             }
@@ -49,14 +49,15 @@ public class PacketSplitter {
                 int resolvedPartSize = Math.min(bufferSize - index, partSize);
                 ByteBuf buffer1 = Unpooled.wrappedBuffer(partPrefix, buffer.retainedSlice(buffer.readerIndex(), resolvedPartSize));
                 buffer.skipBytes(resolvedPartSize);
-                T packet = builder.apply(new FriendlyByteBuf(buffer1));
+                T packet = builder.apply(IFriendlyByteBuf.wrap(buffer1));
                 consumer.accept(packet);
             }
             buffer.release();
         });
     }
 
-    public void merge(UUID uuid, FriendlyByteBuf buffer, Consumer<CustomPacket> consumer) {
+    public void merge(UUID uuid, IFriendlyByteBuf bufferIn, Consumer<CustomPacket> consumer) {
+        ByteBuf buffer = bufferIn.asByteBuf();
         int packetState = buffer.getInt(0);
         if (packetState < 0) {
             ArrayList<ByteBuf> playerReceivedBuffers = receivedBuffers.computeIfAbsent(uuid, k -> new ArrayList<>());
@@ -71,7 +72,7 @@ public class PacketSplitter {
             if (packetState == SPLIT_END_FLAG) {
                 workThread.submit(() -> {
                     // ownership will transfer to full buffer, so don't call release again.
-                    FriendlyByteBuf full = new FriendlyByteBuf(Unpooled.wrappedBuffer(playerReceivedBuffers.toArray(new ByteBuf[0])));
+                    ByteBuf full = Unpooled.wrappedBuffer(playerReceivedBuffers.toArray(new ByteBuf[0]));
                     playerReceivedBuffers.clear();
                     consumer.accept(readPacket(full));
                     full.release();
@@ -85,21 +86,21 @@ public class PacketSplitter {
         }
         ByteBuf receivedBuf = buffer.retainedDuplicate(); // we need to keep writer/reader index
         workThread.submit(() -> {
-            consumer.accept(readPacket(new FriendlyByteBuf(receivedBuf)));
+            consumer.accept(readPacket(receivedBuf));
             receivedBuf.release();
         });
     }
 
-    private void writePacket(CustomPacket message, FriendlyByteBuf buffer) {
+    private void writePacket(CustomPacket message, ByteBuf buffer) {
         buffer.writeInt(message.getPacketID());
-        message.encode(buffer);
+        message.encode(IFriendlyByteBuf.wrap(buffer));
     }
 
-    private CustomPacket readPacket(FriendlyByteBuf buffer) {
+    private CustomPacket readPacket(ByteBuf buffer) {
         int packetId = buffer.readInt();
-        Function<FriendlyByteBuf, CustomPacket> decoder = CustomPacket.getPacketType(packetId);
+        Function<IFriendlyByteBuf, CustomPacket> decoder = CustomPacket.getPacketType(packetId);
         if (decoder != null) {
-            return decoder.apply(buffer);
+            return decoder.apply(IFriendlyByteBuf.wrap(buffer));
         }
         throw new UnsupportedOperationException("This packet ( " + packetId + ") does not support in this version.");
     }

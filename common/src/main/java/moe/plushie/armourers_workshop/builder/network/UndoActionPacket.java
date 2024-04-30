@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.builder.network;
 
 import moe.plushie.armourers_workshop.api.action.IUserAction;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.data.undo.UndoManager;
 import moe.plushie.armourers_workshop.builder.data.undo.UndoStack;
 import moe.plushie.armourers_workshop.builder.data.undo.action.ActionRuntimeException;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModPermissions;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -15,7 +15,7 @@ public class UndoActionPacket extends CustomPacket {
 
     private final boolean isRedo;
 
-    public UndoActionPacket(FriendlyByteBuf buffer) {
+    public UndoActionPacket(IFriendlyByteBuf buffer) {
         this.isRedo = buffer.readBoolean();
     }
 
@@ -24,7 +24,7 @@ public class UndoActionPacket extends CustomPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeBoolean(isRedo);
     }
 

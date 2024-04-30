@@ -12,10 +12,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModConstants;
-import moe.plushie.armourers_workshop.init.ModItems;
-import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -39,39 +36,6 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
         super(block, properties);
     }
 
-    public static ItemStack replace(ItemStack targetStack, ItemStack sourceStack) {
-        CompoundTag sourceNBT = null;
-        if (!sourceStack.isEmpty()) {
-            sourceNBT = sourceStack.getTagElement(Constants.Key.SKIN);
-        }
-        if (sourceNBT != null && sourceNBT.size() != 0) {
-            targetStack.addTagElement(Constants.Key.SKIN, sourceNBT.copy());
-        } else {
-            CompoundTag targetNBT = targetStack.getTag();
-            if (targetNBT != null) {
-                targetNBT.remove(Constants.Key.SKIN);
-            }
-        }
-        return targetStack;
-    }
-
-    public static ItemStack replace(ItemStack targetStack, SkinDescriptor descriptor) {
-        if (targetStack.isEmpty()) {
-            return descriptor.asItemStack();
-        }
-        if (targetStack.is(ModItems.SKIN_TEMPLATE.get())) {
-            return descriptor.asItemStack();
-        }
-        if (descriptor.isEmpty()) {
-            CompoundTag targetNBT = targetStack.getTag();
-            if (targetNBT != null) {
-                targetNBT.remove(Constants.Key.SKIN);
-            }
-        } else {
-            targetStack.addTagElement(Constants.Key.SKIN, descriptor.serializeNBT());
-        }
-        return targetStack;
-    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {

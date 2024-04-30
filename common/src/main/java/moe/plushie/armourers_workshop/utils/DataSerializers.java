@@ -3,11 +3,14 @@ package moe.plushie.armourers_workshop.utils;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
-import moe.plushie.armourers_workshop.api.common.IContainerLevelAccess;
+import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.common.IMenuSerializer;
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractEntityDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
@@ -21,7 +24,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Rotations;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.world.Container;
@@ -44,6 +46,7 @@ import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+@SuppressWarnings("unused")
 public class DataSerializers {
 
     public static final IEntitySerializer<CompoundTag> COMPOUND_TAG = of(EntityDataSerializers.COMPOUND_TAG);
@@ -54,40 +57,40 @@ public class DataSerializers {
 
     public static final IEntitySerializer<Vec3> VECTOR_3D = new IEntitySerializer<Vec3>() {
         @Override
-        public void write(FriendlyByteBuf buffer, Vec3 pos) {
+        public void write(IFriendlyByteBuf buffer, Vec3 pos) {
             buffer.writeDouble(pos.x());
             buffer.writeDouble(pos.y());
             buffer.writeDouble(pos.z());
         }
 
         @Override
-        public Vec3 read(FriendlyByteBuf buffer) {
+        public Vec3 read(IFriendlyByteBuf buffer) {
             return new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
         }
     };
 
     public static final IEntitySerializer<Vector3f> VECTOR_3F = new IEntitySerializer<Vector3f>() {
         @Override
-        public void write(FriendlyByteBuf buffer, Vector3f pos) {
+        public void write(IFriendlyByteBuf buffer, Vector3f pos) {
             buffer.writeFloat(pos.getX());
             buffer.writeFloat(pos.getY());
             buffer.writeFloat(pos.getZ());
         }
 
         @Override
-        public Vector3f read(FriendlyByteBuf buffer) {
+        public Vector3f read(IFriendlyByteBuf buffer) {
             return new Vector3f(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
         }
     };
 
     public static final IEntitySerializer<IPaintColor> PAINT_COLOR = new IEntitySerializer<IPaintColor>() {
         @Override
-        public void write(FriendlyByteBuf buffer, IPaintColor color) {
+        public void write(IFriendlyByteBuf buffer, IPaintColor color) {
             buffer.writeInt(color.getRawValue());
         }
 
         @Override
-        public IPaintColor read(FriendlyByteBuf buffer) {
+        public IPaintColor read(IFriendlyByteBuf buffer) {
             return PaintColor.of(buffer.readInt());
         }
     };
@@ -95,19 +98,19 @@ public class DataSerializers {
     public static final IEntitySerializer<PlayerTextureDescriptor> PLAYER_TEXTURE = new IEntitySerializer<PlayerTextureDescriptor>() {
 
         @Override
-        public void write(FriendlyByteBuf buffer, PlayerTextureDescriptor descriptor) {
+        public void write(IFriendlyByteBuf buffer, PlayerTextureDescriptor descriptor) {
             buffer.writeNbt(descriptor.serializeNBT());
         }
 
         @Override
-        public PlayerTextureDescriptor read(FriendlyByteBuf buffer) {
+        public PlayerTextureDescriptor read(IFriendlyByteBuf buffer) {
             return new PlayerTextureDescriptor(buffer.readNbt());
         }
     };
 
     public static final IEntitySerializer<Exception> EXCEPTION = new IEntitySerializer<Exception>() {
 
-        public void write(FriendlyByteBuf buffer, Exception exception) {
+        public void write(IFriendlyByteBuf buffer, Exception exception) {
             OutputStream outputStream = null;
             ObjectOutputStream objectOutputStream = null;
             try {
@@ -123,7 +126,7 @@ public class DataSerializers {
             }
         }
 
-        public Exception read(FriendlyByteBuf buffer) {
+        public Exception read(IFriendlyByteBuf buffer) {
             InputStream inputStream = null;
             ObjectInputStream objectInputStream = null;
             try {
@@ -142,16 +145,16 @@ public class DataSerializers {
             return value;
         }
 
-        private InputStream createInputStream(FriendlyByteBuf buffer, boolean compress) throws Exception {
-            InputStream inputStream = new ByteBufInputStream(buffer);
+        private InputStream createInputStream(IFriendlyByteBuf buffer, boolean compress) throws Exception {
+            InputStream inputStream = new ByteBufInputStream(buffer.asByteBuf());
             if (compress) {
                 return new GZIPInputStream(inputStream);
             }
             return inputStream;
         }
 
-        private OutputStream createOutputStream(FriendlyByteBuf buffer, boolean compress) throws Exception {
-            ByteBufOutputStream outputStream = new ByteBufOutputStream(buffer);
+        private OutputStream createOutputStream(IFriendlyByteBuf buffer, boolean compress) throws Exception {
+            ByteBufOutputStream outputStream = new ByteBufOutputStream(buffer.asByteBuf());
             if (compress) {
                 return new GZIPOutputStream(outputStream);
             }
@@ -159,13 +162,13 @@ public class DataSerializers {
         }
     };
 
-    public static final IPlayerDataSerializer<SkinWardrobe> ENTITY_WARDROBE = new IPlayerDataSerializer<SkinWardrobe>() {
-        public void write(FriendlyByteBuf buffer, Player player, SkinWardrobe wardrobe) {
+    public static final IMenuSerializer<SkinWardrobe> ENTITY_WARDROBE = new IMenuSerializer<SkinWardrobe>() {
+        public void write(IFriendlyByteBuf buffer, Player player, SkinWardrobe wardrobe) {
             buffer.writeInt(wardrobe.getId());
             buffer.writeResourceLocation(wardrobe.getProfile().getRegistryName());
         }
 
-        public SkinWardrobe read(FriendlyByteBuf buffer, Player player) {
+        public SkinWardrobe read(IFriendlyByteBuf buffer, Player player) {
             if (player == null || player.getLevel() == null) {
                 return null;
             }
@@ -191,41 +194,39 @@ public class DataSerializers {
         }
     };
 
-    public static final IPlayerDataSerializer<IContainerLevelAccess> WORLD_POS = new IPlayerDataSerializer<IContainerLevelAccess>() {
-        public void write(FriendlyByteBuf buffer, Player player, IContainerLevelAccess callable) {
+    public static final IMenuSerializer<IGlobalPos> GLOBAL_POS = new IMenuSerializer<IGlobalPos>() {
+        public void write(IFriendlyByteBuf buffer, Player player, IGlobalPos callable) {
             Optional<BlockPos> pos1 = callable.evaluate((world, pos) -> pos);
             buffer.writeBlockPos(pos1.orElse(BlockPos.ZERO));
-            // buffer.writeNbt(callable.extraData());
         }
 
-        public IContainerLevelAccess read(FriendlyByteBuf buffer, Player player) {
+        public IGlobalPos read(IFriendlyByteBuf buffer, Player player) {
             if (player == null || player.getLevel() == null) {
                 return null;
             }
             BlockPos blockPos = buffer.readBlockPos();
-            // CompoundTag extraNBT = buffer.readNbt(); 
-            return IContainerLevelAccess.create(player.getLevel(), blockPos, null);
+            return IGlobalPos.create(player.getLevel(), blockPos);
         }
     };
 
     public static final IPlayerDataSerializer<ISkinType> SKIN_TYPE = new IPlayerDataSerializer<ISkinType>() {
-        public void write(FriendlyByteBuf buffer, Player player, ISkinType value) {
+        public void write(IFriendlyByteBuf buffer, Player player, ISkinType value) {
             buffer.writeUtf(value.getRegistryName().toString());
         }
 
-        public ISkinType read(FriendlyByteBuf buffer, Player player) {
-            return SkinTypes.byName(buffer.readUtf(Short.MAX_VALUE));
+        public ISkinType read(IFriendlyByteBuf buffer, Player player) {
+            return SkinTypes.byName(buffer.readUtf());
         }
     };
 
     public static final IPlayerDataSerializer<SkinProperties> SKIN_PROPERTIES = new IPlayerDataSerializer<SkinProperties>() {
-        public void write(FriendlyByteBuf buffer, Player player, SkinProperties value) {
+        public void write(IFriendlyByteBuf buffer, Player player, SkinProperties value) {
             CompoundTag nbt = new CompoundTag();
             value.writeToNBT(nbt);
             buffer.writeNbt(nbt);
         }
 
-        public SkinProperties read(FriendlyByteBuf buffer, Player player) {
+        public SkinProperties read(IFriendlyByteBuf buffer, Player player) {
             SkinProperties properties = new SkinProperties();
             CompoundTag nbt = buffer.readNbt();
             if (nbt != null) {
@@ -238,17 +239,7 @@ public class DataSerializers {
     private static final Random RANDOM = new Random();
 
     public static <T> IEntitySerializer<T> of(EntityDataSerializer<T> serializer) {
-        return new IEntitySerializer<T>() {
-            @Override
-            public T read(FriendlyByteBuf buffer) {
-                return serializer.read(buffer);
-            }
-
-            @Override
-            public void write(FriendlyByteBuf buffer, T descriptor) {
-                serializer.write(buffer, descriptor);
-            }
-        };
+        return AbstractEntityDataSerializer.wrap(serializer);
     }
 
     public static void mirrorRotations(CompoundTag source, String sourceKey, Rotations sourceDefaultValue, CompoundTag target, String targetKey, Rotations targetDefaultValue) {

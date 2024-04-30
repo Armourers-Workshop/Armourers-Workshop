@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
+import moe.plushie.armourers_workshop.init.platform.event.common.RegisterDataPackEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -28,8 +29,9 @@ public class DataPackManager {
         }
     }
 
-    public static void init() {
+    public static void init(RegisterDataPackEvent event) {
         // noop
+        event.register(DataPackManager.byType(DataPackType.SERVER_DATA));
     }
 
     protected static class Bundle extends DataPackLoader {

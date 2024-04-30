@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.item;
 import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.item.option.MannequinToolOptions;
-import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -29,11 +29,11 @@ public class MannequinToolItem extends ConfigurableToolItem {
                 CompoundTag config = new CompoundTag();
                 ItemStack newItemStack = itemStack.copy();
                 ((MannequinEntity) entity).saveMannequinToolData(config);
-                newItemStack.addTagElement(Constants.Key.ENTITY, config);
+                newItemStack.set(ModDataComponents.ENTITY_DATA.get(), config);
                 player.setItemInHand(hand, newItemStack);
                 return InteractionResult.sidedSuccess(player.getLevel().isClientSide());
             } else {
-                CompoundTag entityTag = itemStack.getTagElement(Constants.Key.ENTITY);
+                CompoundTag entityTag = itemStack.get(ModDataComponents.ENTITY_DATA.get());
                 if (entityTag != null && !entityTag.isEmpty()) {
                     ((MannequinEntity) entity).readMannequinToolData(entityTag, itemStack);
                     return InteractionResult.sidedSuccess(player.getLevel().isClientSide());
@@ -55,8 +55,7 @@ public class MannequinToolItem extends ConfigurableToolItem {
 
     @Override
     public void appendSettingHoverText(ItemStack itemStack, List<Component> tooltips) {
-        CompoundTag tag = itemStack.getTag();
-        if (tag != null && tag.contains(Constants.Key.ENTITY, Constants.TagFlags.COMPOUND)) {
+        if (itemStack.has(ModDataComponents.ENTITY_DATA.get())) {
             tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.settingsSaved"));
         } else {
             tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.noSettingsSaved"));

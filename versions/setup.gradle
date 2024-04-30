@@ -44,19 +44,8 @@ static def parseVersionFromFile(file) {
     return null
 }
 
-static def readVersionFromDir(project) {
-    def input = project.file("gradle.properties")
-    def properties = new Properties()
-    properties.load(input.newDataInputStream())
-    def version = properties.target_minecraft_version
-    if (version != null && version != "") {
-        return version
-    }
-    return project.rootDir.getName()
-}
-
 // we needs convert the version to number, for example: 1.16.5 => 11605.
-def minecraft_version = readVersionFromDir(project)
+def minecraft_version = project.rootDir.getName()
 def minecraft_version_number = parseVersion(minecraft_version, 0)
 
 def targets = ["common", "forge", "fabric"]
@@ -136,6 +125,24 @@ task applyCoreSources {
     }
 }
 
+task applyCoreResources {
+    dependsOn "applyCoreSources"
+    sourceSets.forEach {
+        it.resources.matching { include "data/**/recipes/**/*.json" }.forEach {
+            def oldValue = it.getText("UTF-8")
+            def newValue = oldValue
+            if (minecraft_version_number >= 12005) {
+                newValue = oldValue.replaceFirst(/(?sm)(\{.+?"result":\s*\{.+?")item("\s*:.+?}.+?})/, /$1id$2/)
+            } else {
+                newValue = oldValue.replaceFirst(/(?sm)(\{.+?"result":\s*\{.+?")id("\s*:.+?}.+?})/, /$1item$2/)
+            }
+            if (newValue != oldValue) {
+                it.setText(newValue, "UTF-8")
+            }
+        }
+    }
+}
+
 task applyCoreProperties {
     def rootPath = rootDir.absolutePath
     fileTree(rootPath).matching { include "**/*.properties" }.forEach {
@@ -177,4 +184,4 @@ task applyRunConfigurations {
     }
 }
 
-defaultTasks("switchCoreSource", "applyCoreSources", "applyCoreConfigurations", "applyRunConfigurations")
+defaultTasks("switchCoreSource", "applyCoreSources", "applyCoreResources", "applyCoreConfigurations", "applyRunConfigurations")

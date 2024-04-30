@@ -8,13 +8,18 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Collections;
+
 public class VanillaItemStackProvider implements IItemStackProvider {
 
     private final LazyValue<EntityType<?>> customNPCEntityType = LazyValue.of(() -> EntityType.byString("customnpcs:customnpc").orElse(null));
 
     @Override
     public Iterable<ItemStack> getArmorSlots(Entity entity) {
-        return entity.getArmorSlots();
+        if (entity instanceof LivingEntity) {
+            return ((LivingEntity) entity).getArmorSlots();
+        }
+        return Collections.emptyList();
     }
 
     @Override
@@ -26,6 +31,9 @@ public class VanillaItemStackProvider implements IItemStackProvider {
             LivingEntity livingEntity = (LivingEntity) entity;
             return Lists.newArrayList(livingEntity.getMainHandItem(), livingEntity.getOffhandItem());
         }
-        return entity.getHandSlots();
+        if (entity instanceof LivingEntity) {
+            return ((LivingEntity) entity).getHandSlots();
+        }
+        return Collections.emptyList();
     }
 }

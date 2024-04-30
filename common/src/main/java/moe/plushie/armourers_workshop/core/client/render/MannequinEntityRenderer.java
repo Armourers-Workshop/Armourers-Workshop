@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractLivingEntityRenderer;
@@ -90,12 +89,12 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
     }
 
     @Override
-    public void scale(T entity, PoseStack poseStack, float p_225620_3_) {
+    public float getEntityScale(T entity) {
         float f = 0.9375f; // from player renderer (maybe 15/16)
         if (!enableLimitScale) {
             f *= entity.getScale();
         }
-        poseStack.scale(f, f, f);
+        return f;
     }
 
     @Override

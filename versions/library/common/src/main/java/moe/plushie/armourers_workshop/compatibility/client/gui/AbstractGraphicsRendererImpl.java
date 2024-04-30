@@ -26,9 +26,16 @@ public class AbstractGraphicsRendererImpl {
         // forward to vanilla implements.
         int tx = (int) origin.x;
         int ty = (int) origin.y;
-        float f = -entity.getBbHeight() / 2.0f; // remove internal offset.
+        float s = entity.getScale();
+        float f = -entity.getBbHeight() / 2.0f / s; // remove internal offset.
         GuiGraphics guiGraphics = AbstractGraphicsRenderer.of(context);
+        PoseStack poseStack = guiGraphics.pose();
+        poseStack.pushPose();
+        poseStack.translate(0, 0, 50);
+        poseStack.scale(s, s, s);
+        poseStack.translate(0, 0, -50);
         InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, tx, ty, tx, ty, scale, f, focus.getX(), focus.getY(), entity);
+        poseStack.popPose();
     };
 
     private static final EntityRendererImpl<Entity> CUSTOM_ENTITY_RENDERER = (entity, origin, scale, focus, context) -> {
@@ -53,7 +60,7 @@ public class AbstractGraphicsRendererImpl {
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
         poseStack.translate(origin.x, origin.y, 50.0);
-        poseStack.mulPoseMatrix(new Matrix4f().scaling(scale, scale, -scale));
+        poseStack.mulPose(new Matrix4f().scaling(scale, scale, -scale));
         //poseStack.translate(0, center, 0);
         poseStack.mulPose(quaternion);
         Lighting.setupForEntityInInventory();

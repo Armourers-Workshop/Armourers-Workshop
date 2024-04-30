@@ -1,10 +1,9 @@
 package moe.plushie.armourers_workshop.core.network;
 
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
-import moe.plushie.armourers_workshop.init.platform.MenuManager;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
@@ -12,7 +11,7 @@ public class OpenWardrobePacket extends CustomPacket {
 
     private final int entityId;
 
-    public OpenWardrobePacket(FriendlyByteBuf buffer) {
+    public OpenWardrobePacket(IFriendlyByteBuf buffer) {
         this.entityId = buffer.readInt();
     }
 
@@ -21,7 +20,7 @@ public class OpenWardrobePacket extends CustomPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(IFriendlyByteBuf buffer) {
         buffer.writeInt(entityId);
     }
 
@@ -30,7 +29,7 @@ public class OpenWardrobePacket extends CustomPacket {
         Entity entity = player.getLevel().getEntity(entityId);
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe != null && wardrobe.isEditable(player)) {
-            MenuManager.openMenu(ModMenuTypes.WARDROBE, player, wardrobe);
+            ModMenuTypes.WARDROBE.get().openMenu(player, wardrobe);
         }
     }
 }

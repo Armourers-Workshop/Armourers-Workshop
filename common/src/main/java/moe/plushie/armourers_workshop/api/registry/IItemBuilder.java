@@ -12,8 +12,6 @@ public interface IItemBuilder<T extends Item> extends IRegistryBuilder<T> {
 
     IItemBuilder<T> stacksTo(int i);
 
-    IItemBuilder<T> defaultDurability(int i);
-
     IItemBuilder<T> durability(int i);
 
     IItemBuilder<T> craftRemainder(Item item);

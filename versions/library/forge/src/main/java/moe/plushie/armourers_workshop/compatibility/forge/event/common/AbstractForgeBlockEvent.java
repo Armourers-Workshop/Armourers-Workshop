@@ -1,0 +1,102 @@
+package moe.plushie.armourers_workshop.compatibility.forge.event.common;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IBlockSnapshot;
+import moe.plushie.armourers_workshop.api.registry.IEventHandler;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeCommonEventsImpl;
+import moe.plushie.armourers_workshop.init.platform.event.common.BlockEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+
+@Available("[1.19, )")
+public class AbstractForgeBlockEvent {
+
+    public static IEventHandler<BlockEvent.Place> placeFactory() {
+        return AbstractForgeCommonEventsImpl.BLOCK_PLACE.map(event -> new BlockEvent.Place() {
+
+            @Override
+            public Entity getEntity() {
+                return event.getEntity();
+            }
+
+            @Override
+            public LevelAccessor getLevel() {
+                return event.getLevel();
+            }
+
+            @Override
+            public BlockPos getPos() {
+                return event.getPos();
+            }
+
+            @Override
+            public BlockState getState() {
+                return event.getState();
+            }
+
+            @Override
+            public IBlockSnapshot getSnapshot() {
+                return new IBlockSnapshot() {
+                    @Override
+                    public BlockState getState() {
+                        return event.getBlockSnapshot().getReplacedBlock();
+                    }
+
+                    @Override
+                    public CompoundTag getTag() {
+                        return event.getBlockSnapshot().getTag();
+                    }
+                };
+            }
+        });
+    }
+
+    public static IEventHandler<BlockEvent.Break> breakFactory() {
+        return AbstractForgeCommonEventsImpl.BLOCK_BREAK.map(event -> new BlockEvent.Break() {
+
+            @Override
+            public Entity getEntity() {
+                return event.getPlayer();
+            }
+
+            @Override
+            public LevelAccessor getLevel() {
+                return event.getLevel();
+            }
+
+            @Override
+            public BlockPos getPos() {
+                return event.getPos();
+            }
+
+            @Override
+            public BlockState getState() {
+                return event.getState();
+            }
+
+            @Override
+            public IBlockSnapshot getSnapshot() {
+                LevelAccessor level = event.getLevel();
+                return new IBlockSnapshot() {
+                    @Override
+                    public BlockState getState() {
+                        return event.getState();
+                    }
+
+                    @Override
+                    public CompoundTag getTag() {
+                        BlockEntity blockEntity = level.getBlockEntity(event.getPos());
+                        if (blockEntity != null) {
+                            return blockEntity.saveFullData(level.registryAccess());
+                        }
+                        return null;
+                    }
+                };
+            }
+        });
+    }
+}
