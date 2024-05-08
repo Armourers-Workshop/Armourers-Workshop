@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Available("[1.18, )")
 @Pseudo
-@Mixin(targets = "net.coderbot.iris.pipeline.newshader.ExtendedShader")
+@Mixin(targets = {"net.coderbot.iris.pipeline.newshader.ExtendedShader", "net.irisshaders.iris.pipeline.programs.ExtendedShader"})
 public class ShaderIrisMixin {
 
     @ModifyVariable(method = "<init>", at = @At(value = "HEAD"), argsOnly = true, remap = false)
