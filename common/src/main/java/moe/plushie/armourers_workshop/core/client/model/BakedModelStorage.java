@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.model;
 
 import moe.plushie.armourers_workshop.api.data.IAssociatedObjectProvider;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.EmbeddedSkinStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -43,10 +44,6 @@ public class BakedModelStorage {
     }
 
     public static BakedModel wrap(BakedModel bakedModel, ItemStack itemStack, EmbeddedSkinStack embeddedStack, LivingEntity entity, @Nullable Level level) {
-        // when the world is empty, this means the model is rendering on the GUI.
-        if (level == null) {
-            bakedModel = getSkinBakedModel();
-        }
         // we use a java proxy, which will forward all methods back to the original baked model.
         Class<?>[] classes = new Class[]{BakedModel.class, IAssociatedObjectProvider.class};
         BakedModelStorage storage = new BakedModelStorage(itemStack, embeddedStack, entity, level, bakedModel);
