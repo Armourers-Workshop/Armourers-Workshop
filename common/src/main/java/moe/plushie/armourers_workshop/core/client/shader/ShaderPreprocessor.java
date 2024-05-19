@@ -43,7 +43,7 @@ public class ShaderPreprocessor {
 
     private String processIrisShader(Builder builder) {
         builder.uniform("mat4", "iris_TextureMat", "mat4", "aw_TextureMatrix", "($1 * $2)");
-        builder.uniform("mat4", "iris_LightmapTextureMatrix", "mat4", "aw_LightmapTextureMatrix", "($1 * $2)");
+        builder.attribute("ivec2", "iris_UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
         builder.attribute("vec3", "iris_Normal", "mat3", "aw_NormalMatrix", "($1 * $2)");
         builder.uniform("mat4", "iris_ModelViewMat", "mat4", "aw_ModelViewMat", "($1 * $2)");
         return build("iris", builder);
