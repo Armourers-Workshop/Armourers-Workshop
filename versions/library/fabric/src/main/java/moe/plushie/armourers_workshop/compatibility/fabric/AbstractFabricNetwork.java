@@ -15,6 +15,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.LoginPacketSender;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -73,10 +75,9 @@ public class AbstractFabricNetwork {
             });
         }
 
-        public void startServerHandshake(Object handler, MinecraftServer server, PacketSender sender, ServerLoginNetworking.LoginSynchronizer synchronizer) {
+        public void startServerHandshake(Object handler, MinecraftServer server, LoginPacketSender sender, ServerLoginNetworking.LoginSynchronizer synchronizer) {
             if (ModConfig.Common.enableProtocolCheck) {
-                // TODO: @SAGESSE NO IMPL
-//                sender.sendPacket(channelName, PacketByteBufs.empty());
+                sender.sendPacket(channelName, PacketByteBufs.empty());
             }
         }
 
