@@ -135,7 +135,7 @@ public class ClientProxy {
         });
         EventManager.listen(ClientPlayerEvent.LoggingOut.class, event -> {
             Player player = event.getPlayer();
-            if (player != null && player.equals(EnvironmentManager.getPlayer())) {
+            if (player != null && !player.equals(EnvironmentManager.getPlayer())) {
                 return; // other players leave
             }
             SkinPreloadManager.stop();
