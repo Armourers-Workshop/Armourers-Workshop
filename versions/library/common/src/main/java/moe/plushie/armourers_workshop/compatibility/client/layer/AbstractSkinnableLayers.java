@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.layers.DrownedOuterLayer;
+import net.minecraft.client.renderer.entity.layers.SkeletonClothingLayer;
 import net.minecraft.client.renderer.entity.layers.SlimeOuterLayer;
 import net.minecraft.client.renderer.entity.layers.VillagerProfessionLayer;
 
@@ -17,5 +18,5 @@ public class AbstractSkinnableLayers {
 
     public static final Class<?> DROWNED_OUTER = DrownedOuterLayer.class;
 
-    public static final Class<?> STRAY_CLOTHING = null;
+    public static final Class<?> STRAY_CLOTHING = SkeletonClothingLayer.class;
 }
