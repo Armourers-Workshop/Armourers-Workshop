@@ -147,7 +147,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
         }
         if (blockEntity.isBed() && !player.isSecondaryUseActive()) {
             if (ModPermissions.SKINNABLE_SLEEP.accept(blockEntity, player)) {
-                BlockState bedState = Blocks.RED_BED.defaultBlockState();
+                BlockState bedState = Blocks.RED_BED.defaultBlockState().setValue(PART, BedPart.HEAD);
                 return super.useWithoutItem(bedState, level, blockEntity.getBedPos(), player, blockHitResult);
             }
         }
