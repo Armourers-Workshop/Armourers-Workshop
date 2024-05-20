@@ -22,25 +22,25 @@ import manifold.ext.rt.api.auto;
 @Available("[1.18, 1.20)")
 public class AbstractFabricRegistries {
 
-    public static final auto BLOCKS = TypedRegistry.create(Block.class, Registry.BLOCK);
+    public static final auto BLOCKS = TypedRegistry.create("Block", Block.class, Registry.BLOCK);
 
-    public static final auto ITEMS = TypedRegistry.create(Item.class, Registry.ITEM);
-    public static final auto ITEM_GROUPS = TypedRegistry.passthrough(CreativeModeTab.class);
-    public static final auto ITEM_LOOT_FUNCTIONS = TypedRegistry.create(LootItemFunctionType.class, Registry.LOOT_FUNCTION_TYPE);
-    public static final auto ITEM_TAGS = TypedRegistry.factory(IItemTag.class, registryName -> {
+    public static final auto ITEMS = TypedRegistry.create("Item", Item.class, Registry.ITEM);
+    public static final auto ITEM_GROUPS = TypedRegistry.passthrough("Creative Mode Tab", CreativeModeTab.class);
+    public static final auto ITEM_LOOT_FUNCTIONS = TypedRegistry.create("Loot Function Type", LootItemFunctionType.class, Registry.LOOT_FUNCTION_TYPE);
+    public static final auto ITEM_TAGS = TypedRegistry.factory("Item Tag", IItemTag.class, registryName -> {
         TagKey<Item> tag = TagKey.create(Registry.ITEM_REGISTRY, registryName);
         return itemStack -> itemStack.is(tag);
     });
 
-    public static final auto MENU_TYPES = TypedRegistry.create(MenuType.class, Registry.MENU);
-    public static final auto ENTITY_TYPES = TypedRegistry.create(EntityType.class, Registry.ENTITY_TYPE);
-    public static final auto BLOCK_ENTITY_TYPES = TypedRegistry.create(BlockEntityType.class, Registry.BLOCK_ENTITY_TYPE);
-    public static final auto SOUND_EVENTS = TypedRegistry.create(SoundEvent.class, Registry.SOUND_EVENT);
+    public static final auto MENU_TYPES = TypedRegistry.create("Menu Type", MenuType.class, Registry.MENU);
+    public static final auto ENTITY_TYPES = TypedRegistry.create("Entity Type", EntityType.class, Registry.ENTITY_TYPE);
+    public static final auto BLOCK_ENTITY_TYPES = TypedRegistry.create("Block Entity Type", BlockEntityType.class, Registry.BLOCK_ENTITY_TYPE);
+    public static final auto SOUND_EVENTS = TypedRegistry.create("Sound Event", SoundEvent.class, Registry.SOUND_EVENT);
 
-    public static final auto ENTITY_DATA_SERIALIZER = TypedRegistry.map(EntityDataSerializer.class, (registryName, value) -> {
+    public static final auto ENTITY_DATA_SERIALIZER = TypedRegistry.map("Entity Data Serializer", EntityDataSerializer.class, (registryName, value) -> {
         // register to real item.
         EntityDataSerializers.registerSerializer(value);
     });
 
-    public static final auto DATA_COMPONENT_TYPES = TypedRegistry.passthrough(IDataComponentType.class);
+    public static final auto DATA_COMPONENT_TYPES = TypedRegistry.passthrough("Data Component Type", IDataComponentType.class);
 }

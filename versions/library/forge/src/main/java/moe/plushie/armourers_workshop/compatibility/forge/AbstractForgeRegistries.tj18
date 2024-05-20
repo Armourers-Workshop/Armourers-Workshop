@@ -23,21 +23,22 @@ import manifold.ext.rt.api.auto;
 @Available("[1.18, 1.19)")
 public class AbstractForgeRegistries {
 
-    public static final auto BLOCKS = AbstractForgeRegistry.create(Block.class, ForgeRegistries.BLOCKS);
+    public static final auto DATA_COMPONENT_TYPES = TypedRegistry.passthrough("Data Component Type", IDataComponentType.class);
 
-    public static final auto ITEMS = AbstractForgeRegistry.create(Item.class, ForgeRegistries.ITEMS);
-    public static final auto ITEM_GROUPS = TypedRegistry.passthrough(CreativeModeTab.class);
-    public static final auto ITEM_LOOT_FUNCTIONS = AbstractForgeRegistry.create(LootItemFunctionType.class, Registry.LOOT_FUNCTION_REGISTRY);
-    public static final auto ITEM_TAGS = TypedRegistry.factory(IItemTag.class, registryName -> {
+    public static final auto ITEMS = AbstractForgeRegistry.create("Item", Item.class, ForgeRegistries.ITEMS);
+    public static final auto ITEM_GROUPS = TypedRegistry.passthrough("Creative Mode Tab", CreativeModeTab.class);
+    public static final auto ITEM_LOOT_FUNCTIONS = AbstractForgeRegistry.create("Loot Function Type", LootItemFunctionType.class, Registry.LOOT_FUNCTION_REGISTRY);
+    public static final auto ITEM_TAGS = TypedRegistry.factory("Item Tag", IItemTag.class, registryName -> {
         TagKey<Item> tag = TagKey.create(ForgeRegistries.Keys.ITEMS, registryName);
         return itemStack -> itemStack.is(tag);
     });
 
-    public static final auto MENU_TYPES = AbstractForgeRegistry.create(MenuType.class, ForgeRegistries.CONTAINERS);
-    public static final auto ENTITY_TYPES = AbstractForgeRegistry.create(EntityType.class, ForgeRegistries.ENTITIES);
-    public static final auto ENTITY_DATA_SERIALIZER = AbstractForgeRegistry.createAndCast(EntityDataSerializer.class, ForgeRegistries.Keys.DATA_SERIALIZERS, DataSerializerEntry::getSerializer, DataSerializerEntry::new);
-    public static final auto BLOCK_ENTITY_TYPES = AbstractForgeRegistry.create(BlockEntityType.class, ForgeRegistries.BLOCK_ENTITIES);
-    public static final auto SOUND_EVENTS = AbstractForgeRegistry.create(SoundEvent.class, ForgeRegistries.SOUND_EVENTS);
+    public static final auto BLOCKS = AbstractForgeRegistry.create("Block", Block.class, ForgeRegistries.BLOCKS);
+    public static final auto BLOCK_ENTITY_TYPES = AbstractForgeRegistry.create("Block Entity Type", BlockEntityType.class, ForgeRegistries.BLOCK_ENTITIES);
 
-    public static final auto DATA_COMPONENT_TYPES = TypedRegistry.passthrough(IDataComponentType.class);
+    public static final auto ENTITY_TYPES = AbstractForgeRegistry.create("Entity Type", EntityType.class, ForgeRegistries.ENTITIES);
+    public static final auto ENTITY_DATA_SERIALIZER = AbstractForgeRegistry.createAndCast("Entity Data Serializer", EntityDataSerializer.class, ForgeRegistries.Keys.DATA_SERIALIZERS, DataSerializerEntry::getSerializer, DataSerializerEntry::new);
+
+    public static final auto MENU_TYPES = AbstractForgeRegistry.create("Menu Type", MenuType.class, ForgeRegistries.CONTAINERS);
+    public static final auto SOUND_EVENTS = AbstractForgeRegistry.create("Sound Event", SoundEvent.class, ForgeRegistries.SOUND_EVENTS);
 }

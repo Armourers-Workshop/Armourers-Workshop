@@ -16,13 +16,13 @@ import java.util.function.Supplier;
 @Available("[1.16, 1.18)")
 public class AbstractForgeRegistry {
 
-    public static <T extends IForgeRegistryEntry<T>> TypedRegistry<T> create(Class<?> type, IForgeRegistry<T> registry) {
-        return new TypedRegistry<>(type, registry::getKey, registry::getValue, build(DeferredRegister.create(registry, ModConstants.MOD_ID)));
+    public static <T extends IForgeRegistryEntry<T>> TypedRegistry<T> create(String name, Class<?> type, IForgeRegistry<T> registry) {
+        return new TypedRegistry<>(name, type, registry::getKey, registry::getValue, build(DeferredRegister.create(registry, ModConstants.MOD_ID)));
     }
 
-    public static <T, V extends IForgeRegistryEntry<V>> TypedRegistry<T> createAndCast(Class<?> type, IForgeRegistry<V> registry, Function<V, T> t0, Function<T, V> t1) {
+    public static <T, V extends IForgeRegistryEntry<V>> TypedRegistry<T> createAndCast(String name, Class<?> type, IForgeRegistry<V> registry, Function<V, T> t0, Function<T, V> t1) {
         TypedRegistry.RegisterProvider<V> register = build(DeferredRegister.create(registry, ModConstants.MOD_ID));
-        return new TypedRegistry<>(type, null, null, new TypedRegistry.RegisterProvider<T>() {
+        return new TypedRegistry<>(name, type, null, null, new TypedRegistry.RegisterProvider<T>() {
             @Override
             public <I extends T> Supplier<I> register(ResourceLocation registryName, Supplier<? extends I> provider) {
                 Supplier<V> result = register.register(registryName, () -> t1.apply(provider.get()));

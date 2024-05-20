@@ -26,9 +26,9 @@ public class TypedRegistry<T> implements IRegistry<T> {
     private final ValueProvider<T> valueProvider;
     private final RegisterProvider<T> registerProvider;
 
-    public TypedRegistry(Class<?> type, KeyProvider<T> keyProvider, ValueProvider<T> valueProvider, RegisterProvider<T> registerProvider) {
+    public TypedRegistry(String name, Class<?> type, KeyProvider<T> keyProvider, ValueProvider<T> valueProvider, RegisterProvider<T> registerProvider) {
         this.type = type;
-        this.typeName = ObjectUtils.readableName(type);
+        this.typeName = name;
         this.keyProvider = keyProvider;
         this.valueProvider = valueProvider;
         this.registerProvider = registerProvider;
@@ -36,8 +36,8 @@ public class TypedRegistry<T> implements IRegistry<T> {
         INSTANCES.add(this);
     }
 
-    public static <T> TypedRegistry<T> create(Class<?> type, Registry<T> registry) {
-        return new TypedRegistry<>(type, registry::getKey, registry::get, new RegisterProvider<T>() {
+    public static <T> TypedRegistry<T> create(String name, Class<?> type, Registry<T> registry) {
+        return new TypedRegistry<>(name, type, registry::getKey, registry::get, new RegisterProvider<T>() {
             @Override
             public <I extends T> Supplier<I> register(ResourceLocation registryName, Supplier<? extends I> provider) {
                 I value = provider.get();
@@ -47,8 +47,8 @@ public class TypedRegistry<T> implements IRegistry<T> {
         });
     }
 
-    public static <T> TypedRegistry<T> factory(Class<? extends T> type, Function<ResourceLocation, T> factory) {
-        return new TypedRegistry<>(type, null, null, new RegisterProvider<T>() {
+    public static <T> TypedRegistry<T> factory(String name, Class<? extends T> type, Function<ResourceLocation, T> factory) {
+        return new TypedRegistry<>(name, type, null, null, new RegisterProvider<T>() {
             @Override
             public <I extends T> Supplier<I> register(ResourceLocation registryName, Supplier<? extends I> provider) {
                 T value = factory.apply(registryName);
@@ -58,8 +58,8 @@ public class TypedRegistry<T> implements IRegistry<T> {
         });
     }
 
-    public static <T> TypedRegistry<T> map(Class<? extends T> type, BiConsumer<ResourceLocation, T> consumer) {
-        return new TypedRegistry<>(type, null, null, new RegisterProvider<T>() {
+    public static <T> TypedRegistry<T> map(String name, Class<? extends T> type, BiConsumer<ResourceLocation, T> consumer) {
+        return new TypedRegistry<>(name, type, null, null, new RegisterProvider<T>() {
             @Override
             public <I extends T> Supplier<I> register(ResourceLocation registryName, Supplier<? extends I> provider) {
                 I value = provider.get();
@@ -69,8 +69,8 @@ public class TypedRegistry<T> implements IRegistry<T> {
         });
     }
 
-    public static <T> TypedRegistry<T> passthrough(Class<?> type) {
-        return new TypedRegistry<>(type, null, null, new RegisterProvider<T>() {
+    public static <T> TypedRegistry<T> passthrough(String name, Class<?> type) {
+        return new TypedRegistry<>(name, type, null, null, new RegisterProvider<T>() {
             @Override
             public <I extends T> Supplier<I> register(ResourceLocation registryName, Supplier<? extends I> provider) {
                 I value = provider.get();

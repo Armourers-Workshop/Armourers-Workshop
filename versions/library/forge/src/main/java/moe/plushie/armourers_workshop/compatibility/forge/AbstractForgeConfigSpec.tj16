@@ -69,7 +69,7 @@ public class AbstractForgeConfigSpec extends AbstractConfigSpec {
             }
 
             <T> Value<T> cast(String path, ForgeConfigSpec.ConfigValue<T> value) {
-                return new Value<>(path, value, value::set);
+                return new Value<>(path, value::get, value::set);
             }
         }));
 

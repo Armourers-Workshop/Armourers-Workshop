@@ -15,12 +15,12 @@ import java.util.function.Supplier;
 @Available("[1.21, )")
 public class AbstractForgeRegistry {
 
-    public static <T> TypedRegistry<T> create(Class<?> type, ResourceKey<Registry<T>> registryKey) {
-        return new TypedRegistry<>(type, null, null, build(DeferredRegister.create(registryKey, ModConstants.MOD_ID)));
+    public static <T> TypedRegistry<T> create(String name, Class<?> type, ResourceKey<Registry<T>> registryKey) {
+        return new TypedRegistry<>(name, type, null, null, build(DeferredRegister.create(registryKey, ModConstants.MOD_ID)));
     }
 
-    public static <T> TypedRegistry<T> create(Class<?> type, Registry<T> registry) {
-        return new TypedRegistry<>(type, registry::getKey, registry::get, build(DeferredRegister.create(registry, ModConstants.MOD_ID)));
+    public static <T> TypedRegistry<T> create(String name, Class<?> type, Registry<T> registry) {
+        return new TypedRegistry<>(name, type, registry::getKey, registry::get, build(DeferredRegister.create(registry, ModConstants.MOD_ID)));
     }
 
     private static <T> TypedRegistry.RegisterProvider<T> build(DeferredRegister<T> register) {

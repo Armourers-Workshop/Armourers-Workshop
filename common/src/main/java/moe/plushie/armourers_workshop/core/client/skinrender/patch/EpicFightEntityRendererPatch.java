@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.core.client.other.thirdparty.EpicFlightMod
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager2;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,22 +21,19 @@ import manifold.ext.rt.api.auto;
 public class EpicFightEntityRendererPatch<T extends LivingEntity> extends EntityRenderPatch<T> {
 
     private EntityModel<?> entityModel;
-    private final LivingEntityRenderer<?, ?> entityRenderer;
 
     private IPoseStack overridePoseStack;
     private EpicFlightModel transformerModel;
 
-
-    public EpicFightEntityRendererPatch(SkinRenderData renderData, LivingEntityRenderer<?, ?> entityRenderer) {
+    public EpicFightEntityRendererPatch(SkinRenderData renderData) {
         super(renderData);
-        this.entityRenderer = entityRenderer;
     }
 
     public static <T extends LivingEntity> void activate(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer, Consumer<EpicFightEntityRendererPatch<T>> handler) {
-        _activate(EpicFightEntityRendererPatch.class, entity, partialTicks, packedLight, poseStackIn, buffersIn, handler, renderData -> {
+        _activate(EpicFightEntityRendererPatch.class, entity, partialTicks, packedLight, poseStackIn, buffersIn, entityRenderer, handler, renderData -> {
             auto model = EpicFlightModel.ofNullable(entityRenderer.getModel());
             if (model != null) {
-                return new EpicFightEntityRendererPatch<>(renderData, entityRenderer);
+                return new EpicFightEntityRendererPatch<>(renderData);
             }
             return null;
         });
@@ -50,15 +48,21 @@ public class EpicFightEntityRendererPatch<T extends LivingEntity> extends Entity
     }
 
     @Override
-    protected void onInit(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn) {
-        super.onInit(entity, partialTicks, packedLight, poseStackIn, buffersIn);
-        auto entityModel = entityRenderer.getModel();
-        if (this.entityModel != entityModel) {
-            this.transformerModel = EpicFlightModel.ofNullable(entityModel);
-            this.transformer = createTransformer(entity, transformerModel, entityRenderer);
-            this.entityModel = entityModel;
+    protected final void onInit(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, EntityRenderer<?> entityRenderer) {
+        if (entityRenderer instanceof LivingEntityRenderer) {
+            onInit(entity, partialTicks, packedLight, poseStackIn, buffersIn, (LivingEntityRenderer<?, ?>) entityRenderer);
         }
     }
+
+    protected void onInit(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
+        super.onInit(entity, partialTicks, packedLight, poseStackIn, buffersIn, entityRenderer);
+        auto entityModel = entityRenderer.getModel();
+        if (this.entityModel != entityModel) {
+            this.entityModel = entityModel;
+            this.transformer = createTransformer(entity, transformerModel, entityRenderer);
+        }
+    }
+
 
     public void setFirstPerson(boolean isFirstPerson) {
         if (transformer == null) {

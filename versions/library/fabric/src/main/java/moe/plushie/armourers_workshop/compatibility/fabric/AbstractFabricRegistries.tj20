@@ -23,25 +23,25 @@ import manifold.ext.rt.api.auto;
 @Available("[1.20, 1.21)")
 public class AbstractFabricRegistries {
 
-    public static final auto BLOCKS = TypedRegistry.create(Block.class, BuiltInRegistries.BLOCK);
+    public static final auto BLOCKS = TypedRegistry.create("Block", Block.class, BuiltInRegistries.BLOCK);
 
-    public static final auto ITEMS = TypedRegistry.create(Item.class, BuiltInRegistries.ITEM);
-    public static final auto ITEM_GROUPS = TypedRegistry.create(CreativeModeTab.class, BuiltInRegistries.CREATIVE_MODE_TAB);
-    public static final auto ITEM_LOOT_FUNCTIONS = TypedRegistry.create(LootItemFunctionType.class, BuiltInRegistries.LOOT_FUNCTION_TYPE);
-    public static final auto ITEM_TAGS = TypedRegistry.factory(IItemTag.class, registryName -> {
+    public static final auto ITEMS = TypedRegistry.create("Item", Item.class, BuiltInRegistries.ITEM);
+    public static final auto ITEM_GROUPS = TypedRegistry.create("Creative Mode Tab", CreativeModeTab.class, BuiltInRegistries.CREATIVE_MODE_TAB);
+    public static final auto ITEM_LOOT_FUNCTIONS = TypedRegistry.create("Loot Function Type", LootItemFunctionType.class, BuiltInRegistries.LOOT_FUNCTION_TYPE);
+    public static final auto ITEM_TAGS = TypedRegistry.factory("Item Tag", IItemTag.class, registryName -> {
         TagKey<Item> tag = TagKey.create(Registries.ITEM, registryName);
         return itemStack -> itemStack.is(tag);
     });
 
-    public static final auto MENU_TYPES = TypedRegistry.create(MenuType.class, BuiltInRegistries.MENU);
-    public static final auto ENTITY_TYPES = TypedRegistry.create(EntityType.class, BuiltInRegistries.ENTITY_TYPE);
-    public static final auto BLOCK_ENTITY_TYPES = TypedRegistry.create(BlockEntityType.class, BuiltInRegistries.BLOCK_ENTITY_TYPE);
-    public static final auto SOUND_EVENTS = TypedRegistry.create(SoundEvent.class, BuiltInRegistries.SOUND_EVENT);
+    public static final auto MENU_TYPES = TypedRegistry.create("Menu Type", MenuType.class, BuiltInRegistries.MENU);
+    public static final auto ENTITY_TYPES = TypedRegistry.create("Entity Type", EntityType.class, BuiltInRegistries.ENTITY_TYPE);
+    public static final auto BLOCK_ENTITY_TYPES = TypedRegistry.create("Block Entity Type", BlockEntityType.class, BuiltInRegistries.BLOCK_ENTITY_TYPE);
+    public static final auto SOUND_EVENTS = TypedRegistry.create("Sound Event", SoundEvent.class, BuiltInRegistries.SOUND_EVENT);
 
-    public static final auto ENTITY_DATA_SERIALIZER = TypedRegistry.map(EntityDataSerializer.class, (registryName, value) -> {
+    public static final auto ENTITY_DATA_SERIALIZER = TypedRegistry.map("Entity Data Serializer", EntityDataSerializer.class, (registryName, value) -> {
         // register to real item.
         EntityDataSerializers.registerSerializer(value);
     });
 
-    public static final auto DATA_COMPONENT_TYPES = TypedRegistry.passthrough(IDataComponentType.class);
+    public static final auto DATA_COMPONENT_TYPES = TypedRegistry.passthrough("Data Component Type", IDataComponentType.class);
 }

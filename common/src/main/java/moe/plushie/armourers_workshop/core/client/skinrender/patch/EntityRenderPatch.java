@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.world.entity.Entity;
 
 import java.util.function.Consumer;
@@ -28,7 +29,7 @@ public abstract class EntityRenderPatch<T extends Entity> extends SkinRenderCont
         this.setRenderData(renderData);
     }
 
-    protected static <T extends Entity, P extends EntityRenderPatch<? super T>> void _activate(Class<?> clazz, T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, Consumer<P> handler, Function<SkinRenderData, EntityRenderPatch<? extends T>> provider) {
+    protected static <T extends Entity, P extends EntityRenderPatch<? super T>> void _activate(Class<?> clazz, T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, EntityRenderer<?> entityRenderer, Consumer<P> handler, Function<SkinRenderData, EntityRenderPatch<? extends T>> provider) {
         auto renderData = SkinRenderData.of(entity);
         if (renderData == null) {
             return;
@@ -42,7 +43,7 @@ public abstract class EntityRenderPatch<T extends Entity> extends SkinRenderCont
                 return; // can't create.
             }
         }
-        renderPatch.onInit(entity, partialTicks, packedLight, poseStackIn, buffersIn);
+        renderPatch.onInit(entity, partialTicks, packedLight, poseStackIn, buffersIn, entityRenderer);
         renderPatch.onActivate(entity);
         if (handler != null) {
             handler.accept(ObjectUtils.unsafeCast(renderPatch));
@@ -75,7 +76,7 @@ public abstract class EntityRenderPatch<T extends Entity> extends SkinRenderCont
         }
     }
 
-    protected void onInit(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn) {
+    protected void onInit(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, EntityRenderer<?> entityRenderer) {
         setPartialTicks(partialTicks);
         setAnimationTicks(TickUtils.ticks());
         setLightmap(packedLight);

@@ -26,7 +26,7 @@ public class FallbackEntityRenderPatch<T extends Entity> extends EntityRenderPat
     }
 
     public static <T extends Entity> void activate(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, Consumer<FallbackEntityRenderPatch<T>> handler) {
-        _activate(FallbackEntityRenderPatch.class, entity, partialTicks, packedLight, poseStackIn, buffersIn, handler, renderData -> {
+        _activate(FallbackEntityRenderPatch.class, entity, partialTicks, packedLight, poseStackIn, buffersIn, null, handler, renderData -> {
             auto transformer = SkinRendererManager.getFallbackTransformer(entity.getType());
             if (transformer != null) {
                 return new FallbackEntityRenderPatch<>(transformer, renderData);
