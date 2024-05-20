@@ -35,6 +35,10 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
         this.addOutputSlot(inventory, 9, 26, 69);
     }
 
+    public ItemStack getInputStack() {
+        return inventory.getItem(8);
+    }
+
     public ItemStack getOutputStack() {
         return inventory.getItem(9);
     }
@@ -52,7 +56,7 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
         addSlot(new Slot(inventory, slot, x, y) {
 
             @Override
-            public boolean mayPickup(Player p_82869_1_) {
+            public boolean mayPickup(Player player) {
                 return false;
             }
 
@@ -75,7 +79,7 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
         addSlot(new Slot(inventory, slot, x, y) {
 
             @Override
-            public boolean mayPlace(ItemStack p_75214_1_) {
+            public boolean mayPlace(ItemStack itemStack) {
                 return false;
             }
 
@@ -146,6 +150,10 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
 
         @Override
         public boolean mayPlace(ItemStack itemStack) {
+            // when not have input, place will cause the bottle lost.
+            if (getInputStack().isEmpty()) {
+                return false;
+            }
             return itemStack.getItem() instanceof BottleItem;
         }
 
