@@ -75,7 +75,7 @@ public class AbstractForgeBlockEvent {
 
             @Override
             public BlockState getState() {
-                return event.getState();
+                return null;
             }
 
             @Override

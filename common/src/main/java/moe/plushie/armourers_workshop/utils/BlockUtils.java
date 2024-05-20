@@ -6,17 +6,14 @@ import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.builder.data.undo.UndoManager;
 import moe.plushie.armourers_workshop.builder.data.undo.action.NamedUserAction;
 import moe.plushie.armourers_workshop.builder.data.undo.action.SetBlockAction;
+import moe.plushie.armourers_workshop.init.platform.event.common.BlockEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -44,17 +41,19 @@ public final class BlockUtils {
         queue.put(blockEntity, handler);
     }
 
-    public static void snapshot(Entity entity, LevelAccessor level, BlockPos blockPos, @Nullable BlockState blockState, IBlockSnapshot snapshot) {
+    public static void snapshot(BlockEvent event) {
         Component reason = null;
         // only work in server side
-        if (!(entity instanceof ServerPlayer) || !(level instanceof Level)) {
+        if (!(event.getEntity() instanceof ServerPlayer) || !(event.getLevel() instanceof Level)) {
             return;
         }
         // is place skin cube block.
+        BlockState blockState = event.getState();
         if (blockState != null && blockState.getBlock() instanceof SkinCubeBlock) {
             reason = Component.translatable("chat.armourers_workshop.undo.placeBlock");
         }
         // is break skin cube block.
+        IBlockSnapshot snapshot = event.getSnapshot();
         if (blockState == null && snapshot.getState().getBlock() instanceof SkinCubeBlock) {
             reason = Component.translatable("chat.armourers_workshop.undo.breakBlock");
         }
@@ -62,9 +61,9 @@ public final class BlockUtils {
         if (reason == null) {
             return;
         }
-        ServerPlayer player = (ServerPlayer) entity;
+        ServerPlayer player = (ServerPlayer) event.getEntity();
         NamedUserAction group = new NamedUserAction(reason);
-        group.push(new SetBlockAction((Level) level, blockPos, snapshot.getState(), snapshot.getTag()));
+        group.push(new SetBlockAction((Level) event.getLevel(), event.getPos(), snapshot.getState(), snapshot.getTag()));
         UndoManager.of(player.getUUID()).push(group);
     }
 

@@ -109,7 +109,6 @@ public class AbstractFabricBlockEvent {
                         }
                     };
                 }
-
             });
             return true;
         });

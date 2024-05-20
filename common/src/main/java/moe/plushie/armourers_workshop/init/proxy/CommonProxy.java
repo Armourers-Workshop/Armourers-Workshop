@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinServerType;
 import moe.plushie.armourers_workshop.init.ModCommands;
-import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.init.ModContext;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
@@ -25,15 +24,14 @@ import moe.plushie.armourers_workshop.init.platform.EventManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.init.platform.ReplayManager;
 import moe.plushie.armourers_workshop.init.platform.event.common.BlockEvent;
-import moe.plushie.armourers_workshop.init.platform.event.common.LauncherConfigSetupEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.PlayerEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.RegisterCommandsEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.RegisterDataPackEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.RegisterEntityAttributesEvent;
-import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartingEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerLevelAddEntityEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerLevelTickEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartedEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartingEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppedEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppingEvent;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
@@ -158,7 +156,7 @@ public class CommonProxy {
             }
         });
 
-        EventManager.listen(BlockEvent.Place.class, event -> BlockUtils.snapshot(event.getEntity(), event.getLevel(), event.getPos(), event.getState(), event.getSnapshot()));
-        EventManager.listen(BlockEvent.Break.class, event -> BlockUtils.snapshot(event.getEntity(), event.getLevel(), event.getPos(), event.getState(), event.getSnapshot()));
+        EventManager.listen(BlockEvent.Place.class, BlockUtils::snapshot);
+        EventManager.listen(BlockEvent.Break.class, BlockUtils::snapshot);
     }
 }
