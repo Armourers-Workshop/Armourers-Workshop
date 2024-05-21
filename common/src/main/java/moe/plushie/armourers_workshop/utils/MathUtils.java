@@ -107,16 +107,40 @@ public class MathUtils {
     }
 
 
-    public static float lerp(float p_219799_0_, float p_219799_1_, float p_219799_2_) {
-        return p_219799_1_ + p_219799_0_ * (p_219799_2_ - p_219799_1_);
+    public static float lerp(float position, float a, float b) {
+        return a + (b - a) * position;
     }
 
-    public static double lerp(double p_219803_0_, double p_219803_2_, double p_219803_4_) {
-        return p_219803_2_ + p_219803_0_ * (p_219803_4_ - p_219803_2_);
+    public static double lerp(double position, double a, double b) {
+        return a + (b - a) * position;
     }
 
-    public static float rotLerp(float p_219805_0_, float p_219805_1_, float p_219805_2_) {
-        return p_219805_1_ + p_219805_0_ * wrapDegrees(p_219805_2_ - p_219805_1_);
+    /**
+     * Special interpolation method for interpolating yaw. The problem with yaw, is that it may go in the "wrong"
+     * direction when having, for example, -170 (as a) and 170 (as b) degress or other way around (170 and -170). This
+     * interpolation method fixes this problem.
+     */
+    public static float lerpYaw(float position, float a, float b) {
+        a = wrapDegrees(a);
+        b = wrapDegrees(b);
+
+        return lerp(position, a, normalizeYaw(a, b));
+    }
+
+    /**
+     * Special interpolation method for interpolating yaw. The problem with yaw, is that it may go in the "wrong"
+     * direction when having, for example, -170 (as a) and 170 (as b) degress or other way around (170 and -170). This
+     * interpolation method fixes this problem.
+     */
+    public static double lerpYaw(double position, double a, double b) {
+        a = wrapDegrees(a);
+        b = wrapDegrees(b);
+
+        return lerp(a, normalizeYaw(a, b), position);
+    }
+
+    public static float rotLerp(float position, float a, float n) {
+        return a + position * wrapDegrees(n - a);
     }
 
     public static int wrapDegrees(int p_188209_0_) {
@@ -158,6 +182,36 @@ public class MathUtils {
         return d0;
     }
 
+
+    /**
+     * Normalize yaw rotation (argument {@code b}) based on the previous yaw rotation.
+     */
+    public static float normalizeYaw(float a, float b) {
+        float diff = a - b;
+
+        if (diff > 180 || diff < -180) {
+            diff = Math.copySign(360 - Math.abs(diff), diff);
+
+            return a + diff;
+        }
+
+        return b;
+    }
+
+    /**
+     * Normalize yaw rotation (argument {@code b}) based on the previous yaw rotation.
+     */
+    public static double normalizeYaw(double a, double b) {
+        double diff = a - b;
+
+        if (diff > 180 || diff < -180) {
+            diff = Math.copySign(360 - Math.abs(diff), diff);
+
+            return a + diff;
+        }
+
+        return b;
+    }
 
     public static float acos(float e) {
         return (float) Math.acos(e);

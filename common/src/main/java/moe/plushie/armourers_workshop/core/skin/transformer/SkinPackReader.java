@@ -49,10 +49,4 @@ public abstract class SkinPackReader {
     public Collection<IResource> getResources() {
         return resources;
     }
-
-    public interface Factory {
-
-        @Nullable
-        SkinPackReader create(String name, Collection<IResource> resources) throws IOException;
-    }
 }

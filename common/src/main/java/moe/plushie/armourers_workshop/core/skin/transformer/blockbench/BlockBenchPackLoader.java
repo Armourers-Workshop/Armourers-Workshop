@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.transformer.blockbench;
 
+import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPackObject;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockTransform;
-import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import net.minecraft.core.Direction;
 
 import java.io.IOException;
@@ -32,6 +32,7 @@ public class BlockBenchPackLoader {
 
         object.each("elements", it -> builder.addElement(parseElementObject(it)));
         object.each("textures", it -> builder.addTexture(parseTextureObject(it)));
+        object.each("animations", it -> builder.addAnimation(parseAnimationObject(it)));
         object.each("outliner", it -> builder.addOutliner(parseChildOutlinerObject(it)));
 
         object.each("display", (name, it) -> builder.addDisplay(name, parseTransformObject(it)));
@@ -112,6 +113,46 @@ public class BlockBenchPackLoader {
         object.at("frame_interpolate", it -> builder.frameInterpolate(it.boolValue()));
         return builder.build();
     }
+
+    private static BlockBenchAnimation parseAnimationObject(SkinPackObject object) throws IOException {
+        BlockBenchAnimation.Builder builder = new BlockBenchAnimation.Builder();
+        object.at("name", it -> builder.name(it.stringValue()));
+        object.at("uuid", it -> builder.uuid(it.stringValue()));
+        object.at("loop", it -> builder.loop(it.stringValue()));
+        object.at("length", it -> builder.duration(it.floatValue()));
+        object.each("animators", (key, it) -> builder.addAnimator(parseAnimatorObject(key, it)));
+        // "override"
+        // "snapping"
+        // "selected"
+        // "anim_time_update"
+        // "blend_weight"
+        // "start_delay"
+        // "loop_delay"
+        return builder.build();
+    }
+
+    private static BlockBenchAnimator parseAnimatorObject(String uuid, SkinPackObject object) throws IOException {
+        BlockBenchAnimator.Builder builder = new BlockBenchAnimator.Builder(uuid);
+        object.at("name", it -> builder.name(it.stringValue()));
+        object.at("uuid", it -> builder.uuid(it.stringValue()));
+        object.at("type", it -> builder.type(it.stringValue()));
+        object.each("keyframes", fo -> {
+            BlockBenchKeyFrame.Builder fb = new BlockBenchKeyFrame.Builder();
+            fo.at("uuid", it -> fb.uuid(it.stringValue()));
+            fo.at("channel", it -> fb.channel(it.stringValue()));
+            fo.at("time", it -> fb.time(it.floatValue()));
+            fo.at("interpolation", it -> fb.interpolation(it.stringValue()));
+            // "data_points":
+            // "bezier_linked"
+            // "bezier_left_time"
+            // "bezier_left_value"
+            // "bezier_right_time"
+            // "bezier_right_value"
+            builder.addFrame(fb.build());
+        });
+        return builder.build();
+    }
+
 
     private static BlockBenchFace parseFaceObject(SkinPackObject object) throws IOException {
         BlockBenchFace.Builder builder = new BlockBenchFace.Builder();

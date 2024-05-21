@@ -29,11 +29,12 @@ public class BlockBenchPack implements SkinPack {
 
     private final List<BlockBenchElement> elements;
     private final List<BlockBenchTexture> textures;
+    private final List<BlockBenchAnimation> animations;
 
     private final Map<String, BedrockTransform> transforms;
     private final HashMap<String, BlockBenchObject> objects = new HashMap<>();
 
-    public BlockBenchPack(String name, String description, String version, String format, List<String> authors, Size2f resolution, Size3f visibleBox, BlockBenchOutliner rootOutliner, List<BlockBenchElement> elements, List<BlockBenchTexture> textures, Map<String, BedrockTransform> transforms) {
+    public BlockBenchPack(String name, String description, String version, String format, List<String> authors, Size2f resolution, Size3f visibleBox, BlockBenchOutliner rootOutliner, List<BlockBenchElement> elements, List<BlockBenchTexture> textures, List<BlockBenchAnimation> animations, Map<String, BedrockTransform> transforms) {
         this.name = name;
         this.description = description;
         this.version = version;
@@ -44,6 +45,7 @@ public class BlockBenchPack implements SkinPack {
         this.elements = elements;
         this.rootOutliner = rootOutliner;
         this.textures = textures;
+        this.animations = animations;
         this.transforms = transforms;
         // rebuild object map.
         elements.forEach(it -> objects.put(it.getUUID(), it));
@@ -106,6 +108,10 @@ public class BlockBenchPack implements SkinPack {
         return textures;
     }
 
+    public List<BlockBenchAnimation> getAnimations() {
+        return animations;
+    }
+
     public Map<String, BedrockTransform> getTransforms() {
         return transforms;
     }
@@ -128,6 +134,7 @@ public class BlockBenchPack implements SkinPack {
 
         private final ArrayList<BlockBenchElement> elements = new ArrayList<>();
         private final ArrayList<BlockBenchTexture> textures = new ArrayList<>();
+        private final ArrayList<BlockBenchAnimation> animations = new ArrayList<>();
 
         private final BlockBenchOutliner.Builder rootOutliner = new BlockBenchOutliner.Builder();
 
@@ -177,8 +184,12 @@ public class BlockBenchPack implements SkinPack {
             this.transforms.put(name, transform);
         }
 
+        public void addAnimation(BlockBenchAnimation animation) {
+            this.animations.add(animation);
+        }
+
         public BlockBenchPack build() {
-            return new BlockBenchPack(name, description, version, format, authors, resolution, visibleBox, rootOutliner.build(), elements, textures, transforms);
+            return new BlockBenchPack(name, description, version, format, authors, resolution, visibleBox, rootOutliner.build(), elements, textures, animations, transforms);
         }
     }
 }

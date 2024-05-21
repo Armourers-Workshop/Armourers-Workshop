@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.transformer.blockbench;
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPack;
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPackModelReader;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModel;
+import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelAnimation;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelBone;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelCube;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelGeometry;
@@ -62,6 +63,11 @@ public class BlockBenchModelReader implements SkinPackModelReader {
     public BedrockModelTexture readTexture(BedrockModelGeometry geometry) throws IOException {
         texture.load(usedTextureIds);
         return texture;
+    }
+
+    @Override
+    public Map<String, BedrockModelAnimation> getAnimations() {
+        return null;
     }
 
     @Override
