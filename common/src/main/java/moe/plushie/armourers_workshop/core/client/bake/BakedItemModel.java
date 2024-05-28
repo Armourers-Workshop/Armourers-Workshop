@@ -6,16 +6,17 @@ import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.BuiltInModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +34,7 @@ public class BakedItemModel extends BuiltInModel {
     private final Variant[] variants;
 
     public BakedItemModel(ItemTransforms itemTransforms, Variant[] variants, boolean usesBlockLight) {
-        super(itemTransforms, ItemOverrides.EMPTY, null, usesBlockLight);
+        super(itemTransforms, ItemOverrides.EMPTY, getMissingAtlasSprite(), usesBlockLight);
         this.variants = variants;
     }
 
@@ -59,6 +60,10 @@ public class BakedItemModel extends BuiltInModel {
             entries.add(new Variant(registryName, model));
         }
         return baker.bake("", entries.toArray(new Variant[0]));
+    }
+
+    private static TextureAtlasSprite getMissingAtlasSprite() {
+        return Minecraft.getInstance().getModelManager().getMissingModel().getParticleIcon();
     }
 
     public static class Variant {
