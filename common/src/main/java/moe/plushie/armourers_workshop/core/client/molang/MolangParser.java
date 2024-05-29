@@ -89,13 +89,10 @@ public class MolangParser extends MathBuilder {
         try {
             List<Object> symbols = breakdownChars(breakdown(expression));
 
-            if (
-                    symbols.size() >= 3 && symbols.get(0) instanceof String name && isVariable(symbols.get(0))
-                            && symbols.get(1).equals("=")
-            ) {
+            if (symbols.size() >= 3 && symbols.get(0) instanceof String && isVariable(symbols.get(0)) && symbols.get(1).equals("=")) {
                 symbols = symbols.subList(2, symbols.size());
                 Variable variable;
-
+                String name = (String) symbols.get(0);
                 if (!variables.containsKey(name) && !currentStatement.locals.containsKey(name)) {
                     LazyVariable local = new LazyVariable(name, 0);
                     currentStatement.locals.put(name, local);

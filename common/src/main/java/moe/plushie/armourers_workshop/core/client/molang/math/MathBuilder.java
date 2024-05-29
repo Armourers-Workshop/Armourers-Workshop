@@ -443,7 +443,8 @@ public class MathBuilder {
             return new Group(this.parseSymbols((List<Object>) object));
         }
 
-        if (object instanceof String symbol) {
+        if (object instanceof String) {
+            String symbol = (String) object;
             /* Variable and constant negation */
             if (symbol.startsWith("!")) {
                 return new Negate(this.valueFromObject(symbol.substring(1)));
@@ -498,11 +499,17 @@ public class MathBuilder {
      * Whether given object is a variable
      */
     protected boolean isVariable(Object o) {
-        return o instanceof String string && !this.isDecimal((String) o) && !this.isOperator(string);
+        if (o instanceof String) {
+            return !this.isDecimal((String) o) && !this.isOperator((String) o);
+        }
+        return false;
     }
 
     protected boolean isOperator(Object o) {
-        return o instanceof String string && this.isOperator(string);
+        if (o instanceof String) {
+            return this.isOperator((String) o);
+        }
+        return false;
     }
 
     /**

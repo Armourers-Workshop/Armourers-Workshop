@@ -44,8 +44,8 @@ public final class SkinBakery implements ISkinLibraryListener {
             .thread("AW-SKIN-BK", Thread.MIN_PRIORITY)
             .loadCount(ModConfig.Client.modelBakingThreadCount)
             .transformCount(ModConfig.Client.modelBakingThreadCount)
-            .loader(this::safeLoadSkin2)
-            .transformer(this::safeBakeSkin2)
+            .loader(this::loadSkin0)
+            .transformer(this::bakeSkin0)
             .build();
 
     public SkinBakery() {
@@ -143,16 +143,21 @@ public final class SkinBakery implements ISkinLibraryListener {
     @Override
     public void libraryDidChanges(ISkinLibrary library, ISkinLibrary.Difference difference) {
         RenderSystem.recordRenderCall(() -> {
-            difference.getRemovedChanges().forEach(it -> manager.remove(it.getSkinIdentifier()));
-            difference.getUpdatedChanges().forEach(it -> manager.remove(it.getKey().getSkinIdentifier()));
+            difference.getRemovedChanges().forEach(it -> invalidateSkin0(it.getSkinIdentifier()));
+            difference.getUpdatedChanges().forEach(it -> invalidateSkin0(it.getKey().getSkinIdentifier()));
         });
     }
 
-    private void safeLoadSkin2(String identifier, IResultHandler<Skin> complete) {
+    private void invalidateSkin0(String identifier) {
+        SkinLoader.getInstance().removeSkin(identifier);
+        manager.remove(identifier);
+    }
+
+    private void loadSkin0(String identifier, IResultHandler<Skin> complete) {
         SkinLoader.getInstance().loadSkin(identifier, complete);
     }
 
-    private void safeBakeSkin2(String identifier, Skin skin, IResultHandler<BakedSkin> complete) {
+    private void bakeSkin0(String identifier, Skin skin, IResultHandler<BakedSkin> complete) {
         try {
             bakeSkin(identifier, skin, complete);
         } catch (Exception exception) {

@@ -61,7 +61,7 @@
   "commands.armourers_workshop.armourers.exportSkin.success": "Export task has been completed!",
   "commands.armourers_workshop.armourers.setItemSkinnable.add": "Add %1$s as skinnable %2$s",
   "commands.armourers_workshop.armourers.setItemSkinnable.remove": "Remove %1$s as skinnable %2$s",
-  "commands.armourers_workshop.notify.title": "Notification Center",
+  "commands.armourers_workshop.notify.title": "Message",
   "commands.armourers_workshop.notify.confirm": "OK",
   "commands.armourers_workshop.notify.exportSkin.failure": "Export skin failure.",
   "commands.armourers_workshop.notify.exportSkin.processing": "Export processing...",

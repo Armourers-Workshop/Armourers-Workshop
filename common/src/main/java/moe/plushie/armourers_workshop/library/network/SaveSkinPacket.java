@@ -135,6 +135,7 @@ public class SaveSkinPacket extends CustomPacket {
             }
             if (container.shouldSaveStack()) {
                 accept(player, "save");
+                SkinLoader.getInstance().removeSkin(destination); // remove skin cache.
                 server.getLibrary().save(getPath(destination), skin);
                 container.crafting(null);
             }
