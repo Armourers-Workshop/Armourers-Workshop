@@ -1,17 +1,20 @@
 package moe.plushie.armourers_workshop.core.skin.serializer;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
+import moe.plushie.armourers_workshop.api.skin.ISkinDyeType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 public class SkinUsedCounter {
 
+    private final Set<ISkinDyeType> dyeTypes = new HashSet<>();
     private final int[] cubeTotals = new int[SkinCubeTypes.getTotalCubes()];
+
     private int markerTotal;
-    private int dyeTotal;
     private int cubeTotal;
     private int faceTotal;
 
@@ -42,7 +45,7 @@ public class SkinUsedCounter {
         }
         for (ISkinPaintType paintType : paintTypes) {
             if (paintType.getDyeType() != null) {
-                dyeTotal += 1;
+                dyeTypes.add(paintType.getDyeType());
             }
         }
     }
@@ -52,14 +55,18 @@ public class SkinUsedCounter {
     }
 
     public void reset() {
-        dyeTotal = 0;
+        dyeTypes.clear();
         markerTotal = 0;
         cubeTotal = 0;
         Arrays.fill(cubeTotals, 0);
     }
 
     public int getDyeTotal() {
-        return dyeTotal;
+        return dyeTypes.size();
+    }
+
+    public Set<ISkinDyeType> getDyeTypes() {
+        return dyeTypes;
     }
 
     public int getMarkerTotal() {

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.menu;
 
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.api.skin.ISkinDyeType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.blockentity.DyeTableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -13,6 +14,7 @@ import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,10 +23,15 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
+import java.util.ArrayList;
+import java.util.Set;
+
 public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
 
     private final ISkinPaintType[] paintTypes = {SkinPaintTypes.DYE_1, SkinPaintTypes.DYE_2, SkinPaintTypes.DYE_3, SkinPaintTypes.DYE_4, SkinPaintTypes.DYE_5, SkinPaintTypes.DYE_6, SkinPaintTypes.DYE_7, SkinPaintTypes.DYE_8};
     private final Container inventory;
+
+    private ArrayList<ISkinPaintType> lockedPaintTypes = new ArrayList<>();
 
     public DyeTableMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
         super(menuType, block, containerId, access);
@@ -33,6 +40,15 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
         this.addCustomSlots(inventory, 68, 36, 22, 22);
         this.addInputSlot(inventory, 8, 26, 23);
         this.addOutputSlot(inventory, 9, 26, 69);
+    }
+
+    // only call at client side.
+    public void reload(Set<ISkinDyeType> dyeTypes) {
+        if (dyeTypes != null) {
+            lockedPaintTypes = ObjectUtils.filter(paintTypes, it -> !dyeTypes.contains(it.getDyeType()));
+        } else {
+            lockedPaintTypes = new ArrayList<>();
+        }
     }
 
     public ItemStack getInputStack() {
@@ -94,10 +110,10 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
     }
 
     protected void addCustomSlots(Container inventory, int x, int y, int itemWidth, int itemHeight) {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < paintTypes.length; i++) {
             int ix = x + (i % 4) * itemWidth;
             int iy = y + (i / 4) * itemHeight;
-            addSlot(new LockableSlot(inventory, i, ix, iy, SkinSlotType.DYE));
+            addSlot(new LockableSlot(inventory, i, ix, iy, paintTypes[i]));
         }
     }
 
@@ -144,8 +160,11 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
 
     public class LockableSlot extends SkinSlot {
 
-        public LockableSlot(Container inventory, int slot, int x, int y, SkinSlotType... slotTypes) {
-            super(inventory, slot, x, y, slotTypes);
+        private final ISkinPaintType paintType;
+
+        public LockableSlot(Container inventory, int slot, int x, int y, ISkinPaintType paintType) {
+            super(inventory, slot, x, y, SkinSlotType.DYE);
+            this.paintType = paintType;
         }
 
         @Override
@@ -161,6 +180,15 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
         public void setChanged() {
             super.setChanged();
             applySkin(getOutputStack());
+        }
+
+        public boolean isLocked() {
+            return lockedPaintTypes != null && lockedPaintTypes.contains(paintType);
+        }
+
+        @Override
+        public boolean isActive() {
+            return !isLocked();
         }
     }
 }
