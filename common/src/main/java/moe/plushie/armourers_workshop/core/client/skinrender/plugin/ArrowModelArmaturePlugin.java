@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.client.skinrender.plugin;
 
-import moe.plushie.armourers_workshop.api.client.model.IModelProvider;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -12,11 +11,6 @@ import manifold.ext.rt.api.auto;
 public class ArrowModelArmaturePlugin extends ArmaturePlugin {
 
     public ArrowModelArmaturePlugin(ArmatureTransformerContext context) {
-        context.addEntityRendererListener(entityRenderer -> {
-            // get the model by entity renderer.
-            auto modelProvider = (IModelProvider<?>) entityRenderer;
-            context.setEntityModel(modelProvider.getModel(null));
-        });
     }
 
     @Override

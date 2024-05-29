@@ -17,7 +17,9 @@ public class BoatModelArmaturePlugin extends ArmaturePlugin {
         context.setEntityModel(placeholderModel);
         context.addEntityRendererListener(entityRenderer -> {
             // force cast to model provider.
-            modelProvider = ObjectUtils.unsafeCast(entityRenderer);
+            if (entityRenderer instanceof IModelProvider<?>) {
+                modelProvider = ObjectUtils.unsafeCast(entityRenderer);
+            }
         });
     }
 
@@ -28,5 +30,10 @@ public class BoatModelArmaturePlugin extends ArmaturePlugin {
 
         // fix the direction.
         context.pose().scale(-1, -1, 1);
+    }
+
+    @Override
+    public boolean freeze() {
+        return modelProvider != null;
     }
 }

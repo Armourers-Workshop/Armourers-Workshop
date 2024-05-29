@@ -4,9 +4,11 @@ import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.api.armature.IJointFilter;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
+import moe.plushie.armourers_workshop.api.client.model.IModelProvider;
 import moe.plushie.armourers_workshop.core.armature.Armature;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformer;
+import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.render.EntityRendererStorage;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager2;
@@ -52,8 +54,13 @@ public class BakedArmatureTransformer {
         if (transformer == null) {
             return null;
         }
+        ArmatureTransformerContext context = transformer.getContext();
         ArrayList<ArmaturePlugin> plugins = Lists.newArrayList(transformer.getPlugins());
-        transformer.getContext().setEntityRenderer(entityRenderer);
+        context.setEntityRenderer(entityRenderer);
+        // we need tried load entity model from entity renderer.
+        if (context.getEntityModel() == null && entityRenderer instanceof IModelProvider<?>) {
+            context.setEntityModel(((IModelProvider<?>) entityRenderer).getModel(null));
+        }
         plugins.removeIf(plugin -> !plugin.freeze());
         BakedArmatureTransformer armatureTransformer1 = new BakedArmatureTransformer(transformer);
         armatureTransformer1.setPlugins(plugins);

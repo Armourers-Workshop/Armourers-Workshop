@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.client.skinrender.plugin;
 
-import moe.plushie.armourers_workshop.api.client.model.IModelProvider;
 import moe.plushie.armourers_workshop.api.data.IAssociatedContainerKey;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
@@ -26,11 +25,6 @@ public class MinecartModelArmaturePlugin extends ArmaturePlugin {
     private static final IAssociatedContainerKey<Boolean> IS_FLAPPED = DataStorageKey.of("isFlapped", Boolean.class, () -> false);
 
     public MinecartModelArmaturePlugin(ArmatureTransformerContext context) {
-        context.addEntityRendererListener(entityRenderer -> {
-            // get the model by entity renderer.
-            auto modelProvider = (IModelProvider<?>) entityRenderer;
-            context.setEntityModel(modelProvider.getModel(null));
-        });
     }
 
     @Override
