@@ -24,7 +24,6 @@ public class ModTextures {
     public static final ResourceLocation ARMOURER = res("textures/gui/armourer/armourer.png");
     public static final ResourceLocation ADVANCED_SKIN_BUILDER = res("textures/gui/advanced_skin_builder/advanced-skin-builder.png");
 
-
     public static final ResourceLocation TABS = res("textures/gui/controls/tabs.png");
     public static final ResourceLocation COMMON = res("textures/gui/common.png");
     public static final ResourceLocation WIDGETS = res("textures/gui/widgets.png");
@@ -33,6 +32,7 @@ public class ModTextures {
     public static final ResourceLocation RATING = res("textures/gui/controls/rating.png");
     public static final ResourceLocation TAB_ICONS = res("textures/gui/controls/tab_icons.png");
     public static final ResourceLocation HUE = res("textures/gui/controls/slider-hue.png");
+    public static final ResourceLocation TOASTS = res("textures/gui/controls/toasts.png");
 
     public static final ResourceLocation BUTTONS = res("textures/gui/controls/buttons.png");
     public static final ResourceLocation HELP = res("textures/gui/controls/help.png");

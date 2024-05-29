@@ -103,6 +103,7 @@
   "inventory.armourers_workshop.advanced-skin-builder.dialog.changeType.title": "Change Type",
   "inventory.armourers_workshop.advanced-skin-builder.dialog.changeType.message": "Change type to \"%s\" will reset all nodes, are you sure?",
   "inventory.armourers_workshop.advanced-skin-builder.dialog.importer.title": "Import Skin",
+  "inventory.armourers_workshop.advanced-skin-builder.dialog.importer.unknownException": "Can't parse the file.",
   "inventory.armourers_workshop.advanced-skin-builder.dialog.exporter.title": "Export Skin",
   "inventory.armourers_workshop.advanced-skin-builder.dialog.exporter.message": "Export skin to player inventory?",
   "inventory.armourers_workshop.advanced-skin-builder.shortcut.show1": "§a%s§r Open/Close left card.",

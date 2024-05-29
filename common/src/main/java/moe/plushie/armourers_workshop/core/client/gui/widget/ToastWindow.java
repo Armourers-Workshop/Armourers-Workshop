@@ -9,6 +9,7 @@ import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIWindow;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -128,7 +129,7 @@ public class ToastWindow extends UIWindow {
     }
 
     private ResourceLocation getDefaultTexture() {
-        return new ResourceLocation("textures/gui/toasts.png");
+        return ModTextures.TOASTS;
     }
 
     private void updateIconRect() {

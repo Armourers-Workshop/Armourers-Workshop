@@ -66,7 +66,7 @@ public class DocumentImporter {
                 UserNotificationCenter.showToast(message, UIColor.RED, title, null);
             } catch (Exception e) {
                 e.printStackTrace();
-                NSString message = NSString.localizedString("skin-library.error.illegalOperation");
+                NSString message = NSString.localizedString("advanced-skin-builder.dialog.importer.unknownException");
                 NSString title = NSString.localizedString("advanced-skin-builder.dialog.importer.title");
                 UserNotificationCenter.showToast(message, UIColor.RED, title, null);
             }
