@@ -59,6 +59,7 @@ public class EpicFightEntityRendererPatch<T extends LivingEntity> extends Entity
         auto entityModel = entityRenderer.getModel();
         if (this.entityModel != entityModel) {
             this.entityModel = entityModel;
+            this.transformerModel = EpicFlightModel.ofNullable(entityModel);
             this.transformer = createTransformer(entity, transformerModel, entityRenderer);
         }
     }

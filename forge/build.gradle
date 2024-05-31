@@ -17,9 +17,6 @@ repositories {
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_api_version}-${rootProject.forge_api_version}"
 
-    // molang support for advanced skin.
-    //modShadow "gg.moonflower:molang-compiler:${rootProject.molang_version}"
-
     //modCompileOnly "com.sk89q.worldedit:worldedit-core:7.2.5-SNAPSHOT"
 
     //modLocalRuntime "com.sk89q.worldedit:worldedit-mod:7.2.5-dist"
