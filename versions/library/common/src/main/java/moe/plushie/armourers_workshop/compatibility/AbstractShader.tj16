@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.core.client.shader.Shader;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexGroup;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,10 +35,16 @@ public class AbstractShader extends Shader {
     }
 
     @Override
-    public void apply(ShaderVertexGroup group, Runnable action) {
+    protected void prepare(ShaderVertexGroup group) {
+        // apply changes of texture animation.
+        RenderSystem.setExtendedTextureMatrix(group.getTextureMatrix(TickUtils.ticks()));
+
         lastMaxVertexCount = group.maxVertexCount;
         group.getRenderType().setupRenderState();
-        action.run();
+    }
+
+    @Override
+    protected void clean(ShaderVertexGroup group) {
         group.getRenderType().clearRenderState();
     }
 

@@ -43,7 +43,6 @@ public abstract class Shader {
         RenderSystem.setShaderFogStart(Float.MAX_VALUE);
         RenderSystem.setShaderFogEnd(Float.MAX_VALUE);
         RenderSystem.setExtendedMatrixFlags(0x80);
-        //RenderSystem.setExtendedTextureMatrix(OpenMatrix4f.createTranslateMatrix(0, TickUtils.getPaintTextureOffset() / 256.0f, 0));
         ShaderUniforms.begin();
 
         if (ModDebugger.wireframeRender) {
