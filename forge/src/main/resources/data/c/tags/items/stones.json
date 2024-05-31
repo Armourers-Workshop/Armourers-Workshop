@@ -2,7 +2,7 @@
   "replace": false,
   "values": [
     {
-      "id": "#forge:stones",
+      "id": "#forge:stone",
       "required": false
     }
   ]
