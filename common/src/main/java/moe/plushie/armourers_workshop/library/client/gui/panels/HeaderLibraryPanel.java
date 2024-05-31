@@ -41,13 +41,13 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
 
     public HeaderLibraryPanel() {
         super("skin-library-global.header", p -> true);
-        this.betaCheckUpdate();
+        this.reloadData();
     }
 
     @Override
     public void tick() {
         super.tick();
-        betaCheckUpdate();
+        reloadData();
     }
 
     @Override
@@ -69,6 +69,31 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
         this.renderPlayerProfile(context, Minecraft.getInstance().getUser().getGameProfile());
+    }
+
+    public void reloadData() {
+        iconButtonHome.setHidden(false);
+        iconButtonMyFiles.setHidden(true);
+        iconButtonUploadSkin.setHidden(true);
+        iconButtonJoin.setHidden(true);
+        iconButtonInfo.setHidden(false);
+        iconButtonModeration.setHidden(true);
+
+        ServerUser user = library.getUser();
+        if (!user.isMember() && library.isConnected()) {
+            iconButtonJoin.setHidden(false);
+        }
+
+        if (user.isMember()) {
+            iconButtonMyFiles.setHidden(false);
+            iconButtonUploadSkin.setHidden(false);
+            iconButtonUploadSkin.setEnabled(user.hasPermission(ServerPermission.SKIN_UPLOAD));
+            if (user.hasPermission(ServerPermission.GET_REPORT_LIST)) {
+                iconButtonModeration.setHidden(false);
+            }
+        }
+
+        setNeedsLayout();
     }
 
     private void renderPlayerProfile(CGGraphicsContext context, GameProfile gameProfile) {
@@ -99,31 +124,6 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         }
         float lineHeight = UIFont.systemFont().lineHeight();
         context.drawText(profile, 24, (rect.height - lineHeight) / 2f, textColor);
-    }
-
-    private void betaCheckUpdate() {
-        iconButtonHome.setHidden(false);
-        iconButtonMyFiles.setHidden(true);
-        iconButtonUploadSkin.setHidden(true);
-        iconButtonJoin.setHidden(true);
-        iconButtonInfo.setHidden(false);
-        iconButtonModeration.setHidden(true);
-
-        ServerUser user = library.getUser();
-        if (!user.isMember() && library.isConnected()) {
-            iconButtonJoin.setHidden(false);
-        }
-
-        if (user.isMember()) {
-            iconButtonMyFiles.setHidden(false);
-            iconButtonUploadSkin.setHidden(false);
-            iconButtonUploadSkin.setEnabled(user.hasPermission(ServerPermission.SKIN_UPLOAD));
-            if (user.hasPermission(ServerPermission.GET_REPORT_LIST)) {
-                iconButtonModeration.setHidden(false);
-            }
-        }
-
-        setNeedsLayout();
     }
 
     private BiConsumer<HeaderLibraryPanel, UIControl> redirect(GlobalSkinLibraryWindow.Page page) {

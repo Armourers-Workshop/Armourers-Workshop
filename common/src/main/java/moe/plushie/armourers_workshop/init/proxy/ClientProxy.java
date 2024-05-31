@@ -44,6 +44,7 @@ import moe.plushie.armourers_workshop.init.platform.event.client.RenderFrameEven
 import moe.plushie.armourers_workshop.init.platform.event.client.RenderHighlightEvent;
 import moe.plushie.armourers_workshop.init.platform.event.client.RenderLivingEntityEvent;
 import moe.plushie.armourers_workshop.init.platform.event.client.RenderSpecificHandEvent;
+import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.data.impl.MinecraftAuth;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -143,6 +144,7 @@ public class ClientProxy {
             Tickets.invalidateAll();
             SkinTextureManager.getInstance().stop();
             SkinLoader.getInstance().stop();
+            GlobalSkinLibrary.getInstance().disconnect();
             SkinLibraryManager.getClient().getPublicSkinLibrary().reset();
             SkinLibraryManager.getClient().getPrivateSkinLibrary().reset();
             ModContext.reset();

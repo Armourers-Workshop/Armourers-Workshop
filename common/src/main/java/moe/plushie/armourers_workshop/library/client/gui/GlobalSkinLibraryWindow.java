@@ -67,7 +67,7 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
     public GlobalSkinLibraryWindow(GlobalSkinLibraryMenu container, Inventory inventory, NSString title) {
         super(container, inventory, title);
         this.setFrame(new CGRect(0, 0, 640, 480));
-        this.titleView.setTextColor(new UIColor(0xcccccc));
+        this.titleView.setTextColor(new UIColor(0xCCCCCC));
         this.inventoryView.setHidden(true);
     }
 
@@ -182,6 +182,7 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
         }
 
         public void showNewHome() {
+            headerPanel.reloadData();
             homePanel.reloadData();
             setPage(Page.HOME);
         }
@@ -235,6 +236,7 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
             return menu;
         }
 
+        @Override
         public void skinDidChange(String skinId, @Nullable ServerSkin newValue) {
             for (AbstractLibraryPanel panel : panels) {
                 if (panel instanceof ISkinListListener) {

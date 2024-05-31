@@ -23,8 +23,8 @@ import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
 import moe.plushie.armourers_workshop.library.data.impl.ServerStatus;
 import moe.plushie.armourers_workshop.library.data.impl.ServerToken;
 import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
-import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
@@ -72,11 +72,12 @@ public class GlobalSkinLibrary extends ServerSession {
         request("/connect", a2m("uuid", profile.getId()), ServerUser::fromJSON, (result, exception) -> {
             state.connecting = false;
             state.connected = true;
-            if (result != null) {
-                state.currentUser = result;
-                state.users.put(result.getId(), result);
-            }
+            updateUser(result);
         });
+    }
+
+    public void disconnect() {
+        state = new State(new ArrayList<>());
     }
 
     public void auth() throws Exception {
@@ -109,6 +110,7 @@ public class GlobalSkinLibrary extends ServerSession {
             try {
                 HashMap<String, Object> parameters = authenticationFromMinecraft();
                 request("/user/join", parameters, o -> o);
+                updateUser(request("/connect", a2m("uuid", parameters.get("uuid")), ServerUser::fromJSON));
                 handlerOut.accept(null);
             } catch (Exception exception1) {
                 handlerOut.throwing(exception1);
@@ -357,6 +359,13 @@ public class GlobalSkinLibrary extends ServerSession {
         HashMap<String, Object> map = new HashMap<>();
         map.put(m, o);
         return map;
+    }
+
+    private void updateUser(ServerUser user) {
+        if (user != null) {
+            state.currentUser = user;
+            state.users.put(user.getId(), user);
+        }
     }
 
     private ServerPermission resolvePermission(ServerRequest request, @Nullable Map<String, ?> parameters) {
