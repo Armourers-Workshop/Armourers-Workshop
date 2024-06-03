@@ -16,13 +16,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Available("[1.16, 1.20)")
+@Available("[1.20, 1.21)")
 public class VehicleEntityPlaceMixin {
 
     @Mixin(BoatItem.class)
     public static class BoatPatch {
 
-        @ModifyVariable(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/Boat;setType(Lnet/minecraft/world/entity/vehicle/Boat$Type;)V"))
+        @ModifyVariable(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/Boat;setVariant(Lnet/minecraft/world/entity/vehicle/Boat$Type;)V"))
         private Boat aw2$updateCustomEntityTag(Boat entity, Level level, Player player, InteractionHand interactionHand) {
             ItemStack itemStack = player.getItemInHand(interactionHand);
             SkinUtils.copyVehicleSkin(entity, itemStack.getTag());
