@@ -16,7 +16,7 @@ public interface IItemBuilder<T extends Item> extends IRegistryBuilder<T> {
 
     IItemBuilder<T> craftRemainder(Item item);
 
-    IItemBuilder<T> group(IRegistryKey<IItemGroup> group);
+    IItemBuilder<T> group(IRegistryHolder<IItemGroup> group);
 
     IItemBuilder<T> rarity(Rarity rarity);
 

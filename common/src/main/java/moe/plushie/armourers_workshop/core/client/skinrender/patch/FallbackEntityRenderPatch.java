@@ -11,8 +11,6 @@ import net.minecraft.world.entity.Entity;
 
 import java.util.function.Consumer;
 
-import manifold.ext.rt.api.auto;
-
 public class FallbackEntityRenderPatch<T extends Entity> extends EntityRenderPatch<T> {
 
     private static final float SCALE = 1 / 16f;
@@ -27,7 +25,7 @@ public class FallbackEntityRenderPatch<T extends Entity> extends EntityRenderPat
 
     public static <T extends Entity> void activate(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, Consumer<FallbackEntityRenderPatch<T>> handler) {
         _activate(FallbackEntityRenderPatch.class, entity, partialTicks, packedLight, poseStackIn, buffersIn, null, handler, renderData -> {
-            auto transformer = SkinRendererManager.getFallbackTransformer(entity.getType());
+            var transformer = SkinRendererManager.getFallbackTransformer(entity.getType());
             if (transformer != null) {
                 return new FallbackEntityRenderPatch<>(transformer, renderData);
             }

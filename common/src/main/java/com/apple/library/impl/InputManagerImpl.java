@@ -71,31 +71,16 @@ public class InputManagerImpl {
     }
 
     public static int getShortcutKey(int key) {
-        switch (key) {
-            case GLFW.GLFW_KEY_A:
-                return GLFW.GLFW_KEY_HOME;
-
-            case GLFW.GLFW_KEY_E:
-                return GLFW.GLFW_KEY_END;
-
-            case GLFW.GLFW_KEY_B:
-                return GLFW.GLFW_KEY_LEFT;
-
-            case GLFW.GLFW_KEY_F:
-                return GLFW.GLFW_KEY_RIGHT;
-
-            case GLFW.GLFW_KEY_D:
-                return GLFW.GLFW_KEY_DELETE;
-
-            case GLFW.GLFW_KEY_P:
-                return GLFW.GLFW_KEY_UP;
-
-            case GLFW.GLFW_KEY_N:
-                return GLFW.GLFW_KEY_DOWN;
-
-            default:
-                return key;
-        }
+        return switch (key) {
+            case GLFW.GLFW_KEY_A -> GLFW.GLFW_KEY_HOME;
+            case GLFW.GLFW_KEY_E -> GLFW.GLFW_KEY_END;
+            case GLFW.GLFW_KEY_B -> GLFW.GLFW_KEY_LEFT;
+            case GLFW.GLFW_KEY_F -> GLFW.GLFW_KEY_RIGHT;
+            case GLFW.GLFW_KEY_D -> GLFW.GLFW_KEY_DELETE;
+            case GLFW.GLFW_KEY_P -> GLFW.GLFW_KEY_UP;
+            case GLFW.GLFW_KEY_N -> GLFW.GLFW_KEY_DOWN;
+            default -> key;
+        };
     }
 
     public static String getClipboard() {

@@ -9,6 +9,7 @@ import net.minecraft.world.phys.AABB;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class Rectangle3f implements IRectangle3f {
@@ -226,6 +227,18 @@ public class Rectangle3f implements IRectangle3f {
 
     public List<Float> toList() {
         return Lists.newArrayList(x, y, z, width, height, depth);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Rectangle3f that)) return false;
+        return Float.compare(x, that.x) == 0 && Float.compare(y, that.y) == 0 && Float.compare(z, that.z) == 0 && Float.compare(width, that.width) == 0 && Float.compare(height, that.height) == 0 && Float.compare(depth, that.depth) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z, width, height, depth);
     }
 
     @Override

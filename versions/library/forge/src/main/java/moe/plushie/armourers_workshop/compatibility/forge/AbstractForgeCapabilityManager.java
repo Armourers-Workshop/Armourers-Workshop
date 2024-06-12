@@ -3,14 +3,14 @@ package moe.plushie.armourers_workshop.compatibility.forge;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.ICapabilityType;
 import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -27,29 +27,29 @@ import java.util.function.Supplier;
 @Available("[1.21, )")
 public class AbstractForgeCapabilityManager {
 
-    public static <T> IRegistryKey<ICapabilityType<T>> register(ResourceLocation registryName, Class<T> type, Function<Entity, Optional<T>> factory) {
+    public static <T> IRegistryHolder<ICapabilityType<T>> register(IResourceLocation registryName, Class<T> type, Function<Entity, Optional<T>> factory) {
         if (type == SkinWardrobe.class) {
             return ObjectUtils.unsafeCast(createWardrobeCapabilityType(registryName, ObjectUtils.unsafeCast(factory)));
         }
         throw new AssertionError();
     }
 
-    private static IRegistryKey<ICapabilityType<SkinWardrobe>> createWardrobeCapabilityType(ResourceLocation registryName, Function<Entity, Optional<SkinWardrobe>> provider) {
-        EntityCapability<SkinWardrobe, Void> capability = EntityCapability.createVoid(registryName, SkinWardrobe.class);
+    private static IRegistryHolder<ICapabilityType<SkinWardrobe>> createWardrobeCapabilityType(IResourceLocation registryName, Function<Entity, Optional<SkinWardrobe>> provider) {
+        EntityCapability<SkinWardrobe, Void> capability = EntityCapability.createVoid(registryName.toLocation(), SkinWardrobe.class);
         ICapabilityType<SkinWardrobe> capabilityType = entity -> Optional.ofNullable(entity.getCapability(capability));
         return new Proxy<>(registryName, SkinWardrobe.class, provider, capabilityType, () -> capability);
     }
 
-    public static class Proxy<T extends IDataSerializerProvider> implements IRegistryKey<ICapabilityType<T>> {
+    public static class Proxy<T extends IDataSerializerProvider> implements IRegistryHolder<ICapabilityType<T>> {
 
-        final ResourceLocation registryName;
+        final IResourceLocation registryName;
         final Supplier<EntityCapability<T, Void>> capability;
 
         final Class<T> type;
         final ICapabilityType<T> capabilityType;
-        final IRegistryKey<AttachmentType<Serializer<T>>> attachmentType;
+        final IRegistryHolder<AttachmentType<Serializer<T>>> attachmentType;
 
-        protected Proxy(ResourceLocation registryName, Class<T> type, Function<Entity, Optional<T>> factory, ICapabilityType<T> capabilityType, Supplier<EntityCapability<T, Void>> capability) {
+        protected Proxy(IResourceLocation registryName, Class<T> type, Function<Entity, Optional<T>> factory, ICapabilityType<T> capabilityType, Supplier<EntityCapability<T, Void>> capability) {
             this.type = type;
             this.attachmentType = Serializer.register(registryName, factory);
             this.capability = capability;
@@ -72,7 +72,7 @@ public class AbstractForgeCapabilityManager {
         }
 
         @Override
-        public ResourceLocation getRegistryName() {
+        public IResourceLocation getRegistryName() {
             return registryName;
         }
     }
@@ -87,7 +87,7 @@ public class AbstractForgeCapabilityManager {
             this.value = value;
         }
 
-        public static <T extends IDataSerializerProvider> IRegistryKey<AttachmentType<Serializer<T>>> register(ResourceLocation registryName, Function<Entity, Optional<T>> factory) {
+        public static <T extends IDataSerializerProvider> IRegistryHolder<AttachmentType<Serializer<T>>> register(IResourceLocation registryName, Function<Entity, Optional<T>> factory) {
             DATA_KEYS.add(registryName.toString());
             Function<IAttachmentHolder, Serializer<T>> transformer = holder -> new Serializer<>(factory.apply((Entity) holder).orElse(null));
             return AbstractForgeRegistries.ATTACHMENT_TYPES.register(registryName.getPath(), () -> AttachmentType.serializable(transformer).build());

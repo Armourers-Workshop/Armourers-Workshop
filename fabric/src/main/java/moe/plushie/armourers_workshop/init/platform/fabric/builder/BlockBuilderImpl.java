@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import moe.plushie.armourers_workshop.api.registry.IBlockBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterial;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterialColor;
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistries;
@@ -167,8 +167,8 @@ public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
     }
 
     @Override
-    public IRegistryKey<T> build(String name) {
-        IRegistryKey<T> object = AbstractFabricRegistries.BLOCKS.register(name, () -> supplier.apply(properties));
+    public IRegistryHolder<T> build(String name) {
+        IRegistryHolder<T> object = AbstractFabricRegistries.BLOCKS.register(name, () -> supplier.apply(properties));
         EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
         return object;
     }

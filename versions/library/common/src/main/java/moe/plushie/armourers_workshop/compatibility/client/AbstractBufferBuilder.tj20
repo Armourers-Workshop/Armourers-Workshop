@@ -1,0 +1,67 @@
+package moe.plushie.armourers_workshop.compatibility.client;
+
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexSorting;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
+import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
+import net.minecraft.client.renderer.RenderType;
+
+import java.nio.ByteBuffer;
+
+@Available("[1.20, 1.21)")
+public class AbstractBufferBuilder extends AbstractVertexConsumer implements IBufferBuilder {
+
+    private final BufferBuilder bufferBuilder;
+
+    public AbstractBufferBuilder(int size) {
+        this(new BufferBuilder(size));
+    }
+
+    public AbstractBufferBuilder(BufferBuilder bufferBuilder) {
+        super(bufferBuilder);
+        this.bufferBuilder = bufferBuilder;
+    }
+
+    public static void upload(RenderType renderType, AbstractBufferBuilder builder) {
+        renderType.end(builder.bufferBuilder, VertexSorting.DISTANCE_TO_ORIGIN);
+    }
+
+    @Override
+    public void begin(RenderType renderType) {
+        bufferBuilder.begin(renderType.mode(), renderType.format());
+    }
+
+    @Override
+    public IRenderedBuffer end() {
+        var buffer = bufferBuilder.end();
+        var state = buffer.drawState();
+        return new IRenderedBuffer() {
+
+            @Override
+            public VertexFormat format() {
+                return state.format();
+            }
+
+            @Override
+            public ByteBuffer vertexBuffer() {
+                return buffer.vertexBuffer();
+            }
+
+            @Override
+            public int vertexCount() {
+                return state.vertexCount();
+            }
+
+            @Override
+            public void release() {
+                buffer.release();
+            }
+        };
+    }
+
+    public BufferBuilder bufferBuilder() {
+        return bufferBuilder;
+    }
+}

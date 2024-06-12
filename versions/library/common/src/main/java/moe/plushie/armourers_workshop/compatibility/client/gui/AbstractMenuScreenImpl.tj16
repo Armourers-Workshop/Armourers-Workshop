@@ -17,8 +17,6 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-import manifold.ext.rt.api.auto;
-
 @Available("[1.16, 1.18)")
 @Environment(EnvType.CLIENT)
 public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
@@ -37,8 +35,8 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
     }
 
     public void renderInView(UIView view, int zLevel, int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
-        auto poseStack = AbstractGraphicsRenderer.of(context);
-        auto modelViewStack = RenderSystem.getExtendedModelViewStack();
+        var poseStack = AbstractGraphicsRenderer.of(context);
+        var modelViewStack = RenderSystem.getExtendedModelViewStack();
         modelViewStack.pushPose();
         modelViewStack.translate(0, 0, zLevel);
         RenderSystem.applyModelViewMatrix();

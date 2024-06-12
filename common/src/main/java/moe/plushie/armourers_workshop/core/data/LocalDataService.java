@@ -132,8 +132,8 @@ public class LocalDataService implements ISkinFileManager {
     public void saveSkinFile(String identifier, InputStream inputStream, Object context) throws Exception {
         ModLog.debug("Save skin into db {}", identifier);
         // fast save the skin data.
-        if (context instanceof Node) {
-            ((Node) context).save(inputStream);
+        if (context instanceof Node node) {
+            node.save(inputStream);
             return;
         }
         // we need to read some skin info and check it is valid.
@@ -254,9 +254,8 @@ public class LocalDataService implements ISkinFileManager {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Node)) return false;
-            Node node = (Node) o;
-            return fileSize == node.fileSize && fileHash == node.fileHash && propertiesHash == node.propertiesHash && type.equals(node.type) && properties.equals(node.properties);
+            if (!(o instanceof Node that)) return false;
+            return fileSize == that.fileSize && fileHash == that.fileHash && propertiesHash == that.propertiesHash && type.equals(that.type) && properties.equals(that.properties);
         }
 
         public boolean equalContents(byte[] bytes) {

@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.client.other;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
-import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.compatibility.AbstractShader;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferBuilder;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -41,8 +40,8 @@ public class SkinVertexBufferBuilder implements IBufferSource {
     }
 
     private static void attach(IBufferSource bufferSource, RenderType renderType, Runnable action) {
-        IVertexConsumer buffer = bufferSource.getBuffer(renderType);
-        IRenderAttachable attachable = ObjectUtils.safeCast(renderType, IRenderAttachable.class);
+        var buffer = bufferSource.getBuffer(renderType);
+        var attachable = ObjectUtils.safeCast(renderType, IRenderAttachable.class);
         if (attachable != null) {
             attachable.attachRenderTask(buffer, action);
         }
@@ -73,7 +72,7 @@ public class SkinVertexBufferBuilder implements IBufferSource {
 
     @NotNull
     public IBufferBuilder getBuffer(@NotNull RenderType renderType) {
-        AbstractBufferBuilder buffer = pendingBuilders2.get(renderType);
+        var buffer = pendingBuilders2.get(renderType);
         if (buffer != null) {
             return buffer;
         }
@@ -84,7 +83,7 @@ public class SkinVertexBufferBuilder implements IBufferSource {
     }
 
     public SkinRenderObjectBuilder getBuffer(@NotNull BakedSkin skin) {
-        SkinRenderObjectBuilder bufferBuilder = pendingBuilders.get(skin);
+        var bufferBuilder = pendingBuilders.get(skin);
         if (bufferBuilder != null) {
             return bufferBuilder;
         }

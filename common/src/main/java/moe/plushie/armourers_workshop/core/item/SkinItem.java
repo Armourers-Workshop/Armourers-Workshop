@@ -2,19 +2,18 @@ package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
-import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -27,8 +26,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
 import java.util.function.BiConsumer;
-
-import manifold.ext.rt.api.auto;
 
 public class SkinItem extends BlockItem implements IItemPropertiesProvider {
 
@@ -78,7 +75,7 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
 
     @Override
     public Component getName(ItemStack itemStack) {
-        Skin skin = SkinLoader.getInstance().getSkin(itemStack);
+        var skin = SkinLoader.getInstance().getSkin(itemStack);
         if (skin != null && !skin.getCustomName().trim().isEmpty()) {
             return TranslateUtils.formatted(skin.getCustomName());
         }
@@ -94,10 +91,10 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
     }
 
     @Override
-    public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
+    public void createModelProperties(BiConsumer<IResourceLocation, IItemModelProperty> builder) {
         builder.accept(ModConstants.key("loading"), (itemStack, level, entity, id) -> {
-            auto descriptor = SkinDescriptor.of(itemStack);
-            auto bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
+            var descriptor = SkinDescriptor.of(itemStack);
+            var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
             if (bakedSkin != null) {
                 return 0;
             }

@@ -20,9 +20,8 @@ public class Transformer {
         float h = MathUtils.rotLerp(g, entity.yBodyRotO, entity.yBodyRot);
         float j = MathUtils.rotLerp(g, entity.yHeadRotO, entity.yHeadRot);
         float k = j - h;
-        if (entity.isPassenger() && entity.getVehicle() instanceof LivingEntity) {
-            LivingEntity livingEntity2 = (LivingEntity)entity.getVehicle();
-            h = MathUtils.rotLerp(g, livingEntity2.yBodyRotO, livingEntity2.yBodyRot);
+        if (entity.isPassenger() && entity.getVehicle() instanceof LivingEntity livingEntity) {
+            h = MathUtils.rotLerp(g, livingEntity.yBodyRotO, livingEntity.yBodyRot);
             k = j - h;
             float l = MathUtils.wrapDegrees(k);
             if (l < -85.0f) {

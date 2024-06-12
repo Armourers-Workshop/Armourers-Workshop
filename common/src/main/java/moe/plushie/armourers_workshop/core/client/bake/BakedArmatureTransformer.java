@@ -3,12 +3,10 @@ package moe.plushie.armourers_workshop.core.client.bake;
 import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.api.armature.IJointFilter;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
-import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelProvider;
 import moe.plushie.armourers_workshop.core.armature.Armature;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformer;
-import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.render.EntityRendererStorage;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager2;
@@ -24,8 +22,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import manifold.ext.rt.api.auto;
 
 public class BakedArmatureTransformer {
 
@@ -54,15 +50,15 @@ public class BakedArmatureTransformer {
         if (transformer == null) {
             return null;
         }
-        ArmatureTransformerContext context = transformer.getContext();
-        ArrayList<ArmaturePlugin> plugins = Lists.newArrayList(transformer.getPlugins());
+        var context = transformer.getContext();
+        var plugins = Lists.newArrayList(transformer.getPlugins());
         context.setEntityRenderer(entityRenderer);
         // we need tried load entity model from entity renderer.
         if (context.getEntityModel() == null && entityRenderer instanceof IModelProvider<?>) {
             context.setEntityModel(((IModelProvider<?>) entityRenderer).getModel(null));
         }
         plugins.removeIf(plugin -> !plugin.freeze());
-        BakedArmatureTransformer armatureTransformer1 = new BakedArmatureTransformer(transformer);
+        var armatureTransformer1 = new BakedArmatureTransformer(transformer);
         armatureTransformer1.setPlugins(plugins);
         return armatureTransformer1;
     }
@@ -72,7 +68,7 @@ public class BakedArmatureTransformer {
         if (entity == null) {
             return null;
         }
-        EntityType<?> entityType = entity.getType();
+        var entityType = entity.getType();
         // when the caller does not provide the entity renderer we need to query it from managers.
         if (entityRenderer == null) {
             entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
@@ -88,29 +84,29 @@ public class BakedArmatureTransformer {
         // in the normal, the entityRenderer only have a model type,
         // but some mods(Custom NPC) generate dynamically models,
         // so we need to be compatible with that
-        auto storage = EntityRendererStorage.of(entityRenderer);
+        var storage = EntityRendererStorage.of(entityRenderer);
         return storage.computeTransformerIfAbsent(entityModel, it -> {
             // if it can't transform this, it means we do not support this renderer.
-            IModel model = ModelHolder.ofNullable(entityModel);
-            ArmatureTransformer transformer = SkinRendererManager2.DEFAULT.getTransformer(entityType, model);
+            var model = ModelHolder.ofNullable(entityModel);
+            var transformer = SkinRendererManager2.DEFAULT.getTransformer(entityType, model);
             return create(transformer, entityRenderer);
         });
     }
 
     public void prepare(Entity entity, SkinRenderContext context) {
-        for (ArmaturePlugin plugin : plugins) {
+        for (var plugin : plugins) {
             plugin.prepare(entity, context);
         }
     }
 
     public void activate(Entity entity, SkinRenderContext context) {
-        for (ArmaturePlugin plugin : plugins) {
+        for (var plugin : plugins) {
             plugin.activate(entity, context);
         }
     }
 
     public void deactivate(Entity entity, SkinRenderContext context) {
-        for (ArmaturePlugin plugin : plugins) {
+        for (var plugin : plugins) {
             plugin.deactivate(entity, context);
         }
     }

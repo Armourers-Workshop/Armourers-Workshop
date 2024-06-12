@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.phys.BlockHitResult;
 
-@Available("[1.16, )")
+@Available("[1.21, )")
 public class AbstractFabricRenderHighlightEvent {
 
     public static IEventHandler<RenderHighlightEvent.Block> blockFactory() {
@@ -19,7 +19,7 @@ public class AbstractFabricRenderHighlightEvent {
             subscriber.accept(new RenderHighlightEvent.Block() {
                 @Override
                 public float getPartialTick() {
-                    return context.tickDelta();
+                    return context.tickCounter().getGameTimeDeltaTicks();
                 }
 
                 @Override

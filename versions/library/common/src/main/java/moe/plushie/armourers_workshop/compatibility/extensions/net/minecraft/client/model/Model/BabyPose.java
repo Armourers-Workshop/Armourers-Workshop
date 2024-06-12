@@ -2,22 +2,19 @@ package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.cl
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.model.IModelBabyPose;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.Model;
 
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
-import manifold.ext.rt.api.auto;
 
 @Extension
 @Available("[1.18, )")
 public class BabyPose {
 
     public static IModelBabyPose getBabyPose(@This Model model) {
-        auto model1 = ObjectUtils.safeCast(model, AgeableListModel.class);
-        if (model1 == null) {
+        if (!(model instanceof AgeableListModel<?> model1)) {
             return null;
         }
         float scale = model1.babyHeadScale;

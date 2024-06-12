@@ -16,8 +16,6 @@ import net.minecraft.world.entity.LivingEntity;
 
 import java.util.function.Consumer;
 
-import manifold.ext.rt.api.auto;
-
 public class EpicFightEntityRendererPatch<T extends LivingEntity> extends EntityRenderPatch<T> {
 
     private EntityModel<?> entityModel;
@@ -31,7 +29,7 @@ public class EpicFightEntityRendererPatch<T extends LivingEntity> extends Entity
 
     public static <T extends LivingEntity> void activate(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer, Consumer<EpicFightEntityRendererPatch<T>> handler) {
         _activate(EpicFightEntityRendererPatch.class, entity, partialTicks, packedLight, poseStackIn, buffersIn, entityRenderer, handler, renderData -> {
-            auto model = EpicFlightModel.ofNullable(entityRenderer.getModel());
+            var model = EpicFlightModel.ofNullable(entityRenderer.getModel());
             if (model != null) {
                 return new EpicFightEntityRendererPatch<>(renderData);
             }
@@ -56,7 +54,7 @@ public class EpicFightEntityRendererPatch<T extends LivingEntity> extends Entity
 
     protected void onInit(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
         super.onInit(entity, partialTicks, packedLight, poseStackIn, buffersIn, entityRenderer);
-        auto entityModel = entityRenderer.getModel();
+        var entityModel = entityRenderer.getModel();
         if (this.entityModel != entityModel) {
             this.entityModel = entityModel;
             this.transformerModel = EpicFlightModel.ofNullable(entityModel);
@@ -101,7 +99,7 @@ public class EpicFightEntityRendererPatch<T extends LivingEntity> extends Entity
 
     private BakedArmatureTransformer createTransformer(Entity entity, EpicFlightModel model, LivingEntityRenderer<?, ?> entityRenderer) {
         if (model != null) {
-            auto transformer = SkinRendererManager2.EPICFIGHT.getTransformer(entity.getType(), model);
+            var transformer = SkinRendererManager2.EPICFIGHT.getTransformer(entity.getType(), model);
             if (transformer != null) {
                 return BakedArmatureTransformer.create(transformer, entityRenderer);
             }

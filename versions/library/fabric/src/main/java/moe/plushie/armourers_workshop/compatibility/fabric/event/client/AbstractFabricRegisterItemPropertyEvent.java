@@ -10,6 +10,6 @@ import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredica
 public class AbstractFabricRegisterItemPropertyEvent {
 
     public static IEventHandler<RegisterItemPropertyEvent> propertyFactory() {
-        return EventManagerImpl.factory(() -> ((registryName, item, property) -> FabricModelPredicateProviderRegistry.register(item, registryName, property::getValue)));
+        return EventManagerImpl.factory(() -> ((registryName, item, property) -> FabricModelPredicateProviderRegistry.register(item, registryName.toLocation(), property::getValue)));
     }
 }

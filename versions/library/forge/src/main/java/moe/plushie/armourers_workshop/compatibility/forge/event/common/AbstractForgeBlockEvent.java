@@ -12,7 +12,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-@Available("[1.19, )")
+@Available("[1.21, )")
 public class AbstractForgeBlockEvent {
 
     public static IEventHandler<BlockEvent.Place> placeFactory() {
@@ -43,7 +43,7 @@ public class AbstractForgeBlockEvent {
                 return new IBlockSnapshot() {
                     @Override
                     public BlockState getState() {
-                        return event.getBlockSnapshot().getReplacedBlock();
+                        return event.getBlockSnapshot().getState();
                     }
 
                     @Override

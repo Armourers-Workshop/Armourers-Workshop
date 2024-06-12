@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.registry.IItemBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractItemStackRendererProvider;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
@@ -19,7 +19,7 @@ public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemB
 
     protected Item.Properties properties = new Item.Properties();
     protected IRegistryBinder<T> binder;
-    protected IRegistryKey<IItemGroup> group;
+    protected IRegistryHolder<IItemGroup> group;
     protected final Function<Item.Properties, T> supplier;
 
     public AbstractForgeItemBuilder(Function<Item.Properties, T> supplier) {
@@ -36,8 +36,8 @@ public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemB
     }
 
     @Override
-    public IRegistryKey<T> build(String name) {
-        IRegistryKey<T> item = AbstractForgeRegistries.ITEMS.register(name, () -> {
+    public IRegistryHolder<T> build(String name) {
+        IRegistryHolder<T> item = AbstractForgeRegistries.ITEMS.register(name, () -> {
             T value = supplier.apply(properties);
             if (group != null) {
                 group.get().add(() -> value);

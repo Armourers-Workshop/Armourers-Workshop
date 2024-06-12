@@ -19,8 +19,6 @@ import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.fml.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-import manifold.ext.rt.api.auto;
-
 @Available("[1.16, 1.18)")
 public class AbstractForgeMenuType<C extends AbstractContainerMenu> extends AbstractMenuType<C> {
 
@@ -40,7 +38,7 @@ public class AbstractForgeMenuType<C extends AbstractContainerMenu> extends Abst
     }
 
     protected C createMenu(int containerId, Inventory inventory, FriendlyByteBuf buf) {
-        auto value = serializer.read(AbstractFriendlyByteBuf.wrap(buf), inventory.player);
+        var value = serializer.read(AbstractFriendlyByteBuf.wrap(buf), inventory.player);
         return factory.createMenu(type, containerId, inventory, value);
     }
 

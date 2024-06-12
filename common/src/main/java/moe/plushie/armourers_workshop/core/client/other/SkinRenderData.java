@@ -48,8 +48,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.function.BiConsumer;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeListener {
 
@@ -214,14 +212,14 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
 
     private void loadArmorSlots(Entity entity, ItemConsumer consumer) {
         int i = 0;
-        for (ItemStack itemStack : itemProvider.getArmorSlots(entity)) {
+        for (var itemStack : itemProvider.getArmorSlots(entity)) {
             consumer.accept(itemStack, 400 + i++, false);
         }
         // ignore when wardrobe profile load fails.
         if (wardrobeProfile == null) {
             return;
         }
-        for (SkinSlotType slotType : wardrobeProfile.getSlots()) {
+        for (var slotType : wardrobeProfile.getSlots()) {
             if (slotType == SkinSlotType.DYE) {
                 continue;
             }
@@ -235,17 +233,17 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
 
     private void loadHandSlots(Entity entity, ItemConsumer consumer) {
         int i = 0;
-        for (ItemStack itemStack : itemProvider.getHandSlots(entity)) {
+        for (var itemStack : itemProvider.getHandSlots(entity)) {
             consumer.accept(itemStack, 400 + i++, true);
         }
     }
 
     private void loadWardrobeFlags(Entity entity) {
-        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        var wardrobe = SkinWardrobe.of(entity);
         if (wardrobe == null) {
             return;
         }
-        for (EquipmentSlot slotType : EquipmentSlot.values()) {
+        for (var slotType : EquipmentSlot.values()) {
             if (wardrobe.shouldRenderEquipment(slotType)) {
                 overriddenManager.removeEquipment(slotType);
             } else {
@@ -256,18 +254,18 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
     }
 
     private void updateDye(ISkinPaintType paintType, ItemStack itemStack) {
-        IPaintColor paintColor = ColorUtils.getColor(itemStack);
+        var paintColor = ColorUtils.getColor(itemStack);
         if (paintColor != null) {
             dyeColors.put(paintType, paintColor);
         }
     }
 
     private void updateSkin(ItemStack itemStack, float renderPriority, boolean isHeld) {
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        var descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
             return;
         }
-        auto bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
         if (bakedSkin == null) {
             missingSkins.add(descriptor.getIdentifier());
             return;
@@ -303,7 +301,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
         if (!replaceSkinItem && itemStack.is(ModItems.SKIN.get())) {
             return SkinDescriptor.EMPTY;
         }
-        auto target = SkinDescriptor.of(itemStack);
+        var target = SkinDescriptor.of(itemStack);
         if (target.getType() == SkinTypes.ITEM_BOAT || target.getType() == SkinTypes.ITEM_FISHING || target.getType() == SkinTypes.HORSE) {
             return SkinDescriptor.EMPTY;
         }

@@ -1,16 +1,16 @@
 package moe.plushie.armourers_workshop.core.skin.part;
 
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.Objects;
 
 public abstract class SkinPartType implements ISkinPartType {
 
-    protected ResourceLocation registryName;
+    protected IResourceLocation registryName;
 
     protected Rectangle3i bounds;
     protected Rectangle3i buildingSpace;
@@ -29,11 +29,11 @@ public abstract class SkinPartType implements ISkinPartType {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public IResourceLocation getRegistryName() {
         return registryName;
     }
 
-    public SkinPartType setRegistryName(ResourceLocation registryName) {
+    public SkinPartType setRegistryName(IResourceLocation registryName) {
         this.registryName = registryName;
         return this;
     }

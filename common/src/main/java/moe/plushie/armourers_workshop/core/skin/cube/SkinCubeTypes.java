@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.skin.cube;
 
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.utils.SkinResourceLocation;
+import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import net.minecraft.world.level.block.Block;
 
 import java.util.HashMap;
@@ -49,9 +49,9 @@ public final class SkinCubeTypes {
         return SOLID;
     }
 
-    private static SkinCubeType register(String name, int id, boolean glass, boolean glowing, IRegistryKey<Block> block) {
+    private static SkinCubeType register(String name, int id, boolean glass, boolean glowing, IRegistryHolder<Block> block) {
         SkinCubeType cube = new SkinCubeType(id, glass, glowing, block);
-        cube.setRegistryName(new SkinResourceLocation("armourers", name));
+        cube.setRegistryName(OpenResourceLocation.create("armourers", name));
         if (ALL_CUBES.containsKey(cube.getRegistryName().toString())) {
             ModLog.warn("A mod tried to register a cube with an id that is in use.");
             return cube;

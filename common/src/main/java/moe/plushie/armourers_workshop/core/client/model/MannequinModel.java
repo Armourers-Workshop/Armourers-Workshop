@@ -61,7 +61,7 @@ public class MannequinModel<T extends MannequinEntity> extends AbstractPlayerMod
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer builder, int light, int overlay, float r, float g, float b, float a) {
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer builder, int light, int overlay, int color) {
         float rx = mainPose.getX();
         float ry = mainPose.getY();
         float rz = mainPose.getZ();
@@ -71,6 +71,6 @@ public class MannequinModel<T extends MannequinEntity> extends AbstractPlayerMod
             ry = 0;
         }
         poseStack.mulPose(new OpenQuaternionf(rx, ry, rz, true));
-        super.renderToBuffer(poseStack, builder, light, overlay, r, g, b, a);
+        super.renderToBuffer(poseStack, builder, light, overlay, color);
     }
 }

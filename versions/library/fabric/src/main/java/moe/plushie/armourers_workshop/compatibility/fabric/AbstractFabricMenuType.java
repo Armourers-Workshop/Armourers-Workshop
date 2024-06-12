@@ -19,8 +19,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
-import manifold.ext.rt.api.auto;
-
 @Available("[1.21, )")
 public class AbstractFabricMenuType<C extends AbstractContainerMenu> extends AbstractMenuType<C> {
 
@@ -38,8 +36,8 @@ public class AbstractFabricMenuType<C extends AbstractContainerMenu> extends Abs
         // the player is missing in the codec, so we need to defer processing.
         return new AbstractFabricMenuType<>(factory, serializer, StreamCodec.of(RegistryFriendlyByteBuf::writeBytes, (bufferIn) -> {
             // we need to keep writer/reader index
-            auto buffer = bufferIn.retainedDuplicate();
-            auto duplicated = new RegistryFriendlyByteBuf(buffer, bufferIn.registryAccess());
+            var buffer = bufferIn.retainedDuplicate();
+            var duplicated = new RegistryFriendlyByteBuf(buffer, bufferIn.registryAccess());
             // we need to tell decoder all data is processed.
             bufferIn.skipBytes(bufferIn.readableBytes());
             return duplicated;
@@ -47,7 +45,7 @@ public class AbstractFabricMenuType<C extends AbstractContainerMenu> extends Abs
     }
 
     protected C createMenu(int containerId, Inventory inventory, RegistryFriendlyByteBuf buf) {
-        auto value = serializer.read(AbstractFriendlyByteBuf.wrap(buf), inventory.player);
+        var value = serializer.read(AbstractFriendlyByteBuf.wrap(buf), inventory.player);
         return factory.createMenu(type, containerId, inventory, value);
     }
 
@@ -62,7 +60,7 @@ public class AbstractFabricMenuType<C extends AbstractContainerMenu> extends Abs
 
             @Override
             public RegistryFriendlyByteBuf getScreenOpeningData(ServerPlayer player) {
-                auto buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), player.registryAccess());
+                var buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), player.registryAccess());
                 serializer.write(AbstractFriendlyByteBuf.wrap(buf), player, value);
                 return buf;
             }

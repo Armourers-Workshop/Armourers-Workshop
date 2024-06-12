@@ -2,11 +2,14 @@ package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
 import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
+import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
+import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.builder.network.UpdateColorPickerPacket;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
@@ -18,12 +21,9 @@ import moe.plushie.armourers_workshop.init.ModSounds;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
-import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -62,12 +62,11 @@ public class ColorPickerItem extends AbstractPaintToolItem implements IItemTintC
             playSound(context);
             return InteractionResult.SUCCESS;
         }
-        if (blockEntity instanceof IPaintProvider) {
+        if (blockEntity instanceof IPaintProvider provider) {
             Player player = context.getPlayer();
             if (player != null && !player.isSecondaryUseActive()) {
                 return InteractionResult.PASS;
             }
-            IPaintProvider provider = (IPaintProvider) blockEntity;
             IPaintColor newColor = getItemColor(itemStack);
             if (newColor == null) {
                 // this is an empty color picker, we don't need to do anything.
@@ -83,7 +82,7 @@ public class ColorPickerItem extends AbstractPaintToolItem implements IItemTintC
     }
 
     @Override
-    public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
+    public void createModelProperties(BiConsumer<IResourceLocation, IItemModelProperty> builder) {
         builder.accept(ModConstants.key("empty"), (itemStack, level, entity, id) -> ColorUtils.hasColor(itemStack) ? 0 : 1);
     }
 
@@ -127,7 +126,7 @@ public class ColorPickerItem extends AbstractPaintToolItem implements IItemTintC
     }
 
     @Override
-    public IRegistryKey<SoundEvent> getItemSoundEvent(UseOnContext context) {
+    public IRegistryHolder<SoundEvent> getItemSoundEvent(UseOnContext context) {
         return ModSounds.PICKER;
     }
 }

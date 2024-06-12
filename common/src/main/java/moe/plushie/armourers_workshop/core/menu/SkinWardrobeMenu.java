@@ -190,8 +190,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
 
     private int getFreeSlot(SkinSlotType slotType) {
         for (Slot slot : slots) {
-            if (slot instanceof SkinSlot && !slot.hasItem()) {
-                SkinSlot slot1 = (SkinSlot) slot;
+            if (slot instanceof SkinSlot slot1 && !slot.hasItem()) {
                 if (slot1.getSlotTypes().contains(slotType) || slot1.getSlotTypes().isEmpty()) {
                     return slot1.index;
                 }

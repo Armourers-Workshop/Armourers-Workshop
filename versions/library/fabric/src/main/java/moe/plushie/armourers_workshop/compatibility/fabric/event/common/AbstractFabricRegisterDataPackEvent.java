@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 
@@ -20,7 +19,7 @@ public class AbstractFabricRegisterDataPackEvent {
 
     public static IEventHandler<RegisterDataPackEvent> registryFactory() {
         return subscriber -> subscriber.accept(provider -> {
-            ResourceLocation registryName = ModConstants.key("custom-data-pack");
+            ResourceLocation registryName = ModConstants.key("custom-data-pack").toLocation();
             ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new IdentifiableResourceReloadListener() {
                 @Override
                 public ResourceLocation getFabricId() {

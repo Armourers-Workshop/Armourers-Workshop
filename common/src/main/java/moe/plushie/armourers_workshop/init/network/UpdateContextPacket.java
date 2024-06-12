@@ -69,7 +69,7 @@ public class UpdateContextPacket extends CustomPacket {
                 fields = ModConfigSpec.COMMON.snapshot();
             }
             buffer.writeInt(fields.size());
-            if (fields.size() == 0) {
+            if (fields.isEmpty()) {
                 return;
             }
             ByteBufOutputStream bo = new ByteBufOutputStream(buffer.asByteBuf());

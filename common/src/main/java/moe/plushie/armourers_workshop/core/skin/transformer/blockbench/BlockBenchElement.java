@@ -98,7 +98,7 @@ public class BlockBenchElement extends BlockBenchObject {
         private Vector3f rotation = Vector3f.ZERO;
         private float inflate = 0;
 
-        private HashMap<Direction, BlockBenchFace> faces = new HashMap<>();
+        private final HashMap<Direction, BlockBenchFace> faces = new HashMap<>();
 
         public void type(String type) {
             this.type = type;

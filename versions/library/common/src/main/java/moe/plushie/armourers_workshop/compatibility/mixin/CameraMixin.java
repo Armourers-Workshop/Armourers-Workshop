@@ -8,12 +8,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Available("[1.16, )")
+@Available("[1.21, )")
 @Mixin(Camera.class)
 public class CameraMixin {
 
     @ModifyVariable(method = "getMaxZoom", at = @At("HEAD"), argsOnly = true)
-    private double aw2$getMaxZoom(double zoom) {
+    private float aw2$getMaxZoom(float zoom) {
         Camera camera = ObjectUtils.unsafeCast(this);
         CameraEntity cameraEntity = ObjectUtils.safeCast(camera.getEntity(), CameraEntity.class);
         if (cameraEntity != null) {

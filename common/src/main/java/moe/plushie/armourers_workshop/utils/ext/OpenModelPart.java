@@ -101,11 +101,11 @@ public class OpenModelPart {
         this.zRot = h;
     }
 
-    public void render(IPoseStack poseStack, IVertexConsumer builder, int i, int j) {
-        this.render(poseStack, builder, i, j, 1.0f, 1.0f, 1.0f, 1.0f);
+    public void render(IPoseStack poseStack, IVertexConsumer builder, int light, int overlay) {
+        this.render(poseStack, builder, light, overlay, -1);
     }
 
-    public void render(IPoseStack poseStack, IVertexConsumer vertexConsumer, int i, int j, float f, float g, float h, float k) {
+    public void render(IPoseStack poseStack, IVertexConsumer vertexConsumer, int light, int overlay, int color) {
         if (!visible) {
             return;
         }
@@ -113,10 +113,10 @@ public class OpenModelPart {
             poseStack.pushPose();
             translateAndRotate(poseStack);
             if (!skipDraw) {
-                compile(poseStack.last(), vertexConsumer, i, j, f, g, h, k);
+                compile(poseStack.last(), vertexConsumer, light, overlay, color);
             }
             for (OpenModelPart modelPart : children.values()) {
-                modelPart.render(poseStack, vertexConsumer, i, j, f, g, h, k);
+                modelPart.render(poseStack, vertexConsumer, light, overlay, color);
             }
             poseStack.popPose();
         }
@@ -132,9 +132,9 @@ public class OpenModelPart {
         }
     }
 
-    private void compile(IPoseStack.Pose pose, IVertexConsumer vertexConsumer, int i, int j, float f, float g, float h, float k) {
+    private void compile(IPoseStack.Pose pose, IVertexConsumer vertexConsumer, int light, int overlay, int color) {
         for (Cube cube : cubes) {
-            cube.compile(pose, vertexConsumer, i, j, f, g, h, k);
+            cube.compile(pose, vertexConsumer, light, overlay, color);
         }
     }
 
@@ -245,7 +245,7 @@ public class OpenModelPart {
 
         }
 
-        public void compile(IPoseStack.Pose entry, IVertexConsumer vertexConsumer, int i, int j, float f, float g, float h, float k) {
+        public void compile(IPoseStack.Pose entry, IVertexConsumer vertexConsumer, int light, int overlay, int color) {
             for (Polygon polygon : polygons) {
                 float[] normal = {
                         polygon.normal.getX(),
@@ -261,7 +261,7 @@ public class OpenModelPart {
                             1.0f
                     };
                     entry.transformPose(pose);
-                    vertexConsumer.vertex(pose[0], pose[1], pose[2], f, g, h, k, vertex.u, vertex.v, j, i, normal[0], normal[1], normal[2]);
+                    vertexConsumer.vertex(pose[0], pose[1], pose[2], color, vertex.u, vertex.v, overlay, light, normal[0], normal[1], normal[2]);
                 }
             }
         }

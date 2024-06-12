@@ -29,7 +29,7 @@ public class AbstractForgeRegistries {
     public static final auto ITEM_GROUPS = TypedRegistry.passthrough("Creative Mode Tab", CreativeModeTab.class);
     public static final auto ITEM_LOOT_FUNCTIONS = AbstractForgeRegistry.create("Loot Function Type", LootItemFunctionType.class, Registry.LOOT_FUNCTION_REGISTRY);
     public static final auto ITEM_TAGS = TypedRegistry.factory("Item Tag", IItemTag.class, registryName -> {
-        TagKey<Item> tag = TagKey.create(ForgeRegistries.Keys.ITEMS, registryName);
+        TagKey<Item> tag = TagKey.create(ForgeRegistries.Keys.ITEMS, registryName.toLocation());
         return itemStack -> itemStack.is(tag);
     });
 

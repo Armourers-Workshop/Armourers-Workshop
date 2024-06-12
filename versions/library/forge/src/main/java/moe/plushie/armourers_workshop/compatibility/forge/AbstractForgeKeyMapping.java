@@ -17,8 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import manifold.ext.rt.api.auto;
-
 @Available("[1.21, )")
 public abstract class AbstractForgeKeyMapping extends KeyMapping {
 
@@ -52,7 +50,7 @@ public abstract class AbstractForgeKeyMapping extends KeyMapping {
     }
 
     private static void unbind(InputConstants.Key keyCode, KeyMapping keyMapping) {
-        auto mappings = MAPPINGS.get(keyCode);
+        var mappings = MAPPINGS.get(keyCode);
         if (mappings != null) {
             mappings.remove(keyMapping);
         }
@@ -61,7 +59,7 @@ public abstract class AbstractForgeKeyMapping extends KeyMapping {
     @Nullable
     public static List<KeyMapping> findKeysByCode(InputConstants.Key keyCode) {
         // fix the neo forge wrong active modifier by `ctrl-shift-<key>`
-        auto mappings = MAPPINGS.get(keyCode);
+        var mappings = MAPPINGS.get(keyCode);
         if (mappings != null) {
             return mappings.stream()
                     .filter(binding -> binding.isActiveAndMatches(keyCode))

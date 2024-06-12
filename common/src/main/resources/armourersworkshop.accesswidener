@@ -18,8 +18,13 @@ accessible method net/minecraft/world/entity/player/Player hurtCurrentlyUsedShie
 accessible method net/minecraft/world/entity/Entity setLevel (Lnet/minecraft/world/level/Level;)V
 ##endif
 
-extendable method net/minecraft/world/entity/decoration/ArmorStand brokenByAnything (Lnet/minecraft/world/damagesource/DamageSource;)V
-extendable method net/minecraft/world/entity/decoration/ArmorStand brokenByPlayer (Lnet/minecraft/world/damagesource/DamageSource;)V
+##if MC >= 12100
+extendable method net/minecraft/world/entity/decoration/ArmorStand brokenByAnything (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;)V
+extendable method net/minecraft/world/entity/decoration/ArmorStand brokenByPlayer (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;)V
+##else
+### extendable method net/minecraft/world/entity/decoration/ArmorStand brokenByAnything (Lnet/minecraft/world/damagesource/DamageSource;)V
+### extendable method net/minecraft/world/entity/decoration/ArmorStand brokenByPlayer (Lnet/minecraft/world/damagesource/DamageSource;)V
+##endif
 
 accessible method net/minecraft/client/renderer/entity/LivingEntityRenderer addLayer (Lnet/minecraft/client/renderer/entity/layers/RenderLayer;)Z
 accessible field net/minecraft/client/renderer/entity/LivingEntityRenderer layers Ljava/util/List;

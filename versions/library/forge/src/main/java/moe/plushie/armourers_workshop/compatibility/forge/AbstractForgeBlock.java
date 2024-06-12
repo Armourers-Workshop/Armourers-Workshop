@@ -7,15 +7,27 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.common.extensions.IBlockExtension;
 
+import javax.annotation.Nullable;
+
 @Available("[1.21, )")
 public interface AbstractForgeBlock extends IBlockExtension {
+
+    @Override
+    boolean isBed(BlockState state, BlockGetter level, BlockPos pos, LivingEntity sleeper);
+
+    @Override
+    boolean isLadder(BlockState state, LevelReader level, BlockPos pos, LivingEntity entity);
 
     @Override
     default boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {

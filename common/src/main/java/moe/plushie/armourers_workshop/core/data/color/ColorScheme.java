@@ -2,13 +2,13 @@ package moe.plushie.armourers_workshop.core.data.color;
 
 import com.google.common.collect.Iterables;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinDye;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class ColorScheme implements ISkinDye {
     private HashMap<ISkinPaintType, IPaintColor> resolvedColors;
 
     private ColorScheme reference;
-    private ResourceLocation texture;
+    private IResourceLocation texture;
 
     private int hashCode;
 
@@ -92,11 +92,11 @@ public class ColorScheme implements ISkinDye {
         return resolvedColors.get(paintType);
     }
 
-    public ResourceLocation getTexture() {
+    public IResourceLocation getTexture() {
         return texture;
     }
 
-    public void setTexture(ResourceLocation texture) {
+    public void setTexture(IResourceLocation texture) {
         this.texture = texture;
     }
 

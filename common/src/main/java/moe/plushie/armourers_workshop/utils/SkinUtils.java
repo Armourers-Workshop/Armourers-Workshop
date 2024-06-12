@@ -61,16 +61,12 @@ public final class SkinUtils {
     };
 
     public static float[][] getRenderUVs(Direction direction, int rot) {
-        switch (rot) {
-            case 90:
-                return FACE_UVS_90[direction.get3DDataValue()];
-            case 180:
-                return FACE_UVS_180[direction.get3DDataValue()];
-            case 270:
-                return FACE_UVS_270[direction.get3DDataValue()];
-            default:
-                return FACE_UVS[direction.get3DDataValue()];
-        }
+        return switch (rot) {
+            case 90 -> FACE_UVS_90[direction.get3DDataValue()];
+            case 180 -> FACE_UVS_180[direction.get3DDataValue()];
+            case 270 -> FACE_UVS_270[direction.get3DDataValue()];
+            default -> FACE_UVS[direction.get3DDataValue()];
+        };
     }
 
     public static float[][] getRenderUVs(Direction direction) {

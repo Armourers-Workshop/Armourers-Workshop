@@ -292,8 +292,7 @@ public class OpenMatrix3f implements IMatrix3f {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof OpenMatrix3f)) return false;
-        OpenMatrix3f that = (OpenMatrix3f) o;
+        if (!(o instanceof OpenMatrix3f that)) return false;
         if (Float.compare(that.m00, m00) != 0) return false;
         if (Float.compare(that.m01, m01) != 0) return false;
         if (Float.compare(that.m02, m02) != 0) return false;
@@ -307,15 +306,15 @@ public class OpenMatrix3f implements IMatrix3f {
 
     @Override
     public int hashCode() {
-        int result = (m00 != +0.0f ? Float.floatToIntBits(m00) : 0);
-        result = 31 * result + (m01 != +0.0f ? Float.floatToIntBits(m01) : 0);
-        result = 31 * result + (m02 != +0.0f ? Float.floatToIntBits(m02) : 0);
-        result = 31 * result + (m10 != +0.0f ? Float.floatToIntBits(m10) : 0);
-        result = 31 * result + (m11 != +0.0f ? Float.floatToIntBits(m11) : 0);
-        result = 31 * result + (m12 != +0.0f ? Float.floatToIntBits(m12) : 0);
-        result = 31 * result + (m20 != +0.0f ? Float.floatToIntBits(m20) : 0);
-        result = 31 * result + (m21 != +0.0f ? Float.floatToIntBits(m21) : 0);
-        result = 31 * result + (m22 != +0.0f ? Float.floatToIntBits(m22) : 0);
+        int result = (m00 != 0.0f ? Float.floatToIntBits(m00) : 0);
+        result = 31 * result + (m01 != 0.0f ? Float.floatToIntBits(m01) : 0);
+        result = 31 * result + (m02 != 0.0f ? Float.floatToIntBits(m02) : 0);
+        result = 31 * result + (m10 != 0.0f ? Float.floatToIntBits(m10) : 0);
+        result = 31 * result + (m11 != 0.0f ? Float.floatToIntBits(m11) : 0);
+        result = 31 * result + (m12 != 0.0f ? Float.floatToIntBits(m12) : 0);
+        result = 31 * result + (m20 != 0.0f ? Float.floatToIntBits(m20) : 0);
+        result = 31 * result + (m21 != 0.0f ? Float.floatToIntBits(m21) : 0);
+        result = 31 * result + (m22 != 0.0f ? Float.floatToIntBits(m22) : 0);
         return result;
     }
 

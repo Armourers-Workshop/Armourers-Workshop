@@ -39,7 +39,7 @@ public class SkinPartTransform implements ISkinTransform {
             return null;
         }
         Collection<SkinMarker> markers = part.getMarkers();
-        if (markers == null || markers.size() == 0) {
+        if (markers == null || markers.isEmpty()) {
             return null;
         }
         return new SkinWingsTransform(partType, part.getProperties(), markers.iterator().next());

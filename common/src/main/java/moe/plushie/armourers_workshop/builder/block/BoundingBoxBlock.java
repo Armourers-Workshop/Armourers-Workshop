@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProv
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -52,8 +51,7 @@ public class BoundingBoxBlock extends Block implements AbstractBlockEntityProvid
     @Override
     public InteractionResult attackBlock(Level level, BlockPos blockPos, BlockState blockState, Direction direction, Player player, InteractionHand hand) {
         //
-        BoundingBoxBlockEntity blockEntity = ObjectUtils.safeCast(level.getBlockEntity(blockPos), BoundingBoxBlockEntity.class);
-        if (blockEntity != null && blockEntity.isValid() && blockEntity.hasColors()) {
+        if (level.getBlockEntity(blockPos) instanceof BoundingBoxBlockEntity blockEntity && blockEntity.isValid() && blockEntity.hasColors()) {
             blockEntity.clearArmourerTextureColors();
             return InteractionResult.sidedSuccess(level.isClientSide());
         }
@@ -68,8 +66,7 @@ public class BoundingBoxBlock extends Block implements AbstractBlockEntityProvid
 
     @Override
     public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
-        BoundingBoxBlockEntity blockEntity = ObjectUtils.safeCast(blockGetter.getBlockEntity(blockPos), BoundingBoxBlockEntity.class);
-        if (blockEntity != null && blockEntity.isValid()) {
+        if (blockGetter.getBlockEntity(blockPos) instanceof BoundingBoxBlockEntity blockEntity && blockEntity.isValid()) {
             return Shapes.block();
         }
         return Shapes.empty();

@@ -1,40 +1,40 @@
 package moe.plushie.armourers_workshop.api.client;
 
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import net.minecraft.util.FastColor;
+import moe.plushie.armourers_workshop.utils.ColorUtils;
 
 public interface IVertexConsumer {
 
-    IVertexConsumer vertex(double d, double e, double f);
+    IVertexConsumer vertex(float x, float y, float z);
 
-    IVertexConsumer color(int i, int j, int k, int l);
+    IVertexConsumer color(int r, int g, int b, int a);
 
-    IVertexConsumer uv(float f, float g);
+    IVertexConsumer uv(float u, float v);
 
-    IVertexConsumer overlayCoords(int i, int j);
+    IVertexConsumer overlayCoords(int u, int v);
 
-    IVertexConsumer uv2(int i, int j);
+    IVertexConsumer uv2(int u, int v);
 
-    IVertexConsumer normal(float f, float g, float h);
+    IVertexConsumer normal(float x, float y, float z);
 
     void endVertex();
 
-    default void vertex(float f, float g, float h, float i, float j, float k, float l, float m, float n, int o, int p, float q, float r, float s) {
-        this.vertex(f, g, h);
-        this.color(i, j, k, l);
-        this.uv(m, n);
-        this.overlayCoords(o);
-        this.uv2(p);
-        this.normal(q, r, s);
+    default void vertex(float x, float y, float z, int color, float u, float v, int overlay, int light, float nx, float ny, float nz) {
+        this.vertex(x, y, z);
+        this.color(color);
+        this.uv(u, v);
+        this.overlayCoords(overlay);
+        this.uv2(light);
+        this.normal(nx, ny, nz);
         this.endVertex();
     }
 
     default IVertexConsumer color(float r, float g, float b, float a) {
-        return this.color((int) (r * 255.0f), (int) (g * 255.0f), (int) (b * 255.0f), (int) (a * 255.0f));
+        return color((int) (r * 255.0f), (int) (g * 255.0f), (int) (b * 255.0f), (int) (a * 255.0f));
     }
 
-    default IVertexConsumer color(int i) {
-        return this.color(FastColor.ARGB32.red(i), FastColor.ARGB32.green(i), FastColor.ARGB32.blue(i), FastColor.ARGB32.alpha(i));
+    default IVertexConsumer color(int color) {
+        return color(ColorUtils.ARGB32.red(color), ColorUtils.ARGB32.green(color), ColorUtils.ARGB32.blue(color), ColorUtils.ARGB32.alpha(color));
     }
 
     default IVertexConsumer uv2(int i) {

@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.compatibility.core.data;
 
 import io.netty.buffer.ByteBuf;
-import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.UUID;
@@ -110,13 +110,13 @@ public class AbstractFriendlyByteBuf extends AbstractFriendlyByteBufImpl {
     }
 
     @Override
-    public ResourceLocation readResourceLocation() {
-        return source.readResourceLocation();
+    public IResourceLocation readResourceLocation() {
+        return OpenResourceLocation.parse(readUtf());
     }
 
     @Override
-    public void writeResourceLocation(ResourceLocation value) {
-        source.writeResourceLocation(value);
+    public void writeResourceLocation(IResourceLocation value) {
+        writeUtf(value.toString());
     }
 
     @Override

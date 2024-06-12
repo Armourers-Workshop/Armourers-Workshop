@@ -1,5 +1,7 @@
 package com.apple.library.foundation;
 
+import java.util.Objects;
+
 @SuppressWarnings("unused")
 public class NSRange {
 
@@ -48,6 +50,18 @@ public class NSRange {
 
     public boolean isEmpty() {
         return length == 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof NSRange that)) return false;
+        return location == that.location && length == that.length;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(location, length);
     }
 
     @Override

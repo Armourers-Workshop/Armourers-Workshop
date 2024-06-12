@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.transformer.bedrock;
 
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPackObject;
-import moe.plushie.armourers_workshop.api.common.IResource;
+import moe.plushie.armourers_workshop.api.core.IResource;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
 import moe.plushie.armourers_workshop.utils.math.Size2f;

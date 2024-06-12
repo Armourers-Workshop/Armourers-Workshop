@@ -10,8 +10,8 @@ import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
-import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import moe.plushie.armourers_workshop.utils.DataSerializerKey;
+import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -55,23 +55,12 @@ public class SkinCubeBlockEntity extends UpdatableBlockEntity implements IPainta
     }
 
     private Direction getResolvedDirection(Direction dir) {
-        switch (getDirection()) {
-            case SOUTH: {
-                // when block facing to south, we need to rotate 180° get facing north direction.
-                return Rotation.CLOCKWISE_180.rotate(dir);
-            }
-            case WEST: {
-                // when block facing to west, we need to rotate 90° get facing north direction.
-                return Rotation.CLOCKWISE_90.rotate(dir);
-            }
-            case EAST: {
-                // when block facing to east, we need to rotate -90° get facing north direction.
-                return Rotation.COUNTERCLOCKWISE_90.rotate(dir);
-            }
-            default: {
-                return dir;
-            }
-        }
+        return switch (getDirection()) {
+            case SOUTH -> Rotation.CLOCKWISE_180.rotate(dir); // rotate 180° get facing north direction.
+            case WEST -> Rotation.CLOCKWISE_90.rotate(dir); // rotate 90° get facing north direction.
+            case EAST -> Rotation.COUNTERCLOCKWISE_90.rotate(dir);// rotate -90° get facing north direction.
+            default -> dir;
+        };
     }
 
     @Override

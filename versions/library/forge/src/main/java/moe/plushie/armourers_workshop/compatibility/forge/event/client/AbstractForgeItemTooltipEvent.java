@@ -14,8 +14,6 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-import manifold.ext.rt.api.auto;
-
 @Available("[1.20, )")
 public class AbstractForgeItemTooltipEvent {
 
@@ -48,15 +46,15 @@ public class AbstractForgeItemTooltipEvent {
 
             @Override
             public CGRect getFrame() {
-                auto font = event.getFont();
-                auto tooltips = event.getComponents();
+                var font = event.getFont();
+                var tooltips = event.getComponents();
                 int mouseX = event.getX();
                 int mouseY = event.getY();
                 int screenWidth = event.getScreenWidth();
                 int screenHeight = event.getScreenHeight();
                 int i = 0;
                 int j = tooltips.size() == 1 ? -2 : 0;
-                for (auto tooltip : tooltips) {
+                for (var tooltip : tooltips) {
                     int k = tooltip.getWidth(font);
                     if (k > i) {
                         i = k;

@@ -49,8 +49,8 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
     }
 
     public static SkinBlockPlaceContext of(BlockPos pos) {
-        if (pos instanceof AttachedBlockPos) {
-            return ((AttachedBlockPos) pos).context;
+        if (pos instanceof AttachedBlockPos pos1) {
+            return pos1.context;
         }
         return null;
     }

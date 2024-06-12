@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.core.data.slot;
 
 import moe.plushie.armourers_workshop.api.common.IItemTag;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItemMatchers;
 import moe.plushie.armourers_workshop.init.ModItemTags;
 import moe.plushie.armourers_workshop.utils.ItemMatcher;
 import moe.plushie.armourers_workshop.utils.TypedRegistry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,11 +31,11 @@ public enum ItemOverrideType {
 
     ITEM("item", null, null);
 
-    private final IRegistryKey<IItemTag> tag;
+    private final IRegistryHolder<IItemTag> tag;
     private final String name;
     private final ItemMatcher matcher;
 
-    ItemOverrideType(String name, IRegistryKey<IItemTag> tag, ItemMatcher matcher) {
+    ItemOverrideType(String name, IRegistryHolder<IItemTag> tag, ItemMatcher matcher) {
         this.name = name;
         this.tag = tag;
         this.matcher = matcher;
@@ -57,7 +57,7 @@ public enum ItemOverrideType {
             return true;
         }
         // test by overrides of the config system.
-        ResourceLocation registryName = TypedRegistry.findKey(itemStack.getItem());
+        IResourceLocation registryName = TypedRegistry.findKey(itemStack.getItem());
         if (ModConfig.Common.overrides.contains(name + ":" + registryName)) {
             return true;
         }

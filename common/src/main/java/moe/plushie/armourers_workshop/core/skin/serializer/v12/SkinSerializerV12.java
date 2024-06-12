@@ -45,26 +45,17 @@ public final class SkinSerializerV12 implements ISkinSerializer {
     }
 
     public String getTypeNameByLegacyId(int legacyId) {
-        switch (legacyId) {
-            case 0:
-                return "armourers:head";
-            case 1:
-                return "armourers:chest";
-            case 2:
-                return "armourers:legs";
-            case 3:
-                return "armourers:skirt";
-            case 4:
-                return "armourers:feet";
-            case 5:
-                return "armourers:sword";
-            case 6:
-                return "armourers:bow";
-            case 7:
-                return "armourers:arrow";
-            default:
-                return null;
-        }
+        return switch (legacyId) {
+            case 0 -> "armourers:head";
+            case 1 -> "armourers:chest";
+            case 2 -> "armourers:legs";
+            case 3 -> "armourers:skirt";
+            case 4 -> "armourers:feet";
+            case 5 -> "armourers:sword";
+            case 6 -> "armourers:bow";
+            case 7 -> "armourers:arrow";
+            default -> null;
+        };
     }
 
     @Override
@@ -170,12 +161,9 @@ public final class SkinSerializerV12 implements ISkinSerializer {
                 skinType = stream.readType(SkinTypes::byName);
             } else {
                 StringBuilder sb = new StringBuilder();
-                while (true) {
+                do {
                     sb.append(new String(new byte[]{stream.readByte()}, StandardCharsets.UTF_8));
-                    if (sb.toString().endsWith("armourers:")) {
-                        break;
-                    }
-                }
+                } while (!sb.toString().endsWith("armourers:"));
                 ModLog.info("Got armourers");
                 sb = new StringBuilder();
                 sb.append("armourers:");
@@ -327,12 +315,9 @@ public final class SkinSerializerV12 implements ISkinSerializer {
                 equipmentSkinType = stream.readType(SkinTypes::byName);
             } else {
                 StringBuilder sb = new StringBuilder();
-                while (true) {
+                do {
                     sb.append(new String(new byte[]{stream.readByte()}, StandardCharsets.UTF_8));
-                    if (sb.toString().endsWith("armourers:")) {
-                        break;
-                    }
-                }
+                } while (!sb.toString().endsWith("armourers:"));
                 ModLog.info("Got armourers");
                 sb = new StringBuilder();
                 sb.append("armourers:");

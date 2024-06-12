@@ -39,22 +39,19 @@ public class BlockBenchTexture extends BlockBenchObject {
     }
 
     public TextureAnimation.Mode getFrameMode() {
-        if (frameOrderType.equals("loop")) {
-            return TextureAnimation.Mode.LOOP;
-        }
-        if (frameOrderType.equals("backwards")) {
-            return TextureAnimation.Mode.BACKWARDS;
-        }
-        if (frameOrderType.equals("back_and_forth")) {
-            return TextureAnimation.Mode.BACK_AND_FORTH;
-        }
-        if (frameOrderType.equals("custom")) {
-            int[] frames = _parseFrameSeq(frameOrder);
-            if (frames.length >= 1) {
-                return new TextureAnimation.Mode(frames);
+        return switch (frameOrderType) {
+            case "loop" -> TextureAnimation.Mode.LOOP;
+            case "backwards" -> TextureAnimation.Mode.BACKWARDS;
+            case "back_and_forth" -> TextureAnimation.Mode.BACK_AND_FORTH;
+            case "custom" -> {
+                int[] frames = _parseFrameSeq(frameOrder);
+                if (frames.length >= 1) {
+                    yield new TextureAnimation.Mode(frames);
+                }
+                yield TextureAnimation.Mode.LOOP;
             }
-        }
-        return TextureAnimation.Mode.LOOP;
+            default -> TextureAnimation.Mode.LOOP;
+        };
     }
 
     public TextureProperties getProperties() {

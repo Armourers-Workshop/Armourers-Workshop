@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.utils.math;
 
+import java.util.Objects;
+
 @SuppressWarnings("unused")
 public class Rectangle2f {
 
@@ -97,6 +99,17 @@ public class Rectangle2f {
         return x <= tx && tx <= (x + width) && y <= ty && ty <= (y + height);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Rectangle2f that)) return false;
+        return Float.compare(x, that.x) == 0 && Float.compare(y, that.y) == 0 && Float.compare(width, that.width) == 0 && Float.compare(height, that.height) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, width, height);
+    }
 
     @Override
     public String toString() {

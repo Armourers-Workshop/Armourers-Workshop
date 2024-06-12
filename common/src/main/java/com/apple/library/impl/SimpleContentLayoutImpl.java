@@ -122,28 +122,18 @@ public class SimpleContentLayoutImpl {
     }
 
     private float sel(float height, float value, NSTextAlignment.Vertical alignment) {
-        switch (alignment) {
-            case BOTTOM:
-                return height - value;
-
-            case CENTER:
-                return (height - value) / 2;
-
-            default:
-                return 0;
-        }
+        return switch (alignment) {
+            case BOTTOM -> (height - value);
+            case CENTER -> (height - value) / 2;
+            default -> 0;
+        };
     }
 
     private float sel(float width, float value, NSTextAlignment.Horizontal alignment) {
-        switch (alignment) {
-            case RIGHT:
-                return width - value;
-
-            case CENTER:
-                return (width - value) / 2;
-
-            default:
-                return 0;
-        }
+        return switch (alignment) {
+            case RIGHT -> (width - value);
+            case CENTER -> (width - value) / 2;
+            default -> 0;
+        };
     }
 }

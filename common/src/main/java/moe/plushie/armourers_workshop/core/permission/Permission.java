@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.permission;
 
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,19 +14,19 @@ import java.util.HashMap;
 public abstract class Permission {
 
     protected final String name;
-    protected final HashMap<ResourceLocation, IPermissionNode> nodes = new HashMap<>();
+    protected final HashMap<IResourceLocation, IPermissionNode> nodes = new HashMap<>();
 
     public Permission(String name) {
         this.name = name;
     }
 
-    protected void add(IRegistryKey<?> object) {
-        ResourceLocation registryName = object.getRegistryName();
-        IPermissionNode node = makeNode(registryName.getPath() + "." + name);
+    protected void add(IRegistryHolder<?> object) {
+        var registryName = object.getRegistryName();
+        var node = makeNode(registryName.getPath() + "." + name);
         nodes.put(registryName, node);
     }
 
-    protected IPermissionNode get(ResourceLocation registryName) {
+    protected IPermissionNode get(IResourceLocation registryName) {
         return nodes.get(registryName);
     }
 

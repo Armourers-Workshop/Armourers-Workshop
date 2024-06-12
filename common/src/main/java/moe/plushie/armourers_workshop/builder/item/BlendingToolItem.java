@@ -2,8 +2,7 @@ package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
-import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
@@ -25,8 +24,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-
-import manifold.ext.rt.api.auto;
 
 public class BlendingToolItem extends AbstractColoredToolItem implements IBlockPaintViewer {
 
@@ -63,29 +60,29 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
 
     @Override
     public IPaintToolSelector createPaintToolSelector(UseOnContext context) {
-        ItemStack itemStack = context.getItemInHand();
-        int radiusEffect = itemStack.get(PaintingToolOptions.RADIUS_EFFECT);
+        var itemStack = context.getItemInHand();
+        var radiusEffect = itemStack.get(PaintingToolOptions.RADIUS_EFFECT);
         return createColorApplierSelector(radiusEffect, context);
     }
 
     @Override
     public IPaintToolAction createPaintToolAction(UseOnContext context) {
-        ItemStack itemStack = context.getItemInHand();
-        int intensity = itemStack.get(PaintingToolOptions.INTENSITY);
-        int radiusSample = itemStack.get(PaintingToolOptions.RADIUS_SAMPLE);
+        var itemStack = context.getItemInHand();
+        var intensity = itemStack.get(PaintingToolOptions.INTENSITY);
+        var radiusSample = itemStack.get(PaintingToolOptions.RADIUS_SAMPLE);
         // we need to complete sampling before we can use blending tool.
         ArrayList<Integer> colors = new ArrayList<>();
         CubeChangesCollector collector = new CubeChangesCollector(context.getLevel());
         createColorApplierSelector(radiusSample, context).forEach(context, (targetPos, dir) -> {
-            auto cube = collector.getCube(targetPos);
+            var cube = collector.getCube(targetPos);
             if (cube.shouldChangeColor(dir)) {
-                IPaintColor paintColor = cube.getColor(dir);
+                var paintColor = cube.getColor(dir);
                 if (paintColor != null) {
                     colors.add(paintColor.getRGB());
                 }
             }
         });
-        IPaintColor paintColor = PaintColor.of(ColorUtils.getAverageColor(colors), SkinPaintTypes.NORMAL);
+        var paintColor = PaintColor.of(ColorUtils.getAverageColor(colors), SkinPaintTypes.NORMAL);
         return new CubePaintingEvent.BlendingAction(paintColor, intensity);
     }
 
@@ -101,7 +98,7 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
     }
 
     @Override
-    public IRegistryKey<SoundEvent> getItemSoundEvent(UseOnContext context) {
+    public IRegistryHolder<SoundEvent> getItemSoundEvent(UseOnContext context) {
         return ModSounds.PAINT;
     }
 }

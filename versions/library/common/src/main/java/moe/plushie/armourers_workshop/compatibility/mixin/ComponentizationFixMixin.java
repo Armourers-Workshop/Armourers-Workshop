@@ -14,6 +14,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.function.UnaryOperator;
+
 @Available("[1.21, )")
 public class ComponentizationFixMixin {
 
@@ -22,6 +24,9 @@ public class ComponentizationFixMixin {
 
         @Shadow
         public abstract void moveTagToComponent(String string, String string2);
+
+        @Shadow
+        public abstract void fixSubTag(String string, boolean bl, UnaryOperator<Dynamic<?>> unaryOperator);
 
         @Inject(method = "<init>", at = @At("RETURN"))
         private void aw2$fixItemStack(String id, int i, Dynamic<?> dynamic, CallbackInfo ci) {
@@ -45,6 +50,9 @@ public class ComponentizationFixMixin {
             moveTagToComponent("Options", "armourers_workshop:tool_options");
 
             moveTagToComponent("LinkedPos", "armourers_workshop:linked_pos");
+
+            // append entity id when EntityTag exists.
+            fixSubTag("EntityTag", true, entityTag -> entityTag.set("id", entityTag.createString(id)));
         }
     }
 

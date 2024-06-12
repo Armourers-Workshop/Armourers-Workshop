@@ -7,8 +7,6 @@ import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 
-import manifold.ext.rt.api.auto;
-
 @SuppressWarnings("unused")
 public class ObjectUtilsImpl extends ObjectUtils {
 
@@ -16,7 +14,7 @@ public class ObjectUtilsImpl extends ObjectUtils {
     private static final OpenMatrix4f SHARED_MATRIX_4x4 = OpenMatrix4f.createScaleMatrix(1, 1, 1);
 
     public static OpenMatrix3f convertToMatrix3x3(CGAffineTransform transform) {
-        auto mat = SHARED_MATRIX_3x3;
+        var mat = SHARED_MATRIX_3x3;
         mat.m00 = transform.a;
         mat.m01 = transform.b;
         mat.m10 = transform.c;
@@ -27,7 +25,7 @@ public class ObjectUtilsImpl extends ObjectUtils {
     }
 
     public static OpenMatrix4f convertToMatrix4x4(CGAffineTransform transform) {
-        auto mat = SHARED_MATRIX_4x4;
+        var mat = SHARED_MATRIX_4x4;
         mat.m00 = transform.a;
         mat.m01 = transform.b;
         mat.m10 = transform.c;

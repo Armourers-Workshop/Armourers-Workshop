@@ -79,51 +79,25 @@ public class TextureBox implements ITextureBox {
         if (mirror) {
             return getMirrorTexture(dir);
         }
-        switch (dir) {
-            case UP: {
-                return makeTexture(dir, depth, 0, width, depth);
-            }
-            case DOWN: {
-                return makeTexture(dir, depth + width, 0, width, depth);
-            }
-            case NORTH: {
-                return makeTexture(dir, depth, depth, width, height);
-            }
-            case SOUTH: {
-                return makeTexture(dir, depth + width + depth, depth, width, height);
-            }
-            case WEST: {
-                return makeTexture(dir, depth + width, depth, depth, height);
-            }
-            case EAST: {
-                return makeTexture(dir, 0, depth, depth, height);
-            }
-        }
-        return null;
+        return switch (dir) {
+            case UP -> makeTexture(dir, depth, 0, width, depth);
+            case DOWN -> makeTexture(dir, depth + width, 0, width, depth);
+            case NORTH -> makeTexture(dir, depth, depth, width, height);
+            case SOUTH -> makeTexture(dir, depth + width + depth, depth, width, height);
+            case WEST -> makeTexture(dir, depth + width, depth, depth, height);
+            case EAST -> makeTexture(dir, 0, depth, depth, height);
+        };
     }
 
     private ITextureKey getMirrorTexture(Direction dir) {
-        switch (dir) {
-            case UP: {
-                return makeTexture(dir, depth + width, 0, -width, depth);
-            }
-            case DOWN: {
-                return makeTexture(dir, depth + width + width, 0, -width, depth);
-            }
-            case NORTH: {
-                return makeTexture(dir, depth + width, depth, -width, height);
-            }
-            case SOUTH: {
-                return makeTexture(dir, depth + width + depth + width, depth, -width, height);
-            }
-            case WEST: {
-                return makeTexture(dir, 0 + depth, depth, -depth, height);
-            }
-            case EAST: {
-                return makeTexture(dir, depth + width + depth, depth, -depth, height);
-            }
-        }
-        return null;
+        return switch (dir) {
+            case UP -> makeTexture(dir, depth + width, 0, -width, depth);
+            case DOWN -> makeTexture(dir, depth + width + width, 0, -width, depth);
+            case NORTH -> makeTexture(dir, depth + width, depth, -width, height);
+            case SOUTH -> makeTexture(dir, depth + width + depth + width, depth, -width, height);
+            case WEST -> makeTexture(dir, 0 + depth, depth, -depth, height);
+            case EAST -> makeTexture(dir, depth + width + depth, depth, -depth, height);
+        };
     }
 
     @Nullable

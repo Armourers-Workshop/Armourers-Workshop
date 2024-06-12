@@ -1,8 +1,9 @@
 package moe.plushie.armourers_workshop.core.texture;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import moe.plushie.armourers_workshop.api.common.IResourceManager;
+import moe.plushie.armourers_workshop.api.core.IResourceManager;
 import moe.plushie.armourers_workshop.api.math.ITexturePos;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.color.TexturedPaintColor;
@@ -15,7 +16,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -32,7 +32,7 @@ public class BakedEntityTexture {
     private final HashMap<ISkinPartType, Rectangle3i> allBounds = new HashMap<>();
 
     private String model;
-    private ResourceLocation resourceLocation;
+    private IResourceLocation resourceLocation;
 
     private boolean isSlimModel = false;
     private boolean isLoaded = false;
@@ -40,7 +40,7 @@ public class BakedEntityTexture {
     public BakedEntityTexture() {
     }
 
-    public BakedEntityTexture(ResourceLocation resourceLocation, boolean slim) {
+    public BakedEntityTexture(IResourceLocation resourceLocation, boolean slim) {
         this.isSlimModel = slim;
         this.resourceLocation = resourceLocation;
         BufferedImage bufferedImage;
@@ -109,11 +109,11 @@ public class BakedEntityTexture {
         return (v & 0xffff) << 16 | (u & 0xffff);
     }
 
-    public ResourceLocation getResourceLocation() {
+    public IResourceLocation getResourceLocation() {
         return resourceLocation;
     }
 
-    public void setResourceLocation(ResourceLocation location) {
+    public void setResourceLocation(IResourceLocation location) {
         this.resourceLocation = location;
     }
 

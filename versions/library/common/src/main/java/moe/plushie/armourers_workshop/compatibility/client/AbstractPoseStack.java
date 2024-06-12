@@ -10,8 +10,6 @@ import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class AbstractPoseStack extends AbstractPoseStackImpl implements IPoseStack {
 
@@ -30,8 +28,8 @@ public class AbstractPoseStack extends AbstractPoseStackImpl implements IPoseSta
     }
 
     public static PoseStack unwrap(IPoseStack poseStack) {
-        if (poseStack instanceof AbstractPoseStack) {
-            return ((AbstractPoseStack) poseStack).stack;
+        if (poseStack instanceof AbstractPoseStack poseStack1) {
+            return poseStack1.stack;
         }
         PoseStack poseStack1 = new PoseStack();
         IPoseStack poseStack2 = wrap(poseStack1);
@@ -53,7 +51,7 @@ public class AbstractPoseStack extends AbstractPoseStackImpl implements IPoseSta
 
     public void scale(float x, float y, float z) {
         // https://web.archive.org/web/20240125142900/http://www.songho.ca/opengl/gl_normaltransform.html
-        auto entry = last();
+        var entry = last();
         entry.pose.scale(x, y, z);
         if (Math.abs(x) == Math.abs(y) && Math.abs(y) == Math.abs(z)) {
             if (x < 0.0f || y < 0.0f || z < 0.0f) {
@@ -71,13 +69,13 @@ public class AbstractPoseStack extends AbstractPoseStackImpl implements IPoseSta
 
     @Override
     public void multiply(IMatrix3f matrix) {
-        auto entry = last();
+        var entry = last();
         entry.normal.multiply(matrix);
     }
 
     @Override
     public void multiply(IMatrix4f matrix) {
-        auto entry = last();
+        var entry = last();
         entry.pose.multiply(matrix);
 //        if (!MatrixUtil.isTranslation(matrix)) {
 //            if (MatrixUtil.isOrthonormal(matrix)) {

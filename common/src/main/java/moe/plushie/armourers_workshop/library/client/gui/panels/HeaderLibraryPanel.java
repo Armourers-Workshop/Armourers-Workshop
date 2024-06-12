@@ -8,6 +8,7 @@ import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIFont;
 import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -18,7 +19,6 @@ import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
@@ -102,7 +102,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         }
         float tx = 5;
         float ty = 5;
-        ResourceLocation texture = PlayerTextureLoader.getInstance().loadTextureLocation(playerTexture);
+        IResourceLocation texture = PlayerTextureLoader.getInstance().loadTextureLocation(playerTexture);
         context.drawResizableImage(texture, tx, ty, 16, 16, 8, 8, 8, 8, 64, 64, 0);
         context.drawResizableImage(texture, tx - 1, ty - 1, 16 + 2, 16 + 2, 40, 8, 8, 8, 64, 64, 0);
 

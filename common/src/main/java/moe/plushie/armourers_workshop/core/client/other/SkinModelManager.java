@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -42,13 +43,13 @@ public class SkinModelManager {
     }
 
     public BakedModel getModel(ISkinPartType partType, @Nullable BakedItemModel itemModel, ItemStack itemStack, @Nullable Level level, @Nullable Entity entity) {
-        ClientLevel clientWorld = ObjectUtils.safeCast(level, ClientLevel.class);
-        LivingEntity livingEntity = ObjectUtils.safeCast(entity, LivingEntity.class);
+        var clientWorld = ObjectUtils.safeCast(level, ClientLevel.class);
+        var livingEntity = ObjectUtils.safeCast(entity, LivingEntity.class);
         // we prefer to use the overridden item model.
         if (itemModel != null) {
             return itemModel.resolve(itemModel, itemStack, clientWorld, livingEntity, 0);
         }
-        BakedModel bakedModel = loadModel(partType);
+        var bakedModel = loadModel(partType);
         return bakedModel.getOverrides().resolve(bakedModel, itemStack, clientWorld, livingEntity, 0);
     }
 
@@ -57,11 +58,12 @@ public class SkinModelManager {
     }
 
     private BakedModel loadModel(ISkinPartType partType) {
-        BakedModel bakedModel = cachedModels.get(partType);
+        var bakedModel = cachedModels.get(partType);
         if (bakedModel != null) {
             return bakedModel;
         }
-        bakedModel = modelManager.getModel(ArmourersWorkshop.getCustomModel(partType.getRegistryName()));
+        var modelId = ArmourersWorkshop.getCustomModel(partType.getRegistryName());
+        bakedModel = modelManager.getModel(new ModelResourceLocation(modelId.toLocation(), "inventory"));
         if (partType != SkinPartTypes.UNKNOWN && bakedModel == getMissingModel()) {
             bakedModel = loadModel(SkinPartTypes.UNKNOWN);
         }

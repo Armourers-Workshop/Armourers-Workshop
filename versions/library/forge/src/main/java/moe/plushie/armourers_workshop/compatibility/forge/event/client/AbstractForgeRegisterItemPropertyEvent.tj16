@@ -12,7 +12,7 @@ public class AbstractForgeRegisterItemPropertyEvent {
     public static IEventHandler<RegisterItemPropertyEvent> propertyFactory() {
         return AbstractForgeCommonEventsImpl.FML_LOAD_COMPLETE.map(event -> (registryName, item, property) -> {
             // forward
-            ItemProperties.register(item, registryName, (itemStack, level, entity) -> property.getValue(itemStack, level, entity, 0));
+            ItemProperties.register(item, registryName.toLocation(), (itemStack, level, entity) -> property.getValue(itemStack, level, entity, 0));
         });
     }
 }

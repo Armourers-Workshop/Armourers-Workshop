@@ -2,12 +2,12 @@ package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.api.registry.IPermissionNodeBuilder;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgePermissionManager;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPermissionNodeBuilder<T> {
 
@@ -21,7 +21,7 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
 
     @Override
     public T build(String name) {
-        ResourceLocation registryName = ModConstants.key(name);
+        IResourceLocation registryName = ModConstants.key(name);
         ModLog.debug("Registering Permission '{}'", registryName);
         return ObjectUtils.unsafeCast(AbstractForgePermissionManager.makeNode(registryName, level));
     }
@@ -29,11 +29,11 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
     public static abstract class NodeImpl implements IPermissionNode {
 
         private final String key;
-        private final ResourceLocation registryName;
+        private final IResourceLocation registryName;
 
-        public NodeImpl(ResourceLocation registryName) {
+        public NodeImpl(IResourceLocation registryName) {
             this.registryName = registryName;
-            this.key = registryName.getNamespace() + "." + registryName.getPath();
+            this.key = registryName.toLanguageKey();
         }
 
         public String getKey() {
@@ -51,7 +51,7 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
         }
 
         @Override
-        public ResourceLocation getRegistryName() {
+        public IResourceLocation getRegistryName() {
             return registryName;
         }
     }

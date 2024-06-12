@@ -188,13 +188,10 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
     }
 
     protected boolean _editingPassKey(int key) {
-        switch (key) {
-            case GLFW.GLFW_KEY_ESCAPE:
-            case GLFW.GLFW_KEY_TAB:
-                return true;
-
-            default:
-                return false;
-        }
+        return switch (key) {
+            case GLFW.GLFW_KEY_ESCAPE -> true;
+            case GLFW.GLFW_KEY_TAB -> true;
+            default -> false;
+        };
     }
 }

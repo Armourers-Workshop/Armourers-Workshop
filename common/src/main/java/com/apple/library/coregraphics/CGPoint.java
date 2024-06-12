@@ -53,11 +53,10 @@ public class CGPoint implements InterpolableImpl<CGPoint> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CGPoint pos = (CGPoint) o;
-        return Float.compare(pos.x, x) == 0 && Float.compare(pos.y, y) == 0;
+        if (!(o instanceof CGPoint that)) return false;
+        return Float.compare(x, that.x) == 0 && Float.compare(y, that.y) == 0;
     }
 
     @Override

@@ -7,8 +7,6 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.forgespi.language.IModFileInfo;
 
-import manifold.ext.rt.api.auto;
-
 @Available("[1.16, 1.21)")
 public class AbstractForgeEnvironment {
 

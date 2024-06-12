@@ -122,39 +122,19 @@ public interface IDataPackObject {
     }
 
     default boolean boolValue() {
-        switch (type()) {
-            case STRING:
-            case NUMBER: {
-                if (numberValue().intValue() != 0) {
-                    return true;
-                }
-                return false;
-            }
-            case BOOLEAN: {
-                return jsonValue().getAsBoolean();
-            }
-            default: {
-                return false;
-            }
-        }
+        return switch (type()) {
+            case STRING, NUMBER -> numberValue().intValue() != 0;
+            case BOOLEAN -> jsonValue().getAsBoolean();
+            default -> false;
+        };
     }
 
     default Number numberValue() {
-        switch (type()) {
-            case STRING:
-            case NUMBER: {
-                return jsonValue().getAsNumber();
-            }
-            case BOOLEAN: {
-                if (jsonValue().getAsBoolean()) {
-                    return 1;
-                }
-                return 0;
-            }
-            default: {
-                return 0;
-            }
-        }
+        return switch (type()) {
+            case STRING, NUMBER -> jsonValue().getAsNumber();
+            case BOOLEAN -> jsonValue().getAsBoolean() ? 1 : 0;
+            default -> 0;
+        };
     }
 
     default int intValue() {
@@ -166,16 +146,10 @@ public interface IDataPackObject {
     }
 
     default String stringValue() {
-        switch (type()) {
-            case STRING:
-            case NUMBER:
-            case BOOLEAN: {
-                return jsonValue().getAsString();
-            }
-            default: {
-                return "";
-            }
-        }
+        return switch (type()) {
+            case STRING, NUMBER, BOOLEAN -> jsonValue().getAsString();
+            default -> "";
+        };
     }
 
     default boolean isNull() {

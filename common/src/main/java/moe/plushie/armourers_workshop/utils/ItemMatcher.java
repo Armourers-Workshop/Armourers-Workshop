@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.utils;
 
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.init.ModConfig;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Collection;
@@ -22,7 +22,7 @@ public class ItemMatcher {
         this.requirements = requirements;
     }
 
-    public boolean test(ResourceLocation registryName, ItemStack itemStack) {
+    public boolean test(IResourceLocation registryName, ItemStack itemStack) {
         // the item id in the whitelist?
         String id = registryName.toString();
         if (whitelist.contains(id)) {

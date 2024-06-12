@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
 import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.registry.IItemBuilder;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeItemBuilder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -34,7 +34,7 @@ public class ItemBuilderImpl<T extends Item> extends AbstractForgeItemBuilder<T>
     }
 
     @Override
-    public IItemBuilder<T> group(IRegistryKey<IItemGroup> group) {
+    public IItemBuilder<T> group(IRegistryHolder<IItemGroup> group) {
         this.group = group;
         return this;
     }

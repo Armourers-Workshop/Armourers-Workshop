@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.registry.IItemBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractItemStackRendererProvider;
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
@@ -19,7 +19,7 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
 
     private Item.Properties properties = new Item.Properties();
     private IRegistryBinder<T> binder;
-    private IRegistryKey<IItemGroup> group;
+    private IRegistryHolder<IItemGroup> group;
     private final Function<Item.Properties, T> supplier;
 
     public ItemBuilderImpl(Function<Item.Properties, T> supplier) {
@@ -45,7 +45,7 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
     }
 
     @Override
-    public IItemBuilder<T> group(IRegistryKey<IItemGroup> group) {
+    public IItemBuilder<T> group(IRegistryHolder<IItemGroup> group) {
         this.group = group;
         return this;
     }
@@ -72,8 +72,8 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
     }
 
     @Override
-    public IRegistryKey<T> build(String name) {
-        IRegistryKey<T> object = AbstractFabricRegistries.ITEMS.register(name, () -> supplier.apply(properties));
+    public IRegistryHolder<T> build(String name) {
+        IRegistryHolder<T> object = AbstractFabricRegistries.ITEMS.register(name, () -> supplier.apply(properties));
         if (group != null) {
             group.get().add(object::get);
         }

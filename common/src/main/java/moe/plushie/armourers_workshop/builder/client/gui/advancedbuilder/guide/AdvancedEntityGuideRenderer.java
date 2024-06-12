@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
+import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.texture.TextureData;
@@ -21,9 +22,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-
-import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public abstract class AdvancedEntityGuideRenderer extends AbstractAdvancedGuideRenderer {
@@ -36,7 +34,7 @@ public abstract class AdvancedEntityGuideRenderer extends AbstractAdvancedGuideR
     public AdvancedEntityGuideRenderer() {
         this.armature = getArmature();
         this.texture = getTexture();
-        this.renderType = SkinRenderType.entityCutoutNoCull(new ResourceLocation(texture.getName()));
+        this.renderType = SkinRenderType.entityCutoutNoCull(OpenResourceLocation.parse(texture.getName()));
     }
 
     public abstract TextureData getTexture();
@@ -91,8 +89,8 @@ public abstract class AdvancedEntityGuideRenderer extends AbstractAdvancedGuideR
             return;
         }
 
-        auto entry = poseStack.last();
-        auto builder = bufferSource.getBuffer(renderType);
+        var entry = poseStack.last();
+        var builder = bufferSource.getBuffer(renderType);
 
         float x = rect.getX();
         float y = rect.getY();

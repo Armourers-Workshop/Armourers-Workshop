@@ -82,7 +82,7 @@ public class ChunkReader {
     }
 
     public Object readBlobs() throws IOException {
-        if (entries.size() != 0) {
+        if (!entries.isEmpty()) {
             return new ArrayList<>(entries);
         }
         return null;

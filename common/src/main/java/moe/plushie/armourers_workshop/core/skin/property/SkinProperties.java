@@ -142,26 +142,13 @@ public class SkinProperties implements ISkinProperties {
             if (type == null) {
                 throw new IOException("Error loading skin properties " + byteType);
             }
-
-            Object value = null;
-            switch (type) {
-                case STRING:
-                    value = stream.readString();
-                    break;
-                case INT:
-                    value = stream.readInt();
-                    break;
-                case DOUBLE:
-                    value = stream.readDouble();
-                    break;
-                case BOOLEAN:
-                    value = stream.readBoolean();
-                    break;
-                case COMPOUND_TAG:
-                    value = stream.readCompoundTag();
-                    break;
-            }
-            properties.put(key, value);
+            properties.put(key, switch (type) {
+                case STRING -> stream.readString();
+                case INT -> stream.readInt();
+                case DOUBLE -> stream.readDouble();
+                case BOOLEAN -> stream.readBoolean();
+                case COMPOUND_TAG -> stream.readCompoundTag();
+            });
         }
     }
 
@@ -182,8 +169,7 @@ public class SkinProperties implements ISkinProperties {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SkinProperties)) return false;
-        SkinProperties that = (SkinProperties) o;
+        if (!(o instanceof SkinProperties that)) return false;
         return properties.equals(that.properties);
     }
 
@@ -302,8 +288,7 @@ public class SkinProperties implements ISkinProperties {
 
         @Nullable
         private <T> String getResolvedKey(ISkinProperty<T> property) {
-            if (property instanceof SkinProperty) {
-                SkinProperty<?> property1 = (SkinProperty<?>) property;
+            if (property instanceof SkinProperty<?> property1) {
                 if (property1.isMultipleKey()) {
                     return property.getKey() + index;
                 }

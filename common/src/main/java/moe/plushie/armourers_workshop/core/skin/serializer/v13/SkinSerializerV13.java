@@ -118,12 +118,9 @@ public final class SkinSerializerV13 implements ISkinSerializer {
             skinType = SkinTypes.byName(regName);
         } else {
             StringBuilder sb = new StringBuilder();
-            while (true) {
+            do {
                 sb.append(new String(new byte[]{stream.readByte()}, StandardCharsets.UTF_8));
-                if (sb.toString().endsWith("armourers:")) {
-                    break;
-                }
-            }
+            } while (!sb.toString().endsWith("armourers:"));
             ModLog.info("Got armourers");
             sb = new StringBuilder();
             sb.append("armourers:");
@@ -223,12 +220,9 @@ public final class SkinSerializerV13 implements ISkinSerializer {
             skinType = SkinTypes.byName(regName);
         } else {
             StringBuilder sb = new StringBuilder();
-            while (true) {
+            do {
                 sb.append(new String(new byte[]{stream.readByte()}, StandardCharsets.UTF_8));
-                if (sb.toString().endsWith("armourers:")) {
-                    break;
-                }
-            }
+            } while (!sb.toString().endsWith("armourers:"));
             ModLog.info("Got armourers");
             sb = new StringBuilder();
             sb.append("armourers:");

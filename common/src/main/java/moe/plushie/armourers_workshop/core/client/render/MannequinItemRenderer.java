@@ -11,8 +11,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class MannequinItemRenderer extends AbstractItemStackRenderer {
 
@@ -30,8 +28,8 @@ public class MannequinItemRenderer extends AbstractItemStackRenderer {
         if (itemStack.isEmpty()) {
             return;
         }
-        auto bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
-        auto transform = bakedModel.getTransform(transformType);
+        var bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
+        var transform = bakedModel.getTransform(transformType);
 
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f); // reset to center

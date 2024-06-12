@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.permission.IPermissionContext;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.permission.BlockPermissionContext;
 import moe.plushie.armourers_workshop.core.permission.PlayerPermissionContext;
 import moe.plushie.armourers_workshop.core.permission.TargetPermissionContext;
@@ -11,7 +12,6 @@ import moe.plushie.armourers_workshop.init.platform.forge.builder.PermissionNode
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -38,8 +38,8 @@ public abstract class AbstractForgePermissionManager {
     private static final PermissionDynamicContextKey<BlockState> BLOCK_STATE = new PermissionDynamicContextKey<>(BlockState.class, "block_state", Object::toString);
     private static final PermissionDynamicContextKey<Direction> FACING = new PermissionDynamicContextKey<>(Direction.class, "facing", Direction::getSerializedName);
 
-    public static IPermissionNode makeNode(ResourceLocation registryName, int level) {
-        PermissionNode<Boolean> node = new PermissionNode<>(registryName, PermissionTypes.BOOLEAN, (player, uuid, contexts) -> true, TARGET, PLAYER, BLOCK_POS, BLOCK_STATE, FACING);
+    public static IPermissionNode makeNode(IResourceLocation registryName, int level) {
+        PermissionNode<Boolean> node = new PermissionNode<>(registryName.toLocation(), PermissionTypes.BOOLEAN, (player, uuid, contexts) -> true, TARGET, PLAYER, BLOCK_POS, BLOCK_STATE, FACING);
         IPermissionNode nodeImpl = new PermissionNodeBuilderImpl.NodeImpl(registryName) {
 
             @Override

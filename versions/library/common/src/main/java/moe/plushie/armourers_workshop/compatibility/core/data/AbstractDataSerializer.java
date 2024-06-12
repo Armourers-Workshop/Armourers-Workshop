@@ -17,8 +17,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-import manifold.ext.rt.api.auto;
-
 @Available("[1.21, )")
 public class AbstractDataSerializer implements IDataSerializer {
 
@@ -51,8 +49,8 @@ public class AbstractDataSerializer implements IDataSerializer {
     public <T> T read(IDataSerializerKey<T> key) {
         String name = key.getName();
         if (tag.contains(name)) {
-            Codec<T> codec = key.getCodec();
-            auto value = codec.decode(NbtOps.INSTANCE, tag.get(key.getName())).result();
+            var codec = key.getCodec();
+            var value = codec.decode(NbtOps.INSTANCE, tag.get(key.getName())).result();
             if (value.isPresent()) {
                 T value2 = value.get().getFirst();
                 if (value2 != null) {

@@ -40,9 +40,8 @@ public class SkinUUID {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SkinUUID)) return false;
-        SkinUUID skinUUID = (SkinUUID) o;
-        return value.equals(skinUUID.value);
+        if (!(o instanceof SkinUUID that)) return false;
+        return value.equals(that.value);
     }
 
     @Override

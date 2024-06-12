@@ -31,8 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import manifold.ext.rt.api.auto;
-
 public class BedrockModelExporter {
 
     protected SkinSettings settings = new SkinSettings();
@@ -97,7 +95,7 @@ public class BedrockModelExporter {
 //        rootParts.removeIf(it -> !whitelist.contains(it.getType()));
 //        rootParts.removeIf(it -> it.getType() == SkinPartTypes.ADVANCED);
 
-        auto builder = createSkin(skinType);
+        var builder = createSkin(skinType);
 
         if (skinType == SkinTypes.ADVANCED || skinType == SkinTypes.OUTFIT || skinType == SkinTypes.ITEM_BOW || skinType == SkinTypes.ITEM_FISHING || skinType instanceof ISkinArmorType) {
             builder.parts(rootParts);
@@ -128,15 +126,15 @@ public class BedrockModelExporter {
     }
 
     protected void exportSkinPart(Node node, SkinPart parentPart, Collection<SkinPart> rootParts, Mapper mapper) {
-        auto origin = Vector3f.ZERO;
-        auto entry = mapper.get(node.name);
+        var origin = Vector3f.ZERO;
+        var entry = mapper.get(node.name);
         if (entry.isRootPart()) {
             // new root node
             parentPart = null;
             origin = node.bone.getPivot();
         }
         // new child node
-        auto part = exportSkinPart(node, origin, entry);
+        var part = exportSkinPart(node, origin, entry);
         if (parentPart != null) {
             parentPart.addPart(part);
         } else {
@@ -148,27 +146,27 @@ public class BedrockModelExporter {
     }
 
     protected SkinPart exportSkinPart(Node node, Vector3f origin, Mapper.Entry entry) {
-        auto bone = node.bone;
+        var bone = node.bone;
 
-        auto pivot = Vector3f.ZERO;
-        auto translate = origin.subtracting(entry.getOffset()).scaling(-1);
-        auto rotation = Vector3f.ZERO;
+        var pivot = Vector3f.ZERO;
+        var translate = origin.subtracting(entry.getOffset()).scaling(-1);
+        var rotation = Vector3f.ZERO;
 
         if (bone != null && !entry.isRootPart()) {
             pivot = bone.getPivot();
             rotation = bone.getRotation();
         }
 
-        auto cubes = new SkinCubesV2();
-        auto builder = new SkinPart.Builder(entry.getType());
+        var cubes = new SkinCubesV2();
+        var builder = new SkinPart.Builder(entry.getType());
 
         builder.cubes(cubes);
         builder.transform(SkinTransform.create(Vector3f.ZERO, rotation, Vector3f.ONE, pivot, translate));
 
         if (bone != null) {
             builder.name(bone.getName());
-            for (BedrockModelCube cube : bone.getCubes()) {
-                auto box = exportSkinCube(cube, node.texture);
+            for (var cube : bone.getCubes()) {
+                var box = exportSkinCube(cube, node.texture);
                 cubes.addBox(box);
             }
         }
@@ -177,12 +175,12 @@ public class BedrockModelExporter {
     }
 
     protected SkinCubesV2.Box exportSkinCube(BedrockModelCube cube, BedrockModelTexture texture) {
-        auto pivot = cube.getPivot();
-        auto translate = Vector3f.ZERO;
-        auto rotation = cube.getRotation();
+        var pivot = cube.getPivot();
+        var translate = Vector3f.ZERO;
+        var rotation = cube.getRotation();
 
-        auto origin = cube.getOrigin();
-        auto size = cube.getSize();
+        var origin = cube.getOrigin();
+        var size = cube.getSize();
 
         float x = origin.getX();
         float y = origin.getY();
@@ -194,15 +192,15 @@ public class BedrockModelExporter {
 
         float inflate = cube.getInflate();
 
-        auto skyBox = texture.read(cube);
+        var skyBox = texture.read(cube);
         if (inflate != 0) {
             // after inflate, the cube size and texture size has been diff,
             // so we need to split per-face, it means each face will save separately.
             skyBox = skyBox.separated();
         }
 
-        auto rect = new Rectangle3f(x, y, z, w, h, d).inflate(inflate);
-        auto transform = SkinTransform.create(Vector3f.ZERO, rotation, Vector3f.ONE, pivot, translate);
+        var rect = new Rectangle3f(x, y, z, w, h, d).inflate(inflate);
+        var transform = SkinTransform.create(Vector3f.ZERO, rotation, Vector3f.ONE, pivot, translate);
         return new SkinCubesV2.Box(rect, transform, skyBox);
     }
 
@@ -255,9 +253,9 @@ public class BedrockModelExporter {
 
         public static Mapper of(Armature armature) {
             return new Mapper(name -> {
-                auto joint = armature.getJoint(name);
+                var joint = armature.getJoint(name);
                 if (joint != null) {
-                    auto partType = armature.getPartType(joint);
+                    var partType = armature.getPartType(joint);
                     if (partType != null) {
                         return new Entry(joint, partType);
                     }
@@ -268,7 +266,7 @@ public class BedrockModelExporter {
 
         public static Mapper of(Map<String, ISkinPartType> map) {
             return new Mapper(name -> {
-                auto partType = map.get(name);
+                var partType = map.get(name);
                 if (partType != null) {
                     return new Entry(null, partType);
                 }
@@ -277,7 +275,7 @@ public class BedrockModelExporter {
         }
 
         public Entry get(String name) {
-            auto entry = provider.apply(name);
+            var entry = provider.apply(name);
             if (entry != null) {
                 return entry;
             }

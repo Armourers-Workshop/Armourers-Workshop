@@ -33,7 +33,7 @@ public class AdvancedExportPacket extends CustomPacket {
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // this is an unauthorized operation, ignore it
         BlockEntity blockEntity = player.getLevel().getBlockEntity(pos);
-        if (!(blockEntity instanceof AdvancedBuilderBlockEntity) || !(player.containerMenu instanceof AdvancedBuilderMenu)) {
+        if (!(blockEntity instanceof AdvancedBuilderBlockEntity blockEntity1) || !(player.containerMenu instanceof AdvancedBuilderMenu)) {
             abort(player, "unauthorized", "user status is incorrect");
             return;
         }
@@ -42,8 +42,7 @@ public class AdvancedExportPacket extends CustomPacket {
             return;
         }
         accept(player, "export");
-        AdvancedBuilderBlockEntity blockEntity1 = (AdvancedBuilderBlockEntity) blockEntity;
-//        String identifier = SkinLoader.getInstance().saveSkin("fs:", skin);
+        //        String identifier = SkinLoader.getInstance().saveSkin("fs:", skin);
         blockEntity1.exportFromDocument(player);
     }
 

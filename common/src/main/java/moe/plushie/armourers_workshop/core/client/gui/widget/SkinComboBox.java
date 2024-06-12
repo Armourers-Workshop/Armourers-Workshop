@@ -8,11 +8,11 @@ import com.apple.library.uikit.UIComboItem;
 import com.apple.library.uikit.UIEdgeInsets;
 import com.apple.library.uikit.UIImage;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class SkinComboBox extends UIComboBox {
         ArrayList<UIComboItem> items = new ArrayList<>();
         for (ISkinType skinType : skinTypes) {
             NSString title = new NSString(TranslateUtils.Name.of(skinType));
-            ResourceLocation rl = ArmourersWorkshop.getItemIcon(skinType);
+            IResourceLocation rl = ArmourersWorkshop.getItemIcon(skinType);
             UIImage image = null;
             if (rl != null) {
                 image = UIImage.of(rl).resizable(16, 16).fixed(9, 9).limit(16, 16).build();

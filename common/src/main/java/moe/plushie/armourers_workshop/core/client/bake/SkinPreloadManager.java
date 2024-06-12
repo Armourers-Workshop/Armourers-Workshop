@@ -8,8 +8,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Inventory;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class SkinPreloadManager {
 
@@ -29,10 +27,10 @@ public class SkinPreloadManager {
         }
         // we need to preload all skin in the current player's inventory.
         if (lastInventoryVersion == null) {
-            auto player = EnvironmentManager.getPlayer();
+            var player = EnvironmentManager.getPlayer();
             if (player != null) {
-                Inventory inventory = player.getInventory();
-                int inventoryVersion = inventory.getTimesChanged();
+                var inventory = player.getInventory();
+                var inventoryVersion = inventory.getTimesChanged();
                 preloadInventory(inventory);
                 lastInventoryVersion = inventoryVersion;
             }

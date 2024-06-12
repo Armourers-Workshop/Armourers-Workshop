@@ -13,8 +13,6 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import manifold.ext.rt.api.auto;
-
 public class BoundingBox extends Rectangle3i {
 
     public static final PlayerTextureModel MODEL = PlayerTextureModel.STAVE_V2;
@@ -27,14 +25,14 @@ public class BoundingBox extends Rectangle3i {
     }
 
     public static void setColor(ISkinPartType partType, Vector3i offset, Direction dir, IPaintColor color, BiConsumer<TexturePos, IPaintColor> applier) {
-        auto texturePos = getTexturePos(partType, offset, dir);
+        var texturePos = getTexturePos(partType, offset, dir);
         if (texturePos != null) {
             applier.accept(texturePos, color);
         }
     }
 
     public static IPaintColor getColor(ISkinPartType partType, Vector3i offset, Direction dir, Function<TexturePos, IPaintColor> supplier) {
-        auto texturePos = getTexturePos(partType, offset, dir);
+        var texturePos = getTexturePos(partType, offset, dir);
         if (texturePos != null) {
             return supplier.apply(texturePos);
         }
@@ -42,7 +40,7 @@ public class BoundingBox extends Rectangle3i {
     }
 
     public static TexturePos getTexturePos(ISkinPartType partType, Vector3i offset, Direction dir) {
-        auto box = MODEL.get(partType);
+        var box = MODEL.get(partType);
         if (box == null) {
             return null;
         }
@@ -63,9 +61,8 @@ public class BoundingBox extends Rectangle3i {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BoundingBox)) return false;
+        if (!(o instanceof BoundingBox that)) return false;
         if (!super.equals(o)) return false;
-        BoundingBox that = (BoundingBox) o;
         return partType.equals(that.partType);
     }
 

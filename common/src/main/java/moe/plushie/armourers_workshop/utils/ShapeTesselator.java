@@ -20,8 +20,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class ShapeTesselator {
 
@@ -59,7 +57,7 @@ public class ShapeTesselator {
     }
 
     public static void point(float x, float y, float z, float width, float height, float depth, IPoseStack poseStack, IBufferSource bufferSource) {
-        auto entry = poseStack.last();
+        var entry = poseStack.last();
 
         float minX = x - width * 0.5f;
         float minY = y - height * 0.5f;
@@ -71,7 +69,7 @@ public class ShapeTesselator {
         float maxY = y + height * 0.5f;
         float maxZ = z + depth * 0.5f;
 
-        auto lineBuilder = bufferSource.getBuffer(SkinRenderType.lines());
+        var lineBuilder = bufferSource.getBuffer(SkinRenderType.lines());
 
         // x-axis
         lineBuilder.vertex(entry, minX, midY, midZ).color(255, 0, 0, 255).normal(entry, 1, 0, 0).endVertex();
@@ -99,7 +97,7 @@ public class ShapeTesselator {
     }
 
     public static void vector(float x, float y, float z, float width, float height, float depth, IPoseStack poseStack, IBufferSource bufferSource) {
-        auto entry = poseStack.last();
+        var entry = poseStack.last();
 
         float minX = x - width * 0.5f;
         float minY = y - height * 0.5f;
@@ -114,7 +112,7 @@ public class ShapeTesselator {
         float n = width * 0.03f;
         float m = height * 0.10f;
 
-        auto lineBuilder = bufferSource.getBuffer(SkinRenderType.lines());
+        var lineBuilder = bufferSource.getBuffer(SkinRenderType.lines());
 
         // x-axis
         lineBuilder.vertex(entry, minX, midY, midZ).color(255, 0, 0, 255).normal(entry, 1, 0, 0).endVertex();
@@ -129,7 +127,7 @@ public class ShapeTesselator {
         lineBuilder.vertex(entry, midX, midY, maxZ).color(0, 0, 255, 255).normal(entry, 1, 0, 0).endVertex();
 
 
-        auto arrowBuilder = bufferSource.getBuffer(SkinRenderType.BLIT_COLOR);
+        var arrowBuilder = bufferSource.getBuffer(SkinRenderType.BLIT_COLOR);
 
         // x-arrow
         arrowBuilder.vertex(entry, maxX - 0, midY + 0, midZ - 0).color(255, 0, 0, 255).normal(entry, 1, 0, 0).endVertex();
@@ -243,7 +241,7 @@ public class ShapeTesselator {
     }
 
     public static void fill(float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, IPoseStack poseStack, IVertexConsumer builder) {
-        auto entry = poseStack.last();
+        var entry = poseStack.last();
         int r = color.getRed();
         int g = color.getGreen();
         int b = color.getBlue();
@@ -305,9 +303,9 @@ public class ShapeTesselator {
     }
 
     public static void cube(float x, float y, float z, float w, float h, float d, float r, float g, float b, float a, IPoseStack poseStack, IBufferSource bufferSource) {
-//        auto builder1 = SkinVertexBufferBuilder.getBuffer(bufferSource);
-//        auto builder = builder1.getBuffer(SkinRenderType.IMAGE_GUIDE);
-        auto builder = bufferSource.getBuffer(SkinRenderType.IMAGE_GUIDE);
+//        var builder1 = SkinVertexBufferBuilder.getBuffer(bufferSource);
+//        var builder = builder1.getBuffer(SkinRenderType.IMAGE_GUIDE);
+        var builder = bufferSource.getBuffer(SkinRenderType.IMAGE_GUIDE);
         cube(x, y, z, w, h, d, r, g, b, a, poseStack, builder);
     }
 
@@ -315,12 +313,12 @@ public class ShapeTesselator {
         if (w == 0 || h == 0 || d == 0) {
             return;
         }
-        auto pose = poseStack.last();
-        for (auto dir : Direction.values()) {
-            float u = 0;
-            float v = 0;
-            byte[][] vertexes = FACE_MARK_VERTEXES[dir.get3DDataValue()];
-            byte[][] textures = FACE_MARK_TEXTURES[dir.get3DDataValue()];
+        var pose = poseStack.last();
+        for (var dir : Direction.values()) {
+            var vertexes = FACE_MARK_VERTEXES[dir.get3DDataValue()];
+            var textures = FACE_MARK_TEXTURES[dir.get3DDataValue()];
+            float u = 0f;
+            float v = 0f;
             float[] values = {0, w, h, d};
             for (int i = 0; i < 4; ++i) {
                 consumer.vertex(pose, x + vertexes[i][0] * w, y + vertexes[i][1] * h, z + vertexes[i][2] * d)

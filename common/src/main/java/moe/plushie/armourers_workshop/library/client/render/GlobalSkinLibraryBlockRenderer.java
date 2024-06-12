@@ -14,8 +14,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class GlobalSkinLibraryBlockRenderer<T extends BlockEntity> extends AbstractBlockEntityRenderer<T> {
 
@@ -50,8 +48,8 @@ public class GlobalSkinLibraryBlockRenderer<T extends BlockEntity> extends Abstr
             poseStack.rotate(new OpenQuaternionf(angle * 4, angle, angle * 2, true));
         }
 
-        auto builder = bufferSource.getBuffer(SkinRenderType.BLOCK_EARTH);
-        model.render(poseStack, builder, 0xf000f0, overlay, 1.0f, 1.0f, 1.0f, 0.5f);
+        var builder = bufferSource.getBuffer(SkinRenderType.BLOCK_EARTH);
+        model.render(poseStack, builder, 0xf000f0, overlay, 0x7fffffff);
 
         poseStack.popPose();
     }

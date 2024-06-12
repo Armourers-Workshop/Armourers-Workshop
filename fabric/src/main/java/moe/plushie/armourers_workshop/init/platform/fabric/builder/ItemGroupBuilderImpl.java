@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.common.IItemGroupProvider;
 import moe.plushie.armourers_workshop.api.registry.IItemGroupBuilder;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistries;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -30,14 +30,14 @@ public class ItemGroupBuilderImpl<T extends IItemGroup> implements IItemGroupBui
     }
 
     @Override
-    public IRegistryKey<T> build(String name) {
+    public IRegistryHolder<T> build(String name) {
         ItemGroup group = new ItemGroup(name);
         return TypedRegistry.Entry.cast(ModConstants.key(name), () -> group);
     }
 
     public class ItemGroup implements IItemGroup {
 
-        private final IRegistryKey<CreativeModeTab> tab;
+        private final IRegistryHolder<CreativeModeTab> tab;
         private final ArrayList<Supplier<Item>> items = new ArrayList<>();
 
         public ItemGroup(String name) {

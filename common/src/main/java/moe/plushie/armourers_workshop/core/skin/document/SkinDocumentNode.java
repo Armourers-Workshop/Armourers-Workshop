@@ -327,7 +327,7 @@ public class SkinDocumentNode {
         tag.putOptionalVector3f(Keys.ROTATION, rotation, Vector3f.ZERO);
         tag.putOptionalVector3f(Keys.SCALE, scale, Vector3f.ONE);
         tag.putOptionalVector3f(Keys.PIVOT, pivot, Vector3f.ZERO);
-        if (children.size() != 0) {
+        if (!children.isEmpty()) {
             ListTag listTag = new ListTag();
             children.forEach(it -> listTag.add(it.serializeNBT()));
             tag.put(Keys.CHILDREN, listTag);

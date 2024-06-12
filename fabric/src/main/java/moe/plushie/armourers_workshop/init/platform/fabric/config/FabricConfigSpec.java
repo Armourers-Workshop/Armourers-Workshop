@@ -103,11 +103,9 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
 
     private void resetCaches(final Iterable<Object> configValues) {
         configValues.forEach(value -> {
-            if (value instanceof ConfigValue) {
-                final ConfigValue<?> configValue = (ConfigValue<?>) value;
+            if (value instanceof ConfigValue<?> configValue) {
                 configValue.clearCache();
-            } else if (value instanceof Config) {
-                final Config innerConfig = (Config) value;
+            } else if (value instanceof Config innerConfig) {
                 this.resetCaches(innerConfig.valueMap().values());
             }
         });
@@ -231,11 +229,8 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
     }
 
     private boolean stringsMatchIgnoringNewlines(@Nullable Object obj1, @Nullable Object obj2) {
-        if (obj1 instanceof String && obj2 instanceof String) {
-            String string1 = (String) obj1;
-            String string2 = (String) obj2;
-
-            if (string1.length() > 0 && string2.length() > 0) {
+        if (obj1 instanceof String string1 && obj2 instanceof String string2) {
+            if (!string1.isEmpty() && !string2.isEmpty()) {
                 return string1.replaceAll("\r\n", "\n")
                         .equals(string2.replaceAll("\r\n", "\n"));
 

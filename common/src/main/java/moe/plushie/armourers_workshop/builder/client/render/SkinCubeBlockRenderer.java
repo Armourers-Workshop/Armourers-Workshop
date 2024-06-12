@@ -18,8 +18,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class SkinCubeBlockRenderer<T extends BlockEntity & IPaintable> extends AbstractBlockEntityRenderer<T> {
 
@@ -71,8 +69,8 @@ public class SkinCubeBlockRenderer<T extends BlockEntity & IPaintable> extends A
             return;
         }
         int alpha = (int) (markerAlpha * 255);
-        auto builder = bufferSource.getBuffer(SkinRenderType.IMAGE_MARKER);
-        for (auto direction : Direction.values()) {
+        var builder = bufferSource.getBuffer(SkinRenderType.IMAGE_MARKER);
+        for (var direction : Direction.values()) {
             if (!entity.shouldChangeColor(direction) || !entity.hasColor(direction)) {
                 continue;
             }

@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.api.permission;
 
 import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 public interface IPermissionNode {
@@ -11,7 +11,7 @@ public interface IPermissionNode {
 
     Component getDescription();
 
-    ResourceLocation getRegistryName();
+    IResourceLocation getRegistryName();
 
     boolean resolve(GameProfile profile, IPermissionContext context);
 

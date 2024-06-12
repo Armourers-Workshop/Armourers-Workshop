@@ -46,9 +46,36 @@ static def parseVersionFromFile(file) {
 
 // we needs convert the version to number, for example: 1.16.5 => 11605.
 def minecraft_version = project.rootDir.getName()
-def minecraft_version_number = parseVersion(minecraft_version, 0)
+var minecraft_version_number = parseVersion(minecraft_version, 0)
 
 def targets = ["common", "forge", "fabric"]
+
+def renameDataPack = { version, old_name, new_name, content_handler = null ->
+    if (minecraft_version_number < version) {
+        // swap when version missing.
+        def tmp = new_name
+        new_name = old_name
+        old_name = tmp
+    }
+    sourceSets.forEach {
+        // rename when file exists.
+        it.resources.srcDirs.forEach {
+            def data = new File(it, "data")
+            if (data.exists()) {
+                data.listFiles().each {
+                    def e = new File(it, old_name)
+                    if (e.exists()) {
+                        e.renameTo(new File(it, new_name))
+                    }
+                }
+            }
+        }
+        // replace contents when file exists.
+        if (content_handler != null) {
+            it.resources.matching { it.include "data/**/$new_name/" }.forEach(content_handler)
+        }
+    }
+}
 
 targets.forEach {
     sourceSets.register(it) {
@@ -127,18 +154,21 @@ task applyCoreSources {
 
 task applyCoreResources {
     dependsOn "applyCoreSources"
-    sourceSets.forEach {
-        it.resources.matching { include "data/**/recipes/**/*.json" }.forEach {
-            def oldValue = it.getText("UTF-8")
-            def newValue = oldValue
-            if (minecraft_version_number >= 12005) {
-                newValue = oldValue.replaceFirst(/(?sm)(\{.+?"result":\s*\{.+?")item("\s*:.+?}.+?})/, /$1id$2/)
-            } else {
-                newValue = oldValue.replaceFirst(/(?sm)(\{.+?"result":\s*\{.+?")id("\s*:.+?}.+?})/, /$1item$2/)
-            }
-            if (newValue != oldValue) {
-                it.setText(newValue, "UTF-8")
-            }
+
+
+    renameDataPack(12100, "tags/items", "tags/item")
+    renameDataPack(12100, "tags/blocks", "tags/block")
+    renameDataPack(12100, "loot_tables", "loot_table")
+    renameDataPack(12100, "recipes", "recipe") {
+        def oldValue = it.getText("UTF-8")
+        def newValue = oldValue
+        if (minecraft_version_number >= 12005) {
+            newValue = oldValue.replaceFirst(/(?sm)(\{.+?"result":\s*\{.+?")item("\s*:.+?}.+?})/, /$1id$2/)
+        } else {
+            newValue = oldValue.replaceFirst(/(?sm)(\{.+?"result":\s*\{.+?")id("\s*:.+?}.+?})/, /$1item$2/)
+        }
+        if (newValue != oldValue) {
+            it.setText(newValue, "UTF-8")
         }
     }
 }

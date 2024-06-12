@@ -5,19 +5,13 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.api.data.IDataSerializerKey;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.Objects;
 import java.util.function.Supplier;
-
-import manifold.ext.rt.api.auto;
 
 @Available("[1.16, 1.21)")
 public class AbstractDataSerializer implements IDataSerializer {
@@ -37,7 +31,7 @@ public class AbstractDataSerializer implements IDataSerializer {
         String name = key.getName();
         if (tag.contains(name)) {
             Codec<T> codec = key.getCodec();
-            auto value = codec.decode(NbtOps.INSTANCE, tag.get(key.getName())).get().left();
+            var value = codec.decode(NbtOps.INSTANCE, tag.get(key.getName())).get().left();
             if (value.isPresent()) {
                 T value2 = value.get().getFirst();
                 if (value2 != null) {

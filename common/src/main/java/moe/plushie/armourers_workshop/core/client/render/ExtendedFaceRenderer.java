@@ -6,8 +6,6 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import net.minecraft.core.Direction;
 
-import manifold.ext.rt.api.auto;
-
 public class ExtendedFaceRenderer {
 
     // we manually reduced by 0.002 pixels,
@@ -60,11 +58,11 @@ public class ExtendedFaceRenderer {
         if (paintColor.getPaintType() == SkinPaintTypes.NORMAL) {
             return;
         }
-        auto pose = poseStack.last();
-        auto paintType = paintColor.getPaintType();
+        var pose = poseStack.last();
+        var paintType = paintColor.getPaintType();
         int u = paintType.getIndex() % 8;
         int v = paintType.getIndex() / 8;
-        auto vertexes = FACE_MARK_VERTEXES[direction.get3DDataValue()];
+        var vertexes = FACE_MARK_VERTEXES[direction.get3DDataValue()];
         for (int i = 0; i < 4; ++i) {
             builder.vertex(pose, x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
                     .color(255, 255, 255, alpha & 0xff)
@@ -77,11 +75,11 @@ public class ExtendedFaceRenderer {
     }
 
     public static void render2(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
-        auto entry = poseStack.last();
+        var entry = poseStack.last();
         int u = 0;
         int v = 0;
         int color = paintColor.getRGB();
-        auto vertexes = FACE_MARK_VERTEXES[direction.get3DDataValue()];
+        var vertexes = FACE_MARK_VERTEXES[direction.get3DDataValue()];
         for (int i = 0; i < 4; ++i) {
             builder.vertex(entry, x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
                     .color(color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff, alpha & 0xff)

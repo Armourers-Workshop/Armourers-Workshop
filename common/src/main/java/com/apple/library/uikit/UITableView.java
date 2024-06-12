@@ -143,8 +143,8 @@ public class UITableView extends UIScrollView {
 
     public UITableViewCell cellForRow(NSIndexPath indexPath) {
         UIView entry = indexedEntries.get(indexPath);
-        if (entry instanceof UITableViewCell) {
-            return (UITableViewCell) entry;
+        if (entry instanceof UITableViewCell cell) {
+            return cell;
         }
         return null;
     }

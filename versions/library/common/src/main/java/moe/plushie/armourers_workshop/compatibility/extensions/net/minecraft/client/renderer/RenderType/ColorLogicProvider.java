@@ -4,7 +4,11 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IRenderTypeBuilder;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.renderer.RenderType;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
 
 @Available("[1.20, )")
 @Extension

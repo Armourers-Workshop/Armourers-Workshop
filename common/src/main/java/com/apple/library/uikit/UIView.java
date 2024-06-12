@@ -481,8 +481,7 @@ public class UIView extends UIResponder implements ViewImpl {
         if (newSuperview.window() != null) {
             _setWindow(newSuperview._window);
         }
-        if (newSuperview instanceof UIWindow) {
-            UIWindow window = (UIWindow) newSuperview;
+        if (newSuperview instanceof UIWindow window) {
             _setWindow(new WeakReference<>(window));
         }
     }

@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.skin.cube;
 
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
 public class SkinCubeType implements ISkinCubeType {
@@ -11,11 +11,11 @@ public class SkinCubeType implements ISkinCubeType {
     protected final int id;
     protected final boolean glass;
     protected final boolean glowing;
-    protected final IRegistryKey<Block> block;
+    protected final IRegistryHolder<Block> block;
 
-    protected ResourceLocation registryName;
+    protected IResourceLocation registryName;
 
-    public SkinCubeType(int id, boolean glass, boolean glowing, IRegistryKey<Block> block) {
+    public SkinCubeType(int id, boolean glass, boolean glowing, IRegistryHolder<Block> block) {
         this.id = id;
         this.glass = glass;
         this.glowing = glowing;
@@ -23,11 +23,11 @@ public class SkinCubeType implements ISkinCubeType {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public IResourceLocation getRegistryName() {
         return registryName;
     }
 
-    public void setRegistryName(ResourceLocation registryName) {
+    public void setRegistryName(IResourceLocation registryName) {
         this.registryName = registryName;
     }
 

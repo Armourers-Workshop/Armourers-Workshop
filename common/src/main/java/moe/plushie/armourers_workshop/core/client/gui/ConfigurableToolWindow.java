@@ -64,8 +64,7 @@ public class ConfigurableToolWindow extends MenuWindow<AbstractContainerMenu> {
 
     private UIView createOptionView(IConfigurableToolProperty<?> property) {
         NSString name = NSString.localizedString("toolOptions." + property.getName());
-        if (property instanceof BooleanToolProperty) {
-            BooleanToolProperty property1 = (BooleanToolProperty) property;
+        if (property instanceof BooleanToolProperty property1) {
             UICheckBox checkBox = new UICheckBox(new CGRect(8, contentHeight, contentWidth - 16, 9));
             checkBox.setTitle(name);
             checkBox.setSelected(itemStack.get(property1));
@@ -76,8 +75,7 @@ public class ConfigurableToolWindow extends MenuWindow<AbstractContainerMenu> {
             });
             return checkBox;
         }
-        if (property instanceof IntegerToolProperty) {
-            IntegerToolProperty property1 = (IntegerToolProperty) property;
+        if (property instanceof IntegerToolProperty property1) {
             UISliderBox slider = new UISliderBox(new CGRect(8, contentHeight, contentWidth - 16, 20));
             slider.setFormatter(currentValue -> {
                 NSMutableString formattedValue = new NSMutableString("");

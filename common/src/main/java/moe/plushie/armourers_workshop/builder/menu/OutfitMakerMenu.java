@@ -109,8 +109,7 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
                     paintData = SkinPaintData.v2();
                 }
                 for (ISkinPartType partType : skin.getType().getParts()) {
-                    if (partType instanceof ISkinPartTypeTextured) {
-                        ISkinPartTypeTextured texType = ((ISkinPartTypeTextured) partType);
+                    if (partType instanceof ISkinPartTypeTextured texType) {
                         mergePaintPart(texType, paintData, skin.getPaintData());
                     }
                 }

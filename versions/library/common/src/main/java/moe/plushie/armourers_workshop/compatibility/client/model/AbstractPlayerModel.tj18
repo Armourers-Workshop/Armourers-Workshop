@@ -1,0 +1,47 @@
+package moe.plushie.armourers_workshop.compatibility.client.model;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererProvider;
+import moe.plushie.armourers_workshop.utils.ColorUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.world.entity.LivingEntity;
+
+@Available("[1.18, 1.21)")
+@Environment(EnvType.CLIENT)
+public abstract class AbstractPlayerModel<T extends LivingEntity> extends PlayerModel<T> {
+
+    public AbstractPlayerModel(AbstractEntityRendererProvider.Context context, float scale, Type type) {
+        super(context.bakeLayer(type.layer), type == Type.SLIM);
+    }
+
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer builder, int light, int overlay, int color) {
+        float r = ColorUtils.getRed(color) / 255.0F;
+        float g = ColorUtils.getGreen(color) / 255.0F;
+        float b = ColorUtils.getBlue(color) / 255.0F;
+        float a = ColorUtils.getAlpha(color) / 255.0F;
+        super.renderToBuffer(poseStack, builder, light, overlay, r, g, b, a);
+    }
+
+    @Override
+    public final void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int light, int overlay, float r, float g, float b, float a) {
+        int color = ColorUtils.getARGB((int) (a * 255), (int) (r * 255), (int) (g * 255), (int) (b * 255));
+        renderToBuffer(poseStack, vertexConsumer, light, overlay, color);
+    }
+
+    public enum Type {
+        NORMAL(ModelLayers.PLAYER),
+        SLIM(ModelLayers.PLAYER_SLIM);
+
+        final ModelLayerLocation layer;
+
+        Type(ModelLayerLocation layer) {
+            this.layer = layer;
+        }
+    }
+}

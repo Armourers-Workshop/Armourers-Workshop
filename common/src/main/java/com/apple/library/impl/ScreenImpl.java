@@ -6,19 +6,17 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 
-import manifold.ext.rt.api.auto;
-
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
 public class ScreenImpl {
 
     public static CGRect bounds() {
-        auto w = Minecraft.getInstance().getWindow();
+        var w = Minecraft.getInstance().getWindow();
         return new CGRect(w.getX(), w.getY(), w.getGuiScaledWidth(), w.getGuiScaledHeight());
     }
 
     public static CGRect nativeBounds() {
-        auto w = Minecraft.getInstance().getWindow();
+        var w = Minecraft.getInstance().getWindow();
         return new CGRect(w.getX(), w.getY(), w.getWidth(), w.getHeight());
     }
 

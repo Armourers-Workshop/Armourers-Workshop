@@ -67,7 +67,7 @@ public class HSBSliderBox extends UIControl {
         float ch = fixedBounds.height;
         float value = values[type.ordinal()];
 
-        RenderSystem.setShaderTexture(0, ModTextures.HUE);
+        RenderSystem.setShaderTexture(0, ModTextures.HUE.toLocation());
 
         if (type == Type.SATURATION) {
             context.setBlendColor(hueColor);

@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.client.guide.IGuideRenderer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
@@ -24,11 +25,9 @@ import moe.plushie.armourers_workshop.utils.TextureUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -54,7 +53,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         renderData.tick();
 
         // when the player has some special texture, we must override to renderer.
-        ResourceLocation playerTexture = renderData.displayTextureLocation;
+        IResourceLocation playerTexture = renderData.displayTextureLocation;
         if (playerTexture != null) {
             override.setTexture(playerTexture);
             override.setBuffers(bufferSource);
@@ -155,14 +154,14 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
     public static class PlayerTextureOverride implements IBufferSource {
 
         protected final HashMap<RenderType, Supplier<RenderType>> overrides = new HashMap<>();
-        protected ResourceLocation texture;
+        protected IResourceLocation texture;
         protected IBufferSource bufferSource;
 
         public void setBuffers(IBufferSource bufferSource) {
             this.bufferSource = bufferSource;
         }
 
-        public void setTexture(ResourceLocation texture) {
+        public void setTexture(IResourceLocation texture) {
             if (Objects.equals(this.texture, texture)) {
                 return;
             }
@@ -191,7 +190,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
 
         protected final ArmourerBlockEntity blockEntity;
         protected final SkinDynamicTexture displayTexture;
-        protected final ResourceLocation displayTextureLocation;
+        protected final IResourceLocation displayTextureLocation;
         protected int lastVersion;
         protected boolean shouldRenderOverlay = false;
         protected ISkinProperties skinProperties;
@@ -199,7 +198,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         public RenderData(ArmourerBlockEntity blockEntity) {
             this.blockEntity = blockEntity;
             this.displayTexture = new SkinDynamicTexture();
-            this.displayTextureLocation = Minecraft.getInstance().getTextureManager().register(identifier(blockEntity), displayTexture);
+            this.displayTextureLocation = TextureUtils.registerTexture(identifier(blockEntity), displayTexture);
         }
 
         public static RenderData of(ArmourerBlockEntity blockEntity) {

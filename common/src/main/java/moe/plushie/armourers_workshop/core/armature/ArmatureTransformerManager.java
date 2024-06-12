@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.core.armature;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 
 import java.util.ArrayList;
@@ -12,27 +12,27 @@ import java.util.HashMap;
 
 public abstract class ArmatureTransformerManager {
 
-    private final HashMap<ResourceLocation, ArmatureTransformerBuilder> pendingBuilders = new HashMap<>();
+    private final HashMap<IResourceLocation, ArmatureTransformerBuilder> pendingBuilders = new HashMap<>();
 
     private final HashMap<IEntityTypeProvider<?>, ArrayList<ArmatureTransformerBuilder>> entityBuilders = new HashMap<>();
     private final HashMap<Class<?>, ArrayList<ArmatureTransformerBuilder>> modelBuilders = new HashMap<>();
 
     private int version = 0;
 
-    protected abstract ArmatureTransformerBuilder createBuilder(ResourceLocation name);
+    protected abstract ArmatureTransformerBuilder createBuilder(IResourceLocation name);
 
     public void clear() {
         pendingBuilders.clear();
     }
 
-    public void append(IDataPackObject object, ResourceLocation location) {
+    public void append(IDataPackObject object, IResourceLocation location) {
         ArmatureTransformerBuilder builder = createBuilder(location);
         pendingBuilders.put(location, builder);
         builder.load(object);
     }
 
     public void freeze() {
-        HashMap<ResourceLocation, ArmatureTransformerBuilder> builders1 = new HashMap<>();
+        HashMap<IResourceLocation, ArmatureTransformerBuilder> builders1 = new HashMap<>();
         pendingBuilders.forEach((name, builder) -> {
             ArrayList<ArmatureTransformerBuilder> chain = new ArrayList<>();
             ArmatureTransformerBuilder nextBuilder = builder;
@@ -92,7 +92,7 @@ public abstract class ArmatureTransformerManager {
                 finalBuilders.addAll(resultBuilders);
             }
         }
-        if (finalBuilders.size() >= 1) {
+        if (!finalBuilders.isEmpty()) {
             ArmatureTransformerContext context = new ArmatureTransformerContext(entityType, entityModel);
             return finalBuilders.get(finalBuilders.size() - 1).build(context);
         }

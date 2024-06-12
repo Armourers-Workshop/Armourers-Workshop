@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin;
 
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
@@ -16,7 +16,7 @@ public class SkinType implements ISkinType {
 
     protected final String name;
     protected final int id;
-    protected ResourceLocation registryName;
+    protected IResourceLocation registryName;
     protected List<? extends ISkinPartType> parts;
 
     public SkinType(String name, int id, List<? extends ISkinPartType> parts) {
@@ -36,11 +36,11 @@ public class SkinType implements ISkinType {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public IResourceLocation getRegistryName() {
         return registryName;
     }
 
-    public void setRegistryName(ResourceLocation registryName) {
+    public void setRegistryName(IResourceLocation registryName) {
         this.registryName = registryName;
     }
 

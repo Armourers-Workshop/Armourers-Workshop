@@ -6,13 +6,13 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIComboItem;
 import com.apple.library.uikit.UIImage;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.builder.client.gui.widget.NewComboBox;
 import moe.plushie.armourers_workshop.builder.client.gui.widget.NewComboItem;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentType;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentTypes;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 
@@ -70,7 +70,7 @@ public class DocumentTypeListView extends NewComboBox {
 
         public AdvancedTypeItem add(SkinDocumentType category) {
             ISkinType skinType = category.getSkinType();
-            ResourceLocation rl = ArmourersWorkshop.getItemIcon(skinType);
+            IResourceLocation rl = ArmourersWorkshop.getItemIcon(skinType);
             UIImage icon = UIImage.of(rl).resize(12, 12, 16, 16).limit(16, 16).build();
             AdvancedTypeItem item = new AdvancedTypeItem(icon, category);
             add(item);

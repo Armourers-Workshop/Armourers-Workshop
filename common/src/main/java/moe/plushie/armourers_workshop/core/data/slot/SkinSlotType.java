@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.data.slot;
 
 import com.mojang.serialization.Codec;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -9,7 +10,6 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.ModConstants;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -114,7 +114,7 @@ public enum SkinSlotType {
         return DYE.getIndex() + i;
     }
 
-    public ResourceLocation getIconSprite() {
+    public IResourceLocation getIconSprite() {
         return ModConstants.key("item/slot/" + name);
     }
 

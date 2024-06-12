@@ -1027,7 +1027,7 @@ ij_html_text_wrap = normal
 [{*.http,*.rest}]
 indent_size = 0
 ij_continuation_indent_size = 4
-ij_http request_call_parameters_wrap = normal
+ij_http_request_call_parameters_wrap = normal
 
 [{*.jsf,*.jsp,*.jspf,*.tag,*.tagf,*.xjsp}]
 ij_jsp_jsp_prefer_comma_separated_import_list = false

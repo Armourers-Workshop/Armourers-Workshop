@@ -1,14 +1,16 @@
 package moe.plushie.armourers_workshop.api.client;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.VertexFormat;
 
 import java.nio.ByteBuffer;
 
 public interface IRenderedBuffer {
 
+    VertexFormat format();
+
     ByteBuffer vertexBuffer();
 
-    BufferBuilder.DrawState drawState();
+    int vertexCount();
 
     default void release() {
     }

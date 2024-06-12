@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -82,6 +83,10 @@ public class PlayerTextureDescriptor {
 
     public static PlayerTextureDescriptor fromProfile(GameProfile profile) {
         return new PlayerTextureDescriptor(Source.USER, profile.getName(), profile);
+    }
+
+    public static PlayerTextureDescriptor fromPlayer(Player player) {
+        return fromProfile(player.getGameProfile());
     }
 
     public CompoundTag serializeNBT() {

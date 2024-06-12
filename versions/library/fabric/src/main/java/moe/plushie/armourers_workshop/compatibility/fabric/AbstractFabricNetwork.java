@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.fabric;
 
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IPacketDistributor;
@@ -31,7 +32,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -47,37 +47,35 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import manifold.ext.rt.api.auto;
-
 @Available("[1.21, )")
 public class AbstractFabricNetwork {
 
     public static class Dispatcher extends NetworkManager.Dispatcher {
 
-        public Dispatcher(ResourceLocation channelName, String channelVersion) {
+        public Dispatcher(IResourceLocation channelName, String channelVersion) {
             super(channelName, channelVersion);
         }
 
         @Override
         public void register() {
-            Proxy.TYPE = new CustomPacketPayload.Type<>(channelName);
+            Proxy.TYPE = new CustomPacketPayload.Type<>(channelName.toLocation());
 
             PayloadTypeRegistry.playC2S().register(Proxy.TYPE, Proxy.CODEC);
             PayloadTypeRegistry.playS2C().register(Proxy.TYPE, Proxy.CODEC);
 
             ServerLoginConnectionEvents.QUERY_START.register(this::startServerHandshake);
-            ServerLoginNetworking.registerGlobalReceiver(channelName, this::onServerHandshake);
+            ServerLoginNetworking.registerGlobalReceiver(channelName.toLocation(), this::onServerHandshake);
             ServerPlayNetworking.registerGlobalReceiver(Proxy.TYPE, this::onServerEvent);
 
             EnvironmentExecutor.runOn(EnvironmentType.CLIENT, () -> () -> {
-                ClientLoginNetworking.registerGlobalReceiver(channelName, this::onClientHandshake);
+                ClientLoginNetworking.registerGlobalReceiver(channelName.toLocation(), this::onClientHandshake);
                 ClientPlayNetworking.registerGlobalReceiver(Proxy.TYPE, this::onClientEvent);
             });
         }
 
         public void startServerHandshake(Object handler, MinecraftServer server, LoginPacketSender sender, ServerLoginNetworking.LoginSynchronizer synchronizer) {
             if (ModConfig.Common.enableProtocolCheck) {
-                sender.sendPacket(channelName, PacketByteBufs.empty());
+                sender.sendPacket(channelName.toLocation(), PacketByteBufs.empty());
             }
         }
 
@@ -126,7 +124,7 @@ public class AbstractFabricNetwork {
         }
 
         @Override
-        public IPacketDistributor add(ResourceLocation channel, IFriendlyByteBuf buf) {
+        public IPacketDistributor add(IResourceLocation channel, IFriendlyByteBuf buf) {
             return new Distributor(sender, target, new Proxy(buf));
         }
 
@@ -157,9 +155,9 @@ public class AbstractFabricNetwork {
         public IPacketDistributor trackingEntityAndSelf(Supplier<Entity> supplier) {
             Entity entity = supplier.get();
             Collection<ServerPlayer> players = PlayerLookup.tracking(entity);
-            if (entity instanceof ServerPlayer) {
+            if (entity instanceof ServerPlayer player) {
                 ArrayList<ServerPlayer> trackingAndSelf = new ArrayList<>(players);
-                trackingAndSelf.add((ServerPlayer) entity);
+                trackingAndSelf.add(player);
                 players = trackingAndSelf;
             }
             return new Distributor(LogicalSide.SERVER, dispatch(players), null);
@@ -205,15 +203,15 @@ public class AbstractFabricNetwork {
             @Override
             public Proxy decode(RegistryFriendlyByteBuf bufferIn) {
                 // we need to tell decoder all data is processed.
-                auto buffer = bufferIn.retainedSlice();
-                auto duplicated = new RegistryFriendlyByteBuf(buffer, bufferIn.registryAccess());
+                var buffer = bufferIn.retainedSlice();
+                var duplicated = new RegistryFriendlyByteBuf(buffer, bufferIn.registryAccess());
                 bufferIn.skipBytes(bufferIn.readableBytes());
                 return new Proxy(IFriendlyByteBuf.wrap(duplicated));
             }
 
             @Override
             public void encode(RegistryFriendlyByteBuf buf, Proxy proxy) {
-                auto sending = proxy.payload.asByteBuf();
+                var sending = proxy.payload.asByteBuf();
                 buf.writeBytes(sending.slice());
             }
         };

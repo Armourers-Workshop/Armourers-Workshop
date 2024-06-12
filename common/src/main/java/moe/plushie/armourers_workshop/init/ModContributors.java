@@ -15,8 +15,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.UUID;
 
-import manifold.ext.rt.api.auto;
-
 public class ModContributors {
 
     public static Contributor dev;
@@ -67,10 +65,9 @@ public class ModContributors {
 
     @Environment(EnvType.CLIENT)
     public static Contributor by(Entity entity) {
-        if (entity instanceof MannequinEntity) {
-            auto mannequin = (MannequinEntity) entity;
+        if (entity instanceof MannequinEntity mannequin) {
             if (mannequin.isExtraRenderer()) {
-                auto descriptor = mannequin.getTextureDescriptor();
+                var descriptor = mannequin.getTextureDescriptor();
                 return of(PlayerTextureLoader.getInstance().getGameProfile(descriptor));
             }
             return null;

@@ -11,15 +11,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-
-import manifold.ext.rt.api.auto;
 
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
@@ -92,12 +89,12 @@ public class SkinOverriddenManager {
     public void addProperty(ISkinProperty<Boolean> property) {
         disabledProperties.add(property);
         // when equipment required hide, we need synchronize it to slot.
-        auto equipmentSlot = OVERRIDDEN_EQUIPMENT_TO_SLOT.get(property);
+        var equipmentSlot = OVERRIDDEN_EQUIPMENT_TO_SLOT.get(property);
         if (equipmentSlot != null) {
             disabledEquipmentSlotsByProperties.add(equipmentSlot);
         }
         // when model part required hide, we need synchronize it to overlay.
-        auto overlayProperties = OVERRIDDEN_MODEL_TO_OVERLAY.get(property);
+        var overlayProperties = OVERRIDDEN_MODEL_TO_OVERLAY.get(property);
         if (overlayProperties != null) {
             disabledModelByProperties.add(property);
             disabledProperties.addAll(overlayProperties);
@@ -105,7 +102,7 @@ public class SkinOverriddenManager {
     }
 
     public void merge(ISkinProperties properties) {
-        for (ISkinProperty<Boolean> property : OVERRIDDEN_PROPERTIES) {
+        for (var property : OVERRIDDEN_PROPERTIES) {
             if (properties.get(property)) {
                 addProperty(property);
             }
@@ -133,21 +130,21 @@ public class SkinOverriddenManager {
     }
 
     public void willRender(Entity entity) {
-        for (EquipmentSlot slotType : ARMOUR_EQUIPMENT_SLOTS) {
+        for (var slotType : ARMOUR_EQUIPMENT_SLOTS) {
             if (!overrideEquipment(slotType) || disabledEquipmentItems.containsKey(slotType)) {
                 continue;
             }
-            ItemStack itemStack = setItem(entity, slotType, ItemStack.EMPTY);
+            var itemStack = setItem(entity, slotType, ItemStack.EMPTY);
             disabledEquipmentItems.put(slotType, itemStack);
         }
     }
 
     public void didRender(Entity entity) {
-        for (EquipmentSlot slotType : ARMOUR_EQUIPMENT_SLOTS) {
+        for (var slotType : ARMOUR_EQUIPMENT_SLOTS) {
             if (!disabledEquipmentItems.containsKey(slotType)) {
                 continue;
             }
-            ItemStack itemStack = disabledEquipmentItems.remove(slotType);
+            var itemStack = disabledEquipmentItems.remove(slotType);
             setItem(entity, slotType, itemStack);
         }
     }
@@ -155,14 +152,13 @@ public class SkinOverriddenManager {
     private ItemStack setItem(Entity entity, EquipmentSlot slotType, ItemStack itemStack) {
         // for the player, using `setItemSlot` will cause play sound.
         if (entity instanceof Player) {
-            Inventory inventory = ((Player) entity).getInventory();
-            ItemStack itemStack1 = inventory.armor.get(slotType.getIndex());
+            var inventory = ((Player) entity).getInventory();
+            var itemStack1 = inventory.armor.get(slotType.getIndex());
             inventory.armor.set(slotType.getIndex(), itemStack);
             return itemStack1;
         }
-        if (entity instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity) entity;
-            ItemStack itemStack1 = livingEntity.getItemBySlot(slotType);
+        if (entity instanceof LivingEntity livingEntity) {
+            var itemStack1 = livingEntity.getItemBySlot(slotType);
             livingEntity.setItemSlot(slotType, itemStack);
             return itemStack1;
         }

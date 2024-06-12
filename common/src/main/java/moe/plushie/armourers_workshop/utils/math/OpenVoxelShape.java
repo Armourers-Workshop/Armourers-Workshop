@@ -51,7 +51,7 @@ public class OpenVoxelShape implements Iterable<Vector4f> {
         if (box != null) {
             return box;
         }
-        if (vertexes == null || vertexes.size() == 0) {
+        if (vertexes == null || vertexes.isEmpty()) {
             return Rectangle3f.ZERO;
         }
         Iterator<Vector4f> iterator = vertexes.iterator();

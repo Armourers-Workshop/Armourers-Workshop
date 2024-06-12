@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.forge.extensions.net.minecraft.client.renderer.GameRenderer;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBlockEntityRendererProvider;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererProvider;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeClientEventsImpl;
@@ -17,11 +17,11 @@ import manifold.ext.rt.api.ThisClass;
 @Extension
 public class ForgeRegistry {
 
-    public static <T extends Entity> void registerEntityRendererFO(@ThisClass Class<?> clazz, IRegistryKey<EntityType<T>> entityType, AbstractEntityRendererProvider<T> provider) {
+    public static <T extends Entity> void registerEntityRendererFO(@ThisClass Class<?> clazz, IRegistryHolder<EntityType<T>> entityType, AbstractEntityRendererProvider<T> provider) {
         AbstractForgeClientEventsImpl.ENTITY_RENDERER_REGISTRY.listen(event -> event.registerEntityRenderer(entityType.get(), provider::create));
     }
 
-    public static <T extends BlockEntity> void registerBlockEntityRendererFO(@ThisClass Class<?> clazz, IRegistryKey<BlockEntityType<T>> entityType, AbstractBlockEntityRendererProvider<T> provider) {
+    public static <T extends BlockEntity> void registerBlockEntityRendererFO(@ThisClass Class<?> clazz, IRegistryHolder<BlockEntityType<T>> entityType, AbstractBlockEntityRendererProvider<T> provider) {
         AbstractForgeClientEventsImpl.ENTITY_RENDERER_REGISTRY.listen(event -> event.registerBlockEntityRenderer(entityType.get(), provider::create));
     }
 }

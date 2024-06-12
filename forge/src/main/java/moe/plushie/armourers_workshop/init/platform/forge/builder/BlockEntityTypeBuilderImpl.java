@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.init.platform.forge.builder;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityType;
 import moe.plushie.armourers_workshop.api.registry.IBlockEntityTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBlockEntityRendererProvider;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeBlockEntity;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeRegistries;
@@ -47,8 +47,8 @@ public class BlockEntityTypeBuilderImpl<T extends BlockEntity> implements IBlock
     }
 
     @Override
-    public IRegistryKey<IBlockEntityType<T>> build(String name) {
-        IRegistryKey<BlockEntityType<T>> object = AbstractForgeRegistries.BLOCK_ENTITY_TYPES.register(name, () -> {
+    public IRegistryHolder<IBlockEntityType<T>> build(String name) {
+        IRegistryHolder<BlockEntityType<T>> object = AbstractForgeRegistries.BLOCK_ENTITY_TYPES.register(name, () -> {
             Block[] blocks1 = blocks.stream().map(Supplier::get).toArray(Block[]::new);
             return AbstractForgeBlockEntity.createType(supplier, blocks1);
         });
@@ -59,9 +59,9 @@ public class BlockEntityTypeBuilderImpl<T extends BlockEntity> implements IBlock
 
     public static class Proxy<T extends BlockEntity> implements IBlockEntityType<T> {
 
-        private final IRegistryKey<BlockEntityType<T>> object;
+        private final IRegistryHolder<BlockEntityType<T>> object;
 
-        public Proxy(IRegistryKey<BlockEntityType<T>> object) {
+        public Proxy(IRegistryHolder<BlockEntityType<T>> object) {
             this.object = object;
         }
 

@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class Vector3i implements Comparable<Vector3i>, IVector3i, Position {
@@ -40,27 +41,8 @@ public class Vector3i implements Comparable<Vector3i>, IVector3i, Position {
         this(values[0], values[1], values[2]);
     }
 
-    public boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-        if (!(other instanceof Vector3i)) {
-            return false;
-        }
-        Vector3i v = (Vector3i) other;
-        if (getX() != v.getX()) {
-            return false;
-        }
-        if (getY() != v.getY()) {
-            return false;
-        }
-        return getZ() == v.getZ();
-    }
 
-    public int hashCode() {
-        return (getY() + getZ() * 31) * 31 + getX();
-    }
-
+    @Override
     public int compareTo(Vector3i v) {
         int dy = getY() - v.getY();
         if (dy != 0) {
@@ -183,6 +165,18 @@ public class Vector3i implements Comparable<Vector3i>, IVector3i, Position {
 
     public List<Integer> toList() {
         return Lists.newArrayList(x, y, z);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Vector3i that)) return false;
+        return x == that.x && y == that.y && z == that.z;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
     }
 
     @Override

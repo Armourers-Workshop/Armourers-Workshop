@@ -3,19 +3,19 @@ package moe.plushie.armourers_workshop.compatibility.core.data;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.function.Function;
-
 @Available("[1.21, )")
 public abstract class AbstractFriendlyByteBufImpl implements IFriendlyByteBuf {
-
-    private static Function<ByteBuf, RegistryFriendlyByteBuf> TRANSFORMER;
 
     protected final RegistryFriendlyByteBuf source;
 
@@ -24,21 +24,29 @@ public abstract class AbstractFriendlyByteBufImpl implements IFriendlyByteBuf {
     }
 
     protected static RegistryFriendlyByteBuf cast(ByteBuf buf) {
-        RegistryFriendlyByteBuf source = ObjectUtils.safeCast(buf, RegistryFriendlyByteBuf.class);
-        if (source == null) {
-            source = TRANSFORMER.apply(buf);
+        // hitting
+        if (buf instanceof RegistryFriendlyByteBuf source) {
+            return source;
         }
-        return source;
+        return new RegistryFriendlyByteBuf(buf, findRegistryAccess());
     }
 
-    public static void setServerboundTransformer(Function<ByteBuf, ? extends ByteBuf> transformer) {
-        TRANSFORMER = ObjectUtils.unsafeCast(transformer);
+    protected static RegistryAccess findRegistryAccess() {
+        // find registry access on the server.
+        var server = EnvironmentManager.getServer();
+        if (server != null) {
+            return server.registryAccess();
+        }
+        // find registry access on the client.
+        var client = EnvironmentExecutor.callOn(EnvironmentType.CLIENT, () -> () -> {
+            var connection = Minecraft.getInstance().getConnection();
+            if (connection != null) {
+                return connection.registryAccess();
+            }
+            return null;
+        });
+        return client.orElse(null);
     }
-
-    public static void setClientboundTransformer(Function<ByteBuf, ? extends ByteBuf> transformer) {
-        TRANSFORMER = ObjectUtils.unsafeCast(transformer);
-    }
-
 
     @Override
     public GlobalPos readGlobalPos() {

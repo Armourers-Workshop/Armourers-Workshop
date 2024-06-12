@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IPacketDistributor;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.network.CustomReplyPacket;
@@ -13,7 +14,6 @@ import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.PacketSplitter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -80,7 +80,7 @@ public class NetworkManager {
     }
 
     @ExpectPlatform
-    public static Dispatcher createDispatcher(ResourceLocation registryName, String version) {
+    public static Dispatcher createDispatcher(IResourceLocation registryName, String version) {
         throw new AssertionError();
     }
 
@@ -93,12 +93,12 @@ public class NetworkManager {
 
         protected final UUID clientUUID = UUID.randomUUID();
         protected final String channelVersion;
-        protected final ResourceLocation channelName;
+        protected final IResourceLocation channelName;
         protected final PacketSplitter splitter;
 
         protected final int maxPartSize = 32000; // 32k
 
-        public Dispatcher(ResourceLocation channelName, String channelVersion) {
+        public Dispatcher(IResourceLocation channelName, String channelVersion) {
             this.channelName = channelName;
             this.channelVersion = channelVersion;
             this.splitter = new PacketSplitter();

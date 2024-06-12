@@ -162,22 +162,11 @@ public class CubeSelector implements IPaintToolSelector {
     }
 
     private BlockPos resolvedPos(Direction dir, int i, int j) {
-        switch (dir) {
-            case UP:
-            case DOWN:
-                return blockPos.offset(j, 0, i);
-
-            case NORTH:
-            case SOUTH:
-                return blockPos.offset(i, j, 0);
-
-            case WEST:
-            case EAST:
-                return blockPos.offset(0, i, j);
-
-            default:
-                return blockPos;
-        }
+        return switch (dir) {
+            case UP, DOWN -> blockPos.offset(j, 0, i);
+            case NORTH, SOUTH -> blockPos.offset(i, j, 0);
+            case WEST, EAST -> blockPos.offset(0, i, j);
+        };
     }
 
     private Direction[] resolvedDirections(Direction clickedFace) {
@@ -194,7 +183,7 @@ public class CubeSelector implements IPaintToolSelector {
         return level.getBlockState(pos).is(ModBlocks.BOUNDING_BOX.get());
     }
 
-    private enum MatchMode {
+    protected enum MatchMode {
         ALL, SAME, TOUCHING
     }
 }

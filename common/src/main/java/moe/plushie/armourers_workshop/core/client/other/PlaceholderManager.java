@@ -5,18 +5,11 @@ import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.horse.Horse;
-import net.minecraft.world.entity.animal.horse.Markings;
-import net.minecraft.world.entity.animal.horse.Variant;
 import net.minecraft.world.level.Level;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class PlaceholderManager {
@@ -24,7 +17,7 @@ public class PlaceholderManager {
     private static final int PLACEHOLDER_ENTITY_ID = -1021;
 
     public static final Supplier<MannequinEntity> MANNEQUIN = new LazyEntry<>(level -> {
-        auto entity = new MannequinEntity(ModEntityTypes.MANNEQUIN.get().get(), level);
+        var entity = new MannequinEntity(ModEntityTypes.MANNEQUIN.get().get(), level);
         entity.setExtraRenderer(false); // never magic cir
         return entity;
     });
@@ -45,7 +38,7 @@ public class PlaceholderManager {
 
         @Override
         public T get() {
-            auto level = Minecraft.getInstance().level;
+            var level = Minecraft.getInstance().level;
             if (entity == null) {
                 entity = provider.apply(level);
                 entity.setId(PLACEHOLDER_ENTITY_ID);

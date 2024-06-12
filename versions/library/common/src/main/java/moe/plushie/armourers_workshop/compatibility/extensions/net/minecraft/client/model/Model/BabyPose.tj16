@@ -9,14 +9,13 @@ import net.minecraft.client.model.Model;
 
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
-import manifold.ext.rt.api.auto;
 
 @Extension
 @Available("[1.16, 1.18)")
 public class BabyPose {
 
     public static IModelBabyPose getBabyPose(@This Model model) {
-        auto model1 = ObjectUtils.safeCast(model, AgeableListModel.class);
+        var model1 = ObjectUtils.safeCast(model, AgeableListModel.class);
         if (model1 == null) {
             return null;
         }

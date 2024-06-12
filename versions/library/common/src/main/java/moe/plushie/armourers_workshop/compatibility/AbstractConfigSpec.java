@@ -34,8 +34,8 @@ public class AbstractConfigSpec implements IConfigSpec {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o instanceof AbstractConfigSpec) {
-            return Objects.equals(spec, ((AbstractConfigSpec) o).spec);
+        if (o instanceof AbstractConfigSpec spec1) {
+            return Objects.equals(spec, spec1.spec);
         }
         return Objects.equals(spec, o);
     }
@@ -130,8 +130,8 @@ public class AbstractConfigSpec implements IConfigSpec {
 
         protected final String path;
 
-        protected Supplier<T> reader;
-        protected Consumer<T> writer;
+        protected final Supplier<T> reader;
+        protected final Consumer<T> writer;
 
         protected Consumer<T> setter;
         protected Supplier<T> getter;

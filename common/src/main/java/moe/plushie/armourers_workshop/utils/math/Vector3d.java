@@ -6,6 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 
 import java.util.EnumSet;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class Vector3d implements Position {
@@ -140,31 +141,15 @@ public class Vector3d implements Position {
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-        if (!(other instanceof Vector3d)) {
-            return false;
-        }
-        Vector3d vector3d = (Vector3d) other;
-        if (Double.compare(vector3d.x, x) != 0) {
-            return false;
-        }
-        if (Double.compare(vector3d.y, y) != 0) {
-            return false;
-        }
-        return Double.compare(vector3d.z, z) == 0;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Vector3d that)) return false;
+        return Double.compare(x, that.x) == 0 && Double.compare(y, that.y) == 0 && Double.compare(z, that.z) == 0;
     }
 
     @Override
     public int hashCode() {
-        long j = Double.doubleToLongBits(x);
-        int i = (int) (j ^ j >>> 32);
-        j = Double.doubleToLongBits(y);
-        i = 31 * i + (int) (j ^ j >>> 32);
-        j = Double.doubleToLongBits(z);
-        return 31 * i + (int) (j ^ j >>> 32);
+        return Objects.hash(x, y, z);
     }
 
     public String toString() {

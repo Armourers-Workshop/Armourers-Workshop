@@ -49,7 +49,7 @@ public class Fix16 {
         // ignored
     }
 
-    public static void glBindVertexArray(@ThisClass Class<?> clazz, IntSupplier supplier) {
+    public static void glBindVertexArray(@ThisClass Class<?> clazz, IntSupplier id) {
         // ignored
     }
 

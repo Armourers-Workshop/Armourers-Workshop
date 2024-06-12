@@ -51,9 +51,8 @@ public class CGSize implements InterpolableImpl<CGSize> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CGSize size = (CGSize) o;
-        return Float.compare(size.width, width) == 0 && Float.compare(size.height, height) == 0;
+        if (!(o instanceof CGSize that)) return false;
+        return Float.compare(width, that.width) == 0 && Float.compare(height, that.height) == 0;
     }
 
     @Override

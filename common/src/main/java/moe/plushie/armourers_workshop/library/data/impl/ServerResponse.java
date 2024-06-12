@@ -21,13 +21,10 @@ public class ServerResponse {
     }
 
     private boolean validFromJSON(IDataPackObject object) {
-        switch (object.type()) {
-            case BOOLEAN:
-                return object.boolValue();
-            case STRING:
-                return object.stringValue().equals("true");
-            default:
-                return true;
-        }
+        return switch (object.type()) {
+            case BOOLEAN -> object.boolValue();
+            case STRING -> object.stringValue().equals("true");
+            default -> true;
+        };
     }
 }

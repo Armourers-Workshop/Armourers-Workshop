@@ -14,8 +14,8 @@ public interface ILootContextParam<T> {
     ILootContextParam<Entity> THIS_ENTITY = () -> Entity.class;
     ILootContextParam<Player> LAST_DAMAGE_PLAYER = () -> Player.class;
     ILootContextParam<DamageSource> DAMAGE_SOURCE = () -> DamageSource.class;
-    ILootContextParam<Entity> KILLER_ENTITY = () -> Entity.class;
-    ILootContextParam<Entity> DIRECT_KILLER_ENTITY = () -> Entity.class;
+    ILootContextParam<Entity> ATTACKING_ENTITY = () -> Entity.class;
+    ILootContextParam<Entity> DIRECT_ATTACKING_ENTITY = () -> Entity.class;
     ILootContextParam<IVector3f> ORIGIN = () -> IVector3f.class;
     ILootContextParam<BlockState> BLOCK_STATE = () -> BlockState.class;
     ILootContextParam<BlockEntity> BLOCK_ENTITY = () -> BlockEntity.class;

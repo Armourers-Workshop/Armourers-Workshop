@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.fml.event.IModBusEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class AbstractForgeEventBus {
             ArrayList<Consumer<T>> queue = new ArrayList<>();
             Consumer<E> listener = event -> queue.forEach(element -> element.accept(transform.apply(event)));
             if (IModBusEvent.class.isAssignableFrom(eventType)) {
-                FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.NORMAL, false, eventType, listener);
+                AbstractForgeInitializer.getEventBus().addListener(EventPriority.NORMAL, false, eventType, listener);
             } else {
                 NeoForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, eventType, listener);
             }

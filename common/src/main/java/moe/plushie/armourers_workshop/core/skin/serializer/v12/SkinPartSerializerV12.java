@@ -19,32 +19,20 @@ public final class SkinPartSerializerV12 {
     }
 
     public String getTypeNameByLegacyId(int legacyId) {
-        switch (legacyId) {
-            case 0:
-                return "armourers:head.base";
-            case 1:
-                return "armourers:chest.base";
-            case 2:
-                return "armourers:chest.leftArm";
-            case 3:
-                return "armourers:chest.rightArm";
-            case 4:
-                return "armourers:legs.leftLeg";
-            case 5:
-                return "armourers:legs.rightLeg";
-            case 6:
-                return "armourers:skirt.base";
-            case 7:
-                return "armourers:feet.leftFoot";
-            case 8:
-                return "armourers:feet.rightFoot";
-            case 9:
-                return "armourers:sword.base";
-            case 10:
-                return "armourers:bow.base";
-            default:
-                return null;
-        }
+        return switch (legacyId) {
+            case 0 -> "armourers:head.base";
+            case 1 -> "armourers:chest.base";
+            case 2 -> "armourers:chest.leftArm";
+            case 3 -> "armourers:chest.rightArm";
+            case 4 -> "armourers:legs.leftLeg";
+            case 5 -> "armourers:legs.rightLeg";
+            case 6 -> "armourers:skirt.base";
+            case 7 -> "armourers:feet.leftFoot";
+            case 8 -> "armourers:feet.rightFoot";
+            case 9 -> "armourers:sword.base";
+            case 10 -> "armourers:bow.base";
+            default -> null;
+        };
     }
 
     public SkinPart loadSkinPart(IInputStream stream, int version) throws IOException, InvalidCubeTypeException {

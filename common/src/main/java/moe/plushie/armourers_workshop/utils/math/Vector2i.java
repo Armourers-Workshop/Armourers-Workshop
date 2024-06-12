@@ -3,6 +3,8 @@ package moe.plushie.armourers_workshop.utils.math;
 import moe.plushie.armourers_workshop.api.math.IVector2i;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 
+import java.util.Objects;
+
 @SuppressWarnings("unused")
 public class Vector2i implements IVector2i {
 
@@ -46,6 +48,19 @@ public class Vector2i implements IVector2i {
         this.y = y;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Vector2i that)) return false;
+        return x == that.x && y == that.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
+
+    @Override
     public String toString() {
         return String.format("(%d %d)", x, y);
     }

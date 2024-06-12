@@ -113,7 +113,7 @@ public enum Operation {
      */
     public final int value;
 
-    private Operation(String sign, int value) {
+    Operation(String sign, int value) {
         this.sign = sign;
         this.value = value;
     }

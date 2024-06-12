@@ -20,7 +20,7 @@ public class AllayWingJointModifier extends JointModifier {
         }
         IModelPartPose rootPose = rootModelPart.pose();
         IModelPartPose bodyPose = bodyModelPart.pose();
-        IModelPartPose wingPose = wingModelPart.pose();;
+        IModelPartPose wingPose = wingModelPart.pose();
         return poseStack -> {
             rootPose.transform(poseStack);
             bodyPose.transform(poseStack);

@@ -7,23 +7,20 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderBufferSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.world.entity.Entity;
 
-import manifold.ext.rt.api.auto;
-
 public class SkinRenderer {
 
     public static int render(Entity entity, BakedArmature armature, BakedSkin bakedSkin, ColorScheme scheme, SkinRenderContext context) {
         int counter = 0;
-        auto scheme1 = bakedSkin.resolve(entity, scheme);
-        auto builder = context.getBuffer(bakedSkin);
-        for (auto bakedPart : bakedSkin.getParts()) {
-            auto bakedTransform = armature.getTransform(bakedPart);
+        var scheme1 = bakedSkin.resolve(entity, scheme);
+        var builder = context.getBuffer(bakedSkin);
+        for (var bakedPart : bakedSkin.getParts()) {
+            var bakedTransform = armature.getTransform(bakedPart);
             if (bakedTransform == null) {
                 continue;
             }
@@ -54,7 +51,7 @@ public class SkinRenderer {
     }
 
     private static void renderChild(Entity entity, BakedSkinPart parentPart, BakedSkin bakedSkin, ColorScheme scheme, boolean shouldRenderPart, SkinRenderBufferSource.ObjectBuilder builder, SkinRenderContext context) {
-        for (auto bakedPart : parentPart.getChildren()) {
+        for (var bakedPart : parentPart.getChildren()) {
             context.pushPose();
             bakedPart.getTransform().apply(context.pose());
             builder.addPart(bakedPart, bakedSkin, scheme, shouldRenderPart, context);
@@ -89,7 +86,7 @@ public class SkinRenderer {
         if (!shouldRenderPart(entity, bakedPart, bakedSkin, context)) {
             return;
         }
-        auto bakedTransform = armature.getTransform(bakedPart);
+        var bakedTransform = armature.getTransform(bakedPart);
         if (bakedTransform == null) {
             return;
         }

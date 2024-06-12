@@ -23,8 +23,6 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class SkinRendererManager {
 
@@ -119,7 +117,7 @@ public class SkinRendererManager {
 
     private static <T extends LivingEntity, V extends EntityModel<T>> void setupRenderer(EntityType<?> entityType, LivingEntityRenderer<T, V> livingRenderer, boolean autoInject) {
         RenderLayer<T, V> armorLayer = null;
-        for (RenderLayer<T, V> layerRenderer : livingRenderer.layers) {
+        for (var layerRenderer : livingRenderer.layers) {
             if (layerRenderer instanceof HumanoidArmorLayer<?, ?, ?>) {
                 armorLayer = layerRenderer;
             }
@@ -130,14 +128,14 @@ public class SkinRendererManager {
         if (autoInject && armorLayer == null) {
             return;
         }
-        auto transformer = BakedArmatureTransformer.defaultBy(entityType, livingRenderer.getModel(), livingRenderer);
+        var transformer = BakedArmatureTransformer.defaultBy(entityType, livingRenderer.getModel(), livingRenderer);
         if (transformer != null) {
             livingRenderer.addLayer(new SkinWardrobeLayer<>(transformer, livingRenderer));
         }
     }
 
     private static <T extends Entity> void setupFallbackRenderer(EntityType<?> entityType, EntityRenderer<T> renderer) {
-        auto transformer = BakedArmatureTransformer.defaultBy(entityType, null, renderer);
+        var transformer = BakedArmatureTransformer.defaultBy(entityType, null, renderer);
         if (transformer != null) {
             FALLBACK_TRANSFORMERS.put(entityType, transformer);
         }

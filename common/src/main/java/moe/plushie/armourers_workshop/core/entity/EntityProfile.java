@@ -1,24 +1,21 @@
 package moe.plushie.armourers_workshop.core.entity;
 
 import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
-import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
 
-import manifold.ext.rt.api.auto;
-
 public class EntityProfile {
 
-    private final ResourceLocation registryName;
+    private final IResourceLocation registryName;
     private final Map<SkinSlotType, Function<SkinSlotType, Integer>> supports;
     private final Collection<IEntityTypeProvider<?>> entities;
     private final boolean locked;
 
-    public EntityProfile(ResourceLocation registryName, Map<SkinSlotType, Function<SkinSlotType, Integer>> supports, Collection<IEntityTypeProvider<?>> entities, boolean locked) {
+    public EntityProfile(IResourceLocation registryName, Map<SkinSlotType, Function<SkinSlotType, Integer>> supports, Collection<IEntityTypeProvider<?>> entities, boolean locked) {
         this.registryName = registryName;
         this.supports = supports;
         this.entities = entities;
@@ -34,7 +31,7 @@ public class EntityProfile {
     }
 
     public int getMaxCount(SkinSlotType slotType) {
-        auto provider = supports.get(slotType);
+        var provider = supports.get(slotType);
         if (provider != null) {
             return provider.apply(slotType);
         }
@@ -49,7 +46,7 @@ public class EntityProfile {
         return entities;
     }
 
-    public ResourceLocation getRegistryName() {
+    public IResourceLocation getRegistryName() {
         return registryName;
     }
 }

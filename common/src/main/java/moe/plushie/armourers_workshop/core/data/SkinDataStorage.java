@@ -30,7 +30,7 @@ public class SkinDataStorage {
     }
 
     public static Optional<SkinWardrobe> getWardrobe(Entity entity) {
-        SkinDataStorage storage = getDataStore(entity);
+        var storage = getDataStore(entity);
         if (storage.wardrobe != null) {
             return storage.wardrobe.resolve();
         }
@@ -38,7 +38,7 @@ public class SkinDataStorage {
     }
 
     public static Optional<SkinWardrobeJS> getWardrobeJS(Entity entity) {
-        SkinDataStorage storage = getDataStore(entity);
+        var storage = getDataStore(entity);
         if (storage.wardrobeJS != null) {
             return storage.wardrobeJS.resolve();
         }
@@ -47,11 +47,11 @@ public class SkinDataStorage {
 
     @Environment(EnvType.CLIENT)
     public static Optional<SkinRenderData> getRenderData(Entity entity) {
-        SkinDataStorage storage = getDataStore(entity);
+        var storage = getDataStore(entity);
         if (storage.renderData == null) {
             return Optional.empty();
         }
-        Optional<SkinRenderData> renderData = storage.renderData.resolve();
+        var renderData = storage.renderData.resolve();
         renderData.ifPresent(data -> {
             int tickCount = entity.tickCount;
             if (storage.lastRenderDataTickCount != tickCount) {
@@ -63,8 +63,8 @@ public class SkinDataStorage {
     }
 
     private static SkinDataStorage getDataStore(Entity entity) {
-        IAssociatedObjectProvider provider = (IAssociatedObjectProvider) entity;
-        SkinDataStorage snapshot = provider.getAssociatedObject();
+        var provider = (IAssociatedObjectProvider) entity;
+        var snapshot = (SkinDataStorage) provider.getAssociatedObject();
         if (snapshot == null) {
             snapshot = new SkinDataStorage(entity);
             provider.setAssociatedObject(snapshot);
@@ -73,7 +73,7 @@ public class SkinDataStorage {
     }
 
     private static LazyOptional<SkinWardrobe> getLazyWardrobe(Entity entity) {
-        Optional<SkinWardrobe> wardrobe = ModCapabilities.WARDROBE.get().get(entity);
+        var wardrobe = ModCapabilities.WARDROBE.get().get(entity);
         if (wardrobe.isPresent()) {
             return LazyOptional.of(wardrobe::get);
         }
@@ -85,7 +85,7 @@ public class SkinDataStorage {
     }
 
     private static LazyOptional<SkinRenderData> getLazyRenderData(Entity entity) {
-        Optional<SkinRenderData> renderData = EnvironmentExecutor.callOn(EnvironmentType.CLIENT, () -> () -> new SkinRenderData(entity.getType()));
+        var renderData = EnvironmentExecutor.callOn(EnvironmentType.CLIENT, () -> () -> new SkinRenderData(entity.getType()));
         if (renderData.isPresent()) {
             return LazyOptional.of(renderData::get);
         }

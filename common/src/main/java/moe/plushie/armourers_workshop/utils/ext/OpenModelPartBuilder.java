@@ -8,8 +8,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Set;
 
-import manifold.ext.rt.api.auto;
-
 public class OpenModelPartBuilder {
 
     private static final Set<Direction> ALL_VISIBLE = EnumSet.allOf(Direction.class);
@@ -63,7 +61,7 @@ public class OpenModelPartBuilder {
     }
 
     public OpenModelPart build() {
-        auto modelPart = new OpenModelPart(cubes, new HashMap<>());
+        var modelPart = new OpenModelPart(cubes, new HashMap<>());
         modelPart.setInitialPose(offset);
         modelPart.loadPose(offset);
         return modelPart;

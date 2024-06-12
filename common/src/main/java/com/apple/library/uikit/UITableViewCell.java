@@ -71,8 +71,8 @@ public class UITableViewCell extends UIView implements HighlightedDisplayable {
             return null;
         }
         UIView view = superview();
-        if (view instanceof UITableView) {
-            return (UITableView) view;
+        if (view instanceof UITableView tableView) {
+            return tableView;
         }
         return null;
     }

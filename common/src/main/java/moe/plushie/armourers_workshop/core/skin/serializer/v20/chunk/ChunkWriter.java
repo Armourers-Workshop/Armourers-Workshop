@@ -39,8 +39,7 @@ public class ChunkWriter {
     public void writeBlobs(Object blobs) throws IOException {
         if (blobs instanceof Collection<?>) {
             for (Object blob : (Collection<?>) blobs) {
-                if (blob instanceof Chunk) {
-                    Chunk chunk = (Chunk) blob;
+                if (blob instanceof Chunk chunk) {
                     String name = chunk.getName();
                     ChunkFlags flags = chunk.getFlags();
                     stream.writeInt(chunk.getLength());

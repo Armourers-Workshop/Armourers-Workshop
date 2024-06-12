@@ -89,18 +89,15 @@ public class CGGraphicsContext implements GraphicsContextImpl {
         if (tooltip == null) {
             return;
         }
-        NSString text = ObjectUtilsImpl.safeCast(tooltip, NSString.class);
-        if (text != null) {
+        if (tooltip instanceof NSString text) {
             renderer.renderTooltip(text, rect, UIFont.systemFont(), this);
             return;
         }
-        ItemStack itemStack = ObjectUtilsImpl.safeCast(tooltip, ItemStack.class);
-        if (itemStack != null) {
+        if (tooltip instanceof ItemStack itemStack) {
             renderer.renderTooltip(itemStack, rect, UIFont.systemFont(), this);
             return;
         }
-        TooltipRenderer view = ObjectUtilsImpl.safeCast(tooltip, TooltipRenderer.class);
-        if (view != null) {
+        if (tooltip instanceof TooltipRenderer view) {
             view.render(rect, this);
             return;
         }
@@ -111,16 +108,16 @@ public class CGGraphicsContext implements GraphicsContextImpl {
         if (contents == null) {
             return;
         }
-        if (contents instanceof UIImage) {
-            drawImage((UIImage) contents, rect);
+        if (contents instanceof UIImage image) {
+            drawImage(image, rect);
             return;
         }
-        if (contents instanceof UIColor) {
-            fillRect((UIColor) contents, rect);
+        if (contents instanceof UIColor color) {
+            fillRect(color, rect);
             return;
         }
-        if (contents instanceof CGGradient) {
-            fillRect((CGGradient) contents, rect);
+        if (contents instanceof CGGradient gradient) {
+            fillRect(gradient, rect);
             return;
         }
         // not supported contents.

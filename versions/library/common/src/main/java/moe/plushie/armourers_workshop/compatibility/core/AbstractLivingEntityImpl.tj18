@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.compatibility.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IEntityDataBuilder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +25,28 @@ public class AbstractLivingEntityImpl {
 
         public CustomArmorStand(EntityType<? extends CustomArmorStand> entityType, Level level) {
             super(entityType, level);
+        }
+
+        public void brokenByPlayer(ServerLevel serverLevel, DamageSource damageSource) {
+            super.brokenByPlayer(damageSource);
+        }
+
+        public void brokenByAnything(ServerLevel serverLevel, DamageSource damageSource) {
+            super.brokenByAnything(damageSource);
+        }
+
+        @Override
+        public final void brokenByPlayer(DamageSource damageSource) {
+            if (getLevel() instanceof ServerLevel serverLevel) {
+                brokenByPlayer(serverLevel, damageSource);
+            }
+        }
+
+        @Override
+        public final void brokenByAnything(DamageSource damageSource) {
+            if (getLevel() instanceof ServerLevel serverLevel) {
+                brokenByAnything(serverLevel, damageSource);
+            }
         }
 
         protected void defineSynchedData(IEntityDataBuilder builder) {

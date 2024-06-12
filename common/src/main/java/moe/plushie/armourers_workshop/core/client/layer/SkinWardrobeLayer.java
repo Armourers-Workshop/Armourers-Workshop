@@ -25,8 +25,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.Entity;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M extends IModel> extends AbstractRenderLayer<T, V> {
 
@@ -45,20 +43,20 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         if (entity.isInvisible()) {
             return;
         }
-        auto poseStack1 = poseStack;
-        auto renderData = SkinRenderData.of(entity);
+        var poseStack1 = poseStack;
+        var renderData = SkinRenderData.of(entity);
         if (renderData == null) {
             return;
         }
-        auto renderPatch = renderData.getRenderPatch();
+        var renderPatch = renderData.getRenderPatch();
         if (renderPatch == null) {
             return;
         }
-        auto transformer = renderPatch.getTransformer();
+        var transformer = renderPatch.getTransformer();
         if (transformer == null) {
             return;
         }
-        auto epicFlightContext = ObjectUtils.safeCast(renderPatch, EpicFightEntityRendererPatch.class);
+        var epicFlightContext = ObjectUtils.safeCast(renderPatch, EpicFightEntityRendererPatch.class);
         if (epicFlightContext != null) {
             poseStack = epicFlightContext.getOverridePose();
         }
@@ -71,7 +69,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         }
 
         // render the contributor
-        auto contributor = ModContributors.by(entity);
+        var contributor = ModContributors.by(entity);
         if (contributor != null && renderData.shouldRenderExtra()) {
             renderMagicCircle(poseStack1, bufferSource, entity.tickCount + entity.getId() * 31, partialTicks, 24, contributor.color, packedLightIn, OverlayTexture.NO_OVERLAY);
         }
@@ -80,10 +78,10 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         poseStack.scale(f, f, f);
 
         transformer.applyTo(armature);
-        auto context = SkinRenderContext.alloc(renderData, packedLightIn, partialTicks, null, poseStack, bufferSource);
-        for (auto entry : renderData.getArmorSkins()) {
+        var context = SkinRenderContext.alloc(renderData, packedLightIn, partialTicks, null, poseStack, bufferSource);
+        for (var entry : renderData.getArmorSkins()) {
             context.setReferenced(SkinItemSource.create(entry.getRenderPriority(), entry.getItemStack()));
-            auto bakedSkin = entry.getBakedSkin();
+            var bakedSkin = entry.getBakedSkin();
             bakedSkin.setupAnim(entity, context.getAnimationTicks(), context.getReferenced());
             SkinRenderer.render(entity, armature, bakedSkin, entry.getBakedScheme(), context);
         }
@@ -103,8 +101,8 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         float rotation = (float) (ticks / 0.8D % 360D) + partialTickTime;
         poseStack.rotate(Vector3f.YP.rotationDegrees(rotation));
         poseStack.scale(circleScale, circleScale, circleScale);
-        auto pose = poseStack.last();
-        auto builder = bufferSource.getBuffer(SkinRenderType.IMAGE_MAGIC);
+        var pose = poseStack.last();
+        var builder = bufferSource.getBuffer(SkinRenderType.IMAGE_MAGIC);
         builder.vertex(pose, -1, 0, -1).color(red, green, blue, 0xff).uv(1, 0).overlayCoords(overlay).uv2(lightmap).endVertex();
         builder.vertex(pose, 1, 0, -1).color(red, green, blue, 0xff).uv(0, 0).overlayCoords(overlay).uv2(lightmap).endVertex();
         builder.vertex(pose, 1, 0, 1).color(red, green, blue, 0xff).uv(0, 1).overlayCoords(overlay).uv2(lightmap).endVertex();

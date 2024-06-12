@@ -1,0 +1,18 @@
+package moe.plushie.armourers_workshop.compatibility.client;
+
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+
+@Available("[1.16, 1.21)")
+public class AbstractBufferSourceImpl {
+
+    public static MultiBufferSource immediateSource(int size) {
+        return MultiBufferSource.immediate(new BufferBuilder(size));
+    }
+
+    public static MultiBufferSource bufferSource() {
+        return Minecraft.getInstance().renderBuffers().bufferSource();
+    }
+}

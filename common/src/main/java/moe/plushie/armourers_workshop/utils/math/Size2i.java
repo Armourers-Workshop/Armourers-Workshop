@@ -3,6 +3,8 @@ package moe.plushie.armourers_workshop.utils.math;
 import moe.plushie.armourers_workshop.api.math.ISize2i;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 
+import java.util.Objects;
+
 @SuppressWarnings("unused")
 public class Size2i implements ISize2i {
 
@@ -20,6 +22,18 @@ public class Size2i implements ISize2i {
 
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Size2i that)) return false;
+        return width == that.width && height == that.height;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(width, height);
     }
 
     @Override

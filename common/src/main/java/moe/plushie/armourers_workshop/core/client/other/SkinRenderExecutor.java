@@ -1,10 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import com.mojang.blaze3d.vertex.Tesselator;
-import net.minecraft.client.renderer.MultiBufferSource;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import net.minecraft.client.renderer.RenderType;
-
-import manifold.ext.rt.api.auto;
 
 public class SkinRenderExecutor {
 
@@ -15,10 +12,10 @@ public class SkinRenderExecutor {
         callout(() -> {
             // we'll use vanilla's rendering system to immediately draw a transparent point,
             // and then we will get this call in `GlStateManager._drawElements`.
-            auto buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-            auto buffer = buffers.getBuffer(renderType);
-            for (int i = 0; i < 4; ++i) {
-                buffer.vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            var buffers = AbstractBufferSource.tesselator();
+            var buffer = buffers.getBuffer(renderType);
+            for (var i = 0; i < 4; ++i) {
+                buffer.vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             }
             buffers.endBatch();
         });

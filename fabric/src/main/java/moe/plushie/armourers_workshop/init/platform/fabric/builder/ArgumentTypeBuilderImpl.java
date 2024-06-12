@@ -3,10 +3,11 @@ package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.api.registry.IArgumentTypeBuilder;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricArgumentType;
 import moe.plushie.armourers_workshop.init.ModConstants;
-import net.minecraft.resources.ResourceLocation;
+import moe.plushie.armourers_workshop.utils.TypedRegistry;
 
 import java.util.function.Supplier;
 
@@ -26,20 +27,10 @@ public class ArgumentTypeBuilderImpl<T extends IArgumentType<?>> implements IArg
     }
 
     @Override
-    public IRegistryKey<T> build(String name) {
-        ResourceLocation registryName = ModConstants.key(name);
+    public IRegistryHolder<T> build(String name) {
+        IResourceLocation registryName = ModConstants.key(name);
 //        ModLog.debug("Registering Argument Type '{}'", registryName);
         AbstractFabricArgumentType.register(registryName, argumentType, argumentSerializer.get());
-        return new IRegistryKey<T>() {
-            @Override
-            public ResourceLocation getRegistryName() {
-                return registryName;
-            }
-
-            @Override
-            public T get() {
-                return null;
-            }
-        };
+        return TypedRegistry.Entry.ofValue(registryName, null);
     }
 }

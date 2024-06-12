@@ -1,18 +1,18 @@
 package moe.plushie.armourers_workshop.api.client;
 
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
 public interface IRenderTypeBuilder {
 
-    default IRenderTypeBuilder texture(ResourceLocation texture) {
+    default IRenderTypeBuilder texture(IResourceLocation texture) {
         return texture(texture, false, false);
     }
 
-    IRenderTypeBuilder texture(ResourceLocation texture, boolean blur, boolean mipmap);
+    IRenderTypeBuilder texture(IResourceLocation texture, boolean blur, boolean mipmap);
 
     IRenderTypeBuilder texturing(Texturing texturing);
 

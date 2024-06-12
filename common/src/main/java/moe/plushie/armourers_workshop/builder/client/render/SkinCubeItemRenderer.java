@@ -16,8 +16,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class SkinCubeItemRenderer extends AbstractItemStackRenderer {
 
@@ -35,24 +33,24 @@ public class SkinCubeItemRenderer extends AbstractItemStackRenderer {
         if (itemStack.isEmpty()) {
             return;
         }
-        auto item = (SkinCubeItem) itemStack.getItem();
-        auto blockPaintColor = item.getItemColors(itemStack);
+        var item = (SkinCubeItem) itemStack.getItem();
+        var blockPaintColor = item.getItemColors(itemStack);
         if (blockPaintColor == null) {
             blockPaintColor = BlockPaintColor.WHITE;
         }
-        auto block = item.getBlock();
+        var block = item.getBlock();
 
-        boolean isGlowing = block.equals(ModBlocks.SKIN_CUBE_GLOWING.get()) || block.equals(ModBlocks.SKIN_CUBE_GLASS_GLOWING.get());
-        boolean isGlass = block.equals(ModBlocks.SKIN_CUBE_GLASS.get()) || block.equals(ModBlocks.SKIN_CUBE_GLASS_GLOWING.get());
+        var isGlowing = block.equals(ModBlocks.SKIN_CUBE_GLOWING.get()) || block.equals(ModBlocks.SKIN_CUBE_GLASS_GLOWING.get());
+        var isGlass = block.equals(ModBlocks.SKIN_CUBE_GLASS.get()) || block.equals(ModBlocks.SKIN_CUBE_GLASS_GLOWING.get());
 
-        auto renderType = SkinRenderType.BLOCK_CUBE;
+        var renderType = SkinRenderType.BLOCK_CUBE;
         if (isGlass) {
             renderType = SkinRenderType.BLOCK_CUBE_GLASS;
         }
         if (isGlowing) {
-            float f1 = 1 / 16.0f;
-            float f = 14 / 16.0f;
-            auto builder2 = bufferSource.getBuffer(renderType);
+            var f1 = 1 / 16.0f;
+            var f = 14 / 16.0f;
+            var builder2 = bufferSource.getBuffer(renderType);
             poseStack.pushPose();
             poseStack.translate(f1, f1, f1);
             poseStack.scale(f, f, f);
@@ -60,13 +58,13 @@ public class SkinCubeItemRenderer extends AbstractItemStackRenderer {
             poseStack.popPose();
             renderType = SkinRenderType.BLOCK_CUBE_GLASS_UNSORTED;
         }
-        auto builder1 = bufferSource.getBuffer(renderType);
+        var builder1 = bufferSource.getBuffer(renderType);
         renderCube(blockPaintColor, light, overlay, poseStack, builder1);
     }
 
     public void renderCube(BlockPaintColor blockPaintColor, int light, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
-        for (auto dir : Direction.values()) {
-            auto paintColor = blockPaintColor.getOrDefault(dir, PaintColor.WHITE);
+        for (var dir : Direction.values()) {
+            var paintColor = blockPaintColor.getOrDefault(dir, PaintColor.WHITE);
             ExtendedFaceRenderer.render2(0, 0, 0, dir, paintColor, 255, light, overlay, poseStack, builder);
         }
     }

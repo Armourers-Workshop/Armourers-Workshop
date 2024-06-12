@@ -11,9 +11,8 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
-import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import moe.plushie.armourers_workshop.utils.DataSerializerKey;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import moe.plushie.armourers_workshop.utils.TextureUtils;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
@@ -193,23 +192,12 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
         if (blockEntity == null) {
             return dir;
         }
-        switch (blockEntity.getFacing()) {
-            case SOUTH: {
-                // when block facing to south, we need to rotate 180° get facing north direction.
-                return Rotation.CLOCKWISE_180.rotate(dir);
-            }
-            case WEST: {
-                // when block facing to west, we need to rotate 90° get facing north direction.
-                return Rotation.CLOCKWISE_90.rotate(dir);
-            }
-            case EAST: {
-                // when block facing to east, we need to rotate -90° get facing north direction.
-                return Rotation.COUNTERCLOCKWISE_90.rotate(dir);
-            }
-            default: {
-                return dir;
-            }
-        }
+        return switch (blockEntity.getFacing()) {
+            case SOUTH -> Rotation.CLOCKWISE_180.rotate(dir); // rotate 180° get facing north direction.
+            case WEST -> Rotation.CLOCKWISE_90.rotate(dir); // rotate 90° get facing north direction.
+            case EAST -> Rotation.COUNTERCLOCKWISE_90.rotate(dir); // rotate -90° get facing north direction.
+            default -> dir;
+        };
     }
 
     private ArmourerBlockEntity getParentBlockEntity() {
@@ -220,13 +208,12 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
             }
             return cachedParentBlockEntity;
         }
-        Level level = getLevel();
+        var level = getLevel();
         if (level == null || parent == null) {
             return null;
         }
-        BlockPos target = getBlockPos().subtract(parent);
-        ArmourerBlockEntity blockEntity = ObjectUtils.safeCast(level.getBlockEntity(target), ArmourerBlockEntity.class);
-        if (blockEntity != null) {
+        var target = getBlockPos().subtract(parent);
+        if (level.getBlockEntity(target) instanceof ArmourerBlockEntity blockEntity) {
             cachedParentBlockEntity = blockEntity;
             return cachedParentBlockEntity;
         }

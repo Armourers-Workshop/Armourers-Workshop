@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 import moe.plushie.armourers_workshop.api.common.IEntityType;
 import moe.plushie.armourers_workshop.api.registry.IEntityTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractEntityRendererProvider;
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistries;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
@@ -91,8 +91,8 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
     }
 
     @Override
-    public IRegistryKey<IEntityType<T>> build(String name) {
-        IRegistryKey<EntityType<T>> object = AbstractFabricRegistries.ENTITY_TYPES.register(name, () -> builder.build());
+    public IRegistryHolder<IEntityType<T>> build(String name) {
+        IRegistryHolder<EntityType<T>> object = AbstractFabricRegistries.ENTITY_TYPES.register(name, () -> builder.build());
         Proxy<T> proxy = new Proxy<>(object);
         EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
         return TypedRegistry.Entry.of(object.getRegistryName(), () -> proxy);
@@ -100,9 +100,9 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
 
     public static class Proxy<T extends Entity> implements IEntityType<T> {
 
-        private final IRegistryKey<EntityType<T>> object;
+        private final IRegistryHolder<EntityType<T>> object;
 
-        public Proxy(IRegistryKey<EntityType<T>> object) {
+        public Proxy(IRegistryHolder<EntityType<T>> object) {
             this.object = object;
         }
 

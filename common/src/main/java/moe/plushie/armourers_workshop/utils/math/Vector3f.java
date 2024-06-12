@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.minecraft.core.Position;
 
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class Vector3f implements IVector3f, Position {
@@ -51,31 +52,6 @@ public class Vector3f implements IVector3f, Position {
 
     public Vector3f(float[] values) {
         set(values);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-        if (!(other instanceof Vector3f)) {
-            return false;
-        }
-        Vector3f pos = (Vector3f) other;
-        if (Float.compare(pos.x, x) != 0) {
-            return false;
-        }
-        if (Float.compare(pos.y, y) != 0) {
-            return false;
-        }
-        return Float.compare(pos.z, z) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        int i = Float.floatToIntBits(x);
-        i = 31 * i + Float.floatToIntBits(y);
-        return 31 * i + Float.floatToIntBits(z);
     }
 
     @Override
@@ -358,6 +334,18 @@ public class Vector3f implements IVector3f, Position {
 
     public List<Float> toList() {
         return Lists.newArrayList(x, y, z);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Vector3f that)) return false;
+        return Float.compare(x, that.x) == 0 && Float.compare(y, that.y) == 0 && Float.compare(z, that.z) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
     }
 
     @Override

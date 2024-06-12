@@ -24,9 +24,9 @@ public class FabricBlockEntityUpdatePacketMixin {
         }
         ClientboundBlockEntityDataPacket packet = ObjectUtils.unsafeCast(this);
         BlockEntity blockEntity = level.getBlockEntity(packet.getPos());
-        if (blockEntity instanceof IBlockEntityHandler) {
+        if (blockEntity instanceof IBlockEntityHandler entityHandler) {
             AbstractDataSerializer serializer = AbstractDataSerializer.wrap(packet.getTag(), level.registryAccess());
-            ((IBlockEntityHandler) blockEntity).handleUpdatePacket(blockEntity.getBlockState(), serializer);
+            entityHandler.handleUpdatePacket(blockEntity.getBlockState(), serializer);
         }
     }
 }

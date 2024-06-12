@@ -3,6 +3,8 @@ package moe.plushie.armourers_workshop.utils.math;
 import moe.plushie.armourers_workshop.api.math.ISize2i;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 
+import java.util.Objects;
+
 @SuppressWarnings("unused")
 public class Size2f {
 
@@ -22,6 +24,18 @@ public class Size2f {
 
     public float getHeight() {
         return height;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Size2f that)) return false;
+        return Float.compare(width, that.width) == 0 && Float.compare(height, that.height) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(width, height);
     }
 
     @Override

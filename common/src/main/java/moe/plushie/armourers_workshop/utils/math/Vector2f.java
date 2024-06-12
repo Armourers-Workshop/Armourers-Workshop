@@ -67,8 +67,8 @@ public class Vector2f implements IVector2f {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Vector2f vector2f)) return false;
-        return Float.compare(vector2f.x, x) == 0 && Float.compare(vector2f.y, y) == 0;
+        if (!(o instanceof Vector2f that)) return false;
+        return Float.compare(that.x, x) == 0 && Float.compare(that.y, y) == 0;
     }
 
     @Override

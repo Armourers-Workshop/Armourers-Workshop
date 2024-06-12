@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.render;
 
 import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractLivingEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.model.MannequinArmorModel;
@@ -15,8 +16,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
-
-import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class MannequinEntityRenderer<T extends MannequinEntity> extends AbstractLivingEntityRenderer<T, MannequinModel<T>> {
@@ -34,7 +33,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
 
     private MannequinEntityRenderer<T> mannequinRenderer;
 
-    private ResourceLocation texture;
+    private IResourceLocation texture;
     private BakedEntityTexture bakedTexture;
 
     private boolean modelState = false;
@@ -43,7 +42,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
     public MannequinEntityRenderer(Context context) {
         super(context, MannequinModel.normal(context), 0.0f);
         // two models by mannequin, only deciding which model using when texture specified.
-        auto provider = getLayerProvider();
+        var provider = getLayerProvider();
         this.context = context;
         this.normalModel = super.getModel();
         this.slimModel = MannequinModel.slim(context);
@@ -68,7 +67,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
             this.getChildRenderer().render(entity, f, partialTicks, poseStack, bufferSource, packedLightIn);
             return;
         }
-        auto textureLoader = PlayerTextureLoader.getInstance();
+        var textureLoader = PlayerTextureLoader.getInstance();
         this.texture = textureLoader.getTextureLocation(entity);
         this.bakedTexture = textureLoader.getTextureModel(texture);
         this.applyTextureModel(bakedTexture);
@@ -78,7 +77,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
         this.enableChildRenderer = false;
         if (ModDebugger.mannequinCulling) {
             poseStack.pushPose();
-            auto box = entity.getBoundingBoxForCulling();
+            var box = entity.getBoundingBoxForCulling();
             double tx = -box.minX - (box.maxX - box.minX) / 2;
             double ty = -box.minY;
             double tz = -box.minZ - (box.maxZ - box.minZ) / 2;
@@ -99,7 +98,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
 
     @Override
     public ResourceLocation getTextureLocation(T entity) {
-        return texture;
+        return texture.toLocation();
     }
 
     public MannequinEntityRenderer<T> getChildRenderer() {

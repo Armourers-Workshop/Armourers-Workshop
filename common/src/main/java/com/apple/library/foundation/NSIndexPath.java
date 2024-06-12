@@ -16,8 +16,7 @@ public class NSIndexPath {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof NSIndexPath)) return false;
-        NSIndexPath that = (NSIndexPath) o;
+        if (!(o instanceof NSIndexPath that)) return false;
         return row == that.row && section == that.section;
     }
 

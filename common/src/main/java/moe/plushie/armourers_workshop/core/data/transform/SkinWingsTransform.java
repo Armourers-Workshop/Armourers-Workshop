@@ -31,7 +31,7 @@ public class SkinWingsTransform implements ISkinTransform {
 
     public void setup(@Nullable Entity entity, float partialTicks) {
         this.partialTicks = partialTicks;
-        this.isFallFlying = entity instanceof LivingEntity && ((LivingEntity) entity).isFallFlying();
+        this.isFallFlying = entity instanceof LivingEntity livingEntity && livingEntity.isFallFlying();
     }
 
     @Override
@@ -81,20 +81,13 @@ public class SkinWingsTransform implements ISkinTransform {
     }
 
     private Vector3f getRotationMatrix() {
-        switch (marker.getDirection()) {
-            case UP:
-                return Vector3f.YP;
-            case DOWN:
-                return Vector3f.YN;
-            case SOUTH:
-                return Vector3f.ZN;
-            case NORTH:
-                return Vector3f.ZP;
-            case EAST:
-                return Vector3f.XP;
-            case WEST:
-                return Vector3f.XN;
-        }
-        return Vector3f.YP;
+        return switch (marker.getDirection()) {
+            case UP -> Vector3f.YP;
+            case DOWN -> Vector3f.YN;
+            case SOUTH -> Vector3f.ZN;
+            case NORTH -> Vector3f.ZP;
+            case EAST -> Vector3f.XP;
+            case WEST -> Vector3f.XN;
+        };
     }
 }

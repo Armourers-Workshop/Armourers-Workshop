@@ -4,11 +4,11 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.permission.IPermissionContext;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.api.registry.IPermissionNodeBuilder;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPermissionNodeBuilder<T> {
 
@@ -19,13 +19,13 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
 
     @Override
     public T build(String name) {
-        ResourceLocation registryName = ModConstants.key(name);
+        IResourceLocation registryName = ModConstants.key(name);
         ModLog.debug("Registering Permission '{}'", registryName);
         return ObjectUtils.unsafeCast(makeNode(registryName));
     }
 
-    private IPermissionNode makeNode(ResourceLocation registryName) {
-        String key = registryName.getNamespace() + "." + registryName.getPath();
+    private IPermissionNode makeNode(IResourceLocation registryName) {
+        String key = registryName.toLanguageKey();
         return new IPermissionNode() {
 
             @Override
@@ -39,7 +39,7 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
             }
 
             @Override
-            public ResourceLocation getRegistryName() {
+            public IResourceLocation getRegistryName() {
                 return registryName;
             }
 

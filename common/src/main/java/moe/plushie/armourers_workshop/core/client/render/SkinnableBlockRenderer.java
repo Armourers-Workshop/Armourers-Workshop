@@ -23,8 +23,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Supplier;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends AbstractBlockEntityRenderer<T> {
 
@@ -37,8 +35,8 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
 
     @Override
     public void render(T entity, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
-        auto descriptor = entity.getDescriptor();
-        auto skin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
+        var descriptor = entity.getDescriptor();
+        var skin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
         if (skin == null) {
             return;
         }

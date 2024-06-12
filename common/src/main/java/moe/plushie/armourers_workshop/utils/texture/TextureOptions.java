@@ -50,26 +50,20 @@ public class TextureOptions implements ITextureOptions {
     }
 
     private int opt2rot(int opt) {
-        switch (opt) {
-            case 0x01:
-                return 90;
-            case 0x02:
-                return 180;
-            case 0x03:
-                return 270;
-        }
-        return 0;
+        return switch (opt) {
+            case 0x01 -> 90;
+            case 0x02 -> 180;
+            case 0x03 -> 270;
+            default -> 0;
+        };
     }
 
     private int rot2opt(int rot) {
-        switch (rot) {
-            case 90:
-                return 0x01;
-            case 180:
-                return 0x02;
-            case 270:
-                return 0x03;
-        }
-        return 0;
+        return switch (rot) {
+            case 90 -> 0x01;
+            case 180 -> 0x02;
+            case 270 -> 0x03;
+            default -> 0;
+        };
     }
 }

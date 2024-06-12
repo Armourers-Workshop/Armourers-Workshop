@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
-import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderObject;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderState;
 import moe.plushie.armourers_workshop.core.client.other.VertexArrayBuffer;
@@ -13,8 +12,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 import org.lwjgl.opengl.GL11;
-
-import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public abstract class Shader {
@@ -85,7 +82,7 @@ public abstract class Shader {
     public void render(ShaderVertexObject object) {
         int vertexes = toTriangleVertex(object.getVertexCount());
         int maxVertexes = toTriangleVertex(lastMaxVertexCount);
-        auto entry = object.getPoseStack().last();
+        var entry = object.getPoseStack().last();
 
         // we need fast update the uniforms,
         // so we're never using from vanilla uniforms.
@@ -101,7 +98,7 @@ public abstract class Shader {
         // the vertex offset no longer supported in vanilla,
         // so we need a special version of the format setup.
         object.getVertexBuffer().bind();
-        setupVertexFormat(object.getFormat(), object.getVertexOffset());
+        object.getFormat().setupBufferState(object.getVertexOffset());
         setupPolygonState(object);
 
         // in the newer version rendering system, we will use a shader.
@@ -112,7 +109,7 @@ public abstract class Shader {
         draw(object.getType(), indexBuffer.type(), vertexes, 0);
 
         cleanPolygonState(object);
-        cleanVertexFormat(object.getFormat());
+        object.getFormat().clearBufferState();
     }
 
     protected abstract void draw(RenderType renderType, VertexIndexBuffer.IndexType indexType, int count, int indices);
@@ -135,20 +132,6 @@ public abstract class Shader {
             RenderSystem.polygonOffset(0f, 0f);
             RenderSystem.disablePolygonOffset();
         }
-    }
-
-    private void setupVertexFormat(VertexFormat format, int offset) {
-        int strict = format.getVertexSize();
-        auto elements = format.getElements();
-        for (int index = 0; index < elements.size(); ++index) {
-            auto element = elements.get(index);
-            element.setupBufferState(index, offset, strict);
-            offset += element.getByteSize();
-        }
-    }
-
-    private void cleanVertexFormat(VertexFormat vertexFormat) {
-        vertexFormat.clearBufferState();
     }
 
     private OpenMatrix4f getLightmapTextureMatrix(ShaderVertexObject object) {

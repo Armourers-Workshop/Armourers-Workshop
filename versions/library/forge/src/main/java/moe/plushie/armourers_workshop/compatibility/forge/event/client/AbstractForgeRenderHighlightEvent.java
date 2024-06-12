@@ -9,14 +9,14 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.phys.BlockHitResult;
 
-@Available("[1.19, )")
+@Available("[1.21, )")
 public class AbstractForgeRenderHighlightEvent {
 
     public static IEventHandler<RenderHighlightEvent.Block> blockFactory() {
         return AbstractForgeClientEventsImpl.RENDER_HIGHLIGHT_BLOCK.map(event -> new RenderHighlightEvent.Block() {
             @Override
             public float getPartialTick() {
-                return event.getPartialTick();
+                return event.getDeltaTracker().getGameTimeDeltaTicks();
             }
 
             @Override

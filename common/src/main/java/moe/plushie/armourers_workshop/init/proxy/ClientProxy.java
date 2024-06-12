@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
-import moe.plushie.armourers_workshop.api.common.IResourceManager;
 import moe.plushie.armourers_workshop.builder.client.render.PaintingHighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
@@ -50,10 +49,10 @@ import moe.plushie.armourers_workshop.library.data.impl.MinecraftAuth;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.TypedRegistry;
+import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.InteractionHand;
@@ -64,8 +63,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 
 import java.util.stream.Stream;
-
-import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class ClientProxy {
@@ -114,9 +111,9 @@ public class ClientProxy {
 
         // register custom model.
         EventManager.listen(RegisterModelEvent.class, event -> SkinPartTypes.registeredTypes().forEach(partType -> {
-            ResourceLocation rl = ArmourersWorkshop.getCustomModel(partType.getRegistryName());
-            IResourceManager resourceManager = Minecraft.getInstance().getResourceManager().asResourceManager();
-            if (resourceManager.hasResource(new ResourceLocation(rl.getNamespace(), "models/item/" + rl.getPath() + ".json"))) {
+            var rl = ArmourersWorkshop.getCustomModel(partType.getRegistryName());
+            var resourceManager = Minecraft.getInstance().getResourceManager().asResourceManager();
+            if (resourceManager.hasResource(OpenResourceLocation.create(rl.getNamespace(), "models/item/" + rl.getPath() + ".json"))) {
                 event.register(rl);
             }
         }));
@@ -160,7 +157,7 @@ public class ClientProxy {
 
         // listen the block highlight events.
         EventManager.listen(RenderHighlightEvent.Block.class, event -> {
-            auto player = EnvironmentManager.getPlayer();
+            var player = EnvironmentManager.getPlayer();
             if (player == null) {
                 return;
             }
@@ -172,8 +169,8 @@ public class ClientProxy {
             //         return;
             //     }
             // }
-            auto poseStack = AbstractPoseStack.wrap(event.getPoseStack());
-            auto buffers = AbstractBufferSource.wrap(event.getMultiBufferSource());
+            var poseStack = AbstractPoseStack.wrap(event.getPoseStack());
+            var buffers = AbstractBufferSource.wrap(event.getMultiBufferSource());
             ItemStack itemStack = player.getMainHandItem();
             if (ModConfig.Client.enableEntityPlacementHighlight && itemStack.is(ModItems.MANNEQUIN.get())) {
                 HighlightPlacementRenderer.renderEntity(player, event.getTarget(), event.getCamera(), poseStack, buffers);
@@ -200,7 +197,7 @@ public class ClientProxy {
             if (!ModConfig.enableFirstPersonSkinRenderer()) {
                 return;
             }
-            auto transformType = AbstractItemTransformType.FIRST_PERSON_LEFT_HAND;
+            var transformType = AbstractItemTransformType.FIRST_PERSON_LEFT_HAND;
             if (event.getHand() == InteractionHand.MAIN_HAND) {
                 transformType = AbstractItemTransformType.FIRST_PERSON_RIGHT_HAND;
             }

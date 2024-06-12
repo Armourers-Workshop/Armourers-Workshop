@@ -46,19 +46,6 @@ public class Rectangle3i implements IRectangle3i {
         this(list[0], list[1], list[2], list[3], list[4], list[5]);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Rectangle3i that = (Rectangle3i) o;
-        return x == that.x && y == that.y && z == that.z && width == that.width && height == that.height && depth == that.depth;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y, z, width, height, depth);
-    }
-
     public int getX() {
         return this.x;
     }
@@ -232,6 +219,18 @@ public class Rectangle3i implements IRectangle3i {
 
     public List<Integer> toList() {
         return Lists.newArrayList(x, y, z, width, height, depth);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Rectangle3i that)) return false;
+        return x == that.x && y == that.y && z == that.z && width == that.width && height == that.height && depth == that.depth;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z, width, height, depth);
     }
 
     @Override

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.painting;
 
 import moe.plushie.armourers_workshop.core.skin.SkinDyeType;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.utils.SkinResourceLocation;
+import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,7 +65,7 @@ public final class SkinPaintTypes {
 
     private static SkinPaintType register(String name, int id, int index) {
         SkinPaintType paintType = new SkinPaintType(index, id);
-        paintType.setRegistryName(new SkinResourceLocation("armourers", name));
+        paintType.setRegistryName(OpenResourceLocation.create("armourers", name));
         if (ALL_PAINT_TYPES.containsKey(paintType.getRegistryName().toString())) {
             ModLog.warn("A mod tried to register a paint type with an id that is in use.");
             return paintType;

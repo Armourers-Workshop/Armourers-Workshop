@@ -21,8 +21,7 @@ public class UploadSkinPacket extends CustomPacket {
 
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
-        if (player.containerMenu instanceof GlobalSkinLibraryMenu) {
-            GlobalSkinLibraryMenu container = (GlobalSkinLibraryMenu) player.containerMenu;
+        if (player.containerMenu instanceof GlobalSkinLibraryMenu container) {
             container.crafting();
         }
     }

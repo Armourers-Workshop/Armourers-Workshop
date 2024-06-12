@@ -3,14 +3,13 @@ package com.apple.library.impl;
 import com.apple.library.coregraphics.CGRect;
 import com.google.common.base.Objects;
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL32;
@@ -20,8 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Stack;
 import java.util.function.BiConsumer;
-
-import manifold.ext.rt.api.auto;
 
 public class ClipContextImpl {
 
@@ -156,7 +153,8 @@ public class ClipContextImpl {
             int readTargetId = GL30.glGetInteger(GL30.GL_READ_FRAMEBUFFER_BINDING);
             int drawTargetId = GL30.glGetInteger(GL30.GL_DRAW_FRAMEBUFFER_BINDING);
 
-            auto buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+//            var buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+            IBufferSource buffers = null;
             int mainTextureId = GL30.glGetFramebufferAttachmentParameteri(GL30.GL_READ_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL30.GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);
 
             GL30.glDisable(GL30.GL_SCISSOR_TEST);
@@ -170,7 +168,7 @@ public class ClipContextImpl {
                 GL30.glStencilFunc(GL30.GL_ALWAYS, 1, 0xFF);
                 GL30.glStencilOp(GL30.GL_REPLACE, GL30.GL_REPLACE, GL30.GL_REPLACE);
 
-                VertexConsumer maskBuilder = buffers.getBuffer(SkinRenderType.BLIT_MASK);
+                var maskBuilder = buffers.getBuffer(SkinRenderType.BLIT_MASK);
                 passes.forEach(it -> buffer.mask(it.destination, maskBuilder));
                 buffers.endBatch();
 
@@ -178,7 +176,7 @@ public class ClipContextImpl {
                 GL30.glStencilOp(GL30.GL_KEEP, GL30.GL_KEEP, GL30.GL_KEEP);
 
                 RenderSystem.setShaderTexture(0, mainTextureId);
-                VertexConsumer blitBuilder = buffers.getBuffer(SkinRenderType.BLIT_IMAGE);
+                var blitBuilder = buffers.getBuffer(SkinRenderType.BLIT_IMAGE);
                 passes.forEach(it -> buffer.blit(it.source, it.destination, blitBuilder));
                 buffers.endBatch();
 
@@ -267,9 +265,8 @@ public class ClipContextImpl {
             @Override
             public boolean equals(Object o) {
                 if (this == o) return true;
-                if (!(o instanceof Pass)) return false;
-                Pass pass = (Pass) o;
-                return destination.equals(pass.destination);
+                if (!(o instanceof Pass that)) return false;
+                return destination.equals(that.destination);
             }
 
             @Override
@@ -373,7 +370,7 @@ public class ClipContextImpl {
                 GL30.glBlitFramebuffer(sx0, fh - sy0, sx1, fh - sy1, dx0, fh - dy0, dx1, fh - dy1, GL30.GL_COLOR_BUFFER_BIT, GL30.GL_NEAREST);
             }
 
-            public void blit(CGRect src, CGRect dst, VertexConsumer buffer) {
+            public void blit(CGRect src, CGRect dst, IVertexConsumer buffer) {
                 float sw = 1 / line.maxWidth;
                 float sh = 1 / line.maxHeight;
                 buffer.vertex(dst.getMinX(), dst.getMinY(), 1f).uv(src.getMinX() * sw, 1f - src.getMinY() * sh).color(255, 255, 255, 255).endVertex();
@@ -382,7 +379,7 @@ public class ClipContextImpl {
                 buffer.vertex(dst.getMaxX(), dst.getMinY(), 1f).uv(src.getMaxX() * sw, 1f - src.getMinY() * sh).color(255, 255, 255, 255).endVertex();
             }
 
-            public void mask(CGRect src, VertexConsumer buffer) {
+            public void mask(CGRect src, IVertexConsumer buffer) {
                 float x = src.getMaxX();
                 float y = src.getMaxY();
                 float width = src.getWidth();
@@ -453,9 +450,8 @@ public class ClipContextImpl {
             @Override
             public boolean equals(Object o) {
                 if (this == o) return true;
-                if (!(o instanceof Buffer)) return false;
-                Buffer buffer = (Buffer) o;
-                return frameBufferId == buffer.frameBufferId;
+                if (!(o instanceof Buffer that)) return false;
+                return frameBufferId == that.frameBufferId;
             }
 
             @Override

@@ -52,7 +52,7 @@ public class AdvancedImportPacket extends CustomPacket {
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // this is an unauthorized operation, ignore it
         BlockEntity blockEntity = player.getLevel().getBlockEntity(pos);
-        if (!(blockEntity instanceof AdvancedBuilderBlockEntity) || !(player.containerMenu instanceof AdvancedBuilderMenu) || skin == null) {
+        if (!(blockEntity instanceof AdvancedBuilderBlockEntity blockEntity1) || !(player.containerMenu instanceof AdvancedBuilderMenu) || skin == null) {
             abort(player, "unauthorized", "user status is incorrect or the skin is invalid");
             return;
         }
@@ -70,7 +70,6 @@ public class AdvancedImportPacket extends CustomPacket {
             return;
         }
         SkinDocumentNode node = null;
-        AdvancedBuilderBlockEntity blockEntity1 = (AdvancedBuilderBlockEntity) blockEntity;
         if (!target.isEmpty()) {
             node = blockEntity1.getDocument().nodeById(target);
             if (node == null) {

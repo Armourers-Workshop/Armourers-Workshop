@@ -35,8 +35,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBuilder {
 
@@ -64,8 +62,8 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
     @Override
     public int addPart(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, boolean shouldRender, SkinRenderContext context) {
         // debug the vbo render.
-        if (ModDebugger.vertexBufferObject) {
-            return draw(part, bakedSkin, scheme, context.getOverlay(), context);
+        if (ModDebugger.vbo) {
+            return drawWithoutVBO(part, bakedSkin, scheme, context.getOverlay(), context);
         }
         CachedTask cachedTask = compile(part, bakedSkin, scheme, context.getOverlay());
         if (cachedTask != null) {
@@ -80,25 +78,25 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
     @Override
     public void addShape(Vector3f origin, SkinRenderContext context) {
-        auto buffers = AbstractBufferSource.defaultBufferSource();
+        var buffers = AbstractBufferSource.buffer();
 //        RenderUtils.drawBoundingBox(poseStack, box, color, SkinRenderBuffer.getInstance());
         ShapeTesselator.vector(origin, 16, context.pose(), buffers);
     }
 
     @Override
     public void addShape(OpenVoxelShape shape, UIColor color, SkinRenderContext context) {
-        auto buffers = AbstractBufferSource.defaultBufferSource();
+        var buffers = AbstractBufferSource.buffer();
         ShapeTesselator.stroke(shape.bounds(), color, context.pose(), buffers);
     }
 
     @Override
     public void addShape(BakedArmature armature, SkinRenderContext context) {
-        auto buffers = AbstractBufferSource.defaultBufferSource();
-        auto transforms = armature.getTransforms();
-        auto armature1 = armature.getArmature();
-        for (auto joint : armature1.allJoints()) {
-            auto shape = armature1.getShape(joint.getId());
-            auto transform = transforms[joint.getId()];
+        var buffers = AbstractBufferSource.buffer();
+        var transforms = armature.getTransforms();
+        var armature1 = armature.getArmature();
+        for (var joint : armature1.allJoints()) {
+            var shape = armature1.getShape(joint.getId());
+            var transform = transforms[joint.getId()];
             if (ModDebugger.defaultArmature) {
                 transform = armature1.getGlobalTransform(joint.getId());
             }
@@ -119,9 +117,9 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
     }
 
     @Nullable
-    public CachedTask compile(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, int overlay) {
-        auto key = SkinCache.borrowKey(bakedSkin.getId(), part.getId(), part.requirements(scheme), overlay);
-        auto cachedTask = cachingTasks.getIfPresent(key);
+    private CachedTask compile(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, int overlay) {
+        var key = SkinCache.borrowKey(bakedSkin.getId(), part.getId(), part.requirements(scheme), overlay);
+        var cachedTask = cachingTasks.getIfPresent(key);
         if (cachedTask != null) {
             SkinCache.returnKey(key);
             if (cachedTask.isCompiled) {
@@ -158,13 +156,13 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 //        long startTime = System.currentTimeMillis();
         OpenPoseStack poseStack1 = new OpenPoseStack();
         ArrayList<CompiledTask> buildingTasks = new ArrayList<>();
-        for (CachedTask task : tasks) {
-            int overlay = task.overlay;
-            BakedSkinPart part = task.part;
-            ColorScheme scheme = task.scheme;
-            ArrayList<CompiledTask> mergedTasks = new ArrayList<>();
+        for (var task : tasks) {
+            var overlay = task.overlay;
+            var part = task.part;
+            var scheme = task.scheme;
+            var mergedTasks = new ArrayList<CompiledTask>();
             part.forEach((renderType, quads) -> {
-                auto builder = new AbstractBufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
+                var builder = new AbstractBufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
                 builder.begin(renderType);
                 quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, overlay, poseStack1, builder));
                 IRenderedBuffer renderedBuffer = builder.end();
@@ -179,9 +177,9 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 //        ModLog.debug("compile tasks {}, times: {}ms", tasks.size(), totalTime);
     }
 
-    private int draw(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, int overlay, SkinRenderContext context) {
-        auto buffers = context.getBuffers();
-        auto poseStack1 = context.pose();
+    private int drawWithoutVBO(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, int overlay, SkinRenderContext context) {
+        var buffers = context.getBuffers();
+        var poseStack1 = context.pose();
 //        CachedTask task = new CachedTask(part, scheme, overlay);
 //        ArrayList<CompiledTask> mergedTasks = new ArrayList<>();
         part.forEach((renderType, quads) -> {
@@ -197,23 +195,32 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         return 1;
     }
 
+    private int drawWithVBO(CachedTask task, SkinRenderContext context) {
+        CachedRenderPipeline pipeline1 = new CachedRenderPipeline();
+        pipeline1.draw(task, context);
+        SkinVertexBufferBuilder.Pipeline pipeline2 = new SkinVertexBufferBuilder.Pipeline();
+        pipeline1.commit(pipeline2::add);
+        pipeline2.end();
+        return task.totalTask;
+    }
+
     private void combineAndUpload(ArrayList<CachedTask> qt, ArrayList<CompiledTask> buildingTasks) {
         int totalRenderedBytes = 0;
         SkinRenderObject vertexBuffer = new SkinRenderObject();
         ArrayList<ByteBuffer> byteBuffers = new ArrayList<>();
 
-        for (CompiledTask compiledTask : buildingTasks) {
-            auto drawState = compiledTask.bufferBuilder.drawState();
-            auto format = drawState.format();
-            auto byteBuffer = compiledTask.bufferBuilder.vertexBuffer();
+        for (var compiledTask : buildingTasks) {
+            var renderedBuffer = compiledTask.bufferBuilder;
+            var format = renderedBuffer.format();
+            var byteBuffer = renderedBuffer.vertexBuffer().duplicate();
             compiledTask.vertexBuffer = vertexBuffer;
-            compiledTask.vertexCount = drawState.vertexCount();
+            compiledTask.vertexCount = renderedBuffer.vertexCount();
             compiledTask.vertexOffset = totalRenderedBytes;
-            compiledTask.bufferBuilder.release();
             compiledTask.bufferBuilder = null;
             compiledTask.format = format;
             byteBuffers.add(byteBuffer);
             totalRenderedBytes += byteBuffer.remaining();
+            renderedBuffer.release();
         }
 
         ByteBuffer mergedByteBuffer = ByteBuffer.allocateDirect(totalRenderedBytes);
@@ -298,11 +305,11 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
             int lightmap = context.getLightmap();
             float animationTicks = context.getAnimationTicks();
             float renderPriority = context.getReferenced().getRenderPriority();
-            auto poseStack = context.pose();
-            auto modelViewStack = RenderSystem.getExtendedModelViewStack();
-            auto finalPostStack = new OpenPoseStack();
-            auto lastPose = finalPostStack.last().pose();
-            auto lastNormal = finalPostStack.last().normal();
+            var poseStack = context.pose();
+            var modelViewStack = RenderSystem.getExtendedModelViewStack();
+            var finalPostStack = new OpenPoseStack();
+            var lastPose = finalPostStack.last().pose();
+            var lastNormal = finalPostStack.last().normal();
             // https://web.archive.org/web/20240125142900/http://www.songho.ca/opengl/gl_normaltransform.html
             //finalPostStack.last().setProperties(poseStack.last().properties());
             lastPose.multiply(modelViewStack.last().pose());
@@ -315,7 +322,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         }
 
         void commit(Consumer<ShaderVertexObject> consumer) {
-            if (tasks.size() != 0) {
+            if (!tasks.isEmpty()) {
                 tasks.forEach(consumer);
                 tasks.clear();
             }

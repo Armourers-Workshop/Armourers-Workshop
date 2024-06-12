@@ -70,9 +70,8 @@ public class SkyBox {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SkyBox)) return false;
-        SkyBox skyBox = (SkyBox) o;
-        return mirror == skyBox.mirror && rect.equals(skyBox.rect) && textureRect.equals(skyBox.textureRect);
+        if (!(o instanceof SkyBox that)) return false;
+        return mirror == that.mirror && rect.equals(that.rect) && textureRect.equals(that.textureRect);
     }
 
     @Override

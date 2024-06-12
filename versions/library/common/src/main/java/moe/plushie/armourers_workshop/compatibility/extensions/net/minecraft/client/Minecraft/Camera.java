@@ -6,14 +6,13 @@ import net.minecraft.client.Minecraft;
 
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
-import manifold.ext.rt.api.auto;
 
 @Extension
 @Available("[1.20, )")
 public class Camera {
 
     public static OpenQuaternionf getCameraOrientation(@This Minecraft minecraft) {
-        auto quat = minecraft.getEntityRenderDispatcher().cameraOrientation();
+        var quat = minecraft.getEntityRenderDispatcher().cameraOrientation();
         return new OpenQuaternionf(quat.x, quat.y, quat.z, quat.w);
     }
 }

@@ -1,59 +1,65 @@
 package moe.plushie.armourers_workshop.compatibility.client;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 
+@Available("[1.21, )")
 public class AbstractVertexConsumer implements IVertexConsumer {
 
-    private VertexConsumer builder;
+    protected VertexConsumer parent;
 
-    public AbstractVertexConsumer(VertexConsumer builder) {
-        this.builder = builder;
+    protected AbstractVertexConsumer(VertexConsumer parent) {
+        this.parent = parent;
+    }
+
+    public static AbstractVertexConsumer of(VertexConsumer parent) {
+        return new AbstractVertexConsumer(parent);
     }
 
     @Override
-    public IVertexConsumer vertex(double d, double e, double f) {
-        this.builder = builder.vertex(d, e, f);
+    public IVertexConsumer vertex(float x, float y, float z) {
+        this.parent = parent.addVertex(x, y, z);
         return this;
     }
 
     @Override
     public IVertexConsumer color(int i, int j, int k, int l) {
-        this.builder = builder.color(i, j, k, l);
+        this.parent = parent.setColor(i, j, k, l);
         return this;
     }
 
     @Override
     public IVertexConsumer uv(float f, float g) {
-        this.builder = builder.uv(f, g);
+        this.parent = parent.setUv(f, g);
         return this;
     }
 
     @Override
     public IVertexConsumer overlayCoords(int i, int j) {
-        this.builder = builder.overlayCoords(i, j);
+        this.parent = parent.setUv1(i, j);
         return this;
     }
 
     @Override
     public IVertexConsumer uv2(int i, int j) {
-        this.builder = builder.uv2(i, j);
+        this.parent = parent.setUv2(i, j);
         return this;
     }
 
     @Override
     public IVertexConsumer normal(float f, float g, float h) {
-        this.builder = builder.normal(f, g, h);
+        this.parent = parent.setNormal(f, g, h);
         return this;
     }
 
     @Override
     public void endVertex() {
-        builder.endVertex();
+        //builder.endVertex();
     }
 
     @Override
-    public void vertex(float f, float g, float h, float i, float j, float k, float l, float m, float n, int o, int p, float q, float r, float s) {
-        builder.vertex(f, g, h, i, j, k, l, m, n, o, p, q, r, s);
+    public void vertex(float x, float y, float z, int color, float u, float v, int overlay, int light, float nx, float ny, float nz) {
+        parent.addVertex(x, y, z, color, u, v, overlay, light, nx, ny, nz);
     }
 }

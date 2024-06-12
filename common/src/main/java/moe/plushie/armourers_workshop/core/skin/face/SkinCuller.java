@@ -133,7 +133,7 @@ public class SkinCuller {
         openList.add(start);
         closedSet.add(start);
         map.limit(rect);
-        while (openList.size() > 0) {
+        while (!openList.isEmpty()) {
             ArrayList<Vector3i> pendingList = new ArrayList<>();
             Vector3i pos = openList.poll();
             for (Direction advance : Direction.values()) {

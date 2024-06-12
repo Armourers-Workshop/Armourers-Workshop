@@ -17,7 +17,7 @@ public class RenderStateMixin implements IRenderAttachable {
 
     @Override
     public void attachRenderTask(IVertexConsumer buffer, Runnable runnable) {
-        Runnable oldAttachment = aw2$attachment;
+        var oldAttachment = aw2$attachment;
         aw2$attachment = runnable;
         if (oldAttachment != null) {
             return;
@@ -25,7 +25,7 @@ public class RenderStateMixin implements IRenderAttachable {
         // we still need to add a placeholder block to the vertex buffer,
         // otherwise RenderType.clearRenderState maybe ignore of the empty vertexes.
         for (int i = 0; i < 4; ++i) {
-            buffer.vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            buffer.vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
     }
 

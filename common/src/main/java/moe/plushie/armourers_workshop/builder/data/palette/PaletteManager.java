@@ -144,8 +144,8 @@ public class PaletteManager {
 
     private JsonArray intToJsonArray(UIColor[] intArray) {
         JsonArray jsonArray = new JsonArray();
-        for (int i = 0; i < intArray.length; i++) {
-            jsonArray.add(colorToHex(intArray[i]));
+        for (UIColor color : intArray) {
+            jsonArray.add(colorToHex(color));
         }
         return jsonArray;
     }

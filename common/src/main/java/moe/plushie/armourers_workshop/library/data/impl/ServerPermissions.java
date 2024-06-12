@@ -19,16 +19,12 @@ public class ServerPermissions {
     }
 
     public static ServerPermissions byId(int groupId) {
-        switch (groupId) {
-            case 0:
-                return USER;
-            case 1:
-                return MOD;
-            case 255:
-                return ADMIN;
-            default:
-                return NO_LOGIN;
-        }
+        return switch (groupId) {
+            case 0 -> USER;
+            case 1 -> MOD;
+            case 255 -> ADMIN;
+            default -> NO_LOGIN;
+        };
     }
 
     public String getName() {

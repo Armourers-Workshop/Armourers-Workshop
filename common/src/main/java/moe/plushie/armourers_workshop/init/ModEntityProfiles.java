@@ -3,13 +3,13 @@ package moe.plushie.armourers_workshop.init;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.Nullable;
@@ -26,10 +26,10 @@ public class ModEntityProfiles {
     private static final ArrayList<BiConsumer<IEntityTypeProvider<?>, EntityProfile>> INSERT_HANDLERS = new ArrayList<>();
     private static final ArrayList<BiConsumer<IEntityTypeProvider<?>, EntityProfile>> REMOVE_HANDLERS = new ArrayList<>();
 
-    private static final HashMap<ResourceLocation, EntityProfile> PENDING_ENTITY_PROFILES = new HashMap<>();
+    private static final HashMap<IResourceLocation, EntityProfile> PENDING_ENTITY_PROFILES = new HashMap<>();
     private static final HashMap<IEntityTypeProvider<?>, EntityProfile> PENDING_ENTITIES = new HashMap<>();
 
-    private static final HashMap<ResourceLocation, EntityProfile> ALL_ENTITY_PROFILES = new HashMap<>();
+    private static final HashMap<IResourceLocation, EntityProfile> ALL_ENTITY_PROFILES = new HashMap<>();
     private static final HashMap<IEntityTypeProvider<?>, EntityProfile> ALL_ENTITIES = new HashMap<>();
 
     private static BiConsumer<IEntityTypeProvider<?>, EntityProfile> dispatch(ArrayList<BiConsumer<IEntityTypeProvider<?>, EntityProfile>> consumers) {
@@ -62,7 +62,7 @@ public class ModEntityProfiles {
     }
 
     @Nullable
-    public static EntityProfile getProfile(ResourceLocation registryName) {
+    public static EntityProfile getProfile(IResourceLocation registryName) {
         return ALL_ENTITY_PROFILES.get(registryName);
     }
 
@@ -70,17 +70,17 @@ public class ModEntityProfiles {
 
         private boolean locked = false;
 
-        private final ResourceLocation registryName;
+        private final IResourceLocation registryName;
 
         private final ArrayList<IEntityTypeProvider<?>> entities = new ArrayList<>();
         private final LinkedHashMap<SkinSlotType, Function<SkinSlotType, Integer>> supports = new LinkedHashMap<>();
 
-        public SimpleLoader(ResourceLocation registryName) {
+        public SimpleLoader(IResourceLocation registryName) {
             this.registryName = ModConstants.key(SkinFileUtils.getBaseName(registryName.getPath()));
         }
 
         @Override
-        public void append(IDataPackObject object, ResourceLocation location) {
+        public void append(IDataPackObject object, IResourceLocation location) {
             if (object.get("replace").boolValue()) {
                 locked = false;
                 supports.clear();

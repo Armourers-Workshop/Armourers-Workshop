@@ -101,12 +101,11 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
                 changes.setCompoundTag(newTag);
             });
         } else if (colors != null) {
-            BlockEntity blockEntity = level.getBlockEntity(blockPos);
-            if (blockEntity instanceof IPaintable) {
-                IPaintable target = (IPaintable) blockEntity;
+            var blockEntity = level.getBlockEntity(blockPos);
+            if (blockEntity instanceof IPaintable target) {
                 HashMap<Direction, IPaintColor> oldValue = new HashMap<>();
-                for (Direction direction : colors.keySet()) {
-                    IPaintColor paintColor = target.getColor(direction);
+                for (var direction : colors.keySet()) {
+                    var paintColor = target.getColor(direction);
                     if (paintColor == null) {
                         paintColor = PaintColor.CLEAR;
                     }

@@ -390,11 +390,9 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
     }
 
     private void removeItem(UIControl sender) {
-        if (!(selectedFile instanceof SkinLibraryFile) || !isAuthorized()) {
+        if (!(selectedFile instanceof SkinLibraryFile file) || !isAuthorized()) {
             return;
         }
-        SkinLibraryFile file = (SkinLibraryFile) selectedFile;
-
         ConfirmDialog dialog = new ConfirmDialog();
         dialog.setTitle(getDisplayText("dialog.delete.title"));
         dialog.setMessageColor(new UIColor(0xff5555));
@@ -412,10 +410,9 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
     }
 
     private void renameItem(String sender) {
-        if (!(selectedFile instanceof SkinLibraryFile) || !isAuthorized()) {
+        if (!(selectedFile instanceof SkinLibraryFile file) || !isAuthorized()) {
             return;
         }
-        SkinLibraryFile file = (SkinLibraryFile) selectedFile;
         if (sender.equals(file.getName())) {
             return; // not changes.
         }

@@ -22,8 +22,6 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.ArrayList;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class PaintingHighlightPlacementRenderer {
 
@@ -47,8 +45,8 @@ public class PaintingHighlightPlacementRenderer {
 
         poseStack.pushPose();
 
-        auto origin = new Vector3f(renderInfo.getPosition());
-        auto builder = bufferSource.getBuffer(SkinRenderType.HIGHLIGHTED_LINES);
+        var origin = new Vector3f(renderInfo.getPosition());
+        var builder = bufferSource.getBuffer(SkinRenderType.HIGHLIGHTED_LINES);
 
         poseStack.translate(-origin.getX(), -origin.getY(), -origin.getZ());
         poseStack.translate(0.5f, 0.5f, 0.5f);

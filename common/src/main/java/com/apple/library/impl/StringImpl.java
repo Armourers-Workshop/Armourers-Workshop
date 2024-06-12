@@ -14,8 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import manifold.ext.rt.api.auto;
-
 @SuppressWarnings("unused")
 public interface StringImpl {
 
@@ -37,7 +35,7 @@ public interface StringImpl {
     }
 
     default Map<String, ?> attributes(int width, UIFont font) {
-        auto style = font._getStyleByWidth(characters(), width);
+        var style = font._getStyleByWidth(characters(), width);
         if (style == null) {
             return null;
         }
@@ -61,8 +59,8 @@ public interface StringImpl {
     static NSString localizedString(String table, String key, Object... args) {
         String fullKey = String.format("%s.%s.%s", table, ModConstants.MOD_ID, key);
         for (int i = 0; i < args.length; ++i) {
-            if (args[i] instanceof NSString) {
-                args[i] = ((NSString) args[i]).component();
+            if (args[i] instanceof NSString text) {
+                args[i] = text.component();
             }
         }
         return new NSString(TranslateUtils.title(fullKey, args));

@@ -7,11 +7,8 @@ import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.model.TransformModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-
-import manifold.ext.rt.api.auto;
 
 public class VillagerModelArmaturePlugin extends ArmaturePlugin {
 
@@ -29,14 +26,13 @@ public class VillagerModelArmaturePlugin extends ArmaturePlugin {
 
     @Override
     public void activate(Entity entity, SkinRenderContext context) {
-        LivingEntity livingEntity = ObjectUtils.safeCast(entity, LivingEntity.class);
-        if (livingEntity == null) {
+        if (!(entity instanceof LivingEntity livingEntity)) {
             return;
         }
         transformModelRef.transformFrom(livingEntity, context.getPartialTicks());
         if (sourcePart != null && destinationPart != null) {
-            auto src = sourcePart.pose();
-            auto dest = destinationPart.pose();
+            var src = sourcePart.pose();
+            var dest = destinationPart.pose();
             dest.setRotation(src.getXRot(), src.getYRot(), src.getZRot());
         }
     }

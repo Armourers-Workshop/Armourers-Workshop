@@ -27,8 +27,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public final class ExtendedItemRenderer {
 
@@ -130,7 +128,7 @@ public final class ExtendedItemRenderer {
         poseStack.scale(newScale, newScale, newScale);
         poseStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
 
-        auto rendererManager = Minecraft.getInstance().getEntityRenderDispatcher();
+        var rendererManager = Minecraft.getInstance().getEntityRenderDispatcher();
         RenderSystem.runAsFancy(() -> rendererManager.render(entity, 0.0d, 0.0d, 0.0d, 0.0f, 1.0f, AbstractPoseStack.unwrap(poseStack), AbstractBufferSource.unwrap(bufferSource), light));
 
         poseStack.popPose();

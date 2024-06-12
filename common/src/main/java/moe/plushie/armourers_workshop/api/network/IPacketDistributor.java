@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.api.network;
 
-import net.minecraft.resources.ResourceLocation;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 
 public interface IPacketDistributor {
 
-    IPacketDistributor add(ResourceLocation channel, IFriendlyByteBuf buf);
+    IPacketDistributor add(IResourceLocation channel, IFriendlyByteBuf buf);
 
     void execute();
 

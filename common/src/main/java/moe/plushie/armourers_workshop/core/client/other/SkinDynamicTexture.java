@@ -1,8 +1,10 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import net.fabricmc.api.EnvType;
@@ -11,11 +13,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class SkinDynamicTexture extends DynamicTexture {
@@ -24,7 +24,7 @@ public class SkinDynamicTexture extends DynamicTexture {
     private SkinPaintData paintData;
     private NativeImage downloadedImage;
 
-    private ResourceLocation refer;
+    private IResourceLocation refer;
     private AbstractTexture referTexture;
 
     private boolean needsUpdate = true;
@@ -34,14 +34,14 @@ public class SkinDynamicTexture extends DynamicTexture {
         this.textureManager = Minecraft.getInstance().getTextureManager();
     }
 
-    public ResourceLocation getRefer() {
+    public IResourceLocation getRefer() {
         return refer;
     }
 
-    public void setRefer(ResourceLocation refer) {
+    public void setRefer(IResourceLocation refer) {
         if (!Objects.equals(this.refer, refer)) {
             this.refer = refer;
-            this.referTexture = Optional.ofNullable(refer).map(textureManager::getTexture).orElse(null);
+            this.referTexture = ObjectUtils.flatMap(refer, it -> textureManager.getTexture(it.toLocation()));
             this.downloadedImage = null;
             this.setNeedsUpdate();
         }

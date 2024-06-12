@@ -443,8 +443,7 @@ public class MathBuilder {
             return new Group(this.parseSymbols((List<Object>) object));
         }
 
-        if (object instanceof String) {
-            String symbol = (String) object;
+        if (object instanceof String symbol) {
             /* Variable and constant negation */
             if (symbol.startsWith("!")) {
                 return new Negate(this.valueFromObject(symbol.substring(1)));

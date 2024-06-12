@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.client.gui.widget.PlayerInventoryView;
 import moe.plushie.armourers_workshop.core.client.gui.widget.TabView;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Inventory;
@@ -69,8 +68,7 @@ public class ArmourerWindow extends MenuWindow<ArmourerMenu> {
         int lastVersion = blockEntity.getVersion();
         if (this.lastVersion != lastVersion) {
             tabView.tabs().forEach(tab -> {
-                ArmourerBaseSetting setting = ObjectUtils.safeCast(tab.contentView(), ArmourerBaseSetting.class);
-                if (setting != null) {
+                if (tab.contentView() instanceof ArmourerBaseSetting setting) {
                     setting.reloadData();
                 }
             });
@@ -80,14 +78,12 @@ public class ArmourerWindow extends MenuWindow<ArmourerMenu> {
 
     private void switchTab(TabView.Entry entry) {
         ArmourerMenu.Group group = ArmourerMenu.Group.MAIN;
-        Object value = entry.target();
-        if (value != null) {
-            group = (ArmourerMenu.Group)value;
+        if (entry.target() instanceof ArmourerMenu.Group target) {
+            group = target;
         }
         menu.setGroup(group);
         inventoryView.setHidden(!menu.shouldRenderInventory());
-        ArmourerBaseSetting setting = ObjectUtils.safeCast(entry.contentView(), ArmourerBaseSetting.class);
-        if (setting != null) {
+        if (entry.contentView() instanceof ArmourerBaseSetting setting) {
             setting.reloadData();
         }
     }

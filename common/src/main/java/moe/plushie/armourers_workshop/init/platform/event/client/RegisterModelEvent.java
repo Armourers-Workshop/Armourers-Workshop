@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init.platform.event.client;
 
-import net.minecraft.resources.ResourceLocation;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 
 public interface RegisterModelEvent {
 
-    void register(ResourceLocation registryName);
+    void register(IResourceLocation registryName);
 }

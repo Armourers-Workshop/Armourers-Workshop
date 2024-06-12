@@ -6,12 +6,8 @@ import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinModelManager;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-
-import manifold.ext.rt.api.auto;
 
 public class BakedItemTransform implements ISkinTransform {
 
@@ -38,7 +34,7 @@ public class BakedItemTransform implements ISkinTransform {
         if (entity == null) {
             return;
         }
-        auto model = SkinModelManager.getInstance().getModel(partType, itemModel, itemStack, entity);
+        var model = SkinModelManager.getInstance().getModel(partType, itemModel, itemStack, entity);
         float f1 = 16f;
         float f2 = 1 / 16f;
         boolean flag = transformType.isLeftHand();

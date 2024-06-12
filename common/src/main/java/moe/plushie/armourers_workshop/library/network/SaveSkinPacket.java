@@ -93,7 +93,7 @@ public class SaveSkinPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // this is an unauthorized operation, ignore it
-        if (!isAuthorized(source, player) || !isAuthorized(destination, player) || !(player.containerMenu instanceof SkinLibraryMenu)) {
+        if (!isAuthorized(source, player) || !isAuthorized(destination, player) || !(player.containerMenu instanceof SkinLibraryMenu container)) {
             abort(player, "unauthorized", "user status is incorrect or the path is invalid");
             return;
         }
@@ -102,7 +102,6 @@ public class SaveSkinPacket extends CustomPacket {
             abort(player, "upload", "uploading prohibited in the config file");
             return;
         }
-        SkinLibraryMenu container = (SkinLibraryMenu) player.containerMenu;
         // load: fs -> db/ln/ws -> db/ln
         if (DataDomain.isDatabase(destination)) {
             if (!ModPermissions.SKIN_LIBRARY_SKIN_LOAD.accept(player)) {

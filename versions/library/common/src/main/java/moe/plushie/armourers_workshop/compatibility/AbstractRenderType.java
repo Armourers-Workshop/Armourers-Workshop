@@ -4,13 +4,12 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IRenderTypeBuilder;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderFormat;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
@@ -141,8 +140,8 @@ public class AbstractRenderType extends RenderType {
         }
 
         @Override
-        public IRenderTypeBuilder texture(ResourceLocation texture, boolean blur, boolean mipmap) {
-            this.stateBuilder = stateBuilder.setTextureState(new TextureStateShard(texture, blur, mipmap));
+        public IRenderTypeBuilder texture(IResourceLocation texture, boolean blur, boolean mipmap) {
+            this.stateBuilder = stateBuilder.setTextureState(new TextureStateShard(texture.toLocation(), blur, mipmap));
             return this;
         }
 

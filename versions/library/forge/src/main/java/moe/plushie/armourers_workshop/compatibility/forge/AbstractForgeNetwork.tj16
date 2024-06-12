@@ -5,12 +5,12 @@ import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IPacketDistributor;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractFriendlyByteBuf;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.thread.BlockableEventLoop;
 import net.minecraft.world.entity.Entity;
@@ -33,14 +33,14 @@ public class AbstractForgeNetwork {
 
     public static class Dispatcher extends NetworkManager.Dispatcher {
 
-        public Dispatcher(ResourceLocation channelName, String channelVersion) {
+        public Dispatcher(IResourceLocation channelName, String channelVersion) {
             super(channelName, channelVersion);
         }
 
         @Override
         public void register() {
             EventNetworkChannel channel = NetworkRegistry.ChannelBuilder
-                    .named(channelName)
+                    .named(channelName.toLocation())
                     .networkProtocolVersion(() -> channelVersion)
                     .clientAcceptedVersions(sv -> true)
                     .serverAcceptedVersions(cv -> {
@@ -91,10 +91,10 @@ public class AbstractForgeNetwork {
         }
 
         @Override
-        public IPacketDistributor add(ResourceLocation channel, IFriendlyByteBuf buf) {
+        public IPacketDistributor add(IResourceLocation channel, IFriendlyByteBuf buf) {
             NetworkDirection direction = target.getDirection();
             FriendlyByteBuf buf1 = (FriendlyByteBuf) buf.asByteBuf();
-            Packet<?> packet1 = direction.buildPacket(Pair.of(buf1, 0), channel).getThis();
+            Packet<?> packet1 = direction.buildPacket(Pair.of(buf1, 0), channel.toLocation()).getThis();
             return new Distributor(target, packet1);
         }
 

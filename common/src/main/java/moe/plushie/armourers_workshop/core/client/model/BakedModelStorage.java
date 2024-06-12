@@ -1,14 +1,10 @@
 package moe.plushie.armourers_workshop.core.client.model;
 
 import moe.plushie.armourers_workshop.api.data.IAssociatedObjectProvider;
-import moe.plushie.armourers_workshop.init.ModConstants;
-import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.EmbeddedSkinStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -18,8 +14,6 @@ import java.lang.reflect.Proxy;
 
 @Environment(EnvType.CLIENT)
 public class BakedModelStorage {
-
-    private static BakedModel SHARED_MODEL;
 
     final ItemStack itemStack;
     final EmbeddedSkinStack embeddedStack;
@@ -53,13 +47,6 @@ public class BakedModelStorage {
             }
             return method.invoke(storage.bakedModel, methodArgs);
         });
-    }
-
-    public static BakedModel getSkinBakedModel() {
-        if (SHARED_MODEL == null) {
-            SHARED_MODEL = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(ModConstants.key("skin"), "inventory"));
-        }
-        return SHARED_MODEL;
     }
 
     public BakedModel getOriginModel() {

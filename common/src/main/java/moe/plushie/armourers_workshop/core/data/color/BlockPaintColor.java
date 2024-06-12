@@ -105,8 +105,7 @@ public class BlockPaintColor implements IBlockPaintColor {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BlockPaintColor)) return false;
-        BlockPaintColor that = (BlockPaintColor) o;
+        if (!(o instanceof BlockPaintColor that)) return false;
         return Objects.equals(paintColor, that.paintColor) && Objects.equals(paintColors, that.paintColors);
     }
 

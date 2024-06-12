@@ -4,6 +4,8 @@ import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.minecraft.core.Position;
 
+import java.util.Objects;
+
 @SuppressWarnings("unused")
 public class Vector4f {
 
@@ -30,35 +32,6 @@ public class Vector4f {
 
     public Vector4f(Position pos) {
         this((float) pos.x(), (float) pos.y(), (float) pos.z(), 1.0F);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-        if (!(other instanceof Vector4f)) {
-            return false;
-        }
-        Vector4f vector4f = (Vector4f) other;
-        if (Float.compare(vector4f.x, x) != 0) {
-            return false;
-        }
-        if (Float.compare(vector4f.y, y) != 0) {
-            return false;
-        }
-        if (Float.compare(vector4f.z, z) != 0) {
-            return false;
-        }
-        return Float.compare(vector4f.w, w) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        int i = Float.floatToIntBits(x);
-        i = 31 * i + Float.floatToIntBits(y);
-        i = 31 * i + Float.floatToIntBits(z);
-        return 31 * i + Float.floatToIntBits(w);
     }
 
     public float x() {
@@ -243,6 +216,18 @@ public class Vector4f {
 
     public Vector4f copy() {
         return new Vector4f(x, y, z, w);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Vector4f that)) return false;
+        return Float.compare(x, that.x) == 0 && Float.compare(y, that.y) == 0 && Float.compare(z, that.z) == 0 && Float.compare(w, that.w) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z, w);
     }
 
     @Override

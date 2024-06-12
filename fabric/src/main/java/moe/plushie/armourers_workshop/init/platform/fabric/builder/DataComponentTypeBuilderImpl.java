@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 import com.mojang.serialization.Codec;
 import moe.plushie.armourers_workshop.api.common.IDataComponentType;
 import moe.plushie.armourers_workshop.api.registry.IDataComponentTypeBuilder;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataComponentType;
 import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistries;
 import moe.plushie.armourers_workshop.init.ModConstants;
@@ -25,7 +25,7 @@ public class DataComponentTypeBuilderImpl<T> implements IDataComponentTypeBuilde
     }
 
     @Override
-    public IRegistryKey<IDataComponentType<T>> build(String name) {
+    public IRegistryHolder<IDataComponentType<T>> build(String name) {
         AbstractDataComponentType<T> proxy = AbstractDataComponentType.create(tag, codec);
         AbstractFabricRegistries.DATA_COMPONENT_TYPES.register(name, () -> proxy);
         return TypedRegistry.Entry.of(ModConstants.key(name), () -> proxy);

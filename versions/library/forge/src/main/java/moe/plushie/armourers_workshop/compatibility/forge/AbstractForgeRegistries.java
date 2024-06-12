@@ -31,12 +31,12 @@ public class AbstractForgeRegistries {
     public static final auto ITEM_GROUPS = AbstractForgeRegistry.create("Creative Mode Tab", CreativeModeTab.class, BuiltInRegistries.CREATIVE_MODE_TAB);
     public static final auto ITEM_LOOT_FUNCTIONS = AbstractForgeRegistry.create("Loot Function Type", LootItemFunctionType.class, BuiltInRegistries.LOOT_FUNCTION_TYPE);
     public static final auto ITEM_TAGS = TypedRegistry.factory("Item Tag", IItemTag.class, registryName -> {
-        TagKey<Item> tag = TagKey.create(Registries.ITEM, registryName);
+        TagKey<Item> tag = TagKey.create(Registries.ITEM, registryName.toLocation());
         return itemStack -> itemStack.is(tag);
     });
 
     public static final auto BLOCKS = AbstractForgeRegistry.create("Block", Block.class, BuiltInRegistries.BLOCK);
-    public static final auto BLOCK_ENTITY_TYPES = AbstractForgeRegistry.create("Block Entity Type",BlockEntityType.class, BuiltInRegistries.BLOCK_ENTITY_TYPE);
+    public static final auto BLOCK_ENTITY_TYPES = AbstractForgeRegistry.create("Block Entity Type", BlockEntityType.class, BuiltInRegistries.BLOCK_ENTITY_TYPE);
 
     public static final auto ENTITY_TYPES = AbstractForgeRegistry.create("Entity Type", EntityType.class, BuiltInRegistries.ENTITY_TYPE);
     public static final auto ENTITY_DATA_SERIALIZER = AbstractForgeRegistry.create("Entity Data Serializer", EntityDataSerializer.class, NeoForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS);

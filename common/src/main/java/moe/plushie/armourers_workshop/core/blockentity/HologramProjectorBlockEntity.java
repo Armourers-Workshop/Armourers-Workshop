@@ -141,14 +141,11 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     protected boolean isRunningForState(BlockState state) {
         Level level = getLevel();
         if (level != null && !SkinDescriptor.of(items.get(0)).isEmpty()) {
-            switch (powerMode) {
-                case 1:
-                    return level.hasNeighborSignal(getBlockPos());
-                case 2:
-                    return !level.hasNeighborSignal(getBlockPos());
-                default:
-                    return true;
-            }
+            return switch (powerMode) {
+                case 1 -> level.hasNeighborSignal(getBlockPos());
+                case 2 -> !level.hasNeighborSignal(getBlockPos());
+                default -> true;
+            };
         }
         return false;
     }

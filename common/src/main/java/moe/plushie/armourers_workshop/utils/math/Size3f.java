@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.utils.math;
 
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 
+import java.util.Objects;
+
 @SuppressWarnings("unused")
 public class Size3f {
 
@@ -27,6 +29,18 @@ public class Size3f {
 
     public float getDepth() {
         return depth;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Size3f that)) return false;
+        return Float.compare(width, that.width) == 0 && Float.compare(height, that.height) == 0 && Float.compare(depth, that.depth) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(width, height, depth);
     }
 
     @Override

@@ -26,19 +26,13 @@ public class ShaderPreprocessor {
     }
 
     public String process(String source) {
-        if (prefix.isEmpty()) {
-            return processVanillaShader(new Builder(source));
-        }
-        if (prefix.equals("va")) {
-            return processOptifineShader(new Builder(source));
-        }
-        if (prefix.equals("iris_")) {
-            return processIrisShader(new Builder(source));
-        }
-        if (prefix.equals("frx_")) {
-            return processCanvasShader(new Builder(source));
-        }
-        return source;
+        return switch (prefix) {
+            case "va" -> processOptifineShader(new Builder(source));
+            case "iris_" -> processIrisShader(new Builder(source));
+            case "frx_" -> processCanvasShader(new Builder(source));
+            case "" -> processVanillaShader(new Builder(source));
+            default -> source;
+        };
     }
 
     private String processIrisShader(Builder builder) {

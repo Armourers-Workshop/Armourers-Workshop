@@ -8,13 +8,14 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIWindow;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -48,14 +49,12 @@ public class ToastWindow extends UIWindow {
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
         // render item as icon.
-        ItemStack itemStack = ObjectUtils.safeCast(getIcon(), ItemStack.class);
-        if (itemStack != null) {
+        if (getIcon() instanceof ItemStack itemStack) {
             context.drawItem(itemStack, 8, 8);
             return;
         }
         // render texture as icon.
-        CustomTexture texture = ObjectUtils.safeCast(getIcon(), CustomTexture.class);
-        if (texture != null) {
+        if (getIcon() instanceof CustomTexture texture) {
             context.drawImage(texture.image, iconRect.offset(texture.origin));
             return;
         }
@@ -128,7 +127,7 @@ public class ToastWindow extends UIWindow {
         return duration;
     }
 
-    private ResourceLocation getDefaultTexture() {
+    private IResourceLocation getDefaultTexture() {
         return ModTextures.TOASTS;
     }
 
@@ -162,7 +161,7 @@ public class ToastWindow extends UIWindow {
 
         public CustomTexture(CompoundTag tag) {
             int[] offset = {0, 0};
-            UIImage.Builder builder = UIImage.of(new ResourceLocation(tag.getString("Image")));
+            UIImage.Builder builder = UIImage.of(OpenResourceLocation.parse(tag.getString("Image")));
             apply(tag, "UV", 2, it -> builder.uv(it[0], it[1]));
             apply(tag, "Fixed", 2, it -> builder.fixed(it[0], it[1]));
             apply(tag, "Resizable", 2, it -> builder.resizable(it[0], it[1]));

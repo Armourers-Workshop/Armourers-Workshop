@@ -52,11 +52,10 @@ public class SkinCipher {
      */
     private byte[] convertTo(final byte[] message, final int sourceBase, final int targetBase) {
         // This algorithm is inspired by: http://codegolf.stackexchange.com/a/21672
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
+        var out = new ByteArrayOutputStream();
         byte[] source = message;
         while (source.length > 0) {
-            ByteArrayOutputStream quotient = new ByteArrayOutputStream(source.length);
+            var quotient = new ByteArrayOutputStream(source.length);
             int remainder = 0;
             for (byte val : source) {
                 final int accumulator = (val & 0xFF) + remainder * sourceBase;
@@ -89,9 +88,9 @@ public class SkinCipher {
     }
 
     private String join(String[] values) {
-        String separator = "";
-        StringBuilder builder = new StringBuilder();
-        for (String value : values) {
+        var separator = "";
+        var builder = new StringBuilder();
+        for (var value : values) {
             builder.append(separator);
             builder.append(value);
             separator = "\n";

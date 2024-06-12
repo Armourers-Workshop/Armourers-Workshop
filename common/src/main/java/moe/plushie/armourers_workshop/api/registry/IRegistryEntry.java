@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.api.registry;
 
-import net.minecraft.resources.ResourceLocation;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 
 @SuppressWarnings("unused")
 public interface IRegistryEntry {
 
-    ResourceLocation getRegistryName();
+    IResourceLocation getRegistryName();
 }

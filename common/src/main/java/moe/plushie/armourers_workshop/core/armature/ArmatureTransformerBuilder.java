@@ -2,15 +2,15 @@ package moe.plushie.armourers_workshop.core.armature;
 
 import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
-import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.core.AfterTransformModifier;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultOverriddenArmaturePlugin;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
+import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,32 +19,30 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import manifold.ext.rt.api.auto;
-
 public abstract class ArmatureTransformerBuilder {
 
-    protected ResourceLocation parent;
+    protected IResourceLocation parent;
     protected Armature armature;
     protected IDataPackObject contents;
 
-    protected final ResourceLocation name;
-    protected final ArrayList<ResourceLocation> models = new ArrayList<>();
+    protected final IResourceLocation name;
+    protected final ArrayList<IResourceLocation> models = new ArrayList<>();
     protected final ArrayList<IEntityTypeProvider<?>> entities = new ArrayList<>();
     protected final ArrayList<String> pluginModifiers = new ArrayList<>();
     protected final HashMap<String, Collection<String>> overrideModifiers = new HashMap<>();
     protected final HashMap<IJoint, Collection<JointModifier>> jointModifiers = new HashMap<>();
     protected final HashMap<IJoint, Collection<JointModifier>> transformModifiers = new HashMap<>();
 
-    public ArmatureTransformerBuilder(ResourceLocation name) {
+    public ArmatureTransformerBuilder(IResourceLocation name) {
         this.name = name;
     }
 
     public void load(IDataPackObject object) {
         object.get("parent").ifPresent(it -> {
-            parent = new ResourceLocation(it.stringValue());
+            parent = OpenResourceLocation.parse(it.stringValue());
         });
         object.get("target").ifPresent(it -> {
-            armature = Armatures.byName(new ResourceLocation(it.stringValue()));
+            armature = Armatures.byName(OpenResourceLocation.parse(it.stringValue()));
         });
         contents = object;
         if (armature != null) {
@@ -82,7 +80,7 @@ public abstract class ArmatureTransformerBuilder {
     }
 
     protected ArmaturePlugin buildPlugin(String name, ArmatureTransformerContext context) {
-        auto builder = ArmatureSerializers.getPlugin(name);
+        var builder = ArmatureSerializers.getPlugin(name);
         if (builder != null) {
             return builder.apply(context);
         }
@@ -90,9 +88,9 @@ public abstract class ArmatureTransformerBuilder {
     }
 
     protected IJointTransform buildTransform(IJoint joint, Collection<JointModifier> modifiers, ArmatureTransformerContext context) {
-        IModel model = context.getEntityModel();
-        IJointTransform transform = IJointTransform.NONE;
-        for (JointModifier modifier : modifiers) {
+        var model = context.getEntityModel();
+        var transform = IJointTransform.NONE;
+        for (var modifier : modifiers) {
             transform = modifier.apply(joint, model, transform);
         }
         return transform;
@@ -100,7 +98,7 @@ public abstract class ArmatureTransformerBuilder {
 
     protected abstract JointModifier buildJointTarget(String name);
 
-    public ArrayList<ResourceLocation> getModels() {
+    public ArrayList<IResourceLocation> getModels() {
         return models;
     }
 
@@ -108,11 +106,11 @@ public abstract class ArmatureTransformerBuilder {
         return entities;
     }
 
-    public ResourceLocation getParent() {
+    public IResourceLocation getParent() {
         return parent;
     }
 
-    public ResourceLocation getName() {
+    public IResourceLocation getName() {
         return name;
     }
 
@@ -197,7 +195,7 @@ public abstract class ArmatureTransformerBuilder {
             case ARRAY: {
                 ArrayList<JointModifier> modifiers = new ArrayList<>();
                 object.allValues().forEach(it -> {
-                    auto modifier = ArmatureSerializers.getModifier(it.stringValue());
+                    var modifier = ArmatureSerializers.getModifier(it.stringValue());
                     if (modifier != null) {
                         modifiers.add(modifier.get());
                     }
@@ -212,7 +210,7 @@ public abstract class ArmatureTransformerBuilder {
 //                        modifiers.add(builder.apply(it.getValue()));
 //                        return;
 //                    }
-                    auto modifier = ArmatureSerializers.getModifier(it.getKey());
+                    var modifier = ArmatureSerializers.getModifier(it.getKey());
                     if (modifier != null) {
                         modifiers.add(modifier.get());
                     }
@@ -236,14 +234,11 @@ public abstract class ArmatureTransformerBuilder {
 
 
     private Collection<String> _parseOverrideModifiers(IDataPackObject object) {
-        switch (object.type()) {
-            case STRING:
-                return Collections.singleton(object.stringValue());
-            case ARRAY:
-                return object.collect(IDataPackObject::stringValue);
-            default:
-                return Collections.emptyList();
-        }
+        return switch (object.type()) {
+            case STRING -> Collections.singleton(object.stringValue());
+            case ARRAY -> object.collect(IDataPackObject::stringValue);
+            default -> Collections.emptyList();
+        };
     }
 
     private void _parseTranslateModifiers(String name, IDataPackObject object) {

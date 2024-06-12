@@ -1,0 +1,13 @@
+package moe.plushie.armourers_workshop.compatibility.client;
+
+import com.mojang.blaze3d.vertex.VertexSorting;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.renderer.RenderType;
+
+@Available("[1.20, 1.21)")
+public class AbstractBufferBuilderImpl {
+
+    public static void upload(RenderType renderType, AbstractBufferBuilder builder) {
+        renderType.end(builder.bufferBuilder(), VertexSorting.DISTANCE_TO_ORIGIN);
+    }
+}

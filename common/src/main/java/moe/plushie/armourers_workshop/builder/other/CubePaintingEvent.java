@@ -13,7 +13,6 @@ import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -23,8 +22,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.function.Function;
-
-import manifold.ext.rt.api.auto;
 
 public class CubePaintingEvent {
 
@@ -77,14 +74,14 @@ public class CubePaintingEvent {
     }
 
     public boolean prepare(CubeChangesCollector collector, UseOnContext context) {
-        auto level = context.getLevel();
-        auto player = context.getPlayer();
+        var level = context.getLevel();
+        var player = context.getPlayer();
         selector.forEach(context, (target, dir) -> {
-            auto cube = collector.getCube(target);
+            var cube = collector.getCube(target);
             if (cube.is(IPaintable.class)) {
                 targetCount += 1;
             }
-            auto action1 = action.build(level, target, dir, cube, player);
+            var action1 = action.build(level, target, dir, cube, player);
             if (action1 != action) {
                 overrides.put(Pair.of(target, dir), action1);
             }
@@ -93,10 +90,10 @@ public class CubePaintingEvent {
     }
 
     public void apply(CubeChangesCollector collector, UseOnContext context) {
-        auto level = context.getLevel();
-        auto player = context.getPlayer();
+        var level = context.getLevel();
+        var player = context.getPlayer();
         selector.forEach(context, (target, dir) -> {
-            auto action1 = overrides.getOrDefault(Pair.of(target, dir), action);
+            var action1 = overrides.getOrDefault(Pair.of(target, dir), action);
             action1.apply(level, target, dir, collector.getCube(target), player);
         });
     }
@@ -104,7 +101,7 @@ public class CubePaintingEvent {
     public static abstract class Action implements IPaintToolAction {
 
         public static Action fromBuffer(IFriendlyByteBuf buffer) {
-            auto type = buffer.readEnum(ActionTypes.class);
+            var type = buffer.readEnum(ActionTypes.class);
             return type.factory.apply(buffer);
         }
 

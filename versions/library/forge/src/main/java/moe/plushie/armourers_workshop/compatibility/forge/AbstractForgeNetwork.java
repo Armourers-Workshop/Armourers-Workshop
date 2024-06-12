@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IPacketDistributor;
@@ -10,7 +11,6 @@ import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.thread.BlockableEventLoop;
@@ -26,14 +26,12 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import manifold.ext.rt.api.auto;
-
 @Available("[1.21, )")
 public class AbstractForgeNetwork {
 
     public static class Dispatcher extends NetworkManager.Dispatcher {
 
-        public Dispatcher(ResourceLocation channelName, String channelVersion) {
+        public Dispatcher(IResourceLocation channelName, String channelVersion) {
             super(channelName, channelVersion);
         }
 
@@ -41,7 +39,7 @@ public class AbstractForgeNetwork {
         public void register() {
             AbstractForgeEventBus.observer(RegisterPayloadHandlersEvent.class, event -> {
                 PayloadRegistrar registrar = event.registrar(ModConstants.MOD_ID).versioned(channelVersion);
-                Proxy.TYPE = new CustomPacketPayload.Type<>(channelName);
+                Proxy.TYPE = new CustomPacketPayload.Type<>(channelName.toLocation());
                 registrar.playBidirectional(Proxy.TYPE, Proxy.CODEC, this::handBidirectionalData);
             });
         }
@@ -79,7 +77,7 @@ public class AbstractForgeNetwork {
         }
 
         @Override
-        public IPacketDistributor add(ResourceLocation channel, IFriendlyByteBuf buf) {
+        public IPacketDistributor add(IResourceLocation channel, IFriendlyByteBuf buf) {
             return new Distributor(sender, target, new Proxy(buf));
         }
 
@@ -131,15 +129,15 @@ public class AbstractForgeNetwork {
             @Override
             public Proxy decode(RegistryFriendlyByteBuf bufferIn) {
                 // we need to tell decoder all data is processed.
-                auto buffer = bufferIn.retainedSlice();
-                auto duplicated = new RegistryFriendlyByteBuf(buffer, bufferIn.registryAccess());
+                var buffer = bufferIn.retainedSlice();
+                var duplicated = new RegistryFriendlyByteBuf(buffer, bufferIn.registryAccess());
                 bufferIn.skipBytes(bufferIn.readableBytes());
                 return new Proxy(IFriendlyByteBuf.wrap(duplicated));
             }
 
             @Override
             public void encode(RegistryFriendlyByteBuf buf, Proxy proxy) {
-                auto sending = proxy.payload.asByteBuf();
+                var sending = proxy.payload.asByteBuf();
                 buf.writeBytes(sending.slice());
             }
         };

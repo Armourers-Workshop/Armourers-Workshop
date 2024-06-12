@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProv
 import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -62,8 +61,7 @@ public class ArmourerBlock extends AbstractHorizontalBlock implements AbstractBl
     }
 
     private void applyTitleEntity(Level level, BlockPos pos, Consumer<ArmourerBlockEntity> consumer) {
-        ArmourerBlockEntity blockEntity = ObjectUtils.safeCast(level.getBlockEntity(pos), ArmourerBlockEntity.class);
-        if (blockEntity != null) {
+        if (level.getBlockEntity(pos) instanceof ArmourerBlockEntity blockEntity) {
             consumer.accept(blockEntity);
         }
     }

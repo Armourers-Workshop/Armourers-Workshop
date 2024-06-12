@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import moe.plushie.armourers_workshop.api.common.IResource;
+import moe.plushie.armourers_workshop.api.core.IResource;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;

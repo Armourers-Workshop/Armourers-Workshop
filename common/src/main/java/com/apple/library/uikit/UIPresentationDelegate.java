@@ -13,8 +13,6 @@ import com.apple.library.quartzcore.CATransaction;
 import java.util.HashMap;
 import java.util.function.Function;
 
-import manifold.ext.rt.api.auto;
-
 @SuppressWarnings("unused")
 class UIPresentationDelegate implements ViewImpl {
 
@@ -124,7 +122,7 @@ class UIPresentationDelegate implements ViewImpl {
         if (superview == null) {
             return null;
         }
-        auto presentation = superview._presentation;
+        var presentation = superview._presentation;
         if (presentation.hasAnimations()) {
             return presentation;
         }

@@ -32,8 +32,7 @@ public class DataStorageKey<T> implements IAssociatedContainerKey<T> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DataStorageKey)) return false;
-        DataStorageKey<?> that = (DataStorageKey<?>) o;
+        if (!(o instanceof DataStorageKey<?> that)) return false;
         return id == that.id;
     }
 

@@ -51,7 +51,7 @@ public class CameraEntity extends SeatEntity {
         return zoom;
     }
 
-    public double getMaxZoom(double targetZoom) {
+    public float getMaxZoom(float targetZoom) {
         return targetZoom * zoom;
     }
 

@@ -16,8 +16,8 @@ public class VanillaItemStackProvider implements IItemStackProvider {
 
     @Override
     public Iterable<ItemStack> getArmorSlots(Entity entity) {
-        if (entity instanceof LivingEntity) {
-            return ((LivingEntity) entity).getArmorSlots();
+        if (entity instanceof LivingEntity livingEntity) {
+            return livingEntity.getArmorSlots();
         }
         return Collections.emptyList();
     }
@@ -27,12 +27,11 @@ public class VanillaItemStackProvider implements IItemStackProvider {
         // Noppes:
         // I disabled that, because there was some mod in the past that had a disarm enchantment, which was also disarming my npcs
         // and getHandSlots isnt really used for anything in minecrafts code, so I removed it
-        if (entity instanceof LivingEntity && entity.getType() == customNPCEntityType.get()) {
-            LivingEntity livingEntity = (LivingEntity) entity;
+        if (entity instanceof LivingEntity livingEntity && entity.getType() == customNPCEntityType.get()) {
             return Lists.newArrayList(livingEntity.getMainHandItem(), livingEntity.getOffhandItem());
         }
-        if (entity instanceof LivingEntity) {
-            return ((LivingEntity) entity).getHandSlots();
+        if (entity instanceof LivingEntity livingEntity) {
+            return livingEntity.getHandSlots();
         }
         return Collections.emptyList();
     }

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.transformer;
 
 import com.google.gson.JsonElement;
-import moe.plushie.armourers_workshop.api.common.IResource;
+import moe.plushie.armourers_workshop.api.core.IResource;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOConsumer;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOConsumer2;

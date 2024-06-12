@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.texture;
 
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
 
 public class PlayerTexture {
 
@@ -12,14 +12,14 @@ public class PlayerTexture {
     public static final PlayerTexture DEFAULT = new PlayerTexture(null, null, null);
 
     private final String url;
-    private final ResourceLocation location;
+    private final IResourceLocation location;
 
     private String model;
 
     @Environment(EnvType.CLIENT)
     private BakedEntityTexture texture;
 
-    public PlayerTexture(String url, ResourceLocation location, String model) {
+    public PlayerTexture(String url, IResourceLocation location, String model) {
 //        this.profile = profile;
         this.location = location;
         this.model = model;
@@ -35,7 +35,7 @@ public class PlayerTexture {
         this.model = model;
     }
 
-    public ResourceLocation getLocation() {
+    public IResourceLocation getLocation() {
         return location;
     }
 

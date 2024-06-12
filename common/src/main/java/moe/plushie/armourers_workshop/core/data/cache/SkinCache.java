@@ -33,10 +33,10 @@ public class SkinCache {
         return key;
     }
 
-    public static void returnKey(Object key) {
-        if (key instanceof Key) {
-            ((Key) key).objects = null;
-            POOL.push((Key) key);
+    public static void returnKey(Object object) {
+        if (object instanceof Key key) {
+            key.objects = null;
+            POOL.push(key);
         }
     }
 

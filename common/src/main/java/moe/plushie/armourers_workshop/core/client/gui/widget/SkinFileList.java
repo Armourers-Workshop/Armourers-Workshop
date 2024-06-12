@@ -18,7 +18,6 @@ import com.apple.library.uikit.UITableViewCell;
 import com.apple.library.uikit.UITableViewDataSource;
 import com.apple.library.uikit.UITableViewDelegate;
 import com.apple.library.uikit.UIView;
-import com.apple.library.uikit.UIWindow;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
@@ -38,8 +37,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class SkinFileList extends UIControl implements UITableViewDataSource, UITableViewDelegate {
@@ -250,41 +247,41 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
                 context.drawResizableImage(ModTextures.LIST, x + (width - 12) / 2f, y + (height - 12) / 2f, 12, 12, u, 0, 16, 16, 256, 256);
                 return;
             }
-            auto descriptor = getDescriptor();
+            var descriptor = getDescriptor();
             if (descriptor.isEmpty()) {
                 int u = 48;
                 context.drawResizableImage(ModTextures.LIST, x + (width - 12) / 2f, y + (height - 12) / 2f, 12, 12, u, 0, 16, 16, 256, 256);
                 return;
             }
-            auto bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
+            var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
             if (bakedSkin == null) {
                 return;
             }
-            auto buffers = AbstractBufferSource.defaultBufferSource();
+            var buffers = AbstractBufferSource.buffer();
             ExtendedItemRenderer.renderSkinInGUI(bakedSkin, x, y, 100, width, height - 1, 20, 45, 0, context.state().ctm(), buffers);
         }
 
         public void renderTooltip(CGRect rect, CGGraphicsContext context) {
-            UIWindow window = window();
+            var window = window();
             if (window == null) {
                 return;
             }
-            auto bakedSkin = SkinBakery.getInstance().loadSkin(getDescriptor(), loadTicket);
+            var bakedSkin = SkinBakery.getInstance().loadSkin(getDescriptor(), loadTicket);
             if (bakedSkin == null) {
                 return;
             }
-            CGRect bounds = window.bounds();
-            CGPoint point = convertPointToView(CGPoint.ZERO, null);
+            var bounds = window.bounds();
+            var point = convertPointToView(CGPoint.ZERO, null);
             float size = 144;
             float dx = point.x - size - 5;
             float dy = MathUtils.clamp(context.state().mousePos().getY() - size / 2f, 0, bounds.height - size);
             context.drawTilableImage(ModTextures.GUI_PREVIEW, dx, dy, size, size, 0, 0, 62, 62, 4, 4, 4, 4);
 
-            auto poseStack = context.state().ctm();
-            auto tooltips = ObjectUtils.map(ItemTooltipManager.createSkinInfo(bakedSkin), NSString::new);
+            var poseStack = context.state().ctm();
+            var tooltips = ObjectUtils.map(ItemTooltipManager.createSkinInfo(bakedSkin), NSString::new);
             context.drawMultilineText(tooltips, dx + 4, dy + 4, size - 8, 0xffffffff, true, font, 0);
 
-            auto buffers = AbstractBufferSource.defaultBufferSource();
+            var buffers = AbstractBufferSource.buffer();
             ExtendedItemRenderer.renderSkinInGUI(bakedSkin, dx, dy, 100, size, size, 30, 45, 0, poseStack, buffers);
             buffers.endBatch();
         }

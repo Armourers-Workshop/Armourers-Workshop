@@ -10,13 +10,9 @@ import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
-import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
-import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class SkinIconView extends UIControl {
@@ -33,20 +29,20 @@ public class SkinIconView extends UIControl {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        auto bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
         if (bakedSkin == null) {
             return;
         }
-        CGRect rect = bounds();
+        var rect = bounds();
         float tx = rect.x;
         float ty = rect.y;
         float tw = rect.width;
         float th = rect.height;
         float si = Math.min(tw, th);
-        auto poseStack = context.state().ctm();
-        auto colorScheme = descriptor.getColorScheme();
-        auto itemSource = SkinItemSource.EMPTY;
-        auto buffers = AbstractBufferSource.defaultBufferSource();
+        var poseStack = context.state().ctm();
+        var colorScheme = descriptor.getColorScheme();
+        var itemSource = SkinItemSource.EMPTY;
+        var buffers = AbstractBufferSource.buffer();
         poseStack.pushPose();
         poseStack.translate(tx + tw / 2f, ty + th / 2f, 200);
         poseStack.scale(1, -1, 1);

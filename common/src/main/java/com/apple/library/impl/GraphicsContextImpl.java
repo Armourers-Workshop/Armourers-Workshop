@@ -3,21 +3,18 @@ package com.apple.library.impl;
 import com.apple.library.coregraphics.CGGraphicsState;
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIFont;
-import com.mojang.blaze3d.vertex.Tesselator;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.RectangleTesselator;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-
-import manifold.ext.rt.api.auto;
 
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
@@ -38,19 +35,19 @@ public interface GraphicsContextImpl {
     }
 
     default void drawText(Collection<NSString> lines, float x, float y, int textColor, boolean shadow, UIFont font, float zLevel) {
-        auto poseStack = state().ctm();
+        var poseStack = state().ctm();
         float scale = font._getScale();
         poseStack.pushPose();
         poseStack.translate(x, y, zLevel);
         poseStack.scale(scale, scale, scale);
 
-        auto pose = AbstractPoseStack.unwrap(poseStack).last();
-        auto buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-        auto renderer = font.impl();
+        var pose = AbstractPoseStack.unwrap(poseStack).last();
+        var buffers = AbstractBufferSource.tesselator();
+        var renderer = font.impl();
 
         int dx = 0, dy = 0;
-        for (auto line : lines) {
-            int qx = renderer.drawInBatch(line.characters(), dx, dy, textColor, shadow, pose.pose(), buffers, false, 0, 15728880);
+        for (var line : lines) {
+            int qx = renderer.drawInBatch(line.characters(), dx, dy, textColor, shadow, pose.pose(), buffers.bufferSource(), false, 0, 15728880);
             if (qx == dx) {
                 dy += 7;
             } else {
@@ -83,35 +80,35 @@ public interface GraphicsContextImpl {
         drawText(wrappedTextLines, x, y, textColor, shadow, font, zLevel);
     }
 
-    default void drawImage(ResourceLocation texture, float x, float y, float width, float height, float u, float v, float texWidth, float texHeight) {
+    default void drawImage(IResourceLocation texture, float x, float y, float width, float height, float u, float v, float texWidth, float texHeight) {
         drawResizableImage(texture, x, y, width, height, u, v, width, height, texWidth, texHeight, 0);
     }
 
-    default void drawImage(ResourceLocation texture, float x, float y, float width, float height, float u, float v, float texWidth, float texHeight, float zLevel) {
+    default void drawImage(IResourceLocation texture, float x, float y, float width, float height, float u, float v, float texWidth, float texHeight, float zLevel) {
         drawResizableImage(texture, x, y, width, height, u, v, width, height, texWidth, texHeight, zLevel);
     }
 
-    default void drawResizableImage(ResourceLocation rl, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight) {
+    default void drawResizableImage(IResourceLocation rl, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight) {
         drawResizableImage(rl, x, y, width, height, u, v, sourceWidth, sourceHeight, texWidth, texHeight, 0);
     }
 
-    default void drawResizableImage(ResourceLocation rl, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight, float zLevel) {
+    default void drawResizableImage(IResourceLocation rl, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight, float zLevel) {
         RectangleTesselator tesselator = new RectangleTesselator(state());
         tesselator.begin(SkinRenderType.GUI_IMAGE, rl, texWidth, texHeight);
         tesselator.blit(x, y, width, height, u, v, sourceWidth, sourceHeight, zLevel);
         tesselator.end();
     }
 
-    default void drawTilableImage(ResourceLocation rl, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float topBorder, float bottomBorder, float leftBorder, float rightBorder) {
+    default void drawTilableImage(IResourceLocation rl, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float topBorder, float bottomBorder, float leftBorder, float rightBorder) {
         drawTilableImage(rl, x, y, width, height, u, v, sourceWidth, sourceHeight, 256, 256, topBorder, bottomBorder, leftBorder, rightBorder, 0);
     }
 
-    default void drawTilableImage(ResourceLocation rl, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float topBorder, float bottomBorder, float leftBorder, float rightBorder, float zLevel) {
+    default void drawTilableImage(IResourceLocation rl, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float topBorder, float bottomBorder, float leftBorder, float rightBorder, float zLevel) {
         drawTilableImage(rl, x, y, width, height, u, v, sourceWidth, sourceHeight, 256, 256, topBorder, bottomBorder, leftBorder, rightBorder, zLevel);
     }
 
-    default void drawTilableImage(ResourceLocation rl, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight, float topBorder, float bottomBorder, float leftBorder, float rightBorder, float zLevel) {
-        auto tesselator = new RectangleTesselator(state());
+    default void drawTilableImage(IResourceLocation rl, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight, float topBorder, float bottomBorder, float leftBorder, float rightBorder, float zLevel) {
+        var tesselator = new RectangleTesselator(state());
         tesselator.begin(SkinRenderType.GUI_IMAGE, rl, texWidth, texHeight);
 
         float x0 = x + 0;
@@ -156,9 +153,9 @@ public interface GraphicsContextImpl {
         int r2 = color2 >> 16 & 0xff;
         int g2 = color2 >> 8 & 0xff;
         int b2 = color2 & 0xff;
-        auto state = state();
-        auto pose = state.ctm().last();
-        auto buffer = state.bufferSource().getBuffer(SkinRenderType.GUI_COLOR);
+        var state = state();
+        var pose = state.ctm().last();
+        var buffer = state.bufferSource().getBuffer(SkinRenderType.GUI_COLOR);
         buffer.vertex(pose, minX, minY, zLevel).color(r1, g1, b1, a1).endVertex();
         buffer.vertex(pose, minX, maxY, zLevel).color(r2, g2, b2, a2).endVertex();
         buffer.vertex(pose, maxX, maxY, zLevel).color(r2, g2, b2, a2).endVertex();
@@ -171,9 +168,9 @@ public interface GraphicsContextImpl {
         int r1 = color >> 16 & 0xff;
         int g1 = color >> 8 & 0xff;
         int b1 = color & 0xff;
-        auto state = state();
-        auto pose = state.ctm().last();
-        auto buffer = state.bufferSource().getBuffer(SkinRenderType.lineStrip());
+        var state = state();
+        var pose = state.ctm().last();
+        var buffer = state.bufferSource().getBuffer(SkinRenderType.lineStrip());
         buffer.vertex(pose, minX, minY, zLevel).color(r1, g1, b1, a1).endVertex();
         buffer.vertex(pose, minX, maxY, zLevel).color(r1, g1, b1, a1).endVertex();
         buffer.vertex(pose, maxX, maxY, zLevel).color(r1, g1, b1, a1).endVertex();
@@ -188,9 +185,9 @@ public interface GraphicsContextImpl {
         int g1 = color >> 8 & 0xff;
         int b1 = color & 0xff;
         float sp = height * 0.5f;
-        auto state = state();
-        auto pose = state.ctm().last();
-        auto buffer = state.bufferSource().getBuffer(SkinRenderType.GUI_COLOR);
+        var state = state();
+        var pose = state.ctm().last();
+        var buffer = state.bufferSource().getBuffer(SkinRenderType.GUI_COLOR);
 
         buffer.vertex(pose, minX - sp, minY - sp, zLevel).color(r1, g1, b1, a1).endVertex();
         buffer.vertex(pose, minX - sp, maxY + sp, zLevel).color(r1, g1, b1, a1).endVertex();

@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.skin.painting;
 
 import moe.plushie.armourers_workshop.api.common.ITextureKey;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.SkinDyeType;
 import moe.plushie.armourers_workshop.utils.texture.TextureKey;
-import net.minecraft.resources.ResourceLocation;
 
 public class SkinPaintType implements ISkinPaintType {
 
@@ -14,7 +14,7 @@ public class SkinPaintType implements ISkinPaintType {
     private final int index;
 
     private SkinDyeType dyeType;
-    private ResourceLocation registryName;
+    private IResourceLocation registryName;
     private TextureKey texture = DEFAULT_TEXTURE;
 
     public SkinPaintType(int index, int id) {
@@ -23,11 +23,11 @@ public class SkinPaintType implements ISkinPaintType {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public IResourceLocation getRegistryName() {
         return registryName;
     }
 
-    public void setRegistryName(ResourceLocation registryName) {
+    public void setRegistryName(IResourceLocation registryName) {
         this.registryName = registryName;
     }
 

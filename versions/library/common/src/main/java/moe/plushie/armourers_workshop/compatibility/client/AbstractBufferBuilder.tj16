@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.client;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.datafixers.util.Pair;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
 @Available("[1.16, 1.19)")
 public class AbstractBufferBuilder extends AbstractVertexConsumer implements IBufferBuilder {
 
-    private BufferBuilder bufferBuilder;
+    private final BufferBuilder bufferBuilder;
 
     public AbstractBufferBuilder(int size) {
         this(new BufferBuilder(size));
@@ -35,17 +35,26 @@ public class AbstractBufferBuilder extends AbstractVertexConsumer implements IBu
     @Override
     public IRenderedBuffer end() {
         bufferBuilder.end();
-        Pair<BufferBuilder.DrawState, ByteBuffer> pair = bufferBuilder.popNextBuffer();
+        var pair = bufferBuilder.popNextBuffer();
         return new IRenderedBuffer() {
+            @Override
+            public VertexFormat format() {
+                return pair.getFirst().format();
+            }
+
             @Override
             public ByteBuffer vertexBuffer() {
                 return pair.getSecond();
             }
 
             @Override
-            public BufferBuilder.DrawState drawState() {
-                return pair.getFirst();
+            public int vertexCount() {
+                return pair.getFirst().vertexCount();
             }
         };
+    }
+
+    public BufferBuilder bufferBuilder() {
+        return bufferBuilder;
     }
 }

@@ -53,7 +53,7 @@ import java.util.function.Consumer;
 @Environment(EnvType.CLIENT)
 public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> implements SkinDocumentListener {
 
-    private static int CARD_WIDTH = 100;
+    private static final int CARD_WIDTH = 100;
 
     private final ArrayList<NSString> helps = new ArrayList<>();
     private final UIButton helpView = new UIButton(new CGRect(0, 0, 7, 8));

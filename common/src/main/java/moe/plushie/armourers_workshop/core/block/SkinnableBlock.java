@@ -178,8 +178,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
-        if (state != null && context instanceof SkinBlockPlaceContext) {
-            SkinBlockPlaceContext context1 = (SkinBlockPlaceContext) context;
+        if (state != null && context instanceof SkinBlockPlaceContext context1) {
             if (context1.getProperty(SkinProperty.BLOCK_GLOWING)) {
                 state = state.setValue(LIT, true);
             }

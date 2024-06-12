@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IPacketDistributor;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
@@ -49,25 +50,25 @@ public class AbstractFabricNetwork {
 
     public static class Dispatcher extends NetworkManager.Dispatcher {
 
-        public Dispatcher(ResourceLocation channelName, String channelVersion) {
+        public Dispatcher(IResourceLocation channelName, String channelVersion) {
             super(channelName, channelVersion);
         }
 
         @Override
         public void register() {
             ServerLoginConnectionEvents.QUERY_START.register(this::startServerHandshake);
-            ServerLoginNetworking.registerGlobalReceiver(channelName, this::onServerHandshake);
-            ServerPlayNetworking.registerGlobalReceiver(channelName, this::onServerEvent);
+            ServerLoginNetworking.registerGlobalReceiver(channelName.toLocation(), this::onServerHandshake);
+            ServerPlayNetworking.registerGlobalReceiver(channelName.toLocation(), this::onServerEvent);
 
             EnvironmentExecutor.runOn(EnvironmentType.CLIENT, () -> () -> {
-                ClientLoginNetworking.registerGlobalReceiver(channelName, this::onClientHandshake);
-                ClientPlayNetworking.registerGlobalReceiver(channelName, this::onClientEvent);
+                ClientLoginNetworking.registerGlobalReceiver(channelName.toLocation(), this::onClientHandshake);
+                ClientPlayNetworking.registerGlobalReceiver(channelName.toLocation(), this::onClientEvent);
             });
         }
 
         public void startServerHandshake(Object handler, MinecraftServer server, PacketSender sender, ServerLoginNetworking.LoginSynchronizer synchronizer) {
             if (ModConfig.Common.enableProtocolCheck) {
-                sender.sendPacket(channelName, PacketByteBufs.empty());
+                sender.sendPacket(channelName.toLocation(), PacketByteBufs.empty());
             }
         }
 
@@ -116,7 +117,7 @@ public class AbstractFabricNetwork {
         }
 
         @Override
-        public IPacketDistributor add(ResourceLocation channel, IFriendlyByteBuf buf) {
+        public IPacketDistributor add(IResourceLocation channel, IFriendlyByteBuf buf) {
             Packet<?> packet1 = direction.buildPacket(buf, channel);
             return new Distributor(direction, target, packet1);
         }
@@ -185,8 +186,8 @@ public class AbstractFabricNetwork {
             this.builder = builder;
         }
 
-        public Packet<?> buildPacket(IFriendlyByteBuf buf, ResourceLocation channelName) {
-            return builder.get().apply(channelName, (FriendlyByteBuf) buf.asByteBuf());
+        public Packet<?> buildPacket(IFriendlyByteBuf buf, IResourceLocation channelName) {
+            return builder.get().apply(channelName.toLocation(), (FriendlyByteBuf) buf.asByteBuf());
         }
     }
 }

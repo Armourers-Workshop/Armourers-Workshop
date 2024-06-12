@@ -60,7 +60,7 @@ public class ChunkNode {
 
     public static class Variable extends ChunkNode {
 
-        private ChunkVariable var;
+        private final ChunkVariable var;
         private ChunkOutputStream stream;
 
         private int varStart;

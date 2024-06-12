@@ -4,14 +4,15 @@ import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.api.common.ITextureKey;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
+import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
 import moe.plushie.armourers_workshop.utils.math.Vector2f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.texture.TextureBox;
 import moe.plushie.armourers_workshop.utils.texture.TextureData;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -22,7 +23,7 @@ import java.util.function.Supplier;
 
 public class ArmatureSerializers {
 
-    private static final HashMap<ResourceLocation, Class<?>> NAMED_CLASSES = new HashMap<>();
+    private static final HashMap<IResourceLocation, Class<?>> NAMED_CLASSES = new HashMap<>();
     private static final HashMap<String, Supplier<? extends JointModifier>> NAMED_MODIFIERS = new HashMap<>();
     private static final HashMap<String, Function<ArmatureTransformerContext, ? extends ArmaturePlugin>> NAMED_PLUGINS = new HashMap<>();
 
@@ -133,16 +134,16 @@ public class ArmatureSerializers {
         return IEntityTypeProvider.of(object.stringValue());
     }
 
-    public static ResourceLocation readResourceLocation(IDataPackObject object) {
-        return new ResourceLocation(object.stringValue());
+    public static IResourceLocation readResourceLocation(IDataPackObject object) {
+        return OpenResourceLocation.parse(object.stringValue());
     }
 
 
     public static <T> void registerClass(String registryName, Class<T> clazz) {
-        NAMED_CLASSES.put(new ResourceLocation(registryName), clazz);
+        NAMED_CLASSES.put(OpenResourceLocation.parse(registryName), clazz);
     }
 
-    public static <T> Class<?> getClass(ResourceLocation registryName) {
+    public static <T> Class<?> getClass(IResourceLocation registryName) {
         return NAMED_CLASSES.get(registryName);
     }
 

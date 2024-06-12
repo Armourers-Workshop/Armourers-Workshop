@@ -39,9 +39,8 @@ public class Joint implements IJoint {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Joint)) return false;
-        Joint joint2 = (Joint) o;
-        return name.equals(joint2.name);
+        if (!(o instanceof Joint that)) return false;
+        return name.equals(that.name);
     }
 
     @Override

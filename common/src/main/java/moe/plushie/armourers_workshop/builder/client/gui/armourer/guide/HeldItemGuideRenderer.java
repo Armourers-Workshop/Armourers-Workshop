@@ -44,7 +44,7 @@ public class HeldItemGuideRenderer extends AbstractGuideRenderer {
         poseStack.rotate(Vector3f.XP.rotationDegrees(-90));
         armSolid.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
         poseStack.translate(0, -0.001f * f, 0);
-        armTransparent.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_TRANSLUCENT), light, overlay, 1, 1, 1, 0.75f);
+        armTransparent.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_TRANSLUCENT), light, overlay, 0xbfffffff);
         poseStack.popPose();
     }
 }

@@ -112,10 +112,10 @@ public interface ViewImpl {
         }
         CGAffineTransform offset = null;
         ArrayList<Pair<Collection<ViewImpl>, Boolean>> enumerator = new ArrayList<>();
-        if (fromViews.size() != 0) {
+        if (!fromViews.isEmpty()) {
             enumerator.add(Pair.of(fromViews, reversed));
         }
-        if (toViews.size() != 0) {
+        if (!toViews.isEmpty()) {
             enumerator.add(Pair.of(toViews, !reversed));
         }
         // when forward search, the evaluate order needs reverse.

@@ -13,8 +13,6 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class SkinRenderTesselator extends SkinRenderContext {
 
@@ -38,8 +36,8 @@ public class SkinRenderTesselator extends SkinRenderContext {
     }
 
     public static SkinRenderTesselator create(BakedSkin bakedSkin) {
-        auto mannequin = PlaceholderManager.MANNEQUIN.get();
-        auto bakedArmature = BakedArmature.defaultBy(bakedSkin.getType());
+        var mannequin = PlaceholderManager.MANNEQUIN.get();
+        var bakedArmature = BakedArmature.defaultBy(bakedSkin.getType());
         if (bakedArmature == null || mannequin == null || mannequin.getLevel() == null) {
             return null;
         }

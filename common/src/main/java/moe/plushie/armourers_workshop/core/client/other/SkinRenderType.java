@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.client.IRenderTypeBuilder;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.compatibility.AbstractRenderType;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -67,12 +67,12 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
         }
     }
 
-    public static RenderType solidFace(ResourceLocation texture) {
+    public static RenderType solidFace(IResourceLocation texture) {
         String key = String.format("aw_custom_solid/%s", texture.getPath());
         return FACE_SOLID_VARIANTS.computeIfAbsent(key, k -> _builder(SkinRenderFormat.SKIN_FACE_TEXTURE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build(k));
     }
 
-    public static RenderType lightingFace(ResourceLocation texture) {
+    public static RenderType lightingFace(IResourceLocation texture) {
         String key = String.format("aw_custom_lighting/%s", texture.getPath());
         return FACE_LIGHTING_VARIANTS.computeIfAbsent(key, k -> _builder(SkinRenderFormat.SKIN_FACE_LIGHTING_TEXTURE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build(k));
     }
@@ -85,15 +85,15 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
         return LINE_STRIP;
     }
 
-    public static RenderType entityCutout(ResourceLocation texture) {
+    public static RenderType entityCutout(IResourceLocation texture) {
         return _entity(SkinRenderFormat.ENTITY_CUTOUT, texture).cull().build("aw_player_solid");
     }
 
-    public static RenderType entityCutoutNoCull(ResourceLocation texture) {
+    public static RenderType entityCutoutNoCull(IResourceLocation texture) {
         return _entity(SkinRenderFormat.ENTITY_CUTOUT_NO_CULL, texture).build("aw_player_cutout");
     }
 
-    public static RenderType entityTranslucentCull(ResourceLocation texture) {
+    public static RenderType entityTranslucentCull(IResourceLocation texture) {
         return _entity(SkinRenderFormat.ENTITY_TRANSLUCENT, texture).cull().transparency(Transparency.TRANSLUCENT).build("aw_player_translucent");
     }
 
@@ -128,11 +128,11 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
         return FACE_LIGHTING_VARIANTS.containsValue(renderType);
     }
 
-    private static IRenderTypeBuilder _entity(SkinRenderFormat format, ResourceLocation texture) {
+    private static IRenderTypeBuilder _entity(SkinRenderFormat format, IResourceLocation texture) {
         return _builder(format).texture(texture).polygonOffset(0, 30).overlay().lightmap().sortOnUpload().crumbling().outline();
     }
 
-    private static IRenderTypeBuilder _entityHighlight(ResourceLocation texture) {
+    private static IRenderTypeBuilder _entityHighlight(IResourceLocation texture) {
         return _builder(SkinRenderFormat.ENTITY_ALPHA).texture(texture).overlay().lightmap();
     }
 
@@ -140,15 +140,15 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
         return _builder(format);
     }
 
-    private static IRenderTypeBuilder _texture(ResourceLocation texture) {
+    private static IRenderTypeBuilder _texture(IResourceLocation texture) {
         return _builder(SkinRenderFormat.IMAGE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT);
     }
 
-    private static IRenderTypeBuilder _texture2(ResourceLocation texture) {
+    private static IRenderTypeBuilder _texture2(IResourceLocation texture) {
         return _builder(SkinRenderFormat.BLOCK_CUTOUT).texture(texture).overlay().lightmap();
     }
 
-    private static IRenderTypeBuilder _block(ResourceLocation texture) {
+    private static IRenderTypeBuilder _block(IResourceLocation texture) {
         return _builder(SkinRenderFormat.BLOCK).texture(texture).overlay().lightmap();
     }
 

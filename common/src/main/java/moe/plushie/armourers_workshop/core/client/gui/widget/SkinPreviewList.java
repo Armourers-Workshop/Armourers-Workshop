@@ -12,6 +12,7 @@ import com.apple.library.uikit.UIScreen;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
@@ -22,13 +23,10 @@ import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-
-import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public abstract class SkinPreviewList<T> extends UIView {
@@ -132,7 +130,7 @@ public abstract class SkinPreviewList<T> extends UIView {
         if ((backgroundColor & 0xff000000) != 0) {
             context.fillRect(x, y, x + width, y + height, backgroundColor);
         }
-        auto buffers = AbstractBufferSource.defaultBufferSource();
+        var buffers = AbstractBufferSource.buffer();
         for (int i = 0; i < totalCount; ++i) {
             renderItem(context, i, false, buffers);
         }
@@ -173,7 +171,7 @@ public abstract class SkinPreviewList<T> extends UIView {
     }
 
     public void renderItemContent(float x, float y, float width, float height, boolean isHovered, T entry, IBufferSource bufferSource, CGGraphicsContext context) {
-        auto bakedSkin = SkinBakery.getInstance().loadSkin(getItemDescriptor(entry), loadTicket);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(getItemDescriptor(entry), loadTicket);
         if (bakedSkin == null) {
             int speed = 60;
             int frames = 18;
@@ -191,7 +189,7 @@ public abstract class SkinPreviewList<T> extends UIView {
             context.drawText(properties, x + 1, iy, 0xffeeeeee, false, font, 0);
         }
 
-        ResourceLocation texture = ArmourersWorkshop.getItemIcon(bakedSkin.getType());
+        IResourceLocation texture = ArmourersWorkshop.getItemIcon(bakedSkin.getType());
         if (texture != null) {
             context.drawResizableImage(texture, x + 1, y + 1, width / 4, height / 4, 0, 0, 16, 16, 16, 16);
         }

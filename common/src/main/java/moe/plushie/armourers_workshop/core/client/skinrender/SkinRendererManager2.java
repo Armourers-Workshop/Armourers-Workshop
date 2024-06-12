@@ -3,10 +3,10 @@ package moe.plushie.armourers_workshop.core.client.skinrender;
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.client.model.AbstractSkinnableModels;
 import moe.plushie.armourers_workshop.core.armature.ArmatureSerializers;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerManager;
-import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultArmatureTransformerManager;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultLayerArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightArmatureTransformerManager;
@@ -25,7 +25,6 @@ import moe.plushie.armourers_workshop.core.client.skinrender.plugin.TridentModel
 import moe.plushie.armourers_workshop.core.client.skinrender.plugin.VillagerModelArmaturePlugin;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
-import net.minecraft.resources.ResourceLocation;
 
 @SuppressWarnings("unused")
 public class SkinRendererManager2 extends ArmatureSerializers {
@@ -116,14 +115,14 @@ public class SkinRendererManager2 extends ArmatureSerializers {
 
     public static class SimpleLoader implements IDataPackBuilder {
 
-        private final ResourceLocation location;
+        private final IResourceLocation location;
 
-        public SimpleLoader(ResourceLocation location) {
+        public SimpleLoader(IResourceLocation location) {
             this.location = location;
         }
 
         @Override
-        public void append(IDataPackObject object, ResourceLocation file) {
+        public void append(IDataPackObject object, IResourceLocation file) {
             String type = object.get("type").stringValue();
             ArmatureTransformerManager manager = MANAGERS.get(type);
             if (manager != null) {

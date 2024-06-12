@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.document;
 
 import moe.plushie.armourers_workshop.api.data.IDataSerializer;
-import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
@@ -10,7 +9,6 @@ import moe.plushie.armourers_workshop.utils.DataSerializerKey;
 import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 
 public class SkinDocument {
 
@@ -168,10 +166,9 @@ public class SkinDocument {
     }
 
     private SkinDocumentNode _generateDefaultNode(SkinDocumentType category) {
-        SkinDocumentNode root = new SkinDocumentNode("root", null);
-        for (ISkinPartType partType : category.getSkinPartTypes()) {
-            ResourceLocation registryName = partType.getRegistryName();
-            SkinDocumentNode node = new SkinDocumentNode(registryName.getPath(), null);
+        var root = new SkinDocumentNode("root", null);
+        for (var partType : category.getSkinPartTypes()) {
+            var node = new SkinDocumentNode(partType.getRegistryName().getPath(), null);
             node.setType(partType);
             root.add(node);
         }

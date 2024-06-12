@@ -3,13 +3,13 @@ package moe.plushie.armourers_workshop.core.skin.document;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinEquipmentType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class SkinDocumentType implements IRegistryEntry {
     private final ISkinType skinType;
     private final ArrayList<ISkinPartType> skinPartTypes;
 
-    private ResourceLocation registryName;
+    private IResourceLocation registryName;
 
     public SkinDocumentType(String category, ISkinType type) {
         this.category = category;
@@ -62,12 +62,12 @@ public class SkinDocumentType implements IRegistryEntry {
         return skinPartTypes;
     }
 
-    public void setRegistryName(ResourceLocation registryName) {
+    public void setRegistryName(IResourceLocation registryName) {
         this.registryName = registryName;
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public IResourceLocation getRegistryName() {
         return registryName;
     }
 

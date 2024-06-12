@@ -121,8 +121,8 @@ public class UIControl extends UIView implements HighlightedDisplayable {
             return;
         }
         for (UIView subview : view.subviews()) {
-            if (subview instanceof HighlightedDisplayable) {
-                ((HighlightedDisplayable) subview).setHighlighted(isHighlighted);
+            if (subview instanceof HighlightedDisplayable displayable) {
+                displayable.setHighlighted(isHighlighted);
             }
             if (!(subview instanceof UIControl)) {
                 applyHighlightState(subview, isHighlighted);

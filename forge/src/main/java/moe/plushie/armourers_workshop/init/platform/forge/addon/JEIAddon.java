@@ -16,7 +16,7 @@ public class JEIAddon implements IModPlugin {
 
     @Override
     public ResourceLocation getPluginUid() {
-        return ModConstants.key("gui-fix");
+        return ModConstants.key("gui-fix").toLocation();
     }
 
     @Override

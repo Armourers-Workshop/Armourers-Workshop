@@ -1,13 +1,14 @@
 package moe.plushie.armourers_workshop.core.data;
 
-import moe.plushie.armourers_workshop.api.common.IResourceManager;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.core.IResourceManager;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
-import net.minecraft.resources.ResourceLocation;
+import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -21,8 +22,6 @@ import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import manifold.ext.rt.api.auto;
 
 public class DataPackLoader implements PreparableReloadListener {
 
@@ -42,7 +41,7 @@ public class DataPackLoader implements PreparableReloadListener {
         ArrayList<CompletableFuture<?>> allJobs = new ArrayList<>();
         ArrayList<Runnable> allCompletes = new ArrayList<>();
         build((supplier, consumer) -> {
-            auto job = CompletableFuture.supplyAsync(supplier, executor);
+            var job = CompletableFuture.supplyAsync(supplier, executor);
             allJobs.add(job);
             allCompletes.add(() -> consumer.accept(job.join()));
         }, resourceManager);
@@ -56,13 +55,13 @@ public class DataPackLoader implements PreparableReloadListener {
 
     public static class Entry {
 
-        private final ResourceLocation target;
-        private final Function<ResourceLocation, IDataPackBuilder> provider;
+        private final IResourceLocation target;
+        private final Function<IResourceLocation, IDataPackBuilder> provider;
         private final Runnable willLoadHandler;
         private final Runnable didLoadHandler;
         private final int order;
 
-        public Entry(String path, Function<ResourceLocation, IDataPackBuilder> provider, Runnable willLoadHandler, Runnable didLoadHandler, int order) {
+        public Entry(String path, Function<IResourceLocation, IDataPackBuilder> provider, Runnable willLoadHandler, Runnable didLoadHandler, int order) {
             this.target = ModConstants.key(path);
             this.provider = provider;
             this.willLoadHandler = willLoadHandler;
@@ -70,19 +69,19 @@ public class DataPackLoader implements PreparableReloadListener {
             this.order = order;
         }
 
-        public Supplier<Map<ResourceLocation, IDataPackBuilder>> prepare(IResourceManager resourceManager) {
+        public Supplier<Map<IResourceLocation, IDataPackBuilder>> prepare(IResourceManager resourceManager) {
             if (willLoadHandler != null) {
                 willLoadHandler.run();
             }
             return () -> {
-                HashMap<ResourceLocation, IDataPackBuilder> results = new HashMap<>();
+                HashMap<IResourceLocation, IDataPackBuilder> results = new HashMap<>();
                 resourceManager.readResources(target, s -> s.endsWith(".json"), (location, resource) -> {
                     IDataPackObject object = StreamUtils.fromPackObject(resource);
                     if (object == null) {
                         return;
                     }
                     String path = SkinFileUtils.removeExtension(location.getPath());
-                    ResourceLocation location1 = new ResourceLocation(location.getNamespace(), path);
+                    IResourceLocation location1 = OpenResourceLocation.create(location.getNamespace(), path);
                     ModLog.debug("Load entry '{}' in '{}'", location1, resource.getSource());
                     results.computeIfAbsent(location1, provider).append(object, location);
                 });
@@ -90,7 +89,7 @@ public class DataPackLoader implements PreparableReloadListener {
             };
         }
 
-        public void load(Map<ResourceLocation, IDataPackBuilder> results) {
+        public void load(Map<IResourceLocation, IDataPackBuilder> results) {
             results.forEach((key, builder) -> builder.build());
             if (didLoadHandler != null) {
                 didLoadHandler.run();
@@ -100,6 +99,6 @@ public class DataPackLoader implements PreparableReloadListener {
 
     protected interface TaskQueue {
 
-        void accept(Supplier<Map<ResourceLocation, IDataPackBuilder>> supplier, Consumer<Map<ResourceLocation, IDataPackBuilder>> consumer);
+        void accept(Supplier<Map<IResourceLocation, IDataPackBuilder>> supplier, Consumer<Map<IResourceLocation, IDataPackBuilder>> consumer);
     }
 }

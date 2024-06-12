@@ -2,11 +2,11 @@ package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
 import moe.plushie.armourers_workshop.api.common.ICapabilityType;
 import moe.plushie.armourers_workshop.api.registry.ICapabilityTypeBuilder;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeCapabilityManager;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
 import java.util.Optional;
@@ -23,8 +23,8 @@ public class CapabilityTypeBuilderImpl<T> implements ICapabilityTypeBuilder<T> {
     }
 
     @Override
-    public IRegistryKey<ICapabilityType<T>> build(String name) {
-        ResourceLocation registryName = ModConstants.key(name);
+    public IRegistryHolder<ICapabilityType<T>> build(String name) {
+        IResourceLocation registryName = ModConstants.key(name);
         ModLog.debug("Registering Capability Type '{}'", registryName);
         return AbstractForgeCapabilityManager.register(registryName, type, factory);
     }

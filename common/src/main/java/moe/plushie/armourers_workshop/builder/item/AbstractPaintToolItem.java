@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.api.common.IItemParticleProvider;
 import moe.plushie.armourers_workshop.api.common.IItemSoundProvider;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.core.item.ConfigurableToolItem;
 import moe.plushie.armourers_workshop.init.ModHolidays;
 import moe.plushie.armourers_workshop.init.ModSounds;
@@ -21,7 +21,7 @@ public abstract class AbstractPaintToolItem extends ConfigurableToolItem impleme
 
     @Override
     public void playSound(UseOnContext context) {
-        IRegistryKey<SoundEvent> soundEvent = getItemSoundEvent(context);
+        IRegistryHolder<SoundEvent> soundEvent = getItemSoundEvent(context);
         if (soundEvent == null) {
             return;
         }
@@ -47,7 +47,7 @@ public abstract class AbstractPaintToolItem extends ConfigurableToolItem impleme
     }
 
     @Nullable
-    public IRegistryKey<SoundEvent> getItemSoundEvent(UseOnContext context) {
+    public IRegistryHolder<SoundEvent> getItemSoundEvent(UseOnContext context) {
         return null;
     }
 }

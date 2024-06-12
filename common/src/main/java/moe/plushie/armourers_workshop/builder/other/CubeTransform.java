@@ -28,37 +28,21 @@ public class CubeTransform {
     }
 
     public static Rotation getRotation(Direction dir, boolean flags) {
-        switch (dir) {
-            case SOUTH:
-                return Rotation.CLOCKWISE_180;
-            case WEST:
-                if (flags) {
-                    return Rotation.CLOCKWISE_90;
-                }
-                return Rotation.COUNTERCLOCKWISE_90;
-            case EAST:
-                if (flags) {
-                    return Rotation.COUNTERCLOCKWISE_90;
-                }
-                return Rotation.CLOCKWISE_90;
-            case NORTH:
-            default:
-                return Rotation.NONE;
-        }
+        return switch (dir) {
+            case SOUTH -> Rotation.CLOCKWISE_180;
+            case WEST -> flags ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90;
+            case EAST -> flags ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90;
+            default -> Rotation.NONE;
+        };
     }
 
     public static OpenQuaternionf getRotationDegrees(Direction dir) {
-        switch (dir) {
-            case SOUTH:
-                return new OpenQuaternionf(0, 180, 0, true);
-            case WEST:
-                return new OpenQuaternionf(0, 90, 0, true);
-            case EAST:
-                return new OpenQuaternionf(0, -90, 0, true);
-            case NORTH:
-            default:
-                return OpenQuaternionf.ONE;
-        }
+        return switch (dir) {
+            case SOUTH -> new OpenQuaternionf(0, 180, 0, true);
+            case WEST -> new OpenQuaternionf(0, 90, 0, true);
+            case EAST -> new OpenQuaternionf(0, -90, 0, true);
+            default -> OpenQuaternionf.ONE;
+        };
     }
 
     public Direction rotate(Direction dir) {

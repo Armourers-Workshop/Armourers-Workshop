@@ -108,7 +108,7 @@ public class BakedCubeQuads {
                 SkinTransform transform = SkinTransform.IDENTITY;
                 quads.add(new SkinCubeFace(shape, transform, paintColor, 255, dir, null, SkinCubeTypes.SOLID));
             });
-            if (quads.size() != 0) {
+            if (!quads.isEmpty()) {
                 Rectangle3i bounds = box.getBounds();
                 OpenVoxelShape renderShape = OpenVoxelShape.box(new Rectangle3f(bounds));
                 allQuads.add(entry.getKey(), new BakedCubeQuads(bounds, SkinTransform.IDENTITY, renderShape, quads));

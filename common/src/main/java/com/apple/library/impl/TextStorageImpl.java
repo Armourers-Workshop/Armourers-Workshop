@@ -23,8 +23,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class TextStorageImpl {
 
@@ -165,9 +163,9 @@ public class TextStorageImpl {
         if (!isFocused || highlightedRects == null || highlightedRects.isEmpty()) {
             return;
         }
-        auto pose = context.state().ctm().last();
-        auto buffers = AbstractBufferSource.defaultBufferSource();
-        auto builder = buffers.getBuffer(SkinRenderType.GUI_HIGHLIGHTED_TEXT);
+        var pose = context.state().ctm().last();
+        var buffers = AbstractBufferSource.buffer();
+        var builder = buffers.getBuffer(SkinRenderType.GUI_HIGHLIGHTED_TEXT);
         for (CGRect rect : highlightedRects) {
             builder.vertex(pose, rect.getMinX(), rect.getMaxY(), 0).endVertex();
             builder.vertex(pose, rect.getMaxX(), rect.getMaxY(), 0).endVertex();

@@ -44,7 +44,7 @@ public final class BlockUtils {
     public static void snapshot(BlockEvent event) {
         Component reason = null;
         // only work in server side
-        if (!(event.getEntity() instanceof ServerPlayer) || !(event.getLevel() instanceof Level)) {
+        if (!(event.getEntity() instanceof ServerPlayer player) || !(event.getLevel() instanceof Level)) {
             return;
         }
         // is place skin cube block.
@@ -61,7 +61,6 @@ public final class BlockUtils {
         if (reason == null) {
             return;
         }
-        ServerPlayer player = (ServerPlayer) event.getEntity();
         NamedUserAction group = new NamedUserAction(reason);
         group.push(new SetBlockAction((Level) event.getLevel(), event.getPos(), snapshot.getState(), snapshot.getTag()));
         UndoManager.of(player.getUUID()).push(group);

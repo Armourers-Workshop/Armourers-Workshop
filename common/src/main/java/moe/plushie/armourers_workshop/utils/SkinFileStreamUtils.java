@@ -24,8 +24,8 @@ public final class SkinFileStreamUtils {
 
     public static Skin loadSkinFromFile(File file) {
         try {
-            FileInputStream fis = new FileInputStream(file);
-            Skin skin = loadSkinFromStream2(fis);
+            var fis = new FileInputStream(file);
+            var skin = loadSkinFromStream2(fis);
             fis.close();
             return skin;
         } catch (FileNotFoundException e) {

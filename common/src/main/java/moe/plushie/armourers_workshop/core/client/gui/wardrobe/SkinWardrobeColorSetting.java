@@ -12,6 +12,7 @@ import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIView;
 import com.apple.library.uikit.UIWindow;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
@@ -28,7 +29,6 @@ import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TextureUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -156,7 +156,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
         }
 
         private void autoPick(UIControl control) {
-            ResourceLocation location = TextureUtils.getTexture(wardrobe.getEntity());
+            IResourceLocation location = TextureUtils.getTexture(wardrobe.getEntity());
             if (location == null) {
                 return;
             }

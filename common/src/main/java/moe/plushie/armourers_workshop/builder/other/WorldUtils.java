@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeProvider;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
-import moe.plushie.armourers_workshop.api.skin.ISkinMarker;
 import moe.plushie.armourers_workshop.api.skin.ISkinPart;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -36,15 +35,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import manifold.ext.rt.api.auto;
 
 /**
  * Helper class for converting back and forth from
@@ -103,7 +99,7 @@ public final class WorldUtils {
         Skin skin = builder.build();
 
         // check if there are any blocks in the build guides.
-        if (skin.getParts().size() == 0 && skin.getPaintData() == null) {
+        if (skin.getParts().isEmpty() && skin.getPaintData() == null) {
             throw SkinSaveException.Type.NO_DATA.build("noting");
         }
 
@@ -197,10 +193,9 @@ public final class WorldUtils {
 
     private static void saveArmourBlockToList(Level level, CubeTransform transform, BlockPos pos, int ix, int iy, int iz, SkinCube cube, ArrayList<SkinMarker> markerBlocks) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (!(blockEntity instanceof IPaintable)) {
+        if (!(blockEntity instanceof IPaintable target)) {
             return;
         }
-        IPaintable target = (IPaintable) blockEntity;
         BlockState blockState = blockEntity.getBlockState();
         OptionalDirection marker = SkinCubeBlock.getMarker(blockState);
 
@@ -237,44 +232,44 @@ public final class WorldUtils {
         ISkinCubeProvider cubeData = partData.getCubeData();
 
         for (int i = 0; i < cubeData.getCubeTotal(); i++) {
-            ISkinCube cube = cubeData.getCube(i);
-            IVector3i cubePos = cube.getPosition();
-            ISkinCubeType blockData = cube.getType();
-            OptionalDirection markerFacing = OptionalDirection.NONE;
-            for (ISkinMarker marker : partData.getMarkers()) {
+            var cube = cubeData.getCube(i);
+            var cubePos = cube.getPosition();
+            var blockData = cube.getType();
+            var markerFacing = OptionalDirection.NONE;
+            for (var marker : partData.getMarkers()) {
                 if (cubePos.equals(marker.getPosition())) {
-                    Direction resolvedMarker = getResolvedDirection(marker.getDirection(), mirror);
+                    var resolvedMarker = getResolvedDirection(marker.getDirection(), mirror);
                     markerFacing = OptionalDirection.of(transform.rotate(resolvedMarker));
                     break;
                 }
             }
-            BlockPos origin = new BlockPos(-offset.getX(), -offset.getY() + -buildSpace.getY(), offset.getZ());
+            var origin = new BlockPos(-offset.getX(), -offset.getY() + -buildSpace.getY(), offset.getZ());
             loadSkinBlockIntoWorld(collector, transform, origin, blockData, cubePos, markerFacing, cube, mirror);
         }
     }
 
     private static void loadSkinBlockIntoWorld(CubeChangesCollector collector, CubeTransform transform, BlockPos origin, ISkinCubeType blockData, IVector3i cubePos, OptionalDirection markerFacing, ISkinCube cube, boolean mirror) {
-        int shiftX = -cubePos.getX() - 1;
-        int shiftY = cubePos.getY() + 1;
-        int shiftZ = cubePos.getZ();
+        var shiftX = -cubePos.getX() - 1;
+        var shiftY = cubePos.getY() + 1;
+        var shiftZ = cubePos.getZ();
         if (mirror) {
             shiftX = cubePos.getX();
         }
 
-        auto target = transform.mul(shiftX + origin.getX(), origin.getY() - shiftY, shiftZ + origin.getZ());
-        auto targetCube = collector.getCube(target);
+        var target = transform.mul(shiftX + origin.getX(), origin.getY() - shiftY, shiftZ + origin.getZ());
+        var targetCube = collector.getCube(target);
 
         if (targetCube.is(ModBlocks.BOUNDING_BOX.get())) {
             targetCube.setBlockStateAndTag(Blocks.AIR.defaultBlockState(), null);
         }
 
-        Block targetBlock = blockData.getBlock();
-        BlockState targetState = SkinCubeBlock.setMarker(targetBlock.defaultBlockState(), markerFacing);
+        var targetBlock = blockData.getBlock();
+        var targetState = SkinCubeBlock.setMarker(targetBlock.defaultBlockState(), markerFacing);
 
         HashMap<Direction, IPaintColor> colors = new HashMap<>();
-        for (Direction dir : Direction.values()) {
-            IPaintColor paintColor = cube.getPaintColor(dir);
-            Direction resolvedDir = getResolvedDirection(dir, mirror);
+        for (var dir : Direction.values()) {
+            var paintColor = cube.getPaintColor(dir);
+            var resolvedDir = getResolvedDirection(dir, mirror);
             colors.put(transform.rotate(resolvedDir), paintColor);
         }
 
@@ -298,11 +293,11 @@ public final class WorldUtils {
                 ix = destWidth - ix - 1;
                 dir = getResolvedDirection(dir, true);
             }
-            ITexturePos newTexture = destBox.get(ix + destX, iy + destY, iz + destZ, dir);
+            var newTexture = destBox.get(ix + destX, iy + destY, iz + destZ, dir);
             if (newTexture == null) {
                 return;
             }
-            int color = paintData.getColor(texture);
+            var color = paintData.getColor(texture);
             if (PaintColor.isOpaque(color)) {
                 // a special case is to use the mirror to swap the part texture,
                 // we will copy the color to the map and then applying it when read finish.
@@ -317,7 +312,7 @@ public final class WorldUtils {
     }
 
     public static void replaceCubes(CubeChangesCollector collector, CubeTransform transform, ISkinType skinType, SkinProperties skinProps, CubeReplacingEvent event) {
-        for (ISkinPartType skinPart : skinType.getParts()) {
+        for (var skinPart : skinType.getParts()) {
             for (Vector3i offset : getResolvedBuildingSpace2(skinPart)) {
                 replaceCube(collector, transform.mul(offset), event);
             }
@@ -325,7 +320,7 @@ public final class WorldUtils {
     }
 
     public static void replaceCube(CubeChangesCollector collector, BlockPos pos, CubeReplacingEvent event) {
-        auto cube = collector.getCube(pos);
+        var cube = collector.getCube(pos);
         if (event.accept(cube)) {
             event.apply(cube);
         }
@@ -365,8 +360,8 @@ public final class WorldUtils {
     private static int clearMarkersForSkinPart(CubeChangesCollector collector, CubeTransform transform, ISkinPartType skinPart) {
         int blockCount = 0;
         for (Vector3i offset : getResolvedBuildingSpace2(skinPart)) {
-            auto cube = collector.getCube(transform.mul(offset));
-            auto targetState = cube.getBlockState();
+            var cube = collector.getCube(transform.mul(offset));
+            var targetState = cube.getBlockState();
             if (targetState.hasProperty(SkinCubeBlock.MARKER) && SkinCubeBlock.getMarker(targetState) != OptionalDirection.NONE) {
                 cube.setBlockState(SkinCubeBlock.setMarker(targetState, OptionalDirection.NONE));
                 blockCount++;
@@ -401,7 +396,7 @@ public final class WorldUtils {
     private static int clearEquipmentCubesForSkinPart(CubeChangesCollector collector, CubeTransform transform, ISkinPartType skinPart) {
         int blockCount = 0;
         for (Vector3i offset : getResolvedBuildingSpace2(skinPart)) {
-            auto cube = collector.getCube(transform.mul(offset));
+            var cube = collector.getCube(transform.mul(offset));
             if (cube.is(SkinCubeBlock.class)) {
                 cube.setBlockStateAndTag(Blocks.AIR.defaultBlockState(), (CompoundTag) null);
                 blockCount++;

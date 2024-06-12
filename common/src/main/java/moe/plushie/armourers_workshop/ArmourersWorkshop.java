@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop;
 
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
@@ -30,8 +31,6 @@ import moe.plushie.armourers_workshop.init.proxy.ClientProxy;
 import moe.plushie.armourers_workshop.init.proxy.CommonProxy;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.resources.ResourceLocation;
 
 public class ArmourersWorkshop {
 
@@ -73,17 +72,17 @@ public class ArmourersWorkshop {
         });
     }
 
-    public static ResourceLocation getItemIcon(ISkinType skinType) {
+    public static IResourceLocation getItemIcon(ISkinType skinType) {
         if (skinType == SkinTypes.UNKNOWN || skinType.getRegistryName() == null) {
             return null;
         }
         return ModConstants.key("textures/item/template/" + skinType.getRegistryName().getPath() + ".png");
     }
 
-    public static ModelResourceLocation getCustomModel(ResourceLocation resourceLocation) {
-        String name = resourceLocation.getPath().toLowerCase();
+    public static IResourceLocation getCustomModel(IResourceLocation location) {
+        String name = location.getPath().toLowerCase();
         name = name.replaceAll("\\.base", "");
         name = name.replaceAll("\\.", "_");
-        return new ModelResourceLocation(ModConstants.key("skin/" + name), "inventory");
+        return ModConstants.key("skin/" + name);
     }
 }

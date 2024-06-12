@@ -39,7 +39,7 @@ public class SkinSlot extends Slot {
         if (backgroundPairs == null) {
             backgroundPairs = new ArrayList<>();
             for (SkinSlotType slotType : slotTypes) {
-                backgroundPairs.add(Pair.of(InventoryMenu.BLOCK_ATLAS, slotType.getIconSprite()));
+                backgroundPairs.add(Pair.of(InventoryMenu.BLOCK_ATLAS, slotType.getIconSprite().toLocation()));
             }
         }
         int size = backgroundPairs.size();

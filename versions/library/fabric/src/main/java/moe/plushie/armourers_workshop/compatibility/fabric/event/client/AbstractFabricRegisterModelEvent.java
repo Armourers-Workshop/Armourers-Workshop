@@ -3,13 +3,16 @@ package moe.plushie.armourers_workshop.compatibility.fabric.event.client;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.registry.IEventHandler;
 import moe.plushie.armourers_workshop.init.platform.event.client.RegisterModelEvent;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.minecraft.resources.ResourceLocation;
 
-@Available("[1.16, )")
+@Available("[1.21, )")
 public class AbstractFabricRegisterModelEvent {
 
     public static IEventHandler<RegisterModelEvent> registryFactory() {
-        return subscriber -> ModelLoadingRegistry.INSTANCE.registerModelProvider((resourceManager, registry) -> subscriber.accept(registry::accept));
+        return subscriber -> ModelLoadingPlugin.register(pluginContext -> subscriber.accept(registryName -> {
+            ResourceLocation location = ResourceLocation.create(registryName.getNamespace(), "item/" + registryName.getPath());
+            pluginContext.addModels(location);
+        }));
     }
-
 }

@@ -18,7 +18,7 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 public class AdvancedLeftCardPanel extends UIView {
 
     //private final UIButton saveButton = new UIButton(new CGRect(146, 120, 20, 20));
-    private DocumentConnector connector;
+    private final DocumentConnector connector;
 
     public AdvancedLeftCardPanel(DocumentEditor editor, CGRect frame) {
         super(frame);

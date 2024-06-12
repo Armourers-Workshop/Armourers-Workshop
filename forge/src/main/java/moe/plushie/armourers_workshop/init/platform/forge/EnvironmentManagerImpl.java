@@ -10,16 +10,14 @@ import org.apache.maven.artifact.versioning.ArtifactVersion;
 
 import java.io.File;
 
-import manifold.ext.rt.api.auto;
-
 @SuppressWarnings("unused")
 public class EnvironmentManagerImpl {
 
     private static MinecraftServer CURRENT_SERVER;
 
     public static String getVersion() {
-        auto fileInfo = AbstractForgeEnvironment.getModFileById(ModConstants.MOD_ID);
-        if (fileInfo != null && fileInfo.getMods().size() != 0) {
+        var fileInfo = AbstractForgeEnvironment.getModFileById(ModConstants.MOD_ID);
+        if (fileInfo != null && !fileInfo.getMods().isEmpty()) {
             ArtifactVersion version = fileInfo.getMods().get(0).getVersion();
             return version.toString();
         }

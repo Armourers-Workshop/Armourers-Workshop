@@ -14,7 +14,7 @@
 //import com.apple.library.uikit.UIView;
 //import com.google.common.collect.ImmutableMap;
 //import com.mojang.authlib.GameProfile;
-//import moe.plushie.armourers_workshop.api.common.IResource;
+//import moe.plushie.armourers_workshop.api.core.IResource;
 //import moe.plushie.armourers_workshop.api.skin.ISkinType;
 //import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 //import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;

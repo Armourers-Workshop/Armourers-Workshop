@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.DataStorageKey;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -18,8 +17,6 @@ import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 
-import manifold.ext.rt.api.auto;
-
 public class MinecartModelArmaturePlugin extends ArmaturePlugin {
 
     private static final IAssociatedContainerKey<Boolean> IS_FLAPPED = DataStorageKey.of("isFlapped", Boolean.class, () -> false);
@@ -29,8 +26,8 @@ public class MinecartModelArmaturePlugin extends ArmaturePlugin {
 
     @Override
     public void activate(Entity entity, SkinRenderContext context) {
-        auto minecart = (AbstractMinecart) entity;
-        auto poseStack = context.pose();
+        var minecart = (AbstractMinecart) entity;
+        var poseStack = context.pose();
 
         // fix minecart render direction issue.
         if (isFlapped(minecart, context.getPartialTicks(), context.getRenderData())) {
@@ -48,14 +45,14 @@ public class MinecartModelArmaturePlugin extends ArmaturePlugin {
 
 
     private boolean isFlapped(AbstractMinecart entity, float partialTicks, SkinRenderData renderData) {
-        auto delta = entity.getDeltaMovement();
+        var delta = entity.getDeltaMovement();
         double dx = delta.x();
         double dz = delta.z();
         if (dx == 0 && dz == 0) {
             // no move, keep the last state
             return renderData.getAssociatedObject(IS_FLAPPED);
         }
-        auto level = entity.getLevel();
+        var level = entity.getLevel();
         int i = MathUtils.floor(MathUtils.lerp(partialTicks, entity.xOld, entity.getX()));
         int j = MathUtils.floor(MathUtils.lerp(partialTicks, entity.yOld, entity.getY()));
         int k = MathUtils.floor(MathUtils.lerp(partialTicks, entity.zOld, entity.getZ()));
@@ -67,7 +64,7 @@ public class MinecartModelArmaturePlugin extends ArmaturePlugin {
             // no rail, keep the last state
             return renderData.getAssociatedObject(IS_FLAPPED);
         }
-        auto shape = blockState.getValue(((BaseRailBlock) blockState.getBlock()).getShapeProperty());
+        var shape = blockState.getValue(((BaseRailBlock) blockState.getBlock()).getShapeProperty());
         boolean result = isFlapped(shape, dx, dz);
         renderData.setAssociatedObject(result, IS_FLAPPED);
         return result;
@@ -75,33 +72,13 @@ public class MinecartModelArmaturePlugin extends ArmaturePlugin {
 
     private boolean isFlapped(RailShape shape, double x, double z) {
         double eps = 1E-3;
-        switch (shape) {
-            case NORTH_WEST:
-            case NORTH_EAST: {
-                return z < -eps;
-            }
-            case SOUTH_EAST:
-            case SOUTH_WEST: {
-                return z > eps;
-            }
-            case NORTH_SOUTH: {
-                return z < -eps;
-            }
-            case EAST_WEST: {
-                return x < -eps;
-            }
-            case ASCENDING_EAST:
-            case ASCENDING_WEST: {
-                return x < -eps;
-            }
-            case ASCENDING_NORTH:
-            case ASCENDING_SOUTH: {
-                return z < -eps;
-            }
-            default: {
-                ModLog.debug("{} - ({}, {})", shape, z, x);
-                return false;
-            }
-        }
+        return switch (shape) {
+            case NORTH_WEST, NORTH_EAST -> z < -eps;
+            case SOUTH_EAST, SOUTH_WEST -> z > eps;
+            case NORTH_SOUTH -> z < -eps;
+            case EAST_WEST -> x < -eps;
+            case ASCENDING_EAST, ASCENDING_WEST -> x < -eps;
+            case ASCENDING_NORTH, ASCENDING_SOUTH -> z < -eps;
+        };
     }
 }

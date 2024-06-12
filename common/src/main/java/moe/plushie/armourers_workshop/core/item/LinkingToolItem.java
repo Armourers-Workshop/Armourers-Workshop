@@ -3,12 +3,12 @@ package moe.plushie.armourers_workshop.core.item;
 import moe.plushie.armourers_workshop.api.common.IItemHandler;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +25,7 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
     }
 
     @Override
-    public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
+    public void createModelProperties(BiConsumer<IResourceLocation, IItemModelProperty> builder) {
         builder.accept(ModConstants.key("empty"), (itemStack, level, entity, id) -> {
             if (itemStack.has(ModDataComponents.LINKED_POS.get())) {
                 return 0;

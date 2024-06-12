@@ -2,10 +2,10 @@ package moe.plushie.armourers_workshop.init.platform;
 
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.init.platform.event.common.RegisterDataPackEvent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.util.function.Function;
@@ -22,7 +22,7 @@ public class DataPackManager {
         return INSTANCES.get(packType);
     }
 
-    public static void register(DataPackType packType, String path, Function<ResourceLocation, IDataPackBuilder> provider, Runnable willLoadHandler, Runnable didLoadHandler, int order) {
+    public static void register(DataPackType packType, String path, Function<IResourceLocation, IDataPackBuilder> provider, Runnable willLoadHandler, Runnable didLoadHandler, int order) {
         DataPackLoader loader = byType(packType);
         if (loader != null) {
             loader.add(new DataPackLoader.Entry(path, provider, willLoadHandler, didLoadHandler, order));

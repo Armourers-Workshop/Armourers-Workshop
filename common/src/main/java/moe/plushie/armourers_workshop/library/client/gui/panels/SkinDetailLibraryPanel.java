@@ -12,6 +12,7 @@ import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIScreen;
 import com.apple.library.uikit.UIView;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
@@ -39,13 +40,10 @@ import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.util.Strings;
 
 import java.io.File;
 import java.util.function.BiConsumer;
-
-import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
@@ -195,7 +193,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
             float ty = rect.y;
             float tw = rect.width;
             float th = rect.height;
-            auto buffers = AbstractBufferSource.defaultBufferSource();
+            var buffers = AbstractBufferSource.buffer();
             ExtendedItemRenderer.renderSkinInGUI(bakedSkin, tx, ty, 100, tw, th, 20, 45, 0, context.state().ctm(), buffers);
             buffers.endBatch();
         }
@@ -402,7 +400,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         @Override
         public void render(CGPoint point, CGGraphicsContext context) {
             super.render(point, context);
-            ResourceLocation texture = PlayerTextureLoader.getInstance().loadTextureLocation(playerTexture);
+            IResourceLocation texture = PlayerTextureLoader.getInstance().loadTextureLocation(playerTexture);
             context.drawResizableImage(texture, 0, 0, 16, 16, 8, 8, 8, 8, 64, 64, 0);
             context.drawResizableImage(texture, -1, -1, 16 + 2, 16 + 2, 40, 8, 8, 8, 64, 64, 0);
         }

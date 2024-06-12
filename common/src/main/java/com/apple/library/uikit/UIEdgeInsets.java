@@ -26,8 +26,7 @@ public class UIEdgeInsets {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UIEdgeInsets)) return false;
-        UIEdgeInsets that = (UIEdgeInsets) o;
+        if (!(o instanceof UIEdgeInsets that)) return false;
         return top == that.top && left == that.left && right == that.right && bottom == that.bottom;
     }
 

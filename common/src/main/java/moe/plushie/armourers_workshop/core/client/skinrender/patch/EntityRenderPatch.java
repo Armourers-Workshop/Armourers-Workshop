@@ -16,8 +16,6 @@ import net.minecraft.world.entity.Entity;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import manifold.ext.rt.api.auto;
-
 public abstract class EntityRenderPatch<T extends Entity> extends SkinRenderContext {
 
     protected final int libraryVersion;
@@ -30,13 +28,13 @@ public abstract class EntityRenderPatch<T extends Entity> extends SkinRenderCont
     }
 
     protected static <T extends Entity, P extends EntityRenderPatch<? super T>> void _activate(Class<?> clazz, T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, EntityRenderer<?> entityRenderer, Consumer<P> handler, Function<SkinRenderData, EntityRenderPatch<? extends T>> provider) {
-        auto renderData = SkinRenderData.of(entity);
+        var renderData = SkinRenderData.of(entity);
         if (renderData == null) {
             return;
         }
-        auto renderPatch = renderData.getRenderPatch();
+        var renderPatch = renderData.getRenderPatch();
         if (!clazz.isInstance(renderPatch) || !renderPatch.isValid()) {
-            auto renderPatch1 = provider.apply(renderData);
+            var renderPatch1 = provider.apply(renderData);
             renderPatch = ObjectUtils.unsafeCast(renderPatch1);
             renderData.setRenderPatch(renderPatch);
             if (renderPatch == null) {
@@ -51,9 +49,9 @@ public abstract class EntityRenderPatch<T extends Entity> extends SkinRenderCont
     }
 
     protected static <T extends Entity, P extends EntityRenderPatch<? super T>> void _apply(Class<?> clazz, T entity, Consumer<P> handler) {
-        auto renderData = SkinRenderData.of(entity);
+        var renderData = SkinRenderData.of(entity);
         if (renderData != null) {
-            auto renderPatch = renderData.getRenderPatch();
+            var renderPatch = renderData.getRenderPatch();
             if (clazz.isInstance(renderPatch)) {
                 if (handler != null) {
                     handler.accept(ObjectUtils.unsafeCast(renderPatch));
@@ -64,9 +62,9 @@ public abstract class EntityRenderPatch<T extends Entity> extends SkinRenderCont
     }
 
     protected static <T extends Entity, P extends EntityRenderPatch<? super T>> void _deactivate(Class<?> clazz, T entity, Consumer<P> handler) {
-        auto renderData = SkinRenderData.of(entity);
+        var renderData = SkinRenderData.of(entity);
         if (renderData != null) {
-            auto renderPatch = renderData.getRenderPatch();
+            var renderPatch = renderData.getRenderPatch();
             if (clazz.isInstance(renderPatch)) {
                 renderPatch.onDeactivate(entity);
                 if (handler != null) {

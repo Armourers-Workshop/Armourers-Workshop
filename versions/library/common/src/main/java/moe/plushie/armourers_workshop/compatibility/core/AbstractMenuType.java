@@ -2,11 +2,11 @@ package moe.plushie.armourers_workshop.compatibility.core;
 
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.api.common.IMenuType;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public abstract class AbstractMenuType<C extends AbstractContainerMenu> implements IMenuType<C> {
 
-    private ResourceLocation registryName;
+    private IResourceLocation registryName;
 
     @Override
     public <T> InteractionResult openMenu(Player player, T value) {
@@ -51,12 +51,10 @@ public abstract class AbstractMenuType<C extends AbstractContainerMenu> implemen
     protected abstract <T> InteractionResult openMenu(ServerPlayer player, Component title, T value);
 
     protected <T> IGlobalPos getGlobalPos(T value) {
-        IGlobalPos globalPos = ObjectUtils.safeCast(value, IGlobalPos.class);
-        if (globalPos != null) {
+        if (value instanceof IGlobalPos globalPos) {
             return globalPos;
         }
-        BlockEntity blockEntity = ObjectUtils.safeCast(value, BlockEntity.class);
-        if (blockEntity != null) {
+        if (value instanceof BlockEntity blockEntity) {
             return IGlobalPos.create(blockEntity.getLevel(), blockEntity.getBlockPos());
         }
         return null;
@@ -67,12 +65,12 @@ public abstract class AbstractMenuType<C extends AbstractContainerMenu> implemen
         return TranslateUtils.title("inventory.armourers_workshop." + getRegistryName().getPath());
     }
 
-    public void setRegistryName(ResourceLocation registryName) {
+    public void setRegistryName(IResourceLocation registryName) {
         this.registryName = registryName;
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public IResourceLocation getRegistryName() {
         return registryName;
     }
 }

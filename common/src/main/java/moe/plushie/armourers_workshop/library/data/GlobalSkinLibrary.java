@@ -26,7 +26,6 @@ import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
@@ -325,9 +324,9 @@ public class GlobalSkinLibrary extends ServerSession {
         if (skinType != null && skinType != SkinTypes.UNKNOWN) {
             return skinType.getRegistryName().toString();
         }
-        StringBuilder searchTypesBuilder = new StringBuilder();
-        for (ISkinType skinType1 : SkinTypes.values()) {
-            ResourceLocation registryName = skinType1.getRegistryName();
+        var searchTypesBuilder = new StringBuilder();
+        for (var skinType1 : SkinTypes.values()) {
+            var registryName = skinType1.getRegistryName();
             if (skinType1 != SkinTypes.UNKNOWN && registryName != null) {
                 if (searchTypesBuilder.length() != 0) {
                     searchTypesBuilder.append(";");
@@ -380,17 +379,11 @@ public class GlobalSkinLibrary extends ServerSession {
             return permission;
         }
         // this is a simple mapping.
-        switch (permission) {
-            case SKIN_OWNER_DELETE: {
-                return ServerPermission.SKIN_MOD_DELETE;
-            }
-            case SKIN_OWNER_EDIT: {
-                return ServerPermission.SKIN_MOD_EDIT;
-            }
-            default: {
-                return permission;
-            }
-        }
+        return switch (permission) {
+            case SKIN_OWNER_DELETE -> ServerPermission.SKIN_MOD_DELETE;
+            case SKIN_OWNER_EDIT -> ServerPermission.SKIN_MOD_EDIT;
+            default -> permission;
+        };
     }
 
     private void resolveState() {

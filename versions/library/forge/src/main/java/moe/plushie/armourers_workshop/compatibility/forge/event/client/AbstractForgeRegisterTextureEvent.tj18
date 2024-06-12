@@ -12,7 +12,7 @@ public class AbstractForgeRegisterTextureEvent {
     public static IEventHandler<RegisterTextureEvent> registryFactory() {
         return AbstractForgeClientEventsImpl.TEXTURE_REGISTRY.map(event -> sprite -> {
             if (event.getAtlas().location().equals(InventoryMenu.BLOCK_ATLAS)) {
-                event.addSprite(sprite);
+                event.addSprite(sprite.toLocation());
             }
         });
     }

@@ -17,8 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
-import manifold.ext.rt.api.auto;
-
 @Available("[1.16, 1.18)")
 public class AbstractFabricMenuType<C extends AbstractContainerMenu> extends AbstractMenuType<C> {
 
@@ -38,7 +36,7 @@ public class AbstractFabricMenuType<C extends AbstractContainerMenu> extends Abs
     }
 
     protected C createMenu(int containerId, Inventory inventory, FriendlyByteBuf buf) {
-        auto value = serializer.read(AbstractFriendlyByteBuf.wrap(buf), inventory.player);
+        var value = serializer.read(AbstractFriendlyByteBuf.wrap(buf), inventory.player);
         return factory.createMenu(type, containerId, inventory, value);
     }
 

@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.common.IMenuSerializer;
 import moe.plushie.armourers_workshop.api.common.IMenuType;
 import moe.plushie.armourers_workshop.api.registry.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractMenuWindowProvider;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeMenuType;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeRegistries;
@@ -43,9 +43,9 @@ public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements 
     }
 
     @Override
-    public IRegistryKey<IMenuType<T>> build(String name) {
+    public IRegistryHolder<IMenuType<T>> build(String name) {
         AbstractForgeMenuType<T> menuType = AbstractForgeMenuType.create(factory, serializer);
-        IRegistryKey<MenuType<T>> object = AbstractForgeRegistries.MENU_TYPES.register(name, menuType::getType);
+        IRegistryHolder<MenuType<T>> object = AbstractForgeRegistries.MENU_TYPES.register(name, menuType::getType);
         menuType.setRegistryName(object.getRegistryName());
         EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
         return TypedRegistry.Entry.of(object.getRegistryName(), () -> menuType);

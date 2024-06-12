@@ -2,15 +2,15 @@ package com.apple.library.uikit;
 
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGSize;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.init.ModLog;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.IntFunction;
 
 @SuppressWarnings("unused")
 public class UIImage {
 
-    protected final ResourceLocation rl;
+    protected final IResourceLocation rl;
     protected final CGPoint uv;
     protected final CGSize size;
     protected final CGSize source;
@@ -19,7 +19,7 @@ public class UIImage {
     protected final AnimationData animationData;
     protected final IntFunction<CGPoint> mapping;
 
-    private UIImage(ResourceLocation rl, CGPoint uv, CGSize size, CGSize source, CGSize limit, ClipData clipData, AnimationData animationData, IntFunction<CGPoint> mapping) {
+    private UIImage(IResourceLocation rl, CGPoint uv, CGSize size, CGSize source, CGSize limit, ClipData clipData, AnimationData animationData, IntFunction<CGPoint> mapping) {
         this.rl = rl;
         this.uv = uv;
         this.size = size;
@@ -30,7 +30,7 @@ public class UIImage {
         this.mapping = mapping;
     }
 
-    public static Builder of(ResourceLocation rl) {
+    public static Builder of(IResourceLocation rl) {
         return Builder.of(rl);
     }
 
@@ -61,7 +61,7 @@ public class UIImage {
         return builder.build();
     }
 
-    public ResourceLocation rl() {
+    public IResourceLocation rl() {
         return rl;
     }
 
@@ -115,7 +115,7 @@ public class UIImage {
 
     public static class Builder {
 
-        private ResourceLocation rl;
+        private IResourceLocation rl;
         private CGPoint uv;
         private CGSize size;
         private CGSize source;
@@ -136,7 +136,7 @@ public class UIImage {
             return builder;
         }
 
-        public static Builder of(ResourceLocation rl) {
+        public static Builder of(IResourceLocation rl) {
             Builder builder = new Builder();
             builder.rl = rl;
             return builder;

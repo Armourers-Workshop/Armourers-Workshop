@@ -31,8 +31,7 @@ public class SkinOptions {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SkinOptions)) return false;
-        SkinOptions that = (SkinOptions) o;
+        if (!(o instanceof SkinOptions that)) return false;
         return tooltipFlags == that.tooltipFlags && enableEmbeddedItemRenderer == that.enableEmbeddedItemRenderer;
     }
 

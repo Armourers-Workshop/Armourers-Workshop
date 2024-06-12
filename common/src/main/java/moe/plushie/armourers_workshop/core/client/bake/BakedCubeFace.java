@@ -2,11 +2,11 @@ package moe.plushie.armourers_workshop.core.client.bake;
 
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.common.ITextureKey;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.other.SkinTextureManager;
@@ -16,7 +16,6 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
@@ -27,11 +26,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
-
-import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class BakedCubeFace {
@@ -61,11 +57,11 @@ public class BakedCubeFace {
     }
 
     public void render(BakedSkinPart part, ColorScheme scheme, int lightmap, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
-        auto resolvedColor = resolveColor(paintColor, scheme, part.getColorInfo(), part.getType(), 0);
+        var resolvedColor = resolveColor(paintColor, scheme, part.getColorInfo(), part.getType(), 0);
         if (resolvedColor.getPaintType() == SkinPaintTypes.NONE) {
             return;
         }
-        auto resolvedTexture = resolveTexture(resolvedColor);
+        var resolvedTexture = resolveTexture(resolvedColor);
         if (resolvedTexture == null) {
             return;
         }
@@ -75,7 +71,7 @@ public class BakedCubeFace {
             transform.apply(poseStack);
         }
 
-        auto entry = poseStack.last();
+        var entry = poseStack.last();
 
         // https://learnopengl.com/Getting-started/Coordinate-Systems
         float x = shape.getX();
@@ -123,7 +119,7 @@ public class BakedCubeFace {
     }
 
     private IPaintColor resolveColor(IPaintColor paintColor, ColorScheme scheme, ColorDescriptor descriptor, ISkinPartType partType, int deep) {
-        ISkinPaintType paintType = paintColor.getPaintType();
+        var paintType = paintColor.getPaintType();
         if (paintType == SkinPaintTypes.NONE) {
             return PaintColor.CLEAR;
         }
@@ -131,14 +127,14 @@ public class BakedCubeFace {
             return dye(paintColor, RAINBOW_TARGET, descriptor.getAverageColor(paintType));
         }
         if (paintType == SkinPaintTypes.TEXTURE) {
-            IPaintColor paintColor1 = resolveTextureColor(scheme.getTexture(), partType);
+            var paintColor1 = resolveTextureColor(scheme.getTexture(), partType);
             if (paintColor1 != null) {
                 return paintColor;
             }
             return paintColor;
         }
         if (paintType.getDyeType() != null && deep < 2) {
-            IPaintColor paintColor1 = scheme.getResolvedColor(paintType);
+            var paintColor1 = scheme.getResolvedColor(paintType);
             if (paintColor1 == null) {
                 return paintColor;
             }
@@ -148,8 +144,8 @@ public class BakedCubeFace {
         return paintColor;
     }
 
-    private IPaintColor resolveTextureColor(ResourceLocation texture, ISkinPartType partType) {
-        BakedEntityTexture bakedTexture = PlayerTextureLoader.getInstance().getTextureModel(texture);
+    private IPaintColor resolveTextureColor(IResourceLocation texture, ISkinPartType partType) {
+        var bakedTexture = PlayerTextureLoader.getInstance().getTextureModel(texture);
         if (bakedTexture != null) {
             int x = (int) shape.getX();
             int y = (int) shape.getY();
@@ -167,7 +163,7 @@ public class BakedCubeFace {
     }
 
     private int resolveTextureRotation(ITextureKey key) {
-        auto options = key.getOptions();
+        var options = key.getOptions();
         if (options != null) {
             return options.getRotation();
         }

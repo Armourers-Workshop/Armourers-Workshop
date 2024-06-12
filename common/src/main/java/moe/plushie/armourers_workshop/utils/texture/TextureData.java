@@ -48,8 +48,7 @@ public class TextureData implements ITextureProvider {
 
     public void load(InputStream inputStream) throws IOException {
         // we have known the length of the file stream, fast copy.
-        if (inputStream instanceof FileInputStream) {
-            FileInputStream fileInputStream = (FileInputStream) inputStream;
+        if (inputStream instanceof FileInputStream fileInputStream) {
             FileChannel fileChannel = fileInputStream.getChannel();
             bytes = ObjectUtils.createByteBuffer((int) fileChannel.size() + 1);
             while (fileChannel.read(bytes) != -1) {

@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.item.option.MannequinToolOptions;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModEntitySerializers;
+import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutorIO;
@@ -20,6 +21,7 @@ import net.minecraft.core.Rotations;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -37,8 +39,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-
-import manifold.ext.rt.api.auto;
 
 @SuppressWarnings("unused")
 public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements IEntityHandler {
@@ -180,6 +180,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         // yep, we need copy the fully model info when ctrl down.
         if (EnvironmentExecutorIO.hasSprintDown()) {
             CompoundTag entityTag = new CompoundTag();
+            entityTag.putString("id", ModEntityTypes.MANNEQUIN.getRegistryName().toString());
             addAdditionalSaveData(entityTag);
             itemStack.set(ModDataComponents.ENTITY_DATA.get(), entityTag);
         }
@@ -204,8 +205,9 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         isDropEquipment = false;
         boolean flag = this.isAlive();
         boolean flag1 = super.hurt(source, amount);
-        if (!isDropEquipment && flag != this.isAlive()) {
-            this.brokenByAnything(source);
+        Level level = getLevel();
+        if (!isDropEquipment && flag != this.isAlive() && level instanceof ServerLevel) {
+            this.brokenByAnything((ServerLevel) level, source);
         }
         return flag1;
     }
@@ -239,7 +241,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
     }
 
     @Override
-    public void brokenByPlayer(DamageSource source) {
+    public void brokenByPlayer(ServerLevel serverLevel, DamageSource source) {
         Player player = null;
         if (source.getEntity() instanceof Player) {
             player = (Player) source.getEntity();
@@ -247,7 +249,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         if (player != null && !player.getAbilities().instabuild) {
             Block.popResource(this.getLevel(), this.blockPosition(), createMannequinStack());
         }
-        this.brokenByAnything(source);
+        this.brokenByAnything(serverLevel, source);
     }
 
     @Override
@@ -264,6 +266,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
     protected ItemStack createMannequinStack() {
         ItemStack itemStack = new ItemStack(ModItems.MANNEQUIN.get());
         CompoundTag entityTag = new CompoundTag();
+        entityTag.putString("id", ModEntityTypes.MANNEQUIN.getRegistryName().toString());
         entityTag.putOptionalFloat(Constants.Key.ENTITY_SCALE, getScale(), 1.0f);
         entityTag.putOptionalTextureDescriptor(Constants.Key.ENTITY_TEXTURE, getTextureDescriptor(), PlayerTextureDescriptor.EMPTY);
         itemStack.set(ModDataComponents.ENTITY_DATA.get(), entityTag);
@@ -340,13 +343,13 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
             newEntityTag.remove(Constants.Key.ENTITY_TEXTURE);
         }
         if (itemStack.get(MannequinToolOptions.CHANGE_SCALE)) {
-            auto oldValue = entityTag.get(Constants.Key.ENTITY_SCALE);
+            var oldValue = entityTag.get(Constants.Key.ENTITY_SCALE);
             if (oldValue != null) {
                 newEntityTag.put(Constants.Key.ENTITY_SCALE, oldValue);
             }
         }
         if (itemStack.get(MannequinToolOptions.CHANGE_ROTATION)) {
-            auto oldValue = entityTag.getCompound(Constants.Key.ENTITY_POSE);
+            var oldValue = entityTag.getCompound(Constants.Key.ENTITY_POSE);
             if (itemStack.get(MannequinToolOptions.MIRROR_MODE) && !oldValue.isEmpty()) {
                 CompoundTag newPoseTag = oldValue.copy();
                 DataSerializers.mirrorRotations(oldValue, Constants.Key.ENTITY_POSE_HEAD, DEFAULT_HEAD_POSE, newPoseTag, Constants.Key.ENTITY_POSE_HEAD, DEFAULT_HEAD_POSE);
@@ -360,7 +363,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
             newEntityTag.put(Constants.Key.ENTITY_POSE, oldValue);
         }
         if (itemStack.get(MannequinToolOptions.CHANGE_TEXTURE)) {
-            auto oldValue = entityTag.get(Constants.Key.ENTITY_TEXTURE);
+            var oldValue = entityTag.get(Constants.Key.ENTITY_TEXTURE);
             if (oldValue != null) {
                 newEntityTag.put(Constants.Key.ENTITY_TEXTURE, oldValue);
             }

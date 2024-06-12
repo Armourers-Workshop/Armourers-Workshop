@@ -92,7 +92,7 @@ public enum Interpolation {
 
     public final String key;
 
-    private Interpolation(String key) {
+    Interpolation(String key) {
         this.key = key;
     }
 

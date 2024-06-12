@@ -329,6 +329,7 @@ public class ColorUtils {
         return (int) (a * (1 - q) + b * q);
     }
 
+
     public static int parseColor(String colorString) {
         try {
             int value = Integer.decode(colorString);
@@ -375,7 +376,47 @@ public class ColorUtils {
         return rgb & 0xff;
     }
 
+    public static int getAlpha(int rgb) {
+        return (rgb >> 24) & 0xff;
+    }
+
     public static int getRGB(int red, int green, int blue) {
         return red << 16 | green << 8 | blue;
+    }
+
+    public static int getARGB(int alpha, int red, int green, int blue) {
+        return alpha << 24 | red << 16 | green << 8 | blue;
+    }
+
+
+    public static class ARGB32 {
+
+        public static int alpha(int i) {
+            return i >>> 24;
+        }
+
+        public static int red(int i) {
+            return i >> 16 & 0xFF;
+        }
+
+        public static int green(int i) {
+            return i >> 8 & 0xFF;
+        }
+
+        public static int blue(int i) {
+            return i & 0xFF;
+        }
+
+        public static int color(int a, int r, int g, int b) {
+            return a << 24 | r << 16 | g << 8 | b;
+        }
+
+        public static int color(float a, float r, float g, float b) {
+            return color((int) (a * 255.0f), (int) (r * 255.0f), (int) (g * 255.0f), (int) (b * 255.0f));
+        }
+
+        public static int multiply(int i, int j) {
+            return color(alpha(i) * alpha(j) / 255, red(i) * red(j) / 255, green(i) * green(j) / 255, blue(i) * blue(j) / 255);
+        }
     }
 }

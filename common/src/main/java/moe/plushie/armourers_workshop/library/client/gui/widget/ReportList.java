@@ -192,7 +192,7 @@ public class ReportList extends UIScrollView {
         void listDidScroll(ReportList reportList, CGPoint contentOffset);
     }
 
-    public class GuiDetailListColumn {
+    public static class GuiDetailListColumn {
 
         private final String name;
         private final float width;

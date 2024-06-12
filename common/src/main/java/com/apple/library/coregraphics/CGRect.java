@@ -152,11 +152,10 @@ public class CGRect implements InterpolableImpl<CGRect> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CGRect rect = (CGRect) o;
-        return Float.compare(rect.x, x) == 0 && Float.compare(rect.y, y) == 0 && Float.compare(rect.width, width) == 0 && Float.compare(rect.height, height) == 0;
+        if (!(o instanceof CGRect that)) return false;
+        return Float.compare(x, that.x) == 0 && Float.compare(y, that.y) == 0 && Float.compare(width, that.width) == 0 && Float.compare(height, that.height) == 0;
     }
 
     @Override

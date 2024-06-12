@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.compatibility.fabric.extensions.net.minecraft.world.item.CreativeModeTab;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
@@ -19,8 +19,8 @@ import manifold.ext.rt.api.ThisClass;
 public class BuilderProvider {
 
     public static Supplier<CreativeModeTab> createCreativeModeTabFA(@ThisClass Class<?> clazz, String name, Supplier<Supplier<ItemStack>> icon, Consumer<List<ItemStack>> itemProvider) {
-        ResourceLocation registryName = ModConstants.key(name);
-        CreativeModeTab tab = FabricItemGroupBuilder.create(registryName)
+        IResourceLocation registryName = ModConstants.key(name);
+        CreativeModeTab tab = FabricItemGroupBuilder.create(registryName.toLocation())
                 .icon(() -> icon.get().get())
                 .appendItems(itemProvider)
                 .build();

@@ -6,9 +6,9 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public interface IRegistryBinder<T> {
 
-    Consumer<IRegistryKey<T>> get();
+    Consumer<IRegistryHolder<T>> get();
 
-    static <T> Supplier<Runnable> perform(IRegistryBinder<T> binder, IRegistryKey<T> value) {
+    static <T> Supplier<Runnable> perform(IRegistryBinder<T> binder, IRegistryHolder<T> value) {
         if (binder != null) {
             return () -> () -> binder.get().accept(value);
         }

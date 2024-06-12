@@ -3,10 +3,10 @@ package moe.plushie.armourers_workshop.utils;
 import com.apple.library.coregraphics.CGGraphicsState;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
 public class RectangleTesselator {
@@ -17,7 +17,7 @@ public class RectangleTesselator {
 
     private float uScale;
     private float vScale;
-    private ResourceLocation texture;
+    private IResourceLocation texture;
     private IVertexConsumer builder;
 
     public RectangleTesselator(CGGraphicsState state) {
@@ -25,7 +25,7 @@ public class RectangleTesselator {
         this.pose = state.ctm().last();
     }
 
-    public void begin(RenderType renderType, ResourceLocation texture, float texWidth, float texHeight) {
+    public void begin(RenderType renderType, IResourceLocation texture, float texWidth, float texHeight) {
         this.builder = state.bufferSource().getBuffer(renderType);
         this.texture = texture;
         this.uScale = 1f / texWidth;
@@ -56,7 +56,7 @@ public class RectangleTesselator {
     }
 
     public void end() {
-        RenderSystem.setShaderTexture(0, texture);
+        RenderSystem.setShaderTexture(0, texture.toLocation());
         state.flush();
         builder = null;
     }

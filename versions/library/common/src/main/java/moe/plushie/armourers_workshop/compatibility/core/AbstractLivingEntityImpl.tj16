@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.compatibility.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IEntityDataBuilder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,13 +21,13 @@ public class AbstractLivingEntityImpl {
         }
 
 
-    public void remove(RemovalReason reason) {
-        super.remove();
-    }
+        public void remove(RemovalReason reason) {
+            super.remove();
+        }
 
-    public enum RemovalReason {
-        KILLED
-    }
+        public enum RemovalReason {
+            KILLED
+        }
 
     }
 
@@ -35,29 +37,52 @@ public class AbstractLivingEntityImpl {
             super(entityType, level);
         }
 
-            protected void defineSynchedData(IEntityDataBuilder builder) {
-                super.defineSynchedData();
-            }
+        public void brokenByPlayer(ServerLevel serverLevel, DamageSource damageSource) {
+            super.brokenByPlayer(damageSource);
+        }
 
-            protected EntityDimensions getDefaultDimensions(Pose pose) {
-                return super.getDimensions(pose);
-            }
+        public void brokenByAnything(ServerLevel serverLevel, DamageSource damageSource) {
+            super.brokenByAnything(damageSource);
+        }
 
-            @Override
-            protected final void defineSynchedData() {
-                this.defineSynchedData(entityData::define);
+        @Override
+        public final void brokenByPlayer(DamageSource damageSource) {
+            var level = getLevel();
+            if (level instanceof ServerLevel) {
+                brokenByPlayer(((ServerLevel) level), damageSource);
             }
+        }
 
-            @Override
-            public final EntityDimensions getDimensions(Pose pose) {
-                return this.getDefaultDimensions(pose).scale(getScale());
+        @Override
+        public final void brokenByAnything(DamageSource damageSource) {
+            var level = getLevel();
+            if (level instanceof ServerLevel) {
+                brokenByAnything(((ServerLevel) level), damageSource);
             }
+        }
 
-            @Override
-            protected float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
-                EntityDimensions dimensions = getDefaultDimensions(pose);
-                return dimensions.getEyeHeight() * getScale();
-            }
+        protected void defineSynchedData(IEntityDataBuilder builder) {
+            super.defineSynchedData();
+        }
 
+        protected EntityDimensions getDefaultDimensions(Pose pose) {
+            return super.getDimensions(pose);
+        }
+
+        @Override
+        protected final void defineSynchedData() {
+            this.defineSynchedData(entityData::define);
+        }
+
+        @Override
+        public final EntityDimensions getDimensions(Pose pose) {
+            return this.getDefaultDimensions(pose).scale(getScale());
+        }
+
+        @Override
+        protected float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
+            EntityDimensions dimensions = getDefaultDimensions(pose);
+            return dimensions.getEyeHeight() * getScale();
+        }
     }
 }

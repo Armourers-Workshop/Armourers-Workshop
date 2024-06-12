@@ -14,14 +14,11 @@ import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-
-import manifold.ext.rt.api.auto;
 
 @Available("[1.20, )")
 @Environment(EnvType.CLIENT)
@@ -55,15 +52,15 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     public void renderTooltip(NSString text, CGRect rect, UIFont font, CGGraphicsContext context) {
         // there are some versions of tooltip that don't split normally,
         // and while we can't decide on the final tooltip size,
-        // but we can to handle the break the newline
-        auto font1 = font.impl();
-        auto texts = font1.split(text.component(), 100000);
+        // but we can to handle the break the newline.
+        var font1 = font.impl();
+        var texts = font1.split(text.component(), 100000);
         graphics.renderTooltip(font1, texts, (int) mousePos.getX(), (int) mousePos.getY());
     }
 
     @Override
     public void renderTooltip(ItemStack itemStack, CGRect rect, UIFont font, CGGraphicsContext context) {
-        auto font1 = font.impl();
+        var font1 = font.impl();
         graphics.renderTooltip(font1, itemStack, (int) mousePos.getX(), (int) mousePos.getY());
     }
 

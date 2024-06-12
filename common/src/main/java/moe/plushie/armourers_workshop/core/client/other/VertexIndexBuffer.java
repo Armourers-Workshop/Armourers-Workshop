@@ -65,15 +65,11 @@ public class VertexIndexBuffer {
     }
 
     private IntConsumer createBuilder(ByteBuffer buffer) {
-        switch (this.type) {
-            case BYTE: {
-                return i -> buffer.put((byte) i);
-            }
-            case SHORT: {
-                return i -> buffer.putShort((short) i);
-            }
-        }
-        return buffer::putInt;
+        return switch (type) {
+            case BYTE -> i -> buffer.put((byte) i);
+            case SHORT -> i -> buffer.putShort((short) i);
+            default -> buffer::putInt;
+        };
     }
 
     public IndexType type() {

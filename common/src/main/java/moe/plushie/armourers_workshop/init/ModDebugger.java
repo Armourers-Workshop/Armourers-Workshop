@@ -47,8 +47,8 @@ public class ModDebugger {
     public static boolean tooltip = false;
     public static boolean properties = false;
 
+    public static boolean vbo = false;
     public static boolean wireframeRender = false;
-    public static boolean vertexBufferObject = false;
 
     public static boolean viewHierarchy = false;
 

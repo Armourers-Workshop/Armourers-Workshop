@@ -22,8 +22,6 @@ import net.minecraft.core.Direction;
 import java.util.BitSet;
 import java.util.EnumMap;
 
-import manifold.ext.rt.api.auto;
-
 public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
 
     private Rectangle3f shape = Rectangle3f.ZERO;
@@ -114,13 +112,13 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
             int index = calcStride(usedBytes, i);
             int face = getByte(index);
             if ((face & 0x40) != 0) {
-                auto opt = ChunkColorSection.OptionsRef.readFromStream(usedBytes, readerIndex + index + 1, bytes);
+                var opt = ChunkColorSection.OptionsRef.readFromStream(usedBytes, readerIndex + index + 1, bytes);
                 for (Direction dir : DirectionUtils.valuesFromSet(face)) {
                     optionsValues.put(dir, opt);
                 }
                 continue;
             }
-            auto pos = ChunkColorSection.TextureRef.readFromStream(usedBytes, readerIndex + index + 1, bytes);
+            var pos = ChunkColorSection.TextureRef.readFromStream(usedBytes, readerIndex + index + 1, bytes);
             for (Direction dir : DirectionUtils.valuesFromSet(face)) {
                 endUVs.put(dir, pos);
                 if (!startUVs.containsKey(dir)) {
@@ -128,11 +126,11 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
                 }
             }
             if ((face & 0x80) != 0) {
-                auto ref = palette.readTexture(pos);
+                var ref = palette.readTexture(pos);
                 if (ref == null) {
                     continue;
                 }
-                auto shape = getShape();
+                var shape = getShape();
                 float width = shape.getWidth();
                 float height = shape.getHeight();
                 float depth = shape.getDepth();
@@ -140,11 +138,11 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
             }
         }
         for (Direction dir : Direction.values()) {
-            Vector2f start = startUVs.get(dir);
-            Vector2f end = endUVs.get(dir);
+            var start = startUVs.get(dir);
+            var end = endUVs.get(dir);
             if (start != null && end != null) {
-                auto opt = optionsValues.get(dir);
-                auto ref = palette.readTexture(start);
+                var opt = optionsValues.get(dir);
+                var ref = palette.readTexture(start);
                 if (ref == null) {
                     continue;
                 }

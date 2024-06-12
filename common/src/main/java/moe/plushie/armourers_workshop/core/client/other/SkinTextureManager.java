@@ -4,10 +4,12 @@ import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.TextureUtil;
 import moe.plushie.armourers_workshop.api.common.ITextureProperties;
 import moe.plushie.armourers_workshop.api.common.ITextureProvider;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.utils.texture.TextureAnimationController;
 import net.fabricmc.api.EnvType;
@@ -16,7 +18,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class SkinTextureManager {
 
     private final AtomicInteger counter = new AtomicInteger(0);
     private final TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-    private final ConcurrentHashMap<ITextureProvider, ResourceLocation> textures = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<ITextureProvider, IResourceLocation> textures = new ConcurrentHashMap<>();
 
     private final ConcurrentHashMap<ITextureProvider, RenderType> renderTypes = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<ITextureProvider, Collection<RenderType>> renderTypeVariants = new ConcurrentHashMap<>();
@@ -69,7 +70,7 @@ public class SkinTextureManager {
     }
 
     public void stop() {
-        textures.values().forEach(textureManager::release);
+        textures.values().forEach(it -> textureManager.release(it.toLocation()));
         textures.clear();
         renderTypes.clear();
         renderTypeVariants.clear();
@@ -78,24 +79,24 @@ public class SkinTextureManager {
     }
 
 
-    private ResourceLocation registerTexture(ITextureProvider provider) {
+    private IResourceLocation registerTexture(ITextureProvider provider) {
         return textures.computeIfAbsent(provider, k -> {
-            ResourceLocation rl = ModConstants.key("textures/dymanic/" + counter.getAndIncrement());
+            IResourceLocation rl = ModConstants.key("textures/dymanic/" + counter.getAndIncrement());
             return registerTexture(rl, provider);
         });
     }
 
-    private ResourceLocation registerTexture(ITextureProvider variant, ITextureProvider parent) {
+    private IResourceLocation registerTexture(ITextureProvider variant, ITextureProvider parent) {
         return textures.computeIfAbsent(variant, k -> {
-            ResourceLocation rl = registerTexture(parent);
-            rl = new ResourceLocation(rl.getNamespace(), rl.getPath() + "_" + getTextureType(variant));
+            IResourceLocation rl = registerTexture(parent);
+            rl = OpenResourceLocation.create(rl.getNamespace(), rl.getPath() + "_" + getTextureType(variant));
             return registerTexture(rl, variant);
         });
     }
 
-    private ResourceLocation registerTexture(ResourceLocation rl, ITextureProvider provider) {
+    private IResourceLocation registerTexture(IResourceLocation rl, ITextureProvider provider) {
         ModLog.debug("Registering Dynamic Texture '{}', {}", rl, provider);
-        RenderSystem.recordRenderCall(() -> textureManager.register(rl, new CustomTexture(provider)));
+        RenderSystem.recordRenderCall(() -> textureManager.register(rl.toLocation(), new CustomTexture(provider)));
         return rl;
     }
 

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.armature;
 
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -9,7 +10,6 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
@@ -22,7 +22,7 @@ import java.util.function.Function;
 public class Armatures {
 
     private static final LinkedHashMap<ISkinType, Armature> LINKED_ARMATURES = new LinkedHashMap<>();
-    private static final LinkedHashMap<ResourceLocation, Armature> NAMED_ARMATURES = new LinkedHashMap<>();
+    private static final LinkedHashMap<IResourceLocation, Armature> NAMED_ARMATURES = new LinkedHashMap<>();
 
     public static final Armature HUMANOID = Builder.named("humanoid");
     public static final Armature HORSE = Builder.named("horse");
@@ -33,7 +33,7 @@ public class Armatures {
     public static final Armature HAND = Builder.named("hand");
 
     @Nullable
-    public static Armature byName(ResourceLocation registryName) {
+    public static Armature byName(IResourceLocation registryName) {
         return NAMED_ARMATURES.get(registryName);
     }
 
@@ -115,7 +115,7 @@ public class Armatures {
         private Armature build(String name) {
             jointParents.forEach((child, parentName) -> child.setParent(namedJoints.get(parentName)));
             Armature armature = new Armature(namedJoints, jointTransforms, linkedJoints, wildcardJoint, jointShapes);
-            ResourceLocation registryName = ModConstants.key(name);
+            IResourceLocation registryName = ModConstants.key(name);
             ModLog.debug("Registering Armature '{}'", registryName);
             NAMED_ARMATURES.put(registryName, armature);
             skinTypes.forEach(it -> LINKED_ARMATURES.put(it, armature));

@@ -8,7 +8,6 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.impl.EntityRendererImpl;
 import com.apple.library.uikit.UIFont;
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
@@ -29,7 +28,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsState {
 
-    private static final IBufferSource SHARED_BUFFERS = AbstractBufferSource.immediateBufferSource(new BufferBuilder(256));
+    private static final IBufferSource SHARED_BUFFERS = AbstractBufferSource.create(256);
 
     private final IPoseStack poseStack;
     private final PoseStack originPoseStack;

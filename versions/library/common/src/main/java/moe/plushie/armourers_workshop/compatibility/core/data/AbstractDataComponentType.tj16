@@ -8,8 +8,6 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import manifold.ext.rt.api.auto;
-
 @Available("[1.16, 1.21)")
 public class AbstractDataComponentType<T> implements IDataComponentType<T> {
 
@@ -27,14 +25,14 @@ public class AbstractDataComponentType<T> implements IDataComponentType<T> {
 
     @Override
     public boolean has(ItemStack itemStack) {
-        auto tag = itemStack.getTag();
+        var tag = itemStack.getTag();
         return tag != null && tag.contains(name);
     }
 
     @Override
     public void set(ItemStack itemStack, @Nullable T value) {
         if (value != null) {
-            auto tag = itemStack.getOrCreateTag();
+            var tag = itemStack.getOrCreateTag();
             codec.encodeStart(NbtOps.INSTANCE, value).get().ifLeft(it -> {
                 // we need to merge new value into the item.
                 tag.put(name, it);
@@ -49,7 +47,7 @@ public class AbstractDataComponentType<T> implements IDataComponentType<T> {
     public T get(ItemStack itemStack) {
         CompoundTag tag = itemStack.getTag();
         if (tag != null && tag.contains(name)) {
-            auto value = codec.decode(NbtOps.INSTANCE, tag.get(name)).get().left();
+            var value = codec.decode(NbtOps.INSTANCE, tag.get(name)).get().left();
             if (value.isPresent()) {
                 return value.get().getFirst();
             }
@@ -68,7 +66,7 @@ public class AbstractDataComponentType<T> implements IDataComponentType<T> {
 
     @Override
     public void remove(ItemStack itemStack) {
-        auto tag = itemStack.getTag();
+        var tag = itemStack.getTag();
         if (tag != null) {
             tag.remove(name);
         }

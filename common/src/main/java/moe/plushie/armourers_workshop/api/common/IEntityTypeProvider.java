@@ -36,8 +36,7 @@ public interface IEntityTypeProvider<T extends Entity> extends Supplier<EntityTy
             @Override
             public boolean equals(Object o) {
                 if (this == o) return true;
-                if (!(o instanceof IEntityTypeProvider)) return false;
-                IEntityTypeProvider<?> that = (IEntityTypeProvider<?>) o;
+                if (!(o instanceof IEntityTypeProvider<?> that)) return false;
                 return registryName.equals(that.getRegistryName());
             }
 

@@ -2,12 +2,12 @@ package moe.plushie.armourers_workshop.core.data;
 
 import moe.plushie.armourers_workshop.api.common.ICapabilityType;
 import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractCapabilityStorage;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -27,7 +27,7 @@ public class CapabilityStorage {
         this.capabilities = capabilities;
     }
 
-    public static <T> void registerCapability(ResourceLocation registryName, ICapabilityType<T> capabilityType, Function<Entity, Optional<T>> provider) {
+    public static <T> void registerCapability(IResourceLocation registryName, ICapabilityType<T> capabilityType, Function<Entity, Optional<T>> provider) {
         ENTRIES.add(new Entry<>(registryName, capabilityType, provider));
     }
 
@@ -114,11 +114,11 @@ public class CapabilityStorage {
     }
 
     private static class Entry<T> {
-        ResourceLocation registryName;
+        IResourceLocation registryName;
         ICapabilityType<T> capabilityType;
         Function<Entity, Optional<T>> provider;
 
-        Entry(ResourceLocation registryName, ICapabilityType<T> capabilityType, Function<Entity, Optional<T>> provider) {
+        Entry(IResourceLocation registryName, ICapabilityType<T> capabilityType, Function<Entity, Optional<T>> provider) {
             this.registryName = registryName;
             this.capabilityType = capabilityType;
             this.provider = provider;

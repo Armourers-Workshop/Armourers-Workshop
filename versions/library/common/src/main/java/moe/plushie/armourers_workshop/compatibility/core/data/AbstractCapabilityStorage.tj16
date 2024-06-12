@@ -6,5 +6,5 @@ import moe.plushie.armourers_workshop.utils.Constants;
 @Available("[1.16, 1.21)")
 public class AbstractCapabilityStorage {
 
-    public static String KEY = Constants.Key.OLD_CAPABILITY;
+    public static final String KEY = Constants.Key.OLD_CAPABILITY;
 }

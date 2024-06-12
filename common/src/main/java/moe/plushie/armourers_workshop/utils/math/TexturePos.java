@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.utils.math;
 
 import moe.plushie.armourers_workshop.api.math.ITexturePos;
 
+import java.util.Objects;
+
 @SuppressWarnings("unused")
 public class TexturePos implements ITexturePos {
 
@@ -23,6 +25,18 @@ public class TexturePos implements ITexturePos {
     @Override
     public int getV() {
         return this.v;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TexturePos that)) return false;
+        return u == that.u && v == that.v;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(u, v);
     }
 
     @Override

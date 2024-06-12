@@ -30,8 +30,6 @@ import org.apache.logging.log4j.util.Strings;
 import java.util.ArrayList;
 import java.util.List;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class ItemTooltipManager {
 
@@ -161,18 +159,18 @@ public class ItemTooltipManager {
         if (!ModConfig.Client.skinPreEnabled) {
             return;
         }
-        auto itemStack = event.getItemStack();
-        auto descriptor = SkinDescriptor.of(itemStack);
-        auto options = descriptor.getOptions();
+        var itemStack = event.getItemStack();
+        var descriptor = SkinDescriptor.of(itemStack);
+        var options = descriptor.getOptions();
         if (!options.contains(SkinOptions.TooltipFlags.PREVIEW)) {
             return;
         }
-        auto bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.TOOLTIP);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.TOOLTIP);
         if (bakedSkin == null) {
             return;
         }
-        auto frame = event.getFrame();
-        auto context = event.getContext();
+        var frame = event.getFrame();
+        var context = event.getContext();
         float screenHeight = event.getScreenHeight();
         float screenWidth = event.getScreenWidth();
         float dx, dy;
@@ -191,8 +189,8 @@ public class ItemTooltipManager {
         if (ModConfig.Client.skinPreDrawBackground) {
             context.drawTilableImage(ModTextures.GUI_PREVIEW, dx, dy, size, size, 0, 0, 62, 62, 4, 4, 4, 4, 400);
         }
-        auto colorScheme = descriptor.getColorScheme();
-        auto buffers = AbstractBufferSource.defaultBufferSource();
+        var colorScheme = descriptor.getColorScheme();
+        var buffers = AbstractBufferSource.buffer();
         ExtendedItemRenderer.renderSkinInTooltip(bakedSkin, colorScheme, itemStack, dx, dy, 500, size, size, 30, 45, 0, 0, 0xf000f0, context.state().ctm(), buffers);
         buffers.endBatch();
     }

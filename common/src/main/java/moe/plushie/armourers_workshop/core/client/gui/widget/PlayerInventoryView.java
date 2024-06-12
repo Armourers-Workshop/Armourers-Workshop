@@ -31,14 +31,8 @@ public class PlayerInventoryView extends UIView {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         switch (style) {
-            case NORMAL: {
-                context.drawImage(backgroundImage, bounds());
-                break;
-            }
-            case COMPACT: {
-                context.drawImage(compactImage, bounds().insetBy(15, 7, 7, 7));
-                break;
-            }
+            case NORMAL -> context.drawImage(backgroundImage, bounds());
+            case COMPACT -> context.drawImage(compactImage, bounds().insetBy(15, 7, 7, 7));
         }
         super.render(point, context);
     }

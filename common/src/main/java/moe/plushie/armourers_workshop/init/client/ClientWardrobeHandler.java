@@ -44,8 +44,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Collections;
 import java.util.function.Supplier;
 
-import manifold.ext.rt.api.auto;
-
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
 public class ClientWardrobeHandler {
@@ -67,14 +65,14 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderSpecificHand(LivingEntity entity, float partialTicks, int packedLight, AbstractItemTransformType transformType, PoseStack poseStackIn, MultiBufferSource buffersIn, Runnable cancelHandler) {
-        auto renderData = SkinRenderData.of(entity);
+        var renderData = SkinRenderData.of(entity);
         if (renderData == null) {
             return;
         }
-        auto poseStack = AbstractPoseStack.wrap(poseStackIn);
-        auto buffers = AbstractBufferSource.wrap(buffersIn);
-        auto armature = BakedFirstPersonArmature.defaultBy(transformType);
-        auto context = SkinRenderContext.alloc(renderData, packedLight, partialTicks, transformType, poseStack, buffers);
+        var poseStack = AbstractPoseStack.wrap(poseStackIn);
+        var buffers = AbstractBufferSource.wrap(buffersIn);
+        var armature = BakedFirstPersonArmature.defaultBy(transformType);
+        var context = SkinRenderContext.alloc(renderData, packedLight, partialTicks, transformType, poseStack, buffers);
 
         poseStack.pushPose();
         poseStack.scale(-SCALE, -SCALE, SCALE);
@@ -119,14 +117,14 @@ public class ClientWardrobeHandler {
         if (RENDERING_GUI_ITEM != itemStack) {
             // when the wardrobe has override skin of the item,
             // we easily got a conclusion of the needs embedded skin.
-            auto renderData = SkinRenderData.of(entity);
+            var renderData = SkinRenderData.of(entity);
             if (renderData != null) {
-                for (auto entry : renderData.getItemSkins(itemStack, entity instanceof MannequinEntity)) {
+                for (var entry : renderData.getItemSkins(itemStack, entity instanceof MannequinEntity)) {
                     return new EmbeddedSkinStack(0, entry);
                 }
             }
         }
-        auto descriptor = SkinDescriptor.of(itemStack);
+        var descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
             return null;
         }
@@ -172,14 +170,14 @@ public class ClientWardrobeHandler {
                     }
                     break;
                 }
-                auto renderData = SkinRenderData.of(entity);
+                var renderData = SkinRenderData.of(entity);
                 if (renderData != null) {
 //                    poseStack.translate(0, 1, -2);
 //                    RenderUtils.drawPoint(poseStack, null, 2, buffers);
-                    auto poseStack = AbstractPoseStack.wrap(poseStackIn);
-                    auto buffers = AbstractBufferSource.wrap(buffersIn);
-                    auto armature = BakedArmature.defaultBy(Armatures.ANY);
-                    auto context = SkinRenderContext.alloc(renderData, packedLight, 0, transformType, poseStack, buffers);
+                    var poseStack = AbstractPoseStack.wrap(poseStackIn);
+                    var buffers = AbstractBufferSource.wrap(buffersIn);
+                    var armature = BakedArmature.defaultBy(Armatures.ANY);
+                    var context = SkinRenderContext.alloc(renderData, packedLight, 0, transformType, poseStack, buffers);
 
                     poseStack.pushPose();
                     poseStack.scale(-SCALE, -SCALE, SCALE);
@@ -203,22 +201,22 @@ public class ClientWardrobeHandler {
 
     private static int _renderEmbeddedSkinInBox(EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight, int overlay) {
         int count = 0;
-        auto descriptor = embeddedStack.getDescriptor();
-        auto bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
+        var descriptor = embeddedStack.getDescriptor();
+        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
         if (bakedSkin == null) {
             return count;
         }
-        auto poseStack = AbstractPoseStack.wrap(poseStackIn);
-        auto buffers = AbstractBufferSource.wrap(buffersIn);
-        auto rotation = Vector3f.ZERO;
-        auto scale = Vector3f.ONE;
+        var poseStack = AbstractPoseStack.wrap(poseStackIn);
+        var buffers = AbstractBufferSource.wrap(buffersIn);
+        var rotation = Vector3f.ZERO;
+        var scale = Vector3f.ONE;
 
         poseStack.pushPose();
 
         // for skin of the custom item transforms, we will respect its options.
         if (bakedSkin.getItemModel() == null) {
-            auto itemModel = BakedItemModel.DEFAULT;
-            auto transform = itemModel.getTransform(transformType);
+            var itemModel = BakedItemModel.DEFAULT;
+            var transform = itemModel.getTransform(transformType);
 
             // when skin not specify item transforms,
             // we need to apply a default item transforms.
@@ -243,13 +241,13 @@ public class ClientWardrobeHandler {
 
     private static int _renderEmbeddedSkin(EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight, int overlay) {
         int count = 0;
-        auto descriptor = embeddedStack.getDescriptor();
-        auto context = SkinRenderTesselator.create(descriptor, Tickets.INVENTORY);
+        var descriptor = embeddedStack.getDescriptor();
+        var context = SkinRenderTesselator.create(descriptor, Tickets.INVENTORY);
         if (context == null) {
             return count;
         }
-        auto poseStack = AbstractPoseStack.wrap(poseStackIn);
-        auto buffers = AbstractBufferSource.wrap(buffersIn);
+        var poseStack = AbstractPoseStack.wrap(poseStackIn);
+        var buffers = AbstractBufferSource.wrap(buffersIn);
 
         poseStack.pushPose();
         poseStack.scale(-16, -16, 16);
@@ -302,10 +300,10 @@ public class ClientWardrobeHandler {
 
     public static int render(Entity entity, BakedArmature bakedArmature, SkinRenderContext context, Supplier<Iterable<SkinRenderData.Entry>> provider) {
         int r = 0;
-        for (auto entry : provider.get()) {
-            auto bakedSkin = entry.getBakedSkin();
-            auto itemSource = context.getReferenced();
-            auto itemStack = itemSource.getItem();
+        for (var entry : provider.get()) {
+            var bakedSkin = entry.getBakedSkin();
+            var itemSource = context.getReferenced();
+            var itemStack = itemSource.getItem();
             if (itemStack.isEmpty()) {
                 itemStack = entry.getItemStack();
             }
@@ -326,7 +324,7 @@ public class ClientWardrobeHandler {
         if (embeddedStack.getMode() == 2) {
             return true;
         }
-        auto skinType = embeddedStack.getDescriptor().getType();
+        var skinType = embeddedStack.getDescriptor().getType();
         if (skinType == SkinTypes.ITEM_BOAT || skinType == SkinTypes.ITEM_FISHING || skinType == SkinTypes.HORSE) {
             return true;
         }

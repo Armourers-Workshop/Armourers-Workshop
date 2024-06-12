@@ -11,8 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 
 import java.util.function.Consumer;
 
-import manifold.ext.rt.api.auto;
-
 public class LivingEntityRenderPatch<T extends LivingEntity> extends EntityRenderPatch<T> {
 
     protected EntityModel<?> entityModel;
@@ -43,7 +41,7 @@ public class LivingEntityRenderPatch<T extends LivingEntity> extends EntityRende
 
     protected void onInit(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
         super.onInit(entity, partialTicks, packedLight, poseStackIn, buffersIn, entityRenderer);
-        auto entityModel = entityRenderer.getModel();
+        var entityModel = entityRenderer.getModel();
         if (this.entityModel != entityModel) {
             this.entityModel = entityModel;
             this.transformer = BakedArmatureTransformer.defaultBy(entity, entityModel, entityRenderer);

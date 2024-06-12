@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "moe.plushie.armourers_workshop.compatibility.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "client": [
     "PoseStackMixin",
     "EntityRenderDispatcherMixin",
@@ -26,7 +26,6 @@
     "EntityJSMixin",
     "VehicleEntityPlaceMixin",
     "VehicleEntityBreakMixin",
-    "ProtocolInfoBuilderMixin",
     "ComponentizationFixMixin$ItemFixer",
     "ComponentizationFixMixin$EntityFixer"
   ],

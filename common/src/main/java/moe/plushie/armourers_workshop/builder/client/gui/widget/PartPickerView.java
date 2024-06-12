@@ -15,7 +15,6 @@ import com.apple.library.uikit.UIWindow;
 import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -67,8 +66,7 @@ public class PartPickerView extends UIControl {
     }
 
     public void dismiss() {
-        UIMenuPopoverView popoverView = ObjectUtils.safeCast(window(), UIMenuPopoverView.class);
-        if (popoverView != null) {
+        if (window() instanceof UIMenuPopoverView popoverView) {
             popoverView.dismiss();
         }
     }

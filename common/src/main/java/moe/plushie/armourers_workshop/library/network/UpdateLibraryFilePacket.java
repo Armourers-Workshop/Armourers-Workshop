@@ -69,18 +69,9 @@ public class UpdateLibraryFilePacket extends CustomPacket {
         }
         ModLog.info("the {} operation accepted for '{}', dest: '{}'", mode, playerName, destination);
         switch (mode) {
-            case MKDIR: {
-                library.mkdir(destination);
-                break;
-            }
-            case RENAME: {
-                getFile(source).ifPresent(file -> library.rename(file, destination));
-                break;
-            }
-            case DELETE: {
-                getFile(source).ifPresent(library::delete);
-                break;
-            }
+            case MKDIR -> library.mkdir(destination);
+            case RENAME -> getFile(source).ifPresent(file -> library.rename(file, destination));
+            case DELETE -> getFile(source).ifPresent(library::delete);
         }
     }
 

@@ -1,0 +1,70 @@
+package moe.plushie.armourers_workshop.compatibility.client;
+
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
+import moe.plushie.armourers_workshop.utils.ColorUtils;
+
+@Available("[1.16, 1.21)")
+public class AbstractVertexConsumer implements IVertexConsumer {
+
+    protected VertexConsumer parent;
+
+    protected AbstractVertexConsumer(VertexConsumer parent) {
+        this.parent = parent;
+    }
+
+    public static AbstractVertexConsumer of(VertexConsumer parent) {
+        return new AbstractVertexConsumer(parent);
+    }
+
+    @Override
+    public IVertexConsumer vertex(float x, float y, float z) {
+        this.parent = parent.vertex(x, y, z);
+        return this;
+    }
+
+    @Override
+    public IVertexConsumer color(int r, int g, int b, int a) {
+        this.parent = parent.color(r, g, b, a);
+        return this;
+    }
+
+    @Override
+    public IVertexConsumer uv(float f, float g) {
+        this.parent = parent.uv(f, g);
+        return this;
+    }
+
+    @Override
+    public IVertexConsumer overlayCoords(int i, int j) {
+        this.parent = parent.overlayCoords(i, j);
+        return this;
+    }
+
+    @Override
+    public IVertexConsumer uv2(int i, int j) {
+        this.parent = parent.uv2(i, j);
+        return this;
+    }
+
+    @Override
+    public IVertexConsumer normal(float f, float g, float h) {
+        this.parent = parent.normal(f, g, h);
+        return this;
+    }
+
+    @Override
+    public void endVertex() {
+        parent.endVertex();
+    }
+
+    @Override
+    public void vertex(float x, float y, float z, int color, float u, float v, int overlay, int light, float nx, float ny, float nz) {
+        float r = ColorUtils.ARGB32.red(color) / 255.0f;
+        float g = ColorUtils.ARGB32.green(color) / 255.0f;
+        float b = ColorUtils.ARGB32.blue(color) / 255.0f;
+        float a = ColorUtils.ARGB32.alpha(color) / 255.0f;
+        parent.vertex(x, y, z, r, g, b, a, u, v, overlay, light, nx, ny, nz);
+    }
+}

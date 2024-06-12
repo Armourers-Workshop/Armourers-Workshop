@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class BakedItemModel extends BuiltInModel {
 
@@ -55,8 +53,8 @@ public class BakedItemModel extends BuiltInModel {
         Baker baker = new Baker(itemTransforms, usesBlockLight);
         ArrayList<Variant> entries = new ArrayList<>();
         for (String name : overrideNames) {
-            auto registryName = new ResourceLocation(name);
-            auto model = baker.bake(name, new Variant[0]);
+            var registryName = ResourceLocation.parse(name);
+            var model = baker.bake(name, new Variant[0]);
             entries.add(new Variant(registryName, model));
         }
         return baker.bake("", entries.toArray(new Variant[0]));
@@ -77,7 +75,7 @@ public class BakedItemModel extends BuiltInModel {
         }
 
         public boolean test(ItemStack itemStack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int i) {
-            auto func = ItemProperties.getProperty(itemStack, name);
+            var func = ItemProperties.getProperty(itemStack, name);
             if (func != null) {
                 return func.call(itemStack, level, entity, i) >= 1;
             }
@@ -132,19 +130,19 @@ public class BakedItemModel extends BuiltInModel {
         }
 
         private ItemTransforms getTransforms() {
-            auto thirdPersonLeftHand = getTransform(AbstractItemTransformType.THIRD_PERSON_LEFT_HAND);
-            auto thirdPersonRightHand = getTransform(AbstractItemTransformType.THIRD_PERSON_RIGHT_HAND);
-            auto firstPersonLeftHand = getTransform(AbstractItemTransformType.FIRST_PERSON_LEFT_HAND);
-            auto firstPersonRightHand = getTransform(AbstractItemTransformType.FIRST_PERSON_RIGHT_HAND);
-            auto head = getTransform(AbstractItemTransformType.HEAD);
-            auto gui = getTransform(AbstractItemTransformType.GUI);
-            auto ground = getTransform(AbstractItemTransformType.GROUND);
-            auto fixed = getTransform(AbstractItemTransformType.FIXED);
+            var thirdPersonLeftHand = getTransform(AbstractItemTransformType.THIRD_PERSON_LEFT_HAND);
+            var thirdPersonRightHand = getTransform(AbstractItemTransformType.THIRD_PERSON_RIGHT_HAND);
+            var firstPersonLeftHand = getTransform(AbstractItemTransformType.FIRST_PERSON_LEFT_HAND);
+            var firstPersonRightHand = getTransform(AbstractItemTransformType.FIRST_PERSON_RIGHT_HAND);
+            var head = getTransform(AbstractItemTransformType.HEAD);
+            var gui = getTransform(AbstractItemTransformType.GUI);
+            var ground = getTransform(AbstractItemTransformType.GROUND);
+            var fixed = getTransform(AbstractItemTransformType.FIXED);
             return new ItemTransforms(thirdPersonLeftHand, thirdPersonRightHand, firstPersonLeftHand, firstPersonRightHand, head, gui, ground, fixed);
         }
 
         private ItemTransform getTransform(AbstractItemTransformType key) {
-            auto transform = itemTransforms.get(prefix + ";" + key.getName());
+            var transform = itemTransforms.get(prefix + ";" + key.getName());
             if (transform == null) {
                 // when the child is not found, use the parent set.
                 transform = itemTransforms.get(key);

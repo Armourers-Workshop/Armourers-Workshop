@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.minecraft_api_version}-${rootProject.forge_api_version}"
+    forge "net.minecraftforge:forge:${rootProject.forge_api_version}"
 
     //modCompileOnly "com.sk89q.worldedit:worldedit-core:7.2.5-SNAPSHOT"
 

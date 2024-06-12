@@ -5,7 +5,7 @@ import com.apple.library.impl.InterpolableImpl;
 import java.util.Objects;
 
 /**
- *               |------------------ CGAffineTransformComponents ----------------|
+ * |------------------ CGAffineTransformComponents ----------------|
  * | a  b  0 |   | sx  0  0 |   |  1  0  0 |   | cos(t)  sin(t)  0 |   | 1  0  0 |
  * | c  d  0 | = |  0 sy  0 | * | sh  1  0 | * |-sin(t)  cos(t)  0 | * | 0  1  0 |
  * | tx ty 1 |   |  0  0  0 |   |  0  0  1 |   |   0       0     1 |   | tx ty 1 |
@@ -127,11 +127,10 @@ public class CGAffineTransform implements InterpolableImpl<CGAffineTransform> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CGAffineTransform transform = (CGAffineTransform) o;
-        return Float.compare(transform.a, a) == 0 && Float.compare(transform.b, b) == 0 && Float.compare(transform.c, c) == 0 && Float.compare(transform.d, d) == 0 && Float.compare(transform.tx, tx) == 0 && Float.compare(transform.ty, ty) == 0;
+        if (!(o instanceof CGAffineTransform that)) return false;
+        return Float.compare(a, that.a) == 0 && Float.compare(b, that.b) == 0 && Float.compare(c, that.c) == 0 && Float.compare(d, that.d) == 0 && Float.compare(tx, that.tx) == 0 && Float.compare(ty, that.ty) == 0;
     }
 
     @Override

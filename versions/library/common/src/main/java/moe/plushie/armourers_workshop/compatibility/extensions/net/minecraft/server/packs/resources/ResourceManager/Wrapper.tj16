@@ -1,9 +1,10 @@
 package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.server.packs.resources.ResourceManager;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.common.IResource;
-import moe.plushie.armourers_workshop.api.common.IResourceManager;
-import net.minecraft.resources.ResourceLocation;
+import moe.plushie.armourers_workshop.api.core.IResource;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.core.IResourceManager;
+import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -22,25 +23,26 @@ public class Wrapper {
     public static IResourceManager asResourceManager(@This ResourceManager resourceManager) {
         return new IResourceManager() {
             @Override
-            public boolean hasResource(ResourceLocation resourceLocation) {
-                return resourceManager.hasResource(resourceLocation);
+            public boolean hasResource(IResourceLocation location) {
+                return resourceManager.hasResource(location.toLocation());
             }
 
             @Override
-            public IResource readResource(ResourceLocation resourceLocation) throws IOException {
-                return wrap(resourceLocation, resourceManager.getResource(resourceLocation));
+            public IResource readResource(IResourceLocation location) throws IOException {
+                return wrap(location, resourceManager.getResource(location.toLocation()));
             }
 
             @Override
-            public void readResources(ResourceLocation target, Predicate<String> validator, BiConsumer<ResourceLocation, IResource> consumer) {
-                for (ResourceLocation key : resourceManager.listResources(target.getPath(), validator)) {
+            public void readResources(IResourceLocation target, Predicate<String> validator, BiConsumer<IResourceLocation, IResource> consumer) {
+                for (var key : resourceManager.listResources(target.getPath(), validator)) {
                     try {
                         if (!key.getNamespace().equals(target.getNamespace())) {
                             return;
                         }
                         for (Resource resource : resourceManager.getResources(key)) {
                             try {
-                                consumer.accept(key, wrap(key, resource));
+                                IResourceLocation key1 = OpenResourceLocation.create(key);
+                                consumer.accept(key1, wrap(key1, resource));
                             } catch (Exception exception) {
                                 exception.printStackTrace();
                             }
@@ -51,8 +53,7 @@ public class Wrapper {
                 }
             }
 
-            private IResource wrap(ResourceLocation name, Resource resource) {
-
+            private IResource wrap(IResourceLocation name, Resource resource) {
                 return new IResource() {
                     @Override
                     public String getName() {

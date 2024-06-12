@@ -19,8 +19,8 @@ public class CuriosAddon {
         ItemStackProvider.getInstance().register(new IItemStackProvider() {
             @Override
             public Iterable<ItemStack> getArmorSlots(Entity entity) {
-                if (entity instanceof LivingEntity) {
-                    Collection<T> collection = provider.apply((LivingEntity) entity, Objects::nonNull);
+                if (entity instanceof LivingEntity livingEntity) {
+                    Collection<T> collection = provider.apply(livingEntity, Objects::nonNull);
                     if (collection != null) {
                         return ObjectUtils.map(collection, transform);
                     }

@@ -13,8 +13,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.item.ItemStack;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class SkinItemRenderer extends AbstractItemStackRenderer {
 
@@ -36,7 +34,7 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
     }
 
     public MannequinModel<?> getMannequinModel() {
-        auto entity = PlaceholderManager.MANNEQUIN.get();
+        var entity = PlaceholderManager.MANNEQUIN.get();
         if (model == null && entity != null) {
             model = MannequinModel.placeholder();
             model.young = false;
@@ -50,7 +48,7 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
 
     public ItemStack getPlayerMannequinItem() {
         if (playerMannequinItem == null) {
-            auto player = EnvironmentManager.getPlayer();
+            var player = EnvironmentManager.getPlayer();
             if (player == null) {
                 return ItemStack.EMPTY;
             }

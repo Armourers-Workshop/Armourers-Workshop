@@ -1,13 +1,11 @@
 package moe.plushie.armourers_workshop.core.armature.core;
 
 import moe.plushie.armourers_workshop.api.client.model.IModel;
-import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.compatibility.client.layer.AbstractSkinnableLayers;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.layer.PlaceholderLayer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -19,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import manifold.ext.rt.api.auto;
 
 public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
 
@@ -75,13 +71,13 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
     }
 
     private <T extends LivingEntity, M extends EntityModel<T>> void apply(LivingEntityRenderer<T, M> entityRenderer) {
-        auto layers = entityRenderer.layers;
-        for (RenderLayer<T, M> targetLayer : layers) {
-            for (Entry entry : entries) {
+        var layers = entityRenderer.layers;
+        for (var targetLayer : layers) {
+            for (var entry : entries) {
                 if (!entry.layerClass.isInstance(targetLayer)) {
                     continue;
                 }
-                EntryImpl<T, M> impl = new EntryImpl<>();
+                var impl = new EntryImpl<T, M>();
                 impl.target = targetLayer;
                 impl.placeholder = new PlaceholderLayer<>(entityRenderer);
                 impl.layers = () -> entityRenderer.layers;
@@ -95,15 +91,14 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
     }
 
     private void setEntityRenderer(EntityRenderer<?> entityRenderer) {
-        LivingEntityRenderer<?, ?> livingEntityRenderer = ObjectUtils.safeCast(entityRenderer, LivingEntityRenderer.class);
-        if (livingEntityRenderer != null) {
+        if (entityRenderer instanceof LivingEntityRenderer<?, ?> livingEntityRenderer) {
             apply(livingEntityRenderer);
         }
     }
 
     private void register(Class<?> clazz, Function<IModel, Supplier<Boolean>> testFactory) {
         if (clazz != null) {
-            Entry entry = new Entry();
+            var entry = new Entry();
             entry.layerClass = clazz;
             entry.testFactory = testFactory;
             entries.add(entry);
@@ -111,7 +106,7 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
     }
 
     private Supplier<Boolean> whenHeadVisible(IModel model) {
-        IModelPart modelPart = model.getPart("head");
+        var modelPart = model.getPart("head");
         if (modelPart != null) {
             return modelPart::isVisible;
         }
@@ -119,14 +114,14 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
     }
 
     private Supplier<Boolean> whenAnyVisible(IModel model) {
-        for (IModelPart part : model.getAllParts()) {
+        for (var part : model.getAllParts()) {
             return part::isVisible;
         }
         return null;
     }
 
     private Supplier<Boolean> whenBodyVisible(IModel model) {
-        IModelPart modelPart = model.getPart("body");
+        var modelPart = model.getPart("body");
         if (modelPart != null) {
             return modelPart::isVisible;
         }

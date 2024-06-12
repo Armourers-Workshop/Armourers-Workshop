@@ -159,9 +159,8 @@ public class UIColor {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UIColor)) return false;
-        UIColor color = (UIColor) o;
-        return value == color.value;
+        if (!(o instanceof UIColor that)) return false;
+        return value == that.value;
     }
 
     @Override

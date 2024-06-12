@@ -12,8 +12,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-import manifold.ext.rt.api.auto;
-
 @SuppressWarnings("unused")
 public class UILabel extends UIView {
 
@@ -72,7 +70,7 @@ public class UILabel extends UIView {
             return;
         }
         float dy = sel(rect, cachedTextHeight, textVerticalAlignment);
-        for (auto line : cachedTextLayout.contents()) {
+        for (var line : cachedTextLayout.contents()) {
             CGPoint offset = line.offset;
             float dx = sel(rect, line.size.width, textHorizontalAlignment);
             context.drawText(line.text, offset.x + dx, offset.y + dy, font, textColor, shadowColor);
@@ -165,7 +163,7 @@ public class UILabel extends UIView {
         }
         CGRect rect = bounds();
         float dy = sel(rect, cachedTextHeight, textVerticalAlignment);
-        for (auto line : cachedTextLayout.contents()) {
+        for (var line : cachedTextLayout.contents()) {
             CGPoint offset = line.offset;
             float dx = sel(rect, line.size.width, textHorizontalAlignment);
             if (point.y >= offset.y + dy && point.y <= offset.y + dy + line.size.height) {
@@ -177,29 +175,19 @@ public class UILabel extends UIView {
     }
 
     private float sel(CGRect rect, float value, NSTextAlignment.Vertical alignment) {
-        switch (alignment) {
-            case BOTTOM:
-                return rect.height - value;
-
-            case CENTER:
-                return (rect.height - value) / 2;
-
-            default:
-                return 0;
-        }
+        return switch (alignment) {
+            case BOTTOM -> (rect.height - value);
+            case CENTER -> (rect.height - value) / 2;
+            default -> 0;
+        };
     }
 
     private float sel(CGRect rect, float value, NSTextAlignment.Horizontal alignment) {
-        switch (alignment) {
-            case RIGHT:
-                return rect.width - value;
-
-            case CENTER:
-                return (rect.width - value) / 2;
-
-            default:
-                return 0;
-        }
+        return switch (alignment) {
+            case RIGHT -> (rect.width - value);
+            case CENTER -> (rect.width - value) / 2;
+            default -> 0;
+        };
     }
 
     private void setNeedsRemakeTextLine() {

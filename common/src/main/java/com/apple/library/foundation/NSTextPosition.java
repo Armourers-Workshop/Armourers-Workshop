@@ -26,8 +26,7 @@ public class NSTextPosition {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof NSTextPosition)) return false;
-        NSTextPosition that = (NSTextPosition) o;
+        if (!(o instanceof NSTextPosition that)) return false;
         return value == that.value && isBackward == that.isBackward;
     }
 

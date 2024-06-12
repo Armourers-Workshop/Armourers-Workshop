@@ -30,8 +30,8 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
-import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import moe.plushie.armourers_workshop.utils.DataSerializerKey;
+import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
@@ -56,8 +56,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
-
-import manifold.ext.rt.api.auto;
 
 public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockEntityHandler, IPaintToolSelector.Provider {
 
@@ -347,7 +345,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
 
 
     public boolean isModelOverridden(ISkinPartType partType) {
-        auto property = PART_TO_MODEL.get(partType);
+        var property = PART_TO_MODEL.get(partType);
         if (property != null) {
             return getSkinProperties().get(property);
         }
@@ -416,8 +414,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
     }
 
     private void setupBoundingBox(Level level, BlockPos pos, Vector3i offset, ISkinPartType partType) {
-        BoundingBoxBlockEntity blockEntity = ObjectUtils.safeCast(level.getBlockEntity(pos), BoundingBoxBlockEntity.class);
-        if (blockEntity != null) {
+        if (level.getBlockEntity(pos) instanceof BoundingBoxBlockEntity blockEntity) {
             blockEntity.setPartType(partType);
             blockEntity.setGuide(offset);
             blockEntity.setParent(pos.subtract(getBlockPos()));

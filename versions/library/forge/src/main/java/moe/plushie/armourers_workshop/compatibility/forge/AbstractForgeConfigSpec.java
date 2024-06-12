@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.config.IConfigBuilder;
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
 import moe.plushie.armourers_workshop.compatibility.AbstractConfigSpec;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
@@ -79,7 +78,7 @@ public class AbstractForgeConfigSpec extends AbstractConfigSpec {
 
         // registry the config into loader.
         ModConfigSpec config = pair.getRight();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.valueOf(type.name()), config);
+        AbstractForgeInitializer.getModContainer().registerConfig(ModConfig.Type.valueOf(type.name()), config);
 
         return spec;
     }

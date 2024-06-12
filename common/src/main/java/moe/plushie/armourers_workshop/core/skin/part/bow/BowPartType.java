@@ -26,31 +26,22 @@ public class BowPartType extends SkinPartType implements ICanHeld, ICanUse {
         // pulling: 1, 0
         // pulling: 1, 0.65
         // pulling: 1, 0.9
-        switch (frame) {
-            case 0:
-                return Range.closed(0, 0);
-            case 1:
-                return Range.closed(1, 12);
-            case 2:
-                return Range.closed(13, 17);
-            default:
-                return Range.closed(18, 30);
-        }
+        return switch (frame) {
+            case 0 -> Range.closed(0, 0);
+            case 1 -> Range.closed(1, 12);
+            case 2 -> Range.closed(13, 17);
+            default -> Range.closed(18, 30);
+        };
     }
 
     public static Vector3i getFrameOffset(int frame) {
-        switch (frame) {
-            case 0:
-                return new Vector3i(-50, 0, 0);
-            case 1:
-                return new Vector3i(-25, 0, 0);
-            case 2:
-                return new Vector3i(0, 0, 0);
-            case 3:
-                return new Vector3i(25, 0, 0);
-            default:
-                return null;
-        }
+        return switch (frame) {
+            case 0 -> new Vector3i(-50, 0, 0);
+            case 1 -> new Vector3i(-25, 0, 0);
+            case 2 -> new Vector3i(0, 0, 0);
+            case 3 -> new Vector3i(25, 0, 0);
+            default -> null;
+        };
     }
 
     @Override

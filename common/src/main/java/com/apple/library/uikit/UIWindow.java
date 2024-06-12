@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import manifold.ext.rt.api.auto;
-
 @SuppressWarnings("unused")
 public class UIWindow extends UIView {
 
@@ -520,8 +518,8 @@ public class UIWindow extends UIView {
             if (view.isHidden()) {
                 return;
             }
-            auto layer = view.layer();
-            auto presentation = view._presentation;
+            var layer = view.layer();
+            var presentation = view._presentation;
             CGPoint center = presentation.center();
             CGRect bounds = presentation.bounds();
             CGAffineTransform transform = presentation.transform();

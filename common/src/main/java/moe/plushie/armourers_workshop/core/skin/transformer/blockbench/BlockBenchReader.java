@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.transformer.blockbench;
 
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPackModelReader;
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPackReader;
-import moe.plushie.armourers_workshop.api.common.IResource;
+import moe.plushie.armourers_workshop.api.core.IResource;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOConsumer;
 
 import java.io.IOException;

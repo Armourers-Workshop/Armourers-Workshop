@@ -1,9 +1,10 @@
 package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.server.packs.resources.ResourceManager;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.common.IResource;
-import moe.plushie.armourers_workshop.api.common.IResourceManager;
-import net.minecraft.resources.ResourceLocation;
+import moe.plushie.armourers_workshop.api.core.IResource;
+import moe.plushie.armourers_workshop.api.core.IResourceManager;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -24,28 +25,29 @@ public class Wrapper {
     public static IResourceManager asResourceManager(@This ResourceManager resourceManager) {
         return new IResourceManager() {
             @Override
-            public boolean hasResource(ResourceLocation resourceLocation) {
-                return resourceManager.getResource(resourceLocation).isPresent();
+            public boolean hasResource(IResourceLocation location) {
+                return resourceManager.getResource(location.toLocation()).isPresent();
             }
 
             @Override
-            public IResource readResource(ResourceLocation resourceLocation) throws IOException {
-                Optional<Resource> resource = resourceManager.getResource(resourceLocation);
+            public IResource readResource(IResourceLocation location) throws IOException {
+                Optional<Resource> resource = resourceManager.getResource(location.toLocation());
                 if (resource.isPresent()) {
-                    return wrap(resourceLocation, resource.get());
+                    return wrap(location, resource.get());
                 }
-                throw new FileNotFoundException(resourceLocation.toString());
+                throw new FileNotFoundException(location.toString());
             }
 
             @Override
-            public void readResources(ResourceLocation target, Predicate<String> validator, BiConsumer<ResourceLocation, IResource> consumer) {
+            public void readResources(IResourceLocation target, Predicate<String> validator, BiConsumer<IResourceLocation, IResource> consumer) {
                 resourceManager.listResources(target.getPath(), rl -> validator.test(rl.getPath())).forEach((key, resource) -> {
                     try {
                         try {
                             if (!key.getNamespace().equals(target.getNamespace())) {
                                 return;
                             }
-                            consumer.accept(key, wrap(key, resource));
+                            IResourceLocation key1 = OpenResourceLocation.create(key);
+                            consumer.accept(key1, wrap(key1, resource));
                         } catch (Exception exception) {
                             exception.printStackTrace();
                         }
@@ -55,8 +57,7 @@ public class Wrapper {
                 });
             }
 
-            private IResource wrap(ResourceLocation name, Resource resource) {
-
+            private IResource wrap(IResourceLocation name, Resource resource) {
                 return new IResource() {
                     @Override
                     public String getName() {

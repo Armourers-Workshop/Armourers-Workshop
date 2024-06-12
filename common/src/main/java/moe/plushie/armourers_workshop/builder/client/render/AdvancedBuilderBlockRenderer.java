@@ -53,8 +53,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> extends AbstractBlockEntityRenderer<T> {
 
@@ -256,8 +254,8 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
             }
         } else {
             poseStack.translate(0, -2, -2);
-            auto entity = PlaceholderManager.MANNEQUIN.get();
-            auto model = SkinModelManager.getInstance().getModel(node.getType(), null, ItemStack.EMPTY, entity);
+            var entity = PlaceholderManager.MANNEQUIN.get();
+            var model = SkinModelManager.getInstance().getModel(node.getType(), null, ItemStack.EMPTY, entity);
             float f1 = 16f;
             float f2 = 1 / 16f;
             poseStack.scale(f1, f1, f1);

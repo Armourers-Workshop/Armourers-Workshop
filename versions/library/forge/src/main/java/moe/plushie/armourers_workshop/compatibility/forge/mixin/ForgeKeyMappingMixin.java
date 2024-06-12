@@ -12,15 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-import manifold.ext.rt.api.auto;
-
 @Available("[1.21, )")
 @Mixin(KeyMappingLookup.class)
 public class ForgeKeyMappingMixin {
 
     @Inject(method = "getAll", at = @At("RETURN"))
     private void aw$getAll(InputConstants.Key keyCode, CallbackInfoReturnable<List<KeyMapping>> cir) {
-        auto mappings = AbstractForgeKeyMapping.findKeysByCode(keyCode);
+        var mappings = AbstractForgeKeyMapping.findKeysByCode(keyCode);
         if (mappings != null) {
             cir.getReturnValue().addAll(mappings);
         }

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.docume
 
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIColor;
-import moe.plushie.armourers_workshop.api.common.IResource;
+import moe.plushie.armourers_workshop.api.core.IResource;
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;

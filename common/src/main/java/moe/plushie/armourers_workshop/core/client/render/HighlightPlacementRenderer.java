@@ -22,13 +22,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class HighlightPlacementRenderer {
 
     public static void renderBlock(ItemStack itemStack, Player player, BlockHitResult traceResult, Camera renderInfo, IPoseStack poseStack, IBufferSource bufferSource) {
-        auto descriptor = SkinDescriptor.of(itemStack);
+        var descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.getType() != SkinTypes.BLOCK) {
             return;
         }
@@ -60,25 +58,25 @@ public class HighlightPlacementRenderer {
     }
 
     public static void renderEntity(Player player, BlockHitResult traceResult, Camera renderInfo, IPoseStack poseStack, IBufferSource bufferSource) {
-        auto origin = new Vector3f(renderInfo.getPosition());
-        auto target = MannequinHitResult.test(player, origin, traceResult.getLocation(), traceResult.getBlockPos());
+        var origin = new Vector3f(renderInfo.getPosition());
+        var target = MannequinHitResult.test(player, origin, traceResult.getLocation(), traceResult.getBlockPos());
         poseStack.pushPose();
 
-        auto location = new Vector3f(target.getLocation());
+        var location = new Vector3f(target.getLocation());
 
         poseStack.translate(location.getX() - origin.getX(), location.getY() - origin.getY(), location.getZ() - origin.getZ());
         poseStack.rotate(Vector3f.YP.rotationDegrees(-target.getRotation()));
 
-        auto model = SkinItemRenderer.getInstance().getMannequinModel();
+        var model = SkinItemRenderer.getInstance().getMannequinModel();
         if (model != null) {
             float f = target.getScale() * 0.9375f; // base scale from player model
-            auto buffers1 = AbstractBufferSource.unwrap(bufferSource);
-            auto builder = buffers1.getBuffer(SkinRenderType.HIGHLIGHTED_ENTITY_LINES);
+            var buffers1 = AbstractBufferSource.unwrap(bufferSource);
+            var builder = buffers1.getBuffer(SkinRenderType.HIGHLIGHTED_ENTITY_LINES);
             poseStack.pushPose();
             poseStack.scale(f, f, f);
             poseStack.scale(-1, -1, 1);
             poseStack.translate(0.0f, -1.501f, 0.0f);
-            model.renderToBuffer(AbstractPoseStack.unwrap(poseStack), builder, 0xf000f0, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);  // m,vb,l,p,r,g,b,a
+            model.renderToBuffer(AbstractPoseStack.unwrap(poseStack), builder, 0xf000f0, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);  // m,vb,l,p,color
             poseStack.popPose();
         }
 

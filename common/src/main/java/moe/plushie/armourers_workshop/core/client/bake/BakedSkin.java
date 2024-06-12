@@ -4,6 +4,7 @@ import com.google.common.collect.Range;
 import moe.plushie.armourers_workshop.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
@@ -36,7 +37,6 @@ import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -52,8 +52,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-
-import manifold.ext.rt.api.auto;
 
 @Environment(EnvType.CLIENT)
 public class BakedSkin implements IBakedSkin {
@@ -105,7 +103,7 @@ public class BakedSkin implements IBakedSkin {
         ColorScheme resolvedColorScheme = resolvedColorSchemes.computeIfAbsent(entity.getId(), k -> colorScheme.copy());
         // we can't bind textures to skin when the item stack rendering.
         if (PlaceholderManager.isPlaceholder(entity)) {
-            ResourceLocation resolvedTexture = PlayerTextureLoader.getInstance().getTextureLocation(entity);
+            IResourceLocation resolvedTexture = PlayerTextureLoader.getInstance().getTextureLocation(entity);
             if (!Objects.equals(resolvedColorScheme.getTexture(), resolvedTexture)) {
                 resolvedColorScheme.setTexture(resolvedTexture);
             }
@@ -236,7 +234,7 @@ public class BakedSkin implements IBakedSkin {
         }
         if (partType instanceof ICanUse && entity instanceof LivingEntity) {
             int useTick = getUseTick((LivingEntity) entity, context.getReferenced().getItem());
-            auto useRange = ((ICanUse) partType).getUseRange();
+            var useRange = ((ICanUse) partType).getUseRange();
             return useRange.contains(MathUtils.clamp(useTick, useTickRange.lowerEndpoint(), useTickRange.upperEndpoint()));
         }
         return true;
@@ -279,7 +277,7 @@ public class BakedSkin implements IBakedSkin {
             return;
         }
         for (BakedSkinPart skinPart : skinParts) {
-            auto bm = skinPart.getPart().getBlockBounds();
+            var bm = skinPart.getPart().getBlockBounds();
             if (bm != null) {
                 cachedBlockBounds.putAll(bm);
             }

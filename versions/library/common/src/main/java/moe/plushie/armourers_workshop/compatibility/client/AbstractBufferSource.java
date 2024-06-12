@@ -2,11 +2,9 @@ package moe.plushie.armourers_workshop.compatibility.client;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 
@@ -14,6 +12,9 @@ import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class AbstractBufferSource implements IBufferSource {
+
+    private static final AbstractBufferSource DEFAULT = create(AbstractBufferSourceImpl.bufferSource());
+    private static final AbstractBufferSource TESSELATOR = create(AbstractBufferSourceImpl.immediateSource(80000));
 
     private static final Cache<Object, AbstractBufferSource> CACHED_BUFFER_SOURCES = CacheBuilder.newBuilder()
             .expireAfterAccess(3, TimeUnit.SECONDS)
@@ -23,22 +24,30 @@ public class AbstractBufferSource implements IBufferSource {
     private final HashMap<VertexConsumer, IVertexConsumer> cachedBuffers = new HashMap<>();
     private final MultiBufferSource bufferSource;
 
-    public AbstractBufferSource(MultiBufferSource bufferSource) {
+    private AbstractBufferSource(MultiBufferSource bufferSource) {
         this.bufferSource = bufferSource;
     }
 
-    public static IBufferSource defaultBufferSource() {
-        return wrap(Minecraft.getInstance().renderBuffers().bufferSource());
+    public static AbstractBufferSource buffer() {
+        return DEFAULT;
     }
 
-    public static IBufferSource immediateBufferSource(BufferBuilder bufferBuilder) {
-        return new AbstractBufferSource(MultiBufferSource.immediate(bufferBuilder));
+    public static AbstractBufferSource create(int size) {
+        return new AbstractBufferSource(AbstractBufferSourceImpl.immediateSource(size));
     }
 
-    public static IBufferSource wrap(MultiBufferSource bufferSource) {
+    public static AbstractBufferSource create(MultiBufferSource bufferSource) {
+        return new AbstractBufferSource(bufferSource);
+    }
+
+    public static AbstractBufferSource tesselator() {
+        return TESSELATOR;
+    }
+
+    public static AbstractBufferSource wrap(MultiBufferSource bufferSource) {
         AbstractBufferSource bufferSource1 = CACHED_BUFFER_SOURCES.getIfPresent(bufferSource);
         if (bufferSource1 == null) {
-            bufferSource1 = new AbstractBufferSource(bufferSource);
+            bufferSource1 = create(bufferSource);
             CACHED_BUFFER_SOURCES.put(bufferSource, bufferSource1);
         }
         return bufferSource1;
@@ -51,13 +60,17 @@ public class AbstractBufferSource implements IBufferSource {
     @Override
     public IVertexConsumer getBuffer(RenderType renderType) {
         VertexConsumer builder = bufferSource.getBuffer(renderType);
-        return cachedBuffers.computeIfAbsent(builder, AbstractVertexConsumer::new);
+        return cachedBuffers.computeIfAbsent(builder, AbstractVertexConsumer::of);
     }
 
     @Override
     public void endBatch() {
-        if (bufferSource instanceof MultiBufferSource.BufferSource) {
-            ((MultiBufferSource.BufferSource) bufferSource).endBatch();
+        if (bufferSource instanceof MultiBufferSource.BufferSource bufferSource1) {
+            bufferSource1.endBatch();
         }
+    }
+
+    public MultiBufferSource bufferSource() {
+        return bufferSource;
     }
 }

@@ -10,6 +10,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
@@ -43,7 +44,6 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
@@ -299,7 +299,7 @@ public class ModCommands {
             if (overrideType == null || itemStack.isEmpty()) {
                 throw ERROR_MISSING_ITEM_STACK.create(player.getScoreboardName());
             }
-            ResourceLocation identifier = TypedRegistry.findKey(itemStack.getItem());
+            IResourceLocation identifier = TypedRegistry.findKey(itemStack.getItem());
             String key = String.format("%s:%s", overrideType.getName(), identifier);
             // we always remove and then add again
             if (operator.equals("add")) {

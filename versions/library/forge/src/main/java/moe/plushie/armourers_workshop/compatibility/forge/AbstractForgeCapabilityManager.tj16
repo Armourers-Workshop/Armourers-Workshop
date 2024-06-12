@@ -3,14 +3,14 @@ package moe.plushie.armourers_workshop.compatibility.forge;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.ICapabilityType;
 import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
-import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -35,28 +35,28 @@ public abstract class AbstractForgeCapabilityManager {
     @CapabilityInject(SkinWardrobe.class)
     public static Capability<SkinWardrobe> WARDROBE_KEY;
 
-    public static <T> IRegistryKey<ICapabilityType<T>> register(ResourceLocation registryName, Class<T> type, Function<Entity, Optional<T>> factory) {
+    public static <T> IRegistryHolder<ICapabilityType<T>> register(IResourceLocation registryName, Class<T> type, Function<Entity, Optional<T>> factory) {
         if (type == SkinWardrobe.class) {
             return ObjectUtils.unsafeCast(createWardrobeCapabilityType(registryName, ObjectUtils.unsafeCast(factory)));
         }
         throw new AssertionError();
     }
 
-    private static IRegistryKey<ICapabilityType<SkinWardrobe>> createWardrobeCapabilityType(ResourceLocation registryName, Function<Entity, Optional<SkinWardrobe>> provider) {
+    private static IRegistryHolder<ICapabilityType<SkinWardrobe>> createWardrobeCapabilityType(IResourceLocation registryName, Function<Entity, Optional<SkinWardrobe>> provider) {
         ICapabilityType<SkinWardrobe> capabilityType = entity -> entity.getCapability(WARDROBE_KEY).resolve();
         return new RegistryObjectProxy<>(registryName, SkinWardrobe.class, provider, capabilityType, () -> WARDROBE_KEY);
     }
 
-    public static class RegistryObjectProxy<T extends IDataSerializerProvider> implements IRegistryKey<ICapabilityType<T>> {
+    public static class RegistryObjectProxy<T extends IDataSerializerProvider> implements IRegistryHolder<ICapabilityType<T>> {
 
-        final ResourceLocation registryName;
+        final IResourceLocation registryName;
         final Supplier<Capability<T>> capability;
 
         final Class<T> type;
         final ICapabilityType<T> capabilityType;
         final Function<Entity, Optional<T>> factory;
 
-        protected RegistryObjectProxy(ResourceLocation registryName, Class<T> type, Function<Entity, Optional<T>> factory, ICapabilityType<T> capabilityType, Supplier<Capability<T>> capability) {
+        protected RegistryObjectProxy(IResourceLocation registryName, Class<T> type, Function<Entity, Optional<T>> factory, ICapabilityType<T> capabilityType, Supplier<Capability<T>> capability) {
             this.type = type;
             this.factory = factory;
             this.capability = capability;
@@ -71,7 +71,7 @@ public abstract class AbstractForgeCapabilityManager {
         }
 
         public void registerCapability(FMLLoadCompleteEvent event) {
-            CapabilityManager.INSTANCE.register(type, new Capability.IStorage<T>() {
+            CapabilityManager.INSTANCE.register(type, new Capability.IStorage<>() {
                 @Override
                 public Tag writeNBT(Capability<T> capability, T object, Direction arg) {
                     return null;
@@ -88,7 +88,7 @@ public abstract class AbstractForgeCapabilityManager {
             if (!value.isPresent()) {
                 return;
             }
-            event.addCapability(registryName, new CapabilityProviderProxy<T>(value.get()) {
+            event.addCapability(registryName.toLocation(), new CapabilityProviderProxy<T>(value.get()) {
                 @Override
                 public Capability<T> getCapability() {
                     return capability.get();
@@ -102,7 +102,7 @@ public abstract class AbstractForgeCapabilityManager {
         }
 
         @Override
-        public ResourceLocation getRegistryName() {
+        public IResourceLocation getRegistryName() {
             return registryName;
         }
     }

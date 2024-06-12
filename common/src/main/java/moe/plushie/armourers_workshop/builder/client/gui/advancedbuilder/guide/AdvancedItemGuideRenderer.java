@@ -38,7 +38,7 @@ public class AdvancedItemGuideRenderer extends AbstractAdvancedGuideRenderer {
         IBufferSource skinBufferSource = SkinVertexBufferBuilder.getBuffer(bufferSource);
         armSolid.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_CUTOUT), 0xf000f0, overlay);
         //poseStack.translate(0, -0.001f * f, 0);
-        armTransparent.render(poseStack, skinBufferSource.getBuffer(SkinRenderType.PLAYER_TRANSLUCENT), 0xf000f0, overlay, 1, 1, 1, 0.75f);
+        armTransparent.render(poseStack, skinBufferSource.getBuffer(SkinRenderType.PLAYER_TRANSLUCENT), 0xf000f0, overlay, 0xbfffffff);
 
         poseStack.popPose();
     }

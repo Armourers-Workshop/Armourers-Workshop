@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.transformer;
 
-import moe.plushie.armourers_workshop.api.common.IResource;
+import moe.plushie.armourers_workshop.api.core.IResource;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 
 import java.io.BufferedInputStream;

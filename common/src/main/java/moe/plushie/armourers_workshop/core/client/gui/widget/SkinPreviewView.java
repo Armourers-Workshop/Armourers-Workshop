@@ -13,8 +13,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.item.ItemStack;
 
-import manifold.ext.rt.api.auto;
-
 @Environment(EnvType.CLIENT)
 public class SkinPreviewView extends UIControl {
 
@@ -30,7 +28,7 @@ public class SkinPreviewView extends UIControl {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        auto bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
         if (bakedSkin == null) {
             return;
         }
@@ -39,10 +37,10 @@ public class SkinPreviewView extends UIControl {
         float ty = rect.y;
         float tw = rect.width;
         float th = rect.height;
-        auto poseStack = context.state().ctm();
-        auto colorScheme = descriptor.getColorScheme();
-        auto itemStack = ItemStack.EMPTY;
-        auto buffers = AbstractBufferSource.defaultBufferSource();
+        var poseStack = context.state().ctm();
+        var colorScheme = descriptor.getColorScheme();
+        var itemStack = ItemStack.EMPTY;
+        var buffers = AbstractBufferSource.buffer();
         ExtendedItemRenderer.renderSkinInGUI(bakedSkin, colorScheme, itemStack, tx, ty, 200, tw, th, 20, 45, 0, 0, 0xf000f0, poseStack, buffers);
         buffers.endBatch();
     }
