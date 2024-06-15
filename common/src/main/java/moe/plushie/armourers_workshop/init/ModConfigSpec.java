@@ -110,6 +110,7 @@ public class ModConfigSpec {
                 define("enableDisplayTab", true, "Enable the wardrobe display settings tab.").bind(v -> showWardrobeDisplaySettings = v, () -> showWardrobeDisplaySettings);
                 define("enableColourTab", true, "Enable the wardrobe colour settings tab.").bind(v -> showWardrobeColorSettings = v, () -> showWardrobeColorSettings);
                 define("enableDyeTab", true, "Enable the wardrobe dyes tab.").bind(v -> showWardrobeDyeSetting = v, () -> showWardrobeDyeSetting);
+                define("onlySkinIntoSlots", false, "Only allows the player place to skin item into slots.").bind(v -> onlySkinIntoSlots = v, () -> onlySkinIntoSlots);
                 defineInRange("mobStartingSlots", 3, 1, SkinSlotType.getMaxSlotSize(), "Number of slot columns the mob starts with for skins.").bind(v -> prefersWardrobeMobSlots = v, () -> prefersWardrobeMobSlots);
                 defineInRange("playerStartingSlots", 3, 1, SkinSlotType.getMaxSlotSize(), "Number of slot columns the player starts with for skins.").bind(v -> prefersWardrobePlayerSlots = v, () -> prefersWardrobePlayerSlots);
                 defineInRange("playerDropSkinsOnDeath", 0, 0, 2, "Should skins be dropped on player death.", "0 = use keep inventory rule", "1 = never drop", "2 = always drop").bind(v -> prefersWardrobeDropOnDeath = v, () -> prefersWardrobeDropOnDeath);

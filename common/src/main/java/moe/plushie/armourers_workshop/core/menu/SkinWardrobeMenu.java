@@ -4,6 +4,8 @@ import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlot;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.init.ModConfig;
+import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModLog;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
@@ -96,9 +98,19 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
 
     protected SkinSlot addGroupSlot(Container inventory, int index, int x, int y, Group group, SkinSlotType... slotTypes) {
         SkinSlot slot = new SkinSlot(inventory, index, x, y, slotTypes) {
+
             @Override
             public boolean isActive() {
                 return getGroup() == group;
+            }
+
+            @Override
+            public boolean mayPlace(ItemStack itemStack) {
+                // when onlySkinIntoSlots is enabled, we will can't accept non-skin item.
+                if (ModConfig.Common.onlySkinIntoSlots && !itemStack.is(ModItems.SKIN.get())) {
+                    return false;
+                }
+                return super.mayPlace(itemStack);
             }
         };
         addSlot(slot);

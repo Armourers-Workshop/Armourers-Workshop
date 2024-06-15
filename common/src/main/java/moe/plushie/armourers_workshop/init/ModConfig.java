@@ -117,6 +117,7 @@ public class ModConfig {
         public static boolean showWardrobeColorSettings = true;
         public static boolean showWardrobeDyeSetting = true;
         public static boolean showWardrobeContributorSetting = true;
+        public static boolean onlySkinIntoSlots = false;
 
         public static int prefersWardrobePlayerSlots = 3;
         public static int prefersWardrobeMobSlots = 3;
