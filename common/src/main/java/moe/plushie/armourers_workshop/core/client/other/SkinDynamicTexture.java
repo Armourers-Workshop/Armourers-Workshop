@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
+import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;

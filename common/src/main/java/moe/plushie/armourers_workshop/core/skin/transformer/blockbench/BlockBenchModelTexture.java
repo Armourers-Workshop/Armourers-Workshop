@@ -3,13 +3,11 @@ package moe.plushie.armourers_workshop.core.skin.transformer.blockbench;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelCube;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelTexture;
-import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelUV;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Size2f;
-import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
-import moe.plushie.armourers_workshop.utils.texture.TextureBox;
-import moe.plushie.armourers_workshop.utils.texture.TextureData;
-import moe.plushie.armourers_workshop.utils.texture.TextureProperties;
+import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
+import moe.plushie.armourers_workshop.core.texture.TextureData;
+import moe.plushie.armourers_workshop.core.texture.TextureProperties;
 import net.minecraft.core.Direction;
 
 import javax.imageio.ImageIO;
@@ -40,20 +38,21 @@ public class BlockBenchModelTexture extends BedrockModelTexture {
         if (defaultTextureData != null) {
             return;
         }
-        for (int textureId : usedTextureIds) {
+        for (var textureId : usedTextureIds) {
             // ignore invalid textures.
             if (textureId < 0 || textureId >= inputs.size()) {
                 continue;
             }
-            BlockBenchTexture texture = inputs.get(textureId);
-            TextureData data = loadTextureData(texture);
+            var texture = inputs.get(textureId);
+            var data = loadTextureData(texture);
             allTexture.put(textureId, data);
             if (defaultTextureData == null) {
                 defaultTextureData = data;
             }
-            BlockBenchTexture additionalTexture = getAdditionalTexture(texture);
+            // some models only support single texture, so load additional textures by special file names.
+            var additionalTexture = getAdditionalTexture(texture);
             if (additionalTexture != null) {
-                TextureData variant = loadTextureData(additionalTexture);
+                var variant = loadTextureData(additionalTexture);
                 variant.getProperties().setEmissive(true);
                 data.setVariants(Collections.singleton(variant));
             }
@@ -66,8 +65,7 @@ public class BlockBenchModelTexture extends BedrockModelTexture {
 
     @Override
     protected TextureData getTextureData(BedrockModelCube cube) {
-        BlockBenchModelUV uv1 = ObjectUtils.safeCast(cube.getUV(), BlockBenchModelUV.class);
-        if (uv1 != null) {
+        if (cube.getUV() instanceof BlockBenchModelUV uv1) {
             return allTexture.get(uv1.getDefaultTextureId());
         }
         return null;
@@ -75,17 +73,16 @@ public class BlockBenchModelTexture extends BedrockModelTexture {
 
     @Override
     protected TextureData getTextureData(BedrockModelCube cube, Direction dir) {
-        BlockBenchModelUV uv1 = ObjectUtils.safeCast(cube.getUV(), BlockBenchModelUV.class);
-        if (uv1 != null) {
+        if (cube.getUV() instanceof BlockBenchModelUV uv1) {
             return allTexture.get(uv1.getTextureId(dir));
         }
         return null;
     }
 
     private BlockBenchTexture getAdditionalTexture(BlockBenchTexture texture) {
-        String name = texture.getName();
-        for (BlockBenchTexture input : inputs) {
-            String target = input.getName();
+        var name = texture.getName();
+        for (var input : inputs) {
+            var target = input.getName();
             if (name.length() < target.length() && name.equals(target.replaceAll("(?i)_s", ""))) {
                 return input;
             }
@@ -94,20 +91,20 @@ public class BlockBenchModelTexture extends BedrockModelTexture {
     }
 
     private TextureData loadTextureData(BlockBenchTexture texture) throws IOException {
-        TextureData textureData = loadedTextures.get(texture.getUUID());
+        var textureData = loadedTextures.get(texture.getUUID());
         if (textureData != null) {
             return textureData;
         }
-        String str = texture.getSource();
-        String[] parts = str.split(";base64,");
+        var str = texture.getSource();
+        var parts = str.split(";base64,");
         if (parts.length != 2) {
             throw new IOException("error.bb.loadModel.textureNotSupported");
         }
-        byte[] imageBytes = Base64.getDecoder().decode(parts[1]);
-        int imageFrame = resolveTextureFrame(imageBytes);
-        Size2f size = resolveTextureSize(imageFrame);
-        TextureAnimation animation = resolveTextureAnimation(texture, imageFrame);
-        TextureProperties properties = texture.getProperties();
+        var imageBytes = Base64.getDecoder().decode(parts[1]);
+        var imageFrame = resolveTextureFrame(imageBytes);
+        var size = resolveTextureSize(imageFrame);
+        var animation = resolveTextureAnimation(texture, imageFrame);
+        var properties = texture.getProperties();
         textureData = new TextureData(texture.getName(), size.getWidth(), size.getHeight(), animation, properties);
         textureData.load(Unpooled.wrappedBuffer(imageBytes));
         loadedTextures.put(texture.getUUID(), textureData);
@@ -115,10 +112,10 @@ public class BlockBenchModelTexture extends BedrockModelTexture {
     }
 
     private int resolveTextureFrame(byte[] imageBytes) throws IOException {
-        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageBytes));
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int frame = height / width;
+        var image = ImageIO.read(new ByteArrayInputStream(imageBytes));
+        var width = image.getWidth();
+        var height = image.getHeight();
+        var frame = height / width;
         if (frame * width == height) {
             return frame;
         }
@@ -126,8 +123,8 @@ public class BlockBenchModelTexture extends BedrockModelTexture {
     }
 
     private Size2f resolveTextureSize(int frameCount) {
-        float width = resolution.getWidth();
-        float height = resolution.getHeight();
+        var width = resolution.getWidth();
+        var height = resolution.getHeight();
         if (frameCount > 1) {
             height = width * frameCount;
         }
@@ -136,9 +133,9 @@ public class BlockBenchModelTexture extends BedrockModelTexture {
 
     private TextureAnimation resolveTextureAnimation(BlockBenchTexture texture, int frameCount) {
         if (frameCount > 1) {
-            int time = texture.getFrameTime() * 50;
-            boolean interpolate = texture.getFrameInterpolate();
-            TextureAnimation.Mode mode = texture.getFrameMode();
+            var time = texture.getFrameTime() * 50;
+            var interpolate = texture.getFrameInterpolate();
+            var mode = texture.getFrameMode();
             return new TextureAnimation(time, frameCount, mode, interpolate);
         }
         return TextureAnimation.EMPTY;

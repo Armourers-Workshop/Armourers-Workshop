@@ -273,16 +273,16 @@ public class AdvancedCameraPanel extends UIView {
         }
 
         public void raycast(OpenRay ray, Consumer<Result> recorder) {
-            OpenRay ray1 = ray.transforming(invMat);
+            var ray1 = ray.transforming(invMat);
             if (!box.intersects(ray1)) {
                 return;
             }
             Result[] result = {null};
-            part.forEach(ray1, face -> {
+            part.getQuads().forEach(ray1, face -> {
                 // TODO: Support Transform @SAGESSE
-                //ITransformf transform = face.getTransform();
-                IRectangle3f shape = face.getShape();
-                float distance = ray1.origin.distanceToSquared(shape.getMinX(), shape.getMinY(), shape.getMinZ());
+                //var transform = face.getTransform();
+                var shape = face.getShape();
+                var distance = ray1.origin.distanceToSquared(shape.getMinX(), shape.getMinY(), shape.getMinZ());
                 if (result[0] == null) {
                     result[0] = new Result(part, distance);
                 } else {

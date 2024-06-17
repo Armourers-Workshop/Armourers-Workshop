@@ -9,8 +9,8 @@ import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkPalett
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.coder.ChunkCubeEncoder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector2f;
-import moe.plushie.armourers_workshop.utils.texture.TextureBox;
-import moe.plushie.armourers_workshop.utils.texture.TextureOptions;
+import moe.plushie.armourers_workshop.core.texture.TextureBox;
+import moe.plushie.armourers_workshop.core.texture.TextureOptions;
 import net.minecraft.core.Direction;
 import org.apache.commons.lang3.tuple.Pair;
 

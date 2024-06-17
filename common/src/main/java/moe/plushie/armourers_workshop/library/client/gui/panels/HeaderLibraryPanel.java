@@ -10,7 +10,7 @@ import com.apple.library.uikit.UIFont;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;

@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.utils.texture;
+package moe.plushie.armourers_workshop.core.texture;
 
 import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
@@ -10,9 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class TextureData implements ITextureProvider {
@@ -49,7 +46,7 @@ public class TextureData implements ITextureProvider {
     public void load(InputStream inputStream) throws IOException {
         // we have known the length of the file stream, fast copy.
         if (inputStream instanceof FileInputStream fileInputStream) {
-            FileChannel fileChannel = fileInputStream.getChannel();
+            var fileChannel = fileInputStream.getChannel();
             bytes = ObjectUtils.createByteBuffer((int) fileChannel.size() + 1);
             while (fileChannel.read(bytes) != -1) {
                 // ignored.
@@ -63,8 +60,8 @@ public class TextureData implements ITextureProvider {
         // this give some a performance boost.
         int capacity = 16384; // 16k
         bytes = ObjectUtils.createByteBuffer(capacity);
-        ArrayList<ByteBuffer> buffers = Lists.newArrayList(bytes);
-        ReadableByteChannel byteChannel = Channels.newChannel(inputStream);
+        var buffers = Lists.newArrayList(bytes);
+        var byteChannel = Channels.newChannel(inputStream);
 
         // when the channel can't be load at one time,
         // we will split it into multiple buffs to load,

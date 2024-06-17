@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.mixin;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import net.minecraft.client.renderer.texture.HttpTexture;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

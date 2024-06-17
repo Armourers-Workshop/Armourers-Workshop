@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.init;
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

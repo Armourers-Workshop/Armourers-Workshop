@@ -96,7 +96,7 @@ public final class SkinBakery implements ISkinLibraryListener {
         if (identifier.isEmpty()) {
             return null;
         }
-        Pair<BakedSkin, Exception> pair = manager.get(identifier);
+        var pair = manager.get(identifier);
         if (pair != null) {
             return pair.getKey();
         }
@@ -168,25 +168,25 @@ public final class SkinBakery implements ISkinLibraryListener {
 
     private void bakeSkin(String identifier, Skin skin, IResultHandler<BakedSkin> complete) {
         ModLog.debug("'{}' => start baking skin", identifier);
-        long startTime = System.currentTimeMillis();
+        var startTime = System.currentTimeMillis();
 
-        SkinUsedCounter usedCounter = new SkinUsedCounter();
-        ArrayList<BakedSkinPart> rootParts = new ArrayList<>();
-        ArrayList<BakedSkinPart> bakedParts = new ArrayList<>();
+        var usedCounter = new SkinUsedCounter();
+        var rootParts = new ArrayList<BakedSkinPart>();
+        var bakedParts = new ArrayList<BakedSkinPart>();
 
-        ColorScheme scheme = new ColorScheme();
-        ColorDescriptor colorInfo = new ColorDescriptor();
+        var scheme = new ColorScheme();
+        var colorInfo = new ColorDescriptor();
 
         eachPart(skin.getParts(), null, (parent, part) -> {
-            ArrayList<BakedSkinPart> children = new ArrayList<>();
+            var children = new ArrayList<BakedSkinPart>();
             BakedCubeQuads.from(part).forEach((partType, quads) -> {
                 // when has a different part type, it means the skin part was split.
                 // for ensure data safety, we need create a blank skin part to manage data.
-                SkinPart usedPart = part;
+                var usedPart = part;
                 if (usedPart.getType() != partType) {
                     usedPart = new SkinPart(partType, Collections.emptyList(), new SkinCubesV0(0));
                 }
-                BakedSkinPart bakedPart = new BakedSkinPart(usedPart, quads);
+                var bakedPart = new BakedSkinPart(usedPart, quads);
                 children.add(bakedPart);
                 bakedParts.add(bakedPart);
                 usedCounter.addFaceTotal(bakedPart.getFaceTotal());
@@ -194,7 +194,7 @@ public final class SkinBakery implements ISkinLibraryListener {
             // a part maybe bake into multiple parts,
             // but we must add sub-parts into main parts.
             BakedSkinPart mainChildPart = null;
-            for (BakedSkinPart bakedPart : children) {
+            for (var bakedPart : children) {
                 if (parent != null) {
                     parent.addPart(bakedPart);
                 } else {
@@ -210,8 +210,8 @@ public final class SkinBakery implements ISkinLibraryListener {
         });
 
         BakedCubeQuads.from(skin.getPaintData()).forEach((partType, quads) -> {
-            SkinPart part = new SkinPart(partType, Collections.emptyList(), new SkinCubesV0(0));
-            BakedSkinPart bakedPart = new BakedSkinPart(part, quads);
+            var part = new SkinPart(partType, Collections.emptyList(), new SkinCubesV0(0));
+            var bakedPart = new BakedSkinPart(part, quads);
             bakedPart.setRenderPolygonOffset(20);
             bakedParts.add(bakedPart);
             rootParts.add(bakedPart);
@@ -220,18 +220,18 @@ public final class SkinBakery implements ISkinLibraryListener {
         // we only bake special parts in preview mode.
         if (skin.getSettings().isPreviewMode()) {
             BakedCubeQuads.from(skin.getPreviewData()).forEach((partType, quads) -> {
-                SkinPart part = new SkinPart(partType, Collections.emptyList(), new SkinCubesV0(0));
-                BakedSkinPart bakedPart = new BakedSkinPart(part, quads);
+                var part = new SkinPart(partType, Collections.emptyList(), new SkinCubesV0(0));
+                var bakedPart = new BakedSkinPart(part, quads);
                 bakedPart.setRenderPolygonOffset(bakedParts.size());
                 bakedParts.add(bakedPart);
                 rootParts.add(bakedPart);
             });
         }
 
-        int partId = 0;
-        ArrayList<BakedSkinPart> iterator = new ArrayList<>(bakedParts);
+        var partId = 0;
+        var iterator = new ArrayList<BakedSkinPart>(bakedParts);
         while (!iterator.isEmpty()) {
-            BakedSkinPart bakedPart = iterator.remove(0);
+            var bakedPart = iterator.remove(0);
             bakedPart.setId(partId++);
             colorInfo.add(bakedPart.getColorInfo());
             iterator.addAll(0, bakedPart.getChildren());
@@ -239,7 +239,7 @@ public final class SkinBakery implements ISkinLibraryListener {
 
         usedCounter.addPaints(colorInfo.getPaintTypes());
 
-        long totalTime = System.currentTimeMillis() - startTime;
+        var totalTime = System.currentTimeMillis() - startTime;
 //            int index = bakeTimesIndex.getAndIncrement();
 //            if (index > bakeTimes.length() - 1) {
 //                index = 0;
@@ -247,7 +247,7 @@ public final class SkinBakery implements ISkinLibraryListener {
 //            }
 //            bakeTimes.set(index, (int) totalTime);
 
-        BakedSkin bakedSkin = new BakedSkin(identifier, skin.getType(), rootParts, skin, scheme, colorInfo, usedCounter);
+        var bakedSkin = new BakedSkin(identifier, skin.getType(), rootParts, skin, scheme, colorInfo, usedCounter);
         ModLog.debug("'{}' => accept baked skin, time: {}ms", identifier, totalTime);
         complete.accept(bakedSkin);
         RenderSystem.recordRenderCall(() -> notifyBake(identifier, bakedSkin));
@@ -270,8 +270,8 @@ public final class SkinBakery implements ISkinLibraryListener {
     }
 
     private void eachPart(Collection<SkinPart> parts, BakedSkinPart parent, BiFunction<BakedSkinPart, SkinPart, BakedSkinPart> consumer) {
-        for (SkinPart part : parts) {
-            BakedSkinPart value = consumer.apply(parent, part);
+        for (var part : parts) {
+            var value = consumer.apply(parent, part);
             eachPart(part.getParts(), value, consumer);
         }
     }

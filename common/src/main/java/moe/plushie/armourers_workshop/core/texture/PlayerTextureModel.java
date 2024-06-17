@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.utils.texture;
+package moe.plushie.armourers_workshop.core.texture;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;

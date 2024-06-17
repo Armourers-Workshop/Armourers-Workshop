@@ -8,8 +8,8 @@ import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractLivi
 import moe.plushie.armourers_workshop.core.client.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.BakedEntityTexture;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import net.fabricmc.api.EnvType;

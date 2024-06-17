@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk;
 
-import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
+import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
 
 import java.io.IOException;
 

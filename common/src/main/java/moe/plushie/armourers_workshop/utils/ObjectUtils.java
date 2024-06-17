@@ -127,6 +127,20 @@ public class ObjectUtils {
         return defaultValue;
     }
 
+    public static <S, T> ArrayList<T> flatMap(@Nullable Collection<S> in, Function<? super S, @Nullable T> transform) {
+        if (in != null) {
+            ArrayList<T> results = new ArrayList<>(in.size());
+            for (S value : in) {
+                T res = transform.apply(value);
+                if (res != null) {
+                    results.add(res);
+                }
+            }
+            return results;
+        }
+        return null;
+    }
+
     public static <T> ArrayList<T> filter(T[] in, Predicate<? super T> predicate) {
         ArrayList<T> results = new ArrayList<>(in.length);
         for (T value : in) {

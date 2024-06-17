@@ -1,8 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
-import moe.plushie.armourers_workshop.core.client.other.SkinTextureManager;
+import moe.plushie.armourers_workshop.core.client.texture.TextureAnimationController;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
-import moe.plushie.armourers_workshop.utils.texture.TextureAnimationController;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
@@ -21,7 +20,7 @@ public class ShaderVertexGroup {
 
     public ShaderVertexGroup(RenderType renderType) {
         this.renderType = renderType;
-        this.animationController = SkinTextureManager.getInstance().getTextureAnimationController(renderType);
+        this.animationController = TextureAnimationController.of(renderType);
     }
 
     public RenderType getRenderType() {

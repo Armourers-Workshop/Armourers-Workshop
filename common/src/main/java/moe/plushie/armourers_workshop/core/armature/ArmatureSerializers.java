@@ -10,8 +10,8 @@ import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
 import moe.plushie.armourers_workshop.utils.math.Vector2f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
-import moe.plushie.armourers_workshop.utils.texture.TextureBox;
-import moe.plushie.armourers_workshop.utils.texture.TextureData;
+import moe.plushie.armourers_workshop.core.texture.TextureBox;
+import moe.plushie.armourers_workshop.core.texture.TextureData;
 import net.minecraft.core.Direction;
 
 import java.util.ArrayList;

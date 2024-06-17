@@ -9,16 +9,17 @@ import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.core.client.other.SkinTextureManager;
+import moe.plushie.armourers_workshop.core.client.texture.TextureManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenRay;
 import net.fabricmc.api.EnvType;
@@ -101,8 +102,8 @@ public class BakedCubeFace {
             b = ColorUtils.mix(b, overlay & 0xff, i);
         }
 
-        float[][] uvs = SkinUtils.getRenderUVs(direction, resolveTextureRotation(resolvedTexture));
-        float[][] vertexes = SkinUtils.getRenderVertexes(direction);
+        var uvs = SkinUtils.getRenderUVs(direction, resolveTextureRotation(resolvedTexture));
+        var vertexes = SkinUtils.getRenderVertexes(direction);
         for (int i = 0; i < 4; ++i) {
             builder.vertex(entry, x + w * vertexes[i][0], y + h * vertexes[i][1], z + d * vertexes[i][2])
                     .color(r, g, b, a)
@@ -171,17 +172,17 @@ public class BakedCubeFace {
     }
 
     private RenderType resolveRenderType(SkinCubeFace face) {
-        ITextureKey texture = face.getTexture();
+        var texture = face.getTexture();
         if (texture != null && texture.getProvider() != null) {
-            return SkinTextureManager.getInstance().prepareTexture(texture.getProvider());
+            return TextureManager.getInstance().register(texture.getProvider());
         }
         return SkinRenderType.by(face.getType());
     }
 
     private Collection<RenderType> resolveRenderTypeVariants(SkinCubeFace face) {
-        ITextureKey texture = face.getTexture();
+        var texture = face.getTexture();
         if (texture != null && texture.getProvider() != null) {
-            return SkinTextureManager.getInstance().prepareVariantTextures(texture.getProvider());
+            return ObjectUtils.flatMap(texture.getProvider().getVariants(), TextureManager.getInstance()::register);
         }
         return null;
     }

@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCuller;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
@@ -17,10 +16,9 @@ import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
-import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
-import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
-import moe.plushie.armourers_workshop.utils.texture.SkinPreviewData;
-import moe.plushie.armourers_workshop.utils.texture.SkyBox;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureModel;
+import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
+import moe.plushie.armourers_workshop.core.texture.SkinPreviewData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
@@ -31,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -56,15 +53,15 @@ public class BakedCubeQuads {
     }
 
     public static QuadsList<ISkinPartType> from(SkinPart part) {
-        QuadsList<ISkinPartType> quads = new QuadsList<>();
-        SkinCubes data = part.getCubeData();
-        OpenVoxelShape shape = data.getShape();
-        Rectangle3i bounds = new Rectangle3i(shape.bounds());
+        var quads = new QuadsList<ISkinPartType>();
+        var data = part.getCubeData();
+        var shape = data.getShape();
+        var bounds = new Rectangle3i(shape.bounds());
         SkinCuller.cullFaces2(data, bounds, part.getType()).forEach(result -> {
             // when has a different part type, it means the skin part was split.
-            Rectangle3i newBounds = bounds;
-            SkinTransform newTransform = SkinTransform.createTranslateTransform(new Vector3f(result.getOrigin()));
-            OpenVoxelShape newRenderShape = shape;
+            var newBounds = bounds;
+            var newTransform = SkinTransform.createTranslateTransform(new Vector3f(result.getOrigin()));
+            var newRenderShape = shape;
             if (result.getPartType() != part.getType()) {
                 newBounds = result.getBounds().offset(bounds.getOrigin());
                 newRenderShape = OpenVoxelShape.box(new Rectangle3f(newBounds));
@@ -75,15 +72,15 @@ public class BakedCubeQuads {
     }
 
     public static QuadsList<ISkinPartType> from(SkinPreviewData previewData) {
-        QuadsList<ISkinPartType> allQuads = new QuadsList<>();
+        var allQuads = new QuadsList<ISkinPartType>();
         if (previewData == null) {
             return allQuads;
         }
         previewData.forEach((transform, data) -> {
-            OpenVoxelShape shape = data.getShape();
-            Rectangle3i bounds = new Rectangle3i(shape.bounds());
+            var shape = data.getShape();
+            var bounds = new Rectangle3i(shape.bounds());
             SkinCuller.cullFaces2(data, bounds, SkinPartTypes.BLOCK).forEach(result -> {
-                BakedCubeQuads quad = new BakedCubeQuads(bounds, transform, shape, result.getFaces());
+                var quad = new BakedCubeQuads(bounds, transform, shape, result.getFaces());
                 allQuads.add(result.getPartType(), quad);
             });
         });
@@ -91,26 +88,26 @@ public class BakedCubeQuads {
     }
 
     public static QuadsList<ISkinPartType> from(SkinPaintData paintData) {
-        QuadsList<ISkinPartType> allQuads = new QuadsList<>();
+        var allQuads = new QuadsList<ISkinPartType>();
         if (paintData == null) {
             return allQuads;
         }
-        for (Map.Entry<ISkinPartType, SkyBox> entry : PlayerTextureModel.of(paintData.getWidth(), paintData.getHeight(), false).entrySet()) {
-            SkyBox box = entry.getValue();
-            ArrayList<SkinCubeFace> quads = new ArrayList<>();
+        for (var entry : PlayerTextureModel.of(paintData.getWidth(), paintData.getHeight(), false).entrySet()) {
+            var box = entry.getValue();
+            var quads = new ArrayList<SkinCubeFace>();
             box.forEach((texture, x, y, z, dir) -> {
-                PaintColor paintColor = PaintColor.of(paintData.getColor(texture));
+                var paintColor = PaintColor.of(paintData.getColor(texture));
                 if (paintColor.getPaintType() == SkinPaintTypes.NONE) {
                     return;
                 }
                 // in the vanilla's player textures are rendering without diffuse lighting.
-                Rectangle3f shape = new Rectangle3f(x, y, z, 1, 1, 1);
-                SkinTransform transform = SkinTransform.IDENTITY;
+                var shape = new Rectangle3f(x, y, z, 1, 1, 1);
+                var transform = SkinTransform.IDENTITY;
                 quads.add(new SkinCubeFace(shape, transform, paintColor, 255, dir, null, SkinCubeTypes.SOLID));
             });
             if (!quads.isEmpty()) {
-                Rectangle3i bounds = box.getBounds();
-                OpenVoxelShape renderShape = OpenVoxelShape.box(new Rectangle3f(bounds));
+                var bounds = box.getBounds();
+                var renderShape = OpenVoxelShape.box(new Rectangle3f(bounds));
                 allQuads.add(entry.getKey(), new BakedCubeQuads(bounds, SkinTransform.IDENTITY, renderShape, quads));
             }
         }
@@ -135,11 +132,11 @@ public class BakedCubeQuads {
     }
 
     private void loadFaces(Collection<SkinCubeFace> faces) {
-        for (SkinCubeFace face : faces) {
+        for (var face : faces) {
             if (face.getPaintType() == SkinPaintTypes.NONE) {
                 continue;
             }
-            BakedCubeFace bakedFace = new BakedCubeFace(face);
+            var bakedFace = new BakedCubeFace(face);
             addSplitFace(bakedFace.getRenderType(), bakedFace);
             if (bakedFace.getRenderTypeVariants() != null) {
                 bakedFace.getRenderTypeVariants().forEach(renderType -> addSplitFace(renderType, bakedFace));
@@ -147,7 +144,7 @@ public class BakedCubeQuads {
             colorInfo.add(face.getColor());
             faceTotal += 1;
         }
-        for (ArrayList<BakedCubeFace> filteredFaces : splitFaces.values()) {
+        for (var filteredFaces : splitFaces.values()) {
             filteredFaces.sort(Comparator.comparingInt(f -> f.getDirection().get3DDataValue()));
         }
     }

@@ -21,7 +21,7 @@ import moe.plushie.armourers_workshop.core.skin.exception.TranslatableException;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
+import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

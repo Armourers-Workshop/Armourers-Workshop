@@ -10,8 +10,8 @@ import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
-import moe.plushie.armourers_workshop.utils.texture.TextureProperties;
+import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
+import moe.plushie.armourers_workshop.core.texture.TextureProperties;
 import net.minecraft.nbt.CompoundTag;
 
 import java.io.DataOutputStream;

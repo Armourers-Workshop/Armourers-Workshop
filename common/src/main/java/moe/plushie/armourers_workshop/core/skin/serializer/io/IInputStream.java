@@ -10,8 +10,8 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
-import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
-import moe.plushie.armourers_workshop.utils.texture.TextureProperties;
+import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
+import moe.plushie.armourers_workshop.core.texture.TextureProperties;
 import net.minecraft.nbt.CompoundTag;
 
 import java.io.DataInputStream;

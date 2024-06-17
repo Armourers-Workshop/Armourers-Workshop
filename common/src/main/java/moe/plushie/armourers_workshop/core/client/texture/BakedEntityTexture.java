@@ -1,17 +1,15 @@
-package moe.plushie.armourers_workshop.core.texture;
+package moe.plushie.armourers_workshop.core.client.texture;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import moe.plushie.armourers_workshop.api.core.IResourceManager;
-import moe.plushie.armourers_workshop.api.math.ITexturePos;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.math.ITexturePos;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.color.TexturedPaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureModel;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
-import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
-import moe.plushie.armourers_workshop.utils.texture.SkyBox;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -21,7 +19,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
@@ -45,7 +42,7 @@ public class BakedEntityTexture {
         this.resourceLocation = resourceLocation;
         BufferedImage bufferedImage;
         try {
-            IResourceManager resourceManager = Minecraft.getInstance().getResourceManager().asResourceManager();
+            var resourceManager = Minecraft.getInstance().getResourceManager().asResourceManager();
             bufferedImage = ImageIO.read(resourceManager.readResource(resourceLocation).getInputStream());
             if (bufferedImage != null) {
 //                slim = (bufferedImage.getRGB(54, 20) & 0xff000000) == 0;
@@ -65,9 +62,9 @@ public class BakedEntityTexture {
     }
 
     private void loadColors(int width, int height, boolean slim, IColorAccessor accessor) {
-        for (Map.Entry<ISkinPartType, SkyBox> entry : PlayerTextureModel.of(width, height, slim).entrySet()) {
-            SkyBox box = entry.getValue();
-            HashMap<Integer, PaintColor> part = allParts.computeIfAbsent(entry.getKey(), k -> new HashMap<>());
+        for (var entry : PlayerTextureModel.of(width, height, slim).entrySet()) {
+            var box = entry.getValue();
+            var part = allParts.computeIfAbsent(entry.getKey(), k -> new HashMap<>());
             allBounds.put(entry.getKey(), box.getBounds());
             box.forEach((texture, x, y, z, dir) -> {
                 int color = accessor.getRGB(texture.getU(), texture.getV());
@@ -90,8 +87,8 @@ public class BakedEntityTexture {
     }
 
     public PaintColor getColor(int x, int y, int z, Direction dir, ISkinPartType partType) {
-        HashMap<Integer, PaintColor> part = allParts.get(partType);
-        Rectangle3i bounds = allBounds.get(partType);
+        var part = allParts.get(partType);
+        var bounds = allBounds.get(partType);
         if (part == null || bounds == null) {
             return null;
         }

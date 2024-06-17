@@ -23,7 +23,7 @@ import moe.plushie.armourers_workshop.utils.StreamUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
-import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
+import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Rotations;
 import net.minecraft.nbt.CompoundTag;

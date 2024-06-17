@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.utils.texture;
+package moe.plushie.armourers_workshop.core.texture;
 
 import moe.plushie.armourers_workshop.api.common.ITextureProperties;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
@@ -37,12 +37,21 @@ public class TextureProperties implements ITextureProperties {
         return getFlag(1);
     }
 
+    public void setParticle(boolean isParticle) {
+        setFlag(2, isParticle);
+    }
+
+    @Override
+    public boolean isParticle() {
+        return getFlag(2);
+    }
+
     @Override
     public String toString() {
         if (this == EMPTY) {
             return "[]";
         }
-        return String.format("[emissive=%s, additive=%s]", isEmissive(), isAdditive());
+        return String.format("[emissive=%s, particle=%s, additive=%s]", isEmissive(), isParticle(), isAdditive());
     }
 
     private void setFlag(int bit, boolean value) {

@@ -20,8 +20,8 @@ import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkPalett
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkPartData;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkPreviewData;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkType;
-import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
-import moe.plushie.armourers_workshop.utils.texture.SkinPreviewData;
+import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
+import moe.plushie.armourers_workshop.core.texture.SkinPreviewData;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;

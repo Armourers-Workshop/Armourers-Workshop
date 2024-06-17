@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.ArmourerMenu;
 import moe.plushie.armourers_workshop.builder.network.UpdateArmourerPacket;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.fabricmc.api.EnvType;

@@ -9,17 +9,13 @@ import moe.plushie.armourers_workshop.core.data.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
-import moe.plushie.armourers_workshop.utils.math.OpenRay;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.RenderType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class BakedSkinPart {
@@ -47,14 +43,6 @@ public class BakedSkinPart {
 
     public void removePart(BakedSkinPart part) {
         children.remove(part);
-    }
-
-    public void forEach(BiConsumer<RenderType, ArrayList<BakedCubeFace>> action) {
-        quads.forEach(action);
-    }
-
-    public void forEach(OpenRay ray, Consumer<BakedCubeFace> recorder) {
-        quads.forEach(ray, recorder);
     }
 
     @Nullable

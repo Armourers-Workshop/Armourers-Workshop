@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SliceRandomlyAccessor;
 import moe.plushie.armourers_workshop.utils.math.Vector2f;
-import moe.plushie.armourers_workshop.utils.texture.TextureOptions;
+import moe.plushie.armourers_workshop.core.texture.TextureOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;

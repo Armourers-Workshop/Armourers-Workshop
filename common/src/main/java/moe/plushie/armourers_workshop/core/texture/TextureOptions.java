@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.utils.texture;
+package moe.plushie.armourers_workshop.core.texture;
 
 import com.google.common.base.Objects;
 import moe.plushie.armourers_workshop.api.common.ITextureOptions;
@@ -34,8 +34,7 @@ public class TextureOptions implements ITextureOptions {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TextureOptions that = (TextureOptions) o;
+        if (!(o instanceof TextureOptions that)) return false;
         return value == that.value;
     }
 

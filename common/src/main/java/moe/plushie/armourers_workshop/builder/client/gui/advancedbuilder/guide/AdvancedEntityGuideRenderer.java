@@ -16,7 +16,7 @@ import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
-import moe.plushie.armourers_workshop.utils.texture.TextureData;
+import moe.plushie.armourers_workshop.core.texture.TextureData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;

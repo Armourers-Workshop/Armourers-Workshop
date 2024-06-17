@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.utils.texture;
+package moe.plushie.armourers_workshop.core.texture;
 
 import moe.plushie.armourers_workshop.api.math.ITexturePos;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;

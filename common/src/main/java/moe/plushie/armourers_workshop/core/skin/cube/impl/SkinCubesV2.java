@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
-import moe.plushie.armourers_workshop.utils.texture.TextureBox;
+import moe.plushie.armourers_workshop.core.texture.TextureBox;
 import net.minecraft.core.Direction;
 
 import java.util.ArrayList;

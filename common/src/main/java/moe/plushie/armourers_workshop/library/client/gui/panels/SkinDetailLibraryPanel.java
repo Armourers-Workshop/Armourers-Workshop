@@ -22,7 +22,7 @@ import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;

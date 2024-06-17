@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
-import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureModel;
 import net.minecraft.core.Direction;
 
 import java.util.Objects;

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.transformer.blockbench;
 
-import moe.plushie.armourers_workshop.utils.texture.TextureAnimation;
-import moe.plushie.armourers_workshop.utils.texture.TextureProperties;
+import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
+import moe.plushie.armourers_workshop.core.texture.TextureProperties;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.texture;
 
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.core.client.texture.BakedEntityTexture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

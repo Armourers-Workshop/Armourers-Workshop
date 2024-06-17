@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.common.ITextureKey;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.SkinDyeType;
-import moe.plushie.armourers_workshop.utils.texture.TextureKey;
+import moe.plushie.armourers_workshop.core.texture.TextureKey;
 
 public class SkinPaintType implements ISkinPaintType {
 

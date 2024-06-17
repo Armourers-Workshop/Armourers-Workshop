@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
-import moe.plushie.armourers_workshop.utils.texture.SkinPreviewData;
+import moe.plushie.armourers_workshop.core.texture.SkinPreviewData;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;

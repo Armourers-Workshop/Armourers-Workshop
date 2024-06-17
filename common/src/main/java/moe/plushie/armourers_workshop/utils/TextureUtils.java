@@ -2,10 +2,10 @@ package moe.plushie.armourers_workshop.utils;
 
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
+import moe.plushie.armourers_workshop.core.client.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;

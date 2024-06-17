@@ -67,13 +67,13 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
         }
     }
 
-    public static RenderType solidFace(IResourceLocation texture) {
-        String key = String.format("aw_custom_solid/%s", texture.getPath());
+    public static RenderType customSolidFace(IResourceLocation texture) {
+        var key = String.format("aw_custom_solid/%s", texture.getPath());
         return FACE_SOLID_VARIANTS.computeIfAbsent(key, k -> _builder(SkinRenderFormat.SKIN_FACE_TEXTURE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build(k));
     }
 
-    public static RenderType lightingFace(IResourceLocation texture) {
-        String key = String.format("aw_custom_lighting/%s", texture.getPath());
+    public static RenderType customLightingFace(IResourceLocation texture) {
+        var key = String.format("aw_custom_lighting/%s", texture.getPath());
         return FACE_LIGHTING_VARIANTS.computeIfAbsent(key, k -> _builder(SkinRenderFormat.SKIN_FACE_LIGHTING_TEXTURE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build(k));
     }
 

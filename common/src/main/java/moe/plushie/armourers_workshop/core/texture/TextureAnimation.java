@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.utils.texture;
+package moe.plushie.armourers_workshop.core.texture;
 
 import moe.plushie.armourers_workshop.api.common.ITextureAnimation;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
@@ -87,7 +87,7 @@ public class TextureAnimation implements ITextureAnimation {
                 case 2:
                     return BACK_AND_FORTH;
                 case 3:
-                    ArrayList<Integer> values = new ArrayList<>();
+                    var values = new ArrayList<Integer>();
                     int len = stream.readVarInt();
                     for (int i = 0; i < len; ++i) {
                         values.add(stream.readVarInt());

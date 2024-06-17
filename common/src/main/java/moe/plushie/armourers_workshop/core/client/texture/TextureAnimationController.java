@@ -1,8 +1,14 @@
-package moe.plushie.armourers_workshop.utils.texture;
+package moe.plushie.armourers_workshop.core.client.texture;
 
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.RenderType;
 
+@Environment(EnvType.CLIENT)
 public class TextureAnimationController {
 
     private static final OpenMatrix4f IDENTITY = OpenMatrix4f.identity();
@@ -23,6 +29,19 @@ public class TextureAnimationController {
         this.frames = _genTextureMatrices(frameCount, frameMode);
         this.frameTime = frameTime;
         this.frameCount = frames.length;
+    }
+
+    public static TextureAnimationController of(RenderType renderType) {
+        // is default?
+        if (renderType == SkinRenderType.FACE_SOLID || renderType == SkinRenderType.FACE_LIGHTING || renderType == SkinRenderType.FACE_TRANSLUCENT || renderType == SkinRenderType.FACE_LIGHTING_TRANSLUCENT) {
+            return DEFAULT;
+        }
+        // is custom?
+        var storage = TextureManager.Entry.of(renderType);
+        if (storage != null) {
+            return storage.getAnimationController();
+        }
+        return NONE;
     }
 
     public OpenMatrix4f getTextureMatrix(int partialTicks) {

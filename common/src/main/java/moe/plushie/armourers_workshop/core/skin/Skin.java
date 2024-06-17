@@ -10,8 +10,8 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
-import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
-import moe.plushie.armourers_workshop.utils.texture.SkinPreviewData;
+import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
+import moe.plushie.armourers_workshop.core.texture.SkinPreviewData;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Nullable;
 

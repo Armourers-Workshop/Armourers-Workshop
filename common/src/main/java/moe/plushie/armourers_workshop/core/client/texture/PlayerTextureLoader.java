@@ -1,10 +1,12 @@
-package moe.plushie.armourers_workshop.core.texture;
+package moe.plushie.armourers_workshop.core.client.texture;
 
 import com.google.common.hash.Hashing;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.NativeImage;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;

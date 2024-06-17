@@ -4,8 +4,6 @@ import com.google.common.collect.Range;
 import moe.plushie.armourers_workshop.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
-import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
@@ -16,13 +14,12 @@ import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
-import moe.plushie.armourers_workshop.core.data.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.data.transform.SkinWingsTransform;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinUsedCounter;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
@@ -32,7 +29,6 @@ import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
-import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -100,10 +96,10 @@ public class BakedSkin implements IBakedSkin {
         if (colorDescriptor.isEmpty()) {
             return ColorScheme.EMPTY;
         }
-        ColorScheme resolvedColorScheme = resolvedColorSchemes.computeIfAbsent(entity.getId(), k -> colorScheme.copy());
+        var resolvedColorScheme = resolvedColorSchemes.computeIfAbsent(entity.getId(), k -> colorScheme.copy());
         // we can't bind textures to skin when the item stack rendering.
         if (PlaceholderManager.isPlaceholder(entity)) {
-            IResourceLocation resolvedTexture = PlayerTextureLoader.getInstance().getTextureLocation(entity);
+            var resolvedTexture = PlayerTextureLoader.getInstance().getTextureLocation(entity);
             if (!Objects.equals(resolvedColorScheme.getTexture(), resolvedTexture)) {
                 resolvedColorScheme.setTexture(resolvedTexture);
             }
@@ -156,23 +152,23 @@ public class BakedSkin implements IBakedSkin {
     }
 
     public Rectangle3f getRenderBounds(SkinItemSource itemSource) {
-        Vector3f rotation = itemSource.getRotation();
-        Object key = SkinCache.borrowKey(rotation, itemSource.getTransformType());
-        Rectangle3f bounds = cachedBounds.get(key);
+        var rotation = itemSource.getRotation();
+        var key = SkinCache.borrowKey(rotation, itemSource.getTransformType());
+        var bounds = cachedBounds.get(key);
         if (bounds != null) {
             SkinCache.returnKey(key);
             return bounds;
         }
-        Entity entity = PlaceholderManager.MANNEQUIN.get();
-        OpenMatrix4f matrix = OpenMatrix4f.createScaleMatrix(1, 1, 1);
-        OpenVoxelShape shape = getRenderShape(entity, BakedArmature.defaultBy(skinType), itemSource);
+        var entity = PlaceholderManager.MANNEQUIN.get();
+        var matrix = OpenMatrix4f.createScaleMatrix(1, 1, 1);
+        var shape = getRenderShape(entity, BakedArmature.defaultBy(skinType), itemSource);
         if (rotation != null) {
             matrix.rotate(new OpenQuaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), true));
             shape.mul(matrix);
         }
         bounds = shape.bounds().copy();
         if (rotation != null) {
-            Vector4f center = new Vector4f(bounds.getCenter());
+            var center = new Vector4f(bounds.getCenter());
             matrix.invert();
             center.transform(matrix);
             bounds.setX(center.x() - bounds.getWidth() / 2);
@@ -187,7 +183,7 @@ public class BakedSkin implements IBakedSkin {
         if (armature == null) {
             return OpenVoxelShape.empty();
         }
-        SkinRenderContext context = new SkinRenderContext();
+        var context = new SkinRenderContext();
         context.setReferenced(itemSource);
         context.setTransformType(itemSource.getTransformType());
         //context.setTransforms(entity, model);
@@ -197,7 +193,7 @@ public class BakedSkin implements IBakedSkin {
 
 
     public <T extends Entity> boolean shouldRenderPart(T entity, BakedSkinPart bakedPart, SkinRenderContext context) {
-        ISkinPartType partType = bakedPart.getType();
+        var partType = bakedPart.getType();
         // hook part only render in hook entity.
         if (partType == SkinPartTypes.ITEM_FISHING_HOOK) {
             return isHookEntity(entity);
@@ -232,9 +228,9 @@ public class BakedSkin implements IBakedSkin {
         if (isHookEntity(entity)) {
             return false; // hook entity only render arrow part.
         }
-        if (partType instanceof ICanUse && entity instanceof LivingEntity) {
-            int useTick = getUseTick((LivingEntity) entity, context.getReferenced().getItem());
-            var useRange = ((ICanUse) partType).getUseRange();
+        if (partType instanceof ICanUse canUse && entity instanceof LivingEntity livingEntity) {
+            var useTick = getUseTick(livingEntity, context.getReferenced().getItem());
+            var useRange = canUse.getUseRange();
             return useRange.contains(MathUtils.clamp(useTick, useTickRange.lowerEndpoint(), useTickRange.upperEndpoint()));
         }
         return true;
@@ -256,7 +252,7 @@ public class BakedSkin implements IBakedSkin {
     private void loadPartTransforms() {
         // attach item transform
         skinParts.forEach(part -> {
-            SkinPartTransform transform = part.getTransform();
+            var transform = part.getTransform();
             if (part.getType() instanceof ICanHeld) {
                 transform.insertTransform(new BakedItemTransform(part, this), 0);
             }
@@ -276,7 +272,7 @@ public class BakedSkin implements IBakedSkin {
         if (skinType != SkinTypes.BLOCK) {
             return;
         }
-        for (BakedSkinPart skinPart : skinParts) {
+        for (var skinPart : skinParts) {
             var bm = skinPart.getPart().getBlockBounds();
             if (bm != null) {
                 cachedBlockBounds.putAll(bm);
@@ -300,8 +296,8 @@ public class BakedSkin implements IBakedSkin {
         int count = 0;
         int maxUseTick = Integer.MIN_VALUE;
         int minUseTick = Integer.MAX_VALUE;
-        for (BakedSkinPart bakedPart : bakedParts) {
-            ISkinPartType partType = bakedPart.getType();
+        for (var bakedPart : bakedParts) {
+            var partType = bakedPart.getType();
             if (partType instanceof ICanUse) {
                 Range<Integer> range = ((ICanUse) partType).getUseRange();
                 maxUseTick = Math.max(maxUseTick, range.upperEndpoint());
@@ -325,8 +321,8 @@ public class BakedSkin implements IBakedSkin {
     }
 
     private Collection<String> resolveItemOverrides() {
-        ArrayList<String> overrides = new ArrayList<>();
-        for (BakedSkinPart part : skinParts) {
+        var overrides = new ArrayList<String>();
+        for (var part : skinParts) {
             overrides.addAll(SkinUtils.getItemOverrides(part.getType()));
             // we need search child part?
         }
@@ -336,9 +332,8 @@ public class BakedSkin implements IBakedSkin {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BakedSkin bakedSkin = (BakedSkin) o;
-        return identifier.equals(bakedSkin.identifier);
+        if (!(o instanceof BakedSkin that)) return false;
+        return Objects.equals(identifier, that.identifier);
     }
 
     @Override
