@@ -57,12 +57,8 @@ public class OpenResourceLocation implements IResourceLocation, Comparable<OpenR
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-        if (!(object instanceof OpenResourceLocation that)) {
-            return false;
-        }
+        if (this == object) return true;
+        if (!(object instanceof OpenResourceLocation that)) return false;
         return namespace.equals(that.namespace) && path.equals(that.path);
     }
 

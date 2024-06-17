@@ -295,8 +295,8 @@ public class UIButton extends UIControl {
         if (state != State.ALL || image == null || !image.isPacked()) {
             return;
         }
-        for (int nextState = State.NORMAL; nextState < State.ALL; ++nextState) {
-            UIImage image1 = image.imageAtIndex(nextState);
+        for (var nextState = State.NORMAL; nextState < State.ALL; ++nextState) {
+            var image1 = image.imageAtIndex(nextState);
             if (image1 != image) {
                 container.setValueForState(image1, nextState);
             }

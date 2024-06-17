@@ -66,7 +66,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         if (ModDebugger.vbo) {
             return drawWithoutVBO(part, bakedSkin, scheme, context.getOverlay(), context);
         }
-        CachedTask cachedTask = compile(part, bakedSkin, scheme, context.getOverlay());
+        var cachedTask = compile(part, bakedSkin, scheme, context.getOverlay());
         if (cachedTask != null) {
             // we need compile the skin part, but does not render now.
             if (!shouldRender) {

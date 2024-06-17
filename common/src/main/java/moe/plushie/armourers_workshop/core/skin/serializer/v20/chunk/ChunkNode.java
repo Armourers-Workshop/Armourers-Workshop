@@ -47,8 +47,8 @@ public class ChunkNode {
     }
 
     private static boolean freezeRange(ChunkNode start, ChunkNode end) throws IOException {
-        boolean flag = true;
-        ChunkNode node = start;
+        var flag = true;
+        var node = start;
         while (node != null && node != end) {
             if (!node.freeze()) {
                 flag = false;
@@ -149,8 +149,8 @@ public class ChunkNode {
         }
 
         private int getEstimatedLength() throws IOException {
-            int length = 0;
-            ChunkNode node = start;
+            var length = 0;
+            var node = start;
             while (node != null) {
                 length += node.length();
                 if (node == this) {
@@ -202,12 +202,12 @@ public class ChunkNode {
                 return;
             }
             buf = Unpooled.buffer(1024);
-            OutputStream outputStream = stream.getContext().createOutputStream(buf, flags);
-            byte[] bytes = stream.getBuffer().array();
-            ChunkNode node = start;
+            var outputStream = stream.getContext().createOutputStream(buf, flags);
+            var bytes = stream.getBuffer().array();
+            var node = start;
             while (node != null && node != this) {
                 node.write(bytes, outputStream);
-                ChunkNode next = node.next;
+                var next = node.next;
                 node.next = null;
                 node = next;
             }

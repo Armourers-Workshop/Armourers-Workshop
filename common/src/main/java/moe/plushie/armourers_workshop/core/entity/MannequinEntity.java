@@ -167,7 +167,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         if (isMarker()) {
             return MARKER_DIMENSIONS;
         }
-        EntityDimensions entitySize = STANDING_DIMENSIONS;
+        var entitySize = STANDING_DIMENSIONS;
         if (isBaby()) {
             entitySize = BABY_DIMENSIONS;
         }
@@ -176,10 +176,10 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
 
     @Override
     public ItemStack getCustomPickResult(HitResult target) {
-        ItemStack itemStack = new ItemStack(ModItems.MANNEQUIN.get());
+        var itemStack = new ItemStack(ModItems.MANNEQUIN.get());
         // yep, we need copy the fully model info when ctrl down.
         if (EnvironmentExecutorIO.hasSprintDown()) {
-            CompoundTag entityTag = new CompoundTag();
+            var entityTag = new CompoundTag();
             entityTag.putString("id", ModEntityTypes.MANNEQUIN.getRegistryName().toString());
             addAdditionalSaveData(entityTag);
             itemStack.set(ModDataComponents.ENTITY_DATA.get(), entityTag);
@@ -205,7 +205,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         isDropEquipment = false;
         boolean flag = this.isAlive();
         boolean flag1 = super.hurt(source, amount);
-        Level level = getLevel();
+        var level = getLevel();
         if (!isDropEquipment && flag != this.isAlive() && level instanceof ServerLevel) {
             this.brokenByAnything((ServerLevel) level, source);
         }
@@ -217,7 +217,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         if (isMarker()) {
             return InteractionResult.PASS;
         }
-        ItemStack itemStack = player.getItemInHand(hand);
+        var itemStack = player.getItemInHand(hand);
         if (itemStack.is(ModItems.MANNEQUIN_TOOL.get())) {
             return InteractionResult.PASS;
         }
@@ -232,7 +232,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
             setBodyPose(new Rotations(rotations.getX(), (float) ry - yRot, rotations.getZ()));
             return InteractionResult.sidedSuccess(getLevel().isClientSide());
         }
-        SkinWardrobe wardrobe = SkinWardrobe.of(this);
+        var wardrobe = SkinWardrobe.of(this);
         if (wardrobe != null && wardrobe.isEditable(player)) {
             ModMenuTypes.WARDROBE.get().openMenu(player, wardrobe);
             return InteractionResult.sidedSuccess(getLevel().isClientSide());
@@ -257,15 +257,15 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         super.dropEquipment();
         this.isDropEquipment = true;
         // drop all wardrobe items.
-        SkinWardrobe wardrobe = SkinWardrobe.of(this);
+        var wardrobe = SkinWardrobe.of(this);
         if (wardrobe != null) {
             wardrobe.dropAll(this::spawnAtLocation);
         }
     }
 
     protected ItemStack createMannequinStack() {
-        ItemStack itemStack = new ItemStack(ModItems.MANNEQUIN.get());
-        CompoundTag entityTag = new CompoundTag();
+        var itemStack = new ItemStack(ModItems.MANNEQUIN.get());
+        var entityTag = new CompoundTag();
         entityTag.putString("id", ModEntityTypes.MANNEQUIN.getRegistryName().toString());
         entityTag.putOptionalFloat(Constants.Key.ENTITY_SCALE, getScale(), 1.0f);
         entityTag.putOptionalTextureDescriptor(Constants.Key.ENTITY_TEXTURE, getTextureDescriptor(), PlayerTextureDescriptor.EMPTY);

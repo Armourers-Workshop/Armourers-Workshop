@@ -33,13 +33,13 @@ public class StateValueImpl<T> {
         if (values.isEmpty()) {
             return null;
         }
-        T value = values.get(state);
+        var value = values.get(state);
         if (value != null) {
             return value;
         }
         // gradually remove all flags when not found value.
-        for (int i = 0; i < UIControl.State.ALL; ++i) {
-            int resolvedState = state & ~i;
+        for (var i = 0; i < UIControl.State.ALL; ++i) {
+            var resolvedState = state & ~i;
             if (resolvedState != state) {
                 value = values.get(resolvedState);
             }

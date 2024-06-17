@@ -20,14 +20,11 @@ import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.function.BiFunction;
 
 @Environment(EnvType.CLIENT)
@@ -35,9 +32,6 @@ public final class SkinBakery implements ISkinLibraryListener {
 
     private static final SkinBakery EMPTY = new SkinBakery();
     private static SkinBakery BAKERY;
-
-    private final AtomicInteger bakingQueue = new AtomicInteger(0);
-    private final AtomicIntegerArray bakeTimes = new AtomicIntegerArray(1000);
 
     private final ArrayList<IBakeListener> listeners = new ArrayList<>();
     private final DataTransformer<String, BakedSkin, Skin> manager = new DataTransformer.Builder<String, BakedSkin, Skin>()
@@ -100,10 +94,6 @@ public final class SkinBakery implements ISkinLibraryListener {
         if (pair != null) {
             return pair.getKey();
         }
-//        Optional<BakedSkin> skin = manager.get(identifier);
-//        if (skin != null && skin.isPresent()) {
-//            return skin.get();
-//        }
         return null;
     }
 
@@ -112,7 +102,7 @@ public final class SkinBakery implements ISkinLibraryListener {
         if (identifier.isEmpty()) {
             return null;
         }
-        Pair<BakedSkin, Exception> pair = manager.getOrLoad(identifier, ticket);
+        var pair = manager.getOrLoad(identifier, ticket);
         if (pair != null) {
             return pair.getKey();
         }
@@ -229,7 +219,7 @@ public final class SkinBakery implements ISkinLibraryListener {
         }
 
         var partId = 0;
-        var iterator = new ArrayList<BakedSkinPart>(bakedParts);
+        var iterator = new ArrayList<>(bakedParts);
         while (!iterator.isEmpty()) {
             var bakedPart = iterator.remove(0);
             bakedPart.setId(partId++);
@@ -276,31 +266,9 @@ public final class SkinBakery implements ISkinLibraryListener {
         }
     }
 
-    public int getAverageBakeTime() {
-        int totalItems = 0;
-        int totalTime = 0;
-        for (int i = 0; i < bakeTimes.length(); i++) {
-            int time = bakeTimes.get(i);
-            if (time != 0) {
-                totalItems++;
-                totalTime += time;
-            }
-        }
-        return (int) ((double) totalTime / (double) totalItems);
-    }
-
-    public int getBakingQueueSize() {
-        return bakingQueue.get();
-    }
-
     @Environment(EnvType.CLIENT)
     @FunctionalInterface
     public interface IBakeListener {
         void didBake(String identifier, BakedSkin bakedSkin);
     }
-
-//    public void handleModelDownload(Thread downloadThread) {
-//        downloadThread.setPriority(Thread.MIN_PRIORITY);
-//        skinDownloadExecutor.execute(downloadThread);
-//    }
 }

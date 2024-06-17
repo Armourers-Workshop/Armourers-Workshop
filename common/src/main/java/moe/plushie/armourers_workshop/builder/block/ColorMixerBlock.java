@@ -37,7 +37,7 @@ public class ColorMixerBlock extends AbstractHorizontalBlock implements Abstract
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        for (Direction direction : context.getNearestLookingDirections()) {
+        for (var direction : context.getNearestLookingDirections()) {
             if (direction.getAxis() == Direction.Axis.Y) {
                 return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
             } else {
@@ -57,9 +57,8 @@ public class ColorMixerBlock extends AbstractHorizontalBlock implements Abstract
         if (reader == null || blockPos == null || index != 1) {
             return 0xffffffff;
         }
-        BlockEntity entity = reader.getBlockEntity(blockPos);
-        if (entity instanceof ColorMixerBlockEntity) {
-            return ((ColorMixerBlockEntity) entity).getColor().getRGB() | 0xff000000;
+        if (reader.getBlockEntity(blockPos) instanceof ColorMixerBlockEntity blockEntity) {
+            return blockEntity.getColor().getRGB() | 0xff000000;
         }
         return 0xffffffff;
     }

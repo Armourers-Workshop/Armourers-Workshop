@@ -122,7 +122,7 @@ public class ModConfigSpec {
                 define("allowPreviewSkins", true, "Shows model previews in the library.", "Causes a lot of extra load on servers.", "Best to turn off on high population servers").bind(n -> allowLibraryPreviews = n, () -> allowLibraryPreviews);
                 define("allowManageSkins", false, "Allows clients to manage skins of the server computer library.", "Required permission level 5 or higher.").bind(v -> allowLibraryRemoteManage = v, () -> allowLibraryRemoteManage);
 
-                defineList("skinServerURLs", new ArrayList<String>(), this::allowsString, "We priority use https for the access token APIs.").bind(v -> customSkinServerURLs = new ArrayList<>(v), () -> new ArrayList<>(customSkinServerURLs));
+                defineList("skinServerURLs", String.class, "We priority use https for the access token APIs.").bind(v -> customSkinServerURLs = new ArrayList<>(v), () -> new ArrayList<>(customSkinServerURLs));
             });
 
             defineCategory("holiday-events", "Enable/disable holiday events.", () -> {
@@ -185,15 +185,11 @@ public class ModConfigSpec {
 //                }
 //            }
             defineCategory("overrides", "Custom list of items that can be skinned.", () -> {
-                defineList("itemOverrides", new ArrayList<String>(), this::allowsString, "Format [\"override type:mod id:item name\"]", "Valid override types are: sword, shield, bow, pickaxe, axe, shovel, hoe and item", "example [\"sword:minecraft:iron_sword\",\"sword:minecraft:gold_sword\"]").bind(n -> overrides = new ArrayList<>(n), () -> new ArrayList<>(overrides));
+                defineList("itemOverrides", String.class, "Format [\"override type:mod id:item name\"]", "Valid override types are: sword, shield, bow, pickaxe, axe, shovel, hoe and item", "example [\"sword:minecraft:iron_sword\",\"sword:minecraft:gold_sword\"]").bind(n -> overrides = new ArrayList<>(n), () -> new ArrayList<>(overrides));
 
                 define("enableMatchingByItemId", true, "Tries to automatically assign the correct type of skin type without config and tag.").bind(v -> enableMatchingByItemId = v, () -> enableMatchingByItemId);
-                defineList("matchingBlacklistByItemId", new ArrayList<String>(), this::allowsString, "If the matching system wrong, you can add the item id here to this ignore it.").bind(v -> disableMatchingItems = new ArrayList<>(v), () -> new ArrayList<>(disableMatchingItems));
+                defineList("matchingBlacklistByItemId", String.class, "If the matching system wrong, you can add the item id here to this ignore it.").bind(v -> disableMatchingItems = new ArrayList<>(v), () -> new ArrayList<>(disableMatchingItems));
             });
-        }
-
-        public boolean allowsString(Object value) {
-            return value instanceof String;
         }
     }
 

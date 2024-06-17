@@ -35,9 +35,9 @@ public class BakedItemTransform implements ISkinTransform {
             return;
         }
         var model = SkinModelManager.getInstance().getModel(partType, itemModel, itemStack, entity);
-        float f1 = 16f;
-        float f2 = 1 / 16f;
-        boolean flag = transformType.isLeftHand();
+        var f1 = 16f;
+        var f2 = 1 / 16f;
+        var flag = transformType.isLeftHand();
         poseStack.scale(f1, f1, f1);
         model.applyTransform(poseStack, flag, transformType);
         poseStack.scale(f2, f2, f2);

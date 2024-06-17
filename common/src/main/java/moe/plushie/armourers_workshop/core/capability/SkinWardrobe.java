@@ -55,7 +55,7 @@ public class SkinWardrobe implements IDataSerializerProvider {
     }
 
     public static Optional<SkinWardrobe> create(Entity entity) {
-        EntityProfile profile = ModEntityProfiles.getProfile(entity);
+        var profile = ModEntityProfiles.getProfile(entity);
         if (profile != null) {
             return Optional.of(new SkinWardrobe(entity, profile));
         }
@@ -87,8 +87,8 @@ public class SkinWardrobe implements IDataSerializerProvider {
     }
 
     public int getFreeSlot(SkinSlotType slotType) {
-        int unlockedSize = getUnlockedSize(slotType);
-        for (int i = 0; i < unlockedSize; ++i) {
+        var unlockedSize = getUnlockedSize(slotType);
+        for (var i = 0; i < unlockedSize; ++i) {
             if (inventory.getItem(slotType.getIndex() + i).isEmpty()) {
                 return i;
             }
@@ -111,14 +111,14 @@ public class SkinWardrobe implements IDataSerializerProvider {
     }
 
     public void dropAll(@Nullable Consumer<ItemStack> consumer) {
-        int containerSize = inventory.getContainerSize();
-        int ignoredStart = SkinSlotType.DYE.getIndex() + 8;
-        int ignoredEnd = SkinSlotType.DYE.getIndex() + SkinSlotType.DYE.getMaxSize();
-        for (int i = 0; i < containerSize; ++i) {
+        var containerSize = inventory.getContainerSize();
+        var ignoredStart = SkinSlotType.DYE.getIndex() + 8;
+        var ignoredEnd = SkinSlotType.DYE.getIndex() + SkinSlotType.DYE.getMaxSize();
+        for (var i = 0; i < containerSize; ++i) {
             if (i >= ignoredStart && i < ignoredEnd) {
                 continue;
             }
-            ItemStack itemStack = inventory.getItem(i);
+            var itemStack = inventory.getItem(i);
             if (itemStack.isEmpty()) {
                 continue;
             }
@@ -187,7 +187,7 @@ public class SkinWardrobe implements IDataSerializerProvider {
         if (slotType == SkinSlotType.DYE) {
             return 8;
         }
-        Integer modifiedSize = skinSlots.get(slotType);
+        var modifiedSize = skinSlots.get(slotType);
         if (modifiedSize != null) {
             return Math.min(slotType.getMaxSize(), modifiedSize);
         }
@@ -219,7 +219,7 @@ public class SkinWardrobe implements IDataSerializerProvider {
     }
 
     public int getId() {
-        Entity entity = getEntity();
+        var entity = getEntity();
         if (entity != null) {
             id = entity.getId();
         }
@@ -231,7 +231,7 @@ public class SkinWardrobe implements IDataSerializerProvider {
             return false;
         }
         // can't edit another player's wardrobe
-        Entity entity = getEntity();
+        var entity = getEntity();
         if (entity instanceof Player && entity.getId() != player.getId()) {
             return false;
         }

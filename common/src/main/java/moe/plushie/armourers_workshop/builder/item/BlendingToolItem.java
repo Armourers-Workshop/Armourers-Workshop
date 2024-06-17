@@ -44,9 +44,9 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
     }
 
     protected CubeSelector createColorApplierSelector(int radius, UseOnContext context) {
-        ItemStack itemStack = context.getItemInHand();
-        boolean restrictPlane = itemStack.get(PaintingToolOptions.PLANE_RESTRICT);
-        boolean isFullMode = shouldUseFullMode(context);
+        var itemStack = context.getItemInHand();
+        var restrictPlane = itemStack.get(PaintingToolOptions.PLANE_RESTRICT);
+        var isFullMode = shouldUseFullMode(context);
         return CubeSelector.touching(context.getClickedPos(), radius, isFullMode, restrictPlane);
     }
 
@@ -71,8 +71,8 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
         var intensity = itemStack.get(PaintingToolOptions.INTENSITY);
         var radiusSample = itemStack.get(PaintingToolOptions.RADIUS_SAMPLE);
         // we need to complete sampling before we can use blending tool.
-        ArrayList<Integer> colors = new ArrayList<>();
-        CubeChangesCollector collector = new CubeChangesCollector(context.getLevel());
+        var colors = new ArrayList<Integer>();
+        var collector = new CubeChangesCollector(context.getLevel());
         createColorApplierSelector(radiusSample, context).forEach(context, (targetPos, dir) -> {
             var cube = collector.getCube(targetPos);
             if (cube.shouldChangeColor(dir)) {

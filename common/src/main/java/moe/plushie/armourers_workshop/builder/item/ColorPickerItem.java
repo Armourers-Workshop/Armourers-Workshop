@@ -5,11 +5,11 @@ import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.builder.network.UpdateColorPickerPacket;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
@@ -26,7 +26,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -49,25 +48,25 @@ public class ColorPickerItem extends AbstractPaintToolItem implements IItemTintC
 
     @Override
     public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity blockEntity, UseOnContext context) {
-        ItemStack itemStack = context.getItemInHand();
-        if (blockEntity instanceof IPaintable) {
+        var itemStack = context.getItemInHand();
+        if (blockEntity instanceof IPaintable paintable) {
             if (!level.isClientSide()) {
                 return InteractionResult.CONSUME;
             }
-            IPaintColor color = ((IPaintable) blockEntity).getColor(dir);
+            var color = paintable.getColor(dir);
             ColorUtils.setColor(itemStack, color);
-            UpdateColorPickerPacket packet = new UpdateColorPickerPacket(context.getHand(), itemStack);
+            var packet = new UpdateColorPickerPacket(context.getHand(), itemStack);
             NetworkManager.sendToServer(packet);
             // we only play local sound, color pick not need send to other players.
             playSound(context);
             return InteractionResult.SUCCESS;
         }
         if (blockEntity instanceof IPaintProvider provider) {
-            Player player = context.getPlayer();
+            var player = context.getPlayer();
             if (player != null && !player.isSecondaryUseActive()) {
                 return InteractionResult.PASS;
             }
-            IPaintColor newColor = getItemColor(itemStack);
+            var newColor = getItemColor(itemStack);
             if (newColor == null) {
                 // this is an empty color picker, we don't need to do anything.
                 return InteractionResult.CONSUME;
@@ -93,7 +92,7 @@ public class ColorPickerItem extends AbstractPaintToolItem implements IItemTintC
 
     @Override
     public void appendColorHoverText(ItemStack itemStack, List<Component> tooltips) {
-        IPaintColor paintColor = getItemColor(itemStack);
+        var paintColor = getItemColor(itemStack);
         if (paintColor != null) {
             tooltips.addAll(ColorUtils.getColorTooltips(paintColor, false));
         } else {
@@ -121,7 +120,7 @@ public class ColorPickerItem extends AbstractPaintToolItem implements IItemTintC
 
     @Override
     public boolean isFoil(ItemStack itemStack) {
-        IPaintColor paintColor = getItemColor(itemStack, PaintColor.WHITE);
+        var paintColor = getItemColor(itemStack, PaintColor.WHITE);
         return paintColor.getPaintType() != SkinPaintTypes.NORMAL;
     }
 

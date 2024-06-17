@@ -257,7 +257,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     public void killSeatEntities(Level level, BlockPos blockPos) {
-        SkinnableBlockEntity blockEntity = getParentBlockEntity(level, blockPos);
+        var blockEntity = getParentBlockEntity(level, blockPos);
         if (blockEntity != null) {
             Vector3d seatPos = blockEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
             killSeatEntity(level, blockEntity.getParentPos(), seatPos);
@@ -265,13 +265,13 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     public boolean dropItems(Level level, BlockPos blockPos, @Nullable Player player) {
-        SkinnableBlockEntity blockEntity = getBlockEntity(level, blockPos);
-        SkinnableBlockEntity parentBlockEntity = getParentBlockEntity(level, blockPos);
+        var blockEntity = getBlockEntity(level, blockPos);
+        var parentBlockEntity = getParentBlockEntity(level, blockPos);
         if (blockEntity == null || parentBlockEntity == null || parentBlockEntity.isDropped()) {
             return false;
         }
         // anyway, we only drop all items once.
-        ItemStack droppedStack = parentBlockEntity.getDescriptor().asItemStack();
+        var droppedStack = parentBlockEntity.getDescriptor().asItemStack();
         blockEntity.setDropped(droppedStack); // mark the attacked block
         parentBlockEntity.setDropped(droppedStack);
         if (parentBlockEntity.isInventory()) {
@@ -281,15 +281,15 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     private SkinnableBlockEntity getBlockEntity(BlockGetter level, BlockPos pos) {
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof SkinnableBlockEntity) {
-            return (SkinnableBlockEntity) blockEntity;
+        var blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof SkinnableBlockEntity blockEntity1) {
+            return blockEntity1;
         }
         return null;
     }
 
     private SkinnableBlockEntity getParentBlockEntity(BlockGetter level, BlockPos blockPos) {
-        SkinnableBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        var blockEntity = getBlockEntity(level, blockPos);
         if (blockEntity != null) {
             return blockEntity.getParent();
         }
@@ -298,8 +298,8 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     @Nullable
     private SeatEntity getSeatEntity(ServerLevel level, BlockPos blockPos, Vector3d pos) {
-        AABB searchRect = new AABB(pos.x, pos.y, pos.z, pos.x + 1, pos.y + 1, pos.z + 1);
-        for (SeatEntity entity : level.getEntitiesOfClass(SeatEntity.class, searchRect)) {
+        var searchRect = new AABB(pos.x, pos.y, pos.z, pos.x + 1, pos.y + 1, pos.z + 1);
+        for (var entity : level.getEntitiesOfClass(SeatEntity.class, searchRect)) {
             if (entity.isAlive() && blockPos.equals(entity.getBlockPos())) {
                 if (entity.getPassengers().isEmpty()) {
                     return entity;
@@ -307,7 +307,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
                 return null; // is using
             }
         }
-        SeatEntity entity = ModEntityTypes.SEAT.get().create(level, BlockPos.ZERO, null, MobSpawnType.SPAWN_EGG);
+        var entity = ModEntityTypes.SEAT.get().create(level, BlockPos.ZERO, null, MobSpawnType.SPAWN_EGG);
         entity.setPos(pos.x(), pos.y(), pos.z());
         entity.setBlockPos(blockPos);
         level.addFreshEntity(entity);
@@ -315,8 +315,8 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     private void killSeatEntity(Level level, BlockPos blockPos, Vector3d pos) {
-        AABB searchRect = new AABB(pos.x, pos.y, pos.z, pos.x + 1, pos.y + 1, pos.z + 1);
-        for (SeatEntity entity : level.getEntitiesOfClass(SeatEntity.class, searchRect)) {
+        var searchRect = new AABB(pos.x, pos.y, pos.z, pos.x + 1, pos.y + 1, pos.z + 1);
+        for (var entity : level.getEntitiesOfClass(SeatEntity.class, searchRect)) {
             if (entity.isAlive() && blockPos.equals(entity.getBlockPos())) {
                 entity.kill();
             }

@@ -203,8 +203,8 @@ public class UIWindow extends UIView {
     }
 
     private boolean _sendMenuEvent(UIEvent event) {
-        int hitCount = 0;
-        for (UIMenuItem menuItem : menuItems) {
+        var hitCount = 0;
+        for (var menuItem : menuItems) {
             if (menuItem.test(event)) {
                 menuItem.perform(event);
                 hitCount += 1;
@@ -298,13 +298,13 @@ public class UIWindow extends UIView {
 
         @Override
         public void render(CGGraphicsContext context) {
-            int level = window.level();
+            var level = window.level();
             if (level != 0) {
                 context.saveGraphicsState();
                 context.translateCTM(0, 0, level);
             }
-            float mouseX = context.state().mousePos().getX();
-            float mouseY = context.state().mousePos().getY();
+            var mouseX = context.state().mousePos().getX();
+            var mouseY = context.state().mousePos().getY();
             applyAnimationPre();
             applyRender(mouseX, mouseY, 0, window, context);
             if (level != 0) {
@@ -314,7 +314,7 @@ public class UIWindow extends UIView {
 
         @Override
         public InvokerResult keyUp(int key, int keyModifier, int j) {
-            UIEvent event = makeKeyEvent(key, keyModifier, UIEvent.Type.KEY_UP);
+            var event = makeKeyEvent(key, keyModifier, UIEvent.Type.KEY_UP);
             if (!window._sendGlobalEvent(UIControl.Event.of(event), event)) {
                 return checkEvent(event);
             }
@@ -323,7 +323,7 @@ public class UIWindow extends UIView {
 
         @Override
         public InvokerResult keyDown(int key, int keyModifier, int j) {
-            UIEvent event = makeKeyEvent(key, keyModifier, UIEvent.Type.KEY_DOWN);
+            var event = makeKeyEvent(key, keyModifier, UIEvent.Type.KEY_DOWN);
             if (!window._sendGlobalEvent(UIControl.Event.of(event), event)) {
                 return checkEvent(event);
             }
@@ -332,7 +332,7 @@ public class UIWindow extends UIView {
 
         @Override
         public InvokerResult charTyped(int ch, int keyModifier, int j) {
-            UIEvent event = makeKeyEvent(ch, keyModifier, UIEvent.Type.CHAR_TYPED);
+            var event = makeKeyEvent(ch, keyModifier, UIEvent.Type.CHAR_TYPED);
             if (!window._sendGlobalEvent(UIControl.Event.of(event), event)) {
                 return checkEvent(event);
             }
@@ -341,7 +341,7 @@ public class UIWindow extends UIView {
 
         @Override
         public InvokerResult mouseDown(double mouseX, double mouseY, int button) {
-            UIEvent event = makeMouseEvent(mouseX, mouseY, button, CGPoint.ZERO, MOUSE_BUTTONS[(button % 3)]);
+            var event = makeMouseEvent(mouseX, mouseY, button, CGPoint.ZERO, MOUSE_BUTTONS[(button % 3)]);
             if (!window._sendGlobalEvent(UIControl.Event.of(event), event)) {
                 return checkEvent(event);
             }
@@ -366,7 +366,7 @@ public class UIWindow extends UIView {
 
         @Override
         public InvokerResult mouseMoved(double mouseX, double mouseY, int button) {
-            UIEvent event = makeMouseEvent(mouseX, mouseY, button, CGPoint.ZERO, UIEvent.Type.MOUSE_MOVED);
+            var event = makeMouseEvent(mouseX, mouseY, button, CGPoint.ZERO, UIEvent.Type.MOUSE_MOVED);
             if (!window._sendGlobalEvent(UIControl.Event.MOUSE_MOVED, event)) {
                 return checkEvent(event);
             }
@@ -383,7 +383,7 @@ public class UIWindow extends UIView {
 
         @Override
         public InvokerResult mouseUp(double mouseX, double mouseY, int button) {
-            UIEvent event = makeMouseEvent(mouseX, mouseY, button, CGPoint.ZERO, MOUSE_BUTTONS[(button % 3) + 3]);
+            var event = makeMouseEvent(mouseX, mouseY, button, CGPoint.ZERO, MOUSE_BUTTONS[(button % 3) + 3]);
             if (!window._sendGlobalEvent(UIControl.Event.of(event), event)) {
                 return checkEvent(event);
             }
@@ -398,7 +398,7 @@ public class UIWindow extends UIView {
 
         @Override
         public InvokerResult mouseWheel(double mouseX, double mouseY, CGPoint delta) {
-            UIEvent event = makeMouseEvent(mouseX, mouseY, 0, delta, UIEvent.Type.MOUSE_WHEEL);
+            var event = makeMouseEvent(mouseX, mouseY, 0, delta, UIEvent.Type.MOUSE_WHEEL);
             if (!window._sendGlobalEvent(UIControl.Event.of(event), event)) {
                 return checkEvent(event);
             }
@@ -416,9 +416,9 @@ public class UIWindow extends UIView {
 
         @Override
         public InvokerResult mouseIsInside(double mouseX, double mouseY, int button) {
-            UIEvent event = makeMouseEvent(mouseX, mouseY, button, CGPoint.ZERO, MOUSE_BUTTONS[(button % 3)]);
-            CGRect frame = window.frame();
-            UIView view = window.hitTest(new CGPoint(mouseX - frame.x, mouseY - frame.y), event);
+            var event = makeMouseEvent(mouseX, mouseY, button, CGPoint.ZERO, MOUSE_BUTTONS[(button % 3)]);
+            var frame = window.frame();
+            var view = window.hitTest(new CGPoint(mouseX - frame.x, mouseY - frame.y), event);
             if (view != null && view != window) {
                 return InvokerResult.SUCCESS;
             }
@@ -430,14 +430,14 @@ public class UIWindow extends UIView {
             UIView view = window;
             UIView targetView = null;
             if (window.focusedResponder != null) {
-                UIView superview = window.focusedResponder.superview();
+                var superview = window.focusedResponder.superview();
                 if (superview != null) {
                     view = superview;
                     targetView = window.focusedResponder;
                 }
             }
-            LBSIterator<UIView> iterator = new LBSIterator<>(bl);
-            UIView responder = findFocusedResponder(view, targetView, iterator, false, targetView != null);
+            var iterator = new LBSIterator<UIView>(bl);
+            var responder = findFocusedResponder(view, targetView, iterator, false, targetView != null);
             if (responder != null) {
                 window._setInputResponder(responder);
                 window._setFocusedResponder(responder);
@@ -475,8 +475,8 @@ public class UIWindow extends UIView {
         }
 
         private UIEvent makeEvent(double mouseX, double mouseY, int key, int keyModifier, CGPoint delta, UIEvent.Type type) {
-            CGRect frame = window.frame();
-            CGPoint location = new CGPoint(mouseX - frame.x, mouseY - frame.y);
+            var frame = window.frame();
+            var location = new CGPoint(mouseX - frame.x, mouseY - frame.y);
             return new UIEvent(type, key, keyModifier, location, delta);
         }
 
@@ -505,7 +505,7 @@ public class UIWindow extends UIView {
 
         private InvokerResult applyKeyEvent(UIEvent event, BiConsumer<UIResponder, UIEvent> consumer) {
             UIResponder[] responders = {window.firstInputResponder, window.focusedResponder, window.hoveredResponder, window};
-            for (UIResponder responder : responders) {
+            for (var responder : responders) {
                 if (responder != null) {
                     consumer.accept(responder, event);
                     break;
@@ -520,27 +520,27 @@ public class UIWindow extends UIView {
             }
             var layer = view.layer();
             var presentation = view._presentation;
-            CGPoint center = presentation.center();
-            CGRect bounds = presentation.bounds();
-            CGAffineTransform transform = presentation.transform();
-            float x = center.x;
-            float y = center.y;
-            float width = bounds.width;
-            float height = bounds.height;
+            var center = presentation.center();
+            var bounds = presentation.bounds();
+            var transform = presentation.transform();
+            var x = center.x;
+            var y = center.y;
+            var width = bounds.width;
+            var height = bounds.height;
             if (transform != CGAffineTransform.IDENTITY) { // fast check
-                CGSize size = new CGSize(width, height);
+                var size = new CGSize(width, height);
                 size.apply(transform);
                 width = size.width;
                 height = size.height;
             }
             x -= width * 0.5f;
             y -= height * 0.5f;
-            float ix = mouseX - x;
-            float iy = mouseY - y;
-            boolean needClips = view.isClipBounds();
+            var ix = mouseX - x;
+            var iy = mouseY - y;
+            var needClips = view.isClipBounds();
             if (needClips) {
-                CGRect clipBox = UIScreen.convertRectFromView(bounds, view);
-                float cornerRadius = layer.cornerRadius();
+                var clipBox = UIScreen.convertRectFromView(bounds, view);
+                var cornerRadius = layer.cornerRadius();
                 if (cornerRadius != 0) {
                     CGRect cornerBox = UIScreen.convertRectFromView(new CGRect(0, 0, cornerRadius, cornerRadius), view);
                     context.addClip(clipBox, cornerBox.getWidth());
@@ -559,7 +559,7 @@ public class UIWindow extends UIView {
             if (!isOpaque) {
                 context.enableBlend();
             }
-            UIColor backgroundColor = view.backgroundColor();
+            var backgroundColor = view.backgroundColor();
             if (backgroundColor != null) {
                 context.fillRect(backgroundColor, bounds);
             }
@@ -567,7 +567,7 @@ public class UIWindow extends UIView {
                 context.strokeRect(bounds, layer.borderWidth(), layer.borderColor());
             }
             view.render(new CGPoint(ix, iy), context);
-            for (UIView subview : view.subviews()) {
+            for (var subview : view.subviews()) {
                 // when the clip is enabled, we will not render the views of the out of size.
                 if (needClips && !bounds.intersects(subview.frame())) {
                     continue;
@@ -586,39 +586,39 @@ public class UIWindow extends UIView {
         }
 
         private static UIView findFirstResponder(float mouseX, float mouseY, UIEvent event, UIView view) {
-            CGRect frame = view.frame();
-            CGPoint point = new CGPoint(mouseX - frame.x, mouseY - frame.y);
+            var frame = view.frame();
+            var point = new CGPoint(mouseX - frame.x, mouseY - frame.y);
             return view.hitTest(point, event);
         }
 
         private static UIView findFocusedResponder(UIView view, @Nullable UIView currentView, LBSIterator<UIView> iterator, boolean ignoreSelf, boolean backToTop) {
-            List<UIView> subviews = view.subviews();
-            for (UIView subview : iterator.remaining(subviews, currentView)) {
+            var subviews = view.subviews();
+            for (var subview : iterator.remaining(subviews, currentView)) {
                 if (ignoreSelf && subview == currentView) {
                     continue;
                 }
                 if (subview != currentView && subview.canBecomeFocused()) {
                     return subview;
                 }
-                UIView focusedResponder = findFocusedResponder(subview, null, iterator, false, false);
+                var focusedResponder = findFocusedResponder(subview, null, iterator, false, false);
                 if (focusedResponder != null && subview.shouldBecomeFocused(focusedResponder)) {
                     return focusedResponder;
                 }
             }
             if (backToTop) {
-                UIView superView = view.superview();
+                var superView = view.superview();
                 if (superView != null) {
-                    UIView focusedResponder = findFocusedResponder(superView, view, iterator, true, true);
+                    var focusedResponder = findFocusedResponder(superView, view, iterator, true, true);
                     if (focusedResponder != null) {
                         return focusedResponder;
                     }
                 }
             }
-            for (UIView subview : iterator.skipping(subviews, currentView)) {
+            for (var subview : iterator.skipping(subviews, currentView)) {
                 if (subview != currentView && subview.canBecomeFocused()) {
                     return subview;
                 }
-                UIView focusedResponder = findFocusedResponder(subview, null, iterator, false, false);
+                var focusedResponder = findFocusedResponder(subview, null, iterator, false, false);
                 if (focusedResponder != null) {
                     return focusedResponder;
                 }
@@ -630,9 +630,9 @@ public class UIWindow extends UIView {
             if (currentView == null) {
                 return null;
             }
-            CGRect frame = view.frame();
-            CGPoint point = new CGPoint(mouseX - frame.x, mouseY - frame.y);
-            for (UIView subview : currentView._invertedSubviews()) {
+            var frame = view.frame();
+            var point = new CGPoint(mouseX - frame.x, mouseY - frame.y);
+            for (var subview : currentView._invertedSubviews()) {
                 if (subview.tooltip() != null && !subview.isHidden()) {
                     if (subview.pointInside(view.convertPointToView(point, subview), event)) {
                         return subview;

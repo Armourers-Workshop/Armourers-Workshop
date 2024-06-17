@@ -30,7 +30,7 @@ public abstract class PropertySettingView extends UIView {
 
     public PropertySettingView(CGRect rect, Collection<ISkinProperty<?>> properties) {
         super(rect);
-        for (ISkinProperty<?> property : properties) {
+        for (var property : properties) {
             if (property.getDefaultValue() instanceof Boolean) {
                 addCheckBox(ObjectUtils.unsafeCast(property));
             }
@@ -54,7 +54,7 @@ public abstract class PropertySettingView extends UIView {
     }
 
     protected void addCheckBox(ISkinProperty<Boolean> property) {
-        UICheckBox checkBox = new UICheckBox(new CGRect(0, cursorY, bounds().width, 10));
+        var checkBox = new UICheckBox(new CGRect(0, cursorY, bounds().width, 10));
         checkBox.setTitle(getDisplayText(property.getKey()));
         checkBox.setTitleColor(UIColor.WHITE);
         checkBox.setTitleColor(UIColor.GRAY, UIControl.State.DISABLED);
@@ -96,9 +96,9 @@ public abstract class PropertySettingView extends UIView {
     }
 
     private void setInventorySize(UIControl sender) {
-        CGPoint offset = inventoryBox.getOffset();
-        int width = (int) (offset.x / 10) + 1;
-        int height = (int) (offset.y / 10) + 1;
+        var offset = inventoryBox.getOffset();
+        var width = (int) (offset.x / 10) + 1;
+        var height = (int) (offset.y / 10) + 1;
         beginEditing();
         putValue(SkinProperty.BLOCK_INVENTORY_WIDTH, width);
         putValue(SkinProperty.BLOCK_INVENTORY_HEIGHT, height);
@@ -110,9 +110,9 @@ public abstract class PropertySettingView extends UIView {
         if (inventorySlot == null) {
             return;
         }
-        boolean isEnabled = getValue(SkinProperty.BLOCK_INVENTORY) && !getValue(SkinProperty.BLOCK_ENDER_INVENTORY);
-        int width = getValue(SkinProperty.BLOCK_INVENTORY_WIDTH);
-        int height = getValue(SkinProperty.BLOCK_INVENTORY_HEIGHT);
+        var isEnabled = getValue(SkinProperty.BLOCK_INVENTORY) && !getValue(SkinProperty.BLOCK_ENDER_INVENTORY);
+        var width = getValue(SkinProperty.BLOCK_INVENTORY_WIDTH);
+        var height = getValue(SkinProperty.BLOCK_INVENTORY_HEIGHT);
         inventorySlot.setText(getDisplayText("label.inventorySlots", width * height, width, height));
         inventoryBox.setOffset(new CGPoint(Math.max(width - 1, 0) * 10, Math.max(height - 1, 0) * 10));
         inventoryTitle.setHidden(!isEnabled);

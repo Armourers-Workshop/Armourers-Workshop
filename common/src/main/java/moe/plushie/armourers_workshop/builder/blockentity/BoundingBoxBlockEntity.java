@@ -86,7 +86,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
     }
 
     public boolean isValid() {
-        ArmourerBlockEntity blockEntity = getParentBlockEntity();
+        var blockEntity = getParentBlockEntity();
         if (blockEntity != null && blockEntity.getSkinType() != null) {
             return blockEntity.getSkinType().getParts().contains(partType);
         }
@@ -94,12 +94,12 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
     }
 
     public boolean hasColors() {
-        ArmourerBlockEntity blockEntity = getParentBlockEntity();
+        var blockEntity = getParentBlockEntity();
         if (blockEntity == null) {
             return false;
         }
-        for (Direction dir : Direction.values()) {
-            IPaintColor paintColor = getArmourerTextureColor(blockEntity, getTexturePos(blockEntity, dir));
+        for (var dir : Direction.values()) {
+            var paintColor = getArmourerTextureColor(blockEntity, getTexturePos(blockEntity, dir));
             if (paintColor != PaintColor.CLEAR) {
                 return true;
             }
@@ -115,14 +115,14 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
 
     @Override
     public IPaintColor getColor(Direction direction) {
-        ArmourerBlockEntity blockEntity = getParentBlockEntity();
-        TexturePos texturePos = getTexturePos(blockEntity, direction);
-        IPaintColor color = getArmourerTextureColor(blockEntity, texturePos);
+        var blockEntity = getParentBlockEntity();
+        var texturePos = getTexturePos(blockEntity, direction);
+        var color = getArmourerTextureColor(blockEntity, texturePos);
         if (color != null && color.getPaintType() != SkinPaintTypes.NONE) {
             return color;
         }
         // when work in the client side, we try to get the texture color from the loaded texture.
-        Level level = getLevel();
+        var level = getLevel();
         if (level != null && level.isClientSide()) {
             return getTextureColor(blockEntity, texturePos);
         }
@@ -136,7 +136,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
 
     @Override
     public void setColors(Map<Direction, IPaintColor> colors) {
-        ArmourerBlockEntity blockEntity = getParentBlockEntity();
+        var blockEntity = getParentBlockEntity();
         colors.forEach((dir, color) -> setArmourerTextureColor(blockEntity, getTexturePos(blockEntity, dir), color));
     }
 
@@ -147,7 +147,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
     }
 
     public void clearArmourerTextureColors() {
-        ArmourerBlockEntity blockEntity = getParentBlockEntity();
+        var blockEntity = getParentBlockEntity();
         if (blockEntity == null || getLevel() == null) {
             return;
         }
@@ -158,7 +158,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
 
     public IPaintColor getArmourerTextureColor(ArmourerBlockEntity blockEntity, TexturePos texturePos) {
         if (texturePos != null && blockEntity != null) {
-            IPaintColor color = blockEntity.getPaintColor(texturePos);
+            var color = blockEntity.getPaintColor(texturePos);
             if (color != null) {
                 return color;
             }
@@ -176,7 +176,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
     @Environment(EnvType.CLIENT)
     private IPaintColor getTextureColor(ArmourerBlockEntity blockEntity, TexturePos texturePos) {
         if (texturePos != null && blockEntity != null) {
-            IPaintColor color = TextureUtils.getPlayerTextureModelColor(blockEntity.getTextureDescriptor(), texturePos);
+            var color = TextureUtils.getPlayerTextureModelColor(blockEntity.getTextureDescriptor(), texturePos);
             if (color != null) {
                 return color;
             }

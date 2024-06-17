@@ -26,7 +26,7 @@ public class ReportDialog extends ConfirmDialog {
     }
 
     private void setup() {
-        float width = bounds().width;
+        var width = bounds().width;
 
         textView.setFrame(new CGRect(10, 45, width - 20, 80));
         addSubview(textView);
@@ -69,15 +69,15 @@ public class ReportDialog extends ConfirmDialog {
     }
 
     private UIComboBox buildComboBox(int x, int y, int width, int height) {
-        int selectedIndex = 0;
-        UIComboBox comboBox = new UIComboBox(new CGRect(x, y, width, height));
+        var selectedIndex = 0;
+        var comboBox = new UIComboBox(new CGRect(x, y, width, height));
         comboBox.setSelectedIndex(selectedIndex);
         addSubview(comboBox);
         return comboBox;
     }
 
     private UITextView buildTextField(int x, int y, int width, int height) {
-        UITextView textBox = new UITextView(new CGRect(x, y, width, height));
+        var textBox = new UITextView(new CGRect(x, y, width, height));
         textBox.setMaxLength(255);
         if (this.content != null) {
             textBox.setText(content);

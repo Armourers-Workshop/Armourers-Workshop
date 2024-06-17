@@ -1,17 +1,16 @@
 package moe.plushie.armourers_workshop.core.armature;
 
 import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
-import moe.plushie.armourers_workshop.api.common.ITextureKey;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.math.ITransformf;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
+import moe.plushie.armourers_workshop.core.texture.TextureBox;
+import moe.plushie.armourers_workshop.core.texture.TextureData;
 import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
 import moe.plushie.armourers_workshop.utils.math.Vector2f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
-import moe.plushie.armourers_workshop.core.texture.TextureBox;
-import moe.plushie.armourers_workshop.core.texture.TextureData;
 import net.minecraft.core.Direction;
 
 import java.util.ArrayList;
@@ -55,11 +54,11 @@ public class ArmatureSerializers {
         if (object.isNull()) {
             return SkinTransform.IDENTITY;
         }
-        Vector3f translate = readVector(object.get("translate"), Vector3f.ZERO);
-        Vector3f scale = readVector(object.get("scale"), Vector3f.ONE);
-        Vector3f rotation = readVector(object.get("rotation"), Vector3f.ZERO);
-        Vector3f pivot = readVector(object.get("pivot"), Vector3f.ZERO);
-        Vector3f offset = readVector(object.get("offset"), Vector3f.ZERO);
+        var translate = readVector(object.get("translate"), Vector3f.ZERO);
+        var scale = readVector(object.get("scale"), Vector3f.ONE);
+        var rotation = readVector(object.get("rotation"), Vector3f.ZERO);
+        var pivot = readVector(object.get("pivot"), Vector3f.ZERO);
+        var offset = readVector(object.get("offset"), Vector3f.ZERO);
         return SkinTransform.create(translate, rotation, scale, pivot, offset);
     }
 
@@ -67,12 +66,12 @@ public class ArmatureSerializers {
         if (object.isNull()) {
             return null;
         }
-        Vector3f origin = readVector(object.get("origin"), Vector3f.ZERO);
-        Vector3f size = readVector(object.get("size"), Vector3f.ZERO);
-        float inflate = object.get("inflate").floatValue();
-        ITransformf transform = readTransform(object);
-        Map<Direction, Rectangle2f> textureBox = readShapeTextureUVs(object.get("uv"), size);
-        ArrayList<JointShape> children = new ArrayList<>();
+        var origin = readVector(object.get("origin"), Vector3f.ZERO);
+        var size = readVector(object.get("size"), Vector3f.ZERO);
+        var inflate = object.get("inflate").floatValue();
+        var transform = readTransform(object);
+        var textureBox = readShapeTextureUVs(object.get("uv"), size);
+        var children = new ArrayList<JointShape>();
         object.get("children").allValues().forEach(it -> children.add(readShape(it)));
         return new JointShape(origin, size, inflate, transform, textureBox, children);
     }
@@ -90,11 +89,11 @@ public class ArmatureSerializers {
                     u = -u;
                     mirror = true;
                 }
-                TextureData textureData = new TextureData("", 255, 255);
-                TextureBox textureBox = new TextureBox(size.getX(), size.getY(), size.getZ(), mirror, new Vector2f(u, v), textureData);
-                EnumMap<Direction, Rectangle2f> uvs = new EnumMap<>(Direction.class);
-                for (Direction dir : Direction.values()) {
-                    ITextureKey key = textureBox.getTexture(dir);
+                var textureData = new TextureData("", 255, 255);
+                var textureBox = new TextureBox(size.getX(), size.getY(), size.getZ(), mirror, new Vector2f(u, v), textureData);
+                var uvs = new EnumMap<Direction, Rectangle2f>(Direction.class);
+                for (var dir : Direction.values()) {
+                    var key = textureBox.getTexture(dir);
                     if (key != null) {
                         uvs.put(dir, new Rectangle2f(key.getU(), key.getV(), key.getWidth(), key.getHeight()));
                     }
@@ -102,10 +101,10 @@ public class ArmatureSerializers {
                 return uvs;
             }
             case DICTIONARY: {
-                TextureData textureData = new TextureData("", 255, 255);
-                TextureBox textureBox = new TextureBox(size.getX(), size.getY(), size.getZ(), false, null, textureData);
-                for (Direction dir : Direction.values()) {
-                    IDataPackObject ob = object.get(dir.getName());
+                var textureData = new TextureData("", 255, 255);
+                var textureBox = new TextureBox(size.getX(), size.getY(), size.getZ(), false, null, textureData);
+                for (var dir : Direction.values()) {
+                    var ob = object.get(dir.getName());
                     if (ob.size() >= 4) {
                         float u = ob.at(0).floatValue();
                         float v = ob.at(1).floatValue();
@@ -114,9 +113,9 @@ public class ArmatureSerializers {
                         textureBox.putTextureRect(dir, new Rectangle2f(u, v, n - u, m - v));
                     }
                 }
-                EnumMap<Direction, Rectangle2f> uvs = new EnumMap<>(Direction.class);
-                for (Direction dir : Direction.values()) {
-                    ITextureKey key = textureBox.getTexture(dir);
+                var uvs = new EnumMap<Direction, Rectangle2f>(Direction.class);
+                for (var dir : Direction.values()) {
+                    var key = textureBox.getTexture(dir);
                     if (key != null) {
                         uvs.put(dir, new Rectangle2f(key.getU(), key.getV(), key.getWidth(), key.getHeight()));
                     }

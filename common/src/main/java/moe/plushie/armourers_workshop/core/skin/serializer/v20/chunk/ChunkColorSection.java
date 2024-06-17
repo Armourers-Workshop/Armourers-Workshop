@@ -6,17 +6,16 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
-import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
-import moe.plushie.armourers_workshop.utils.math.Vector2f;
 import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.core.texture.TextureData;
 import moe.plushie.armourers_workshop.core.texture.TextureOptions;
 import moe.plushie.armourers_workshop.core.texture.TextureProperties;
+import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
+import moe.plushie.armourers_workshop.utils.math.Vector2f;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 import java.util.function.Function;
@@ -142,19 +141,19 @@ public abstract class ChunkColorSection {
             if (isTexture()) {
                 textureLists = new TextureList[size];
                 for (int i = 0; i < size; ++i) {
-                    TextureList list = new TextureList();
+                    var list = new TextureList();
                     list.readFromStream(stream);
                     textureLists[i] = list;
                 }
                 // restore the parent -> child.
-                for (TextureList parent : textureLists) {
-                    for (TextureList child : textureLists) {
+                for (var parent : textureLists) {
+                    for (var child : textureLists) {
                         if (parent.id == child.parentId) {
-                            Collection<ITextureProvider> variants = parent.provider.getVariants();
+                            var variants = parent.provider.getVariants();
                             if (variants == null) {
                                 variants = new ArrayList<>();
-                                if (parent.provider instanceof TextureData) {
-                                    ((TextureData) parent.provider).setVariants(variants);
+                                if (parent.provider instanceof TextureData textureData) {
+                                    textureData.setVariants(variants);
                                 }
                             }
                             variants.add(child.provider);
@@ -252,7 +251,7 @@ public abstract class ChunkColorSection {
 
         public TextureRef putTexture(Vector2f uv, ITextureProvider provider) {
             // we're also adding all variant textures.
-            TextureList textureList = getOrCreateTextureList(provider);
+            var textureList = getOrCreateTextureList(provider);
             if (provider.getVariants() != null) {
                 provider.getVariants().forEach(this::getOrCreateTextureList);
             }
@@ -265,7 +264,7 @@ public abstract class ChunkColorSection {
 
         @Override
         protected TextureList getTextureList(Vector2f pos) {
-            for (TextureList list : textureLists.values()) {
+            for (var list : textureLists.values()) {
                 if (list.contains(pos)) {
                     return list;
                 }
@@ -276,7 +275,7 @@ public abstract class ChunkColorSection {
         protected TextureList getOrCreateTextureList(ITextureProvider provider) {
             // ..
             return textureLists.computeIfAbsent(provider, it -> {
-                TextureList list = new TextureList(it);
+                var list = new TextureList(it);
                 list.id = textureLists.size() + 1;
                 return list;
             });
@@ -335,7 +334,7 @@ public abstract class ChunkColorSection {
 
         @Override
         public void writeToStream(IOutputStream stream) throws IOException {
-            Rectangle2f rect = list.getRect();
+            var rect = list.getRect();
             _writeFixedFloat(rect.getX() + uv.getX(), section.textureIndexBytes, stream);
             _writeFixedFloat(rect.getY() + uv.getY(), section.textureIndexBytes, stream);
         }
@@ -384,15 +383,15 @@ public abstract class ChunkColorSection {
         public void readFromStream(IInputStream stream) throws IOException {
             this.id = stream.readVarInt();
             this.parentId = stream.readVarInt();
-            float x = stream.readFloat();
-            float y = stream.readFloat();
-            float width = stream.readFloat();
-            float height = stream.readFloat();
+            var x = stream.readFloat();
+            var y = stream.readFloat();
+            var width = stream.readFloat();
+            var height = stream.readFloat();
             this.rect = new Rectangle2f(x, y, width, height);
-            TextureAnimation animation = stream.readTextureAnimation();
-            TextureProperties properties = stream.readTextureProperties();
-            int byteSize = stream.readInt();
-            TextureData provider = new TextureData(String.valueOf(id), width, height, animation, properties);
+            var animation = stream.readTextureAnimation();
+            var properties = stream.readTextureProperties();
+            var byteSize = stream.readInt();
+            var provider = new TextureData(String.valueOf(id), width, height, animation, properties);
             provider.load(stream.readBytes(byteSize));
             this.provider = provider;
         }

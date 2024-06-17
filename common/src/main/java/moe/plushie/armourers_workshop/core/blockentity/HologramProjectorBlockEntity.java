@@ -3,14 +3,13 @@ package moe.plushie.armourers_workshop.core.blockentity;
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import moe.plushie.armourers_workshop.utils.DataSerializerKey;
+import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -21,7 +20,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
@@ -109,15 +107,15 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     }
 
     public void updateBlockStates() {
-        BlockState state = getBlockState();
+        var state = getBlockState();
         isPowered = isRunningForState(state);
         setChanged();
         setRenderChanged();
-        boolean growing = isPowered && isGlowing;
-        Level level = getLevel();
+        var growing = isPowered && isGlowing;
+        var level = getLevel();
         if (level != null && !level.isClientSide()) {
             if (state.getValue(HologramProjectorBlock.LIT) != growing) {
-                BlockState newState = state.setValue(HologramProjectorBlock.LIT, growing);
+                var newState = state.setValue(HologramProjectorBlock.LIT, growing);
                 level.setBlock(getBlockPos(), newState, Constants.BlockFlags.BLOCK_UPDATE);
             } else {
                 level.sendBlockUpdated(getBlockPos(), state, state, Constants.BlockFlags.BLOCK_UPDATE);
@@ -139,7 +137,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     }
 
     protected boolean isRunningForState(BlockState state) {
-        Level level = getLevel();
+        var level = getLevel();
         if (level != null && !SkinDescriptor.of(items.get(0)).isEmpty()) {
             return switch (powerMode) {
                 case 1 -> level.hasNeighborSignal(getBlockPos());
@@ -242,9 +240,9 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
         if (renderRotations != null) {
             return renderRotations;
         }
-        AttachFace face = blockState.getOptionalValue(HologramProjectorBlock.FACE).orElse(AttachFace.FLOOR);
-        Direction facing = blockState.getOptionalValue(HologramProjectorBlock.FACING).orElse(Direction.NORTH);
-        Vector3f rot = FACING_TO_ROT.getOrDefault(Pair.of(face, facing), Vector3f.ZERO);
+        var face = blockState.getOptionalValue(HologramProjectorBlock.FACE).orElse(AttachFace.FLOOR);
+        var facing = blockState.getOptionalValue(HologramProjectorBlock.FACING).orElse(Direction.NORTH);
+        var rot = FACING_TO_ROT.getOrDefault(Pair.of(face, facing), Vector3f.ZERO);
         renderRotations = new OpenQuaternionf(rot.getX(), rot.getY(), rot.getZ(), true);
         return renderRotations;
     }
@@ -255,35 +253,35 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
         if (!isPowered()) {
             return null;
         }
-        SkinDescriptor descriptor = SkinDescriptor.of(getItem(0));
-        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.TEST);
+        var descriptor = SkinDescriptor.of(getItem(0));
+        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.TEST);
         if (bakedSkin == null) {
             return null;
         }
-        Rectangle3f rect = bakedSkin.getRenderBounds(SkinItemSource.EMPTY);
-        float f = 1 / 16f;
-        float scale = getModelScale() * f;
-        float modelRadius = 0.0f;
-        float rotationRadius = 0.0f;
+        var rect = bakedSkin.getRenderBounds(SkinItemSource.EMPTY);
+        var f = 1 / 16f;
+        var scale = getModelScale() * f;
+        var modelRadius = 0.0f;
+        var rotationRadius = 0.0f;
 
         if (!rect.equals(Rectangle3f.ZERO)) {
-            double x = MathUtils.absMax(rect.getMinX(), rect.getMaxX());
-            double y = MathUtils.absMax(rect.getMinY(), rect.getMaxY());
-            double z = MathUtils.absMax(rect.getMinZ(), rect.getMaxZ());
+            var x = MathUtils.absMax(rect.getMinX(), rect.getMaxX());
+            var y = MathUtils.absMax(rect.getMinY(), rect.getMaxY());
+            var z = MathUtils.absMax(rect.getMinZ(), rect.getMaxZ());
             modelRadius = MathUtils.sqrt(x * x + y * y + z * z);
         }
 
         if (!rotationOffset.equals(Vector3f.ZERO)) {
-            float x = Math.abs(rotationOffset.getX());
-            float y = Math.abs(rotationOffset.getY());
-            float z = Math.abs(rotationOffset.getZ());
+            var x = Math.abs(rotationOffset.getX());
+            var y = Math.abs(rotationOffset.getY());
+            var z = Math.abs(rotationOffset.getZ());
             rotationRadius = MathUtils.sqrt(x * x + y * y + z * z);
         }
 
-        float tr = (rotationRadius + modelRadius) * scale;
-        float tx = (modelOffset.getX()) * scale;
-        float ty = (modelOffset.getY()) * scale + 0.5f;
-        float tz = (modelOffset.getZ()) * scale;
+        var tr = (rotationRadius + modelRadius) * scale;
+        var tx = (modelOffset.getX()) * scale;
+        var ty = (modelOffset.getY()) * scale + 0.5f;
+        var tz = (modelOffset.getZ()) * scale;
 
         if (isOverrideOrigin()) {
             ty += rect.getMaxY() * scale;

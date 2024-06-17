@@ -50,7 +50,7 @@ public class SkinWardrobeJS {
     }
 
     public SkinDescriptorJS loadSkin(String identifier) {
-        Skin skin = SkinLoader.getInstance().loadSkin(identifier);
+        var skin = SkinLoader.getInstance().loadSkin(identifier);
         if (skin != null) {
             return new SkinDescriptorJS(new SkinDescriptor(identifier, skin.getType(), ColorScheme.EMPTY));
         }
@@ -58,7 +58,7 @@ public class SkinWardrobeJS {
     }
 
     public SkinDescriptorJS loadSkinFromDB(String identifier) {
-        SkinDescriptor descriptor = SkinLoader.getInstance().loadSkinFromDB(identifier, ColorScheme.EMPTY, true);
+        var descriptor = SkinLoader.getInstance().loadSkinFromDB(identifier, ColorScheme.EMPTY, true);
         if (!descriptor.isEmpty()) {
             return new SkinDescriptorJS(descriptor);
         }
@@ -66,7 +66,7 @@ public class SkinWardrobeJS {
     }
 
     public SkinDescriptorJS loadSkinByItem(ItemStack itemStack) {
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        var descriptor = SkinDescriptor.of(itemStack);
         if (!descriptor.isEmpty()) {
             return new SkinDescriptorJS(descriptor);
         }
@@ -122,7 +122,7 @@ public class SkinWardrobeJS {
     }
 
     private void setOptions(String opt, boolean flag) {
-        BiConsumer<SkinWardrobe, Boolean> o = OPTIONS.get(opt);
+        var o = OPTIONS.get(opt);
         if (o != null) {
             o.accept(wardrobe, flag);
         }

@@ -57,7 +57,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
     private void setup() {
         CGRect bounds = bounds();
 
-        UIImageView bg1 = new UIImageView(new CGRect(0, 0, bounds.width - 10, bounds.height));
+        var bg1 = new UIImageView(new CGRect(0, 0, bounds.width - 10, bounds.height));
         bg1.setImage(UIImage.of(ModTextures.LIST).fixed(11, 11).clip(1, 1, 1, 1).build());
         bg1.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
         addSubview(bg1);

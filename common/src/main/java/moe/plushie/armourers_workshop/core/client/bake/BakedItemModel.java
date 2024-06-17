@@ -37,7 +37,7 @@ public class BakedItemModel extends BuiltInModel {
     }
 
     public BakedModel resolve(BakedModel bakedModel, ItemStack itemStack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int i) {
-        for (Variant variant : variants) {
+        for (var variant : variants) {
             if (variant.test(itemStack, level, entity, i)) {
                 return variant.model;
             }
@@ -50,9 +50,9 @@ public class BakedItemModel extends BuiltInModel {
     }
 
     public static BakedItemModel from(Collection<String> overrideNames, SkinItemTransforms itemTransforms, boolean usesBlockLight) {
-        Baker baker = new Baker(itemTransforms, usesBlockLight);
-        ArrayList<Variant> entries = new ArrayList<>();
-        for (String name : overrideNames) {
+        var baker = new Baker(itemTransforms, usesBlockLight);
+        var entries = new ArrayList<Variant>();
+        for (var name : overrideNames) {
             var registryName = ResourceLocation.parse(name);
             var model = baker.bake(name, new Variant[0]);
             entries.add(new Variant(registryName, model));

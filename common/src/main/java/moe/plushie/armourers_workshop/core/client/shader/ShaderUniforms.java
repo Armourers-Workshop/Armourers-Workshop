@@ -37,15 +37,15 @@ public class ShaderUniforms {
     }
 
     public void apply() {
-        int programId = GL20.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+        var programId = GL20.glGetInteger(GL20.GL_CURRENT_PROGRAM);
         if (programId == 0) {
             return;
         }
-        Collection<ShaderUniform> uniforms = this.uniforms.computeIfAbsent(programId, this::getLocations);
+        var uniforms = this.uniforms.computeIfAbsent(programId, this::getLocations);
         if (uniforms.isEmpty()) {
             return;
         }
-        for (ShaderUniform uniform : uniforms) {
+        for (var uniform : uniforms) {
             saveUniform(uniform);
             uniform.apply();
         }
@@ -62,7 +62,7 @@ public class ShaderUniforms {
         if (changes.isEmpty()) {
             return;
         }
-        int currentProgram = GL20.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+        var currentProgram = GL20.glGetInteger(GL20.GL_CURRENT_PROGRAM);
         changes.forEach((program, uniforms) -> {
             if (currentProgram != program) {
                 GL20.glUseProgram(program);

@@ -30,7 +30,7 @@ public class ItemStackProvider implements IItemStackProvider {
     @Override
     public Iterable<ItemStack> getArmorSlots(Entity entity) {
         Iterable<ItemStack> allArmourSlots = DEFAULT_EMPTY_LIST;
-        for (IItemStackProvider itemProvider : itemProviders) {
+        for (var itemProvider : itemProviders) {
             Iterable<ItemStack> armorSlots = itemProvider.getArmorSlots(entity);
             if (armorSlots != null) {
                 allArmourSlots = Iterables.concat(allArmourSlots, armorSlots);
@@ -42,7 +42,7 @@ public class ItemStackProvider implements IItemStackProvider {
     @Override
     public Iterable<ItemStack> getHandSlots(Entity entity) {
         Iterable<ItemStack> allHandSlots = DEFAULT_EMPTY_LIST;
-        for (IItemStackProvider itemProvider : itemProviders) {
+        for (var itemProvider : itemProviders) {
             Iterable<ItemStack> handSlots = itemProvider.getHandSlots(entity);
             if (handSlots != null) {
                 allHandSlots = Iterables.concat(allHandSlots, handSlots);

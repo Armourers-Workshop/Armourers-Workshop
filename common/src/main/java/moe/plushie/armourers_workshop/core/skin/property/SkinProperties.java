@@ -96,9 +96,9 @@ public class SkinProperties implements ISkinProperties {
     }
 
     public ArrayList<String> getPropertiesList() {
-        ArrayList<String> list = new ArrayList<String>();
+        var list = new ArrayList<String>();
         for (int i = 0; i < properties.size(); i++) {
-            String key = (String) properties.keySet().toArray()[i];
+            var key = (String) properties.keySet().toArray()[i];
             list.add(key + ":" + properties.get(key));
         }
         return list;
@@ -107,8 +107,8 @@ public class SkinProperties implements ISkinProperties {
     public void writeToStream(IOutputStream stream) throws IOException {
         stream.writeInt(properties.size());
         for (int i = 0; i < properties.size(); i++) {
-            String key = (String) properties.keySet().toArray()[i];
-            Object value = properties.get(key);
+            var key = (String) properties.keySet().toArray()[i];
+            var value = properties.get(key);
             stream.writeString(key);
             if (value instanceof String) {
                 stream.writeByte(DataTypes.STRING.ordinal());
@@ -136,9 +136,9 @@ public class SkinProperties implements ISkinProperties {
     public void readFromStream(IInputStream stream) throws IOException {
         int count = stream.readInt();
         for (int i = 0; i < count; i++) {
-            String key = stream.readString();
-            int byteType = stream.readByte();
-            DataTypes type = DataTypes.byId(byteType);
+            var key = stream.readString();
+            var byteType = stream.readByte();
+            var type = DataTypes.byId(byteType);
             if (type == null) {
                 throw new IOException("Error loading skin properties " + byteType);
             }
@@ -161,7 +161,7 @@ public class SkinProperties implements ISkinProperties {
     }
 
     public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
+        var tag = new CompoundTag();
         writeToNBT(tag);
         return tag;
     }
@@ -258,7 +258,7 @@ public class SkinProperties implements ISkinProperties {
 
         @Override
         public <T> T get(ISkinProperty<T> property) {
-            String indexedKey = getResolvedKey(property);
+            var indexedKey = getResolvedKey(property);
             Object value;
             if (indexedKey != null && properties.containsKey(indexedKey)) {
                 value = properties.getOrDefault(indexedKey, property.getDefaultValue());
@@ -279,7 +279,7 @@ public class SkinProperties implements ISkinProperties {
 
         @Override
         public <T> boolean containsValue(ISkinProperty<T> property) {
-            String indexedKey = getResolvedKey(property);
+            var indexedKey = getResolvedKey(property);
             if (indexedKey != null && properties.containsValue(indexedKey)) {
                 return true;
             }
@@ -313,7 +313,7 @@ public class SkinProperties implements ISkinProperties {
         }
 
         public CompoundTag serializeNBT() {
-            CompoundTag tag = new CompoundTag();
+            var tag = new CompoundTag();
             writeToNBT(tag);
             return tag;
         }

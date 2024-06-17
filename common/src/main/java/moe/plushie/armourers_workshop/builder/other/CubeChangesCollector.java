@@ -27,7 +27,7 @@ public class CubeChangesCollector {
             return;
         }
         // create an undo action and execute it immediately
-        NamedUserAction group = new NamedUserAction(name);
+        var group = new NamedUserAction(name);
         allChanges.forEach(group::push);
         UndoManager.of(player.getUUID()).push(group.apply());
     }

@@ -48,7 +48,7 @@ public class ScrollIndicator extends UIControl {
     }
 
     private void setup() {
-        CGRect rect = bounds();
+        var rect = bounds();
         int size = 10;
 
         topButton.setFrame(new CGRect(0, 0, size, size));
@@ -65,9 +65,9 @@ public class ScrollIndicator extends UIControl {
         bottomButton.setCanBecomeFocused(false);
         addSubview(bottomButton);
 
-        UIImageView bg1 = new UIImageView(new CGRect(0, topButton.frame().getMaxY(), size, size));
-        UIImageView bg2 = new UIImageView(new CGRect(0, bottomButton.frame().getMinY() - size, size, size));
-        UIImageView bg3 = new UIImageView(new CGRect(0, bg1.frame().getMaxY(), size, bg2.frame().getMinY() - bg1.frame().getMaxY()));
+        var bg1 = new UIImageView(new CGRect(0, topButton.frame().getMaxY(), size, size));
+        var bg2 = new UIImageView(new CGRect(0, bottomButton.frame().getMinY() - size, size, size));
+        var bg3 = new UIImageView(new CGRect(0, bg1.frame().getMaxY(), size, bg2.frame().getMinY() - bg1.frame().getMaxY()));
         bg1.setImage(makeImage(20, 20));
         bg2.setImage(makeImage(30, 20));
         bg3.setImage(UIImage.of(ModTextures.SCROLLBAR).uv(246, 0).resizable(10, 246).build());
@@ -85,7 +85,7 @@ public class ScrollIndicator extends UIControl {
     }
 
     private UIImage makeImage(int u, int v) {
-        HashMap<Integer, CGPoint> offsets = new HashMap<>();
+        var offsets = new HashMap<Integer, CGPoint>();
         offsets.put(State.NORMAL, new CGPoint(0, 0));
         offsets.put(State.HIGHLIGHTED, new CGPoint(0, 1));
         offsets.put(State.SELECTED, new CGPoint(0, 1));
@@ -93,7 +93,7 @@ public class ScrollIndicator extends UIControl {
     }
 
     private void updateOffsetIfNeeded() {
-        CGRect frame = middleButton.frame();
+        var frame = middleButton.frame();
         float minY = topButton.frame().getMaxY();
         float maxY = bottomButton.frame().getMinY();
         float y = ((maxY - minY) - frame.height) * value;

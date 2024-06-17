@@ -16,12 +16,9 @@ import java.util.Optional;
 
 public class SkinDataStorage {
 
-    protected LazyOptional<SkinWardrobe> wardrobe;
-    protected LazyOptional<SkinWardrobeJS> wardrobeJS;
-    protected LazyOptional<SkinRenderData> renderData;
-
-    protected int lastWardrobeTickCount = Integer.MAX_VALUE;
-    protected int lastRenderDataTickCount = Integer.MAX_VALUE;
+    protected final LazyOptional<SkinWardrobe> wardrobe;
+    protected final LazyOptional<SkinWardrobeJS> wardrobeJS;
+    protected final LazyOptional<SkinRenderData> renderData;
 
     public SkinDataStorage(Entity entity) {
         this.wardrobe = getLazyWardrobe(entity);
@@ -31,35 +28,18 @@ public class SkinDataStorage {
 
     public static Optional<SkinWardrobe> getWardrobe(Entity entity) {
         var storage = getDataStore(entity);
-        if (storage.wardrobe != null) {
-            return storage.wardrobe.resolve();
-        }
-        return Optional.empty();
+        return storage.wardrobe.resolve();
     }
 
     public static Optional<SkinWardrobeJS> getWardrobeJS(Entity entity) {
         var storage = getDataStore(entity);
-        if (storage.wardrobeJS != null) {
-            return storage.wardrobeJS.resolve();
-        }
-        return Optional.empty();
+        return storage.wardrobeJS.resolve();
     }
 
     @Environment(EnvType.CLIENT)
     public static Optional<SkinRenderData> getRenderData(Entity entity) {
         var storage = getDataStore(entity);
-        if (storage.renderData == null) {
-            return Optional.empty();
-        }
-        var renderData = storage.renderData.resolve();
-        renderData.ifPresent(data -> {
-            int tickCount = entity.tickCount;
-            if (storage.lastRenderDataTickCount != tickCount) {
-                storage.lastRenderDataTickCount = tickCount;
-                data.tick(entity);
-            }
-        });
-        return renderData;
+        return storage.renderData.resolve();
     }
 
     private static SkinDataStorage getDataStore(Entity entity) {

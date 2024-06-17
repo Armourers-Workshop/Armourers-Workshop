@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.client.gui.widget;
 
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.uikit.UIWindowManager;
-import moe.plushie.armourers_workshop.api.math.ISize2i;
 import moe.plushie.armourers_workshop.compatibility.client.gui.AbstractMenuToast;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,7 +20,7 @@ public class ContainerMenuToast<W extends ToastWindow> extends AbstractMenuToast
         this.manager.addWindow(window);
         this.manager.init();
 
-        ISize2i screenSize = getScreenSize();
+        var screenSize = getScreenSize();
         this.manager.layout(screenSize.getWidth(), screenSize.getHeight());
     }
 

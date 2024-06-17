@@ -11,13 +11,13 @@ public class AllayBodyJointModifier extends JointModifier {
 
     @Override
     public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
-        IModelPart rootModelPart = model.getPart("root");
-        IModelPart bodyModelPart = model.getPart("body");
+        var rootModelPart = model.getPart("root");
+        var bodyModelPart = model.getPart("body");
         if (rootModelPart == null || bodyModelPart == null) {
             return transform;
         }
-        IModelPartPose rootPose = rootModelPart.pose();
-        IModelPartPose bodyPose = bodyModelPart.pose();
+        var rootPose = rootModelPart.pose();
+        var bodyPose = bodyModelPart.pose();
         return poseStack -> {
             rootPose.transform(poseStack);
             bodyPose.transform(poseStack);

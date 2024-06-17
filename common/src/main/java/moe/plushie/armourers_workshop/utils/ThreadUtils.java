@@ -11,6 +11,7 @@ public class ThreadUtils {
     public final static AtomicInteger SKIN_COUNTER = new AtomicInteger();
 
     public final static AtomicInteger BAKED_SKIN_COUNTER = new AtomicInteger();
+    public final static AtomicInteger BAKED_SKIN_ANIMATION_COUNTER = new AtomicInteger();
 
     public static ExecutorService newFixedThreadPool(int nThreads, String name) {
         return newFixedThreadPool(nThreads, name, Thread.NORM_PRIORITY);

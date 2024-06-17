@@ -30,7 +30,7 @@ public class BakedFirstPersonArmature extends BakedArmature {
 
     @Override
     public IJoint getJoint(ISkinPartType partType) {
-        IJoint joint = super.getJoint(partType);
+        var joint = super.getJoint(partType);
         if (joint != null && !jointNames.isEmpty() && !jointNames.contains(joint.getName())) {
             return null;
         }

@@ -9,9 +9,9 @@ import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
-import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.core.texture.TextureProperties;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.minecraft.nbt.CompoundTag;
 
 import java.io.DataOutputStream;
@@ -108,6 +108,16 @@ public interface IOutputStream {
             outputStream.writeByte(i & 0x7F | 0x80);
             i >>>= 7;
         }
+    }
+
+    default void writeFloatArray(float[] values) throws IOException {
+        for (float value : values) {
+            writeFloat(value);
+        }
+    }
+
+    default void writeEnum(Enum<?> value) throws IOException {
+        writeVarInt(value.ordinal());
     }
 
     default void writeVector3i(IVector3i vec) throws IOException {

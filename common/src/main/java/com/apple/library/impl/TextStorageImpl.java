@@ -61,22 +61,22 @@ public class TextStorageImpl {
     private Collection<TextLine> cachedTextLines;
 
     public void insertText(String inputText) {
-        String oldValue = value;
-        String replacementText = formattedString(inputText);
-        NSRange range = selectionRange();
+        var oldValue = value;
+        var replacementText = formattedString(inputText);
+        var range = selectionRange();
         if (!valueShouldChange.test(range, replacementText)) {
             return;
         }
-        int length = replacementText.length();
+        var length = replacementText.length();
         if (maxLength > 0) {
-            int remaining = Math.max((maxLength - (oldValue.length() - range.length)), 0);
+            var remaining = Math.max((maxLength - (oldValue.length() - range.length)), 0);
             if (remaining < length) {
                 replacementText = replacementText.substring(0, remaining);
                 length = remaining;
             }
         }
-        int startIndex = range.startIndex();
-        int endIndex = range.endIndex();
+        var startIndex = range.startIndex();
+        var endIndex = range.endIndex();
         setValue((new StringBuilder(oldValue)).replace(startIndex, endIndex, replacementText).toString());
         setCursorAndHighlightPos(NSTextPosition.forward(startIndex + length));
         valueDidChange.accept(oldValue, value);
@@ -90,13 +90,13 @@ public class TextStorageImpl {
             insertText("");
             return;
         }
-        int advancedIndex = tokenizer.advance(value, cursorPos.value, count);
-        int startIndex = Math.min(advancedIndex, cursorPos.value);
-        int endIndex = Math.max(advancedIndex, cursorPos.value);
+        var advancedIndex = tokenizer.advance(value, cursorPos.value, count);
+        var startIndex = Math.min(advancedIndex, cursorPos.value);
+        var endIndex = Math.max(advancedIndex, cursorPos.value);
         if (startIndex == endIndex) {
             return;
         }
-        String oldValue = value;
+        var oldValue = value;
         if (!valueShouldChange.test(NSRange.of(startIndex, endIndex), "")) {
             return;
         }
@@ -125,8 +125,8 @@ public class TextStorageImpl {
         if (cachedTextLines == null) {
             sizeToFit();
         }
-        UIFont font = cachedFont;
-        int textColor = defaultTextColor();
+        var font = cachedFont;
+        var textColor = defaultTextColor();
         if (cachedFont == null || cachedTextLines == null) {
             return;
         }
@@ -134,10 +134,10 @@ public class TextStorageImpl {
         context.translateCTM(offset.x, offset.y, 0);
 
         if (placeholder != null && cachedTextLines.isEmpty()) {
-            int placeholderColor = defaultPlaceholderColor();
+            var placeholderColor = defaultPlaceholderColor();
             context.drawText(placeholder, 1, 0, placeholderColor, true, font, 0);
         }
-        for (TextLine line : cachedTextLines) {
+        for (var line : cachedTextLines) {
             context.drawText(line.formattedText, line.rect.x, line.rect.y, textColor, true, font, 0);
             context.strokeDebugRect(line.index, line.rect);
         }
@@ -166,7 +166,7 @@ public class TextStorageImpl {
         var pose = context.state().ctm().last();
         var buffers = AbstractBufferSource.buffer();
         var builder = buffers.getBuffer(SkinRenderType.GUI_HIGHLIGHTED_TEXT);
-        for (CGRect rect : highlightedRects) {
+        for (var rect : highlightedRects) {
             builder.vertex(pose, rect.getMinX(), rect.getMaxY(), 0).endVertex();
             builder.vertex(pose, rect.getMaxX(), rect.getMaxY(), 0).endVertex();
             builder.vertex(pose, rect.getMaxX(), rect.getMinY(), 0).endVertex();
@@ -244,9 +244,9 @@ public class TextStorageImpl {
         if (cachedFont == null || cachedTextLines == null) {
             return null;
         }
-        ArrayList<TextLine> selectedLines = new ArrayList<>();
+        var selectedLines = new ArrayList<TextLine>();
         if (isMultipleLineMode()) {
-            for (TextLine line : cachedTextLines) {
+            for (var line : cachedTextLines) {
                 if (line.insideAtY(point.y)) {
                     selectedLines.add(line);
                 }
@@ -254,15 +254,15 @@ public class TextStorageImpl {
         } else {
             selectedLines.addAll(cachedTextLines);
         }
-        for (TextLine line : selectedLines) {
+        for (var line : selectedLines) {
             if (line.insideAtX(point.x)) {
-                String value = cachedFont._getTextByWidth(line.text, (point.x - line.rect.x));
+                var value = cachedFont._getTextByWidth(line.text, (point.x - line.rect.x));
                 int index = line.range.startIndex() + value.length();
                 return NSTextPosition.forward(index);
             }
         }
         if (!selectedLines.isEmpty()) {
-            TextLine line = selectedLines.get(selectedLines.size() - 1);
+            var line = selectedLines.get(selectedLines.size() - 1);
             return NSTextPosition.backward(line.range.endIndex());
         }
         return endOfDocument();
@@ -337,9 +337,9 @@ public class TextStorageImpl {
 
         NSRange selection = NSRange.of(cursorPos.value, highlightPos.value);
 
-        List<TextLine> lines = split(value, selection, font, boundingSize.width);
-        for (TextLine line : lines) {
-            float width = font._getTextWidth(line.formattedText.characters());
+        var lines = split(value, selection, font, boundingSize.width);
+        for (var line : lines) {
+            var width = font._getTextWidth(line.formattedText.characters());
             if (lineIndex != line.index) {
                 lineIndex = line.index;
                 y += maxHeight;
@@ -350,7 +350,7 @@ public class TextStorageImpl {
             x += width;
         }
 
-        CGRect lastLineRect = new CGRect(0, y + maxHeight, 0, lineHeight);
+        var lastLineRect = new CGRect(0, y + maxHeight, 0, lineHeight);
         remakeHighlightedLines(lines, boundingSize, lastLineRect);
         cursorRect = cursorRectAtIndex(cursorPos, lines, lastLineRect);
 
@@ -365,16 +365,16 @@ public class TextStorageImpl {
             highlightedRects = null;
             return;
         }
-        CGPoint startPoint = pointAtIndex(min(cursorPos, highlightPos), lines, lastLineRect, false);
-        CGPoint endPoint = pointAtIndex(max(cursorPos, highlightPos), lines, lastLineRect, false);
+        var startPoint = pointAtIndex(min(cursorPos, highlightPos), lines, lastLineRect, false);
+        var endPoint = pointAtIndex(max(cursorPos, highlightPos), lines, lastLineRect, false);
         if (startPoint.y == endPoint.y) {
-            CGRect rect = new CGRect(startPoint.x, startPoint.y, endPoint.x - startPoint.x, lastLineRect.height);
+            var rect = new CGRect(startPoint.x, startPoint.y, endPoint.x - startPoint.x, lastLineRect.height);
             highlightedRects = Collections.singletonList(rect);
             return;
         }
-        ArrayList<CGRect> rects = new ArrayList<>();
+        var rects = new ArrayList<CGRect>();
         rects.add(new CGRect(startPoint.x, startPoint.y, boundingSize.width - startPoint.x, lastLineRect.height));
-        float my = startPoint.y + lastLineRect.height;
+        var my = startPoint.y + lastLineRect.height;
         if (my != endPoint.y) {
             rects.add(new CGRect(0, my, boundingSize.width, endPoint.y - my));
         }
@@ -390,8 +390,8 @@ public class TextStorageImpl {
         if (isMultipleLineMode()) {
             return value;
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        for (char c : value.toCharArray()) {
+        var stringBuilder = new StringBuilder();
+        for (var c : value.toCharArray()) {
             if (!isAllowedChatCharacter(c)) continue;
             stringBuilder.append(c);
         }
@@ -401,18 +401,18 @@ public class TextStorageImpl {
     private CGPoint pointAtIndex(NSTextPosition pos, Iterable<TextLine> lines, CGRect lastLineRect, boolean enabledBackward) {
         // If you are backward mode, we preferentially check endIndex.
         if (pos.isBackward && enabledBackward) {
-            for (TextLine line : lines) {
+            for (var line : lines) {
                 if (line.range.endIndex() == pos.value) {
                     return line.endPoint();
                 }
             }
         }
-        for (TextLine line : lines) {
+        for (var line : lines) {
             if (line.range.startIndex() == pos.value) {
                 return line.startPoint();
             }
         }
-        for (TextLine line : lines) {
+        for (var line : lines) {
             if (line.range.endIndex() == pos.value) {
                 return line.endPoint();
             }
@@ -421,7 +421,7 @@ public class TextStorageImpl {
     }
 
     private CGRect cursorRectAtIndex(NSTextPosition pos, Iterable<TextLine> lines, CGRect lastLineRect) {
-        CGPoint point = pointAtIndex(pos, lines, lastLineRect, true);
+        var point = pointAtIndex(pos, lines, lastLineRect, true);
         return new CGRect(point.x, point.y - 2, 1, lastLineRect.height + 2);
     }
 
@@ -446,25 +446,25 @@ public class TextStorageImpl {
         if (maxWidth == 0) {
             return Collections.singletonList(new TextLine(0, 0, value.length(), value));
         }
-        AtomicInteger counter = new AtomicInteger();
+        var counter = new AtomicInteger();
         return font._splitLines(value, maxWidth, false, (substring, begin, end) -> new TextLine(counter.getAndIncrement(), begin, end, substring));
     }
 
     private ArrayList<TextLine> split(String value, NSRange selection, UIFont font, float maxWidth) {
-        List<TextLine> wrappedTextLines = split(value, font, maxWidth);
+        var wrappedTextLines = split(value, font, maxWidth);
         if (wrappedTextLines.isEmpty()) {
             return new ArrayList<>();
         }
-        ArrayList<TextLine> resolvedTextLines = new ArrayList<>(wrappedTextLines.size() + 2);
-        for (TextLine line : wrappedTextLines) {
+        var resolvedTextLines = new ArrayList<TextLine>(wrappedTextLines.size() + 2);
+        for (var line : wrappedTextLines) {
             // a special case when has a blank line we can't to split it.
             if (line.range.intersects(selection) && !line.range.isEmpty()) {
                 // split
-                int lineIndex = line.index;
-                int leftStartIndex = line.range.startIndex();
-                int leftEndIndex = Math.max(leftStartIndex, selection.startIndex());
-                int rightEndIndex = line.range.endIndex();
-                int rightStartIndex = Math.min(selection.endIndex(), rightEndIndex);
+                var lineIndex = line.index;
+                var leftStartIndex = line.range.startIndex();
+                var leftEndIndex = Math.max(leftStartIndex, selection.startIndex());
+                var rightEndIndex = line.range.endIndex();
+                var rightStartIndex = Math.min(selection.endIndex(), rightEndIndex);
                 if (leftStartIndex != leftEndIndex) {
                     // left part
                     resolvedTextLines.add(new TextLine(lineIndex, leftStartIndex, leftEndIndex, value.substring(leftStartIndex, leftEndIndex)));
@@ -509,7 +509,7 @@ public class TextStorageImpl {
     }
 
     void moveCursorTo(TextTokenizer tokenizer, int count, boolean selectMode) {
-        int index = tokenizer.advance(value, cursorPos.value, count);
+        var index = tokenizer.advance(value, cursorPos.value, count);
         moveCursorTo(NSTextPosition.forward(index), selectMode);
     }
 
@@ -528,8 +528,8 @@ public class TextStorageImpl {
     interface TextTokenizer {
 
         TextTokenizer WORLD_AFTER = (value, index, step) -> {
-            for (int k = 0; k < step; ++k) {
-                int l = value.length();
+            for (var k = 0; k < step; ++k) {
+                var l = value.length();
                 index = value.indexOf(' ', index);
                 if (index == -1) {
                     index = l;
@@ -543,7 +543,7 @@ public class TextStorageImpl {
         };
 
         TextTokenizer WORLD_BEFORE = (value, index, step) -> {
-            for (int k = 0; k < step; ++k) {
+            for (var k = 0; k < step; ++k) {
                 while (index > 0 && value.charAt(index - 1) == ' ') {
                     --index;
                 }
@@ -555,8 +555,8 @@ public class TextStorageImpl {
         };
 
         TextTokenizer CHAR_AFTER = (value, index, step) -> {
-            int length = value.length();
-            for (int k = 0; index < length && k < step; ++k) {
+            var length = value.length();
+            for (var k = 0; index < length && k < step; ++k) {
                 if (Character.isHighSurrogate(value.charAt(index++)) && index < length && Character.isLowSurrogate(value.charAt(index))) {
                     ++index;
                 }
@@ -565,7 +565,7 @@ public class TextStorageImpl {
         };
 
         TextTokenizer CHAR_BEFORE = (value, index, step) -> {
-            for (int k = 0; index > 0 && k < step; ++k) {
+            for (var k = 0; index > 0 && k < step; ++k) {
                 --index;
                 if (Character.isLowSurrogate(value.charAt(index)) && index > 0 && Character.isHighSurrogate(value.charAt(index - 1))) {
                     --index;

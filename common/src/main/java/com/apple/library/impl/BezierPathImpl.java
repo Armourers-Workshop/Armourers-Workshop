@@ -207,8 +207,8 @@ public class BezierPathImpl {
     }
 
     private void _initSpline() {
-        double delta_t = 1.0 / (CUBIC_BEZIER_SPLINE_SAMPLES - 1);
-        for (int i = 0; i < CUBIC_BEZIER_SPLINE_SAMPLES; i++) {
+        var delta_t = 1.0 / (CUBIC_BEZIER_SPLINE_SAMPLES - 1);
+        for (var i = 0; i < CUBIC_BEZIER_SPLINE_SAMPLES; i++) {
             _splineSamples[i] = _sampleCurveX(i * delta_t);
         }
     }
@@ -236,16 +236,15 @@ public class BezierPathImpl {
     // Given an x value, find a parametric value it came from.
     // x must be in [0, 1] range. Doesn't use gradients.
     private double _solveCurveX(double x, double epsilon) {
-        double t0 = 0;
-        double t1 = 0;
-        double t2 = x;
-        double x2 = 0;
-        double d2 = 0;
-        int i;
+        var t0 = 0d;
+        var t1 = 0d;
+        var t2 = x;
+        var x2 = 0d;
+        var d2 = 0d;
 
         // Linear interpolation of spline curve for initial guess.
-        double delta_t = 1.0 / (CUBIC_BEZIER_SPLINE_SAMPLES - 1);
-        for (i = 1; i < CUBIC_BEZIER_SPLINE_SAMPLES; i++) {
+        var delta_t = 1.0 / (CUBIC_BEZIER_SPLINE_SAMPLES - 1);
+        for (var i = 1; i < CUBIC_BEZIER_SPLINE_SAMPLES; i++) {
             if (x <= _splineSamples[i]) {
                 t1 = delta_t * i;
                 t0 = t1 - delta_t;
@@ -256,8 +255,8 @@ public class BezierPathImpl {
 
         // Perform a few iterations of Newton's method -- normally very fast.
         // See https://en.wikipedia.org/wiki/Newton%27s_method.
-        double newton_epsilon = Math.min(kBezierEpsilon, epsilon);
-        for (i = 0; i < kMaxNewtonIterations; i++) {
+        var newton_epsilon = Math.min(kBezierEpsilon, epsilon);
+        for (var i = 0; i < kMaxNewtonIterations; i++) {
             x2 = _sampleCurveX(t2) - x;
             if (Math.abs(x2) < newton_epsilon) {
                 return t2;

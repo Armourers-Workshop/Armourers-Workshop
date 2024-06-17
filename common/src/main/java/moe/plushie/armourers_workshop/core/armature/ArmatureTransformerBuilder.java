@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.core.armature.core.AfterTransformModifier;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultOverriddenArmaturePlugin;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
@@ -67,14 +66,14 @@ public abstract class ArmatureTransformerBuilder {
     }
 
     public ArmatureTransformer build(ArmatureTransformerContext context) {
-        ArrayList<ArmaturePlugin> plugins = new ArrayList<>();
-        HashMap<IJoint, ArrayList<JointModifier>> modifiers = new HashMap<>();
+        var plugins = new ArrayList<ArmaturePlugin>();
+        var modifiers = new HashMap<IJoint, ArrayList<JointModifier>>();
         plugins.add(new DefaultOverriddenArmaturePlugin(overrideModifiers, context));
         jointModifiers.forEach((joint, modifiers1) -> modifiers.computeIfAbsent(joint, k -> new ArrayList<>()).addAll(modifiers1));
         transformModifiers.forEach((joint, modifiers1) -> modifiers.computeIfAbsent(joint, k -> new ArrayList<>()).addAll(modifiers1));
         pluginModifiers.forEach(it -> plugins.add(buildPlugin(it, context)));
         plugins.removeIf(Objects::isNull);
-        ArmatureTransformer transformer = new ArmatureTransformer(armature, plugins, context);
+        var transformer = new ArmatureTransformer(armature, plugins, context);
         modifiers.forEach((joint, values) -> transformer.put(joint, buildTransform(joint, values, context)));
         return transformer;
     }
@@ -120,7 +119,7 @@ public abstract class ArmatureTransformerBuilder {
             return;
         }
         // Find the last armature.
-        for (ArmatureTransformerBuilder builder : hierarchy) {
+        for (var builder : hierarchy) {
             if (builder.armature != null) {
                 armature = builder.armature;
                 break; // this -> this.parent -> this.parent.parent -> ...
@@ -134,7 +133,7 @@ public abstract class ArmatureTransformerBuilder {
     private void _parseContent(IDataPackObject object) {
         // read all joint
         object.get("joint").entrySet().forEach(it -> {
-            IJoint joint = armature.getJoint(it.getKey());
+            var joint = armature.getJoint(it.getKey());
             if (joint != null) {
                 jointModifiers.put(joint, _parseModelModifiers(it.getValue()));
             }
@@ -193,7 +192,7 @@ public abstract class ArmatureTransformerBuilder {
     private Collection<JointModifier> _parseModifiers(IDataPackObject object) {
         switch (object.type()) {
             case ARRAY: {
-                ArrayList<JointModifier> modifiers = new ArrayList<>();
+                var modifiers = new ArrayList<JointModifier>();
                 object.allValues().forEach(it -> {
                     var modifier = ArmatureSerializers.getModifier(it.stringValue());
                     if (modifier != null) {
@@ -203,7 +202,7 @@ public abstract class ArmatureTransformerBuilder {
                 return modifiers;
             }
             case DICTIONARY: {
-                ArrayList<JointModifier> modifiers = new ArrayList<>();
+                var modifiers = new ArrayList<JointModifier>();
                 object.entrySet().forEach(it -> {
 //                    Function<IDataPackObject, JointModifier> builder = PARAMETERIZED_MODIFIERS.get(it.getKey());
 //                    if (builder != null) {
@@ -225,7 +224,7 @@ public abstract class ArmatureTransformerBuilder {
     }
 
     private Collection<JointModifier> _parseTransformModifiers(IDataPackObject object) {
-        ITransformf transform = ArmatureSerializers.readTransform(object);
+        var transform = ArmatureSerializers.readTransform(object);
         if (transform.isIdentity()) {
             return Collections.emptyList();
         }
@@ -242,29 +241,29 @@ public abstract class ArmatureTransformerBuilder {
     }
 
     private void _parseTranslateModifiers(String name, IDataPackObject object) {
-        Vector3f value = ArmatureSerializers.readVector(object, Vector3f.ZERO);
+        var value = ArmatureSerializers.readVector(object, Vector3f.ZERO);
         if (value.equals(Vector3f.ZERO)) {
             return;
         }
-        ITransformf transform = SkinTransform.createTranslateTransform(value);
+        var transform = SkinTransform.createTranslateTransform(value);
         _addTransformModifier(name, new AfterTransformModifier(transform));
     }
 
     private void _parseRotateModifiers(String name, IDataPackObject object) {
-        Vector3f value = ArmatureSerializers.readVector(object, Vector3f.ZERO);
+        var value = ArmatureSerializers.readVector(object, Vector3f.ZERO);
         if (value.equals(Vector3f.ZERO)) {
             return;
         }
-        ITransformf transform = SkinTransform.createRotationTransform(value);
+        var transform = SkinTransform.createRotationTransform(value);
         _addTransformModifier(name, new AfterTransformModifier(transform));
     }
 
     private void _parseScaleModifiers(String name, IDataPackObject object) {
-        Vector3f value = ArmatureSerializers.readVector(object, Vector3f.ONE);
+        var value = ArmatureSerializers.readVector(object, Vector3f.ONE);
         if (value.equals(Vector3f.ONE)) {
             return;
         }
-        ITransformf transform = SkinTransform.createScaleTransform(value);
+        var transform = SkinTransform.createScaleTransform(value);
         _addTransformModifier(name, new AfterTransformModifier(transform));
     }
 

@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.network.RequestSkinPacket;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinServerType;
 import moe.plushie.armourers_workshop.init.ModConfig;
@@ -41,7 +42,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -100,7 +101,7 @@ public class SkinLoader {
 
     @Nullable
     public Skin getSkin(ItemStack itemStack) {
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        var descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
             return null;
         }
@@ -112,7 +113,7 @@ public class SkinLoader {
         if (identifier.isEmpty()) {
             return null;
         }
-        Entry entry = getEntry(identifier);
+        var entry = getEntry(identifier);
         if (entry != null) {
             return entry.get();
         }
@@ -124,19 +125,19 @@ public class SkinLoader {
         if (identifier.isEmpty()) {
             return null;
         }
-        Entry entry = getOrCreateEntry(identifier);
+        var entry = getOrCreateEntry(identifier);
         resumeRequest(entry, Method.SYNC);
         return entry.get();
     }
 
     public void loadSkin(String identifier, @Nullable IResultHandler<Skin> handler) {
-        Entry entry = getOrCreateEntry(identifier);
+        var entry = getOrCreateEntry(identifier);
         entry.listen(handler);
         resumeRequest(entry, Method.ASYNC);
     }
 
     public SkinDescriptor loadSkinFromDB(String identifier, ColorScheme scheme, boolean needCopy) {
-        Skin skin = loadSkin(identifier);
+        var skin = loadSkin(identifier);
         if (skin != null) {
             if (needCopy) {
                 identifier = saveSkin(identifier, skin);
@@ -172,7 +173,7 @@ public class SkinLoader {
         if (DataDomain.isDatabase(identifier)) {
             return identifier;
         }
-        String newIdentifier = LocalDataService.getInstance().saveSkinFile(skin);
+        var newIdentifier = LocalDataService.getInstance().saveSkinFile(skin);
         if (newIdentifier != null) {
             identifier = DataDomain.DATABASE.normalize(newIdentifier);
             addSkin(identifier, skin);
@@ -182,20 +183,20 @@ public class SkinLoader {
 
 
     public void addSkin(String identifier, Skin skin) {
-        Entry entry = getOrCreateEntry(identifier);
+        var entry = getOrCreateEntry(identifier);
         entry.accept(skin);
     }
 
     public void addSkin(String identifier, Skin skin, Exception exception) {
         ModLog.debug("'{}' => receive server skin, exception: {}", identifier, exception);
-        IResultHandler<Skin> resultHandler = waiting.remove(identifier);
+        var resultHandler = waiting.remove(identifier);
         if (resultHandler != null) {
             resultHandler.apply(skin, exception);
         }
     }
 
     public void removeSkin(String identifier) {
-        Entry entry = removeEntry(identifier);
+        var entry = removeEntry(identifier);
         if (entry != null && !entry.isCompleted()) {
             entry.abort(new CancellationException("removed by user"));
         }
@@ -248,12 +249,12 @@ public class SkinLoader {
                 return;
             }
         }
-        Session session = taskManager.get(DataDomain.byName(entry.identifier));
+        var session = taskManager.get(DataDomain.byName(entry.identifier));
         if (session == null) {
             entry.abort(new NoSuchElementException("can't found session"));
             return;
         }
-        Request req = session.request(method, entry.identifier);
+        var req = session.request(method, entry.identifier);
         req.delegate = entry;
         session.submit(req);
     }
@@ -308,7 +309,7 @@ public class SkinLoader {
             if (this.handlers.isEmpty()) {
                 return;
             }
-            ArrayList<IResultHandler<Skin>> handlers = this.handlers;
+            var handlers = this.handlers;
             this.handlers = new ArrayList<>();
             handlers.forEach(handler -> handler.apply(get(), exception));
         }
@@ -367,7 +368,7 @@ public class SkinLoader {
                 sendNotify();
                 return;
             }
-            String newIdentifier = LOADER.saveSkin(identifier, skin);
+            var newIdentifier = LOADER.saveSkin(identifier, skin);
             ModLog.debug("'{}' => did load global skin into database, target: '{}'", newIdentifier);
             descriptor = new SkinDescriptor(newIdentifier, skin.getType(), ColorScheme.EMPTY);
             sendNotify();
@@ -387,7 +388,7 @@ public class SkinLoader {
         }
 
         private void sendNotify() {
-            for (IResultHandler<SkinDescriptor> handler : pending) {
+            for (var handler : pending) {
                 handler.apply(descriptor, exception);
             }
             pending.clear();
@@ -443,7 +444,7 @@ public class SkinLoader {
         public abstract Skin load(Request request) throws Exception;
 
         public Request request(Method method, String identifier) {
-            Request task = getRequest(identifier);
+            var task = getRequest(identifier);
             task.elevate(method);
             return task;
         }
@@ -487,7 +488,7 @@ public class SkinLoader {
             ModLog.debug("'{}' => start load skin", request.identifier);
             request.isRunning = true;
             try {
-                Skin skin = load(request);
+                var skin = load(request);
                 request.accept(skin);
             } catch (Exception exception) {
                 exception.printStackTrace();
@@ -503,7 +504,7 @@ public class SkinLoader {
         private void syncRequest(Request request) {
             try {
                 ModLog.debug("'{}' => await load skin", request.identifier);
-                Semaphore semaphore = new Semaphore(0);
+                var semaphore = new Semaphore(0);
                 request.delegate.listen((skin, exception) -> semaphore.release());
                 semaphore.acquire();
                 ModLog.debug("'{}' => await load skin completed", request.identifier);
@@ -517,7 +518,7 @@ public class SkinLoader {
             if (requests.isEmpty()) {
                 return null;
             }
-            Request request = Collections.max(requests.values(), Comparator.comparingInt(t -> t.level));
+            var request = Collections.max(requests.values(), Comparator.comparingInt(t -> t.level));
             if (request != null) {
                 return requests.remove(request.identifier);
             }
@@ -540,9 +541,9 @@ public class SkinLoader {
             InputStream inputStream = null;
             try {
                 inputStream = from(request);
-                long startTime = System.currentTimeMillis();
-                Skin skin = SkinFileStreamUtils.loadSkinFromStream2(inputStream);
-                long totalTime = System.currentTimeMillis() - startTime;
+                var startTime = System.currentTimeMillis();
+                var skin = SkinFileStreamUtils.loadSkinFromStream2(inputStream);
+                var totalTime = System.currentTimeMillis() - startTime;
                 loadDidFinish(request, skin, totalTime);
                 return skin;
             } finally {
@@ -595,7 +596,7 @@ public class SkinLoader {
             } catch (Exception ignored) {
             }
             ModLog.debug("'{}' => start request server skin", request.identifier);
-            RequestSkinPacket req = new RequestSkinPacket(request.identifier);
+            var req = new RequestSkinPacket(request.identifier);
             NetworkManager.sendToServer(req);
             return await(request);
         }
@@ -669,7 +670,7 @@ public class SkinLoader {
 
         @Override
         public Skin load(Request request) throws Exception {
-            File cachedFile = caching.cachingFile(request.identifier);
+            var cachedFile = caching.cachingFile(request.identifier);
             if (cachedFile.exists()) {
                 try {
                     return caching.load(request);
@@ -688,8 +689,8 @@ public class SkinLoader {
 
         @Override
         public InputStream from(Request request) throws Exception {
-            String domain = DataDomain.getNamespace(request.identifier);
-            ISkinFileProvider loader = LOADER.loaders.get(domain);
+            var domain = DataDomain.getNamespace(request.identifier);
+            var loader = LOADER.loaders.get(domain);
             if (loader != null) {
                 return loader.loadSkin(DataDomain.getPath(request.identifier));
             }
@@ -709,7 +710,7 @@ public class SkinLoader {
         }
 
         public void add(String identifier, Skin skin) {
-            File cachedFile = cachingFile(identifier);
+            var cachedFile = cachingFile(identifier);
             if (skin == null || cachedFile == null) {
                 return;
             }
@@ -764,7 +765,7 @@ public class SkinLoader {
         }
 
         public void remove(String identifier) {
-            File cachedFile = cachingFile(identifier);
+            var cachedFile = cachingFile(identifier);
             if (cachedFile == null || !cachedFile.exists()) {
                 return;
             }
@@ -781,7 +782,7 @@ public class SkinLoader {
 
         @Override
         public InputStream from(Request request) throws Exception {
-            File cacheFile = cachingFile(request.identifier);
+            var cacheFile = cachingFile(request.identifier);
             if (cacheFile == null) {
                 throw new FileNotFoundException(request.identifier);
             }
@@ -789,30 +790,30 @@ public class SkinLoader {
             if (isGlobalLibraryResource(request.identifier)) {
                 return new FileInputStream(cacheFile);
             }
-            byte[] x0 = ModContext.x0();
-            byte[] x1 = ModContext.x1();
+            var x0 = ModContext.x0();
+            var x1 = ModContext.x1();
             if (x0 == null || x1 == null) {
                 throw new IllegalStateException("illegal context state");
             }
-            InputStream inputStream = new FileInputStream(cacheFile);
-            byte[] target = new byte[x0.length];
-            int targetSize = inputStream.read(target, 0, target.length);
+            var inputStream = new FileInputStream(cacheFile);
+            var target = new byte[x0.length];
+            var targetSize = inputStream.read(target, 0, target.length);
             if (targetSize != x0.length || !Arrays.equals(x0, target)) {
                 throw new IllegalStateException("illegal cache signature");
             }
-            SecretKeySpec key = new SecretKeySpec(x1, "AES");
-            Cipher aes = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            var key = new SecretKeySpec(x1, "AES");
+            var aes = Cipher.getInstance("AES/ECB/PKCS5Padding");
             aes.init(Cipher.DECRYPT_MODE, key);
             return new CipherInputStream(inputStream, aes);
         }
 
         private File cachingFile(String identifier) {
             File cacheFile = null;
-            UUID t0 = ModContext.t0();
-            String namespace = DataDomain.getNamespace(identifier);
+            var t0 = ModContext.t0();
+            var namespace = DataDomain.getNamespace(identifier);
             if (isGlobalLibraryResource(identifier) && ModConfig.Common.isGlobalSkinServer()) {
-                String path = DataDomain.getPath(identifier);
-                String domain = "00000000-0000-0000-0000-000000000000";
+                var path = DataDomain.getPath(identifier);
+                var domain = "00000000-0000-0000-0000-000000000000";
                 // for history reasons and performance optimization,
                 // when skin already downloaded we don't need preview skin.
                 cacheFile = cachingFile(domain, DataDomain.GLOBAL_SERVER.namespace(), path);
@@ -820,15 +821,15 @@ public class SkinLoader {
                     cacheFile = cachingFile(domain, namespace, path);
                 }
             } else if (t0 != null) {
-                String path = DataDomain.getPath(identifier);
+                var path = DataDomain.getPath(identifier);
                 cacheFile = cachingFile(t0.toString(), namespace, path);
             }
             return cacheFile;
         }
 
         private File cachingFile(String domain, String namespace, String identifier) {
-            File rootPath = new File(EnvironmentManager.getSkinCacheDirectory(), domain);
-            File localPath = new File(rootPath, namespace);
+            var rootPath = new File(EnvironmentManager.getSkinCacheDirectory(), domain);
+            var localPath = new File(rootPath, namespace);
             return new File(localPath, identifier + ".dat");
         }
 
@@ -845,26 +846,34 @@ public class SkinLoader {
 
         @Override
         public Skin load(Request request) throws Exception {
-            String[] parts = SkinCipher.getInstance().decrypt(DataDomain.getPath(request.identifier));
+            var parts = SkinCipher.getInstance().decrypt(DataDomain.getPath(request.identifier));
             if (parts.length != 2) {
                 throw new RuntimeException("invalid identifier format!");
             }
-            String id = parts[0];
-            String keyPath = parts[1];
-            Skin skin = LOADER.loadSkin(id);
+            var id = parts[0];
+            var keyPath = parts[1];
+            var skin = LOADER.loadSkin(id);
             if (skin == null || !skin.getSettings().isEditable()) {
                 throw new RuntimeException("can't load skin " + id);
             }
-            SkinPart skinPart = extractPart(keyPath, skin.getParts());
+            var skinPart = extractPart(keyPath, skin.getParts());
             if (skinPart == null) {
                 throw new RuntimeException("can't load part " + keyPath + " in " + id);
             }
-            Skin.Builder builder = new Skin.Builder(SkinTypes.ADVANCED);
+            var animations = new ArrayList<SkinAnimation>();
+            skin.getAnimations().forEach(animation -> {
+                var keys = animation.getValues().keySet();
+                if (containsPart(keys, skinPart)) {
+                    animations.add(animation);
+                }
+            });
+            var builder = new Skin.Builder(SkinTypes.ADVANCED);
             builder.paintData(skin.getPaintData());
             builder.version(skin.getVersion());
             builder.parts(Collections.singleton(skinPart));
             builder.settings(skin.getSettings().copy());
             builder.properties(skin.getProperties().copy());
+            builder.animations(animations);
             return builder.build();
         }
 
@@ -893,6 +902,19 @@ public class SkinLoader {
                 }
             }
             return null;
+        }
+
+        boolean containsPart(Set<String> names, SkinPart part) {
+            var name = part.getName();
+            if (name != null && names.contains(name)) {
+                return true;
+            }
+            for (var child : part.getParts()) {
+                if (containsPart(names, child)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

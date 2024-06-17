@@ -16,7 +16,7 @@ public class ClientMenuScreen extends ContainerMenuScreen<AbstractContainerMenu,
     }
 
     public static Inventory getEmptyInventory() {
-        Player player = EnvironmentManager.getPlayer();
+        var player = EnvironmentManager.getPlayer();
         if (player != null) {
             return player.getInventory();
         }

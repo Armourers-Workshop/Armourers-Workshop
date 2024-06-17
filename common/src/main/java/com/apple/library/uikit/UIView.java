@@ -103,7 +103,7 @@ public class UIView extends UIResponder implements ViewImpl {
         if (_flags.needsLayout) {
             layoutSubviews();
         }
-        for (UIView subview : subviews()) {
+        for (var subview : subviews()) {
             subview.layoutIfNeeded();
         }
         _flags.isDirty = false;
@@ -128,8 +128,8 @@ public class UIView extends UIResponder implements ViewImpl {
         if (!pointInside(point, event)) {
             return null;
         }
-        for (UIView subview : _invertedSubviews()) {
-            UIView hitView = subview.hitTest(convertPointToView(point, subview), event);
+        for (var subview : _invertedSubviews()) {
+            var hitView = subview.hitTest(convertPointToView(point, subview), event);
             if (hitView != null) {
                 return hitView;
             }
@@ -437,7 +437,7 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     private void _resizeSubviewsWithOldSize(CGRect oldValue, CGRect newValue) {
-        for (UIView subview : subviews()) {
+        for (var subview : subviews()) {
             subview._resizeWithOldSuperviewSize(oldValue, newValue);
         }
     }

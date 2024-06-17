@@ -7,9 +7,9 @@ import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractLivingEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
-import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.client.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import net.fabricmc.api.EnvType;
@@ -78,9 +78,9 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
         if (ModDebugger.mannequinCulling) {
             poseStack.pushPose();
             var box = entity.getBoundingBoxForCulling();
-            double tx = -box.minX - (box.maxX - box.minX) / 2;
-            double ty = -box.minY;
-            double tz = -box.minZ - (box.maxZ - box.minZ) / 2;
+            var tx = -box.minX - (box.maxX - box.minX) / 2;
+            var ty = -box.minY;
+            var tz = -box.minZ - (box.maxZ - box.minZ) / 2;
             poseStack.translate((float) tx, (float) ty, (float) tz);
             ShapeTesselator.stroke(box, UIColor.YELLOW, poseStack, bufferSource);
             poseStack.popPose();

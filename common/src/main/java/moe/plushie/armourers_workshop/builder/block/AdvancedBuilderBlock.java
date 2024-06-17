@@ -36,7 +36,7 @@ public class AdvancedBuilderBlock extends AbstractHorizontalBlock implements Abs
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        for (Direction direction : context.getNearestLookingDirections()) {
+        for (var direction : context.getNearestLookingDirections()) {
             if (direction.getAxis() == Direction.Axis.Y) {
                 return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
             } else {

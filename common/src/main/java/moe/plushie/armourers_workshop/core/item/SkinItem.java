@@ -36,17 +36,17 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        SkinSlotType slotType = SkinSlotType.byType(descriptor.getType());
+        var itemStack = player.getItemInHand(hand);
+        var descriptor = SkinDescriptor.of(itemStack);
+        var slotType = SkinSlotType.byType(descriptor.getType());
         if (descriptor.isEmpty() || slotType == null) {
             return InteractionResultHolder.pass(itemStack);
         }
-        SkinWardrobe wardrobe = SkinWardrobe.of(player);
+        var wardrobe = SkinWardrobe.of(player);
         if (wardrobe == null || !wardrobe.isEditable(player) || !wardrobe.isSupported(slotType)) {
             return InteractionResultHolder.pass(itemStack);
         }
-        int slot = wardrobe.getFreeSlot(slotType);
+        var slot = wardrobe.getFreeSlot(slotType);
         if (!wardrobe.getItem(slotType, slot).isEmpty()) {
             return InteractionResultHolder.pass(itemStack);
         }
@@ -55,7 +55,7 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
             return InteractionResultHolder.success(itemStack);
         }
         // we need consume item stack even in creative mode.
-        ItemStack resultStack = itemStack.copy();
+        var resultStack = itemStack.copy();
         wardrobe.setItem(slotType, slot, resultStack.split(1));
         wardrobe.broadcast();
         player.setItemInHand(hand, resultStack);
@@ -64,8 +64,8 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
 
     @Override
     public InteractionResult place(BlockPlaceContext context) {
-        ItemStack itemStack = context.getItemInHand();
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        var itemStack = context.getItemInHand();
+        var descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.getType() != SkinTypes.BLOCK) {
             return InteractionResult.PASS;
         }

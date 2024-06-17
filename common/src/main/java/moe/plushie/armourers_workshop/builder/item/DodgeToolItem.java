@@ -30,14 +30,14 @@ public class DodgeToolItem extends AbstractColoredToolItem implements IBlockPain
 
     @Override
     public IPaintToolAction createPaintToolAction(UseOnContext context) {
-        ItemStack itemStack = context.getItemInHand();
-        int intensity = itemStack.get(PaintingToolOptions.INTENSITY);
+        var itemStack = context.getItemInHand();
+        var intensity = itemStack.get(PaintingToolOptions.INTENSITY);
         return new CubePaintingEvent.BrightnessAction(intensity);
     }
 
     @Override
     public void appendSettingHoverText(ItemStack itemStack, List<Component> tooltips) {
-        int intensity = itemStack.get(PaintingToolOptions.INTENSITY);
+        var intensity = itemStack.get(PaintingToolOptions.INTENSITY);
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.intensity", intensity));
         super.appendSettingHoverText(itemStack, tooltips);
     }

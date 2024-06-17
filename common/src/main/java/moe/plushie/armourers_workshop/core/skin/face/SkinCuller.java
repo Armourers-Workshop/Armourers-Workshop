@@ -59,25 +59,25 @@ public class SkinCuller {
         // The texture cube does not support static cull,
         // the slices are designed to contain multiple cube types,
         // but the skin culler can't support it now.
-        Collection<ISkinCubeType> cubeTypes = cubeData.getCubeTypes();
+        var cubeTypes = cubeData.getCubeTypes();
         if (cubeTypes != null && cubeTypes.contains(SkinCubeTypes.TEXTURE)) {
             return allFaces(cubeData, bounds, partType);
         }
-        Partition partition = getPartition(partType);
-        IndexedMap indexedMap = new IndexedMap(cubeData, bounds);
-        Collection<SearchResult> results = partition.subdivide(bounds);
-        for (SearchResult result : results) {
+        var partition = getPartition(partType);
+        var indexedMap = new IndexedMap(cubeData, bounds);
+        var results = partition.subdivide(bounds);
+        for (var result : results) {
             result.cull(cubeData, indexedMap);
         }
         for (int i = 0; i < cubeData.getCubeTotal(); ++i) {
             SkinCube cube = null;
-            for (Direction dir : Direction.values()) {
-                for (SearchResult result : results) {
+            for (var dir : Direction.values()) {
+                for (var result : results) {
                     if (result.flags.get(i * DIRECTION_SIZE + dir.get3DDataValue())) {
                         if (cube == null) {
                             cube = cubeData.getCube(i);
                         }
-                        SkinCubeFace face = cube.getFace(dir);
+                        var face = cube.getFace(dir);
                         if (face != null) {
                             result.add(face);
                         }
@@ -89,11 +89,11 @@ public class SkinCuller {
     }
 
     public static Collection<SearchResult> allFaces(SkinCubes cubeData, Rectangle3i bounds, ISkinPartType partType) {
-        SearchResult result = new SearchResult(partType, bounds, Vector3i.ZERO);
+        var result = new SearchResult(partType, bounds, Vector3i.ZERO);
         for (int i = 0; i < cubeData.getCubeTotal(); ++i) {
-            SkinCube cube = cubeData.getCube(i);
-            for (Direction dir : Direction.values()) {
-                SkinCubeFace face = cube.getFace(dir);
+            var cube = cubeData.getCube(i);
+            for (var dir : Direction.values()) {
+                var face = cube.getFace(dir);
                 if (face != null) {
                     result.add(face);
                 }
@@ -103,18 +103,18 @@ public class SkinCuller {
     }
 
     public static ArrayList<SkinCubeFace> cullFaces(SkinCubes cubeData, Rectangle3i bounds) {
-        IndexedMap indexedMap = new IndexedMap(cubeData, bounds);
-        Rectangle3i rect = new Rectangle3i(0, 0, 0, bounds.getWidth(), bounds.getHeight(), bounds.getDepth());
-        BitSet flags = cullFaceFlags(cubeData, indexedMap, rect);
-        ArrayList<SkinCubeFace> faces = new ArrayList<>();
+        var indexedMap = new IndexedMap(cubeData, bounds);
+        var rect = new Rectangle3i(0, 0, 0, bounds.getWidth(), bounds.getHeight(), bounds.getDepth());
+        var flags = cullFaceFlags(cubeData, indexedMap, rect);
+        var faces = new ArrayList<SkinCubeFace>();
         for (int i = 0; i < cubeData.getCubeTotal(); ++i) {
             SkinCube cube = null;
-            for (Direction dir : Direction.values()) {
+            for (var dir : Direction.values()) {
                 if (flags.get(i * DIRECTION_SIZE + dir.get3DDataValue())) {
                     if (cube == null) {
                         cube = cubeData.getCube(i);
                     }
-                    SkinCubeFace face = cube.getFace(dir);
+                    var face = cube.getFace(dir);
                     if (face != null) {
                         faces.add(face);
                     }
@@ -125,26 +125,26 @@ public class SkinCuller {
     }
 
     private static BitSet cullFaceFlags(SkinCubes cubeData, IndexedMap map, Rectangle3i rect) {
-        BitSet flags = new BitSet(cubeData.getCubeTotal() * DIRECTION_SIZE);
-        Rectangle3i searchArea = new Rectangle3i(rect.getX() - 1, rect.getY() - 1, rect.getZ() - 1, rect.getWidth() + 2, rect.getHeight() + 2, rect.getDepth() + 2);
-        HashSet<Vector3i> closedSet = new HashSet<>();
-        ArrayDeque<Vector3i> openList = new ArrayDeque<>();
-        Vector3i start = searchArea.getOrigin();
+        var flags = new BitSet(cubeData.getCubeTotal() * DIRECTION_SIZE);
+        var searchArea = new Rectangle3i(rect.getX() - 1, rect.getY() - 1, rect.getZ() - 1, rect.getWidth() + 2, rect.getHeight() + 2, rect.getDepth() + 2);
+        var closedSet = new HashSet<Vector3i>();
+        var openList = new ArrayDeque<Vector3i>();
+        var start = searchArea.getOrigin();
         openList.add(start);
         closedSet.add(start);
         map.limit(rect);
         while (!openList.isEmpty()) {
-            ArrayList<Vector3i> pendingList = new ArrayList<>();
-            Vector3i pos = openList.poll();
-            for (Direction advance : Direction.values()) {
-                Vector3i pos1 = pos.relative(advance, 1);
+            var pendingList = new ArrayList<Vector3i>();
+            var pos = openList.poll();
+            for (var advance : Direction.values()) {
+                var pos1 = pos.relative(advance, 1);
                 int targetIndex = map.get(pos1);
                 if (targetIndex == -1) {
                     pendingList.add(pos1);
                     continue;
                 }
-                boolean isBlank = false;
-                ISkinCubeType targetCube = cubeData.getCube(targetIndex).getType();
+                var isBlank = false;
+                var targetCube = cubeData.getCube(targetIndex).getType();
                 if (targetCube.isGlass()) {
                     pendingList.add(pos1);
                     // when source cube and target cube is linked glass, ignore.
@@ -158,7 +158,7 @@ public class SkinCuller {
                 // so theory we should always use `advance.getOpposite()` get cube facing direction.
                 // but actually we reset the cube origin in the indexes, which causes the relationship
                 // between the forward direction and the facing is changed.
-                Direction facing = advance;
+                var facing = advance;
                 if (advance.getAxis() == Direction.Axis.Z) {
                     facing = advance.getOpposite();
                 }
@@ -184,7 +184,7 @@ public class SkinCuller {
 
         @Override
         public Collection<SearchResult> subdivide(Rectangle3i rect) {
-            Rectangle3i box = new Rectangle3i(0, 0, 0, rect.getWidth(), rect.getHeight(), rect.getDepth());
+            var box = new Rectangle3i(0, 0, 0, rect.getWidth(), rect.getHeight(), rect.getDepth());
             return Collections.singleton(new SearchResult(partType, box, Vector3i.ZERO));
         }
     }

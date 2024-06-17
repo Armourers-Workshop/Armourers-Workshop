@@ -24,7 +24,7 @@ public class RenderStateMixin implements IRenderAttachable {
         }
         // we still need to add a placeholder block to the vertex buffer,
         // otherwise RenderType.clearRenderState maybe ignore of the empty vertexes.
-        for (int i = 0; i < 4; ++i) {
+        for (var i = 0; i < 4; ++i) {
             buffer.vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
     }

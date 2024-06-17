@@ -57,10 +57,10 @@ public class SkinDocumentNode {
         this.scale = tag.getOptionalVector3f(Keys.SCALE, Vector3f.ONE);
         this.pivot = tag.getOptionalVector3f(Keys.PIVOT, Vector3f.ZERO);
         if (tag.contains(Keys.CHILDREN)) {
-            ListTag listTag = tag.getList(Keys.CHILDREN, Constants.TagFlags.COMPOUND);
-            int count = listTag.size();
-            for (int i = 0; i < count; ++i) {
-                SkinDocumentNode node = new SkinDocumentNode(listTag.getCompound(i));
+            var listTag = tag.getList(Keys.CHILDREN, Constants.TagFlags.COMPOUND);
+            var count = listTag.size();
+            for (var i = 0; i < count; ++i) {
+                var node = new SkinDocumentNode(listTag.getCompound(i));
                 node.parent = this;
                 this.children.add(node);
             }
@@ -94,7 +94,7 @@ public class SkinDocumentNode {
     }
 
     public void moveTo(SkinDocumentNode node, int toIndex) {
-        int index = children.indexOf(node);
+        var index = children.indexOf(node);
         if (index < 0 || index == toIndex) {
             return;
         }
@@ -121,7 +121,7 @@ public class SkinDocumentNode {
         name = value;
         cachedTypeName = null;
         if (listener != null) {
-            CompoundTag tag = new CompoundTag();
+            var tag = new CompoundTag();
             tag.putOptionalString(Keys.NAME, value, null);
             listener.documentDidUpdateNode(this, tag);
         }
@@ -134,8 +134,8 @@ public class SkinDocumentNode {
         if (cachedTypeName != null) {
             return cachedTypeName;
         }
-        Component lhs = TranslateUtils.title("documentType.armourers_workshop.node.root");
-        Component rhs = TranslateUtils.title("documentType.armourers_workshop.node." + id);
+        var lhs = TranslateUtils.title("documentType.armourers_workshop.node.root");
+        var rhs = TranslateUtils.title("documentType.armourers_workshop.node." + id);
         if (type != SkinPartTypes.ADVANCED) {
             rhs = TranslateUtils.Name.of(type);
         }
@@ -155,7 +155,7 @@ public class SkinDocumentNode {
     public void setSkin(SkinDescriptor value) {
         skin = value;
         if (listener != null) {
-            CompoundTag tag = new CompoundTag();
+            var tag = new CompoundTag();
             tag.putOptionalSkinDescriptor(Keys.SKIN, value, null);
             listener.documentDidUpdateNode(this, tag);
         }
@@ -169,7 +169,7 @@ public class SkinDocumentNode {
         location = value;
         transform = null;
         if (listener != null) {
-            CompoundTag tag = new CompoundTag();
+            var tag = new CompoundTag();
             tag.putOptionalVector3f(Keys.LOCATION, value, null);
             listener.documentDidUpdateNode(this, tag);
         }
@@ -183,7 +183,7 @@ public class SkinDocumentNode {
         rotation = value;
         transform = null;
         if (listener != null) {
-            CompoundTag tag = new CompoundTag();
+            var tag = new CompoundTag();
             tag.putOptionalVector3f(Keys.ROTATION, value, null);
             listener.documentDidUpdateNode(this, tag);
         }
@@ -197,7 +197,7 @@ public class SkinDocumentNode {
         scale = new Vector3f(value, value, value);
         transform = null;
         if (listener != null) {
-            CompoundTag tag = new CompoundTag();
+            var tag = new CompoundTag();
             tag.putOptionalVector3f(Keys.SCALE, scale, null);
             listener.documentDidUpdateNode(this, tag);
         }
@@ -211,7 +211,7 @@ public class SkinDocumentNode {
         pivot = value;
         transform = null;
         if (listener != null) {
-            CompoundTag tag = new CompoundTag();
+            var tag = new CompoundTag();
             tag.putOptionalVector3f(Keys.PIVOT, value, null);
             listener.documentDidUpdateNode(this, tag);
         }
@@ -226,8 +226,8 @@ public class SkinDocumentNode {
         if (transform != null) {
             return transform;
         }
-        Vector3f translate = this.location;
-        Vector3f pivot = this.pivot;
+        var translate = this.location;
+        var pivot = this.pivot;
         if (!translate.equals(Vector3f.ZERO)) {
             translate = new Vector3f(-translate.getX(), -translate.getY(), translate.getZ());
         }
@@ -245,7 +245,7 @@ public class SkinDocumentNode {
     public void setEnabled(boolean value) {
         isEnabled = value;
         if (listener != null) {
-            CompoundTag tag = new CompoundTag();
+            var tag = new CompoundTag();
             tag.putBoolean(Keys.ENABLED, value);
             listener.documentDidUpdateNode(this, tag);
         }
@@ -258,7 +258,7 @@ public class SkinDocumentNode {
     public void setMirror(boolean value) {
         isMirror = value;
         if (listener != null) {
-            CompoundTag tag = new CompoundTag();
+            var tag = new CompoundTag();
             tag.putBoolean(Keys.MIRROR, value);
             listener.documentDidUpdateNode(this, tag);
         }
@@ -318,7 +318,7 @@ public class SkinDocumentNode {
 //    }
 
     public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
+        var tag = new CompoundTag();
         tag.putString(Keys.UID, id);
         tag.putOptionalString(Keys.NAME, name, null);
         tag.putOptionalType(Keys.TYPE, type, SkinPartTypes.ADVANCED);
@@ -328,7 +328,7 @@ public class SkinDocumentNode {
         tag.putOptionalVector3f(Keys.SCALE, scale, Vector3f.ONE);
         tag.putOptionalVector3f(Keys.PIVOT, pivot, Vector3f.ZERO);
         if (!children.isEmpty()) {
-            ListTag listTag = new ListTag();
+            var listTag = new ListTag();
             children.forEach(it -> listTag.add(it.serializeNBT()));
             tag.put(Keys.CHILDREN, listTag);
         }
@@ -338,31 +338,31 @@ public class SkinDocumentNode {
     }
 
     public void deserializeNBT(CompoundTag tag) {
-        SkinDescriptor newSkin = tag.getOptionalSkinDescriptor(Keys.SKIN, null);
+        var newSkin = tag.getOptionalSkinDescriptor(Keys.SKIN, null);
         if (newSkin != null) {
             skin = newSkin;
         }
-        Vector3f newLocation = tag.getOptionalVector3f(Keys.LOCATION, null);
+        var newLocation = tag.getOptionalVector3f(Keys.LOCATION, null);
         if (newLocation != null) {
             location = newLocation;
             transform = null;
         }
-        Vector3f newRotation = tag.getOptionalVector3f(Keys.ROTATION, null);
+        var newRotation = tag.getOptionalVector3f(Keys.ROTATION, null);
         if (newRotation != null) {
             rotation = newRotation;
             transform = null;
         }
-        Vector3f newScale = tag.getOptionalVector3f(Keys.SCALE, null);
+        var newScale = tag.getOptionalVector3f(Keys.SCALE, null);
         if (newScale != null) {
             scale = newScale;
             transform = null;
         }
-        Vector3f newPivot = tag.getOptionalVector3f(Keys.PIVOT, null);
+        var newPivot = tag.getOptionalVector3f(Keys.PIVOT, null);
         if (newPivot != null) {
             pivot = newPivot;
             transform = null;
         }
-        String newName = tag.getOptionalString(Keys.NAME, null);
+        var newName = tag.getOptionalString(Keys.NAME, null);
         if (newName != null) {
             name = newName;
         }

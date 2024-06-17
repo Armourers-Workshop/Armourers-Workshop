@@ -22,11 +22,11 @@ public abstract class AbstractContainerMenu extends AbstractContainerMenuImpl {
     }
 
     public ItemStack quickMoveStack(Player player, int index, int slotSize) {
-        Slot slot = this.slots.get(index);
+        var slot = this.slots.get(index);
         if (!slot.hasItem()) {
             return ItemStack.EMPTY;
         }
-        ItemStack itemStack = slot.getItem();
+        var itemStack = slot.getItem();
         if (index >= 36) {
             if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
                 return ItemStack.EMPTY;
@@ -46,11 +46,11 @@ public abstract class AbstractContainerMenu extends AbstractContainerMenuImpl {
     }
 
     protected void addPlayerSlots(Container inventory, int slotsX, int slotsY, ISlotBuilder builder) {
-        for (int col = 0; col < 9; ++col) {
+        for (var col = 0; col < 9; ++col) {
             this.addSlot(builder.create(inventory, col, slotsX + col * 18, slotsY + 58));
         }
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
+        for (var row = 0; row < 3; ++row) {
+            for (var col = 0; col < 9; ++col) {
                 this.addSlot(builder.create(inventory, col + row * 9 + 9, slotsX + col * 18, slotsY + row * 18));
             }
         }

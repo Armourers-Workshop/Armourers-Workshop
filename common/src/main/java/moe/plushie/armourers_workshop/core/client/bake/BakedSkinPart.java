@@ -1,15 +1,13 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
-import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -50,11 +48,11 @@ public class BakedSkinPart {
         if (descriptor.isEmpty() || scheme.isEmpty()) {
             return null;
         }
-        boolean needsEntityTexture = false;
-        ArrayList<Object> requirements = new ArrayList<>();
-        for (ISkinPaintType paintType : descriptor.getPaintTypes()) {
+        var needsEntityTexture = false;
+        var requirements = new ArrayList<Object>();
+        for (var paintType : descriptor.getPaintTypes()) {
             if (paintType.getDyeType() != null) {
-                IPaintColor resolvedColor = scheme.getResolvedColor(paintType);
+                var resolvedColor = scheme.getResolvedColor(paintType);
                 requirements.add(paintType.getId());
                 requirements.add(resolvedColor);
                 // we must know then texture info for the resolved color.
@@ -79,6 +77,14 @@ public class BakedSkinPart {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        String name = part.getName();
+        if (name == null) {
+            name = part.getType().getName();
+        }
+        return name;
     }
 
     public SkinPart getPart() {

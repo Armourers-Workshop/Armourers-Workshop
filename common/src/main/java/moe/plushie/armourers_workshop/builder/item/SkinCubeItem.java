@@ -37,9 +37,9 @@ public class SkinCubeItem extends AbstractBlockItem implements IItemColorProvide
 
     @Override
     public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity blockEntity, UseOnContext context) {
-        ItemStack itemStack = context.getItemInHand();
-        if (blockEntity instanceof IPaintProvider) {
-            setItemColor(itemStack, ((IPaintProvider) blockEntity).getColor());
+        var itemStack = context.getItemInHand();
+        if (blockEntity instanceof IPaintProvider provider) {
+            setItemColor(itemStack, provider.getColor());
             return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.PASS;
@@ -48,8 +48,8 @@ public class SkinCubeItem extends AbstractBlockItem implements IItemColorProvide
     @Override
     protected boolean updateCustomBlockEntityTag(BlockPos pos, Level level, @Nullable Player player, ItemStack itemStack, BlockState blockState) {
         // sync the all faced color into block.
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        CompoundTag entityTag = itemStack.get(ModDataComponents.BLOCK_ENTITY_DATA.get());
+        var blockEntity = level.getBlockEntity(pos);
+        var entityTag = itemStack.get(ModDataComponents.BLOCK_ENTITY_DATA.get());
         if (entityTag != null && blockEntity != null) {
             CompoundTag newNBT = blockEntity.saveFullData(level.registryAccess());
             newNBT.put(Constants.Key.COLOR, entityTag.getCompound(Constants.Key.COLOR));
@@ -62,7 +62,7 @@ public class SkinCubeItem extends AbstractBlockItem implements IItemColorProvide
     @Environment(EnvType.CLIENT)
     public void appendHoverText(ItemStack itemStack, List<Component> tooltips, ITooltipContext context) {
         super.appendHoverText(itemStack, tooltips, context);
-        BlockPaintColor paintColor = getItemColors(itemStack);
+        var paintColor = getItemColors(itemStack);
         if (paintColor != null && paintColor.isPureColor()) {
             tooltips.addAll(ColorUtils.getColorTooltips(paintColor.get(Direction.NORTH), true));
         }
@@ -70,9 +70,9 @@ public class SkinCubeItem extends AbstractBlockItem implements IItemColorProvide
 
     @Override
     public void setItemColor(ItemStack itemStack, IPaintColor paintColor) {
-        CompoundTag entityTag = new CompoundTag();
-        BlockPaintColor color = new BlockPaintColor(paintColor);
-        CompoundTag oldEntityTag = itemStack.get(ModDataComponents.BLOCK_ENTITY_DATA.get());
+        var entityTag = new CompoundTag();
+        var color = new BlockPaintColor(paintColor);
+        var oldEntityTag = itemStack.get(ModDataComponents.BLOCK_ENTITY_DATA.get());
         if (oldEntityTag != null) {
             entityTag.merge(oldEntityTag);
         }

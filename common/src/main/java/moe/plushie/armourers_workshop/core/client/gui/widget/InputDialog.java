@@ -30,7 +30,7 @@ public class InputDialog extends ConfirmDialog implements UITextFieldDelegate {
     @Override
     public void layoutSubviews() {
         super.layoutSubviews();
-        CGRect rect = bounds();
+        var rect = bounds();
         textField.setFrame(new CGRect(10, 30, rect.width - 20, 20));
         messageLabel.setFrame(new CGRect(10, 58, rect.width - 20, 20));
     }

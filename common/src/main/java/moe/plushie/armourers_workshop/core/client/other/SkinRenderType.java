@@ -99,7 +99,7 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
 
     public static int getOrdering(RenderType renderType) {
         int index = 1;
-        for (RenderType target : SkinRenderType.RENDER_ORDERING_FACES) {
+        for (var target : SkinRenderType.RENDER_ORDERING_FACES) {
             if (target == renderType) {
                 return index;
             }

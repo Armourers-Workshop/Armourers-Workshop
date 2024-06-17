@@ -26,8 +26,8 @@ public class BlockPermission extends Permission {
     }
 
     public boolean accept(BlockEntity blockEntity, Player player) {
-        BlockState state = blockEntity.getBlockState();
-        IPermissionNode node = get(TypedRegistry.findKey(state.getBlock()));
+        var state = blockEntity.getBlockState();
+        var node = get(TypedRegistry.findKey(state.getBlock()));
         return eval(node, player, new BlockPermissionContext(player, blockEntity.getBlockPos(), state, null));
     }
 }

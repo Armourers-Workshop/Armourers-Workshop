@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import moe.plushie.armourers_workshop.api.common.IItemStackProvider;
 import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
 import moe.plushie.armourers_workshop.api.data.IAssociatedContainerKey;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
@@ -10,12 +9,14 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.client.animation.AnimationManager;
+import moe.plushie.armourers_workshop.core.client.animation.AnimationState;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.BakedSkinAnimation;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.skinrender.patch.EntityRenderPatch;
 import moe.plushie.armourers_workshop.core.client.skinrender.patch.EpicFightEntityRendererPatch;
-import moe.plushie.armourers_workshop.core.data.ItemStackProvider;
 import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
@@ -33,7 +34,6 @@ import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -57,6 +57,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
 
     private final HashMap<ISkinPaintType, IPaintColor> dyeColors = new HashMap<>();
     private final HashMap<ISkinPaintType, IPaintColor> lastDyeColors = new HashMap<>();
+    private final HashMap<SkinDescriptor, BakedSkin> lastActiveSkins = new HashMap<>();
 
     private final NonNullList<ItemStack> lastWardrobeSlots = NonNullList.withSize(SkinSlotType.getTotalSize(), ItemStack.EMPTY);
     private final ArrayList<ItemStack> lastEquipmentSlots = new ArrayList<>();
@@ -66,7 +67,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
     private final HashSet<ISkinPartType> lastSkinPartTypes = new HashSet<>();
 
     private final Ticket loadTicket = Ticket.wardrobe();
-    private final IItemStackProvider itemProvider = ItemStackProvider.getInstance();
+    private final AnimationManager animationManager = new AnimationManager();
     private final SkinOverriddenManager overriddenManager = new SkinOverriddenManager();
     private final DataStorage dataStorage = new DataStorage();
 
@@ -108,6 +109,8 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
             this.reload(entity);
             this.lastVersion = this.version;
         }
+        // check animation play status.
+        this.animationManager.tick();
     }
 
     protected void reload(Entity entity) {
@@ -130,11 +133,13 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
                 isListening = true;
             }
         }
+
+        animationManager.load(lastActiveSkins);
     }
 
     protected void loadEquipmentSlots(Entity entity) {
         int index = 0;
-        for (ItemStack itemStack : itemProvider.getAllSlots(entity)) {
+        for (var itemStack : entity.getOverrideSlots()) {
             if (index >= lastEquipmentSlots.size()) {
                 lastEquipmentSlots.add(itemStack);
                 version += 1;
@@ -151,22 +156,22 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
     }
 
     protected void loadWardrobeSlots(Entity entity) {
-        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        var wardrobe = SkinWardrobe.of(entity);
         if (wardrobe == null) {
             this.isRenderExtra = false;
             this.wardrobeProfile = null;
             return;
         }
-        Container inventory = wardrobe.getInventory();
-        int size = inventory.getContainerSize();
-        for (int index = 0; index < size; ++index) {
-            ItemStack itemStack = inventory.getItem(index);
+        var inventory = wardrobe.getInventory();
+        var size = inventory.getContainerSize();
+        for (var index = 0; index < size; ++index) {
+            var itemStack = inventory.getItem(index);
             if (lastVersion != version || lastWardrobeSlots.get(index) != itemStack) {
                 lastWardrobeSlots.set(index, itemStack);
                 version += 1;
             }
         }
-        BitSet flags = wardrobe.getFlags();
+        var flags = wardrobe.getFlags();
         if (!lastWardrobeFlags.equals(flags)) {
             lastWardrobeFlags.clear();
             lastWardrobeFlags.or(flags);
@@ -181,6 +186,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
 
         lastSkinTypes.clear();
         lastSkinPartTypes.clear();
+        lastActiveSkins.clear();
 
         dyeColors.clear();
         missingSkins.clear();
@@ -196,8 +202,8 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
         if (wardrobeProfile == null) {
             return;
         }
-        for (ISkinPaintType paintType : SkinSlotType.getSupportedPaintTypes()) {
-            ItemStack itemStack = lastWardrobeSlots.get(SkinSlotType.getDyeSlotIndex(paintType));
+        for (var paintType : SkinSlotType.getSupportedPaintTypes()) {
+            var itemStack = lastWardrobeSlots.get(SkinSlotType.getDyeSlotIndex(paintType));
             consumer.accept(paintType, itemStack);
         }
         if (!lastDyeColors.equals(dyeColors)) {
@@ -212,7 +218,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
 
     private void loadArmorSlots(Entity entity, ItemConsumer consumer) {
         int i = 0;
-        for (var itemStack : itemProvider.getArmorSlots(entity)) {
+        for (var itemStack : entity.getOverrideArmorSlots()) {
             consumer.accept(itemStack, 400 + i++, false);
         }
         // ignore when wardrobe profile load fails.
@@ -233,7 +239,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
 
     private void loadHandSlots(Entity entity, ItemConsumer consumer) {
         int i = 0;
-        for (var itemStack : itemProvider.getHandSlots(entity)) {
+        for (var itemStack : entity.getOverrideHandSlots()) {
             consumer.accept(itemStack, 400 + i++, true);
         }
     }
@@ -266,6 +272,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
             return;
         }
         var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
+        lastActiveSkins.put(descriptor, bakedSkin);
         if (bakedSkin == null) {
             missingSkins.add(descriptor.getIdentifier());
             return;
@@ -378,6 +385,10 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
         return lastSkinPartTypes;
     }
 
+    public AnimationManager getAnimationManager() {
+        return animationManager;
+    }
+
     @Override
     public <T> T getAssociatedObject(IAssociatedContainerKey<T> key) {
         return dataStorage.getAssociatedObject(key);
@@ -421,7 +432,7 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
             if (entityScheme.isEmpty()) {
                 return skinScheme;
             }
-            ColorScheme bakedScheme = skinScheme.copy();
+            var bakedScheme = skinScheme.copy();
             bakedScheme.setReference(entityScheme);
             return bakedScheme;
         }

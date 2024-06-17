@@ -39,7 +39,7 @@ public abstract class AbstractHorizontalBlock extends AbstractHorizontalBlockImp
 
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        for (Direction direction : context.getNearestLookingDirections()) {
+        for (var direction : context.getNearestLookingDirections()) {
             if (direction.getAxis() == Direction.Axis.Y) {
                 return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
             } else {

@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.skin.document;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.api.skin.ISkinEquipmentType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -81,13 +81,13 @@ public class SkinDocumentType implements IRegistryEntry {
     }
 
     private ArrayList<ISkinPartType> generatePartTypes(ISkinType type) {
-        ArrayList<ISkinPartType> partTypes = new ArrayList<>();
-        for (ISkinPartType partType : type.getParts()) {
+        var partTypes = new ArrayList<ISkinPartType>();
+        for (var partType : type.getParts()) {
             // manually disabled parts.
             if (DISABLED_PARTS.contains(partType)) {
                 continue;
             }
-            Collection<ISkinPartType> linkedParts = LINKED_PARTS.get(partType);
+            var linkedParts = LINKED_PARTS.get(partType);
             partTypes.add(partType);
             if (linkedParts != null) {
                 partTypes.addAll(linkedParts);

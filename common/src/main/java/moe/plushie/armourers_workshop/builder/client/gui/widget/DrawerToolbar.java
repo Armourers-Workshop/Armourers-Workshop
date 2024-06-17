@@ -46,8 +46,8 @@ public class DrawerToolbar extends UIView implements UIScrollViewDelegate {
     }
 
     public void addPage(UIView contentView, UIBarItem barItem) {
-        UIEdgeInsets edg = barItem.imageInsets();
-        UIButton badgeView = new UIButton(new CGRect(0, 0, getBarSize(), getBarSize()));
+        var edg = barItem.imageInsets();
+        var badgeView = new UIButton(new CGRect(0, 0, getBarSize(), getBarSize()));
         badgeView.setImage(barItem.getImage(), UIControl.State.NORMAL);
         badgeView.setImageEdgeInsets(new UIEdgeInsets(edg.top + 2, edg.left + 2, edg.bottom + 2, edg.right + 0));
         badgeView.setBackgroundImage(badgeBackgroundImage, UIControl.State.ALL);
@@ -64,7 +64,7 @@ public class DrawerToolbar extends UIView implements UIScrollViewDelegate {
     public void layoutSubviews() {
         super.layoutSubviews();
         float y = 0;
-        for (UIButton entity : entities) {
+        for (var entity : entities) {
             if (y != 0) {
                 y += 5;
             }
@@ -81,7 +81,7 @@ public class DrawerToolbar extends UIView implements UIScrollViewDelegate {
     }
 
     protected void switchToPage(UIControl sender, UIView contentView) {
-        for (UIButton entity : entities) {
+        for (var entity : entities) {
             entity.setSelected(false);
         }
         sender.setSelected(true);
@@ -91,8 +91,8 @@ public class DrawerToolbar extends UIView implements UIScrollViewDelegate {
         displayView = contentView;
         if (displayView != null) {
             containerView.addSubview(displayView);
-            CGRect bounds = containerView.bounds();
-            CGSize size = displayView.sizeThatFits(bounds.size());
+            var bounds = containerView.bounds();
+            var size = displayView.sizeThatFits(bounds.size());
             displayView.setFrame(new CGRect(0, 0, bounds.width, Math.max(bounds.height, size.height)));
             containerView.setContentSize(new CGSize(0, size.height));
             containerView.setContentOffset(new CGPoint(0, 0));

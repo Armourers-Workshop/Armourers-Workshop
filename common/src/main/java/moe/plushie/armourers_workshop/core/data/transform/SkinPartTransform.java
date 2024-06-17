@@ -19,11 +19,11 @@ public class SkinPartTransform implements ISkinTransform {
         if (quadsTransform != null) {
             transforms.add(quadsTransform);
         }
-        ISkinTransform wingsTransform = getWingsTransform(part);
+        var wingsTransform = getWingsTransform(part);
         if (wingsTransform != null) {
             transforms.add(wingsTransform);
         }
-        ISkinTransform partTransform = part.getTransform();
+        var partTransform = part.getTransform();
         if (partTransform != null) {
             transforms.add(partTransform);
         }
@@ -34,11 +34,11 @@ public class SkinPartTransform implements ISkinTransform {
     }
 
     private ISkinTransform getWingsTransform(SkinPart part) {
-        ISkinPartType partType = part.getType();
+        var partType = part.getType();
         if (!(partType instanceof ICanRotation)) {
             return null;
         }
-        Collection<SkinMarker> markers = part.getMarkers();
+        var markers = part.getMarkers();
         if (markers == null || markers.isEmpty()) {
             return null;
         }
@@ -47,7 +47,7 @@ public class SkinPartTransform implements ISkinTransform {
 
     @Override
     public void apply(IPoseStack poseStack) {
-        for (ISkinTransform transform : transforms) {
+        for (var transform : transforms) {
             transform.apply(poseStack);
         }
     }

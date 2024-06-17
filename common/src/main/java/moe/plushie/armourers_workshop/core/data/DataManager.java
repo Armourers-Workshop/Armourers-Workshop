@@ -149,7 +149,7 @@ public class DataManager {
 //    }
 
     private InputStream loadStreamFromPath(String identifier) throws IOException {
-        File file = new File(EnvironmentManager.getSkinLibraryDirectory(), identifier);
+        var file = new File(EnvironmentManager.getSkinLibraryDirectory(), identifier);
         if (file.exists()) {
             return new FileInputStream(file);
         }

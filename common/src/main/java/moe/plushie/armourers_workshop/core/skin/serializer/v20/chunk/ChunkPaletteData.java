@@ -7,10 +7,10 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
+import moe.plushie.armourers_workshop.core.texture.TextureOptions;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SliceRandomlyAccessor;
 import moe.plushie.armourers_workshop.utils.math.Vector2f;
-import moe.plushie.armourers_workshop.core.texture.TextureOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class ChunkPaletteData implements ChunkVariable {
         if (paintColors == null || paintColorAccessor == null) {
             return PaintColor.WHITE;
         }
-        IPaintColor paintColor = paintColors[index];
+        var paintColor = paintColors[index];
         if (paintColor != null) {
             return paintColor;
         }
@@ -103,10 +103,10 @@ public class ChunkPaletteData implements ChunkVariable {
             return true;
         }
         // an optimize to reduce order dependence on HashMap.
-        int offset = 0;
-        ArrayList<ChunkColorSection> sortedSections = new ArrayList<>(sections.values());
+        var offset = 0;
+        var sortedSections = new ArrayList<>(sections.values());
         sortedSections.sort(Comparator.comparing(this::_key));
-        for (ChunkColorSection section : sortedSections) {
+        for (var section : sortedSections) {
             // we can't freeze multiple times.
             if (!section.isResolved()) {
                 section.freeze(offset);
@@ -116,7 +116,7 @@ public class ChunkPaletteData implements ChunkVariable {
         colorUsedIndex = _used(offset);
         textureUsedIndex = 4;
         flags = (colorUsedIndex & 0x0f) | ((textureUsedIndex & 0x0f) << 4);
-        for (ChunkColorSection section : sortedSections) {
+        for (var section : sortedSections) {
             section.freezeIndex(colorUsedIndex, textureUsedIndex);
         }
         resolved = true;
@@ -129,7 +129,7 @@ public class ChunkPaletteData implements ChunkVariable {
         flags = stream.readVarInt();
         reserved = stream.readVarInt();
         while (true) {
-            ChunkColorSection section = readSectionFromStream(stream);
+            var section = readSectionFromStream(stream);
             if (section == null) {
                 break;
             }
@@ -151,24 +151,24 @@ public class ChunkPaletteData implements ChunkVariable {
     @Override
     public void writeToStream(IOutputStream stream) throws IOException {
         // we need to make sure section in offset order.
-        ArrayList<ChunkColorSection> sortedSections = new ArrayList<>(sections.values());
+        var sortedSections = new ArrayList<>(sections.values());
         sortedSections.sort(Comparator.comparing(ChunkColorSection::getStartIndex));
         stream.writeVarInt(flags);
         stream.writeVarInt(reserved);
-        for (ChunkColorSection section : sortedSections) {
+        for (var section : sortedSections) {
             writeSectionToStream(section, stream);
         }
         writeSectionToStream(null, stream);
     }
 
     private ChunkColorSection readSectionFromStream(IInputStream stream) throws IOException {
-        int total = stream.readVarInt();
+        var total = stream.readVarInt();
         if (total == 0) {
             return null;
         }
-        ISkinPaintType paintType = SkinPaintTypes.byId(stream.readByte());
-        int usedBytes = stream.readByte();
-        ChunkColorSection.Immutable section = new ChunkColorSection.Immutable(total, usedBytes, paintType);
+        var paintType = SkinPaintTypes.byId(stream.readByte());
+        var usedBytes = stream.readByte();
+        var section = new ChunkColorSection.Immutable(total, usedBytes, paintType);
         section.readFromStream(stream);
         return section;
     }

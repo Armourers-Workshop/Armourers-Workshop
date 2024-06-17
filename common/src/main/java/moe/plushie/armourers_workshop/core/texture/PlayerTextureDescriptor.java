@@ -151,8 +151,7 @@ public class PlayerTextureDescriptor {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PlayerTextureDescriptor that = (PlayerTextureDescriptor) o;
+        if (!(o instanceof PlayerTextureDescriptor that)) return false;
         return source == that.source && Objects.equals(value, that.value);
     }
 

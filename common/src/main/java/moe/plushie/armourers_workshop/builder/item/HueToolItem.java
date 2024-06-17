@@ -34,18 +34,18 @@ public class HueToolItem extends PaintbrushItem {
 
     @Override
     public IPaintToolAction createPaintToolAction(UseOnContext context) {
-        ItemStack itemStack = context.getItemInHand();
-        IPaintColor paintColor = getItemColor(itemStack, PaintColor.WHITE);
-        boolean hue = itemStack.get(PaintingToolOptions.CHANGE_HUE);
-        boolean saturation = itemStack.get(PaintingToolOptions.CHANGE_SATURATION);
-        boolean brightness = itemStack.get(PaintingToolOptions.CHANGE_BRIGHTNESS);
-        boolean paintType = itemStack.get(PaintingToolOptions.CHANGE_PAINT_TYPE);
+        var itemStack = context.getItemInHand();
+        var paintColor = getItemColor(itemStack, PaintColor.WHITE);
+        var hue = itemStack.get(PaintingToolOptions.CHANGE_HUE);
+        var saturation = itemStack.get(PaintingToolOptions.CHANGE_SATURATION);
+        var brightness = itemStack.get(PaintingToolOptions.CHANGE_BRIGHTNESS);
+        var paintType = itemStack.get(PaintingToolOptions.CHANGE_PAINT_TYPE);
         return new CubePaintingEvent.HueAction(paintColor, hue, saturation, brightness, paintType);
     }
 
     @Override
     public void appendColorHoverText(ItemStack itemStack, List<Component> tooltips) {
-        IPaintColor paintColor = getItemColor(itemStack, PaintColor.WHITE);
+        var paintColor = getItemColor(itemStack, PaintColor.WHITE);
         tooltips.addAll(ColorUtils.getColorTooltips(paintColor, true));
     }
 

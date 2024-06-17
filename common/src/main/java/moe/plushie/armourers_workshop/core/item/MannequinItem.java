@@ -33,13 +33,13 @@ public class MannequinItem extends FlavouredItem {
     }
 
     public static ItemStack of(@Nullable Player player, float scale) {
-        ItemStack itemStack = new ItemStack(ModItems.MANNEQUIN.get());
-        CompoundTag entityTag = new CompoundTag();
+        var itemStack = new ItemStack(ModItems.MANNEQUIN.get());
+        var entityTag = new CompoundTag();
         if (scale != 1.0f) {
             entityTag.putFloat(Constants.Key.ENTITY_SCALE, scale);
         }
         if (player != null) {
-            PlayerTextureDescriptor descriptor = PlayerTextureDescriptor.fromPlayer(player);
+            var descriptor = PlayerTextureDescriptor.fromPlayer(player);
             entityTag.put(Constants.Key.ENTITY_TEXTURE, descriptor.serializeNBT());
         }
         if (!entityTag.isEmpty()) {
@@ -51,7 +51,7 @@ public class MannequinItem extends FlavouredItem {
     }
 
     public static boolean isSmall(ItemStack itemStack) {
-        CompoundTag entityTag = itemStack.get(ModDataComponents.ENTITY_DATA.get());
+        var entityTag = itemStack.get(ModDataComponents.ENTITY_DATA.get());
         if (entityTag != null) {
             return entityTag.getBoolean(Constants.Key.ENTITY_IS_SMALL);
         }
@@ -59,7 +59,7 @@ public class MannequinItem extends FlavouredItem {
     }
 
     public static float getScale(ItemStack itemStack) {
-        CompoundTag entityTag = itemStack.get(ModDataComponents.ENTITY_DATA.get());
+        var entityTag = itemStack.get(ModDataComponents.ENTITY_DATA.get());
         if (entityTag == null || !entityTag.contains(Constants.Key.ENTITY_SCALE, Constants.TagFlags.FLOAT)) {
             return 1.0f;
         }
@@ -99,7 +99,7 @@ public class MannequinItem extends FlavouredItem {
 
     @Override
     public String getDescriptionId(ItemStack itemStack) {
-        float scale = getScale(itemStack);
+        var scale = getScale(itemStack);
         if (scale <= 0.5f) {
             return super.getDescriptionId(itemStack) + ".small";
         }
@@ -113,7 +113,7 @@ public class MannequinItem extends FlavouredItem {
     @Environment(EnvType.CLIENT)
     public void appendHoverText(ItemStack itemStack, List<Component> tooltips, ITooltipContext context) {
         super.appendHoverText(itemStack, tooltips, context);
-        PlayerTextureDescriptor descriptor = PlayerTextureDescriptor.of(itemStack);
+        var descriptor = PlayerTextureDescriptor.of(itemStack);
         if (descriptor.getName() != null) {
             tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.user", descriptor.getName()));
         }

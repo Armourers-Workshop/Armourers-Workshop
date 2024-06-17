@@ -110,11 +110,11 @@ public class CubeSelector implements IPaintToolSelector {
     }
 
     public void forEach(UseOnContext context, BiConsumer<BlockPos, Direction> consumer) {
-        Level level = context.getLevel();
-        Direction clickedFace = context.getClickedFace();
-        Direction[] dirs = resolvedDirections(clickedFace);
+        var level = context.getLevel();
+        var clickedFace = context.getClickedFace();
+        var dirs = resolvedDirections(clickedFace);
         forEach(level, clickedFace, targetPos -> {
-            for (Direction dir : dirs) {
+            for (var dir : dirs) {
                 consumer.accept(targetPos, dir);
             }
         });
@@ -123,7 +123,7 @@ public class CubeSelector implements IPaintToolSelector {
     private void forEach(Level level, Direction dir, Consumer<BlockPos> consumer) {
         switch (this.mode) {
             case ALL: {
-                for (Rectangle3i rect : rects) {
+                for (var rect : rects) {
                     for (Vector3i pos : rect.enumerateZYX()) {
                         consumer.accept(pos.asBlockPos());
                     }
@@ -131,7 +131,7 @@ public class CubeSelector implements IPaintToolSelector {
                 break;
             }
             case SAME: {
-                Object info = resolvedBlockInfo(level, blockPos);
+                var info = resolvedBlockInfo(level, blockPos);
                 Consumer<BlockPos> consumer1 = targetPos -> {
                     if (Objects.equals(info, resolvedBlockInfo(level, targetPos))) {
                         consumer.accept(targetPos);

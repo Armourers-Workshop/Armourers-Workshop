@@ -5,13 +5,13 @@ import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.registry.IRegistryEntry;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
+import moe.plushie.armourers_workshop.core.texture.TextureProperties;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
-import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
-import moe.plushie.armourers_workshop.core.texture.TextureProperties;
 import net.minecraft.nbt.CompoundTag;
 
 import java.io.DataInputStream;
@@ -116,6 +116,18 @@ public interface IInputStream {
             throw new RuntimeException("VarInt too big");
         } while ((b & 0x80) != 0);
         return i;
+    }
+
+    default float[] readFloatArray(int count) throws IOException {
+        float[] results = new float[count];
+        for (int i = 0; i < count; i++) {
+            results[i] = readFloat();
+        }
+        return results;
+    }
+
+    default <T extends Enum<?>> T readEnum(Class<T> clazz) throws IOException {
+        return clazz.getEnumConstants()[readVarInt()];
     }
 
     default Vector3i readVector3i() throws IOException {

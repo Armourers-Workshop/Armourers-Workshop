@@ -37,9 +37,8 @@ public class ServerUser {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ServerUser user = (ServerUser) o;
-        return Objects.equals(id, user.id);
+        if (!(o instanceof ServerUser that)) return false;
+        return Objects.equals(id, that.id);
     }
 
     @Override

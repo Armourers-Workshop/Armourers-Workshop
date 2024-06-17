@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.client.texture.TextureManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -16,7 +17,6 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -75,28 +75,28 @@ public class BakedCubeFace {
         var entry = poseStack.last();
 
         // https://learnopengl.com/Getting-started/Coordinate-Systems
-        float x = shape.getX();
-        float y = shape.getY();
-        float z = shape.getZ();
-        float w = roundUp(shape.getWidth());
-        float h = roundUp(shape.getHeight());
-        float d = roundUp(shape.getDepth());
+        var x = shape.getX();
+        var y = shape.getY();
+        var z = shape.getZ();
+        var w = roundUp(shape.getWidth());
+        var h = roundUp(shape.getHeight());
+        var d = roundUp(shape.getDepth());
 
-        float u = resolvedTexture.getU();
-        float v = resolvedTexture.getV();
-        float s = roundDown(resolvedTexture.getWidth());
-        float t = roundDown(resolvedTexture.getHeight());
-        float n = resolvedTexture.getTotalWidth();
-        float m = resolvedTexture.getTotalHeight();
+        var u = resolvedTexture.getU();
+        var v = resolvedTexture.getV();
+        var s = roundDown(resolvedTexture.getWidth());
+        var t = roundDown(resolvedTexture.getHeight());
+        var n = resolvedTexture.getTotalWidth();
+        var m = resolvedTexture.getTotalHeight();
 
-        int r = resolvedColor.getRed();
-        int g = resolvedColor.getGreen();
-        int b = resolvedColor.getBlue();
-        int a = alpha & 0xff;
+        var r = resolvedColor.getRed();
+        var g = resolvedColor.getGreen();
+        var b = resolvedColor.getBlue();
+        var a = alpha & 0xff;
 
         // mixin overlay color.
         if (overlay != 0) {
-            float i = (overlay >> 24 & 0xff) / 255f;
+            var i = (overlay >> 24 & 0xff) / 255f;
             r = ColorUtils.mix(r, overlay >> 16 & 0xff, i);
             g = ColorUtils.mix(g, overlay >> 8 & 0xff, i);
             b = ColorUtils.mix(b, overlay & 0xff, i);

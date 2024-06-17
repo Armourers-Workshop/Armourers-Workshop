@@ -63,7 +63,7 @@ public class SkinVertexBufferBuilder implements IBufferSource {
     }
 
     public static void clearAllCache() {
-        SkinVertexBufferBuilder builder = getInstance();
+        var builder = getInstance();
         builder.cachingBuilders.clear();
         builder.cachingBuilders2.clear();
         builder.pipeline.clear();
@@ -95,7 +95,7 @@ public class SkinVertexBufferBuilder implements IBufferSource {
     @Override
     public void endBatch() {
         if (!pendingBuilders.isEmpty()) {
-            for (SkinRenderObjectBuilder builder : pendingBuilders.values()) {
+            for (var builder : pendingBuilders.values()) {
                 builder.endBatch(pipeline);
             }
             pendingBuilders.clear();

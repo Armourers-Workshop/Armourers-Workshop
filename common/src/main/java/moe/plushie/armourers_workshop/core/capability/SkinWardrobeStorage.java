@@ -27,16 +27,16 @@ public class SkinWardrobeStorage {
     }
 
     public static void loadDataFixer(SkinWardrobe wardrobe, IDataSerializer serializer) {
-        int version = serializer.read(VERSION_KEY);
+        var version = serializer.read(VERSION_KEY);
         if (version <= 0) {
-            Container inventory = wardrobe.getInventory();
+            var inventory = wardrobe.getInventory();
             DataFixerUtils.move(inventory, 67, SkinSlotType.DYE.getIndex(), 16, "align dye slots storage");
             DataFixerUtils.move(inventory, 57, SkinSlotType.OUTFIT.getIndex(), 10, "align outfit slots storage");
         }
     }
 
     public static void saveInventoryItems(Container inventory, IDataSerializer serializer) {
-        NonNullList<ItemStack> itemStacks = NonNullList.withSize(inventory.getContainerSize(), ItemStack.EMPTY);
+        var itemStacks = NonNullList.withSize(inventory.getContainerSize(), ItemStack.EMPTY);
         for (int i = 0; i < itemStacks.size(); ++i) {
             itemStacks.set(i, inventory.getItem(i));
         }
@@ -44,11 +44,11 @@ public class SkinWardrobeStorage {
     }
 
     public static void loadInventoryItems(Container inventory, IDataSerializer serializer) {
-        NonNullList<ItemStack> itemStacks = NonNullList.withSize(inventory.getContainerSize(), ItemStack.EMPTY);
+        var itemStacks = NonNullList.withSize(inventory.getContainerSize(), ItemStack.EMPTY);
         serializer.readItemList(itemStacks);
         for (int i = 0; i < itemStacks.size(); ++i) {
-            ItemStack newItemStack = itemStacks.get(i);
-            ItemStack oldItemStack = inventory.getItem(i);
+            var newItemStack = itemStacks.get(i);
+            var oldItemStack = inventory.getItem(i);
             if (!Objects.equals(newItemStack, oldItemStack)) {
                 inventory.setItem(i, newItemStack);
             }
@@ -56,7 +56,7 @@ public class SkinWardrobeStorage {
     }
 
     public static void saveFlags(BitSet flags, IDataSerializer serializer) {
-        int value = 0;
+        var value = 0;
         for (int i = 0; i < 32; ++i) {
             if (flags.get(i)) {
                 value |= 1 << i;
@@ -68,7 +68,7 @@ public class SkinWardrobeStorage {
     }
 
     public static void loadFlags(BitSet flags, IDataSerializer serializer) {
-        int value = serializer.read(VISIBILITY_KEY);
+        var value = serializer.read(VISIBILITY_KEY);
         flags.clear();
         for (int i = 0; i < 32; ++i) {
             int mask = 1 << i;
@@ -82,10 +82,10 @@ public class SkinWardrobeStorage {
         if (slots.isEmpty()) {
             return;
         }
-        ArrayList<Short> value = new ArrayList<>();
+        var value = new ArrayList<Short>();
         slots.forEach((slotType, count) -> {
-            int index = slotType.getId() & 0xff;
-            int encoded = index << 8 | count & 0xff;
+            var index = slotType.getId() & 0xff;
+            var encoded = index << 8 | count & 0xff;
             value.add((short) encoded);
         });
         if (!value.isEmpty()) {
@@ -94,9 +94,9 @@ public class SkinWardrobeStorage {
     }
 
     public static void loadSkinSlots(HashMap<SkinSlotType, Integer> slots, IDataSerializer serializer) {
-        List<Short> value = serializer.read(SLOTS_KEY);
-        for (short encoded : value) {
-            SkinSlotType slotType = SkinSlotType.byId((encoded >> 8) & 0xff);
+        var value = serializer.read(SLOTS_KEY);
+        for (var encoded : value) {
+            var slotType = SkinSlotType.byId((encoded >> 8) & 0xff);
             if (slotType != null) {
                 slots.put(slotType, encoded & 0xff);
             }

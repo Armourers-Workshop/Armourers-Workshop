@@ -28,7 +28,6 @@ import moe.plushie.armourers_workshop.library.data.impl.SearchOrderType;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
 import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import moe.plushie.armourers_workshop.library.menu.GlobalSkinLibraryMenu;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.Util;
@@ -215,14 +214,13 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
 
         @Override
         public void labelWillClickAttributes(UILabel label, Map<String, ?> attributes) {
-            ClickEvent clickEvent = ObjectUtils.safeCast(attributes.get("ClickEvent"), ClickEvent.class);
-            if (clickEvent == null || clickEvent.getAction() != ClickEvent.Action.OPEN_URL) {
+            if (!(attributes.get("ClickEvent") instanceof ClickEvent clickEvent) || clickEvent.getAction() != ClickEvent.Action.OPEN_URL) {
                 return;
             }
-            String value = clickEvent.getValue();
+            var value = clickEvent.getValue();
             try {
-                URI uri = new URI(value);
-                String s = uri.getScheme();
+                var uri = new URI(value);
+                var s = uri.getScheme();
                 if (s == null) {
                     throw new URISyntaxException(value, "Missing protocol");
                 }
@@ -239,8 +237,8 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
         @Override
         public void skinDidChange(String skinId, @Nullable ServerSkin newValue) {
             for (AbstractLibraryPanel panel : panels) {
-                if (panel instanceof ISkinListListener) {
-                    ((ISkinListListener) panel).skinDidChange(skinId, newValue);
+                if (panel instanceof ISkinListListener listener) {
+                    listener.skinDidChange(skinId, newValue);
                 }
             }
         }

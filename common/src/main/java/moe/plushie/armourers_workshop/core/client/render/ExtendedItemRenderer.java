@@ -48,13 +48,13 @@ public final class ExtendedItemRenderer {
 
     private static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, @Nullable Vector3f target, float x, float y, float z, float width, float height, float rx, float ry, float rz, float partialTicks, int light, IPoseStack poseStack, IBufferSource bufferSource) {
         if (bakedSkin != null) {
-            int t = TickUtils.ticks();
+            float t = TickUtils.animationTicks();
             float si = Math.min(width, height);
             poseStack.pushPose();
             poseStack.translate(x + width / 2f, y + height / 2f, z);
             poseStack.scale(1, -1, 1);
             poseStack.rotate(Vector3f.XP.rotationDegrees(rx));
-            poseStack.rotate(Vector3f.YP.rotationDegrees(ry + (float) (t / 10 % 360)));
+            poseStack.rotate(Vector3f.YP.rotationDegrees(ry + ((t * 100) % 360)));
             poseStack.scale(0.625f, 0.625f, 0.625f);
             poseStack.scale(si, si, si);
             renderSkinInBox(bakedSkin, scheme, Vector3f.ONE, target, partialTicks, light, SkinItemSource.create(itemStack), poseStack, bufferSource);
@@ -63,8 +63,8 @@ public final class ExtendedItemRenderer {
     }
 
     private static int renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, Vector3f scale, @Nullable Vector3f target, float partialTicks, int light, SkinItemSource itemSource, IPoseStack poseStack, IBufferSource bufferSource) {
-        int counter = 0;
-        SkinRenderTesselator context = SkinRenderTesselator.create(bakedSkin);
+        var counter = 0;
+        var context = SkinRenderTesselator.create(bakedSkin);
         if (context == null) {
             return counter;
         }
@@ -79,7 +79,7 @@ public final class ExtendedItemRenderer {
 
         // ...
         if (target != null) {
-            Rectangle3f rect = context.getBakedRenderBounds();
+            var rect = context.getBakedRenderBounds();
             float targetWidth = target.getX();
             float targetHeight = target.getY();
             float targetDepth = target.getZ();
@@ -104,7 +104,7 @@ public final class ExtendedItemRenderer {
     }
 
     public static void renderMannequin(PlayerTextureDescriptor descriptor, Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, IPoseStack poseStack, IBufferSource bufferSource) {
-        MannequinEntity entity = PlaceholderManager.MANNEQUIN.get();
+        var entity = PlaceholderManager.MANNEQUIN.get();
         if (entity == null || entity.getLevel() == null) {
             return;
         }
@@ -115,15 +115,15 @@ public final class ExtendedItemRenderer {
             entity.setTextureDescriptor(descriptor);
         }
 
-        Rectangle3f rect = new Rectangle3f(entity.getBoundingBox());
+        var rect = new Rectangle3f(entity.getBoundingBox());
         if (ModDebugger.targetBounds) {
             ShapeTesselator.stroke(-targetWidth / 2, -targetHeight / 2, -targetDepth / 2, targetWidth / 2, targetHeight / 2, targetDepth / 2, UIColor.ORANGE, poseStack, bufferSource);
             ShapeTesselator.vector(0, 0, 0, targetWidth, targetHeight, targetDepth, poseStack, bufferSource);
         }
 
-        Rectangle3f resolvedRect = rect.offset(rect.getMidX(), rect.getMidY(), rect.getMidZ());
+        var resolvedRect = rect.offset(rect.getMidX(), rect.getMidY(), rect.getMidZ());
         resolvedRect.mul(new OpenMatrix4f(new OpenQuaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), true)));
-        float newScale = Math.min(targetWidth / resolvedRect.getWidth(), targetHeight / resolvedRect.getHeight());
+        var newScale = Math.min(targetWidth / resolvedRect.getWidth(), targetHeight / resolvedRect.getHeight());
 
         poseStack.scale(newScale, newScale, newScale);
         poseStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center

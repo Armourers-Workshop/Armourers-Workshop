@@ -3,13 +3,9 @@ package moe.plushie.armourers_workshop.builder.client.render;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.client.guide.IGuideDataProvider;
-import moe.plushie.armourers_workshop.api.client.guide.IGuideRenderer;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.api.math.IRectangle3i;
-import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
@@ -46,25 +42,25 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
 
     @Override
     public void render(T entity, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
-        ISkinType skinType = entity.getSkinType();
-        ISkinProperties skinProperties = entity.getSkinProperties();
+        var skinType = entity.getSkinType();
+        var skinProperties = entity.getSkinProperties();
 
-        RenderData renderData = RenderData.of(entity);
+        var renderData = RenderData.of(entity);
         renderData.tick();
 
         // when the player has some special texture, we must override to renderer.
-        IResourceLocation playerTexture = renderData.displayTextureLocation;
+        var playerTexture = renderData.displayTextureLocation;
         if (playerTexture != null) {
             override.setTexture(playerTexture);
             override.setBuffers(bufferSource);
             bufferSource = override;
         }
 
-        boolean isMultiBlocks = skinProperties.get(SkinProperty.BLOCK_MULTIBLOCK);
-        boolean isShowGuides = entity.isShowGuides();
-        boolean isShowModelGuides = entity.isShowModelGuides();
-        boolean isShowHelper = entity.isShowHelper();
-        boolean isUseHelper = entity.isUseHelper();
+        var isMultiBlocks = skinProperties.get(SkinProperty.BLOCK_MULTIBLOCK);
+        var isShowGuides = entity.isShowGuides();
+        var isShowModelGuides = entity.isShowModelGuides();
+        var isShowHelper = entity.isShowHelper();
+        var isUseHelper = entity.isUseHelper();
 
         // don't display overlay layers when helpers are actived.
         renderData.shouldRenderOverlay = !isUseHelper;
@@ -74,16 +70,16 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         transform(poseStack, entity);
         poseStack.scale(-1, -1, 1);
 
-        float polygonOffset = 0f;
+        var polygonOffset = 0f;
         for (ISkinPartType partType : skinType.getParts()) {
-            IVector3i origin = partType.getOffset();
-            IRectangle3i rect = partType.getBuildingSpace();
-            IRectangle3i rect2 = partType.getGuideSpace();
+            var origin = partType.getOffset();
+            var rect = partType.getBuildingSpace();
+            var rect2 = partType.getGuideSpace();
 
-            float r = 0.5f;
-            float g = 0.5f;
-            float b = 0.5f;
-            float a = 0.25f;
+            var r = 0.5f;
+            var g = 0.5f;
+            var b = 0.5f;
+            var a = 0.25f;
 
             if (partType == SkinPartTypes.BLOCK_MULTI && !isMultiBlocks) {
                 continue;
@@ -96,7 +92,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
                 a = 0.2f;
             }
 
-            boolean isModelOverridden = entity.isModelOverridden(partType);
+            var isModelOverridden = entity.isModelOverridden(partType);
             if (isUseHelper) {
                 isModelOverridden = !isShowHelper;
             }
@@ -107,7 +103,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
 
             // render guide model
             if (!isModelOverridden) {
-                IGuideRenderer guideRenderer = rendererManager.getRenderer(partType);
+                var guideRenderer = rendererManager.getRenderer(partType);
                 if (guideRenderer != null) {
                     poseStack.pushPose();
                     poseStack.translate(0, -rect2.getMinY(), 0);
@@ -173,7 +169,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
 
         @Override
         public IVertexConsumer getBuffer(RenderType renderType) {
-            Supplier<RenderType> overrideRenderType = overrides.get(renderType);
+            var overrideRenderType = overrides.get(renderType);
             if (overrideRenderType != null) {
                 renderType = overrideRenderType.get();
             }

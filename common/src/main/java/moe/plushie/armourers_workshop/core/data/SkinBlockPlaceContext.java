@@ -56,23 +56,23 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
     }
 
     protected void transform(Vector3f r) {
-        for (Part part : parts) {
+        for (var part : parts) {
             part.transform(r);
         }
     }
 
     protected void loadElements(Function<String, Skin> provider) {
-        ItemStack itemStack = getItemInHand();
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        var itemStack = getItemInHand();
+        var descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
             return;
         }
-        Skin skin = provider.apply(descriptor.getIdentifier());
+        var skin = provider.apply(descriptor.getIdentifier());
         if (skin == null) {
             return;
         }
-        ArrayList<Part> parts = new ArrayList<>();
-        ArrayList<BlockPos> blockPosList = new ArrayList<>();
+        var parts = new ArrayList<Part>();
+        var blockPosList = new ArrayList<BlockPos>();
         skin.getBlockBounds().forEach((pos, shape) -> {
             if (pos.equals(BlockPos.ZERO)) {
                 parts.add(new ParentPart(pos, shape, blockPosList, descriptor, skin));
@@ -83,13 +83,13 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         this.skin = descriptor;
         this.parts = parts;
         this.properties = skin.getProperties();
-        BlockState state = ModBlocks.SKINNABLE.get().getStateForPlacement(this);
+        var state = ModBlocks.SKINNABLE.get().getStateForPlacement(this);
         if (state != null) {
             this.rotations = SkinnableBlockEntity.getRotations(state);
             this.transform(rotations);
         }
         // copy all transformed block pose into list.
-        for (Part part : parts) {
+        for (var part : parts) {
             blockPosList.add(part.getOffset());
         }
     }
@@ -210,10 +210,10 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         public void transform(Vector3f r) {
             super.transform(r);
 
-            OpenQuaternionf q = new OpenQuaternionf(r.getX(), r.getY(), r.getZ(), true);
-            ArrayList<SkinMarker> newMarkerList = new ArrayList<>();
-            for (SkinMarker marker : markerList) {
-                Vector4f f = new Vector4f(marker.x, marker.y, marker.z, 1.0f);
+            var q = new OpenQuaternionf(r.getX(), r.getY(), r.getZ(), true);
+            var newMarkerList = new ArrayList<SkinMarker>();
+            for (var marker : markerList) {
+                var f = new Vector4f(marker.x, marker.y, marker.z, 1.0f);
                 f.transform(OpenMatrix4f.createScaleMatrix(-1, -1, 1));
                 f.transform(q);
                 int x = Math.round(f.x());

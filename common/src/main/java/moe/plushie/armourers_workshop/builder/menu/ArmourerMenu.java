@@ -4,16 +4,13 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.other.CubeChangesCollector;
-import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.builder.other.WorldUtils;
 import moe.plushie.armourers_workshop.core.data.UserNotifications;
 import moe.plushie.armourers_workshop.core.menu.AbstractBlockEntityMenu;
-import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.exception.SkinLoadException;
 import moe.plushie.armourers_workshop.core.skin.exception.TranslatableException;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModItems;
 import net.minecraft.network.chat.Component;
@@ -24,7 +21,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
 public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
@@ -46,18 +42,18 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
     }
 
     public boolean shouldLoadArmourItem(Player player) {
-        ItemStack stackInput = inventory.getItem(0);
-        ItemStack stackOuput = inventory.getItem(1);
+        var stackInput = inventory.getItem(0);
+        var stackOuput = inventory.getItem(1);
         if (stackInput.isEmpty() || !stackOuput.isEmpty()) {
             return false;
         }
-        SkinDescriptor descriptor = SkinDescriptor.of(stackInput);
+        var descriptor = SkinDescriptor.of(stackInput);
         return !descriptor.isEmpty();
     }
 
     public boolean shouldSaveArmourItem(Player player) {
-        ItemStack stackInput = inventory.getItem(0);
-        ItemStack stackOutput = inventory.getItem(1);
+        var stackInput = inventory.getItem(0);
+        var stackOutput = inventory.getItem(1);
 
         if (player.isCreative()) {
             if (stackInput.isEmpty()) {
@@ -82,25 +78,32 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
         if (blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide()) {
             return;
         }
-        ItemStack stackInput = inventory.getItem(0);
-
-        Skin skin = null;
-        SkinProperties skinProps = blockEntity.getSkinProperties().copy();
-        skinProps.put(SkinProperty.ALL_AUTHOR_NAME, profile.getName());
-
-        // in the offline server the `player.getStringUUID()` is not real player uuid.
-        if (profile.getId() != null) {
-            skinProps.put(SkinProperty.ALL_AUTHOR_UUID, profile.getId().toString());
-        }
-
-        if (customName != null) {
-            skinProps.put(SkinProperty.ALL_CUSTOM_NAME, customName);
-        }
-
         try {
-            Level level = blockEntity.getLevel();
-            CubeTransform transform = blockEntity.getTransform();
-            skin = WorldUtils.saveSkinFromWorld(level, transform, skinProps, blockEntity.getSkinType(), blockEntity.getPaintData());
+            var stackInput = inventory.getItem(0);
+            var skinProps = blockEntity.getSkinProperties().copy();
+
+            skinProps.put(SkinProperty.ALL_AUTHOR_NAME, profile.getName());
+
+            // in the offline server the `player.getStringUUID()` is not real player uuid.
+            if (profile.getId() != null) {
+                skinProps.put(SkinProperty.ALL_AUTHOR_UUID, profile.getId().toString());
+            }
+
+            if (customName != null) {
+                skinProps.put(SkinProperty.ALL_CUSTOM_NAME, customName);
+            }
+
+            var level = blockEntity.getLevel();
+            var transform = blockEntity.getTransform();
+            var skin = WorldUtils.saveSkinFromWorld(level, transform, skinProps, blockEntity.getSkinType(), blockEntity.getPaintData());
+
+            var identifier = SkinLoader.getInstance().saveSkin("", skin);
+            var descriptor = new SkinDescriptor(identifier, skin.getType());
+            if (!player.isCreative()) {
+                stackInput.shrink(1);
+            }
+
+            inventory.setItem(1, descriptor.asItemStack());
         } catch (TranslatableException exception) {
             player.sendSystemMessage(exception.getComponent());
             UserNotifications.sendErrorMessage(exception.getComponent(), player);
@@ -108,17 +111,6 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
             // we unknown why, pls report this.
             exception.printStackTrace();
         }
-
-        if (skin == null) {
-            return;
-        }
-
-        String identifier = SkinLoader.getInstance().saveSkin("", skin);
-        SkinDescriptor descriptor = new SkinDescriptor(identifier, skin.getType());
-        if (!player.isCreative()) {
-            stackInput.shrink(1);
-        }
-        inventory.setItem(1, descriptor.asItemStack());
     }
 
     /**
@@ -130,13 +122,13 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
         if (blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide()) {
             return;
         }
-        ItemStack stackInput = inventory.getItem(0);
-        SkinDescriptor descriptor = SkinDescriptor.of(stackInput);
+        var stackInput = inventory.getItem(0);
+        var descriptor = SkinDescriptor.of(stackInput);
         if (!shouldLoadArmourItem(player)) {
             return;
         }
         try {
-            Skin skin = SkinLoader.getInstance().loadSkin(descriptor.getIdentifier());
+            var skin = SkinLoader.getInstance().loadSkin(descriptor.getIdentifier());
             if (skin == null) {
                 throw SkinLoadException.Type.NOT_FOUND.build("notFound");
             }
@@ -150,8 +142,8 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
             blockEntity.setSkinProperties(skin.getProperties());
             blockEntity.setPaintData(skin.getPaintData());
 
-            CubeChangesCollector collector = new CubeChangesCollector(blockEntity.getLevel());
-            CubeTransform transform = blockEntity.getTransform();
+            var collector = new CubeChangesCollector(blockEntity.getLevel());
+            var transform = blockEntity.getTransform();
             WorldUtils.loadSkinIntoWorld(collector, transform, skin);
             collector.submit(Component.translatable("action.armourers_workshop.block.load"), player);
 

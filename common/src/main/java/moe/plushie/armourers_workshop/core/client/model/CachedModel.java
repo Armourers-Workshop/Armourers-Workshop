@@ -70,8 +70,8 @@ public class CachedModel<P> implements IModel {
             IModelPart holder = transformer.apply(part);
             parts.put(name, holder);
             values.add(holder);
-            if (holder instanceof ModelPartHolder) {
-                ((ModelPartHolder) holder).setName(name);
+            if (holder instanceof ModelPartHolder holder1) {
+                holder1.setName(name);
             }
         }
 

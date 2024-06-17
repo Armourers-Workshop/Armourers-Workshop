@@ -63,9 +63,8 @@ public class Holiday {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Holiday holiday = (Holiday) o;
-        return name.equals(holiday.name);
+        if (!(o instanceof Holiday that)) return false;
+        return name.equals(that.name);
     }
 
     @Override

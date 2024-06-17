@@ -23,23 +23,23 @@ public class SetBlockColorAction extends BlockUserAction {
 
     @Override
     public IUserAction apply() throws RuntimeException {
-        IPaintable target = (IPaintable) getBlockEntity();
-        HashMap<Direction, IPaintColor> oldValue = new HashMap<>();
-        for (Direction direction : newValue.keySet()) {
-            IPaintColor paintColor = target.getColor(direction);
+        var target = (IPaintable) getBlockEntity();
+        var oldValue = new HashMap<Direction, IPaintColor>();
+        for (var direction : newValue.keySet()) {
+            var paintColor = target.getColor(direction);
             if (paintColor == null) {
                 paintColor = PaintColor.CLEAR;
             }
             oldValue.put(direction, paintColor);
         }
-        IUserAction revertAction = new SetBlockColorAction(level, blockPos, oldValue);
+        var revertAction = new SetBlockColorAction(level, blockPos, oldValue);
         target.setColors(newValue);
         return revertAction;
     }
 
     @Override
     public BlockEntity getBlockEntity() {
-        BlockEntity blockEntity = super.getBlockEntity();
+        var blockEntity = super.getBlockEntity();
         if (blockEntity instanceof IPaintable) {
             return blockEntity;
         }

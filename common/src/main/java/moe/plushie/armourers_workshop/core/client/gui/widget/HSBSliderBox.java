@@ -57,8 +57,8 @@ public class HSBSliderBox extends UIControl {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        CGRect bounds = bounds();
-        CGRect fixedBounds = bounds.insetBy(1, 1, 1, 1);
+        var bounds = bounds();
+        var fixedBounds = bounds.insetBy(1, 1, 1, 1);
         context.drawImage(backgroundImage, bounds);
         // TODO: Refactoring
         float cx = fixedBounds.x;
@@ -98,8 +98,8 @@ public class HSBSliderBox extends UIControl {
     }
 
     private void updateValueWithEvent(UIEvent event) {
-        CGPoint point = event.locationInView(this);
-        CGRect rect = bounds().insetBy(1, 1, 1, 1);
+        var point = event.locationInView(this);
+        var rect = bounds().insetBy(1, 1, 1, 1);
         double value = ((double) point.x - rect.x) / rect.width;
         values[type.ordinal()] = MathUtils.clamp((float) value, 0f, 1f);
         valueDidChange();

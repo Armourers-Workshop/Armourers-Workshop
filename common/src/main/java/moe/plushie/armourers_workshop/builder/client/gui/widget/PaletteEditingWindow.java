@@ -62,7 +62,7 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
                 paletteManager.markDirty();
                 return;
             }
-            UIColor selectedColor = palette.getColor(index);
+            var selectedColor = palette.getColor(index);
             if (selectedColor == null) {
                 return;
             }
@@ -76,7 +76,7 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
     }
 
     protected void showNewPaletteDialog(UIControl button) {
-        InputDialog alert = new InputDialog();
+        var alert = new InputDialog();
         alert.setTitle(NSString.localizedString("colour-mixer.add_palette.title"));
         alert.setPlaceholder(NSString.localizedString("colour-mixer.add_palette.enter_name"));
         alert.showInView(this, () -> {
@@ -88,11 +88,11 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
     }
 
     protected void showRenamePaletteDialog(UIControl button) {
-        Palette palette = getSelectedPalette();
+        var palette = getSelectedPalette();
         if (palette == null || palette.isLocked()) {
             return;
         }
-        InputDialog alert = new InputDialog();
+        var alert = new InputDialog();
         alert.setTitle(NSString.localizedString("colour-mixer.rename_palette.title"));
         alert.setPlaceholder(NSString.localizedString("colour-mixer.rename_palette.enter_name"));
         alert.setValue(palette.getName());
@@ -106,11 +106,11 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
     }
 
     protected void showRemovePaletteDialog(UIControl button) {
-        Palette palette = getSelectedPalette();
+        var palette = getSelectedPalette();
         if (palette == null || palette.isLocked()) {
             return;
         }
-        ConfirmDialog alert = new ConfirmDialog();
+        var alert = new ConfirmDialog();
         alert.setTitle(NSString.localizedString("colour-mixer.remove_palette.title"));
         alert.setMessage(NSString.localizedString("colour-mixer.remove_palette.message", palette.getName()));
         alert.showInView(this, () -> {
@@ -124,11 +124,11 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
     }
 
     protected void reloadPalettes() {
-        int selectedIndex = 0;
+        var selectedIndex = 0;
         palettes = new ArrayList<>();
-        ArrayList<UIComboItem> items = new ArrayList<>();
-        for (Palette palette : PaletteManager.getInstance().getPalettes()) {
-            UIComboItem item = new UIComboItem(new NSString(palette.getName()));
+        var items = new ArrayList<UIComboItem>();
+        for (var palette : PaletteManager.getInstance().getPalettes()) {
+            var item = new UIComboItem(new NSString(palette.getName()));
             if (palette == getSelectedPalette()) {
                 selectedIndex = items.size();
             }
@@ -147,7 +147,7 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
 
     @Override
     public boolean textFieldShouldReturn(UITextField textField) {
-        String value = textField.text();
+        var value = textField.text();
         if (value.matches("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")) {
             setSelectedColor(UIColor.decode(value));
             submitColorChange(textField);
@@ -156,9 +156,9 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
     }
 
     protected void setColorComponents(float[] values) {
-        UIColor newValue = UIColor.getHSBColor(values[0], values[1], values[2]);
+        var newValue = UIColor.getHSBColor(values[0], values[1], values[2]);
         paintColorView.setColor(newValue);
-        for (HSBSliderBox slider : sliders) {
+        for (var slider : sliders) {
             slider.setValueWithComponents(values);
         }
         hexInputView.setText(String.format("#%02x%02x%02x", newValue.getRed(), newValue.getGreen(), newValue.getBlue()));
@@ -168,7 +168,7 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
     }
 
     public void setSelectedColor(UIColor selectedColor) {
-        float[] values = UIColor.RGBtoHSB(selectedColor.getRed(), selectedColor.getGreen(), selectedColor.getBlue(), null);
+        var values = UIColor.RGBtoHSB(selectedColor.getRed(), selectedColor.getGreen(), selectedColor.getBlue(), null);
         setColorComponents(values);
     }
 

@@ -87,14 +87,14 @@ public class UIStackView extends UIView {
     }
 
     private void _apply(List<UIView> views) {
-        CGRect bounds = _rotation(bounds().copy());
-        ArrayList<CGRect> rects = new ArrayList<>();
-        for (UIView view : views) {
+        var bounds = _rotation(bounds().copy());
+        var rects = new ArrayList<CGRect>();
+        for (var view : views) {
             rects.add(_rotation(view.frame().copy()));
         }
         _applySize(bounds, rects, _distribution);
         _applyOffset(bounds, rects, _alignment);
-        for (int i = 0; i < rects.size(); ++i) {
+        for (var i = 0; i < rects.size(); ++i) {
             views.get(i).setFrame(_rotation(rects.get(i)));
         }
     }
@@ -111,10 +111,10 @@ public class UIStackView extends UIView {
                 break;
             }
             case FILL_EQUALLY: {
-                float usableSize = bounds.getWidth() - _spacing * (count - 1);
-                float itemLeft = 0;
-                float itemWidth = usableSize / count;
-                for (CGRect rect : rects) {
+                var usableSize = bounds.getWidth() - _spacing * (count - 1);
+                var itemLeft = 0f;
+                var itemWidth = usableSize / count;
+                for (var rect : rects) {
                     rect.setX(itemLeft);
                     rect.setWidth(itemWidth);
                     itemLeft += itemWidth + _spacing;
@@ -122,12 +122,12 @@ public class UIStackView extends UIView {
                 break;
             }
             case FILL_PROPORTIONALLY: {
-                float usableSize = bounds.getWidth() - _spacing * (count - 1);
-                float contentWidth = Math.max(_calcSize(rects).getWidth(), 1);
-                float itemLeft = 0;
-                for (CGRect rect : rects) {
-                    float pro = rect.getWidth() / contentWidth;
-                    float itemWidth = pro * usableSize;
+                var usableSize = bounds.getWidth() - _spacing * (count - 1);
+                var contentWidth = Math.max(_calcSize(rects).getWidth(), 1);
+                var itemLeft = 0f;
+                for (var rect : rects) {
+                    var pro = rect.getWidth() / contentWidth;
+                    var itemWidth = pro * usableSize;
                     rect.setX(itemLeft);
                     rect.setWidth(itemWidth);
                     itemLeft += itemWidth + _spacing;
@@ -139,20 +139,20 @@ public class UIStackView extends UIView {
                     _applySize(bounds, rects, Distribution.FILL_EQUALLY);
                     break;
                 }
-                float contentSize = Math.max(_calcSize(rects).getWidth(), 1);
-                float spacing = (bounds.getWidth() - contentSize) / (count - 1);
-                float itemLeft = 0;
-                for (CGRect rect : rects) {
-                    float itemWidth = rect.getWidth();
+                var contentSize = Math.max(_calcSize(rects).getWidth(), 1);
+                var spacing = (bounds.getWidth() - contentSize) / (count - 1);
+                var itemLeft = 0f;
+                for (var rect : rects) {
+                    var itemWidth = rect.getWidth();
                     rect.setX(itemLeft);
                     itemLeft += itemWidth + spacing;
                 }
                 break;
             }
             case EQUAL_CENTERING: {
-                float centerSize = bounds.getWidth() / (count + 1);
-                float itemLeft = 0;
-                for (CGRect rect : rects) {
+                var centerSize = bounds.getWidth() / (count + 1);
+                var itemLeft = 0f;
+                for (var rect : rects) {
                     float itemWidth = rect.getWidth();
                     rect.setX(itemLeft + centerSize - itemWidth / 2);
                     itemLeft += centerSize;
@@ -163,14 +163,14 @@ public class UIStackView extends UIView {
     }
 
     private void _applyOffset(CGRect bounds, List<CGRect> rects, Alignment alignment) {
-        int count = rects.size();
+        var count = rects.size();
         if (count == 0) {
             return;
         }
         switch (alignment) {
             case FILL: {
-                float usableHeight = bounds.getHeight();
-                for (CGRect rect : rects) {
+                var usableHeight = bounds.getHeight();
+                for (var rect : rects) {
                     rect.setY(0);
                     rect.setHeight(usableHeight);
                 }
@@ -178,22 +178,22 @@ public class UIStackView extends UIView {
             }
             case TOP:
             case LEADING: {
-                for (CGRect rect : rects) {
+                for (var rect : rects) {
                     rect.setY(0);
                 }
                 break;
             }
             case BOTTOM:
             case TRAILING: {
-                float usableHeight = bounds.getHeight();
-                for (CGRect rect : rects) {
+                var usableHeight = bounds.getHeight();
+                for (var rect : rects) {
                     rect.setY(usableHeight - rect.getHeight());
                 }
                 break;
             }
             case CENTER: {
-                float usableHeight = bounds.getHeight();
-                for (CGRect rect : rects) {
+                var usableHeight = bounds.getHeight();
+                for (var rect : rects) {
                     rect.setY((usableHeight - rect.getHeight()) / 2);
                 }
                 break;
@@ -207,9 +207,9 @@ public class UIStackView extends UIView {
     }
 
     private CGSize _calcSize(List<CGRect> rects) {
-        float width = 0;
-        float height = 0;
-        for (CGRect rect : rects) {
+        var width = 0f;
+        var height = 0f;
+        for (var rect : rects) {
             width += rect.getWidth();
             height = Math.max(height, rect.getHeight());
         }
@@ -218,10 +218,10 @@ public class UIStackView extends UIView {
 
     private CGRect _rotation(CGRect rect) {
         if (_axis == Axis.VERTICAL) {
-            float x = rect.getY();
-            float y = rect.getX();
-            float width = rect.getHeight();
-            float height = rect.getWidth();
+            var x = rect.getY();
+            var y = rect.getX();
+            var width = rect.getHeight();
+            var height = rect.getWidth();
             rect.setX(x);
             rect.setY(y);
             rect.setWidth(width);

@@ -74,8 +74,8 @@ public class SkinRenderer {
     }
 
     public static OpenVoxelShape getShape(Entity entity, BakedArmature armature, BakedSkin bakedSkin, SkinRenderContext context) {
-        OpenVoxelShape voxelShape = OpenVoxelShape.empty();
-        for (BakedSkinPart bakedPart : bakedSkin.getParts()) {
+        var voxelShape = OpenVoxelShape.empty();
+        for (var bakedPart : bakedSkin.getParts()) {
             getShape(entity, voxelShape, bakedPart, bakedSkin, armature, context);
         }
         return voxelShape;
@@ -90,25 +90,25 @@ public class SkinRenderer {
         if (bakedTransform == null) {
             return;
         }
-        OpenVoxelShape shape1 = bakedPart.getRenderShape().copy();
+        var shape1 = bakedPart.getRenderShape().copy();
         context.pushPose();
         bakedTransform.apply(context.pose());
         bakedPart.getTransform().apply(context.pose());
         shape1.mul(context.pose().last().pose());
         shape.add(shape1);
-        for (BakedSkinPart childPart : bakedPart.getChildren()) {
+        for (var childPart : bakedPart.getChildren()) {
             getChildShape(shape, childPart, context);
         }
         context.popPose();
     }
 
     private static void getChildShape(OpenVoxelShape shape, BakedSkinPart bakedPart, SkinRenderContext context) {
-        OpenVoxelShape shape1 = bakedPart.getRenderShape().copy();
+        var shape1 = bakedPart.getRenderShape().copy();
         context.pushPose();
         bakedPart.getTransform().apply(context.pose());
         shape1.mul(context.pose().last().pose());
         shape.add(shape1);
-        for (BakedSkinPart childPart : bakedPart.getChildren()) {
+        for (var childPart : bakedPart.getChildren()) {
             getChildShape(shape, childPart, context);
         }
         context.popPose();

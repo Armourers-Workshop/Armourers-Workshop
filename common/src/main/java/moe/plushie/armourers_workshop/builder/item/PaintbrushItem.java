@@ -5,10 +5,10 @@ import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.builder.client.gui.PaletteToolWindow;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
@@ -48,7 +48,7 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        InteractionResult resultType = usePickTool(context);
+        var resultType = usePickTool(context);
         if (resultType.consumesAction()) {
             return resultType;
         }
@@ -57,8 +57,8 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
 
     @Override
     public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity blockEntity, UseOnContext context) {
-        if (blockEntity instanceof IPaintProvider) {
-            setItemColor(context.getItemInHand(), ((IPaintProvider) blockEntity).getColor());
+        if (blockEntity instanceof IPaintProvider provider) {
+            setItemColor(context.getItemInHand(), provider.getColor());
             return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.PASS;
@@ -73,10 +73,10 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
 
     @Override
     public IPaintToolAction createPaintToolAction(UseOnContext context) {
-        ItemStack itemStack = context.getItemInHand();
-        IPaintColor paintColor = getItemColor(itemStack, PaintColor.WHITE);
-        boolean usePaintColor = itemStack.get(PaintingToolOptions.CHANGE_PAINT_COLOR);
-        boolean usePaintType = itemStack.get(PaintingToolOptions.CHANGE_PAINT_TYPE);
+        var itemStack = context.getItemInHand();
+        var paintColor = getItemColor(itemStack, PaintColor.WHITE);
+        var usePaintColor = itemStack.get(PaintingToolOptions.CHANGE_PAINT_COLOR);
+        var usePaintType = itemStack.get(PaintingToolOptions.CHANGE_PAINT_TYPE);
         return new CubePaintingEvent.SetAction(paintColor, usePaintColor, usePaintType);
     }
 
@@ -87,7 +87,7 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
 
     @Override
     public void appendColorHoverText(ItemStack itemStack, List<Component> tooltips) {
-        IPaintColor paintColor = getItemColor(itemStack, PaintColor.WHITE);
+        var paintColor = getItemColor(itemStack, PaintColor.WHITE);
         tooltips.addAll(ColorUtils.getColorTooltips(paintColor, true));
     }
 
@@ -103,7 +103,7 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
 
     @Environment(EnvType.CLIENT)
     public void openPaletteGUI(Level level, Player player, InteractionHand hand, ItemStack itemStack) {
-        PaletteToolWindow window = new PaletteToolWindow(itemStack.getHoverName(), itemStack, hand);
+        var window = new PaletteToolWindow(itemStack.getHoverName(), itemStack, hand);
         Minecraft.getInstance().setScreen(window.asScreen());
     }
 
@@ -132,7 +132,7 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
 
     @Override
     public boolean isFoil(ItemStack itemStack) {
-        IPaintColor paintColor = getItemColor(itemStack, PaintColor.WHITE);
+        var paintColor = getItemColor(itemStack, PaintColor.WHITE);
         return paintColor.getPaintType() != SkinPaintTypes.NORMAL;
     }
 }

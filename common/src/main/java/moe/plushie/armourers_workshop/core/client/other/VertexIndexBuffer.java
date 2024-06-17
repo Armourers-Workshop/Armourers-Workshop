@@ -48,15 +48,15 @@ public class VertexIndexBuffer {
         }
         total = MathUtils.roundToward(total * 2, indexStride);
         ModLog.debug("growing index buffer {} => {}.", indexCount, total);
-        IndexType indexType = IndexType.least(total);
-        int j = MathUtils.roundToward(total * indexType.bytes, 4);
+        var indexType = IndexType.least(total);
+        var j = MathUtils.roundToward(total * indexType.bytes, 4);
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, j, GL15.GL_DYNAMIC_DRAW);
         ByteBuffer buffer = GL15.glMapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, GL15.GL_WRITE_ONLY);
         if (buffer == null) {
             throw new RuntimeException("Failed to map GL buffer");
         }
         type = indexType;
-        IntConsumer builder = createBuilder(buffer);
+        var builder = createBuilder(buffer);
         for (int k = 0; k < total; k += indexStride) {
             generator.accept(builder, k * vertexStride / indexStride);
         }

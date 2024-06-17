@@ -12,20 +12,20 @@ public class DefaultSkirtJointModifier extends JointModifier {
     @Override
     public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
         // ...
-        IModelPart body = model.getPart("body");
-        IModelPart leg1 = model.getPart("left_leg");
-        IModelPart leg2 = model.getPart("right_leg");
+        var body = model.getPart("body");
+        var leg1 = model.getPart("left_leg");
+        var leg2 = model.getPart("right_leg");
         // sorry, but we can't complete this convert.
         if (body == null || leg1 == null || leg2 == null) {
             return transform;
         }
         return poseStack -> {
-            float z = (leg1.pose().getZ() + leg2.pose().getZ()) / 2;
+            var z = (leg1.pose().getZ() + leg2.pose().getZ()) / 2;
             poseStack.translate(body.pose().getX(), leg1.pose().getY(), z);
             if (body.pose().getYRot() != 0) {
                 poseStack.rotate(Vector3f.YP.rotation(body.pose().getYRot()));
             }
-            float xRot = (ort(leg1.pose().getXRot()) + ort(leg2.pose().getXRot())) / 2;
+            var xRot = (ort(leg1.pose().getXRot()) + ort(leg2.pose().getXRot())) / 2;
             if (Float.compare(xRot, 0) != 0) {
                 poseStack.rotate(Vector3f.XP.rotation(xRot));
             }
@@ -35,7 +35,7 @@ public class DefaultSkirtJointModifier extends JointModifier {
     }
 
     private float ort(float q) {
-        float pi = (float) Math.PI;
+        var pi = (float) Math.PI;
         if (q > pi) {
             return q - pi * 2;
         }

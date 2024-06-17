@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.SkinOptions;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentSettings;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentType;
@@ -81,6 +82,8 @@ public class DataTypeCodecs {
     public static final Codec<SkinDocumentType> SKIN_DOCUMENT_TYPE = STRING.xmap(SkinDocumentTypes::byName, SkinDocumentType::getName);
 
     public static final Codec<SkinDocumentNode> SKIN_DOCUMENT_NODE = COMPOUND_TAG.xmap(SkinDocumentNode::new, SkinDocumentNode::serializeNBT);
+
+    public static final Codec<SkinAnimation> SKIN_DOCUMENT_ANIMATION = COMPOUND_TAG.xmap(SkinAnimation::new, SkinAnimation::serializeNBT);
 
     public static final Codec<SkinDocumentSettings> SKIN_DOCUMENT_SETTINGS = COMPOUND_TAG.xmap(SkinDocumentSettings::new, SkinDocumentSettings::serializeNBT);
 

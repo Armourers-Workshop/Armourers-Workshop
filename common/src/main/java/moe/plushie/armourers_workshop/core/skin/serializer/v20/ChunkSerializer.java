@@ -32,8 +32,8 @@ public abstract class ChunkSerializer<V, T> {
         if (value == null) {
             return false;
         }
-        if (value instanceof Collection<?>) {
-            return !((Collection<?>) value).isEmpty();
+        if (value instanceof Collection<?> collection) {
+            return !collection.isEmpty();
         }
         return true;
     }
@@ -43,7 +43,7 @@ public abstract class ChunkSerializer<V, T> {
     }
 
     public ChunkFlags getChunkFlags(V value, ChunkContext context) {
-        ChunkFlags flags = new ChunkFlags();
+        var flags = new ChunkFlags();
         config(flags, value, context);
         return flags;
     }

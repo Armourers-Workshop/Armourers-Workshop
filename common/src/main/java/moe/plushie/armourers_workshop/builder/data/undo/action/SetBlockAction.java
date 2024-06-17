@@ -26,16 +26,16 @@ public class SetBlockAction extends BlockUserAction {
 
     @Override
     public IUserAction apply() {
-        BlockState oldState = level.getBlockState(blockPos);
+        var oldState = level.getBlockState(blockPos);
         CompoundTag oldNBT = null;
-        BlockEntity oldBlockEntity = level.getBlockEntity(blockPos);
+        var oldBlockEntity = level.getBlockEntity(blockPos);
         if (oldBlockEntity != null) {
             oldNBT = oldBlockEntity.saveFullData(level.registryAccess());
         }
-        SetBlockAction oldChanges = new SetBlockAction(level, blockPos, oldState, oldNBT);
+        var oldChanges = new SetBlockAction(level, blockPos, oldState, oldNBT);
         level.setBlock(blockPos, newValue, Constants.BlockFlags.DEFAULT_AND_RERENDER);
         if (newValueNBT != null) {
-            BlockEntity blockEntity = level.getBlockEntity(blockPos);
+            var blockEntity = level.getBlockEntity(blockPos);
             if (blockEntity != null) {
                 blockEntity.loadFullData(newValueNBT, level.registryAccess());
             }

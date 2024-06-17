@@ -63,7 +63,7 @@ public class CubeTransform {
             return blockPos.offset(x, y, z);
         }
         // we increase 0.5 offset to avoid down-cast incorrect by float accuracy problems.
-        Vector4f off = new Vector4f(x + 0.5f, y + 0.5f, z + 0.5f, 1);
+        var off = new Vector4f(x + 0.5f, y + 0.5f, z + 0.5f, 1);
         off.transform(rotationDegrees);
         return blockPos.offset(MathUtils.floor(off.x()), MathUtils.floor(off.y()), MathUtils.floor(off.z()));
     }

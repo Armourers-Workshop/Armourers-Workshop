@@ -70,7 +70,7 @@ public class BakedArmature {
     }
 
     public IJointTransform getTransform(ISkinPartType partType) {
-        IJoint joint = getJoint(partType);
+        var joint = getJoint(partType);
         if (joint != null) {
             return finalTransforms[joint.getId()];
         }
@@ -78,7 +78,7 @@ public class BakedArmature {
     }
 
     public IJoint getJoint(ISkinPartType partType) {
-        IJoint joint = armature.getJoint(partType);
+        var joint = armature.getJoint(partType);
         if (joint != null && filter != null && !filter.test(joint)) {
             return null;
         }
@@ -90,7 +90,7 @@ public class BakedArmature {
     }
 
     public IJointTransform getTransform(BakedSkinPart bakedPart) {
-        ISkinPartType partType = bakedPart.getType();
+        var partType = bakedPart.getType();
         if (partType == SkinPartTypes.BIPPED_LEFT_WING) {
             if (bakedPart.getProperties().get(SkinProperty.WINGS_MATCHING_POSE)) {
                 return getTransform(SkinPartTypes.BIPPED_LEFT_PHALANX);

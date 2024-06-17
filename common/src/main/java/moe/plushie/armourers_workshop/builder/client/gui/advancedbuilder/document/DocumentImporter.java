@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.docume
 
 import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIColor;
-import moe.plushie.armourers_workshop.api.core.IResource;
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
+import moe.plushie.armourers_workshop.api.core.IResource;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.exception.TranslatableException;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
-import moe.plushie.armourers_workshop.core.skin.transformer.SkinPack;
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPackReader;
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinSerializerV21;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModel;
@@ -20,7 +19,6 @@ import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModel
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelExporter;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelGeometry;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelTexture;
-import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockTransform;
 import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchReader;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -29,7 +27,6 @@ import net.minecraft.client.Minecraft;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public class DocumentImporter {
@@ -108,7 +105,11 @@ public class DocumentImporter {
                     exporter.add(bone, texture);
                 }
             }
-            SkinPack pack = modelReader.getPack();
+            var animations = modelReader.getAnimations();
+            if (animations != null) {
+                animations.forEach(exporter::add);
+            }
+            var pack = modelReader.getPack();
             if (pack != null) {
                 String name = pack.getName();
                 if (name != null && !name.isEmpty()) {
@@ -132,7 +133,7 @@ public class DocumentImporter {
                     exporter.add(SkinProperty.ALL_AUTHOR_NAME, builder.toString());
                 }
             }
-            Map<String, BedrockTransform> transforms = modelReader.getTransforms();
+            var transforms = modelReader.getTransforms();
             if (transforms != null) {
                 transforms.forEach((name, transform) -> {
                     Vector3f translation = transform.getTranslation();

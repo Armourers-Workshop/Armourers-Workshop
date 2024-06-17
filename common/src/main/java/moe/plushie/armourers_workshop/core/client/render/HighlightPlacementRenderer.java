@@ -16,7 +16,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -33,18 +32,18 @@ public class HighlightPlacementRenderer {
 
         poseStack.pushPose();
 
-        float f = 1 / 16.f;
-        Vector3f origin = new Vector3f(renderInfo.getPosition());
-        SkinBlockPlaceContext context = new SkinBlockPlaceContext(player, InteractionHand.MAIN_HAND, itemStack, traceResult);
-        BlockPos location = context.getClickedPos();
+        var f = 1 / 16.f;
+        var origin = new Vector3f(renderInfo.getPosition());
+        var context = new SkinBlockPlaceContext(player, InteractionHand.MAIN_HAND, itemStack, traceResult);
+        var location = context.getClickedPos();
 
         poseStack.translate(location.getX() - origin.getX(), location.getY() - origin.getY(), location.getZ() - origin.getZ());
         poseStack.translate(0.5f, 0.5f, 0.5f);
         poseStack.scale(f, f, f);
 
-        for (SkinBlockPlaceContext.Part part : context.getParts()) {
-            BlockPos pos = part.getOffset();
-            UIColor color = UIColor.RED;
+        for (var part : context.getParts()) {
+            var pos = part.getOffset();
+            var color = UIColor.RED;
             if (context.canPlace(part)) {
                 color = UIColor.WHITE;
             }
@@ -69,7 +68,7 @@ public class HighlightPlacementRenderer {
 
         var model = SkinItemRenderer.getInstance().getMannequinModel();
         if (model != null) {
-            float f = target.getScale() * 0.9375f; // base scale from player model
+            var f = target.getScale() * 0.9375f; // base scale from player model
             var buffers1 = AbstractBufferSource.unwrap(bufferSource);
             var builder = buffers1.getBuffer(SkinRenderType.HIGHLIGHTED_ENTITY_LINES);
             poseStack.pushPose();

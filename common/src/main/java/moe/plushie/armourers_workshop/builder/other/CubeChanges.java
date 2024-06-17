@@ -77,7 +77,7 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
         if (blockState != null) {
             return;
         }
-        BlockEntity blockEntity = level.getBlockEntity(blockPos);
+        var blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity == null) {
             String value = String.format("x=%d, y=%d, z=%d", blockPos.getX(), blockPos.getY(), blockPos.getZ());
             throw new ActionRuntimeException(Component.translatable("chat.armourers_workshop.undo.missingBlock", value));
@@ -86,8 +86,8 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
 
     @Override
     public IUserAction apply() throws RuntimeException {
-        boolean isChangedNBT = false;
-        CubeChanges changes = new CubeChanges(level, blockPos);
+        var isChangedNBT = false;
+        var changes = new CubeChanges(level, blockPos);
         if (blockState != null) {
             changes.setBlockState(level.getBlockState(blockPos));
             isChangedNBT = true;
@@ -103,7 +103,7 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
         } else if (colors != null) {
             var blockEntity = level.getBlockEntity(blockPos);
             if (blockEntity instanceof IPaintable target) {
-                HashMap<Direction, IPaintColor> oldValue = new HashMap<>();
+                var oldValue = new HashMap<Direction, IPaintColor>();
                 for (var direction : colors.keySet()) {
                     var paintColor = target.getColor(direction);
                     if (paintColor == null) {
@@ -128,7 +128,7 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
         if (!level.isLoaded(blockPos)) {
             return InteractionResult.PASS;
         }
-        int changes = 0;
+        var changes = 0;
         if (blockState != null && !blockState.equals(level.getBlockState(blockPos))) {
             level.setBlock(blockPos, blockState, Constants.BlockFlags.DEFAULT);
             changes += 1;

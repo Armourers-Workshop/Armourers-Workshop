@@ -52,7 +52,7 @@ public class DataTransformer<K, V, T> {
 
     @Nullable
     public Pair<V, Exception> get(K key) {
-        Entry entry = getEntry(key);
+        var entry = getEntry(key);
         if (entry != null) {
             return entry.transformedData;
         }
@@ -61,7 +61,7 @@ public class DataTransformer<K, V, T> {
 
     @Nullable
     public Pair<V, Exception> getOrLoad(K key, Ticket ticket) {
-        Entry entry = getEntryAndCreate(key);
+        var entry = getEntryAndCreate(key);
         if (!entry.isCompleted()) {
             load(key, ticket, null);
         }
@@ -69,7 +69,7 @@ public class DataTransformer<K, V, T> {
     }
 
     public void load(K key, Ticket ticket, IResultHandler<V> resultHandler) {
-        Entry entry = getEntryAndCreate(key);
+        var entry = getEntryAndCreate(key);
         validator.update(key, ticket);
         entry.listen(resultHandler);
         if (entry.isCompleted()) {
@@ -111,7 +111,7 @@ public class DataTransformer<K, V, T> {
             return;
         }
         while (true) {
-            Entry entry = getLastTask(loadQueue);
+            var entry = getLastTask(loadQueue);
             if (entry == null) {
                 break;
             }
@@ -133,7 +133,7 @@ public class DataTransformer<K, V, T> {
             return;
         }
         while (true) {
-            Entry entry = getLastTask(transformQueue);
+            var entry = getLastTask(transformQueue);
             if (entry == null) {
                 break;
             }
@@ -192,7 +192,7 @@ public class DataTransformer<K, V, T> {
             return null;
         }
         Entry lastEntry = null;
-        for (Entry entry : queue) {
+        for (var entry : queue) {
             if (lastEntry == null || entry.priority > lastEntry.priority) {
                 lastEntry = entry;
             }
@@ -256,12 +256,12 @@ public class DataTransformer<K, V, T> {
         }
 
         public void sendNotify() {
-            ArrayList<IResultHandler<V>> callbacks = this.callbacks;
+            var callbacks = this.callbacks;
             this.callbacks = null;
             if (callbacks == null || callbacks.isEmpty()) {
                 return;
             }
-            for (IResultHandler<V> callback : callbacks) {
+            for (var callback : callbacks) {
                 callback.apply(transformedData.getKey(), transformedData.getValue());
             }
         }

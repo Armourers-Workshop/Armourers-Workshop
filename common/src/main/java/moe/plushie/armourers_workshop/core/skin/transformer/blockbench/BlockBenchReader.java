@@ -20,7 +20,7 @@ public class BlockBenchReader extends SkinPackReader {
 
     @Override
     public void loadEntityModel(IOConsumer<SkinPackModelReader> consumer) throws IOException {
-        BlockBenchPack pack = BlockBenchPackLoader.load(this);
+        var pack = BlockBenchPackLoader.load(this);
         consumer.accept(new BlockBenchModelReader(pack.getName(), pack));
     }
 }

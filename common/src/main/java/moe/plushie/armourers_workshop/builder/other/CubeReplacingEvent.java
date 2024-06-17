@@ -3,14 +3,12 @@ package moe.plushie.armourers_workshop.builder.other;
 import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.builder.item.SkinCubeItem;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -64,10 +62,10 @@ public class CubeReplacingEvent {
         }
         // when specified block color we need to check matching.
         if (sourceBlockColor != null) {
-            int diff = 0;
-            for (Direction dir : Direction.values()) {
-                IPaintColor s = sourceBlockColor.getOrDefault(dir, PaintColor.WHITE);
-                IPaintColor t = cube.getColor(dir);
+            var diff = 0;
+            for (var dir : Direction.values()) {
+                var s = sourceBlockColor.getOrDefault(dir, PaintColor.WHITE);
+                var t = cube.getColor(dir);
                 if (!Objects.equals(s, t)) {
                     diff += 1;
                 }
@@ -86,8 +84,8 @@ public class CubeReplacingEvent {
         if (!cube.is(IPaintable.class)) {
             return;
         }
-        int oldBlockChanges = blockChanges;
-        int oldBlockColorChanges = blockColorChanges;
+        var oldBlockChanges = blockChanges;
+        var oldBlockColorChanges = blockColorChanges;
         // when specified new block color, we need to apply it first.
         if (!destination.isEmpty() && destinationBlockColor != null) {
             applyColor(cube);
@@ -108,22 +106,22 @@ public class CubeReplacingEvent {
             return;
         }
         // we just need to replace the matching block colors.
-        HashMap<Direction, IPaintColor> newColors = new HashMap<>();
-        for (Direction dir : Direction.values()) {
-            IPaintColor targetColor = cube.getColor(dir);
+        var newColors = new HashMap<Direction, IPaintColor>();
+        for (var dir : Direction.values()) {
+            var targetColor = cube.getColor(dir);
             if (sourceBlockColor != null) {
-                IPaintColor sourceColor = sourceBlockColor.getOrDefault(dir, PaintColor.WHITE);
+                var sourceColor = sourceBlockColor.getOrDefault(dir, PaintColor.WHITE);
                 if (!Objects.equals(sourceColor, targetColor)) {
                     newColors.put(dir, targetColor);
                     continue;
                 }
             }
-            IPaintColor newColor = destinationBlockColor.getOrDefault(dir, PaintColor.WHITE);
-            int color = newColor.getRGB();
+            var newColor = destinationBlockColor.getOrDefault(dir, PaintColor.WHITE);
+            var color = newColor.getRGB();
             if (keepColor) {
                 color = targetColor.getRGB();
             }
-            ISkinPaintType paintType = newColor.getPaintType();
+            var paintType = newColor.getPaintType();
             if (keepPaintType) {
                 paintType = targetColor.getPaintType();
             }
@@ -141,12 +139,12 @@ public class CubeReplacingEvent {
             return;
         }
         CompoundTag newNBT = null;
-        BlockState oldState = cube.getBlockState();
-        BlockState newState = Blocks.AIR.defaultBlockState();
+        var oldState = cube.getBlockState();
+        var newState = Blocks.AIR.defaultBlockState();
         if (destinationBlock != null) {
             newNBT = cube.getBlockTag();
             newState = destinationBlock.defaultBlockState();
-            for (Property<?> property : oldState.getProperties()) {
+            for (var property : oldState.getProperties()) {
                 newState = applyBlockState(newState, oldState, property);
             }
         }
@@ -162,20 +160,20 @@ public class CubeReplacingEvent {
     }
 
     private Block getBlock(ItemStack itemStack) {
-        Item item = itemStack.getItem();
-        if (item instanceof SkinCubeItem) {
-            return ((SkinCubeItem) item).getBlock();
+        var item = itemStack.getItem();
+        if (item instanceof SkinCubeItem cubeItem) {
+            return cubeItem.getBlock();
         }
         return null;
     }
 
     private BlockPaintColor getBlockColor(ItemStack itemStack) {
-        Item item = itemStack.getItem();
-        if (item instanceof SkinCubeItem) {
-            return ((SkinCubeItem) item).getItemColors(itemStack);
+        var item = itemStack.getItem();
+        if (item instanceof SkinCubeItem cubeItem) {
+            return cubeItem.getItemColors(itemStack);
         }
-        if (item instanceof IItemColorProvider) {
-            IPaintColor paintColor = ((IItemColorProvider) item).getItemColor(itemStack);
+        if (item instanceof IItemColorProvider provider) {
+            var paintColor = provider.getItemColor(itemStack);
             if (paintColor != null) {
                 return new BlockPaintColor(paintColor);
             }

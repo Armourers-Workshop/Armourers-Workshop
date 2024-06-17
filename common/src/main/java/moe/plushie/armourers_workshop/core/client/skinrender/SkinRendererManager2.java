@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import com.google.common.collect.ImmutableMap;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.client.model.AbstractSkinnableModels;
 import moe.plushie.armourers_workshop.core.armature.ArmatureSerializers;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerManager;
@@ -123,8 +123,8 @@ public class SkinRendererManager2 extends ArmatureSerializers {
 
         @Override
         public void append(IDataPackObject object, IResourceLocation file) {
-            String type = object.get("type").stringValue();
-            ArmatureTransformerManager manager = MANAGERS.get(type);
+            var type = object.get("type").stringValue();
+            var manager = MANAGERS.get(type);
             if (manager != null) {
                 manager.append(object, location);
             }

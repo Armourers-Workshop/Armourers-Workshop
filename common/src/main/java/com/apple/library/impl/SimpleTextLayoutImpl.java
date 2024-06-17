@@ -22,7 +22,7 @@ public class SimpleTextLayoutImpl {
             preferredMaxLayoutWidth = 10000;
         }
         // split all line with text.
-        LinkedList<NSString> lines = new LinkedList<>();
+        var lines = new LinkedList<NSString>();
         if (numberOfLines == 1) {
             lines.add(title);
         } else {
@@ -35,9 +35,9 @@ public class SimpleTextLayoutImpl {
         // transform the char sequence to text line.
         this.textLines = ObjectUtilsImpl.map(lines, text -> new Line(text, font));
 
-        float textWidth = 0;
-        float textHeight = 0;
-        for (Line line : textLines) {
+        var textWidth = 0f;
+        var textHeight = 0f;
+        for (var line : textLines) {
             line.offset = new CGPoint(0, textHeight);
             textHeight += line.size.height + lineSpacing;
             textWidth = Math.max(textWidth, line.size.width);

@@ -12,9 +12,9 @@ public class ColorDescriptor {
     private final HashMap<ISkinPaintType, Channel> channels = new HashMap<>();
 
     public void add(IPaintColor color) {
-        ISkinPaintType paintType = color.getPaintType();
+        var paintType = color.getPaintType();
         if (shouldRecordChannel(paintType)) {
-            Channel ch = channels.computeIfAbsent(paintType, k -> new Channel());
+            var ch = channels.computeIfAbsent(paintType, k -> new Channel());
             ch.red += color.getRed();
             ch.green += color.getGreen();
             ch.blue += color.getBlue();
@@ -25,7 +25,7 @@ public class ColorDescriptor {
 
     public void add(ColorDescriptor descriptor) {
         descriptor.channels.forEach((paintType, otherChannel) -> {
-            Channel ch = channels.computeIfAbsent(paintType, k -> new Channel());
+            var ch = channels.computeIfAbsent(paintType, k -> new Channel());
             ch.red += otherChannel.red;
             ch.green += otherChannel.green;
             ch.blue += otherChannel.blue;
@@ -39,7 +39,7 @@ public class ColorDescriptor {
     }
 
     public IPaintColor getAverageColor(ISkinPaintType paintType) {
-        Channel channel = channels.get(paintType);
+        var channel = channels.get(paintType);
         if (channel != null) {
             return channel.getResolvedColor();
         }

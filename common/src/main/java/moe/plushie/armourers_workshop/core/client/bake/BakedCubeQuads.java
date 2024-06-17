@@ -123,7 +123,7 @@ public class BakedCubeQuads {
             loadDirFaces();
         }
         dirFaces.forEach((dir, faces) -> {
-            for (BakedCubeFace face : faces) {
+            for (var face : faces) {
                 if (face.intersects(ray)) {
                     recorder.accept(face);
                 }

@@ -36,7 +36,7 @@ public interface GraphicsContextImpl {
 
     default void drawText(Collection<NSString> lines, float x, float y, int textColor, boolean shadow, UIFont font, float zLevel) {
         var poseStack = state().ctm();
-        float scale = font._getScale();
+        var scale = font._getScale();
         poseStack.pushPose();
         poseStack.translate(x, y, zLevel);
         poseStack.scale(scale, scale, scale);
@@ -45,9 +45,10 @@ public interface GraphicsContextImpl {
         var buffers = AbstractBufferSource.tesselator();
         var renderer = font.impl();
 
-        int dx = 0, dy = 0;
+        var dx = 0;
+        var dy = 0;
         for (var line : lines) {
-            int qx = renderer.drawInBatch(line.characters(), dx, dy, textColor, shadow, pose.pose(), buffers.bufferSource(), false, 0, 15728880);
+            var qx = renderer.drawInBatch(line.characters(), dx, dy, textColor, shadow, pose.pose(), buffers.bufferSource(), false, 0, 15728880);
             if (qx == dx) {
                 dy += 7;
             } else {
@@ -72,9 +73,9 @@ public interface GraphicsContextImpl {
     }
 
     default void drawMultilineText(Collection<NSString> lines, float x, float y, float maxWidth, int textColor, boolean shadow, UIFont font, float zLevel) {
-        float scale = font.fontSize() / 9f;
-        ArrayList<NSString> wrappedTextLines = new ArrayList<>();
-        for (NSString line : lines) {
+        var scale = font.fontSize() / 9f;
+        var wrappedTextLines = new ArrayList<NSString>();
+        for (var line : lines) {
             wrappedTextLines.addAll(line.split(font, maxWidth / scale));
         }
         drawText(wrappedTextLines, x, y, textColor, shadow, font, zLevel);
@@ -93,7 +94,7 @@ public interface GraphicsContextImpl {
     }
 
     default void drawResizableImage(IResourceLocation rl, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight, float zLevel) {
-        RectangleTesselator tesselator = new RectangleTesselator(state());
+        var tesselator = new RectangleTesselator(state());
         tesselator.begin(SkinRenderType.GUI_IMAGE, rl, texWidth, texHeight);
         tesselator.blit(x, y, width, height, u, v, sourceWidth, sourceHeight, zLevel);
         tesselator.end();
@@ -108,26 +109,27 @@ public interface GraphicsContextImpl {
     }
 
     default void drawTilableImage(IResourceLocation rl, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight, float topBorder, float bottomBorder, float leftBorder, float rightBorder, float zLevel) {
+        var x0 = x + 0f;
+        var y0 = y + 0f;
+        var x3 = x0 + width;
+        var y3 = y0 + height;
+        var x1 = x0 + leftBorder;
+        var y1 = y0 + topBorder;
+        var x2 = x3 - rightBorder;
+        var y2 = y3 - bottomBorder;
+
+        var u0 = u + 0f;
+        var v0 = v + 0f;
+        var u3 = u0 + sourceWidth;
+        var v3 = v0 + sourceHeight;
+        var u1 = u0 + leftBorder;
+        var v1 = v0 + topBorder;
+        var u2 = u3 - rightBorder;
+        var v2 = v3 - bottomBorder;
+
         var tesselator = new RectangleTesselator(state());
+
         tesselator.begin(SkinRenderType.GUI_IMAGE, rl, texWidth, texHeight);
-
-        float x0 = x + 0;
-        float y0 = y + 0;
-        float x3 = x0 + width;
-        float y3 = y0 + height;
-        float x1 = x0 + leftBorder;
-        float y1 = y0 + topBorder;
-        float x2 = x3 - rightBorder;
-        float y2 = y3 - bottomBorder;
-
-        float u0 = u + 0;
-        float v0 = v + 0;
-        float u3 = u0 + sourceWidth;
-        float v3 = v0 + sourceHeight;
-        float u1 = u0 + leftBorder;
-        float v1 = v0 + topBorder;
-        float u2 = u3 - rightBorder;
-        float v2 = v3 - bottomBorder;
 
         tesselator.blit(x0, y0, x1 - x0, y1 - y0, u0, v0, zLevel); // tl
         tesselator.blit(x2, y0, x3 - x2, y1 - y0, u2, v0, zLevel); // tr
@@ -145,14 +147,14 @@ public interface GraphicsContextImpl {
     }
 
     default void drawColor(float minX, float minY, float maxX, float maxY, float zLevel, int color1, int color2) {
-        int a1 = color1 >> 24 & 0xff;
-        int r1 = color1 >> 16 & 0xff;
-        int g1 = color1 >> 8 & 0xff;
-        int b1 = color1 & 0xff;
-        int a2 = color2 >> 24 & 0xff;
-        int r2 = color2 >> 16 & 0xff;
-        int g2 = color2 >> 8 & 0xff;
-        int b2 = color2 & 0xff;
+        var a1 = color1 >> 24 & 0xff;
+        var r1 = color1 >> 16 & 0xff;
+        var g1 = color1 >> 8 & 0xff;
+        var b1 = color1 & 0xff;
+        var a2 = color2 >> 24 & 0xff;
+        var r2 = color2 >> 16 & 0xff;
+        var g2 = color2 >> 8 & 0xff;
+        var b2 = color2 & 0xff;
         var state = state();
         var pose = state.ctm().last();
         var buffer = state.bufferSource().getBuffer(SkinRenderType.GUI_COLOR);
@@ -164,10 +166,10 @@ public interface GraphicsContextImpl {
     }
 
     default void drawBorder(float minX, float minY, float maxX, float maxY, float zLevel, int color) {
-        int a1 = color >> 24 & 0xff;
-        int r1 = color >> 16 & 0xff;
-        int g1 = color >> 8 & 0xff;
-        int b1 = color & 0xff;
+        var a1 = color >> 24 & 0xff;
+        var r1 = color >> 16 & 0xff;
+        var g1 = color >> 8 & 0xff;
+        var b1 = color & 0xff;
         var state = state();
         var pose = state.ctm().last();
         var buffer = state.bufferSource().getBuffer(SkinRenderType.lineStrip());
@@ -180,11 +182,11 @@ public interface GraphicsContextImpl {
     }
 
     default void drawBorder(float minX, float minY, float maxX, float maxY, float zLevel, float height, int color) {
-        int a1 = color >> 24 & 0xff;
-        int r1 = color >> 16 & 0xff;
-        int g1 = color >> 8 & 0xff;
-        int b1 = color & 0xff;
-        float sp = height * 0.5f;
+        var a1 = color >> 24 & 0xff;
+        var r1 = color >> 16 & 0xff;
+        var g1 = color >> 8 & 0xff;
+        var b1 = color & 0xff;
+        var sp = height * 0.5f;
         var state = state();
         var pose = state.ctm().last();
         var buffer = state.bufferSource().getBuffer(SkinRenderType.GUI_COLOR);

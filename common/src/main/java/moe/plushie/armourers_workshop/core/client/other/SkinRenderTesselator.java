@@ -28,7 +28,7 @@ public class SkinRenderTesselator extends SkinRenderContext {
     }
 
     public static SkinRenderTesselator create(SkinDescriptor descriptor, Ticket ticket) {
-        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, ticket);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, ticket);
         if (bakedSkin != null) {
             return create(bakedSkin);
         }
@@ -49,7 +49,7 @@ public class SkinRenderTesselator extends SkinRenderContext {
         setBuffers(bufferSource);
 //        setTransforms(mannequin, renderer.getOverrideModel(model));
 //        bakedArmature.setupAnim(mannequin, null, this);
-        bakedSkin.setupAnim(mannequin, getAnimationTicks(), getReferenced());
+        bakedSkin.setupAnim(mannequin, this);
         return SkinRenderer.render(mannequin, bakedArmature, bakedSkin, getColorScheme(), this);
     }
 

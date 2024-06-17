@@ -44,9 +44,9 @@ public class SkinPreloadManager {
     }
 
     private static void preloadInventory(Inventory inventory) {
-        int size = inventory.getContainerSize();
-        for (int i = 0; i < size; i++) {
-            SkinDescriptor descriptor = SkinDescriptor.of(inventory.getItem(i));
+        var size = inventory.getContainerSize();
+        for (var i = 0; i < size; i++) {
+            var descriptor = SkinDescriptor.of(inventory.getItem(i));
             if (descriptor.isEmpty()) {
                 continue;
             }

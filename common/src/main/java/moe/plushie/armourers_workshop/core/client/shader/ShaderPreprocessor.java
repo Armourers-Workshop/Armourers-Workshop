@@ -68,7 +68,7 @@ public class ShaderPreprocessor {
     }
 
     private String build(String type, Builder builder) {
-        String source = builder.build();
+        var source = builder.build();
         if (ModConfig.Client.enableShaderDebug) {
             ModLog.info("process {} shader: \n{}", type, source);
         }

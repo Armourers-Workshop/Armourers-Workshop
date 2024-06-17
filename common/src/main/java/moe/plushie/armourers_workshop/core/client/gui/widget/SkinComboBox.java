@@ -28,10 +28,10 @@ public class SkinComboBox extends UIComboBox {
     }
 
     public void reloadSkins(List<ISkinType> skinTypes) {
-        ArrayList<UIComboItem> items = new ArrayList<>();
-        for (ISkinType skinType : skinTypes) {
-            NSString title = new NSString(TranslateUtils.Name.of(skinType));
-            IResourceLocation rl = ArmourersWorkshop.getItemIcon(skinType);
+        var items = new ArrayList<UIComboItem>();
+        for (var skinType : skinTypes) {
+            var title = new NSString(TranslateUtils.Name.of(skinType));
+            var rl = ArmourersWorkshop.getItemIcon(skinType);
             UIImage image = null;
             if (rl != null) {
                 image = UIImage.of(rl).resizable(16, 16).fixed(9, 9).limit(16, 16).build();
@@ -71,7 +71,7 @@ public class SkinComboBox extends UIComboBox {
     @Override
     protected void updateEntryView(Entry entry, UIComboItem item) {
         if (item != null && item.image != null) {
-            UIButton button = entry.titleView;
+            var button = entry.titleView;
             button.setContentEdgeInsets(UIEdgeInsets.ZERO);
             button.setTitleEdgeInsets(new UIEdgeInsets(0, 2, 0, 0));
             button.imageView().setOpaque(false);

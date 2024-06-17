@@ -22,12 +22,12 @@ public interface StringImpl {
     FormattedCharSequence characters();
 
     default CGRect boundingRectWithFont(UIFont font) {
-        float width = font._getTextWidth(characters());
+        var width = font._getTextWidth(characters());
         return new CGRect(0, 0, width, font.lineHeight());
     }
 
     default List<NSString> split(UIFont font, float maxWidth) {
-        Component contents = component();
+        var contents = component();
         if (contents != null) {
             return font._splitLines(contents, maxWidth, false, NSString::new);
         }
@@ -39,15 +39,15 @@ public interface StringImpl {
         if (style == null) {
             return null;
         }
-        HashMap<String, Object> attributes = new HashMap<>();
+        var attributes = new HashMap<String, Object>();
         attributes.put("ClickEvent", style.getClickEvent());
         return attributes;
     }
 
     static NSString join(Iterable<? extends NSString> strings, String separator) {
-        int index = 0;
-        NSMutableString result = new NSMutableString("");
-        for (NSString value : strings) {
+        var index = 0;
+        var result = new NSMutableString("");
+        for (var value : strings) {
             if (index++ > 0) {
                 result.append(separator);
             }
@@ -57,8 +57,8 @@ public interface StringImpl {
     }
 
     static NSString localizedString(String table, String key, Object... args) {
-        String fullKey = String.format("%s.%s.%s", table, ModConstants.MOD_ID, key);
-        for (int i = 0; i < args.length; ++i) {
+        var fullKey = String.format("%s.%s.%s", table, ModConstants.MOD_ID, key);
+        for (var i = 0; i < args.length; ++i) {
             if (args[i] instanceof NSString text) {
                 args[i] = text.component();
             }

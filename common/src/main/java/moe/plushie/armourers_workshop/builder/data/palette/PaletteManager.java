@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.builder.data.palette;
 
 import com.apple.library.uikit.UIColor;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -15,7 +14,6 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PaletteManager {
@@ -78,7 +76,7 @@ public class PaletteManager {
     }
 
     public Palette addPalette(String paletteName) {
-        Palette palette = new Palette(paletteName);
+        var palette = new Palette(paletteName);
         paletteMap.put(paletteName, palette);
         markDirty();
         return palette;
@@ -88,7 +86,7 @@ public class PaletteManager {
         if (oldName.equals(newName)) {
             return;
         }
-        Palette palette = getPalette(oldName);
+        var palette = getPalette(oldName);
         palette.setName(newName);
         paletteMap.put(newName, palette);
         paletteMap.remove(oldName);
@@ -108,15 +106,15 @@ public class PaletteManager {
 
     private void savePalettes() {
         ModLog.info("Saving palettes.");
-        JsonArray json = new JsonArray();
-        for (Palette palette : paletteMap.values()) {
+        var json = new JsonArray();
+        for (var palette : paletteMap.values()) {
             JsonObject jsonPalette = new JsonObject();
             jsonPalette.addProperty("name", palette.getName());
             jsonPalette.addProperty("locked", palette.isLocked());
             jsonPalette.add("colours", intToJsonArray(palette.getColors()));
             json.add(jsonPalette);
         }
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        var gson = new GsonBuilder().setPrettyPrinting().create();
         SerializeHelper.writeFile(paletteFile, StandardCharsets.UTF_8, gson.toJson(json));
     }
 
@@ -124,14 +122,14 @@ public class PaletteManager {
         ModLog.info("Loading palettes.");
         try {
             paletteMap.clear();
-            JsonArray json = SerializeHelper.readJsonFile(paletteFile, StandardCharsets.UTF_8).getAsJsonArray();
-            for (int i = 0; i < json.size(); i++) {
-                JsonObject jsonPalette = json.get(i).getAsJsonObject();
+            var json = SerializeHelper.readJsonFile(paletteFile, StandardCharsets.UTF_8).getAsJsonArray();
+            for (var i = 0; i < json.size(); i++) {
+                var jsonPalette = json.get(i).getAsJsonObject();
                 if (jsonPalette.has("name") & jsonPalette.has("colours")) {
-                    String name = jsonPalette.get("name").getAsString();
-                    boolean locked = jsonPalette.get("locked").getAsBoolean();
-                    UIColor[] colors = jsonToIntArray(jsonPalette.get("colours").getAsJsonArray());
-                    Palette palette = new Palette(name, locked, colors);
+                    var name = jsonPalette.get("name").getAsString();
+                    var locked = jsonPalette.get("locked").getAsBoolean();
+                    var colors = jsonToIntArray(jsonPalette.get("colours").getAsJsonArray());
+                    var palette = new Palette(name, locked, colors);
                     paletteMap.put(palette.getName(), palette);
                 }
             }
@@ -143,17 +141,17 @@ public class PaletteManager {
     }
 
     private JsonArray intToJsonArray(UIColor[] intArray) {
-        JsonArray jsonArray = new JsonArray();
-        for (UIColor color : intArray) {
+        var jsonArray = new JsonArray();
+        for (var color : intArray) {
             jsonArray.add(colorToHex(color));
         }
         return jsonArray;
     }
 
     private UIColor[] jsonToIntArray(JsonArray jsonArray) {
-        UIColor[] intArray = new UIColor[jsonArray.size()];
+        var intArray = new UIColor[jsonArray.size()];
         for (int i = 0; i < jsonArray.size(); i++) {
-            String colorHex = jsonArray.get(i).getAsString();
+            var colorHex = jsonArray.get(i).getAsString();
             if (isValidHex(colorHex)) {
                 intArray[i] = UIColor.decode(colorHex);
             }
@@ -165,9 +163,9 @@ public class PaletteManager {
         if (colorStr.isEmpty()) {
             return false;
         }
-        String hexPatten = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
-        Pattern pattern = Pattern.compile(hexPatten);
-        Matcher matcher = pattern.matcher(colorStr);
+        var hexPatten = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+        var pattern = Pattern.compile(hexPatten);
+        var matcher = pattern.matcher(colorStr);
         return matcher.matches();
     }
 

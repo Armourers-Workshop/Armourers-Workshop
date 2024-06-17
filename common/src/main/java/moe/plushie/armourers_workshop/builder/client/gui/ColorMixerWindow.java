@@ -11,9 +11,6 @@ import com.apple.library.uikit.UIEdgeInsets;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UITextFieldDelegate;
-import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
-import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.widget.PaletteEditingWindow;
 import moe.plushie.armourers_workshop.builder.menu.ColorMixerMenu;
 import moe.plushie.armourers_workshop.builder.network.UpdateColorMixerPacket;
@@ -68,7 +65,7 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
             return;
         }
         setSelectedColor(selectedColor);
-        int selectedIndex = paintTypes.indexOf(selectedPaintType);
+        var selectedIndex = paintTypes.indexOf(selectedPaintType);
         if (selectedIndex >= 0) {
             paintComboBox.setSelectedIndex(selectedIndex);
         }
@@ -130,13 +127,13 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
     }
 
     private void setupLabel(int x, int y, String key) {
-        UILabel label = new UILabel(new CGRect(x, y, 80, 9));
+        var label = new UILabel(new CGRect(x, y, 80, 9));
         label.setText(getDisplayText(key));
         addSubview(label);
     }
 
     private void setupButton(int x, int y, int u, int v, String key, BiConsumer<ColorMixerWindow, UIControl> consumer) {
-        UIButton button = new UIButton(new CGRect(x, y, 16, 16));
+        var button = new UIButton(new CGRect(x, y, 16, 16));
         button.setTooltip(getDisplayText(key));
         button.setBackgroundImage(ModTextures.defaultButtonImage(u, v), UIControl.State.ALL);
         button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, consumer);
@@ -144,7 +141,7 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
     }
 
     private void setupHelpButton(int x, int y) {
-        UIButton button = new UIButton(new CGRect(x, y, 7, 8));
+        var button = new UIButton(new CGRect(x, y, 7, 8));
         button.setBackgroundImage(ModTextures.helpButtonImage(), UIControl.State.ALL);
         button.setTooltip(getDisplayText("help.palette"));
         button.setCanBecomeFocused(false);
@@ -152,7 +149,7 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
     }
 
     private HSBSliderBox setupHSBSlider(int x, int y, HSBSliderBox.Type type) {
-        HSBSliderBox slider = new HSBSliderBox(type, new CGRect(x, y, 150, 10));
+        var slider = new HSBSliderBox(type, new CGRect(x, y, 150, 10));
         slider.addTarget(this, UIControl.Event.VALUE_CHANGED, ColorMixerWindow::applyColorChange);
         slider.addTarget(this, UIControl.Event.EDITING_DID_END, ColorMixerWindow::submitColorChange);
         addSubview(slider);
@@ -160,11 +157,11 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
     }
 
     private void setupPaintList() {
-        int selectedIndex = 0;
+        var selectedIndex = 0;
         paintTypes = new ArrayList<>();
-        ArrayList<UIComboItem> items = new ArrayList<>();
-        for (ISkinPaintType paintType : SkinPaintTypes.values()) {
-            UIComboItem item = new UIComboItem(new NSString(TranslateUtils.Name.of(paintType)));
+        var items = new ArrayList<UIComboItem>();
+        for (var paintType : SkinPaintTypes.values()) {
+            var item = new UIComboItem(new NSString(TranslateUtils.Name.of(paintType)));
             if (paintType == SkinPaintTypes.TEXTURE) {
                 item.setEnabled(false);
             }

@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -36,9 +35,8 @@ public class UpdateConfigurableToolPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
-        ItemStack oldItemStack = player.getItemInHand(hand);
-        IConfigurableTool configurableTool = ObjectUtils.safeCast(oldItemStack.getItem(), IConfigurableTool.class);
-        if (configurableTool == null) {
+        var oldItemStack = player.getItemInHand(hand);
+        if (!(oldItemStack.getItem() instanceof IConfigurableTool)) {
             abort(player, "update", "tried change unsupported item type.");
             return;
         }

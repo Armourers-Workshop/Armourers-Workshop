@@ -1,12 +1,11 @@
 package moe.plushie.armourers_workshop.builder.block;
 
-import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.core.data.OptionalDirection;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
-import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -44,7 +43,7 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements AbstractBl
     }
 
     public static BlockState setMarker(BlockState blockState, OptionalDirection direction) {
-        Direction dir = direction.getDirection();
+        var dir = direction.getDirection();
         if (dir != null) {
             return blockState.setValue(HAS_MARKER, true).setValue(MARKER, dir);
         }
@@ -71,8 +70,8 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements AbstractBl
 
     @Override
     public BlockState rotate(BlockState blockState, Rotation rotation) {
-        Direction facing = rotation.rotate(blockState.getValue(FACING));
-        Direction marker = rotation.rotate(blockState.getValue(MARKER));
+        var facing = rotation.rotate(blockState.getValue(FACING));
+        var marker = rotation.rotate(blockState.getValue(MARKER));
         return blockState.setValue(FACING, facing).setValue(MARKER, marker);
     }
 
@@ -91,13 +90,13 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements AbstractBl
         if (reader == null || blockPos == null) {
             return 0xffffffff;
         }
-        Direction direction = Direction.NORTH;
+        var direction = Direction.NORTH;
         if (index > 0 && index < 7) {
             direction = Direction.values()[index - 1];
         }
-        BlockEntity blockEntity = reader.getBlockEntity(blockPos);
+        var blockEntity = reader.getBlockEntity(blockPos);
         if (blockEntity instanceof IPaintable) {
-            IPaintColor paintColor = ((IPaintable) blockEntity).getColor(direction);
+            var paintColor = ((IPaintable) blockEntity).getColor(direction);
             if (paintColor != null) {
                 return paintColor.getRGB() | 0xff000000;
             }

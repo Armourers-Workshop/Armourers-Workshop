@@ -59,7 +59,7 @@ public abstract class FontImpl {
     }
 
     public <T> List<T> _splitLines(String value, float maxWidth, boolean bl, SliceTransform<T> transformer) {
-        ArrayList<T> results = new ArrayList<>();
+        var results = new ArrayList<T>();
         font.getSplitter().splitLines(value, _f2i(maxWidth), Style.EMPTY, bl, (style, bi, ei) -> {
             results.add(transformer.accept(value.substring(bi, ei), bi, ei));
         });
@@ -67,8 +67,8 @@ public abstract class FontImpl {
     }
 
     public <T> List<T> _splitLines(Component value, float maxWidth, boolean bl, Function<FormattedCharSequence, T> transformer) {
-        ArrayList<T> results = new ArrayList<>();
-        for (FormattedCharSequence seq : font.split(value, _f2i(maxWidth))) {
+        var results = new ArrayList<T>();
+        for (var seq : font.split(value, _f2i(maxWidth))) {
             results.add(transformer.apply(seq));
         }
         return results;

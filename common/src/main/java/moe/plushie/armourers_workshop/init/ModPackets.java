@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.core.network.ExecuteAlertPacket;
 import moe.plushie.armourers_workshop.core.network.OpenWardrobePacket;
 import moe.plushie.armourers_workshop.core.network.RequestSkinPacket;
 import moe.plushie.armourers_workshop.core.network.ResponseSkinPacket;
+import moe.plushie.armourers_workshop.core.network.UpdateAnimationPacket;
 import moe.plushie.armourers_workshop.core.network.UpdateConfigurableToolPacket;
 import moe.plushie.armourers_workshop.core.network.UpdateHologramProjectorPacket;
 import moe.plushie.armourers_workshop.core.network.UpdateSkinDocumentPacket;
@@ -52,6 +53,8 @@ public enum ModPackets {
 
     UPLOAD_SKIN_TO_GLOBAL(0x43, UploadSkinPacket.class, UploadSkinPacket::new),
     UPLOAD_SKIN_TO_GLOBAL_PRE(0x44, UploadSkinPrePacket.class, UploadSkinPrePacket::new),
+
+    UPDATE_ANIMATION(0x50, UpdateAnimationPacket.class, UpdateAnimationPacket::new),
 
     UPDATE_SKIN_DOCUMENT(0x60, UpdateSkinDocumentPacket.class, UpdateSkinDocumentPacket::new),
 

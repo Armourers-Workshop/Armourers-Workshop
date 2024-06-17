@@ -16,7 +16,7 @@ public class UndoStack {
         if (undoStack.isEmpty()) {
             throw new ActionRuntimeException(Component.translatable("chat.armourers_workshop.undo.outOfUndos"));
         }
-        IUserAction changes = undoStack.peek();
+        var changes = undoStack.peek();
         redoStack.push(changes.apply());
         undoStack.pop();
         return changes;
@@ -26,7 +26,7 @@ public class UndoStack {
         if (redoStack.isEmpty()) {
             throw new ActionRuntimeException(Component.translatable("chat.armourers_workshop.undo.outOfRedos"));
         }
-        IUserAction changes = redoStack.peek();
+        var changes = redoStack.peek();
         undoStack.push(changes.apply());
         redoStack.pop();
         return changes;

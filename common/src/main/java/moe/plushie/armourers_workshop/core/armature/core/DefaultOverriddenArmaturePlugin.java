@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
-import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -37,19 +36,19 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
 
     @Override
     public void prepare(Entity entity, SkinRenderContext context) {
-        SkinRenderData renderData = context.getRenderData();
+        var renderData = context.getRenderData();
 
         // Limit the players limbs if they have a skirt equipped.
         // A proper lady should not swing her legs around!
-        if (entity instanceof LivingEntity && renderData.isLimitLimbs()) {
-            ((LivingEntity) entity).applyLimitLimbs();
+        if (entity instanceof LivingEntity livingEntity && renderData.isLimitLimbs()) {
+            livingEntity.applyLimitLimbs();
         }
     }
 
     @Override
     public void activate(Entity entity, SkinRenderContext context) {
-        SkinRenderData renderData = context.getRenderData();
-        SkinOverriddenManager overriddenManager = renderData.getOverriddenManager();
+        var renderData = context.getRenderData();
+        var overriddenManager = renderData.getOverriddenManager();
 
         // apply all other part by the entity.
         overriddenManager.willRender(entity);
@@ -77,8 +76,8 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
 
     @Override
     public void deactivate(Entity entity, SkinRenderContext context) {
-        SkinRenderData renderData = context.getRenderData();
-        SkinOverriddenManager overriddenManager = renderData.getOverriddenManager();
+        var renderData = context.getRenderData();
+        var overriddenManager = renderData.getOverriddenManager();
 
         overriddenManager.didRender(entity);
 
@@ -102,7 +101,7 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
         if (ModDebugger.modelOverride) {
             return;
         }
-        for (IModelPart part : parts) {
+        for (var part : parts) {
             if (part.isVisible()) {
                 part.setVisible(false);
                 applying.add(part);
@@ -114,17 +113,17 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
         overrides.clear();
         keys.forEach((key, names) -> {
             if (key.startsWith("hasType.")) {
-                ISkinType skinType = SkinTypes.byName(key.replace("hasType.", "armourers:"));
+                var skinType = SkinTypes.byName(key.replace("hasType.", "armourers:"));
                 skinTypeToOverrides.put(skinType, buildParts(names, model));
                 return;
             }
             if (key.startsWith("hasPart.")) {
-                ISkinPartType skinPartType = SkinPartTypes.byName(key.replace("hasPart.", "armourers:"));
+                var skinPartType = SkinPartTypes.byName(key.replace("hasPart.", "armourers:"));
                 skinPartTypeToOverrides.put(skinPartType, buildParts(names, model));
                 return;
             }
             // NOTE: we assume that all default values is false.
-            ISkinProperty<Boolean> property = SkinProperty.normal(key, false);
+            var property = SkinProperty.normal(key, false);
             overrides.put(property, buildParts(names, model));
         });
     }
@@ -135,9 +134,9 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
             return model.getAllParts();
         }
         // find all parts and remove duplicates.
-        LinkedHashMap<String, IModelPart> parts = new LinkedHashMap<>();
-        for (String name : names) {
-            IModelPart part = model.getPart(name);
+        var parts = new LinkedHashMap<String, IModelPart>();
+        for (var name : names) {
+            var part = model.getPart(name);
             if (part != null) {
                 parts.put(name, part);
             }

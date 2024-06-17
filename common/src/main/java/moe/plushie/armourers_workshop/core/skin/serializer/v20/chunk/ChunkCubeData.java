@@ -50,7 +50,7 @@ public class ChunkCubeData implements ChunkVariable {
     public void readFromStream(ChunkInputStream stream) throws IOException {
         int offset = 0;
         while (true) {
-            ChunkCubeSection section = readSectionFromStream(stream);
+            var section = readSectionFromStream(stream);
             if (section == null) {
                 break;
             }
@@ -63,7 +63,7 @@ public class ChunkCubeData implements ChunkVariable {
     @Override
     public void writeToStream(IOutputStream stream) throws IOException {
         // we need to make sure section in offset order.
-        ArrayList<ChunkCubeSection> sortedSections = new ArrayList<>(sections.values());
+        var sortedSections = new ArrayList<>(sections.values());
         sortedSections.sort(Comparator.comparing(ChunkCubeSection::getIndex));
         for (ChunkCubeSection section : sortedSections) {
             writeSectionToStream(section, stream);
@@ -72,12 +72,12 @@ public class ChunkCubeData implements ChunkVariable {
     }
 
     public SkinCubes readReferenceFromStream(ChunkInputStream stream) throws IOException {
-        ArrayList<ChunkCubeSelector> selectors = new ArrayList<>();
+        var selectors = new ArrayList<ChunkCubeSelector>();
         int count = stream.readVarInt();
         for (int i = 0; i < count; ++i) {
             int index = stream.readInt();
             int size = stream.readInt();
-            ChunkCubeSection section = _sectionAt(index);
+            var section = _sectionAt(index);
             if (section != null) {
                 int offset = index - section.getIndex();
                 selectors.add(new ChunkCubeSelector(section, offset, offset + size));

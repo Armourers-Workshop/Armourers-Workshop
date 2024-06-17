@@ -25,19 +25,19 @@ public class MannequinToolItem extends ConfigurableToolItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack itemStack, Player player, LivingEntity entity, InteractionHand hand) {
-        if (entity instanceof MannequinEntity) {
+        if (entity instanceof MannequinEntity mannequinEntity) {
             if (player.isSecondaryUseActive()) {
-                CompoundTag config = new CompoundTag();
-                ItemStack newItemStack = itemStack.copy();
-                ((MannequinEntity) entity).saveMannequinToolData(config);
+                var config = new CompoundTag();
+                var newItemStack = itemStack.copy();
+                mannequinEntity.saveMannequinToolData(config);
                 config.putString("id", ModEntityTypes.MANNEQUIN.getRegistryName().toString());
                 newItemStack.set(ModDataComponents.ENTITY_DATA.get(), config);
                 player.setItemInHand(hand, newItemStack);
                 return InteractionResult.sidedSuccess(player.getLevel().isClientSide());
             } else {
-                CompoundTag entityTag = itemStack.get(ModDataComponents.ENTITY_DATA.get());
+                var entityTag = itemStack.get(ModDataComponents.ENTITY_DATA.get());
                 if (entityTag != null && !entityTag.isEmpty()) {
-                    ((MannequinEntity) entity).readMannequinToolData(entityTag, itemStack);
+                    mannequinEntity.readMannequinToolData(entityTag, itemStack);
                     return InteractionResult.sidedSuccess(player.getLevel().isClientSide());
                 }
                 return InteractionResult.FAIL;

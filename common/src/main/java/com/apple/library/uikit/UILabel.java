@@ -71,8 +71,8 @@ public class UILabel extends UIView {
         }
         float dy = sel(rect, cachedTextHeight, textVerticalAlignment);
         for (var line : cachedTextLayout.contents()) {
-            CGPoint offset = line.offset;
-            float dx = sel(rect, line.size.width, textHorizontalAlignment);
+            var offset = line.offset;
+            var dx = sel(rect, line.size.width, textHorizontalAlignment);
             context.drawText(line.text, offset.x + dx, offset.y + dy, font, textColor, shadowColor);
         }
     }
@@ -164,10 +164,10 @@ public class UILabel extends UIView {
         CGRect rect = bounds();
         float dy = sel(rect, cachedTextHeight, textVerticalAlignment);
         for (var line : cachedTextLayout.contents()) {
-            CGPoint offset = line.offset;
-            float dx = sel(rect, line.size.width, textHorizontalAlignment);
+            var offset = line.offset;
+            var dx = sel(rect, line.size.width, textHorizontalAlignment);
             if (point.y >= offset.y + dy && point.y <= offset.y + dy + line.size.height) {
-                float ptx = point.x - dx;
+                var ptx = point.x - dx;
                 return line.text.attributes((int) ptx, line.font);
             }
         }

@@ -122,8 +122,8 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
             inventory.clearContent();
             return;
         }
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        ColorScheme scheme = descriptor.getColorScheme();
+        var descriptor = SkinDescriptor.of(itemStack);
+        var scheme = descriptor.getColorScheme();
         for (int i = 0; i < paintTypes.length; ++i) {
             ItemStack colorStack = ItemStack.EMPTY;
             IPaintColor paintColor = scheme.getColor(paintTypes[i]);
@@ -140,20 +140,20 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
         if (itemStack.isEmpty()) {
             return;
         }
-        ColorScheme newScheme = new ColorScheme();
+        var newScheme = new ColorScheme();
         for (int i = 0; i < paintTypes.length; ++i) {
-            ItemStack colorStack = inventory.getItem(i);
-            IPaintColor paintColor = ColorUtils.getColor(colorStack);
+            var colorStack = inventory.getItem(i);
+            var paintColor = ColorUtils.getColor(colorStack);
             if (paintColor != null) {
                 newScheme.setColor(paintTypes[i], paintColor);
             }
         }
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        var descriptor = SkinDescriptor.of(itemStack);
         if (newScheme.equals(descriptor.getColorScheme())) {
             return; // not any changes.
         }
         descriptor = new SkinDescriptor(descriptor, newScheme);
-        ItemStack newItemStack = itemStack.copy();
+        var newItemStack = itemStack.copy();
         newItemStack.set(ModDataComponents.SKIN.get(), descriptor);
         setOutputStack(newItemStack);
     }

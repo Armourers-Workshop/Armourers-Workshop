@@ -10,8 +10,8 @@ public enum DataDomain {
     }
 
     public static DataDomain byName(String path) {
-        String namespace = getNamespace(path);
-        for (DataDomain domain : values()) {
+        var namespace = getNamespace(path);
+        for (var domain : values()) {
             if (domain.namespace.equals(namespace)) {
                 return domain;
             }

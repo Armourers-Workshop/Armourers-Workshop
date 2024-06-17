@@ -17,7 +17,7 @@ public class TextureAnimationController {
     public static final TextureAnimationController DEFAULT = new TextureAnimationController(25, 256, TextureAnimation.Mode.LOOP);
 
     private final int frameCount;
-    private final int frameTime;
+    private final float frameTime;
 
     private final OpenMatrix4f[] frames;
 
@@ -27,7 +27,7 @@ public class TextureAnimationController {
 
     public TextureAnimationController(int frameTime, int frameCount, TextureAnimation.Mode frameMode) {
         this.frames = _genTextureMatrices(frameCount, frameMode);
-        this.frameTime = frameTime;
+        this.frameTime = Math.max(frameTime, 1) / 1000f;
         this.frameCount = frames.length;
     }
 
@@ -44,9 +44,9 @@ public class TextureAnimationController {
         return NONE;
     }
 
-    public OpenMatrix4f getTextureMatrix(int partialTicks) {
+    public OpenMatrix4f getTextureMatrix(float animationTicks) {
         if (frameCount != 0) {
-            int idx = partialTicks / frameTime;
+            var idx = (int) (animationTicks / frameTime);
             return frames[idx % frameCount];
         }
         return IDENTITY;
@@ -57,33 +57,33 @@ public class TextureAnimationController {
             return new OpenMatrix4f[0];
         }
         if (mode.equals(TextureAnimation.Mode.LOOP)) {
-            OpenMatrix4f[] frames = new OpenMatrix4f[total];
-            for (int i = 0; i < total; ++i) {
+            var frames = new OpenMatrix4f[total];
+            for (var i = 0; i < total; ++i) {
                 frames[i] = _genTextureMatrix(i / (float) total);
             }
             return frames;
         }
         if (mode.equals(TextureAnimation.Mode.BACKWARDS)) {
-            OpenMatrix4f[] frames = new OpenMatrix4f[total];
-            for (int i = 0; i < total; ++i) {
+            var frames = new OpenMatrix4f[total];
+            for (var i = 0; i < total; ++i) {
                 frames[total - i - 1] = _genTextureMatrix(i / (float) total);
             }
             return frames;
         }
         if (mode.equals(TextureAnimation.Mode.BACK_AND_FORTH)) {
-            OpenMatrix4f[] frames = new OpenMatrix4f[total + total - 2];
-            for (int i = 0; i < total; ++i) {
+            var frames = new OpenMatrix4f[total + total - 2];
+            for (var i = 0; i < total; ++i) {
                 frames[i] = _genTextureMatrix(i / (float) total);
             }
-            for (int i = 1; i < total; ++i) {
+            for (var i = 1; i < total; ++i) {
                 frames[total - i - 1] = _genTextureMatrix(i / (float) total);
             }
             return frames;
         }
         if (mode.getFrames() != null) {
-            int[] indexes = mode.getFrames();
-            OpenMatrix4f[] frames = new OpenMatrix4f[indexes.length];
-            for (int i = 0; i < indexes.length; ++i) {
+            var indexes = mode.getFrames();
+            var frames = new OpenMatrix4f[indexes.length];
+            for (var i = 0; i < indexes.length; ++i) {
                 frames[i] = _genTextureMatrix(MathUtils.clamp(indexes[i], 0, total - 1) / (float) total);
             }
             return frames;

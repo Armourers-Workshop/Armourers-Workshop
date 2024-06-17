@@ -13,9 +13,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +26,7 @@ public abstract class ConfigurableToolItem extends FlavouredItem implements ICon
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
+        var itemStack = player.getItemInHand(hand);
         if (level.isClientSide() && player.isShiftKeyDown() && openContainer(level, player, hand, itemStack)) {
             return InteractionResultHolder.success(itemStack);
         }
@@ -51,7 +49,7 @@ public abstract class ConfigurableToolItem extends FlavouredItem implements ICon
     }
 
     public boolean openContainer(Level level, Player player, InteractionHand hand, ItemStack itemStack) {
-        ArrayList<IConfigurableToolProperty<?>> properties = new ArrayList<>();
+        var properties = new ArrayList<IConfigurableToolProperty<?>>();
         createToolProperties(properties::add);
         if (properties.isEmpty()) {
             return false;
@@ -62,7 +60,7 @@ public abstract class ConfigurableToolItem extends FlavouredItem implements ICon
 
     @Environment(EnvType.CLIENT)
     public void openContainerGUI(Component title, ArrayList<IConfigurableToolProperty<?>> properties, InteractionHand hand, ItemStack itemStack) {
-        ConfigurableToolWindow window = new ConfigurableToolWindow(title, properties, itemStack, hand);
+        var window = new ConfigurableToolWindow(title, properties, itemStack, hand);
         Minecraft.getInstance().setScreen(window.asScreen());
     }
 }

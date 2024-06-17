@@ -358,21 +358,21 @@ public class ClipContextImpl {
             }
 
             public void blit(CGRect src, CGRect dst) {
-                int fh = frameHeight;
-                int sx0 = (int) (src.getMinX() * frameScale);
-                int sx1 = (int) (src.getMaxX() * frameScale);
-                int sy0 = (int) (src.getMinY() * frameScale);
-                int sy1 = (int) (src.getMaxY() * frameScale);
-                int dx0 = (int) (dst.getMinX() * frameScale);
-                int dx1 = (int) (dst.getMaxX() * frameScale);
-                int dy0 = (int) (dst.getMinY() * frameScale);
-                int dy1 = (int) (dst.getMaxY() * frameScale);
+                var fh = frameHeight;
+                var sx0 = (int) (src.getMinX() * frameScale);
+                var sx1 = (int) (src.getMaxX() * frameScale);
+                var sy0 = (int) (src.getMinY() * frameScale);
+                var sy1 = (int) (src.getMaxY() * frameScale);
+                var dx0 = (int) (dst.getMinX() * frameScale);
+                var dx1 = (int) (dst.getMaxX() * frameScale);
+                var dy0 = (int) (dst.getMinY() * frameScale);
+                var dy1 = (int) (dst.getMaxY() * frameScale);
                 GL30.glBlitFramebuffer(sx0, fh - sy0, sx1, fh - sy1, dx0, fh - dy0, dx1, fh - dy1, GL30.GL_COLOR_BUFFER_BIT, GL30.GL_NEAREST);
             }
 
             public void blit(CGRect src, CGRect dst, IVertexConsumer buffer) {
-                float sw = 1 / line.maxWidth;
-                float sh = 1 / line.maxHeight;
+                var sw = 1 / line.maxWidth;
+                var sh = 1 / line.maxHeight;
                 buffer.vertex(dst.getMinX(), dst.getMinY(), 1f).uv(src.getMinX() * sw, 1f - src.getMinY() * sh).color(255, 255, 255, 255).endVertex();
                 buffer.vertex(dst.getMinX(), dst.getMaxY(), 1f).uv(src.getMinX() * sw, 1f - src.getMaxY() * sh).color(255, 255, 255, 255).endVertex();
                 buffer.vertex(dst.getMaxX(), dst.getMaxY(), 1f).uv(src.getMaxX() * sw, 1f - src.getMaxY() * sh).color(255, 255, 255, 255).endVertex();
@@ -380,19 +380,21 @@ public class ClipContextImpl {
             }
 
             public void mask(CGRect src, IVertexConsumer buffer) {
-                float x = src.getMaxX();
-                float y = src.getMaxY();
-                float width = src.getWidth();
-                float height = src.getHeight();
+                var x = src.getMaxX();
+                var y = src.getMaxY();
+                var width = src.getWidth();
+                var height = src.getHeight();
 
-                float tx1, tx2 = 0;
-                float ty1, ty2 = 0;
+                var tx1 = 0f;
+                var tx2 = 0f;
+                var ty1 = 0f;
+                var ty2 = 0f;
 
                 // some small triangle with length of 1 pixel.
-                float pi2 = MathUtils.PI_D2;
-                int ts = (int) (pi2 * Math.abs(width)); // 2 * pi * r / 4
-                for (int idx = 0; idx <= ts; idx++) {
-                    float ap = pi2 * idx / ts;
+                var pi2 = MathUtils.PI_D2;
+                var ts = (int) (pi2 * Math.abs(width)); // 2 * pi * r / 4
+                for (var idx = 0; idx <= ts; idx++) {
+                    var ap = pi2 * idx / ts;
                     tx1 = tx2;
                     ty1 = ty2;
                     tx2 = width * MathUtils.cos(ap);
@@ -428,9 +430,9 @@ public class ClipContextImpl {
 
             @Nullable
             public Pass add(CGRect rect) {
-                float width = Math.min(Math.abs(rect.getWidth()), line.maxWidth);
-                float height = Math.min(Math.abs(rect.getHeight()), line.maxHeight);
-                Pass pass = line.add(width, height, rect);
+                var width = Math.min(Math.abs(rect.getWidth()), line.maxWidth);
+                var height = Math.min(Math.abs(rect.getHeight()), line.maxHeight);
+                var pass = line.add(width, height, rect);
                 if (pass != null) {
                     passes.add(pass);
                 }
@@ -460,7 +462,7 @@ public class ClipContextImpl {
             }
 
             private void create(int width, int height) {
-                int oldFrameBufferId = GL30.glGetInteger(GL30.GL_FRAMEBUFFER_BINDING);
+                var oldFrameBufferId = GL30.glGetInteger(GL30.GL_FRAMEBUFFER_BINDING);
                 frameBufferId = GL30.glGenFramebuffers();
                 GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBufferId);
 
@@ -522,8 +524,8 @@ public class ClipContextImpl {
                 }
                 // we first add content to the end, for reduces overlay checks.
                 if (contentLeft + width <= maxWidth) {
-                    CGRect destination = new CGRect(contentLeft, contentTop, width, height);
-                    Pass pass = new Pass(id, source, destination);
+                    var destination = new CGRect(contentLeft, contentTop, width, height);
+                    var pass = new Pass(id, source, destination);
                     contentLeft += width;
                     contentWidth += width;
                     contentHeight = Math.max(height, contentHeight);
@@ -562,7 +564,7 @@ public class ClipContextImpl {
                     }
                     return;
                 }
-                CGRect rect = pass.destination;
+                var rect = pass.destination;
                 contentWidth -= rect.width;
             }
         }

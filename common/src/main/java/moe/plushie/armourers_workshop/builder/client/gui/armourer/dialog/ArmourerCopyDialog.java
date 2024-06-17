@@ -35,10 +35,10 @@ public class ArmourerCopyDialog extends ConfirmDialog {
 
     private void setup() {
         layoutIfNeeded();
-        float width = bounds().width - 30;
-        float left = confirmButton.frame().getX() + 1;
-        float right = cancelButton.frame().getMaxX() - 1;
-        float bottom = confirmButton.frame().getY() - 4;
+        var width = bounds().width - 30;
+        var left = confirmButton.frame().getX() + 1;
+        var right = cancelButton.frame().getMaxX() - 1;
+        var bottom = confirmButton.frame().getY() - 4;
 
         mirrorCheckBox.setFrame(new CGRect(left, bottom - 22, width, 9));
         mirrorCheckBox.setTitle(NSString.localizedString("armourer.dialog.copy.mirror"));
@@ -91,9 +91,9 @@ public class ArmourerCopyDialog extends ConfirmDialog {
     }
 
     private ArrayList<UIComboItem> getItems(ArrayList<ISkinPartType> partTypes) {
-        ArrayList<UIComboItem> items = new ArrayList<>();
-        for (ISkinPartType partType : partTypes) {
-            NSString title = new NSString(TranslateUtils.Name.of(partType));
+        var items = new ArrayList<UIComboItem>();
+        for (var partType : partTypes) {
+            var title = new NSString(TranslateUtils.Name.of(partType));
             items.add(new UIComboItem(title));
         }
         return items;

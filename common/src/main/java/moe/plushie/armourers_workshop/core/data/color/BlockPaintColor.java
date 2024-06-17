@@ -29,8 +29,8 @@ public class BlockPaintColor implements IBlockPaintColor {
     public void deserializeNBT(CompoundTag tag) {
         this.paintColor = tag.getOptionalPaintColor(Side.fullyName(), null);
         this.paintColors = null;
-        for (Side side : Side.values()) {
-            IPaintColor paintColor = tag.getOptionalPaintColor(side.name, null);
+        for (var side : Side.values()) {
+            var paintColor = tag.getOptionalPaintColor(side.name, null);
             if (paintColor != null) {
                 if (this.paintColors == null) {
                     this.paintColors = new EnumMap<>(Side.class);
@@ -42,7 +42,7 @@ public class BlockPaintColor implements IBlockPaintColor {
     }
 
     public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
+        var tag = new CompoundTag();
         if (paintColor != null) {
             tag.putOptionalPaintColor(Side.fullyName(), paintColor, null);
         }
@@ -66,7 +66,7 @@ public class BlockPaintColor implements IBlockPaintColor {
             this.paintColors = getPaintColors(this.paintColor);
             this.paintColor = null;
         }
-        Side side = Side.of(dir);
+        var side = Side.of(dir);
         if (paintColor != null) {
             this.paintColors.put(side, paintColor);
         } else {
@@ -133,7 +133,7 @@ public class BlockPaintColor implements IBlockPaintColor {
         }
         int total = 0;
         IPaintColor lastColor = null;
-        for (IPaintColor paintColor : this.paintColors.values()) {
+        for (var paintColor : this.paintColors.values()) {
             if (lastColor != null && !lastColor.equals(paintColor)) {
                 return;
             }
@@ -147,9 +147,9 @@ public class BlockPaintColor implements IBlockPaintColor {
     }
 
     private EnumMap<Side, IPaintColor> getPaintColors(IPaintColor paintColor) {
-        EnumMap<Side, IPaintColor> paintColors = new EnumMap<>(Side.class);
+        var paintColors = new EnumMap<Side, IPaintColor>(Side.class);
         if (paintColor != null) {
-            for (Side side : Side.values()) {
+            for (var side : Side.values()) {
                 paintColors.put(side, paintColor);
             }
         }

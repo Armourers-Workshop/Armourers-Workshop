@@ -313,7 +313,7 @@ public class ClientWardrobeHandler {
             itemSource.setItem(itemStack);
             itemSource.setRenderPriority(entry.getRenderPriority());
             context.setReferenced(itemSource);
-            bakedSkin.setupAnim(entity, context.getAnimationTicks(), itemSource);
+            bakedSkin.setupAnim(entity, context);
             r += SkinRenderer.render(entity, bakedArmature, bakedSkin, entry.getBakedScheme(), context);
         }
         return r;

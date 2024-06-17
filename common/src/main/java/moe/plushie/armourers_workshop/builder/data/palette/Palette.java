@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.builder.data.palette;
 import com.apple.library.uikit.UIColor;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Palette {
 
@@ -51,25 +52,15 @@ public class Palette {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Palette that)) return false;
+        return Objects.equals(name, that.name);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Palette other = (Palette) obj;
-        if (name == null) {
-            return other.name == null;
-        } else return name.equals(other.name);
+    public int hashCode() {
+        return name.hashCode();
     }
 
     @Override

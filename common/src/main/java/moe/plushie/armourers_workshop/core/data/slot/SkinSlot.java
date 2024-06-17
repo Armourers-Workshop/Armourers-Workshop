@@ -38,7 +38,7 @@ public class SkinSlot extends Slot {
     public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
         if (backgroundPairs == null) {
             backgroundPairs = new ArrayList<>();
-            for (SkinSlotType slotType : slotTypes) {
+            for (var slotType : slotTypes) {
                 backgroundPairs.add(Pair.of(InventoryMenu.BLOCK_ATLAS, slotType.getIconSprite().toLocation()));
             }
         }

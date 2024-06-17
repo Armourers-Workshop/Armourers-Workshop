@@ -79,7 +79,7 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
     @Override
     public void layoutSubviews() {
         super.layoutSubviews();
-        CGRect rect = bounds();
+        var rect = bounds();
         float height = rect.getHeight();
         float width = height * 3 / 4; // 3:4
         leftView.setFrame(new CGRect(0, 0, width, height));
@@ -211,7 +211,7 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
     }
 
     private void buttonDown(UIControl sender) {
-        UIWindow window = window();
+        var window = window();
         if (window == null) {
             return;
         }
@@ -270,7 +270,7 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
         }
 
         // the click on the left side?
-        UIView view = hitTest(event.locationInView(this), event);
+        var view = hitTest(event.locationInView(this), event);
         if (view == leftView) {
             update(value - stepValue);
             sendEvent(Event.VALUE_CHANGED);
@@ -317,7 +317,7 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
     }
 
     private void inputEnd() {
-        UIWindow window = window();
+        var window = window();
         if (window == null) {
             return;
         }

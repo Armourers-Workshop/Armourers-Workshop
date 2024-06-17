@@ -3,15 +3,16 @@ package moe.plushie.armourers_workshop.core.skin;
 import moe.plushie.armourers_workshop.api.skin.ISkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
-import moe.plushie.armourers_workshop.utils.ThreadUtils;
-import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.core.texture.SkinPreviewData;
+import moe.plushie.armourers_workshop.utils.ThreadUtils;
+import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,6 +30,7 @@ public class Skin implements ISkin {
     private final SkinProperties properties;
     private final ISkinType skinType;
     private final List<SkinPart> parts;
+    private final List<SkinAnimation> animations;
 
     private Object blobs;
     private HashMap<BlockPos, Rectangle3i> blockBounds;
@@ -38,12 +40,13 @@ public class Skin implements ISkin {
     private final SkinPaintData paintData;
     private final SkinPreviewData previewData;
 
-    public Skin(ISkinType skinType, SkinProperties properties, SkinSettings settings, SkinPaintData paintData, SkinPreviewData previewData, Collection<SkinPart> skinParts) {
+    public Skin(ISkinType skinType, SkinProperties properties, SkinSettings settings, SkinPaintData paintData, SkinPreviewData previewData, Collection<SkinAnimation> skinAnimations, Collection<SkinPart> skinParts) {
         this.properties = properties;
         this.settings = settings;
         this.skinType = skinType;
         this.paintData = paintData;
         this.previewData = previewData;
+        this.animations = new ArrayList<>(skinAnimations);
         this.parts = new ArrayList<>(skinParts);
     }
 
@@ -67,7 +70,7 @@ public class Skin implements ISkin {
         if (skinType != SkinTypes.BLOCK) {
             return blockBounds;
         }
-        List<Rectangle3i> collisionBox = settings.getCollisionBox();
+        var collisionBox = settings.getCollisionBox();
         blockBounds.put(BlockPos.ZERO, Rectangle3i.ZERO);
         if (collisionBox != null) {
             for (Rectangle3i rect : collisionBox) {
@@ -84,8 +87,8 @@ public class Skin implements ISkin {
             }
             return blockBounds;
         }
-        for (SkinPart part : getParts()) {
-            HashMap<BlockPos, Rectangle3i> partBlockBounds = part.getBlockBounds();
+        for (var part : getParts()) {
+            var partBlockBounds = part.getBlockBounds();
             if (partBlockBounds != null) {
                 blockBounds.putAll(partBlockBounds);
             }
@@ -124,6 +127,10 @@ public class Skin implements ISkin {
         return parts;
     }
 
+    public List<SkinAnimation> getAnimations() {
+        return animations;
+    }
+
     public SkinItemTransforms getItemTransforms() {
         return settings.getItemTransforms();
     }
@@ -146,7 +153,7 @@ public class Skin implements ISkin {
 
     @Override
     public String toString() {
-        String returnString = "Skin [properties=" + properties + ", type=" + skinType.getRegistryName();
+        var returnString = "Skin [properties=" + properties + ", type=" + skinType.getRegistryName();
         if (paintData != null) {
             returnString += ", paintData=" + paintData;
         }
@@ -155,8 +162,8 @@ public class Skin implements ISkin {
     }
 
     public Collection<SkinMarker> getMarkers() {
-        ArrayList<SkinMarker> markers = new ArrayList<>();
-        for (SkinPart part : parts) {
+        var markers = new ArrayList<SkinMarker>();
+        for (var part : parts) {
             markers.addAll(part.getMarkers());
         }
         return markers;
@@ -170,6 +177,7 @@ public class Skin implements ISkin {
 
         private final ISkinType skinType;
         private final ArrayList<SkinPart> skinParts = new ArrayList<>();
+        private final ArrayList<SkinAnimation> skinAnimations = new ArrayList<>();
 
         private SkinPaintData paintData;
         private SkinPreviewData previewData;
@@ -205,6 +213,13 @@ public class Skin implements ISkin {
             return this;
         }
 
+        public Builder animations(List<SkinAnimation> animations) {
+            if (animations != null) {
+                this.skinAnimations.addAll(animations);
+            }
+            return this;
+        }
+
         public Builder previewData(SkinPreviewData previewData) {
             this.previewData = previewData;
             return this;
@@ -231,7 +246,7 @@ public class Skin implements ISkin {
             updateSettingIfNeeded();
             updatePropertiesIfNeeded();
             bindPropertiesIfNeeded();
-            Skin skin = new Skin(skinType, properties, settings, paintData, previewData, skinParts);
+            var skin = new Skin(skinType, properties, settings, paintData, previewData, skinAnimations, skinParts);
             skin.version = version;
             skin.blobs = blobs;
             return skin;
@@ -287,19 +302,19 @@ public class Skin implements ISkin {
 
         private void bindPropertiesIfNeeded() {
             // bind properties to part.
-            for (SkinPart part : skinParts) {
+            for (var part : skinParts) {
                 part.setProperties(properties);
             }
-            String skinIndexs = properties.get(SkinProperty.OUTFIT_PART_INDEXS);
+            var skinIndexs = properties.get(SkinProperty.OUTFIT_PART_INDEXS);
             if (skinIndexs != null && !skinIndexs.equals("")) {
-                String[] split = skinIndexs.split(":");
-                int partIndex = 0;
-                for (int skinIndex = 0; skinIndex < split.length; ++skinIndex) {
-                    SkinProperties stub = properties.slice(skinIndex);
-                    int count = Integer.parseInt(split[skinIndex]);
+                var split = skinIndexs.split(":");
+                var partIndex = 0;
+                for (var skinIndex = 0; skinIndex < split.length; ++skinIndex) {
+                    var stub = properties.slice(skinIndex);
+                    var count = Integer.parseInt(split[skinIndex]);
                     while (partIndex < count) {
                         if (partIndex < skinParts.size()) {
-                            SkinPart skinPart = skinParts.get(partIndex);
+                            var skinPart = skinParts.get(partIndex);
                             skinPart.setProperties(stub);
                         }
                         partIndex += 1;

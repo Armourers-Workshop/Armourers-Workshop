@@ -30,7 +30,7 @@ public class UserNotificationCenter {
     public static void showAlertFromServer(ExecuteAlertPacket alertPacket) {
         RenderSystem.recordRenderCall(() -> {
             if ((alertPacket.getType() & 0x80000000) != 0) {
-                ServerToastWindow window = new ServerToastWindow(alertPacket);
+                var window = new ServerToastWindow(alertPacket);
                 window.showInScreen();
             } else {
                 ServerAlertWindow window = new ServerAlertWindow(alertPacket);
@@ -40,7 +40,7 @@ public class UserNotificationCenter {
     }
 
     public static void showAlert(NSString title, NSString message, UIColor messageColor, UIView view) {
-        Impl alert = new Impl();
+        var alert = new Impl();
         alert.setTitle(title);
         alert.setMessage(message);
         if (messageColor != null) {
@@ -51,7 +51,7 @@ public class UserNotificationCenter {
     }
 
     public static void showToast(NSString message, @Nullable UIColor messageColor, NSString title, Object icon) {
-        ToastWindow window = new ToastWindow(new CGRect(0, 0, 160, 32));
+        var window = new ToastWindow(new CGRect(0, 0, 160, 32));
         window.setTitle(title);
         window.setTitleColor(new UIColor(0xff88ff));
         window.setMessage(message);
@@ -99,10 +99,10 @@ public class UserNotificationCenter {
         }
 
         private void setup() {
-            CGRect rect = bounds();
-            float w = 100;
-            float sp = (rect.width - w) / 2;
-            float bottom = rect.height - 30;
+            var rect = bounds();
+            var w = 100f;
+            var sp = (rect.width - w) / 2;
+            var bottom = rect.height - 30;
 
             messageLabel.setFrame(new CGRect(10, 30, rect.width - 20, 20));
             messageLabel.setAutoresizingMask(AutoresizingMask.flexibleWidth);
@@ -112,7 +112,7 @@ public class UserNotificationCenter {
         }
 
         protected UIButton buildButton(int x, int y, int width, int height, BiConsumer<Impl, UIControl> event) {
-            UIButton button = new UIButton(new CGRect(x, y, width, height));
+            var button = new UIButton(new CGRect(x, y, width, height));
             button.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
             button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
             button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, event);

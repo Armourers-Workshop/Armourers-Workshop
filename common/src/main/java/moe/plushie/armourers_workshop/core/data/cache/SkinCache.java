@@ -24,7 +24,7 @@ public class SkinCache {
     public Map<Skin, SkinRenderObjectBuilder> bufferBuilders = new HashMap<>();
 
     public static Object borrowKey(Object... objects) {
-        Key key = POOL.poll();
+        var key = POOL.poll();
         if (key == null) {
             key = new Key();
         }
@@ -61,9 +61,8 @@ public class SkinCache {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Key key = (Key) o;
-            return hash == key.hash && Arrays.equals(objects, key.objects);
+            if (!(o instanceof Key that)) return false;
+            return hash == that.hash && Arrays.equals(objects, that.objects);
         }
 
         @Override

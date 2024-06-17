@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.builder.network;
 
-import moe.plushie.armourers_workshop.api.action.IUserAction;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.data.undo.UndoManager;
-import moe.plushie.armourers_workshop.builder.data.undo.UndoStack;
 import moe.plushie.armourers_workshop.builder.data.undo.action.ActionRuntimeException;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModPermissions;
@@ -33,18 +31,18 @@ public class UndoActionPacket extends CustomPacket {
         // TODO: check player
         try {
             Component message;
-            UndoStack stack = UndoManager.of(player.getUUID());
+            var stack = UndoManager.of(player.getUUID());
             if (isRedo) {
                 if (!ModPermissions.REDO.accept(player)) {
                     return;
                 }
-                IUserAction command = stack.redo();
+                var command = stack.redo();
                 message = Component.translatable("chat.armourers_workshop.undo.redoing", command.name());
             } else {
                 if (!ModPermissions.UNDO.accept(player)) {
                     return;
                 }
-                IUserAction command = stack.undo();
+                var command = stack.undo();
                 message = Component.translatable("chat.armourers_workshop.undo.undoing", command.name());
             }
             player.sendSystemMessage(message);

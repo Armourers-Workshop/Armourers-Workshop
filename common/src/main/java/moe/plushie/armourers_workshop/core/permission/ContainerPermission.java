@@ -19,12 +19,12 @@ public class ContainerPermission extends Permission {
     }
 
     public <T extends AbstractContainerMenu> boolean accept(IMenuType<T> type, Entity target, Player player) {
-        IPermissionNode node = get(type.getRegistryName());
+        var node = get(type.getRegistryName());
         return eval(node, player, new TargetPermissionContext(player, target));
     }
 
     public <T extends AbstractContainerMenu> boolean accept(IMenuType<T> type, Level level, BlockPos pos, Player player) {
-        IPermissionNode node = get(type.getRegistryName());
+        var node = get(type.getRegistryName());
         return eval(node, player, new BlockPermissionContext(player, pos, level.getBlockState(pos), null));
     }
 }

@@ -7,8 +7,6 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.dialog.ArmourerClearDialog;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.dialog.ArmourerCopyDialog;
@@ -25,7 +23,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
@@ -44,21 +41,21 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
     public void init() {
         super.init();
 
-        UIButton clearBtn = new UIButton(new CGRect(10, 20, 70, 20));
+        var clearBtn = new UIButton(new CGRect(10, 20, 70, 20));
         clearBtn.setTitle(getDisplayText("clear"), UIControl.State.ALL);
         clearBtn.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
         clearBtn.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
         clearBtn.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, ArmourerBlockSetting::clearAction);
         addSubview(clearBtn);
 
-        UIButton copyBtn = new UIButton(new CGRect(10, 45, 70, 20));
+        var copyBtn = new UIButton(new CGRect(10, 45, 70, 20));
         copyBtn.setTitle(getDisplayText("copy"), UIControl.State.ALL);
         copyBtn.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
         copyBtn.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
         copyBtn.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, ArmourerBlockSetting::copyAction);
         addSubview(copyBtn);
 
-        UIButton replaceBtn = new UIButton(new CGRect(10, 70, 70, 20));
+        var replaceBtn = new UIButton(new CGRect(10, 70, 70, 20));
         replaceBtn.setTitle(getDisplayText("replace"), UIControl.State.ALL);
         replaceBtn.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
         replaceBtn.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
@@ -67,13 +64,13 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
     }
 
     private void clearAction(UIControl sender) {
-        ArmourerClearDialog dialog = new ArmourerClearDialog(getPartTypes(true));
+        var dialog = new ArmourerClearDialog(getPartTypes(true));
         dialog.setTitle(NSString.localizedString("armourer.dialog.clear.title"));
         dialog.showInView(this, () -> {
             if (dialog.isCancelled()) {
                 return;
             }
-            CompoundTag nbt = new CompoundTag();
+            var nbt = new CompoundTag();
             nbt.putBoolean(Constants.Key.SKIN_CUBES, dialog.isClearBlocks());
             nbt.putBoolean(Constants.Key.SKIN_PAINTS, dialog.isClearPaints());
             nbt.putBoolean(Constants.Key.SKIN_MARKERS, dialog.isClearMarkers());
@@ -83,13 +80,13 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
     }
 
     private void copyAction(UIControl sender) {
-        ArmourerCopyDialog dialog = new ArmourerCopyDialog(getPartTypes(false));
+        var dialog = new ArmourerCopyDialog(getPartTypes(false));
         dialog.setTitle(NSString.localizedString("armourer.dialog.copy.title"));
         dialog.showInView(this, () -> {
             if (dialog.isCancelled()) {
                 return;
             }
-            CompoundTag nbt = new CompoundTag();
+            var nbt = new CompoundTag();
             nbt.putBoolean(Constants.Key.MIRROR, dialog.isMirror());
             nbt.putBoolean(Constants.Key.SKIN_PAINTS, dialog.isCopyPaintData());
             nbt.putString(Constants.Key.SOURCE, dialog.getSourcePartType().getRegistryName().toString());
@@ -99,27 +96,27 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
     }
 
     private void replaceAction(UIControl sender) {
-        ArmourerReplaceDialog dialog = new ArmourerReplaceDialog();
+        var dialog = new ArmourerReplaceDialog();
         dialog.setTitle(NSString.localizedString("armourer.dialog.replace.title"));
         dialog.showInView(this, () -> {
             Level level = Minecraft.getInstance().level;
             if (dialog.isCancelled() || level == null) {
                 return;
             }
-            CompoundTag source = new CompoundTag();
-            ItemStack selector = dialog.getSelector();
+            var source = new CompoundTag();
+            var selector = dialog.getSelector();
             if (selector.getItem() instanceof IItemColorProvider) {
                 selector.save(level.registryAccess(), source);
             }
-            CompoundTag destination = new CompoundTag();
-            ItemStack applier = dialog.getApplier();
+            var destination = new CompoundTag();
+            var applier = dialog.getApplier();
             if (applier.getItem() instanceof IItemColorProvider) {
                 applier.save(level.registryAccess(), destination);
             }
             if (source.isEmpty() && destination.isEmpty()) {
                 return;
             }
-            CompoundTag nbt = new CompoundTag();
+            var nbt = new CompoundTag();
             nbt.put(Constants.Key.SOURCE, source);
             nbt.put(Constants.Key.DESTINATION, destination);
             nbt.putBoolean(Constants.Key.KEEP_COLOR, dialog.isKeepColor());
@@ -129,9 +126,9 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
     }
 
     public ArrayList<ISkinPartType> getPartTypes(boolean usesAll) {
-        ISkinType skinType = blockEntity.getSkinType();
-        ISkinProperties skinProperties = blockEntity.getSkinProperties();
-        ArrayList<ISkinPartType> partTypes = new ArrayList<>();
+        var skinType = blockEntity.getSkinType();
+        var skinProperties = blockEntity.getSkinProperties();
+        var partTypes = new ArrayList<ISkinPartType>();
         if (usesAll) {
             partTypes.add(0, SkinPartTypes.UNKNOWN);
         }

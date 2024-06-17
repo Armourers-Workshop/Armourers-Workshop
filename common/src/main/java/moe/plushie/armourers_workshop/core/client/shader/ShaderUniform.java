@@ -112,7 +112,7 @@ public abstract class ShaderUniform {
 
         @Override
         public void apply() {
-            OpenMatrix3f newValue = value.get();
+            var newValue = value.get();
             if (!newValue.equals(cachedValue)) {
                 cachedValue = newValue.copy();
                 cachedValue.store(buffer);

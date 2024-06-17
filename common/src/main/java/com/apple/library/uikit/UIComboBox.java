@@ -69,7 +69,7 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
     @Override
     public void layoutSubviews() {
         super.layoutSubviews();
-        CGRect rect = bounds();
+        var rect = bounds();
         float h = rect.height;
         titleView.setFrame(rect.insetBy(1, 1, 1, h + 1));
         handleView.setFrame(new CGRect(rect.width - h, 0, h, h));
@@ -94,7 +94,7 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
 
     @Override
     public UITableViewCell tableViewCellForRow(UITableView tableView, NSIndexPath indexPath) {
-        Entry entry = new Entry();
+        var entry = new Entry();
         updateEntryView(entry, items.get(indexPath.row));
         return entry;
     }
@@ -188,7 +188,7 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
     }
 
     private void applyTableViewSize() {
-        CGRect rect = bounds();
+        var rect = bounds();
         float popoverHeight = 0;
         if (maxRows != 0) {
             popoverHeight = maxRows * popoverContentView.rowHeight();
@@ -202,7 +202,7 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
     }
 
     private void addGlobalClickListener() {
-        UIWindow window = window();
+        var window = window();
         if (window != null) {
             window.addGlobalTarget(this, Event.MOUSE_LEFT_DOWN, (self, event) -> {
                 self.removeGlobalClickListener();
@@ -215,7 +215,7 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
     }
 
     private void removeGlobalClickListener() {
-        UIWindow window = window();
+        var window = window();
         if (window != null) {
             window.removeGlobalTarget(this, Event.MOUSE_LEFT_DOWN);
         }

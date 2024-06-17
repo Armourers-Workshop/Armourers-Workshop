@@ -32,15 +32,15 @@ public class Armature {
         this.wildcardJoint = wildcardJoint;
         this.shapes = new JointShape[joints.size()];
         int id = 0;
-        for (Joint joint : joints.values()) {
+        for (var joint : joints.values()) {
             this.joints[id] = joint;
             this.shapes[id] = shapes.get(joint);
             this.localTransforms[id] = transforms.getOrDefault(joint, IJointTransform.NONE);
             this.globalTransforms[id] = calcTransform(joint, transforms);
             joint.setId(id++);
         }
-        for (Map.Entry<ISkinPartType, Joint> entry : linkedJoints.entrySet()) {
-            Joint joint = entry.getValue();
+        for (var entry : linkedJoints.entrySet()) {
+            var joint = entry.getValue();
             partTypes[joint.getId()] = entry.getKey();
         }
     }
@@ -86,11 +86,11 @@ public class Armature {
     }
 
     private IJointTransform calcTransform(Joint joint, Map<Joint, IJointTransform> transforms) {
-        IJointTransform childTransform = transforms.getOrDefault(joint, IJointTransform.NONE);
+        var childTransform = transforms.getOrDefault(joint, IJointTransform.NONE);
         if (joint.getParent() == null) {
             return childTransform;
         }
-        IJointTransform parentTransform = calcTransform(joint.getParent(), transforms);
+        var parentTransform = calcTransform(joint.getParent(), transforms);
         // the parent not need the transform, so we just need to keep the child transform.
         if (parentTransform == IJointTransform.NONE) {
             return childTransform;

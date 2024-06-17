@@ -20,7 +20,7 @@ public class NamedUserAction implements IUserAction {
 
     @Override
     public void prepare() throws RuntimeException {
-        for (IUserAction childAction : actions) {
+        for (var childAction : actions) {
             childAction.prepare();
         }
     }
@@ -29,9 +29,9 @@ public class NamedUserAction implements IUserAction {
     public IUserAction apply() throws RuntimeException {
         // first prepare command to avoid backtracking, and then apply all child commands.
         prepare();
-        NamedUserAction revertGroup = new NamedUserAction(name);
-        for (IUserAction childAction : actions) {
-            IUserAction revertChildAction = childAction.apply();
+        var revertGroup = new NamedUserAction(name);
+        for (var childAction : actions) {
+            var revertChildAction = childAction.apply();
             revertGroup.push(revertChildAction);
         }
         return revertGroup;

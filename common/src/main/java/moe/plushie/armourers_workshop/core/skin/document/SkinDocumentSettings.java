@@ -23,7 +23,7 @@ public class SkinDocumentSettings {
     }
 
     public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
+        var tag = new CompoundTag();
         tag.putOptionalFloat(Keys.SCALE, scale, 1);
         tag.putOptionalBoolean(Keys.HELPER_MODEL, showsHelperModel, true);
         tag.putOptionalBoolean(Keys.ORIGIN, showsOrigin, true);
@@ -50,7 +50,7 @@ public class SkinDocumentSettings {
     public void setShowsHelperModel(boolean value) {
         this.showsHelperModel = value;
         if (listener != null) {
-            CompoundTag tag = new CompoundTag();
+            var tag = new CompoundTag();
             tag.putBoolean(Keys.HELPER_MODEL, value);
             listener.documentDidChangeSettings(tag);
         }
@@ -63,7 +63,7 @@ public class SkinDocumentSettings {
     public void setShowsOrigin(boolean value) {
         this.showsOrigin = value;
         if (listener != null) {
-            CompoundTag tag = new CompoundTag();
+            var tag = new CompoundTag();
             tag.putBoolean(Keys.ORIGIN, value);
             listener.documentDidChangeSettings(tag);
         }
@@ -76,7 +76,7 @@ public class SkinDocumentSettings {
     public void setItemTransforms(SkinItemTransforms itemTransforms) {
         this.itemTransforms = itemTransforms;
         if (listener != null) {
-            CompoundTag tag = new CompoundTag();
+            var tag = new CompoundTag();
             tag.putOptionalItemTransforms(Keys.ITEM_TRANSFORMS, itemTransforms, null);
             listener.documentDidChangeSettings(tag);
         }

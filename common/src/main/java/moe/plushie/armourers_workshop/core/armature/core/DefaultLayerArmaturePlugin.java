@@ -24,7 +24,7 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
     private final ArrayList<EntryImpl<?, ?>> applying = new ArrayList<>();
 
     public static DefaultLayerArmaturePlugin villager(ArmatureTransformerContext context) {
-        DefaultLayerArmaturePlugin plugin = new DefaultLayerArmaturePlugin();
+        var plugin = new DefaultLayerArmaturePlugin();
         plugin.register(AbstractSkinnableLayers.VILLAGER_PROFESSION, plugin::whenHeadVisible);
         context.addEntityModelListener(plugin::setEntityModel);
         context.addEntityRendererListener(plugin::setEntityRenderer);
@@ -32,7 +32,7 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
     }
 
     public static DefaultLayerArmaturePlugin slime(ArmatureTransformerContext context) {
-        DefaultLayerArmaturePlugin plugin = new DefaultLayerArmaturePlugin();
+        var plugin = new DefaultLayerArmaturePlugin();
         plugin.register(AbstractSkinnableLayers.SLIME_OUTER, plugin::whenAnyVisible);
         context.addEntityModelListener(plugin::setEntityModel);
         context.addEntityRendererListener(plugin::setEntityRenderer);
@@ -40,7 +40,7 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
     }
 
     public static DefaultLayerArmaturePlugin mob(ArmatureTransformerContext context) {
-        DefaultLayerArmaturePlugin plugin = new DefaultLayerArmaturePlugin();
+        var plugin = new DefaultLayerArmaturePlugin();
         plugin.register(AbstractSkinnableLayers.STRAY_CLOTHING, plugin::whenBodyVisible);
         plugin.register(AbstractSkinnableLayers.DROWNED_OUTER, plugin::whenBodyVisible);
         context.addEntityModelListener(plugin::setEntityModel);
@@ -153,7 +153,7 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
 
         private void set(RenderLayer<T, M> from, RenderLayer<T, M> to) {
             // we prioritize quick search.
-            List<RenderLayer<T, M>> layers = this.layers.get();
+            var layers = this.layers.get();
             if (lastIndex < layers.size()) {
                 if (layers.get(lastIndex) == from) {
                     layers.set(lastIndex, to);
@@ -161,7 +161,7 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
                 }
             }
             // can't hit cache, search again.
-            for (int index = 0; index < layers.size(); ++index) {
+            for (var index = 0; index < layers.size(); ++index) {
                 if (layers.get(index) == from) {
                     layers.set(index, to);
                     lastIndex = index;

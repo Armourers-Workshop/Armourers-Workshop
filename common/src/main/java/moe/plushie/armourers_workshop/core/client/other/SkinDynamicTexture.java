@@ -4,9 +4,9 @@ import com.mojang.blaze3d.platform.NativeImage;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
+import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -60,8 +60,8 @@ public class SkinDynamicTexture extends DynamicTexture {
 
     @Override
     public void upload() {
-        NativeImage downloadedImage = getDownloadedImage();
-        NativeImage mergedImage = getPixels();
+        var downloadedImage = getDownloadedImage();
+        var mergedImage = getPixels();
         if (mergedImage == null || downloadedImage == null) {
             return;
         }
@@ -83,14 +83,14 @@ public class SkinDynamicTexture extends DynamicTexture {
     }
 
     private void applyPaintColor(NativeImage mergedImage) {
-        for (int iy = 0; iy < paintData.getHeight(); ++iy) {
-            for (int ix = 0; ix < paintData.getWidth(); ++ix) {
-                int color = paintData.getColor(ix, iy);
+        for (var iy = 0; iy < paintData.getHeight(); ++iy) {
+            for (var ix = 0; ix < paintData.getWidth(); ++ix) {
+                var color = paintData.getColor(ix, iy);
                 if (PaintColor.isOpaque(color)) {
-                    int r = color >> 16 & 0xff;
-                    int g = color >> 8 & 0xff;
-                    int b = color & 0xff;
-                    int fixed = b << 16 | g << 8 | r;  // ARGB => ABGR
+                    var r = color >> 16 & 0xff;
+                    var g = color >> 8 & 0xff;
+                    var b = color & 0xff;
+                    var fixed = b << 16 | g << 8 | r;  // ARGB => ABGR
                     mergedImage.setPixelRGBA(ix, iy, 0xff000000 | fixed);
                 }
             }

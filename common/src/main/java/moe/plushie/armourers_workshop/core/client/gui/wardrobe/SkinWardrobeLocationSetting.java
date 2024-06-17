@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.Entity;
@@ -50,13 +49,13 @@ public class SkinWardrobeLocationSetting extends SkinWardrobeBaseSetting {
     }
 
     private void setupLabel(int x, int y, String text) {
-        UILabel label = new UILabel(new CGRect(x, y, 10, 9));
+        var label = new UILabel(new CGRect(x, y, 10, 9));
         label.setText(new NSString(text));
         addSubview(label);
     }
 
     private void setupButton(int x, int y, int u, int v, int axis, float step, String key) {
-        UIButton button = new UIButton(new CGRect(x, y, 16, 16));
+        var button = new UIButton(new CGRect(x, y, 16, 16));
         button.setBackgroundImage(ModTextures.defaultButtonImage(u, v), UIControl.State.ALL);
         button.setTooltip(getDisplayText(key));
         button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, (self, e) -> {
@@ -66,11 +65,10 @@ public class SkinWardrobeLocationSetting extends SkinWardrobeBaseSetting {
     }
 
     private void updateValue(int axis, float step) {
-        MannequinEntity entity = ObjectUtils.safeCast(this.entity, MannequinEntity.class);
-        if (entity == null) {
+        if (!(entity instanceof MannequinEntity mannequinEntity)) {
             return;
         }
-        Vec3 pos = entity.position();
+        Vec3 pos = mannequinEntity.position();
         double[] xyz = {pos.x(), pos.y(), pos.z()};
         xyz[axis] += step;
         pos = new Vec3(xyz[0], xyz[1], xyz[2]);

@@ -76,7 +76,7 @@ public abstract class EntityRenderPatch<T extends Entity> extends SkinRenderCont
 
     protected void onInit(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, EntityRenderer<?> entityRenderer) {
         setPartialTicks(partialTicks);
-        setAnimationTicks(TickUtils.ticks());
+        setAnimationTicks(TickUtils.animationTicks());
         setLightmap(packedLight);
         setPose(AbstractPoseStack.wrap(poseStackIn));
         setBuffers(AbstractBufferSource.wrap(buffersIn));

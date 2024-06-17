@@ -37,7 +37,7 @@ public class DyeTableBlock extends AbstractHorizontalBlock implements AbstractBl
         if (state.is(newState.getBlock())) {
             return;
         }
-        DyeTableBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        var blockEntity = getBlockEntity(level, blockPos);
         if (blockEntity != null) {
             DataSerializers.dropItemStack(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), blockEntity.getItem(9));
         }
@@ -45,9 +45,9 @@ public class DyeTableBlock extends AbstractHorizontalBlock implements AbstractBl
     }
 
     private DyeTableBlockEntity getBlockEntity(Level level, BlockPos blockPos) {
-        BlockEntity blockEntity = level.getBlockEntity(blockPos);
-        if (blockEntity instanceof DyeTableBlockEntity) {
-            return (DyeTableBlockEntity) blockEntity;
+        var blockEntity = level.getBlockEntity(blockPos);
+        if (blockEntity instanceof DyeTableBlockEntity blockEntity1) {
+            return blockEntity1;
         }
         return null;
     }

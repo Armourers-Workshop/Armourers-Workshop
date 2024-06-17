@@ -42,7 +42,7 @@ public class WindowManagerImpl {
     }
 
     public void addWindow(UIWindow window) {
-        UIWindow.Dispatcher dispatcher = new UIWindow.Dispatcher(window);
+        var dispatcher = new UIWindow.Dispatcher(window);
         dispatchers.add(dispatcher);
         if (isCalledInit) {
             dispatcher.init();
@@ -55,7 +55,7 @@ public class WindowManagerImpl {
 
     public void removeWindow(UIWindow window) {
         dispatchers.removeIf(dispatcher -> {
-            UIWindow.Dispatcher dispatcher1 = ObjectUtilsImpl.safeCast(dispatcher, UIWindow.Dispatcher.class);
+            var dispatcher1 = ObjectUtilsImpl.safeCast(dispatcher, UIWindow.Dispatcher.class);
             if (dispatcher1 != null && dispatcher1.window == window) {
                 dispatcher1.deinit();
                 return true;
@@ -76,23 +76,23 @@ public class WindowManagerImpl {
     }
 
     public void layout(float width, float height) {
-        CGSize size = new CGSize(width, height);
+        var size = new CGSize(width, height);
         dispatchers.forEach(dispatcher -> dispatcher.layout(size));
         lastLayoutSize = size;
     }
 
     public void render(CGGraphicsContext context, RenderInvoker foreground, RenderInvoker background, RenderInvoker overlay) {
-        float partialTicks = context.state().partialTicks();
-        int mouseX = (int) context.state().mousePos().getX();
-        int mouseY = (int) context.state().mousePos().getY();
+        var partialTicks = context.state().partialTicks();
+        var mouseX = (int) context.state().mousePos().getX();
+        var mouseY = (int) context.state().mousePos().getY();
         // we need to display a custom tooltip, so must cancel the original tooltip render,
         // we need reset mouse to impossible position to fool the original tooltip render.
-        UIView tooltipResponder = firstTooltipResponder();
+        var tooltipResponder = firstTooltipResponder();
         if (tooltipResponder != null) {
             mouseX = Integer.MIN_VALUE;
             mouseY = Integer.MIN_VALUE;
         }
-        for (WindowDispatcherImpl dispatcher : dispatchers) {
+        for (var dispatcher : dispatchers) {
             dispatcher.render(context);
             if (dispatcher == WindowDispatcherImpl.BACKGROUND) {
                 background.invoke(mouseX, mouseY, partialTicks, context);
@@ -111,7 +111,7 @@ public class WindowManagerImpl {
         if (tooltipResponder == null) {
             return;
         }
-        Object tooltip = tooltipResponder.tooltip();
+        var tooltip = tooltipResponder.tooltip();
         if (tooltip != null) {
             context.saveGraphicsState();
             context.translateCTM(0, 0, 400);
@@ -226,7 +226,7 @@ public class WindowManagerImpl {
 
         public boolean test(Function<T, InvokerResult> provider) {
             for (T value : descendingEnum()) {
-                InvokerResult result = provider.apply(value);
+                var result = provider.apply(value);
                 if (result.isDecided()) {
                     return result.conclusion();
                 }
@@ -246,7 +246,7 @@ public class WindowManagerImpl {
 
         public <A, B, C> boolean invoke(A a, B b, C c, Invoker<A, B, C, Boolean> invoker, Invoker4<T, A, B, C, InvokerResult> provider) {
             for (T value : descendingEnum()) {
-                InvokerResult ret = provider.invoke(value, a, b, c);
+                var ret = provider.invoke(value, a, b, c);
                 if (ret.isDecided()) {
                     return ret.conclusion();
                 }

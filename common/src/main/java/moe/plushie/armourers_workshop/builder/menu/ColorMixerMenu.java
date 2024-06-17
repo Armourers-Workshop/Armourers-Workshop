@@ -54,8 +54,8 @@ public class ColorMixerMenu extends AbstractBlockEntityMenu<ColorMixerBlockEntit
 
             @Override
             public void setChanged() {
-                ItemStack itemStack = inventory.getItem(0);
-                Item item = itemStack.getItem();
+                var itemStack = inventory.getItem(0);
+                var item = itemStack.getItem();
                 if (item instanceof IPaintToolPicker && inventory.getItem(1).isEmpty()) {
                     ItemStack newItemStack = itemStack.copy();
                     access.execute((world, pos) -> ((IPaintToolPicker) item).usePickTool(buildContext(world, pos, newItemStack)));
@@ -68,7 +68,7 @@ public class ColorMixerMenu extends AbstractBlockEntityMenu<ColorMixerBlockEntit
     }
 
     protected UseOnContext buildContext(Level level, BlockPos pos, ItemStack itemStack) {
-        BlockHitResult traceResult = BlockHitResult.miss(Vec3.ZERO, Direction.NORTH, pos);
+        var traceResult = BlockHitResult.miss(Vec3.ZERO, Direction.NORTH, pos);
         return new UseOnContext(level, null, InteractionHand.OFF_HAND, itemStack, traceResult);
     }
 }

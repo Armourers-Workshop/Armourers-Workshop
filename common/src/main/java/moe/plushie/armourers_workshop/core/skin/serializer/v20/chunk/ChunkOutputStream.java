@@ -4,14 +4,13 @@ import com.google.common.collect.Iterators;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
-import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOConsumer;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOExecutor;
+import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
@@ -51,8 +50,8 @@ public class ChunkOutputStream implements IOutputStream {
     public void transferTo(OutputStream finalStream) throws IOException {
         appendVariable(null);
         // load all variable nodes.
-        ChunkNode node = headNode;
-        LinkedList<ChunkNode> pending = new LinkedList<>();
+        var node = headNode;
+        var pending = new LinkedList<ChunkNode>();
         while (node != null) {
             if (!node.freeze()) {
                 pending.add(node);
@@ -60,14 +59,14 @@ public class ChunkOutputStream implements IOutputStream {
             node = node.next;
         }
         // freeze all pending variable node.
-        Iterator<ChunkNode> iterator = Iterators.cycle(pending);
+        var iterator = Iterators.cycle(pending);
         while (iterator.hasNext()) {
             if (iterator.next().freeze()) {
                 iterator.remove();
             }
         }
         // write to final stream and destroy the links.
-        byte[] bytes = buffer.array();
+        var bytes = buffer.array();
         node = headNode;
         while (node != null) {
             node.write(bytes, finalStream);
@@ -80,7 +79,7 @@ public class ChunkOutputStream implements IOutputStream {
     }
 
     protected void sumTask(IntConsumer callback, IOExecutor executor) throws IOException {
-        ChunkNode start = appendVariable(null);
+        var start = appendVariable(null);
         executor.run();
         appendNode(new ChunkNode.Sum(buffer.writerIndex(), start, callback));
     }
@@ -90,7 +89,7 @@ public class ChunkOutputStream implements IOutputStream {
             executor.run();
             return;
         }
-        ChunkNode start = appendVariable(null);
+        var start = appendVariable(null);
         appendNode(start);
         executor.run();
         appendNode(new ChunkNode.Compressed(getBuffer().writerIndex(), start, flags, this));
@@ -110,7 +109,7 @@ public class ChunkOutputStream implements IOutputStream {
     }
 
     protected ChunkNode appendVariable(ChunkVariable var) {
-        ChunkNode node = ChunkNode.of(buffer.writerIndex(), var, this);
+        var node = ChunkNode.of(buffer.writerIndex(), var, this);
         return appendNode(node);
     }
 

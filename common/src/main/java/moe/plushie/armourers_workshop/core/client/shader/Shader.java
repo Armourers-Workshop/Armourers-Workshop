@@ -63,7 +63,7 @@ public abstract class Shader {
         lastMaxVertexCount = group.maxVertexCount;
         arrayBuffer.bind();
         // apply changes of texture animation.
-        RenderSystem.setExtendedTextureMatrix(group.getTextureMatrix(TickUtils.ticks()));
+        RenderSystem.setExtendedTextureMatrix(group.getTextureMatrix(TickUtils.animationTicks()));
     }
 
     protected void clean(ShaderVertexGroup group) {
@@ -80,8 +80,8 @@ public abstract class Shader {
     }
 
     public void render(ShaderVertexObject object) {
-        int vertexes = toTriangleVertex(object.getVertexCount());
-        int maxVertexes = toTriangleVertex(lastMaxVertexCount);
+        var vertexes = toTriangleVertex(object.getVertexCount());
+        var maxVertexes = toTriangleVertex(lastMaxVertexCount);
         var entry = object.getPoseStack().last();
 
         // we need fast update the uniforms,
@@ -115,7 +115,7 @@ public abstract class Shader {
     protected abstract void draw(RenderType renderType, VertexIndexBuffer.IndexType indexType, int count, int indices);
 
     protected void setupPolygonState(ShaderVertexObject object) {
-        float polygonOffset = object.getPolygonOffset();
+        var polygonOffset = object.getPolygonOffset();
         if (polygonOffset != 0) {
             // https://sites.google.com/site/threejstuts/home/polygon_offset
             // For polygons that are parallel to the near and far clipping planes, the depth slope is zero.
@@ -127,7 +127,7 @@ public abstract class Shader {
     }
 
     protected void cleanPolygonState(ShaderVertexObject object) {
-        float polygonOffset = object.getPolygonOffset();
+        var polygonOffset = object.getPolygonOffset();
         if (polygonOffset != 0) {
             RenderSystem.polygonOffset(0f, 0f);
             RenderSystem.disablePolygonOffset();
@@ -141,10 +141,10 @@ public abstract class Shader {
             return OpenMatrix4f.identity();
         }
         // we only recreate when something changes.
-        int lightmap = object.getLightmap();
+        var lightmap = object.getLightmap();
         if (lastLightmapMat == null || lightmap != lastLightmap) {
-            int u = lightmap & 0xffff;
-            int v = (lightmap >> 16) & 0xffff;
+            var u = lightmap & 0xffff;
+            var v = (lightmap >> 16) & 0xffff;
             // a special matrix, function is reset location of the texture.
             OpenMatrix4f newValue = OpenMatrix4f.createScaleMatrix(0, 0, 0);
             newValue.m03 = u;

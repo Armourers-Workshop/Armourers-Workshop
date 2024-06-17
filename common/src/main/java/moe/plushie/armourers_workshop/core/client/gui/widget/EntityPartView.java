@@ -35,7 +35,7 @@ public class EntityPartView extends UIControl {
     @Override
     public void mouseDown(UIEvent event) {
         super.mouseDown(event);
-        Part part = getPart(event.locationInView(this));
+        var part = getPart(event.locationInView(this));
         if (part != null) {
             selectedPart = part;
             sendEvent(Event.VALUE_CHANGED);
@@ -57,7 +57,7 @@ public class EntityPartView extends UIControl {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         context.drawImage(backgroundImage, bounds());
-        for (Part part : Part.values()) {
+        for (var part : Part.values()) {
             context.fillRect(partColor.valueForState(getPartState(part)), part.bounds);
         }
     }
@@ -71,7 +71,7 @@ public class EntityPartView extends UIControl {
     }
 
     private Part getPart(CGPoint point) {
-        for (Part part : Part.values()) {
+        for (var part : Part.values()) {
             if (part.bounds.contains(point)) {
                 return part;
             }

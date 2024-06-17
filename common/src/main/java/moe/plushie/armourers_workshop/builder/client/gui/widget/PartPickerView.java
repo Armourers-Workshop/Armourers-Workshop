@@ -11,7 +11,6 @@ import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIMenuPopoverView;
 import com.apple.library.uikit.UIScrollView;
 import com.apple.library.uikit.UIView;
-import com.apple.library.uikit.UIWindow;
 import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
@@ -44,14 +43,14 @@ public class PartPickerView extends UIControl {
     }
 
     public void showInView(UIView fromView) {
-        UIWindow window = fromView.window();
+        var window = fromView.window();
         if (window == null) {
             return;
         }
         setupData();
         // reset the location.
-        CGRect bounds = bounds().applying(transform());
-        CGRect rect = fromView.convertRectToView(fromView.bounds(), window).copy();
+        var bounds = bounds().applying(transform());
+        var rect = fromView.convertRectToView(fromView.bounds(), window).copy();
         if (rect.x + bounds.width > window.bounds().getMaxX()) {
             rect.x -= bounds.width;
         }

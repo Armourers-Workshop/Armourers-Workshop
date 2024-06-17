@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init.network;
 
+import com.google.common.collect.ImmutableList;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
@@ -7,6 +8,7 @@ import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
+import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -16,8 +18,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.util.List;
 
 public class ExecuteCommandPacket extends CustomPacket {
+
+    private static final List<Class<?>> SUPPORTED_CLASSES = new ImmutableList.Builder<Class<?>>()
+            .add(ModDebugger.class)
+            .add(ModConfig.Client.class)
+            .build();
 
     private final Class<?> object;
     private final Mode mode;
@@ -47,8 +55,8 @@ public class ExecuteCommandPacket extends CustomPacket {
         return new ExecuteCommandPacket(obj, key, null, Mode.GET);
     }
 
-    public static ExecuteCommandPacket invoke(Class<?> obj, String key) {
-        return new ExecuteCommandPacket(obj, key, null, Mode.INVOKE);
+    public static ExecuteCommandPacket invoke(Class<?> obj, String key, Object... args) {
+        return new ExecuteCommandPacket(obj, key, args, Mode.INVOKE);
     }
 
     @Override
@@ -128,11 +136,13 @@ public class ExecuteCommandPacket extends CustomPacket {
     }
 
     private Class<?> readClass(IFriendlyByteBuf buffer) {
-        try {
-            return Class.forName(buffer.readUtf());
-        } catch (ClassNotFoundException e) {
-            return null;
+        String name = buffer.readUtf();
+        for (Class<?> clazz : SUPPORTED_CLASSES) {
+            if (name.equals(clazz.getName())) {
+                return clazz;
+            }
         }
+        return null;
     }
 
     public enum Mode {

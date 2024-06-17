@@ -5,13 +5,14 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIView;
-import moe.plushie.armourers_workshop.api.common.ITextureKey;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
+import moe.plushie.armourers_workshop.core.client.texture.TextureAnimationController;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.TickUtils;
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -28,16 +29,18 @@ public class PaintColorView extends UIView {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        ITextureKey texture = paintType.getTexture();
-        float cu = texture.getU();
-        float cv = texture.getV();
-        float dv = (int) (cv + TickUtils.getPaintTextureOffset()) % 256;
+        var texture = paintType.getTexture();
+        var textureMatrix = TextureAnimationController.DEFAULT.getTextureMatrix(TickUtils.animationTicks());
+        var textureOffset = Vector3f.ZERO.transforming(textureMatrix);
+        var cu = texture.getU();
+        var cv = texture.getV();
+        var dv = (int) (cv + textureOffset.getY() * 256) % 256;
 
         if (paintType != SkinPaintTypes.RAINBOW) {
             context.setBlendColor(color);
         }
 
-        CGRect rect = bounds();
+        var rect = bounds();
         context.drawResizableImage(ModTextures.CUBE, 0, 0, rect.width, rect.height, cu, dv, 1, 1, 256, 256);
         if (paintType != SkinPaintTypes.RAINBOW) {
             context.setBlendColor(UIColor.WHITE);

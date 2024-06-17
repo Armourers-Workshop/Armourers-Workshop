@@ -25,7 +25,7 @@ public final class SkinCubeTypes {
     public static final ISkinCubeType VERTEX = register("vertex", 5, false, false, ModBlocks.BOUNDING_BOX);
 
     public static ISkinCubeType byName(String name) {
-        ISkinCubeType cube = ALL_CUBES.get(name);
+        var cube = ALL_CUBES.get(name);
         if (cube != null) {
             return cube;
         }
@@ -33,7 +33,7 @@ public final class SkinCubeTypes {
     }
 
     public static ISkinCubeType byId(int index) {
-        ISkinCubeType cubeType = ALL_CUBES_MAPPING[index & 0xFF];
+        var cubeType = ALL_CUBES_MAPPING[index & 0xFF];
         if (cubeType != null) {
             return cubeType;
         }
@@ -41,7 +41,7 @@ public final class SkinCubeTypes {
     }
 
     public static ISkinCubeType byBlock(Block block) {
-        for (SkinCubeType cubeType : ALL_CUBES.values()) {
+        for (var cubeType : ALL_CUBES.values()) {
             if (cubeType.getBlock() == block) {
                 return cubeType;
             }
@@ -50,7 +50,7 @@ public final class SkinCubeTypes {
     }
 
     private static SkinCubeType register(String name, int id, boolean glass, boolean glowing, IRegistryHolder<Block> block) {
-        SkinCubeType cube = new SkinCubeType(id, glass, glowing, block);
+        var cube = new SkinCubeType(id, glass, glowing, block);
         cube.setRegistryName(OpenResourceLocation.create("armourers", name));
         if (ALL_CUBES.containsKey(cube.getRegistryName().toString())) {
             ModLog.warn("A mod tried to register a cube with an id that is in use.");

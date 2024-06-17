@@ -67,10 +67,10 @@ public class SkinCube implements ISkinCube {
 
     @Nullable
     public SkinCubeFace getFace(Direction dir) {
-        ITextureKey textureKey = getTexture(dir);
-        IPaintColor paintColor = getPaintColor(dir);
-        ISkinCubeType cubeType = getType();
-        int alpha = 255;
+        var textureKey = getTexture(dir);
+        var paintColor = getPaintColor(dir);
+        var cubeType = getType();
+        var alpha = 255;
         if (cubeType.isGlass()) {
             alpha = 127;
         }

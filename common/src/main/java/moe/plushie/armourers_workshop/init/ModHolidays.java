@@ -8,9 +8,7 @@ import moe.plushie.armourers_workshop.core.holiday.ValentinesHandler;
 import moe.plushie.armourers_workshop.core.item.GiftSackItem;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -56,7 +54,7 @@ public final class ModHolidays {
 
     @Nullable
     public static Holiday byName(String name) {
-        for (Holiday holiday : HOLIDAY_LIST) {
+        for (var holiday : HOLIDAY_LIST) {
             if (holiday.getName().equals(name)) {
                 return holiday;
             }
@@ -65,19 +63,19 @@ public final class ModHolidays {
     }
 
     public static void welcome(Player player) {
-        MinecraftServer server = player.getServer();
+        var server = player.getServer();
         if (server == null || ModConfig.Common.disableAllHolidayEvents) {
             return;
         }
-        for (Holiday holiday1 : getActiveHolidays()) {
+        for (var holiday1 : getActiveHolidays()) {
             if (holiday1.getHandler() == null) {
                 continue;
             }
-            HolidayTracker storage = HolidayTracker.of(server);
+            var storage = HolidayTracker.of(server);
             if (storage.has(player, holiday1)) {
                 continue; // the gift is already give to player in this year.
             }
-            ItemStack itemStack = GiftSackItem.of(holiday1);
+            var itemStack = GiftSackItem.of(holiday1);
             if (player.getInventory().add(itemStack)) {
                 storage.add(player, holiday1);
             } else {
@@ -100,15 +98,15 @@ public final class ModHolidays {
      * @param lengthInHours Number of hours this holiday lasts.
      */
     private static Holiday register(String name, int dayOfMonth, int month, int lengthInDays, int lengthInHours, @Nullable Supplier<Holiday.IHandler> builder) {
-        Calendar startDate = Calendar.getInstance();
+        var startDate = Calendar.getInstance();
         startDate.set(Calendar.MINUTE, 0);
         startDate.set(Calendar.HOUR_OF_DAY, 0);
         startDate.set(Calendar.MONTH, month);
         startDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        Calendar endDate = (Calendar) startDate.clone();
+        var endDate = (Calendar) startDate.clone();
         endDate.add(Calendar.DAY_OF_YEAR, lengthInDays);
         endDate.add(Calendar.HOUR_OF_DAY, lengthInHours);
-        Holiday holiday = new Holiday(name, startDate, endDate);
+        var holiday = new Holiday(name, startDate, endDate);
         if (builder != null) {
             holiday.setHandler(builder.get());
         }

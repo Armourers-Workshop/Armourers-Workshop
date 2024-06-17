@@ -13,13 +13,20 @@ import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationFunction;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationLoop;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationValue;
 import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV0;
 import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV2;
+import moe.plushie.armourers_workshop.core.skin.molang.MolangVirtualMachine;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
+import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchAnimation;
+import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchAnimator;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import org.apache.commons.lang3.tuple.Pair;
@@ -28,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -40,6 +49,7 @@ public class BedrockModelExporter {
     protected Node rootNode = new Node("", null, null);
     protected HashMap<String, Node> namedNodes = new HashMap<>();
     protected ArrayList<Pair<String, Node>> allNodes = new ArrayList<>();
+    protected ArrayList<BlockBenchAnimation> allAnimations = new ArrayList<>();
 
     protected boolean keepItemTransforms = false;
 
@@ -47,6 +57,10 @@ public class BedrockModelExporter {
         Node node = new Node(bone.getName(), bone, texture);
         allNodes.add(Pair.of(bone.getParent(), node));
         namedNodes.put(bone.getName(), node);
+    }
+
+    public void add(BlockBenchAnimation animation) {
+        allAnimations.add(animation);
     }
 
     public void add(String name, ITransformf transform) {
@@ -117,6 +131,7 @@ public class BedrockModelExporter {
         if (isKeepItemTransforms()) {
             settings.setItemTransforms(itemTransforms);
         }
+        builder.animations(exportSkinAnimations());
         builder.version(SkinSerializer.Versions.V20);
         return builder.build();
     }
@@ -204,12 +219,83 @@ public class BedrockModelExporter {
         return new SkinCubesV2.Box(rect, transform, skyBox);
     }
 
+    protected List<SkinAnimation> exportSkinAnimations() {
+        var results = new ArrayList<SkinAnimation>();
+        allAnimations.forEach(animation -> {
+            var name = animation.getName();
+            var duration = animation.getDuration();
+            var loop = switch (animation.getLoop()) {
+                case "once" -> SkinAnimationLoop.NONE;
+                case "hold" -> SkinAnimationLoop.LAST_FRAME;
+                case "loop" -> SkinAnimationLoop.LOOP;
+                default -> SkinAnimationLoop.LOOP; // missing
+            };
+            var values = exportSkinAnimationValues(animation.getAnimators());
+            if (values.isEmpty()) {
+                return;
+            }
+            results.add(new SkinAnimation(name, duration, loop, values));
+        });
+        return results;
+    }
+
+    protected Map<String, List<SkinAnimationValue>> exportSkinAnimationValues(List<BlockBenchAnimator> animators) {
+        var results = new LinkedHashMap<String, List<SkinAnimationValue>>();
+        animators.forEach(animator -> {
+            var values = results.computeIfAbsent(animator.getName(), k -> new ArrayList<>());
+            animator.getKeyframes().forEach(keyframe -> {
+                var time = keyframe.getTime();
+                var channel = keyframe.getName();
+                var function = switch (keyframe.getInterpolation()) {
+                    case "bezier" -> {
+                        // TODO: NO IMP @SAGESSE
+                        // bezier_linked
+                        // bezier_left_time
+                        // bezier_left_value
+                        // bezier_right_time
+                        // bezier_right_value
+                        //SkinAnimationFunction.bezier(null);
+                        yield SkinAnimationFunction.LINEAR;
+                    }
+                    case "linear" -> SkinAnimationFunction.LINEAR;
+                    case "step" -> SkinAnimationFunction.STEP;
+                    case "smooth" -> SkinAnimationFunction.SMOOTH;
+                    default -> SkinAnimationFunction.LINEAR; // missing
+                };
+                var points = new ArrayList<>();
+                for (var point : keyframe.getPoints()) {
+                    points.add(getOptimizedValue(point));
+                }
+                values.add(new SkinAnimationValue(time, channel, function, points));
+            });
+        });
+        return results;
+    }
+
     public boolean isKeepItemTransforms() {
         return keepItemTransforms;
     }
 
     public void setKeepItemTransforms(boolean keepItemTransforms) {
         this.keepItemTransforms = keepItemTransforms;
+    }
+
+    private Object getOptimizedValue(Object value) {
+        return switch (value) {
+            case String script -> {
+                try {
+                    var expr = MolangVirtualMachine.get().create(script);
+                    if (expr.isConstant()) {
+                        yield (float) expr.get();
+                    }
+                    yield script;
+                } catch (Exception exception) {
+                    throw new RuntimeException("can't parse \"" + script + "\" in model!", exception);
+                }
+            }
+            case Number number -> number.floatValue();
+            default -> 0;
+        };
     }
 
     public static class Node {

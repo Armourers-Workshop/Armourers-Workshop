@@ -33,7 +33,7 @@ public class WandOfStyleItem extends FlavouredItem implements IItemHandler {
     }
 
     private void openGUI(Player player, Entity entity) {
-        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        var wardrobe = SkinWardrobe.of(entity);
         if (wardrobe != null && wardrobe.isEditable(player)) {
             ModMenuTypes.WARDROBE.get().openMenu(player, wardrobe);
         }

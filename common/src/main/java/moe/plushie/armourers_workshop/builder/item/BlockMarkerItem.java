@@ -18,11 +18,11 @@ public class BlockMarkerItem extends FlavouredItem {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        Level level = context.getLevel();
-        BlockPos blockPos = context.getClickedPos();
-        BlockState blockState = level.getBlockState(blockPos);
+        var level = context.getLevel();
+        var blockPos = context.getClickedPos();
+        var blockState = level.getBlockState(blockPos);
         if (blockState.hasProperty(SkinCubeBlock.MARKER)) {
-            OptionalDirection direction = OptionalDirection.of(context.getClickedFace());
+            var direction = OptionalDirection.of(context.getClickedFace());
             if (direction.equals(SkinCubeBlock.getMarker(blockState))) {
                 direction = OptionalDirection.NONE;
             }

@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -17,9 +18,9 @@ import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.data.transform.SkinWingsTransform;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinUsedCounter;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
@@ -65,6 +66,7 @@ public class BakedSkin implements IBakedSkin {
 
     private final Range<Integer> useTickRange;
     private final List<BakedSkinPart> skinParts;
+    private final List<BakedSkinAnimation> skinAnimations;
 
     private final ColorDescriptor colorDescriptor;
     private final SkinUsedCounter usedCounter;
@@ -78,6 +80,7 @@ public class BakedSkin implements IBakedSkin {
         this.skin = skin;
         this.skinType = skinType;
         this.skinParts = bakedParts;
+        this.skinAnimations = resolveAnimations(skin.getAnimations(), bakedParts);
         this.colorScheme = colorScheme;
         this.colorDescriptor = colorDescriptor;
         this.usedCounter = usedCounter;
@@ -87,9 +90,10 @@ public class BakedSkin implements IBakedSkin {
         this.loadPartTransforms();
     }
 
-    public void setupAnim(Entity entity, float partialTicks, SkinItemSource itemSource) {
-        cachedItemTransforms.forEach(it -> it.setup(entity, itemSource));
-        cachedWingsTransforms.forEach(it -> it.setup(entity, partialTicks));
+    public void setupAnim(Entity entity, SkinRenderContext context) {
+        cachedItemTransforms.forEach(it -> it.setup(entity, context.getReferenced()));
+        cachedWingsTransforms.forEach(it -> it.setup(entity, context.getAnimationTicks()));
+        skinAnimations.forEach(it -> it.setup(entity, context));
     }
 
     public ColorScheme resolve(Entity entity, ColorScheme scheme) {
@@ -128,6 +132,10 @@ public class BakedSkin implements IBakedSkin {
 
     public List<BakedSkinPart> getParts() {
         return skinParts;
+    }
+
+    public List<BakedSkinAnimation> getAnimations() {
+        return skinAnimations;
     }
 
     public ColorScheme getColorScheme() {
@@ -186,8 +194,9 @@ public class BakedSkin implements IBakedSkin {
         var context = new SkinRenderContext();
         context.setReferenced(itemSource);
         context.setTransformType(itemSource.getTransformType());
+        context.setAnimationTicks(0);
         //context.setTransforms(entity, model);
-        setupAnim(entity, 0, context.getReferenced());
+        setupAnim(entity, context);
         return SkinRenderer.getShape(entity, armature, this, context);
     }
 
@@ -199,15 +208,13 @@ public class BakedSkin implements IBakedSkin {
             return isHookEntity(entity);
         }
         if (partType == SkinPartTypes.ITEM_FISHING_ROD1) {
-            Player player = ObjectUtils.safeCast(entity, Player.class);
-            return player != null && player.fishing != null;
+            return entity instanceof Player player && player.fishing != null;
         }
         if (partType == SkinPartTypes.ITEM_FISHING_ROD) {
             if (isHookEntity(entity)) {
                 return false;
             }
-            Player player = ObjectUtils.safeCast(entity, Player.class);
-            return player == null || player.fishing == null;
+            return !(entity instanceof Player player && player.fishing != null);
         }
         if (partType == SkinPartTypes.ITEM_ARROW) {
             // arrow part only render in arrow entity
@@ -250,7 +257,7 @@ public class BakedSkin implements IBakedSkin {
     }
 
     private void loadPartTransforms() {
-        // attach item transform
+        // attach item transform.
         skinParts.forEach(part -> {
             var transform = part.getTransform();
             if (part.getType() instanceof ICanHeld) {
@@ -259,11 +266,11 @@ public class BakedSkin implements IBakedSkin {
         });
         // search all transform
         skinParts.forEach(it -> it.getTransform().forEach(transform -> {
-            if (transform instanceof SkinWingsTransform) {
-                cachedWingsTransforms.add((SkinWingsTransform) transform);
+            if (transform instanceof SkinWingsTransform transform1) {
+                cachedWingsTransforms.add(transform1);
             }
-            if (transform instanceof BakedItemTransform) {
-                cachedItemTransforms.add((BakedItemTransform) transform);
+            if (transform instanceof BakedItemTransform transform1) {
+                cachedItemTransforms.add(transform1);
             }
         }));
     }
@@ -273,9 +280,9 @@ public class BakedSkin implements IBakedSkin {
             return;
         }
         for (var skinPart : skinParts) {
-            var bm = skinPart.getPart().getBlockBounds();
-            if (bm != null) {
-                cachedBlockBounds.putAll(bm);
+            var bounds = skinPart.getPart().getBlockBounds();
+            if (bounds != null) {
+                cachedBlockBounds.putAll(bounds);
             }
         }
     }
@@ -297,9 +304,8 @@ public class BakedSkin implements IBakedSkin {
         int maxUseTick = Integer.MIN_VALUE;
         int minUseTick = Integer.MAX_VALUE;
         for (var bakedPart : bakedParts) {
-            var partType = bakedPart.getType();
-            if (partType instanceof ICanUse) {
-                Range<Integer> range = ((ICanUse) partType).getUseRange();
+            if (bakedPart.getType() instanceof ICanUse partType) {
+                var range = partType.getUseRange();
                 maxUseTick = Math.max(maxUseTick, range.upperEndpoint());
                 minUseTick = Math.min(minUseTick, range.lowerEndpoint());
                 count += 1;
@@ -311,7 +317,6 @@ public class BakedSkin implements IBakedSkin {
         return Range.closed(minUseTick, maxUseTick);
     }
 
-
     private BakedItemModel resolveItemModel(SkinItemTransforms oldValue) {
         // we only convert transform when override item transforms is enabled.
         if (oldValue != null) {
@@ -320,13 +325,36 @@ public class BakedSkin implements IBakedSkin {
         return null;
     }
 
-    private Collection<String> resolveItemOverrides() {
+    private List<String> resolveItemOverrides() {
         var overrides = new ArrayList<String>();
         for (var part : skinParts) {
             overrides.addAll(SkinUtils.getItemOverrides(part.getType()));
             // we need search child part?
         }
         return overrides;
+    }
+
+    private List<BakedSkinAnimation> resolveAnimations(Collection<SkinAnimation> animations, List<BakedSkinPart> parts) {
+        var results = new ArrayList<BakedSkinAnimation>();
+        if (animations.isEmpty()) {
+            return results;
+        }
+        var namedParts = new HashMap<String, List<BakedSkinPart>>();
+        ObjectUtils.search(parts, BakedSkinPart::getChildren, part -> {
+            var partType = part.getType();
+            var partName = partType.getName();
+            if (partType == SkinPartTypes.ADVANCED) {
+                partName = part.getName();
+            }
+            namedParts.computeIfAbsent(partName, it -> new ArrayList<>()).add(part);
+        });
+        animations.forEach(animation -> {
+            BakedSkinAnimation bakedAnimation = new BakedSkinAnimation(animation);
+            bakedAnimation.link(namedParts);
+            results.add(bakedAnimation);
+        });
+        results.removeIf(BakedSkinAnimation::isEmpty);
+        return results;
     }
 
     @Override

@@ -23,8 +23,8 @@ public abstract class SkinPackReader {
 
     @Nullable
     public IResource findResource(String regex) {
-        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        for (IResource resource : resources) {
+        var pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        for (var resource : resources) {
             if (pattern.matcher(resource.getName()).find()) {
                 return resource;
             }
@@ -38,7 +38,7 @@ public abstract class SkinPackReader {
 
     @Nullable
     public IResource getResource(String name) {
-        for (IResource resource : resources) {
+        for (var resource : resources) {
             if (resource.getName().equalsIgnoreCase(name)) {
                 return resource;
             }

@@ -62,14 +62,14 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         addSubview(checkShowModelGuides);
         addSubview(checkShowHelper);
 
-        UILabel label = new UILabel(new CGRect(10, 20, 160, 10));
+        var label = new UILabel(new CGRect(10, 20, 160, 10));
         label.setText(getDisplayText("label.skinType"));
         addSubview(label);
 
         inputType.setText(getDisplayText("label.username"));
         addSubview(inputType);
 
-        String defaultValue = defaultValues.get(lastSource);
+        var defaultValue = defaultValues.get(lastSource);
         textBox.setMaxLength(1024);
         textBox.setDelegate(this);
         if (Strings.isNotBlank(defaultValue)) {
@@ -77,7 +77,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         }
         addSubview(textBox);
 
-        UIButton loadBtn = new UIButton(new CGRect(10, 90, 100, 20));
+        var loadBtn = new UIButton(new CGRect(10, 90, 100, 20));
         loadBtn.setTitle(getDisplayText("set"), UIControl.State.ALL);
         loadBtn.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
         loadBtn.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
@@ -133,8 +133,8 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
 
     private void submit(Object button) {
         textBox.resignFirstResponder();
-        int index = comboList.selectedIndex();
-        PlayerTextureDescriptor.Source source = PlayerTextureDescriptor.Source.values()[index + 1];
+        var index = comboList.selectedIndex();
+        var source = PlayerTextureDescriptor.Source.values()[index + 1];
         applyText(source, textBox.text());
     }
 
@@ -152,7 +152,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
     }
 
     private void applyText(PlayerTextureDescriptor.Source source, String value) {
-        PlayerTextureDescriptor descriptor = PlayerTextureDescriptor.EMPTY;
+        var descriptor = PlayerTextureDescriptor.EMPTY;
         if (Strings.isNotEmpty(value)) {
             if (source == PlayerTextureDescriptor.Source.URL) {
                 descriptor = PlayerTextureDescriptor.fromURL(value);
@@ -162,7 +162,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
             }
         }
         PlayerTextureLoader.getInstance().loadTextureDescriptor(descriptor, resolvedDescriptor -> {
-            PlayerTextureDescriptor newValue = resolvedDescriptor.orElse(PlayerTextureDescriptor.EMPTY);
+            var newValue = resolvedDescriptor.orElse(PlayerTextureDescriptor.EMPTY);
             if (lastDescriptor.equals(newValue)) {
                 return; // no changes
             }
@@ -177,11 +177,11 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
     }
 
     private void updateFlagValue(UIControl sender) {
-        int oldFlags = blockEntity.getFlags();
+        var oldFlags = blockEntity.getFlags();
         blockEntity.setShowGuides(checkShowGuides.isSelected());
         blockEntity.setShowModelGuides(checkShowModelGuides.isSelected());
         blockEntity.setShowHelper(checkShowHelper.isSelected());
-        int flags = blockEntity.getFlags();
+        var flags = blockEntity.getFlags();
         if (flags == oldFlags) {
             return;
         }
@@ -190,11 +190,11 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
     }
 
     private void setupComboList(PlayerTextureDescriptor.Source source) {
-        int selectedIndex = 0;
+        var selectedIndex = 0;
         if (source != PlayerTextureDescriptor.Source.NONE) {
             selectedIndex = source.ordinal() - 1;
         }
-        ArrayList<UIComboItem> items = new ArrayList<>();
+        var items = new ArrayList<UIComboItem>();
         items.add(new UIComboItem(getDisplayText("dropdown.user")));
         items.add(new UIComboItem(getDisplayText("dropdown.url")));
         comboList.setSelectedIndex(selectedIndex);

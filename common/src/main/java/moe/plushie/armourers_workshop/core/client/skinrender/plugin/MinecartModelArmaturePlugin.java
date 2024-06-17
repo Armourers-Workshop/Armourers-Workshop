@@ -46,26 +46,26 @@ public class MinecartModelArmaturePlugin extends ArmaturePlugin {
 
     private boolean isFlapped(AbstractMinecart entity, float partialTicks, SkinRenderData renderData) {
         var delta = entity.getDeltaMovement();
-        double dx = delta.x();
-        double dz = delta.z();
+        var dx = delta.x();
+        var dz = delta.z();
         if (dx == 0 && dz == 0) {
             // no move, keep the last state
             return renderData.getAssociatedObject(IS_FLAPPED);
         }
         var level = entity.getLevel();
-        int i = MathUtils.floor(MathUtils.lerp(partialTicks, entity.xOld, entity.getX()));
-        int j = MathUtils.floor(MathUtils.lerp(partialTicks, entity.yOld, entity.getY()));
-        int k = MathUtils.floor(MathUtils.lerp(partialTicks, entity.zOld, entity.getZ()));
+        var i = MathUtils.floor(MathUtils.lerp(partialTicks, entity.xOld, entity.getX()));
+        var j = MathUtils.floor(MathUtils.lerp(partialTicks, entity.yOld, entity.getY()));
+        var k = MathUtils.floor(MathUtils.lerp(partialTicks, entity.zOld, entity.getZ()));
         if (level.getBlockState(new BlockPos(i, j - 1, k)).is(BlockTags.RAILS)) {
             --j;
         }
-        BlockState blockState = level.getBlockState(new BlockPos(i, j, k));
+        var blockState = level.getBlockState(new BlockPos(i, j, k));
         if (!BaseRailBlock.isRail(blockState)) {
             // no rail, keep the last state
             return renderData.getAssociatedObject(IS_FLAPPED);
         }
         var shape = blockState.getValue(((BaseRailBlock) blockState.getBlock()).getShapeProperty());
-        boolean result = isFlapped(shape, dx, dz);
+        var result = isFlapped(shape, dx, dz);
         renderData.setAssociatedObject(result, IS_FLAPPED);
         return result;
     }

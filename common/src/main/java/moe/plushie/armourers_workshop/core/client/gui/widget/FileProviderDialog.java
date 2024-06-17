@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.client.gui.widget;
 
-import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
@@ -44,7 +43,7 @@ public class FileProviderDialog extends ConfirmDialog {
     }
 
     private void setup(CGRect rect) {
-        CGPoint messageOffset = messageLabel.center().copy();
+        var messageOffset = messageLabel.center().copy();
         messageOffset.y -= 10;
         messageLabel.setCenter(messageOffset);
 
@@ -60,17 +59,17 @@ public class FileProviderDialog extends ConfirmDialog {
     }
 
     private void setupEmptyView() {
-        CGRect rect = fileList.bounds();
-        UIView emptyView = new UIView(fileList.frame());
+        var rect = fileList.bounds();
+        var emptyView = new UIView(fileList.frame());
         emptyView.setAutoresizingMask(fileList.autoresizingMask());
 
-        UIImageView bg1 = new UIImageView(rect);
+        var bg1 = new UIImageView(rect);
         bg1.setImage(UIImage.of(ModTextures.LIST).fixed(11, 11).clip(1, 1, 1, 1).build());
         bg1.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
         emptyView.addSubview(bg1);
 
-        float top = (rect.height - 50) / 2;
-        UILabel titleView = new UILabel(new CGRect(10, top, rect.width - 20, 30));
+        var top = (rect.height - 50) / 2;
+        var titleView = new UILabel(new CGRect(10, top, rect.width - 20, 30));
         titleView.setText(NSString.localizedString("skin-library.dialog.fileProvider.emptyFolder", extension, rootPath.getName()));
         titleView.setTextColor(UIColor.GRAY);
         titleView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
@@ -79,7 +78,7 @@ public class FileProviderDialog extends ConfirmDialog {
         titleView.setNumberOfLines(0);
         emptyView.addSubview(titleView);
 
-        UIButton openButton = new UIButton(new CGRect((rect.width - 100) / 2, top + 30, 100, 20));
+        var openButton = new UIButton(new CGRect((rect.width - 100) / 2, top + 30, 100, 20));
         openButton.setTitle(NSString.localizedString("skin-library.dialog.fileProvider.openFolder"), UIControl.State.ALL);
         openButton.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
         openButton.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
@@ -91,8 +90,8 @@ public class FileProviderDialog extends ConfirmDialog {
     }
 
     private void selectFile(UIControl control) {
-        FileItem oldValue = selectedFile;
-        FileItem newValue = (FileItem) fileList.getSelectedItem();
+        var oldValue = selectedFile;
+        var newValue = (FileItem) fileList.getSelectedItem();
         selectedFile = newValue;
         confirmButton.setEnabled(newValue != null && !newValue.isDirectory());
         if (newValue != null && newValue.isDirectory() && oldValue == newValue) {
@@ -105,9 +104,9 @@ public class FileProviderDialog extends ConfirmDialog {
             return;
         }
         selectedPath = newSelectedPath;
-        File targetPath = new File(rootPath, selectedPath);
-        ArrayList<FileItem> items = getSkinFiles(targetPath, false);
-        String path = SkinFileUtils.getRelativePath(targetPath, rootPath, true);
+        var targetPath = new File(rootPath, selectedPath);
+        var items = getSkinFiles(targetPath, false);
+        var path = SkinFileUtils.getRelativePath(targetPath, rootPath, true);
         if (path != null && !path.equals("/")) {
             items.add(0, new FileItem("..", newSelectedPath + "/..", true));
         }
@@ -129,7 +128,7 @@ public class FileProviderDialog extends ConfirmDialog {
     }
 
     private ArrayList<FileItem> getSkinFiles(File directory, boolean recursive) {
-        ArrayList<FileItem> fileList = new ArrayList<>();
+        var fileList = new ArrayList<FileItem>();
         File[] templateFiles;
         try {
             templateFiles = directory.listFiles();
@@ -142,9 +141,9 @@ public class FileProviderDialog extends ConfirmDialog {
             return fileList;
         }
 
-        for (File file : templateFiles) {
-            String path = SkinFileUtils.getRelativePath(file, rootPath, true);
-            String filename = file.getName();
+        for (var file : templateFiles) {
+            var path = SkinFileUtils.getRelativePath(file, rootPath, true);
+            var filename = file.getName();
             if (file.isDirectory()) {
                 fileList.add(new FileItem(filename, path, true));
                 continue;
@@ -157,7 +156,7 @@ public class FileProviderDialog extends ConfirmDialog {
         Collections.sort(fileList);
 
         if (recursive) {
-            for (File file : templateFiles) {
+            for (var file : templateFiles) {
                 if (file.isDirectory()) {
                     fileList.addAll(getSkinFiles(file, true));
                 }

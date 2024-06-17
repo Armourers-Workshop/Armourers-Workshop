@@ -31,16 +31,16 @@ public class BakedModelStorage {
 
     @Nullable
     public static BakedModelStorage unwrap(BakedModel bakedModel) {
-        if (bakedModel instanceof IAssociatedObjectProvider) {
-            return ((IAssociatedObjectProvider) bakedModel).getAssociatedObject();
+        if (bakedModel instanceof IAssociatedObjectProvider provider) {
+            return provider.getAssociatedObject();
         }
         return null;
     }
 
     public static BakedModel wrap(BakedModel bakedModel, ItemStack itemStack, EmbeddedSkinStack embeddedStack, LivingEntity entity, @Nullable Level level) {
         // we use a java proxy, which will forward all methods back to the original baked model.
-        Class<?>[] classes = new Class[]{BakedModel.class, IAssociatedObjectProvider.class};
-        BakedModelStorage storage = new BakedModelStorage(itemStack, embeddedStack, entity, level, bakedModel);
+        var classes = new Class[]{BakedModel.class, IAssociatedObjectProvider.class};
+        var storage = new BakedModelStorage(itemStack, embeddedStack, entity, level, bakedModel);
         return (BakedModel) Proxy.newProxyInstance(BakedModel.class.getClassLoader(), classes, (proxy, method, methodArgs) -> {
             if (method.getDeclaringClass() == IAssociatedObjectProvider.class) {
                 return storage;

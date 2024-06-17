@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
 
@@ -38,7 +37,7 @@ public class SkinRendererManager {
     }
 
     public static void reload() {
-        EntityRenderDispatcher entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
+        var entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
         if (entityRenderManager == null) {
             // call again later!!!
             RenderSystem.recordRenderCall(SkinRendererManager::reload);
@@ -49,15 +48,15 @@ public class SkinRendererManager {
 
     private static void _reload(EntityRenderDispatcher entityRenderManager) {
 
-        for (EntityRenderer<? extends Player> renderer : entityRenderManager.playerRenderers.values()) {
-            if (renderer instanceof LivingEntityRenderer<?, ?>) {
-                setupRenderer(EntityType.PLAYER, (LivingEntityRenderer<?, ?>) renderer, true);
+        for (var renderer : entityRenderManager.playerRenderers.values()) {
+            if (renderer instanceof LivingEntityRenderer<?, ?> livingEntityRenderer) {
+                setupRenderer(EntityType.PLAYER, livingEntityRenderer, true);
             }
         }
 
         entityRenderManager.renderers.forEach((entityType1, entityRenderer) -> {
-            if (entityRenderer instanceof LivingEntityRenderer<?, ?>) {
-                setupRenderer(entityType1, (LivingEntityRenderer<?, ?>) entityRenderer, true);
+            if (entityRenderer instanceof LivingEntityRenderer<?, ?> livingEntityRenderer) {
+                setupRenderer(entityType1, livingEntityRenderer, true);
             }
         });
 
@@ -87,27 +86,27 @@ public class SkinRendererManager {
     }
 
     private static void _bind(IEntityTypeProvider<?> entityType, EntityProfile entityProfile) {
-        EntityType<?> resolvedEntityType = entityType.get();
+        var resolvedEntityType = entityType.get();
         if (resolvedEntityType == null) {
             return;
         }
-        EntityRenderDispatcher entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
+        var entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
         if (entityRenderManager == null) {
             return;
         }
         // Add our own custom armor layer to the various player renderers.
         if (resolvedEntityType == EntityType.PLAYER) {
-            for (EntityRenderer<? extends Player> renderer : entityRenderManager.playerRenderers.values()) {
-                if (renderer instanceof LivingEntityRenderer<?, ?>) {
-                    setupRenderer(resolvedEntityType, (LivingEntityRenderer<?, ?>) renderer, false);
+            for (var renderer : entityRenderManager.playerRenderers.values()) {
+                if (renderer instanceof LivingEntityRenderer<?, ?> livingEntityRenderer) {
+                    setupRenderer(resolvedEntityType, livingEntityRenderer, false);
                 }
             }
         }
         // Add our own custom armor layer to everything that has an armor layer
         entityRenderManager.renderers.forEach((entityType1, renderer) -> {
             if (resolvedEntityType.equals(entityType1)) {
-                if (renderer instanceof LivingEntityRenderer<?, ?>) {
-                    setupRenderer(resolvedEntityType, (LivingEntityRenderer<?, ?>) renderer, false);
+                if (renderer instanceof LivingEntityRenderer<?, ?> livingEntityRenderer) {
+                    setupRenderer(resolvedEntityType, livingEntityRenderer, false);
                 } else {
                     setupFallbackRenderer(resolvedEntityType, renderer);
                 }

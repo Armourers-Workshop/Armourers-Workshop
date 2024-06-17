@@ -16,9 +16,9 @@ public abstract class UpdatableBlockEntity extends AbstractBlockEntity implement
 
     @Override
     public void sendBlockUpdates() {
-        Level level = getLevel();
+        var level = getLevel();
         if (level != null) {
-            BlockState state = getBlockState();
+            var state = getBlockState();
             level.sendBlockUpdated(getBlockPos(), state, state, Constants.BlockFlags.DEFAULT_AND_RERENDER);
         }
     }

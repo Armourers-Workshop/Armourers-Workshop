@@ -48,8 +48,8 @@ public class HolidayTracker extends AbstractSavedData {
     @Override
     public void readAdditionalData(IDataSerializer serializer) {
         logs.clear();
-        String prefix = calendar.get(Calendar.YEAR) + ":";
-        for (String log : serializer.read(LOG_KEY)) {
+        var prefix = calendar.get(Calendar.YEAR) + ":";
+        for (var log : serializer.read(LOG_KEY)) {
             // ignore more than 1 year ago the logs
             if (log.startsWith(prefix)) {
                 logs.add(log);
@@ -59,9 +59,9 @@ public class HolidayTracker extends AbstractSavedData {
 
     @Override
     public void writeAdditionalData(IDataSerializer serializer) {
-        String prefix = calendar.get(Calendar.YEAR) + ":";
-        ArrayList<String> logs = new ArrayList<>();
-        for (String log : logs) {
+        var prefix = calendar.get(Calendar.YEAR) + ":";
+        var logs = new ArrayList<String>();
+        for (var log : logs) {
             // ignore more than 1 year ago the logs
             if (log.startsWith(prefix)) {
                 logs.add(log);

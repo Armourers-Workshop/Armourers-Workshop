@@ -36,13 +36,13 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
 
     @Override
     public InteractionResult useOnFirst(ItemStack itemStack, UseOnContext context) {
-        Level level = context.getLevel();
-        Player player = context.getPlayer();
+        var level = context.getLevel();
+        var player = context.getPlayer();
         if (level.isClientSide() || player == null) {
             return InteractionResult.SUCCESS;
         }
-        BlockPos linkedBlockPos = itemStack.get(ModDataComponents.LINKED_POS.get());
-        SkinnableBlockEntity blockEntity = getTitleEntity(level, context.getClickedPos());
+        var linkedBlockPos = itemStack.get(ModDataComponents.LINKED_POS.get());
+        var blockEntity = getTitleEntity(level, context.getClickedPos());
         if (blockEntity != null && player.isSecondaryUseActive()) {
             blockEntity.setLinkedBlockPos(null);
             player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.linking-tool.clear"));
@@ -68,7 +68,7 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
     }
 
     private SkinnableBlockEntity getTitleEntity(Level level, BlockPos blockPos) {
-        BlockEntity blockEntity = level.getBlockEntity(blockPos);
+        var blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity instanceof SkinnableBlockEntity) {
             return (SkinnableBlockEntity) blockEntity;
         }

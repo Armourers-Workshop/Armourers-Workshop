@@ -29,7 +29,7 @@ public class ServerAlertWindow extends MenuWindow<AbstractContainerMenu> {
 
     @Override
     public void init() {
-        NotificationDialog dialog = new NotificationDialog();
+        var dialog = new NotificationDialog();
         dialog.setTitle(new NSString(alertPacket.getTitle()));
         dialog.setMessage(new NSString(alertPacket.getMessage()));
         if (alertPacket.getType() == 1) {
@@ -41,8 +41,8 @@ public class ServerAlertWindow extends MenuWindow<AbstractContainerMenu> {
     }
 
     public void showInScreen() {
-        Minecraft minecraft = Minecraft.getInstance();
-        WrappedScreen screen = new WrappedScreen(this, alertPacket.getTitle());
+        var minecraft = Minecraft.getInstance();
+        var screen = new WrappedScreen(this, alertPacket.getTitle());
         screen.setTarget(minecraft.screen);
         // we must the screen before set, otherwise it will cause the previous screen to close.
         minecraft.screen = null;
@@ -50,8 +50,8 @@ public class ServerAlertWindow extends MenuWindow<AbstractContainerMenu> {
     }
 
     public void dismiss() {
-        Minecraft minecraft = Minecraft.getInstance();
-        WrappedScreen screen = ObjectUtils.safeCast(minecraft.screen, WrappedScreen.class);
+        var minecraft = Minecraft.getInstance();
+        var screen = ObjectUtils.safeCast(minecraft.screen, WrappedScreen.class);
         if (screen == null) {
             return;
         }

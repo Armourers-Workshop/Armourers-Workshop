@@ -5,8 +5,8 @@ import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.ITooltipContext;
-import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
@@ -40,9 +40,9 @@ public class BottleItem extends FlavouredItem implements IItemTintColorProvider,
 
     @Override
     public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity blockEntity, UseOnContext context) {
-        ItemStack itemStack = context.getItemInHand();
-        if (blockEntity instanceof IPaintProvider) {
-            setItemColor(itemStack, ((IPaintProvider) blockEntity).getColor());
+        var itemStack = context.getItemInHand();
+        if (blockEntity instanceof IPaintProvider provider) {
+            setItemColor(itemStack, provider.getColor());
             return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.PASS;
@@ -50,7 +50,7 @@ public class BottleItem extends FlavouredItem implements IItemTintColorProvider,
 
     @Override
     public boolean isFoil(ItemStack itemStack) {
-        IPaintColor paintColor = getItemColor(itemStack);
+        var paintColor = getItemColor(itemStack);
         if (paintColor != null) {
             return paintColor.getPaintType() != SkinPaintTypes.NORMAL;
         }
@@ -84,7 +84,7 @@ public class BottleItem extends FlavouredItem implements IItemTintColorProvider,
     @Environment(EnvType.CLIENT)
     public void appendHoverText(ItemStack itemStack, List<Component> tooltips, ITooltipContext context) {
         super.appendHoverText(itemStack, tooltips, context);
-        IPaintColor paintColor = getItemColor(itemStack);
+        var paintColor = getItemColor(itemStack);
         if (paintColor != null) {
             tooltips.addAll(ColorUtils.getColorTooltips(paintColor, false));
         } else {

@@ -1,15 +1,12 @@
 package moe.plushie.armourers_workshop.core.skin.exporter;
 
-import moe.plushie.armourers_workshop.api.math.IRectangle3f;
-import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.api.skin.ISkinExporter;
-import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.data.transform.SkinPartTransform;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCuller;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
@@ -51,17 +48,17 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         this.colors = new HashMap<>();
         this.faceIndex = 0;
 
-        File outputFile = new File(filePath, filename + ".obj");
-        FileOutputStream fos = new FileOutputStream(outputFile);
-        OutputStreamWriter os = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+        var outputFile = new File(filePath, filename + ".obj");
+        var fos = new FileOutputStream(outputFile);
+        var os = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
 
-        ArrayList<Task> tasks = new ArrayList<>();
+        var tasks = new ArrayList<Task>();
 
         int colorIndex = 0;
         int totalFaces = 0;
-        for (SkinPart skinPart : skin.getParts()) {
-            Task task = new Task(skin, skinPart);
-            for (SkinCubeFace face : task.skinFaces) {
+        for (var skinPart : skin.getParts()) {
+            var task = new Task(skin, skinPart);
+            for (var face : task.skinFaces) {
                 if (face.getPaintType() == SkinPaintTypes.NONE) {
                     continue;
                 }
@@ -75,31 +72,31 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         }
         ModLog.debug("create task with {} total faces.", totalFaces);
 
-        int textureTotalSize = colors.size();
-        int textureSize = 0;
+        var textureTotalSize = colors.size();
+        var textureSize = 0;
         while (textureSize * textureSize < textureTotalSize * 4) {
             textureSize = getNextPowerOf2(textureSize + 1);
         }
         ModLog.debug("create {}x{} texture of {}", textureSize, textureSize, textureTotalSize);
 
-        TextureBuilder textureBuilder = new TextureBuilder(textureSize, textureSize);
+        var textureBuilder = new TextureBuilder(textureSize, textureSize);
         colors.forEach((color, index) -> textureBuilder.setColor(index, color));
 
         os.write("# WavefrontObj" + CRLF);
         os.write("# This file was exported from the Minecraft mod Armourer's Workshop" + CRLF);
         os.write("mtllib " + filename + ".mtl" + CRLF);
 
-        int partIndex = 0;
-        for (Task task : tasks) {
-            OpenPoseStack poseStack = new OpenPoseStack();
-            SkinPart part = task.skinPart;
-            SkinPartTransform transform = new SkinPartTransform(part, SkinTransform.IDENTITY);
+        var partIndex = 0;
+        for (var task : tasks) {
+            var poseStack = new OpenPoseStack();
+            var part = task.skinPart;
+            var transform = new SkinPartTransform(part, SkinTransform.IDENTITY);
             // apply the render context matrix.
             poseStack.scale(scale, scale, scale);
             poseStack.scale(-1, -1, 1);
             poseStack.rotate(Vector3f.YP.rotationDegrees(90));
             // apply the origin offset.
-            IVector3i pos = part.getType().getRenderOffset();
+            var pos = part.getType().getRenderOffset();
             poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
             // apply the marker rotation and offset.
             transform.apply(poseStack);
@@ -117,15 +114,15 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
     private void exportPart(OpenPoseStack poseStack, ArrayList<SkinCubeFace> allFaces, SkinPart skinPart, Skin skin, OutputStreamWriter os, TextureBuilder texture, int partIndex) throws IOException {
         // user maybe need apply some effects for the glass or glowing blocks,
         // so we need split the glass and glowing block into separate layers.
-        HashMap<ISkinCubeType, ArrayList<SkinCubeFace>> faces = new HashMap<>();
-        for (SkinCubeFace face : allFaces) {
+        var faces = new HashMap<ISkinCubeType, ArrayList<SkinCubeFace>>();
+        for (var face : allFaces) {
             if (face.getPaintType() != SkinPaintTypes.NONE) {
                 faces.computeIfAbsent(face.getType(), k -> new ArrayList<>()).add(face);
             }
         }
         String[] layerNames = {"opaque", "glowing", "transparent", "transparent-glowing"};
         for (int i = 0; i < SkinCubeTypes.getTotalCubes(); ++i) {
-            ArrayList<SkinCubeFace> faces1 = faces.get(SkinCubeTypes.byId(i));
+            var faces1 = faces.get(SkinCubeTypes.byId(i));
             if (faces1 != null && !faces1.isEmpty()) {
                 exportLayer(poseStack, faces1, skinPart, skin, os, texture, layerNames[i], partIndex);
             }
@@ -141,27 +138,27 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         os.flush();
 
         // Export vertex list.
-        for (SkinCubeFace face : faces) {
-            IRectangle3f shape = face.getShape();
-            float x = shape.getX();
-            float y = shape.getY();
-            float z = shape.getZ();
-            float w = shape.getWidth();
-            float h = shape.getHeight();
-            float d = shape.getDepth();
-            float[][] vertexes = SkinUtils.getRenderVertexes(face.getDirection());
-            for (int i = 0; i < 4; ++i) {
+        for (var face : faces) {
+            var shape = face.getShape();
+            var x = shape.getX();
+            var y = shape.getY();
+            var z = shape.getZ();
+            var w = shape.getWidth();
+            var h = shape.getHeight();
+            var d = shape.getDepth();
+            var vertexes = SkinUtils.getRenderVertexes(face.getDirection());
+            for (var i = 0; i < 4; ++i) {
                 writeVert(poseStack, os, x + vertexes[i][0] * w, y + vertexes[i][1] * h, z + vertexes[i][2] * d);
             }
         }
 
         // TODO: add adv skin support.
-        double scale = 1.0 / texture.width;
-        for (SkinCubeFace face : faces) {
+        var scale = 1.0 / texture.width;
+        for (var face : faces) {
             int index = colors.getOrDefault(face.getColor().getRGB() | 0xff000000, 0);
 
-            double ix = texture.getX(index) + 0.5;
-            double iy = texture.getY(index) + 0.5;
+            var ix = texture.getX(index) + 0.5;
+            var iy = texture.getY(index) + 0.5;
 
             writeTexture(os, (ix + 1) * scale, iy * scale);
             writeTexture(os, (ix + 1) * scale, (iy + 1) * scale);
@@ -169,12 +166,12 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
             writeTexture(os, ix * scale, iy * scale);
         }
 
-        for (SkinCubeFace face : faces) {
-            float[][] vertexes = SkinUtils.getRenderVertexes(face.getDirection());
+        for (var face : faces) {
+            var vertexes = SkinUtils.getRenderVertexes(face.getDirection());
             writeNormal(poseStack, os, vertexes[4][0], vertexes[4][1], vertexes[4][2]);
         }
 
-        for (SkinCubeFace face : faces) {
+        for (var face : faces) {
             // Vertex / texture index / normal index
             os.write("f");
             os.write(String.format(" %d/%d/%d", 4 * faceIndex + 1, 4 * faceIndex + 1, faceIndex + 1));
@@ -187,13 +184,13 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
     }
 
     private void writeVert(OpenPoseStack poseStack, OutputStreamWriter os, float x, float y, float z) throws IOException {
-        Vector4f v = new Vector4f(x, y, z, 1);
+        var v = new Vector4f(x, y, z, 1);
         v.transform(poseStack.last().pose());
         os.write(String.format("v %s %s %s", f2s(v.x()), f2s(v.y()), f2s(v.z())) + CRLF);
     }
 
     private void writeNormal(OpenPoseStack poseStack, OutputStreamWriter os, float x, float y, float z) throws IOException {
-        Vector3f v = new Vector3f(x, y, z);
+        var v = new Vector3f(x, y, z);
         v.transform(poseStack.last().normal());
         os.write(String.format("vn %s %s %s", f2s(v.x()), f2s(v.y()), f2s(v.z())) + CRLF);
     }
@@ -203,9 +200,9 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
     }
 
     private void createMtlFile(File filePath, String filename) throws IOException {
-        File outputFile = new File(filePath, filename + ".mtl");
-        FileOutputStream fos = new FileOutputStream(outputFile);
-        OutputStreamWriter os = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+        var outputFile = new File(filePath, filename + ".mtl");
+        var fos = new FileOutputStream(outputFile);
+        var os = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
         os.write("newmtl basetexture" + CRLF);
         os.write("Ns 96.078431" + CRLF);
         os.write("Ka 1.000000 1.000000 1.000000" + CRLF);
@@ -237,8 +234,8 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         final ArrayList<SkinCubeFace> skinFaces;
 
         Task(Skin skin, SkinPart skinPart) {
-            SkinCubes cubeData = skinPart.getCubeData();
-            Rectangle3i bounds = new Rectangle3i(cubeData.getShape().bounds());
+            var cubeData = skinPart.getCubeData();
+            var bounds = new Rectangle3i(cubeData.getShape().bounds());
             this.skin = skin;
             this.skinPart = skinPart;
             this.skinFaces = SkinCuller.cullFaces(cubeData, bounds);
@@ -258,8 +255,8 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         }
 
         void setColor(int index, int color) {
-            int ix = getX(index);
-            int iy = height - 1 - getY(index);
+            var ix = getX(index);
+            var iy = height - 1 - getY(index);
             image.setRGB(ix, iy, color);
             image.setRGB(ix + 1, iy, color);
             image.setRGB(ix, iy - 1, color);

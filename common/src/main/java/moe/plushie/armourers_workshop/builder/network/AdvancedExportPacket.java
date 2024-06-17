@@ -32,7 +32,7 @@ public class AdvancedExportPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // this is an unauthorized operation, ignore it
-        BlockEntity blockEntity = player.getLevel().getBlockEntity(pos);
+        var blockEntity = player.getLevel().getBlockEntity(pos);
         if (!(blockEntity instanceof AdvancedBuilderBlockEntity blockEntity1) || !(player.containerMenu instanceof AdvancedBuilderMenu)) {
             abort(player, "unauthorized", "user status is incorrect");
             return;
@@ -47,12 +47,12 @@ public class AdvancedExportPacket extends CustomPacket {
     }
 
     private void accept(Player player, String op) {
-        String playerName = player.getScoreboardName();
+        var playerName = player.getScoreboardName();
         ModLog.info("accept {} request of the '{}'", op, playerName);
     }
 
     private void abort(Player player, String op, String reason) {
-        String playerName = player.getScoreboardName();
+        var playerName = player.getScoreboardName();
         ModLog.info("abort {} request of the '{}', reason: '{}'", op, playerName, reason);
     }
 }

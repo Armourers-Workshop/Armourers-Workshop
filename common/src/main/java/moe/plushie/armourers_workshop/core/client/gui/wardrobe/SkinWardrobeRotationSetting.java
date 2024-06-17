@@ -71,7 +71,7 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
     }
 
     private UISliderBox setupSlider(int x, int y, String key) {
-        UISliderBox slider = new UISliderBox(new CGRect(x, y, 160, 10));
+        var slider = new UISliderBox(new CGRect(x, y, 160, 10));
         slider.setMinValue(-180);
         slider.setMaxValue(180);
         slider.setFormatter(currentValue -> new NSString(String.format("%s%.2f°", key, currentValue)));
@@ -82,7 +82,7 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
     }
 
     private void setupButton(int x, int y, String key, BiConsumer<SkinWardrobeRotationSetting, UIControl> consumer) {
-        UIButton button = new UIButton(new CGRect(x, y, 100, 16));
+        var button = new UIButton(new CGRect(x, y, 100, 16));
         button.setTitle(getDisplayText(key), UIControl.State.ALL);
         button.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
         button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
@@ -96,7 +96,7 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
 
     public void setSelectedPart(EntityPartView.Part part) {
         partView.setSelectedPart(part);
-        Rotations rotations = part.getValue(entity);
+        var rotations = part.getValue(entity);
         sliderX.setValue(getAngle(rotations.getX()));
         sliderY.setValue(getAngle(rotations.getY()));
         sliderZ.setValue(getAngle(rotations.getZ()));
@@ -117,14 +117,14 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
         if (!(entity instanceof MannequinEntity mannequinEntity)) {
             return;
         }
-        CompoundTag nbt = mannequinEntity.saveCustomPose();
+        var nbt = mannequinEntity.saveCustomPose();
         NetworkManager.sendToServer(UpdateWardrobePacket.Field.MANNEQUIN_POSE.buildPacket(wardrobe, nbt));
     }
 
     private void randomRotation(UIControl button) {
-        HashMap<EntityPartView.Part, Rotations> parts = getRandomParts();
-        for (EntityPartView.Part part : EntityPartView.Part.values()) {
-            Rotations rotations = parts.get(part);
+        var parts = getRandomParts();
+        for (var part : EntityPartView.Part.values()) {
+            var rotations = parts.get(part);
             if (rotations != null) {
                 part.setValue(entity, rotations);
             }
@@ -134,8 +134,8 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
     }
 
     private void resetRotation(UIControl button) {
-        boolean isCtrl = InputManagerImpl.hasControlDown();
-        for (EntityPartView.Part part : EntityPartView.Part.values()) {
+        var isCtrl = InputManagerImpl.hasControlDown();
+        for (var part : EntityPartView.Part.values()) {
             if (isCtrl) {
                 part.setValue(entity, new Rotations(0, 0, 0));
             } else {
@@ -147,7 +147,7 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
     }
 
     private HashMap<EntityPartView.Part, Rotations> getRandomParts() {
-        Random random = new Random();
+        var random = new Random();
         // we get rotations from pre-defined json.
         if (InputManagerImpl.hasControlDown() && !RANDOMLY_ROTATIONS.isEmpty()) {
             int index = RANDOMLY_INDEX;
@@ -155,15 +155,15 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
             return RANDOMLY_ROTATIONS.get(index);
         }
         // we get rotations from generator.
-        HashMap<EntityPartView.Part, Rotations> parts = new HashMap<>();
-        for (EntityPartView.Part part : EntityPartView.Part.values()) {
+        var parts = new HashMap<EntityPartView.Part, Rotations>();
+        for (var part : EntityPartView.Part.values()) {
             if (part == EntityPartView.Part.BODY) {
                 continue;
             }
-            float x = 0.0f;
-            float y = 0.0f;
-            float z = 0.0f;
-            for (int j = 0; j < 3; j++) {
+            var x = 0.0f;
+            var y = 0.0f;
+            var z = 0.0f;
+            for (var j = 0; j < 3; j++) {
                 x += random.nextFloat() * 60.0f - 30.0f;
                 y += random.nextFloat() * 60.0f - 30.0f;
                 z += random.nextFloat() * 60.0f - 30.0f;
@@ -181,18 +181,18 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
     }
 
     private void loadRandomlyRotations() {
-        IResourceManager resourceManager = Minecraft.getInstance().getResourceManager().asResourceManager();
+        var resourceManager = Minecraft.getInstance().getResourceManager().asResourceManager();
         resourceManager.readResources(ModConstants.key("models/entity/mannequin"), s -> s.endsWith(".json"), (location, resource) -> {
-            IDataPackObject object = StreamUtils.fromPackObject(resource);
+            var object = StreamUtils.fromPackObject(resource);
             if (object == null) {
                 return;
             }
-            HashMap<EntityPartView.Part, Rotations> parts = new HashMap<>();
-            for (EntityPartView.Part part : EntityPartView.Part.values()) {
+            var parts = new HashMap<EntityPartView.Part, Rotations>();
+            for (var part : EntityPartView.Part.values()) {
                 object.get(part.name).ifPresent(it -> {
-                    float x = it.at(0).floatValue();
-                    float y = it.at(1).floatValue();
-                    float z = it.at(2).floatValue();
+                    var x = it.at(0).floatValue();
+                    var y = it.at(1).floatValue();
+                    var z = it.at(2).floatValue();
                     parts.put(part, new Rotations(x, y, z));
                 });
             }

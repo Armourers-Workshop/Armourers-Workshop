@@ -34,7 +34,7 @@ public class ConfirmDialog extends BaseDialog {
     }
 
     private void setup() {
-        CGRect rect = bounds();
+        var rect = bounds();
         float w = 100;
         float sp = (rect.width - w * 2) / 3;
         float bottom = rect.height - 30;
@@ -98,7 +98,7 @@ public class ConfirmDialog extends BaseDialog {
     }
 
     protected UIButton buildButton(int x, int y, int width, int height, BiConsumer<ConfirmDialog, UIControl> event) {
-        UIButton button = new UIButton(new CGRect(x, y, width, height));
+        var button = new UIButton(new CGRect(x, y, width, height));
         button.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
         button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
         button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, event);

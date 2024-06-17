@@ -69,7 +69,7 @@ public enum SkinSlotType {
     }
 
     public static SkinSlotType byType(ISkinType skinType) {
-        for (SkinSlotType slotType : SkinSlotType.values()) {
+        for (var slotType : SkinSlotType.values()) {
             if (Objects.equals(slotType.skinType, skinType)) {
                 return slotType;
             }
@@ -85,7 +85,7 @@ public enum SkinSlotType {
         if (itemStack.getItem() instanceof BottleItem) {
             return DYE;
         }
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        var descriptor = SkinDescriptor.of(itemStack);
         if (!descriptor.isEmpty()) {
             return byType(descriptor.getType());
         }

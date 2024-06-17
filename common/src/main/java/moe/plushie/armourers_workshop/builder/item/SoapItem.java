@@ -17,7 +17,7 @@ public class SoapItem extends FlavouredItem implements IPaintToolApplier {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        InteractionResult resultType = usePaintTool(context);
+        var resultType = usePaintTool(context);
         if (resultType.consumesAction()) {
             return resultType;
         }

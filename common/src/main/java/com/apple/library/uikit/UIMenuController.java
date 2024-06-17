@@ -179,19 +179,19 @@ public class UIMenuController {
 
         @Override
         public void sizeToFit() {
-            UIEdgeInsets edg = contentInsets();
-            float x = edg.left;
-            float y = edg.top;
-            float maxWidth = 0;
-            for (UIView cell : contentCells) {
+            var edg = contentInsets();
+            var x = edg.left;
+            var y = edg.top;
+            var maxWidth = 0f;
+            for (var cell : contentCells) {
                 cell.sizeToFit();
-                CGSize size = cell.bounds().size();
+                var size = cell.bounds().size();
                 cell.setFrame(new CGRect(x, y, size.width, size.height));
                 y += size.height;
                 maxWidth = Math.max(maxWidth, size.width);
             }
-            for (UIView cell : contentCells) {
-                CGRect frame = cell.frame();
+            for (var cell : contentCells) {
+                var frame = cell.frame();
                 cell.setFrame(new CGRect(frame.x, frame.y, maxWidth, frame.height));
             }
             y += edg.bottom;

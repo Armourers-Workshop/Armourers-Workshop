@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.armature;
 
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
-import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.InputStream;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.function.Consumer;
@@ -56,23 +55,23 @@ public class Armatures {
         private final LinkedHashMap<Joint, String> jointParents = new LinkedHashMap<>();
 
         private Builder(String path) {
-            ClassLoader loader = this.getClass().getClassLoader();
-            InputStream inputStream = loader.getResourceAsStream(path);
-            IDataPackObject object = StreamUtils.fromPackObject(inputStream);
+            var loader = this.getClass().getClassLoader();
+            var inputStream = loader.getResourceAsStream(path);
+            var object = StreamUtils.fromPackObject(inputStream);
             if (object != null) {
                 load(object);
             }
         }
 
         private static Armature named(String name) {
-            Builder loader = new Builder("data/armourers_workshop/skin/armatures/" + name + ".json");
+            var loader = new Builder("data/armourers_workshop/skin/armatures/" + name + ".json");
             return loader.build(name);
         }
 
         private void load(IDataPackObject object) {
             object.get("joint").entrySet().forEach(it -> {
-                IDataPackObject value = it.getValue();
-                Joint joint = new Joint(it.getKey());
+                var value = it.getValue();
+                var joint = new Joint(it.getKey());
                 namedJoints.put(joint.getName(), joint);
                 loadType(value.get("id"), SkinPartTypes::byName, partType -> {
                     if (partType != null) {

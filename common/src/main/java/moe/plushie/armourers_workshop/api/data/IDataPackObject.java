@@ -113,9 +113,9 @@ public interface IDataPackObject {
     }
 
     default <T> ArrayList<T> collect(Function<IDataPackObject, ? extends T> mapper) {
-        Collection<IDataPackObject> values = allValues();
-        ArrayList<T> results = new ArrayList<>(values.size());
-        for (IDataPackObject value : values) {
+        var values = allValues();
+        var results = new ArrayList<T>(values.size());
+        for (var value : values) {
             results.add(mapper.apply(value));
         }
         return results;

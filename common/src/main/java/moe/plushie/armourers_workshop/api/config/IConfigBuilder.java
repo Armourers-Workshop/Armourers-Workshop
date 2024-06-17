@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.api.config;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -17,6 +18,10 @@ public interface IConfigBuilder {
 
     default IConfigValue<Double> defineInRange(String path, double defaultValue, double min, double max, String... description) {
         return builder().defineInRange(path, defaultValue, min, max, description);
+    }
+
+    default <T> IConfigValue<List<? extends T>> defineList(String path, Class<? extends T> clazz, String... description) {
+        return defineList(path, new ArrayList<>(), clazz::isInstance, description);
     }
 
     default <T> IConfigValue<List<? extends T>> defineList(String path, List<? extends T> defaultValue, String... description) {

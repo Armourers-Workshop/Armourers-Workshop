@@ -4,8 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
 import moe.plushie.armourers_workshop.api.common.IWorldUpdateTask;
 import moe.plushie.armourers_workshop.api.data.IDataSerializer;
-import moe.plushie.armourers_workshop.api.math.IRectangle3i;
-import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
@@ -28,6 +26,8 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
+import moe.plushie.armourers_workshop.core.texture.SkyBox;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.DataSerializerKey;
@@ -35,9 +35,6 @@ import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureModel;
-import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
-import moe.plushie.armourers_workshop.core.texture.SkyBox;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -118,8 +115,8 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
 
     public void onPlace(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity) {
         remakeBoundingBoxes(null, getBoundingBoxes(), true);
-        if (entity instanceof Player) {
-            setTextureDescriptor(PlayerTextureDescriptor.fromProfile(((Player) entity).getGameProfile()));
+        if (entity instanceof Player player) {
+            setTextureDescriptor(PlayerTextureDescriptor.fromPlayer(player));
         }
     }
 
@@ -139,7 +136,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
         if (this.skinType == skinType) {
             return;
         }
-        Collection<BoundingBox> boxes = getBoundingBoxes();
+        var boxes = getBoundingBoxes();
         this.skinType = skinType;
         this.setPaintData(null);
         this.remakeSkinProperties();
@@ -152,7 +149,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
     }
 
     public void setSkinProperties(SkinProperties skinProperties) {
-        Collection<BoundingBox> boxes = getBoundingBoxes();
+        var boxes = getBoundingBoxes();
         this.skinProperties = skinProperties;
         this.remakeBoundingBoxes(boxes, getBoundingBoxes(), false);
         BlockUtils.combine(this, this::sendBlockUpdates);
@@ -163,7 +160,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
     }
 
     public void setFlags(int flags) {
-        Collection<BoundingBox> boxes = getBoundingBoxes();
+        var boxes = getBoundingBoxes();
         this.flags = flags;
         this.remakeBoundingBoxes(boxes, getBoundingBoxes(), false);
         BlockUtils.combine(this, this::sendBlockUpdates);
@@ -263,22 +260,22 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
     }
 
     public IPaintToolSelector createPaintToolSelector(UseOnContext context) {
-        Player player = context.getPlayer();
+        var player = context.getPlayer();
         if (player == null || !player.isSecondaryUseActive()) {
             return null;
         }
-        ArrayList<Rectangle3i> rects = new ArrayList<>();
-        CubeTransform transform = getTransform();
-        for (ISkinPartType partType : getSkinType().getParts()) {
-            Rectangle3i box = WorldUtils.getResolvedBuildingSpace(partType);
-            BlockPos p1 = transform.mul(box.getMinX(), box.getMinY(), box.getMinZ());
-            BlockPos p2 = transform.mul(box.getMaxX(), box.getMaxY(), box.getMaxZ());
-            int minX = Math.min(p1.getX(), p2.getX());
-            int minY = Math.min(p1.getY(), p2.getY());
-            int minZ = Math.min(p1.getZ(), p2.getZ());
-            int maxX = Math.max(p1.getX(), p2.getX());
-            int maxY = Math.max(p1.getY(), p2.getY());
-            int maxZ = Math.max(p1.getZ(), p2.getZ());
+        var rects = new ArrayList<Rectangle3i>();
+        var transform = getTransform();
+        for (var partType : getSkinType().getParts()) {
+            var box = WorldUtils.getResolvedBuildingSpace(partType);
+            var p1 = transform.mul(box.getMinX(), box.getMinY(), box.getMinZ());
+            var p2 = transform.mul(box.getMaxX(), box.getMaxY(), box.getMaxZ());
+            var minX = Math.min(p1.getX(), p2.getX());
+            var minY = Math.min(p1.getY(), p2.getY());
+            var minZ = Math.min(p1.getZ(), p2.getZ());
+            var maxX = Math.max(p1.getX(), p2.getX());
+            var maxY = Math.max(p1.getY(), p2.getY());
+            var maxZ = Math.max(p1.getZ(), p2.getZ());
             rects.add(new Rectangle3i(minX, minY, minZ, maxX - minX, maxY - minY, maxZ - minZ));
         }
         return CubeSelector.all(rects);
@@ -288,9 +285,9 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
         if (paintData == null) {
             return;
         }
-        PlayerTextureModel textureModel = BoundingBox.MODEL;
-        SkyBox srcBox = textureModel.get(srcPart);
-        SkyBox destBox = textureModel.get(destPart);
+        var textureModel = BoundingBox.MODEL;
+        var srcBox = textureModel.get(srcPart);
+        var destBox = textureModel.get(destPart);
         if (srcBox != null && destBox != null) {
             WorldUtils.copyPaintData(paintData, srcBox, destBox, mirror);
             BlockUtils.combine(this, this::sendBlockUpdates);
@@ -307,7 +304,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
             return;
         }
         // we just need to clear the paint data for the current part type.
-        PlayerTextureModel textureModel = BoundingBox.MODEL;
+        var textureModel = BoundingBox.MODEL;
         SkyBox srcBox = textureModel.get(partType);
         if (srcBox != null) {
             WorldUtils.clearPaintData(paintData, srcBox);
@@ -323,7 +320,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
             return;
         }
         // remake all properties.
-        boolean isMultiBlock = skinProperties.get(SkinProperty.BLOCK_MULTIBLOCK);
+        var isMultiBlock = skinProperties.get(SkinProperty.BLOCK_MULTIBLOCK);
         skinProperties = new SkinProperties();
         skinProperties.put(SkinProperty.BLOCK_MULTIBLOCK, isMultiBlock);
         BlockUtils.combine(this, this::sendBlockUpdates);
@@ -425,7 +422,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
         if (boxes == null || boxes.isEmpty()) {
             return;
         }
-        CubeTransform transform = getTransform();
+        var transform = getTransform();
         boxes.forEach(box -> box.forEach((ix, iy, iz) -> {
             BlockPos target = transform.mul(ix + box.getX(), iy + box.getY(), iz + box.getZ());
             ix = box.getWidth() - ix - 1;
@@ -439,12 +436,12 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
     }
 
     private Collection<BoundingBox> getBoundingBoxes() {
-        ArrayList<BoundingBox> boxes = new ArrayList<>();
-        for (ISkinPartType partType : skinType.getParts()) {
+        var boxes = new ArrayList<BoundingBox>();
+        for (var partType : skinType.getParts()) {
             if (shouldAddBoundingBoxes(partType)) {
-                IVector3i offset = partType.getOffset();
-                IRectangle3i bounds = partType.getBuildingSpace();
-                Rectangle3i rect = new Rectangle3i(partType.getGuideSpace());
+                var offset = partType.getOffset();
+                var bounds = partType.getBuildingSpace();
+                var rect = new Rectangle3i(partType.getGuideSpace());
                 rect = rect.offset(-offset.getX(), -offset.getY() - bounds.getMinY(), offset.getZ());
                 boxes.add(new BoundingBox(partType, rect));
             }
@@ -453,15 +450,15 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
     }
 
     private Collection<BoundingBox> getFullBoundingBoxes() {
-        ArrayList<BoundingBox> boxes = new ArrayList<>();
-        for (ISkinPartType partType : skinType.getParts()) {
+        var boxes = new ArrayList<BoundingBox>();
+        for (var partType : skinType.getParts()) {
             if (shouldAddBoundingBoxes(partType)) {
-                IVector3i origin = partType.getOffset();
-                IRectangle3i buildSpace = partType.getBuildingSpace();
-                int dx = -origin.getX() + buildSpace.getX();
-                int dy = -origin.getY();
-                int dz = origin.getZ() + buildSpace.getZ();
-                Rectangle3i rect = new Rectangle3i(dx, dy, dz, buildSpace.getWidth(), buildSpace.getHeight(), buildSpace.getDepth());
+                var origin = partType.getOffset();
+                var buildSpace = partType.getBuildingSpace();
+                var dx = -origin.getX() + buildSpace.getX();
+                var dy = -origin.getY();
+                var dz = origin.getZ() + buildSpace.getZ();
+                var rect = new Rectangle3i(dx, dy, dz, buildSpace.getWidth(), buildSpace.getHeight(), buildSpace.getDepth());
                 boxes.add(new BoundingBox(partType, rect));
             }
         }
@@ -473,7 +470,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
     }
 
     public CubeTransform getTransform() {
-        BlockPos pos = getBlockPos().offset(0, 1, 0);
+        var pos = getBlockPos().offset(0, 1, 0);
         return new CubeTransform(getLevel(), pos, getFacing());
     }
 

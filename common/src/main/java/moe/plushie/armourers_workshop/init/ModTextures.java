@@ -69,7 +69,7 @@ public class ModTextures {
     }
 
     public static UIImage defaultButtonImage() {
-        HashMap<Integer, CGPoint> offsets = new HashMap<>();
+        var offsets = new HashMap<Integer, CGPoint>();
         offsets.put(UIControl.State.DISABLED, new CGPoint(0, 0));
         offsets.put(UIControl.State.NORMAL, new CGPoint(0, 1));
         offsets.put(UIControl.State.HIGHLIGHTED, new CGPoint(0, 2));
@@ -81,7 +81,7 @@ public class ModTextures {
     }
 
     public static UIImage buttonImage(IResourceLocation texture, float u, float v, float width, float height) {
-        HashMap<Integer, CGPoint> offsets = new HashMap<>();
+        var offsets = new HashMap<Integer, CGPoint>();
         offsets.put(UIControl.State.NORMAL, new CGPoint(0, 0));
         offsets.put(UIControl.State.HIGHLIGHTED, new CGPoint(1, 0));
         offsets.put(UIControl.State.SELECTED | UIControl.State.NORMAL, new CGPoint(2, 0));
@@ -94,7 +94,7 @@ public class ModTextures {
     }
 
     public static UIImage iconImage(float u, float v, float width, float height, IResourceLocation resource) {
-        HashMap<Integer, CGPoint> offsets = new HashMap<>();
+        var offsets = new HashMap<Integer, CGPoint>();
         offsets.put(UIControl.State.NORMAL, new CGPoint(0, 0));
         offsets.put(UIControl.State.HIGHLIGHTED, new CGPoint(1, 0));
         offsets.put(UIControl.State.DISABLED, new CGPoint(2, 0));
@@ -102,17 +102,9 @@ public class ModTextures {
     }
 
     public static UIImage helpButtonImage() {
-        HashMap<Integer, CGPoint> offsets = new HashMap<>();
+        var offsets = new HashMap<Integer, CGPoint>();
         offsets.put(UIControl.State.NORMAL, new CGPoint(0, 0));
         offsets.put(UIControl.State.HIGHLIGHTED, new CGPoint(1, 0));
         return UIImage.of(HELP).fixed(7, 8).unzip(offsets::get).build();
-    }
-
-    public static UIImage tabButtonImage() {
-        HashMap<Integer, CGPoint> offsets = new HashMap<>();
-        offsets.put(UIControl.State.DISABLED, new CGPoint(0, 0));
-        offsets.put(UIControl.State.NORMAL, new CGPoint(0, 1));
-        offsets.put(UIControl.State.HIGHLIGHTED, new CGPoint(0, 2));
-        return UIImage.of(WIDGETS).uv(0, 46).fixed(200, 20).clip(2, 3, 2, 2).unzip(offsets::get).build();
     }
 }

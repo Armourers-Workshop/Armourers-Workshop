@@ -120,7 +120,7 @@ public class UIControl extends UIView implements HighlightedDisplayable {
         if (!shouldPassHighlighted()) {
             return;
         }
-        for (UIView subview : view.subviews()) {
+        for (var subview : view.subviews()) {
             if (subview instanceof HighlightedDisplayable displayable) {
                 displayable.setHighlighted(isHighlighted);
             }
@@ -168,8 +168,8 @@ public class UIControl extends UIView implements HighlightedDisplayable {
         }
 
         public static Event of(UIEvent event) {
-            UIEvent.Type type = event.type();
-            for (Event event1 : values()) {
+            var type = event.type();
+            for (var event1 : values()) {
                 if (event1.type == type) {
                     return event1;
                 }

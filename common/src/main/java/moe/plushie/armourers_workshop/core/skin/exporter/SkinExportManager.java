@@ -29,8 +29,8 @@ public final class SkinExportManager {
         if (fileExtension.isEmpty()) {
             return null;
         }
-        for (ISkinExporter skinExporter : SKIN_EXPORTERS) {
-            for (String ext : skinExporter.getExtensions()) {
+        for (var skinExporter : SKIN_EXPORTERS) {
+            for (var ext : skinExporter.getExtensions()) {
                 if (ext.equalsIgnoreCase(fileExtension)) {
                     return skinExporter;
                 }
@@ -40,7 +40,7 @@ public final class SkinExportManager {
     }
 
     public static void exportSkin(Skin skin, String fileExtension, String filename, float scale) throws Exception {
-        ISkinExporter skinExporter = getSkinExporter(fileExtension);
+        var skinExporter = getSkinExporter(fileExtension);
         if (skinExporter != null) {
             exportSkin(skin, skinExporter, filename, scale);
         } else {
@@ -49,14 +49,14 @@ public final class SkinExportManager {
     }
 
     public static void exportSkin(Skin skin, ISkinExporter skinExporter, String filename, float scale) throws Exception {
-        File filePath = new File(EnvironmentManager.getRootDirectory(), "model-exports");
+        var filePath = new File(EnvironmentManager.getRootDirectory(), "model-exports");
         SkinFileUtils.forceMkdir(filePath);
         skinExporter.exportSkin(skin, filePath, filename, scale);
     }
 
     public static Collection<String> getExporters() {
-        ArrayList<String> exporters = new ArrayList<>();
-        for (ISkinExporter skinExporter : SKIN_EXPORTERS) {
+        var exporters = new ArrayList<String>();
+        for (var skinExporter : SKIN_EXPORTERS) {
             exporters.addAll(skinExporter.getExtensions());
         }
         return exporters;

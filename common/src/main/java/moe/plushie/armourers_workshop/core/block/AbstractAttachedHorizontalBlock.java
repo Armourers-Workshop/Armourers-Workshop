@@ -38,7 +38,7 @@ public abstract class AbstractAttachedHorizontalBlock extends AbstractHorizontal
 
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        for (Direction direction : context.getNearestLookingDirections()) {
+        for (var direction : context.getNearestLookingDirections()) {
             BlockState blockstate;
             if (direction.getAxis() == Direction.Axis.Y) {
                 blockstate = this.defaultBlockState().setValue(FACE, direction == Direction.UP ? AttachFace.CEILING : AttachFace.FLOOR).setValue(FACING, context.getHorizontalDirection().getOpposite());

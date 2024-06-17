@@ -12,11 +12,11 @@ public class HorseBodyJointModifier extends JointModifier {
     @Override
     public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
         // ...
-        IModelPart modelPart = model.getPart("body");
+        var modelPart = model.getPart("body");
         if (modelPart == null) {
             return transform;
         }
-        IModelPartPose pose = modelPart.pose();
+        var pose = modelPart.pose();
         return poseStack -> {
             pose.transform(poseStack);
             transform.apply(poseStack);

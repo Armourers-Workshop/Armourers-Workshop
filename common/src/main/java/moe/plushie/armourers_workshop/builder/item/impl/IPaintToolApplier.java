@@ -16,11 +16,11 @@ public interface IPaintToolApplier {
         if (!shouldUseTool(context)) {
             return InteractionResult.PASS;
         }
-        BlockEntity blockEntity = context.getLevel().getBlockEntity(context.getClickedPos());
+        var blockEntity = context.getLevel().getBlockEntity(context.getClickedPos());
         if (blockEntity == null) {
             return InteractionResult.PASS;
         }
-        IPaintToolSelector selector = createPaintToolSelector(blockEntity, context);
+        var selector = createPaintToolSelector(blockEntity, context);
         IPaintToolAction action = null;
         if (selector != null) {
             action = createPaintToolAction(context);
@@ -28,11 +28,11 @@ public interface IPaintToolApplier {
         if (selector == null || action == null) {
             return InteractionResult.PASS;
         }
-        CubeChangesCollector collector = new CubeChangesCollector(context.getLevel());
-        CubePaintingEvent event = new CubePaintingEvent(selector, action);
+        var collector = new CubeChangesCollector(context.getLevel());
+        var event = new CubePaintingEvent(selector, action);
         if (event.prepare(collector, context)) {
             event.apply(collector, context);
-            UpdateBlockColorPacket packet = new UpdateBlockColorPacket(context, event);
+            var packet = new UpdateBlockColorPacket(context, event);
             NetworkManager.sendToServer(packet);
             return InteractionResult.SUCCESS;
         }
@@ -47,8 +47,8 @@ public interface IPaintToolApplier {
 
     @Nullable
     default IPaintToolSelector createPaintToolSelector(BlockEntity blockEntity, UseOnContext context) {
-        if (blockEntity instanceof IPaintToolSelector.Provider) {
-            return ((IPaintToolSelector.Provider) blockEntity).createPaintToolSelector(context);
+        if (blockEntity instanceof IPaintToolSelector.Provider provider) {
+            return provider.createPaintToolSelector(context);
         }
         if (blockEntity instanceof IPaintable) {
             return createPaintToolSelector(context);

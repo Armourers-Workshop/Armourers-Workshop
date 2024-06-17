@@ -37,7 +37,7 @@ public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock impl
 
     @Override
     public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl) {
-        HologramProjectorBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        var blockEntity = getBlockEntity(level, blockPos);
         if (blockEntity != null) {
             blockEntity.updateBlockStates();
         }
@@ -58,7 +58,7 @@ public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock impl
         if (blockState.is(blockState2.getBlock())) {
             return;
         }
-        HologramProjectorBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        var blockEntity = getBlockEntity(level, blockPos);
         if (blockEntity != null) {
             DataSerializers.dropContents(level, blockPos, blockEntity);
         }
@@ -66,9 +66,9 @@ public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock impl
     }
 
     private HologramProjectorBlockEntity getBlockEntity(Level level, BlockPos blockPos) {
-        BlockEntity blockEntity = level.getBlockEntity(blockPos);
-        if (blockEntity instanceof HologramProjectorBlockEntity) {
-            return (HologramProjectorBlockEntity) blockEntity;
+        var blockEntity = level.getBlockEntity(blockPos);
+        if (blockEntity instanceof HologramProjectorBlockEntity blockEntity1) {
+            return blockEntity1;
         }
         return null;
     }

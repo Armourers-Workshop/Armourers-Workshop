@@ -38,28 +38,28 @@ public class SimpleContentLayoutImpl {
         results.clear();
         contentWidth = 0;
         contentHeight = 0;
-        for (Pair<CGRect, UIEdgeInsets> pair : rects) {
+        for (var pair : rects) {
             if (pair != null) {
-                CGRect rect = pair.getKey();
-                UIEdgeInsets edg = pair.getValue();
+                var rect = pair.getKey();
+                var edg = pair.getValue();
                 contentWidth = contentWidth + edg.left + rect.x + rect.width + edg.right;
                 contentHeight = Math.max(contentHeight, edg.top + rect.y + rect.height + edg.bottom);
             }
         }
-        float x = bounds.x + contentInsets.left;
-        float y = bounds.y + contentInsets.top;
-        float width = bounds.width - contentInsets.left - contentInsets.right;
-        float height = bounds.height - contentInsets.top - contentInsets.bottom;
+        var x = bounds.x + contentInsets.left;
+        var y = bounds.y + contentInsets.top;
+        var width = bounds.width - contentInsets.left - contentInsets.right;
+        var height = bounds.height - contentInsets.top - contentInsets.bottom;
         if (bounds == CGRect.ZERO) {
             width = contentWidth;
             height = contentHeight;
         }
-        float dx = x + sel(width, contentWidth, horizontalAlignment);
-        for (Pair<CGRect, UIEdgeInsets> pair : rects) {
+        var dx = x + sel(width, contentWidth, horizontalAlignment);
+        for (var pair : rects) {
             if (pair != null) {
-                CGRect rect = pair.getKey();
-                UIEdgeInsets edg = pair.getValue();
-                float dy = y + sel(height - edg.top - edg.bottom, rect.y + rect.height, verticalAlignment);
+                var rect = pair.getKey();
+                var edg = pair.getValue();
+                var dy = y + sel(height - edg.top - edg.bottom, rect.y + rect.height, verticalAlignment);
                 results.add(new CGRect(dx + edg.left + rect.x, dy + edg.top + rect.y, rect.width, rect.height));
                 dx += rect.width + edg.left + edg.right;
             } else {
@@ -74,28 +74,28 @@ public class SimpleContentLayoutImpl {
         results.clear();
         contentWidth = 0;
         contentHeight = 0;
-        for (Pair<CGRect, UIEdgeInsets> pair : rects) {
+        for (var pair : rects) {
             if (pair != null) {
-                CGRect rect = pair.getKey();
-                UIEdgeInsets edg = pair.getValue();
+                var rect = pair.getKey();
+                var edg = pair.getValue();
                 contentWidth = Math.max(contentWidth, edg.left + rect.x + rect.width + edg.right);
                 contentHeight = contentHeight + edg.top + rect.y + rect.height + edg.bottom;
             }
         }
-        float x = bounds.x + contentInsets.left;
-        float y = bounds.y + contentInsets.top;
-        float width = bounds.width - contentInsets.left - contentInsets.right;
-        float height = bounds.height - contentInsets.top - contentInsets.bottom;
+        var x = bounds.x + contentInsets.left;
+        var y = bounds.y + contentInsets.top;
+        var width = bounds.width - contentInsets.left - contentInsets.right;
+        var height = bounds.height - contentInsets.top - contentInsets.bottom;
         if (bounds == CGRect.ZERO) {
             width = contentWidth;
             height = contentHeight;
         }
-        float dy = y + sel(height, contentHeight, verticalAlignment);
-        for (Pair<CGRect, UIEdgeInsets> pair : rects) {
+        var dy = y + sel(height, contentHeight, verticalAlignment);
+        for (var pair : rects) {
             if (pair != null) {
-                CGRect rect = pair.getKey();
-                UIEdgeInsets edg = pair.getValue();
-                float dx = x + sel(width - edg.left - edg.right, rect.x + rect.width, horizontalAlignment);
+                var rect = pair.getKey();
+                var edg = pair.getValue();
+                var dx = x + sel(width - edg.left - edg.right, rect.x + rect.width, horizontalAlignment);
                 results.add(new CGRect(dx + edg.left + rect.x, dy + edg.top + rect.y, rect.width, rect.height));
                 dy += rect.height + edg.top + edg.bottom;
             } else {
@@ -113,7 +113,7 @@ public class SimpleContentLayoutImpl {
     @Nullable
     public CGRect getOrDefault(int index, CGRect defaultValue) {
         if (index >= 0 && index < results.size()) {
-            CGRect rect = results.get(index);
+            var rect = results.get(index);
             if (rect != null) {
                 return rect;
             }

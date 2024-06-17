@@ -49,11 +49,11 @@ public class HologramProjectorMenu extends AbstractBlockEntityMenu<HologramProje
     }
 
     protected void addSkinSlots(Container inventory, int group, int width, int height) {
-        int size = inventory.getContainerSize();
-        int slotsX = (width - 176) / 2 + 80;
-        int slotsY = 16;
-        for (int i = 0; i < size; ++i) {
-            int tx = slotsX + i * 19;
+        var size = inventory.getContainerSize();
+        var slotsX = (width - 176) / 2 + 80;
+        var slotsY = 16;
+        for (var i = 0; i < size; ++i) {
+            var tx = slotsX + i * 19;
             addSlot(new GroupSlot(inventory, group, i, tx, slotsY));
         }
     }

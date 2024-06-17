@@ -129,8 +129,8 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
 
         poseStack.scale(-MathUtils.SCALE, -MathUtils.SCALE, MathUtils.SCALE);
 
-        SkinDocument document = entity.getDocument();
-        SkinDocumentSettings settings = document.getSettings();
+        var document = entity.getDocument();
+        var settings = document.getSettings();
 
 //        IGuideRenderer guideRenderer = rendererManager.getRenderer(SkinPartTypes.BIPPED_HEAD);
 //        if (guideRenderer != null) {
@@ -148,24 +148,24 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
         }
 
         if (settings.showsHelperModel()) {
-            AbstractAdvancedGuideRenderer guideRenderer = GUIDES.get(document.getType());
+            var guideRenderer = GUIDES.get(document.getType());
             if (guideRenderer != null) {
                 guideRenderer.render(document, poseStack, light, overlay, bufferSource);
             }
         }
 
-        BakedArmature armature = BakedArmature.defaultBy(document.getType().getSkinType());
+        var armature = BakedArmature.defaultBy(document.getType().getSkinType());
         renderNode(document, document.getRoot(), armature, 0, poseStack, bufferSource, light, overlay);
 
         poseStack.popPose();
 
         if (ModDebugger.advancedBuilder) {
-            BlockState blockState = entity.getBlockState();
-            BlockPos pos = entity.getBlockPos();
+            var blockState = entity.getBlockState();
+            var pos = entity.getBlockPos();
             poseStack.pushPose();
             poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
             ShapeTesselator.stroke(entity.getRenderBoundingBox(blockState), UIColor.RED, poseStack, bufferSource);
-            Vector3f origin = entity.getRenderOrigin();
+            var origin = entity.getRenderOrigin();
             poseStack.translate(origin.getX(), origin.getY(), origin.getZ());
             ShapeTesselator.vector(Vector3f.ZERO, 1, poseStack, bufferSource);
             poseStack.translate(entity.carmeOffset.getX(), entity.carmeOffset.getY(), entity.carmeOffset.getZ());
@@ -212,15 +212,15 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
             poseStack.scale(-1, 1, 1);
         }
 
-        SkinDescriptor descriptor = node.getSkin();
-        SkinRenderTesselator tesselator = SkinRenderTesselator.create(descriptor, Tickets.RENDERER);
+        var descriptor = node.getSkin();
+        var tesselator = SkinRenderTesselator.create(descriptor, Tickets.RENDERER);
         if (tesselator != null) {
             tesselator.setLightmap(0xf000f0);
             tesselator.setPartialTicks(partialTicks);
             tesselator.setAnimationTicks(0);
             tesselator.draw(poseStack, bufferSource);
         }
-        for (SkinDocumentNode child : node.children()) {
+        for (var child : node.children()) {
             renderNode(document, child, armature, partialTicks, poseStack, bufferSource, light, overlay);
         }
         poseStack.popPose();
@@ -228,7 +228,7 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
 
 
     public void renderOutput(T entity, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
-        BlockPos pos = entity.getBlockPos();
+        var pos = entity.getBlockPos();
         poseStack.pushPose();
         poseStack.translate((float) (-pos.getX()), (float) (-pos.getY()), (float) (-pos.getZ()));
 //        for (Vector3f v : OUTPUTS) {
@@ -247,7 +247,7 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
 
     protected void applyTransform(IPoseStack poseStack, SkinDocumentNode node, SkinItemTransforms itemTransforms) {
         if (itemTransforms != null) {
-            ITransformf itemTransform = itemTransforms.get(AbstractItemTransformType.THIRD_PERSON_RIGHT_HAND);
+            var itemTransform = itemTransforms.get(AbstractItemTransformType.THIRD_PERSON_RIGHT_HAND);
             if (itemTransform != null) {
                 poseStack.translate(0, -2, -2);
                 itemTransform.apply(poseStack);
@@ -256,8 +256,8 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
             poseStack.translate(0, -2, -2);
             var entity = PlaceholderManager.MANNEQUIN.get();
             var model = SkinModelManager.getInstance().getModel(node.getType(), null, ItemStack.EMPTY, entity);
-            float f1 = 16f;
-            float f2 = 1 / 16f;
+            var f1 = 16f;
+            var f2 = 1 / 16f;
             poseStack.scale(f1, f1, f1);
             model.applyTransform(poseStack, false, AbstractItemTransformType.THIRD_PERSON_RIGHT_HAND);
             poseStack.scale(f2, f2, f2);

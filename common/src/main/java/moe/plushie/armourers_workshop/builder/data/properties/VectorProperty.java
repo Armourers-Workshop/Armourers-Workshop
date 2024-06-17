@@ -49,7 +49,7 @@ public class VectorProperty extends DataProperty<Vector3f> {
             @Override
             public void set(Float value) {
                 super.set(value);
-                Vector3f newValue = VectorProperty.this.value.copy();
+                var newValue = VectorProperty.this.value.copy();
                 setter.accept(newValue, value);
                 VectorProperty.super.set(newValue);
             }

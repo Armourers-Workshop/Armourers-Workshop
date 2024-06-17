@@ -12,7 +12,6 @@ import com.apple.library.uikit.UIImageView;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UITextFieldDelegate;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.builder.client.gui.widget.PaletteEditingWindow;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ClientMenuScreen;
 import moe.plushie.armourers_workshop.core.client.gui.widget.HSBSliderBox;
@@ -64,7 +63,7 @@ public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMen
 
     @Override
     protected void submitColorChange(UIControl control) {
-        PaintColor paintColor = paintColorView.paintColor();
+        var paintColor = paintColorView.paintColor();
         ColorUtils.setColor(itemStack, paintColor);
         NetworkManager.sendToServer(new UpdateConfigurableToolPacket(hand, itemStack));
     }
@@ -80,7 +79,7 @@ public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMen
     private void setupBackgroundView() {
         setBackgroundView(ModTextures.defaultWindowImage());
 
-        UIImageView bg = new UIImageView(new CGRect(107, 101, 15, 15));
+        var bg = new UIImageView(new CGRect(107, 101, 15, 15));
         bg.setImage(UIImage.of(ModTextures.COLOR_MIXER).uv(107, 101).build());
         bg.setAutoresizingMask(AutoresizingMask.flexibleBottomMargin | AutoresizingMask.flexibleRightMargin);
         addSubview(bg);
@@ -119,13 +118,13 @@ public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMen
     }
 
     private void setupLabel(int x, int y, String key) {
-        UILabel label = new UILabel(new CGRect(x, y, 80, 9));
+        var label = new UILabel(new CGRect(x, y, 80, 9));
         label.setText(NSString.localizedString(key));
         addSubview(label);
     }
 
     private void setupButton(int x, int y, int u, int v, String key, BiConsumer<PaletteToolWindow, UIControl> consumer) {
-        UIButton button = new UIButton(new CGRect(x, y, 16, 16));
+        var button = new UIButton(new CGRect(x, y, 16, 16));
         button.setTooltip(NSString.localizedString(key));
         button.setBackgroundImage(ModTextures.defaultButtonImage(u, v), UIControl.State.ALL);
         button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, consumer);
@@ -133,7 +132,7 @@ public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMen
     }
 
     private void setupHelpButton(int x, int y) {
-        UIButton button = new UIButton(new CGRect(x, y, 7, 8));
+        var button = new UIButton(new CGRect(x, y, 7, 8));
         button.setBackgroundImage(ModTextures.helpButtonImage(), UIControl.State.ALL);
         button.setTooltip(NSString.localizedString("colour-mixer.help.palette"));
         button.setCanBecomeFocused(false);
@@ -141,7 +140,7 @@ public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMen
     }
 
     private HSBSliderBox setupHSBSlider(int x, int y, HSBSliderBox.Type type) {
-        HSBSliderBox slider = new HSBSliderBox(type, new CGRect(x, y, 150, 10));
+        var slider = new HSBSliderBox(type, new CGRect(x, y, 150, 10));
         slider.addTarget(this, UIControl.Event.VALUE_CHANGED, PaletteToolWindow::applyColorChange);
         slider.addTarget(this, UIControl.Event.EDITING_DID_END, PaletteToolWindow::submitColorChange);
         addSubview(slider);
@@ -149,11 +148,11 @@ public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMen
     }
 
     private void setupPaintList() {
-        int selectedIndex = 0;
+        var selectedIndex = 0;
         paintTypes = new ArrayList<>();
-        ArrayList<UIComboItem> items = new ArrayList<>();
-        for (ISkinPaintType paintType : SkinPaintTypes.values()) {
-            UIComboItem item = new UIComboItem(new NSString(TranslateUtils.Name.of(paintType)));
+        var items = new ArrayList<UIComboItem>();
+        for (var paintType : SkinPaintTypes.values()) {
+            var item = new UIComboItem(new NSString(TranslateUtils.Name.of(paintType)));
             if (paintType == SkinPaintTypes.TEXTURE) {
                 item.setEnabled(false);
             }
@@ -185,7 +184,7 @@ public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMen
     }
 
     protected IPaintColor getItemColor(ItemStack itemStack) {
-        IPaintColor paintColor = ColorUtils.getColor(itemStack);
+        var paintColor = ColorUtils.getColor(itemStack);
         if (paintColor != null) {
             return paintColor;
         }

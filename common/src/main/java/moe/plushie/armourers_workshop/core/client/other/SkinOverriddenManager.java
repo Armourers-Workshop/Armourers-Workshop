@@ -151,8 +151,8 @@ public class SkinOverriddenManager {
 
     private ItemStack setItem(Entity entity, EquipmentSlot slotType, ItemStack itemStack) {
         // for the player, using `setItemSlot` will cause play sound.
-        if (entity instanceof Player) {
-            var inventory = ((Player) entity).getInventory();
+        if (entity instanceof Player player) {
+            var inventory = player.getInventory();
             var itemStack1 = inventory.armor.get(slotType.getIndex());
             inventory.armor.set(slotType.getIndex(), itemStack);
             return itemStack1;

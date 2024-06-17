@@ -44,7 +44,7 @@ public class ConfigurableToolWindow extends MenuWindow<AbstractContainerMenu> {
         this.hand = hand;
         this.itemStack = itemStack;
         properties.forEach(property -> {
-            UIView view = createOptionView(property);
+            var view = createOptionView(property);
             if (view != null) {
                 this.properties.add(Pair.of(property, view));
                 this.contentHeight += view.frame().getHeight() + 8;
@@ -63,9 +63,9 @@ public class ConfigurableToolWindow extends MenuWindow<AbstractContainerMenu> {
     }
 
     private UIView createOptionView(IConfigurableToolProperty<?> property) {
-        NSString name = NSString.localizedString("toolOptions." + property.getName());
+        var name = NSString.localizedString("toolOptions." + property.getName());
         if (property instanceof BooleanToolProperty property1) {
-            UICheckBox checkBox = new UICheckBox(new CGRect(8, contentHeight, contentWidth - 16, 9));
+            var checkBox = new UICheckBox(new CGRect(8, contentHeight, contentWidth - 16, 9));
             checkBox.setTitle(name);
             checkBox.setSelected(itemStack.get(property1));
             checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, sender) -> {
@@ -76,7 +76,7 @@ public class ConfigurableToolWindow extends MenuWindow<AbstractContainerMenu> {
             return checkBox;
         }
         if (property instanceof IntegerToolProperty property1) {
-            UISliderBox slider = new UISliderBox(new CGRect(8, contentHeight, contentWidth - 16, 20));
+            var slider = new UISliderBox(new CGRect(8, contentHeight, contentWidth - 16, 20));
             slider.setFormatter(currentValue -> {
                 NSMutableString formattedValue = new NSMutableString("");
                 formattedValue.append(name);

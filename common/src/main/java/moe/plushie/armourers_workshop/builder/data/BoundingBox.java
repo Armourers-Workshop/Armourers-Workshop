@@ -44,7 +44,7 @@ public class BoundingBox extends Rectangle3i {
         if (box == null) {
             return null;
         }
-        Rectangle3i rect = box.getBounds();
+        var rect = box.getBounds();
         return box.get(rect.getX() + offset.getX(), rect.getY() + offset.getY(), rect.getZ() + offset.getZ(), dir);
     }
 

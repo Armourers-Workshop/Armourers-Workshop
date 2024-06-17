@@ -12,19 +12,17 @@ import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIView;
 import com.apple.library.uikit.UIWindow;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.client.texture.BakedEntityTexture;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.client.texture.BakedEntityTexture;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TextureUtils;
 import net.fabricmc.api.EnvType;
@@ -57,18 +55,18 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
     }
 
     private void setupPickerView(ISkinPaintType paintType, int x, int y, boolean enableAutoPick) {
-        ColorPicker picker = new ColorPicker(paintType, new CGRect(x, y, 90, 24), enableAutoPick);
+        var picker = new ColorPicker(paintType, new CGRect(x, y, 90, 24), enableAutoPick);
         addSubview(picker);
     }
 
     private void setupPaletteView() {
-        UIView bg1 = new UIView(new CGRect(0, 152, 256, 98));
-        UIView bg2 = new UIView(new CGRect(256, 152, 22, 98));
+        var bg1 = new UIView(new CGRect(0, 152, 256, 98));
+        var bg2 = new UIView(new CGRect(256, 152, 22, 98));
         bg1.setContents(UIImage.of(ModTextures.WARDROBE_1).uv(0, 152).build());
         bg2.setContents(UIImage.of(ModTextures.WARDROBE_2).uv(0, 152).build());
         insertViewAtIndex(bg2, 0);
         insertViewAtIndex(bg1, 0);
-        UILabel label = new UILabel(new CGRect(6, 5, 100, 9));
+        var label = new UILabel(new CGRect(6, 5, 100, 9));
         label.setText(getDisplayText("label.palette"));
         bg1.addSubview(label);
     }
@@ -93,7 +91,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
         }
 
         private void setup(ISkinPaintType paintType, boolean enableAutoPick) {
-            String name = paintType.getRegistryName().getPath();
+            var name = paintType.getRegistryName().getPath();
             // title
             this.titleView.setText(getDisplayText("label." + name));
             this.titleView.setFrame(new CGRect(0, 0, bounds().width, 9));
@@ -105,14 +103,14 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
                 setupIconButton(50, 9, 144, 208, ColorPicker::autoPick, "button." + name + ".auto");
             }
             // picked color
-            UIView view = new UIView(new CGRect(0, 11, 14, 14));
+            var view = new UIView(new CGRect(0, 11, 14, 14));
             view.setContents(UIImage.of(ModTextures.WARDROBE_2).uv(242, 166).build());
             addSubview(view);
             addSubview(colorView);
         }
 
         private void setupIconButton(int x, int y, int u, int v, BiConsumer<ColorPicker, UIControl> consumer, String tooltip) {
-            UIButton button = new UIButton(new CGRect(x, y, 16, 16));
+            var button = new UIButton(new CGRect(x, y, 16, 16));
             button.setBackgroundImage(ModTextures.defaultButtonImage(u, v), UIControl.State.ALL);
             button.setTooltip(getDisplayText(tooltip));
             button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, consumer);
@@ -120,7 +118,9 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
         }
 
         public void start(UIControl control) {
-            UIButton button = ObjectUtils.unsafeCast(control);
+            if (!(control instanceof UIButton button)) {
+                return;
+            }
             button.setSelected(true);
             pickerButton = button;
             UIWindow window = window();
@@ -156,11 +156,11 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
         }
 
         private void autoPick(UIControl control) {
-            IResourceLocation location = TextureUtils.getTexture(wardrobe.getEntity());
+            var location = TextureUtils.getTexture(wardrobe.getEntity());
             if (location == null) {
                 return;
             }
-            BakedEntityTexture texture = PlayerTextureLoader.getInstance().getTextureModel(location);
+            var texture = PlayerTextureLoader.getInstance().getTextureModel(location);
             if (texture != null) {
                 setColor(getColorFromTexture(texture));
             } else {
@@ -172,7 +172,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
             if (texture == null) {
                 return null;
             }
-            ArrayList<PaintColor> colors = new ArrayList<>();
+            var colors = new ArrayList<PaintColor>();
             if (paintType == SkinPaintTypes.SKIN) {
                 colors.add(texture.getColor(11, 13));
                 colors.add(texture.getColor(12, 13));
@@ -186,7 +186,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
                 colors.add(texture.getColor(13, 12));
             }
             int r = 0, g = 0, b = 0, c = 0;
-            for (PaintColor paintColor : colors) {
+            for (var paintColor : colors) {
                 if (paintColor != null) {
                     r += paintColor.getRed();
                     g += paintColor.getGreen();

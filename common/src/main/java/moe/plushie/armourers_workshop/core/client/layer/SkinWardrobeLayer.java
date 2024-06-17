@@ -2,9 +2,7 @@ package moe.plushie.armourers_workshop.core.client.layer;
 
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
-import moe.plushie.armourers_workshop.api.client.model.IModelBabyPose;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.compatibility.AbstractRenderLayer;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
@@ -74,7 +72,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
             renderMagicCircle(poseStack1, bufferSource, entity.tickCount + entity.getId() * 31, partialTicks, 24, contributor.color, packedLightIn, OverlayTexture.NO_OVERLAY);
         }
 
-        float f = 1 / 16f;
+        var f = 1 / 16f;
         poseStack.scale(f, f, f);
 
         transformer.applyTo(armature);
@@ -82,7 +80,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         for (var entry : renderData.getArmorSkins()) {
             context.setReferenced(SkinItemSource.create(entry.getRenderPriority(), entry.getItemStack()));
             var bakedSkin = entry.getBakedSkin();
-            bakedSkin.setupAnim(entity, context.getAnimationTicks(), context.getReferenced());
+            bakedSkin.setupAnim(entity, context);
             SkinRenderer.render(entity, armature, bakedSkin, entry.getBakedScheme(), context);
         }
         context.release();
@@ -94,11 +92,11 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         poseStack.pushPose();
         poseStack.translate(0, offset / 16.0f, 0);
 
-        int red = color >> 16 & 0xff;
-        int green = color >> 8 & 0xff;
-        int blue = color & 0xff;
-        float circleScale = 2;
-        float rotation = (float) (ticks / 0.8D % 360D) + partialTickTime;
+        var red = color >> 16 & 0xff;
+        var green = color >> 8 & 0xff;
+        var blue = color & 0xff;
+        var circleScale = 2f;
+        var rotation = (float) (ticks / 0.8D % 360D) + partialTickTime;
         poseStack.rotate(Vector3f.YP.rotationDegrees(rotation));
         poseStack.scale(circleScale, circleScale, circleScale);
         var pose = poseStack.last();
@@ -111,10 +109,10 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
     }
 
     protected void applyModelScale(IPoseStack poseStack, M model) {
-        IModelBabyPose babyPose = model.getBabyPose();
+        var babyPose = model.getBabyPose();
         if (babyPose != null) {
-            float scale = 1 / babyPose.getHeadScale();
-            IVector3f offset = babyPose.getHeadOffset();
+            var scale = 1 / babyPose.getHeadScale();
+            var offset = babyPose.getHeadOffset();
             poseStack.scale(scale, scale, scale);
             poseStack.translate(offset.getX() / 16f, offset.getY() / 16f, offset.getZ() / 16f);
         }

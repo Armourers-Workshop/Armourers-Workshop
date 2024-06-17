@@ -122,13 +122,14 @@ public interface ViewImpl {
         if (!reversed && enumerator.size() > 1) {
             Collections.reverse(enumerator);
         }
-        for (Pair<Collection<ViewImpl>, Boolean> it : enumerator) {
-            float tx = 0, ty = 0;
-            CGAffineTransform translate = CGAffineTransform.createScale(1, 1);
-            for (ViewImpl view : it.getLeft()) {
-                CGAffineTransform transform = view.transform();
-                CGPoint center = view.center();
-                CGRect bounds = view.bounds();
+        for (var it : enumerator) {
+            var tx = 0f;
+            var ty = 0f;
+            var translate = CGAffineTransform.createScale(1, 1);
+            for (var view : it.getLeft()) {
+                var transform = view.transform();
+                var center = view.center();
+                var bounds = view.bounds();
                 tx += center.x;
                 ty += center.y;
                 // TODO: the bounds origin need apply transform?
@@ -140,7 +141,7 @@ public interface ViewImpl {
                     continue;
                 }
                 // calculate transformed view size
-                CGSize size = bounds.size();
+                var size = bounds.size();
                 size.apply(transform);
                 tx -= size.width * 0.5f;
                 ty -= size.height * 0.5f;

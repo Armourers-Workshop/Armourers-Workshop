@@ -5,6 +5,7 @@ public enum ChunkType {
     CUBE_DATA("CCBO"),
     PAINT_DATA("PADT"),
     PREVIEW_DATA("VCBO"),
+    ANIMATION_DATA("ANIM"),
     PALETTE("PALE"),
     PROPERTIES("PPTS"),
     SKIN_PART("SKPR"),

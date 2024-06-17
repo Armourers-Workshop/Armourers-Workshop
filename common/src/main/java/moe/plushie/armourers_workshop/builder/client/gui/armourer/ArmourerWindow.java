@@ -77,7 +77,7 @@ public class ArmourerWindow extends MenuWindow<ArmourerMenu> {
     }
 
     private void switchTab(TabView.Entry entry) {
-        ArmourerMenu.Group group = ArmourerMenu.Group.MAIN;
+        var group = ArmourerMenu.Group.MAIN;
         if (entry.target() instanceof ArmourerMenu.Group target) {
             group = target;
         }

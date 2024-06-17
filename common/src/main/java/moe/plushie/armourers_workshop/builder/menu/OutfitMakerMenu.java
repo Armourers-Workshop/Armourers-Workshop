@@ -3,8 +3,6 @@ package moe.plushie.armourers_workshop.builder.menu;
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
-import moe.plushie.armourers_workshop.api.math.ITexturePos;
-import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.builder.blockentity.OutfitMakerBlockEntity;
 import moe.plushie.armourers_workshop.core.data.UserNotifications;
@@ -31,7 +29,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEntity> {
 
@@ -56,7 +53,7 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
             return false;
         }
         // required has item on the input slot.
-        for (ItemStack itemStack : getInputStacks()) {
+        for (var itemStack : getInputStacks()) {
             if (!itemStack.isEmpty()) {
                 return true;
             }
@@ -81,14 +78,14 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
     }
 
     private void saveArmourItemWithProfile(GameProfile profile, OutfitMakerBlockEntity blockEntity) throws Exception {
-        ArrayList<SkinPart> skinParts = new ArrayList<>();
-        SkinProperties skinProperties = new SkinProperties();
-        String partIndexs = "";
+        var skinParts = new ArrayList<SkinPart>();
+        var skinProperties = new SkinProperties();
+        var partIndexs = "";
         SkinPaintData paintData = null;
         int skinIndex = 0;
-        for (ItemStack itemStack : getInputStacks()) {
-            SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-            Skin skin = SkinLoader.getInstance().loadSkin(descriptor.getIdentifier());
+        for (var itemStack : getInputStacks()) {
+            var descriptor = SkinDescriptor.of(itemStack);
+            var skin = SkinLoader.getInstance().loadSkin(descriptor.getIdentifier());
             if (skin == null) {
                 continue;
             }
@@ -100,7 +97,7 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
                 throw SkinLoadException.Type.NOT_EDITABLE.build("notEditable");
             }
             for (int partIndex = 0; partIndex < skin.getPartCount(); partIndex++) {
-                SkinPart part = skin.getParts().get(partIndex);
+                var part = skin.getParts().get(partIndex);
                 skinParts.add(part);
             }
             // TODO: IMP
@@ -108,7 +105,7 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
                 if (paintData == null) {
                     paintData = SkinPaintData.v2();
                 }
-                for (ISkinPartType partType : skin.getType().getParts()) {
+                for (var partType : skin.getType().getParts()) {
                     if (partType instanceof ISkinPartTypeTextured texType) {
                         mergePaintPart(texType, paintData, skin.getPaintData());
                     }
@@ -120,7 +117,7 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
                 partIndexs += ":" + skinParts.size();
             }
             // TODO: refactor
-            for (Map.Entry<String, Object> entry : skin.getProperties().entrySet()) {
+            for (var entry : skin.getProperties().entrySet()) {
                 if (entry.getKey().startsWith("wings")) {
                     skinProperties.put(entry.getKey() + skinIndex, entry.getValue());
                 } else {
@@ -133,7 +130,7 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
         // because old skin not support v2 texture format,
         // so downgrade v2 to v1 texture format.
         if (paintData != null) {
-            SkinPaintData resolvedPaintData = SkinPaintData.v1();
+            var resolvedPaintData = SkinPaintData.v1();
             resolvedPaintData.copyFrom(paintData);
             paintData = resolvedPaintData;
         }
@@ -147,13 +144,13 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
             skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, blockEntity.getItemName());
             skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, blockEntity.getItemFlavour());
             // build
-            Skin.Builder builder = new Skin.Builder(SkinTypes.OUTFIT);
+            var builder = new Skin.Builder(SkinTypes.OUTFIT);
             builder.properties(skinProperties);
             builder.paintData(paintData);
             builder.parts(skinParts);
-            Skin skin = builder.build();
-            String identifier = SkinLoader.getInstance().saveSkin("", skin);
-            SkinDescriptor descriptor = new SkinDescriptor(identifier, skin.getType());
+            var skin = builder.build();
+            var identifier = SkinLoader.getInstance().saveSkin("", skin);
+            var descriptor = new SkinDescriptor(identifier, skin.getType());
             setOutputStack(descriptor.asItemStack());
         }
     }
@@ -180,12 +177,12 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
 
 
     protected ItemStack getOutputStack() {
-        Slot outputSlot = slots.get(slots.size() - 1);
+        var outputSlot = slots.get(slots.size() - 1);
         return outputSlot.getItem();
     }
 
     protected void setOutputStack(ItemStack itemStack) {
-        Slot outputSlot = slots.get(slots.size() - 1);
+        var outputSlot = slots.get(slots.size() - 1);
         outputSlot.set(itemStack);
     }
 
@@ -194,16 +191,16 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
     }
 
     private void mergePaintPart(ISkinPartTypeTextured texType, SkinPaintData desPaint, SkinPaintData srcPaint) {
-        ITexturePos pos = texType.getTextureSkinPos();
+        var pos = texType.getTextureSkinPos();
 
-        int width = (texType.getTextureModelSize().getX() * 2) + (texType.getTextureModelSize().getZ() * 2);
-        int height = texType.getTextureModelSize().getY() + texType.getTextureModelSize().getZ();
+        var width = (texType.getTextureModelSize().getX() * 2) + (texType.getTextureModelSize().getZ() * 2);
+        var height = texType.getTextureModelSize().getY() + texType.getTextureModelSize().getZ();
 
-        for (int ix = 0; ix < width; ix++) {
-            for (int iy = 0; iy < height; iy++) {
-                int x = pos.getU() + ix;
-                int y = pos.getV() + iy;
-                int color = srcPaint.getColor(x, y);
+        for (var ix = 0; ix < width; ix++) {
+            for (var iy = 0; iy < height; iy++) {
+                var x = pos.getU() + ix;
+                var y = pos.getV() + iy;
+                var color = srcPaint.getColor(x, y);
                 if (PaintColor.isOpaque(color)) {
                     desPaint.setColor(x, y, color);
                 }

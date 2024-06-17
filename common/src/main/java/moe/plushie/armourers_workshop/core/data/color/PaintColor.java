@@ -96,8 +96,8 @@ public class PaintColor implements IPaintColor {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        return value == ((PaintColor) o).value;
+        if (!(o instanceof PaintColor that)) return false;
+        return value == that.value;
     }
 
     @Override

@@ -56,8 +56,8 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
 
     protected void addEquipmentSlots(Group group, int column, int row) {
         SkinSlotType[] slotTypes = {SkinSlotType.SWORD, SkinSlotType.SHIELD, SkinSlotType.BOW, SkinSlotType.TRIDENT, null, SkinSlotType.PICKAXE, SkinSlotType.AXE, SkinSlotType.SHOVEL, SkinSlotType.HOE};
-        boolean hasContents = false;
-        for (SkinSlotType slotType : slotTypes) {
+        var hasContents = false;
+        for (var slotType : slotTypes) {
             if (slotType != null) {
                 int count = wardrobe.getUnlockedSize(slotType);
                 if (count > 0) {
@@ -72,32 +72,32 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
     }
 
     protected void addMannequinSlots(Group group, int column, int row) {
-        if (wardrobe.getEntity() instanceof MannequinEntity) {
-            Container inventory = ((MannequinEntity) wardrobe.getEntity()).getInventory();
-            int size = inventory.getContainerSize();
-            for (int i = 0; i < inventory.getContainerSize(); ++i) {
-                int x = slotsX + (column + (size - i - 1)) * 19; // reverse: slot 1 => left, slot 2 => right
-                int y = slotsY + row * 19;
-                SkinSlot slot = addGroupSlot(inventory, i, x, y, group);
+        if (wardrobe.getEntity() instanceof MannequinEntity entity) {
+            var inventory = entity.getInventory();
+            var size = inventory.getContainerSize();
+            for (var i = 0; i < inventory.getContainerSize(); ++i) {
+                var x = slotsX + (column + (size - i - 1)) * 19; // reverse: slot 1 => left, slot 2 => right
+                var y = slotsY + row * 19;
+                var slot = addGroupSlot(inventory, i, x, y, group);
                 customSlots.add(slot);
             }
         }
     }
 
     protected void addSkinSlots(SkinSlotType slotType, Group group, int column, int row) {
-        int index = slotType.getIndex();
-        int size = wardrobe.getUnlockedSize(slotType);
-        Container inventory = wardrobe.getInventory();
-        for (int i = 0; i < size; ++i) {
-            int x = slotsX + (column + i) * 19;
-            int y = slotsY + row * 19;
-            SkinSlot slot = addGroupSlot(inventory, index + i, x, y, group, slotType);
+        var index = slotType.getIndex();
+        var size = wardrobe.getUnlockedSize(slotType);
+        var inventory = wardrobe.getInventory();
+        for (var i = 0; i < size; ++i) {
+            var x = slotsX + (column + i) * 19;
+            var y = slotsY + row * 19;
+            var slot = addGroupSlot(inventory, index + i, x, y, group, slotType);
             customSlots.add(slot);
         }
     }
 
     protected SkinSlot addGroupSlot(Container inventory, int index, int x, int y, Group group, SkinSlotType... slotTypes) {
-        SkinSlot slot = new SkinSlot(inventory, index, x, y, slotTypes) {
+        var slot = new SkinSlot(inventory, index, x, y, slotTypes) {
 
             @Override
             public boolean isActive() {
@@ -122,7 +122,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
     }
 
     public void forEachCustomSlots(Consumer<Slot> consumer) {
-        for (Slot slot : customSlots) {
+        for (var slot : customSlots) {
             if (slot.isActive()) {
                 consumer.accept(slot);
             }
@@ -131,7 +131,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        Entity entity = getEntity();
+        var entity = getEntity();
         if (entity == null || !entity.isAlive() || !wardrobe.isEditable(player)) {
             return false;
         }
@@ -140,11 +140,11 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        Slot slot = slots.get(index);
+        var slot = slots.get(index);
         if (!slot.hasItem()) {
             return ItemStack.EMPTY;
         }
-        ItemStack itemStack = slot.getItem();
+        var itemStack = slot.getItem();
         if (slot instanceof SkinSlot) {
             if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
                 return ItemStack.EMPTY;
@@ -152,9 +152,9 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
             slot.set(ItemStack.EMPTY);
             return itemStack.copy();
         }
-        SkinSlotType slotType = SkinSlotType.byItem(itemStack);
+        var slotType = SkinSlotType.byItem(itemStack);
         if (slotType != null && wardrobe.isSupported(slotType)) {
-            int startIndex = getFreeSlot(slotType);
+            var startIndex = getFreeSlot(slotType);
             if (!moveItemStackTo(itemStack, startIndex, startIndex + 1, false)) {
                 return ItemStack.EMPTY;
             }
@@ -178,13 +178,13 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
             return;
         }
         // if slots is ready, we check all slots and fast synchronize changes to all players if changes.
-        int changes = 0;
-        for (int index = 0; index < slots.size(); ++index) {
+        var changes = 0;
+        for (var index = 0; index < slots.size(); ++index) {
             // the first 36 slots we defined as player slots, no synchronize is required.
             if (index < 36) {
                 continue;
             }
-            ItemStack newItemStack = slots.get(index).getItem();
+            var newItemStack = slots.get(index).getItem();
             if (!lastSyncSlot.get(index).equals(newItemStack)) {
                 lastSyncSlot.set(index, newItemStack);
                 changes += 1;
@@ -201,7 +201,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
     }
 
     private int getFreeSlot(SkinSlotType slotType) {
-        for (Slot slot : slots) {
+        for (var slot : slots) {
             if (slot instanceof SkinSlot slot1 && !slot.hasItem()) {
                 if (slot1.getSlotTypes().contains(slotType) || slot1.getSlotTypes().isEmpty()) {
                     return slot1.index;

@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.data;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.core.IResourceManager;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
-import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
@@ -38,8 +37,8 @@ public class DataPackLoader implements PreparableReloadListener {
 
     @Override
     public CompletableFuture<Void> reload(PreparableReloadListener.PreparationBarrier barrier, ResourceManager resourceManager, ProfilerFiller profilerFiller, ProfilerFiller profilerFiller2, Executor executor, Executor executor2) {
-        ArrayList<CompletableFuture<?>> allJobs = new ArrayList<>();
-        ArrayList<Runnable> allCompletes = new ArrayList<>();
+        var allJobs = new ArrayList<CompletableFuture<?>>();
+        var allCompletes = new ArrayList<Runnable>();
         build((supplier, consumer) -> {
             var job = CompletableFuture.supplyAsync(supplier, executor);
             allJobs.add(job);
@@ -49,7 +48,7 @@ public class DataPackLoader implements PreparableReloadListener {
     }
 
     public void build(TaskQueue taskQueue, ResourceManager resourceManager) {
-        IResourceManager resourceManager1 = resourceManager.asResourceManager();
+        var resourceManager1 = resourceManager.asResourceManager();
         entries.forEach(entry -> taskQueue.accept(entry.prepare(resourceManager1), entry::load));
     }
 
@@ -74,14 +73,14 @@ public class DataPackLoader implements PreparableReloadListener {
                 willLoadHandler.run();
             }
             return () -> {
-                HashMap<IResourceLocation, IDataPackBuilder> results = new HashMap<>();
+                var results = new HashMap<IResourceLocation, IDataPackBuilder>();
                 resourceManager.readResources(target, s -> s.endsWith(".json"), (location, resource) -> {
-                    IDataPackObject object = StreamUtils.fromPackObject(resource);
+                    var object = StreamUtils.fromPackObject(resource);
                     if (object == null) {
                         return;
                     }
-                    String path = SkinFileUtils.removeExtension(location.getPath());
-                    IResourceLocation location1 = OpenResourceLocation.create(location.getNamespace(), path);
+                    var path = SkinFileUtils.removeExtension(location.getPath());
+                    var location1 = OpenResourceLocation.create(location.getNamespace(), path);
                     ModLog.debug("Load entry '{}' in '{}'", location1, resource.getSource());
                     results.computeIfAbsent(location1, provider).append(object, location);
                 });

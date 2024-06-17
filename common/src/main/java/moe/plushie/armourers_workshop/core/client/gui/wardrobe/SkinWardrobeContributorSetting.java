@@ -26,7 +26,7 @@ public class SkinWardrobeContributorSetting extends SkinWardrobeBaseSetting {
     }
 
     private void setup() {
-        NSMutableString thanks = new NSMutableString("");
+        var thanks = new NSMutableString("");
         thanks.append(getDisplayText("label.contributor"));
         thanks.append("\n\n\nOptions coming here soon!");
         this.label.setText(thanks);

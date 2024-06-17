@@ -6,7 +6,6 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIEvent;
 import moe.plushie.armourers_workshop.core.client.render.MannequinEntityRenderer;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -26,11 +25,10 @@ public class EntityPreviewView extends UIControl {
 
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
-        Entity entity = ObjectUtils.safeCast(contents(), Entity.class);
-        if (entity == null) {
+        if (!(contents() instanceof Entity entity)) {
             return;
         }
-        CGRect bounds = bounds();
+        var bounds = bounds();
         RenderSystem.setExtendedScissorFlags(1);
         MannequinEntityRenderer.enableLimitScale = true;
         MannequinEntityRenderer.enableLimitYRot = true;
@@ -67,11 +65,11 @@ public class EntityPreviewView extends UIControl {
     @Override
     public void mouseDragged(UIEvent event) {
         super.mouseDragged(event);
-        CGPoint oldMousePos = this.lastMousePos;
+        var oldMousePos = this.lastMousePos;
         if (oldMousePos == null) {
             return;
         }
-        float yRot = lastPlayerRotation.getY();
+        var yRot = lastPlayerRotation.getY();
         this.lastMousePos = event.locationInWindow();
         this.lastPlayerRotation.setY((yRot + (lastMousePos.x - oldMousePos.x) + 360) % 360);
     }

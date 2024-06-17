@@ -27,7 +27,7 @@ public abstract class AbstractColoredToolItem extends AbstractPaintToolItem impl
 
     @Override
     public IPaintToolSelector createPaintToolSelector(UseOnContext context) {
-        boolean isFullMode = shouldUseFullMode(context);
+        var isFullMode = shouldUseFullMode(context);
         return CubeSelector.box(context.getClickedPos(), isFullMode);
     }
 

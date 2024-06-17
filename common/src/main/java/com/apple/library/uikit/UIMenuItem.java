@@ -124,17 +124,17 @@ public class UIMenuItem {
 
         private Builder addCondition(UIEvent.Type eventType, String... keyNames) {
             conditions.add(event -> event.type() == eventType);
-            ArrayList<NSString> names = new ArrayList<>();
-            for (String keyName : keyNames) {
-                Predicate<UIEvent> condition = TESTER.get(keyName);
+            var names = new ArrayList<NSString>();
+            for (var keyName : keyNames) {
+                var condition = TESTER.get(keyName);
                 if (condition != null) {
                     conditions.add(condition);
-                    Supplier<String> name = TESTER_NAME.get(keyName);
+                    var name = TESTER_NAME.get(keyName);
                     if (name != null) {
                         names.add(new NSString(name.get()));
                     }
                 } else {
-                    InputKeyImpl key = InputKeyImpl.get(keyName);
+                    var key = InputKeyImpl.get(keyName);
                     conditions.add(event -> key.test(event.key(), event.keyModifier()));
                     names.add(new NSString(key.getName()));
                 }

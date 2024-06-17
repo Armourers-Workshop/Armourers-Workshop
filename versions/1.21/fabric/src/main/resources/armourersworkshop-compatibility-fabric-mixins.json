@@ -6,10 +6,12 @@
     "FabricScreenMixin",
     "FabricGuiGraphicsMixin",
     "FabricRecipeComponentMixin",
-    "FabricTrinketsAddonMixin"
+    "FabricTrinketsAddonMixin",
+    "FabricEntityClientTickMixin"
   ],
   "mixins": [
-    "FabricPackResourcesMixin"
+    "FabricPackResourcesMixin",
+    "FabricEntityServerTickMixin"
   ],
   "injectors": {
     "defaultRequire": 1

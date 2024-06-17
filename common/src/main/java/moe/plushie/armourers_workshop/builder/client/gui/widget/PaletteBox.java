@@ -46,7 +46,7 @@ public class PaletteBox extends UIControl {
         for (int j = 0; j < row; ++j) {
             for (int i = 0; i < column; ++i) {
                 int index = j * column + i;
-                CGRect rect = new CGRect(i * cellWidth + 1, j * cellHeight + 1, cellWidth, cellHeight);
+                var rect = new CGRect(i * cellWidth + 1, j * cellHeight + 1, cellWidth, cellHeight);
                 context.fillRect(palette.getColor(index), rect);
             }
         }
@@ -55,7 +55,7 @@ public class PaletteBox extends UIControl {
     @Override
     public void layoutSubviews() {
         super.layoutSubviews();
-        CGRect rect = bounds();
+        var rect = bounds();
         if (cachedBounds.equals(rect)) {
             return;
         }
@@ -98,7 +98,7 @@ public class PaletteBox extends UIControl {
         if (cellWidth == 0 || cellHeight == 0) {
             return;
         }
-        CGRect rect = bounds();
+        var rect = bounds();
         int i = (int) ((point.x - rect.x - 1) / cellWidth);
         int j = (int) ((point.y - rect.y - 1) / cellHeight);
         if (i < 0 || j < 0 || i >= column || j >= row) {

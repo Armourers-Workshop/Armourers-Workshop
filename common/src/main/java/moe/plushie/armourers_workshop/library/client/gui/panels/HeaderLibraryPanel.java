@@ -8,9 +8,8 @@ import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIFont;
 import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
@@ -100,9 +99,9 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         if (playerTexture == null) {
             playerTexture = PlayerTextureDescriptor.fromProfile(gameProfile);
         }
-        float tx = 5;
-        float ty = 5;
-        IResourceLocation texture = PlayerTextureLoader.getInstance().loadTextureLocation(playerTexture);
+        var tx = 5.0f;
+        var ty = 5.0f;
+        var texture = PlayerTextureLoader.getInstance().loadTextureLocation(playerTexture);
         context.drawResizableImage(texture, tx, ty, 16, 16, 8, 8, 8, 8, 64, 64, 0);
         context.drawResizableImage(texture, tx - 1, ty - 1, 16 + 2, 16 + 2, 40, 8, 8, 8, 64, 64, 0);
 
@@ -111,11 +110,11 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         // Yellow - Member not authenticated.
         // Green - Authenticated member.
         // Red - Missing profile info.
-        CGRect rect = bounds();
-        NSMutableString profile = new NSMutableString(" - ");
+        var rect = bounds();
+        var profile = new NSMutableString(" - ");
         profile.append(gameProfile.getName());
         int textColor = 0xFFAAAA;
-        ServerUser user = library.getUser();
+        var user = library.getUser();
         if (user.isMember()) {
             textColor = 0xFFFFAA;
         }

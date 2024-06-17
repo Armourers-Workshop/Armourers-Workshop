@@ -140,8 +140,8 @@ public abstract class AbstractPoseStackImpl {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof AbstractMatrix3f)) return false;
-            return mat.equals(((AbstractMatrix3f) o).mat);
+            if (!(o instanceof AbstractMatrix3f that)) return false;
+            return mat.equals(that.mat);
         }
 
         @Override
@@ -255,8 +255,8 @@ public abstract class AbstractPoseStackImpl {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof AbstractMatrix4f)) return false;
-            return mat.equals(((AbstractMatrix4f) o).mat);
+            if (!(o instanceof AbstractMatrix4f that)) return false;
+            return mat.equals(that.mat);
         }
 
         @Override

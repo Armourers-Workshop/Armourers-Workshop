@@ -104,7 +104,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UI
     @Override
     public void init() {
         super.init();
-        CGRect rect = bounds().insetBy(23, 5, 5, 5);
+        var rect = bounds().insetBy(23, 5, 5, 5);
 
         titleView.setTextColor(new UIColor(0xcccccc));
 

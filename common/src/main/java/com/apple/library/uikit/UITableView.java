@@ -54,16 +54,16 @@ public class UITableView extends UIScrollView {
     }
 
     public void reloadData() {
-        CGRect bounds = bounds();
-        ArrayList<UIView> entries = new ArrayList<>();
-        HashMap<NSIndexPath, UIView> indexedEntries = new HashMap<>();
-        UITableViewDelegate delegate = this.delegate.invoker();
-        UITableViewDataSource dataSource = this.dataSource.invoker();
-        int height = 0;
-        int sections = dataSource.tableViewNumberOfSections(this);
-        for (int section = 0; section < sections; ++section) {
-            int rows = dataSource.tableViewNumberOfRowsInSection(this, section);
-            float headerHeight = delegate.tableViewHeightForHeaderInSection(this, section);
+        var bounds = bounds();
+        var entries = new ArrayList<UIView>();
+        var indexedEntries = new HashMap<NSIndexPath, UIView>();
+        var delegate = this.delegate.invoker();
+        var dataSource = this.dataSource.invoker();
+        var height = 0f;
+        var sections = dataSource.tableViewNumberOfSections(this);
+        for (var section = 0; section < sections; ++section) {
+            var rows = dataSource.tableViewNumberOfRowsInSection(this, section);
+            var headerHeight = delegate.tableViewHeightForHeaderInSection(this, section);
             if (headerHeight != 0) {
                 UIView headerView = delegate.tableViewViewForHeaderInSection(this, section);
                 if (headerView != null) {
@@ -72,19 +72,19 @@ public class UITableView extends UIScrollView {
                     height += headerHeight;
                 }
             }
-            for (int row = 0; row < rows; ++row) {
-                NSIndexPath indexPath = new NSIndexPath(row, section);
-                UITableViewCell cell = dataSource.tableViewCellForRow(this, indexPath);
-                float rowHeight = heightForRow(indexPath);
+            for (var row = 0; row < rows; ++row) {
+                var indexPath = new NSIndexPath(row, section);
+                var cell = dataSource.tableViewCellForRow(this, indexPath);
+                var rowHeight = heightForRow(indexPath);
                 cell._setIndexPath(indexPath);
                 cell.setFrame(new CGRect(0, height, bounds.width, rowHeight));
                 entries.add(cell);
                 indexedEntries.put(indexPath, cell);
                 height += rowHeight;
             }
-            float footerHeight = delegate.tableViewHeightForFooterInSection(this, section);
+            var footerHeight = delegate.tableViewHeightForFooterInSection(this, section);
             if (footerHeight != 0) {
-                UIView footerView = delegate.tableViewViewForFooterInSection(this, section);
+                var footerView = delegate.tableViewViewForFooterInSection(this, section);
                 if (footerView != null) {
                     footerView.setFrame(new CGRect(0, height, bounds.width, footerHeight));
                     entries.add(footerView);
@@ -142,7 +142,7 @@ public class UITableView extends UIScrollView {
     }
 
     public UITableViewCell cellForRow(NSIndexPath indexPath) {
-        UIView entry = indexedEntries.get(indexPath);
+        var entry = indexedEntries.get(indexPath);
         if (entry instanceof UITableViewCell cell) {
             return cell;
         }
@@ -161,7 +161,7 @@ public class UITableView extends UIScrollView {
             return;
         }
         if (!allowsMultipleSection) {
-            for (NSIndexPath indexPath1 : selectedIndexPaths) {
+            for (var indexPath1 : selectedIndexPaths) {
                 deselectRow(indexPath1, animated);
             }
         }
@@ -194,7 +194,7 @@ public class UITableView extends UIScrollView {
     }
 
     private float heightForRow(NSIndexPath indexPath) {
-        float height = delegate.invoker().tableViewHeightForRowAt(this, indexPath);
+        var height = delegate.invoker().tableViewHeightForRowAt(this, indexPath);
         if (height != 0) {
             return height;
         }
@@ -202,7 +202,7 @@ public class UITableView extends UIScrollView {
     }
 
     private <T> void apply(BiConsumer<UITableViewCell, T> func, NSIndexPath indexPath, T value) {
-        UITableViewCell cell = cellForRow(indexPath);
+        var cell = cellForRow(indexPath);
         if (cell != null) {
             func.accept(cell, value);
         }

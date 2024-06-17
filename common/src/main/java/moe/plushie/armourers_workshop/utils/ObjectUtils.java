@@ -161,6 +161,13 @@ public class ObjectUtils {
         return results;
     }
 
+    public static <T> void search(Collection<T> collection, Function<T, Collection<T>> children, Consumer<T> consumer) {
+        for (T value : collection) {
+            consumer.accept(value);
+            search(children.apply(value), children, consumer);
+        }
+    }
+
     @SafeVarargs
     public static <T> ArrayList<T> map(T... objects) {
         ArrayList<T> results = new ArrayList<>(objects.length);

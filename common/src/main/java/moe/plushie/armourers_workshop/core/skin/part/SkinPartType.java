@@ -86,8 +86,7 @@ public abstract class SkinPartType implements ISkinPartType {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SkinPartType that = (SkinPartType) o;
+        if (!(o instanceof SkinPartType that)) return false;
         return Objects.equals(registryName, that.registryName);
     }
 

@@ -112,6 +112,20 @@ public class OptionalAPI {
         }
     }
 
+
+    public static <T extends Enum<?>> T getOptionalEnum(@This CompoundTag tag, String key, T defaultValue) {
+        if (tag.contains(key, Constants.TagFlags.INT)) {
+//            return provider.apply(tag.getString(key));
+        }
+        return defaultValue;
+    }
+
+    public static <T extends Enum<?>> void putOptionalEnum(@This CompoundTag tag, String key, T value, T defaultValue) {
+        if (_shouldPutValue(tag, key, value, defaultValue)) {
+            tag.putInt(key, value.ordinal());
+        }
+    }
+
     public static Vector3f getOptionalVector3f(@This CompoundTag tag, String key, Vector3f defaultValue) {
         ListTag listNBT = tag.getList(key, Constants.TagFlags.FLOAT);
         if (listNBT.size() >= 3) {
@@ -183,9 +197,9 @@ public class OptionalAPI {
     }
 
     public static Collection<BlockPos> getOptionalBlockPosArray(@This CompoundTag tag, String key) {
-        ArrayList<BlockPos> elements = new ArrayList<>();
+        var elements = new ArrayList<BlockPos>();
         if (tag.contains(key, Constants.TagFlags.LONG_ARRAY)) {
-            for (long value : tag.getLongArray(key)) {
+            for (var value : tag.getLongArray(key)) {
                 elements.add(BlockPos.of(value));
             }
         }
@@ -194,8 +208,8 @@ public class OptionalAPI {
 
     public static void putOptionalBlockPosArray(@This CompoundTag tag, String key, Collection<BlockPos> elements) {
         if (_shouldPutValueArray(tag, key, elements)) {
-            ArrayList<Long> list = new ArrayList<>(elements.size());
-            for (BlockPos pos : elements) {
+            var list = new ArrayList<Long>(elements.size());
+            for (var pos : elements) {
                 list.add(pos.asLong());
             }
             tag.putLongArray(key, list);
@@ -258,14 +272,14 @@ public class OptionalAPI {
     public static SkinPaintData getOptionalPaintData(@This CompoundTag tag, String key) {
         if (tag != null && tag.contains(key, Constants.TagFlags.BYTE_ARRAY)) {
             try {
-                ByteBuf buffer = Unpooled.wrappedBuffer(tag.getByteArray(key));
-                ByteBufInputStream bufferedStream = new ByteBufInputStream(buffer);
-                java.util.zip.GZIPInputStream compressedStream = new GZIPInputStream(bufferedStream);
-                DataInputStream dataStream = new DataInputStream(compressedStream);
-                SkinPaintData paintData = SkinPaintData.v2();
-                int length = dataStream.readInt();
-                int[] colors = paintData.getData();
-                for (int i = 0; i < length; ++i) {
+                var buffer = Unpooled.wrappedBuffer(tag.getByteArray(key));
+                var bufferedStream = new ByteBufInputStream(buffer);
+                var compressedStream = new GZIPInputStream(bufferedStream);
+                var dataStream = new DataInputStream(compressedStream);
+                var paintData = SkinPaintData.v2();
+                var length = dataStream.readInt();
+                var colors = paintData.getData();
+                for (var i = 0; i < length; ++i) {
                     if (i < colors.length) {
                         colors[i] = dataStream.readInt();
                     }
@@ -282,13 +296,13 @@ public class OptionalAPI {
     public static void putOptionalPaintData(@This CompoundTag tag, String key, SkinPaintData paintData) {
         if (paintData != null) {
             try {
-                int[] colors = paintData.getData();
-                ByteBuf buffer = Unpooled.buffer();
-                ByteBufOutputStream bufferedStream = new ByteBufOutputStream(buffer);
-                GZIPOutputStream compressedStream = new GZIPOutputStream(bufferedStream);
-                DataOutputStream dataStream = new DataOutputStream(compressedStream);
+                var colors = paintData.getData();
+                var buffer = Unpooled.buffer();
+                var bufferedStream = new ByteBufOutputStream(buffer);
+                var compressedStream = new GZIPOutputStream(bufferedStream);
+                var dataStream = new DataOutputStream(compressedStream);
                 dataStream.writeInt(colors.length);
-                for (int color : colors) {
+                for (var color : colors) {
                     dataStream.writeInt(color);
                 }
                 StreamUtils.closeQuietly(dataStream, compressedStream, bufferedStream);
@@ -414,9 +428,9 @@ public class OptionalAPI {
     }
 
     public static Collection<SkinMarker> getOptionalSkinMarkerArray(@This CompoundTag tag, String key) {
-        ArrayList<SkinMarker> elements = new ArrayList<>();
+        var elements = new ArrayList<SkinMarker>();
         if (tag.contains(key, Constants.TagFlags.LONG_ARRAY)) {
-            for (long value : tag.getLongArray(key)) {
+            for (var value : tag.getLongArray(key)) {
                 elements.add(SkinMarker.of(value));
             }
         }
@@ -425,8 +439,8 @@ public class OptionalAPI {
 
     public static void putOptionalSkinMarkerArray(@This CompoundTag tag, String key, Collection<SkinMarker> elements) {
         if (_shouldPutValueArray(tag, key, elements)) {
-            ArrayList<Long> list = new ArrayList<>(elements.size());
-            for (SkinMarker marker : elements) {
+            var list = new ArrayList<Long>(elements.size());
+            for (var marker : elements) {
                 list.add(marker.asLong());
             }
             tag.putLongArray(key, list);

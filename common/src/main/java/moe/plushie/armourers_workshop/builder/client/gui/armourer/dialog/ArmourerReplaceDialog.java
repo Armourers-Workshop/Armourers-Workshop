@@ -43,7 +43,7 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
     public ArmourerReplaceDialog() {
         super();
         this.setFrame(new CGRect(0, 0, 240, 130));
-        Player player = EnvironmentManager.getPlayer();
+        var player = EnvironmentManager.getPlayer();
         this.playerInventory = player.getInventory();
         this.inventory = createBackup(playerInventory);
         this.listView = new SlotListView<>(new PickerContainer(inventory), playerInventory, bounds());
@@ -52,11 +52,11 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
 
     private void setup() {
         layoutIfNeeded();
-        float left = confirmButton.frame().getX() + 1;
-        float centerX = cancelButton.frame().getX() + 1;
-        float bottom = confirmButton.frame().getY() - 4;
-        float width = bounds().width - 30;
-        float height = bounds().getHeight() + 10 + 98;
+        var left = confirmButton.frame().getX() + 1;
+        var centerX = cancelButton.frame().getX() + 1;
+        var bottom = confirmButton.frame().getY() - 4;
+        var width = bounds().width - 30;
+        var height = bounds().getHeight() + 10 + 98;
 
         setupBackgroundView(left, centerX, height);
 
@@ -79,17 +79,17 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
     }
 
     private void setupBackgroundView(float left, float center, float height) {
-        UILabel label1 = new UILabel(new CGRect(left + 8, 25, 100, 9));
-        UILabel label2 = new UILabel(new CGRect(center + 8, 25, 100, 9));
+        var label1 = new UILabel(new CGRect(left + 8, 25, 100, 9));
+        var label2 = new UILabel(new CGRect(center + 8, 25, 100, 9));
         label1.setText(NSString.localizedString("armourer.dialog.replace.srcBlock"));
         label2.setText(NSString.localizedString("armourer.dialog.replace.desBlock"));
         addSubview(label1);
         addSubview(label2);
 
-        float placeholderX = left + 32;
-        float placeholderY = 44;
-        UIImageView slot1 = new UIImageView(new CGRect(placeholderX - 5, placeholderY - 5, 26, 26));
-        UIImageView slot2 = new UIImageView(new CGRect(placeholderX - 5 + 110, placeholderY - 5, 26, 26));
+        var placeholderX = left + 32f;
+        var placeholderY = 44f;
+        var slot1 = new UIImageView(new CGRect(placeholderX - 5, placeholderY - 5, 26, 26));
+        var slot2 = new UIImageView(new CGRect(placeholderX - 5 + 110, placeholderY - 5, 26, 26));
         slot1.setImage(UIImage.of(ModTextures.ARMOURER).uv(230, 18).build());
         slot2.setImage(UIImage.of(ModTextures.ARMOURER).uv(230, 18).build());
         addSubview(slot1);
@@ -106,8 +106,8 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
     }
 
     private Container createBackup(Inventory inventory) {
-        int size = inventory.getContainerSize();
-        Container newInventory = new SimpleContainer(size + 2);
+        var size = inventory.getContainerSize();
+        var newInventory = new SimpleContainer(size + 2);
         for (int i = 0; i < size; ++i) {
             newInventory.setItem(i, inventory.getItem(i).copy());
         }
@@ -148,15 +148,15 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         if (!pointInside(point, event)) {
             return null;
         }
-        for (UIView subview : _invertedSubviews()) {
+        for (var subview : _invertedSubviews()) {
             if (subview != listView) {
-                UIView hitView = subview.hitTest(convertPointToView(point, subview), event);
+                var hitView = subview.hitTest(convertPointToView(point, subview), event);
                 if (hitView != null) {
                     return hitView;
                 }
             }
         }
-        UIView hitView = listView.hitTest(convertPointToView(point, listView), event);
+        var hitView = listView.hitTest(convertPointToView(point, listView), event);
         if (hitView != null) {
             return hitView;
         }
@@ -173,7 +173,7 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
     }
 
     private void addHelpButton(float x, float y, String tooltipKey) {
-        UIButton button = new UIButton(new CGRect(x, y, 7, 8));
+        var button = new UIButton(new CGRect(x, y, 7, 8));
         button.setBackgroundImage(ModTextures.helpButtonImage(), UIControl.State.ALL);
         button.setTooltip(NSString.localizedString(tooltipKey));
         button.setCanBecomeFocused(false);

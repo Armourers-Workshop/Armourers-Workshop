@@ -15,11 +15,8 @@ import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
-import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Supplier;
 
@@ -40,10 +37,10 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
         if (skin == null) {
             return;
         }
-        float f = 1 / 16f;
+        var f = 1 / 16f;
 
-        BlockState blockState = entity.getBlockState();
-        OpenQuaternionf rotations = entity.getRenderRotations(blockState);
+        var blockState = entity.getBlockState();
+        var rotations = entity.getRenderRotations(blockState);
 
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f);
@@ -52,7 +49,7 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
         poseStack.scale(f, f, f);
         poseStack.scale(-1, -1, 1);
 
-        SkinRenderContext context = SkinRenderContext.alloc(null, light, partialTicks, poseStack, bufferSource);
+        var context = SkinRenderContext.alloc(null, light, partialTicks, poseStack, bufferSource);
         SkinRenderer.render(placeholder.get(), armature, skin, descriptor.getColorScheme(), context);
         context.release();
 
@@ -68,7 +65,7 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
                 ShapeTesselator.stroke(rect, UIColor.RED, poseStack, bufferSource);
                 poseStack.popPose();
             });
-            BlockPos pos = entity.getBlockPos();
+            var pos = entity.getBlockPos();
             poseStack.pushPose();
             poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
             ShapeTesselator.stroke(entity.getRenderShape(blockState), UIColor.ORANGE, poseStack, bufferSource);

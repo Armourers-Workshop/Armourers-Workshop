@@ -108,7 +108,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         if (!isParent()) {
             return;
         }
-        SkinProperties oldProperties = properties;
+        var oldProperties = properties;
         refers = serializer.read(REFERS_KEY);
         markers = serializer.read(MARKERS_KEY);
         descriptor = serializer.read(SKIN_KEY);
@@ -140,7 +140,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     public void updateBlockStates() {
         setChanged();
-        Level level = getLevel();
+        var level = getLevel();
         if (level != null && !level.isClientSide()) {
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
         }
@@ -185,7 +185,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     public void setLinkedBlockPos(BlockPos linkedBlockPos) {
-        SkinnableBlockEntity blockEntity = getParent();
+        var blockEntity = getParent();
         if (blockEntity != null) {
             blockEntity.linkedBlockPos = linkedBlockPos;
             blockEntity.updateBlockStates();
@@ -232,10 +232,10 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     public Vector3d getSeatPos() {
         float dx = 0, dy = 0, dz = 0;
-        BlockPos parentPos = getParentPos();
-        Collection<SkinMarker> markers = getMarkers();
+        var parentPos = getParentPos();
+        var markers = getMarkers();
         if (markers != null && !markers.isEmpty()) {
-            SkinMarker marker = markers.iterator().next();
+            var marker = markers.iterator().next();
             dx = marker.x / 16.0f;
             dy = marker.y / 16.0f;
             dz = marker.z / 16.0f;
@@ -244,8 +244,8 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     public BlockPos getBedPos() {
-        BlockPos parentPos = getParentPos();
-        Collection<SkinMarker> markers = getMarkers();
+        var parentPos = getParentPos();
+        var markers = getMarkers();
         if (markers == null || markers.isEmpty()) {
             Direction facing = getBlockState().getOptionalValue(SkinnableBlock.FACING).orElse(Direction.NORTH);
             return parentPos.relative(Rotation.CLOCKWISE_180.rotate(facing));
@@ -347,7 +347,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         if (renderRotations != null) {
             return renderRotations;
         }
-        Vector3f r = getRotations(blockState);
+        var r = getRotations(blockState);
         renderRotations = new OpenQuaternionf(r.getX(), r.getY(), r.getZ(), true);
         return renderRotations;
     }
@@ -355,12 +355,12 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     @Environment(EnvType.CLIENT)
     @Override
     public Rectangle3f getRenderShape(BlockState blockState) {
-        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(getDescriptor(), Tickets.TEST);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(getDescriptor(), Tickets.TEST);
         if (bakedSkin == null) {
             return null;
         }
-        float f = 1 / 16f;
-        Rectangle3f box = bakedSkin.getRenderBounds(SkinItemSource.EMPTY).copy();
+        var f = 1 / 16f;
+        var box = bakedSkin.getRenderBounds(SkinItemSource.EMPTY).copy();
         box.mul(OpenMatrix4f.createScaleMatrix(-f, -f, f));
         return box;
     }
@@ -375,7 +375,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     @Nullable
     private <V> V getValueFromParent(Function<SkinnableBlockEntity, V> getter) {
-        SkinnableBlockEntity blockEntity = getParent();
+        var blockEntity = getParent();
         if (blockEntity != null) {
             return getter.apply(blockEntity);
         }
@@ -383,7 +383,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     private <V> V getProperty(SkinProperty<V> property) {
-        SkinProperties properties = getProperties();
+        var properties = getProperties();
         if (properties != null) {
             return properties.get(property);
         }

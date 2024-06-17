@@ -32,9 +32,9 @@ public class ArmourerClearDialog extends ConfirmDialog {
 
     private void setup() {
         layoutIfNeeded();
-        float width = bounds().width - 30;
-        float left = confirmButton.frame().getX() + 1;
-        float bottom = confirmButton.frame().getY() - 4;
+        var width = bounds().width - 30;
+        var left = confirmButton.frame().getX() + 1;
+        var bottom = confirmButton.frame().getY() - 4;
 
         blockCheckBox.setFrame(new CGRect(left, bottom - 22, width, 9));
         blockCheckBox.setTitle(NSString.localizedString("armourer.dialog.clear.clearBlocks"));
@@ -77,8 +77,8 @@ public class ArmourerClearDialog extends ConfirmDialog {
     }
 
     private ArrayList<UIComboItem> getItems(ArrayList<ISkinPartType> partTypes) {
-        ArrayList<UIComboItem> items = new ArrayList<>();
-        for (ISkinPartType partType : partTypes) {
+        var items = new ArrayList<UIComboItem>();
+        for (var partType : partTypes) {
             NSString title;
             if (partType != SkinPartTypes.UNKNOWN) {
                 title = new NSString(TranslateUtils.Name.of(partType));

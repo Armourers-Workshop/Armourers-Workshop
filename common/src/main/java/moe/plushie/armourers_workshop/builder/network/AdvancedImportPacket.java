@@ -17,7 +17,6 @@ import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
@@ -51,12 +50,12 @@ public class AdvancedImportPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // this is an unauthorized operation, ignore it
-        BlockEntity blockEntity = player.getLevel().getBlockEntity(pos);
+        var blockEntity = player.getLevel().getBlockEntity(pos);
         if (!(blockEntity instanceof AdvancedBuilderBlockEntity blockEntity1) || !(player.containerMenu instanceof AdvancedBuilderMenu) || skin == null) {
             abort(player, "unauthorized", "user status is incorrect or the skin is invalid");
             return;
         }
-        SkinLibraryManager server = SkinLibraryManager.getServer();
+        var server = SkinLibraryManager.getServer();
         if (!server.shouldUploadFile(player)) {
             abort(player, "import", "uploading prohibited in the config file");
             return;
@@ -87,18 +86,18 @@ public class AdvancedImportPacket extends CustomPacket {
     }
 
     private void accept(Player player, String op) {
-        String playerName = player.getScoreboardName();
+        var playerName = player.getScoreboardName();
         ModLog.info("accept {} request of the '{}'", op, playerName);
     }
 
     private void abort(Player player, String op, String reason) {
-        String playerName = player.getScoreboardName();
+        var playerName = player.getScoreboardName();
         ModLog.info("abort {} request of the '{}', reason: '{}'", op, playerName, reason);
     }
 
     private void encodeSkin(IFriendlyByteBuf buffer) {
         try {
-            GZIPOutputStream stream = new GZIPOutputStream(new ByteBufOutputStream(buffer.asByteBuf()));
+            var stream = new GZIPOutputStream(new ByteBufOutputStream(buffer.asByteBuf()));
             SkinFileStreamUtils.saveSkinToStream(stream, skin);
             stream.close();
         } catch (Exception e) {
@@ -107,14 +106,14 @@ public class AdvancedImportPacket extends CustomPacket {
     }
 
     private Skin decodeSkin(IFriendlyByteBuf buffer) {
-        Skin skin = null;
         try {
-            GZIPInputStream stream = new GZIPInputStream(new ByteBufInputStream(buffer.asByteBuf()));
-            skin = SkinFileStreamUtils.loadSkinFromStream(stream);
+            var stream = new GZIPInputStream(new ByteBufInputStream(buffer.asByteBuf()));
+            var skin = SkinFileStreamUtils.loadSkinFromStream(stream);
             stream.close();
+            return skin;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        return skin;
     }
 }

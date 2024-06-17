@@ -133,14 +133,13 @@ public class SkinDescriptor implements ISkinDescriptor {
 
     @Override
     public String toString() {
-        return String.format("%s@%s[%s]", identifier, type.getRegistryName(), type.getId());
+        return String.format("%s@%s[%s]", identifier, type.getRegistryName().getPath(), type.getId());
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SkinDescriptor that = (SkinDescriptor) o;
+        if (!(o instanceof SkinDescriptor that)) return false;
         return identifier.equals(that.identifier) && colorScheme.equals(that.colorScheme);
     }
 

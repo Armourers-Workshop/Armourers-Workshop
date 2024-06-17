@@ -60,10 +60,10 @@ public class ExtendedFaceRenderer {
         }
         var pose = poseStack.last();
         var paintType = paintColor.getPaintType();
-        int u = paintType.getIndex() % 8;
-        int v = paintType.getIndex() / 8;
+        var u = paintType.getIndex() % 8;
+        var v = paintType.getIndex() / 8;
         var vertexes = FACE_MARK_VERTEXES[direction.get3DDataValue()];
-        for (int i = 0; i < 4; ++i) {
+        for (var i = 0; i < 4; ++i) {
             builder.vertex(pose, x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
                     .color(255, 255, 255, alpha & 0xff)
                     .uv((u + FACE_MARK_TEXTURES[i][0]) / 8f, (v + FACE_MARK_TEXTURES[i][1]) / 8f)
@@ -76,11 +76,11 @@ public class ExtendedFaceRenderer {
 
     public static void render2(int x, int y, int z, Direction direction, IPaintColor paintColor, int alpha, int light, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
         var entry = poseStack.last();
-        int u = 0;
-        int v = 0;
-        int color = paintColor.getRGB();
+        var u = 0;
+        var v = 0;
+        var color = paintColor.getRGB();
         var vertexes = FACE_MARK_VERTEXES[direction.get3DDataValue()];
-        for (int i = 0; i < 4; ++i) {
+        for (var i = 0; i < 4; ++i) {
             builder.vertex(entry, x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
                     .color(color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff, alpha & 0xff)
                     .uv((u + FACE_MARK_TEXTURES[i][0]), (v + FACE_MARK_TEXTURES[i][1]))

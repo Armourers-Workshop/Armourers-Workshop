@@ -12,20 +12,20 @@ public class AllayWingJointModifier extends JointModifier {
 
     @Override
     public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
-        IModelPart rootModelPart = model.getPart("root");
-        IModelPart bodyModelPart = model.getPart("body");
-        IModelPart wingModelPart = getWingPart(joint, model);
+        var rootModelPart = model.getPart("root");
+        var bodyModelPart = model.getPart("body");
+        var wingModelPart = getWingPart(joint, model);
         if (rootModelPart == null || bodyModelPart == null || wingModelPart == null) {
             return transform;
         }
-        IModelPartPose rootPose = rootModelPart.pose();
-        IModelPartPose bodyPose = bodyModelPart.pose();
-        IModelPartPose wingPose = wingModelPart.pose();
+        var rootPose = rootModelPart.pose();
+        var bodyPose = bodyModelPart.pose();
+        var wingPose = wingModelPart.pose();
         return poseStack -> {
             rootPose.transform(poseStack);
             bodyPose.transform(poseStack);
             transform.apply(poseStack);
-            float yRot = wingPose.getYRot();
+            var yRot = wingPose.getYRot();
             if (yRot != 0) {
                 poseStack.rotate(Vector3f.YP.rotation(yRot));
             }

@@ -44,7 +44,7 @@ public class BlockBenchTexture extends BlockBenchObject {
             case "backwards" -> TextureAnimation.Mode.BACKWARDS;
             case "back_and_forth" -> TextureAnimation.Mode.BACK_AND_FORTH;
             case "custom" -> {
-                int[] frames = _parseFrameSeq(frameOrder);
+                var frames = _parseFrameSeq(frameOrder);
                 if (frames.length >= 1) {
                     yield new TextureAnimation.Mode(frames);
                 }
@@ -55,25 +55,25 @@ public class BlockBenchTexture extends BlockBenchObject {
     }
 
     public TextureProperties getProperties() {
-        TextureProperties properties = new TextureProperties();
+        var properties = new TextureProperties();
         properties.setEmissive(renderMode.equals("emissive"));
         properties.setAdditive(renderMode.equals("additive"));
         return properties;
     }
 
     private int[] _parseFrameSeq(String input) {
-        String[] parts = input.split("\\s+");
-        ArrayList<Integer> values = new ArrayList<>(parts.length);
-        for (String part : parts) {
+        var parts = input.split("\\s+");
+        var values = new ArrayList<Integer>(parts.length);
+        for (var part : parts) {
             try {
-                int value = Integer.parseInt(part);
+                var value = Integer.parseInt(part);
                 values.add(value);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        int[] frames = new int[values.size()];
-        for (int i = 0; i < frames.length; ++i) {
+        var frames = new int[values.size()];
+        for (var i = 0; i < frames.length; ++i) {
             frames[i] = values.get(i);
         }
         return frames;

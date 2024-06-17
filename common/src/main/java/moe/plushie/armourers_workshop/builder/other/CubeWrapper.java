@@ -56,7 +56,7 @@ public class CubeWrapper implements IPaintable {
             return this.state.get();
         }
         if (this.pos != null) {
-            BlockState state = level.getBlockState(pos);
+            var state = level.getBlockState(pos);
             this.state = () -> state;
             return state;
         }
@@ -83,7 +83,7 @@ public class CubeWrapper implements IPaintable {
             return this.blockEntity.get();
         }
         if (this.pos != null) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
+            var blockEntity = level.getBlockEntity(pos);
             this.blockEntity = () -> blockEntity;
             return blockEntity;
         }
@@ -92,7 +92,7 @@ public class CubeWrapper implements IPaintable {
 
     @Nullable
     public CompoundTag getBlockTag() {
-        BlockEntity blockEntity = getBlockEntity();
+        var blockEntity = getBlockEntity();
         if (blockEntity != null) {
             return blockEntity.saveFullData(level.registryAccess());
         }
@@ -101,7 +101,7 @@ public class CubeWrapper implements IPaintable {
 
     @Override
     public IPaintColor getColor(Direction direction) {
-        IPaintable target = getTarget();
+        var target = getTarget();
         if (target != null) {
             return target.getColor(direction);
         }
@@ -120,7 +120,7 @@ public class CubeWrapper implements IPaintable {
 
     @Override
     public boolean shouldChangeColor(Direction direction) {
-        IPaintable target = getTarget();
+        var target = getTarget();
         if (target != null) {
             return target.shouldChangeColor(direction);
         }
@@ -142,7 +142,7 @@ public class CubeWrapper implements IPaintable {
         if (this.target != null) {
             return this.target.get();
         }
-        IPaintable target = ObjectUtils.safeCast(getBlockEntity(), IPaintable.class);
+        var target = ObjectUtils.safeCast(getBlockEntity(), IPaintable.class);
         if (target != null) {
             this.target = () -> target;
             return target;

@@ -5,7 +5,9 @@ import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.core.client.animation.AnimationState;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.BakedSkinAnimation;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TickUtils;
@@ -53,7 +55,7 @@ public class SkinRenderContext {
         context.setRenderData(renderData);
         context.setLightmap(light);
         context.setPartialTicks(partialTick);
-        context.setAnimationTicks(TickUtils.ticks());
+        context.setAnimationTicks(TickUtils.animationTicks());
         context.setTransformType(transformType);
         context.setPose(poseStack);
         context.setBuffers(bufferSource);
@@ -158,6 +160,13 @@ public class SkinRenderContext {
         return renderData;
     }
 
+    public AnimationState getAnimationState(BakedSkinAnimation animation) {
+        if (renderData != null) {
+            return renderData.getAnimationManager().getAnimationState(animation);
+        }
+        return null;
+    }
+
     public void setPose(IPoseStack pose) {
         this.poseStack = pose;
     }
@@ -174,7 +183,7 @@ public class SkinRenderContext {
         if (bufferProvider != null) {
             return bufferProvider.getBuffer(skin);
         }
-        SkinVertexBufferBuilder bufferBuilder = SkinVertexBufferBuilder.getBuffer(bufferSource);
+        var bufferBuilder = SkinVertexBufferBuilder.getBuffer(bufferSource);
         return bufferBuilder.getBuffer(skin);
     }
 

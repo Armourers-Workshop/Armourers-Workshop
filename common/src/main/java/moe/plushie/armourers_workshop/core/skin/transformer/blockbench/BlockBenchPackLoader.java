@@ -10,7 +10,7 @@ import java.io.IOException;
 public class BlockBenchPackLoader {
 
     public static BlockBenchPack load(BlockBenchReader reader) throws IOException {
-        SkinPackObject modelObject = SkinPackObject.from(reader.findResource("(.*)\\.bbmodel"));
+        var modelObject = SkinPackObject.from(reader.findResource("(.*)\\.bbmodel"));
         if (modelObject == null) {
             throw translatableException("error.bb.loadModel.noModel");
         }
@@ -19,7 +19,7 @@ public class BlockBenchPackLoader {
     }
 
     private static BlockBenchPack parsePackObject(SkinPackObject object, BlockBenchReader reader) throws IOException {
-        BlockBenchPack.Builder builder = new BlockBenchPack.Builder();
+        var builder = new BlockBenchPack.Builder();
 
         // pack info
         object.at("name", it -> builder.name(it.stringValue()));
@@ -41,7 +41,8 @@ public class BlockBenchPackLoader {
     }
 
     private static BlockBenchElement parseElementObject(SkinPackObject object) throws IOException {
-        BlockBenchElement.Builder builder = new BlockBenchElement.Builder();
+        var builder = new BlockBenchElement.Builder();
+
         object.at("uuid", it -> builder.uuid(it.stringValue()));
         object.at("name", it -> builder.name(it.stringValue()));
         object.at("type", it -> builder.type(it.stringValue()));
@@ -72,7 +73,7 @@ public class BlockBenchPackLoader {
     }
 
     public static BlockBenchOutliner parseOutlinerObject(SkinPackObject object) throws IOException {
-        BlockBenchOutliner.Builder builder = new BlockBenchOutliner.Builder();
+        var builder = new BlockBenchOutliner.Builder();
 
         object.at("uuid", it -> builder.uuid(it.stringValue()));
         object.at("name", it -> builder.name(it.stringValue()));
@@ -95,7 +96,7 @@ public class BlockBenchPackLoader {
     }
 
     private static BedrockTransform parseTransformObject(SkinPackObject object) throws IOException {
-        BedrockTransform.Builder builder = new BedrockTransform.Builder();
+        var builder = new BedrockTransform.Builder();
         object.at("translation", it -> builder.translation(it.vector3fValue()));
         object.at("rotation", it -> builder.rotation(it.vector3fValue()));
         object.at("scale", it -> builder.scale(it.vector3fValue()));
@@ -103,7 +104,7 @@ public class BlockBenchPackLoader {
     }
 
     private static BlockBenchTexture parseTextureObject(SkinPackObject object) throws IOException {
-        BlockBenchTexture.Builder builder = new BlockBenchTexture.Builder();
+        var builder = new BlockBenchTexture.Builder();
         object.at("name", it -> builder.name(it.stringValue()));
         object.at("uuid", it -> builder.uuid(it.stringValue()));
         object.at("source", it -> builder.source(it.stringValue()));
@@ -116,7 +117,7 @@ public class BlockBenchPackLoader {
     }
 
     private static BlockBenchAnimation parseAnimationObject(SkinPackObject object) throws IOException {
-        BlockBenchAnimation.Builder builder = new BlockBenchAnimation.Builder();
+        var builder = new BlockBenchAnimation.Builder();
         object.at("name", it -> builder.name(it.stringValue()));
         object.at("uuid", it -> builder.uuid(it.stringValue()));
         object.at("loop", it -> builder.loop(it.stringValue()));
@@ -133,17 +134,21 @@ public class BlockBenchPackLoader {
     }
 
     private static BlockBenchAnimator parseAnimatorObject(String uuid, SkinPackObject object) throws IOException {
-        BlockBenchAnimator.Builder builder = new BlockBenchAnimator.Builder(uuid);
+        var builder = new BlockBenchAnimator.Builder(uuid);
         object.at("name", it -> builder.name(it.stringValue()));
         object.at("uuid", it -> builder.uuid(it.stringValue()));
         object.at("type", it -> builder.type(it.stringValue()));
         object.each("keyframes", fo -> {
             BlockBenchKeyFrame.Builder fb = new BlockBenchKeyFrame.Builder();
             fo.at("uuid", it -> fb.uuid(it.stringValue()));
-            fo.at("channel", it -> fb.channel(it.stringValue()));
+            fo.at("channel", it -> fb.name(it.stringValue()));
             fo.at("time", it -> fb.time(it.floatValue()));
             fo.at("interpolation", it -> fb.interpolation(it.stringValue()));
-            // "data_points":
+            fo.each("data_points", it -> {
+                fb.add(it.get("x"));
+                fb.add(it.get("y"));
+                fb.add(it.get("z"));
+            });
             // "bezier_linked"
             // "bezier_left_time"
             // "bezier_left_value"
@@ -156,7 +161,7 @@ public class BlockBenchPackLoader {
 
 
     private static BlockBenchFace parseFaceObject(SkinPackObject object) throws IOException {
-        BlockBenchFace.Builder builder = new BlockBenchFace.Builder();
+        var builder = new BlockBenchFace.Builder();
         object.at("rotation", it -> builder.rotation(it.intValue()));
         object.at("uv", it -> builder.uv(it.rectangle2fValue()));
         object.at("texture", it -> {

@@ -7,7 +7,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -29,7 +28,7 @@ public abstract class UpdatableContainerBlockEntity extends UpdatableBlockEntity
 
     @Override
     public ItemStack removeItem(int i, int j) {
-        ItemStack itemStack = ContainerHelper.removeItem(this.getItems(), i, j);
+        var itemStack = ContainerHelper.removeItem(this.getItems(), i, j);
         if (!itemStack.isEmpty()) {
             this.setContainerChanged();
         }
@@ -55,8 +54,8 @@ public abstract class UpdatableContainerBlockEntity extends UpdatableBlockEntity
         if (getLevel() == null) {
             return false;
         }
-        BlockPos pos = getBlockPos();
-        BlockEntity blockEntity = getLevel().getBlockEntity(pos);
+        var pos = getBlockPos();
+        var blockEntity = getLevel().getBlockEntity(pos);
         if (blockEntity != this) {
             return false;
         }

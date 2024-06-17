@@ -13,7 +13,7 @@ public class BeforeTransformModifier extends AfterTransformModifier {
 
     @Override
     public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
-        IJointTransform transform1 = super.apply(joint, model, IJointTransform.NONE);
+        var transform1 = super.apply(joint, model, IJointTransform.NONE);
         if (transform1 == IJointTransform.NONE) {
             return transform;
         }

@@ -43,10 +43,10 @@ public abstract class BaseDialog extends UIView {
     }
 
     public void dismiss() {
-        UIWindow window = window();
-        if (window instanceof UIPopoverView) {
+        var window = window();
+        if (window instanceof UIPopoverView popoverView) {
             window.removeGlobalTarget(this, UIControl.Event.KEY_DOWN);
-            ((UIPopoverView) window).dismiss();
+            popoverView.dismiss();
         }
         if (completeHandler != null) {
             completeHandler.run();
@@ -55,7 +55,7 @@ public abstract class BaseDialog extends UIView {
     }
 
     public void showInView(UIView view) {
-        UIPopoverView popoverView = makePopoverView();
+        var popoverView = makePopoverView();
         popoverView.showInView(view);
 //        popoverView.addGlobalTarget(this, UIControl.Event.KEY_DOWN, (self, event) -> {
 //            if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
@@ -79,7 +79,7 @@ public abstract class BaseDialog extends UIView {
     }
 
     protected UIPopoverView makePopoverView() {
-        UIPopoverView popoverView = new UIPopoverView();
+        var popoverView = new UIPopoverView();
         popoverView.setContentView(this);
         return popoverView;
     }

@@ -37,7 +37,7 @@ public class AbstractShader extends Shader {
     @Override
     protected void prepare(ShaderVertexGroup group) {
         // apply changes of texture animation.
-        RenderSystem.setExtendedTextureMatrix(group.getTextureMatrix(TickUtils.ticks()));
+        RenderSystem.setExtendedTextureMatrix(group.getTextureMatrix(TickUtils.animationTicks()));
 
         lastMaxVertexCount = group.maxVertexCount;
         group.getRenderType().setupRenderState();

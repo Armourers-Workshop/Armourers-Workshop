@@ -43,14 +43,14 @@ public class CubePaintingEvent {
         this.action = Action.fromBuffer(buffer);
         // read and remapping actions.
         while (true) {
-            int size = buffer.readByte();
+            var size = buffer.readByte();
             if (size <= 0) {
                 break;
             }
-            BlockPos pos = buffer.readBlockPos();
-            for (int i = 0; i < size; ++i) {
-                Direction dir = buffer.readEnum(Direction.class);
-                Action action = Action.fromBuffer(buffer);
+            var pos = buffer.readBlockPos();
+            for (var i = 0; i < size; ++i) {
+                var dir = buffer.readEnum(Direction.class);
+                var action = Action.fromBuffer(buffer);
                 overrides.put(Pair.of(pos, dir), action);
             }
         }
@@ -126,7 +126,7 @@ public class CubePaintingEvent {
         @Override
         public Action build(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
             if (provider.shouldChangeColor(dir)) {
-                IPaintColor paintColor = provider.getColor(dir);
+                var paintColor = provider.getColor(dir);
                 if (paintColor instanceof TexturedPaintColor) {
                     // for bounding box block, the client side maybe used texture color,
                     // this is inconsistent with the server side.
@@ -188,9 +188,9 @@ public class CubePaintingEvent {
             if (usePaintType && usePaintColor) {
                 return destinationColor;
             }
-            IPaintColor oldValue = provider.getColor(dir);
-            ISkinPaintType paintType = oldValue.getPaintType();
-            int paintColor = oldValue.getRGB();
+            var oldValue = provider.getColor(dir);
+            var paintType = oldValue.getPaintType();
+            var paintColor = oldValue.getRGB();
             if (usePaintColor) {
                 paintColor = destinationColor.getRGB();
             }

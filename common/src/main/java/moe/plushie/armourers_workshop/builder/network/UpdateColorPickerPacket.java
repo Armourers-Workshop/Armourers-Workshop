@@ -33,7 +33,7 @@ public class UpdateColorPickerPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
-        ItemStack holdItemStack = player.getItemInHand(hand);
+        var holdItemStack = player.getItemInHand(hand);
         if (Objects.equals(holdItemStack.getItem(), itemStack.getItem())) {
             player.setItemInHand(hand, itemStack);
         }

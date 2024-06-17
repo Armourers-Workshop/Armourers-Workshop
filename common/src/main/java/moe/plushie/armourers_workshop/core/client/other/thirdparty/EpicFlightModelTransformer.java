@@ -23,7 +23,7 @@ public class EpicFlightModelTransformer<T, P, M extends IModel> {
 
 
     public static <M extends EpicFlightModelPartBuilder, P extends Consumer<Boolean>> void register(Class<M> clazz, Function<CachedModel.Container<P>, IModel> factory, BiConsumer<M, CachedModel.Container<P>> builder) {
-        EpicFlightModelTransformer<M, P, IModel> entry = new EpicFlightModelTransformer<>();
+        var entry = new EpicFlightModelTransformer<M, P, IModel>();
         entry.clazz = clazz;
         entry.factory = factory;
         entry.builder = builder;
@@ -49,7 +49,7 @@ public class EpicFlightModelTransformer<T, P, M extends IModel> {
     }
 
     public static <M, P> void register(Class<M> clazz, Function<CachedModel.Container<P>, IModel> factory, Function<P, IModelPart> transformer, BiConsumer<M, CachedModel.Container<P>> builder) {
-        EpicFlightModelTransformer<M, P, IModel> entry = new EpicFlightModelTransformer<>();
+        var entry = new EpicFlightModelTransformer<M, P, IModel>();
         entry.clazz = clazz;
         entry.factory = factory;
         entry.builder = builder;
@@ -58,7 +58,7 @@ public class EpicFlightModelTransformer<T, P, M extends IModel> {
     }
 
     public static <T, P, M extends IModel> M create(T model) {
-        ArrayList<BiConsumer<T, CachedModel.Container<P>>> builders = new ArrayList<>();
+        var builders = new ArrayList<BiConsumer<T, CachedModel.Container<P>>>();
         Function<CachedModel.Container<P>, M> factory = null;
         Function<P, IModelPart> transformer = null;
         Class<?> clazz = model.getClass();

@@ -28,7 +28,7 @@ public enum OptionalDirection implements StringRepresentable {
     }
 
     public static OptionalDirection of(Direction direction) {
-        for (OptionalDirection dir : values()) {
+        for (var dir : values()) {
             if (direction.equals(dir.getDirection())) {
                 return dir;
             }

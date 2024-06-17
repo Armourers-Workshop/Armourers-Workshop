@@ -24,7 +24,7 @@ public class ShaderVertexMerger {
     }
 
     public void forEach(Consumer<ShaderVertexGroup> consumer) {
-        for (ShaderVertexGroup group : sortedGroups) {
+        for (var group : sortedGroups) {
             if (group.isEmpty()) {
                 continue;
             }
@@ -51,7 +51,7 @@ public class ShaderVertexMerger {
 
 
     private ShaderVertexGroup addAndSort(RenderType type) {
-        ShaderVertexGroup group = new ShaderVertexGroup(type);
+        var group = new ShaderVertexGroup(type);
         sortedGroups.add(group);
         sortedGroups.sort(Comparator.comparing(this::getRenderOrder));
         return group;

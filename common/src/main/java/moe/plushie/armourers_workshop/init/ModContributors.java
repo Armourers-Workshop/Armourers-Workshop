@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.init;
 
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -121,8 +121,8 @@ public class ModContributors {
         }
 
         Builder add(String uuid, String username, int color, ContributionFlags... flags) {
-            EnumSet<ContributionFlags> set = EnumSet.copyOf(Lists.newArrayList(flags));
-            Contributor contributor = new Contributor(uuid, username, set, color);
+            var set = EnumSet.copyOf(Lists.newArrayList(flags));
+            var contributor = new Contributor(uuid, username, set, color);
             contributors.put(contributor.uuid, contributor);
             if (contributor.contributions.contains(ContributionFlags.PROGRAMMING)) {
                 dev = contributor;

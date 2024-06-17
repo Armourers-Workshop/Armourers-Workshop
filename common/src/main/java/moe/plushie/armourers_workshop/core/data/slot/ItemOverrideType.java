@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.data.slot;
 
 import moe.plushie.armourers_workshop.api.common.IItemTag;
 import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItemMatchers;
 import moe.plushie.armourers_workshop.init.ModItemTags;
@@ -43,7 +42,7 @@ public enum ItemOverrideType {
 
     @Nullable
     public static ItemOverrideType of(String name) {
-        for (ItemOverrideType overrideType : ItemOverrideType.values()) {
+        for (var overrideType : ItemOverrideType.values()) {
             if (overrideType.getName().equals(name)) {
                 return overrideType;
             }
@@ -57,7 +56,7 @@ public enum ItemOverrideType {
             return true;
         }
         // test by overrides of the config system.
-        IResourceLocation registryName = TypedRegistry.findKey(itemStack.getItem());
+        var registryName = TypedRegistry.findKey(itemStack.getItem());
         if (ModConfig.Common.overrides.contains(name + ":" + registryName)) {
             return true;
         }

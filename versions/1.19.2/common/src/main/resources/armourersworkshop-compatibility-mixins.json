@@ -15,6 +15,7 @@
     "InventoryScreenMixin",
     "HttpTextureMixin",
     "CameraMixin",
+    "ClientEntityTickMixin",
     "patch/ArrowRendererMixin",
     "patch/BoatRendererMixin",
     "patch/FishingHookRendererMixin",

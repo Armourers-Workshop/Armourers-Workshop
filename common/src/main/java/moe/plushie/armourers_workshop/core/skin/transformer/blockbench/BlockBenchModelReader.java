@@ -3,14 +3,12 @@ package moe.plushie.armourers_workshop.core.skin.transformer.blockbench;
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPack;
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPackModelReader;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModel;
-import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelAnimation;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelBone;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelCube;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelGeometry;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelTexture;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelUV;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockTransform;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
 import moe.plushie.armourers_workshop.utils.math.Size3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -21,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 public class BlockBenchModelReader implements SkinPackModelReader {
@@ -53,9 +52,10 @@ public class BlockBenchModelReader implements SkinPackModelReader {
 
         builder.addBones(convertToBone(pack.getRootOutliner(), null));
 
-        BedrockModel.Builder rootBuilder = new BedrockModel.Builder();
+        var rootBuilder = new BedrockModel.Builder();
         rootBuilder.formatVersion("1.12.0");
         rootBuilder.addGeometry(builder.build());
+
         return rootBuilder.build();
     }
 
@@ -66,8 +66,8 @@ public class BlockBenchModelReader implements SkinPackModelReader {
     }
 
     @Override
-    public Map<String, BedrockModelAnimation> getAnimations() {
-        return null;
+    public List<BlockBenchAnimation> getAnimations() {
+        return pack.getAnimations();
     }
 
     @Override
@@ -76,9 +76,9 @@ public class BlockBenchModelReader implements SkinPackModelReader {
         if (pack.getTransforms() == null) {
             return null;
         }
-        Map<String, BedrockTransform> results = new HashMap<>();
+        var results = new HashMap<String, BedrockTransform>();
         pack.getTransforms().forEach((name, transform) -> {
-            BedrockTransform.Builder builder = new BedrockTransform.Builder();
+            var builder = new BedrockTransform.Builder();
             builder.translation(convertToLocal(transform.getTranslation()));
             builder.rotation(convertToLocal(transform.getRotation()));
             builder.scale(transform.getScale());
@@ -94,12 +94,12 @@ public class BlockBenchModelReader implements SkinPackModelReader {
 
     // https://github.com/JannisX11/blockbench/blob/master/js/io/formats/bedrock.js#L781
     private ArrayList<BedrockModelBone> convertToBone(BlockBenchOutliner outliner, @Nullable BlockBenchOutliner parentOutliner) {
-        ArrayList<BedrockModelBone> bones = new ArrayList<>();
+        var bones = new ArrayList<BedrockModelBone>();
         if (!outliner.allowExport()) {
             return bones;
         }
 
-        BedrockModelBone.Builder builder = new BedrockModelBone.Builder();
+        var builder = new BedrockModelBone.Builder();
 
         builder.name(outliner.getName());
         if (parentOutliner != null) {
@@ -115,18 +115,15 @@ public class BlockBenchModelReader implements SkinPackModelReader {
 
         builder.mirror(false);
 
-        for (Object child : outliner.getChildren()) {
-            BlockBenchOutliner childOutliner = ObjectUtils.safeCast(child, BlockBenchOutliner.class);
-            if (childOutliner != null) {
-                bones.addAll(convertToBone(childOutliner, outliner));
+        for (var child : outliner.getChildren()) {
+            if (child instanceof BlockBenchOutliner childOutlineer) {
+                bones.addAll(convertToBone(childOutlineer, outliner));
                 continue;
             }
-            String ref = ObjectUtils.safeCast(child, String.class);
-            if (ref == null) {
+            if (!(child instanceof String ref)) {
                 continue;
             }
-            BlockBenchElement element = ObjectUtils.safeCast(pack.getObject(ref), BlockBenchElement.class);
-            if (element == null || !element.allowExport()) {
+            if (!(pack.getObject(ref) instanceof BlockBenchElement element) || !element.allowExport()) {
                 continue;
             }
             if (element.getType().equals("cube")) {
@@ -142,7 +139,7 @@ public class BlockBenchModelReader implements SkinPackModelReader {
 
     // https://github.com/JannisX11/blockbench/blob/master/js/io/formats/bedrock.js#L726
     private BedrockModelCube convertToCube(BlockBenchElement element) {
-        BedrockModelCube.Builder builder = new BedrockModelCube.Builder();
+        var builder = new BedrockModelCube.Builder();
 
         builder.origin(convertToCubeOrigin(element).subtracting(baseOrigin));
         builder.size(convertToCubeSize(element));
@@ -154,20 +151,21 @@ public class BlockBenchModelReader implements SkinPackModelReader {
         }
 
         builder.uv(convertToCubeUV(element));
+
         return builder.build();
     }
 
     private Vector3f convertToCubeOrigin(BlockBenchElement element) {
-        Vector3f from = element.getFrom();
-        Vector3f to = element.getTo();
+        var from = element.getFrom();
+        var to = element.getTo();
         // tx = -(from.getX() + (to.getX() - from.getX()))
         // ty = -(from.getY() + (to.getY() - from.getY()))
         return new Vector3f(-to.getX(), -to.getY(), from.getZ());
     }
 
     private Size3f convertToCubeSize(BlockBenchElement element) {
-        Vector3f from = element.getFrom();
-        Vector3f to = element.getTo();
+        var from = element.getFrom();
+        var to = element.getTo();
         return new Size3f(to.getX() - from.getX(), to.getY() - from.getY(), to.getZ() - from.getZ());
     }
 
@@ -183,13 +181,13 @@ public class BlockBenchModelReader implements SkinPackModelReader {
             return uv;
         }
         // per-face texture
-        BlockBenchModelUV uv = new BlockBenchModelUV(null);
+        var uv = new BlockBenchModelUV(null);
         uv.setDefaultTextureId(-1); // default not use any texture.
         element.getFaces().forEach((dir, face) -> {
             if (face.getTextureId() < 0) {
                 return;
             }
-            Rectangle2f rect = face.getRect();
+            var rect = face.getRect();
             if (dir == Direction.UP || dir == Direction.DOWN) {
                 var fixedRect = rect.copy();
                 fixedRect.setX(rect.getMaxX());

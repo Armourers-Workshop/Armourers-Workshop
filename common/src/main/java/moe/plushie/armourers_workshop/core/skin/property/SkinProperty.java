@@ -112,8 +112,7 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SkinProperty<?> that = (SkinProperty<?>) o;
+        if (!(o instanceof SkinProperty<?> that)) return false;
         return key.equals(that.key);
     }
 

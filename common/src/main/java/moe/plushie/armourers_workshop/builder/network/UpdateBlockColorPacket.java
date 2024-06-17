@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -52,14 +51,14 @@ public class UpdateBlockColorPacket extends CustomPacket {
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
         // we don't support modify blocks in multiple dimensions at the same time.
-        Level level = player.server.getLevel(clickedPos.dimension());
+        var level = player.server.getLevel(clickedPos.dimension());
         if (level == null) {
             return;
         }
         try {
-            ItemStack itemStack = player.getItemInHand(hand);
-            UseOnContext context = new UseOnContext(level, player, hand, itemStack, traceResult);
-            CubeChangesCollector collector = new CubeChangesCollector(level);
+            var itemStack = player.getItemInHand(hand);
+            var context = new UseOnContext(level, player, hand, itemStack, traceResult);
+            var collector = new CubeChangesCollector(level);
             paintingEvent.apply(collector, context);
             collector.submit(itemStack.getHoverName(), player);
             applyUseEffects(itemStack, context);
@@ -70,19 +69,19 @@ public class UpdateBlockColorPacket extends CustomPacket {
     }
 
     public BlockPos by(IPaintable target) {
-        if (target instanceof BlockEntity) {
-            return ((BlockEntity) target).getBlockPos();
+        if (target instanceof BlockEntity blockEntity) {
+            return blockEntity.getBlockPos();
         }
         return null;
     }
 
     private void applyUseEffects(ItemStack itemStack, UseOnContext context) {
-        Item item = itemStack.getItem();
-        if (item instanceof IItemSoundProvider) {
-            ((IItemSoundProvider) item).playSound(context);
+        var item = itemStack.getItem();
+        if (item instanceof IItemSoundProvider provider) {
+            provider.playSound(context);
         }
-        if (item instanceof IItemParticleProvider) {
-            ((IItemParticleProvider) item).playParticle(context);
+        if (item instanceof IItemParticleProvider provider) {
+            provider.playParticle(context);
         }
     }
 }

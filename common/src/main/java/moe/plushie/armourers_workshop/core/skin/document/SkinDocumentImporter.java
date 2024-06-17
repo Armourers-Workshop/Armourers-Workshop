@@ -10,8 +10,6 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.utils.SkinCipher;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 public class SkinDocumentImporter {
 
     private final SkinDocument document;
@@ -21,14 +19,14 @@ public class SkinDocumentImporter {
     }
 
     public void execute(String identifier, Skin skin) {
-        List<SkinPart> parts = skin.getParts();
-        SkinDocumentNode root = document.getRoot();
-        for (int i = 0; i < parts.size(); ++i) {
-            SkinPart part = parts.get(i);
+        var parts = skin.getParts();
+        var root = document.getRoot();
+        for (var i = 0; i < parts.size(); ++i) {
+            var part = parts.get(i);
             if (isEmpty(part)) {
                 continue; // ignore empty part
             }
-            SkinDocumentNode node = findNodeByType(root, part.getType());
+            var node = findNodeByType(root, part.getType());
             if (node != null) {
                 copyTo(part, node, identifier, String.valueOf(i));
             }
@@ -36,20 +34,20 @@ public class SkinDocumentImporter {
     }
 
     private void copyTo(SkinPart part, SkinDocumentNode node, String identifier, String indexPath) {
-        String ref = SkinCipher.getInstance().encrypt(identifier, indexPath);
-        SkinDescriptor descriptor = new SkinDescriptor(DataDomain.SLICE_LOAD.normalize(ref), SkinTypes.ADVANCED);
+        var ref = SkinCipher.getInstance().encrypt(identifier, indexPath);
+        var descriptor = new SkinDescriptor(DataDomain.SLICE_LOAD.normalize(ref), SkinTypes.ADVANCED);
         if (node.getType() != SkinPartTypes.ADVANCED) {
             node.setSkin(descriptor);
             return;
         }
 
-        String name = part.getName();
+        var name = part.getName();
         if (name == null || name.isEmpty()) {
             name = "untitled node";
         }
 
         if (name.equals("Float")) {
-            SkinDocumentNode floatNode = findNodeById(document.getRoot(), "float");
+            var floatNode = findNodeById(document.getRoot(), "float");
             if (floatNode != null) {
                 node = floatNode;
                 name = "untitled float node";
@@ -57,17 +55,17 @@ public class SkinDocumentImporter {
         }
 
         // this maybe has multiple nodes, so we need to append it.
-        SkinDocumentNode newValue = new SkinDocumentNode(name);
+        var newValue = new SkinDocumentNode(name);
         newValue.setSkin(descriptor);
         node.add(newValue);
     }
 
     private boolean isEmpty(SkinPart part) {
-        int cubeTotal = part.getCubeData().getCubeTotal();
+        var cubeTotal = part.getCubeData().getCubeTotal();
         if (cubeTotal != 0) {
             return false;
         }
-        for (SkinPart child : part.getParts()) {
+        for (var child : part.getParts()) {
             if (!isEmpty(child)) {
                 return false;
             }
@@ -77,7 +75,7 @@ public class SkinDocumentImporter {
 
     @Nullable
     private SkinDocumentNode findNodeById(SkinDocumentNode root, String id) {
-        for (SkinDocumentNode node : root.children()) {
+        for (var node : root.children()) {
             if (node.getId().equals(id)) {
                 return node;
             }
@@ -89,7 +87,7 @@ public class SkinDocumentImporter {
     private SkinDocumentNode findNodeByType(SkinDocumentNode root, ISkinPartType partType) {
         // we shouldn't match advanced parts
         if (partType != SkinPartTypes.ADVANCED) {
-            for (SkinDocumentNode node : root.children()) {
+            for (var node : root.children()) {
                 if (partType.equals(node.getType())) {
                     return node;
                 }

@@ -23,7 +23,7 @@ public class GiftSackItem extends FlavouredItem implements IItemGroupProvider, I
     }
 
     public static ItemStack of(Holiday holiday) {
-        ItemStack stack = new ItemStack(ModItems.GIFT_SACK.get());
+        var stack = new ItemStack(ModItems.GIFT_SACK.get());
         stack.set(ModDataComponents.HOLIDAY.get(), holiday);
         if (holiday.getHandler() != null) {
             stack.set(ModDataComponents.GIFT_COLOR_BG.get(), holiday.getHandler().getBackgroundColor());
@@ -33,7 +33,7 @@ public class GiftSackItem extends FlavouredItem implements IItemGroupProvider, I
     }
 
     public static ItemStack getGift(ItemStack itemStack, Player player) {
-        Holiday holiday = itemStack.get(ModDataComponents.HOLIDAY.get());
+        var holiday = itemStack.get(ModDataComponents.HOLIDAY.get());
         if (holiday != null && holiday.getHandler() != null) {
             return holiday.getHandler().getGift(player);
         }
@@ -42,8 +42,8 @@ public class GiftSackItem extends FlavouredItem implements IItemGroupProvider, I
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
-        ItemStack giftStack = getGift(itemStack, player);
+        var itemStack = player.getItemInHand(hand);
+        var giftStack = getGift(itemStack, player);
         if (giftStack.isEmpty()) {
             return InteractionResultHolder.pass(itemStack);
         }

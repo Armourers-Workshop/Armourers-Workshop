@@ -49,7 +49,7 @@ public class SkinningTableMenu extends AbstractBlockMenu {
     protected void addOutputSlot(Container inventory, int slot, int x, int y) {
         addSlot(new Slot(inventory, slot, x, y) {
             @Override
-            public boolean mayPlace(ItemStack p_75214_1_) {
+            public boolean mayPlace(ItemStack itemStack) {
                 return false;
             }
 

@@ -17,11 +17,11 @@ public class DefaultJointBinder extends JointModifier {
 
     @Override
     public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
-        IModelPart modelPart = model.getPart(name);
+        var modelPart = model.getPart(name);
         if (modelPart == null) {
             return transform;
         }
-        IModelPartPose pose = modelPart.pose();
+        var pose = modelPart.pose();
         return poseStack -> {
             transform.apply(poseStack);
             pose.transform(poseStack);

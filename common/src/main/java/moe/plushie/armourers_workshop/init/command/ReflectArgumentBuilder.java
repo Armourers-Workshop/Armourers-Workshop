@@ -43,7 +43,7 @@ public class ReflectArgumentBuilder<S> extends LiteralArgumentBuilder<S> {
         this.object = object;
     }
 
-    public static <S> ReflectArgumentBuilder<S> literal(final String name, Class<?> object) {
+    public static ReflectArgumentBuilder<CommandSourceStack> literal(final String name, Class<?> object) {
         return new ReflectArgumentBuilder<>(name, object);
     }
 

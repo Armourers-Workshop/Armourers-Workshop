@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.builder.other.CubeSelector;
 import moe.plushie.armourers_workshop.init.ModSounds;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
@@ -30,15 +29,15 @@ public class PaintRollerItem extends PaintbrushItem {
 
     @Override
     public IPaintToolSelector createPaintToolSelector(UseOnContext context) {
-        ItemStack itemStack = context.getItemInHand();
-        BlockPos pos = context.getClickedPos();
-        int radius = itemStack.get(PaintingToolOptions.RADIUS);
+        var itemStack = context.getItemInHand();
+        var pos = context.getClickedPos();
+        var radius = itemStack.get(PaintingToolOptions.RADIUS);
         return CubeSelector.plane(pos, radius, shouldUseFullMode(context));
     }
 
     @Override
     public void appendSettingHoverText(ItemStack itemStack, List<Component> tooltips) {
-        int radius = itemStack.get(PaintingToolOptions.RADIUS);
+        var radius = itemStack.get(PaintingToolOptions.RADIUS);
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.area", radius * 2 - 1, radius * 2 - 1, 1));
         super.appendSettingHoverText(itemStack, tooltips);
     }

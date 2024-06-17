@@ -21,16 +21,16 @@ public abstract class AbstractPaintToolItem extends ConfigurableToolItem impleme
 
     @Override
     public void playSound(UseOnContext context) {
-        IRegistryHolder<SoundEvent> soundEvent = getItemSoundEvent(context);
+        var soundEvent = getItemSoundEvent(context);
         if (soundEvent == null) {
             return;
         }
         if (ModHolidays.APRIL_FOOLS.isHolidayActive()) {
             soundEvent = ModSounds.BOI;
         }
-        float pitch = getItemSoundPitch(context);
-        Level level = context.getLevel();
-        BlockPos clickedPos = context.getClickedPos();
+        var pitch = getItemSoundPitch(context);
+        var level = context.getLevel();
+        var clickedPos = context.getClickedPos();
         if (level.isClientSide()) {
             level.playSound(context.getPlayer(), clickedPos, soundEvent.get(), SoundSource.BLOCKS, 1.0f, pitch);
         } else {

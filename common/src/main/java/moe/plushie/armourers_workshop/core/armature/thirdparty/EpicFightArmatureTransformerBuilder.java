@@ -17,7 +17,7 @@ public class EpicFightArmatureTransformerBuilder extends ArmatureTransformerBuil
 
     @Override
     protected IJointTransform buildTransform(IJoint joint, Collection<JointModifier> modifiers, ArmatureTransformerContext context) {
-        IJointTransform transform = super.buildTransform(joint, modifiers, context);
+        var transform = super.buildTransform(joint, modifiers, context);
         return poseStack -> {
             transform.apply(poseStack);
             poseStack.scale(-1, -1, 1);

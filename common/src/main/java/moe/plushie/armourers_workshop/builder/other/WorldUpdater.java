@@ -31,18 +31,18 @@ public class WorldUpdater {
     }
 
     public void tick(Level level) {
-        ResourceKey<Level> key = level.dimension();
+        var key = level.dimension();
         if (isEmpty(key)) {
             return;
         }
         BlockUtils.performBatch(() -> {
             // long startAt = System.currentTimeMillis();
             for (int count = ModConfig.Common.blockTaskRate; count > 0; /* noop */) {
-                IWorldUpdateTask task = poll(key);
+                var task = poll(key);
                 if (task == null) {
                     break; // no more tasks to run
                 }
-                InteractionResult resultType = task.run(level);
+                var resultType = task.run(level);
                 if (resultType.consumesAction()) {
                     count -= 1;
                 } else if (resultType == InteractionResult.FAIL) {
@@ -57,7 +57,7 @@ public class WorldUpdater {
     }
 
     public synchronized void drain(Level level) {
-        AutoMergeQueue queue = allTasks.remove(level.dimension());
+        var queue = allTasks.remove(level.dimension());
         if (queue == null || queue.isEmpty()) {
             return;
         }
@@ -69,13 +69,13 @@ public class WorldUpdater {
     }
 
     public synchronized boolean isEmpty(ResourceKey<Level> key) {
-        AutoMergeQueue m = allTasks.get(key);
+        var m = allTasks.get(key);
         return m == null || m.isEmpty();
     }
 
     @Nullable
     public synchronized IWorldUpdateTask poll(ResourceKey<Level> key) {
-        AutoMergeQueue m = allTasks.get(key);
+        var m = allTasks.get(key);
         if (m != null && !m.isEmpty()) {
             return m.pop();
         }
@@ -88,25 +88,25 @@ public class WorldUpdater {
         private final ArrayList<IWorldUpdateTask> tasks = new ArrayList<>();
 
         public void push(IWorldUpdateTask task) {
-            BlockPos blockPos = task.getBlockPos();
-            IWorldUpdateTask pendingTask = fastTable.get(blockPos);
+            var blockPos = task.getBlockPos();
+            var pendingTask = fastTable.get(blockPos);
             if (pendingTask == null) {
                 tasks.add(task);
                 fastTable.put(blockPos, task);
                 return;
             }
-            if (pendingTask instanceof AutoMergeTask) {
-                ((AutoMergeTask) pendingTask).add(task);
+            if (pendingTask instanceof AutoMergeTask mergeTask) {
+                mergeTask.add(task);
                 return;
             }
-            AutoMergeTask mergedTask = new AutoMergeTask(pendingTask);
+            var mergedTask = new AutoMergeTask(pendingTask);
             mergedTask.add(task);
             fastTable.put(blockPos, mergedTask);
         }
 
         public IWorldUpdateTask pop() {
-            IWorldUpdateTask task = tasks.remove(0);
-            IWorldUpdateTask mergedTask = fastTable.remove(task.getBlockPos());
+            var task = tasks.remove(0);
+            var mergedTask = fastTable.remove(task.getBlockPos());
             if (mergedTask != null) {
                 return mergedTask;
             }
@@ -135,10 +135,10 @@ public class WorldUpdater {
         }
 
         public void optimize(Level level) {
-            ArrayList<IWorldUpdateTask> optimizedTasks = new ArrayList<>();
+            var optimizedTasks = new ArrayList<IWorldUpdateTask>();
             BlockState lastBlockState = null;
-            for (IWorldUpdateTask task : tasks) {
-                BlockState newBlockState = task.getBlockState();
+            for (var task : tasks) {
+                var newBlockState = task.getBlockState();
                 if (!Objects.equals(newBlockState, lastBlockState)) {
                     lastBlockState = newBlockState;
                     optimizedTasks.clear();
@@ -170,10 +170,10 @@ public class WorldUpdater {
         public InteractionResult run(Level level) {
             // before the run, we will optimize the block changes.
             optimize(level);
-            int changes = 0;
-            ArrayList<IWorldUpdateTask> failedTasks = new ArrayList<>();
-            for (IWorldUpdateTask task : tasks) {
-                InteractionResult resultType = task.run(level);
+            var changes = 0;
+            var failedTasks = new ArrayList<IWorldUpdateTask>();
+            for (var task : tasks) {
+                var resultType = task.run(level);
                 if (resultType.consumesAction()) {
                     changes += 1;
                 }

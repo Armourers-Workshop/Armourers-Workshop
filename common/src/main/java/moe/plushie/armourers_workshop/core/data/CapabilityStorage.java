@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.data;
 
 import moe.plushie.armourers_workshop.api.common.ICapabilityType;
-import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractCapabilityStorage;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.utils.Constants;
@@ -35,9 +35,9 @@ public class CapabilityStorage {
         if (ENTRIES.isEmpty()) {
             return NONE;
         }
-        IdentityHashMap<ICapabilityType<?>, Pair<Entry<?>, Optional<?>>> capabilities = new IdentityHashMap<>();
-        for (Entry<?> entry : ENTRIES) {
-            Optional<?> cap = entry.provider.apply(entity);
+        var capabilities = new IdentityHashMap<ICapabilityType<?>, Pair<Entry<?>, Optional<?>>>();
+        for (var entry : ENTRIES) {
+            var cap = entry.provider.apply(entity);
             if (cap.isPresent()) {
                 capabilities.put(entry.capabilityType, Pair.of(entry, cap));
             }
@@ -49,8 +49,8 @@ public class CapabilityStorage {
     }
 
     public static <T> Optional<T> getCapability(Entity entity, ICapabilityType<T> capabilityType) {
-        CapabilityStorage storage = ((Provider) entity).getCapabilityStorage();
-        Pair<Entry<?>, Optional<?>> value = storage.capabilities.get(capabilityType);
+        var storage = ((Provider) entity).getCapabilityStorage();
+        var value = storage.capabilities.get(capabilityType);
         if (value != null) {
             return ObjectUtils.unsafeCast(value.getValue());
         }
@@ -61,12 +61,11 @@ public class CapabilityStorage {
         if (this == NONE) {
             return;
         }
-        String capsKey = AbstractCapabilityStorage.KEY;
-        CompoundTag caps = tag.getCompound(capsKey);
+        var capsKey = AbstractCapabilityStorage.KEY;
+        var caps = tag.getCompound(capsKey);
         capabilities.values().forEach(pair -> {
-            IDataSerializerProvider provider = ObjectUtils.safeCast(pair.getValue().orElse(null), IDataSerializerProvider.class);
-            if (provider != null) {
-                CompoundTag tag1 = new CompoundTag();
+            if (pair.getValue().orElse(null) instanceof IDataSerializerProvider provider) {
+                var tag1 = new CompoundTag();
                 provider.serialize(AbstractDataSerializer.wrap(tag1, entity));
                 caps.put(pair.getKey().registryName.toString(), tag1);
             }
@@ -87,9 +86,8 @@ public class CapabilityStorage {
             return;
         }
         capabilities.values().forEach(pair -> {
-            IDataSerializerProvider provider = ObjectUtils.safeCast(pair.getValue().orElse(null), IDataSerializerProvider.class);
-            if (provider != null) {
-                CompoundTag tag1 = ObjectUtils.safeCast(caps.get(pair.getKey().registryName.toString()), CompoundTag.class);
+            if (pair.getValue().orElse(null) instanceof IDataSerializerProvider provider) {
+                var tag1 = ObjectUtils.safeCast(caps.get(pair.getKey().registryName.toString()), CompoundTag.class);
                 if (tag1 != null) {
                     provider.deserialize(AbstractDataSerializer.wrap(tag1, entity));
                 }

@@ -1,11 +1,10 @@
 package moe.plushie.armourers_workshop.core.data.color;
 
 import com.google.common.collect.Iterables;
-import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinDye;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.nbt.CompoundTag;
@@ -32,8 +31,8 @@ public class ColorScheme implements ISkinDye {
     }
 
     public ColorScheme(CompoundTag nbt) {
-        for (String key : nbt.getAllKeys()) {
-            SkinPaintType paintType = SkinPaintTypes.byName(key);
+        for (var key : nbt.getAllKeys()) {
+            var paintType = SkinPaintTypes.byName(key);
             if (paintType != SkinPaintTypes.NONE && nbt.contains(key, Constants.TagFlags.INT)) {
                 colors.put(paintType, PaintColor.of(nbt.getInt(key)));
             }
@@ -41,13 +40,13 @@ public class ColorScheme implements ISkinDye {
     }
 
     public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
+        var nbt = new CompoundTag();
         colors.forEach((paintType, paintColor) -> nbt.putInt(paintType.getRegistryName().toString(), paintColor.getRawValue()));
         return nbt;
     }
 
     public ColorScheme copy() {
-        ColorScheme scheme = new ColorScheme();
+        var scheme = new ColorScheme();
         scheme.colors.putAll(colors);
         scheme.reference = reference;
         scheme.texture = texture;
@@ -69,7 +68,7 @@ public class ColorScheme implements ISkinDye {
 
     @Nullable
     public IPaintColor getColor(ISkinPaintType paintType) {
-        IPaintColor color = colors.get(paintType);
+        var color = colors.get(paintType);
         if (color != null) {
             return color;
         }
@@ -120,16 +119,16 @@ public class ColorScheme implements ISkinDye {
     }
 
     private HashMap<ISkinPaintType, IPaintColor> getResolvedColors() {
-        HashMap<ISkinPaintType, IPaintColor> resolvedColors = new HashMap<>();
-        HashMap<ISkinPaintType, ArrayList<ISkinPaintType>> dependencies = new HashMap<>();
+        var resolvedColors = new HashMap<ISkinPaintType, IPaintColor>();
+        var dependencies = new HashMap<ISkinPaintType, ArrayList<ISkinPaintType>>();
         // build all reference dependencies
         if (reference != null) {
             resolvedColors.putAll(reference.getResolvedColors());
         }
         // build all item dependencies
         Iterables.concat(colors.entrySet(), getReference().colors.entrySet()).forEach(e -> {
-            ISkinPaintType paintType = e.getKey();
-            IPaintColor color = e.getValue();
+            var paintType = e.getKey();
+            var color = e.getValue();
             if (color.getPaintType().getDyeType() != null) {
                 dependencies.computeIfAbsent(color.getPaintType(), k -> new ArrayList<>()).add(paintType);
             } else {
@@ -153,10 +152,8 @@ public class ColorScheme implements ISkinDye {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (o.hashCode() != this.hashCode()) return false;
-        ColorScheme scheme = (ColorScheme) o;
-        return colors.equals(scheme.colors) && Objects.equals(texture, scheme.texture) && Objects.equals(reference, scheme.reference);
+        if (!(o instanceof ColorScheme that)) return false;
+        return colors.equals(that.colors) && Objects.equals(texture, that.texture) && Objects.equals(reference, that.reference);
     }
 
     @Override

@@ -19,6 +19,7 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.slot.ItemOverrideType;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
+import moe.plushie.armourers_workshop.core.network.UpdateAnimationPacket;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -31,6 +32,7 @@ import moe.plushie.armourers_workshop.init.command.ListArgumentType;
 import moe.plushie.armourers_workshop.init.command.ReflectArgumentBuilder;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.init.platform.event.common.RegisterCommandsEvent;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
@@ -64,17 +66,9 @@ public class ModCommands {
         return map;
     });
 
-    private static final DynamicCommandExceptionType ERROR_MISSING_DYE_SLOT = new DynamicCommandExceptionType(ob -> {
-        return Component.translatable("commands.armourers_workshop.armourers.error.missingSkin", ob);
-    });
-
-    private static final DynamicCommandExceptionType ERROR_MISSING_SKIN = new DynamicCommandExceptionType(ob -> {
-        return Component.translatable("commands.armourers_workshop.armourers.error.missingSkin", ob);
-    });
-
-    private static final DynamicCommandExceptionType ERROR_MISSING_ITEM_STACK = new DynamicCommandExceptionType(ob -> {
-        return Component.translatable("commands.armourers_workshop.armourers.error.missingItemSkinnable", ob);
-    });
+    private static final DynamicCommandExceptionType ERROR_MISSING_DYE_SLOT = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.missingSkin", ob));
+    private static final DynamicCommandExceptionType ERROR_MISSING_SKIN = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.missingSkin", ob));
+    private static final DynamicCommandExceptionType ERROR_MISSING_ITEM_STACK = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.missingItemSkinnable", ob));
 
     public static void init(RegisterCommandsEvent event) {
         event.register(commands());
@@ -84,18 +78,24 @@ public class ModCommands {
     public static LiteralArgumentBuilder<CommandSourceStack> commands() {
         return Commands.literal("armourers")
                 .then(ReflectArgumentBuilder.literal("config", ModConfig.Client.class))
-                .then(ReflectArgumentBuilder.literal("debug", ModDebugger.class))
+                .then(ReflectArgumentBuilder.literal("debug", ModDebugger.class).then(animationCommands()))
                 .requires(source -> source.hasPermission(2))
                 .then(Commands.literal("library").then(Commands.literal("reload").executes(Executor::reloadLibrary)))
                 .then(Commands.literal("setSkin").then(entities().then(slots().then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))).then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))))
                 .then(Commands.literal("giveSkin").then(players().then(skins().then(skinDying().executes(Executor::giveSkin)).executes(Executor::giveSkin))))
                 .then(Commands.literal("clearSkin").then(entities().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
-                .then(Commands.literal("exportSkin").then(skinFormats().then(outputFileName().then(scale().executes(Executor::exportSkin)).executes(Executor::exportSkin))))
+                .then(Commands.literal("exportSkin").then(skinFormats().then(name().then(scale().executes(Executor::exportSkin)).executes(Executor::exportSkin))))
                 .then(Commands.literal("setColor").then(entities().then(dyesSlotNames().then(dyeColor().executes(Executor::setColor)))))
                 .then(Commands.literal("rsyncWardrobe").then(players().executes(Executor::resyncWardrobe)))
                 .then(Commands.literal("openWardrobe").then(entities().executes(Executor::openWardrobe)))
                 .then(Commands.literal("itemSkinnable").then(addOrRemote().then(overrideTypes().executes(Executor::setItemSkinnable))))
                 .then(Commands.literal("setUnlockedSlots").then(entities().then(resizableSlotNames().then(resizableSlotAmounts().executes(Executor::setUnlockedWardrobeSlots)))));
+    }
+
+    public static LiteralArgumentBuilder<CommandSourceStack> animationCommands() {
+        return Commands.literal("animation")
+                .then(Commands.literal("play").then(entities().then(name().executes(Executor::playAnimation))))
+                .then(Commands.literal("stop").then(entities().then(name().executes(Executor::stopAnimation)).executes(Executor::stopAnimation)));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> players() {
@@ -130,7 +130,7 @@ public class ModCommands {
         return Commands.argument("scale", FloatArgumentType.floatArg());
     }
 
-    static ArgumentBuilder<CommandSourceStack, ?> outputFileName() {
+    static ArgumentBuilder<CommandSourceStack, ?> name() {
         return Commands.argument("name", StringArgumentType.string());
     }
 
@@ -375,6 +375,25 @@ public class ModCommands {
                 needCopy = true; // save the skin to the database
             }
             return SkinLoader.getInstance().loadSkinFromDB(identifier, scheme, needCopy);
+        }
+
+        public static int playAnimation(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+            String animationName = StringArgumentType.getString(context, "name");
+            for (Entity entity : EntityArgument.getEntities(context, "entities")) {
+                NetworkManager.sendToAll(UpdateAnimationPacket.play(entity, animationName));
+            }
+            return 0;
+        }
+
+        public static int stopAnimation(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+            String animationName = "";
+            if (containsNode(context, "name")) {
+                animationName = StringArgumentType.getString(context, "name");
+            }
+            for (Entity entity : EntityArgument.getEntities(context, "entities")) {
+                NetworkManager.sendToAll(UpdateAnimationPacket.stop(entity, animationName));
+            }
+            return 0;
         }
     }
 }

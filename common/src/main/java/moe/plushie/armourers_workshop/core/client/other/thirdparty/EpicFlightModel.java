@@ -28,11 +28,11 @@ public class EpicFlightModel extends LinkedModel {
     }
 
     public static <V extends Model> EpicFlightModel ofNullable(V model) {
-        IModel model1 = ModelHolder.ofNullable(model);
+        var model1 = ModelHolder.ofNullable(model);
         if (model1 == null) {
             return null;
         }
-        EpicFlightModel model2 = model1.getAssociatedObject(KEY);
+        var model2 = model1.getAssociatedObject(KEY);
         if (model2 != null) {
             return model2;
         }

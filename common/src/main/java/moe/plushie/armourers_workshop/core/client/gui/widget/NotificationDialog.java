@@ -29,9 +29,9 @@ public class NotificationDialog extends ConfirmDialog {
 
     @Override
     public void sizeToFit() {
-        CGRect bounding = message().boundingRectWithFont(UIFont.systemFont());
-        float minWidth = MathUtils.clamp(bounding.width, 120, 280) + 40;
-        CGRect bounds = bounds();
+        var bounding = message().boundingRectWithFont(UIFont.systemFont());
+        var minWidth = MathUtils.clamp(bounding.width, 120, 280) + 40;
+        var bounds = bounds();
         bounds = new CGRect(0, 0, minWidth, bounds.height);
         setBounds(bounds);
     }

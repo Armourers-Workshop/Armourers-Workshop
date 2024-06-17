@@ -17,7 +17,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.HttpTexture;
-import net.minecraft.client.resources.SkinManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -85,8 +84,8 @@ public class PlayerTextureLoader {
 
     public IResourceLocation getTextureLocation(Entity entity) {
         if (entity instanceof MannequinEntity) {
-            PlayerTextureDescriptor descriptor = entity.getEntityData().get(MannequinEntity.DATA_TEXTURE);
-            PlayerTexture texture = loadTexture(descriptor);
+            var descriptor = entity.getEntityData().get(MannequinEntity.DATA_TEXTURE);
+            var texture = loadTexture(descriptor);
             if (texture != null && texture.getLocation() != null) {
                 return texture.getLocation();
             }
@@ -96,7 +95,7 @@ public class PlayerTextureLoader {
 
     public IResourceLocation loadTextureLocation(PlayerTextureDescriptor descriptor) {
         if (!descriptor.isEmpty()) {
-            PlayerTexture texture1 = loadTexture(descriptor);
+            var texture1 = loadTexture(descriptor);
             if (texture1 != null) {
                 return texture1.getLocation();
             }
@@ -216,8 +215,7 @@ public class PlayerTextureLoader {
             return;
         }
         ModLog.debug("load player texture => {}", profile);
-        SkinManager manager = Minecraft.getInstance().getSkinManager();
-        manager.loadCustomSkin(profile, skin -> {
+        Minecraft.getInstance().getSkinManager().loadCustomSkin(profile, skin -> {
             var url = skin.textureUrl();
             var model = skin.model().id();
             var location = OpenResourceLocation.create(skin.texture());
@@ -258,10 +256,10 @@ public class PlayerTextureLoader {
         if (image == null) {
             return;
         }
-        NativeImage newImage = new NativeImage(image.format(), image.getWidth(), image.getHeight(), true);
+        var newImage = new NativeImage(image.format(), image.getWidth(), image.getHeight(), true);
         newImage.copyFrom(image);
         workThread.execute(() -> {
-            BakedEntityTexture bakedTexture = getDownloadedTexture(url);
+            var bakedTexture = getDownloadedTexture(url);
             if (bakedTexture.getModel() == null) {
                 bakedTexture.setModel("default");
                 if (slim) {
@@ -274,8 +272,8 @@ public class PlayerTextureLoader {
     }
 
     private synchronized void receivePlayerTexture(PlayerTextureDescriptor descriptor, IResourceLocation location, String url, String model) {
-        PlayerTexture resolvedTexture = new PlayerTexture(url, location, model);
-        BakedEntityTexture bakedTexture = getDownloadedTexture(url);
+        var resolvedTexture = new PlayerTexture(url, location, model);
+        var bakedTexture = getDownloadedTexture(url);
         bakedTexture.setResourceLocation(location);
         bakedTexture.setModel(model);
         resolvedTexture.setTexture(bakedTexture);

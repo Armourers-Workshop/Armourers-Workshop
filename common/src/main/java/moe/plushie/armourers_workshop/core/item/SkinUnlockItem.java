@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.item;
 
-import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -22,21 +21,21 @@ public class SkinUnlockItem extends FlavouredItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
+        var itemStack = player.getItemInHand(hand);
         if (level.isClientSide()) {
             return InteractionResultHolder.success(itemStack);
         }
-        ISkinType skinType = slotType.getSkinType();
-        SkinWardrobe wardrobe = SkinWardrobe.of(player);
+        var skinType = slotType.getSkinType();
+        var wardrobe = SkinWardrobe.of(player);
         if (wardrobe == null || skinType == null) {
             return InteractionResultHolder.fail(itemStack);
         }
-        Component skinName = TranslateUtils.Name.of(skinType);
+        var skinName = TranslateUtils.Name.of(skinType);
         if (wardrobe.getUnlockedSize(slotType) >= slotType.getMaxSize()) {
             player.sendSystemMessage(Component.translatable("chat.armourers_workshop.slotUnlockedFailed", skinName));
             return InteractionResultHolder.fail(itemStack);
         }
-        int count = wardrobe.getUnlockedSize(slotType) + 1;
+        var count = wardrobe.getUnlockedSize(slotType) + 1;
         wardrobe.setUnlockedSize(slotType, count);
         wardrobe.broadcast();
         player.sendSystemMessage(Component.translatable("chat.armourers_workshop.slotUnlocked", skinName, Integer.toString(count)));

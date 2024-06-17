@@ -42,11 +42,11 @@ public abstract class RotableContainerBlockEntity extends UpdatableContainerBloc
         if (renderBoundingBox != null) {
             return renderBoundingBox;
         }
-        Rectangle3f rect = getRenderShape(blockState);
+        var rect = getRenderShape(blockState);
         if (rect == null) {
             return ZERO_BOX;
         }
-        OpenQuaternionf quaternion = getRenderRotations(blockState);
+        var quaternion = getRenderRotations(blockState);
         if (quaternion != null) {
             rect.mul(quaternion);
         }

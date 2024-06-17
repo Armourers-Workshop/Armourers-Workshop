@@ -20,6 +20,8 @@ public class ModDebugger {
 
     public static int flag = 0;
 
+    public static float animationSpeed = 1f;
+
     public static boolean skinnable = false;
     public static boolean hologramProjector = false;
     public static boolean advancedBuilder = false;

@@ -145,8 +145,8 @@ public class BakedArmatureTransformer {
     }
 
     private static EntityModel<?> getModel(EntityRenderer<?> entityRenderer) {
-        if (entityRenderer instanceof RenderLayerParent) {
-            return ((RenderLayerParent<?, ?>) entityRenderer).getModel();
+        if (entityRenderer instanceof RenderLayerParent<?, ?> layerParent) {
+            return layerParent.getModel();
         }
         return null;
     }

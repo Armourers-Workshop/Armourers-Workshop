@@ -125,8 +125,8 @@ public class SkinWardrobeWindow<M extends SkinWardrobeMenu> extends MenuWindow<M
     }
 
     private void setupBackgroundView() {
-        UIView bg1 = new UIView(new CGRect(0, 0, 256, 151));
-        UIView bg2 = new UIView(new CGRect(256, 0, 22, 151));
+        var bg1 = new UIView(new CGRect(0, 0, 256, 151));
+        var bg2 = new UIView(new CGRect(256, 0, 22, 151));
         bg1.setContents(UIImage.of(ModTextures.WARDROBE_1).build());
         bg2.setContents(UIImage.of(ModTextures.WARDROBE_2).build());
         tabView.insertViewAtIndex(bg2, 0);
@@ -136,7 +136,7 @@ public class SkinWardrobeWindow<M extends SkinWardrobeMenu> extends MenuWindow<M
     private void setupForegroundView() {
         tabView.addSubview(inventoryView);
 
-        EntityPreviewView entityView = new EntityPreviewView(new CGRect(8, 27, 71, 111));
+        var entityView = new EntityPreviewView(new CGRect(8, 27, 71, 111));
         entityView.setContents(entity);
         tabView.addSubview(entityView);
     }

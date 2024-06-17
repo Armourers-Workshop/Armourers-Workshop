@@ -31,6 +31,7 @@ import moe.plushie.armourers_workshop.init.proxy.ClientProxy;
 import moe.plushie.armourers_workshop.init.proxy.CommonProxy;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 
 public class ArmourersWorkshop {
 
@@ -55,6 +56,7 @@ public class ArmourersWorkshop {
             // setup network manager.
             ModPackets.init();
             NetworkManager.init("play", ModConstants.MOD_NET_ID);
+            TickUtils.init();
 
             ModHolidays.init();
             ModPermissions.init();

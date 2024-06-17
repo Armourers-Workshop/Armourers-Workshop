@@ -29,7 +29,7 @@ public class RequestSkinPacket extends CustomPacket {
         ModLog.debug("'{}' => accept skin request", identifier);
         SkinLoader.getInstance().loadSkin(identifier, (skin, exception) -> {
             ModLog.debug("'{}' => response skin data, exception: {}", identifier, exception);
-            ResponseSkinPacket packet = new ResponseSkinPacket(identifier, skin, exception);
+            var packet = new ResponseSkinPacket(identifier, skin, exception);
             NetworkManager.sendTo(packet, player);
         });
     }

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.document;
 import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.DataSerializerKey;
@@ -10,18 +11,23 @@ import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.nbt.CompoundTag;
 
+import java.util.List;
+
 public class SkinDocument {
 
     private static final DataSerializerKey<SkinDocumentType> TYPE_KEY = DataSerializerKey.create("Type", DataTypeCodecs.SKIN_DOCUMENT_TYPE, SkinDocumentTypes.GENERAL_ARMOR_HEAD);
     private static final DataSerializerKey<SkinDocumentNode> NODES_KEY = DataSerializerKey.create("Nodes", DataTypeCodecs.SKIN_DOCUMENT_NODE, null);
+    private static final DataSerializerKey<List<SkinAnimation>> ANIMATIONS_KEY = DataSerializerKey.create("Animations", DataTypeCodecs.SKIN_DOCUMENT_ANIMATION.listOf(), null);
     private static final DataSerializerKey<SkinDocumentSettings> SETTINGS_KEY = DataSerializerKey.create("Settings", DataTypeCodecs.SKIN_DOCUMENT_SETTINGS, null, SkinDocumentSettings::new);
     private static final DataSerializerKey<SkinProperties> PROPERTIES_KEY = DataSerializerKey.create("Properties", DataTypeCodecs.SKIN_PROPERTIES, SkinProperties.EMPTY, SkinProperties::new);
 
     private SkinDocumentType type;
     private SkinDocumentNode nodes;
+    private List<SkinAnimation> animations;
 
     private SkinProperties properties = new SkinProperties();
     private SkinDocumentSettings settings = new SkinDocumentSettings();
+
     private final SkinDocumentListeners.Proxy listener = new SkinDocumentListeners.Proxy();
 
     public SkinDocument() {
@@ -29,22 +35,24 @@ public class SkinDocument {
     }
 
     public void reset() {
-        setType(type);
-    }
-
-    public void setType(SkinDocumentType type) {
-        this.type = type;
         this.nodes = _generateDefaultNode(type);
+        this.animations = null;
         this.settings = _generateSkinSettings();
-        this.properties = _generateSkinProperties();
         this.settings.setListener(listener);
         this.nodes.setListener(listener);
         this.listener.documentDidChangeType(type);
     }
 
+    public void setType(SkinDocumentType type) {
+        this.type = type;
+        this.properties = _generateSkinProperties();
+        this.reset();
+    }
+
     public void serialize(IDataSerializer serializer) {
         serializer.write(TYPE_KEY, type);
         serializer.write(NODES_KEY, nodes);
+        serializer.write(ANIMATIONS_KEY, animations);
         serializer.write(SETTINGS_KEY, settings);
         serializer.write(PROPERTIES_KEY, properties);
     }
@@ -57,6 +65,7 @@ public class SkinDocument {
         if (nodes == null) {
             nodes = _generateDefaultNode(type);
         }
+        animations = serializer.read(ANIMATIONS_KEY);
         settings.setListener(listener);
         nodes.setListener(listener);
         listener.documentDidReload();
@@ -74,7 +83,7 @@ public class SkinDocument {
 
     public <T> void put(ISkinProperty<T> property, T value) {
         properties.put(property, value);
-        SkinProperties.Changes changes = new SkinProperties.Changes();
+        var changes = new SkinProperties.Changes();
         changes.put(property, value);
         listener.documentDidChangeProperties(changes.serializeNBT());
     }
@@ -97,6 +106,14 @@ public class SkinDocument {
 
     public void removeListener(SkinDocumentListener listener) {
         this.listener.removeListener(listener);
+    }
+
+    public void setAnimations(List<SkinAnimation> animations) {
+        this.animations = animations;
+    }
+
+    public List<SkinAnimation> getAnimations() {
+        return animations;
     }
 
     public void setItemTransforms(SkinItemTransforms itemTransforms) {
@@ -140,8 +157,8 @@ public class SkinDocument {
         if (id.equals(parent.getId())) {
             return parent;
         }
-        for (SkinDocumentNode node : parent.children()) {
-            SkinDocumentNode result = _findNodeById(node, id);
+        for (var node : parent.children()) {
+            var result = _findNodeById(node, id);
             if (result != null) {
                 return result;
             }
@@ -150,16 +167,16 @@ public class SkinDocument {
     }
 
     private SkinDocumentSettings _generateSkinSettings() {
-        SkinDocumentSettings settings1 = new SkinDocumentSettings();
+        var settings1 = new SkinDocumentSettings();
         settings1.setShowsOrigin(settings.showsOrigin());
         settings1.setShowsHelperModel(settings.showsHelperModel());
         return settings1;
     }
 
     private SkinProperties _generateSkinProperties() {
-        String name = properties.get(SkinProperty.ALL_CUSTOM_NAME);
-        String flavour = properties.get(SkinProperty.ALL_FLAVOUR_TEXT);
-        SkinProperties properties = new SkinProperties();
+        var name = properties.get(SkinProperty.ALL_CUSTOM_NAME);
+        var flavour = properties.get(SkinProperty.ALL_FLAVOUR_TEXT);
+        var properties = new SkinProperties();
         properties.put(SkinProperty.ALL_CUSTOM_NAME, name);
         properties.put(SkinProperty.ALL_FLAVOUR_TEXT, flavour);
         return properties;

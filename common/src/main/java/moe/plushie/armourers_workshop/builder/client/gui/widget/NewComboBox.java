@@ -109,16 +109,16 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
 
     @Override
     public UITableViewCell tableViewCellForRow(UITableView tableView, NSIndexPath indexPath) {
-        NewComboItem section = sections.get(indexPath.section);
-        Cell cell = new Cell();
+        var section = sections.get(indexPath.section);
+        var cell = new Cell();
         updateEntryView(cell, section.get(indexPath.row), section);
         return cell;
     }
 
     @Override
     public UIView tableViewViewForHeaderInSection(UITableView tableView, int section) {
-        NewComboItem sec = sections.get(section);
-        UIButton view = new UIButton(CGRect.ZERO);
+        var sec = sections.get(section);
+        var view = new UIButton(CGRect.ZERO);
         view.setTitle(sec.getTitle(), State.NORMAL);
         view.setTitleColor(UIColor.WHITE, State.NORMAL);
         view.setHorizontalAlignment(NSTextAlignment.Horizontal.LEFT);
@@ -175,13 +175,13 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
         if (indexPath.section < 0 || indexPath.section >= sections.size()) {
             return;
         }
-        NewComboItem section = sections.get(indexPath.section);
+        var section = sections.get(indexPath.section);
         // ignore item missing.
         if (indexPath.row < 0 || indexPath.row >= section.size()) {
             return;
         }
-        UIComboItem item = section.get(indexPath.row);
-        NSMutableString name = new NSMutableString(section.getTitle());
+        var item = section.get(indexPath.row);
+        var name = new NSMutableString(section.getTitle());
         name.append(" - ");
         name.append(item.title);
         titleView.setTitle(name, State.ALL);
@@ -203,13 +203,13 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
     }
 
     private void applyTableViewSize() {
-        CGRect rect = bounds();
+        var rect = bounds();
         float popoverHeight = 0;
         if (maxRows != 0) {
             popoverHeight = maxRows * popoverContentView.rowHeight();
         }
         if (popoverHeight == 0) {
-            UIEdgeInsets edg = popoverContentView.contentInsets();
+            var edg = popoverContentView.contentInsets();
             popoverHeight = edg.top + popoverContentView.contentSize().height + edg.bottom;
         }
         popoverView.setFrame(new CGRect(0, rect.height, rect.width, popoverHeight));
@@ -218,7 +218,7 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
     }
 
     private void addGlobalClickListener() {
-        UIWindow window = window();
+        var window = window();
         if (window == null) {
             return;
         }
@@ -231,7 +231,7 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
     }
 
     private void removeGlobalClickListener() {
-        UIWindow window = window();
+        var window = window();
         if (window == null) {
             return;
         }
@@ -239,7 +239,7 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
     }
 
     private void updatePassthroughView() {
-        UIWindow window = window();
+        var window = window();
         if (window != null && popoverView.superview() != null) {
             if (passthroughView.superview() != window) {
                 window.addSubview(passthroughView);

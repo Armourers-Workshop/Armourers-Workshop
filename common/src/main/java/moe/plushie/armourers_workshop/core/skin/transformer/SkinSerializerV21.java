@@ -28,9 +28,9 @@ public final class SkinSerializerV21 {
 
 
     public static Collection<IResource> getResourcesFromZip(File zipFile) throws IOException {
-        ArrayList<IResource> resources = new ArrayList<>();
-        ZipFile file = new ZipFile(zipFile);
-        ZipInputStream zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile)));
+        var resources = new ArrayList<IResource>();
+        var file = new ZipFile(zipFile);
+        var zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile)));
         ZipEntry entry;
         while ((entry = zip.getNextEntry()) != null) {
             if (entry.isDirectory()) {
@@ -59,12 +59,12 @@ public final class SkinSerializerV21 {
     }
 
     public static Collection<IResource> getResourcesFromDirectory(File rootPath) throws IOException {
-        ArrayList<IResource> resources = new ArrayList<>();
-        for (File entry : SkinFileUtils.listAllFiles(rootPath)) {
+        var resources = new ArrayList<IResource>();
+        for (var entry : SkinFileUtils.listAllFiles(rootPath)) {
             if (entry.isDirectory()) {
                 continue;
             }
-            String fileName = SkinFileUtils.getRelativePath(entry, rootPath, true).substring(1);
+            var fileName = SkinFileUtils.getRelativePath(entry, rootPath, true).substring(1);
             resources.add(new IResource() {
                 @Override
                 public String getName() {
@@ -86,12 +86,12 @@ public final class SkinSerializerV21 {
     }
 
     public static Collection<IResource> getResourcesFromSet(File... entries) throws IOException {
-        ArrayList<IResource> resources = new ArrayList<>();
-        for (File entry : entries) {
+        var resources = new ArrayList<IResource>();
+        for (var entry : entries) {
             if (entry.isDirectory()) {
                 continue;
             }
-            String fileName = entry.getName();
+            var fileName = entry.getName();
             resources.add(new IResource() {
                 @Override
                 public String getName() {

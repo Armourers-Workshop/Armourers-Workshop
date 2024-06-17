@@ -16,7 +16,6 @@ import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.apache.logging.log4j.util.Strings;
@@ -45,7 +44,7 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
 
     private void setup() {
         setupTextField();
-        UIButton button = new UIButton(new CGRect(83, 90, 100, 20));
+        var button = new UIButton(new CGRect(83, 90, 100, 20));
         button.setTitle(getDisplayText("set"), UIControl.State.ALL);
         button.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
         button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
@@ -59,7 +58,7 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
         if (lastSource != PlayerTextureDescriptor.Source.NONE) {
             selectedIndex = lastSource.ordinal() - 1;
         }
-        ArrayList<UIComboItem> items = new ArrayList<>();
+        var items = new ArrayList<UIComboItem>();
         items.add(new UIComboItem(getDisplayText("dropdown.user")));
         items.add(new UIComboItem(getDisplayText("dropdown.url")));
         comboView.setSelectedIndex(selectedIndex);
@@ -72,7 +71,7 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
     }
 
     public void setupTextField() {
-        String defaultValue = defaultValues.get(lastSource);
+        var defaultValue = defaultValues.get(lastSource);
         textField.setDelegate(this);
         textField.setMaxLength(1024);
         if (Strings.isNotBlank(defaultValue)) {
@@ -82,8 +81,7 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
     }
 
     private void prepareDefaultValue() {
-        MannequinEntity entity = ObjectUtils.safeCast(wardrobe.getEntity(), MannequinEntity.class);
-        if (entity == null) {
+        if (!(wardrobe.getEntity() instanceof MannequinEntity entity)) {
             return;
         }
         defaultValues.clear();
@@ -117,7 +115,7 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
     }
 
     private void applyText(PlayerTextureDescriptor.Source source, String value) {
-        PlayerTextureDescriptor descriptor = PlayerTextureDescriptor.EMPTY;
+        var descriptor = PlayerTextureDescriptor.EMPTY;
         if (Strings.isNotEmpty(value)) {
             if (source == PlayerTextureDescriptor.Source.URL) {
                 descriptor = PlayerTextureDescriptor.fromURL(value);
@@ -127,7 +125,7 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
             }
         }
         PlayerTextureLoader.getInstance().loadTextureDescriptor(descriptor, resolvedDescriptor -> {
-            PlayerTextureDescriptor newValue = resolvedDescriptor.orElse(PlayerTextureDescriptor.EMPTY);
+            var newValue = resolvedDescriptor.orElse(PlayerTextureDescriptor.EMPTY);
             if (lastDescriptor.equals(newValue)) {
                 return; // no changes
             }

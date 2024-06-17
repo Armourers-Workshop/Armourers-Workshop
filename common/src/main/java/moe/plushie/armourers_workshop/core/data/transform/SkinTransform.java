@@ -31,7 +31,7 @@ public class SkinTransform implements ITransformf, ISkinTransform {
         if (translate.equals(Vector3f.ZERO) && rotation.equals(Vector3f.ZERO) && scale.equals(Vector3f.ONE) && pivot.equals(Vector3f.ZERO) && offset.equals(Vector3f.ZERO)) {
             return IDENTITY;
         }
-        SkinTransform transform = new SkinTransform();
+        var transform = new SkinTransform();
         transform.translate = translate;
         transform.rotation = rotation;
         transform.scale = scale;
@@ -42,7 +42,7 @@ public class SkinTransform implements ITransformf, ISkinTransform {
 
     public static SkinTransform createRotationTransform(Vector3f rotation) {
         if (!rotation.equals(Vector3f.ZERO)) {
-            SkinTransform transform = new SkinTransform();
+            var transform = new SkinTransform();
             transform.rotation = rotation;
             return transform;
         }
@@ -51,7 +51,7 @@ public class SkinTransform implements ITransformf, ISkinTransform {
 
     public static SkinTransform createScaleTransform(float sx, float sy, float sz) {
         if (sx != 1 || sy != 1 || sz != 1) {
-            SkinTransform transform = new SkinTransform();
+            var transform = new SkinTransform();
             transform.scale = new Vector3f(sx, sy, sz);
             return transform;
         }
@@ -60,7 +60,7 @@ public class SkinTransform implements ITransformf, ISkinTransform {
 
     public static SkinTransform createScaleTransform(Vector3f scale) {
         if (!scale.equals(Vector3f.ONE)) {
-            SkinTransform transform = new SkinTransform();
+            var transform = new SkinTransform();
             transform.scale = scale;
             return transform;
         }
@@ -69,7 +69,7 @@ public class SkinTransform implements ITransformf, ISkinTransform {
 
     public static SkinTransform createTranslateTransform(float tx, float ty, float tz) {
         if (tx != 0 || ty != 0 || tz != 0) {
-            SkinTransform transform = new SkinTransform();
+            var transform = new SkinTransform();
             transform.translate = new Vector3f(tx, ty, tz);
             return transform;
         }
@@ -78,7 +78,7 @@ public class SkinTransform implements ITransformf, ISkinTransform {
 
     public static SkinTransform createTranslateTransform(Vector3f offset) {
         if (!offset.equals(Vector3f.ZERO)) {
-            SkinTransform transform = new SkinTransform();
+            var transform = new SkinTransform();
             transform.translate = offset;
             return transform;
         }
@@ -133,8 +133,7 @@ public class SkinTransform implements ITransformf, ISkinTransform {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SkinTransform that = (SkinTransform) o;
+        if (!(o instanceof SkinTransform that)) return false;
         return translate.equals(that.translate) && rotation.equals(that.rotation) && scale.equals(that.scale) && pivot.equals(that.pivot) && offset.equals(that.offset);
     }
 

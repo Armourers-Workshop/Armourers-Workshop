@@ -17,9 +17,6 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
 
 @Environment(EnvType.CLIENT)
 public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEntity> extends AbstractBlockEntityRenderer<T> {
@@ -33,16 +30,16 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
         if (!entity.isPowered()) {
             return;
         }
-        BlockState blockState = entity.getBlockState();
-        ItemStack itemStack = entity.getItem(0);
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        SkinRenderTesselator context = SkinRenderTesselator.create(descriptor, Tickets.RENDERER);
+        var blockState = entity.getBlockState();
+        var itemStack = entity.getItem(0);
+        var descriptor = SkinDescriptor.of(itemStack);
+        var context = SkinRenderTesselator.create(descriptor, Tickets.RENDERER);
         if (context == null) {
             return;
         }
-        float f = 1 / 16f;
-        float partialTicks1 = TickUtils.ticks();
-        int overLight = light;
+        var f = 1 / 16f;
+        var animationTicks = TickUtils.animationTicks();
+        var overLight = light;
         if (entity.isOverrideLight()) {
             overLight = 0xf000f0;
         }
@@ -56,19 +53,19 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
         poseStack.scale(-1, -1, 1);
 
         context.setLightmap(overLight);
-        context.setPartialTicks(partialTicks1);
+        context.setAnimationTicks(animationTicks);
         context.setColorScheme(descriptor.getColorScheme());
         context.setReferenced(SkinItemSource.create(itemStack));
 
         Rectangle3f rect = context.getBakedRenderBounds();
-        apply(entity, rect, partialTicks1, poseStack, bufferSource);
+        apply(entity, rect, animationTicks, poseStack, bufferSource);
 
         context.draw(poseStack, bufferSource);
 
         poseStack.popPose();
 
         if (ModDebugger.hologramProjector) {
-            BlockPos pos = entity.getBlockPos();
+            var pos = entity.getBlockPos();
             poseStack.pushPose();
             poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
             ShapeTesselator.stroke(entity.getRenderShape(blockState), UIColor.ORANGE, poseStack, bufferSource);
@@ -76,31 +73,31 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
         }
     }
 
-    private void apply(T entity, Rectangle3f rect, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource) {
-        Vector3f angle = entity.getModelAngle();
-        Vector3f offset = entity.getModelOffset();
-        Vector3f rotationOffset = entity.getRotationOffset();
-        Vector3f rotationSpeed = entity.getRotationSpeed();
+    private void apply(T entity, Rectangle3f rect, float animationTicks, IPoseStack poseStack, IBufferSource bufferSource) {
+        var angle = entity.getModelAngle();
+        var offset = entity.getModelOffset();
+        var rotationOffset = entity.getRotationOffset();
+        var rotationSpeed = entity.getRotationSpeed();
 
-        float rotX = angle.getX();
-        float speedX = rotationSpeed.getX();
+        var rotX = angle.getX();
+        var speedX = rotationSpeed.getX() / 1000f;
         if (speedX != 0) {
-            rotX += ((partialTicks % speedX) / speedX) * 360.0f;
+            rotX += ((animationTicks % speedX) / speedX) * 360.0f;
         }
 
-        float rotY = angle.getY();
-        float speedY = rotationSpeed.getY();
+        var rotY = angle.getY();
+        var speedY = rotationSpeed.getY() / 1000f;
         if (speedY != 0) {
-            rotY += ((partialTicks % speedY) / speedY) * 360.0f;
+            rotY += ((animationTicks % speedY) / speedY) * 360.0f;
         }
 
-        float rotZ = angle.getZ();
-        float speedZ = rotationSpeed.getZ();
+        var rotZ = angle.getZ();
+        var speedZ = rotationSpeed.getZ() / 1000f;
         if (speedZ != 0) {
-            rotZ += ((partialTicks % speedZ) / speedZ) * 360.0f;
+            rotZ += ((animationTicks % speedZ) / speedZ) * 360.0f;
         }
 
-        float scale = entity.getModelScale();
+        var scale = entity.getModelScale();
         poseStack.scale(scale, scale, scale);
         if (entity.isOverrideOrigin()) {
             poseStack.translate(0, -rect.getMaxY(), 0); // to model center
