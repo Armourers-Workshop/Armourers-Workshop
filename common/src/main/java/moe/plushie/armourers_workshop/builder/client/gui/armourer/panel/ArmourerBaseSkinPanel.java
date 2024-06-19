@@ -51,9 +51,9 @@ public class ArmourerBaseSkinPanel extends UIView {
     }
 
     protected UISliderBox addSliderBox(int x, int y, int width, int height, double minValue, double maxValue, String suffix, SkinProperty<Double> property) {
-        UISliderBox slider = new UISliderBox(new CGRect(cursorX + x, cursorY + y, width, height));
+        var slider = new UISliderBox(new CGRect(cursorX + x, cursorY + y, width, height));
         slider.setFormatter(value -> {
-            String formattedValue = String.format("%.0f%s", value, suffix);
+            var formattedValue = String.format("%.0f%s", value, suffix);
             return new NSString(formattedValue);
         });
         slider.setMaxValue(maxValue);
@@ -71,7 +71,7 @@ public class ArmourerBaseSkinPanel extends UIView {
 
     protected UICheckBox addCheckBox(int x, int y, SkinProperty<Boolean> property) {
         boolean oldValue = skinProperties.get(property);
-        UICheckBox checkBox = new UICheckBox(new CGRect(cursorX + x, cursorY + y, 156 - x, 9));
+        var checkBox = new UICheckBox(new CGRect(cursorX + x, cursorY + y, 156 - x, 9));
         checkBox.setTitle(getDisplayText(property.getKey()));
         checkBox.setSelected(oldValue);
         checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, box) -> {

@@ -153,7 +153,7 @@
   "inventory.armourers_workshop.armourer.skinSettings.label.idleSpeed": "空闲速度:",
   "inventory.armourers_workshop.armourer.skinSettings.label.inventorySize": "箱子大小:",
   "inventory.armourers_workshop.armourer.skinSettings.label.inventorySlots": "槽位:%d 宽度:%d 高度:%d",
-  "inventory.armourers_workshop.armourer.skinSettings.label.maxAngle": "最小角度:",
+  "inventory.armourers_workshop.armourer.skinSettings.label.maxAngle": "最大角度:",
   "inventory.armourers_workshop.armourer.skinSettings.label.minAngle": "最小角度:",
   "inventory.armourers_workshop.armourer.skinSettings.limitLimbs": "限制抬腿高度?",
   "inventory.armourers_workshop.armourer.skinSettings.overrideModelArmLeft": "用时装取代左臂?",

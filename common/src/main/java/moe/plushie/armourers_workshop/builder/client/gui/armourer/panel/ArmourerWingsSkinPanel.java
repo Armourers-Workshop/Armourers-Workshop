@@ -37,22 +37,22 @@ public class ArmourerWingsSkinPanel extends ArmourerBaseSkinPanel {
 
     protected UIComboBox addMovementList(int x, int y, int width, int height, SkinProperty<String> property) {
         int selectedIndex = 0;
-        SkinProperty.MovementType selectedMovementType = SkinProperty.MovementType.valueOf(skinProperties.get(property));
-        ArrayList<UIComboItem> items = new ArrayList<>();
-        for (SkinProperty.MovementType movementType : SkinProperty.MovementType.values()) {
-            NSString name = NSString.localizedTableString("movmentType", movementType.name().toLowerCase());
-            UIComboItem item = new UIComboItem(name);
+        var selectedMovementType = SkinProperty.MovementType.valueOf(skinProperties.get(property));
+        var items = new ArrayList<UIComboItem>();
+        for (var movementType : SkinProperty.MovementType.values()) {
+            var name = NSString.localizedTableString("movmentType", movementType.name().toLowerCase());
+            var item = new UIComboItem(name);
             if (movementType == selectedMovementType) {
                 selectedIndex = items.size();
             }
             items.add(item);
         }
-        UIComboBox comboBox = new UIComboBox(new CGRect(cursorX + x, cursorY + y, width, height));
+        var comboBox = new UIComboBox(new CGRect(cursorX + x, cursorY + y, width, height));
         comboBox.setSelectedIndex(selectedIndex);
         comboBox.reloadData(items);
         comboBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, box) -> {
             int newValue = ((UIComboBox) box).selectedIndex();
-            SkinProperty.MovementType newMovementType = SkinProperty.MovementType.values()[newValue];
+            var newMovementType = SkinProperty.MovementType.values()[newValue];
             self.skinProperties.put(property, newMovementType.name());
             apply();
         });

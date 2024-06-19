@@ -57,9 +57,9 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
 
     @Override
     public void reloadData() {
-        ISkinType skinType = blockEntity.getSkinType();
+        var skinType = blockEntity.getSkinType();
         skinProperties.reset(blockEntity.getSkinProperties());
-        Function<SkinProperties, ArmourerBaseSkinPanel> supplier = REGISTERED.get(skinType);
+        var supplier = REGISTERED.get(skinType);
         if (supplier != null) {
             updateScreen(supplier.apply(skinProperties));
             screen.setApplier(this::updateSkinProperties);
@@ -77,15 +77,15 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
     }
 
     private void updateSkinProperties(SkinProperties skinProperties) {
-        SkinProperties skinProperties1 = blockEntity.getSkinProperties().copy();
+        var skinProperties1 = blockEntity.getSkinProperties().copy();
         this.skinProperties.applyTo(skinProperties1);
         if (skinProperties1.equals(blockEntity.getSkinProperties())) {
             return; // no changes
         }
         this.skinProperties.reset(skinProperties1);
-        this.blockEntity.setSkinProperties(skinProperties);
-        UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.SKIN_PROPERTIES;
-        UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, skinProperties);
+        this.blockEntity.setSkinProperties(skinProperties1);
+        var field = UpdateArmourerPacket.Field.SKIN_PROPERTIES;
+        var packet = new UpdateArmourerPacket(blockEntity, field, skinProperties);
         NetworkManager.sendToServer(packet);
     }
 
