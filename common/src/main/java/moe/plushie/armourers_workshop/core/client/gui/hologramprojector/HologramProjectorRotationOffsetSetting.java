@@ -21,7 +21,7 @@ public class HologramProjectorRotationOffsetSetting extends HologramProjectorBas
     private UISliderBox sliderZ;
 
     private final HologramProjectorBlockEntity entity;
-    private final UpdateHologramProjectorPacket.Field field = UpdateHologramProjectorPacket.Field.ROTATION_OFFSET;
+    private final UpdateHologramProjectorPacket.Field<Vector3f> field = UpdateHologramProjectorPacket.Field.ROTATION_OFFSET;
 
     public HologramProjectorRotationOffsetSetting(HologramProjectorBlockEntity entity) {
         super("hologram-projector.rotationOffset");
@@ -41,8 +41,7 @@ public class HologramProjectorRotationOffsetSetting extends HologramProjectorBas
         float x = (float) sliderX.value();
         float y = (float) sliderY.value();
         float z = (float) sliderZ.value();
-        UpdateHologramProjectorPacket packet = new UpdateHologramProjectorPacket(entity, field, new Vector3f(x, y, z));
-        NetworkManager.sendToServer(packet);
+        NetworkManager.sendToServer(field.buildPacket(entity, new Vector3f(x, y, z)));
     }
 
     private void setup() {
@@ -53,7 +52,7 @@ public class HologramProjectorRotationOffsetSetting extends HologramProjectorBas
         sliderZ = setupSlider(11, 60, "Z: ", value.z());
     }
 
-    private void setupOption(int x, int y, UpdateHologramProjectorPacket.Field field, String key) {
+    private void setupOption(int x, int y, UpdateHologramProjectorPacket.Field<Boolean> field, String key) {
         UICheckBox checkBox = new UICheckBox(new CGRect(x, y, 178, 10));
         checkBox.setTitle(getDisplayText(key));
         checkBox.setSelected(field.get(entity));

@@ -74,7 +74,6 @@ public class SkinWardrobeLocationSetting extends SkinWardrobeBaseSetting {
         double[] xyz = {pos.x(), pos.y(), pos.z()};
         xyz[axis] += step;
         pos = new Vec3(xyz[0], xyz[1], xyz[2]);
-        UpdateWardrobePacket packet = UpdateWardrobePacket.field(wardrobe, UpdateWardrobePacket.Field.MANNEQUIN_POSITION, pos);
-        NetworkManager.sendToServer(packet);
+        NetworkManager.sendToServer(UpdateWardrobePacket.Field.MANNEQUIN_POSITION.buildPacket(wardrobe, pos));
     }
 }

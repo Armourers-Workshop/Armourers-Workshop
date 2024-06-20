@@ -13,6 +13,4 @@ public interface IDataSerializer {
     void readItemList(NonNullList<ItemStack> items);
 
     void writeItemList(NonNullList<ItemStack> items);
-
-    CompoundTag getUnsafe();
 }

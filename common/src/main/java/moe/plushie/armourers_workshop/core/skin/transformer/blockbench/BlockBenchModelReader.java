@@ -40,7 +40,7 @@ public class BlockBenchModelReader implements SkinPackModelReader {
 
     @Override
     public BedrockModel readModel() throws IOException {
-        BedrockModelGeometry.Builder builder = new BedrockModelGeometry.Builder();
+        var builder = new BedrockModelGeometry.Builder();
 
         builder.identifier("geometry.steve");
 

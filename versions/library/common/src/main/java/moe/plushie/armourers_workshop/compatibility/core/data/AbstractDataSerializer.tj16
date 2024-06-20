@@ -69,9 +69,4 @@ public class AbstractDataSerializer implements IDataSerializer {
     public void writeItemList(NonNullList<ItemStack> items) {
         ContainerHelper.saveAllItems(tag, items);
     }
-
-    @Override
-    public CompoundTag getUnsafe() {
-        return tag;
-    }
 }

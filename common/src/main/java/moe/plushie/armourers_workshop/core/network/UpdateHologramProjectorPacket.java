@@ -1,75 +1,68 @@
 package moe.plushie.armourers_workshop.core.network;
 
 import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.data.IGenericValue;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
-import moe.plushie.armourers_workshop.utils.DataAccessor;
+import moe.plushie.armourers_workshop.core.data.GenericProperties;
+import moe.plushie.armourers_workshop.core.data.GenericProperty;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
-import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import manifold.ext.rt.api.auto;
+
 public class UpdateHologramProjectorPacket extends CustomPacket {
 
     private final BlockPos pos;
-    private final Field field;
-    private final Object fieldValue;
+    private final IGenericValue<HologramProjectorBlockEntity, ?> fieldValue;
 
     public UpdateHologramProjectorPacket(IFriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
-        this.field = buffer.readEnum(Field.class);
-        this.fieldValue = field.accessor.read(buffer);
+        this.fieldValue = buffer.readProperty(Field.TYPE);
     }
 
-    public UpdateHologramProjectorPacket(HologramProjectorBlockEntity entity, Field field, Object value) {
+    public UpdateHologramProjectorPacket(HologramProjectorBlockEntity entity, IGenericValue<HologramProjectorBlockEntity, ?> fieldValue) {
         this.pos = entity.getBlockPos();
-        this.field = field;
-        this.fieldValue = value;
+        this.fieldValue = fieldValue;
     }
 
     @Override
     public void encode(IFriendlyByteBuf buffer) {
         buffer.writeBlockPos(pos);
-        buffer.writeEnum(field);
-        field.accessor.write(buffer, fieldValue);
+        buffer.writeProperty(fieldValue);
     }
 
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
-        BlockEntity entity = player.getLevel().getBlockEntity(pos);
-        if (entity instanceof HologramProjectorBlockEntity) {
-            field.accessor.set((HologramProjectorBlockEntity) entity, fieldValue);
+        var entity = player.getLevel().getBlockEntity(pos);
+        if (entity instanceof HologramProjectorBlockEntity blockEntity) {
+            fieldValue.apply(blockEntity);
         }
     }
 
-    public enum Field implements DataAccessor.Provider<HologramProjectorBlockEntity> {
+    public static final class Field<T> extends GenericProperty<HologramProjectorBlockEntity, T> {
 
-        POWER_MODE(HologramProjectorBlockEntity::getPowerMode, HologramProjectorBlockEntity::setPowerMode, DataSerializers.INT),
-        IS_GLOWING(HologramProjectorBlockEntity::isGlowing, HologramProjectorBlockEntity::setGlowing, DataSerializers.BOOLEAN),
+        private static final auto TYPE = GenericProperties.of(HologramProjectorBlockEntity.class, UpdateHologramProjectorPacket::new);
 
-        SHOWS_ROTATION_POINT(HologramProjectorBlockEntity::shouldShowRotationPoint, HologramProjectorBlockEntity::setShowRotationPoint, DataSerializers.BOOLEAN),
+        public static final auto POWER_MODE = create(HologramProjectorBlockEntity::getPowerMode, HologramProjectorBlockEntity::setPowerMode, DataSerializers.INT);
+        public static final auto IS_GLOWING = create(HologramProjectorBlockEntity::isGlowing, HologramProjectorBlockEntity::setGlowing, DataSerializers.BOOLEAN);
 
-        OFFSET(HologramProjectorBlockEntity::getModelOffset, HologramProjectorBlockEntity::setModelOffset, DataSerializers.VECTOR_3F),
-        ANGLE(HologramProjectorBlockEntity::getModelAngle, HologramProjectorBlockEntity::setModelAngle, DataSerializers.VECTOR_3F),
+        public static final auto SHOWS_ROTATION_POINT = create(HologramProjectorBlockEntity::shouldShowRotationPoint, HologramProjectorBlockEntity::setShowRotationPoint, DataSerializers.BOOLEAN);
 
-        ROTATION_OFFSET(HologramProjectorBlockEntity::getRotationOffset, HologramProjectorBlockEntity::setRotationOffset, DataSerializers.VECTOR_3F),
-        ROTATION_SPEED(HologramProjectorBlockEntity::getRotationSpeed, HologramProjectorBlockEntity::setRotationSpeed, DataSerializers.VECTOR_3F);
+        public static final auto OFFSET = create(HologramProjectorBlockEntity::getModelOffset, HologramProjectorBlockEntity::setModelOffset, DataSerializers.VECTOR_3F);
+        public static final auto ANGLE = create(HologramProjectorBlockEntity::getModelAngle, HologramProjectorBlockEntity::setModelAngle, DataSerializers.VECTOR_3F);
 
-        private final DataAccessor<HologramProjectorBlockEntity, Object> accessor;
+        public static final auto ROTATION_OFFSET = create(HologramProjectorBlockEntity::getRotationOffset, HologramProjectorBlockEntity::setRotationOffset, DataSerializers.VECTOR_3F);
+        public static final auto ROTATION_SPEED = create(HologramProjectorBlockEntity::getRotationSpeed, HologramProjectorBlockEntity::setRotationSpeed, DataSerializers.VECTOR_3F);
 
-        <T> Field(Function<HologramProjectorBlockEntity, T> supplier, BiConsumer<HologramProjectorBlockEntity, T> applier, IEntitySerializer<T> dataSerializer) {
-            this.accessor = DataAccessor.erased(dataSerializer, supplier, applier);
-        }
-
-        @Override
-        public DataAccessor<HologramProjectorBlockEntity, Object> getAccessor() {
-            return accessor;
+        private static <T> Field<T> create(Function<HologramProjectorBlockEntity, T> supplier, BiConsumer<HologramProjectorBlockEntity, T> applier, IEntitySerializer<T> dataSerializer) {
+            return TYPE.create(dataSerializer).setter(applier).getter(supplier).build(Field::new);
         }
     }
 }

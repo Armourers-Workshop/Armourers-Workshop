@@ -169,7 +169,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
     }
 
     private void updateSkinType(UIControl control) {
-        ISkinType skinType = skinTypeBox.selectedSkin();
+        var skinType = skinTypeBox.selectedSkin();
         if (Objects.equals(skinType, this.skinType)) {
             return; // no changes
         }
@@ -177,33 +177,27 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
         if (this.blockEntity == null) {
             return;
         }
-        this.blockEntity.setSkinType(skinType);
-        UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.SKIN_TYPE;
-        UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, skinType);
-        NetworkManager.sendToServer(packet);
+        blockEntity.setSkinType(skinType);
+        NetworkManager.sendToServer(UpdateArmourerPacket.Field.SKIN_TYPE.buildPacket(blockEntity, skinType));
     }
 
     private void updateSkinProperties() {
-        SkinProperties skinProperties = blockEntity.getSkinProperties().copy();
-        skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, nameTextField.text());
-        skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, flavorTextField.text());
-        if (skinProperties.equals(blockEntity.getSkinProperties())) {
+        var newValue = blockEntity.getSkinProperties().copy();
+        newValue.put(SkinProperty.ALL_CUSTOM_NAME, nameTextField.text());
+        newValue.put(SkinProperty.ALL_FLAVOUR_TEXT, flavorTextField.text());
+        if (newValue.equals(blockEntity.getSkinProperties())) {
             return; // not any changes.
         }
-        this.blockEntity.setSkinProperties(skinProperties);
-        UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.SKIN_PROPERTIES;
-        UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, skinProperties);
-        NetworkManager.sendToServer(packet);
+        blockEntity.setSkinProperties(newValue);
+        NetworkManager.sendToServer(UpdateArmourerPacket.Field.SKIN_PROPERTIES.buildPacket(blockEntity, newValue));
     }
 
     private void loadSkin(UIControl sender) {
-        Player player = EnvironmentManager.getPlayer();
+        var player = EnvironmentManager.getPlayer();
         if (player == null || !container.shouldLoadArmourItem(player)) {
             return;
         }
-        UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.ITEM_LOAD;
-        UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, new CompoundTag());
-        NetworkManager.sendToServer(packet);
+        NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_LOAD.buildPacket(blockEntity, new CompoundTag()));
     }
 
     private void saveSkin(UIControl sender) {
@@ -213,9 +207,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
         }
         GameProfile origin = Minecraft.getInstance().getUser().getGameProfile();
         CompoundTag nbt = DataSerializers.writeGameProfile(new CompoundTag(), origin);
-        UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.ITEM_SAVE;
-        UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, nbt);
-        NetworkManager.sendToServer(packet);
+        NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_SAVE.buildPacket(blockEntity, nbt));
     }
 
     private void updateSkinPropertiesReturn() {

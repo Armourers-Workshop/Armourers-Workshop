@@ -1,96 +1,104 @@
 package moe.plushie.armourers_workshop.builder.network;
 
-import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.data.IGenericValue;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.blockentity.OutfitMakerBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.OutfitMakerMenu;
+import moe.plushie.armourers_workshop.core.data.GenericProperties;
+import moe.plushie.armourers_workshop.core.data.GenericProperty;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
-import moe.plushie.armourers_workshop.utils.DataAccessor;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import manifold.ext.rt.api.auto;
+
 public class UpdateOutfitMakerPacket extends CustomPacket {
 
     private final BlockPos pos;
-    private final Field field;
-    private final Object fieldValue;
+    private final IGenericValue<OutfitMakerBlockEntity, ?> fieldValue;
 
     public UpdateOutfitMakerPacket(IFriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
-        this.field = buffer.readEnum(Field.class);
-        this.fieldValue = field.accessor.read(buffer);
+        this.fieldValue = buffer.readProperty(Field.TYPE);
     }
 
-    public UpdateOutfitMakerPacket(OutfitMakerBlockEntity entity, Field field, Object value) {
+    public UpdateOutfitMakerPacket(OutfitMakerBlockEntity entity, IGenericValue<OutfitMakerBlockEntity, ?> fieldValue) {
         this.pos = entity.getBlockPos();
-        this.field = field;
-        this.fieldValue = value;
+        this.fieldValue = fieldValue;
     }
 
     @Override
     public void encode(IFriendlyByteBuf buffer) {
         buffer.writeBlockPos(pos);
-        buffer.writeEnum(field);
-        field.accessor.write(buffer, fieldValue);
+        buffer.writeProperty(fieldValue);
     }
 
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
+        var blockEntity = player.getLevel().getBlockEntity(pos);
+        if (!(blockEntity instanceof OutfitMakerBlockEntity blockEntity1) || !(fieldValue.getProperty() instanceof Field<?> field)) {
+            return;
+        }
         // TODO: check player
         BlockUtils.performBatch(() -> {
-            accept2(packetHandler, player);
+            try {
+                field.apply(this, blockEntity1, player);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         });
     }
 
-    private void accept2(IServerPacketHandler packetHandler, ServerPlayer player) {
-        switch (field) {
-            case ITEM_CRAFTING: {
-                if (!ModPermissions.OUTFIT_MAKER_MAKE.accept(player)) {
-                    return;
-                }
-                if (player.containerMenu instanceof OutfitMakerMenu) {
-                    CompoundTag nbt = (CompoundTag) fieldValue;
-                    GameProfile profile = DataSerializers.readGameProfile(nbt);
-                    ((OutfitMakerMenu) player.containerMenu).saveArmourItem(player, profile);
-                }
-                break;
-            }
-            case ITEM_NAME:
-            case ITEM_FLAVOUR: {
-                BlockEntity entity = player.getLevel().getBlockEntity(pos);
-                if (entity instanceof OutfitMakerBlockEntity) {
-                    field.accessor.set((OutfitMakerBlockEntity) entity, fieldValue);
-                }
-                break;
+    private void craftItem(OutfitMakerBlockEntity blockEntity, ServerPlayer player) {
+        if (!ModPermissions.OUTFIT_MAKER_MAKE.accept(player)) {
+            return;
+        }
+        if (player.containerMenu instanceof OutfitMakerMenu menu) {
+            var nbt = (CompoundTag) fieldValue.getValue();
+            var profile = DataSerializers.readGameProfile(nbt);
+            menu.saveArmourItem(player, profile);
+        }
+    }
+
+    public static final class Field<T> extends GenericProperty<OutfitMakerBlockEntity, T> {
+
+        private static final auto TYPE = GenericProperties.of(OutfitMakerBlockEntity.class, UpdateOutfitMakerPacket::new);
+
+        public static final auto ITEM_NAME = create(OutfitMakerBlockEntity::getItemName, OutfitMakerBlockEntity::setItemName, DataSerializers.STRING);
+        public static final auto ITEM_FLAVOUR = create(OutfitMakerBlockEntity::getItemFlavour, OutfitMakerBlockEntity::setItemFlavour, DataSerializers.STRING);
+        public static final auto ITEM_CRAFTING = create(UpdateOutfitMakerPacket::craftItem, DataSerializers.COMPOUND_TAG);
+
+        private FieldAction<T> action;
+
+        private static <T> Field<T> create(FieldAction<T> action, IEntitySerializer<T> dataSerializer) {
+            Field<T> field = TYPE.create(dataSerializer).build(Field::new);
+            field.action = action;
+            return field;
+        }
+
+        private static <T> Field<T> create(Function<OutfitMakerBlockEntity, T> supplier, BiConsumer<OutfitMakerBlockEntity, T> applier, IEntitySerializer<T> dataSerializer) {
+            return TYPE.create(dataSerializer).getter(supplier).setter(applier).build(Field::new);
+        }
+
+        private void apply(UpdateOutfitMakerPacket packet, OutfitMakerBlockEntity blockEntity, ServerPlayer player) throws Exception {
+            if (action != null) {
+                action.accept(packet, blockEntity, player);
+            } else {
+                packet.fieldValue.apply(blockEntity);
             }
         }
     }
 
-    public enum Field implements DataAccessor.Provider<OutfitMakerBlockEntity> {
-
-        ITEM_NAME(OutfitMakerBlockEntity::getItemName, OutfitMakerBlockEntity::setItemName, DataSerializers.STRING),
-        ITEM_FLAVOUR(OutfitMakerBlockEntity::getItemFlavour, OutfitMakerBlockEntity::setItemFlavour, DataSerializers.STRING),
-        ITEM_CRAFTING(null, null, DataSerializers.COMPOUND_TAG);
-
-        private final DataAccessor<OutfitMakerBlockEntity, Object> accessor;
-
-        <T> Field(Function<OutfitMakerBlockEntity, T> supplier, BiConsumer<OutfitMakerBlockEntity, T> applier, IEntitySerializer<T> dataSerializer) {
-            this.accessor = DataAccessor.erased(dataSerializer, supplier, applier);
-        }
-
-        @Override
-        public DataAccessor<OutfitMakerBlockEntity, Object> getAccessor() {
-            return accessor;
-        }
+    public interface FieldAction<T> {
+        void accept(UpdateOutfitMakerPacket packet, OutfitMakerBlockEntity blockEntity, ServerPlayer player) throws Exception;
     }
 }

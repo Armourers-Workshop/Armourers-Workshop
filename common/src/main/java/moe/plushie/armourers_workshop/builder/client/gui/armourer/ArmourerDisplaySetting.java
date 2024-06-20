@@ -169,9 +169,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
             lastSource = PlayerTextureDescriptor.Source.NONE;
             lastDescriptor = newValue;
             blockEntity.setTextureDescriptor(newValue);
-            UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.TEXTURE_DESCRIPTOR;
-            UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, newValue);
-            NetworkManager.sendToServer(packet);
+            NetworkManager.sendToServer(UpdateArmourerPacket.Field.TEXTURE_DESCRIPTOR.buildPacket(blockEntity, newValue));
             // update to use
             defaultValues.put(newValue.getSource(), newValue.getValue());
             changeSource(newValue.getSource());
@@ -188,9 +186,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
             return;
         }
         blockEntity.setFlags(flags);
-        UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.FLAGS;
-        UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, flags);
-        NetworkManager.sendToServer(packet);
+        NetworkManager.sendToServer(UpdateArmourerPacket.Field.FLAGS.buildPacket(blockEntity, flags));
     }
 
     private void setupComboList(PlayerTextureDescriptor.Source source) {

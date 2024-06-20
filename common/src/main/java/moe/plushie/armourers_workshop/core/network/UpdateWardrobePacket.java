@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.network;
 
 import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.data.IGenericValue;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
@@ -8,6 +9,8 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractEntityDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.data.GenericProperties;
+import moe.plushie.armourers_workshop.core.data.GenericProperty;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.menu.SkinWardrobeMenu;
@@ -15,13 +18,11 @@ import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.utils.DataAccessor;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -31,13 +32,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import manifold.ext.rt.api.auto;
+
 public class UpdateWardrobePacket extends CustomPacket {
 
     private final Type type;
     private final int entityId;
 
-    private final Field field;
-    private final Object fieldValue;
+    private final IGenericValue<SkinWardrobe, ?> fieldValue;
 
     private final CompoundTag compoundTag;
 
@@ -46,39 +48,36 @@ public class UpdateWardrobePacket extends CustomPacket {
         this.entityId = buffer.readInt();
         if (this.type != Type.SYNC_OPTION) {
             this.fieldValue = null;
-            this.field = null;
             this.compoundTag = buffer.readNbt();
         } else {
-            this.field = buffer.readEnum(Field.class);
-            this.fieldValue = field.accessor.read(buffer);
+            this.fieldValue = buffer.readProperty(Field.TYPE);
             this.compoundTag = null;
         }
     }
 
-    public UpdateWardrobePacket(SkinWardrobe wardrobe, Type mode, CompoundTag compoundTag, Field field, Object fieldValue) {
+    public UpdateWardrobePacket(SkinWardrobe wardrobe, Type mode, CompoundTag compoundTag, IGenericValue<SkinWardrobe, ?> fieldValue) {
         this.type = mode;
         this.entityId = wardrobe.getId();
-        this.field = field;
         this.fieldValue = fieldValue;
         this.compoundTag = compoundTag;
     }
 
     public static UpdateWardrobePacket sync(SkinWardrobe wardrobe) {
-        CompoundTag tag = new CompoundTag();
-        AbstractDataSerializer serializer = AbstractDataSerializer.wrap(tag, wardrobe.getEntity());
+        var tag = new CompoundTag();
+        var serializer = AbstractDataSerializer.wrap(tag, wardrobe.getEntity());
         wardrobe.serialize(serializer);
-        return new UpdateWardrobePacket(wardrobe, Type.SYNC, tag, null, null);
+        return new UpdateWardrobePacket(wardrobe, Type.SYNC, tag, null);
     }
 
     public static UpdateWardrobePacket dying(SkinWardrobe wardrobe, int slot, IPaintColor color) {
-        CompoundTag compoundNBT = new CompoundTag();
+        var compoundNBT = new CompoundTag();
         compoundNBT.putInt("Slot", slot);
         compoundNBT.putOptionalPaintColor("Color", color, null);
-        return new UpdateWardrobePacket(wardrobe, Type.SYNC_ITEM, compoundNBT, null, null);
+        return new UpdateWardrobePacket(wardrobe, Type.SYNC_ITEM, compoundNBT, null);
     }
 
-    public static UpdateWardrobePacket field(SkinWardrobe wardrobe, Field field, Object value) {
-        return new UpdateWardrobePacket(wardrobe, Type.SYNC_OPTION, null, field, value);
+    public static UpdateWardrobePacket field(SkinWardrobe wardrobe, IGenericValue<SkinWardrobe, ?> fieldValue) {
+        return new UpdateWardrobePacket(wardrobe, Type.SYNC_OPTION, null, fieldValue);
     }
 
     @Override
@@ -88,25 +87,23 @@ public class UpdateWardrobePacket extends CustomPacket {
         if (compoundTag != null) {
             buffer.writeNbt(compoundTag);
         }
-        if (field != null) {
-            buffer.writeEnum(field);
-            field.accessor.write(buffer, fieldValue);
+        if (fieldValue != null) {
+            buffer.writeProperty(fieldValue);
         }
     }
 
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // We can't allow wardrobe updates without container.
-        String playerName = player.getDisplayName().getString();
         if (!(player.containerMenu instanceof SkinWardrobeMenu)) {
-            ModLog.info("reject {} operation for '{}'", getOperator(), playerName);
+            ModLog.info("reject {} operation for '{}'", getOperator(), player.getDisplayName().getString());
             return;
         }
         if (!checkSecurityByServer()) {
-            ModLog.info("reject {} operation for '{}', for security reasons.", getOperator(), playerName);
+            ModLog.info("reject {} operation for '{}', for security reasons.", getOperator(), player.getDisplayName().getString());
             return;
         }
-        ModLog.debug("accept {} operation for '{}'", getOperator(), playerName);
+        ModLog.debug("accept {} operation for '{}'", getOperator(), player.getDisplayName().getString());
         SkinWardrobe wardrobe = apply(player);
         if (wardrobe != null) {
             NetworkManager.sendToTracking(this, player);
@@ -120,66 +117,59 @@ public class UpdateWardrobePacket extends CustomPacket {
 
     @Nullable
     private SkinWardrobe apply(Player player) {
-        SkinWardrobe wardrobe = SkinWardrobe.of(player.getLevel().getEntity(entityId));
+        var wardrobe = SkinWardrobe.of(player.getLevel().getEntity(entityId));
         if (wardrobe == null) {
             return null;
         }
-        switch (type) {
-            case SYNC: {
+        return switch (type) {
+            case SYNC -> {
                 wardrobe.deserialize(AbstractDataSerializer.wrap(compoundTag, player));
-                return wardrobe;
+                yield wardrobe;
             }
-            case SYNC_ITEM: {
-                Container inventory = wardrobe.getInventory();
+            case SYNC_OPTION -> {
+                if (fieldValue != null) {
+                    fieldValue.apply(wardrobe);
+                    yield wardrobe;
+                }
+                yield null;
+            }
+            case SYNC_ITEM -> {
+                var inventory = wardrobe.getInventory();
                 int slot = compoundTag.getInt("Slot");
                 if (slot < inventory.getContainerSize()) {
-                    IPaintColor color = compoundTag.getOptionalPaintColor("Color", null);
-                    ItemStack itemStack = ItemStack.EMPTY;
+                    var color = compoundTag.getOptionalPaintColor("Color", null);
+                    var itemStack = ItemStack.EMPTY;
                     if (color != null) {
                         itemStack = new ItemStack(ModItems.BOTTLE.get());
                         itemStack.set(ModDataComponents.TOOL_COLOR.get(), color);
                     }
                     inventory.setItem(slot, itemStack);
-                    return wardrobe;
+                    yield wardrobe;
                 }
-                break;
+                yield null;
             }
-            case SYNC_OPTION: {
-                if (field != null) {
-                    field.accessor.set(wardrobe, fieldValue);
-                    return wardrobe;
-                }
-                break;
-            }
-        }
-        return null;
+        };
     }
 
     private boolean checkSecurityByServer() {
-        switch (type) {
-            case SYNC: {
-                // the server side never accept sync request.
-                return false;
-            }
-            case SYNC_ITEM: {
+        return switch (type) {
+            case SYNC -> false; // the server side never accept sync request.
+            case SYNC_OPTION -> true;
+            case SYNC_ITEM -> {
                 int slot = compoundTag.getInt("Slot");
                 // for security reasons we need to check the position of the slot.
                 int index = slot - SkinSlotType.DYE.getIndex();
                 if (index < 8 || index >= SkinSlotType.DYE.getMaxSize()) {
-                    return false;
+                    yield false;
                 }
-                return true;
+                yield true;
             }
-            case SYNC_OPTION: {
-                return true;
-            }
-        }
-        return true;
+        };
     }
 
     private Object getOperator() {
-        if (field != null) {
-            return field;
+        if (fieldValue != null) {
+            return fieldValue.getProperty();
         }
         return type;
     }
@@ -188,58 +178,52 @@ public class UpdateWardrobePacket extends CustomPacket {
         SYNC, SYNC_ITEM, SYNC_OPTION
     }
 
-    public enum Field implements DataAccessor.Provider<SkinWardrobe> {
+    public static final class Field<T> extends GenericProperty<SkinWardrobe, T> {
 
-        WARDROBE_ARMOUR_HEAD(EquipmentSlot.HEAD),
-        WARDROBE_ARMOUR_CHEST(EquipmentSlot.CHEST),
-        WARDROBE_ARMOUR_LEGS(EquipmentSlot.LEGS),
-        WARDROBE_ARMOUR_FEET(EquipmentSlot.FEET),
+        private static final auto TYPE = GenericProperties.of(SkinWardrobe.class, UpdateWardrobePacket::field);
 
-        WARDROBE_EXTRA_RENDER(SkinWardrobe::shouldRenderExtra, SkinWardrobe::setRenderExtra),
+        public static final auto WARDROBE_ARMOUR_HEAD = create(EquipmentSlot.HEAD);
+        public static final auto WARDROBE_ARMOUR_CHEST = create(EquipmentSlot.CHEST);
+        public static final auto WARDROBE_ARMOUR_LEGS = create(EquipmentSlot.LEGS);
+        public static final auto WARDROBE_ARMOUR_FEET = create(EquipmentSlot.FEET);
 
-        MANNEQUIN_IS_CHILD(MannequinEntity.DATA_IS_CHILD),
-        MANNEQUIN_IS_FLYING(MannequinEntity.DATA_IS_FLYING),
-        MANNEQUIN_IS_VISIBLE(MannequinEntity.DATA_IS_VISIBLE),
-        MANNEQUIN_IS_GHOST(MannequinEntity.DATA_IS_GHOST),
-        MANNEQUIN_EXTRA_RENDER(MannequinEntity.DATA_EXTRA_RENDERER),
+        public static final auto WARDROBE_EXTRA_RENDER = create(SkinWardrobe::shouldRenderExtra, SkinWardrobe::setRenderExtra);
 
-        MANNEQUIN_POSE(MannequinEntity::saveCustomPose, MannequinEntity::readCustomPose, DataSerializers.COMPOUND_TAG),
-        MANNEQUIN_POSITION(MannequinEntity::position, MannequinEntity::moveTo, DataSerializers.VECTOR_3D),
+        public static final auto MANNEQUIN_IS_CHILD = create(MannequinEntity.DATA_IS_CHILD);
+        public static final auto MANNEQUIN_IS_FLYING = create(MannequinEntity.DATA_IS_FLYING);
+        public static final auto MANNEQUIN_IS_VISIBLE = create(MannequinEntity.DATA_IS_VISIBLE);
+        public static final auto MANNEQUIN_IS_GHOST = create(MannequinEntity.DATA_IS_GHOST);
+        public static final auto MANNEQUIN_EXTRA_RENDER = create(MannequinEntity.DATA_EXTRA_RENDERER);
 
-        MANNEQUIN_TEXTURE(MannequinEntity.DATA_TEXTURE);
+        public static final auto MANNEQUIN_POSE = create(MannequinEntity::saveCustomPose, MannequinEntity::readCustomPose, DataSerializers.COMPOUND_TAG);
+        public static final auto MANNEQUIN_POSITION = create(MannequinEntity::position, MannequinEntity::moveTo, DataSerializers.VECTOR_3D);
 
-        private final DataAccessor<SkinWardrobe, Object> accessor;
+        public static final auto MANNEQUIN_TEXTURE = create(MannequinEntity.DATA_TEXTURE);
 
-        Field(EquipmentSlot slotType) {
-            this(w -> w.shouldRenderEquipment(slotType), (w, v) -> w.setRenderEquipment(slotType, v));
+
+        private static Field<Boolean> create(EquipmentSlot slotType) {
+            return create((source) -> source.shouldRenderEquipment(slotType), (source, value) -> source.setRenderEquipment(slotType, value));
         }
 
-        Field(Function<SkinWardrobe, Boolean> supplier, BiConsumer<SkinWardrobe, Boolean> applier) {
-            this.accessor = DataAccessor.erased(DataSerializers.BOOLEAN, supplier, applier);
+        private static Field<Boolean> create(Function<SkinWardrobe, Boolean> supplier, BiConsumer<SkinWardrobe, Boolean> applier) {
+            return TYPE.create(DataSerializers.BOOLEAN).getter(supplier).setter(applier).build(Field::new);
         }
 
-        <S extends Entity, T> Field(Function<S, T> supplier, BiConsumer<S, T> applier, IEntitySerializer<T> dataSerializer) {
-            this.accessor = DataAccessor.erased(dataSerializer,
-                    (wardrobe) -> {
-                        if (wardrobe.getEntity() != null) {
-                            return supplier.apply(ObjectUtils.unsafeCast(wardrobe.getEntity()));
-                        }
-                        return null;
-                    },
-                    (wardrobe, value) -> {
-                        if (wardrobe.getEntity() != null) {
-                            applier.accept(ObjectUtils.unsafeCast(wardrobe.getEntity()), value);
-                        }
-                    });
+        private static <T> Field<T> create(EntityDataAccessor<T> dataParameter) {
+            return create((entity) -> entity.getEntityData().get(dataParameter), (entity, value) -> entity.getEntityData().set(dataParameter, value), AbstractEntityDataSerializer.wrap(dataParameter));
         }
 
-        <T> Field(EntityDataAccessor<T> dataParameter) {
-            this(e -> e.getEntityData().get(dataParameter), (e, v) -> e.getEntityData().set(dataParameter, v), AbstractEntityDataSerializer.wrap(dataParameter));
-        }
-
-        @Override
-        public DataAccessor<SkinWardrobe, Object> getAccessor() {
-            return accessor;
+        private static <S extends Entity, T> Field<T> create(Function<S, T> supplier, BiConsumer<S, T> applier, IEntitySerializer<T> dataSerializer) {
+            return TYPE.create(dataSerializer).getter((source) -> {
+                if (source.getEntity() instanceof Entity entity) {
+                    return supplier.apply(ObjectUtils.unsafeCast(entity));
+                }
+                return null;
+            }).setter((source, value) -> {
+                if (source.getEntity() instanceof Entity entity) {
+                    applier.accept(ObjectUtils.unsafeCast(entity), value);
+                }
+            }).build(Field::new);
         }
     }
 }

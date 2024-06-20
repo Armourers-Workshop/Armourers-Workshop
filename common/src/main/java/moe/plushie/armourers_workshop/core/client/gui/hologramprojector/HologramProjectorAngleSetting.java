@@ -19,7 +19,7 @@ public class HologramProjectorAngleSetting extends HologramProjectorBaseSetting 
     private UISliderBox sliderZ;
 
     private final HologramProjectorBlockEntity entity;
-    private final UpdateHologramProjectorPacket.Field field = UpdateHologramProjectorPacket.Field.ANGLE;
+    private final UpdateHologramProjectorPacket.Field<Vector3f> field = UpdateHologramProjectorPacket.Field.ANGLE;
 
     public HologramProjectorAngleSetting(HologramProjectorBlockEntity entity) {
         super("hologram-projector.angle");
@@ -39,8 +39,7 @@ public class HologramProjectorAngleSetting extends HologramProjectorBaseSetting 
         float x = (float) sliderX.value();
         float y = (float) sliderY.value();
         float z = (float) sliderZ.value();
-        UpdateHologramProjectorPacket packet = new UpdateHologramProjectorPacket(entity, field, new Vector3f(x, y, z));
-        NetworkManager.sendToServer(packet);
+        NetworkManager.sendToServer(field.buildPacket(entity, new Vector3f(x, y, z)));
     }
 
     private void setup() {

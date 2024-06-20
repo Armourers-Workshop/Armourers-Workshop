@@ -52,11 +52,10 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
-        String playerName = player.getDisplayName().getString();
-        BlockEntity blockEntity = player.getLevel().getBlockEntity(pos);
-        if (blockEntity instanceof SkinDocumentProvider) {
-            ModLog.debug("the document {} accepted for '{}'", action, playerName);
-            SkinDocument document = ((SkinDocumentProvider) blockEntity).getDocument();
+        var blockEntity = player.getLevel().getBlockEntity(pos);
+        if (blockEntity instanceof SkinDocumentProvider provider) {
+            ModLog.debug("the document {} accepted for '{}'", action, player.getDisplayName().getString());
+            var document = provider.getDocument();
             document.beginEditing();
             action.execute(document, player);
             document.endEditing();
@@ -73,10 +72,10 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
         if (operator.equals(player.getStringUUID())) {
             return;
         }
-        BlockEntity blockEntity = player.getLevel().getBlockEntity(pos);
-        if (blockEntity instanceof SkinDocumentProvider) {
+        var blockEntity = player.getLevel().getBlockEntity(pos);
+        if (blockEntity instanceof SkinDocumentProvider provider) {
             ModLog.debug("the document {} accepted for server", action);
-            SkinDocument document = ((SkinDocumentProvider) blockEntity).getDocument();
+            var document = provider.getDocument();
             document.beginEditing();
             action.execute(document, player);
             document.endEditing();

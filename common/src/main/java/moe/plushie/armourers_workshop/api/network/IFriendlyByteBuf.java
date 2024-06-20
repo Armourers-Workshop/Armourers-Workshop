@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.api.network;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.data.IGenericProperties;
+import moe.plushie.armourers_workshop.api.data.IGenericValue;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractFriendlyByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -38,6 +40,9 @@ public interface IFriendlyByteBuf {
 
     void writeBoolean(boolean value);
 
+    int readVarInt();
+
+    void writeVarInt(int value);
 
     ByteBuf readBytes(int length);
 
@@ -82,6 +87,14 @@ public interface IFriendlyByteBuf {
     Component readComponent();
 
     void writeComponent(Component component);
+
+    default <S> IGenericValue<S, ?> readProperty(IGenericProperties<S> properties) {
+        return properties.read(this);
+    }
+
+    default <S> void writeProperty(IGenericValue<S, ?> value) {
+        value.write(this);
+    }
 
     ByteBuf asByteBuf();
 }

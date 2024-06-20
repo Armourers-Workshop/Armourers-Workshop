@@ -276,6 +276,9 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         }
 
         void finish(SkinRenderObject renderObject) {
+            if (mergedTasks == null) {
+                return; // is released or not init.
+            }
             isCompiled = true;
             totalTask = mergedTasks.size();
             usingTypes.forEach(TextureManager.getInstance()::open);

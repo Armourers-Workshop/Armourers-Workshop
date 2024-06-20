@@ -16,7 +16,6 @@ import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3d;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -78,15 +77,15 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     @Override
     public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity entity, ItemStack itemStack) {
-        SkinBlockPlaceContext context = SkinBlockPlaceContext.of(blockPos);
+        var context = SkinBlockPlaceContext.of(blockPos);
         if (context == null) {
             return;
         }
         // add all part into level
         context.getParts().forEach(p -> {
-            BlockPos target = blockPos.offset(p.getOffset());
+            var target = blockPos.offset(p.getOffset());
             level.setBlock(target, blockState, 11);
-            SkinnableBlockEntity blockEntity = getBlockEntity(level, target);
+            var blockEntity = getBlockEntity(level, target);
             if (blockEntity != null) {
                 blockEntity.readAdditionalData(AbstractDataSerializer.wrap(p.getEntityTag(), level));
                 blockEntity.updateBlockStates();
@@ -106,19 +105,19 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     @Override
     public List<ItemStack> getDrops(BlockState blockState, ILootContext context) {
-        List<ItemStack> results = super.getDrops(blockState, context);
-        SkinnableBlockEntity blockEntity = ObjectUtils.safeCast(context.getOptionalParameter(ILootContextParam.BLOCK_ENTITY), SkinnableBlockEntity.class);
-        if (blockEntity == null || results.isEmpty()) {
+        var results = super.getDrops(blockState, context);
+        var blockEntity = context.getOptionalParameter(ILootContextParam.BLOCK_ENTITY);
+        if (!(blockEntity instanceof SkinnableBlockEntity blockEntity1) || results.isEmpty()) {
             return results;
         }
-        ArrayList<ItemStack> fixedResults = new ArrayList<>(results.size());
-        for (ItemStack itemStack : results) {
+        var fixedResults = new ArrayList<ItemStack>(results.size());
+        for (var itemStack : results) {
             // we will add an invalid skin item from loot table at data pack,
             // so we need fix the skin info in the drop event.
             if (itemStack.is(ModItems.SKIN.get()) && SkinDescriptor.of(itemStack).isEmpty()) {
                 // when not found any dropped stack,
                 // we must be remove invalid skin item.
-                itemStack = blockEntity.getDropped();
+                itemStack = blockEntity1.getDropped();
                 if (itemStack == null) {
                     continue;
                 }
@@ -136,18 +135,18 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     @Override
     protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
-        SkinnableBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        var blockEntity = getBlockEntity(level, blockPos);
         if (blockEntity == null) {
             return InteractionResult.FAIL;
         }
         if (blockEntity.isLinked()) {
-            BlockPos linkedPos = blockEntity.getLinkedBlockPos();
-            BlockState linkedState = level.getBlockState(linkedPos);
+            var linkedPos = blockEntity.getLinkedBlockPos();
+            var linkedState = level.getBlockState(linkedPos);
             return super.useWithoutItem(linkedState, level, linkedPos, player, blockHitResult);
         }
         if (blockEntity.isBed() && !player.isSecondaryUseActive()) {
             if (ModPermissions.SKINNABLE_SLEEP.accept(blockEntity, player)) {
-                BlockState bedState = Blocks.RED_BED.defaultBlockState().setValue(PART, BedPart.HEAD);
+                var bedState = Blocks.RED_BED.defaultBlockState().setValue(PART, BedPart.HEAD);
                 return super.useWithoutItem(bedState, level, blockEntity.getBedPos(), player, blockHitResult);
             }
         }
@@ -156,8 +155,8 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
                 if (level.isClientSide()) {
                     return InteractionResult.CONSUME;
                 }
-                Vector3d seatPos = blockEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
-                SeatEntity seatEntity = getSeatEntity((ServerLevel) level, blockEntity.getParentPos(), seatPos);
+                var seatPos = blockEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
+                var seatEntity = getSeatEntity((ServerLevel) level, blockEntity.getParentPos(), seatPos);
                 if (seatEntity == null) {
                     return InteractionResult.FAIL; // it is using
                 }
@@ -166,7 +165,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
             }
         }
         if (blockEntity.isInventory()) {
-            InteractionResult result = ModMenuTypes.SKINNABLE.get().openMenu(player, level.getBlockEntity(blockPos));
+            var result = ModMenuTypes.SKINNABLE.get().openMenu(player, level.getBlockEntity(blockPos));
             if (result.consumesAction()) {
                 player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
             }
@@ -177,7 +176,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        BlockState state = super.getStateForPlacement(context);
+        var state = super.getStateForPlacement(context);
         if (state != null && context instanceof SkinBlockPlaceContext context1) {
             if (context1.getProperty(SkinProperty.BLOCK_GLOWING)) {
                 state = state.setValue(LIT, true);
@@ -188,7 +187,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     @Override
     public ItemStack getCloneItemStack(LevelReader blockGetter, BlockPos blockPos, BlockState blockState) {
-        SkinnableBlockEntity blockEntity = getParentBlockEntity(blockGetter, blockPos);
+        var blockEntity = getParentBlockEntity(blockGetter, blockPos);
         if (blockEntity != null) {
             return blockEntity.getDescriptor().asItemStack();
         }
@@ -197,7 +196,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     @Override
     public boolean isCustomBed(BlockGetter level, BlockPos blockPos, BlockState blockState, @Nullable Entity player) {
-        SkinnableBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        var blockEntity = getBlockEntity(level, blockPos);
         if (blockEntity != null) {
             return blockEntity.isBed();
         }
@@ -206,7 +205,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     @Override
     public boolean isCustomLadder(BlockGetter level, BlockPos blockPos, BlockState blockState, LivingEntity entity) {
-        SkinnableBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        var blockEntity = getBlockEntity(level, blockPos);
         if (blockEntity != null) {
             return blockEntity.isLadder();
         }
@@ -220,7 +219,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     @Override
     public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
-        SkinnableBlockEntity blockEntity = getBlockEntity(blockGetter, blockPos);
+        var blockEntity = getBlockEntity(blockGetter, blockPos);
         if (blockEntity != null) {
             return blockEntity.getShape();
         }
@@ -229,7 +228,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     @Override
     public VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
-        SkinnableBlockEntity blockEntity = getBlockEntity(blockGetter, blockPos);
+        var blockEntity = getBlockEntity(blockGetter, blockPos);
         if (blockEntity != null && blockEntity.noCollision()) {
             return Shapes.empty();
         }
@@ -237,13 +236,13 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     public void forEach(Level level, BlockPos pos, Consumer<BlockPos> consumer) {
-        SkinnableBlockEntity blockEntity = getParentBlockEntity(level, pos);
+        var blockEntity = getParentBlockEntity(level, pos);
         if (blockEntity == null) {
             return;
         }
-        BlockPos parentPos = blockEntity.getBlockPos();
-        for (BlockPos offset : blockEntity.getRefers()) {
-            BlockPos targetPos = parentPos.offset(offset);
+        var parentPos = blockEntity.getBlockPos();
+        for (var offset : blockEntity.getRefers()) {
+            var targetPos = parentPos.offset(offset);
             if (!targetPos.equals(pos)) {
                 consumer.accept(targetPos);
             }

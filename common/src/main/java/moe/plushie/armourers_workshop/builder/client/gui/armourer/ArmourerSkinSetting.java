@@ -77,16 +77,14 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
     }
 
     private void updateSkinProperties(SkinProperties skinProperties) {
-        var skinProperties1 = blockEntity.getSkinProperties().copy();
-        this.skinProperties.applyTo(skinProperties1);
-        if (skinProperties1.equals(blockEntity.getSkinProperties())) {
+        var newValue = blockEntity.getSkinProperties().copy();
+        this.skinProperties.applyTo(newValue);
+        if (newValue.equals(blockEntity.getSkinProperties())) {
             return; // no changes
         }
-        this.skinProperties.reset(skinProperties1);
-        this.blockEntity.setSkinProperties(skinProperties1);
-        var field = UpdateArmourerPacket.Field.SKIN_PROPERTIES;
-        var packet = new UpdateArmourerPacket(blockEntity, field, skinProperties);
-        NetworkManager.sendToServer(packet);
+        this.skinProperties.reset(newValue);
+        this.blockEntity.setSkinProperties(newValue);
+        NetworkManager.sendToServer(UpdateArmourerPacket.Field.SKIN_PROPERTIES.buildPacket(blockEntity, newValue));
     }
 
     private void updateScreen(ArmourerBaseSkinPanel view) {

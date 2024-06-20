@@ -28,13 +28,13 @@ public class SkinWardrobeDisplaySetting extends SkinWardrobeBaseSetting {
         setupOptionView(83, 87, UpdateWardrobePacket.Field.WARDROBE_ARMOUR_FEET, "renderFootArmour");
     }
 
-    private void setupOptionView(int x, int y, UpdateWardrobePacket.Field option, String key) {
-        UICheckBox checkBox = new UICheckBox(new CGRect(x, y, 185, 10));
+    private void setupOptionView(int x, int y, UpdateWardrobePacket.Field<Boolean> property, String key) {
+        var checkBox = new UICheckBox(new CGRect(x, y, 185, 10));
         checkBox.setTitle(getDisplayText(key));
-        checkBox.setSelected(option.getOrDefault(wardrobe, true));
+        checkBox.setSelected(property.getOrDefault(wardrobe, true));
         checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, c) -> {
             UICheckBox checkBox1 = ObjectUtils.unsafeCast(c);
-            NetworkManager.sendToServer(UpdateWardrobePacket.field(self.wardrobe, option, checkBox1.isSelected()));
+            NetworkManager.sendToServer(property.buildPacket(self.wardrobe, checkBox1.isSelected()));
         });
         addSubview(checkBox);
     }

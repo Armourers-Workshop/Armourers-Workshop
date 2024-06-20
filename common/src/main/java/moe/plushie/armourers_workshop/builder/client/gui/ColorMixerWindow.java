@@ -18,7 +18,6 @@ import moe.plushie.armourers_workshop.builder.client.gui.widget.PaletteEditingWi
 import moe.plushie.armourers_workshop.builder.menu.ColorMixerMenu;
 import moe.plushie.armourers_workshop.builder.network.UpdateColorMixerPacket;
 import moe.plushie.armourers_workshop.core.client.gui.widget.HSBSliderBox;
-import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
@@ -59,10 +58,10 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
     }
 
     protected void reloadStatus() {
-        ColorMixerBlockEntity blockEntity = menu.getBlockEntity();
-        IPaintColor paintColor = blockEntity.getColor();
-        UIColor selectedColor = new UIColor(paintColor.getRGB());
-        ISkinPaintType selectedPaintType = paintColor.getPaintType();
+        var blockEntity = menu.getBlockEntity();
+        var paintColor = blockEntity.getColor();
+        var selectedColor = new UIColor(paintColor.getRGB());
+        var selectedPaintType = paintColor.getPaintType();
         paintColorView.setColor(selectedColor);
         paintColorView.setPaintType(selectedPaintType);
         if (paintComboBox == null || paintTypes == null) {
@@ -77,13 +76,13 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
 
     @Override
     protected void submitColorChange(UIControl control) {
-        ColorMixerBlockEntity blockEntity = menu.getBlockEntity();
-        PaintColor paintColor = paintColorView.paintColor();
-        UpdateColorMixerPacket.Field field = UpdateColorMixerPacket.Field.COLOR;
+        var blockEntity = menu.getBlockEntity();
+        var paintColor = paintColorView.paintColor();
+        var field = UpdateColorMixerPacket.Field.COLOR;
         if (paintColor.equals(field.get(blockEntity))) {
             return;
         }
-        NetworkManager.sendToServer(new UpdateColorMixerPacket(blockEntity, field, paintColor));
+        NetworkManager.sendToServer(field.buildPacket(blockEntity, paintColor));
     }
 
     private void setupLayout() {

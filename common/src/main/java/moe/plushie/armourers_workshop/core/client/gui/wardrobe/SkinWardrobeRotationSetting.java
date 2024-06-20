@@ -114,12 +114,11 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
     }
 
     private void didUpdateValue(UIControl button) {
-        if (!(entity instanceof MannequinEntity)) {
+        if (!(entity instanceof MannequinEntity mannequinEntity)) {
             return;
         }
-        CompoundTag nbt = ((MannequinEntity) entity).saveCustomPose();
-        UpdateWardrobePacket packet = UpdateWardrobePacket.field(wardrobe, UpdateWardrobePacket.Field.MANNEQUIN_POSE, nbt);
-        NetworkManager.sendToServer(packet);
+        CompoundTag nbt = mannequinEntity.saveCustomPose();
+        NetworkManager.sendToServer(UpdateWardrobePacket.Field.MANNEQUIN_POSE.buildPacket(wardrobe, nbt));
     }
 
     private void randomRotation(UIControl button) {

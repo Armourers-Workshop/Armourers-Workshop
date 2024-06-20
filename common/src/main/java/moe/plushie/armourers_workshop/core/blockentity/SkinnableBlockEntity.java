@@ -220,6 +220,9 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         if (refers == null) {
             refers = getValueFromParent(te -> te.refers);
         }
+        if (refers == null) {
+            return Collections.emptyList();
+        }
         return refers;
     }
 

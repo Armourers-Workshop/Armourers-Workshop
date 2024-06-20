@@ -78,8 +78,7 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             nbt.putBoolean(Constants.Key.SKIN_PAINTS, dialog.isClearPaints());
             nbt.putBoolean(Constants.Key.SKIN_MARKERS, dialog.isClearMarkers());
             nbt.putString(Constants.Key.SKIN_PART_TYPE, dialog.getSelectedPartType().getRegistryName().toString());
-            UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.ITEM_CLEAR;
-            NetworkManager.sendToServer(new UpdateArmourerPacket(blockEntity, field, nbt));
+            NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_CLEAR.buildPacket(blockEntity, nbt));
         });
     }
 
@@ -95,9 +94,7 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             nbt.putBoolean(Constants.Key.SKIN_PAINTS, dialog.isCopyPaintData());
             nbt.putString(Constants.Key.SOURCE, dialog.getSourcePartType().getRegistryName().toString());
             nbt.putString(Constants.Key.DESTINATION, dialog.getDestinationPartType().getRegistryName().toString());
-            UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.ITEM_COPY;
-            UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, nbt);
-            NetworkManager.sendToServer(packet);
+            NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_COPY.buildPacket(blockEntity, nbt));
         });
     }
 
@@ -127,9 +124,7 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             nbt.put(Constants.Key.DESTINATION, destination);
             nbt.putBoolean(Constants.Key.KEEP_COLOR, dialog.isKeepColor());
             nbt.putBoolean(Constants.Key.KEEP_PAINT_TYPE, dialog.isKeepPaintType());
-            UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.ITEM_REPLACE;
-            UpdateArmourerPacket packet = new UpdateArmourerPacket(blockEntity, field, nbt);
-            NetworkManager.sendToServer(packet);
+            NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_REPLACE.buildPacket(blockEntity, nbt));
         });
     }
 

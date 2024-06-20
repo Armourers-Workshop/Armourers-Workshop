@@ -70,6 +70,16 @@ public class AbstractFriendlyByteBuf extends AbstractFriendlyByteBufImpl {
     }
 
     @Override
+    public int readVarInt() {
+        return source.readVarInt();
+    }
+
+    @Override
+    public void writeVarInt(int value) {
+        source.writeVarInt(value);
+    }
+
+    @Override
     public ByteBuf readBytes(int length) {
         return source.readBytes(length);
     }

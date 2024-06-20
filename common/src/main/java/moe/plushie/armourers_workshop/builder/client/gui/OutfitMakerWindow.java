@@ -7,7 +7,6 @@ import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UITextField;
-import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.builder.blockentity.OutfitMakerBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.OutfitMakerMenu;
 import moe.plushie.armourers_workshop.builder.network.UpdateOutfitMakerPacket;
@@ -48,7 +47,7 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
         setupTextField(nameTextField, blockEntity.getItemName(), "outfit-maker.skinName");
         setupTextField(flavourTextField, blockEntity.getItemFlavour(), "outfit-maker.skinFlavour");
 
-        HashMap<Integer, CGPoint> offsets = new HashMap<>();
+        var offsets = new HashMap<Integer, CGPoint>();
         offsets.put(UIControl.State.NORMAL, new CGPoint(0, 0));
         offsets.put(UIControl.State.HIGHLIGHTED, new CGPoint(1, 0));
         offsets.put(UIControl.State.SELECTED | UIControl.State.NORMAL, new CGPoint(0, 1));
@@ -63,15 +62,14 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
         if (!menu.shouldCrafting()) {
             return;
         }
-        GameProfile origin = Minecraft.getInstance().getUser().getGameProfile();
-        CompoundTag nbt = DataSerializers.writeGameProfile(new CompoundTag(), origin);
-        UpdateOutfitMakerPacket.Field field = UpdateOutfitMakerPacket.Field.ITEM_CRAFTING;
-        NetworkManager.sendToServer(new UpdateOutfitMakerPacket(blockEntity, field, nbt));
+        var origin = Minecraft.getInstance().getUser().getGameProfile();
+        var nbt = DataSerializers.writeGameProfile(new CompoundTag(), origin);
+        NetworkManager.sendToServer(UpdateOutfitMakerPacket.Field.ITEM_CRAFTING.buildPacket(blockEntity, nbt));
     }
 
     private void saveSkinInfo(UIControl textField) {
-        String value = nameTextField.text();
-        UpdateOutfitMakerPacket.Field field = UpdateOutfitMakerPacket.Field.ITEM_NAME;
+        var value = nameTextField.text();
+        var field = UpdateOutfitMakerPacket.Field.ITEM_NAME;
         if (textField == flavourTextField) {
             field = UpdateOutfitMakerPacket.Field.ITEM_FLAVOUR;
             value = flavourTextField.text();
@@ -79,7 +77,7 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
         if (Objects.equals(value, field.get(blockEntity))) {
             return; // ignore when value not changes
         }
-        NetworkManager.sendToServer(new UpdateOutfitMakerPacket(blockEntity, field, value));
+        NetworkManager.sendToServer(field.buildPacket(blockEntity, value));
     }
 
     private void setupTextField(UITextField textField, String value, String placeholderKey) {
