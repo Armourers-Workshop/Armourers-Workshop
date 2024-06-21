@@ -12,6 +12,7 @@ public class BlockBenchElement extends BlockBenchObject {
     private final String type;
 
     private final boolean boxUV;
+    private final boolean mirrorUV;
     private final boolean allowMirrorModeling;
     private final boolean allowExport;
 
@@ -26,10 +27,11 @@ public class BlockBenchElement extends BlockBenchObject {
 
     private final Map<Direction, BlockBenchFace> faces;
 
-    public BlockBenchElement(String uuid, String name, String type, boolean boxUV, boolean allowMirrorModeling, boolean allowExport, Vector2f uvOffset, Vector3f from, Vector3f to, Vector3f origin, Vector3f rotation, float inflate, Map<Direction, BlockBenchFace> faces) {
+    public BlockBenchElement(String uuid, String name, String type, boolean boxUV, boolean mirrorUV, boolean allowMirrorModeling, boolean allowExport, Vector2f uvOffset, Vector3f from, Vector3f to, Vector3f origin, Vector3f rotation, float inflate, Map<Direction, BlockBenchFace> faces) {
         super(uuid, name);
         this.type = type;
         this.boxUV = boxUV;
+        this.mirrorUV = mirrorUV;
         this.allowMirrorModeling = allowMirrorModeling;
         this.allowExport = allowExport;
         this.uvOffset = uvOffset;
@@ -69,6 +71,10 @@ public class BlockBenchElement extends BlockBenchObject {
         return boxUV;
     }
 
+    public boolean isMirrorUV() {
+        return mirrorUV;
+    }
+
     public boolean allowExport() {
         return allowExport;
     }
@@ -86,6 +92,7 @@ public class BlockBenchElement extends BlockBenchObject {
         private String type = "cube";
 
         private boolean boxUV = false;
+        private boolean mirrorUV = false;
         private boolean allowMirrorModeling = false;
         private boolean allowExport = true;
 
@@ -106,6 +113,10 @@ public class BlockBenchElement extends BlockBenchObject {
 
         public void boxUV(boolean boxUV) {
             this.boxUV = boxUV;
+        }
+
+        public void mirrorUV(boolean mirrorUV) {
+            this.mirrorUV = mirrorUV;
         }
 
         public void allowMirrorModeling(boolean allowMirrorModeling) {
@@ -145,7 +156,7 @@ public class BlockBenchElement extends BlockBenchObject {
         }
 
         public BlockBenchElement build() {
-            return new BlockBenchElement(uuid, name, type, boxUV, allowMirrorModeling, allowExport, uvOffset, from, to, origin, rotation, inflate, faces);
+            return new BlockBenchElement(uuid, name, type, boxUV, mirrorUV, allowMirrorModeling, allowExport, uvOffset, from, to, origin, rotation, inflate, faces);
         }
     }
 }

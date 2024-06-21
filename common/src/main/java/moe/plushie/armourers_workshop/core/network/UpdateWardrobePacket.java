@@ -215,12 +215,14 @@ public class UpdateWardrobePacket extends CustomPacket {
 
         private static <S extends Entity, T> Field<T> create(Function<S, T> supplier, BiConsumer<S, T> applier, IEntitySerializer<T> dataSerializer) {
             return TYPE.create(dataSerializer).getter((source) -> {
-                if (source.getEntity() instanceof Entity entity) {
+                var entity = source.getEntity();
+                if (entity != null) {
                     return supplier.apply(ObjectUtils.unsafeCast(entity));
                 }
                 return null;
             }).setter((source, value) -> {
-                if (source.getEntity() instanceof Entity entity) {
+                var entity = source.getEntity();
+                if (entity != null) {
                     applier.accept(ObjectUtils.unsafeCast(entity), value);
                 }
             }).build(Field::new);

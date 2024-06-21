@@ -173,8 +173,8 @@ public class BlockBenchModelReader implements SkinPackModelReader {
 
     private BedrockModelUV convertToCubeUV(BlockBenchElement element) {
         // box texture
-        if (element.isBoxUV()) {
-            BlockBenchModelUV uv = new BlockBenchModelUV(element.getUVOffset());
+        if (element.isBoxUV() && !element.isMirrorUV()) {
+            var uv = new BlockBenchModelUV(element.getUVOffset());
             element.getFaces().forEach((dir, face) -> {
                 uv.setDefaultTextureId(face.getTextureId());
                 uv.setRotation(dir, face.getRotation());
@@ -191,7 +191,7 @@ public class BlockBenchModelReader implements SkinPackModelReader {
             }
             Rectangle2f rect = face.getRect();
             if (dir == Direction.UP || dir == Direction.DOWN) {
-                Rectangle2f fixedRect = rect.copy();
+                var fixedRect = rect.copy();
                 fixedRect.setX(rect.getMaxX());
                 fixedRect.setY(rect.getMaxY());
                 fixedRect.setWidth(-rect.getWidth());

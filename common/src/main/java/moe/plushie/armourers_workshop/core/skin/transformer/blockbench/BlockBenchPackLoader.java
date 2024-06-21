@@ -55,6 +55,7 @@ public class BlockBenchPackLoader {
 
         object.at("allow_mirror_modeling", it -> builder.allowMirrorModeling(it.boolValue()));
         object.at("box_uv", it -> builder.boxUV(it.boolValue()));
+        object.at("mirror_uv", it -> builder.mirrorUV(it.boolValue()));
         object.at("uv_offset", it -> builder.uvOffset(it.vector2fValue()));
         object.at("export", it -> builder.export(it.boolValue()));
 
