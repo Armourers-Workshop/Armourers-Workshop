@@ -10,21 +10,17 @@ import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationManager;
-import moe.plushie.armourers_workshop.core.client.animation.AnimationState;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkinAnimation;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.skinrender.patch.EntityRenderPatch;
 import moe.plushie.armourers_workshop.core.client.skinrender.patch.EpicFightEntityRendererPatch;
-import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
+import moe.plushie.armourers_workshop.core.data.EntityDataStorage;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -35,7 +31,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +44,7 @@ import java.util.HashSet;
 import java.util.function.BiConsumer;
 
 @Environment(EnvType.CLIENT)
-public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeListener {
+public class EntityRenderData implements IAssociatedContainer, SkinBakery.IBakeListener {
 
     private final ArrayList<String> missingSkins = new ArrayList<>();
     private final ArrayList<Entry> armorSkins = new ArrayList<>();
@@ -84,13 +79,13 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
 
     private EntityRenderPatch<? super Entity> renderPatch;
 
-    public SkinRenderData(EntityType<?> entityType) {
+    public EntityRenderData(Entity entity) {
     }
 
     @Nullable
-    public static SkinRenderData of(@Nullable Entity entity) {
+    public static EntityRenderData of(@Nullable Entity entity) {
         if (entity != null) {
-            return SkinDataStorage.getRenderData(entity).orElse(null);
+            return EntityDataStorage.of(entity).getRenderData().orElse(null);
         }
         return null;
     }
@@ -291,14 +286,14 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
 
     private void loadSkinInfo(BakedSkin skin) {
         // check all part status, some skin only one part, but overridden all the models/overlays
-        SkinProperties properties = skin.getSkin().getProperties();
+        var properties = skin.getSkin().getProperties();
         overriddenManager.merge(properties);
         if (!isLimitLimbs) {
             isLimitLimbs = properties.get(SkinProperty.LIMIT_LEGS_LIMBS);
         }
         // collect the skin and skin part type info.
         lastSkinTypes.add(skin.getType());
-        for (BakedSkinPart skinPart : skin.getParts()) {
+        for (var skinPart : skin.getParts()) {
             lastSkinPartTypes.add(skinPart.getType());
         }
     }
@@ -316,18 +311,18 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
     }
 
     public Iterable<Entry> getItemSkins(ItemStack itemStack, boolean replaceSkinItem) {
-        SkinDescriptor target = getEmbeddedSkin(itemStack, replaceSkinItem);
+        var target = getEmbeddedSkin(itemStack, replaceSkinItem);
         if (target.isEmpty()) {
             // the item stack is not embedded skin, using matching pattern,
             // only need to find the first matching skin by item.
-            for (Entry entry : itemSkins) {
+            for (var entry : itemSkins) {
                 if (!entry.isHeld && entry.getDescriptor().accept(itemStack)) {
                     return Collections.singletonList(entry);
                 }
             }
         } else {
             // the item stack is embedded skin, find the baked skin for matched descriptor.
-            for (SkinRenderData.Entry entry : itemSkins) {
+            for (EntityRenderData.Entry entry : itemSkins) {
                 if (entry.getDescriptor().equals(target)) {
                     return Collections.singletonList(entry);
                 }
@@ -367,7 +362,6 @@ public class SkinRenderData implements IAssociatedContainer, SkinBakery.IBakeLis
     public boolean shouldRenderExtra() {
         return isRenderExtra;
     }
-
 
     public void setRenderPatch(EntityRenderPatch<? super Entity> renderPatch) {
         this.renderPatch = renderPatch;

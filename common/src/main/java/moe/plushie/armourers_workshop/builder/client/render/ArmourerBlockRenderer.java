@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRendererManager;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.core.client.other.BlockEntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinDynamicTexture;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -42,14 +43,15 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
 
     @Override
     public void render(T entity, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
+        var textureProvider = CustomTextureProvider.of(entity);
+        if (textureProvider == null) {
+            return;
+        }
         var skinType = entity.getSkinType();
         var skinProperties = entity.getSkinProperties();
 
-        var renderData = RenderData.of(entity);
-        renderData.tick();
-
         // when the player has some special texture, we must override to renderer.
-        var playerTexture = renderData.displayTextureLocation;
+        var playerTexture = textureProvider.displayTextureLocation;
         if (playerTexture != null) {
             override.setTexture(playerTexture);
             override.setBuffers(bufferSource);
@@ -63,8 +65,8 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         var isUseHelper = entity.isUseHelper();
 
         // don't display overlay layers when helpers are actived.
-        renderData.shouldRenderOverlay = !isUseHelper;
-        renderData.skinProperties = skinProperties;
+        textureProvider.shouldRenderOverlay = !isUseHelper;
+        textureProvider.skinProperties = skinProperties;
 
         poseStack.pushPose();
         transform(poseStack, entity);
@@ -108,7 +110,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
                     poseStack.pushPose();
                     poseStack.translate(0, -rect2.getMinY(), 0);
                     poseStack.scale(16, 16, 16);
-                    guideRenderer.render(poseStack, renderData, 0xf000f0, OverlayTexture.NO_OVERLAY, bufferSource);
+                    guideRenderer.render(poseStack, textureProvider, 0xf000f0, OverlayTexture.NO_OVERLAY, bufferSource);
                     poseStack.popPose();
                 }
             }
@@ -182,29 +184,32 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         }
     }
 
-    public static class RenderData implements IGuideDataProvider {
+    public static class CustomTextureProvider implements IGuideDataProvider {
 
-        protected final ArmourerBlockEntity blockEntity;
         protected final SkinDynamicTexture displayTexture;
         protected final IResourceLocation displayTextureLocation;
         protected int lastVersion;
         protected boolean shouldRenderOverlay = false;
         protected ISkinProperties skinProperties;
 
-        public RenderData(ArmourerBlockEntity blockEntity) {
-            this.blockEntity = blockEntity;
+        public CustomTextureProvider(ArmourerBlockEntity blockEntity) {
             this.displayTexture = new SkinDynamicTexture();
             this.displayTextureLocation = TextureUtils.registerTexture(identifier(blockEntity), displayTexture);
         }
 
-        public static RenderData of(ArmourerBlockEntity blockEntity) {
-            Object renderData = blockEntity.getRenderData();
-            if (renderData instanceof RenderData) {
-                return (RenderData) renderData;
+        public static CustomTextureProvider of(ArmourerBlockEntity blockEntity) {
+            var renderData = BlockEntityRenderData.of(blockEntity);
+            if (renderData == null) {
+                return null;
             }
-            RenderData renderData1 = new RenderData(blockEntity);
-            blockEntity.setRenderData(renderData1);
-            return renderData1;
+            if (renderData.getCustomTextureProvider() instanceof CustomTextureProvider textureProvider) {
+                textureProvider.tick(blockEntity);
+                return textureProvider;
+            }
+            var textureProvider = new CustomTextureProvider(blockEntity);
+            renderData.setCustomTextureProvider(textureProvider);
+            textureProvider.tick(blockEntity);
+            return textureProvider;
         }
 
         public static String identifier(ArmourerBlockEntity blockEntity) {
@@ -219,7 +224,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
 //            super.finalize();
 //        }
 
-        public void tick() {
+        public void tick(ArmourerBlockEntity blockEntity) {
             this.displayTexture.setRefer(TextureUtils.getPlayerTextureLocation(blockEntity.getTextureDescriptor()));
             this.displayTexture.setPaintData(blockEntity.getPaintData());
         }

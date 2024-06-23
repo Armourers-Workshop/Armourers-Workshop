@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.utils;
 
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -13,9 +13,9 @@ public class EmbeddedSkinStack {
     private final ItemStack itemStack;
 
     private final SkinDescriptor descriptor;
-    private final SkinRenderData.Entry entry;
+    private final EntityRenderData.Entry entry;
 
-    public EmbeddedSkinStack(int mode, SkinRenderData.Entry entry) {
+    public EmbeddedSkinStack(int mode, EntityRenderData.Entry entry) {
         this.mode = mode;
         this.entry = entry;
         this.descriptor = entry.getDescriptor();
@@ -37,7 +37,7 @@ public class EmbeddedSkinStack {
         return descriptor;
     }
 
-    public SkinRenderData.Entry getEntry() {
+    public EntityRenderData.Entry getEntry() {
         return entry;
     }
 

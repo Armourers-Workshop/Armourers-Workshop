@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedItemModel;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
@@ -65,7 +65,7 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderSpecificHand(LivingEntity entity, float partialTicks, int packedLight, AbstractItemTransformType transformType, PoseStack poseStackIn, MultiBufferSource buffersIn, Runnable cancelHandler) {
-        var renderData = SkinRenderData.of(entity);
+        var renderData = EntityRenderData.of(entity);
         if (renderData == null) {
             return;
         }
@@ -117,7 +117,7 @@ public class ClientWardrobeHandler {
         if (RENDERING_GUI_ITEM != itemStack) {
             // when the wardrobe has override skin of the item,
             // we easily got a conclusion of the needs embedded skin.
-            var renderData = SkinRenderData.of(entity);
+            var renderData = EntityRenderData.of(entity);
             if (renderData != null) {
                 for (var entry : renderData.getItemSkins(itemStack, entity instanceof MannequinEntity)) {
                     return new EmbeddedSkinStack(0, entry);
@@ -170,7 +170,7 @@ public class ClientWardrobeHandler {
                     }
                     break;
                 }
-                var renderData = SkinRenderData.of(entity);
+                var renderData = EntityRenderData.of(entity);
                 if (renderData != null) {
 //                    poseStack.translate(0, 1, -2);
 //                    RenderUtils.drawPoint(poseStack, null, 2, buffers);
@@ -252,7 +252,7 @@ public class ClientWardrobeHandler {
         poseStack.pushPose();
         poseStack.scale(-16, -16, 16);
 
-        context.setRenderData(SkinRenderData.of(context.getMannequin()));
+        context.setRenderData(EntityRenderData.of(context.getMannequin()));
         context.setLightmap(packedLight);
         context.setPartialTicks(0);
         context.setReferenced(SkinItemSource.create(800, embeddedStack.getItemStack(), transformType));
@@ -298,7 +298,7 @@ public class ClientWardrobeHandler {
         }
     }
 
-    public static int render(Entity entity, BakedArmature bakedArmature, SkinRenderContext context, Supplier<Iterable<SkinRenderData.Entry>> provider) {
+    public static int render(Entity entity, BakedArmature bakedArmature, SkinRenderContext context, Supplier<Iterable<EntityRenderData.Entry>> provider) {
         int r = 0;
         for (var entry : provider.get()) {
             var bakedSkin = entry.getBakedSkin();

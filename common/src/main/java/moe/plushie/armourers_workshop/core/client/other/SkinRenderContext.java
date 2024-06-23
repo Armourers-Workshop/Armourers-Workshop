@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.core.client.animation.AnimationManager;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationState;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinAnimation;
@@ -30,12 +31,13 @@ public class SkinRenderContext {
 
     protected IBufferSource bufferSource;
 
-    protected SkinRenderData renderData;
+    protected EntityRenderData renderData;
     protected SkinRenderBufferSource bufferProvider;
 
     protected SkinItemSource itemSource;
 
     protected ColorScheme colorScheme = ColorScheme.EMPTY;
+    protected AnimationManager animationManager;
     protected AbstractItemTransformType transformType = AbstractItemTransformType.NONE;
 
     protected final IPoseStack defaultPoseStack;
@@ -50,7 +52,7 @@ public class SkinRenderContext {
         this.poseStack = defaultPoseStack;
     }
 
-    public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, AbstractItemTransformType transformType, IPoseStack poseStack, IBufferSource bufferSource) {
+    public static SkinRenderContext alloc(EntityRenderData renderData, int light, float partialTick, AbstractItemTransformType transformType, IPoseStack poseStack, IBufferSource bufferSource) {
         SkinRenderContext context = POOL.next();
         context.setRenderData(renderData);
         context.setLightmap(light);
@@ -62,7 +64,7 @@ public class SkinRenderContext {
         return context;
     }
 
-    public static SkinRenderContext alloc(SkinRenderData renderData, int light, float partialTick, IPoseStack poseStack, IBufferSource bufferSource) {
+    public static SkinRenderContext alloc(EntityRenderData renderData, int light, float partialTick, IPoseStack poseStack, IBufferSource bufferSource) {
         return alloc(renderData, light, partialTick, AbstractItemTransformType.NONE, poseStack, bufferSource);
     }
 
@@ -79,6 +81,7 @@ public class SkinRenderContext {
         this.bufferProvider = null;
         this.renderData = null;
         this.bufferSource = null;
+        this.animationManager = null;
     }
 
     public void pushPose() {
@@ -152,17 +155,29 @@ public class SkinRenderContext {
         return SkinItemSource.EMPTY;
     }
 
-    public void setRenderData(SkinRenderData renderData) {
+    public void setRenderData(EntityRenderData renderData) {
         this.renderData = renderData;
     }
 
-    public SkinRenderData getRenderData() {
+    public EntityRenderData getRenderData() {
         return renderData;
     }
 
-    public AnimationState getAnimationState(BakedSkinAnimation animation) {
+    public void setAnimationManager(AnimationManager animationManager) {
+        this.animationManager = animationManager;
+    }
+
+    public AnimationManager getAnimationManager() {
         if (renderData != null) {
-            return renderData.getAnimationManager().getAnimationState(animation);
+            return renderData.getAnimationManager();
+        }
+        return animationManager;
+    }
+
+    public AnimationState getAnimationState(BakedSkinAnimation animation) {
+        var animationManager = getAnimationManager();
+        if (animationManager != null) {
+            return animationManager.getAnimationState(animation);
         }
         return null;
     }

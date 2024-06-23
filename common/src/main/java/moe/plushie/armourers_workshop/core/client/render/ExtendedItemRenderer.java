@@ -8,10 +8,9 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -73,7 +72,7 @@ public final class ExtendedItemRenderer {
 
         context.setLightmap(light);
         context.setPartialTicks(partialTicks);
-        context.setRenderData(SkinRenderData.of(context.getMannequin()));
+        context.setRenderData(EntityRenderData.of(context.getMannequin()));
         context.setColorScheme(scheme);
         context.setReferenced(itemSource);
 

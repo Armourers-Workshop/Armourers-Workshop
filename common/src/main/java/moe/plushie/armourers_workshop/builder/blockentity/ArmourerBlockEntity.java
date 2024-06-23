@@ -82,7 +82,6 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
 
     protected SkinPaintData paintData;
 
-    protected Object renderData;
     protected AABB renderBoundingBox;
 
     public ArmourerBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
@@ -350,14 +349,6 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IBlockE
 
     public int getVersion() {
         return version;
-    }
-
-    public Object getRenderData() {
-        return renderData;
-    }
-
-    public void setRenderData(Object renderData) {
-        this.renderData = renderData;
     }
 
     @Override

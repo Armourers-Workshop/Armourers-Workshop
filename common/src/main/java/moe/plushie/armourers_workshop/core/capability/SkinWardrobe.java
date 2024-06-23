@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.capability;
 
 import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
-import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
+import moe.plushie.armourers_workshop.core.data.EntityDataStorage;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
@@ -49,7 +49,7 @@ public class SkinWardrobe implements IDataSerializerProvider {
     @Nullable
     public static SkinWardrobe of(@Nullable Entity entity) {
         if (entity != null) {
-            return SkinDataStorage.getWardrobe(entity).orElse(null);
+            return EntityDataStorage.of(entity).getWardrobe().orElse(null);
         }
         return null;
     }

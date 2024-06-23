@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightTransformProvider;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.thirdparty.EpicFlightModel;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager2;
 import net.minecraft.client.model.EntityModel;
@@ -23,7 +23,7 @@ public class EpicFightEntityRendererPatch<T extends LivingEntity> extends Entity
     private IPoseStack overridePoseStack;
     private EpicFlightModel transformerModel;
 
-    public EpicFightEntityRendererPatch(SkinRenderData renderData) {
+    public EpicFightEntityRendererPatch(EntityRenderData renderData) {
         super(renderData);
     }
 

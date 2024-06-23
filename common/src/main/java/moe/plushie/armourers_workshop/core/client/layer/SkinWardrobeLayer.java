@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.patch.EpicFightEntityRendererPatch;
@@ -42,7 +42,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
             return;
         }
         var poseStack1 = poseStack;
-        var renderData = SkinRenderData.of(entity);
+        var renderData = EntityRenderData.of(entity);
         if (renderData == null) {
             return;
         }

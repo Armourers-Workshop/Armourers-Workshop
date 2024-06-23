@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TickUtils;
@@ -21,14 +21,14 @@ public abstract class EntityRenderPatch<T extends Entity> extends SkinRenderCont
     protected final int libraryVersion;
     protected BakedArmatureTransformer transformer;
 
-    public EntityRenderPatch(SkinRenderData renderData) {
+    public EntityRenderPatch(EntityRenderData renderData) {
         super(null);
         this.libraryVersion = SkinRendererManager.getVersion();
         this.setRenderData(renderData);
     }
 
-    protected static <T extends Entity, P extends EntityRenderPatch<? super T>> void _activate(Class<?> clazz, T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, EntityRenderer<?> entityRenderer, Consumer<P> handler, Function<SkinRenderData, EntityRenderPatch<? extends T>> provider) {
-        var renderData = SkinRenderData.of(entity);
+    protected static <T extends Entity, P extends EntityRenderPatch<? super T>> void _activate(Class<?> clazz, T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, EntityRenderer<?> entityRenderer, Consumer<P> handler, Function<EntityRenderData, EntityRenderPatch<? extends T>> provider) {
+        var renderData = EntityRenderData.of(entity);
         if (renderData == null) {
             return;
         }
@@ -49,7 +49,7 @@ public abstract class EntityRenderPatch<T extends Entity> extends SkinRenderCont
     }
 
     protected static <T extends Entity, P extends EntityRenderPatch<? super T>> void _apply(Class<?> clazz, T entity, Consumer<P> handler) {
-        var renderData = SkinRenderData.of(entity);
+        var renderData = EntityRenderData.of(entity);
         if (renderData != null) {
             var renderPatch = renderData.getRenderPatch();
             if (clazz.isInstance(renderPatch)) {
@@ -62,7 +62,7 @@ public abstract class EntityRenderPatch<T extends Entity> extends SkinRenderCont
     }
 
     protected static <T extends Entity, P extends EntityRenderPatch<? super T>> void _deactivate(Class<?> clazz, T entity, Consumer<P> handler) {
-        var renderData = SkinRenderData.of(entity);
+        var renderData = EntityRenderData.of(entity);
         if (renderData != null) {
             var renderPatch = renderData.getRenderPatch();
             if (clazz.isInstance(renderPatch)) {

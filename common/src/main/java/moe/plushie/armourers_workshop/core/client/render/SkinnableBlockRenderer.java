@@ -7,11 +7,9 @@ import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBloc
 import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
-import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.client.other.BlockEntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
-import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
@@ -32,15 +30,24 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
 
     @Override
     public void render(T entity, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
-        var descriptor = entity.getDescriptor();
-        var skin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
-        if (skin == null) {
+        var renderData = BlockEntityRenderData.of(entity);
+        if (renderData == null) {
+            return;
+        }
+        renderData.tick(entity);
+        var skins = renderData.getAllSkins();
+        if (skins.isEmpty()) {
             return;
         }
         var f = 1 / 16f;
 
         var blockState = entity.getBlockState();
         var rotations = entity.getRenderRotations(blockState);
+
+        var renderPatch = renderData.getRenderPatch();
+        var mannequinEntity = placeholder.get();
+
+        renderPatch.activate(entity, partialTicks, light, overlay, poseStack, bufferSource);
 
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f);
@@ -49,27 +56,33 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
         poseStack.scale(f, f, f);
         poseStack.scale(-1, -1, 1);
 
-        var context = SkinRenderContext.alloc(null, light, partialTicks, poseStack, bufferSource);
-        SkinRenderer.render(placeholder.get(), armature, skin, descriptor.getColorScheme(), context);
-        context.release();
+        for (var entry : skins) {
+            var skin = entry.getBakedSkin();
+            skin.setupAnim(mannequinEntity, renderPatch);
+            SkinRenderer.render(mannequinEntity, armature, skin, entry.getBakedScheme(), renderPatch);
+        }
+//        for (var entry : skins) {
+//            entry.getBakedSkin().getBlockBounds().forEach((pos, rect) -> {
+//                poseStack.pushPose();
+//                poseStack.translate(0.5f, 0.5f, 0.5f);
+//                poseStack.scale(f, f, f);
+//                poseStack.rotate(rotations);
+//                poseStack.translate(pos.getX() * 16f, pos.getY() * 16f, pos.getZ() * 16f);
+//                ShapeTesselator.stroke(rect, UIColor.RED, poseStack, bufferSource);
+//                poseStack.popPose();
+//            });
+//        }
 
         poseStack.popPose();
 
         if (ModDebugger.skinnable) {
-            skin.getBlockBounds().forEach((pos, rect) -> {
-                poseStack.pushPose();
-                poseStack.translate(0.5f, 0.5f, 0.5f);
-                poseStack.scale(f, f, f);
-                poseStack.rotate(rotations);
-                poseStack.translate(pos.getX() * 16f, pos.getY() * 16f, pos.getZ() * 16f);
-                ShapeTesselator.stroke(rect, UIColor.RED, poseStack, bufferSource);
-                poseStack.popPose();
-            });
             var pos = entity.getBlockPos();
             poseStack.pushPose();
             poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
             ShapeTesselator.stroke(entity.getRenderShape(blockState), UIColor.ORANGE, poseStack, bufferSource);
             poseStack.popPose();
         }
+
+        renderPatch.deactivate(entity, partialTicks, light, overlay, poseStack, bufferSource);
     }
 }

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.network;
 
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.minecraft.nbt.CompoundTag;
@@ -71,10 +71,10 @@ public class UpdateAnimationPacket extends CustomPacket {
         }
     }
 
-    private SkinRenderData getTargetRenderData(Player player) {
+    private EntityRenderData getTargetRenderData(Player player) {
         if (value.contains("target")) {
             int entityId = value.getInt("target");
-            return SkinRenderData.of(player.getLevel().getEntity(entityId));
+            return EntityRenderData.of(player.getLevel().getEntity(entityId));
         }
         return null;
     }

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.skinrender.patch;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -15,7 +15,7 @@ public class LivingEntityRenderPatch<T extends LivingEntity> extends EntityRende
 
     protected EntityModel<?> entityModel;
 
-    public LivingEntityRenderPatch(SkinRenderData renderData) {
+    public LivingEntityRenderPatch(EntityRenderData renderData) {
         super(renderData);
     }
 

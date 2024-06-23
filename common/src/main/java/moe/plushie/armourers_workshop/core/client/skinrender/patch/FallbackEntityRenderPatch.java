@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.client.skinrender.patch;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,7 +17,7 @@ public class FallbackEntityRenderPatch<T extends Entity> extends EntityRenderPat
 
     private final BakedArmature armature;
 
-    public FallbackEntityRenderPatch(BakedArmatureTransformer transformer, SkinRenderData renderData) {
+    public FallbackEntityRenderPatch(BakedArmatureTransformer transformer, EntityRenderData renderData) {
         super(renderData);
         this.transformer = transformer;
         this.armature = BakedArmature.mutableBy(transformer.getArmature());

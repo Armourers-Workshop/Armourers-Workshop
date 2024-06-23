@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.data.IAssociatedContainerKey;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.DataStorageKey;
 import moe.plushie.armourers_workshop.utils.MathUtils;
@@ -14,7 +14,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.level.block.BaseRailBlock;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 
 public class MinecartModelArmaturePlugin extends ArmaturePlugin {
@@ -44,7 +43,7 @@ public class MinecartModelArmaturePlugin extends ArmaturePlugin {
     }
 
 
-    private boolean isFlapped(AbstractMinecart entity, float partialTicks, SkinRenderData renderData) {
+    private boolean isFlapped(AbstractMinecart entity, float partialTicks, EntityRenderData renderData) {
         var delta = entity.getDeltaMovement();
         var dx = delta.x();
         var dz = delta.z();
