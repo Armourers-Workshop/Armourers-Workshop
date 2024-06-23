@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
@@ -54,24 +53,24 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
         overriddenManager.willRender(entity);
 
         // apply all visible part to hidden.
-        overrides.forEach((key, value) -> {
-            if (overriddenManager.contains(key)) {
-                hidden(value);
+        for (var entry : overrides.entrySet()) {
+            if (overriddenManager.contains(entry.getKey())) {
+                hidden(entry.getValue());
             }
-        });
+        }
 
         // apply all visible part to hidden if the specified skin type exists.
-        skinTypeToOverrides.forEach((key, value) -> {
-            if (has(key, SkinTypes.UNKNOWN, renderData.getUsingTypes())) {
-                hidden(value);
+        for (var entry : skinTypeToOverrides.entrySet()) {
+            if (has(entry.getKey(), SkinTypes.UNKNOWN, renderData.getUsingTypes())) {
+                hidden(entry.getValue());
             }
-        });
+        }
         // apply all visible part to hidden if the specified skin part type exists.
-        skinPartTypeToOverrides.forEach((key, value) -> {
-            if (has(key, SkinPartTypes.UNKNOWN, renderData.getUsingPartTypes())) {
-                hidden(value);
+        for (var entry : skinPartTypeToOverrides.entrySet()) {
+            if (has(entry.getKey(), SkinPartTypes.UNKNOWN, renderData.getUsingPartTypes())) {
+                hidden(entry.getValue());
             }
-        });
+        }
     }
 
     @Override

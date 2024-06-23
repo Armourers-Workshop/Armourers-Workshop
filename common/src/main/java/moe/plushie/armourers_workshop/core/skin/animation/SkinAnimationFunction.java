@@ -47,24 +47,24 @@ public interface SkinAnimationFunction {
     }
 
     static SkinAnimationFunction readFromTag(Tag tag) {
-        return switch (tag) {
-            case IntTag intTag -> switch (intTag.getAsInt()) {
+        // a simple value.
+        if (tag instanceof IntTag intTag) {
+            return switch (intTag.getAsInt()) {
                 case 2 -> SMOOTH;
                 case 1 -> STEP;
                 case 0 -> LINEAR;
                 default -> LINEAR; // can't parse, downcast.
             };
-
-            case CompoundTag compoundTag -> {
-                var list = compoundTag.getList("Bezier", Constants.TagFlags.FLOAT);
-                var parameters = new float[12];
-                for (int i = 0; i < list.size(); ++i) {
-                    parameters[i] = list.getFloat(i);
-                }
-                yield bezier(parameters);
+        }
+        if (tag instanceof CompoundTag compoundTag) {
+            var list = compoundTag.getList("Bezier", Constants.TagFlags.FLOAT);
+            var parameters = new float[12];
+            for (int i = 0; i < list.size(); ++i) {
+                parameters[i] = list.getFloat(i);
             }
-            case null, default -> LINEAR; // can't parse, downcast.
-        };
+            return bezier(parameters);
+        }
+        return LINEAR; // can't parse, downcast.
     }
 
     static SkinAnimationFunction readFromStream(IInputStream stream) throws IOException {

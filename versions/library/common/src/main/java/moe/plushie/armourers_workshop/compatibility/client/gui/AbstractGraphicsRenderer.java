@@ -6,7 +6,6 @@ import com.apple.library.coregraphics.CGGraphicsState;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
-import com.apple.library.impl.EntityRendererImpl;
 import com.apple.library.uikit.UIFont;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
@@ -44,7 +43,7 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
     }
 
     public static CGGraphicsContext of(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        AbstractGraphicsRenderer impl = new AbstractGraphicsRenderer(graphics, mouseX, mouseY, partialTicks);
+        var impl = new AbstractGraphicsRenderer(graphics, mouseX, mouseY, partialTicks);
         return new CGGraphicsContext(impl, impl);
     }
 
@@ -66,7 +65,7 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
 
     @Override
     public void renderEntity(Entity entity, CGPoint origin, int scale, CGPoint focus, CGGraphicsContext context) {
-        EntityRendererImpl<Entity> renderer = AbstractGraphicsRendererImpl.getRenderer(entity);
+        var renderer = AbstractGraphicsRendererImpl.getRenderer(entity);
         renderer.render(entity, origin, scale, focus, context);
     }
 

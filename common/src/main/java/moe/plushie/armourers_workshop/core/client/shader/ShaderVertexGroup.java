@@ -40,6 +40,7 @@ public class ShaderVertexGroup {
     }
 
     public void clear() {
+        objects.forEach(ShaderVertexObject::release);
         objects.clear();
         maxVertexCount = 0;
     }

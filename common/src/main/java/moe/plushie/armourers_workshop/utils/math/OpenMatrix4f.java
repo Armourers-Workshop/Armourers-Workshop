@@ -27,29 +27,7 @@ public class OpenMatrix4f implements IMatrix4f {
     }
 
     public OpenMatrix4f(IQuaternionf quaternion) {
-        float f = quaternion.x();
-        float g = quaternion.y();
-        float h = quaternion.z();
-        float i = quaternion.w();
-        float j = 2.0f * f * f;
-        float k = 2.0f * g * g;
-        float l = 2.0f * h * h;
-        m00 = 1.0f - k - l;
-        m11 = 1.0f - l - j;
-        m22 = 1.0f - j - k;
-        m33 = 1.0f;
-        float m = f * g;
-        float n = g * h;
-        float o = h * f;
-        float p = f * i;
-        float q = g * i;
-        float r = h * i;
-        m10 = 2.0f * (m + r);
-        m01 = 2.0f * (m - r);
-        m20 = 2.0f * (o - q);
-        m02 = 2.0f * (o + q);
-        m21 = 2.0f * (n + p);
-        m12 = 2.0f * (n - p);
+        set(quaternion);
     }
 
     public OpenMatrix4f(FloatBuffer buffer) {
@@ -82,8 +60,8 @@ public class OpenMatrix4f implements IMatrix4f {
     }
 
     public static OpenMatrix4f of(IMatrix4f o) {
-        if (o instanceof OpenMatrix4f) {
-            return (OpenMatrix4f) o;
+        if (o instanceof OpenMatrix4f that) {
+            return that;
         }
         return new OpenMatrix4f(o);
     }
@@ -100,12 +78,38 @@ public class OpenMatrix4f implements IMatrix4f {
 
     @Override
     public void rotate(IQuaternionf quaternion) {
-        multiply(new OpenMatrix4f(quaternion));
+        multiply(FastLocal.from(quaternion));
     }
 
     @Override
     public void set(IMatrix4f matrix) {
-        set(of(matrix));
+        set(FastLocal.from(matrix));
+    }
+
+    public void set(IQuaternionf quaternion) {
+        float f = quaternion.x();
+        float g = quaternion.y();
+        float h = quaternion.z();
+        float i = quaternion.w();
+        float j = 2.0f * f * f;
+        float k = 2.0f * g * g;
+        float l = 2.0f * h * h;
+        m00 = 1.0f - k - l;
+        m11 = 1.0f - l - j;
+        m22 = 1.0f - j - k;
+        m33 = 1.0f;
+        float m = f * g;
+        float n = g * h;
+        float o = h * f;
+        float p = f * i;
+        float q = g * i;
+        float r = h * i;
+        m10 = 2.0f * (m + r);
+        m01 = 2.0f * (m - r);
+        m20 = 2.0f * (o - q);
+        m02 = 2.0f * (o + q);
+        m21 = 2.0f * (n + p);
+        m12 = 2.0f * (n - p);
     }
 
     @Override
@@ -122,15 +126,15 @@ public class OpenMatrix4f implements IMatrix4f {
 
     @Override
     public void multiply(IMatrix4f other) {
-        multiply(of(other), this, this);
+        multiply(FastLocal.from(other), this, this);
     }
 
     public void multiplyFront(IMatrix4f other) {
-        multiply(this, of(other), this);
+        multiply(this, FastLocal.from(other), this);
     }
 
     public void multiplyFront(IQuaternionf quaternion) {
-        multiplyFront(new OpenMatrix4f(quaternion));
+        multiplyFront(FastLocal.from(quaternion));
     }
 
     public void multiply(float f) {
@@ -398,21 +402,22 @@ public class OpenMatrix4f implements IMatrix4f {
         if (this == o) return true;
         if (!(o instanceof OpenMatrix4f that)) return false;
         if (Float.compare(that.m00, m00) != 0) return false;
+        if (Float.compare(that.m11, m11) != 0) return false;
+        if (Float.compare(that.m22, m22) != 0) return false;
+        if (Float.compare(that.m33, m33) != 0) return false;
+        if (Float.compare(that.m30, m30) != 0) return false;
+        if (Float.compare(that.m31, m31) != 0) return false;
+        if (Float.compare(that.m32, m32) != 0) return false;
         if (Float.compare(that.m01, m01) != 0) return false;
         if (Float.compare(that.m02, m02) != 0) return false;
         if (Float.compare(that.m03, m03) != 0) return false;
         if (Float.compare(that.m10, m10) != 0) return false;
-        if (Float.compare(that.m11, m11) != 0) return false;
         if (Float.compare(that.m12, m12) != 0) return false;
         if (Float.compare(that.m13, m13) != 0) return false;
         if (Float.compare(that.m20, m20) != 0) return false;
         if (Float.compare(that.m21, m21) != 0) return false;
-        if (Float.compare(that.m22, m22) != 0) return false;
         if (Float.compare(that.m23, m23) != 0) return false;
-        if (Float.compare(that.m30, m30) != 0) return false;
-        if (Float.compare(that.m31, m31) != 0) return false;
-        if (Float.compare(that.m32, m32) != 0) return false;
-        return Float.compare(that.m33, m33) == 0;
+        return true;
     }
 
     @Override
@@ -522,5 +527,29 @@ public class OpenMatrix4f implements IMatrix4f {
         ret.m31 = m31;
         ret.m32 = m32;
         ret.m33 = m33;
+    }
+
+    private static class FastLocal extends OpenMatrix4f {
+
+        private static final ThreadLocal<FastLocal> LOCALS = ThreadLocal.withInitial(FastLocal::new);
+
+        private final FloatBuffer buffer = ObjectUtils.createFloatBuffer(16);
+
+        private static OpenMatrix4f from(IMatrix4f value) {
+            if (value instanceof OpenMatrix4f matrix) {
+                return matrix;
+            }
+            var local = LOCALS.get();
+            value.store(local.buffer);
+            local.load(local.buffer);
+            return local;
+        }
+
+        private static OpenMatrix4f from(IQuaternionf value) {
+            var local = LOCALS.get();
+            local.setIdentity();
+            local.set(value);
+            return local;
+        }
     }
 }

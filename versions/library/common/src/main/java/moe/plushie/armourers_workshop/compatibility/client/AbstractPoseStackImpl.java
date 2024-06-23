@@ -22,6 +22,8 @@ public abstract class AbstractPoseStackImpl {
     private static final Matrix3f CONVERTER_MAT3 = new Matrix3f();
     private static final Matrix4f CONVERTER_MAT4 = new Matrix4f();
 
+    private static final Quaternionf CONVERTER_QUAT = new Quaternionf();
+
     private static final FloatBuffer BUFFER3x3 = ObjectUtils.createFloatBuffer(9);
     private static final FloatBuffer BUFFER4x4 = ObjectUtils.createFloatBuffer(16);
 
@@ -54,6 +56,11 @@ public abstract class AbstractPoseStackImpl {
     }
 
     public static Quaternionf convertQuaternion(IQuaternionf q) {
+        CONVERTER_QUAT.set(q.x(), q.y(), q.z(), q.w());
+        return CONVERTER_QUAT;
+    }
+
+    public static Quaternionf copyQuaternion(IQuaternionf q) {
         return new Quaternionf(q.x(), q.y(), q.z(), q.w());
     }
 
@@ -82,7 +89,7 @@ public abstract class AbstractPoseStackImpl {
 
         @Override
         public void rotate(IQuaternionf q) {
-            mat.rotate(new Quaternionf(q.x(), q.y(), q.z(), q.w()));
+            mat.rotate(convertQuaternion(q));
         }
 
         @Override
@@ -161,7 +168,7 @@ public abstract class AbstractPoseStackImpl {
 
         @Override
         public void rotate(IQuaternionf q) {
-            mat.rotate(new Quaternionf(q.x(), q.y(), q.z(), q.w()));
+            mat.rotate(convertQuaternion(q));
         }
 
         @Override

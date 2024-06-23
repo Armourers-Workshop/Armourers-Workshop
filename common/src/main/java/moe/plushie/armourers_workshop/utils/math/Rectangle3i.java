@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.utils.math;
 
-import com.apple.library.coregraphics.CGRect;
 import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.api.math.IRectangle3f;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
+import moe.plushie.armourers_workshop.utils.MathUtils;
 
 import java.util.Iterator;
 import java.util.List;
@@ -35,7 +35,7 @@ public class Rectangle3i implements IRectangle3i {
     }
 
     public Rectangle3i(IRectangle3f rect) {
-        this((int) rect.getX(), (int) rect.getY(), (int) rect.getZ(), (int) rect.getWidth(), (int) rect.getHeight(), (int) rect.getDepth());
+        this(MathUtils.floor(rect.getX()), MathUtils.floor(rect.getY()), MathUtils.floor(rect.getZ()), MathUtils.floor(rect.getWidth()), MathUtils.floor(rect.getHeight()), MathUtils.floor(rect.getDepth()));
     }
 
 //    public Rectangle3i(AABB box) {

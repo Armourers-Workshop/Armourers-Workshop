@@ -272,27 +272,27 @@ public class AdvancedCameraPanel extends UIView {
             this.box = part.getRenderShape().aabb();
         }
 
-        public void raycast(OpenRay ray, Consumer<Result> recorder) {
-            var ray1 = ray.transforming(invMat);
-            if (!box.intersects(ray1)) {
-                return;
-            }
-            Result[] result = {null};
-            part.getQuads().forEach(ray1, face -> {
-                // TODO: Support Transform @SAGESSE
-                //var transform = face.getTransform();
-                var shape = face.getShape();
-                var distance = ray1.origin.distanceToSquared(shape.getMinX(), shape.getMinY(), shape.getMinZ());
-                if (result[0] == null) {
-                    result[0] = new Result(part, distance);
-                } else {
-                    result[0].distance = Math.min(result[0].distance, distance);
-                }
-            });
-            if (result[0] != null) {
-                recorder.accept(result[0]);
-            }
-        }
+//        public void raycast(OpenRay ray, Consumer<Result> recorder) {
+//            var ray1 = ray.transforming(invMat);
+//            if (!box.intersects(ray1)) {
+//                return;
+//            }
+//            Result[] result = {null};
+//            part.getQuads().forEach(ray1, face -> {
+//                // TODO: Support Transform @SAGESSE
+//                //var transform = face.getTransform();
+//                var shape = face.getShape();
+//                var distance = ray1.origin.distanceToSquared(shape.getMinX(), shape.getMinY(), shape.getMinZ());
+//                if (result[0] == null) {
+//                    result[0] = new Result(part, distance);
+//                } else {
+//                    result[0].distance = Math.min(result[0].distance, distance);
+//                }
+//            });
+//            if (result[0] != null) {
+//                recorder.accept(result[0]);
+//            }
+//        }
     }
 }
 

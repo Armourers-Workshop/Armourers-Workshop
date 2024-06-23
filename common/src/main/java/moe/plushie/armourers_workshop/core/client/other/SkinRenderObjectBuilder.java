@@ -14,7 +14,8 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.core.client.texture.TextureManager;
-import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
+import moe.plushie.armourers_workshop.core.data.cache.ObjectPool;
+import moe.plushie.armourers_workshop.core.data.cache.PrimaryKey;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
@@ -41,7 +42,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
     private static final ExecutorService workThread = ThreadUtils.newFixedThreadPool(1, "AW-SKIN-VB");
     private static final Cache<Object, CachedTask> cachingTasks = CacheBuilder.newBuilder()
-            .expireAfterAccess(3, TimeUnit.SECONDS)
+            .expireAfterAccess(30, TimeUnit.SECONDS)
             .removalListener(CachedTask::release)
             .build();
 
@@ -69,7 +70,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         var cachedTask = compile(part, bakedSkin, scheme, context.getOverlay());
         if (cachedTask != null) {
             // we need compile the skin part, but does not render now.
-            if (!shouldRender) {
+            if (!shouldRender || cachedTask.isEmpty()) {
                 return 0;
             }
             return cachedRenderPipeline.draw(cachedTask, context);
@@ -119,10 +120,10 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
     @Nullable
     private CachedTask compile(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, int overlay) {
-        var key = SkinCache.borrowKey(bakedSkin.getId(), part.getId(), part.requirements(scheme), overlay);
+        var key = PrimaryKey.of(bakedSkin.getId(), part.getId(), part.requirements(scheme), overlay);
         var cachedTask = cachingTasks.getIfPresent(key);
         if (cachedTask != null) {
-            SkinCache.returnKey(key);
+            key.release();
             if (cachedTask.isCompiled) {
                 return cachedTask;
             }
@@ -168,7 +169,12 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
             part.getQuads().forEach((renderType, quads) -> {
                 var builder = new AbstractBufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
                 builder.begin(renderType);
-                quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, overlay, poseStack1, builder));
+                quads.forEach((transform, faces) -> {
+                    poseStack1.pushPose();
+                    transform.apply(poseStack1);
+                    faces.forEach(face -> face.render(part, scheme, 0xf000f0, overlay, poseStack1, builder));
+                    poseStack1.popPose();
+                });
                 var renderedBuffer = builder.end();
                 var compiledTask = new CompiledTask(renderType, renderedBuffer, part.getRenderPolygonOffset(), part.getType());
                 usingTypes.add(renderType);
@@ -186,18 +192,15 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
     private int drawWithoutVBO(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, int overlay, SkinRenderContext context) {
         var buffers = context.getBuffers();
         var poseStack1 = context.pose();
-//        CachedTask task = new CachedTask(part, scheme, overlay);
-//        ArrayList<CompiledTask> mergedTasks = new ArrayList<>();
         part.getQuads().forEach((renderType, quads) -> {
-//            auto builder = BufferBuilder.createBuilderBuffer(quads.size() * 8 * renderType.format().getVertexSize());
-//            builder.begin(renderType);
-            quads.forEach(quad -> quad.render(part, scheme, 0xf000f0, overlay, poseStack1, buffers.getBuffer(renderType)));
-//            IRenderedBuffer renderedBuffer = builder.end();
-//            CompiledTask compiledTask = new CompiledTask(renderType, renderedBuffer, part.getRenderPolygonOffset(), part.getType());
-//            mergedTasks.add(compiledTask);
-//            buildingTasks.add(compiledTask);
+            var builder = buffers.getBuffer(renderType);
+            quads.forEach((transform, faces) -> {
+                poseStack1.pushPose();
+                transform.apply(poseStack1);
+                faces.forEach(face -> face.render(part, scheme, 0xf000f0, overlay, poseStack1, builder));
+                poseStack1.popPose();
+            });
         });
-//        task.mergedTasks = mergedTasks;
         return 1;
     }
 
@@ -292,10 +295,15 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
             mergedTasks = null;
             isCompiled = false;
         }
+
+        boolean isEmpty() {
+            return mergedTasks == null || mergedTasks.isEmpty();
+        }
     }
 
     static class CompiledTask {
 
+        final boolean isGrowing;
         final float polygonOffset;
         final ISkinPartType partType;
         final RenderType renderType;
@@ -305,65 +313,105 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         SkinRenderObject vertexBuffer;
         VertexFormat format;
 
+
         CompiledTask(RenderType renderType, IRenderedBuffer bufferBuilder, float polygonOffset, ISkinPartType partType) {
             this.partType = partType;
             this.renderType = renderType;
             this.bufferBuilder = bufferBuilder;
             this.polygonOffset = polygonOffset;
+            this.isGrowing = SkinRenderType.isGrowing(renderType);
         }
     }
 
     static class CachedRenderPipeline {
 
-        protected final ArrayList<CompiledPass> tasks = new ArrayList<>();
+        protected final ObjectPool<CompiledPassGroup> passGroupPool = new ObjectPool<>(CompiledPassGroup::new);
+        protected final ArrayList<CompiledPassGroup> passGroups = new ArrayList<>();
 
         int draw(CachedTask task, SkinRenderContext context) {
+            var pass = passGroupPool.get();
             var lightmap = context.getLightmap();
             var animationTicks = context.getAnimationTicks();
             var renderPriority = context.getReferenced().getRenderPriority();
             var poseStack = context.pose();
             var modelViewStack = RenderSystem.getExtendedModelViewStack();
-            var finalPostStack = new OpenPoseStack();
-            var lastPose = finalPostStack.last().pose();
-            var lastNormal = finalPostStack.last().normal();
+            var finalPoseStack = pass.poseStack;
+            var lastPose = finalPoseStack.last().pose();
+            var lastNormal = finalPoseStack.last().normal();
             // https://web.archive.org/web/20240125142900/http://www.songho.ca/opengl/gl_normaltransform.html
-            //finalPostStack.last().setProperties(poseStack.last().properties());
-            lastPose.multiply(modelViewStack.last().pose());
+            //finalPoseStack.last().setProperties(poseStack.last().properties());
+            lastPose.set(modelViewStack.last().pose());
             lastPose.multiply(poseStack.last().pose());
-            //lastNormal.multiply(modelViewStack.last().normal());
-            lastNormal.multiply(poseStack.last().normal());
+            //lastNormal.set(modelViewStack.last().normal());
+            lastNormal.set(poseStack.last().normal());
             lastNormal.invert();
-            task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, finalPostStack, lightmap, animationTicks, renderPriority)));
+            passGroups.add(pass.fill(task, lightmap, animationTicks, renderPriority));
             return task.totalTask;
         }
 
         void commit(Consumer<ShaderVertexObject> consumer) {
-            if (!tasks.isEmpty()) {
-                tasks.forEach(consumer);
-                tasks.clear();
+            for (var pass : passGroups) {
+                pass.forEach(consumer);
+                passGroupPool.add(pass);
             }
+            passGroups.clear();
         }
     }
 
-    static class CompiledPass extends ShaderVertexObject {
+    static class CompiledPassGroup {
+
+        private final OpenPoseStack poseStack = new OpenPoseStack();
+        private final ArrayList<CompiledPass> pendingQueue = new ArrayList<>();
+
+        private int usedCount = 0;
+        private int totalCount = 0;
+
+        public void forEach(Consumer<ShaderVertexObject> consumer) {
+            for (int i = 0; i < usedCount; ++i) {
+                var pass = pendingQueue.get(i);
+                consumer.accept(pass);
+            }
+        }
+
+        public CompiledPassGroup fill(CachedTask task, int lightmap, float animationTicks, float renderPriority) {
+            usedCount = task.mergedTasks.size();
+            for (int i = 0; i < usedCount; ++i) {
+                var mergedTask = task.mergedTasks.get(i);
+                if (i < totalCount) {
+                    var pass = pendingQueue.get(i);
+                    pass.fill(mergedTask, poseStack, lightmap, animationTicks, renderPriority);
+                } else {
+                    var pass = new CompiledPass();
+                    pass.fill(mergedTask, poseStack, lightmap, animationTicks, renderPriority);
+                    pendingQueue.add(pass);
+                    totalCount += 1;
+                }
+            }
+            return this;
+        }
+    }
+
+    static class CompiledPass implements ShaderVertexObject {
 
         int lightmap;
         float animationTicks;
 
         float additionalPolygonOffset;
-        boolean isGrowing;
 
         OpenPoseStack poseStack;
         CompiledTask compiledTask;
 
-        CompiledPass(CompiledTask compiledTask, OpenPoseStack poseStack, int lightmap, float animationTicks, float renderPriority) {
-            super();
+        public CompiledPass fill(CompiledTask compiledTask, OpenPoseStack poseStack, int lightmap, float animationTicks, float renderPriority) {
             this.compiledTask = compiledTask;
             this.poseStack = poseStack;
             this.lightmap = lightmap;
             this.animationTicks = animationTicks;
-            this.isGrowing = SkinRenderType.isGrowing(compiledTask.renderType);
             this.additionalPolygonOffset = renderPriority;
+            return this;
+        }
+
+        @Override
+        public void release() {
         }
 
         @Override
@@ -411,7 +459,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
         @Override
         public boolean isGrowing() {
-            return isGrowing;
+            return compiledTask.isGrowing;
         }
     }
 }

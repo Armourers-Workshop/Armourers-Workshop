@@ -107,7 +107,7 @@ public class BakedSkinAnimation {
         }
         for (var part : linkedParts) {
             var transform = new AnimationTransform(part);
-            part.getTransform().addTransform(transform);
+            part.getTransform().addChild(transform);
             namedAnimators.values().forEach(it -> it.add(transform));
             transforms.add(transform);
         }

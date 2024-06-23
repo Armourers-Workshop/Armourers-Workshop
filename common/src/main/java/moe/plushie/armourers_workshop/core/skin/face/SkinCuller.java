@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.skin.face;
 
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
-import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCube;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;

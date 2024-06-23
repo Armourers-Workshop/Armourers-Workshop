@@ -27,6 +27,7 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchAnimation;
 import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchAnimator;
+import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import org.apache.commons.lang3.tuple.Pair;
@@ -131,7 +132,9 @@ public class BedrockModelExporter {
         if (isKeepItemTransforms()) {
             settings.setItemTransforms(itemTransforms);
         }
-        builder.animations(exportSkinAnimations());
+        if (true) {
+            builder.animations(exportSkinAnimations());
+        }
         builder.version(SkinSerializer.Versions.V20);
         return builder.build();
     }
@@ -241,34 +244,40 @@ public class BedrockModelExporter {
 
     protected Map<String, List<SkinAnimationValue>> exportSkinAnimationValues(List<BlockBenchAnimator> animators) {
         var results = new LinkedHashMap<String, List<SkinAnimationValue>>();
-        animators.forEach(animator -> {
-            var values = results.computeIfAbsent(animator.getName(), k -> new ArrayList<>());
-            animator.getKeyframes().forEach(keyframe -> {
-                var time = keyframe.getTime();
-                var channel = keyframe.getName();
-                var function = switch (keyframe.getInterpolation()) {
-                    case "bezier" -> {
-                        // TODO: NO IMP @SAGESSE
-                        // bezier_linked
-                        // bezier_left_time
-                        // bezier_left_value
-                        // bezier_right_time
-                        // bezier_right_value
-                        //SkinAnimationFunction.bezier(null);
-                        yield SkinAnimationFunction.LINEAR;
+        for (var animator : animators) {
+            switch (animator.getType()) {
+                case "bone" -> {
+                    var values = results.computeIfAbsent(animator.getName(), k -> new ArrayList<>());
+                    for (var keyframe : animator.getKeyframes()) {
+                        var time = keyframe.getTime();
+                        var channel = keyframe.getName();
+                        var function = switch (keyframe.getInterpolation()) {
+                            case "bezier" -> {
+                                // TODO: NO IMP @SAGESSE
+                                // bezier_linked
+                                // bezier_left_time
+                                // bezier_left_value
+                                // bezier_right_time
+                                // bezier_right_value
+                                //SkinAnimationFunction.bezier(null);
+                                yield SkinAnimationFunction.LINEAR;
+                            }
+                            case "linear" -> SkinAnimationFunction.LINEAR;
+                            case "step" -> SkinAnimationFunction.STEP;
+                            case "smooth" -> SkinAnimationFunction.SMOOTH;
+                            default -> SkinAnimationFunction.LINEAR; // missing
+                        };
+                        var points = new ArrayList<>();
+                        for (var point : keyframe.getPoints()) {
+                            points.add(getOptimizedValue(point));
+                        }
+                        values.add(new SkinAnimationValue(time, channel, function, points));
                     }
-                    case "linear" -> SkinAnimationFunction.LINEAR;
-                    case "step" -> SkinAnimationFunction.STEP;
-                    case "smooth" -> SkinAnimationFunction.SMOOTH;
-                    default -> SkinAnimationFunction.LINEAR; // missing
-                };
-                var points = new ArrayList<>();
-                for (var point : keyframe.getPoints()) {
-                    points.add(getOptimizedValue(point));
                 }
-                values.add(new SkinAnimationValue(time, channel, function, points));
-            });
-        });
+                case "effect" -> ModLog.warn("not supported yet of effect");
+                default -> ModLog.warn("a unknown type of '{}'", animator.getType());
+            }
+        }
         return results;
     }
 
@@ -281,21 +290,25 @@ public class BedrockModelExporter {
     }
 
     private Object getOptimizedValue(Object value) {
-        return switch (value) {
-            case String script -> {
-                try {
-                    var expr = MolangVirtualMachine.get().create(script);
-                    if (expr.isConstant()) {
-                        yield (float) expr.get();
-                    }
-                    yield script;
-                } catch (Exception exception) {
-                    throw new RuntimeException("can't parse \"" + script + "\" in model!", exception);
+        if (value instanceof String script) {
+            try {
+                // for blank script, we assume it to be a 0
+                if (script.isBlank()) {
+                    return 0f;
                 }
+                var expr = MolangVirtualMachine.get().create(script);
+                if (expr.isConstant()) {
+                    return (float) expr.get();
+                }
+                return script;
+            } catch (Exception exception) {
+                throw new RuntimeException("can't parse \"" + script + "\" in model!", exception);
             }
-            case Number number -> number.floatValue();
-            default -> 0;
-        };
+        }
+        if (value instanceof Number number) {
+            return number.floatValue();
+        }
+        return 0f;
     }
 
     public static class Node {

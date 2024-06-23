@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL20;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Stack;
 import java.util.function.Supplier;
 
@@ -33,6 +34,18 @@ public abstract class ShaderUniform {
     }
 
     public void pop() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ShaderUniform that)) return false;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 
     public interface Factory<T> {
@@ -77,21 +90,19 @@ public abstract class ShaderUniform {
 
         private final FloatBuffer buffer = ObjectUtils.createFloatBuffer(16);
         private final Supplier<OpenMatrix4f> value;
-
-        private OpenMatrix4f cachedValue;
+        private final OpenMatrix4f cachedValue = OpenMatrix4f.createScaleMatrix(0, 0, 0);
 
         Matrix4f(String name, int program, int location, Supplier<OpenMatrix4f> value) {
             super(name, program, location);
-            this.cachedValue = null;
             this.value = value;
         }
 
         @Override
         public void apply() {
-            OpenMatrix4f newValue = value.get();
+            var newValue = value.get();
             if (!newValue.equals(cachedValue)) {
-                cachedValue = newValue.copy();
-                cachedValue.store(buffer);
+                newValue.store(buffer);
+                cachedValue.load(buffer);
                 buffer.rewind();
                 GL20.glUniformMatrix4fv(location, false, buffer);
             }
@@ -102,11 +113,10 @@ public abstract class ShaderUniform {
 
         private final FloatBuffer buffer = ObjectUtils.createFloatBuffer(9);
         private final Supplier<OpenMatrix3f> value;
-        private OpenMatrix3f cachedValue;
+        private final OpenMatrix3f cachedValue = OpenMatrix3f.createScaleMatrix(0, 0, 0);
 
         Matrix3f(String name, int program, int location, Supplier<OpenMatrix3f> value) {
             super(name, program, location);
-            this.cachedValue = null;
             this.value = value;
         }
 
@@ -114,8 +124,8 @@ public abstract class ShaderUniform {
         public void apply() {
             var newValue = value.get();
             if (!newValue.equals(cachedValue)) {
-                cachedValue = newValue.copy();
-                cachedValue.store(buffer);
+                newValue.store(buffer);
+                cachedValue.load(buffer);
                 buffer.rewind();
                 GL20.glUniformMatrix3fv(location, false, buffer);
             }

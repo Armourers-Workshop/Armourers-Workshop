@@ -5,16 +5,15 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.lwjgl.opengl.GL20;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class ShaderUniforms {
 
     private static ShaderUniforms INSTANCE = new ShaderUniforms();
 
-    private final HashMap<Integer, HashMap<String, ShaderUniform>> changes = new HashMap<>();
-    private final HashMap<Integer, Collection<ShaderUniform>> uniforms = new HashMap<>();
+    private final HashMap<Integer, State> states = new HashMap<>();
 
     public static ShaderUniforms getInstance() {
         return INSTANCE;
@@ -24,12 +23,25 @@ public class ShaderUniforms {
     }
 
     public static void end() {
-        getInstance().restoreUniforms();
+        var instance = getInstance();
+        var currentProgram = GL20.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+        instance.states.forEach((programId, state) -> {
+            if (!state.isChanged()) {
+                return;
+            }
+            if (currentProgram != programId) {
+                GL20.glUseProgram(programId);
+            }
+            state.reset();
+            if (currentProgram != programId) {
+                GL20.glUseProgram(currentProgram);
+            }
+        });
     }
 
     public static void clear() {
         // Ignore call when changes empty.
-        if (getInstance().uniforms.isEmpty()) {
+        if (getInstance().states.isEmpty()) {
             return;
         }
         INSTANCE = new ShaderUniforms();
@@ -41,41 +53,43 @@ public class ShaderUniforms {
         if (programId == 0) {
             return;
         }
-        var uniforms = this.uniforms.computeIfAbsent(programId, this::getLocations);
-        if (uniforms.isEmpty()) {
-            return;
-        }
-        for (var uniform : uniforms) {
-            saveUniform(uniform);
-            uniform.apply();
+        var state = states.computeIfAbsent(programId, State::new);
+        if (!state.isEmpty()) {
+            state.apply();
         }
     }
 
-    private void saveUniform(ShaderUniform uniform) {
-        changes.computeIfAbsent(uniform.program, key -> new HashMap<>()).computeIfAbsent(uniform.name, key -> {
-            uniform.push();
-            return uniform;
-        });
-    }
+    public static class State {
 
-    private void restoreUniforms() {
-        if (changes.isEmpty()) {
-            return;
+        private final List<ShaderUniform> uniforms;
+        private List<ShaderUniform> changes;
+
+        public State(int program) {
+            var loader = new ShaderUniform.Loader(program);
+            this.uniforms = loader.uniforms;
         }
-        var currentProgram = GL20.glGetInteger(GL20.GL_CURRENT_PROGRAM);
-        changes.forEach((program, uniforms) -> {
-            if (currentProgram != program) {
-                GL20.glUseProgram(program);
+
+        public void apply() {
+            if (changes == null) {
+                uniforms.forEach(ShaderUniform::push);
+                changes = uniforms;
             }
-            uniforms.forEach((name, uniform) -> uniform.pop());
-            if (currentProgram != program) {
-                GL20.glUseProgram(currentProgram);
-            }
-        });
-        changes.clear();
-    }
+            uniforms.forEach(ShaderUniform::apply);
+        }
 
-    private Collection<ShaderUniform> getLocations(int programId) {
-        return new ShaderUniform.Loader(programId).uniforms;
+        public void reset() {
+            if (changes != null) {
+                uniforms.forEach(ShaderUniform::pop);
+                changes = null;
+            }
+        }
+
+        public boolean isEmpty() {
+            return uniforms.isEmpty();
+        }
+
+        public boolean isChanged() {
+            return changes != null;
+        }
     }
 }

@@ -19,7 +19,12 @@ public class ShaderVertexMerger {
     private final HashMap<RenderType, ShaderVertexGroup> pending = new HashMap<>();
 
     public void add(ShaderVertexObject pass) {
-        pending.computeIfAbsent(pass.getType(), this::addAndSort).add(pass);
+        var group = pending.get(pass.getType());
+        if (group == null) {
+            group = addAndSort(pass.getType());
+            pending.put(pass.getType(), group);
+        }
+        group.add(pass);
         maxVertexCount = Math.max(maxVertexCount, pass.getVertexCount());
     }
 

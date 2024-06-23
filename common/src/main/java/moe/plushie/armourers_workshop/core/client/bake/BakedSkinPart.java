@@ -27,10 +27,10 @@ public class BakedSkinPart {
     private int id = 0;
     private float renderPolygonOffset;
 
-    public BakedSkinPart(SkinPart part, BakedCubeQuads quads) {
+    public BakedSkinPart(SkinPart part, SkinPartTransform transform, BakedCubeQuads quads) {
         this.part = part;
         this.quads = quads;
-        this.transform = new SkinPartTransform(part, quads.getTransform());
+        this.transform = transform;
         this.descriptor = quads.getColorInfo();
         this.renderPolygonOffset = getType().getRenderPolygonOffset();
     }
@@ -49,7 +49,7 @@ public class BakedSkinPart {
             return null;
         }
         var needsEntityTexture = false;
-        var requirements = new ArrayList<Object>();
+        var requirements = new ArrayList<>();
         for (var paintType : descriptor.getPaintTypes()) {
             if (paintType.getDyeType() != null) {
                 var resolvedColor = scheme.getResolvedColor(paintType);
@@ -104,7 +104,7 @@ public class BakedSkinPart {
     }
 
     public OpenVoxelShape getRenderShape() {
-        return quads.getRenderShape();
+        return quads.getShape();
     }
 
     public int getFaceTotal() {

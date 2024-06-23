@@ -4,12 +4,10 @@
   "compatibilityLevel": "JAVA_16",
   "client": [
     "FabricScreenMixin",
-    "FabricTrinketsAddonMixin",
-    "FabricEntityClientTickMixin"
+    "FabricTrinketsAddonMixin"
   ],
   "mixins": [
-    "FabricPackResourcesMixin",
-    "FabricEntityServerTickMixin"
+    "FabricPackResourcesMixin"
   ],
   "injectors": {
     "defaultRequire": 1

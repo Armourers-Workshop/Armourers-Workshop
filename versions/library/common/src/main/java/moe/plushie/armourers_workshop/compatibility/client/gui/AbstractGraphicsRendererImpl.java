@@ -2,18 +2,14 @@ package moe.plushie.armourers_workshop.compatibility.client.gui;
 
 import com.apple.library.impl.EntityRendererImpl;
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.joml.Matrix4f;
@@ -28,8 +24,8 @@ public class AbstractGraphicsRendererImpl {
         int ty = (int) origin.y;
         float s = entity.getScale();
         float f = -entity.getBbHeight() / 2.0f / s; // remove internal offset.
-        GuiGraphics guiGraphics = AbstractGraphicsRenderer.of(context);
-        PoseStack poseStack = guiGraphics.pose();
+        var guiGraphics = AbstractGraphicsRenderer.of(context);
+        var poseStack = guiGraphics.pose();
         poseStack.pushPose();
         poseStack.translate(0, 0, 50);
         poseStack.scale(s, s, s);
@@ -42,8 +38,8 @@ public class AbstractGraphicsRendererImpl {
         // custom entity renderer from the InventoryScreen.renderEntityInInventory
         float p = (float) Math.atan((0 - focus.getX()) / 40.0f);
         float q = (float) Math.atan((0 - focus.getY()) / 40.0f);
-        OpenQuaternionf quaternion = Vector3f.ZP.rotationDegrees(180.0f);
-        OpenQuaternionf quaternion2 = Vector3f.XP.rotationDegrees(q * 20.0f);
+        var quaternion = Vector3f.ZP.rotationDegrees(180.0f);
+        var quaternion2 = Vector3f.XP.rotationDegrees(q * 20.0f);
         quaternion.mul(Vector3f.YP.rotationDegrees(180.0f));
         quaternion.mul(quaternion2);
         //float m = livingEntity.yBodyRot;
@@ -56,17 +52,17 @@ public class AbstractGraphicsRendererImpl {
         entity.setXRot(-q * 20.0f);
         //livingEntity.yHeadRot = livingEntity.getYRot();
         //livingEntity.yHeadRotO = livingEntity.getYRot();
-        GuiGraphics guiGraphics = AbstractGraphicsRenderer.of(context);
-        PoseStack poseStack = guiGraphics.pose();
+        var guiGraphics = AbstractGraphicsRenderer.of(context);
+        var poseStack = guiGraphics.pose();
         poseStack.pushPose();
         poseStack.translate(origin.x, origin.y, 50.0);
         poseStack.mulPose(new Matrix4f().scaling(scale, scale, -scale));
         //poseStack.translate(0, center, 0);
         poseStack.mulPose(quaternion);
         Lighting.setupForEntityInInventory();
-        EntityRenderDispatcher renderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+        var renderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         quaternion2.conjugate();
-        renderDispatcher.overrideCameraOrientation(AbstractPoseStack.convertQuaternion(quaternion2));
+        renderDispatcher.overrideCameraOrientation(AbstractPoseStack.copyQuaternion(quaternion2));
         renderDispatcher.setRenderShadow(false);
         RenderSystem.runAsFancy(() -> renderDispatcher.render(entity, 0.0, 0.0, 0.0, 0.0f, 1.0f, poseStack, guiGraphics.bufferSource(), 0xF000F0));
         guiGraphics.flush();

@@ -15,6 +15,7 @@ public class SkinWardrobeOpMenu extends SkinWardrobeMenu {
     @Override
     public boolean stillValid(Player player) {
         // in op mode, we have access wardrobe anytime anywhere.
-        return getEntity() instanceof Entity entity && entity.isAlive();
+        var entity = getEntity();
+        return entity != null && entity.isAlive();
     }
 }

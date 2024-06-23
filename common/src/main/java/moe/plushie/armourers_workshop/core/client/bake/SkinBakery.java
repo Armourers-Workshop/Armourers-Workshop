@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.data.DataTransformer;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
+import moe.plushie.armourers_workshop.core.data.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -17,6 +18,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.SkinUsedCounter;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -169,14 +171,14 @@ public final class SkinBakery implements ISkinLibraryListener {
 
         eachPart(skin.getParts(), null, (parent, part) -> {
             var children = new ArrayList<BakedSkinPart>();
-            BakedCubeQuads.from(part).forEach((partType, quads) -> {
+            BakedCubeQuads.from(part).forEach((partType, partTransform, quads) -> {
                 // when has a different part type, it means the skin part was split.
                 // for ensure data safety, we need create a blank skin part to manage data.
                 var usedPart = part;
                 if (usedPart.getType() != partType) {
                     usedPart = new SkinPart(partType, Collections.emptyList(), new SkinCubesV0(0));
                 }
-                var bakedPart = new BakedSkinPart(usedPart, quads);
+                var bakedPart = new BakedSkinPart(usedPart, new SkinPartTransform(usedPart, partTransform), quads);
                 children.add(bakedPart);
                 bakedParts.add(bakedPart);
                 usedCounter.addFaceTotal(bakedPart.getFaceTotal());
@@ -199,9 +201,9 @@ public final class SkinBakery implements ISkinLibraryListener {
             return mainChildPart;
         });
 
-        BakedCubeQuads.from(skin.getPaintData()).forEach((partType, quads) -> {
+        BakedCubeQuads.from(skin.getPaintData()).forEach((partType, partTransform, quads) -> {
             var part = new SkinPart(partType, Collections.emptyList(), new SkinCubesV0(0));
-            var bakedPart = new BakedSkinPart(part, quads);
+            var bakedPart = new BakedSkinPart(part, new SkinPartTransform(part, partTransform), quads);
             bakedPart.setRenderPolygonOffset(20);
             bakedParts.add(bakedPart);
             rootParts.add(bakedPart);
@@ -209,23 +211,19 @@ public final class SkinBakery implements ISkinLibraryListener {
 
         // we only bake special parts in preview mode.
         if (skin.getSettings().isPreviewMode()) {
-            BakedCubeQuads.from(skin.getPreviewData()).forEach((partType, quads) -> {
+            BakedCubeQuads.from(skin.getPreviewData()).forEach((partType, partTransform, quads) -> {
                 var part = new SkinPart(partType, Collections.emptyList(), new SkinCubesV0(0));
-                var bakedPart = new BakedSkinPart(part, quads);
+                var bakedPart = new BakedSkinPart(part, new SkinPartTransform(part, partTransform), quads);
                 bakedPart.setRenderPolygonOffset(bakedParts.size());
                 bakedParts.add(bakedPart);
                 rootParts.add(bakedPart);
             });
         }
 
-        var partId = 0;
-        var iterator = new ArrayList<>(bakedParts);
-        while (!iterator.isEmpty()) {
-            var bakedPart = iterator.remove(0);
-            bakedPart.setId(partId++);
+        // collect color info from the all child parts.
+        ObjectUtils.search(bakedParts, BakedSkinPart::getChildren, bakedPart -> {
             colorInfo.add(bakedPart.getColorInfo());
-            iterator.addAll(0, bakedPart.getChildren());
-        }
+        });
 
         usedCounter.addPaints(colorInfo.getPaintTypes());
 

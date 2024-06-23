@@ -2,35 +2,33 @@ package moe.plushie.armourers_workshop.core.data.transform;
 
 import moe.plushie.armourers_workshop.api.action.ICanRotation;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
-import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.function.Consumer;
+import java.util.List;
 
 public class SkinPartTransform implements ISkinTransform {
 
-    private final ArrayList<ISkinTransform> transforms = new ArrayList<>();
+    public static final SkinPartTransform IDENTITY = new SkinPartTransform();
+    private final ArrayList<ISkinTransform> children = new ArrayList<>();
+
+    public SkinPartTransform() {
+    }
 
     public SkinPartTransform(SkinPart part, ISkinTransform quadsTransform) {
         if (quadsTransform != null) {
-            transforms.add(quadsTransform);
+            children.add(quadsTransform);
         }
         var wingsTransform = getWingsTransform(part);
         if (wingsTransform != null) {
-            transforms.add(wingsTransform);
+            children.add(wingsTransform);
         }
         var partTransform = part.getTransform();
         if (partTransform != null) {
-            transforms.add(partTransform);
+            children.add(partTransform);
         }
-    }
-
-    public void forEach(Consumer<ISkinTransform> consumer) {
-        transforms.forEach(consumer);
     }
 
     private ISkinTransform getWingsTransform(SkinPart part) {
@@ -47,20 +45,34 @@ public class SkinPartTransform implements ISkinTransform {
 
     @Override
     public void apply(IPoseStack poseStack) {
-        for (var transform : transforms) {
+        for (var transform : children) {
             transform.apply(poseStack);
         }
     }
 
-    public void addTransform(ISkinTransform transform) {
-        transforms.add(transform);
+    public void addChild(ISkinTransform transform) {
+        children.add(transform);
     }
 
-    public void insertTransform(ISkinTransform transform, int index) {
-        transforms.add(index, transform);
+    public void insertChild(ISkinTransform transform, int index) {
+        children.add(index, transform);
     }
 
-    public void removeTransform(ISkinTransform transform) {
-        transforms.remove(transform);
+    public void removeChild(ISkinTransform transform) {
+        children.remove(transform);
+    }
+
+    public List<ISkinTransform> getChildren() {
+        return children;
+    }
+
+    public boolean isIdentity() {
+        for (var transform : children) {
+            if (transform instanceof ITransformf transform1 && transform1.isIdentity()) {
+                continue;
+            }
+            return false;
+        }
+        return true;
     }
 }

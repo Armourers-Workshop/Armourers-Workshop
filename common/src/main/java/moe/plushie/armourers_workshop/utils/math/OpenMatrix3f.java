@@ -10,6 +10,8 @@ import java.nio.FloatBuffer;
 @SuppressWarnings("unused")
 public class OpenMatrix3f implements IMatrix3f {
 
+    private static final OpenMatrix3f IDENTITY = OpenMatrix3f.createScaleMatrix(1, 1, 1);
+
     public float m00, m01, m02;
     public float m10, m11, m12;
     public float m20, m21, m22;
@@ -22,12 +24,63 @@ public class OpenMatrix3f implements IMatrix3f {
     }
 
     public OpenMatrix3f(IMatrix4f matrix) {
-        FloatBuffer buffer = ObjectUtils.createFloatBuffer(16);
+        var buffer = ObjectUtils.createFloatBuffer(16);
         matrix.store(buffer);
         import44(buffer);
     }
 
     public OpenMatrix3f(IQuaternionf quaternion) {
+        set(quaternion);
+    }
+
+    public OpenMatrix3f(FloatBuffer buffer) {
+        if (buffer.remaining() == 9) {
+            load(buffer);
+        } else {
+            import44(buffer);
+        }
+    }
+
+    public static OpenMatrix3f createScaleMatrix(float x, float y, float z) {
+        var matrix = new OpenMatrix3f();
+        matrix.m00 = x;
+        matrix.m11 = y;
+        matrix.m22 = z;
+        return matrix;
+    }
+
+    public static OpenMatrix3f identity() {
+        return IDENTITY;
+    }
+
+    public static OpenMatrix3f of(IMatrix3f mat) {
+        if (mat instanceof OpenMatrix3f that) {
+            return that;
+        }
+        return new OpenMatrix3f(mat);
+    }
+
+    public static OpenMatrix3f of(IMatrix4f mat) {
+        return new OpenMatrix3f(mat);
+    }
+
+
+    @Override
+    public void scale(float x, float y, float z) {
+        multiply(OpenMatrix3f.createScaleMatrix(x, y, z));
+    }
+
+    @Override
+    public void rotate(IQuaternionf other) {
+        multiply(FastLocal.fromRot(other));
+    }
+
+    @Override
+    public void set(IMatrix3f matrix) {
+        set(FastLocal.from(matrix));
+    }
+
+    public void set(IQuaternionf quaternion) {
         float f = quaternion.x();
         float g = quaternion.y();
         float h = quaternion.z();
@@ -52,49 +105,6 @@ public class OpenMatrix3f implements IMatrix3f {
         m12 = 2.0f * (n - p);
     }
 
-    public OpenMatrix3f(FloatBuffer buffer) {
-        if (buffer.remaining() == 9) {
-            load(buffer);
-        } else {
-            import44(buffer);
-        }
-    }
-
-    public static OpenMatrix3f createScaleMatrix(float x, float y, float z) {
-        OpenMatrix3f matrix = new OpenMatrix3f();
-        matrix.m00 = x;
-        matrix.m11 = y;
-        matrix.m22 = z;
-        return matrix;
-    }
-
-    public static OpenMatrix3f of(IMatrix3f mat) {
-        if (mat instanceof OpenMatrix3f) {
-            return (OpenMatrix3f) mat;
-        }
-        return new OpenMatrix3f(mat);
-    }
-
-    public static OpenMatrix3f of(IMatrix4f mat) {
-        return new OpenMatrix3f(mat);
-    }
-
-
-    @Override
-    public void scale(float x, float y, float z) {
-        multiply(OpenMatrix3f.createScaleMatrix(x, y, z));
-    }
-
-    @Override
-    public void rotate(IQuaternionf other) {
-        multiply(new OpenMatrix3f(other));
-    }
-
-    @Override
-    public void set(IMatrix3f matrix) {
-        set(of(matrix));
-    }
-
     @Override
     public void multiply(float[] values) {
         float x = values[0];
@@ -107,15 +117,15 @@ public class OpenMatrix3f implements IMatrix3f {
 
     @Override
     public void multiply(IMatrix3f other) {
-        multiply(of(other), this, this);
+        multiply(FastLocal.from(other), this, this);
     }
 
     public void multiplyFront(IMatrix3f other) {
-        multiply(this, of(other), this);
+        multiply(this, FastLocal.from(other), this);
     }
 
     public void multiplyFront(IQuaternionf other) {
-        multiplyFront(new OpenMatrix3f(other));
+        multiply(this, FastLocal.fromRot(other), this);
     }
 
     public void multiply(float ratio) {
@@ -130,6 +140,7 @@ public class OpenMatrix3f implements IMatrix3f {
         m22 *= ratio;
     }
 
+    @Override
     public void load(FloatBuffer buffer) {
         m00 = buffer.get(bufferIndex(0, 0));
         m01 = buffer.get(bufferIndex(0, 1));
@@ -142,6 +153,7 @@ public class OpenMatrix3f implements IMatrix3f {
         m22 = buffer.get(bufferIndex(2, 2));
     }
 
+    @Override
     public void store(FloatBuffer buffer) {
         buffer.put(bufferIndex(0, 0), m00);
         buffer.put(bufferIndex(0, 1), m01);
@@ -234,7 +246,6 @@ public class OpenMatrix3f implements IMatrix3f {
         return new OpenMatrix3f(this);
     }
 
-
     public float adjugateAndDet() {
         float f = m11 * m22 - m12 * m21;
         float g = -(m10 * m22 - m12 * m20);
@@ -294,14 +305,15 @@ public class OpenMatrix3f implements IMatrix3f {
         if (this == o) return true;
         if (!(o instanceof OpenMatrix3f that)) return false;
         if (Float.compare(that.m00, m00) != 0) return false;
+        if (Float.compare(that.m11, m11) != 0) return false;
+        if (Float.compare(that.m22, m22) != 0) return false;
+        if (Float.compare(that.m20, m20) != 0) return false;
+        if (Float.compare(that.m21, m21) != 0) return false;
         if (Float.compare(that.m01, m01) != 0) return false;
         if (Float.compare(that.m02, m02) != 0) return false;
         if (Float.compare(that.m10, m10) != 0) return false;
-        if (Float.compare(that.m11, m11) != 0) return false;
         if (Float.compare(that.m12, m12) != 0) return false;
-        if (Float.compare(that.m20, m20) != 0) return false;
-        if (Float.compare(that.m21, m21) != 0) return false;
-        return Float.compare(that.m22, m22) == 0;
+        return true;
     }
 
     @Override
@@ -345,5 +357,29 @@ public class OpenMatrix3f implements IMatrix3f {
         ret.m20 = m20;
         ret.m21 = m21;
         ret.m22 = m22;
+    }
+
+    private static class FastLocal extends OpenMatrix3f {
+
+        private static final ThreadLocal<FastLocal> LOCALS = ThreadLocal.withInitial(FastLocal::new);
+
+        private final FloatBuffer buffer = ObjectUtils.createFloatBuffer(9);
+
+        private static OpenMatrix3f from(IMatrix3f value) {
+            if (value instanceof OpenMatrix3f matrix) {
+                return matrix;
+            }
+            var local = LOCALS.get();
+            value.store(local.buffer);
+            local.load(local.buffer);
+            return local;
+        }
+
+        private static OpenMatrix3f fromRot(IQuaternionf value) {
+            var local = LOCALS.get();
+            local.setIdentity();
+            local.set(value);
+            return local;
+        }
     }
 }

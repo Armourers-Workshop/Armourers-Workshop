@@ -67,7 +67,7 @@ public class AbstractGraphicsRendererImpl {
         Lighting.setupForEntityInInventory();
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         quaternion2.conjugate();
-        entityRenderDispatcher.overrideCameraOrientation(AbstractPoseStack.convertQuaternion(quaternion2));
+        entityRenderDispatcher.overrideCameraOrientation(AbstractPoseStack.copyQuaternion(quaternion2));
         entityRenderDispatcher.setRenderShadow(false);
         MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
         RenderSystem.runAsFancy(() -> {

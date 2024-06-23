@@ -44,7 +44,7 @@ public class SkinAnimationValue {
         var time = stream.readFloat();
         var function = SkinAnimationFunction.readFromStream(stream);
         var length = stream.readVarInt();
-        var objects = new ArrayList<Object>();
+        var objects = new ArrayList<>();
         for (int i = 0; i < length && i < 6; i++) {
             var flags = stream.readVarInt();
             if ((flags & 0x40) != 0) {
@@ -61,19 +61,15 @@ public class SkinAnimationValue {
         function.writeToStream(stream);
         stream.writeVarInt(points.size());
         for (var obj : points) {
-            switch (obj) {
-                case String script -> {
-                    stream.writeVarInt(0x40);
-                    stream.writeString(script);
-                }
-                case Number number -> {
-                    stream.writeVarInt(0x00);
-                    stream.writeFloat(number.floatValue());
-                }
-                default -> {
-                    stream.writeVarInt(0x00);
-                    stream.writeFloat(0);
-                }
+            if (obj instanceof String script) {
+                stream.writeVarInt(0x40);
+                stream.writeString(script);
+            } else if (obj instanceof Number number) {
+                stream.writeVarInt(0x00);
+                stream.writeFloat(number.floatValue());
+            } else {
+                stream.writeVarInt(0x00);
+                stream.writeFloat(0);
             }
         }
     }
@@ -127,19 +123,23 @@ public class SkinAnimationValue {
     }
 
     private Object decodeValue(Tag tag) {
-        return switch (tag) {
-            case StringTag stringTag -> stringTag.getAsString();
-            case NumericTag numericTag -> numericTag.getAsFloat();
-            case null, default -> 0f;
-        };
+        if (tag instanceof StringTag stringTag) {
+            return stringTag.getAsString();
+        }
+        if (tag instanceof NumericTag numericTag) {
+            return numericTag.getAsFloat();
+        }
+        return 0f;
     }
 
     private Tag encodeValue(Object value) {
-        return switch (value) {
-            case String script -> StringTag.valueOf(script);
-            case Number number -> FloatTag.valueOf(number.floatValue());
-            default -> FloatTag.valueOf(0f);
-        };
+        if (value instanceof String script) {
+            return StringTag.valueOf(script);
+        }
+        if (value instanceof Number number) {
+            return FloatTag.valueOf(number.floatValue());
+        }
+        return FloatTag.valueOf(0f);
     }
 
     public static class Keys {
