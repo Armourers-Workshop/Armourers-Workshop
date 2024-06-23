@@ -24,14 +24,14 @@ public class BakedSkinPartCombiner {
     }
 
 
-    private static BakedSkinPart clip(BakedSkinPart skinPart) {
+    private static BakedSkinPart clip(BakedSkinPart rootPart) {
         // single node, no needs any clip.
-        if (skinPart.getChildren().isEmpty()) {
-            return skinPart;
+        if (rootPart.getChildren().isEmpty()) {
+            return rootPart;
         }
         var restNodes = new ArrayList<Node>();
         var motionNodes = new ArrayList<Node>();
-        var rootNode = new Node(null, skinPart);
+        var rootNode = new Node(null, rootPart);
         for (var childNode : rootNode.children) {
             childNode.freeze(motionNodes, restNodes);
         }
@@ -41,23 +41,25 @@ public class BakedSkinPartCombiner {
             var resolvedQuads = childNode.part.getQuads();
             pendingQuads.add(Pair.of(resolvedTransform, resolvedQuads));
         }
-        var resolvedParts = new ArrayList<Pair<SkinPartTransform, BakedSkinPart>>();
+        var childrenParts = new ArrayList<Pair<SkinPartTransform, BakedSkinPart>>();
         for (var childNode : motionNodes) {
-            var resolvedTransform = childNode.resolveTransform();
-            var resolvedPart = clip(childNode.part);
-            resolvedParts.add(Pair.of(resolvedTransform, resolvedPart));
+            var transform = childNode.resolveTransform();
+            var part = clip(childNode.part);
+            childrenParts.add(Pair.of(transform, part));
         }
-        var mergedQuads = BakedCubeQuads.merge(skinPart.getQuads(), pendingQuads);
-        var resolvedPart = new BakedSkinPart(skinPart.getPart(), skinPart.getTransform(), mergedQuads);
-        resolvedParts.forEach(pair -> {
+        var mergedQuads = BakedCubeQuads.merge(rootPart.getQuads(), pendingQuads);
+        var resolvedPart = new BakedSkinPart(rootPart.getPart(), rootPart.getTransform(), mergedQuads);
+        for (var pair : childrenParts) {
             var transform = pair.getKey();
-            var part = pair.getValue();
-            if (part.getTransform() == transform) {
-                resolvedPart.addPart(part);
+            var childPart = pair.getValue();
+            if (childPart.getTransform() == transform) {
+                resolvedPart.addPart(childPart);
             } else {
-                resolvedPart.addPart(new BakedSkinPart(part.getPart(), transform, part.getQuads()));
+                var childPart1 = new BakedSkinPart(childPart.getPart(), transform, childPart.getQuads());
+                childPart.getChildren().forEach(childPart1::addPart);
+                resolvedPart.addPart(childPart1);
             }
-        });
+        }
         return resolvedPart;
     }
 

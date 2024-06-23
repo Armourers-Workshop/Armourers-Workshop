@@ -188,12 +188,20 @@ public class BlockBenchModelReader implements SkinPackModelReader {
                 return;
             }
             var rect = face.getRect();
-            if (dir == Direction.UP || dir == Direction.DOWN) {
+            if (dir == Direction.UP) {
                 var fixedRect = rect.copy();
                 fixedRect.setX(rect.getMaxX());
                 fixedRect.setY(rect.getMaxY());
                 fixedRect.setWidth(-rect.getWidth());
                 fixedRect.setHeight(-rect.getHeight());
+                rect = fixedRect;
+            }
+            if (dir == Direction.DOWN) {
+                var fixedRect = rect.copy();
+                fixedRect.setX(rect.getMaxX());
+//                fixedRect.setY(rect.getMaxY());
+                fixedRect.setWidth(-rect.getWidth());
+//                fixedRect.setHeight(-rect.getHeight());
                 rect = fixedRect;
             }
             uv.put(dir, rect);

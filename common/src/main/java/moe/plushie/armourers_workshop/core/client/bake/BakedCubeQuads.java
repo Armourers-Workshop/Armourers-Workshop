@@ -112,6 +112,10 @@ public class BakedCubeQuads {
     }
 
     public static BakedCubeQuads merge(BakedCubeQuads parent, List<Pair<ISkinTransform, BakedCubeQuads>> children) {
+        // when children is empty, we no needs merge action.
+        if (children.isEmpty()) {
+            return parent;
+        }
         // we need to recalculate the render bounds and shape.
         var mergedShape = parent.getShape().copy();
         children.forEach(pair -> {
