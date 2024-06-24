@@ -102,7 +102,6 @@ public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements 
         BlockUtils.performBatch(() -> {
             var importer = new SkinDocumentImporter(document);
             document.reset();
-            document.setAnimations(skin.getAnimations());
             document.setItemTransforms(skin.getItemTransforms());
             importer.execute(identifier, skin);
         });

@@ -267,7 +267,6 @@ public class EntityRenderData implements IAssociatedContainer, SkinBakery.IBakeL
             return;
         }
         var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
-        lastActiveSkins.put(descriptor, bakedSkin);
         if (bakedSkin == null) {
             missingSkins.add(descriptor.getIdentifier());
             return;
@@ -275,10 +274,12 @@ public class EntityRenderData implements IAssociatedContainer, SkinBakery.IBakeL
         ISkinType type = bakedSkin.getType();
         // If held a skin of armor type, nothing happen
         if (type instanceof ISkinArmorType && !isHeld) {
+            lastActiveSkins.put(descriptor, bakedSkin);
             armorSkins.add(new Entry(itemStack, descriptor, bakedSkin, colorScheme, renderPriority, false));
             loadSkinInfo(bakedSkin);
         }
         if (type instanceof ISkinToolType || type == SkinTypes.ITEM) {
+            lastActiveSkins.put(descriptor, bakedSkin);
             itemSkins.add(new Entry(itemStack, descriptor, bakedSkin, colorScheme, renderPriority, isHeld));
             loadSkinInfo(bakedSkin);
         }

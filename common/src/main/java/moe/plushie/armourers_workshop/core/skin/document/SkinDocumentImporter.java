@@ -10,6 +10,8 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.utils.SkinCipher;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+
 public class SkinDocumentImporter {
 
     private final SkinDocument document;
@@ -31,6 +33,7 @@ public class SkinDocumentImporter {
                 copyTo(part, node, identifier, String.valueOf(i));
             }
         }
+        copyAnimations(identifier, skin);
     }
 
     private void copyTo(SkinPart part, SkinDocumentNode node, String identifier, String indexPath) {
@@ -58,6 +61,15 @@ public class SkinDocumentImporter {
         var newValue = new SkinDocumentNode(name);
         newValue.setSkin(descriptor);
         node.add(newValue);
+    }
+
+    private void copyAnimations(String identifier, Skin skin) {
+        var animations = new ArrayList<SkinDocumentAnimation>();
+        var descriptor = new SkinDescriptor(identifier, SkinTypes.ADVANCED);
+        for (var animation : skin.getAnimations()) {
+            animations.add(new SkinDocumentAnimation(animation.getName(), descriptor));
+        }
+        document.setAnimations(animations);
     }
 
     private boolean isEmpty(SkinPart part) {

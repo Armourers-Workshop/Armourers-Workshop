@@ -47,14 +47,23 @@ public class AnimationOutput {
     }
 
     public Vector3f getTranslate() {
-        return translate;
+        if ((flags & 0x10) != 0) {
+            return translate;
+        }
+        return Vector3f.ZERO;
     }
 
     public Vector3f getRotation() {
-        return rotation;
+        if ((flags & 0x20) != 0) {
+            return rotation;
+        }
+        return Vector3f.ZERO;
     }
 
     public Vector3f getScale() {
-        return scale;
+        if ((flags & 0x40) != 0) {
+            return scale;
+        }
+        return Vector3f.ONE;
     }
 }

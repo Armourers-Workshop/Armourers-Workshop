@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
 import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV2;
 import moe.plushie.armourers_workshop.core.skin.exception.SkinSaveException;
 import moe.plushie.armourers_workshop.core.skin.exception.TranslatableException;
@@ -38,6 +39,7 @@ public class SkinDocumentExporter {
         var settings = new SkinSettings();
         var properties = document.getProperties().copy();
         var parts = convertToParts(document.getRoot());
+        var animations = convertToAnimations(document.getAnimations());
 
         if (parts.isEmpty()) {
             throw SkinSaveException.Type.NO_DATA.build("noting");
@@ -78,7 +80,7 @@ public class SkinDocumentExporter {
         builder.settings(settings);
         builder.properties(properties);
         builder.parts(parts);
-        builder.animations(document.getAnimations());
+        builder.animations(animations);
 
         builder.previewData(null);
         builder.blobs(null);
@@ -148,6 +150,20 @@ public class SkinDocumentExporter {
         return allParts;
     }
 
+    private ArrayList<SkinAnimation> convertToAnimations(List<SkinDocumentAnimation> importedAnimations) throws TranslatableException {
+        var animations = new ArrayList<SkinAnimation>();
+        if (importedAnimations == null || importedAnimations.isEmpty()) {
+            return animations;
+        }
+        for (var importedAnimation : importedAnimations) {
+            var animation = loadSkinAnimation(importedAnimation);
+            if (animation != null) {
+                animations.add(animation);
+            }
+        }
+        return animations;
+    }
+
     @Nullable
     private List<SkinPart> loadSkinParts(Skin skin, SkinDocumentNode node) throws TranslatableException {
         if (skin != null) {
@@ -160,15 +176,26 @@ public class SkinDocumentExporter {
     }
 
     @Nullable
-    private Skin loadSkin(SkinDocumentNode node) throws TranslatableException {
-        var descriptor = node.getSkin();
-        if (!descriptor.isEmpty()) {
-            return loadSkin(node, descriptor);
+    private SkinAnimation loadSkinAnimation(SkinDocumentAnimation animationRef) throws TranslatableException {
+        var skin = loadSkin(animationRef.getName(), animationRef.getDescriptor());
+        for (var animation : skin.getAnimations()) {
+            if (animation.getName().equals(animationRef.getName())) {
+                return animation;
+            }
         }
         return null;
     }
 
-    private Skin loadSkin(SkinDocumentNode node, SkinDescriptor descriptor) throws TranslatableException {
+    @Nullable
+    private Skin loadSkin(SkinDocumentNode node) throws TranslatableException {
+        var descriptor = node.getSkin();
+        if (!descriptor.isEmpty()) {
+            return loadSkin(node.getName(), descriptor);
+        }
+        return null;
+    }
+
+    private Skin loadSkin(String source, SkinDescriptor descriptor) throws TranslatableException {
         var identifier = descriptor.getIdentifier();
         var skin = skins.get(identifier);
         if (skin != null) {
@@ -176,7 +203,7 @@ public class SkinDocumentExporter {
         }
         skin = SkinLoader.getInstance().loadSkin(identifier);
         if (skin == null) {
-            throw new TranslatableException("exception.armourers_workshop.load.notFoundNodePart", identifier, node.getName());
+            throw new TranslatableException("exception.armourers_workshop.load.notFoundNodePart", identifier, source);
         }
         skins.put(identifier, skin);
         return skin;

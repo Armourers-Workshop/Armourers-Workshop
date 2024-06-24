@@ -17,13 +17,13 @@ public class SkinDocument {
 
     private static final DataSerializerKey<SkinDocumentType> TYPE_KEY = DataSerializerKey.create("Type", DataTypeCodecs.SKIN_DOCUMENT_TYPE, SkinDocumentTypes.GENERAL_ARMOR_HEAD);
     private static final DataSerializerKey<SkinDocumentNode> NODES_KEY = DataSerializerKey.create("Nodes", DataTypeCodecs.SKIN_DOCUMENT_NODE, null);
-    private static final DataSerializerKey<List<SkinAnimation>> ANIMATIONS_KEY = DataSerializerKey.create("Animations", DataTypeCodecs.SKIN_DOCUMENT_ANIMATION.listOf(), null);
+    private static final DataSerializerKey<List<SkinDocumentAnimation>> ANIMATIONS_KEY = DataSerializerKey.create("Animations", DataTypeCodecs.SKIN_DOCUMENT_ANIMATION.listOf(), null);
     private static final DataSerializerKey<SkinDocumentSettings> SETTINGS_KEY = DataSerializerKey.create("Settings", DataTypeCodecs.SKIN_DOCUMENT_SETTINGS, null, SkinDocumentSettings::new);
     private static final DataSerializerKey<SkinProperties> PROPERTIES_KEY = DataSerializerKey.create("Properties", DataTypeCodecs.SKIN_PROPERTIES, SkinProperties.EMPTY, SkinProperties::new);
 
     private SkinDocumentType type;
     private SkinDocumentNode nodes;
-    private List<SkinAnimation> animations;
+    private List<SkinDocumentAnimation> animations;
 
     private SkinProperties properties = new SkinProperties();
     private SkinDocumentSettings settings = new SkinDocumentSettings();
@@ -108,11 +108,11 @@ public class SkinDocument {
         this.listener.removeListener(listener);
     }
 
-    public void setAnimations(List<SkinAnimation> animations) {
+    public void setAnimations(List<SkinDocumentAnimation> animations) {
         this.animations = animations;
     }
 
-    public List<SkinAnimation> getAnimations() {
+    public List<SkinDocumentAnimation> getAnimations() {
         return animations;
     }
 
