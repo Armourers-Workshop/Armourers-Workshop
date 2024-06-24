@@ -6,7 +6,7 @@ public abstract class PrimaryKey {
 
     protected int hash;
 
-    public abstract void release();
+    public abstract PrimaryKey copy();
 
     @Override
     public int hashCode() {
@@ -41,7 +41,7 @@ public abstract class PrimaryKey {
 
     public static class P1 extends PrimaryKey {
 
-        protected static final ObjectPool<P1> POOL = new ObjectPool<>(P1::new);
+        protected static final AutoreleasePool<P1> POOL = AutoreleasePool.create(P1::new);
         protected Object p1;
 
         public P1 set(int hash, Object p1) {
@@ -58,14 +58,14 @@ public abstract class PrimaryKey {
         }
 
         @Override
-        public void release() {
-            POOL.add(this);
+        public PrimaryKey copy() {
+            return new P1().set(hash, p1);
         }
     }
 
     public static class P2 extends P1 {
 
-        protected static final ObjectPool<P2> POOL = new ObjectPool<>(P2::new);
+        protected static final AutoreleasePool<P2> POOL = AutoreleasePool.create(P2::new);
         protected Object p2;
 
         public P2 set(int hash, Object p1, Object p2) {
@@ -83,14 +83,14 @@ public abstract class PrimaryKey {
         }
 
         @Override
-        public void release() {
-            POOL.add(this);
+        public PrimaryKey copy() {
+            return new P2().set(hash, p1, p2);
         }
     }
 
     public static class P3 extends P2 {
 
-        protected static final ObjectPool<P3> POOL = new ObjectPool<>(P3::new);
+        protected static final AutoreleasePool<P3> POOL = AutoreleasePool.create(P3::new);
         protected Object p3;
 
         public P3 set(int hash, Object p1, Object p2, Object p3) {
@@ -109,14 +109,14 @@ public abstract class PrimaryKey {
         }
 
         @Override
-        public void release() {
-            POOL.add(this);
+        public PrimaryKey copy() {
+            return new P3().set(hash, p1, p2, p3);
         }
     }
 
     public static class P4 extends P3 {
 
-        protected static final ObjectPool<P4> POOL = new ObjectPool<>(P4::new);
+        protected static final AutoreleasePool<P4> POOL = AutoreleasePool.create(P4::new);
         protected Object p4;
 
         public P4 set(int hash, Object p1, Object p2, Object p3, Object p4) {
@@ -136,8 +136,8 @@ public abstract class PrimaryKey {
         }
 
         @Override
-        public void release() {
-            POOL.add(this);
+        public PrimaryKey copy() {
+            return new P4().set(hash, p1, p2, p3, p4);
         }
     }
 }

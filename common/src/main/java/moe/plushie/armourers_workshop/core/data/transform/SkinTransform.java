@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 
 import java.io.IOException;
@@ -97,9 +98,10 @@ public class SkinTransform implements ITransformf, ISkinTransform {
             if (pivot != Vector3f.ZERO) {
                 poseStack.translate(pivot.getX(), pivot.getY(), pivot.getZ());
             }
-            poseStack.rotate(Vector3f.ZP.rotationDegrees(rotation.getZ()));
-            poseStack.rotate(Vector3f.YP.rotationDegrees(rotation.getY()));
-            poseStack.rotate(Vector3f.XP.rotationDegrees(rotation.getX()));
+            poseStack.rotate(OpenQuaternionf.fromZYX(rotation, true));
+            // poseStack.rotate(Vector3f.ZP.rotationDegrees(rotation.getZ()));
+            // poseStack.rotate(Vector3f.YP.rotationDegrees(rotation.getY()));
+            // poseStack.rotate(Vector3f.XP.rotationDegrees(rotation.getX()));
             if (pivot != Vector3f.ZERO) {
                 poseStack.translate(-pivot.getX(), -pivot.getY(), -pivot.getZ());
             }

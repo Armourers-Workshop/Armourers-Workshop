@@ -58,6 +58,13 @@ public class SkinPartTransform implements ISkinTransform {
         children.add(index, transform);
     }
 
+    public void replaceChild(ISkinTransform oldTransform, ISkinTransform newTransform) {
+        int index = children.indexOf(oldTransform);
+        if (index != -1) {
+            children.set(index, newTransform);
+        }
+    }
+
     public void removeChild(ISkinTransform transform) {
         children.remove(transform);
     }

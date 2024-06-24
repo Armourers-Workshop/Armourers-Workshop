@@ -164,7 +164,6 @@ public class BakedSkin implements IBakedSkin {
         var key = PrimaryKey.of(rotation, itemSource.getTransformType());
         var bounds = cachedBounds.get(key);
         if (bounds != null) {
-            key.release();
             return bounds;
         }
         var entity = PlaceholderManager.MANNEQUIN.get();
@@ -183,7 +182,7 @@ public class BakedSkin implements IBakedSkin {
             bounds.setY(center.y() - bounds.getHeight() / 2);
             bounds.setZ(center.z() - bounds.getDepth() / 2);
         }
-        cachedBounds.put(key, bounds);
+        cachedBounds.put(key.copy(), bounds);
         return bounds;
     }
 

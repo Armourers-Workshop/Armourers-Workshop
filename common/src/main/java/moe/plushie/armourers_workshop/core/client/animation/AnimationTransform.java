@@ -1,72 +1,148 @@
 package moe.plushie.armourers_workshop.core.client.animation;
 
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
+import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
+
+import java.util.ArrayList;
+import java.util.function.Function;
 
 public class AnimationTransform implements ISkinTransform {
 
-    private int flags = 0x00;
+    private final Vector3f pivot;
+    private final Vector3f offset;
 
     private final Vector3f translate = new Vector3f();
     private final Vector3f rotation = new Vector3f();
     private final Vector3f scale = new Vector3f(1, 1, 1);
 
-    private IVector3f pivot = Vector3f.ZERO;
+    private final SkinTransform parent;
+    private final ArrayList<AnimationOutput> outputs = new ArrayList<>();
 
-    public AnimationTransform(BakedSkinPart part) {
-        var transform = part.getPart().getTransform();
-        if (transform instanceof ITransformf transform1) {
-            // the rotation animation requires pivot, so we need to inherit pivot from the part transform.
-            pivot = transform1.getPivot();
-        }
+    private int dirty = 0x00;
+    private int changes = 0x00;
+
+    public AnimationTransform(SkinTransform parent) {
+        this.parent = parent;
+        this.pivot = parent.getPivot();
+        this.offset = parent.getOffset();
+        this.clear(0x01, offset.equals(Vector3f.ZERO));
+        this.clear(0x02, pivot.equals(Vector3f.ZERO));
+    }
+
+    public void link(AnimationOutput output) {
+        outputs.add(output);
     }
 
     @Override
     public void apply(IPoseStack poseStack) {
-        // fast check.
-        if (flags == 0x00) {
+        // not any changes, so only call parent.
+        int flags = resolve();
+        if ((flags & 0xF0) == 0) {
+            parent.apply(poseStack);
             return;
         }
+        // the translate have changes?
         if ((flags & 0x10) != 0) {
             poseStack.translate(translate.getX(), translate.getY(), translate.getZ());
         }
+        // the rotation have changes?
         if ((flags & 0x20) != 0) {
-            if (pivot != Vector3f.ZERO) {
+            if ((flags & 0x02) != 0) {
                 poseStack.translate(pivot.getX(), pivot.getY(), pivot.getZ());
             }
-            poseStack.rotate(Vector3f.ZP.rotationDegrees(rotation.getZ()));
-            poseStack.rotate(Vector3f.YP.rotationDegrees(rotation.getY()));
-            poseStack.rotate(Vector3f.XP.rotationDegrees(rotation.getX()));
-            if (pivot != Vector3f.ZERO) {
+            poseStack.rotate(OpenQuaternionf.fromZYX(rotation, true));
+            // poseStack.rotate(Vector3f.ZP.rotationDegrees(rotation.getZ()));
+            // poseStack.rotate(Vector3f.YP.rotationDegrees(rotation.getY()));
+            // poseStack.rotate(Vector3f.XP.rotationDegrees(rotation.getX()));
+            if ((flags & 0x02) != 0) {
                 poseStack.translate(-pivot.getX(), -pivot.getY(), -pivot.getZ());
             }
         }
+        // the scale have changes?
         if ((flags & 0x40) != 0) {
-            poseStack.scale(scale.getX(), scale.getY(), scale.getZ());
+            if ((flags & 0x02) != 0) {
+                poseStack.translate(pivot.getX(), pivot.getY(), pivot.getZ());
+            }
+            if ((flags & 0x04) != 0) {
+                poseStack.multiply(OpenMatrix4f.createScaleMatrix(scale.getX(), scale.getY(), scale.getZ()));
+            } else {
+                poseStack.scale(scale.getX(), scale.getY(), scale.getZ());
+            }
+            if ((flags & 0x02) != 0) {
+                poseStack.translate(-pivot.getX(), -pivot.getY(), -pivot.getZ());
+            }
+        }
+        // the offset have changes?
+        if ((flags & 0x80) != 0) {
+            poseStack.translate(offset.getX(), offset.getY(), offset.getZ());
         }
     }
 
-    public void translate(float x, float y, float z) {
-        translate.set(x, y, z);
-        flags |= 0x10;
+    public void mark(int newFlags) {
+        dirty |= newFlags;
     }
 
-    public void rotate(float x, float y, float z) {
-        rotation.set(x, y, z);
-        flags |= 0x20;
+    private int resolve() {
+        // when dirty flags is clear, not need to recalculate.
+        if (dirty == 0x00) {
+            return changes;
+        }
+        // the translate have changes?
+        if ((dirty & 0x10) != 0) {
+            translate.set(combine(parent.getTranslate(), AnimationOutput::getTranslate, 0));
+            clear(0x10, translate.equals(Vector3f.ZERO));
+        }
+        // the rotation have changes?
+        if ((dirty & 0x20) != 0) {
+            rotation.set(combine(parent.getRotation(), AnimationOutput::getRotation, 1));
+            clear(0x20, rotation.equals(Vector3f.ZERO));
+        }
+        // the scale have changes?
+        if ((dirty & 0x40) != 0) {
+            scale.set(combine(parent.getScale(), AnimationOutput::getScale, 2));
+            clear(0x04, Math.abs(scale.getX()) == Math.abs(scale.getY()) && Math.abs(scale.getY()) == Math.abs(scale.getZ()));
+            clear(0x40, scale.equals(Vector3f.ONE));
+        }
+        dirty = 0x00;
+        return changes;
     }
 
-    public void scale(float x, float y, float z) {
-        scale.set(x, y, z);
-        flags |= 0x40;
+    private Vector3f combine(IVector3f parent, Function<AnimationOutput, IVector3f> getter, int mode) {
+        float x = parent.getX();
+        float y = parent.getY();
+        float z = parent.getZ();
+        for (var output : outputs) {
+            var value = getter.apply(output);
+            // TODO: add override mode support?
+            if (mode == 2) {
+                x *= value.getX();
+                y *= value.getY();
+                z *= value.getZ();
+            } else {
+                x += value.getX();
+                y += value.getY();
+                z += value.getZ();
+            }
+        }
+        if (mode == 1) {
+            x = x % 360;
+            y = y % 360;
+            z = z % 360;
+        }
+        return new Vector3f(x, y, z);
     }
 
-    public void reset() {
-        flags = 0x00;
+    private void clear(int flags, boolean value) {
+        if (value) {
+            changes &= ~flags;
+        } else {
+            changes |= flags;
+        }
     }
 }
 

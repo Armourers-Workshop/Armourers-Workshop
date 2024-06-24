@@ -1,12 +1,15 @@
 package moe.plushie.armourers_workshop.utils.math;
 
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
+import moe.plushie.armourers_workshop.api.math.IVector3f;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 
 @SuppressWarnings("unused")
 public class OpenQuaternionf implements IQuaternionf {
 
     public static final OpenQuaternionf ONE = new OpenQuaternionf();
+
+    private static final float DEGREES_TO_RADIANS = (float) (Math.PI / 180);
 
     public float x;
     public float y;
@@ -35,18 +38,18 @@ public class OpenQuaternionf implements IQuaternionf {
         this.w = MathUtils.cos(f / 2.0f);
     }
 
-    public OpenQuaternionf(float f, float g, float h, boolean bl) {
+    public OpenQuaternionf(float x, float y, float z, boolean bl) {
         if (bl) {
-            f *= (float) Math.PI / 180;
-            g *= (float) Math.PI / 180;
-            h *= (float) Math.PI / 180;
+            x *= (float) Math.PI / 180;
+            y *= (float) Math.PI / 180;
+            z *= (float) Math.PI / 180;
         }
-        float i = sin(0.5f * f);
-        float j = cos(0.5f * f);
-        float k = sin(0.5f * g);
-        float l = cos(0.5f * g);
-        float m = sin(0.5f * h);
-        float n = cos(0.5f * h);
+        float i = sin(0.5f * x);
+        float j = cos(0.5f * x);
+        float k = sin(0.5f * y);
+        float l = cos(0.5f * y);
+        float m = sin(0.5f * z);
+        float n = cos(0.5f * z);
         this.x = i * l * n + j * k * m;
         this.y = j * k * n - i * l * m;
         this.z = i * k * n + j * l * m;
@@ -118,16 +121,45 @@ public class OpenQuaternionf implements IQuaternionf {
 //        quaternion.mul(new OpenQuaternionf(0.0f, 0.0f, (float) Math.sin(h / 2.0f), (float) Math.cos(h / 2.0f)));
 //        return quaternion;
 //    }
-//
-//    public static OpenQuaternionf fromXYZDegrees(Vector3f vector3f) {
-//        return fromXYZ((float) Math.toRadians(vector3f.x()), (float) Math.toRadians(vector3f.y()), (float) Math.toRadians(vector3f.z()));
-//    }
-//
-//    public static OpenQuaternionf fromXYZ(Vector3f vector3f) {
-//        return fromXYZ(vector3f.getX(), vector3f.getY(), vector3f.getZ());
-//    }
-//
-//    public static OpenQuaternionf fromUnitVectors(Vector3f from, Vector3f to) {
+
+    public static OpenQuaternionf fromXYZ(IVector3f value, boolean bl) {
+        float x = value.getX();
+        float y = value.getY();
+        float z = value.getZ();
+        if (bl) {
+            x *= DEGREES_TO_RADIANS;
+            y *= DEGREES_TO_RADIANS;
+            z *= DEGREES_TO_RADIANS;
+        }
+        return fromXYZ(x, y, z);
+    }
+
+    public static OpenQuaternionf fromZYX(IVector3f value, boolean bl) {
+        float x = value.getX();
+        float y = value.getY();
+        float z = value.getZ();
+        if (bl) {
+            x *= DEGREES_TO_RADIANS;
+            y *= DEGREES_TO_RADIANS;
+            z *= DEGREES_TO_RADIANS;
+        }
+        return fromZYX(z, y, x);
+    }
+
+    public static OpenQuaternionf fromYXZ(IVector3f value, boolean bl) {
+        float x = value.getX();
+        float y = value.getY();
+        float z = value.getZ();
+        if (bl) {
+            x *= DEGREES_TO_RADIANS;
+            y *= DEGREES_TO_RADIANS;
+            z *= DEGREES_TO_RADIANS;
+        }
+        return fromYXZ(y, x, z);
+    }
+
+
+    //    public static OpenQuaternionf fromUnitVectors(Vector3f from, Vector3f to) {
 //        // assumes direction vectors vFrom and vTo are normalized
 //        float EPS = 0.000001f;
 //        float x, y, z, r = from.dot(to) + 1;

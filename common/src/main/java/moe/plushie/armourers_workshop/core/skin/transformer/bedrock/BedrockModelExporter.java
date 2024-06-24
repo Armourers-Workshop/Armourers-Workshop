@@ -269,7 +269,10 @@ public class BedrockModelExporter {
                         };
                         var points = new ArrayList<>();
                         for (var point : keyframe.getPoints()) {
-                            points.add(getOptimizedValue(point));
+                            points.add(exportSkinAnimationValue(point));
+                        }
+                        if (channel.equals("position")) {
+                            fixAnimationPosition(points);
                         }
                         values.add(new SkinAnimationValue(time, channel, function, points));
                     }
@@ -281,15 +284,7 @@ public class BedrockModelExporter {
         return results;
     }
 
-    public boolean isKeepItemTransforms() {
-        return keepItemTransforms;
-    }
-
-    public void setKeepItemTransforms(boolean keepItemTransforms) {
-        this.keepItemTransforms = keepItemTransforms;
-    }
-
-    private Object getOptimizedValue(Object value) {
+    private Object exportSkinAnimationValue(Object value) {
         if (value instanceof String script) {
             try {
                 // for blank script, we assume it to be a 0
@@ -309,6 +304,30 @@ public class BedrockModelExporter {
             return number.floatValue();
         }
         return 0f;
+    }
+
+
+    private void fixAnimationPosition(List<Object> values) {
+        int count = values.size();
+        for (int i = 0; i < count; i++) {
+            if (i % 3 == 1) { // y-axis.
+                var value = values[i];
+                if (value instanceof String script) {
+                    value = "-(" + script + ")";
+                } else if (value instanceof Number number) {
+                    value = -number.floatValue();
+                }
+                values[i] = value;
+            }
+        }
+    }
+
+    public boolean isKeepItemTransforms() {
+        return keepItemTransforms;
+    }
+
+    public void setKeepItemTransforms(boolean keepItemTransforms) {
+        this.keepItemTransforms = keepItemTransforms;
     }
 
     public static class Node {

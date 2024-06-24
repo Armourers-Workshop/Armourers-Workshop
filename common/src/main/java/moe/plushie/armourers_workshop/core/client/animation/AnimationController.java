@@ -9,20 +9,20 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.function.Supplier;
 
-public class AnimationTransformer {
+public class AnimationController {
 
     private int channel = 0;
     private boolean requiresVirtualMachine = false;
 
     private final ArrayList<AnimationValue> values = new ArrayList<>();
-    private final ArrayList<AnimationTransform> transforms = new ArrayList<>();
+    private final ArrayList<AnimationOutput> outputs = new ArrayList<>();
 
-    public static AnimationTransformer create(String channel) {
+    public static AnimationController create(String channel) {
         return switch (channel) {
             case "position" -> new Translation();
             case "rotation" -> new Rotation();
             case "scale" -> new Scale();
-            default -> new AnimationTransformer();
+            default -> new AnimationController();
         };
     }
 
@@ -30,8 +30,8 @@ public class AnimationTransformer {
         values.add(new AnimationValue(value));
     }
 
-    public void add(AnimationTransform transform) {
-        transforms.add(transform);
+    public void add(AnimationOutput output) {
+        outputs.add(output);
     }
 
     public void process(AnimationState state, float animationTicks, Entity entity, SkinRenderContext context) {
@@ -62,8 +62,8 @@ public class AnimationTransformer {
         }
 
         // upload animated data into applier.
-        for (var applier : transforms) {
-            upload(applier, tx, ty, tz);
+        for (var output : outputs) {
+            upload(output, tx, ty, tz);
         }
 
         // upload animated data into state.
@@ -102,7 +102,7 @@ public class AnimationTransformer {
         return requiresVirtualMachine;
     }
 
-    protected void upload(AnimationTransform transform, float x, float y, float z) {
+    protected void upload(AnimationOutput output, float x, float y, float z) {
         // nope
     }
 
@@ -148,7 +148,7 @@ public class AnimationTransformer {
 //            var value = frame.getToValue().copy();
 //            return () -> value;
 //        }
-        var value = state.getLastValue(channel).copy();
+        var value = getLastOrDefaultValue(state).copy();
         return () -> value;
     }
 
@@ -164,27 +164,38 @@ public class AnimationTransformer {
         return null;
     }
 
-    public static class Translation extends AnimationTransformer {
+    protected Vector3f getLastOrDefaultValue(AnimationState state) {
+        var lastValue = state.getLastValue(channel);
+        if (lastValue != null) {
+            return lastValue;
+        }
+        if (this instanceof Scale) {
+            return Vector3f.ONE;
+        }
+        return Vector3f.ZERO;
+    }
+
+    public static class Translation extends AnimationController {
 
         @Override
-        protected void upload(AnimationTransform transform, float x, float y, float z) {
-            transform.translate(x, y, z);
+        protected void upload(AnimationOutput output, float x, float y, float z) {
+            output.translate(x, y, z);
         }
     }
 
-    public static class Rotation extends AnimationTransformer {
+    public static class Rotation extends AnimationController {
 
         @Override
-        protected void upload(AnimationTransform transform, float x, float y, float z) {
-            transform.rotate(x, y, z);
+        protected void upload(AnimationOutput output, float x, float y, float z) {
+            output.rotate(x, y, z);
         }
     }
 
-    public static class Scale extends AnimationTransformer {
+    public static class Scale extends AnimationController {
 
         @Override
-        protected void upload(AnimationTransform transform, float x, float y, float z) {
-            transform.scale(x, y, z);
+        protected void upload(AnimationOutput output, float x, float y, float z) {
+            output.scale(x, y, z);
         }
     }
 }

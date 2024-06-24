@@ -23,7 +23,7 @@ public class AnimationState {
         this.loop = animation.getLoop();
         this.frames = new Frame[animation.getChannels()];
         this.lastValues = new Vector3f[animation.getChannels()];
-        this.requiresVirtualMachine = animation.getTransformers().stream().anyMatch(AnimationTransformer::isRequiresVirtualMachine);
+        this.requiresVirtualMachine = animation.getControllers().stream().anyMatch(AnimationController::isRequiresVirtualMachine);
     }
 
     public void setStartTime(float startTime) {
@@ -49,17 +49,16 @@ public class AnimationState {
     }
 
     public void setLastValues(int channel, float x, float y, float z) {
-        var value = getLastValue(channel);
+        var value = lastValues[channel];
+        if (value == null) {
+            value = new Vector3f();
+            lastValues[channel] = value;
+        }
         value.set(x, y, z);
     }
 
     public Vector3f getLastValue(int channel) {
-        var value = lastValues[channel];
-        if (value == null) {
-            value = new Vector3f(0, 0, 0);
-            lastValues[channel] = value;
-        }
-        return value;
+        return lastValues[channel];
     }
 
     public float getPartialTicks(float animationTicks) {

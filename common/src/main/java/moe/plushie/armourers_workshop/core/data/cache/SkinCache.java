@@ -18,27 +18,8 @@ import java.util.function.Function;
 
 public class SkinCache {
 
-    private final static ArrayDeque<Key> POOL = new ArrayDeque<>();
-
     public static SkinCache INSTANCE = new SkinCache();
     public Map<Skin, SkinRenderObjectBuilder> bufferBuilders = new HashMap<>();
-
-    public static Object borrowKey(Object... objects) {
-        var key = POOL.poll();
-        if (key == null) {
-            key = new Key();
-        }
-        key.hash = Objects.hash(objects);
-        key.objects = objects;
-        return key;
-    }
-
-    public static void returnKey(Object object) {
-        if (object instanceof Key key) {
-            key.objects = null;
-            POOL.push(key);
-        }
-    }
 
     public void cache(Skin key, SkinRenderObjectBuilder buffer) {
         bufferBuilders.put(key, buffer);

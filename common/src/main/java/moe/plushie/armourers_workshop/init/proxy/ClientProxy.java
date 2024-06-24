@@ -11,13 +11,12 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationEngine;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.bake.SkinPreloadManager;
-import moe.plushie.armourers_workshop.core.client.texture.TextureManager;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager2;
+import moe.plushie.armourers_workshop.core.client.texture.TextureManager;
 import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
-import moe.plushie.armourers_workshop.core.data.cache.ObjectPool;
-import moe.plushie.armourers_workshop.core.data.cache.ObjectPools;
+import moe.plushie.armourers_workshop.core.data.cache.AutoreleasePool;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -155,13 +154,13 @@ public class ClientProxy {
 
         EventManager.listen(RenderFrameEvent.Pre.class, event -> {
             boolean isPaused = Minecraft.getInstance().isPaused();
-            ObjectPools.begin();
+            AutoreleasePool.begin();
             TickUtils.tick(isPaused);
             SkinPreloadManager.tick(isPaused);
         });
 
         EventManager.listen(RenderFrameEvent.Post.class, event -> {
-            ObjectPools.end();
+            AutoreleasePool.end();
         });
 
         // listen the block highlight events.

@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.core.client.texture.TextureManager;
-import moe.plushie.armourers_workshop.core.data.cache.ObjectPool;
+import moe.plushie.armourers_workshop.core.data.cache.AutoreleasePool;
 import moe.plushie.armourers_workshop.core.data.cache.PrimaryKey;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
@@ -123,7 +123,6 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         var key = PrimaryKey.of(bakedSkin.getId(), part.getId(), part.requirements(scheme), overlay);
         var cachedTask = cachingTasks.getIfPresent(key);
         if (cachedTask != null) {
-            key.release();
             if (cachedTask.isCompiled) {
                 return cachedTask;
             }
@@ -131,7 +130,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
         }
         cachedTask = new CachedTask(part, scheme, overlay);
-        cachingTasks.put(key, cachedTask);
+        cachingTasks.put(key.copy(), cachedTask);
         pushCompileTask(cachedTask);
         return null; // wait compile
     }
@@ -325,11 +324,10 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
     static class CachedRenderPipeline {
 
-        protected final ObjectPool<CompiledPassGroup> passGroupPool = new ObjectPool<>(CompiledPassGroup::new);
         protected final ArrayList<CompiledPassGroup> passGroups = new ArrayList<>();
 
         int draw(CachedTask task, SkinRenderContext context) {
-            var pass = passGroupPool.get();
+            var pass = CompiledPassGroup.POOL.get();
             var lightmap = context.getLightmap();
             var animationTicks = context.getAnimationTicks();
             var renderPriority = context.getReferenced().getRenderPriority();
@@ -352,13 +350,14 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         void commit(Consumer<ShaderVertexObject> consumer) {
             for (var pass : passGroups) {
                 pass.forEach(consumer);
-                passGroupPool.add(pass);
             }
             passGroups.clear();
         }
     }
 
     static class CompiledPassGroup {
+
+        private static final AutoreleasePool<CompiledPassGroup> POOL = AutoreleasePool.create(CompiledPassGroup::new);
 
         private final OpenPoseStack poseStack = new OpenPoseStack();
         private final ArrayList<CompiledPass> pendingQueue = new ArrayList<>();

@@ -1,9 +1,11 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
+import moe.plushie.armourers_workshop.core.client.animation.AnimationController;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationEngine;
+import moe.plushie.armourers_workshop.core.client.animation.AnimationOutput;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationTransform;
-import moe.plushie.armourers_workshop.core.client.animation.AnimationTransformer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
+import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationLoop;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationValue;
@@ -30,8 +32,8 @@ public class BakedSkinAnimation {
 
     private final SkinAnimation animation;
 
-    private final ArrayList<AnimationTransform> transforms = new ArrayList<>();
-    private final ArrayList<AnimationTransformer> transformers = new ArrayList<>();
+    private final ArrayList<AnimationOutput> outputs = new ArrayList<>();
+    private final ArrayList<AnimationController> controllers = new ArrayList<>();
 
     public BakedSkinAnimation(SkinAnimation animation) {
         this.name = animation.getName();
@@ -44,7 +46,7 @@ public class BakedSkinAnimation {
         // we needs reset the applier.
         var state = context.getAnimationState(this);
         if (state == null) {
-            transforms.forEach(AnimationTransform::reset);
+            outputs.forEach(AnimationOutput::reset);
             return;
         }
         // we only bind it when transformer use the molang environment.
@@ -53,7 +55,7 @@ public class BakedSkinAnimation {
             AnimationEngine.upload(entity, partialTicks, state.getStartTime());
         }
         // check/switch frames of animation and write to applier.
-        for (var transformer : transformers) {
+        for (var transformer : controllers) {
             transformer.process(state, partialTicks, entity, context);
         }
     }
@@ -73,7 +75,7 @@ public class BakedSkinAnimation {
     }
 
     public boolean isEmpty() {
-        return transforms.isEmpty();
+        return outputs.isEmpty();
     }
 
     public int getId() {
@@ -81,7 +83,7 @@ public class BakedSkinAnimation {
     }
 
     public int getChannels() {
-        return transformers.size();
+        return controllers.size();
     }
 
     public float getDuration() {
@@ -96,26 +98,43 @@ public class BakedSkinAnimation {
         return loop;
     }
 
-    public List<AnimationTransformer> getTransformers() {
-        return transformers;
+    public List<AnimationController> getControllers() {
+        return controllers;
     }
 
     private void build(List<SkinAnimationValue> linkedValues, List<BakedSkinPart> linkedParts) {
-        var namedAnimators = new LinkedHashMap<String, AnimationTransformer>();
+        var namedControllers = new LinkedHashMap<String, AnimationController>();
         for (var value : linkedValues) {
-            namedAnimators.computeIfAbsent(value.getKey(), AnimationTransformer::create).add(value);
+            namedControllers.computeIfAbsent(value.getKey(), AnimationController::create).add(value);
         }
         for (var part : linkedParts) {
-            var transform = new AnimationTransform(part);
-            part.getTransform().addChild(transform);
-            namedAnimators.values().forEach(it -> it.add(transform));
-            transforms.add(transform);
+            var output = buildStream(part);
+            namedControllers.values().forEach(it -> it.add(output));
+            outputs.add(output);
         }
-        for (var transformer : namedAnimators.values()) {
-            if (transformer.freeze()) {
-                transformer.setChannel(transformers.size());
-                transformers.add(transformer);
+        for (var controller : namedControllers.values()) {
+            if (controller.freeze()) {
+                controller.setChannel(controllers.size());
+                controllers.add(controller);
             }
         }
+    }
+
+    private AnimationOutput buildStream(BakedSkinPart part) {
+        // when animation transform already been created, we just link it directly.
+        for (var transform : part.getTransform().getChildren()) {
+            if (transform instanceof AnimationTransform animatedTransform) {
+                return new AnimationOutput(animatedTransform);
+            }
+        }
+        // if part have a non-standard transform (preview mode),
+        // we wil think this part can't be support animation.
+        if (!(part.getPart().getTransform() instanceof SkinTransform parent)) {
+            return new AnimationOutput(null);
+        }
+        // we will replace the standard transform to animated transform.
+        var animatedTransform = new AnimationTransform(parent);
+        part.getTransform().replaceChild(parent, animatedTransform);
+        return new AnimationOutput(animatedTransform);
     }
 }
