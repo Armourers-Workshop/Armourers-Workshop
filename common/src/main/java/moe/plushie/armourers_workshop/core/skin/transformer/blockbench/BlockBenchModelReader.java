@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModel
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelTexture;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelUV;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockTransform;
-import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
 import moe.plushie.armourers_workshop.utils.math.Size3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.core.Direction;
@@ -171,7 +170,7 @@ public class BlockBenchModelReader implements SkinPackModelReader {
 
     private BedrockModelUV convertToCubeUV(BlockBenchElement element) {
         // box texture
-        if (element.isBoxUV() && !element.isMirrorUV()) {
+        if (element.isBoxUV() && !element.isMirrorUV() && isAlignedSize(element)) {
             var uv = new BlockBenchModelUV(element.getUVOffset());
             element.getFaces().forEach((dir, face) -> {
                 uv.setDefaultTextureId(face.getTextureId());
@@ -199,9 +198,7 @@ public class BlockBenchModelReader implements SkinPackModelReader {
             if (dir == Direction.DOWN) {
                 var fixedRect = rect.copy();
                 fixedRect.setX(rect.getMaxX());
-//                fixedRect.setY(rect.getMaxY());
                 fixedRect.setWidth(-rect.getWidth());
-//                fixedRect.setHeight(-rect.getHeight());
                 rect = fixedRect;
             }
             uv.put(dir, rect);
@@ -217,5 +214,11 @@ public class BlockBenchModelReader implements SkinPackModelReader {
             return pos.scaling(-1, -1, 1);
         }
         return pos;
+    }
+
+    // If the element is not a aligned size, the texture box needs to be rounded down.
+    private boolean isAlignedSize(BlockBenchElement element) {
+        var size = element.getFrom().subtracting(element.getTo());
+        return (size.getX() % 1 == 0) && (size.getY() % 1 == 0) && (size.getZ() % 1 == 0);
     }
 }
