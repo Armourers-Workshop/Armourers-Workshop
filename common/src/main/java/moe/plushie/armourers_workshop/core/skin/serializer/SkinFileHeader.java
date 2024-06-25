@@ -25,7 +25,7 @@ public class SkinFileHeader implements ISkinFileHeader {
     }
 
     public static SkinFileHeader optimized(int version, ISkinType type, ISkinProperties properties) {
-        SkinProperties result = new SkinProperties();
+        var result = new SkinProperties();
         if (properties != null) {
             result.put(SkinProperty.ALL_CUSTOM_NAME, properties.get(SkinProperty.ALL_CUSTOM_NAME));
             result.put(SkinProperty.ALL_AUTHOR_NAME, properties.get(SkinProperty.ALL_AUTHOR_NAME));

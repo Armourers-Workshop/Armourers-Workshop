@@ -26,7 +26,7 @@ public class FabricGuiGraphicsMixin {
         if (tooltips.isEmpty()) {
             return;
         }
-        ItemStack itemStack = RenderTooltipEvents.TOOLTIP_ITEM_STACK;
+        var itemStack = RenderTooltipEvents.TOOLTIP_ITEM_STACK;
         if (itemStack.isEmpty()) {
             return;
         }

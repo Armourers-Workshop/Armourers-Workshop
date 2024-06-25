@@ -11,9 +11,9 @@ import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileHeader;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.ISkinSerializer;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
+import moe.plushie.armourers_workshop.init.ModLog;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -214,7 +214,7 @@ public final class SkinSerializerV12 implements ISkinSerializer {
         }
 
         int size = stream.readByte();
-        ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
+        var parts = new ArrayList<SkinPart>();
         for (int i = 0; i < size; i++) {
             if (fileVersion > 12) {
                 String partHeader = stream.readString();
@@ -239,7 +239,7 @@ public final class SkinSerializerV12 implements ISkinSerializer {
             }
         }
 
-        Skin.Builder builder = new Skin.Builder(skinType);
+        var builder = new Skin.Builder(skinType);
         builder.properties(properties);
         builder.paintData(paintData);
         builder.parts(parts);

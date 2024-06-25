@@ -110,7 +110,7 @@ public class AnimationManager {
 
     private boolean isParallelAnimation(BakedSkinAnimation animation) {
         var name = animation.getName();
-        return name != null && name.matches("^.+\\.parallel\\d+$");
+        return name != null && name.matches("^(.+\\.)?parallel\\d+$");
     }
 
     protected static class Entry {

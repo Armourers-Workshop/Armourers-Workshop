@@ -22,7 +22,6 @@ import java.util.function.Supplier;
 public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends AbstractBlockEntityRenderer<T> {
 
     private final BakedArmature armature = new BakedArmature(Armatures.ANY);
-    private final Supplier<MannequinEntity> placeholder = PlaceholderManager.MANNEQUIN;
 
     public SkinnableBlockRenderer(Context context) {
         super(context);
@@ -45,7 +44,7 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
         var rotations = entity.getRenderRotations(blockState);
 
         var renderPatch = renderData.getRenderPatch();
-        var mannequinEntity = placeholder.get();
+        var mannequinEntity = PlaceholderManager.MANNEQUIN.get();
 
         renderPatch.activate(entity, partialTicks, light, overlay, poseStack, bufferSource);
 

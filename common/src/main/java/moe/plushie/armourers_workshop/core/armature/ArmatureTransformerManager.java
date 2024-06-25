@@ -37,7 +37,7 @@ public abstract class ArmatureTransformerManager {
             var chain = new ArrayList<ArmatureTransformerBuilder>();
             var nextBuilder = builder;
             while (nextBuilder.getParent() != null) {
-                ArmatureTransformerBuilder parent = pendingBuilders.get(nextBuilder.getParent());
+                var parent = pendingBuilders.get(nextBuilder.getParent());
                 if (parent == null) {
                     break;
                 }
@@ -58,7 +58,7 @@ public abstract class ArmatureTransformerManager {
             });
             // ...
             builder.getModels().forEach(model -> {
-                Class<?> clazz = ArmatureSerializers.getClass(model);
+                var clazz = ArmatureSerializers.getClass(model);
                 if (clazz != null) {
                     modelBuilders.computeIfAbsent(clazz, k -> new ArrayList<>()).add(builder);
                 }

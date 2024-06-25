@@ -14,7 +14,6 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
 import moe.plushie.armourers_workshop.utils.math.Vector2f;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Objects;
@@ -54,7 +53,7 @@ public abstract class ChunkColorSection {
     public abstract IPaintColor getColor(int index);
 
     public TextureRef getTexture(Vector2f pos) {
-        TextureList list = getTextureList(pos);
+        var list = getTextureList(pos);
         if (list != null) {
             return list.get(pos, this);
         }
@@ -169,7 +168,7 @@ public abstract class ChunkColorSection {
                 stream.write(buffers);
             }
             if (textureLists != null) {
-                for (TextureList list : textureLists) {
+                for (var list : textureLists) {
                     list.writeToStream(stream);
                 }
             }
@@ -189,7 +188,7 @@ public abstract class ChunkColorSection {
             if (textureLists == null) {
                 return null;
             }
-            for (TextureList list : textureLists) {
+            for (var list : textureLists) {
                 if (list.contains(pos)) {
                     return list;
                 }
@@ -214,7 +213,7 @@ public abstract class ChunkColorSection {
             for (int color : colorLists) {
                 _writeFixedInt(color, usedBytes, stream);
             }
-            for (TextureList list : textureLists.values()) {
+            for (var list : textureLists.values()) {
                 list.writeToStream(stream);
             }
         }
@@ -223,7 +222,7 @@ public abstract class ChunkColorSection {
         public void freeze(int index) {
             float x = 0;
             float y = 0;
-            for (TextureList list : textureLists.values()) {
+            for (var list : textureLists.values()) {
                 list.freeze(x, y, textureLists::get);
                 x += list.rect.getWidth() * 2;
             }
@@ -243,7 +242,7 @@ public abstract class ChunkColorSection {
                 value |= 0xff000000;
             }
             return indexes.computeIfAbsent(value, k -> {
-                ColorRef ref = new ColorRef(this, colorLists.size());
+                var ref = new ColorRef(this, colorLists.size());
                 colorLists.add(k);
                 return ref;
             });
@@ -363,6 +362,7 @@ public abstract class ChunkColorSection {
 
     public static class TextureList {
 
+        protected TextureList proxy;
         private Rectangle2f rect = Rectangle2f.ZERO;
         private ITextureProvider provider;
         private boolean isResolved = false;
@@ -381,6 +381,9 @@ public abstract class ChunkColorSection {
         }
 
         public void readFromStream(IInputStream stream) throws IOException {
+            if (proxy != null) {
+                return; // ignore, when proxied.
+            }
             this.id = stream.readVarInt();
             this.parentId = stream.readVarInt();
             var x = stream.readFloat();
@@ -397,7 +400,10 @@ public abstract class ChunkColorSection {
         }
 
         public void writeToStream(IOutputStream stream) throws IOException {
-            ByteBuffer buffer = provider.getBuffer();
+            if (proxy != null) {
+                return; // ignore, when proxied.
+            }
+            var buffer = provider.getBuffer();
             stream.writeVarInt(id);
             stream.writeVarInt(parentId);
             stream.writeFloat(rect.getX());
@@ -420,6 +426,9 @@ public abstract class ChunkColorSection {
         }
 
         public boolean contains(Vector2f uv) {
+            if (proxy != null) {
+                return proxy.contains(uv);
+            }
             float x0 = rect.getMinX();
             float x1 = uv.getX();
             float x2 = rect.getMaxX();
@@ -427,20 +436,36 @@ public abstract class ChunkColorSection {
         }
 
         public TextureRef get(Vector2f uv, ChunkColorSection section) {
+            if (proxy != null) {
+                return proxy.get(uv, section);
+            }
             return new TextureRef(section, this, new Vector2f(uv.getX() - rect.getX(), uv.getY()));
         }
 
         public TextureRef add(Vector2f uv, ChunkColorSection section) {
-            TextureRef ref = new TextureRef(section, this, uv);
+            if (proxy != null) {
+                return proxy.add(uv, section);
+            }
+            var ref = new TextureRef(section, this, uv);
             uvs.add(ref);
             return ref;
         }
 
         public Rectangle2f getRect() {
+            if (proxy != null) {
+                return proxy.getRect();
+            }
             return rect;
         }
 
+        public boolean isProxy() {
+            return proxy != null;
+        }
+
         public boolean isResolved() {
+            if (proxy != null) {
+                return proxy.isResolved();
+            }
             return isResolved;
         }
     }

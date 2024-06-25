@@ -113,8 +113,8 @@ public class Armatures {
 
         private Armature build(String name) {
             jointParents.forEach((child, parentName) -> child.setParent(namedJoints.get(parentName)));
-            Armature armature = new Armature(namedJoints, jointTransforms, linkedJoints, wildcardJoint, jointShapes);
-            IResourceLocation registryName = ModConstants.key(name);
+            var armature = new Armature(namedJoints, jointTransforms, linkedJoints, wildcardJoint, jointShapes);
+            var registryName = ModConstants.key(name);
             ModLog.debug("Registering Armature '{}'", registryName);
             NAMED_ARMATURES.put(registryName, armature);
             skinTypes.forEach(it -> LINKED_ARMATURES.put(it, armature));

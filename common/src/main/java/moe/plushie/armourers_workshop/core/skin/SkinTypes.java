@@ -11,7 +11,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 @SuppressWarnings({"unused", "SameParameterValue"})
 public final class SkinTypes {
@@ -78,8 +77,8 @@ public final class SkinTypes {
     }
 
     private static ISkinType registerArmor(String name, int id, EquipmentSlot slotType, ISkinType... types) {
-        List<ISkinPartType> partTypes = new ArrayList<>();
-        for (ISkinType type : types) {
+        var partTypes = new ArrayList<ISkinPartType>();
+        for (var type : types) {
             partTypes.addAll(type.getParts());
         }
         return register(name, new SkinType.Armor(name, id, slotType, partTypes));

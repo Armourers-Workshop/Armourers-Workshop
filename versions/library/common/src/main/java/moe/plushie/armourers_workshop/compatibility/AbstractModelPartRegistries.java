@@ -7,9 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
-import net.minecraft.client.model.geom.ModelPart;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Available("[1.18, )")
@@ -46,7 +44,7 @@ public abstract class AbstractModelPartRegistries {
         });
 
         ModelHolder.register(AbstractSkinnableModels.CREEPER, (model, it) -> {
-            ModelPart root = model.root();
+            var root = model.root();
             it.put("head", root.getSafeChild("head"));
             it.put("hair", root.getSafeChild("head"));
         });
@@ -78,10 +76,10 @@ public abstract class AbstractModelPartRegistries {
 
 
         ModelHolder.register(AbstractSkinnableModels.VILLAGER, (model, it) -> {
-            ModelPart root = model.root();
-            ModelPart head = root.getSafeChild("head");
-            ModelPart hat = head.getSafeChild("hat");
-            ModelPart body = root.getSafeChild("body");
+            var root = model.root();
+            var head = root.getSafeChild("head");
+            var hat = head.getSafeChild("hat");
+            var body = root.getSafeChild("body");
             it.put("hat", hat);
             it.put("hat_rim", hat.getSafeChild("hat_rim"));
             it.put("head", head);
@@ -95,9 +93,9 @@ public abstract class AbstractModelPartRegistries {
         });
 
         ModelHolder.register(AbstractSkinnableModels.ILLAGER, (model, it) -> {
-            ModelPart root = model.root();
-            ModelPart head = root.getSafeChild("head");
-            ModelPart hat = head.getSafeChild("hat");
+            var root = model.root();
+            var head = root.getSafeChild("head");
+            var hat = head.getSafeChild("hat");
             it.put("hat", hat);
             it.put("head", head);
             it.put("body", root.getSafeChild("body"));
@@ -109,7 +107,7 @@ public abstract class AbstractModelPartRegistries {
         });
 
         ModelHolder.register(AbstractSkinnableModels.IRON_GOLEM, (model, it) -> {
-            ModelPart root = model.root();
+            var root = model.root();
             it.put("hat", root.getSafeChild("head"));
             it.put("head", root.getSafeChild("head"));
             it.put("body", root.getSafeChild("body"));
@@ -120,7 +118,7 @@ public abstract class AbstractModelPartRegistries {
         });
 
         ModelHolder.register(AbstractSkinnableModels.BOAT, (model, it) -> {
-            List<ModelPart> parts = model.parts();
+            var parts = model.parts();
             it.put("bottom", parts.get(0));
             it.put("back", parts.get(1));
             it.put("front", parts.get(2));
@@ -137,8 +135,8 @@ public abstract class AbstractModelPartRegistries {
 //        });
 
         ModelHolder.registerOptional(AbstractSkinnableModels.ALLAY, (model, it) -> {
-            ModelPart root = model.root();
-            ModelPart body = root.getSafeChild("body");
+            var root = model.root();
+            var body = root.getSafeChild("body");
             it.put("root", root);
             it.put("hat", root.getSafeChild("head"));
             it.put("head", root.getSafeChild("head"));

@@ -72,11 +72,11 @@ public class SkinLoader {
 
     public void setup(SkinServerType type) {
         taskManager.values().forEach(Session::shutdown);
-        LocalDataSession local = new LocalDataSession();
-        DownloadSession download = new DownloadSession();
-        SliceSession slice = new SliceSession();
+        var local = new LocalDataSession();
+        var download = new DownloadSession();
+        var slice = new SliceSession();
         if (type == SkinServerType.CLIENT) {
-            ProxySession proxy = new ProxySession();
+            var proxy = new ProxySession();
             taskManager.put(DataDomain.LOCAL, local);
             taskManager.put(DataDomain.DATABASE, proxy);
             taskManager.put(DataDomain.DATABASE_LINK, proxy);

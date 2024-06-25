@@ -48,8 +48,8 @@ public class ChunkCubeDecoderV1 extends ChunkCubeDecoder {
         int usedBytes = palette.getColorIndexBytes();
         for (int i = 0; i < faceCount; ++i) {
             int face = getByte(calcStride(usedBytes, i));
-            IPaintColor color = palette.readColorFromStream(bytes, readerIndex + calcStride(usedBytes, i) + 1);
-            for (Direction dir : DirectionUtils.valuesFromSet(face)) {
+            var color = palette.readColorFromStream(bytes, readerIndex + calcStride(usedBytes, i) + 1);
+            for (var dir : DirectionUtils.valuesFromSet(face)) {
                 super.setPaintColor(dir, color);
             }
         }

@@ -82,7 +82,7 @@ public class ChunkTransform {
             readZippedBuffer(stream, buffer, IDENTITY_MATRIX_BUFFER);
             return;
         }
-        FloatBuffer buffer = FloatBuffer.allocate(IDENTITY_VECTOR_BUFFER.length);
+        var buffer = FloatBuffer.allocate(IDENTITY_VECTOR_BUFFER.length);
         readZippedBuffer(stream, buffer, IDENTITY_VECTOR_BUFFER);
         translate = readVector(buffer, 0);
         rotation = readVector(buffer, 3);
@@ -102,7 +102,7 @@ public class ChunkTransform {
             return;
         }
         stream.writeByte(0x40);
-        FloatBuffer buffer = FloatBuffer.allocate(IDENTITY_VECTOR_BUFFER.length);
+        var buffer = FloatBuffer.allocate(IDENTITY_VECTOR_BUFFER.length);
         buffer.put(translate.getX()).put(translate.getY()).put(translate.getZ());
         buffer.put(rotation.getX()).put(rotation.getY()).put(rotation.getZ());
         buffer.put(scale.getX()).put(scale.getY()).put(scale.getZ());
@@ -129,8 +129,8 @@ public class ChunkTransform {
             return SkinTransform.IDENTITY;
         }
         if (buffer != null) {
-            OpenMatrix4f pose = new OpenMatrix4f(buffer);
-            OpenMatrix3f normal = new OpenMatrix3f(buffer);
+            var pose = new OpenMatrix4f(buffer);
+            var normal = new OpenMatrix3f(buffer);
             return new FlatTransform(pose, normal);
         }
         return SkinTransform.create(translate, rotation, scale, pivot, offset);

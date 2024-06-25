@@ -1,13 +1,10 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk;
 
-import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.coder.ChunkCubeCoders;
-import moe.plushie.armourers_workshop.core.skin.serializer.v20.coder.ChunkCubeEncoder;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,9 +32,9 @@ public class ChunkCubeData implements ChunkVariable {
         }
         // an optimize to reduce order dependence on HashMap.
         int offset = 0;
-        ArrayList<ChunkCubeSection> sortedSections = new ArrayList<>(sections.values());
+        var sortedSections = new ArrayList<>(sections.values());
         sortedSections.sort(Comparator.comparing(this::_key));
-        for (ChunkCubeSection section : sortedSections) {
+        for (var section : sortedSections) {
             // we can't freeze multiple times.
             if (!section.isResolved()) {
                 section.freeze(offset);
@@ -89,9 +86,8 @@ public class ChunkCubeData implements ChunkVariable {
     public void writeReferenceToStream(SkinCubes cubes, ChunkOutputStream streamIn) throws IOException {
         // for the fast encoder mode,
         // we will reuse the cube data.
-        if (streamIn.getContext().allowsFastEncoder() && cubes instanceof ChunkCubeSlices) {
-            ChunkCubeSlices slices = ObjectUtils.unsafeCast(cubes);
-            Collection<ChunkCubeSelector> selectors = pending.computeIfAbsent(cubes, k -> slices.getSelectors());
+        if (streamIn.getContext().allowsFastEncoder() && cubes instanceof ChunkCubeSlices slices) {
+            var selectors = pending.computeIfAbsent(cubes, k -> slices.getSelectors());
             palette.copyFrom(slices.getPalette());
             streamIn.writeVarInt(selectors.size());
             for (ChunkCubeSelector selector : selectors) {
@@ -101,7 +97,7 @@ public class ChunkCubeData implements ChunkVariable {
             }
             return;
         }
-        Collection<ChunkCubeSelector> selectors = pending.computeIfAbsent(cubes, k -> new ArrayList<>());
+        var selectors = pending.computeIfAbsent(cubes, k -> new ArrayList<>());
         // the cubes maybe will be occurred reused,
         // so we just need encode the cubes at first call.
         if (selectors.isEmpty()) {
@@ -111,7 +107,7 @@ public class ChunkCubeData implements ChunkVariable {
         }
         // write all selector into the stream.
         streamIn.writeVarInt(selectors.size());
-        for (ChunkCubeSelector selector : selectors) {
+        for (var selector : selectors) {
             streamIn.writeVariable(selector);
         }
     }
@@ -121,9 +117,9 @@ public class ChunkCubeData implements ChunkVariable {
         if (cubeTotal == 0) {
             return null;
         }
-        ISkinCubeType cubeType = SkinCubeTypes.byId(stream.readVarInt());
-        int options = stream.readVarInt();
-        ChunkCubeSection.Immutable section = new ChunkCubeSection.Immutable(cubeTotal, options, cubeType, palette);
+        var cubeType = SkinCubeTypes.byId(stream.readVarInt());
+        var options = stream.readVarInt();
+        var section = new ChunkCubeSection.Immutable(cubeTotal, options, cubeType, palette);
         section.readFromStream(stream);
         return section;
     }
@@ -143,10 +139,10 @@ public class ChunkCubeData implements ChunkVariable {
     private void _encodeCubeData(SkinCubes cubes, ChunkContext context) throws IOException {
         int size = cubes.getCubeTotal();
         for (int i = 0; i < size; ++i) {
-            ISkinCube cube = cubes.getCube(i);
-            ISkinCubeType cubeType = cube.getType();
-            ChunkCubeEncoder cubeEncoder = ChunkCubeCoders.createEncoder(cubeType);
-            ChunkCubeSection.Mutable section = _mutableSectionAt(cubeType, cubeEncoder.begin(cube), context);
+            var cube = cubes.getCube(i);
+            var cubeType = cube.getType();
+            var cubeEncoder = ChunkCubeCoders.createEncoder(cubeType);
+            var section = _mutableSectionAt(cubeType, cubeEncoder.begin(cube), context);
             changes.putIfAbsent(section, section.getCubeTotal());
             section.write(cubeEncoder, palette);
         }
@@ -161,7 +157,7 @@ public class ChunkCubeData implements ChunkVariable {
     }
 
     private ChunkCubeSection _sectionAt(int index) {
-        for (ChunkCubeSection section : sections.values()) {
+        for (var section : sections.values()) {
             int startIndex = section.getIndex();
             int endIndex = section.getCubeTotal() + startIndex;
             if (startIndex <= index && index < endIndex) {
@@ -172,8 +168,8 @@ public class ChunkCubeData implements ChunkVariable {
     }
 
     private ChunkCubeSection.Mutable _mutableSectionAt(ISkinCubeType cubeType, int options, ChunkContext context) {
-        Integer key = _key(cubeType, options);
-        ChunkCubeSection section = sections.computeIfAbsent(key, it -> new ChunkCubeSection.Mutable(options, cubeType, context));
+        var key = _key(cubeType, options);
+        var section = sections.computeIfAbsent(key, it -> new ChunkCubeSection.Mutable(options, cubeType, context));
         return (ChunkCubeSection.Mutable) section;
     }
 }

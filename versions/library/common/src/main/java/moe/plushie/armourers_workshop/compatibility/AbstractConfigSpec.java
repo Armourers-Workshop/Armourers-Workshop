@@ -47,7 +47,7 @@ public class AbstractConfigSpec implements IConfigSpec {
 
     @Override
     public Map<String, Object> snapshot() {
-        HashMap<String, Object> fields = new HashMap<>();
+        var fields = new HashMap<String, Object>();
         values.forEach((key, value) -> {
             if (value.getter != null) {
                 fields.put(key, value.getter.get());
@@ -65,7 +65,7 @@ public class AbstractConfigSpec implements IConfigSpec {
         }
         ModLog.debug("apply {} snapshot from server", type);
         snapshot.forEach((key, object) -> {
-            Value<Object> value = values.get(key);
+            var value = values.get(key);
             if (value != null && value.setter != null) {
                 value.setter.accept(object);
             }
@@ -166,7 +166,7 @@ public class AbstractConfigSpec implements IConfigSpec {
 
         @Override
         public void defineCategory(String name, String description, Runnable runnable) {
-            String parent = root;
+            var parent = root;
             comment(description);
             push(name);
             root = root + name + ".";

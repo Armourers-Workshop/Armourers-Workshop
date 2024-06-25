@@ -9,7 +9,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.function.Predicate;
 
 public class ChunkReader {
@@ -30,7 +29,7 @@ public class ChunkReader {
             if (length == 0) {
                 break;
             }
-            EntryBuilder builder = new EntryBuilder(length);
+            var builder = new EntryBuilder(length);
             readHeader(builder);
             if (chunkFilter != null && !chunkFilter.test(builder.name)) {
                 stream.getInputStream().skipBytes(builder.getBodySize());
@@ -50,9 +49,9 @@ public class ChunkReader {
 
     @Nullable
     public <T, C> T read(ChunkSerializer<T, C> serializer, C context) throws IOException {
-        Iterator<Entry> iterator = entries.iterator();
+        var iterator = entries.iterator();
         while (iterator.hasNext()) {
-            Entry entry = iterator.next();
+            var entry = iterator.next();
             if (serializer.canRead(entry.name)) {
                 iterator.remove();
                 return entry.read(serializer, context);
@@ -66,13 +65,13 @@ public class ChunkReader {
     }
 
     public <T, C> Collection<T> readAll(ChunkSerializer<T, C> serializer, C context) throws IOException {
-        ArrayList<T> results = new ArrayList<>();
-        Iterator<Entry> iterator = entries.iterator();
+        var results = new ArrayList<T>();
+        var iterator = entries.iterator();
         while (iterator.hasNext()) {
-            Entry entry = iterator.next();
+            var entry = iterator.next();
             if (serializer.canRead(entry.name)) {
                 iterator.remove();
-                T result = entry.read(serializer, context);
+                var result = entry.read(serializer, context);
                 if (result != null) {
                     results.add(result);
                 }

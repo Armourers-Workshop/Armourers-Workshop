@@ -33,7 +33,7 @@ public class ChunkCubeCoders {
 
     public static ChunkCubeDecoder createDecoder(int startIndex, int endIndex, ChunkCubeSelector selector, ChunkCubeSection.Immutable section) {
         // ..
-        ISkinCubeType cubeType = section.getCubeType();
+        var cubeType = section.getCubeType();
         if (cubeType == SkinCubeTypes.TEXTURE) {
             return new ChunkCubeDecoderV2(startIndex, endIndex, selector, section);
         }
@@ -41,7 +41,7 @@ public class ChunkCubeCoders {
     }
 
     public static ChunkContext createEncodeContext(Skin skin) {
-        ChunkContext context = new ChunkContext(skin.getVersion());
+        var context = new ChunkContext(skin.getVersion());
         // when the skin using multiple data sources, we can't enable fast encoder,
         // because it must to recompile and resort it.
         if (getDataSourceCount(skin.getParts(), new HashSet<>()) > 1) {
@@ -63,8 +63,8 @@ public class ChunkCubeCoders {
     }
 
     private static int getDataSourceCount(List<SkinPart> parts, HashSet<SkinCubes> dataSources) {
-        for (SkinPart part : parts) {
-            SkinCubes cubes = part.getCubeData();
+        for (var part : parts) {
+            var cubes = part.getCubeData();
             if (cubes.getCubeTotal() != 0) {
                 dataSources.add(cubes);
             }

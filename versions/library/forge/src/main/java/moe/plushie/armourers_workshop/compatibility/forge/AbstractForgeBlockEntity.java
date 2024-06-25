@@ -22,7 +22,7 @@ public interface AbstractForgeBlockEntity extends IBlockEntityExtension {
 
     static <T extends BlockEntity> BlockEntityType<T> createType(IBlockEntityType.Serializer<T> supplier, Block... blocks) {
         BlockEntityType<?>[] entityTypes = {null};
-        BlockEntityType<T> entityType = BlockEntityType.Builder.of((blockPos, blockState) -> supplier.create(entityTypes[0], blockPos, blockState), blocks).build(null);
+        var entityType = BlockEntityType.Builder.of((blockPos, blockState) -> supplier.create(entityTypes[0], blockPos, blockState), blocks).build(null);
         entityTypes[0] = entityType;
         return entityType;
     }

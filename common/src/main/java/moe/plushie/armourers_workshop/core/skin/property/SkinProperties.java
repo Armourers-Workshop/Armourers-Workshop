@@ -47,7 +47,7 @@ public class SkinProperties implements ISkinProperties {
 
     @Override
     public <T> T get(ISkinProperty<T> property) {
-        Object value = properties.getOrDefault(property.getKey(), property.getDefaultValue());
+        var value = properties.getOrDefault(property.getKey(), property.getDefaultValue());
         return ObjectUtils.unsafeCast(value);
     }
 

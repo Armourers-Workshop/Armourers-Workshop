@@ -8,7 +8,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class ChunkPreviewData {
 
@@ -19,8 +18,8 @@ public class ChunkPreviewData {
     }
 
     public SkinPreviewData readFromStream(ChunkInputStream stream) throws IOException {
-        ChunkTransform chunkTransform = new ChunkTransform();
-        ArrayList<Pair<ISkinTransform, SkinCubes>> sections = new ArrayList<>();
+        var chunkTransform = new ChunkTransform();
+        var sections = new ArrayList<Pair<ISkinTransform, SkinCubes>>();
         while (true) {
             int count = stream.readVarInt();
             if (count == 0) {
@@ -29,7 +28,7 @@ public class ChunkPreviewData {
             int id = stream.readVarInt();
             chunkTransform.readFromStream(stream);
             for (int i = 0; i < count; ++i) {
-                SkinCubes cubes = chunkCubeData.readReferenceFromStream(stream);
+                var cubes = chunkCubeData.readReferenceFromStream(stream);
                 sections.add(Pair.of(chunkTransform.build(), cubes));
             }
         }
@@ -38,12 +37,12 @@ public class ChunkPreviewData {
 
     public void writeToStream(SkinPreviewData previewData, ChunkOutputStream stream) throws IOException {
         // freeze and combine the transform/cubes data.
-        LinkedHashMap<ChunkTransform, ArrayList<SkinCubes>> sections = new LinkedHashMap<>();
+        var sections = new LinkedHashMap<ChunkTransform, ArrayList<SkinCubes>>();
         previewData.forEach((transform, cubeData) -> {
-            ChunkTransform chunkTransform = ChunkTransform.flat(transform);
+            var chunkTransform = ChunkTransform.flat(transform);
             sections.computeIfAbsent(chunkTransform, k -> new ArrayList<>()).add(cubeData);
         });
-        for (Map.Entry<ChunkTransform, ArrayList<SkinCubes>> section : sections.entrySet()) {
+        for (var section : sections.entrySet()) {
             stream.writeVarInt(section.getValue().size());
             stream.writeVarInt(0);
             section.getKey().writeToStream(stream);

@@ -28,6 +28,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchAnimation;
 import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchAnimator;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.utils.SkinUUID;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import org.apache.commons.lang3.tuple.Pair;
@@ -81,12 +82,12 @@ public class BedrockModelExporter {
     public Skin export(ISkinType skinType) {
         // build the bone child-parent relationships tree.
         allNodes.forEach(it -> {
-            String parentName = it.getKey();
+            var parentName = it.getKey();
             if (parentName == null || parentName.isEmpty() || parentName.equalsIgnoreCase("none")) {
                 rootNode.add(it.getValue());
                 return;
             }
-            Node parent = namedNodes.get(parentName);
+            var parent = namedNodes.get(parentName);
             if (parent == null) {
                 parent = new Node(parentName, null, null);
                 rootNode.add(parent);
@@ -96,11 +97,13 @@ public class BedrockModelExporter {
         });
 
         // start export all skin parts.
-        Mapper mapper = Mapper.of(skinType);
-        ArrayList<SkinPart> rootParts = new ArrayList<>();
-        for (Node child : rootNode.children) {
+        var mapper = Mapper.of(skinType);
+        var rootParts = new ArrayList<SkinPart>();
+        for (var child : rootNode.children) {
             exportSkinPart(child, null, rootParts, mapper);
         }
+
+        var animations = exportSkinAnimations();
 
 //        ArrayList<ISkinPartType> whitelist = new ArrayList<>();
 //        whitelist.add(SkinPartTypes.BIPPED_HEAD);
@@ -116,10 +119,10 @@ public class BedrockModelExporter {
             builder.parts(rootParts);
         } else {
             if (skinType.getParts().size() == 1) {
-                SkinPart.Builder builder1 = new SkinPart.Builder(skinType.getParts().get(0));
+                var builder1 = new SkinPart.Builder(skinType.getParts().get(0));
                 builder1.cubes(new SkinCubesV0(0));
                 //builder1.transform(SkinBasicTransform.createScaleTransform(1, 1, 1));
-                SkinPart rootPart = builder1.build();
+                var rootPart = builder1.build();
                 rootParts.forEach(rootPart::addPart);
                 builder.parts(Collections.singleton(rootPart));
             } else {
@@ -132,9 +135,7 @@ public class BedrockModelExporter {
         if (isKeepItemTransforms()) {
             settings.setItemTransforms(itemTransforms);
         }
-        if (true) {
-            builder.animations(exportSkinAnimations());
-        }
+        builder.animations(animations);
         builder.version(SkinSerializer.Versions.V20);
         return builder.build();
     }
@@ -158,7 +159,7 @@ public class BedrockModelExporter {
         } else {
             rootParts.add(part);
         }
-        for (Node child : node.children) {
+        for (var child : node.children) {
             exportSkinPart(child, part, rootParts, mapper);
         }
     }

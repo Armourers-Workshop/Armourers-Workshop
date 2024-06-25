@@ -218,7 +218,7 @@ public class SkinFileUtils {
     }
 
     public static CompoundTag readNBT(InputStream inputStream) throws IOException {
-        try (DataInputStream datainputstream = new DataInputStream(inputStream)) {
+        try (var datainputstream = new DataInputStream(inputStream)) {
             return NbtIo.read(datainputstream);
         }
     }

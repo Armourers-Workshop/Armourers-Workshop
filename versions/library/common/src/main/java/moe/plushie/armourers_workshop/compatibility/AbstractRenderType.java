@@ -64,7 +64,7 @@ public class AbstractRenderType extends RenderType {
     }
 
     public static IRenderTypeBuilder builder(SkinRenderFormat format) {
-        Supplier<IRenderTypeBuilder> provider = MAPPER.get(format);
+        var provider = MAPPER.get(format);
         if (provider != null) {
             return provider.get();
         }
@@ -72,13 +72,13 @@ public class AbstractRenderType extends RenderType {
     }
 
     private static Builder _builder(VertexFormat format, VertexFormat.Mode mode, ShaderStateShard shader) {
-        Builder builder = new Builder(format, mode);
+        var builder = new Builder(format, mode);
         builder.stateBuilder.setShaderState(shader);
         return builder;
     }
 
     private static <T, U> HashMap<T, U> _make(Consumer<HashMap<T, U>> consumer) {
-        HashMap<T, U> map = new HashMap<>();
+        var map = new HashMap<T, U>();
         consumer.accept(map);
         return map;
     }

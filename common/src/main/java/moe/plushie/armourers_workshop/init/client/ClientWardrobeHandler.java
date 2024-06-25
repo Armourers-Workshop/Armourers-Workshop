@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedFirstPersonArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedItemModel;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.client.other.EntitySlot;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
@@ -298,7 +299,7 @@ public class ClientWardrobeHandler {
         }
     }
 
-    public static int render(Entity entity, BakedArmature bakedArmature, SkinRenderContext context, Supplier<Iterable<EntityRenderData.Entry>> provider) {
+    public static int render(Entity entity, BakedArmature bakedArmature, SkinRenderContext context, Supplier<Iterable<EntitySlot>> provider) {
         int r = 0;
         for (var entry : provider.get()) {
             var bakedSkin = entry.getBakedSkin();

@@ -38,7 +38,7 @@ public interface IInputStream {
     }
 
     default void read(FloatBuffer buffer) throws IOException {
-        DataInputStream stream = getInputStream();
+        var stream = getInputStream();
         int position = buffer.position();
         int limit = buffer.limit();
         for (int index = position; index < limit; ++index) {
@@ -48,11 +48,11 @@ public interface IInputStream {
 
     default ByteBuf readBytes(int limit) throws IOException {
         // we can't directly create a big buffers, it's easy to be hacked.
-        DataInputStream inputStream = getInputStream();
-        ArrayList<byte[]> buffers = new ArrayList<>();
+        var inputStream = getInputStream();
+        var buffers = new ArrayList<byte[]>();
         int remaining = limit;
         while (remaining > 0) {
-            byte[] bytes = new byte[Math.min(remaining, 16384)]; // 16k
+            var bytes = new byte[Math.min(remaining, 16384)]; // 16k
             inputStream.readFully(bytes);
             buffers.add(bytes);
             remaining -= bytes.length;
@@ -103,7 +103,7 @@ public interface IInputStream {
     }
 
     default int readVarInt() throws IOException {
-        DataInputStream inputStream = getInputStream();
+        var inputStream = getInputStream();
         byte b;
         int i = 0;
         int j = 0;
@@ -119,7 +119,7 @@ public interface IInputStream {
     }
 
     default float[] readFloatArray(int count) throws IOException {
-        float[] results = new float[count];
+        var results = new float[count];
         for (int i = 0; i < count; i++) {
             results[i] = readFloat();
         }
@@ -131,7 +131,7 @@ public interface IInputStream {
     }
 
     default Vector3i readVector3i() throws IOException {
-        DataInputStream stream = getInputStream();
+        var stream = getInputStream();
         int x = stream.readInt();
         int y = stream.readInt();
         int z = stream.readInt();
@@ -139,7 +139,7 @@ public interface IInputStream {
     }
 
     default Vector3f readVector3f() throws IOException {
-        DataInputStream stream = getInputStream();
+        var stream = getInputStream();
         float x = stream.readFloat();
         float y = stream.readFloat();
         float z = stream.readFloat();
@@ -147,7 +147,7 @@ public interface IInputStream {
     }
 
     default Rectangle3i readRectangle3i() throws IOException {
-        DataInputStream stream = getInputStream();
+        var stream = getInputStream();
         int x = stream.readInt();
         int y = stream.readInt();
         int z = stream.readInt();
@@ -158,7 +158,7 @@ public interface IInputStream {
     }
 
     default Rectangle3f readRectangle3f() throws IOException {
-        DataInputStream stream = getInputStream();
+        var stream = getInputStream();
         float x = stream.readFloat();
         float y = stream.readFloat();
         float z = stream.readFloat();
@@ -169,7 +169,7 @@ public interface IInputStream {
     }
 
     default SkinTransform readTransformf() throws IOException {
-        SkinTransform transform = new SkinTransform();
+        var transform = new SkinTransform();
         transform.readFromStream(this);
         if (!transform.equals(SkinTransform.IDENTITY)) {
             return transform;
@@ -178,24 +178,24 @@ public interface IInputStream {
     }
 
     default <T extends IRegistryEntry> T readType(Function<String, T> transform) throws IOException {
-        String name = readString();
+        var name = readString();
         return transform.apply(name);
     }
 
     default SkinProperties readSkinProperties() throws IOException {
-        SkinProperties properties = new SkinProperties();
+        var properties = new SkinProperties();
         properties.readFromStream(this);
         return properties;
     }
 
     default TextureAnimation readTextureAnimation() throws IOException {
-        TextureAnimation animation = new TextureAnimation();
+        var animation = new TextureAnimation();
         animation.readFromStream(this);
         return animation;
     }
 
     default TextureProperties readTextureProperties() throws IOException {
-        TextureProperties properties = new TextureProperties();
+        var properties = new TextureProperties();
         properties.readFromStream(this);
         return properties;
     }

@@ -17,7 +17,7 @@ public class ChunkPartReader extends ChunkReader {
     @Override
     protected void prepare() throws IOException {
         super.prepare();
-        for (Entry entry : entries) {
+        for (var entry : entries) {
             mapping.computeIfAbsent(entry.extra, k -> new ArrayList<>()).add(entry);
         }
     }

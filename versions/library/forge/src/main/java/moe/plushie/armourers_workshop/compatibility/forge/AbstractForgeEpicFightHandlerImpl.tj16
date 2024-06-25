@@ -10,7 +10,7 @@ import java.nio.FloatBuffer;
 public class AbstractForgeEpicFightHandlerImpl {
 
     public static void copyTo(Joint joint, OpenMatrix4f[] poses, FloatBuffer buf) {
-        OpenMatrix4f jointMatrix = poses[joint.getId()];
+        var jointMatrix = poses[joint.getId()];
         jointMatrix.store(buf);
         buf.rewind();
     }

@@ -176,10 +176,15 @@ public class SkinDocumentExporter {
     }
 
     @Nullable
-    private SkinAnimation loadSkinAnimation(SkinDocumentAnimation animationRef) throws TranslatableException {
-        var skin = loadSkin(animationRef.getName(), animationRef.getDescriptor());
+    private SkinAnimation loadSkinAnimation(SkinDocumentAnimation ref) throws TranslatableException {
+        var name = ref.getName();
+        var descriptor = ref.getDescriptor();
+        if (name.isEmpty() || descriptor.isEmpty()) {
+            return null;
+        }
+        var skin = loadSkin(name, descriptor);
         for (var animation : skin.getAnimations()) {
-            if (animation.getName().equals(animationRef.getName())) {
+            if (animation.getName().equals(ref.getName())) {
                 return animation;
             }
         }

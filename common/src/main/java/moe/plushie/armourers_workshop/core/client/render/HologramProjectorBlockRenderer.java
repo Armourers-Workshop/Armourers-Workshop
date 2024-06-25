@@ -5,8 +5,12 @@ import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
+import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
+import moe.plushie.armourers_workshop.core.client.other.BlockEntityRenderData;
+import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
+import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModDebugger;
@@ -30,19 +34,32 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
         if (!entity.isPowered()) {
             return;
         }
-        var blockState = entity.getBlockState();
-        var itemStack = entity.getItem(0);
-        var descriptor = SkinDescriptor.of(itemStack);
-        var context = SkinRenderTesselator.create(descriptor, Tickets.RENDERER);
-        if (context == null) {
+        var renderData = BlockEntityRenderData.of(entity);
+        if (renderData == null) {
             return;
         }
+        renderData.tick(entity);
+        var skins = renderData.getAllSkins();
+        if (skins.isEmpty()) {
+            return;
+        }
+//        var itemStack = entity.getItem(0);
+//        var descriptor = SkinDescriptor.of(itemStack);
+//        var context = SkinRenderTesselator.create(descriptor, Tickets.RENDERER);
+//        if (context == null) {
+//            return;
+//        }
         var f = 1 / 16f;
-        var animationTicks = TickUtils.animationTicks();
         var overLight = light;
         if (entity.isOverrideLight()) {
             overLight = 0xf000f0;
         }
+
+        var blockState = entity.getBlockState();
+        var renderPatch = renderData.getRenderPatch();
+        var mannequinEntity = PlaceholderManager.MANNEQUIN.get();
+
+        renderPatch.activate(entity, partialTicks, overLight, overlay, poseStack, bufferSource);
 
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f);
@@ -52,15 +69,25 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
         poseStack.scale(f, f, f);
         poseStack.scale(-1, -1, 1);
 
-        context.setLightmap(overLight);
-        context.setAnimationTicks(animationTicks);
-        context.setColorScheme(descriptor.getColorScheme());
-        context.setReferenced(SkinItemSource.create(itemStack));
+//        context.setLightmap(overLight);
+//        context.setAnimationTicks(animationTicks);
+//        context.setColorScheme(descriptor.getColorScheme());
+//        context.setReferenced(SkinItemSource.create(itemStack));
 
-        Rectangle3f rect = context.getBakedRenderBounds();
-        apply(entity, rect, animationTicks, poseStack, bufferSource);
+        for (var entry : skins) {
+            var itemSource = SkinItemSource.create(entry.getItemStack());
+            var bakedSkin = entry.getBakedSkin();
+            var bakedArmature = BakedArmature.defaultBy(bakedSkin.getType());
+            var rect = bakedSkin.getRenderBounds(itemSource);
 
-        context.draw(poseStack, bufferSource);
+            renderPatch.setReferenced(itemSource);
+            renderPatch.setColorScheme(entry.getBakedScheme());
+
+            apply(entity, rect, renderPatch.getAnimationTicks(), poseStack, bufferSource);
+
+            bakedSkin.setupAnim(mannequinEntity, renderPatch);
+            SkinRenderer.render(mannequinEntity, bakedArmature, bakedSkin, entry.getBakedScheme(), renderPatch);
+        }
 
         poseStack.popPose();
 
@@ -71,6 +98,8 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
             ShapeTesselator.stroke(entity.getRenderShape(blockState), UIColor.ORANGE, poseStack, bufferSource);
             poseStack.popPose();
         }
+
+        renderPatch.deactivate(entity, partialTicks, light, overlay, poseStack, bufferSource);
     }
 
     private void apply(T entity, Rectangle3f rect, float animationTicks, IPoseStack poseStack, IBufferSource bufferSource) {

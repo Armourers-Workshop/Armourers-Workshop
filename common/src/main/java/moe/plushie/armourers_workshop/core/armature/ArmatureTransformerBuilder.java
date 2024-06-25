@@ -158,7 +158,7 @@ public abstract class ArmatureTransformerBuilder {
                 return _parseJointTargets(object);
             }
             case DICTIONARY: {
-                ArrayList<JointModifier> modifiers = new ArrayList<>();
+                var modifiers = new ArrayList<JointModifier>();
                 modifiers.addAll(_parseJointTargets(object));
                 modifiers.addAll(_parseTransformModifiers(object));
                 modifiers.addAll(_parseModifiers(object.get("modifier")));
@@ -177,7 +177,7 @@ public abstract class ArmatureTransformerBuilder {
                 return _parseJointTargets(object.get("target"));
             }
             case STRING: {
-                String value = object.stringValue();
+                var value = object.stringValue();
                 if (!value.isEmpty()) {
                     return Collections.singleton(buildJointTarget(value));
                 }

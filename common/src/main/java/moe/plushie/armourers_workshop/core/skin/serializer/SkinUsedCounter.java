@@ -30,7 +30,7 @@ public class SkinUsedCounter {
     }
 
     public void addCube(int cubeId) {
-        ISkinCubeType cubeType = SkinCubeTypes.byId(cubeId);
+        var cubeType = SkinCubeTypes.byId(cubeId);
         cubeTotal += 1;
         cubeTotals[cubeType.getId()] += 1;
     }
@@ -43,7 +43,7 @@ public class SkinUsedCounter {
         if (paintTypes == null) {
             return;
         }
-        for (ISkinPaintType paintType : paintTypes) {
+        for (var paintType : paintTypes) {
             if (paintType.getDyeType() != null) {
                 dyeTypes.add(paintType.getDyeType());
             }

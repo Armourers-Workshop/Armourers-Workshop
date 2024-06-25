@@ -33,7 +33,7 @@ public class SkinCube implements ISkinCube {
 
     @Override
     public Rectangle3f getShape() {
-        Vector3i pos = getPosition();
+        var pos = getPosition();
         return new Rectangle3f(pos.getX(), pos.getY(), pos.getZ(), 1, 1, 1);
     }
 

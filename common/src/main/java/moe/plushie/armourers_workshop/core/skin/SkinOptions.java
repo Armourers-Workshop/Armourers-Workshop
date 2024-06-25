@@ -23,7 +23,7 @@ public class SkinOptions {
     }
 
     public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
+        var tag = new CompoundTag();
         tag.putOptionalInt(Constants.Key.OPTIONS_EMBEDDED_ITEM_RENDERER, enableEmbeddedItemRenderer, 0);
         return tag;
     }

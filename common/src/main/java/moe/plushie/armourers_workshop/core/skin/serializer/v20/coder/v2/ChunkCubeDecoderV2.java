@@ -77,7 +77,7 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
 
     @Override
     public IPaintColor getPaintColor(Direction dir) {
-        ITextureKey key = getTexture(dir);
+        var key = getTexture(dir);
         if (key != null) {
             return PaintColor.WHITE;
         }
@@ -137,7 +137,7 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
                 textureBox = new TextureBox(width, height, depth, false, ref.getPos(), ref.getProvider());
             }
         }
-        for (Direction dir : Direction.values()) {
+        for (var dir : Direction.values()) {
             var start = startUVs.get(dir);
             var end = endUVs.get(dir);
             if (start != null && end != null) {

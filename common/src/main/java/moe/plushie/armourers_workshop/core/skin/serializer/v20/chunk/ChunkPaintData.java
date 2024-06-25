@@ -16,7 +16,7 @@ public class ChunkPaintData {
         int flags = stream.readVarInt();
         int totalWidth = stream.readVarInt();
         int totalHeight = stream.readVarInt();
-        SkinPaintData paintData = _paintData(flags, totalWidth, totalHeight);
+        var paintData = _paintData(flags, totalWidth, totalHeight);
         if (paintData == null) {
             return null; // we can't support it.
         }
