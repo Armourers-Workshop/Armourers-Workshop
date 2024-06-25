@@ -4,11 +4,8 @@ import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.core.data.OptionalDirection;
 import moe.plushie.armourers_workshop.core.item.FlavouredItem;
 import moe.plushie.armourers_workshop.utils.Constants;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockMarkerItem extends FlavouredItem {
 

@@ -28,7 +28,6 @@ import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchAnimation;
 import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchAnimator;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.utils.SkinUUID;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import org.apache.commons.lang3.tuple.Pair;

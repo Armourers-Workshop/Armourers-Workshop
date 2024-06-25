@@ -1,12 +1,10 @@
 package moe.plushie.armourers_workshop.core.permission;
 
-import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.utils.TypedRegistry;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Arrays;
 

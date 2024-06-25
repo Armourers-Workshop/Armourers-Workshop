@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.molang.functions.utility;
 
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
 import moe.plushie.armourers_workshop.core.skin.molang.functions.Function;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
 
 public class Random extends Function {
 

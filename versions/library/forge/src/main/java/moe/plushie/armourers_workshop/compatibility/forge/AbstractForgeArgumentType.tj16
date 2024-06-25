@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.AbstractArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypes;
-import net.minecraft.resources.ResourceLocation;
 
 @Available("[1.16, 1.19)")
 public class AbstractForgeArgumentType {

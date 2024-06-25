@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.skin.transformer.blockbench;
 
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPack;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockTransform;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Size2f;
 import moe.plushie.armourers_workshop.utils.math.Size3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;

@@ -4,7 +4,6 @@ import com.google.common.base.Objects;
 import moe.plushie.armourers_workshop.api.data.IDataProperty;
 
 import java.util.ArrayList;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class DataProperty<T> implements IDataProperty<T> {

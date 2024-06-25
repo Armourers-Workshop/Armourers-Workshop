@@ -47,8 +47,6 @@ public class SkinRenderTesselator extends SkinRenderContext {
     public int draw(IPoseStack poseStack, IBufferSource bufferSource) {
         setPose(poseStack);
         setBuffers(bufferSource);
-//        setTransforms(mannequin, renderer.getOverrideModel(model));
-//        bakedArmature.setupAnim(mannequin, null, this);
         bakedSkin.setupAnim(mannequin, this);
         return SkinRenderer.render(mannequin, bakedArmature, bakedSkin, getColorScheme(), this);
     }

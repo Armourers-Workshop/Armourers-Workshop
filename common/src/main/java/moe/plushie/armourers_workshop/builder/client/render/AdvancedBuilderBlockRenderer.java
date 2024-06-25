@@ -7,7 +7,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
-import moe.plushie.armourers_workshop.api.math.ITransformf;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedBuilderBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AbstractAdvancedGuideRenderer;
@@ -30,10 +29,8 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
-import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentSettings;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentType;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -45,9 +42,7 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -288,9 +283,9 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
             // note we will rebuild a new cache by overlay,
             // because we can't mix colors in the shader (1.16 + rendertype_entity_shadow).
             if (RESULTS.contains(bakedPart)) {
-                context.setOverlay(0x38ffffff);
+                //scheme.setOverlay(0x38ffffff);
                 total = builder.addPart(bakedPart, bakedSkin, scheme, shouldRender, context);
-                context.setOverlay(0);
+                //scheme.setOverlay(0);
             }
             // when we rendered the highlighted version,
             // so we don't need to render original version,

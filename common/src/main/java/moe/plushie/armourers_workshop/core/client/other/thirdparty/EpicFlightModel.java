@@ -1,18 +1,11 @@
 package moe.plushie.armourers_workshop.core.client.other.thirdparty;
 
 import moe.plushie.armourers_workshop.api.client.model.IModel;
-import moe.plushie.armourers_workshop.api.client.model.IModelBabyPose;
-import moe.plushie.armourers_workshop.api.client.model.IModelPart;
-import moe.plushie.armourers_workshop.api.data.IAssociatedContainerKey;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
 import moe.plushie.armourers_workshop.core.client.model.LinkedModel;
 import moe.plushie.armourers_workshop.utils.DataStorageKey;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import net.minecraft.client.model.Model;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
-import java.util.HashMap;
 
 public class EpicFlightModel extends LinkedModel {
 

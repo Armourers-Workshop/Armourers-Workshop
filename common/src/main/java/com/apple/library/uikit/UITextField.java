@@ -10,7 +10,6 @@ import com.apple.library.foundation.NSTextPosition;
 import com.apple.library.foundation.NSTextRange;
 import com.apple.library.impl.AppearanceImpl;
 import com.apple.library.impl.DelegateImpl;
-import com.apple.library.impl.InvokerResult;
 import com.apple.library.impl.TextInputImpl;
 import com.apple.library.impl.TextInputTraits;
 import com.apple.library.impl.TextStorageImpl;

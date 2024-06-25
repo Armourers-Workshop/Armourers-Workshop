@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.network.chat.Component;
 
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.utils.TextFormatter;
 import net.minecraft.network.chat.FormattedText;
@@ -10,6 +8,9 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.TranslatableContents;
 
 import java.util.Optional;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
 
 @Extension
 @Available("[1.20, )")

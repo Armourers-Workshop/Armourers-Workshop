@@ -49,14 +49,14 @@ public class SkinRendererManager {
     private static void _reload(EntityRenderDispatcher entityRenderManager) {
 
         for (var renderer : entityRenderManager.playerRenderers.values()) {
-            if (renderer instanceof LivingEntityRenderer<?, ?> livingEntityRenderer) {
-                setupRenderer(EntityType.PLAYER, livingEntityRenderer, true);
+            if (renderer != null) {
+                setupRenderer(EntityType.PLAYER, (LivingEntityRenderer<?, ?>) renderer, true);
             }
         }
 
         entityRenderManager.renderers.forEach((entityType1, entityRenderer) -> {
-            if (entityRenderer instanceof LivingEntityRenderer<?, ?> livingEntityRenderer) {
-                setupRenderer(entityType1, livingEntityRenderer, true);
+            if (entityRenderer instanceof LivingEntityRenderer<?, ?>) {
+                setupRenderer(entityType1, (LivingEntityRenderer<?, ?>) entityRenderer, true);
             }
         });
 
@@ -97,9 +97,7 @@ public class SkinRendererManager {
         // Add our own custom armor layer to the various player renderers.
         if (resolvedEntityType == EntityType.PLAYER) {
             for (var renderer : entityRenderManager.playerRenderers.values()) {
-                if (renderer instanceof LivingEntityRenderer<?, ?> livingEntityRenderer) {
-                    setupRenderer(resolvedEntityType, livingEntityRenderer, false);
-                }
+                setupRenderer(resolvedEntityType, (LivingEntityRenderer<?, ?>) renderer, false);
             }
         }
         // Add our own custom armor layer to everything that has an armor layer

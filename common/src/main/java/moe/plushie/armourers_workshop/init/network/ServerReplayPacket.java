@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.init.network;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.platform.ReplayManager;
-import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.function.Consumer;

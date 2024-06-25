@@ -1,10 +1,11 @@
 package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.commands.CommandSourceStack;
 
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.This;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
 
 @Extension
 @Available("[1.20, )")

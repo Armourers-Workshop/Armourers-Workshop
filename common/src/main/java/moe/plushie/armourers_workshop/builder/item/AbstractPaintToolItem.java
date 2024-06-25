@@ -6,11 +6,9 @@ import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.core.item.ConfigurableToolItem;
 import moe.plushie.armourers_workshop.init.ModHolidays;
 import moe.plushie.armourers_workshop.init.ModSounds;
-import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractPaintToolItem extends ConfigurableToolItem implements IItemSoundProvider, IItemParticleProvider {

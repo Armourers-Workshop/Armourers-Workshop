@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.skin.serializer;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV1;
-import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 
 import java.io.IOException;
 

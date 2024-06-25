@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.document;
 
 import moe.plushie.armourers_workshop.core.network.UpdateSkinDocumentPacket;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;

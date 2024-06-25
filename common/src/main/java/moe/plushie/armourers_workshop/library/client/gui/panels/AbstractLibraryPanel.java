@@ -8,7 +8,6 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;

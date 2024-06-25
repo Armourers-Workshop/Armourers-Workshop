@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.api.data;
 
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 public interface IDataSerializer {

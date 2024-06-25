@@ -3,7 +3,6 @@ package com.apple.library.impl;
 import com.apple.library.coregraphics.CGAffineTransform;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
-import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIView;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;

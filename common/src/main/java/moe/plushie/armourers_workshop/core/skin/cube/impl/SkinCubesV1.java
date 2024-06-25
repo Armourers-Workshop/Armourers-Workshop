@@ -7,11 +7,11 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCube;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
-import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
-import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
-import moe.plushie.armourers_workshop.core.skin.serializer.LegacyCubeHelper;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.skin.serializer.LegacyCubeHelper;
+import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
+import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.core.Direction;
 

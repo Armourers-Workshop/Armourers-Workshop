@@ -196,7 +196,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
             quads.forEach((transform, faces) -> {
                 poseStack1.pushPose();
                 transform.apply(poseStack1);
-                faces.forEach(face -> face.render(part, scheme, 0xf000f0, overlay, poseStack1, builder));
+                faces.forEach(face -> face.render(part, scheme, context.getLightmap(), overlay, poseStack1, builder));
                 poseStack1.popPose();
             });
         });
@@ -244,7 +244,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         });
     }
 
-    static class CachedTask {
+    protected static class CachedTask {
 
         int totalTask;
         boolean isCompiled = false;
@@ -322,7 +322,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         }
     }
 
-    static class CachedRenderPipeline {
+    protected static class CachedRenderPipeline {
 
         protected final ArrayList<CompiledPassGroup> passGroups = new ArrayList<>();
 
@@ -355,7 +355,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         }
     }
 
-    static class CompiledPassGroup {
+    protected static class CompiledPassGroup {
 
         private static final AutoreleasePool<CompiledPassGroup> POOL = AutoreleasePool.create(CompiledPassGroup::new);
 

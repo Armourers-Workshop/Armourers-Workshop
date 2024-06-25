@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerial
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeBlockEntity;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;

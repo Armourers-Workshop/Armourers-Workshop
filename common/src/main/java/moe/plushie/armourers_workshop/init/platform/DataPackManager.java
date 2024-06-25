@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init.platform;
 
 import com.google.common.collect.ImmutableMap;
-import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.init.platform.event.common.RegisterDataPackEvent;

@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.skin.document;
 import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.DataSerializerKey;

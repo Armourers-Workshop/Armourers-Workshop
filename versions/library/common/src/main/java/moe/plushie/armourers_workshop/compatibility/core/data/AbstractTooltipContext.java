@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.compatibility.core.data;
 
 import moe.plushie.armourers_workshop.api.common.ITooltipContext;
-import moe.plushie.armourers_workshop.core.skin.SkinOptions;
 import net.minecraft.world.item.TooltipFlag;
 
 public class AbstractTooltipContext<T> implements ITooltipContext {

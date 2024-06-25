@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.capability;
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
-import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.init.ModDataComponents;

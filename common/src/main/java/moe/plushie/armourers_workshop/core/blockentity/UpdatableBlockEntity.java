@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.common.IBlockEntity;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntity;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 

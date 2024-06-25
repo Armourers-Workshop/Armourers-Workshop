@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.api.common;
 
 import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;

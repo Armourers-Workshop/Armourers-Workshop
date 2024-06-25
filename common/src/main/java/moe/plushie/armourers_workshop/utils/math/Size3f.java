@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.utils.math;
 
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
-
 import java.util.Objects;
 
 @SuppressWarnings("unused")

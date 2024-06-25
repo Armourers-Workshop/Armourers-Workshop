@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -25,7 +26,7 @@ public class SkinRenderContext {
     private static final Iterator<SkinRenderContext> POOL = Iterators.cycle(ObjectUtils.makeItems(100, i -> new SkinRenderContext()));
 
     protected int lightmap = 0xf000f0;
-    protected int overlay = 0;
+    protected int overlay = OverlayTexture.NO_OVERLAY;
     protected float partialTicks = 0;
     protected float animationTicks = 0;
 
@@ -69,6 +70,7 @@ public class SkinRenderContext {
     }
 
     public void release() {
+        this.overlay = OverlayTexture.NO_OVERLAY;
         this.lightmap = 0xf000f0;
         this.partialTicks = 0;
 

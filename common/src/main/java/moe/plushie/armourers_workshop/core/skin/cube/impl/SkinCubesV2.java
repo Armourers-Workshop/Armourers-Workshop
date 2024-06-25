@@ -9,10 +9,10 @@ import moe.plushie.armourers_workshop.core.skin.cube.SkinCube;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
+import moe.plushie.armourers_workshop.core.texture.TextureBox;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
-import moe.plushie.armourers_workshop.core.texture.TextureBox;
 import net.minecraft.core.Direction;
 
 import java.util.ArrayList;

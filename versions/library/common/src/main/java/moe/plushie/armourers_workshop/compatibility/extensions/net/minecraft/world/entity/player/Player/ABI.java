@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.world.entity.player.Player;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import net.minecraft.server.commands.GiveCommand;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;

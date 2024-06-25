@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
-import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.registry.ISoundEventBuilder;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeRegistries;
 import moe.plushie.armourers_workshop.init.ModConstants;

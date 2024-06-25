@@ -43,6 +43,7 @@ public class ShaderVertexMerger {
 
     public void reset() {
         pending.forEach((renderType, group) -> group.clear());
+        maxVertexCount = 0;
     }
 
     public void clear() {

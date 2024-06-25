@@ -2,17 +2,16 @@ package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.wo
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
 
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
 @Extension
-@Available("[1.20, )")
-public class PropertyProvider {
+@Available("[1.16, 1.20)")
+public class Fix1619 {
 
-    public static Level getLevel(@This Entity entity) {
-        return entity.level();
+    public static boolean onGround(@This Entity entity) {
+        return entity.isOnGround();
     }
 }
 

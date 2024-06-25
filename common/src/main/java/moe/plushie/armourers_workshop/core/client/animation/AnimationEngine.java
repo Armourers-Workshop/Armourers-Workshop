@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.client.animation;
 
 import moe.plushie.armourers_workshop.core.skin.molang.MolangVirtualMachine;
 import moe.plushie.armourers_workshop.core.skin.molang.math.LazyVariable;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -10,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
+@SuppressWarnings("Convert2MethodRef")
 @Environment(EnvType.CLIENT)
 public class AnimationEngine {
 
@@ -38,7 +38,7 @@ public class AnimationEngine {
         VM.getVariables().forEach((name, variable) -> variable.set(0));
     }
 
-    public static void upload(Entity entity, double animTime, double startAnimTime) {
+    public static void upload(Object source, double animTime, double startAnimTime) {
         var mc = Minecraft.getInstance();
         var level = mc.level;
         if (level == null) {
@@ -52,19 +52,26 @@ public class AnimationEngine {
         ACTOR_COUNT.set(level::getEntityCount);
         MOON_PHASE.set(level::getMoonPhase);
 
-        DISTANCE_FROM_CAMERA.set(() -> mc.gameRenderer.getMainCamera().getPosition().distanceTo(entity.position()));
-
-        IS_ON_GROUND.set(entity::onGround);
-        IS_IN_WATER.set(entity::isInWater);
-        IS_IN_WATER_OR_RAIN.set(entity::isInWaterRainOrBubble);
-
-        if (!(entity instanceof LivingEntity livingEntity)) {
-            return;
+        if (source instanceof Entity entity) {
+            uploadEntity(entity, animTime, startAnimTime);
         }
+        if (source instanceof LivingEntity livingEntity) {
+            uploadLivingEntity(livingEntity, animTime, startAnimTime);
+        }
+    }
 
-        HEALTH.set(livingEntity::getHealth);
-        MAX_HEALTH.set(livingEntity::getMaxHealth);
-        IS_ON_FIRE.set(livingEntity::isOnFire);
+    private static void uploadEntity(Entity entity, double animTime, double startAnimTime) {
+        DISTANCE_FROM_CAMERA.set(() -> Minecraft.getInstance().gameRenderer.getMainCamera().getPosition().distanceTo(entity.position()));
+
+        IS_ON_GROUND.set(() -> entity.onGround());
+        IS_IN_WATER.set(() -> entity.isInWater());
+        IS_IN_WATER_OR_RAIN.set(() -> entity.isInWaterRainOrBubble());
+    }
+
+    private static void uploadLivingEntity(LivingEntity livingEntity, double animTime, double startAnimTime) {
+        HEALTH.set(() -> livingEntity.getHealth());
+        MAX_HEALTH.set(() -> livingEntity.getMaxHealth());
+        IS_ON_FIRE.set(() -> livingEntity.isOnFire());
 
         GROUND_SPEED.set(() -> {
             var velocity = livingEntity.getDeltaMovement();

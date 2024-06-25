@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.compatibility.forge;
 
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.permission.IPermissionContext;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.permission.BlockPermissionContext;
 import moe.plushie.armourers_workshop.core.permission.PlayerPermissionContext;
 import moe.plushie.armourers_workshop.core.permission.TargetPermissionContext;

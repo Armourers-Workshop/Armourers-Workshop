@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
-import moe.plushie.armourers_workshop.api.client.model.IModelPartPose;
 import moe.plushie.armourers_workshop.core.armature.JointModifier;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 

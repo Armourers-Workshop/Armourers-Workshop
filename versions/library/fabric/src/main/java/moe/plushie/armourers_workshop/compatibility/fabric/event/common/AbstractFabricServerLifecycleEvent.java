@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.compatibility.fabric.event.common;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.registry.IEventHandler;
-import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartingEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartedEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartingEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppedEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppingEvent;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;

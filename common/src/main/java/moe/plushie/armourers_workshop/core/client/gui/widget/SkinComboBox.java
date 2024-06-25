@@ -2,13 +2,11 @@ package moe.plushie.armourers_workshop.core.client.gui.widget;
 
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
-import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIComboBox;
 import com.apple.library.uikit.UIComboItem;
 import com.apple.library.uikit.UIEdgeInsets;
 import com.apple.library.uikit.UIImage;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;

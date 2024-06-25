@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.menu;
 
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;

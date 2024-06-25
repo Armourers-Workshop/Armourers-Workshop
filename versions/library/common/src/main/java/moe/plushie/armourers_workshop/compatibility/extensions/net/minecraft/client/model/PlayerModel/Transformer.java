@@ -1,12 +1,13 @@
 package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.client.model.PlayerModel;
 
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.This;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
 
 @Available("[1.20, )")
 @Extension

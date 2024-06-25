@@ -1,10 +1,11 @@
 package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.client.renderer.block.model.ItemTransforms;
 
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.ThisClass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import net.minecraft.world.item.ItemDisplayContext;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
 
 @Extension
 @Available("[1.20, )")

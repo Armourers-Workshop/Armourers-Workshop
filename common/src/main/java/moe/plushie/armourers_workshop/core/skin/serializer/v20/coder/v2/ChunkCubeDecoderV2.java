@@ -10,13 +10,13 @@ import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkCubeSe
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkCubeSelector;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkPaletteData;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.coder.ChunkCubeDecoder;
+import moe.plushie.armourers_workshop.core.texture.TextureBox;
+import moe.plushie.armourers_workshop.core.texture.TextureKey;
+import moe.plushie.armourers_workshop.core.texture.TextureOptions;
 import moe.plushie.armourers_workshop.utils.DirectionUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector2f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
-import moe.plushie.armourers_workshop.core.texture.TextureBox;
-import moe.plushie.armourers_workshop.core.texture.TextureKey;
-import moe.plushie.armourers_workshop.core.texture.TextureOptions;
 import net.minecraft.core.Direction;
 
 import java.util.BitSet;

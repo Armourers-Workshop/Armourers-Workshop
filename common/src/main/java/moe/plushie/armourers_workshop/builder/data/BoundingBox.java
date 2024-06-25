@@ -3,10 +3,10 @@ package moe.plushie.armourers_workshop.builder.data;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureModel;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureModel;
 import net.minecraft.core.Direction;
 
 import java.util.Objects;

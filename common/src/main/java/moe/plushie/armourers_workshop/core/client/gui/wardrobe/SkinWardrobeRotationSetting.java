@@ -7,8 +7,6 @@ import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UISliderBox;
-import moe.plushie.armourers_workshop.api.core.IResourceManager;
-import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.gui.widget.EntityPartView;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
@@ -21,7 +19,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Rotations;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 
 import java.util.ArrayList;

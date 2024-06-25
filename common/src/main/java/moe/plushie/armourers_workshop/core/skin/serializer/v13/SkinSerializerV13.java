@@ -10,9 +10,9 @@ import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileHeader;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.ISkinSerializer;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
+import moe.plushie.armourers_workshop.init.ModLog;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

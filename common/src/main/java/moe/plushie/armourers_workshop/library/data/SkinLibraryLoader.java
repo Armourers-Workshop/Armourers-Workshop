@@ -6,8 +6,8 @@ import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileHeader;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 
 import java.io.File;
 import java.util.ArrayList;

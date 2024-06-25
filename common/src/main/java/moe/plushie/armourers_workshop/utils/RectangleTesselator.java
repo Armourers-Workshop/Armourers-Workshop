@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.utils;
 
 import com.apple.library.coregraphics.CGGraphicsState;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;

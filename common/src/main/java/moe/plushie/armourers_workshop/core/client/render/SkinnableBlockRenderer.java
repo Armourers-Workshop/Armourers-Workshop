@@ -10,13 +10,10 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.other.BlockEntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
-import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
-import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends AbstractBlockEntityRenderer<T> {
@@ -59,18 +56,16 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
             var skin = entry.getBakedSkin();
             skin.setupAnim(mannequinEntity, renderPatch);
             SkinRenderer.render(mannequinEntity, armature, skin, entry.getBakedScheme(), renderPatch);
+            if (ModDebugger.skinnable) {
+                skin.getBlockBounds().forEach((pos, rect) -> {
+                    poseStack.pushPose();
+                    poseStack.scale(-1, -1, 1);
+                    poseStack.translate(pos.getX() * 16f, pos.getY() * 16f, pos.getZ() * 16f);
+                    ShapeTesselator.stroke(rect, UIColor.RED, poseStack, bufferSource);
+                    poseStack.popPose();
+                });
+            }
         }
-//        for (var entry : skins) {
-//            entry.getBakedSkin().getBlockBounds().forEach((pos, rect) -> {
-//                poseStack.pushPose();
-//                poseStack.translate(0.5f, 0.5f, 0.5f);
-//                poseStack.scale(f, f, f);
-//                poseStack.rotate(rotations);
-//                poseStack.translate(pos.getX() * 16f, pos.getY() * 16f, pos.getZ() * 16f);
-//                ShapeTesselator.stroke(rect, UIColor.RED, poseStack, bufferSource);
-//                poseStack.popPose();
-//            });
-//        }
 
         poseStack.popPose();
 

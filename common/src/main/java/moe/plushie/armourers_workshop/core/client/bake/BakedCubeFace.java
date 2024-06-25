@@ -17,7 +17,6 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
@@ -25,7 +24,6 @@ import moe.plushie.armourers_workshop.utils.math.OpenRay;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 
 import java.util.Collection;
@@ -94,13 +92,13 @@ public class BakedCubeFace {
         var b = resolvedColor.getBlue();
         var a = alpha & 0xff;
 
-        // mixin overlay color.
-        if (overlay != 0) {
-            var i = (overlay >> 24 & 0xff) / 255f;
-            r = ColorUtils.mix(r, overlay >> 16 & 0xff, i);
-            g = ColorUtils.mix(g, overlay >> 8 & 0xff, i);
-            b = ColorUtils.mix(b, overlay & 0xff, i);
-        }
+//        // mixin overlay color.
+//        if (extraOverlay != 0) {
+//            var i = (extraOverlay >> 24 & 0xff) / 255f;
+//            r = ColorUtils.mix(r, extraOverlay >> 16 & 0xff, i);
+//            g = ColorUtils.mix(g, extraOverlay >> 8 & 0xff, i);
+//            b = ColorUtils.mix(b, extraOverlay & 0xff, i);
+//        }
 
         var uvs = SkinUtils.getRenderUVs(direction, resolveTextureRotation(resolvedTexture));
         var vertexes = SkinUtils.getRenderVertexes(direction);
@@ -108,7 +106,7 @@ public class BakedCubeFace {
             builder.vertex(entry, x + w * vertexes[i][0], y + h * vertexes[i][1], z + d * vertexes[i][2])
                     .color(r, g, b, a)
                     .uv((u + s * uvs[i][0]) / n, (v + t * uvs[i][1]) / m)
-                    .overlayCoords(OverlayTexture.NO_OVERLAY)
+                    .overlayCoords(overlay)
                     .uv2(lightmap)
                     .normal(entry, vertexes[4][0], vertexes[4][1], vertexes[4][2])
                     .endVertex();

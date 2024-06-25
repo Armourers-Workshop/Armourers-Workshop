@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.cube;
 
-import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.world.level.block.Block;

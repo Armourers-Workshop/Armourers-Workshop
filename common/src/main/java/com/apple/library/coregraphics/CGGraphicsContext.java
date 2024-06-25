@@ -4,7 +4,6 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.impl.AppearanceImpl;
 import com.apple.library.impl.ClipContextImpl;
 import com.apple.library.impl.GraphicsContextImpl;
-import com.apple.library.impl.ObjectUtilsImpl;
 import com.apple.library.impl.TooltipRenderer;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIFont;
