@@ -4,9 +4,11 @@ import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPackObject;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockTransform;
 import moe.plushie.armourers_workshop.utils.math.Size2f;
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.core.Direction;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class BlockBenchPackLoader {
 
@@ -146,17 +148,29 @@ public class BlockBenchPackLoader {
             fo.at("uuid", it -> fb.uuid(it.stringValue()));
             fo.at("channel", it -> fb.name(it.stringValue()));
             fo.at("time", it -> fb.time(it.floatValue()));
-            fo.at("interpolation", it -> fb.interpolation(it.stringValue()));
+            fo.at("interpolation", it -> {
+                fb.interpolation(it.stringValue());
+                if (it.stringValue().equals("bezier")) {
+                    var values = new ArrayList<Vector3f>();
+                    var parameters = new ArrayList<Float>();
+                    //fo.get("bezier_linked");
+                    values.add(fo.get("bezier_left_time").vector3fValue());
+                    values.add(fo.get("bezier_left_value").vector3fValue());
+                    values.add(fo.get("bezier_right_time").vector3fValue());
+                    values.add(fo.get("bezier_right_value").vector3fValue());
+                    for (var parameter : values) {
+                        parameters.add(parameter.getX());
+                        parameters.add(parameter.getY());
+                        parameters.add(parameter.getZ());
+                    }
+                    fb.parameters(parameters);
+                }
+            });
             fo.each("data_points", it -> {
                 fb.add(it.get("x"));
                 fb.add(it.get("y"));
                 fb.add(it.get("z"));
             });
-            // "bezier_linked"
-            // "bezier_left_time"
-            // "bezier_left_value"
-            // "bezier_right_time"
-            // "bezier_right_value"
             builder.addFrame(fb.build());
         });
         return builder.build();

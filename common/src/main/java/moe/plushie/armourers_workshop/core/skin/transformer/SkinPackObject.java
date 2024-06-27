@@ -128,13 +128,18 @@ public class SkinPackObject implements IDataPackObject {
         }
     }
 
-    public IDataPackObject by(String keyPath) {
+    @Override
+    public SkinPackObject get(String key) {
+        return new SkinPackObject(IDataPackObject.super.get(key));
+    }
+
+    public SkinPackObject by(String keyPath) {
         // when this is a full key, ignore.
         if (has(keyPath)) {
             return get(keyPath);
         }
         var keys = keyPath.split("\\.");
-        IDataPackObject object = this;
+        SkinPackObject object = this;
         for (String key : keys) {
             object = object.get(key);
         }

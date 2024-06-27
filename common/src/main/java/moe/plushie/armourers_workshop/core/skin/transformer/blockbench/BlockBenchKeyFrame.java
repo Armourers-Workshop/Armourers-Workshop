@@ -10,13 +10,14 @@ public class BlockBenchKeyFrame extends BlockBenchObject {
     private final float time;
 
     private final String interpolation;
-
+    private final List<Float> parameters;
     private final List<Object> points;
 
-    public BlockBenchKeyFrame(String uuid, String name, float time, String interpolation, List<Object> points) {
+    public BlockBenchKeyFrame(String uuid, String name, float time, String interpolation, List<Float> parameters, List<Object> points) {
         super(uuid, name);
         this.time = time;
         this.interpolation = interpolation;
+        this.parameters = parameters;
         this.points = points;
     }
 
@@ -26,6 +27,10 @@ public class BlockBenchKeyFrame extends BlockBenchObject {
 
     public String getInterpolation() {
         return interpolation;
+    }
+
+    public List<Float> getParameters() {
+        return parameters;
     }
 
     public List<Object> getPoints() {
@@ -38,6 +43,7 @@ public class BlockBenchKeyFrame extends BlockBenchObject {
 
         private String interpolation = "liner"; // liner,smooth,bezier,step
 
+        private List<Float> parameters;
         private final ArrayList<Object> points = new ArrayList<>();
 
         public void time(float time) {
@@ -46,6 +52,10 @@ public class BlockBenchKeyFrame extends BlockBenchObject {
 
         public void interpolation(String interpolation) {
             this.interpolation = interpolation;
+        }
+
+        public void parameters(List<Float> parameters) {
+            this.parameters = parameters;
         }
 
         public void add(IDataPackObject value) {
@@ -57,7 +67,7 @@ public class BlockBenchKeyFrame extends BlockBenchObject {
         }
 
         public BlockBenchKeyFrame build() {
-            return new BlockBenchKeyFrame(uuid, name, time, interpolation, points);
+            return new BlockBenchKeyFrame(uuid, name, time, interpolation, parameters, points);
         }
     }
 }

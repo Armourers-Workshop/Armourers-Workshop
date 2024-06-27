@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.function.Supplier;
 
-public class AnimationController {
+public class AnimationProcessor {
 
     private int channel = 0;
     private boolean requiresVirtualMachine = false;
@@ -17,12 +17,12 @@ public class AnimationController {
     private final ArrayList<AnimationValue> values = new ArrayList<>();
     private final ArrayList<AnimationOutput> outputs = new ArrayList<>();
 
-    public static AnimationController create(String channel) {
+    public static AnimationProcessor create(String channel) {
         return switch (channel) {
             case "position" -> new Translation();
             case "rotation" -> new Rotation();
             case "scale" -> new Scale();
-            default -> new AnimationController();
+            default -> new AnimationProcessor();
         };
     }
 
@@ -34,7 +34,7 @@ public class AnimationController {
         outputs.add(output);
     }
 
-    public void process(AnimationState state, float animationTicks, Entity entity, SkinRenderContext context) {
+    public void process(AnimationState state, float animationTicks) {
         // populate the results of animation ticks.
         var frame = populate(state, animationTicks);
 
@@ -54,11 +54,10 @@ public class AnimationController {
             ty = to.getY();
             tz = to.getZ();
         } else {
-            var t = time / duration;
-            var f = frame.getFunction();
-            tx = f.interpolating(from.getX(), to.getX(), t);
-            ty = f.interpolating(from.getY(), to.getY(), t);
-            tz = f.interpolating(from.getZ(), to.getZ(), t);
+            var t = frame.getFunction().apply(time / duration);
+            tx = lerp(from.getX(), to.getX(), t);
+            ty = lerp(from.getY(), to.getY(), t);
+            tz = lerp(from.getZ(), to.getZ(), t);
         }
 
         // upload animated data into applier.
@@ -100,6 +99,11 @@ public class AnimationController {
 
     public boolean isRequiresVirtualMachine() {
         return requiresVirtualMachine;
+    }
+
+
+    protected float lerp(float start, float end, float t) {
+        return start + (end - start) * t;
     }
 
     protected void upload(AnimationOutput output, float x, float y, float z) {
@@ -175,7 +179,7 @@ public class AnimationController {
         return Vector3f.ZERO;
     }
 
-    public static class Translation extends AnimationController {
+    public static class Translation extends AnimationProcessor {
 
         @Override
         protected void upload(AnimationOutput output, float x, float y, float z) {
@@ -183,7 +187,7 @@ public class AnimationController {
         }
     }
 
-    public static class Rotation extends AnimationController {
+    public static class Rotation extends AnimationProcessor {
 
         @Override
         protected void upload(AnimationOutput output, float x, float y, float z) {
@@ -191,7 +195,7 @@ public class AnimationController {
         }
     }
 
-    public static class Scale extends AnimationController {
+    public static class Scale extends AnimationProcessor {
 
         @Override
         protected void upload(AnimationOutput output, float x, float y, float z) {

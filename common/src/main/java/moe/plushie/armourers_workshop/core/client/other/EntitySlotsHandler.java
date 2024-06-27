@@ -408,10 +408,10 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         protected void load(Entity source, SlotConsumer consumer) {
             int i = 0;
             for (var itemStack : armourSlots) {
-                consumer.accept(itemStack, 400 + i++, EntitySlot.Type.IN_HELD);
+                consumer.accept(itemStack, 400 + i++, EntitySlot.Type.IN_EQUIPMENT);
             }
             for (var itemStack : handSlots) {
-                consumer.accept(itemStack, 400 + i++, EntitySlot.Type.IN_EQUIPMENT);
+                consumer.accept(itemStack, 400 + i++, EntitySlot.Type.IN_HELD);
             }
         }
 

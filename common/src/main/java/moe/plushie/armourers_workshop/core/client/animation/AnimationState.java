@@ -23,7 +23,7 @@ public class AnimationState {
         this.loop = animation.getLoop();
         this.frames = new Frame[animation.getChannels()];
         this.lastValues = new Vector3f[animation.getChannels()];
-        this.requiresVirtualMachine = animation.getControllers().stream().anyMatch(AnimationController::isRequiresVirtualMachine);
+        this.requiresVirtualMachine = animation.getProcessors().stream().anyMatch(AnimationProcessor::isRequiresVirtualMachine);
     }
 
     public void setStartTime(float startTime) {

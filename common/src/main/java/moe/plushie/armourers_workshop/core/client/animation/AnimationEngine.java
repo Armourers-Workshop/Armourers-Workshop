@@ -46,11 +46,11 @@ public class AnimationEngine {
         }
 
         ANIM_TIME.set(animTime);
-        LIFE_TIME.set(() -> startAnimTime);
-        TIME_OF_DAY.set(() -> level.getDayTime() / 24000d);
+        LIFE_TIME.set(startAnimTime);
+        TIME_OF_DAY.set(level.getDayTime() / 24000d);
 
-        ACTOR_COUNT.set(level::getEntityCount);
-        MOON_PHASE.set(level::getMoonPhase);
+        ACTOR_COUNT.set(level.getEntityCount());
+        MOON_PHASE.set(level.getMoonPhase());
 
         if (source instanceof Entity entity) {
             uploadEntity(entity, animTime, startAnimTime);

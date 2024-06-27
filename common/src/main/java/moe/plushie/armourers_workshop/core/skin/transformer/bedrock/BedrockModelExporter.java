@@ -27,6 +27,7 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchAnimation;
 import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchAnimator;
+import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchKeyFrame;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -251,22 +252,7 @@ public class BedrockModelExporter {
                     for (var keyframe : animator.getKeyframes()) {
                         var time = keyframe.getTime();
                         var channel = keyframe.getName();
-                        var function = switch (keyframe.getInterpolation()) {
-                            case "bezier" -> {
-                                // TODO: NO IMP @SAGESSE
-                                // bezier_linked
-                                // bezier_left_time
-                                // bezier_left_value
-                                // bezier_right_time
-                                // bezier_right_value
-                                //SkinAnimationFunction.bezier(null);
-                                yield SkinAnimationFunction.LINEAR;
-                            }
-                            case "linear" -> SkinAnimationFunction.LINEAR;
-                            case "step" -> SkinAnimationFunction.STEP;
-                            case "smooth" -> SkinAnimationFunction.SMOOTH;
-                            default -> SkinAnimationFunction.LINEAR; // missing
-                        };
+                        var function = exportSkinAnimationFunction(keyframe);
                         var points = new ArrayList<>();
                         for (var point : keyframe.getPoints()) {
                             points.add(exportSkinAnimationValue(point));
@@ -304,6 +290,17 @@ public class BedrockModelExporter {
             return number.floatValue();
         }
         return 0f;
+    }
+
+    private SkinAnimationFunction exportSkinAnimationFunction(BlockBenchKeyFrame keyframe) {
+        return switch (keyframe.getInterpolation()) {
+            //case "bezier" -> SkinAnimationFunction.bezier(keyframe.getParameters());
+            case "bezier" -> SkinAnimationFunction.linear(); // TODO: not impl. @SAGESSE
+            case "linear" -> SkinAnimationFunction.linear();
+            case "step" -> SkinAnimationFunction.step();
+            case "smooth" -> SkinAnimationFunction.smooth();
+            default -> SkinAnimationFunction.linear(); // missing
+        };
     }
 
 

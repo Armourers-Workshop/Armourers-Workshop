@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
-import moe.plushie.armourers_workshop.core.client.animation.AnimationController;
+import moe.plushie.armourers_workshop.core.client.animation.AnimationProcessor;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationEngine;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationOutput;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationTransform;
@@ -33,7 +33,7 @@ public class BakedSkinAnimation {
     private final SkinAnimation animation;
 
     private final ArrayList<AnimationOutput> outputs = new ArrayList<>();
-    private final ArrayList<AnimationController> controllers = new ArrayList<>();
+    private final ArrayList<AnimationProcessor> processors = new ArrayList<>();
 
     public BakedSkinAnimation(SkinAnimation animation) {
         this.name = animation.getName();
@@ -55,8 +55,8 @@ public class BakedSkinAnimation {
             AnimationEngine.upload(entity, partialTicks, state.getStartTime());
         }
         // check/switch frames of animation and write to applier.
-        for (var transformer : controllers) {
-            transformer.process(state, partialTicks, entity, context);
+        for (var transformer : processors) {
+            transformer.process(state, partialTicks);
         }
     }
 
@@ -83,7 +83,7 @@ public class BakedSkinAnimation {
     }
 
     public int getChannels() {
-        return controllers.size();
+        return processors.size();
     }
 
     public float getDuration() {
@@ -98,24 +98,24 @@ public class BakedSkinAnimation {
         return loop;
     }
 
-    public List<AnimationController> getControllers() {
-        return controllers;
+    public List<AnimationProcessor> getProcessors() {
+        return processors;
     }
 
     private void build(List<SkinAnimationValue> linkedValues, List<BakedSkinPart> linkedParts) {
-        var namedControllers = new LinkedHashMap<String, AnimationController>();
+        var nameProcessors = new LinkedHashMap<String, AnimationProcessor>();
         for (var value : linkedValues) {
-            namedControllers.computeIfAbsent(value.getKey(), AnimationController::create).add(value);
+            nameProcessors.computeIfAbsent(value.getKey(), AnimationProcessor::create).add(value);
         }
         for (var part : linkedParts) {
             var output = buildStream(part);
-            namedControllers.values().forEach(it -> it.add(output));
+            nameProcessors.values().forEach(it -> it.add(output));
             outputs.add(output);
         }
-        for (var controller : namedControllers.values()) {
-            if (controller.freeze()) {
-                controller.setChannel(controllers.size());
-                controllers.add(controller);
+        for (var processor : nameProcessors.values()) {
+            if (processor.freeze()) {
+                processor.setChannel(processors.size());
+                processors.add(processor);
             }
         }
     }
