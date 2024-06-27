@@ -17,6 +17,8 @@ public interface IBlockBuilder<T extends Block> extends IRegistryBuilder<T> {
 
     IBlockBuilder<T> noOcclusion();
 
+    IBlockBuilder<T> noDrops();
+
     IBlockBuilder<T> friction(float f);
 
     IBlockBuilder<T> speedFactor(float f);
@@ -29,17 +31,13 @@ public interface IBlockBuilder<T extends Block> extends IRegistryBuilder<T> {
 
     IBlockBuilder<T> strength(float f, float g);
 
-    IBlockBuilder<T> instabreak();
-
-    IBlockBuilder<T> strength(float f);
-
     IBlockBuilder<T> randomTicks();
 
     IBlockBuilder<T> dynamicShape();
 
-    IBlockBuilder<T> noDrops();
-
     IBlockBuilder<T> air();
+
+    IBlockBuilder<T> forceSolid();
 
     IBlockBuilder<T> isValidSpawn(BlockBehaviour.StateArgumentPredicate<EntityType<?>> stateArgumentPredicate);
 

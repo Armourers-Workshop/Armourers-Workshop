@@ -80,18 +80,6 @@ public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
     }
 
     @Override
-    public IBlockBuilder<T> instabreak() {
-        this.properties = properties.instabreak();
-        return this;
-    }
-
-    @Override
-    public IBlockBuilder<T> strength(float f) {
-        this.properties = properties.strength(f);
-        return this;
-    }
-
-    @Override
     public IBlockBuilder<T> randomTicks() {
         this.properties = properties.randomTicks();
         return this;
@@ -112,6 +100,12 @@ public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
     @Override
     public IBlockBuilder<T> air() {
         this.properties = properties.air();
+        return this;
+    }
+
+    @Override
+    public IBlockBuilder<T> forceSolid() {
+        this.properties = properties.forceSolidOn();
         return this;
     }
 
