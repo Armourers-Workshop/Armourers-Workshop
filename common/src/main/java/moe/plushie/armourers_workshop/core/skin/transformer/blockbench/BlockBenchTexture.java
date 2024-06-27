@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.transformer.blockbench;
 
 import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.core.texture.TextureProperties;
+import moe.plushie.armourers_workshop.utils.math.Size2f;
 
 import java.util.ArrayList;
 
@@ -10,15 +11,20 @@ public class BlockBenchTexture extends BlockBenchObject {
     private final String renderMode;
     private final String source;
 
+    private final Size2f imageSize;
+    private final Size2f textureSize;
+
     private final int frameTime;
     private final String frameOrderType;
     private final String frameOrder;
     private final boolean frameInterpolate;
 
-    public BlockBenchTexture(String uuid, String name, String renderMode, String source, int frameTime, String frameOrderType, String frameOrder, boolean frameInterpolate) {
+    public BlockBenchTexture(String uuid, String name, String renderMode, String source, Size2f imageSize, Size2f textureSize, int frameTime, String frameOrderType, String frameOrder, boolean frameInterpolate) {
         super(uuid, name);
         this.renderMode = renderMode;
         this.source = source;
+        this.imageSize = imageSize;
+        this.textureSize = textureSize;
         this.frameTime = frameTime;
         this.frameOrderType = frameOrderType;
         this.frameOrder = frameOrder;
@@ -29,6 +35,13 @@ public class BlockBenchTexture extends BlockBenchObject {
         return source;
     }
 
+    public Size2f getImageSize() {
+        return imageSize;
+    }
+
+    public Size2f getTextureSize() {
+        return textureSize;
+    }
 
     public int getFrameTime() {
         return frameTime;
@@ -89,12 +102,23 @@ public class BlockBenchTexture extends BlockBenchObject {
         private String frameOrder = "";
         private boolean frameInterpolate = false;
 
+        private Size2f imageSize;
+        private Size2f textureSize;
+
         public void renderMode(String renderMode) {
             this.renderMode = renderMode;
         }
 
         public void source(String source) {
             this.source = source;
+        }
+
+        public void imageSize(Size2f size) {
+            this.imageSize = size;
+        }
+
+        public void textureSize(Size2f size) {
+            this.textureSize = size;
         }
 
         public void frameTime(int frameTime) {
@@ -114,7 +138,7 @@ public class BlockBenchTexture extends BlockBenchObject {
         }
 
         public BlockBenchTexture build() {
-            return new BlockBenchTexture(uuid, name, renderMode, source, frameTime, frameOrderType, frameOrder, frameInterpolate);
+            return new BlockBenchTexture(uuid, name, renderMode, source, imageSize, textureSize, frameTime, frameOrderType, frameOrder, frameInterpolate);
         }
     }
 }

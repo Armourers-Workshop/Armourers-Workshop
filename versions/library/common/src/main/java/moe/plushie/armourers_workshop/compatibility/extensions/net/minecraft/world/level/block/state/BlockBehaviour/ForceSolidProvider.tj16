@@ -1,0 +1,21 @@
+package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.world.level.block.state.BlockBehaviour;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Extension
+@Available("[1.16, 1.20)")
+public class ForceSolidProvider {
+
+    @Extension
+    public static class Properties {
+
+        public static BlockBehaviour.Properties forceSolidOn(@This BlockBehaviour.Properties properties) {
+            // default is force solid on.
+            return properties;
+        }
+    }
+}

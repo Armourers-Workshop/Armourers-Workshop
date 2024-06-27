@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.transformer;
 
 import moe.plushie.armourers_workshop.api.core.IResource;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOConsumer;
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -12,6 +13,8 @@ public abstract class SkinPackReader {
 
     protected final String name;
     protected final Collection<IResource> resources;
+
+    protected Vector3f offset = Vector3f.ZERO;
 
     protected SkinPackReader(String name, Collection<IResource> resources) {
         this.name = name;
@@ -48,5 +51,14 @@ public abstract class SkinPackReader {
 
     public Collection<IResource> getResources() {
         return resources;
+    }
+
+
+    public void setOffset(Vector3f offset) {
+        this.offset = offset;
+    }
+
+    public Vector3f getOffset() {
+        return offset;
     }
 }

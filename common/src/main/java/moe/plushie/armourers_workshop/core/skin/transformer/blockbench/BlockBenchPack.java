@@ -78,12 +78,13 @@ public class BlockBenchPack implements SkinPack {
         return authors;
     }
 
+    @Nullable
     public Vector3f getOrigin() {
         // java block/item has a special origin.
         if (format.equals("java_block")) {
             return new Vector3f(8, 8, 8);
         }
-        return Vector3f.ZERO;
+        return null;
     }
 
     public Size2f getResolution() {

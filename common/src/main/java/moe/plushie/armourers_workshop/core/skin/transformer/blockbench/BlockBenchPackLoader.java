@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.transformer.blockbench;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPackObject;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockTransform;
+import moe.plushie.armourers_workshop.utils.math.Size2f;
 import net.minecraft.core.Direction;
 
 import java.io.IOException;
@@ -113,6 +114,8 @@ public class BlockBenchPackLoader {
         object.at("frame_order_type", it -> builder.frameOrderType(it.stringValue()));
         object.at("frame_order", it -> builder.frameOrder(it.stringValue()));
         object.at("frame_interpolate", it -> builder.frameInterpolate(it.boolValue()));
+        object.at("width", width -> object.at("height", height -> builder.imageSize(new Size2f(width.floatValue(), height.floatValue()))));
+        object.at("uv_width", width -> object.at("uv_height", height -> builder.textureSize(new Size2f(width.floatValue(), height.floatValue()))));
         return builder.build();
     }
 

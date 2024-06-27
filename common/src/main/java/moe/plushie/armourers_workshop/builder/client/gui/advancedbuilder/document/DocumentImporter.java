@@ -87,21 +87,21 @@ public class DocumentImporter {
         });
     }
 
-
     private Skin readSkinFromFile(File file) throws IOException {
-        String name = file.getName();
-        Collection<IResource> resources = SkinSerializerV21.getResourcesFromFile(file);
+        var name = file.getName();
+        var resources = SkinSerializerV21.getResourcesFromFile(file);
         return readSkinFromReader(BlockBenchReader.from(name, resources));
     }
 
     private Skin readSkinFromReader(SkinPackReader reader) throws IOException {
         // access the bedrock addon pack, and the load the entity models.
-        CustomModelExporter exporter = new CustomModelExporter();
+        var exporter = new CustomModelExporter();
+        reader.setOffset(getOffset());
         reader.loadEntityModel(modelReader -> {
-            BedrockModel model = modelReader.readModel();
-            for (BedrockModelGeometry geometry : model.getGeometries()) {
-                BedrockModelTexture texture = modelReader.readTexture(geometry);
-                for (BedrockModelBone bone : geometry.getBones()) {
+            var model = modelReader.readModel();
+            for (var geometry : model.getGeometries()) {
+                var texture = modelReader.readTexture(geometry);
+                for (var bone : geometry.getBones()) {
                     exporter.add(bone, texture);
                 }
             }
@@ -111,15 +111,15 @@ public class DocumentImporter {
             }
             var pack = modelReader.getPack();
             if (pack != null) {
-                String name = pack.getName();
+                var name = pack.getName();
                 if (name != null && !name.isEmpty()) {
                     exporter.add(SkinProperty.ALL_CUSTOM_NAME, name);
                 }
-                String description = pack.getDescription();
+                var description = pack.getDescription();
                 if (description != null && !description.isEmpty()) {
                     exporter.add(SkinProperty.ALL_FLAVOUR_TEXT, description);
                 }
-                Collection<String> authors = pack.getAuthors();
+                var authors = pack.getAuthors();
                 if (authors != null && !authors.isEmpty()) {
                     StringBuilder builder = null;
                     for (String a : authors) {
@@ -136,10 +136,10 @@ public class DocumentImporter {
             var transforms = modelReader.getTransforms();
             if (transforms != null) {
                 transforms.forEach((name, transform) -> {
-                    Vector3f translation = transform.getTranslation();
-                    Vector3f rotation = transform.getRotation();
-                    Vector3f scale = transform.getScale();
-                    SkinTransform transform1 = SkinTransform.create(translation, rotation, scale);
+                    var translation = transform.getTranslation();
+                    var rotation = transform.getRotation();
+                    var scale = transform.getScale();
+                    var transform1 = SkinTransform.create(translation, rotation, scale);
                     exporter.add(name, transform1);
                 });
             }
@@ -159,15 +159,24 @@ public class DocumentImporter {
         return exporter.export(skinType);
     }
 
+    private Vector3f getOffset() {
+        // work in bedrock_block/bedrock_entity/bedrock_entity_old/geckolib_block/generic_block/modded_entity/optifine_entity
+        // not work in java_block, but pack will fix it.
+        if (skinType == SkinTypes.BLOCK) {
+            return new Vector3f(0, 8, 0);
+        }
+        return Vector3f.ZERO;
+    }
+
     public static class CustomModelExporter extends BedrockModelExporter {
 
         @Override
         protected Skin.Builder createSkin(ISkinType skinType) {
             // we only export advanced skin, because it is an intermediate product.
-            Skin.Builder builder = new Skin.Builder(SkinTypes.ADVANCED);
+            var builder = new Skin.Builder(SkinTypes.ADVANCED);
 
             // note the export skin must to editable.
-            SkinSettings settings = new SkinSettings();
+            var settings = new SkinSettings();
             settings.setEditable(true);
             builder.settings(settings);
 

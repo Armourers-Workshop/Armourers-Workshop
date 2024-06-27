@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModel
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelTexture;
 import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.core.texture.TextureData;
+import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.math.Size2f;
 import net.minecraft.core.Direction;
 
@@ -98,8 +99,8 @@ public class BlockBenchModelTexture extends BedrockModelTexture {
             throw new IOException("error.bb.loadModel.textureNotSupported");
         }
         var imageBytes = Base64.getDecoder().decode(parts[1]);
-        var imageFrame = resolveTextureFrame(imageBytes);
-        var size = resolveTextureSize(imageFrame);
+        var imageFrame = resolveTextureFrame(texture, imageBytes);
+        var size = resolveTextureSize(texture, imageFrame);
         var animation = resolveTextureAnimation(texture, imageFrame);
         var properties = texture.getProperties();
         textureData = new TextureData(texture.getName(), size.getWidth(), size.getHeight(), animation, properties);
@@ -108,10 +109,15 @@ public class BlockBenchModelTexture extends BedrockModelTexture {
         return textureData;
     }
 
-    private int resolveTextureFrame(byte[] imageBytes) throws IOException {
-        var image = ImageIO.read(new ByteArrayInputStream(imageBytes));
-        var width = image.getWidth();
-        var height = image.getHeight();
+    private int resolveTextureFrame(BlockBenchTexture texture, byte[] imageBytes) throws IOException {
+        // in new version block bench provides image size.
+        var imageSize = texture.getImageSize();
+        if (imageSize == null) {
+            var image = ImageIO.read(new ByteArrayInputStream(imageBytes));
+            imageSize = new Size2f(image.getWidth(), image.getHeight());
+        }
+        var width = MathUtils.floor(imageSize.getWidth());
+        var height = MathUtils.floor(imageSize.getHeight());
         var frame = height / width;
         if (frame * width == height) {
             return frame;
@@ -119,9 +125,14 @@ public class BlockBenchModelTexture extends BedrockModelTexture {
         return 0;
     }
 
-    private Size2f resolveTextureSize(int frameCount) {
+    private Size2f resolveTextureSize(BlockBenchTexture texture, int frameCount) {
         var width = resolution.getWidth();
         var height = resolution.getHeight();
+        // in new version block bench provides texture size.
+        if (texture.getTextureSize() != null) {
+            width = texture.getTextureSize().getWidth();
+            height = texture.getTextureSize().getHeight();
+        }
         if (frameCount > 1) {
             height = width * frameCount;
         }

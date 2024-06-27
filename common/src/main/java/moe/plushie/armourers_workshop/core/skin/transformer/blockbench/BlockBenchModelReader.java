@@ -30,10 +30,10 @@ public class BlockBenchModelReader implements SkinPackModelReader {
 
     private final HashSet<Integer> usedTextureIds = new HashSet<>();
 
-    public BlockBenchModelReader(String name, BlockBenchPack pack) {
+    public BlockBenchModelReader(String name, Vector3f origin, BlockBenchPack pack) {
         this.pack = pack;
         this.texture = new BlockBenchModelTexture(pack.getResolution(), pack.getTextures());
-        this.baseOrigin = convertToLocal(pack.getOrigin());
+        this.baseOrigin = convertToLocal(origin);
     }
 
     @Override
@@ -100,9 +100,10 @@ public class BlockBenchModelReader implements SkinPackModelReader {
 
         var builder = new BedrockModelBone.Builder();
 
+        builder.id(outliner.getUUID());
         builder.name(outliner.getName());
         if (parentOutliner != null) {
-            builder.parent(parentOutliner.getName());
+            builder.parent(parentOutliner.getUUID());
         }
 
         if (!outliner.getOrigin().equals(Vector3f.ZERO)) {

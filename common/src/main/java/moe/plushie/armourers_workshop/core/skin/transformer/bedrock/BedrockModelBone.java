@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class BedrockModelBone {
 
+    private final String id;
     private final String name;
     private final String parent;
     private final Vector3f pivot;
@@ -17,7 +18,8 @@ public class BedrockModelBone {
     private final Collection<BedrockModelCube> cubes;
     private final Map<String, Vector3f> locators;
 
-    public BedrockModelBone(String name, String parent, Vector3f pivot, Vector3f rotation, boolean mirror, Collection<BedrockModelCube> cubes, Map<String, Vector3f> locators) {
+    public BedrockModelBone(String id, String name, String parent, Vector3f pivot, Vector3f rotation, boolean mirror, Collection<BedrockModelCube> cubes, Map<String, Vector3f> locators) {
+        this.id = id;
         this.name = name;
         this.parent = parent;
         this.pivot = pivot;
@@ -25,6 +27,10 @@ public class BedrockModelBone {
         this.mirror = mirror;
         this.cubes = cubes;
         this.locators = locators;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {
@@ -57,6 +63,7 @@ public class BedrockModelBone {
 
     public static class Builder {
 
+        private String id;
         private String name;
         private String parent = "";
         private Vector3f pivot = Vector3f.ZERO;
@@ -64,6 +71,10 @@ public class BedrockModelBone {
         private boolean mirror = false;
         private final ArrayList<BedrockModelCube> cubes = new ArrayList<>();
         private final HashMap<String, Vector3f> locators = new HashMap<>();
+
+        public void id(String id) {
+            this.id = id;
+        }
 
         public void name(String name) {
             this.name = name;
@@ -94,7 +105,7 @@ public class BedrockModelBone {
         }
 
         public BedrockModelBone build() {
-            return new BedrockModelBone(name, parent, pivot, rotation, mirror, cubes, locators);
+            return new BedrockModelBone(id, name, parent, pivot, rotation, mirror, cubes, locators);
         }
     }
 }

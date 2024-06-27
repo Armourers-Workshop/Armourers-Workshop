@@ -55,9 +55,9 @@ public class BedrockModelExporter {
     protected boolean keepItemTransforms = false;
 
     public void add(BedrockModelBone bone, BedrockModelTexture texture) {
-        Node node = new Node(bone.getName(), bone, texture);
+        Node node = new Node(bone.getId(), bone, texture);
         allNodes.add(Pair.of(bone.getParent(), node));
-        namedNodes.put(bone.getName(), node);
+        namedNodes.put(bone.getId(), node);
     }
 
     public void add(BlockBenchAnimation animation) {
@@ -81,16 +81,16 @@ public class BedrockModelExporter {
     public Skin export(ISkinType skinType) {
         // build the bone child-parent relationships tree.
         allNodes.forEach(it -> {
-            var parentName = it.getKey();
-            if (parentName == null || parentName.isEmpty() || parentName.equalsIgnoreCase("none")) {
+            var parentId = it.getKey();
+            if (parentId == null || parentId.isEmpty()) {
                 rootNode.add(it.getValue());
                 return;
             }
-            var parent = namedNodes.get(parentName);
+            var parent = namedNodes.get(parentId);
             if (parent == null) {
-                parent = new Node(parentName, null, null);
+                parent = new Node(parentId, null, null);
                 rootNode.add(parent);
-                namedNodes.put(parentName, parent);
+                namedNodes.put(parentId, parent);
             }
             parent.add(it.getValue());
         });
@@ -145,7 +145,7 @@ public class BedrockModelExporter {
 
     protected void exportSkinPart(Node node, SkinPart parentPart, Collection<SkinPart> rootParts, Mapper mapper) {
         var origin = Vector3f.ZERO;
-        var entry = mapper.get(node.name);
+        var entry = mapper.get(node.bone.getName());
         if (entry.isRootPart()) {
             // new root node
             parentPart = null;
@@ -332,14 +332,14 @@ public class BedrockModelExporter {
 
     public static class Node {
 
-        public final String name;
+        public final String id;
         public final BedrockModelBone bone;
         public final BedrockModelTexture texture;
         public final ArrayList<Node> children = new ArrayList<>();
 
-        public Node(String name, BedrockModelBone bone, BedrockModelTexture texture) {
+        public Node(String id, BedrockModelBone bone, BedrockModelTexture texture) {
+            this.id = id;
             this.bone = bone;
-            this.name = name;
             this.texture = texture;
         }
 
