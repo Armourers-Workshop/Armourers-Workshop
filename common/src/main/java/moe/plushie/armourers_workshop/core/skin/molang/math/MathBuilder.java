@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Math builder This class is responsible for parsing math expressions provided by user in a string to an {@link IValue}
@@ -47,12 +48,12 @@ public class MathBuilder {
     /**
      * Named variables that can be used in math expression by this builder
      */
-    public Map<String, Variable> variables = new HashMap<>();
+    protected final Map<KeyPath, Variable> variables = new HashMap<>();
 
     /**
      * Map of functions which can be used in the math expressions
      */
-    public Map<String, Class<? extends Function>> functions = new HashMap<>();
+    protected final Map<String, Class<? extends Function>> functions = new HashMap<>();
 
     public MathBuilder() {
         /* Some default values */
@@ -98,7 +99,7 @@ public class MathBuilder {
      * Register a variable
      */
     public void register(Variable variable) {
-        this.variables.put(variable.getName(), variable);
+        this.variables.put(KeyPath.parse(variable.getName()), variable);
     }
 
     /**
@@ -460,7 +461,7 @@ public class MathBuilder {
      * Get variable
      */
     protected Variable getVariable(String name) {
-        return this.variables.get(name);
+        return this.variables.get(KeyPath.parse(name));
     }
 
     /**
@@ -505,5 +506,69 @@ public class MathBuilder {
      */
     protected boolean isDecimal(String s) {
         return s.matches("^-?\\d+(\\.\\d+)?$");
+    }
+
+    /**
+     * A key path for a.b.c style
+     */
+    public static class KeyPath {
+
+        private final String name;
+        private final KeyPath child;
+
+        public KeyPath(String name) {
+            this.name = name;
+            this.child = null;
+        }
+
+        public KeyPath(String name, KeyPath child) {
+            this.name = name;
+            this.child = child;
+        }
+
+        public static KeyPath of(String name) {
+            return new KeyPath(name);
+        }
+
+        public static KeyPath parse(String name) {
+            var keys = name.split("\\.");
+            var index = keys.length;
+            if (index <= 1) {
+                return of(name);
+            }
+            var key = new KeyPath(keys[--index]);
+            while (index > 0) {
+                key = new KeyPath(keys[--index], key);
+            }
+            return key;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof KeyPath that)) return false;
+            return Objects.equals(name, that.name) && Objects.equals(child, that.child);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name, child);
+        }
+
+        @Override
+        public String toString() {
+            if (child != null) {
+                return name + "." + child;
+            }
+            return name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public KeyPath getChild() {
+            return child;
+        }
     }
 }

@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.core.skin.molang.expressions.MolangValue;
 import moe.plushie.armourers_workshop.core.skin.molang.math.LazyVariable;
 import moe.plushie.armourers_workshop.core.skin.molang.math.Variable;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.DoubleSupplier;
 
@@ -13,6 +14,7 @@ public class MolangVirtualMachine {
     private static final MolangVirtualMachine DEFAULT = new MolangVirtualMachine();
 
     private final MolangParser parser = new MolangParser();
+    private final HashMap<String, LazyVariable> variables = new HashMap<>();
 
     public final LazyVariable animTime = register("query.anim_time", 0);
 
@@ -42,6 +44,7 @@ public class MolangVirtualMachine {
 
     public final LazyVariable yawSpeed = register("query.yaw_speed", 0);
 
+
     public MolangVirtualMachine() {
     }
 
@@ -63,7 +66,7 @@ public class MolangVirtualMachine {
      * @param value The value supplier to set
      */
     public void setValue(String name, Double value) {
-        Variable variable = parser.getVariable(name);
+        var variable = parser.getVariable(name);
         variable.set(value);
     }
 
@@ -74,9 +77,9 @@ public class MolangVirtualMachine {
      * @param value The value supplier to set
      */
     public void setValue(String name, DoubleSupplier value) {
-        Variable variable = parser.getVariable(name);
-        if (variable instanceof LazyVariable) {
-            ((LazyVariable) variable).set(value);
+        var variable = parser.getVariable(name);
+        if (variable instanceof LazyVariable lazyVariable) {
+            lazyVariable.set(value);
         } else {
             variable.set(value.getAsDouble());
         }
@@ -87,18 +90,20 @@ public class MolangVirtualMachine {
     }
 
     public LazyVariable register(String name, double value) {
-        LazyVariable variable = new LazyVariable(name, value);
+        var variable = new LazyVariable(name, value);
         parser.register(variable);
+        variables.put(name, variable);
         return variable;
     }
 
     public LazyVariable register(String name, DoubleSupplier value) {
-        LazyVariable variable = new LazyVariable(name, value);
+        var variable = new LazyVariable(name, value);
         parser.register(variable);
+        variables.put(name, variable);
         return variable;
     }
 
-    public Map<String, Variable> getVariables() {
-        return parser.variables;
+    public Map<String, ? extends Variable> getVariables() {
+        return variables;
     }
 }

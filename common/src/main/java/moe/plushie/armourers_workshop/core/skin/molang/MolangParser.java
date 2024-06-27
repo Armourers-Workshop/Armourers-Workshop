@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.molang;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import moe.plushie.armourers_workshop.core.skin.molang.expressions.MolangCompoundValue;
@@ -13,6 +14,7 @@ import moe.plushie.armourers_workshop.core.skin.molang.math.LazyVariable;
 import moe.plushie.armourers_workshop.core.skin.molang.math.MathBuilder;
 import moe.plushie.armourers_workshop.core.skin.molang.math.Variable;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -27,6 +29,14 @@ public class MolangParser extends MathBuilder {
     public static final MolangVariableHolder ONE = new MolangVariableHolder(null, new Constant(1));
 
     public static final String RETURN = "return ";
+
+    private final HashMap<String, KeyPath> keys = new HashMap<>();
+    private final ImmutableMap<String, String> aliases = ImmutableMap.<String, String>builder()
+            .put("c", "context")
+            .put("q", "query")
+            .put("t", "temp")
+            .put("v", "variable")
+            .build();
 
     public MolangParser() {
         super();
@@ -152,9 +162,9 @@ public class MolangParser extends MathBuilder {
         if (function != null) {
             functions.put(newName, function);
         }
-        var variable = variables.remove(oldName);
+        var variable = variables.remove(KeyPath.of(oldName));
         if (variable != null) {
-            variables.put(newName, variable);
+            variables.put(KeyPath.of(newName), variable);
         }
     }
 
@@ -167,7 +177,8 @@ public class MolangParser extends MathBuilder {
      */
     @Override
     public Variable getVariable(String name) {
-        return variables.computeIfAbsent(name, key -> new LazyVariable(key, 0));
+        var keyPath = parseKeyPath(name);
+        return variables.computeIfAbsent(keyPath, p -> new Variable(p.getName(), 0));
     }
 
     public Variable getVariable(String name, MolangCompoundValue currentStatement) {
@@ -193,6 +204,20 @@ public class MolangParser extends MathBuilder {
         }
     }
 
+    private KeyPath parseKeyPath(String name) {
+        var keyPath = keys.get(name);
+        if (keyPath != null) {
+            return keyPath;
+        }
+        keyPath = KeyPath.parse(name);
+        var resolvedName = aliases.get(keyPath.getName());
+        if (resolvedName != null) {
+            keyPath = new KeyPath(resolvedName, keyPath.getChild());
+        }
+        keys.put(name, keyPath);
+        return keyPath;
+    }
+
     /**
      * Extend this method to allow {@link #breakdownChars(String[])} to capture "=" as an operator, so it was easier to
      * parse assignment statements
@@ -201,4 +226,5 @@ public class MolangParser extends MathBuilder {
     protected boolean isOperator(String s) {
         return super.isOperator(s) || s.equals("=");
     }
+
 }
