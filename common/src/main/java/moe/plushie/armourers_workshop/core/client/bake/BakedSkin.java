@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
 import com.google.common.collect.Range;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import moe.plushie.armourers_workshop.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
@@ -73,7 +75,7 @@ public class BakedSkin implements IBakedSkin {
 
     private final ColorScheme colorScheme;
     private final BakedItemModel resolvedItemModel;
-    private final HashMap<Integer, ColorScheme> resolvedColorSchemes = new HashMap<>();
+    private final Int2ObjectMap<ColorScheme> resolvedColorSchemes = new Int2ObjectOpenHashMap<>();
 
     public BakedSkin(String identifier, ISkinType skinType, ArrayList<BakedSkinPart> bakedParts, Skin skin, ColorScheme colorScheme, ColorDescriptor colorDescriptor, SkinUsedCounter usedCounter) {
         this.identifier = identifier;

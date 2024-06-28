@@ -1,25 +1,23 @@
 package moe.plushie.armourers_workshop.compatibility;
 
-import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderObject;
-import moe.plushie.armourers_workshop.core.client.other.VertexIndexBuffer;
+import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
+import moe.plushie.armourers_workshop.core.client.other.VertexBufferObject;
+import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
 import moe.plushie.armourers_workshop.core.client.shader.Shader;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexGroup;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.utils.TickUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.RenderType;
+import org.lwjgl.opengl.GL15;
 
 @Available("[1.16, 1.18)")
 @Environment(EnvType.CLIENT)
 public class AbstractShader extends Shader {
 
-    private int lastMaxVertexCount = 0;
+    private int maxVertexCount;
 
     @Override
     public void begin() {
@@ -30,56 +28,62 @@ public class AbstractShader extends Shader {
     @Override
     public void end() {
         RenderSystem.disableRescaleNormal();
-        SkinRenderObject.unbind();
         super.end();
     }
 
     @Override
     protected void prepare(ShaderVertexGroup group) {
-        // apply changes of texture animation.
-        RenderSystem.setExtendedTextureMatrix(group.getTextureMatrix(TickUtils.animationTicks()));
-
-        lastMaxVertexCount = group.maxVertexCount;
+        super.prepare(group);
         group.getRenderType().setupRenderState();
+        maxVertexCount = group.maxVertexCount;
     }
 
     @Override
     protected void clean(ShaderVertexGroup group) {
+        VertexIndexObject.unbind();
+        VertexBufferObject.unbind();
+        VertexArrayObject.unbind();
         group.getRenderType().clearRenderState();
+        super.clean(group);
     }
 
     @Override
     public void render(ShaderVertexObject object) {
-        VertexFormat vertexFormat = object.getFormat();
-        AbstractLightBufferObject lightBuffer = null;
+        var poseStack = object.getPoseStack();
 
-        if (!object.isGrowing()) {
-            lightBuffer = AbstractLightBufferObject.getLightBuffer(object.getLightmap());
-            lightBuffer.ensureCapacity(lastMaxVertexCount);
-            lightBuffer.bind();
-            lightBuffer.getFormat().setupBufferState(0L);
-        }
-
-        object.getVertexBuffer().bind();
-        vertexFormat.setupBufferState(object.getVertexOffset());
-        setupPolygonState(object);
-
-        OpenPoseStack poseStack = object.getPoseStack();
         RenderSystem.pushMatrix();
         RenderSystem.multMatrix(AbstractPoseStack.convertMatrix(poseStack.last().pose()));
-        RenderSystem.drawArrays(object.getType().mode(), 0, object.getVertexCount());
+
+        // https://sites.google.com/site/threejstuts/home/polygon_offset
+        // For polygons that are parallel to the near and far clipping planes, the depth slope is zero.
+        // For the polygons in your scene with a depth slope near zero, only a small, constant offset is needed.
+        // To create a small, constant offset, you can pass factor = 0.0 and units = 1.0.
+        RenderSystem.polygonOffset(0, object.getPolygonOffset() * -1);
+
+        drawElements(object, object.getArrayObject(), object.getIndexObject(), object.getTotal());
+
         RenderSystem.popMatrix();
-
-        cleanPolygonState(object);
-        vertexFormat.clearBufferState();
-
-        if (lightBuffer != null) {
-            lightBuffer.getFormat().clearBufferState();
-        }
     }
 
     @Override
-    protected void draw(RenderType renderType, VertexIndexBuffer.IndexType indexType, int count, int indices) {
-        throw new AssertionError();
+    protected void drawElements(ShaderVertexObject vertexObject, VertexArrayObject arrayObject, VertexIndexObject indexObject, int count) {
+        // convert quad vertexes to triangle vertexes.
+        count += count / 2;
+
+        vertexObject.getBufferObject().bind();
+        vertexObject.getFormat().setupBufferState(vertexObject.getOffset());
+        vertexObject.getIndexObject().bind(0);
+
+        if (!vertexObject.isGrowing()) {
+            var lightBuffer = AbstractLightBufferObject.getLightBuffer(vertexObject.getLightmap());
+            lightBuffer.ensureCapacity(maxVertexCount);
+            lightBuffer.bind();
+            lightBuffer.getFormat().setupBufferState(0L);
+            vertexObject.getBufferObject().bind();
+        }
+
+        GL15.glDrawElements(GL15.GL_TRIANGLES, count, indexObject.type().asGLType, 0);
+
+        vertexObject.getFormat().clearBufferState();
     }
 }

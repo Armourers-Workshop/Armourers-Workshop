@@ -3,9 +3,11 @@ package moe.plushie.armourers_workshop.compatibility;
 import com.mojang.blaze3d.vertex.BufferUploader;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderExecutor;
-import moe.plushie.armourers_workshop.core.client.other.VertexIndexBuffer;
+import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
+import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
 import moe.plushie.armourers_workshop.core.client.shader.Shader;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexGroup;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -40,10 +42,5 @@ public class AbstractShader extends Shader {
         // we let the vanilla's rendering system normal call rendering once,
         // and then insert our the rendering content in end stage.
         SkinRenderExecutor.execute(group.getRenderType(), () -> super.apply(group, action));
-    }
-
-    @Override
-    protected void draw(RenderType renderType, VertexIndexBuffer.IndexType indexType, int count, int indices) {
-        GL15.glDrawElements(renderType.mode().asGLMode, count, indexType.asGLType, indices);
     }
 }

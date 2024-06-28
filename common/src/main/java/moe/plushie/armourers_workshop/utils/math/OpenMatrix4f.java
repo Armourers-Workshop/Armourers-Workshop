@@ -401,20 +401,20 @@ public class OpenMatrix4f implements IMatrix4f {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof OpenMatrix4f that)) return false;
+        if (Float.compare(that.m10, m10) != 0) return false;
+        if (Float.compare(that.m20, m20) != 0) return false;
+        if (Float.compare(that.m30, m30) != 0) return false;
         if (Float.compare(that.m00, m00) != 0) return false;
         if (Float.compare(that.m11, m11) != 0) return false;
         if (Float.compare(that.m22, m22) != 0) return false;
         if (Float.compare(that.m33, m33) != 0) return false;
-        if (Float.compare(that.m30, m30) != 0) return false;
         if (Float.compare(that.m31, m31) != 0) return false;
         if (Float.compare(that.m32, m32) != 0) return false;
         if (Float.compare(that.m01, m01) != 0) return false;
         if (Float.compare(that.m02, m02) != 0) return false;
         if (Float.compare(that.m03, m03) != 0) return false;
-        if (Float.compare(that.m10, m10) != 0) return false;
         if (Float.compare(that.m12, m12) != 0) return false;
         if (Float.compare(that.m13, m13) != 0) return false;
-        if (Float.compare(that.m20, m20) != 0) return false;
         if (Float.compare(that.m21, m21) != 0) return false;
         if (Float.compare(that.m23, m23) != 0) return false;
         return true;

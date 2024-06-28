@@ -72,6 +72,11 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
     }
 
     protected void tick(T source, SkinWardrobe wardrobe) {
+        tickSlots(source, wardrobe);
+        animationManager.tick();
+    }
+
+    private void tickSlots(T source, SkinWardrobe wardrobe) {
         // ..
         if (wardrobeProvider.tick(wardrobe)) {
             version += 1;
@@ -80,13 +85,12 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
             version += 1;
         }
         if (lastVersion != version) {
-            reload(source, wardrobe);
+            reloadSlots(source, wardrobe);
             lastVersion = version;
         }
-        animationManager.tick();
     }
 
-    protected void reload(T source, SkinWardrobe wardrobe) {
+    private void reloadSlots(T source, SkinWardrobe wardrobe) {
         invalidateAll();
 
         wardrobeProvider.loadDye(wardrobe);
@@ -101,7 +105,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         animationManager.load(activeSkins);
     }
 
-    protected void invalidateAll() {
+    private void invalidateAll() {
         lastVersion = Integer.MAX_VALUE;
 
         isLimitLimbs = false;

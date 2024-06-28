@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderObject;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderState;
-import moe.plushie.armourers_workshop.core.client.other.VertexArrayBuffer;
-import moe.plushie.armourers_workshop.core.client.other.VertexIndexBuffer;
+import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
+import moe.plushie.armourers_workshop.core.client.other.VertexBufferObject;
+import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
@@ -12,26 +12,16 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
 
 @Environment(EnvType.CLIENT)
 public abstract class Shader {
-
-    private int lastMaxVertexCount = 0;
 
     private int lastLightmap = 0;
 
     private OpenMatrix4f lastLightmapMat;
 
     private final SkinRenderState renderState = new SkinRenderState();
-    private final VertexArrayBuffer arrayBuffer = new VertexArrayBuffer();
-    private final VertexIndexBuffer indexBuffer = new VertexIndexBuffer(4, 6, (builder, index) -> {
-        builder.accept(index);
-        builder.accept(index + 1);
-        builder.accept(index + 2);
-        builder.accept(index + 2);
-        builder.accept(index + 3);
-        builder.accept(index);
-    });
 
     public void begin() {
         RenderSystem.backupExtendedFog();
@@ -59,18 +49,16 @@ public abstract class Shader {
     }
 
     protected void prepare(ShaderVertexGroup group) {
-        renderState.push();
-        lastMaxVertexCount = group.maxVertexCount;
-        arrayBuffer.bind();
+        renderState.save();
         // apply changes of texture animation.
         RenderSystem.setExtendedTextureMatrix(group.getTextureMatrix(TickUtils.animationTicks()));
+        RenderSystem.enablePolygonOffset();
     }
 
     protected void clean(ShaderVertexGroup group) {
-        SkinRenderObject.unbind();
-        indexBuffer.unbind();
-        arrayBuffer.unbind();
-        renderState.pop();
+        RenderSystem.disablePolygonOffset();
+        VertexArrayObject.unbind();
+        renderState.load();
     }
 
     public void apply(ShaderVertexGroup group, Runnable action) {
@@ -80,8 +68,6 @@ public abstract class Shader {
     }
 
     public void render(ShaderVertexObject object) {
-        var vertexes = toTriangleVertex(object.getVertexCount());
-        var maxVertexes = toTriangleVertex(lastMaxVertexCount);
         var entry = object.getPoseStack().last();
 
         // we need fast update the uniforms,
@@ -90,51 +76,28 @@ public abstract class Shader {
         RenderSystem.setExtendedNormalMatrix(entry.normal());
         RenderSystem.setExtendedModelViewMatrix(entry.pose());
 
+        // https://sites.google.com/site/threejstuts/home/polygon_offset
+        // For polygons that are parallel to the near and far clipping planes, the depth slope is zero.
+        // For the polygons in your scene with a depth slope near zero, only a small, constant offset is needed.
+        // To create a small, constant offset, you can pass factor = 0.0 and units = 1.0.
+        RenderSystem.polygonOffset(0, object.getPolygonOffset() * -1);
+
         // yes, we need update the uniform every render call.
         // maybe need query uniform from current shader.
-        ShaderUniforms.getInstance().apply();
+        ShaderUniforms.getInstance().apply(renderState.lastProgramId());
 
-        // bind VBO and and setup vertex pointer,
-        // the vertex offset no longer supported in vanilla,
-        // so we need a special version of the format setup.
-        object.getVertexBuffer().bind();
-        object.getFormat().setupBufferState(object.getVertexOffset());
-        setupPolygonState(object);
-
-        // in the newer version rendering system, we will use a shader.
-        // and shader requires we to split the quad into two triangles,
-        // so we need use index buffer to control size of the vertex data.
-        indexBuffer.bind(maxVertexes);
-
-        draw(object.getType(), indexBuffer.type(), vertexes, 0);
-
-        cleanPolygonState(object);
-        object.getFormat().clearBufferState();
+        // ..
+        drawElements(object, object.getArrayObject(), object.getIndexObject(), object.getTotal());
     }
 
-    protected abstract void draw(RenderType renderType, VertexIndexBuffer.IndexType indexType, int count, int indices);
-
-    protected void setupPolygonState(ShaderVertexObject object) {
-        var polygonOffset = object.getPolygonOffset();
-        if (polygonOffset != 0) {
-            // https://sites.google.com/site/threejstuts/home/polygon_offset
-            // For polygons that are parallel to the near and far clipping planes, the depth slope is zero.
-            // For the polygons in your scene with a depth slope near zero, only a small, constant offset is needed.
-            // To create a small, constant offset, you can pass factor = 0.0 and units = 1.0.
-            RenderSystem.polygonOffset(0, polygonOffset * -1);
-            RenderSystem.enablePolygonOffset();
-        }
+    protected void drawElements(ShaderVertexObject vertexObject, VertexArrayObject arrayObject, VertexIndexObject indexObject, int count) {
+        // convert quad vertexes to triangle vertexes.
+        count += count / 2;
+        arrayObject.bind();
+        GL15.glDrawElements(GL15.GL_TRIANGLES, count, indexObject.type().asGLType, 0);
     }
 
-    protected void cleanPolygonState(ShaderVertexObject object) {
-        var polygonOffset = object.getPolygonOffset();
-        if (polygonOffset != 0) {
-            RenderSystem.polygonOffset(0f, 0f);
-            RenderSystem.disablePolygonOffset();
-        }
-    }
-
-    private OpenMatrix4f getLightmapTextureMatrix(ShaderVertexObject object) {
+    protected OpenMatrix4f getLightmapTextureMatrix(ShaderVertexObject object) {
         // We specified the fully lighting when create the vertex,
         // so we don't need any change when growing is required.
         if (object.isGrowing()) {
@@ -153,9 +116,5 @@ public abstract class Shader {
             lastLightmapMat = newValue;
         }
         return lastLightmapMat;
-    }
-
-    private int toTriangleVertex(int count) {
-        return count + count / 2;
     }
 }

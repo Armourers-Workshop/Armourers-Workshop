@@ -176,15 +176,10 @@ public final class RenderSystem extends AbstractRenderSystem {
         }
 
         public void set(T value) {
-            if (!isOnRenderThread()) {
-                recordRenderCall(() -> this.value = value);
-            } else {
-                this.value = value;
-            }
+            this.value = value;
         }
 
         public T get() {
-            assertOnRenderThread();
             return value;
         }
     }

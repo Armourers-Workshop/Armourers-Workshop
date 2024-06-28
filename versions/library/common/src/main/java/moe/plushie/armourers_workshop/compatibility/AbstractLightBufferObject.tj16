@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferBuilder;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderObject;
+import moe.plushie.armourers_workshop.core.client.other.VertexBufferObject;
 import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL11;
 
 @Available("[1.16, 1.18)")
 @Environment(EnvType.CLIENT)
-public class AbstractLightBufferObject extends SkinRenderObject {
+public class AbstractLightBufferObject extends VertexBufferObject {
 
     public static final RenderType TYPE = RenderType.create("", createDefaultFormat(), GL11.GL_QUADS, 256, false, false, RenderType.CompositeState.builder().createCompositeState(false));
     public static final int PAGE_SIZE = 4096;

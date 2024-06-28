@@ -25,7 +25,7 @@ public class ShaderVertexMerger {
             pending.put(pass.getType(), group);
         }
         group.add(pass);
-        maxVertexCount = Math.max(maxVertexCount, pass.getVertexCount());
+        maxVertexCount = Math.max(maxVertexCount, pass.getTotal());
     }
 
     public void forEach(Consumer<ShaderVertexGroup> consumer) {

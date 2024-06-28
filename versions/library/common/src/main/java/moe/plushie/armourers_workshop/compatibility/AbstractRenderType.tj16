@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.compatibility;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IRenderTypeBuilder;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
@@ -26,8 +24,6 @@ import java.util.function.Supplier;
 @Available("[1.16, 1.18)")
 @Environment(EnvType.CLIENT)
 public class AbstractRenderType extends RenderType {
-
-    private static final VertexFormat SKIN_NORMAL_FORMAT = new VertexFormat(ImmutableList.<VertexFormatElement>builder().add(DefaultVertexFormat.ELEMENT_POSITION).add(DefaultVertexFormat.ELEMENT_COLOR).add(DefaultVertexFormat.ELEMENT_UV0).add(DefaultVertexFormat.ELEMENT_UV1).add(DefaultVertexFormat.ELEMENT_NORMAL).add(DefaultVertexFormat.ELEMENT_PADDING).build());
 
     private static final TexturingStateShard COLORS_OFFSET = new TexturingStateShard("aw_offset_ov", () -> {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);
@@ -89,13 +85,13 @@ public class AbstractRenderType extends RenderType {
         it.put(SkinRenderFormat.ENTITY_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING)));
         it.put(SkinRenderFormat.ENTITY_ALPHA, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
 
-        it.put(SkinRenderFormat.SKIN_FACE_SOLID, () -> _builder(SKIN_NORMAL_FORMAT, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP)));
-        it.put(SkinRenderFormat.SKIN_FACE_TRANSLUCENT, () -> _builder(SKIN_NORMAL_FORMAT, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP).setAlphaState(DEFAULT_ALPHA)));
+        it.put(SkinRenderFormat.SKIN_FACE_SOLID, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP)));
+        it.put(SkinRenderFormat.SKIN_FACE_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP).setAlphaState(DEFAULT_ALPHA)));
         it.put(SkinRenderFormat.SKIN_FACE_LIGHTING, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET)));
         it.put(SkinRenderFormat.SKIN_FACE_LIGHTING_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setAlphaState(DEFAULT_ALPHA)));
 
-        it.put(SkinRenderFormat.SKIN_FACE_TEXTURE, () -> _builder(SKIN_NORMAL_FORMAT, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP)));
-        it.put(SkinRenderFormat.SKIN_FACE_LIGHTING_TEXTURE, () -> _builder(SKIN_NORMAL_FORMAT, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setAlphaState(DEFAULT_ALPHA)));
+        it.put(SkinRenderFormat.SKIN_FACE_TEXTURE, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP)));
+        it.put(SkinRenderFormat.SKIN_FACE_LIGHTING_TEXTURE, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setTexturingState(COLORS_OFFSET).setAlphaState(DEFAULT_ALPHA)));
     });
 
     public AbstractRenderType(String name, RenderType delegate, boolean affectsCrumbling, boolean sortUpload, Runnable setupRenderState, Runnable clearRenderState) {

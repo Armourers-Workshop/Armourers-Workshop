@@ -1,11 +1,12 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import moe.plushie.armourers_workshop.init.ModLog;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.lwjgl.opengl.GL20;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
@@ -13,7 +14,7 @@ public class ShaderUniforms {
 
     private static ShaderUniforms INSTANCE = new ShaderUniforms();
 
-    private final HashMap<Integer, State> states = new HashMap<>();
+    private final Int2ObjectMap<State> states = new Int2ObjectOpenHashMap<>();
 
     public static ShaderUniforms getInstance() {
         return INSTANCE;
@@ -48,8 +49,7 @@ public class ShaderUniforms {
         ModLog.debug("reset all uniforms from shader changes");
     }
 
-    public void apply() {
-        var programId = GL20.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+    public void apply(int programId) {
         if (programId == 0) {
             return;
         }

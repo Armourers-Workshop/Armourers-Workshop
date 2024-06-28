@@ -10,20 +10,21 @@ import java.nio.ByteBuffer;
 import java.util.function.IntConsumer;
 
 @Environment(EnvType.CLIENT)
-public class VertexIndexBuffer {
+public class VertexIndexObject {
 
+    private final int id;
     private final int vertexStride;
     private final int indexStride;
     private final IndexGenerator generator;
 
-    private int name;
     private int indexCount;
     private IndexType type = IndexType.BYTE;
 
-    public VertexIndexBuffer(int i, int j, IndexGenerator generator) {
+    public VertexIndexObject(int i, int j, IndexGenerator generator) {
         this.vertexStride = i;
         this.indexStride = j;
         this.generator = generator;
+        this.id = GL15.glGenBuffers();
     }
 
     public boolean hasStorage(int i) {
@@ -31,14 +32,11 @@ public class VertexIndexBuffer {
     }
 
     public void bind(int total) {
-        if (name == 0) {
-            name = GL15.glGenBuffers();
-        }
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, name);
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, id);
         ensureStorage(total);
     }
 
-    public void unbind() {
+    public static void unbind() {
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
@@ -51,7 +49,7 @@ public class VertexIndexBuffer {
         var indexType = IndexType.least(total);
         var j = MathUtils.roundToward(total * indexType.bytes, 4);
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, j, GL15.GL_DYNAMIC_DRAW);
-        ByteBuffer buffer = GL15.glMapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, GL15.GL_WRITE_ONLY);
+        var buffer = GL15.glMapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, GL15.GL_WRITE_ONLY);
         if (buffer == null) {
             throw new RuntimeException("Failed to map GL buffer");
         }

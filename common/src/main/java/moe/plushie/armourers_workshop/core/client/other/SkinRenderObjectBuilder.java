@@ -1,9 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import com.apple.library.uikit.UIColor;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.RemovalNotification;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
@@ -15,7 +12,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.core.client.texture.TextureManager;
 import moe.plushie.armourers_workshop.core.data.cache.AutoreleasePool;
-import moe.plushie.armourers_workshop.core.data.cache.PrimaryKey;
+import moe.plushie.armourers_workshop.core.data.cache.CacheQueue;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
@@ -33,18 +30,24 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBuilder {
 
     private static final ExecutorService workThread = ThreadUtils.newFixedThreadPool(1, "AW-SKIN-VB");
-    private static final Cache<Object, CachedTask> cachingTasks = CacheBuilder.newBuilder()
-            .expireAfterAccess(30, TimeUnit.SECONDS)
-            .removalListener(CachedTask::release)
-            .build();
+    private static final CacheQueue<Object, CachedTask> cachingTasks = new CacheQueue<>(30000, CachedTask::release);
+
+    private static final VertexIndexObject indexBufferObject = new VertexIndexObject(4, 6, (builder, index) -> {
+        builder.accept(index);
+        builder.accept(index + 1);
+        builder.accept(index + 2);
+        builder.accept(index + 2);
+        builder.accept(index + 3);
+        builder.accept(index);
+    });
 
     protected final BakedSkin skin;
     protected final CachedRenderPipeline cachedRenderPipeline = new CachedRenderPipeline();
@@ -57,8 +60,7 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
     }
 
     public static void clearAllCache() {
-        cachingTasks.invalidateAll();
-        cachingTasks.cleanUp();
+        cachingTasks.clearAll();
     }
 
     @Override
@@ -120,8 +122,8 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
 
     @Nullable
     private CachedTask compile(BakedSkinPart part, BakedSkin bakedSkin, ColorScheme scheme, int overlay) {
-        var key = PrimaryKey.of(bakedSkin.getId(), part.getId(), part.requirements(scheme), overlay);
-        var cachedTask = cachingTasks.getIfPresent(key);
+        var key = CachedTaskKey.of(bakedSkin.getId(), part.getId(), part.requirements(scheme), overlay);
+        var cachedTask = cachingTasks.get(key);
         if (cachedTask != null) {
             if (cachedTask.isCompiled) {
                 return cachedTask;
@@ -213,22 +215,26 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
     }
 
     private void combineAndUpload(ArrayList<CachedTask> cachedTasks, ArrayList<CompiledTask> buildingTasks) {
+        var maxVertexCount = 0;
         var totalRenderedBytes = 0;
-        var vertexBuffer = new SkinRenderObject();
         var byteBuffers = new ArrayList<ByteBuffer>();
 
         for (var compiledTask : buildingTasks) {
             var renderedBuffer = compiledTask.bufferBuilder;
             var format = renderedBuffer.format();
             var byteBuffer = renderedBuffer.vertexBuffer().duplicate();
-            compiledTask.vertexBuffer = vertexBuffer;
             compiledTask.vertexCount = renderedBuffer.vertexCount();
             compiledTask.vertexOffset = totalRenderedBytes;
             compiledTask.bufferBuilder = null;
             compiledTask.format = format;
             byteBuffers.add(byteBuffer);
+            maxVertexCount = Math.max(maxVertexCount, compiledTask.vertexCount);
             totalRenderedBytes += byteBuffer.remaining();
             renderedBuffer.release();
+        }
+
+        for (var cachedTask : cachedTasks) {
+            cachedTask.maxVertexCount = maxVertexCount;
         }
 
         var mergedByteBuffer = ByteBuffer.allocateDirect(totalRenderedBytes);
@@ -236,24 +242,35 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
             mergedByteBuffer.put(byteBuffer);
         }
         mergedByteBuffer.rewind();
-        vertexBuffer.upload(mergedByteBuffer);
 
-        RenderSystem.recordRenderCall(() -> {
-            cachedTasks.forEach(it -> it.finish(vertexBuffer));
-            vertexBuffer.release();
-        });
+        // upload only be called in the render thread !!!
+        RenderSystem.recordRenderCall(() -> upload(mergedByteBuffer, cachedTasks));
+    }
+
+    private void upload(ByteBuffer byteBuffer, ArrayList<CachedTask> cachedTasks) {
+        var renderState = new SkinRenderState();
+        var vertexBuffer = new VertexBufferObject();
+        renderState.save();
+        vertexBuffer.upload(byteBuffer);
+        for (var cachedTask : cachedTasks) {
+            cachedTask.upload(vertexBuffer);
+        }
+        vertexBuffer.release();
+        renderState.load();
     }
 
     protected static class CachedTask {
 
         int totalTask;
+        int maxVertexCount;
         boolean isCompiled = false;
         ArrayList<CompiledTask> mergedTasks;
         HashSet<RenderType> usingTypes;
         BakedSkinPart part;
         ColorScheme scheme;
         int overlay;
-        SkinRenderObject renderObject;
+
+        VertexBufferObject renderObject;
 
         CachedTask(BakedSkinPart part, ColorScheme scheme, int overlay) {
             this.part = part;
@@ -261,23 +278,19 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
             this.overlay = overlay;
         }
 
-        static void release(RemovalNotification<Object, Object> notification) {
-            if (notification.getValue() instanceof CachedTask task) {
-                task.release();
-            }
-        }
-
-        void setRenderObject(SkinRenderObject renderObject) {
+        void setRenderObject(VertexBufferObject renderObject) {
             if (this.renderObject != null) {
                 this.renderObject.release();
+                this.clearBufferState();
             }
             this.renderObject = renderObject;
             if (this.renderObject != null) {
                 this.renderObject.retain();
+                this.setupBufferState();
             }
         }
 
-        void finish(SkinRenderObject renderObject) {
+        void upload(VertexBufferObject renderObject) {
             if (mergedTasks == null) {
                 return; // is released or not init.
             }
@@ -298,7 +311,88 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         boolean isEmpty() {
             return mergedTasks == null || mergedTasks.isEmpty();
         }
+
+        private void setupBufferState() {
+            // compile vao of data.
+            for (var task : mergedTasks) {
+                // link to gl context.
+                task.indexObject = indexBufferObject;
+                task.bufferObject = renderObject;
+                task.arrayObject = new VertexArrayObject();
+
+                // in the newer version rendering system, we will use a shader.
+                // and shader requires we to split the quad into two triangles,
+                // so we need use index buffer to control size of the vertex data.
+                task.arrayObject.bind();
+                task.bufferObject.bind();
+                task.indexObject.bind(maxVertexCount * 2);
+
+                // the vertex offset no longer supported in vanilla,
+                // so we need a special version of the format setup.
+                task.format.setupBufferState(task.vertexOffset);
+
+                // unbind the VBO/VAO to prevent accidentally modify VAO.
+                VertexArrayObject.unbind();
+                VertexBufferObject.unbind();
+
+                // because the setup state by each format maybe different,
+                // so we need to clear state first.
+                task.format.clearBufferState();
+            }
+            VertexIndexObject.unbind();
+        }
+
+        private void clearBufferState() {
+            for (var compiledTask : mergedTasks) {
+                compiledTask.arrayObject.close();
+            }
+        }
     }
+
+    protected static class CachedTaskKey {
+
+        protected static final AutoreleasePool<CachedTaskKey> POOL = AutoreleasePool.create(CachedTaskKey::new);
+
+        int p1;
+        int p2;
+        int p4;
+        Object p3;
+        int hash;
+
+        private CachedTaskKey set(int hash, int p1, int p2, Object p3, int p4) {
+            this.hash = hash;
+            this.p1 = p1;
+            this.p2 = p2;
+            this.p3 = p3;
+            this.p4 = p4;
+            return this;
+        }
+
+        public static CachedTaskKey of(int p1, int p2, Object p3, int p4) {
+            int hash = p1;
+            hash = 31 * hash + p2;
+            hash = 31 * hash + (p3 == null ? 0 : p3.hashCode());
+            hash = 31 * hash + p4;
+            return POOL.get().set(hash, p1, p2, p3, p4);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof CachedTaskKey that)) return false;
+            return p1 == that.p1 && p2 == that.p2 && p4 == that.p4 && Objects.equals(p3, that.p3);
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+
+        public CachedTaskKey copy() {
+            return new CachedTaskKey().set(hash, p1, p2, p3, p4);
+        }
+    }
+
 
     static class CompiledTask {
 
@@ -309,9 +403,11 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         int vertexCount;
         int vertexOffset;
         IRenderedBuffer bufferBuilder;
-        SkinRenderObject vertexBuffer;
         VertexFormat format;
 
+        VertexArrayObject arrayObject;
+        VertexBufferObject bufferObject;
+        VertexIndexObject indexObject;
 
         CompiledTask(RenderType renderType, IRenderedBuffer bufferBuilder, float polygonOffset, ISkinPartType partType) {
             this.partType = partType;
@@ -419,18 +515,28 @@ public class SkinRenderObjectBuilder implements SkinRenderBufferSource.ObjectBui
         }
 
         @Override
-        public int getVertexOffset() {
+        public int getOffset() {
             return compiledTask.vertexOffset;
         }
 
         @Override
-        public int getVertexCount() {
+        public int getTotal() {
             return compiledTask.vertexCount;
         }
 
         @Override
-        public SkinRenderObject getVertexBuffer() {
-            return compiledTask.vertexBuffer;
+        public VertexArrayObject getArrayObject() {
+            return compiledTask.arrayObject;
+        }
+
+        @Override
+        public VertexIndexObject getIndexObject() {
+            return compiledTask.indexObject;
+        }
+
+        @Override
+        public VertexBufferObject getBufferObject() {
+            return compiledTask.bufferObject;
         }
 
         @Override
