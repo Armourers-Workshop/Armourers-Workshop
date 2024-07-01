@@ -21,9 +21,10 @@ public class AbstractProgramProvider extends AbstractProgramProviderImpl {
 
     @Override
     public Function<String, String> getTransformer(ResourceLocation location) {
-        if (!location.getPath().endsWith("." + type)) {
-            return null;
+        var path = location.getPath();
+        if (path.endsWith("." + type)) {
+            return preprocessor::process;
         }
-        return preprocessor::process;
+        return null;
     }
 }

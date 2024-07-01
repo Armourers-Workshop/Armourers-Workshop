@@ -162,7 +162,7 @@ public abstract class ShaderUniform {
         public Loader(int programId) {
             this.programId = programId;
             register("aw_MatrixFlags", RenderSystem::getExtendedMatrixFlags, Int::new);
-            //register("aw_ColorModulator", RenderSystem::getExtendedColorModulator, Vec4f::new);
+            register("aw_OverlayTextureMatrix", RenderSystem::getExtendedOverlayTextureMatrix, Matrix4f::new);
             register("aw_LightmapTextureMatrix", RenderSystem::getExtendedLightmapTextureMatrix, Matrix4f::new);
             register("aw_TextureMatrix", RenderSystem::getExtendedTextureMatrix, Matrix4f::new);
             register("aw_NormalMatrix", RenderSystem::getExtendedNormalMatrix, Matrix3f::new);

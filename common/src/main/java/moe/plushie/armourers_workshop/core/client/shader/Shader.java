@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
-import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -18,7 +17,7 @@ import org.lwjgl.opengl.GL15;
 @Environment(EnvType.CLIENT)
 public abstract class Shader {
 
-    private final Int2ObjectOpenHashMap<Vector4f> overlayMatrices = new Int2ObjectOpenHashMap<>();
+    private final Int2ObjectOpenHashMap<OpenMatrix4f> overlayMatrices = new Int2ObjectOpenHashMap<>();
     private final Int2ObjectOpenHashMap<OpenMatrix4f> lightmapMatrices = new Int2ObjectOpenHashMap<>();
     private final SkinRenderState renderState = new SkinRenderState();
 
@@ -71,7 +70,7 @@ public abstract class Shader {
 
         // we need fast update the uniforms,
         // so we're never using from vanilla uniforms.
-        //RenderSystem.setExtendedColorModulator(getColorModulator(object));
+        RenderSystem.setExtendedOverlayTextureMatrix(getOverlayTextureMatrix(object));
         RenderSystem.setExtendedLightmapTextureMatrix(getLightmapTextureMatrix(object));
         RenderSystem.setExtendedNormalMatrix(entry.normal());
         RenderSystem.setExtendedModelViewMatrix(entry.pose());
@@ -101,19 +100,20 @@ public abstract class Shader {
         return renderState.lastProgramId();
     }
 
-    protected Vector4f getColorModulator(ShaderVertexObject object) {
-        // We specified the on overlay  when create the vertex,
-        // so we don't need any change when overlay is required.
-        var test = OverlayTexture.pack(0, true);
-        if (test == OverlayTexture.NO_OVERLAY) {
-            return Vector4f.ONE;
+    protected OpenMatrix4f getOverlayTextureMatrix(ShaderVertexObject object) {
+        // We specified the no overlay when create the vertex,
+        // so we don't need any change when no overlay is required.
+        if (object.getOverlay() == OverlayTexture.NO_OVERLAY) {
+            return OpenMatrix4f.identity();
         }
         // a special matrix, function is reset location of the texture.
-        return overlayMatrices.computeIfAbsent(test, overlay -> {
+        return overlayMatrices.computeIfAbsent(object.getOverlay(), overlay -> {
             var u = overlay & 0xffff;
             var v = (overlay >> 16) & 0xffff;
-            var k = (1.0f - (float)v / 15.0f * 0.75f);
-            return new Vector4f(k, 1, 1, 1);
+            OpenMatrix4f newValue = OpenMatrix4f.createScaleMatrix(0, 0, 0);
+            newValue.m03 = u;
+            newValue.m13 = v;
+            return newValue;
         });
     }
 

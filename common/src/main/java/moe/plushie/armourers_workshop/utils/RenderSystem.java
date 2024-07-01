@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractRenderSystem;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
-import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -23,9 +22,9 @@ public final class RenderSystem extends AbstractRenderSystem {
     private static final AtomicInteger extendedMatrixFlags = new AtomicInteger();
     private static final AtomicInteger extendedScissorFlags = new AtomicInteger();
 
-    private static final Storage<Vector4f> extendedColorModulator = new Storage<>(new Vector4f(1, 1, 1, 1));
     private static final Storage<OpenMatrix3f> extendedNormalMatrix = new Storage<>(OpenMatrix3f.createScaleMatrix(1, 1, 1));
     private static final Storage<OpenMatrix4f> extendedTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
+    private static final Storage<OpenMatrix4f> extendedOverlayTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
     private static final Storage<OpenMatrix4f> extendedLightmapTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
     private static final Storage<OpenMatrix4f> extendedModelViewMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
     private static final Storage<PaintColor> extendedTintColor = new Storage<>(PaintColor.WHITE);
@@ -78,14 +77,6 @@ public final class RenderSystem extends AbstractRenderSystem {
     }
 
 
-    public static void setExtendedColorModulator(Vector4f value) {
-        extendedColorModulator.set(value);
-    }
-
-    public static Vector4f getExtendedColorModulator() {
-        return extendedColorModulator.get();
-    }
-
     public static OpenMatrix3f getExtendedNormalMatrix() {
         return extendedNormalMatrix.get();
     }
@@ -100,6 +91,14 @@ public final class RenderSystem extends AbstractRenderSystem {
 
     public static void setExtendedTextureMatrix(OpenMatrix4f value) {
         extendedTextureMatrix.set(value);
+    }
+
+    public static OpenMatrix4f getExtendedOverlayTextureMatrix() {
+        return extendedOverlayTextureMatrix.get();
+    }
+
+    public static void setExtendedOverlayTextureMatrix(OpenMatrix4f value) {
+        extendedOverlayTextureMatrix.set(value);
     }
 
     public static OpenMatrix4f getExtendedLightmapTextureMatrix() {
