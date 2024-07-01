@@ -19,7 +19,7 @@ public class BlockEntityRenderPatch<T extends BlockEntity> extends SkinRenderCon
         setLightmap(lightmap);
         setOverlay(overlay);
         setPose(poseStack);
-        setBuffers(bufferSource);
+        setBufferSource(bufferSource);
     }
 
     public void deactivate(T entity, float partialTicks, int lightmap, int overlay, IPoseStack poseStack, IBufferSource bufferSource) {

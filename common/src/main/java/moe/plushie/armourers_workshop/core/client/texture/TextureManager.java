@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.data.IAssociatedObjectProvider;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.init.ModLog;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -92,6 +93,7 @@ public class TextureManager {
         }
 
         protected void open() {
+            ModLog.debug("upload texture {}", location);
             Minecraft.getInstance().getTextureManager().register(location.toLocation(), texture);
             isUpload = true;
         }
@@ -102,6 +104,7 @@ public class TextureManager {
                 return;
             }
             isUpload = false;
+            ModLog.debug("close texture {}", location);
             Minecraft.getInstance().getTextureManager().release(location.toLocation());
         }
 

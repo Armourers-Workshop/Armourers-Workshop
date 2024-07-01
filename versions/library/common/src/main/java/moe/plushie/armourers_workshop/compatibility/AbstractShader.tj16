@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.compatibility;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
-import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexBufferObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
 import moe.plushie.armourers_workshop.core.client.shader.Shader;
@@ -42,13 +41,13 @@ public class AbstractShader extends Shader {
     protected void clean(ShaderVertexGroup group) {
         VertexIndexObject.unbind();
         VertexBufferObject.unbind();
-        VertexArrayObject.unbind();
         group.getRenderType().clearRenderState();
         super.clean(group);
     }
 
     @Override
     public void render(ShaderVertexObject object) {
+        var count = object.getTotal();
         var poseStack = object.getPoseStack();
 
         RenderSystem.pushMatrix();
@@ -60,30 +59,22 @@ public class AbstractShader extends Shader {
         // To create a small, constant offset, you can pass factor = 0.0 and units = 1.0.
         RenderSystem.polygonOffset(0, object.getPolygonOffset() * -1);
 
-        drawElements(object, object.getArrayObject(), object.getIndexObject(), object.getTotal());
+        object.getBufferObject().bind();
+        object.getFormat().setupBufferState(object.getOffset());
+        object.getIndexObject().bind();
 
-        RenderSystem.popMatrix();
-    }
-
-    @Override
-    protected void drawElements(ShaderVertexObject vertexObject, VertexArrayObject arrayObject, VertexIndexObject indexObject, int count) {
-        // convert quad vertexes to triangle vertexes.
-        count += count / 2;
-
-        vertexObject.getBufferObject().bind();
-        vertexObject.getFormat().setupBufferState(vertexObject.getOffset());
-        vertexObject.getIndexObject().bind(0);
-
-        if (!vertexObject.isGrowing()) {
-            var lightBuffer = AbstractLightBufferObject.getLightBuffer(vertexObject.getLightmap());
+        if (!object.isGrowing()) {
+            var lightBuffer = AbstractLightBufferObject.getLightBuffer(object.getLightmap());
             lightBuffer.ensureCapacity(maxVertexCount);
             lightBuffer.bind();
             lightBuffer.getFormat().setupBufferState(0L);
-            vertexObject.getBufferObject().bind();
+            object.getBufferObject().bind();
         }
 
-        GL15.glDrawElements(GL15.GL_TRIANGLES, count, indexObject.type().asGLType, 0);
+        GL15.glDrawElements(GL15.GL_TRIANGLES, count + count / 2, object.getIndexObject().type().asGLType, 0);
 
-        vertexObject.getFormat().clearBufferState();
+        object.getFormat().clearBufferState();
+
+        RenderSystem.popMatrix();
     }
 }

@@ -6,9 +6,7 @@ import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationManager;
-import moe.plushie.armourers_workshop.core.client.animation.AnimationState;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkinAnimation;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TickUtils;
@@ -18,9 +16,10 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
+import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
-public class SkinRenderContext {
+public class SkinRenderContext implements ConcurrentRenderingContext {
 
     public static final SkinRenderContext EMPTY = new SkinRenderContext();
     private static final Iterator<SkinRenderContext> POOL = Iterators.cycle(ObjectUtils.makeItems(100, i -> new SkinRenderContext()));
@@ -33,7 +32,7 @@ public class SkinRenderContext {
     protected IBufferSource bufferSource;
 
     protected EntityRenderData renderData;
-    protected SkinRenderBufferSource bufferProvider;
+    protected Function<BakedSkin, ConcurrentBufferBuilder> bufferProvider;
 
     protected SkinItemSource itemSource;
 
@@ -61,7 +60,7 @@ public class SkinRenderContext {
         context.setAnimationTicks(TickUtils.animationTicks());
         context.setTransformType(transformType);
         context.setPose(poseStack);
-        context.setBuffers(bufferSource);
+        context.setBufferSource(bufferSource);
         return context;
     }
 
@@ -146,17 +145,6 @@ public class SkinRenderContext {
         return transformType;
     }
 
-    public void setReferenced(SkinItemSource itemSource) {
-        this.itemSource = itemSource;
-    }
-
-    public SkinItemSource getReferenced() {
-        if (this.itemSource != null) {
-            return this.itemSource;
-        }
-        return SkinItemSource.EMPTY;
-    }
-
     public void setRenderData(EntityRenderData renderData) {
         this.renderData = renderData;
     }
@@ -176,35 +164,54 @@ public class SkinRenderContext {
         return animationManager;
     }
 
-    public AnimationState getAnimationState(BakedSkinAnimation animation) {
-        var animationManager = getAnimationManager();
-        if (animationManager != null) {
-            return animationManager.getAnimationState(animation);
-        }
-        return null;
-    }
-
     public void setPose(IPoseStack pose) {
         this.poseStack = pose;
     }
 
-    public void setBuffers(IBufferSource bufferSource) {
-        this.bufferSource = bufferSource;
-    }
 
-    public IBufferSource getBuffers() {
-        return bufferSource;
-    }
-
-    public SkinRenderBufferSource.ObjectBuilder getBuffer(@NotNull BakedSkin skin) {
+    public ConcurrentBufferBuilder getBuffer(@NotNull BakedSkin skin) {
         if (bufferProvider != null) {
-            return bufferProvider.getBuffer(skin);
+            return bufferProvider.apply(skin);
         }
         var bufferBuilder = SkinVertexBufferBuilder.getBuffer(bufferSource);
         return bufferBuilder.getBuffer(skin);
     }
 
-    public void setBufferProvider(SkinRenderBufferSource bufferProvider) {
+    public void setBufferProvider(Function<BakedSkin, ConcurrentBufferBuilder> bufferProvider) {
         this.bufferProvider = bufferProvider;
+    }
+
+    public void setBufferSource(IBufferSource bufferSource) {
+        this.bufferSource = bufferSource;
+    }
+
+    @Override
+    public IBufferSource getBufferSource() {
+        return bufferSource;
+    }
+
+    @Override
+    public float getRenderPriority() {
+        if (itemSource != null) {
+            return itemSource.getRenderPriority();
+        }
+        return 0;
+    }
+
+    public void setItemSource(SkinItemSource itemSource) {
+        this.itemSource = itemSource;
+    }
+
+    @Override
+    public SkinItemSource getItemSource() {
+        if (this.itemSource != null) {
+            return this.itemSource;
+        }
+        return SkinItemSource.EMPTY;
+    }
+
+    @Override
+    public IPoseStack getPoseStack() {
+        return poseStack;
     }
 }

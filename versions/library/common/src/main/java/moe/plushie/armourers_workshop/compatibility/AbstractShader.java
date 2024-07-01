@@ -3,16 +3,11 @@ package moe.plushie.armourers_workshop.compatibility;
 import com.mojang.blaze3d.vertex.BufferUploader;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderExecutor;
-import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
-import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
 import moe.plushie.armourers_workshop.core.client.shader.Shader;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexGroup;
-import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.RenderType;
-import org.lwjgl.opengl.GL15;
 
 @Available("[1.18, )")
 @Environment(EnvType.CLIENT)

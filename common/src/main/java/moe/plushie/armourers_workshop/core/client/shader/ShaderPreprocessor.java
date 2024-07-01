@@ -38,6 +38,7 @@ public class ShaderPreprocessor {
     private String processIrisShader(Builder builder) {
         builder.uniform("mat4", "iris_TextureMat", "mat4", "aw_TextureMatrix", "($1 * $2)");
         builder.attribute("ivec2", "iris_UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
+        //builder.attribute("vec4", "iris_Color", "vec4", "aw_ColorModulator", "($1 * $2)");
         builder.attribute("vec3", "iris_Normal", "mat3", "aw_NormalMatrix", "($1 * $2)");
         builder.uniform("mat4", "iris_ModelViewMat", "mat4", "aw_ModelViewMat", "($1 * $2)");
         return build("iris", builder);
@@ -46,6 +47,7 @@ public class ShaderPreprocessor {
     private String processOptifineShader(Builder builder) {
         builder.attribute("ivec2", "vaUV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
         builder.uniform("mat4", "textureMatrix", "mat4", "aw_TextureMatrix", "($1 * $2)");
+        //builder.attribute("vec4", "vaColor", "vec4", "aw_ColorModulator", "($1 * $2)");
         builder.attribute("vec3", "vaNormal", "mat3", "aw_NormalMatrix", "($1 * $2)");
         builder.uniform("mat4", "modelViewMatrix", "mat4", "aw_ModelViewMat", "($1 * $2)");
         return build("optifine", builder);
@@ -62,6 +64,7 @@ public class ShaderPreprocessor {
     private String processVanillaShader(Builder builder) {
         builder.attribute("ivec2", "UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
         builder.attribute("vec2", "UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 1, 1))");
+        //builder.attribute("vec4", "Color", "vec4", "aw_ColorModulator", "($1 * $2)");
         builder.attribute("vec3", "Normal", "mat3", "aw_NormalMatrix", "($1 * $2)");
         builder.uniform("mat4", "ModelViewMat", "mat4", "aw_ModelViewMat", "($1 * $2)");
         return build("vanilla", builder);

@@ -1,0 +1,19 @@
+package moe.plushie.armourers_workshop.compatibility.client;
+
+import com.mojang.blaze3d.vertex.VertexFormat;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderState;
+import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
+import moe.plushie.armourers_workshop.core.client.other.VertexBufferObject;
+import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
+@Available("[1.16, 1.18)")
+@Environment(EnvType.CLIENT)
+public class AbstractVertexArrayObject extends VertexArrayObject {
+
+    public static VertexArrayObject create(VertexFormat format, long offset, VertexBufferObject bufferObject, VertexIndexObject indexObject) {
+        return new VertexArrayObject(0);
+    }
+}

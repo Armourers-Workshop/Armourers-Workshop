@@ -78,10 +78,11 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         transformer.applyTo(armature);
         var context = SkinRenderContext.alloc(renderData, packedLightIn, partialTicks, null, poseStack, bufferSource);
         for (var entry : renderData.getArmorSkins()) {
-            context.setReferenced(SkinItemSource.create(entry.getRenderPriority(), entry.getItemStack()));
+            context.setItemSource(SkinItemSource.create(entry.getRenderPriority(), entry.getItemStack()));
             var bakedSkin = entry.getBakedSkin();
             bakedSkin.setupAnim(entity, context);
-            SkinRenderer.render(entity, armature, bakedSkin, entry.getBakedScheme(), context);
+            var colorScheme = bakedSkin.resolve(entity, entry.getBakedScheme());
+            SkinRenderer.render(entity, armature, bakedSkin, colorScheme, context);
         }
         context.release();
 

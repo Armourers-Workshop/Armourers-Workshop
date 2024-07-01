@@ -46,9 +46,11 @@ public class SkinRenderTesselator extends SkinRenderContext {
 
     public int draw(IPoseStack poseStack, IBufferSource bufferSource) {
         setPose(poseStack);
-        setBuffers(bufferSource);
+        setBufferSource(bufferSource);
         bakedSkin.setupAnim(mannequin, this);
-        return SkinRenderer.render(mannequin, bakedArmature, bakedSkin, getColorScheme(), this);
+        var colorScheme = bakedSkin.resolve(mannequin, getColorScheme());
+        SkinRenderer.render(mannequin, bakedArmature, bakedSkin, colorScheme, this);
+        return SkinRenderHelper.getRenderCount(bakedSkin);
     }
 
     public MannequinEntity getMannequin() {
@@ -60,6 +62,6 @@ public class SkinRenderTesselator extends SkinRenderContext {
     }
 
     public Rectangle3f getBakedRenderBounds() {
-        return bakedSkin.getRenderBounds(getReferenced());
+        return bakedSkin.getRenderBounds(getItemSource());
     }
 }

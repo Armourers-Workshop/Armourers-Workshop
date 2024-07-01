@@ -12,7 +12,8 @@ public class AnimationState {
     private float startTime0;
     private final float duration;
 
-    private final SkinAnimationLoop loop;
+    private int playCount;
+
     private final Frame[] frames;
     private final Vector3f[] lastValues;
 
@@ -20,7 +21,6 @@ public class AnimationState {
 
     public AnimationState(BakedSkinAnimation animation) {
         this.duration = animation.getDuration();
-        this.loop = animation.getLoop();
         this.frames = new Frame[animation.getChannels()];
         this.lastValues = new Vector3f[animation.getChannels()];
         this.requiresVirtualMachine = animation.getProcessors().stream().anyMatch(AnimationProcessor::isRequiresVirtualMachine);
@@ -35,6 +35,13 @@ public class AnimationState {
         return startTime;
     }
 
+    public void setPlayCount(int playCount) {
+        this.playCount = playCount;
+    }
+
+    public int getPlayCount() {
+        return playCount;
+    }
 
     public void setFrame(int channel, Frame frame) {
         frames[channel] = frame;
@@ -64,24 +71,24 @@ public class AnimationState {
     public float getPartialTicks(float animationTicks) {
         float offset = animationTicks - startTime0;
         offset *= ModDebugger.animationSpeed;
-        switch (loop) {
-            case LOOP:
-                // 0 -> duration / 0 -> duration ...
-                if (offset > duration) {
-                    offset -= duration;
-                    startTime0 = animationTicks - offset;
-                }
-                break;
-
-            case LAST_FRAME:
-            case NONE:
-                break;
+        if (playCount == 0) {
+            return offset;
+        }
+        // 0 -> duration / 0 -> duration ...
+        if (offset > duration) {
+            if (playCount > 0) {
+                playCount -= 1;
+            }
+            if (playCount != 0) { // reset
+                offset -= duration;
+                startTime0 = animationTicks - offset;
+            }
         }
         return offset;
     }
 
     public boolean isCompleted(float animationTicks) {
-        return getPartialTicks(animationTicks) > this.duration;
+        return playCount == 0 && getPartialTicks(animationTicks) > this.duration;
     }
 
     public boolean isRequiresVirtualMachine() {

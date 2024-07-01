@@ -9,8 +9,12 @@ public class VertexArrayObject {
 
     private final int id;
 
+    public VertexArrayObject(int id) {
+        this.id = id;
+    }
+
     public VertexArrayObject() {
-        this.id = GL30.glGenVertexArrays();
+        this(GL30.glGenVertexArrays());
     }
 
     public void bind() {

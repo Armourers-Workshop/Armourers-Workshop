@@ -2,9 +2,10 @@ package moe.plushie.armourers_workshop.core.network;
 
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
-import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
+import moe.plushie.armourers_workshop.core.client.animation.AnimationManager;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.TickUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -24,16 +25,32 @@ public class UpdateAnimationPacket extends CustomPacket {
         this.value = buffer.readNbt();
     }
 
-    public static UpdateAnimationPacket play(Entity entity, String name) {
+    public static UpdateAnimationPacket play(Entity entity, String name, int playCount) {
         CompoundTag tag = new CompoundTag();
-        tag.putInt("target", entity.getId());
+        tag.putInt("entity", entity.getId());
         tag.putString("name", name);
+        tag.putInt("count", playCount);
         return new UpdateAnimationPacket(Mode.PLAY, tag);
     }
 
     public static UpdateAnimationPacket stop(Entity entity, String name) {
         CompoundTag tag = new CompoundTag();
-        tag.putInt("target", entity.getId());
+        tag.putInt("entity", entity.getId());
+        tag.putString("name", name);
+        return new UpdateAnimationPacket(Mode.STOP, tag);
+    }
+
+    public static UpdateAnimationPacket play(BlockPos blockPos, String name, int playCount) {
+        CompoundTag tag = new CompoundTag();
+        tag.putOptionalBlockPos("block", blockPos, null);
+        tag.putString("name", name);
+        tag.putInt("count", playCount);
+        return new UpdateAnimationPacket(Mode.PLAY, tag);
+    }
+
+    public static UpdateAnimationPacket stop(BlockPos blockPos, String name) {
+        CompoundTag tag = new CompoundTag();
+        tag.putOptionalBlockPos("block", blockPos, null);
         tag.putString("name", name);
         return new UpdateAnimationPacket(Mode.STOP, tag);
     }
@@ -48,20 +65,21 @@ public class UpdateAnimationPacket extends CustomPacket {
     public void accept(IClientPacketHandler packetHandler, Player player) {
         switch (mode) {
             case PLAY: {
-                var renderData = getTargetRenderData(player);
-                if (renderData != null) {
-                    String name = value.getString("name");
+                var animationManager = getTargetRenderData(player);
+                if (animationManager != null) {
+                    var name = value.getString("name");
+                    var playCount = value.getInt("count");
                     ModLog.debug("play animation {}", value);
-                    renderData.getAnimationManager().play(name, TickUtils.animationTicks());
+                    animationManager.play(name, TickUtils.animationTicks(), playCount);
                 }
                 break;
             }
             case STOP: {
-                var renderData = getTargetRenderData(player);
-                if (renderData != null) {
+                var animationManager = getTargetRenderData(player);
+                if (animationManager != null) {
                     String name = value.getString("name");
                     ModLog.debug("stop animation {}", value);
-                    renderData.getAnimationManager().stop(name);
+                    animationManager.stop(name);
                 }
                 break;
             }
@@ -71,10 +89,14 @@ public class UpdateAnimationPacket extends CustomPacket {
         }
     }
 
-    private EntityRenderData getTargetRenderData(Player player) {
-        if (value.contains("target")) {
-            int entityId = value.getInt("target");
-            return EntityRenderData.of(player.getLevel().getEntity(entityId));
+    private AnimationManager getTargetRenderData(Player player) {
+        if (value.contains("entity")) {
+            int entityId = value.getInt("entity");
+            return AnimationManager.of(player.getLevel().getEntity(entityId));
+        }
+        if (value.contains("block")) {
+            var blockPos = value.getOptionalBlockPos("block", BlockPos.ZERO);
+            return AnimationManager.of(player.getLevel().getBlockEntity(blockPos));
         }
         return null;
     }

@@ -43,7 +43,7 @@ public class MannequinItem extends FlavouredItem {
             entityTag.put(Constants.Key.ENTITY_TEXTURE, descriptor.serializeNBT());
         }
         if (!entityTag.isEmpty()) {
-            entityTag.putString("id", ModEntityTypes.MANNEQUIN.getRegistryName().toString());
+            entityTag.putString(Constants.Key.ID, ModEntityTypes.MANNEQUIN.getRegistryName().toString());
             itemStack.set(ModDataComponents.ENTITY_DATA.get(), entityTag);
         }
         return itemStack;

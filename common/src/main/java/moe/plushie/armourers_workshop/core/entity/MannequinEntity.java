@@ -180,7 +180,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         // yep, we need copy the fully model info when ctrl down.
         if (EnvironmentExecutorIO.hasSprintDown()) {
             var entityTag = new CompoundTag();
-            entityTag.putString("id", ModEntityTypes.MANNEQUIN.getRegistryName().toString());
+            entityTag.putString(Constants.Key.ID, ModEntityTypes.MANNEQUIN.getRegistryName().toString());
             addAdditionalSaveData(entityTag);
             itemStack.set(ModDataComponents.ENTITY_DATA.get(), entityTag);
         }
@@ -266,7 +266,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
     protected ItemStack createMannequinStack() {
         var itemStack = new ItemStack(ModItems.MANNEQUIN.get());
         var entityTag = new CompoundTag();
-        entityTag.putString("id", ModEntityTypes.MANNEQUIN.getRegistryName().toString());
+        entityTag.putString(Constants.Key.ID, ModEntityTypes.MANNEQUIN.getRegistryName().toString());
         entityTag.putOptionalFloat(Constants.Key.ENTITY_SCALE, getScale(), 1.0f);
         entityTag.putOptionalTextureDescriptor(Constants.Key.ENTITY_TEXTURE, getTextureDescriptor(), PlayerTextureDescriptor.EMPTY);
         itemStack.set(ModDataComponents.ENTITY_DATA.get(), entityTag);

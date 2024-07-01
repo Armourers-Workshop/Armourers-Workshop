@@ -9,6 +9,7 @@ import java.util.Objects;
 @SuppressWarnings("unused")
 public class Vector4f {
 
+    public static final Vector4f ONE = new Vector4f(1, 1, 1, 1);
     public static final Vector4f ZERO = new Vector4f(0, 0, 0, 0);
 
     private float x;

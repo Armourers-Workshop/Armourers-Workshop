@@ -67,7 +67,7 @@ public class SkinVertexBufferBuilder implements IBufferSource {
         builder.cachingBuilders.clear();
         builder.cachingBuilders2.clear();
         builder.pipeline.clear();
-        SkinRenderObjectBuilder.clearAllCache();
+        ConcurrentBufferCompiler.clearAllCache();
     }
 
     @NotNull

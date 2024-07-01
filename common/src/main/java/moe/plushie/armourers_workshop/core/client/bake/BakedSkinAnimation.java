@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
-import moe.plushie.armourers_workshop.core.client.animation.AnimationProcessor;
-import moe.plushie.armourers_workshop.core.client.animation.AnimationEngine;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationOutput;
+import moe.plushie.armourers_workshop.core.client.animation.AnimationProcessor;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationTransform;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationLoop;
@@ -13,7 +11,6 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.world.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -40,24 +37,6 @@ public class BakedSkinAnimation {
         this.duration = animation.getDuration();
         this.loop = animation.getLoop();
         this.animation = animation;
-    }
-
-    public void setup(Entity entity, SkinRenderContext context) {
-        // we needs reset the applier.
-        var state = context.getAnimationState(this);
-        if (state == null) {
-            outputs.forEach(AnimationOutput::reset);
-            return;
-        }
-        // we only bind it when transformer use the molang environment.
-        var partialTicks = state.getPartialTicks(context.getAnimationTicks());
-        if (state.isRequiresVirtualMachine()) {
-            AnimationEngine.upload(entity, partialTicks, state.getStartTime());
-        }
-        // check/switch frames of animation and write to applier.
-        for (var transformer : processors) {
-            transformer.process(state, partialTicks);
-        }
     }
 
     public void link(Map<String, List<BakedSkinPart>> namedParts) {
@@ -96,6 +75,10 @@ public class BakedSkinAnimation {
 
     public SkinAnimationLoop getLoop() {
         return loop;
+    }
+
+    public ArrayList<AnimationOutput> getOutputs() {
+        return outputs;
     }
 
     public List<AnimationProcessor> getProcessors() {

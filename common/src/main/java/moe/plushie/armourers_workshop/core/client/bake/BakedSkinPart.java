@@ -26,6 +26,7 @@ public class BakedSkinPart {
 
     private int id = 0;
     private float renderPolygonOffset;
+    private boolean shouldRender = true;
 
     public BakedSkinPart(SkinPart part, SkinPartTransform transform, BakedCubeQuads quads) {
         this.part = part;
@@ -117,6 +118,14 @@ public class BakedSkinPart {
 
     public float getRenderPolygonOffset() {
         return renderPolygonOffset;
+    }
+
+    public void setShouldRender(boolean shouldRender) {
+        this.shouldRender = shouldRender;
+    }
+
+    public boolean isVisible() {
+        return shouldRender;
     }
 
     public ArrayList<BakedSkinPart> getChildren() {

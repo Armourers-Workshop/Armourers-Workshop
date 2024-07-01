@@ -18,7 +18,9 @@ public class BufferedTexture extends AbstractTexture {
 
     @Override
     public void load(ResourceManager resourceManager) throws IOException {
-        NativeImage pixels = NativeImage.read(provider.getBuffer());
+        var buffer = provider.getBuffer();
+        buffer.rewind();
+        var pixels = NativeImage.read(buffer);
         TextureUtil.prepareImage(getId(), pixels.getWidth(), pixels.getHeight());
         pixels.upload(0, 0, 0, false);
         pixels.close();

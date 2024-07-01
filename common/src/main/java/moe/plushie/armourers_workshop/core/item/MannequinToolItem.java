@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.item.option.MannequinToolOptions;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
+import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -30,7 +31,7 @@ public class MannequinToolItem extends ConfigurableToolItem {
                 var config = new CompoundTag();
                 var newItemStack = itemStack.copy();
                 mannequinEntity.saveMannequinToolData(config);
-                config.putString("id", ModEntityTypes.MANNEQUIN.getRegistryName().toString());
+                config.putString(Constants.Key.ID, ModEntityTypes.MANNEQUIN.getRegistryName().toString());
                 newItemStack.set(ModDataComponents.ENTITY_DATA.get(), config);
                 player.setItemInHand(hand, newItemStack);
                 return InteractionResult.sidedSuccess(player.getLevel().isClientSide());

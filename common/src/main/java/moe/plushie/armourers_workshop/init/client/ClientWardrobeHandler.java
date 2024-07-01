@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.EntitySlot;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderHelper;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
@@ -183,7 +184,7 @@ public class ClientWardrobeHandler {
                     poseStack.pushPose();
                     poseStack.scale(-SCALE, -SCALE, SCALE);
 
-                    context.setReferenced(SkinItemSource.create(800, itemStack, transformType));
+                    context.setItemSource(SkinItemSource.create(800, itemStack, transformType));
                     counter = render(entity, armature, context, () -> Collections.singleton(embeddedStack.getEntry()));
                     context.release();
                     poseStack.popPose();
@@ -256,7 +257,7 @@ public class ClientWardrobeHandler {
         context.setRenderData(EntityRenderData.of(context.getMannequin()));
         context.setLightmap(packedLight);
         context.setPartialTicks(0);
-        context.setReferenced(SkinItemSource.create(800, embeddedStack.getItemStack(), transformType));
+        context.setItemSource(SkinItemSource.create(800, embeddedStack.getItemStack(), transformType));
         context.setColorScheme(descriptor.getColorScheme());
 
         count = context.draw(poseStack, buffers);
@@ -303,7 +304,7 @@ public class ClientWardrobeHandler {
         int r = 0;
         for (var entry : provider.get()) {
             var bakedSkin = entry.getBakedSkin();
-            var itemSource = context.getReferenced();
+            var itemSource = context.getItemSource();
             var itemStack = itemSource.getItem();
             if (itemStack.isEmpty()) {
                 itemStack = entry.getItemStack();
@@ -313,9 +314,11 @@ public class ClientWardrobeHandler {
             }
             itemSource.setItem(itemStack);
             itemSource.setRenderPriority(entry.getRenderPriority());
-            context.setReferenced(itemSource);
+            context.setItemSource(itemSource);
             bakedSkin.setupAnim(entity, context);
-            r += SkinRenderer.render(entity, bakedArmature, bakedSkin, entry.getBakedScheme(), context);
+            var colorScheme = bakedSkin.resolve(entity, entry.getBakedScheme());
+            SkinRenderer.render(entity, bakedArmature, bakedSkin, colorScheme, context);
+            r += SkinRenderHelper.getRenderCount(bakedSkin);
         }
         return r;
     }

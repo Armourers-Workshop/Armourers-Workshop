@@ -22,6 +22,8 @@ public interface ShaderVertexObject {
 
     VertexIndexObject getIndexObject();
 
+    int getOverlay();
+
     int getLightmap();
 
     float getPolygonOffset();

@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.lwjgl.opengl.GL20;
@@ -86,6 +87,26 @@ public abstract class ShaderUniform {
         }
     }
 
+    public static class Vec4f extends ShaderUniform {
+
+        private final Supplier<Vector4f> value;
+        private Vector4f cachedValue = Vector4f.ZERO;
+
+        Vec4f(String name, int program, int location, Supplier<Vector4f> value) {
+            super(name, program, location);
+            this.value = value;
+        }
+
+        @Override
+        public void apply() {
+            var newValue = value.get();
+            if (!newValue.equals(cachedValue)) {
+                cachedValue = newValue;
+                GL20.glUniform4f(location, newValue.x(), newValue.y(), newValue.z(), newValue.w());
+            }
+        }
+    }
+
     public static class Matrix4f extends ShaderUniform {
 
         private final FloatBuffer buffer = ObjectUtils.createFloatBuffer(16);
@@ -141,6 +162,7 @@ public abstract class ShaderUniform {
         public Loader(int programId) {
             this.programId = programId;
             register("aw_MatrixFlags", RenderSystem::getExtendedMatrixFlags, Int::new);
+            //register("aw_ColorModulator", RenderSystem::getExtendedColorModulator, Vec4f::new);
             register("aw_LightmapTextureMatrix", RenderSystem::getExtendedLightmapTextureMatrix, Matrix4f::new);
             register("aw_TextureMatrix", RenderSystem::getExtendedTextureMatrix, Matrix4f::new);
             register("aw_NormalMatrix", RenderSystem::getExtendedNormalMatrix, Matrix3f::new);

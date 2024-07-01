@@ -36,6 +36,16 @@ public class LazyVariable extends Variable {
         this.valueSupplier = null;
     }
 
+    /**
+     * Set the new value for the variable, acting as a constant
+     */
+    public void set(boolean value) {
+        if (value) {
+            set(1d);
+        } else {
+            set(0d);
+        }
+    }
 
     /**
      * Set the new value supplier for the variable

@@ -74,7 +74,7 @@ public final class ExtendedItemRenderer {
         context.setPartialTicks(partialTicks);
         context.setRenderData(EntityRenderData.of(context.getMannequin()));
         context.setColorScheme(scheme);
-        context.setReferenced(itemSource);
+        context.setItemSource(itemSource);
 
         // ...
         if (target != null) {

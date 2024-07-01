@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.animation;
 
+import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.molang.MolangVirtualMachine;
 import moe.plushie.armourers_workshop.core.skin.molang.math.LazyVariable;
+import moe.plushie.armourers_workshop.core.skin.molang.math.Literal;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -9,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
-@SuppressWarnings("Convert2MethodRef")
 @Environment(EnvType.CLIENT)
 public class AnimationEngine {
 
@@ -35,7 +36,35 @@ public class AnimationEngine {
 
     public static void stop() {
         // clear all binding.
-        VM.getVariables().forEach((name, variable) -> variable.set(0));
+        VM.getVariables().forEach((name, variable) -> {
+            if (!(variable instanceof Literal)) {
+                variable.set(0);
+            }
+        });
+    }
+
+    public static void apply(Object source, BakedSkin skin, float animationTicks, AnimationManager animationManager) {
+        // we can't apply when missing animation manager.
+        if (animationManager == null) {
+            return;
+        }
+        for (var animation : skin.getAnimations()) {
+            // we needs reset the applier.
+            var state = animationManager.getAnimationState(animation);
+            if (state == null) {
+                animation.getOutputs().forEach(AnimationOutput::reset);
+                continue;
+            }
+            // we only bind it when transformer use the molang environment.
+            var partialTicks = state.getPartialTicks(animationTicks);
+            if (state.isRequiresVirtualMachine()) {
+                upload(source, partialTicks, state.getStartTime());
+            }
+            // check/switch frames of animation and write to applier.
+            for (var transformer : animation.getProcessors()) {
+                transformer.process(state, partialTicks);
+            }
+        }
     }
 
     public static void upload(Object source, double animTime, double startAnimTime) {
@@ -63,15 +92,15 @@ public class AnimationEngine {
     private static void uploadEntity(Entity entity, double animTime, double startAnimTime) {
         DISTANCE_FROM_CAMERA.set(() -> Minecraft.getInstance().gameRenderer.getMainCamera().getPosition().distanceTo(entity.position()));
 
-        IS_ON_GROUND.set(() -> entity.onGround());
-        IS_IN_WATER.set(() -> entity.isInWater());
-        IS_IN_WATER_OR_RAIN.set(() -> entity.isInWaterRainOrBubble());
+        IS_ON_GROUND.set(entity.onGround());
+        IS_IN_WATER.set(entity.isInWater());
+        IS_IN_WATER_OR_RAIN.set(entity.isInWaterRainOrBubble());
     }
 
     private static void uploadLivingEntity(LivingEntity livingEntity, double animTime, double startAnimTime) {
-        HEALTH.set(() -> livingEntity.getHealth());
-        MAX_HEALTH.set(() -> livingEntity.getMaxHealth());
-        IS_ON_FIRE.set(() -> livingEntity.isOnFire());
+        HEALTH.set(livingEntity.getHealth());
+        MAX_HEALTH.set(livingEntity.getMaxHealth());
+        IS_ON_FIRE.set(livingEntity.isOnFire());
 
         GROUND_SPEED.set(() -> {
             var velocity = livingEntity.getDeltaMovement();

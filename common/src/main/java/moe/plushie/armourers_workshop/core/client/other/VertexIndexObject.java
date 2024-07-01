@@ -18,6 +18,7 @@ public class VertexIndexObject {
     private final IndexGenerator generator;
 
     private int indexCount;
+    private int uploadIndexCount;
     private IndexType type = IndexType.BYTE;
 
     public VertexIndexObject(int i, int j, IndexGenerator generator) {
@@ -31,21 +32,27 @@ public class VertexIndexObject {
         return i <= indexCount;
     }
 
-    public void bind(int total) {
+    public void ensureStorage(int i) {
+        if (indexCount < i) {
+            indexCount = i;
+        }
+    }
+
+    public void bind() {
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, id);
-        ensureStorage(total);
+        uploadStorageIfNeeded(indexCount);
     }
 
     public static void unbind() {
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
-    private void ensureStorage(int total) {
-        if (hasStorage(total)) {
+    private void uploadStorageIfNeeded(int total) {
+        if (total <= uploadIndexCount) {
             return;
         }
         total = MathUtils.roundToward(total * 2, indexStride);
-        ModLog.debug("growing index buffer {} => {}.", indexCount, total);
+        ModLog.debug("growing index buffer {} => {}.", total, total);
         var indexType = IndexType.least(total);
         var j = MathUtils.roundToward(total * indexType.bytes, 4);
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, j, GL15.GL_DYNAMIC_DRAW);
@@ -59,7 +66,7 @@ public class VertexIndexObject {
             generator.accept(builder, k * vertexStride / indexStride);
         }
         GL15.glUnmapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER);
-        indexCount = total;
+        uploadIndexCount = total;
     }
 
     private IntConsumer createBuilder(ByteBuffer buffer) {

@@ -44,6 +44,7 @@ import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -76,26 +77,29 @@ public class ModCommands {
 
     // :/armourers setSkin|giveSkin|clearSkin
     public static LiteralArgumentBuilder<CommandSourceStack> commands() {
-        return Commands.literal("armourers")
+        return literal("armourers")
                 .then(ReflectArgumentBuilder.literal("config", ModConfig.Client.class))
-                .then(ReflectArgumentBuilder.literal("debug", ModDebugger.class).then(animationCommands()))
+                .then(ReflectArgumentBuilder.literal("debug", ModDebugger.class))
                 .requires(source -> source.hasPermission(2))
-                .then(Commands.literal("library").then(Commands.literal("reload").executes(Executor::reloadLibrary)))
-                .then(Commands.literal("setSkin").then(entities().then(slots().then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))).then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))))
-                .then(Commands.literal("giveSkin").then(players().then(skins().then(skinDying().executes(Executor::giveSkin)).executes(Executor::giveSkin))))
-                .then(Commands.literal("clearSkin").then(entities().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
-                .then(Commands.literal("exportSkin").then(skinFormats().then(name().then(scale().executes(Executor::exportSkin)).executes(Executor::exportSkin))))
-                .then(Commands.literal("setColor").then(entities().then(dyesSlotNames().then(dyeColor().executes(Executor::setColor)))))
-                .then(Commands.literal("rsyncWardrobe").then(players().executes(Executor::resyncWardrobe)))
-                .then(Commands.literal("openWardrobe").then(entities().executes(Executor::openWardrobe)))
-                .then(Commands.literal("itemSkinnable").then(addOrRemote().then(overrideTypes().executes(Executor::setItemSkinnable))))
-                .then(Commands.literal("setUnlockedSlots").then(entities().then(resizableSlotNames().then(resizableSlotAmounts().executes(Executor::setUnlockedWardrobeSlots)))));
+                .then(literal("library").then(literal("reload").executes(Executor::reloadLibrary)))
+                .then(literal("setSkin").then(entities().then(slots().then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))).then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))))
+                .then(literal("giveSkin").then(players().then(skins().then(skinDying().executes(Executor::giveSkin)).executes(Executor::giveSkin))))
+                .then(literal("clearSkin").then(entities().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
+                .then(literal("exportSkin").then(skinFormats().then(name().then(scale().executes(Executor::exportSkin)).executes(Executor::exportSkin))))
+                .then(literal("setColor").then(entities().then(dyesSlotNames().then(dyeColor().executes(Executor::setColor)))))
+                .then(literal("rsyncWardrobe").then(players().executes(Executor::resyncWardrobe)))
+                .then(literal("openWardrobe").then(entities().executes(Executor::openWardrobe)))
+                .then(literal("itemSkinnable").then(addOrRemote().then(overrideTypes().executes(Executor::setItemSkinnable))))
+                .then(literal("animation", "<entity_block_target>", literal("play").then(name().then(playCount().executes(Executor::playAnimation)).executes(Executor::playAnimation)), literal("stop").then(name().executes(Executor::stopAnimation)).executes(Executor::stopAnimation)))
+                .then(literal("setUnlockedSlots").then(entities().then(resizableSlotNames().then(resizableSlotAmounts().executes(Executor::setUnlockedWardrobeSlots)))));
     }
 
-    public static LiteralArgumentBuilder<CommandSourceStack> animationCommands() {
-        return Commands.literal("animation")
-                .then(Commands.literal("play").then(entities().then(name().executes(Executor::playAnimation))))
-                .then(Commands.literal("stop").then(entities().then(name().executes(Executor::stopAnimation)).executes(Executor::stopAnimation)));
+    static LiteralArgumentBuilder<CommandSourceStack> literal(String name) {
+        return Commands.literal(name);
+    }
+
+    static ArgumentBuilder<CommandSourceStack, ?> literal(String name, String desc, ArgumentBuilder<CommandSourceStack, ?> builder1, ArgumentBuilder<CommandSourceStack, ?> builder2) {
+        return literal(name).then(literal("entity").then(entities().then(builder1).then(builder2))).then(literal("block").then(blockPos().then(builder1).then(builder2)));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> players() {
@@ -105,6 +109,11 @@ public class ModCommands {
     static ArgumentBuilder<CommandSourceStack, ?> entities() {
         return Commands.argument("entities", EntityArgument.entities());
     }
+
+    static ArgumentBuilder<CommandSourceStack, ?> blockPos() {
+        return Commands.argument("block_pos", BlockPosArgument.blockPos());
+    }
+
 
     static ArgumentBuilder<CommandSourceStack, ?> slots() {
         return Commands.argument("slot", IntegerArgumentType.integer(1, 10));
@@ -132,6 +141,10 @@ public class ModCommands {
 
     static ArgumentBuilder<CommandSourceStack, ?> name() {
         return Commands.argument("name", StringArgumentType.string());
+    }
+
+    static ArgumentBuilder<CommandSourceStack, ?> playCount() {
+        return Commands.argument("play_count", IntegerArgumentType.integer(-1));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> resizableSlotAmounts() {
@@ -378,20 +391,36 @@ public class ModCommands {
         }
 
         public static int playAnimation(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            String animationName = StringArgumentType.getString(context, "name");
-            for (Entity entity : EntityArgument.getEntities(context, "entities")) {
-                NetworkManager.sendToAll(UpdateAnimationPacket.play(entity, animationName));
+            var playCount = 0;
+            if (containsNode(context, "play_count")) {
+                playCount = IntegerArgumentType.getInteger(context, "play_count");
+            }
+            var animationName = StringArgumentType.getString(context, "name");
+            if (containsNode(context, "entities")) {
+                for (var entity : EntityArgument.getEntities(context, "entities")) {
+                    NetworkManager.sendToAll(UpdateAnimationPacket.play(entity, animationName, playCount));
+                }
+            }
+            if (containsNode(context, "block_pos")) {
+                var blockPos = BlockPosArgument.getBlockPos(context, "block_pos");
+                NetworkManager.sendToAll(UpdateAnimationPacket.play(blockPos, animationName, playCount));
             }
             return 0;
         }
 
         public static int stopAnimation(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            String animationName = "";
+            var animationName = "";
             if (containsNode(context, "name")) {
                 animationName = StringArgumentType.getString(context, "name");
             }
-            for (Entity entity : EntityArgument.getEntities(context, "entities")) {
-                NetworkManager.sendToAll(UpdateAnimationPacket.stop(entity, animationName));
+            if (containsNode(context, "entities")) {
+                for (var entity : EntityArgument.getEntities(context, "entities")) {
+                    NetworkManager.sendToAll(UpdateAnimationPacket.stop(entity, animationName));
+                }
+            }
+            if (containsNode(context, "block_pos")) {
+                var blockPos = BlockPosArgument.getBlockPos(context, "block_pos");
+                NetworkManager.sendToAll(UpdateAnimationPacket.stop(blockPos, animationName));
             }
             return 0;
         }

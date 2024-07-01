@@ -80,7 +80,7 @@ public class TextureData implements ITextureProvider {
         if (buffers.size() != 1) {
             int total = capacity - bytes.remaining();
             bytes = ObjectUtils.createByteBuffer(total);
-            for (ByteBuffer buffer : buffers) {
+            for (var buffer : buffers) {
                 buffer.flip();
                 bytes.put(buffer);
             }

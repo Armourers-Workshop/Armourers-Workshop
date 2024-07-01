@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.utils.TypedRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -76,6 +77,7 @@ public class SkinCubeItem extends AbstractBlockItem implements IItemColorProvide
         if (oldEntityTag != null) {
             entityTag.merge(oldEntityTag);
         }
+        entityTag.putString(Constants.Key.ID, TypedRegistry.findKey(getBlock()).toString());
         entityTag.putOptionalBlockPaintColor(Constants.Key.COLOR, color, null);
         itemStack.set(ModDataComponents.TOOL_FLAGS.get(), 1);
         itemStack.set(ModDataComponents.BLOCK_ENTITY_DATA.get(), entityTag);

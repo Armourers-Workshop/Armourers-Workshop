@@ -19,14 +19,10 @@ import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.A
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinModelManager;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderBufferSource;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
-import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocument;
@@ -37,7 +33,6 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
-import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -267,50 +262,5 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
     @Override
     public boolean shouldRenderOffScreen(T entity) {
         return true;
-    }
-
-    public static class OutlineObjectBuilder implements SkinRenderBufferSource.ObjectBuilder {
-
-        private final SkinRenderBufferSource.ObjectBuilder builder;
-
-        public OutlineObjectBuilder(SkinRenderBufferSource.ObjectBuilder builder) {
-            this.builder = builder;
-        }
-
-        @Override
-        public int addPart(BakedSkinPart bakedPart, BakedSkin bakedSkin, ColorScheme scheme, boolean shouldRender, SkinRenderContext context) {
-            int total = 0;
-            // note we will rebuild a new cache by overlay,
-            // because we can't mix colors in the shader (1.16 + rendertype_entity_shadow).
-            if (RESULTS.contains(bakedPart)) {
-                //scheme.setOverlay(0x38ffffff);
-                total = builder.addPart(bakedPart, bakedSkin, scheme, shouldRender, context);
-                //scheme.setOverlay(0);
-            }
-            // when we rendered the highlighted version,
-            // so we don't need to render original version,
-            // but we still keep the original cache to next render.
-            // and a special case when the highlighted version cache not compiled yet,
-            // we still need to display the original cache.
-            if (total != 0) {
-                shouldRender = false;
-            }
-            return builder.addPart(bakedPart, bakedSkin, scheme, shouldRender, context);
-        }
-
-        @Override
-        public void addShape(Vector3f origin, SkinRenderContext context) {
-            builder.addShape(origin, context);
-        }
-
-        @Override
-        public void addShape(OpenVoxelShape shape, UIColor color, SkinRenderContext context) {
-            builder.addShape(shape, color, context);
-        }
-
-        @Override
-        public void addShape(BakedArmature armature, SkinRenderContext context) {
-            builder.addShape(armature, context);
-        }
     }
 }

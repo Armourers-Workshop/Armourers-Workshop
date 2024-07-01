@@ -79,7 +79,7 @@ public abstract class EntityRenderPatch<T extends Entity> extends SkinRenderCont
         setAnimationTicks(TickUtils.animationTicks());
         setLightmap(packedLight);
         setPose(AbstractPoseStack.wrap(poseStackIn));
-        setBuffers(AbstractBufferSource.wrap(buffersIn));
+        setBufferSource(AbstractBufferSource.wrap(buffersIn));
     }
 
     protected void onActivate(T entity) {

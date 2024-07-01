@@ -13,7 +13,6 @@ import moe.plushie.armourers_workshop.utils.math.OpenBoundingBox;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenOrientedBoundingBox;
 import moe.plushie.armourers_workshop.utils.math.OpenTransformedBoundingBox;
-import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -226,11 +225,11 @@ public class ShapeTesselator {
 
     public static void stroke(JointShape shape, UIColor color, IPoseStack poseStack, IBufferSource bufferSource) {
         poseStack.pushPose();
-        Rectangle3f rect = shape.bounds();
+        var rect = shape.bounds();
         shape.transform().apply(poseStack);
         stroke(rect, color, poseStack, bufferSource);
         poseStack.translate(rect.getX(), rect.getY(), rect.getZ());
-        for (JointShape shape1 : shape.children()) {
+        for (var shape1 : shape.children()) {
             stroke(shape1, color, poseStack, bufferSource);
         }
         poseStack.popPose();

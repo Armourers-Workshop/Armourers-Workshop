@@ -1,0 +1,20 @@
+package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.core.BlockPos;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+
+@Extension
+@Available("[1.16, 1.20)")
+public class ABI {
+
+    public static BlockPos getBlockPos(@ThisClass Class<?> clazz, CommandContext<CommandSourceStack> context, String name) throws CommandSyntaxException {
+        return BlockPosArgument.getLoadedBlockPos(context, name);
+    }
+}
