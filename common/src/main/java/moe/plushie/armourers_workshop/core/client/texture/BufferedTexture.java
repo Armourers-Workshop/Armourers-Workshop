@@ -10,6 +10,8 @@ import java.io.IOException;
 
 public class BufferedTexture extends AbstractTexture {
 
+    private NativeImage pixels;
+
     private final ITextureProvider provider;
 
     public BufferedTexture(ITextureProvider provider) {
@@ -18,12 +20,20 @@ public class BufferedTexture extends AbstractTexture {
 
     @Override
     public void load(ResourceManager resourceManager) throws IOException {
-        var buffer = provider.getBuffer();
-        buffer.rewind();
-        var pixels = NativeImage.read(buffer);
-        TextureUtil.prepareImage(getId(), pixels.getWidth(), pixels.getHeight());
-        pixels.upload(0, 0, 0, false);
-        pixels.close();
+        if (pixels == null) {
+            pixels = NativeImage.read(provider.getBuffer());
+            TextureUtil.prepareImage(getId(), pixels.getWidth(), pixels.getHeight());
+            pixels.upload(0, 0, 0, false);
+        }
+    }
+
+    @Override
+    public void close() {
+        if (pixels != null) {
+            pixels.close();
+            releaseId();
+            pixels = null;
+        }
     }
 }
 
