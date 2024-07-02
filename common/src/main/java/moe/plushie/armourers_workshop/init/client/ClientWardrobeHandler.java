@@ -168,6 +168,8 @@ public class ClientWardrobeHandler {
                     if (shouldRenderInBox(embeddedStack)) {
                         counter = _renderEmbeddedSkinInBox(embeddedStack, transformType, leftHandHackery, poseStackIn, buffersIn, packedLight, overlay);
                     } else {
+                        // use this case:
+                        //  YDM's Weapon Master
                         counter = _renderEmbeddedSkin(embeddedStack, transformType, leftHandHackery, poseStackIn, buffersIn, packedLight, overlay);
                     }
                     break;
@@ -252,7 +254,7 @@ public class ClientWardrobeHandler {
         var buffers = AbstractBufferSource.wrap(buffersIn);
 
         poseStack.pushPose();
-        poseStack.scale(-16, -16, 16);
+        poseStack.scale(-SCALE, -SCALE, SCALE);
 
         context.setRenderData(EntityRenderData.of(context.getMannequin()));
         context.setLightmap(packedLight);
