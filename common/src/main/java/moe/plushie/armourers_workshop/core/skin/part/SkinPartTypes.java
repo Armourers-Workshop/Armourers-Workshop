@@ -93,7 +93,10 @@ public final class SkinPartTypes {
 //    public static final ISkinPartType PLAYER_RIGHT_SLEEVE = register("player.sleeves.rightSleeve", new UnknownPartType());
 
     public static final ISkinPartType ADVANCED = register("part.advanced_part", new AdvancedPartType());
-    public static final ISkinPartType ADVANCED_LOCATOR = register("part.advanced_locator", new AdvancedPartType());
+    
+    public static final ISkinPartType ADVANCED_LOCATOR = register("part.locator", new AdvancedPartType());
+    public static final ISkinPartType ADVANCED_STATIC = register("part.static", new AdvancedPartType());
+    public static final ISkinPartType ADVANCED_FLOAT = register("part.float", new AdvancedPartType());
 
     public static final ISkinPartType BOAT_BODY = register("boat.base", new ItemPartType());
     public static final ISkinPartType BOAT_LEFT_PADDLE = register("boat.leftPaddle", new ItemPartType());

@@ -317,7 +317,7 @@ public class ClientWardrobeHandler {
             itemSource.setItem(itemStack);
             itemSource.setRenderPriority(entry.getRenderPriority());
             context.setItemSource(itemSource);
-            bakedSkin.setupAnim(entity, context);
+            bakedSkin.setupAnim(entity, bakedArmature, context);
             var colorScheme = bakedSkin.resolve(entity, entry.getBakedScheme());
             SkinRenderer.render(entity, bakedArmature, bakedSkin, colorScheme, context);
             r += SkinRenderHelper.getRenderCount(bakedSkin);

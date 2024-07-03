@@ -55,9 +55,9 @@ public class ColorMixerMenu extends AbstractBlockEntityMenu<ColorMixerBlockEntit
             public void setChanged() {
                 var itemStack = inventory.getItem(0);
                 var item = itemStack.getItem();
-                if (item instanceof IPaintToolPicker && inventory.getItem(1).isEmpty()) {
-                    ItemStack newItemStack = itemStack.copy();
-                    access.execute((world, pos) -> ((IPaintToolPicker) item).usePickTool(buildContext(world, pos, newItemStack)));
+                if (item instanceof IPaintToolPicker toolPicker && inventory.getItem(1).isEmpty()) {
+                    var newItemStack = itemStack.copy();
+                    access.execute((world, pos) -> toolPicker.usePickTool(buildContext(world, pos, newItemStack)));
                     inventory.setItem(0, ItemStack.EMPTY);
                     inventory.setItem(1, newItemStack);
                 }

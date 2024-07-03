@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.client.animation;
 
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinAnimation;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationFunction;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationLoop;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 

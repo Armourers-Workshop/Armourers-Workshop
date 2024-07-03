@@ -31,7 +31,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
     public UpdateSkinDocumentPacket(IFriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
         this.operator = buffer.readUtf();
-        Mode mode = buffer.readEnum(Mode.class);
+        var mode = buffer.readEnum(Mode.class);
         this.action = mode.read(buffer);
     }
 
@@ -54,7 +54,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
         // TODO: check player
         var blockEntity = player.getLevel().getBlockEntity(pos);
         if (blockEntity instanceof SkinDocumentProvider provider) {
-            ModLog.debug("the document {} accepted for '{}'", action, player.getDisplayName().getString());
+            ModLog.debug("the document {} accepted for '{}'", action, player.getScoreboardName());
             var document = provider.getDocument();
             document.beginEditing();
             action.execute(document, player);
@@ -112,7 +112,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
         public abstract void execute(final SkinDocument document, final Player player);
 
         protected String makeDescription(String action, Object... args) {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.append(action);
             builder.append("(");
             for (int i = 0; i < args.length; i += 2) {
@@ -239,9 +239,9 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
 
         @Override
         public void execute(SkinDocument document, Player player) {
-            SkinDocumentNode target = document.nodeById(id);
+            var target = document.nodeById(id);
             if (target != null) {
-                SkinDocumentNode newValue = new SkinDocumentNode(tag);
+                var newValue = new SkinDocumentNode(tag);
                 target.insertAtIndex(newValue, targetIndex);
             }
         }
@@ -275,7 +275,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
 
         @Override
         public void execute(SkinDocument document, Player player) {
-            SkinDocumentNode target = document.nodeById(id);
+            var target = document.nodeById(id);
             if (target != null) {
                 target.deserializeNBT(tag);
             }
@@ -306,7 +306,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
 
         @Override
         public void execute(SkinDocument document, Player player) {
-            SkinDocumentNode target = document.nodeById(id);
+            var target = document.nodeById(id);
             if (target != null) {
                 target.removeFromParent();
             }
@@ -345,8 +345,8 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
 
         @Override
         public void execute(SkinDocument document, Player player) {
-            SkinDocumentNode parent = document.nodeById(id);
-            SkinDocumentNode target = document.nodeById(targetId);
+            var parent = document.nodeById(id);
+            var target = document.nodeById(targetId);
             if (parent != null && target != null) {
                 parent.moveTo(target, targetIndex);
             }

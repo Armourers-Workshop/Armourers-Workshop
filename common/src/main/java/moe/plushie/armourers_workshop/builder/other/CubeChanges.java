@@ -69,17 +69,17 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
 
     @Override
     public void prepare() throws RuntimeException {
-        // only change colors or nbt, required a block entity
+        // when change colors or nbt, required block entity
         if (!isChangeNBT()) {
             return;
         }
-        // when the block state is changed, the block entity will be created again.
+        // when change block state, the block entity will be created again.
         if (blockState != null) {
             return;
         }
         var blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity == null) {
-            String value = String.format("x=%d, y=%d, z=%d", blockPos.getX(), blockPos.getY(), blockPos.getZ());
+            var value = String.format("x=%d, y=%d, z=%d", blockPos.getX(), blockPos.getY(), blockPos.getZ());
             throw new ActionRuntimeException(Component.translatable("chat.armourers_workshop.undo.missingBlock", value));
         }
     }
@@ -97,7 +97,7 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
         }
         if (isChangedNBT) {
             ObjectUtils.ifPresent(level.getBlockEntity(blockPos), blockEntity -> {
-                CompoundTag newTag = blockEntity.saveFullData(level.registryAccess());
+                var newTag = blockEntity.saveFullData(level.registryAccess());
                 changes.setCompoundTag(newTag);
             });
         } else if (colors != null) {
@@ -144,8 +144,8 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
             }
         }
         if (colors != null) {
-            if (blockEntity instanceof IPaintable) {
-                ((IPaintable) blockEntity).setColors(colors);
+            if (blockEntity instanceof IPaintable paintable) {
+                paintable.setColors(colors);
                 changes += 1;
             }
         }

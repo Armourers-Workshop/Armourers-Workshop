@@ -39,7 +39,7 @@ public class SkinDocumentImporter {
     private void copyTo(SkinPart part, SkinDocumentNode node, String identifier, String indexPath) {
         var ref = SkinCipher.getInstance().encrypt(identifier, indexPath);
         var descriptor = new SkinDescriptor(DataDomain.SLICE_LOAD.normalize(ref), SkinTypes.ADVANCED);
-        if (node.getType() != SkinPartTypes.ADVANCED) {
+        if (node.isBasic()) {
             node.setSkin(descriptor);
             return;
         }
@@ -50,7 +50,7 @@ public class SkinDocumentImporter {
         }
 
         if (name.equals("Float")) {
-            var floatNode = findNodeById(document.getRoot(), "float");
+            var floatNode = findNodeByType(document.getRoot(), SkinPartTypes.ADVANCED_FLOAT);
             if (floatNode != null) {
                 node = floatNode;
                 name = "untitled float node";
@@ -86,16 +86,6 @@ public class SkinDocumentImporter {
     }
 
     @Nullable
-    private SkinDocumentNode findNodeById(SkinDocumentNode root, String id) {
-        for (var node : root.children()) {
-            if (node.getId().equals(id)) {
-                return node;
-            }
-        }
-        return null;
-    }
-
-    @Nullable
     private SkinDocumentNode findNodeByType(SkinDocumentNode root, ISkinPartType partType) {
         // we shouldn't match advanced parts
         if (partType != SkinPartTypes.ADVANCED) {
@@ -105,6 +95,9 @@ public class SkinDocumentImporter {
                 }
             }
         }
-        return findNodeById(root, "static");
+        if (partType != SkinPartTypes.ADVANCED_STATIC) {
+            return findNodeByType(root, SkinPartTypes.ADVANCED_STATIC);
+        }
+        return null;
     }
 }

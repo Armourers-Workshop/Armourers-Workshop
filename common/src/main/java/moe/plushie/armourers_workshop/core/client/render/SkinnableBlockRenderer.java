@@ -55,7 +55,7 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
 
         for (var entry : skins) {
             var skin = entry.getBakedSkin();
-            skin.setupAnim(mannequinEntity, renderPatch);
+            skin.setupAnim(mannequinEntity, armature, renderPatch);
             var colorScheme = skin.resolve(mannequinEntity, entry.getBakedScheme());
             SkinRenderer.render(mannequinEntity, armature, skin, colorScheme, renderPatch);
             if (ModDebugger.skinnable) {

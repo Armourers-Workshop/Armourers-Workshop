@@ -85,11 +85,11 @@ public class BakedSkin implements IBakedSkin {
         this.loadPartTransforms(skinParts);
     }
 
-    public void setupAnim(Entity entity, SkinRenderContext context) {
+    public void setupAnim(Entity entity, BakedArmature bakedArmature, SkinRenderContext context) {
         cachedItemTransforms.forEach(it -> it.setup(entity, context.getItemSource()));
         cachedWingsTransforms.forEach(it -> it.setup(entity, context.getAnimationTicks()));
         AnimationEngine.apply(entity, this, context.getAnimationTicks(), context.getAnimationManager());
-        SkinRenderHelper.apply(entity, this, context.getItemSource());
+        SkinRenderHelper.apply(entity, this, bakedArmature, context.getItemSource());
     }
 
     public ColorScheme resolve(Entity entity, ColorScheme scheme) {
@@ -195,7 +195,7 @@ public class BakedSkin implements IBakedSkin {
         context.setTransformType(itemSource.getTransformType());
         context.setAnimationTicks(0);
         //context.setTransforms(entity, model);
-        setupAnim(entity, context);
+        setupAnim(entity, armature, context);
         return SkinRenderer.getShape(entity, armature, this, context.pose());
     }
 

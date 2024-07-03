@@ -73,7 +73,7 @@ public class AdvancedGeneralPanel extends AdvancedPanel {
             return;
         }
         boolean keepItemTransforms = false;
-        if (node.getType() != SkinPartTypes.ADVANCED && node.isLocked() && document.getType().usesItemTransforms()) {
+        if (node.isBasic() && node.isLocked() && document.getType().usesItemTransforms()) {
             keepItemTransforms = true;
         }
         if (node.getType() instanceof ICanOverride) {

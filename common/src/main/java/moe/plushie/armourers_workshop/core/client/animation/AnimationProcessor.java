@@ -1,9 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.animation;
 
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationValue;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
-import net.minecraft.world.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.Comparator;

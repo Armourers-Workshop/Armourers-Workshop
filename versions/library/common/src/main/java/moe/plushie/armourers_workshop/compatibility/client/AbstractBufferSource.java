@@ -45,7 +45,7 @@ public class AbstractBufferSource implements IBufferSource {
     }
 
     public static AbstractBufferSource wrap(MultiBufferSource bufferSource) {
-        AbstractBufferSource bufferSource1 = CACHED_BUFFER_SOURCES.getIfPresent(bufferSource);
+        var bufferSource1 = CACHED_BUFFER_SOURCES.getIfPresent(bufferSource);
         if (bufferSource1 == null) {
             bufferSource1 = create(bufferSource);
             CACHED_BUFFER_SOURCES.put(bufferSource, bufferSource1);
@@ -59,7 +59,7 @@ public class AbstractBufferSource implements IBufferSource {
 
     @Override
     public IVertexConsumer getBuffer(RenderType renderType) {
-        VertexConsumer builder = bufferSource.getBuffer(renderType);
+        var builder = bufferSource.getBuffer(renderType);
         return cachedBuffers.computeIfAbsent(builder, AbstractVertexConsumer::of);
     }
 

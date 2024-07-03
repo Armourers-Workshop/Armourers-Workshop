@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.document;
 import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.DataSerializerKey;
@@ -188,8 +189,8 @@ public class SkinDocument {
             node.setType(partType);
             root.add(node);
         }
-        root.add(new SkinDocumentNode("float", null));
-        root.add(new SkinDocumentNode("static", null));
+        root.add(new SkinDocumentNode("float", null, SkinPartTypes.ADVANCED_FLOAT));
+        root.add(new SkinDocumentNode("static", null, SkinPartTypes.ADVANCED_STATIC));
         return root;
     }
 }

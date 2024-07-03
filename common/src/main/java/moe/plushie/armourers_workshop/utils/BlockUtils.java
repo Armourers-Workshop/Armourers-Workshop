@@ -67,7 +67,7 @@ public final class BlockUtils {
     }
 
     public static void endCombiner() {
-        Map<BlockEntity, Runnable> queue = pending.get();
+        var queue = pending.get();
         if (queue == null) {
             return;
         }
@@ -165,8 +165,8 @@ public final class BlockUtils {
         boolean first = true;
 
         while (!openList.isEmpty()) {
-            BlockPos loc = openList.remove(0);
-            BlockEntity blockEntity = level.getBlockEntity(loc);
+            var loc = openList.remove(0);
+            var blockEntity = level.getBlockEntity(loc);
             if (blockEntity instanceof IPaintable) {
                 if (!restrictPlane) {
                     blockFaces.add(loc);
@@ -174,8 +174,8 @@ public final class BlockUtils {
                     blockFaces.add(loc);
                 }
             }
-            for (Direction side : sides) {
-                BlockPos sideLoc = loc.relative(side);
+            for (var side : sides) {
+                var sideLoc = loc.relative(side);
                 if (closedList.contains(sideLoc)) {
                     continue;
                 }

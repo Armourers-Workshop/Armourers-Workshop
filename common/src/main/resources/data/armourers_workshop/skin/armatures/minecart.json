@@ -47,6 +47,14 @@
           }
         ]
       }
+    },
+    "Float": {
+      "parent": "Root",
+      "id": "armourers:part.float"
+    },
+    "Static": {
+      "parent": "Root",
+      "id": "armourers:part.static"
     }
   },
   "type": [

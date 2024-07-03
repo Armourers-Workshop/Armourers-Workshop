@@ -86,6 +86,14 @@
         "translate": [ 3, -5, -9 ],
         "rotation": [ -37.5, 142, 11.25 ]
       }
+    },
+    "Float": {
+      "parent": "Root",
+      "id": "armourers:part.float"
+    },
+    "Static": {
+      "parent": "Root",
+      "id": "armourers:part.static"
     }
   },
   "type": [

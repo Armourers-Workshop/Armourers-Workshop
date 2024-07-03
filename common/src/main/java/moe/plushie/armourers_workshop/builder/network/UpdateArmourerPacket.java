@@ -73,13 +73,13 @@ public class UpdateArmourerPacket extends CustomPacket {
     }
 
     private void saveItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag nbt) {
-        ModLog.info("accept save action of the {}, nbt: {}", player.getDisplayName().getString(), nbt);
+        ModLog.info("accept save action of the {}, nbt: {}", player.getScoreboardName(), nbt);
         var profile = DataSerializers.readGameProfile(nbt);
         container.saveArmourItem(player, profile, null, null);
     }
 
     private void copyItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag nbt) throws Exception {
-        ModLog.info("accept copy action of the {}, nbt: {}", player.getDisplayName().getString(), nbt);
+        ModLog.info("accept copy action of the {}, nbt: {}", player.getScoreboardName(), nbt);
         boolean isMirror = nbt.getBoolean(Constants.Key.MIRROR);
         boolean isCopyPaintData = nbt.getBoolean(Constants.Key.SKIN_PAINTS);
         var sourcePartType = SkinPartTypes.byName(nbt.getString(Constants.Key.SOURCE));
@@ -93,7 +93,7 @@ public class UpdateArmourerPacket extends CustomPacket {
     }
 
     private void replaceItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag nbt) throws Exception {
-        ModLog.info("accept replace action of the {}, nbt: {}", player.getDisplayName().getString(), nbt);
+        ModLog.info("accept replace action of the {}, nbt: {}", player.getScoreboardName(), nbt);
         var level = player.getLevel();
         var source = ItemStack.parseOptional(level.registryAccess(), nbt.getCompound(Constants.Key.SOURCE));
         var destination = ItemStack.parseOptional(level.registryAccess(), nbt.getCompound(Constants.Key.DESTINATION));
@@ -110,7 +110,7 @@ public class UpdateArmourerPacket extends CustomPacket {
     }
 
     private void clearItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag nbt) {
-        ModLog.info("accept clear action of the {}, nbt: {}", player.getDisplayName().getString(), nbt);
+        ModLog.info("accept clear action of the {}, nbt: {}", player.getScoreboardName(), nbt);
         var collector = new CubeChangesCollector(blockEntity.getLevel());
         var partType = SkinPartTypes.byName(nbt.getString(Constants.Key.SKIN_PART_TYPE));
         if (nbt.getBoolean(Constants.Key.SKIN_CUBES)) {

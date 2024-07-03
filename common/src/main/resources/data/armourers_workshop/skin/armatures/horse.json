@@ -234,6 +234,14 @@
         "rotation": [ 30, 0, 0 ],
         "offset": [ 0, 2, 2 ]
       }
+    },
+    "Float": {
+      "parent": "Root",
+      "id": "armourers:part.float"
+    },
+    "Static": {
+      "parent": "Root",
+      "id": "armourers:part.static"
     }
   },
   "type": [

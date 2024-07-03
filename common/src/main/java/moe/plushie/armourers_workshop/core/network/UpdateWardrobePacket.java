@@ -96,14 +96,14 @@ public class UpdateWardrobePacket extends CustomPacket {
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // We can't allow wardrobe updates without container.
         if (!(player.containerMenu instanceof SkinWardrobeMenu)) {
-            ModLog.info("reject {} operation for '{}'", getOperator(), player.getDisplayName().getString());
+            ModLog.info("reject {} operation for '{}'", getOperator(), player.getScoreboardName());
             return;
         }
         if (!checkSecurityByServer()) {
-            ModLog.info("reject {} operation for '{}', for security reasons.", getOperator(), player.getDisplayName().getString());
+            ModLog.info("reject {} operation for '{}', for security reasons.", getOperator(), player.getScoreboardName());
             return;
         }
-        ModLog.debug("accept {} operation for '{}'", getOperator(), player.getDisplayName().getString());
+        ModLog.debug("accept {} operation for '{}'", getOperator(), player.getScoreboardName());
         SkinWardrobe wardrobe = apply(player);
         if (wardrobe != null) {
             NetworkManager.sendToTracking(this, player);

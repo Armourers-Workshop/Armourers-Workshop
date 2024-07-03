@@ -85,7 +85,7 @@ public class OpenVoxelShape implements Iterable<Vector4f> {
     }
 
     public void add(float x, float y, float z, float width, float height, float depth) {
-        List<Vector4f> list = getVertexes();
+        var list = getVertexes();
         list.add(new Vector4f(x, y, z, 1.0f));
         list.add(new Vector4f(x + width, y, z, 1.0f));
         list.add(new Vector4f(x + width, y + height, z, 1.0f));
@@ -116,11 +116,11 @@ public class OpenVoxelShape implements Iterable<Vector4f> {
         if (vertexes == null || vertexes.size() <= 8) {
             return;
         }
-        List<Vector4f> list = getVertexes();
-        HashSet<Vector4f> addVertexes = new HashSet<>(list.size());
-        HashSet<Vector4f> uniquesVertexes = new HashSet<>(list.size());
+        var list = getVertexes();
+        var addVertexes = new HashSet<Vector4f>(list.size());
+        var uniquesVertexes = new HashSet<Vector4f>(list.size());
         // when vertex is used than 1, that means this a overlapping vertex.
-        for (Vector4f vector : list) {
+        for (var vector : list) {
             if (addVertexes.contains(vector)) {
                 uniquesVertexes.remove(vector);
             } else {

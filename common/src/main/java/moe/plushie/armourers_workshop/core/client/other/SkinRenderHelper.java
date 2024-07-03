@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
+import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -27,9 +28,16 @@ public class SkinRenderHelper {
         return count;
     }
 
-    public static void apply(Entity entity, BakedSkin bakedSkin, SkinItemSource itemSource) {
+    public static void apply(Entity entity, BakedSkin bakedSkin, BakedArmature bakedArmature, SkinItemSource itemSource) {
         for (var part : bakedSkin.getParts()) {
-            part.setShouldRender(shouldRenderPart(entity, part, bakedSkin, itemSource));
+            boolean shouldRender = false;
+            if (bakedArmature != null && bakedArmature.getTransform(part) != null) {
+                shouldRender = true;
+            }
+            if (shouldRender) {
+                shouldRender = shouldRenderPart(entity, part, bakedSkin, itemSource);
+            }
+            part.setShouldRender(shouldRender);
         }
     }
 

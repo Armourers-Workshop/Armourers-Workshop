@@ -81,7 +81,7 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
 
             apply(entity, rect, renderPatch.getAnimationTicks(), poseStack, bufferSource);
 
-            bakedSkin.setupAnim(mannequinEntity, renderPatch);
+            bakedSkin.setupAnim(mannequinEntity, bakedArmature, renderPatch);
             var colorScheme = bakedSkin.resolve(mannequinEntity, entry.getBakedScheme());
             SkinRenderer.render(mannequinEntity, bakedArmature, bakedSkin, colorScheme, renderPatch);
         }

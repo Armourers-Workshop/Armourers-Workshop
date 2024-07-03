@@ -22,7 +22,7 @@ public class SkinDocumentNode {
     private Vector3f pivot = Vector3f.ZERO;
     private SkinTransform transform = null;
 
-    private ISkinPartType type = SkinPartTypes.ADVANCED;
+    private ISkinPartType type;
     private SkinDescriptor skin = SkinDescriptor.EMPTY;
 
     private String name;
@@ -42,8 +42,13 @@ public class SkinDocumentNode {
     }
 
     public SkinDocumentNode(String id, String name) {
+        this(id, name, SkinPartTypes.ADVANCED);
+    }
+
+    public SkinDocumentNode(String id, String name, ISkinPartType type) {
         this.id = id;
         this.name = name;
+        this.type = type;
     }
 
     public SkinDocumentNode(CompoundTag tag) {
@@ -272,17 +277,21 @@ public class SkinDocumentNode {
     }
 
     public boolean isStatic() {
-        return id.equals("static");
+        return type == SkinPartTypes.ADVANCED_STATIC;
     }
 
     public boolean isFloat() {
-        return id.equals("float");
+        return type == SkinPartTypes.ADVANCED_FLOAT;
     }
 
     public boolean isLocator() {
-        return type.equals(SkinPartTypes.ADVANCED_LOCATOR);
+        return type == SkinPartTypes.ADVANCED_LOCATOR;
     }
 
+
+    public boolean isBasic() {
+        return type != SkinPartTypes.ADVANCED && type != SkinPartTypes.ADVANCED_STATIC && type != SkinPartTypes.ADVANCED_FLOAT && type != SkinPartTypes.ADVANCED_LOCATOR;
+    }
 
     public SkinDocumentNode parent() {
         return parent;
