@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.skin.serializer.v20.coder;
 import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkContext;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkCubeSection;
@@ -13,6 +12,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.v20.coder.v1.ChunkCub
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.coder.v1.ChunkCubeEncoderV1;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.coder.v2.ChunkCubeDecoderV2;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.coder.v2.ChunkCubeEncoderV2;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -42,11 +42,7 @@ public class ChunkCubeCoders {
 
     public static ChunkContext createEncodeContext(Skin skin) {
         var context = new ChunkContext(skin.getVersion());
-        // when the skin using multiple data sources, we can't enable fast encoder,
-        // because it must to recompile and resort it.
-        if (getDataSourceCount(skin.getParts(), new HashSet<>()) > 1) {
-            context.setFastEncoder(false);
-        }
+        context.setFastEncoder(canFastEncoding(skin.getParts()));
         return context;
     }
 
@@ -62,14 +58,16 @@ public class ChunkCubeCoders {
         return ChunkCubeDecoderV1.getStride(options, palette);
     }
 
-    private static int getDataSourceCount(List<SkinPart> parts, HashSet<SkinCubes> dataSources) {
-        for (var part : parts) {
-            var cubes = part.getCubeData();
-            if (cubes.getCubeTotal() != 0) {
-                dataSources.add(cubes);
+    public static boolean canFastEncoding(List<SkinPart> parts) {
+        // when the skin have multiple data owner, we can't enable fast encoder,
+        // because it must to recompile and resort it.
+        var owners = new HashSet<Integer>();
+        ObjectUtils.search(parts, SkinPart::getParts, part -> {
+            var cubeData = part.getCubeData();
+            if (cubeData.getCubeTotal() != 0) {
+                owners.add(cubeData.getOwner());
             }
-            getDataSourceCount(part.getParts(), dataSources);
-        }
-        return dataSources.size();
+        });
+        return owners.size() <= 1 && !owners.contains(-1);
     }
 }

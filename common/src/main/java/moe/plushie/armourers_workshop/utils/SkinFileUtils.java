@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.utils;
 
+import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.TagParser;
@@ -19,6 +21,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * because `commons.io` versions on some servers are too low,
@@ -229,5 +232,46 @@ public class SkinFileUtils {
         } catch (Exception e) {
             return new CompoundTag();
         }
+    }
+
+    public static String dumpTree(Skin skin) {
+        var tree = new StringBuilder();
+        tree.append("<Skin ");
+        tree.append("name=").append(skin.getCustomName()).append(",");
+        tree.append("author=").append(skin.getAuthorName()).append(",");;
+        tree.append("type=").append(skin.getType().getRegistryName().getPath());
+        tree.append(">\n");
+        for (var part : skin.getParts()) {
+            var prefix = "|-- ";
+            var subtree = dumpTree(part);
+            for (var line : subtree.split("\n")) {
+                tree.append(prefix).append(line).append("\n");
+                prefix = "| ";
+            }
+        }
+        return tree.toString();
+    }
+
+    private static String dumpTree(SkinPart part) {
+        var tree = new StringBuilder();
+        tree.append("<SkinPart ");
+        tree.append("name=").append(Objects.requireNonNullElse(part.getName(), "")).append(",");
+        tree.append("type=").append(part.getType().getRegistryName().getPath());
+        tree.append(">\n");
+        for (var childPart : part.getParts()) {
+            var prefix = "|-- ";
+            var subtree = dumpTree(childPart);
+            for (var line : subtree.split("\n")) {
+                tree.append(prefix).append(line).append("\n");
+                prefix = "| ";
+            }
+        }
+        var data = part.getCubeData();
+        var count = data.getCubeTotal();
+        for (int i = 0; i < count; ++i) {
+            var cube = data.getCube(i);
+            tree.append("<SkinCube ").append("rect=").append(cube.getShape()).append(",").append("type=").append(cube.getType().getRegistryName().getPath()).append(">\n");
+        }
+        return tree.toString();
     }
 }

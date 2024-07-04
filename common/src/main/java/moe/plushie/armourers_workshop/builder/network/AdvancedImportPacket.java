@@ -86,13 +86,11 @@ public class AdvancedImportPacket extends CustomPacket {
     }
 
     private void accept(Player player, String op) {
-        var playerName = player.getScoreboardName();
-        ModLog.info("accept {} request of the '{}'", op, playerName);
+        ModLog.info("accept {} request of the '{}'", op, player.getScoreboardName());
     }
 
     private void abort(Player player, String op, String reason) {
-        var playerName = player.getScoreboardName();
-        ModLog.info("abort {} request of the '{}', reason: '{}'", op, playerName, reason);
+        ModLog.info("abort {} request of the '{}', reason: '{}'", op, player.getScoreboardName(), reason);
     }
 
     private void encodeSkin(IFriendlyByteBuf buffer) {

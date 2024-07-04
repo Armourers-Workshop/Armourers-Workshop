@@ -41,7 +41,7 @@ public abstract class PrimaryKey {
 
     public static class P1 extends PrimaryKey {
 
-        protected static final AutoreleasePool<P1> POOL = AutoreleasePool.create(P1::new);
+        protected static final ObjectPool<P1> POOL = ObjectPool.create(P1::new);
         protected Object p1;
 
         public P1 set(int hash, Object p1) {
@@ -65,7 +65,7 @@ public abstract class PrimaryKey {
 
     public static class P2 extends P1 {
 
-        protected static final AutoreleasePool<P2> POOL = AutoreleasePool.create(P2::new);
+        protected static final ObjectPool<P2> POOL = ObjectPool.create(P2::new);
         protected Object p2;
 
         public P2 set(int hash, Object p1, Object p2) {
@@ -90,7 +90,7 @@ public abstract class PrimaryKey {
 
     public static class P3 extends P2 {
 
-        protected static final AutoreleasePool<P3> POOL = AutoreleasePool.create(P3::new);
+        protected static final ObjectPool<P3> POOL = ObjectPool.create(P3::new);
         protected Object p3;
 
         public P3 set(int hash, Object p1, Object p2, Object p3) {
@@ -116,7 +116,7 @@ public abstract class PrimaryKey {
 
     public static class P4 extends P3 {
 
-        protected static final AutoreleasePool<P4> POOL = AutoreleasePool.create(P4::new);
+        protected static final ObjectPool<P4> POOL = ObjectPool.create(P4::new);
         protected Object p4;
 
         public P4 set(int hash, Object p1, Object p2, Object p3, Object p4) {

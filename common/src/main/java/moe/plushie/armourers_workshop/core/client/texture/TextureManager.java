@@ -81,7 +81,8 @@ public class TextureManager {
         }
 
         protected void retain() {
-            if (counter.getAndIncrement() == 0) {
+            counter.getAndIncrement();
+            if (!isUpload) {
                 open();
             }
         }
@@ -93,6 +94,9 @@ public class TextureManager {
         }
 
         protected void open() {
+            if (isUpload) {
+                return;
+            }
             ModLog.debug("upload texture {}", location);
             Minecraft.getInstance().getTextureManager().register(location.toLocation(), texture);
             isUpload = true;
@@ -127,6 +131,10 @@ public class TextureManager {
 
         private void resolve() {
             if (renderType instanceof IAssociatedObjectProvider provider) {
+                Entry entry = provider.getAssociatedObject();
+                if (entry != null) {
+                    entry.close();
+                }
                 provider.setAssociatedObject(this);
             }
         }

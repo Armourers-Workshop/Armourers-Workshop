@@ -7,33 +7,27 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public class BufferedTexture extends AbstractTexture {
 
-    private NativeImage pixels;
-
-    private final ITextureProvider provider;
+    private final ByteBuffer bytes;
 
     public BufferedTexture(ITextureProvider provider) {
-        this.provider = provider;
+        this.bytes = provider.getBuffer().asReadOnlyBuffer();
     }
 
     @Override
     public void load(ResourceManager resourceManager) throws IOException {
-        if (pixels == null) {
-            pixels = NativeImage.read(provider.getBuffer());
+        try (var pixels = NativeImage.read(bytes)) {
             TextureUtil.prepareImage(getId(), pixels.getWidth(), pixels.getHeight());
-            pixels.upload(0, 0, 0, false);
+            pixels.upload(0, 0, 0, true);
         }
     }
 
     @Override
     public void close() {
-        if (pixels != null) {
-            pixels.close();
-            releaseId();
-            pixels = null;
-        }
+        releaseId();
     }
 }
 

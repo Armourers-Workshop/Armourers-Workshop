@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.v20.coder.v2;
 
-import moe.plushie.armourers_workshop.api.common.ITextureKey;
 import moe.plushie.armourers_workshop.api.common.ITextureProvider;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOConsumer2;
@@ -16,7 +15,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class ChunkCubeEncoderV2 extends ChunkCubeEncoder {
 
@@ -29,13 +27,13 @@ public class ChunkCubeEncoderV2 extends ChunkCubeEncoder {
     @Override
     public int begin(ISkinCube cube) {
         // merge all values
-        for (Direction dir : Direction.values()) {
-            ITextureKey value = cube.getTexture(dir);
+        for (var dir : Direction.values()) {
+            var value = cube.getTexture(dir);
             if (value == null) {
                 continue;
             }
-            ITextureProvider provider = value.getProvider();
-            TextureBox.Entry entry = ObjectUtils.safeCast(value, TextureBox.Entry.class);
+            var provider = value.getProvider();
+            var entry = ObjectUtils.safeCast(value, TextureBox.Entry.class);
             if (entry != null) {
                 startValues.put(0x80, entry.getParent(), provider);
                 // box need options?
@@ -48,8 +46,8 @@ public class ChunkCubeEncoderV2 extends ChunkCubeEncoder {
             float t = value.getHeight();
             startValues.put(face, new Vector2f(u, v), provider);
             endValues.put(face, new Vector2f(u + s, v + t), provider);
-            if (value.getOptions() instanceof TextureOptions) {
-                optionsValues.put(face, (TextureOptions) value.getOptions(), provider);
+            if (value.getOptions() instanceof TextureOptions textureOptions) {
+                optionsValues.put(face, textureOptions, provider);
             }
         }
         this.cube = cube;
@@ -87,13 +85,13 @@ public class ChunkCubeEncoderV2 extends ChunkCubeEncoder {
         private final LinkedHashMap<Pair<T, ITextureProvider>, Integer> impl = new LinkedHashMap<>();
 
         public void forEach(IOConsumer2<Pair<T, ITextureProvider>, Integer> consumer) throws IOException {
-            for (Map.Entry<Pair<T, ITextureProvider>, Integer> entry : impl.entrySet()) {
+            for (var entry : impl.entrySet()) {
                 consumer.accept(entry.getKey(), entry.getValue());
             }
         }
 
         public void put(int face, T pos, ITextureProvider provider) {
-            Pair<T, ITextureProvider> index = Pair.of(pos, provider);
+            var index = Pair.of(pos, provider);
             int newFace = impl.getOrDefault(index, 0);
             newFace |= face;
             impl.put(index, newFace);

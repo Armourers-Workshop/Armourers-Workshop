@@ -16,6 +16,10 @@ public abstract class SkinCubes implements ISkinCubeProvider {
     protected final OpenPoseStack poseStack = new OpenPoseStack();
     protected final SkinUsedCounter usedCounter = new SkinUsedCounter();
 
+    protected int owner = -1;
+
+    public abstract SkinCubes duplicate();
+
     public void forEach(Consumer<SkinCube> consumer) {
         var count = getCubeTotal();
         for (var i = 0; i < count; ++i) {
@@ -59,6 +63,10 @@ public abstract class SkinCubes implements ISkinCubeProvider {
     public Collection<ISkinCubeType> getCubeTypes() {
         // we don't know the included cube types.
         return null;
+    }
+
+    public int getOwner() {
+        return owner;
     }
 
     @Override

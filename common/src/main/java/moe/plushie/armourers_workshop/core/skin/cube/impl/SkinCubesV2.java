@@ -29,15 +29,20 @@ public class SkinCubesV2 extends SkinCubes {
     }
 
     @Override
+    public SkinCubesV2 duplicate() {
+        return this;
+    }
+
+    @Override
     public OpenVoxelShape getShape() {
-        OpenVoxelShape shape = OpenVoxelShape.empty();
-        for (Box box : entities) {
+        var shape = OpenVoxelShape.empty();
+        for (var box : entities) {
             if (box.transform.isIdentity()) {
                 shape.add(box.shape);
                 continue;
             }
             poseStack.pushPose();
-            OpenVoxelShape shape1 = OpenVoxelShape.box(box.shape);
+            var shape1 = OpenVoxelShape.box(box.shape);
             box.transform.apply(poseStack);
             shape1.mul(poseStack.last().pose());
             shape.add(shape1);

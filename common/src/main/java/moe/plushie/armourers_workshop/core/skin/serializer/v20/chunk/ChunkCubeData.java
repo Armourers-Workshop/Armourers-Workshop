@@ -12,15 +12,19 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ChunkCubeData implements ChunkVariable {
 
+    private static final AtomicInteger ID = new AtomicInteger(0);
+
+    private final int owner;
     private final ChunkPaletteData palette;
     private final LinkedHashMap<Integer, ChunkCubeSection> sections = new LinkedHashMap<>();
-    private final LinkedHashMap<ChunkCubeSection, Integer> changes = new LinkedHashMap<>();
     private final IdentityHashMap<SkinCubes, Collection<ChunkCubeSelector>> pending = new IdentityHashMap<>();
 
     public ChunkCubeData(ChunkPaletteData palette) {
+        this.owner = ID.incrementAndGet();
         this.palette = palette;
     }
 
@@ -41,6 +45,8 @@ public class ChunkCubeData implements ChunkVariable {
             }
             offset += section.getCubeTotal();
         }
+        // cleanup write context.
+        pending.clear();
         return true;
     }
 
@@ -62,7 +68,7 @@ public class ChunkCubeData implements ChunkVariable {
         // we need to make sure section in offset order.
         var sortedSections = new ArrayList<>(sections.values());
         sortedSections.sort(Comparator.comparing(ChunkCubeSection::getIndex));
-        for (ChunkCubeSection section : sortedSections) {
+        for (var section : sortedSections) {
             writeSectionToStream(section, stream);
         }
         writeSectionToStream(null, stream);
@@ -80,7 +86,7 @@ public class ChunkCubeData implements ChunkVariable {
                 selectors.add(new ChunkCubeSelector(section, offset, offset + size));
             }
         }
-        return new ChunkCubeSlices(selectors, palette);
+        return new ChunkCubeSlices(owner, selectors, palette);
     }
 
     public void writeReferenceToStream(SkinCubes cubes, ChunkOutputStream streamIn) throws IOException {
@@ -90,20 +96,24 @@ public class ChunkCubeData implements ChunkVariable {
             var selectors = pending.computeIfAbsent(cubes, k -> slices.getSelectors());
             palette.copyFrom(slices.getPalette());
             streamIn.writeVarInt(selectors.size());
-            for (ChunkCubeSelector selector : selectors) {
-                ChunkCubeSection section = selector.section;
+            for (var selector : selectors) {
+                var section = selector.section;
                 sections.put(_key(section), section);
                 streamIn.writeVariable(selector);
             }
             return;
         }
-        var selectors = pending.computeIfAbsent(cubes, k -> new ArrayList<>());
         // the cubes maybe will be occurred reused,
         // so we just need encode the cubes at first call.
+        var selectors = pending.computeIfAbsent(cubes, k -> new ArrayList<>());
         if (selectors.isEmpty()) {
-            _encodeCubeData(cubes, streamIn.getContext());
-            changes.forEach((buffer, from) -> selectors.add(new ChunkCubeSelector(buffer, from, buffer.getCubeTotal())));
-            changes.clear();
+            var changes = _encodeCubeData(cubes.duplicate(), streamIn.getContext());
+            changes.forEach((section, startIndex) -> {
+                // we record the once total at the start encode,
+                // and then record the total again at the end encode.
+                var endIndex = section.getCubeTotal();
+                selectors.add(new ChunkCubeSelector(section, startIndex, endIndex));
+            });
         }
         // write all selector into the stream.
         streamIn.writeVarInt(selectors.size());
@@ -136,16 +146,18 @@ public class ChunkCubeData implements ChunkVariable {
         section.writeToStream(stream);
     }
 
-    private void _encodeCubeData(SkinCubes cubes, ChunkContext context) throws IOException {
+    private LinkedHashMap<ChunkCubeSection, Integer> _encodeCubeData(SkinCubes cubes, ChunkContext context) throws IOException {
+        var changes = new LinkedHashMap<ChunkCubeSection, Integer>();
         int size = cubes.getCubeTotal();
         for (int i = 0; i < size; ++i) {
             var cube = cubes.getCube(i);
             var cubeType = cube.getType();
             var cubeEncoder = ChunkCubeCoders.createEncoder(cubeType);
             var section = _mutableSectionAt(cubeType, cubeEncoder.begin(cube), context);
-            changes.putIfAbsent(section, section.getCubeTotal());
+            changes.putIfAbsent(section, section.getCubeTotal()); // section, startIndex
             section.write(cubeEncoder, palette);
         }
+        return changes;
     }
 
     private Integer _key(ChunkCubeSection section) {

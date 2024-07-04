@@ -23,8 +23,17 @@ public class SkinCubesV1 extends SkinCubes {
     private final BufferSlice bufferSlice;
 
     public SkinCubesV1(int count) {
-        this.bufferSlice = new BufferSlice(count);
+        this(new BufferSlice(count), count);
+    }
+
+    private SkinCubesV1(BufferSlice bufferSlice, int count) {
+        this.bufferSlice = bufferSlice;
         this.cubeTotal = count;
+    }
+
+    @Override
+    public SkinCubesV1 duplicate() {
+        return new SkinCubesV1(bufferSlice.duplicate(), cubeTotal);
     }
 
     @Override
@@ -107,10 +116,21 @@ public class SkinCubesV1 extends SkinCubes {
             this.buffers = new byte[count * lineSize];
         }
 
+        private BufferSlice(byte[] buffers) {
+            this.buffers = buffers;
+        }
+
         public BufferSlice at(int index) {
             this.writerIndex = index * lineSize;
             this.readerIndex = index * lineSize;
             return this;
+        }
+
+        public BufferSlice duplicate() {
+            var slice = new BufferSlice(buffers);
+            slice.writerIndex = writerIndex;
+            slice.readerIndex = readerIndex;
+            return slice;
         }
 
         public byte getId() {

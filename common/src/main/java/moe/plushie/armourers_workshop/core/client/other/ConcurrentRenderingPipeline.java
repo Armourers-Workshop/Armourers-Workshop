@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
-import moe.plushie.armourers_workshop.core.data.cache.AutoreleasePool;
+import moe.plushie.armourers_workshop.core.data.cache.ObjectPool;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.minecraft.client.renderer.RenderType;
 
@@ -41,7 +41,7 @@ public class ConcurrentRenderingPipeline {
 
     public static class Group {
 
-        private static final AutoreleasePool<Group> POOL = AutoreleasePool.create(Group::new);
+        private static final ObjectPool<Group> POOL = ObjectPool.create(Group::new);
 
         private final OpenPoseStack poseStack = new OpenPoseStack();
         private final ArrayList<Pass> pendingQueue = new ArrayList<>();

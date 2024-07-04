@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.network.RequestSkinPacket;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinServerType;
 import moe.plushie.armourers_workshop.init.ModConfig;
@@ -860,20 +859,12 @@ public class SkinLoader {
             if (skinPart == null) {
                 throw new RuntimeException("can't load part " + keyPath + " in " + id);
             }
-            var animations = new ArrayList<SkinAnimation>();
-            skin.getAnimations().forEach(animation -> {
-                var keys = animation.getValues().keySet();
-                if (containsPart(keys, skinPart)) {
-                    animations.add(animation);
-                }
-            });
             var builder = new Skin.Builder(SkinTypes.ADVANCED);
             builder.paintData(skin.getPaintData());
             builder.version(skin.getVersion());
             builder.parts(Collections.singleton(skinPart));
             builder.settings(skin.getSettings().copy());
             builder.properties(skin.getProperties().copy());
-            builder.animations(animations);
             return builder.build();
         }
 

@@ -57,7 +57,7 @@ public class SliceRandomlyAccessor<T> {
     }
 
     private List<Provider<? extends T>> checkOrder(List<Provider<? extends T>> slices) {
-        ArrayList<Provider<? extends T>> sortedSlices = new ArrayList<>(slices);
+        var sortedSlices = new ArrayList<>(slices);
         sortedSlices.sort(Comparator.comparingInt(Provider::getStartIndex));
         return sortedSlices;
     }

@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationTransform;
 import moe.plushie.armourers_workshop.core.data.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.data.transform.SkinWingsTransform;
+import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -14,6 +15,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BakedSkinPartCombiner {
 
     public static List<BakedSkinPart> apply(List<BakedSkinPart> skinParts) {
+        if (ModDebugger.skinPartCombiner) {
+            var partId = new AtomicInteger(0);
+            ObjectUtils.search(skinParts, BakedSkinPart::getChildren, bakedPart -> bakedPart.setId(partId.getAndIncrement()));
+            return skinParts;
+        }
         var results = new ArrayList<BakedSkinPart>();
         for (var skinPart : skinParts) {
             results.add(clip(skinPart));

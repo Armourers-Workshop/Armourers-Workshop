@@ -602,6 +602,7 @@
   "paintType.armourers_workshop.skin": "Skin",
   "paintType.armourers_workshop.texture": "Texture",
   "skinPartType.armourers_workshop.all.base": "Base",
+  "skinPartType.armourers_workshop.block.base": "Block",
   "skinPartType.armourers_workshop.block.multiblock": "Multiblock",
   "skinPartType.armourers_workshop.bow.arrow": "Arrow",
   "skinPartType.armourers_workshop.bow.frame0": "Frame 0",

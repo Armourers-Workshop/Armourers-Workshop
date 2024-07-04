@@ -18,10 +18,16 @@ public class ChunkCubeSlices extends SkinCubes {
     private final ArrayList<ChunkCubeSelector> selectors;
     private final ChunkPaletteData palette;
 
-    public ChunkCubeSlices(ArrayList<ChunkCubeSelector> selectors, ChunkPaletteData palette) {
+    public ChunkCubeSlices(int owner, ArrayList<ChunkCubeSelector> selectors, ChunkPaletteData palette) {
+        this.owner = owner;
         this.palette = palette;
         this.selectors = selectors;
         this.accessor = new SliceRandomlyAccessor<>(ObjectUtils.map(selectors, this::build));
+    }
+
+    @Override
+    public SkinCubes duplicate() {
+        return new ChunkCubeSlices(owner, selectors, palette);
     }
 
     @Override

@@ -2,27 +2,40 @@ package moe.plushie.armourers_workshop.core.data.cache;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-public class CacheQueue<K, V> {
+@SuppressWarnings("unused")
+public class CacheQueue<K, V> extends AutoreleasePool {
 
     private long nextCheckTime;
 
-    private final int expiredTime;
+    private final long expiredTime;
     private final Consumer<V> releaseHandler;
 
     private final ArrayList<Pair<K, V>> queuing = new ArrayList<>();
     private final HashMap<K, Entry<V>> values = new HashMap<>();
 
-    public CacheQueue(int expiredTime) {
+    public CacheQueue(Duration expiredTime) {
         this(expiredTime, null);
     }
 
-    public CacheQueue(int expiredTime, Consumer<V> releaseHandler) {
-        this.expiredTime = expiredTime;
+    public CacheQueue(Duration expiredTime, Consumer<V> releaseHandler) {
+        this.expiredTime = expiredTime.toMillis();
         this.releaseHandler = releaseHandler;
+    }
+
+
+    @Override
+    protected void beginCapturing() {
+
+    }
+
+    @Override
+    protected void endCapturing() {
+        drain(System.currentTimeMillis());
     }
 
     public void clearAll() {
@@ -45,7 +58,6 @@ public class CacheQueue<K, V> {
         var entry = values.get(key);
         if (entry != null) {
             entry.expiredTime = time + expiredTime;
-            drain(time);
             return entry.value;
         }
         return null;
@@ -72,7 +84,7 @@ public class CacheQueue<K, V> {
         queuing.clear();
     }
 
-    public static class Entry< V> {
+    public static class Entry<V> {
 
         private long expiredTime;
         private final V value;

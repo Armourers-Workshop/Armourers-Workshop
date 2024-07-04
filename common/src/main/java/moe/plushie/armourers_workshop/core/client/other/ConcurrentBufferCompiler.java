@@ -8,8 +8,8 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractVertexArrayOb
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.texture.TextureManager;
-import moe.plushie.armourers_workshop.core.data.cache.AutoreleasePool;
 import moe.plushie.armourers_workshop.core.data.cache.CacheQueue;
+import moe.plushie.armourers_workshop.core.data.cache.ObjectPool;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.concurrent.ExecutorService;
 public class ConcurrentBufferCompiler {
 
     private static final ExecutorService QUEUE = ThreadUtils.newFixedThreadPool(1, "AW-SKIN-VB");
-    private static final CacheQueue<Object, Group> CACHING = new CacheQueue<>(30000, Group::release);
+    private static final CacheQueue<Object, Group> CACHING = new CacheQueue<>(Duration.ofSeconds(30), Group::release);
     private static final VertexIndexObject INDEXER = new VertexIndexObject(4, 6, (builder, index) -> {
         builder.accept(index);
         builder.accept(index + 1);
@@ -114,6 +115,7 @@ public class ConcurrentBufferCompiler {
     }
 
     private void link(ArrayList<Group> cachedTasks, ArrayList<Pass> buildingTasks) {
+        var indexer = INDEXER;
         var totalRenderedBytes = 0;
         var byteBuffers = new ArrayList<ByteBuffer>();
 
@@ -129,7 +131,7 @@ public class ConcurrentBufferCompiler {
             totalRenderedBytes += byteBuffer.remaining();
             renderedBuffer.release();
             // make sure the index buffer is of sufficient size.
-            INDEXER.ensureStorage(compiledTask.vertexCount * 2);
+            indexer.ensureCapacity(compiledTask.vertexCount * 2);
         }
 
         var mergedByteBuffer = ByteBuffer.allocateDirect(totalRenderedBytes);
@@ -175,20 +177,20 @@ public class ConcurrentBufferCompiler {
             if (mergedTasks == null) {
                 return; // is released or not init.
             }
+            this.usingTypes.forEach(TextureManager.getInstance()::open);
+            this.mergedTasks.forEach(it -> it.upload(bufferObject));
             this.bufferObject = bufferObject;
             this.bufferObject.retain();
-            this.usingTypes.forEach(TextureManager.getInstance()::open);
-            this.mergedTasks.forEach(it -> it.upload(bufferObject, INDEXER));
         }
 
         public void release() {
             if (bufferObject == null) {
                 return;
             }
-            this.mergedTasks.forEach(Pass::release);
-            this.usingTypes.forEach(TextureManager.getInstance()::close);
             this.bufferObject.release();
             this.bufferObject = null;
+            this.mergedTasks.forEach(Pass::release);
+            this.usingTypes.forEach(TextureManager.getInstance()::close);
             this.usingTypes = null;
             this.mergedTasks = null;
         }
@@ -231,10 +233,10 @@ public class ConcurrentBufferCompiler {
             this.isGrowing = SkinRenderType.isGrowing(renderType);
         }
 
-        public void upload(VertexBufferObject bufferObject, VertexIndexObject indexObject) {
-            this.arrayObject = AbstractVertexArrayObject.create(format, vertexOffset, bufferObject, indexObject);
+        public void upload(VertexBufferObject bufferObject) {
+            this.arrayObject = AbstractVertexArrayObject.create(format, vertexOffset, bufferObject, INDEXER);
             this.bufferObject = bufferObject;
-            this.indexObject = indexObject;
+            this.indexObject = INDEXER;
         }
 
         public void release() {
@@ -246,7 +248,7 @@ public class ConcurrentBufferCompiler {
 
     public static class Key {
 
-        protected static final AutoreleasePool<Key> POOL = AutoreleasePool.create(Key::new);
+        protected static final ObjectPool<Key> POOL = ObjectPool.create(Key::new);
 
         private int p1;
         private int p2;
