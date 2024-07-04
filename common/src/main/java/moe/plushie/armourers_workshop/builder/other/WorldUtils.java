@@ -235,8 +235,9 @@ public final class WorldUtils {
             var blockData = cube.getType();
             var markerFacing = OptionalDirection.NONE;
             for (var marker : partData.getMarkers()) {
-                if (cubePos.equals(marker.getPosition())) {
-                    var resolvedMarker = getResolvedDirection(marker.getDirection(), mirror);
+                var dir = marker.getDirection();
+                if (dir != null && cubePos.equals(marker.getPosition())) {
+                    var resolvedMarker = getResolvedDirection(dir, mirror);
                     markerFacing = OptionalDirection.of(transform.rotate(resolvedMarker));
                     break;
                 }

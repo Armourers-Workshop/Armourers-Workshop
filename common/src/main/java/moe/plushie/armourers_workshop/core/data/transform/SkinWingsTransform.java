@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +36,10 @@ public class SkinWingsTransform implements ISkinTransform {
 
     @Override
     public void apply(IPoseStack poseStack) {
+        var dir = marker.getDirection();
+        if (dir == null) {
+            return;
+        }
         var point = marker.getPosition();
         var angle = (float) getRotationDegrees();
         var offset = new Vector3f(point.getX() + 0.5f, point.getY() + 0.5f, point.getZ() + 0.5f);
@@ -43,7 +48,7 @@ public class SkinWingsTransform implements ISkinTransform {
         }
 
         poseStack.translate(offset.getX(), offset.getY(), offset.getZ());
-        poseStack.rotate(getRotationMatrix().rotationDegrees(angle));
+        poseStack.rotate(getRotationMatrix(dir).rotationDegrees(angle));
         poseStack.translate(-offset.getX(), -offset.getY(), -offset.getZ());
     }
 
@@ -79,8 +84,8 @@ public class SkinWingsTransform implements ISkinTransform {
         return -minAngle - fullAngle * ((angle + 1D) / 2);
     }
 
-    private Vector3f getRotationMatrix() {
-        return switch (marker.getDirection()) {
+    private Vector3f getRotationMatrix(Direction direction) {
+        return switch (direction) {
             case UP -> Vector3f.YP;
             case DOWN -> Vector3f.YN;
             case SOUTH -> Vector3f.ZN;

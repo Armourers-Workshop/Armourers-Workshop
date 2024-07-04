@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.core.Direction;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -55,6 +56,7 @@ public class SkinMarker implements ISkinMarker {
         return new Vector3i(x, y, z);
     }
 
+    @Nullable
     @Override
     public Direction getDirection() {
         return OptionalDirection.values()[meta].getDirection();
