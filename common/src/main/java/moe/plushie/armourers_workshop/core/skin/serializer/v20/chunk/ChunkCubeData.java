@@ -97,7 +97,7 @@ public class ChunkCubeData implements ChunkVariable {
             palette.copyFrom(slices.getPalette());
             streamIn.writeVarInt(selectors.size());
             for (var selector : selectors) {
-                var section = selector.section;
+                var section = selector.getSection();
                 sections.put(_key(section), section);
                 streamIn.writeVariable(selector);
             }
@@ -107,7 +107,7 @@ public class ChunkCubeData implements ChunkVariable {
         // so we just need encode the cubes at first call.
         var selectors = pending.computeIfAbsent(cubes, k -> new ArrayList<>());
         if (selectors.isEmpty()) {
-            var changes = _encodeCubeData(cubes.duplicate(), streamIn.getContext());
+            var changes = _encodeCubeData(cubes, streamIn.getContext());
             changes.forEach((section, startIndex) -> {
                 // we record the once total at the start encode,
                 // and then record the total again at the end encode.

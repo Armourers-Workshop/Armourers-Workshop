@@ -47,10 +47,22 @@ public class CacheQueue<K, V> extends AutoreleasePool {
         values.clear();
     }
 
-    public void put(K key, V value) {
+    public V remove(K key) {
+        var entry = values.remove(key);
+        if (entry != null) {
+            return entry.value;
+        }
+        return null;
+    }
+
+    public V put(K key, V value) {
         var entry = new Entry<>(value);
         entry.expiredTime = System.currentTimeMillis() + expiredTime;
-        values.put(key, entry);
+        var oldEntry = values.put(key, entry);
+        if (oldEntry != null) {
+            return oldEntry.value;
+        }
+        return null;
     }
 
     public V get(K key) {

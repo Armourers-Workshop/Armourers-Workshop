@@ -16,6 +16,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 
 @SuppressWarnings("unused")
 public class ObjectUtils {
@@ -248,5 +249,13 @@ public class ObjectUtils {
 
     public static FloatBuffer createFloatBuffer(int capacity) {
         return createByteBuffer(Float.BYTES * capacity).asFloatBuffer();
+    }
+
+    public static <T> int sum(Collection<T> elements, ToIntFunction<T> getter) {
+        int sum = 0;
+        for (T element : elements) {
+            sum += getter.applyAsInt(element);
+        }
+        return sum;
     }
 }

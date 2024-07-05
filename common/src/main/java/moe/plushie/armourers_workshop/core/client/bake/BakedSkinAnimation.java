@@ -20,7 +20,7 @@ import java.util.Map;
 @Environment(EnvType.CLIENT)
 public class BakedSkinAnimation {
 
-    private final int id = ThreadUtils.BAKED_SKIN_ANIMATION_COUNTER.getAndIncrement();
+    private final int id = ThreadUtils.nextId(BakedSkinAnimation.class);
 
     private final float duration;
 

@@ -19,26 +19,21 @@ import java.io.IOException;
 
 public class SkinCubesV1 extends SkinCubes {
 
+    private static final int STRIDE_SIZE = 4 + 4 * 6; // id/x/y/z + r/g/b/t * 6
+
+    private final byte[] bytes;
     private final int cubeTotal;
-    private final BufferSlice bufferSlice;
+    private final ThreadLocal<BufferSlice> bufferSlice;
 
     public SkinCubesV1(int count) {
-        this(new BufferSlice(count), count);
-    }
-
-    private SkinCubesV1(BufferSlice bufferSlice, int count) {
-        this.bufferSlice = bufferSlice;
+        this.bytes = new byte[count * STRIDE_SIZE];
         this.cubeTotal = count;
-    }
-
-    @Override
-    public SkinCubesV1 duplicate() {
-        return new SkinCubesV1(bufferSlice.duplicate(), cubeTotal);
+        this.bufferSlice = ThreadLocal.withInitial(() -> new BufferSlice(bytes, STRIDE_SIZE));
     }
 
     @Override
     public SkinCube getCube(int index) {
-        return bufferSlice.at(index);
+        return bufferSlice.get().at(index);
     }
 
     @Override
@@ -49,8 +44,8 @@ public class SkinCubesV1 extends SkinCubes {
     public static void writeToStream(SkinCubes cubes, IOutputStream stream) throws IOException {
         int count = cubes.getCubeTotal();
         stream.writeInt(cubes.getCubeTotal());
-        if (cubes instanceof SkinCubesV1) {
-            stream.write(((SkinCubesV1) cubes).bufferSlice.getBuffers());
+        if (cubes instanceof SkinCubesV1 cubes1) {
+            stream.write(cubes1.bytes);
             return;
         }
         // convert to this version.
@@ -76,13 +71,13 @@ public class SkinCubesV1 extends SkinCubes {
 
     public static SkinCubesV1 readFromStream(IInputStream stream, int version, ISkinPartType skinPart) throws IOException, InvalidCubeTypeException {
         int size = stream.readInt();
-        SkinCubesV1 cubes = new SkinCubesV1(size);
-        BufferSlice bufferSlice = cubes.bufferSlice;
+        var cubes = new SkinCubesV1(size);
+        var bufferSlice = cubes.bufferSlice.get();
         if (version >= 10) {
-            byte[] buffers = bufferSlice.getBuffers();
-            stream.read(buffers, 0, size * bufferSlice.lineSize);
+            var bytes = bufferSlice.getBytes();
+            stream.read(bytes, 0, size * bufferSlice.stride);
             for (int i = 0; i < size; i++) {
-                BufferSlice slice = bufferSlice.at(i);
+                var slice = bufferSlice.at(i);
                 if (version < 11) {
                     for (int side = 0; side < 6; side++) {
                         slice.setPaintType(side, (byte) 255);
@@ -94,7 +89,7 @@ public class SkinCubesV1 extends SkinCubes {
         }
         // 1 - 9
         for (int i = 0; i < size; i++) {
-            BufferSlice slice = bufferSlice.at(i);
+            var slice = bufferSlice.at(i);
             LegacyCubeHelper.loadLegacyCubeData(cubes, slice, stream, version, skinPart);
             for (int side = 0; side < 6; side++) {
                 slice.setPaintType(side, (byte) 255);
@@ -105,32 +100,22 @@ public class SkinCubesV1 extends SkinCubes {
 
     public static class BufferSlice extends SkinCube {
 
-        final int lineSize = 4 + 4 * 6; // id/x/y/z + r/g/b/t * 6
-        final byte[] buffers;
-        final Vector3i pos = new Vector3i(0, 0, 0);
+        private final int stride;
+        private final byte[] bytes;
+        private final Vector3i pos = new Vector3i(0, 0, 0);
 
         int writerIndex = 0;
         int readerIndex = 0;
 
-        public BufferSlice(int count) {
-            this.buffers = new byte[count * lineSize];
-        }
-
-        private BufferSlice(byte[] buffers) {
-            this.buffers = buffers;
+        public BufferSlice(byte[] bytes, int stride) {
+            this.bytes = bytes;
+            this.stride = stride;
         }
 
         public BufferSlice at(int index) {
-            this.writerIndex = index * lineSize;
-            this.readerIndex = index * lineSize;
+            this.writerIndex = index * stride;
+            this.readerIndex = index * stride;
             return this;
-        }
-
-        public BufferSlice duplicate() {
-            var slice = new BufferSlice(buffers);
-            slice.writerIndex = writerIndex;
-            slice.readerIndex = readerIndex;
-            return slice;
         }
 
         public byte getId() {
@@ -263,15 +248,15 @@ public class SkinCubesV1 extends SkinCubes {
         }
 
         public void setByte(int offset, byte value) {
-            buffers[writerIndex + offset] = value;
+            bytes[writerIndex + offset] = value;
         }
 
         public byte getByte(int offset) {
-            return buffers[readerIndex + offset];
+            return bytes[readerIndex + offset];
         }
 
-        public byte[] getBuffers() {
-            return buffers;
+        public byte[] getBytes() {
+            return bytes;
         }
     }
 }

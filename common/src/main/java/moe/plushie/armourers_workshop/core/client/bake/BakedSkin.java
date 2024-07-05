@@ -48,7 +48,7 @@ import java.util.Objects;
 @Environment(EnvType.CLIENT)
 public class BakedSkin implements IBakedSkin {
 
-    private final int id = ThreadUtils.BAKED_SKIN_COUNTER.incrementAndGet();
+    private final int id = ThreadUtils.nextId(BakedSkinPart.class);
 
     private final String identifier;
     private final Skin skin;

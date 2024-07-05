@@ -6,10 +6,10 @@ import java.io.IOException;
 
 public class ChunkCubeSelector implements ChunkVariable {
 
-    public final int index;
-    public final int count;
+    private final int index;
+    private final int count;
 
-    public final ChunkCubeSection section;
+    private final ChunkCubeSection section;
 
     ChunkCubeSelector(ChunkCubeSection section, int fromIndex, int toIndex) {
         this.section = section;
@@ -26,5 +26,18 @@ public class ChunkCubeSelector implements ChunkVariable {
     @Override
     public boolean freeze() {
         return section.isResolved();
+    }
+
+
+    public int getIndex() {
+        return index;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public ChunkCubeSection getSection() {
+        return section;
     }
 }

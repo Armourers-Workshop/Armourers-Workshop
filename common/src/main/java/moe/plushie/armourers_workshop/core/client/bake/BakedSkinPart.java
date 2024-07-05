@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.data.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,13 +19,14 @@ import java.util.ArrayList;
 @Environment(EnvType.CLIENT)
 public class BakedSkinPart {
 
+    private final int id = ThreadUtils.nextId(BakedSkinPart.class);
+
     private final SkinPart part;
     private final BakedCubeQuads quads;
     private final SkinPartTransform transform;
     private final ColorDescriptor descriptor;
     private final ArrayList<BakedSkinPart> children = new ArrayList<>();
 
-    private int id = 0;
     private float renderPolygonOffset;
     private boolean shouldRender = true;
 
@@ -74,10 +76,6 @@ public class BakedSkinPart {
 
     public int getId() {
         return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

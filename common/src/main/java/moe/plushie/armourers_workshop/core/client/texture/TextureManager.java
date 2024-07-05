@@ -37,20 +37,6 @@ public class TextureManager {
         textures.clear();
     }
 
-    public void open(RenderType renderType) {
-        var entry = Entry.of(renderType);
-        if (entry != null) {
-            entry.retain();
-        }
-    }
-
-    public void close(RenderType renderType) {
-        var entry = Entry.of(renderType);
-        if (entry != null) {
-            entry.release();
-        }
-    }
-
     public RenderType register(ITextureProvider provider) {
         return textures.computeIfAbsent(provider, Entry::new).getRenderType();
     }
@@ -60,19 +46,15 @@ public class TextureManager {
         private final IResourceLocation location;
 
         private final RenderType renderType;
-        private final BufferedTexture texture;
+        private final SmartBufferedTexture bufferedTexture;
         private final TextureAnimationController animationController;
-
-        private final AtomicInteger counter = new AtomicInteger(0);
-
-        private boolean isUpload = false;
 
         public Entry(ITextureProvider provider) {
             this.location = resolveResourceLocation(provider);
-            this.renderType = resolveRenderType(provider, location);
-            this.texture = new BufferedTexture(provider);
+            this.renderType = resolveRenderType(location, provider);
+            this.bufferedTexture = new SmartBufferedTexture(location, provider.getBuffer());
             this.animationController = new TextureAnimationController((TextureAnimation) provider.getAnimation());
-            this.resolve();
+            this.open();
         }
 
         @Nullable
@@ -80,35 +62,21 @@ public class TextureManager {
             return IAssociatedObjectProvider.get(renderType);
         }
 
-        protected void retain() {
-            counter.getAndIncrement();
-            if (!isUpload) {
-                open();
-            }
-        }
-
-        protected void release() {
-            if (counter.get() > 0 && counter.decrementAndGet() == 0) {
-                close();
-            }
-        }
-
         protected void open() {
-            if (isUpload) {
-                return;
+            // close old texture if needs.
+            if (renderType instanceof IAssociatedObjectProvider provider) {
+                Entry entry = provider.getAssociatedObject();
+                if (entry != null) {
+                    entry.close();
+                }
+                provider.setAssociatedObject(this);
             }
-            ModLog.debug("upload texture {}", location);
-            Minecraft.getInstance().getTextureManager().register(location.toLocation(), texture);
-            isUpload = true;
+            ModLog.debug("Registering Texture '{}'", location);
+            Minecraft.getInstance().getTextureManager().register(location.toLocation(), bufferedTexture);
         }
 
         protected void close() {
-            counter.set(0);
-            if (!isUpload) {
-                return;
-            }
-            isUpload = false;
-            ModLog.debug("close texture {}", location);
+            ModLog.debug("Unregistering Texture '{}'", location);
             Minecraft.getInstance().getTextureManager().release(location.toLocation());
         }
 
@@ -129,16 +97,6 @@ public class TextureManager {
             return location.toString();
         }
 
-        private void resolve() {
-            if (renderType instanceof IAssociatedObjectProvider provider) {
-                Entry entry = provider.getAssociatedObject();
-                if (entry != null) {
-                    entry.close();
-                }
-                provider.setAssociatedObject(this);
-            }
-        }
-
         private IResourceLocation resolveResourceLocation(ITextureProvider provider) {
             var path = "textures/dynamic/" + ID.getAndIncrement();
             var properties = provider.getProperties();
@@ -148,7 +106,7 @@ public class TextureManager {
             return ModConstants.key(path);
         }
 
-        private RenderType resolveRenderType(ITextureProvider provider, IResourceLocation location) {
+        private RenderType resolveRenderType(IResourceLocation location, ITextureProvider provider) {
             var properties = provider.getProperties();
             if (properties.isEmissive()) {
                 return SkinRenderType.customLightingFace(location);

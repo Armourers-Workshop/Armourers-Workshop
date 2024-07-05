@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferBuilder
 import moe.plushie.armourers_workshop.compatibility.client.AbstractVertexArrayObject;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
-import moe.plushie.armourers_workshop.core.client.texture.TextureManager;
 import moe.plushie.armourers_workshop.core.data.cache.CacheQueue;
 import moe.plushie.armourers_workshop.core.data.cache.ObjectPool;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -21,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
@@ -47,7 +45,7 @@ public class ConcurrentBufferCompiler {
 
     @Nullable
     public Group compile(BakedSkinPart part, BakedSkin skin, ColorScheme scheme) {
-        var key = Key.of(skin.getId(), part.getId(), part.requirements(scheme));
+        var key = Key.of(part.getId(), part.requirements(scheme));
         var group = CACHING.get(key);
         if (group != null) {
             if (group.isCompiled()) {
@@ -89,7 +87,6 @@ public class ConcurrentBufferCompiler {
         for (var task : pendingTasks) {
             var part = task.part;
             var scheme = task.scheme;
-            var usingTypes = new HashSet<RenderType>();
             var mergedTasks = new ArrayList<Pass>();
             part.getQuads().forEach((renderType, quads) -> {
                 var builder = new AbstractBufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
@@ -102,12 +99,10 @@ public class ConcurrentBufferCompiler {
                 });
                 var renderedBuffer = builder.end();
                 var compiledTask = new Pass(renderType, renderedBuffer, part.getRenderPolygonOffset(), part.getType());
-                usingTypes.add(renderType);
                 mergedTasks.add(compiledTask);
                 buildingTasks.add(compiledTask);
             });
             task.mergedTasks = mergedTasks;
-            task.usingTypes = usingTypes;
         }
         link(pendingTasks, buildingTasks);
 //        long totalTime = System.currentTimeMillis() - startTime;
@@ -162,7 +157,6 @@ public class ConcurrentBufferCompiler {
         private final BakedSkin skin;
         private final ColorScheme scheme;
 
-        private HashSet<RenderType> usingTypes;
         private ArrayList<Pass> mergedTasks;
 
         private VertexBufferObject bufferObject;
@@ -177,7 +171,6 @@ public class ConcurrentBufferCompiler {
             if (mergedTasks == null) {
                 return; // is released or not init.
             }
-            this.usingTypes.forEach(TextureManager.getInstance()::open);
             this.mergedTasks.forEach(it -> it.upload(bufferObject));
             this.bufferObject = bufferObject;
             this.bufferObject.retain();
@@ -190,8 +183,6 @@ public class ConcurrentBufferCompiler {
             this.bufferObject.release();
             this.bufferObject = null;
             this.mergedTasks.forEach(Pass::release);
-            this.usingTypes.forEach(TextureManager.getInstance()::close);
-            this.usingTypes = null;
             this.mergedTasks = null;
         }
 
@@ -251,30 +242,27 @@ public class ConcurrentBufferCompiler {
         protected static final ObjectPool<Key> POOL = ObjectPool.create(Key::new);
 
         private int p1;
-        private int p2;
-        private Object p3;
+        private Object p2;
         private int hash;
 
-        private Key set(int hash, int p1, int p2, Object p3) {
+        private Key set(int hash, int p1, Object p3) {
             this.hash = hash;
             this.p1 = p1;
-            this.p2 = p2;
-            this.p3 = p3;
+            this.p2 = p3;
             return this;
         }
 
-        public static Key of(int p1, int p2, Object p3) {
+        public static Key of(int p1, Object p3) {
             int hash = p1;
-            hash = 31 * hash + p2;
             hash = 31 * hash + (p3 == null ? 0 : p3.hashCode());
-            return POOL.get().set(hash, p1, p2, p3);
+            return POOL.get().set(hash, p1, p3);
         }
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (!(o instanceof Key that)) return false;
-            return p1 == that.p1 && p2 == that.p2 && Objects.equals(p3, that.p3);
+            return p1 == that.p1 && Objects.equals(p2, that.p2);
         }
 
         @Override
@@ -283,7 +271,7 @@ public class ConcurrentBufferCompiler {
         }
 
         public Key copy() {
-            return new Key().set(hash, p1, p2, p3);
+            return new Key().set(hash, p1, p2);
         }
     }
 }

@@ -29,11 +29,6 @@ public class SkinCubesV2 extends SkinCubes {
     }
 
     @Override
-    public SkinCubesV2 duplicate() {
-        return this;
-    }
-
-    @Override
     public OpenVoxelShape getShape() {
         var shape = OpenVoxelShape.empty();
         for (var box : entities) {

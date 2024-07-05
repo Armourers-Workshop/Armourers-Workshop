@@ -18,8 +18,6 @@ public abstract class SkinCubes implements ISkinCubeProvider {
 
     protected int owner = -1;
 
-    public abstract SkinCubes duplicate();
-
     public void forEach(Consumer<SkinCube> consumer) {
         var count = getCubeTotal();
         for (var i = 0; i < count; ++i) {

@@ -29,6 +29,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -71,12 +72,12 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         this.wardrobeProvider = wardrobeProvider;
     }
 
-    protected void tick(T source, SkinWardrobe wardrobe) {
+    protected void tick(T source, @Nullable SkinWardrobe wardrobe) {
         tickSlots(source, wardrobe);
         animationManager.tick();
     }
 
-    private void tickSlots(T source, SkinWardrobe wardrobe) {
+    private void tickSlots(T source, @Nullable SkinWardrobe wardrobe) {
         // ..
         if (wardrobeProvider.tick(wardrobe)) {
             version += 1;
@@ -90,7 +91,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         }
     }
 
-    private void reloadSlots(T source, SkinWardrobe wardrobe) {
+    private void reloadSlots(T source, @Nullable SkinWardrobe wardrobe) {
         invalidateAll();
 
         wardrobeProvider.loadDye(wardrobe);

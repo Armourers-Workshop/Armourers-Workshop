@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class Skin implements ISkin {
 
-    private final int id = ThreadUtils.SKIN_COUNTER.incrementAndGet();
+    private final int id = ThreadUtils.nextId(Skin.class);
 
     private final SkinSettings settings;
     private final SkinProperties properties;

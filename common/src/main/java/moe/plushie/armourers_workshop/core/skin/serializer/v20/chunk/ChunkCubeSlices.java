@@ -9,40 +9,37 @@ import moe.plushie.armourers_workshop.utils.SliceRandomlyAccessor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class ChunkCubeSlices extends SkinCubes {
 
-    private int cubeTotal;
+    private final int total;
 
-    private final SliceRandomlyAccessor<SkinCube> accessor;
-    private final ArrayList<ChunkCubeSelector> selectors;
+    private final ThreadLocal<SliceRandomlyAccessor<SkinCube>> accessor;
+    private final List<ChunkCubeSelector> selectors;
     private final ChunkPaletteData palette;
 
-    public ChunkCubeSlices(int owner, ArrayList<ChunkCubeSelector> selectors, ChunkPaletteData palette) {
+    public ChunkCubeSlices(int owner, List<ChunkCubeSelector> selectors, ChunkPaletteData palette) {
         this.owner = owner;
         this.palette = palette;
         this.selectors = selectors;
-        this.accessor = new SliceRandomlyAccessor<>(ObjectUtils.map(selectors, this::build));
-    }
-
-    @Override
-    public SkinCubes duplicate() {
-        return new ChunkCubeSlices(owner, selectors, palette);
+        this.accessor = ThreadLocal.withInitial(() -> build(selectors));
+        this.total = ObjectUtils.sum(selectors, ChunkCubeSelector::getCount);
     }
 
     @Override
     public int getCubeTotal() {
-        return cubeTotal;
+        return total;
     }
 
     @Override
     public SkinCube getCube(int index) {
-        return accessor.get(index);
+        return accessor.get().get(index);
     }
 
     @Override
     public Collection<ISkinCubeType> getCubeTypes() {
-        return ObjectUtils.map(selectors, it -> it.section.getCubeType());
+        return ObjectUtils.map(selectors, it -> it.getSection().getCubeType());
     }
 
     public ChunkPaletteData getPalette() {
@@ -53,9 +50,15 @@ public class ChunkCubeSlices extends SkinCubes {
         return selectors;
     }
 
-    private ChunkCubeSlice build(ChunkCubeSelector selector) {
-        int startIndex = cubeTotal;
-        cubeTotal += selector.count;
-        return ChunkCubeCoders.createDecoder(startIndex, cubeTotal, selector, (ChunkCubeSection.Immutable) selector.section);
+    private static SliceRandomlyAccessor<SkinCube> build(List<ChunkCubeSelector> selectors) {
+        var providers = new ArrayList<SliceRandomlyAccessor.Provider<? extends SkinCube>>();
+        int startIndex = 0;
+        int endIndex = 0;
+        for (var selector : selectors) {
+            endIndex += selector.getCount();
+            providers.add(ChunkCubeCoders.createDecoder(startIndex, endIndex, selector, (ChunkCubeSection.Immutable) selector.getSection()));
+            startIndex = endIndex;
+        }
+        return new SliceRandomlyAccessor<>(providers);
     }
 }

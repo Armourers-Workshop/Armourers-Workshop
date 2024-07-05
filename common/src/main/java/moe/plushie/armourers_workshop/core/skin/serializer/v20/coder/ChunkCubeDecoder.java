@@ -14,7 +14,7 @@ public abstract class ChunkCubeDecoder extends ChunkCubeSlice {
     protected final ChunkPaletteData palette;
 
     public ChunkCubeDecoder(int startIndex, int endIndex, ChunkCubeSelector selector, ChunkCubeSection.Immutable section) {
-        super(startIndex, endIndex, selector.index, section);
+        super(startIndex, endIndex, selector.getIndex(), section);
         this.bytes = section.getBytes();
         this.palette = section.getPalette();
         this.faceCount = section.getCubeOptions() & 0x0F;

@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.utils;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.core.client.texture.BakedEntityTexture;
@@ -16,6 +17,9 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 @Environment(EnvType.CLIENT)
 public final class TextureUtils {
@@ -60,5 +64,13 @@ public final class TextureUtils {
             return textureModel.getColor(texturePos);
         }
         return null;
+    }
+
+    public static NativeImage readTextureImage(ByteBuffer buffer) {
+        try {
+            return NativeImage.read(buffer.asReadOnlyBuffer());
+        } catch (IOException e) {
+            return new NativeImage(NativeImage.Format.RGBA, 128, 128, false);
+        }
     }
 }

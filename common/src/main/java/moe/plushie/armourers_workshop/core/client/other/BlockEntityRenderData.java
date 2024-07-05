@@ -10,10 +10,8 @@ import org.jetbrains.annotations.Nullable;
 @Environment(EnvType.CLIENT)
 public class BlockEntityRenderData extends EntitySlotsHandler<BlockEntity> {
 
-
     private Object customTextureProvider;
     private BlockEntityRenderPatch<? super BlockEntity> renderPatch;
-
 
     public BlockEntityRenderData(BlockEntity blockEntity) {
         super(new BlockEntityProvider(), new WardrobeProvider());
