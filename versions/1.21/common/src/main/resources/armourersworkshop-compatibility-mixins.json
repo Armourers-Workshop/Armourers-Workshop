@@ -15,6 +15,7 @@
     "InventoryScreenMixin",
     "GuiGraphicsMixin",
     "HttpTextureMixin",
+    "PackRepositoryMixin",
     "CameraMixin",
     "ClientEntityTickMixin",
     "patch/ArrowRendererMixin",

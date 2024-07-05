@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public class BlockBenchTexture extends BlockBenchObject {
 
+    private final boolean particle;
     private final String renderMode;
     private final String source;
 
@@ -19,8 +20,9 @@ public class BlockBenchTexture extends BlockBenchObject {
     private final String frameOrder;
     private final boolean frameInterpolate;
 
-    public BlockBenchTexture(String uuid, String name, String renderMode, String source, Size2f imageSize, Size2f textureSize, int frameTime, String frameOrderType, String frameOrder, boolean frameInterpolate) {
+    public BlockBenchTexture(String uuid, String name, boolean particle, String renderMode, String source, Size2f imageSize, Size2f textureSize, int frameTime, String frameOrderType, String frameOrder, boolean frameInterpolate) {
         super(uuid, name);
+        this.particle = particle;
         this.renderMode = renderMode;
         this.source = source;
         this.imageSize = imageSize;
@@ -29,6 +31,10 @@ public class BlockBenchTexture extends BlockBenchObject {
         this.frameOrderType = frameOrderType;
         this.frameOrder = frameOrder;
         this.frameInterpolate = frameInterpolate;
+    }
+
+    public boolean isParticle() {
+        return particle;
     }
 
     public String getSource() {
@@ -70,7 +76,8 @@ public class BlockBenchTexture extends BlockBenchObject {
     public TextureProperties getProperties() {
         var properties = new TextureProperties();
         properties.setEmissive(renderMode.equals("emissive"));
-        properties.setAdditive(renderMode.equals("additive"));
+        //properties.setAdditive(renderMode.equals("additive"));
+        properties.setParticle(particle);
         return properties;
     }
 
@@ -96,6 +103,7 @@ public class BlockBenchTexture extends BlockBenchObject {
 
         private String renderMode = "default";
         private String source;
+        private boolean particle = false;
 
         private int frameTime = 1;
         private String frameOrderType = "loop";
@@ -107,6 +115,10 @@ public class BlockBenchTexture extends BlockBenchObject {
 
         public void renderMode(String renderMode) {
             this.renderMode = renderMode;
+        }
+
+        public void particle(boolean particle) {
+            this.particle = particle;
         }
 
         public void source(String source) {
@@ -138,7 +150,7 @@ public class BlockBenchTexture extends BlockBenchObject {
         }
 
         public BlockBenchTexture build() {
-            return new BlockBenchTexture(uuid, name, renderMode, source, imageSize, textureSize, frameTime, frameOrderType, frameOrder, frameInterpolate);
+            return new BlockBenchTexture(uuid, name, particle, renderMode, source, imageSize, textureSize, frameTime, frameOrderType, frameOrder, frameInterpolate);
         }
     }
 }

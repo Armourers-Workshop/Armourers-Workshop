@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.api.common.ITextureProvider;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.ThreadUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,9 +12,11 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.util.Collection;
+import java.util.Collections;
 
 public class TextureData implements ITextureProvider {
 
+    private final int id = ThreadUtils.nextId(TextureData.class);
     private final String name;
 
     private final float width;
@@ -23,7 +26,7 @@ public class TextureData implements ITextureProvider {
     private TextureProperties properties;
 
     private ByteBuffer bytes;
-    private Collection<ITextureProvider> variants;
+    private Collection<ITextureProvider> variants = Collections.emptyList();
 
     public TextureData(String name, float width, float height) {
         this(name, width, height, TextureAnimation.EMPTY, TextureProperties.EMPTY);
@@ -139,5 +142,17 @@ public class TextureData implements ITextureProvider {
     @Override
     public String toString() {
         return ObjectUtils.makeDescription(this, "name", name, "width", width, "height", height, "animation", animation, "properties", properties);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TextureData that)) return false;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }

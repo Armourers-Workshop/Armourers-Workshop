@@ -1,9 +1,8 @@
 package moe.plushie.armourers_workshop.api.common;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.nio.ByteBuffer;
 import java.util.Collection;
+import java.util.Collections;
 
 public interface ITextureProvider {
 
@@ -19,8 +18,7 @@ public interface ITextureProvider {
 
     ITextureProperties getProperties();
 
-    @Nullable
     default Collection<ITextureProvider> getVariants() {
-        return null;
+        return Collections.emptyList();
     }
 }

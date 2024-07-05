@@ -7,13 +7,18 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.SimpleTexture;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Environment(EnvType.CLIENT)
@@ -22,23 +27,28 @@ public class TextureManager {
     private static final AtomicInteger ID = new AtomicInteger(0);
     private static final TextureManager INSTANCE = new TextureManager();
 
-    private final ConcurrentHashMap<ITextureProvider, Entry> textures = new ConcurrentHashMap<>();
+    private final IdentityHashMap<ITextureProvider, Entry> textures = new IdentityHashMap<>();
 
     public static TextureManager getInstance() {
         return INSTANCE;
     }
 
-    public void start() {
+    public synchronized void start() {
         ID.set(0);
     }
 
-    public void stop() {
+    public synchronized void stop() {
         textures.values().forEach(Entry::close);
         textures.clear();
     }
 
-    public RenderType register(ITextureProvider provider) {
-        return textures.computeIfAbsent(provider, Entry::new).getRenderType();
+    public synchronized RenderType register(ITextureProvider provider) {
+        var entry = textures.get(provider);
+        if (entry == null) {
+            entry = new Entry(provider);
+            textures.put(provider, entry);
+        }
+        return entry.getRenderType();
     }
 
     public static class Entry {
@@ -46,13 +56,13 @@ public class TextureManager {
         private final IResourceLocation location;
 
         private final RenderType renderType;
-        private final SmartBufferedTexture bufferedTexture;
+        private final Map<IResourceLocation, ByteBuffer> textureBuffers;
         private final TextureAnimationController animationController;
 
         public Entry(ITextureProvider provider) {
             this.location = resolveResourceLocation(provider);
             this.renderType = resolveRenderType(location, provider);
-            this.bufferedTexture = new SmartBufferedTexture(location, provider.getBuffer());
+            this.textureBuffers = resolveTextureBuffers(location, provider);
             this.animationController = new TextureAnimationController((TextureAnimation) provider.getAnimation());
             this.open();
         }
@@ -63,7 +73,7 @@ public class TextureManager {
         }
 
         protected void open() {
-            // close old texture if needs.
+            // bind entry to render type.
             if (renderType instanceof IAssociatedObjectProvider provider) {
                 Entry entry = provider.getAssociatedObject();
                 if (entry != null) {
@@ -71,13 +81,23 @@ public class TextureManager {
                 }
                 provider.setAssociatedObject(this);
             }
-            ModLog.debug("Registering Texture '{}'", location);
-            Minecraft.getInstance().getTextureManager().register(location.toLocation(), bufferedTexture);
+            RenderSystem.recordRenderCall(() -> {
+                ModLog.debug("Registering Texture '{}'", location);
+                textureBuffers.forEach(SmartResourceManager.getInstance()::register);
+                Minecraft.getInstance().getTextureManager().register(location.toLocation(), new SimpleTexture(location.toLocation()));
+            });
         }
 
         protected void close() {
-            ModLog.debug("Unregistering Texture '{}'", location);
-            Minecraft.getInstance().getTextureManager().release(location.toLocation());
+            // unbind entry from render type.
+            if (renderType instanceof IAssociatedObjectProvider provider) {
+                provider.setAssociatedObject(null);
+            }
+            RenderSystem.recordRenderCall(() -> {
+                ModLog.debug("Unregistering Texture '{}'", location);
+                textureBuffers.keySet().forEach(SmartResourceManager.getInstance()::unregister);
+                Minecraft.getInstance().getTextureManager().unregister(location.toLocation());
+            });
         }
 
         public IResourceLocation getLocation() {
@@ -99,10 +119,6 @@ public class TextureManager {
 
         private IResourceLocation resolveResourceLocation(ITextureProvider provider) {
             var path = "textures/dynamic/" + ID.getAndIncrement();
-            var properties = provider.getProperties();
-            if (properties.isEmissive()) {
-                path += "_s"; // light
-            }
             return ModConstants.key(path);
         }
 
@@ -112,6 +128,20 @@ public class TextureManager {
                 return SkinRenderType.customLightingFace(location);
             }
             return SkinRenderType.customSolidFace(location);
+        }
+
+        private Map<IResourceLocation, ByteBuffer> resolveTextureBuffers(IResourceLocation location, ITextureProvider provider) {
+            var results = new HashMap<IResourceLocation, ByteBuffer>();
+            results.put(location, provider.getBuffer());
+            for (var variant : provider.getVariants()) {
+                if (variant.getProperties().isNormal()) {
+                    results.put(ModConstants.key(location.getPath() + "_n"), variant.getBuffer());
+                }
+                if (variant.getProperties().isSpecular()) {
+                    results.put(ModConstants.key(location.getPath() + "_s"), variant.getBuffer());
+                }
+            }
+            return results;
         }
     }
 }

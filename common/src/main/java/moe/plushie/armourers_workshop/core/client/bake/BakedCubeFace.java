@@ -18,7 +18,6 @@ import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenRay;
 import net.fabricmc.api.EnvType;
@@ -26,6 +25,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Environment(EnvType.CLIENT)
@@ -179,10 +179,19 @@ public class BakedCubeFace {
 
     private Collection<RenderType> resolveRenderTypeVariants(SkinCubeFace face) {
         var texture = face.getTexture();
-        if (texture != null && texture.getProvider() != null) {
-            return ObjectUtils.flatMap(texture.getProvider().getVariants(), TextureManager.getInstance()::register);
+        if (texture == null || texture.getProvider() == null) {
+            return null;
         }
-        return null;
+        var parent = texture.getProvider();
+        var renderTypes = new ArrayList<RenderType>();
+        for (var variant : parent.getVariants()) {
+            var properties = variant.getProperties();
+            if (properties.isNormal() || properties.isSpecular()) {
+                continue; // normal/specular map, only use from shader mod.
+            }
+            renderTypes.add(TextureManager.getInstance().register(variant));
+        }
+        return renderTypes;
     }
 
     private IPaintColor dye(IPaintColor source, IPaintColor destination, IPaintColor average) {

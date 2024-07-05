@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.core.texture.TextureData;
 import moe.plushie.armourers_workshop.core.texture.TextureOptions;
 import moe.plushie.armourers_workshop.core.texture.TextureProperties;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2f;
 import moe.plushie.armourers_workshop.utils.math.Vector2f;
 
@@ -146,17 +147,14 @@ public abstract class ChunkColorSection {
                 }
                 // restore the parent -> child.
                 for (var parent : textureLists) {
+                    var variants = new ArrayList<>(parent.provider.getVariants());
                     for (var child : textureLists) {
                         if (parent.id == child.parentId) {
-                            var variants = parent.provider.getVariants();
-                            if (variants == null) {
-                                variants = new ArrayList<>();
-                                if (parent.provider instanceof TextureData textureData) {
-                                    textureData.setVariants(variants);
-                                }
-                            }
                             variants.add(child.provider);
                         }
+                    }
+                    if (parent.provider instanceof TextureData textureData) {
+                        textureData.setVariants(variants);
                     }
                 }
             }
@@ -251,9 +249,7 @@ public abstract class ChunkColorSection {
         public TextureRef putTexture(Vector2f uv, ITextureProvider provider) {
             // we're also adding all variant textures.
             var textureList = getOrCreateTextureList(provider);
-            if (provider.getVariants() != null) {
-                provider.getVariants().forEach(this::getOrCreateTextureList);
-            }
+            ObjectUtils.search(provider.getVariants(), ITextureProvider::getVariants, this::getOrCreateTextureList);
             return textureList.add(uv, this);
         }
 
@@ -420,9 +416,7 @@ public abstract class ChunkColorSection {
             this.rect = new Rectangle2f(x, y, rect.getWidth(), rect.getHeight());
             this.isResolved = true;
             // bind the child -> parent
-            if (this.provider.getVariants() != null) {
-                this.provider.getVariants().stream().map(childProvider).filter(Objects::nonNull).forEach(it -> it.parentId = this.id);
-            }
+            this.provider.getVariants().stream().map(childProvider).filter(Objects::nonNull).forEach(it -> it.parentId = this.id);
         }
 
         public boolean contains(Vector2f uv) {

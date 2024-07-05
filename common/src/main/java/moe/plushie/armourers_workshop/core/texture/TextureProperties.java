@@ -1,10 +1,12 @@
 package moe.plushie.armourers_workshop.core.texture;
 
+import joptsimple.internal.Strings;
 import moe.plushie.armourers_workshop.api.common.ITextureProperties;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class TextureProperties implements ITextureProperties {
 
@@ -29,29 +31,61 @@ public class TextureProperties implements ITextureProperties {
         return getFlag(0);
     }
 
-    public void setAdditive(boolean isAdditive) {
-        setFlag(1, isAdditive);
-    }
-
-    public boolean isAdditive() {
-        return getFlag(1);
-    }
-
     public void setParticle(boolean isParticle) {
-        setFlag(2, isParticle);
+        setFlag(1, isParticle);
     }
 
     @Override
     public boolean isParticle() {
+        return getFlag(1);
+    }
+
+    public void setSpecular(boolean isSpecular) {
+        setFlag(2, isSpecular);
+    }
+
+    @Override
+    public boolean isSpecular() {
         return getFlag(2);
+    }
+
+    public void setNormal(boolean isNormal) {
+        setFlag(3, isNormal);
+    }
+
+    @Override
+    public boolean isNormal() {
+        return getFlag(3);
     }
 
     @Override
     public String toString() {
-        if (this == EMPTY) {
-            return "[]";
+        var values = new ArrayList<String>();
+        if (isEmissive()) {
+            values.add("Emissive");
         }
-        return String.format("[emissive=%s, particle=%s, additive=%s]", isEmissive(), isParticle(), isAdditive());
+        if (isParticle()) {
+            values.add("Particle");
+        }
+        if (isNormal()) {
+            values.add("Normal");
+        }
+        if (isSpecular()) {
+            values.add("Specular");
+        }
+        return String.format("[%s]", Strings.join(values, ","));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TextureProperties that)) return false;
+        return flags == that.flags;
+    }
+
+    @Override
+    public int hashCode() {
+        return flags;
     }
 
     private void setFlag(int bit, boolean value) {
