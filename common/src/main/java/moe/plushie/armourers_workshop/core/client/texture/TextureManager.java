@@ -6,8 +6,8 @@ import moe.plushie.armourers_workshop.api.data.IAssociatedObjectProvider;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.init.ModConstants;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -16,8 +16,8 @@ import net.minecraft.client.renderer.texture.SimpleTexture;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
-import java.util.HashMap;
 import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -82,7 +82,6 @@ public class TextureManager {
                 provider.setAssociatedObject(this);
             }
             RenderSystem.recordRenderCall(() -> {
-                ModLog.debug("Registering Texture '{}'", location);
                 textureBuffers.forEach(SmartResourceManager.getInstance()::register);
                 Minecraft.getInstance().getTextureManager().register(location.toLocation(), new SimpleTexture(location.toLocation()));
             });
@@ -94,7 +93,6 @@ public class TextureManager {
                 provider.setAssociatedObject(null);
             }
             RenderSystem.recordRenderCall(() -> {
-                ModLog.debug("Unregistering Texture '{}'", location);
                 textureBuffers.keySet().forEach(SmartResourceManager.getInstance()::unregister);
                 Minecraft.getInstance().getTextureManager().unregister(location.toLocation());
             });
@@ -119,7 +117,7 @@ public class TextureManager {
 
         private IResourceLocation resolveResourceLocation(ITextureProvider provider) {
             var path = "textures/dynamic/" + ID.getAndIncrement();
-            return ModConstants.key(path);
+            return ModConstants.key(path + ".png");
         }
 
         private RenderType resolveRenderType(IResourceLocation location, ITextureProvider provider) {
@@ -131,14 +129,15 @@ public class TextureManager {
         }
 
         private Map<IResourceLocation, ByteBuffer> resolveTextureBuffers(IResourceLocation location, ITextureProvider provider) {
-            var results = new HashMap<IResourceLocation, ByteBuffer>();
+            var path = SkinFileUtils.removeExtension(location.getPath());
+            var results = new LinkedHashMap<IResourceLocation, ByteBuffer>();
             results.put(location, provider.getBuffer());
             for (var variant : provider.getVariants()) {
                 if (variant.getProperties().isNormal()) {
-                    results.put(ModConstants.key(location.getPath() + "_n"), variant.getBuffer());
+                    results.put(ModConstants.key(path + "_n.png"), variant.getBuffer());
                 }
                 if (variant.getProperties().isSpecular()) {
-                    results.put(ModConstants.key(location.getPath() + "_s"), variant.getBuffer());
+                    results.put(ModConstants.key(path + "_s.png"), variant.getBuffer());
                 }
             }
             return results;

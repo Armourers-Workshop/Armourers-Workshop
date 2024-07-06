@@ -5,8 +5,7 @@ import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractPackResources;
 import moe.plushie.armourers_workshop.init.ModConstants;
-import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
+import moe.plushie.armourers_workshop.init.ModLog;
 import net.minecraft.server.packs.PackType;
 
 import java.io.InputStream;
@@ -31,11 +30,13 @@ public class SmartResourceManager extends AbstractPackResources {
     }
 
     public void register(IResourceLocation location, ByteBuffer buffer) {
-        resources.put(resolve(location), buffer);
+        ModLog.debug("Registering Resource '{}'", location);
+        resources.put(location, buffer);
     }
 
     public void unregister(IResourceLocation location) {
-        resources.remove(resolve(location));
+        ModLog.debug("Unregistering Resource '{}'", location);
+        resources.remove(location);
     }
 
     @Override
@@ -45,7 +46,7 @@ public class SmartResourceManager extends AbstractPackResources {
 
     @Override
     public Supplier<InputStream> getResource(PackType packType, IResourceLocation location) {
-        var buf = resources.get(resolve(location));
+        var buf = resources.get(location);
         if (buf != null) {
             return () -> new ByteBufInputStream(Unpooled.wrappedBuffer(buf.duplicate()));
         }
@@ -55,15 +56,5 @@ public class SmartResourceManager extends AbstractPackResources {
     @Override
     public void close() {
         // reload or quit.
-    }
-
-    private IResourceLocation resolve(IResourceLocation location) {
-        var extension = SkinFileUtils.getExtension(location.getPath());
-        if (extension.isEmpty()) {
-            // when no specified extension, we assume it is a png file.
-            var path = location.getPath() + ".png";
-            return OpenResourceLocation.create(location.getNamespace(), path);
-        }
-        return location;
     }
 }
