@@ -24,6 +24,9 @@ dependencies {
     //modLocalRuntime "org.samo_lego:taterzens:1.9.6-forge"
     //modLocalRuntime "net.optifine:OptiFine:1.18.2_HD_U_H9_pre1"
 
+    //modCompileOnly "maven.modrinth:cristel-lib:1.1.5-forge"
+    //modLocalRuntime "maven.modrinth:cristel-lib:1.1.5-forge"
+
     modOptionalCompileOnly project.jei_api_version
     modOptionalCompileOnly project.epicfight_api_version
     modOptionalCompileOnly project.curios_api_version

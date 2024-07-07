@@ -29,11 +29,6 @@ public class DataPackManager {
         }
     }
 
-    public static void init(RegisterDataPackEvent event) {
-        // noop
-        event.register(DataPackManager.byType(DataPackType.SERVER_DATA));
-    }
-
     protected static class Bundle extends DataPackLoader {
 
         @Override
@@ -49,7 +44,7 @@ public class DataPackManager {
         public void build(TaskQueue taskQueue, ResourceManager resourceManager) {
             DataPackLoader loader = byType(DataPackType.BUNDLED_DATA);
             if (loader != null && !loader.isEmpty()) {
-                loader.build(taskQueue, resourceManager);
+                loader.build(taskQueue, resourceManager.asBundleManager());
             }
             super.build(taskQueue, resourceManager);
         }

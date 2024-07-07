@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init.platform;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentPlatformType;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.fabricmc.api.EnvType;
@@ -16,6 +17,11 @@ public class EnvironmentManager {
 
     @ExpectPlatform
     public static String getVersion() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static EnvironmentPlatformType getPlatformType() {
         throw new AssertionError();
     }
 

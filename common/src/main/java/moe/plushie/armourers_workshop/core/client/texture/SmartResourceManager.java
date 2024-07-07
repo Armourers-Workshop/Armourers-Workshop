@@ -22,7 +22,7 @@ public class SmartResourceManager extends AbstractPackResources {
     private final HashMap<IResourceLocation, ByteBuffer> resources = new HashMap<>();
 
     protected SmartResourceManager() {
-        super(ModConstants.key("skin"));
+        super(String.format("skin/%s/dynamic", ModConstants.MOD_ID));
     }
 
     public static SmartResourceManager getInstance() {

@@ -19,12 +19,15 @@ public abstract class AbstractPackResources implements PackResources {
 
     private final String id;
 
-    protected AbstractPackResources(IResourceLocation id) {
-        this.id = id.toString();
+    protected AbstractPackResources(String id) {
+        this.id = id;
+    }
+
+    public static boolean isModResources(PackResources resources) {
+        return !resources.packId().startsWith("file/");
     }
 
     public abstract Supplier<InputStream> getResource(PackType packType, IResourceLocation location);
-
 
     @Nullable
     @Override

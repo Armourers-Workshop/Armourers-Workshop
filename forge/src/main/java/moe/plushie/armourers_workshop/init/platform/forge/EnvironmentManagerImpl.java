@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.init.platform.forge;
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeEnvironment;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentPlatformType;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.ConfigBuilderImpl;
 import net.minecraft.server.MinecraftServer;
@@ -22,6 +23,10 @@ public class EnvironmentManagerImpl {
             return version.toString();
         }
         return "Unknown";
+    }
+
+    public static EnvironmentPlatformType getPlatformType() {
+        return EnvironmentPlatformType.FORGE;
     }
 
     public static EnvironmentType getEnvironmentType() {

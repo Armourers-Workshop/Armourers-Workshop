@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.compatibility.core.data;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -23,8 +25,12 @@ public abstract class AbstractPackResources implements PackResources {
 
     private final PackLocationInfo info;
 
-    protected AbstractPackResources(IResourceLocation id) {
-        this.info = new PackLocationInfo(id.toString(), Component.empty(), PackSource.BUILT_IN, Optional.empty());
+    protected AbstractPackResources(String id) {
+        this.info = new PackLocationInfo(id, Component.empty(), PackSource.DEFAULT, Optional.empty());
+    }
+
+    public static boolean isModResources(PackResources resources) {
+        return !resources.packId().startsWith("file/");
     }
 
     public abstract Supplier<InputStream> getResource(PackType packType, IResourceLocation location);

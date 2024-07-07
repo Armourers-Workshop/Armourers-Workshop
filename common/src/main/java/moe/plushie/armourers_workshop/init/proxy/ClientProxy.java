@@ -14,7 +14,6 @@ import moe.plushie.armourers_workshop.core.client.bake.SkinPreloadManager;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager2;
 import moe.plushie.armourers_workshop.core.client.texture.TextureManager;
-import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.data.cache.AutoreleasePool;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
@@ -48,7 +47,6 @@ import moe.plushie.armourers_workshop.init.platform.event.client.RenderSpecificH
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.data.impl.MinecraftAuth;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.TypedRegistry;
 import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
@@ -56,9 +54,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -78,8 +74,8 @@ public class ClientProxy {
         ModDebugger.init();
 
         EnvironmentExecutor.willSetup(EnvironmentType.CLIENT, () -> () -> {
-            ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-            DataPackLoader packLoader = DataPackManager.byType(DataPackType.CLIENT_RESOURCES);
+            var resourceManager = Minecraft.getInstance().getResourceManager();
+            var packLoader = DataPackManager.byType(DataPackType.CLIENT_RESOURCES);
             ((ReloadableResourceManager) resourceManager).registerReloadListener(packLoader);
         });
 
@@ -89,9 +85,8 @@ public class ClientProxy {
     private static void register() {
         // register custom item property.
         EventManager.listen(RegisterItemPropertyEvent.class, event -> TypedRegistry.findEntries(Item.class).forEach(it -> {
-            Item item = it.get();
-            IItemPropertiesProvider provider = ObjectUtils.safeCast(item, IItemPropertiesProvider.class);
-            if (provider != null) {
+            var item = it.get();
+            if (item instanceof IItemPropertiesProvider provider) {
                 provider.createModelProperties((key, property) -> event.register(key, item, property));
             }
             event.register(ModConstants.key("type"), Items.CROSSBOW, ((itemStack, level, entity, id) -> 1));
@@ -99,15 +94,15 @@ public class ClientProxy {
 
         // register item/block color handler.
         EventManager.listen(RegisterColorHandlersEvent.Item.class, event -> TypedRegistry.findEntries(Item.class).forEach(it -> {
-            Item item = it.get();
-            if (item instanceof IItemTintColorProvider) {
-                event.register(((IItemTintColorProvider) item), item);
+            var item = it.get();
+            if (item instanceof IItemTintColorProvider provider) {
+                event.register(provider, item);
             }
         }));
         EventManager.listen(RegisterColorHandlersEvent.Block.class, event -> TypedRegistry.findEntries(Block.class).forEach(it -> {
-            Block block = it.get();
-            if (block instanceof IBlockTintColorProvider) {
-                event.register(((IBlockTintColorProvider) block), block);
+            var block = it.get();
+            if (block instanceof IBlockTintColorProvider provider) {
+                event.register(provider, block);
             }
         }));
 
@@ -125,7 +120,7 @@ public class ClientProxy {
         }));
 
         EventManager.listen(ClientPlayerEvent.LoggingIn.class, event -> {
-            Player player = event.getPlayer();
+            var player = event.getPlayer();
             if (player == null || !player.equals(EnvironmentManager.getPlayer())) {
                 return; // other players join
             }
@@ -135,7 +130,7 @@ public class ClientProxy {
             AnimationEngine.start();
         });
         EventManager.listen(ClientPlayerEvent.LoggingOut.class, event -> {
-            Player player = event.getPlayer();
+            var player = event.getPlayer();
             if (player != null && !player.equals(EnvironmentManager.getPlayer())) {
                 return; // other players leave
             }

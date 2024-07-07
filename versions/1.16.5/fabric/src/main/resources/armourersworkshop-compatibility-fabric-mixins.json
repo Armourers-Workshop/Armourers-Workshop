@@ -7,7 +7,6 @@
     "FabricTrinketsAddonMixin"
   ],
   "mixins": [
-    "FabricPackResourcesMixin"
   ],
   "injectors": {
     "defaultRequire": 1

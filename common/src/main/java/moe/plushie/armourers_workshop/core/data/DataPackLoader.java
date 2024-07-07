@@ -96,7 +96,7 @@ public class DataPackLoader implements PreparableReloadListener {
         }
     }
 
-    protected interface TaskQueue {
+    public interface TaskQueue {
 
         void accept(Supplier<Map<IResourceLocation, IDataPackBuilder>> supplier, Consumer<Map<IResourceLocation, IDataPackBuilder>> consumer);
     }

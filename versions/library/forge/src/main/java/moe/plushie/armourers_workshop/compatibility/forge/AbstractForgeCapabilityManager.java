@@ -105,7 +105,9 @@ public class AbstractForgeCapabilityManager {
 
         @Override
         public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
-            value.deserialize(AbstractDataSerializer.wrap(tag, provider));
+            if (value != null) {
+                value.deserialize(AbstractDataSerializer.wrap(tag, provider));
+            }
         }
 
         public T getValue() {
