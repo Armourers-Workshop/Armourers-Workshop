@@ -11,8 +11,7 @@ public class AbstractFabricRegisterModelEvent {
 
     public static IEventHandler<RegisterModelEvent> registryFactory() {
         return subscriber -> ModelLoadingPlugin.register(pluginContext -> subscriber.accept(registryName -> {
-            ResourceLocation location = ResourceLocation.create(registryName.getNamespace(), "item/" + registryName.getPath());
-            pluginContext.addModels(location);
+            pluginContext.addModels(ResourceLocation.create(registryName.getNamespace(), "item/" + registryName.getPath()));
         }));
     }
 }

@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -63,7 +63,7 @@ public class SkinModelManager {
             return bakedModel;
         }
         var modelId = ArmourersWorkshop.getCustomModel(partType.getRegistryName());
-        bakedModel = modelManager.getModel(new ModelResourceLocation(modelId.toLocation(), "inventory"));
+        bakedModel = modelManager.getModel(ResourceLocation.create(modelId, "inventory"));
         if (partType != SkinPartTypes.UNKNOWN && bakedModel == getMissingModel()) {
             bakedModel = loadModel(SkinPartTypes.UNKNOWN);
         }

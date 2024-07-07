@@ -4,14 +4,12 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.registry.IEventHandler;
 import moe.plushie.armourers_workshop.init.platform.event.client.RegisterModelEvent;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 @Available("[1.16, 1.21)")
 public class AbstractFabricRegisterModelEvent {
 
     public static IEventHandler<RegisterModelEvent> registryFactory() {
-        return subscriber -> ModelLoadingRegistry.INSTANCE.registerModelProvider((resourceManager, registry) -> subscriber.accept(registryName -> {
-            registry.accept(new ModelResourceLocation(registryName.toLocation(), "inventory"));
-        }));
+        return subscriber -> ModelLoadingRegistry.INSTANCE.registerModelProvider((resourceManager, registry) -> subscriber.accept(registryName -> registry.accept(ResourceLocation.create(registryName, "inventory"))));
     }
 }

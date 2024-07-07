@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Available("[1.16, )")
+@Available("[1.21, )")
 @Mixin(ThrownTridentRenderer.class)
 public class ThrownTridentRendererMixin<T extends ThrownTrident> implements IModelProvider<T> {
 
@@ -27,10 +27,11 @@ public class ThrownTridentRendererMixin<T extends ThrownTrident> implements IMod
         ClientWardrobeHandler.onRenderEntityPre(entity, partialTicks, poseStack, buffers, light);
     }
 
-    @Inject(method = "render(Lnet/minecraft/world/entity/projectile/ThrownTrident;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;getFoilBufferDirect(Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/renderer/RenderType;ZZ)Lcom/mojang/blaze3d/vertex/VertexConsumer;", shift = At.Shift.BEFORE))
+    @Inject(method = "render(Lnet/minecraft/world/entity/projectile/ThrownTrident;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/TridentModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;II)V"))
     public void aw2$render(T entity, float p_225623_2_, float partialTicks, PoseStack poseStack, MultiBufferSource renderType, int light, CallbackInfo ci) {
         ClientWardrobeHandler.onRenderEntity(entity, partialTicks, poseStack, renderType, light);
         if (!aw2$transformModel.isVisible()) {
+            poseStack.setIdentity();
             poseStack.scale(0, 0, 0);
         }
     }

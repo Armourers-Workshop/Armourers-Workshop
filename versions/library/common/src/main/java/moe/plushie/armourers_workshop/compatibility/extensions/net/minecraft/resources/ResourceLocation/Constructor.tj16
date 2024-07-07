@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.resources.ResourceLocation;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 
 import manifold.ext.rt.api.Extension;
@@ -10,11 +12,15 @@ import manifold.ext.rt.api.ThisClass;
 @Extension
 public class Constructor {
 
-    public static  ResourceLocation create(@ThisClass Class<?> clazz, String namespace, String path) {
+    public static ResourceLocation parse(@ThisClass Class<?> clazz, String id) {
+        return new ResourceLocation(id);
+    }
+
+    public static ResourceLocation create(@ThisClass Class<?> clazz, String namespace, String path) {
         return new ResourceLocation(namespace, path);
     }
 
-    public static  ResourceLocation parse(@ThisClass Class<?> clazz, String id) {
-        return new ResourceLocation(id);
+    public static ModelResourceLocation create(@ThisClass Class<?> clazz, IResourceLocation location, String variant) {
+        return new ModelResourceLocation(new ResourceLocation(location.getNamespace(), location.getPath()), variant);
     }
 }

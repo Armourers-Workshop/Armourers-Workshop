@@ -23,6 +23,11 @@ public class AbstractPoseStack extends AbstractPoseStackImpl implements IPoseSta
         this.stack = poseStack;
     }
 
+    public static void reset(PoseStack poseStack) {
+        //poseStack.setIdentity();
+        poseStack.scale(1e-9f, 1e-9f, 1e-9f);
+    }
+
     public static IPoseStack wrap(PoseStack poseStack) {
         return IAssociatedObjectProvider.of(poseStack, AbstractPoseStack::new);
     }

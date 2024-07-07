@@ -31,6 +31,7 @@ public class FishingHookRendererMixin<T extends FishingHook> implements IModelPr
     public void aw2$render(T entity, float p_225623_2_, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, CallbackInfo ci) {
         ClientWardrobeHandler.onRenderEntity(entity, partialTicks, poseStack, buffers, light);
         if (!aw2$transformModel.isVisible()) {
+            poseStack.setIdentity();
             poseStack.scale(0, 0, 0);
         }
     }
