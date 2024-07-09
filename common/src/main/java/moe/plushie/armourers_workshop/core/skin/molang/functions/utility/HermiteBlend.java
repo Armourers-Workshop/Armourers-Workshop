@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin.molang.functions.utility;
 
 import moe.plushie.armourers_workshop.core.skin.molang.functions.Function;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 
 public class HermiteBlend extends Function.Pure {
 
-    public HermiteBlend(IValue[] values, String name) throws Exception {
+    public HermiteBlend(IMathValue[] values, String name) throws Exception {
         super(values, name);
     }
 

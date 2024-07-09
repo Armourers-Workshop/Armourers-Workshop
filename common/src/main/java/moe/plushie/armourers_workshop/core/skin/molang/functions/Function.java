@@ -1,17 +1,17 @@
 package moe.plushie.armourers_workshop.core.skin.molang.functions;
 
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 
 /**
  * Abstract function class This class provides function capability (i.e. giving it arguments and upon {@link #get()}
  * method you receive output).
  */
-public abstract class Function implements IValue {
+public abstract class Function implements IMathValue {
 
     protected String name;
-    protected IValue[] args;
+    protected IMathValue[] args;
 
-    protected Function(IValue[] values, String name) throws Exception {
+    protected Function(IMathValue[] values, String name) throws Exception {
         if (values.length < getRequiredArguments()) {
             var message = String.format(
                     "Function '%s' requires at least %s arguments. %s are given!",
@@ -72,7 +72,7 @@ public abstract class Function implements IValue {
      */
     public abstract static class Pure extends Function {
 
-        protected Pure(IValue[] values, String name) throws Exception {
+        protected Pure(IMathValue[] values, String name) throws Exception {
             super(values, name);
         }
 

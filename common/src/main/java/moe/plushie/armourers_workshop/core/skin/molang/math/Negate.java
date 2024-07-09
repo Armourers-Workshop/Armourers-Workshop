@@ -3,11 +3,11 @@ package moe.plushie.armourers_workshop.core.skin.molang.math;
 /**
  * Negate operator class This class is responsible for negating given value
  */
-public class Negate implements IValue {
+public class Negate implements IMathValue {
 
-    public IValue value;
+    public IMathValue value;
 
-    public Negate(IValue value) {
+    public Negate(IMathValue value) {
         this.value = value;
     }
 

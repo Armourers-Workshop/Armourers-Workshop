@@ -37,10 +37,10 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Math builder This class is responsible for parsing math expressions provided by user in a string to an {@link IValue}
+ * Math builder This class is responsible for parsing math expressions provided by user in a string to an {@link IMathValue}
  * which can be used to compute some value dynamically using different math operators, variables and functions. It works
  * by first breaking down given string into a list of tokens and then putting them together in a binary tree-like
- * {@link IValue}. TODO: maybe implement constant pool (to reuse same values)? TODO: maybe pre-compute constant
+ * {@link IMathValue}. TODO: maybe implement constant pool (to reuse same values)? TODO: maybe pre-compute constant
  * expressions?
  */
 public class MathBuilder {
@@ -103,9 +103,9 @@ public class MathBuilder {
     }
 
     /**
-     * Parse given math expression into a {@link IValue} which can be used to execute math.
+     * Parse given math expression into a {@link IMathValue} which can be used to execute math.
      */
-    public IValue parse(String expression) throws Exception {
+    public IMathValue parse(String expression) throws Exception {
         return this.parseSymbols(this.breakdownChars(this.breakdown(expression)));
     }
 
@@ -231,11 +231,11 @@ public class MathBuilder {
 
     /**
      * Parse symbols This function is the most important part of this class. It's responsible for turning list of
-     * symbols into {@link IValue}. This is done by constructing a binary tree-like {@link IValue} based on
+     * symbols into {@link IMathValue}. This is done by constructing a binary tree-like {@link IMathValue} based on
      * {@link Operator} class. However, beside parsing operations, it's also can return one or two item sized symbol
      * lists.
      */
-    public IValue parseSymbols(List<Object> symbols) throws Exception {
+    public IMathValue parseSymbols(List<Object> symbols) throws Exception {
         var ternary = tryTernary(symbols);
         if (ternary != null) {
             return ternary;
@@ -332,7 +332,7 @@ public class MathBuilder {
      * Try parsing a ternary expression From what we know, with ternary expressions, we should have only one ? and :,
      * and some elements from beginning till ?, in between ? and :, and also some remaining elements after :.
      */
-    protected IValue tryTernary(List<Object> symbols) throws Exception {
+    protected IMathValue tryTernary(List<Object> symbols) throws Exception {
         int question = -1;
         int questions = 0;
         int colon = -1;
@@ -369,11 +369,11 @@ public class MathBuilder {
 
     /**
      * Create a function value This method in comparison to {@link #valueFromObject(Object)} needs the name of the
-     * function and list of args (which can't be stored in one object). This method will constructs {@link IValue}s from
+     * function and list of args (which can't be stored in one object). This method will constructs {@link IMathValue}s from
      * list of args mixed with operators, groups, values and commas. And then plug it in to a class constructor with
      * given name.
      */
-    protected IValue createFunction(String first, List<Object> args) throws Exception {
+    protected IMathValue createFunction(String first, List<Object> args) throws Exception {
         /* Handle special cases with negation */
         if (first.equals("!")) {
             return new Negate(this.parseSymbols(args));
@@ -396,7 +396,7 @@ public class MathBuilder {
             throw new MolangException("Function '" + first + "' couldn't be found!");
         }
 
-        List<IValue> values = new ArrayList<>();
+        List<IMathValue> values = new ArrayList<>();
         List<Object> buffer = new ArrayList<>();
 
         for (Object o : args) {
@@ -413,15 +413,15 @@ public class MathBuilder {
         }
 
         Class<? extends Function> function = this.functions.get(first);
-        Constructor<? extends Function> ctor = function.getConstructor(IValue[].class, String.class);
-        return ctor.newInstance(values.toArray(new IValue[values.size()]), first);
+        Constructor<? extends Function> ctor = function.getConstructor(IMathValue[].class, String.class);
+        return ctor.newInstance(values.toArray(new IMathValue[values.size()]), first);
     }
 
     /**
      * Get value from an object. This method is responsible for creating different sort of values based on the input
      * object. It can create constants, variables and groups.
      */
-    public IValue valueFromObject(Object object) throws Exception {
+    public IMathValue valueFromObject(Object object) throws Exception {
         if (object instanceof List) {
             return new Group(this.parseSymbols((List<Object>) object));
         }
@@ -444,7 +444,7 @@ public class MathBuilder {
                         return new Negative(value);
                     }
                 } else {
-                    IValue value = this.getVariable(symbol);
+                    IMathValue value = this.getVariable(symbol);
 
                     /* Avoid NPE */
                     if (value != null) {

@@ -48,11 +48,11 @@ public class AnimationEngine {
         if (animationManager == null) {
             return;
         }
-        for (var animation : skin.getAnimations()) {
+        for (var animationController : skin.getAnimationControllers()) {
             // we needs reset the applier.
-            var state = animationManager.getAnimationState(animation);
+            var state = animationManager.getAnimationState(animationController);
             if (state == null) {
-                animation.getOutputs().forEach(AnimationOutput::reset);
+                animationController.reset();
                 continue;
             }
             // we only bind it when transformer use the molang environment.
@@ -61,9 +61,7 @@ public class AnimationEngine {
                 upload(source, partialTicks, state.getStartTime());
             }
             // check/switch frames of animation and write to applier.
-            for (var transformer : animation.getProcessors()) {
-                transformer.process(state, partialTicks);
-            }
+            animationController.process(partialTicks);
         }
     }
 

@@ -1,23 +1,23 @@
 package moe.plushie.armourers_workshop.core.skin.molang.expressions;
 
 import moe.plushie.armourers_workshop.core.skin.molang.MolangParser;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 
 /**
- * Molang extension for the {@link IValue} system. Used to handle values and expressions specific to Molang
+ * Molang extension for the {@link IMathValue} system. Used to handle values and expressions specific to Molang
  * deserialization
  */
-public class MolangValue implements IValue {
+public class MolangValue implements IMathValue {
 
-    private final IValue value;
+    private final IMathValue value;
 
     private final boolean returns;
 
-    public MolangValue(IValue value) {
+    public MolangValue(IMathValue value) {
         this(value, false);
     }
 
-    public MolangValue(IValue value, boolean isReturn) {
+    public MolangValue(IMathValue value, boolean isReturn) {
         this.value = value;
         this.returns = isReturn;
     }
@@ -27,7 +27,7 @@ public class MolangValue implements IValue {
         return this.value.get();
     }
 
-    public IValue getValueHolder() {
+    public IMathValue getValueHolder() {
         return this.value;
     }
 

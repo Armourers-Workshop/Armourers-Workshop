@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.molang.expressions;
 
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 import moe.plushie.armourers_workshop.core.skin.molang.math.Variable;
 
 /**
@@ -10,7 +10,7 @@ public class MolangVariableHolder extends MolangValue {
 
     public Variable variable;
 
-    public MolangVariableHolder(Variable variable, IValue value) {
+    public MolangVariableHolder(Variable variable, IMathValue value) {
         super(value);
         this.variable = variable;
     }

@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin.molang.functions.classic;
 
 import moe.plushie.armourers_workshop.core.skin.molang.functions.Function;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 
 public class Exp extends Function.Pure {
 
-    public Exp(IValue[] values, String name) throws Exception {
+    public Exp(IMathValue[] values, String name) throws Exception {
         super(values, name);
     }
 

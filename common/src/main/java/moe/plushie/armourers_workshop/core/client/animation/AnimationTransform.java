@@ -21,7 +21,7 @@ public class AnimationTransform implements ISkinTransform {
     private final Vector3f scale = new Vector3f(1, 1, 1);
 
     private final SkinTransform parent;
-    private final ArrayList<AnimationOutput> outputs = new ArrayList<>();
+    private final ArrayList<AnimationController.Snapshot> snapshots = new ArrayList<>();
 
     private int dirty = 0x00;
     private int changes = 0x00;
@@ -34,8 +34,8 @@ public class AnimationTransform implements ISkinTransform {
         this.clear(0x02, pivot.equals(Vector3f.ZERO));
     }
 
-    public void link(AnimationOutput output) {
-        outputs.add(output);
+    public void link(AnimationController.Snapshot snapshot) {
+        snapshots.add(snapshot);
     }
 
     @Override
@@ -94,17 +94,17 @@ public class AnimationTransform implements ISkinTransform {
         }
         // the translate have changes?
         if ((dirty & 0x10) != 0) {
-            translate.set(combine(parent.getTranslate(), AnimationOutput::getTranslate, 0));
+            translate.set(combine(parent.getTranslate(), AnimationController.Snapshot::getTranslate, 0));
             clear(0x10, translate.equals(Vector3f.ZERO));
         }
         // the rotation have changes?
         if ((dirty & 0x20) != 0) {
-            rotation.set(combine(parent.getRotation(), AnimationOutput::getRotation, 1));
+            rotation.set(combine(parent.getRotation(), AnimationController.Snapshot::getRotation, 1));
             clear(0x20, rotation.equals(Vector3f.ZERO));
         }
         // the scale have changes?
         if ((dirty & 0x40) != 0) {
-            scale.set(combine(parent.getScale(), AnimationOutput::getScale, 2));
+            scale.set(combine(parent.getScale(), AnimationController.Snapshot::getScale, 2));
             clear(0x04, Math.abs(scale.getX()) == Math.abs(scale.getY()) && Math.abs(scale.getY()) == Math.abs(scale.getZ()));
             clear(0x40, scale.equals(Vector3f.ONE));
         }
@@ -112,12 +112,12 @@ public class AnimationTransform implements ISkinTransform {
         return changes;
     }
 
-    private Vector3f combine(IVector3f parent, Function<AnimationOutput, IVector3f> getter, int mode) {
+    private Vector3f combine(IVector3f parent, Function<AnimationController.Snapshot, IVector3f> getter, int mode) {
         float x = parent.getX();
         float y = parent.getY();
         float z = parent.getZ();
-        for (var output : outputs) {
-            var value = getter.apply(output);
+        for (var snapshot : snapshots) {
+            var value = getter.apply(snapshot);
             // TODO: add override mode support?
             if (mode == 2) {
                 x *= value.getX();

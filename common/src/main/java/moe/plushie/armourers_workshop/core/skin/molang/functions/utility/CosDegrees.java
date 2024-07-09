@@ -2,14 +2,14 @@ package moe.plushie.armourers_workshop.core.skin.molang.functions.utility;
 
 import moe.plushie.armourers_workshop.core.skin.molang.functions.Function;
 import moe.plushie.armourers_workshop.core.skin.molang.functions.classic.Cos;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 
 /**
  * Replacement function for {@link Cos}, operating in degrees rather than radians.
  */
 public class CosDegrees extends Function.Pure {
 
-    public CosDegrees(IValue[] values, String name) throws Exception {
+    public CosDegrees(IMathValue[] values, String name) throws Exception {
         super(values, name);
     }
 

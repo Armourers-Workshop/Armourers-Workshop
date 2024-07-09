@@ -3,11 +3,11 @@ package moe.plushie.armourers_workshop.core.skin.molang.math;
 /**
  * Negative operator class This class is responsible for inverting given value
  */
-public class Negative implements IValue {
+public class Negative implements IMathValue {
 
-    public IValue value;
+    public IMathValue value;
 
-    public Negative(IValue value) {
+    public Negative(IMathValue value) {
         this.value = value;
     }
 

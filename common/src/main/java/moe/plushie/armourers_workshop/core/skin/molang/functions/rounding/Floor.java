@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin.molang.functions.rounding;
 
 import moe.plushie.armourers_workshop.core.skin.molang.functions.Function;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 
 public class Floor extends Function.Pure {
 
-    public Floor(IValue[] values, String name) throws Exception {
+    public Floor(IMathValue[] values, String name) throws Exception {
         super(values, name);
     }
 

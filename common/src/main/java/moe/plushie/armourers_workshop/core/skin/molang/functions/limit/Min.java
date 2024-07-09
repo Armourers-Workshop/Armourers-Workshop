@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin.molang.functions.limit;
 
 import moe.plushie.armourers_workshop.core.skin.molang.functions.Function;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 
 public class Min extends Function.Pure {
 
-    public Min(IValue[] values, String name) throws Exception {
+    public Min(IMathValue[] values, String name) throws Exception {
         super(values, name);
     }
 

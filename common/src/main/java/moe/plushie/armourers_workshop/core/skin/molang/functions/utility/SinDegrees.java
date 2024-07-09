@@ -2,14 +2,14 @@ package moe.plushie.armourers_workshop.core.skin.molang.functions.utility;
 
 import moe.plushie.armourers_workshop.core.skin.molang.functions.Function;
 import moe.plushie.armourers_workshop.core.skin.molang.functions.classic.Sin;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 
 /**
  * Replacement function for {@link Sin}, operating in degrees rather than radians
  */
 public class SinDegrees extends Function.Pure {
 
-    public SinDegrees(IValue[] values, String name) throws Exception {
+    public SinDegrees(IMathValue[] values, String name) throws Exception {
         super(values, name);
     }
 

@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.core.skin.molang.functions.limit;
 
 import moe.plushie.armourers_workshop.core.skin.molang.functions.Function;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 import moe.plushie.armourers_workshop.core.skin.molang.math.MathHelper;
 
 public class Clamp extends Function.Pure {
 
-    public Clamp(IValue[] values, String name) throws Exception {
+    public Clamp(IMathValue[] values, String name) throws Exception {
         super(values, name);
     }
 

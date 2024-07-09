@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin.molang.functions.classic;
 
 import moe.plushie.armourers_workshop.core.skin.molang.functions.Function;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 
 public class Pow extends Function.Pure {
 
-    public Pow(IValue[] values, String name) throws Exception {
+    public Pow(IMathValue[] values, String name) throws Exception {
         super(values, name);
     }
 

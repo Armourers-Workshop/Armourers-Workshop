@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.skin.molang.expressions.MolangVariabl
 import moe.plushie.armourers_workshop.core.skin.molang.functions.utility.CosDegrees;
 import moe.plushie.armourers_workshop.core.skin.molang.functions.utility.SinDegrees;
 import moe.plushie.armourers_workshop.core.skin.molang.math.Constant;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 import moe.plushie.armourers_workshop.core.skin.molang.math.LazyVariable;
 import moe.plushie.armourers_workshop.core.skin.molang.math.MathBuilder;
 import moe.plushie.armourers_workshop.core.skin.molang.math.Variable;
@@ -195,7 +195,7 @@ public class MolangParser extends MathBuilder {
     /**
      * Wrapper around {@link #parseSymbols(List)} to throw {@link MolangException}
      */
-    private IValue parseSymbolsMolang(List<Object> symbols) throws MolangException {
+    private IMathValue parseSymbolsMolang(List<Object> symbols) throws MolangException {
         try {
             return this.parseSymbols(symbols);
         } catch (Exception e) {

@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.core.skin.molang.math;
 
 /**
- * Group class Simply wraps given {@link IValue} into parenthesis in the {@link #toString()} method.
+ * Group class Simply wraps given {@link IMathValue} into parenthesis in the {@link #toString()} method.
  */
-public class Group implements IValue {
+public class Group implements IMathValue {
 
-    private final IValue value;
+    private final IMathValue value;
 
-    public Group(IValue value) {
+    public Group(IMathValue value) {
         this.value = value;
     }
 

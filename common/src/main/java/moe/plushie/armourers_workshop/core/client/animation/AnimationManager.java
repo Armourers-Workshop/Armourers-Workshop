@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.animation;
 
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkinAnimation;
 import moe.plushie.armourers_workshop.core.client.other.BlockEntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -21,10 +20,10 @@ import java.util.Map;
 public class AnimationManager {
 
     private final HashMap<SkinDescriptor, Entry> entries = new HashMap<>();
-    private final HashMap<BakedSkinAnimation, AnimationState> states = new HashMap<>();
+    private final HashMap<AnimationController, AnimationState> states = new HashMap<>();
 
-    private final ArrayList<BakedSkinAnimation> animations = new ArrayList<>();
-    private final ArrayList<BakedSkinAnimation> removeOnCompletion = new ArrayList<>();
+    private final ArrayList<AnimationController> animations = new ArrayList<>();
+    private final ArrayList<AnimationController> removeOnCompletion = new ArrayList<>();
 
     public static AnimationManager of(Entity entity) {
         var renderData = EntityRenderData.of(entity);
@@ -51,7 +50,7 @@ public class AnimationManager {
                 return;
             }
             entry.isLoaded = true;
-            entry.animations = skin.getAnimations();
+            entry.animations = skin.getAnimationControllers();
             if (entry.animations != null) {
                 entry.animations.forEach(animation -> {
                     // auto play
@@ -102,10 +101,10 @@ public class AnimationManager {
         });
     }
 
-    public void play(BakedSkinAnimation animation, float atTime, int playCount) {
-        var state = new AnimationState(animation);
+    public void play(AnimationController animationController, float atTime, int playCount) {
+        var state = new AnimationState(animationController);
         if (playCount == 0) {
-            playCount = switch (animation.getLoop()) {
+            playCount = switch (animationController.getLoop()) {
                 case NONE -> 1;
                 case LAST_FRAME -> 0;
                 case LOOP -> -1;
@@ -113,32 +112,32 @@ public class AnimationManager {
         }
         state.setStartTime(atTime);
         state.setPlayCount(playCount);
-        states.put(animation, state);
-        ModLog.debug("start play {}", animation);
+        states.put(animationController, state);
+        ModLog.debug("start play {}", animationController);
         // automatically remove on animation completion.
         if (playCount > 0) {
-            removeOnCompletion.add(animation);
+            removeOnCompletion.add(animationController);
         } else {
-            removeOnCompletion.remove(animation);
+            removeOnCompletion.remove(animationController);
         }
     }
 
-    public void stop(BakedSkinAnimation animation) {
-        var state = states.remove(animation);
+    public void stop(AnimationController animationController) {
+        var state = states.remove(animationController);
         if (state == null) {
             return;
         }
-        ModLog.debug("stop play {}", animation);
-        removeOnCompletion.remove(animation);
+        ModLog.debug("stop play {}", animationController);
+        removeOnCompletion.remove(animationController);
     }
 
-    public AnimationState getAnimationState(BakedSkinAnimation animation) {
-        return states.get(animation);
+    public AnimationState getAnimationState(AnimationController animationController) {
+        return states.get(animationController);
     }
 
 
-    private boolean isParallelAnimation(BakedSkinAnimation animation) {
-        var name = animation.getName();
+    private boolean isParallelAnimation(AnimationController animationController) {
+        var name = animationController.getName();
         return name != null && name.matches("^(.+\\.)?parallel\\d+$");
     }
 
@@ -146,7 +145,7 @@ public class AnimationManager {
 
         private final SkinDescriptor descriptor;
 
-        private List<BakedSkinAnimation> animations;
+        private List<AnimationController> animations;
         private boolean isLoaded = false;
 
         public Entry(SkinDescriptor descriptor) {

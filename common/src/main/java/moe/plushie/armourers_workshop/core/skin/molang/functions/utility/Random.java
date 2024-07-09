@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.core.skin.molang.functions.utility;
 
 import moe.plushie.armourers_workshop.core.skin.molang.functions.Function;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 
 public class Random extends Function {
 
     public java.util.Random random;
 
-    public Random(IValue[] values, String name) throws Exception {
+    public Random(IMathValue[] values, String name) throws Exception {
         super(values, name);
         this.random = new java.util.Random();
     }

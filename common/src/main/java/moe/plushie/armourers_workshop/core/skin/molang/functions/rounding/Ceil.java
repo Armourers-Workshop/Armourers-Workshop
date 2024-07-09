@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin.molang.functions.rounding;
 
 import moe.plushie.armourers_workshop.core.skin.molang.functions.Function;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 
 public class Ceil extends Function.Pure {
 
-    public Ceil(IValue[] values, String name) throws Exception {
+    public Ceil(IMathValue[] values, String name) throws Exception {
         super(values, name);
     }
 

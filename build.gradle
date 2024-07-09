@@ -41,7 +41,8 @@ allprojects {
 
     group = rootProject.maven_group
     archivesBaseName = "${uname.toLowerCase()}-${project.name}-${rootProject.minecraft_version}"
-    targetCompatibility = sourceCompatibility = rootProject.java_version
+    targetCompatibility = rootProject.java_version
+    sourceCompatibility = 16
 
     repositories {
         // Add repositories to retrieve artifacts from in here.

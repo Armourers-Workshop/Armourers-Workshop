@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.client.animation.AnimationController;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationEngine;
 import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
@@ -61,7 +62,7 @@ public class BakedSkin implements IBakedSkin {
 
     private final Range<Integer> useTickRange;
     private final List<BakedSkinPart> skinParts;
-    private final List<BakedSkinAnimation> skinAnimations;
+    private final List<AnimationController> skinAnimationControllers;
 
     private final ColorDescriptor colorDescriptor;
     private final SkinUsedCounter usedCounter;
@@ -74,7 +75,7 @@ public class BakedSkin implements IBakedSkin {
         this.identifier = identifier;
         this.skin = skin;
         this.skinType = skinType;
-        this.skinAnimations = resolveAnimations(bakedParts, skin.getAnimations());
+        this.skinAnimationControllers = resolveAnimationControllers(bakedParts, skin.getAnimations());
         this.skinParts = BakedSkinPartCombiner.apply(bakedParts);
         this.colorScheme = colorScheme;
         this.colorDescriptor = colorDescriptor;
@@ -130,8 +131,8 @@ public class BakedSkin implements IBakedSkin {
         return skinParts;
     }
 
-    public List<BakedSkinAnimation> getAnimations() {
-        return skinAnimations;
+    public List<AnimationController> getAnimationControllers() {
+        return skinAnimationControllers;
     }
 
     public ColorScheme getColorScheme() {
@@ -265,26 +266,25 @@ public class BakedSkin implements IBakedSkin {
         return overrides;
     }
 
-    private List<BakedSkinAnimation> resolveAnimations(List<BakedSkinPart> skinParts, Collection<SkinAnimation> animations) {
-        var results = new ArrayList<BakedSkinAnimation>();
+    private List<AnimationController> resolveAnimationControllers(List<BakedSkinPart> skinParts, Collection<SkinAnimation> animations) {
+        var results = new ArrayList<AnimationController>();
         if (animations.isEmpty()) {
             return results;
         }
-        var namedParts = new HashMap<String, List<BakedSkinPart>>();
+        var namedParts = new HashMap<String, BakedSkinPart>();
         ObjectUtils.search(skinParts, BakedSkinPart::getChildren, part -> {
             var partType = part.getType();
             var partName = partType.getName();
             if (partType == SkinPartTypes.ADVANCED) {
                 partName = part.getName();
             }
-            namedParts.computeIfAbsent(partName, it -> new ArrayList<>()).add(part);
+            namedParts.put(partName, part);
         });
         animations.forEach(animation -> {
-            var bakedAnimation = new BakedSkinAnimation(animation);
-            bakedAnimation.link(namedParts);
-            results.add(bakedAnimation);
+            var controller = new AnimationController(animation, namedParts);
+            results.add(controller);
         });
-        results.removeIf(BakedSkinAnimation::isEmpty);
+        results.removeIf(AnimationController::isEmpty);
         return results;
     }
 

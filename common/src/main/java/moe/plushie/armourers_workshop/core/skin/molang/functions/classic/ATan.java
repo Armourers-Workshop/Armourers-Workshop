@@ -1,14 +1,14 @@
 package moe.plushie.armourers_workshop.core.skin.molang.functions.classic;
 
 import moe.plushie.armourers_workshop.core.skin.molang.functions.Function;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 
 /**
  * Absolute value function
  */
 public class ATan extends Function.Pure {
 
-    public ATan(IValue[] values, String name) throws Exception {
+    public ATan(IMathValue[] values, String name) throws Exception {
         super(values, name);
     }
 

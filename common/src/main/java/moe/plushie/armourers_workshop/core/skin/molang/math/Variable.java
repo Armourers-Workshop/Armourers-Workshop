@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin.molang.math;
 
 /**
- * Variable class This class is responsible for providing a mutable {@link IValue} which can be modifier during runtime
+ * Variable class This class is responsible for providing a mutable {@link IMathValue} which can be modifier during runtime
  * and still getting referenced in the expressions parsed by {@link MathBuilder}. But in practice, it's simply returns
  * stored value and provides a method to modify it.
  */
-public class Variable implements IValue {
+public class Variable implements IMathValue {
 
     private String name;
 

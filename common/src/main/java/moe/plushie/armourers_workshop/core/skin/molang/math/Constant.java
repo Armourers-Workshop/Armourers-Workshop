@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.molang.math;
 /**
  * Constant class This class simply returns supplied in the constructor value
  */
-public class Constant implements IValue {
+public class Constant implements IMathValue {
 
     private final double value;
 

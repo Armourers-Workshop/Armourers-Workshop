@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin.molang.functions.limit;
 
 import moe.plushie.armourers_workshop.core.skin.molang.functions.Function;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 
 public class Max extends Function.Pure {
 
-    public Max(IValue[] values, String name) throws Exception {
+    public Max(IMathValue[] values, String name) throws Exception {
         super(values, name);
     }
 

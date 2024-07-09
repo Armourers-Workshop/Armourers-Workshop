@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.core.skin.molang.functions.utility;
 
 import moe.plushie.armourers_workshop.core.skin.molang.functions.Function;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 import moe.plushie.armourers_workshop.core.skin.molang.math.Interpolations;
 
 public class LerpRotate extends Function.Pure {
 
-    public LerpRotate(IValue[] values, String name) throws Exception {
+    public LerpRotate(IMathValue[] values, String name) throws Exception {
         super(values, name);
     }
 

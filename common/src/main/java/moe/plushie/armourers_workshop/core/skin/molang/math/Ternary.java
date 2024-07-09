@@ -3,13 +3,13 @@ package moe.plushie.armourers_workshop.core.skin.molang.math;
 /**
  * Ternary operator class This value implementation allows to return different values depending on given condition value
  */
-public class Ternary implements IValue {
+public class Ternary implements IMathValue {
 
-    public final IValue condition;
-    public final IValue ifTrue;
-    public final IValue ifFalse;
+    public final IMathValue condition;
+    public final IMathValue ifTrue;
+    public final IMathValue ifFalse;
 
-    public Ternary(IValue condition, IValue ifTrue, IValue ifFalse) {
+    public Ternary(IMathValue condition, IMathValue ifTrue, IMathValue ifFalse) {
         this.condition = condition;
         this.ifTrue = ifTrue;
         this.ifFalse = ifFalse;

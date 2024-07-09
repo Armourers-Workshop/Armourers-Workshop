@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin.molang.functions.utility;
 
 import moe.plushie.armourers_workshop.core.skin.molang.functions.Function;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IValue;
+import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
 
 public class DieRollInteger extends Function {
 
-    public DieRollInteger(IValue[] values, String name) throws Exception {
+    public DieRollInteger(IMathValue[] values, String name) throws Exception {
         super(values, name);
     }
 
