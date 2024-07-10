@@ -52,8 +52,11 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.spongepowered.include.com.google.common.base.Function;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ModCommands {
 
@@ -90,7 +93,7 @@ public class ModCommands {
                 .then(literal("rsyncWardrobe").then(players().executes(Executor::resyncWardrobe)))
                 .then(literal("openWardrobe").then(entities().executes(Executor::openWardrobe)))
                 .then(literal("itemSkinnable").then(addOrRemote().then(overrideTypes().executes(Executor::setItemSkinnable))))
-                .then(literal("animation", "<entity_block_target>", literal("play").then(name().then(playCount().executes(Executor::playAnimation)).executes(Executor::playAnimation)), literal("stop").then(name().executes(Executor::stopAnimation)).executes(Executor::stopAnimation)))
+                .then(literal("animation", "<entity_block_target>", ModCommands::animationCommands))
                 .then(literal("setUnlockedSlots").then(entities().then(resizableSlotNames().then(resizableSlotAmounts().executes(Executor::setUnlockedWardrobeSlots)))));
     }
 
@@ -98,10 +101,17 @@ public class ModCommands {
         return Commands.literal(name);
     }
 
-    static ArgumentBuilder<CommandSourceStack, ?> literal(String name, String desc, ArgumentBuilder<CommandSourceStack, ?> builder1, ArgumentBuilder<CommandSourceStack, ?> builder2) {
+    static ArgumentBuilder<CommandSourceStack, ?> literal(String name, String desc, Function<ArgumentBuilder<CommandSourceStack, ?>, ArgumentBuilder<CommandSourceStack, ?>> transformer) {
         return literal(name)
-                .then(literal("entity").then(entities().then(builder1).then(builder2)))
-                .then(literal("block").then(blockPos().then(builder1).then(builder2)));
+                .then(literal("entity").then(transformer.apply(entities())))
+                .then(literal("block").then(transformer.apply(blockPos())));
+    }
+
+    static ArgumentBuilder<CommandSourceStack, ?> animationCommands(ArgumentBuilder<CommandSourceStack, ?> parent) {
+        return parent
+                .then(literal("play").then(name().then(playCount().executes(Executor::playAnimation)).executes(Executor::playAnimation)))
+                .then(literal("stop").then(name().executes(Executor::stopAnimation)).executes(Executor::stopAnimation))
+                .then(literal("map").then(string("from").then(string("to").executes(Executor::mappingAnimation))));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> players() {
@@ -116,6 +126,9 @@ public class ModCommands {
         return Commands.argument("block_pos", BlockPosArgument.blockPos());
     }
 
+    static ArgumentBuilder<CommandSourceStack, ?> string(String name) {
+        return Commands.argument(name, StringArgumentType.string());
+    }
 
     static ArgumentBuilder<CommandSourceStack, ?> slots() {
         return Commands.argument("slot", IntegerArgumentType.integer(1, 10));
@@ -398,14 +411,8 @@ public class ModCommands {
                 playCount = IntegerArgumentType.getInteger(context, "play_count");
             }
             var animationName = StringArgumentType.getString(context, "name");
-            if (containsNode(context, "entities")) {
-                for (var entity : EntityArgument.getEntities(context, "entities")) {
-                    NetworkManager.sendToAll(UpdateAnimationPacket.play(entity, animationName, playCount));
-                }
-            }
-            if (containsNode(context, "block_pos")) {
-                var blockPos = BlockPosArgument.getBlockPos(context, "block_pos");
-                NetworkManager.sendToAll(UpdateAnimationPacket.play(blockPos, animationName, playCount));
+            for (var selector : getAnimationSelector(context)) {
+                NetworkManager.sendToAll(UpdateAnimationPacket.play(selector, animationName, playCount));
             }
             return 0;
         }
@@ -415,16 +422,33 @@ public class ModCommands {
             if (containsNode(context, "name")) {
                 animationName = StringArgumentType.getString(context, "name");
             }
+            for (var selector : getAnimationSelector(context)) {
+                NetworkManager.sendToAll(UpdateAnimationPacket.stop(selector, animationName));
+            }
+            return 0;
+        }
+
+        public static int mappingAnimation(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+            var from = StringArgumentType.getString(context, "from");
+            var to = StringArgumentType.getString(context, "to");
+            for (var selector : getAnimationSelector(context)) {
+                NetworkManager.sendToAll(UpdateAnimationPacket.mapping(selector, from, to));
+            }
+            return 0;
+        }
+
+        private static List<UpdateAnimationPacket.Selector> getAnimationSelector(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+            var selectors = new ArrayList<UpdateAnimationPacket.Selector>();
             if (containsNode(context, "entities")) {
                 for (var entity : EntityArgument.getEntities(context, "entities")) {
-                    NetworkManager.sendToAll(UpdateAnimationPacket.stop(entity, animationName));
+                    selectors.add(new UpdateAnimationPacket.Selector(entity));
                 }
             }
             if (containsNode(context, "block_pos")) {
                 var blockPos = BlockPosArgument.getBlockPos(context, "block_pos");
-                NetworkManager.sendToAll(UpdateAnimationPacket.stop(blockPos, animationName));
+                selectors.add(new UpdateAnimationPacket.Selector(blockPos));
             }
-            return 0;
+            return selectors;
         }
     }
 }

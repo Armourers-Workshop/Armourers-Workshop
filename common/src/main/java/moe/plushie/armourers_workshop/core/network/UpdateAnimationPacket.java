@@ -25,34 +25,24 @@ public class UpdateAnimationPacket extends CustomPacket {
         this.value = buffer.readNbt();
     }
 
-    public static UpdateAnimationPacket play(Entity entity, String name, int playCount) {
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("entity", entity.getId());
+    public static UpdateAnimationPacket play(Selector selector, String name, int playCount) {
+        var tag = selector.save();
         tag.putString("name", name);
         tag.putInt("count", playCount);
         return new UpdateAnimationPacket(Mode.PLAY, tag);
     }
 
-    public static UpdateAnimationPacket stop(Entity entity, String name) {
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("entity", entity.getId());
+    public static UpdateAnimationPacket stop(Selector selector, String name) {
+        var tag = selector.save();
         tag.putString("name", name);
         return new UpdateAnimationPacket(Mode.STOP, tag);
     }
 
-    public static UpdateAnimationPacket play(BlockPos blockPos, String name, int playCount) {
-        CompoundTag tag = new CompoundTag();
-        tag.putOptionalBlockPos("block", blockPos, null);
-        tag.putString("name", name);
-        tag.putInt("count", playCount);
-        return new UpdateAnimationPacket(Mode.PLAY, tag);
-    }
-
-    public static UpdateAnimationPacket stop(BlockPos blockPos, String name) {
-        CompoundTag tag = new CompoundTag();
-        tag.putOptionalBlockPos("block", blockPos, null);
-        tag.putString("name", name);
-        return new UpdateAnimationPacket(Mode.STOP, tag);
+    public static UpdateAnimationPacket mapping(Selector selector, String from, String to) {
+        var tag = selector.save();
+        tag.putString("from", from);
+        tag.putString("to", to);
+        return new UpdateAnimationPacket(Mode.MAPPING, tag);
     }
 
     @Override
@@ -83,6 +73,16 @@ public class UpdateAnimationPacket extends CustomPacket {
                 }
                 break;
             }
+            case MAPPING: {
+                var animationManager = getTargetRenderData(player);
+                if (animationManager != null) {
+                    String from = value.getString("from");
+                    String to = value.getString("to");
+                    ModLog.debug("remapping animation {} to {}", from, to);
+                    animationManager.mapping(from, to);
+                }
+                break;
+            }
             case MODERATOR: {
                 break;
             }
@@ -102,6 +102,32 @@ public class UpdateAnimationPacket extends CustomPacket {
     }
 
     public enum Mode {
-        PLAY, STOP, MODERATOR
+        PLAY, STOP, MAPPING, MODERATOR
+    }
+
+    public static class Selector {
+
+        private final int id;
+        private final BlockPos pos;
+
+        public Selector(Entity entity) {
+            this.id = entity.getId();
+            this.pos = null;
+        }
+
+        public Selector(BlockPos blockPos) {
+            this.id = -1;
+            this.pos = blockPos;
+        }
+
+        public CompoundTag save() {
+            CompoundTag tag = new CompoundTag();
+            if (pos != null) {
+                tag.putOptionalBlockPos("block", pos, null);
+            } else {
+                tag.putInt("entity", id);
+            }
+            return tag;
+        }
     }
 }
