@@ -26,6 +26,7 @@
   ],
   "mixins": [
     "EntityJSMixin",
+    "EntityActionTrackerMixin",
     "VehicleEntityPlaceMixin",
     "VehicleEntityBreakMixin",
     "ComponentizationFixMixin$ItemFixer",

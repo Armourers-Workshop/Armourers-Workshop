@@ -60,7 +60,9 @@
     "Phalanx_R": {
       "target": "body",
       "translate": [ 0, 0, 2 ]
-    }
+    },
+    "Float": "Root",
+    "Static": "Root"
   },
   "override": {
     "overrideModelHead": "head",

@@ -25,6 +25,7 @@
   ],
   "mixins": [
     "EntityJSMixin",
+    "EntityActionTrackerMixin",
     "VehicleEntityPlaceMixin$BoatPatch",
     "VehicleEntityPlaceMixin$MinecartPatch",
     "VehicleEntityPlaceMixin$MinecartDispensePatch",

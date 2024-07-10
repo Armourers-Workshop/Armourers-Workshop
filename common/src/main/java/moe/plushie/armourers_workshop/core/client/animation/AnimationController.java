@@ -27,8 +27,9 @@ public class AnimationController {
     private final String name;
     private final SkinAnimation animation;
 
-    private final int duration;
+    private final float duration;
     private final SkinAnimationLoop loop;
+    private final DisplayMode displayMode;
 
     private final ArrayList<Section> sections = new ArrayList<>();
 
@@ -37,13 +38,14 @@ public class AnimationController {
         this.animation = animation;
 
         this.loop = animation.getLoop();
-        this.duration = AnimationController.toTime(animation.getDuration());
+        this.duration = animation.getDuration();
+        this.displayMode = DisplayMode.of(animation.getName());
 
         // create all animation.
         animation.getValues().forEach((boneName, linkedValues) -> {
             var bone = bones.get(boneName);
             if (bone != null) {
-                sections.add(new Section(bone, duration, linkedValues));
+                sections.add(new Section(bone, AnimationController.toTime(duration), linkedValues));
             }
         });
     }
@@ -97,7 +99,7 @@ public class AnimationController {
     }
 
     public float getDuration() {
-        return animation.getDuration();
+        return duration;
     }
 
     public boolean isRequiresVirtualMachine() {
@@ -111,6 +113,10 @@ public class AnimationController {
             }
         }
         return false;
+    }
+
+    public boolean isParallel() {
+        return displayMode.isParallel();
     }
 
     public boolean isEmpty() {
@@ -231,7 +237,12 @@ public class AnimationController {
                     return new Constant(number.doubleValue());
                 }
                 if (object instanceof String script) {
-                    return MolangVirtualMachine.get().create(script);
+                    var expr = MolangVirtualMachine.get().eval(script);
+                    if (!expr.isConstant()) {
+                        return expr;
+                    }
+                    // to avoid any molang function calls.
+                    return new Constant(expr.get());
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();
@@ -467,6 +478,23 @@ public class AnimationController {
             }
             // something requires to be calculated.
             return () -> variable.set((float) x.get(), (float) y.get(), (float) z.get());
+        }
+    }
+
+    public enum DisplayMode {
+
+        SERIAL, PARALLEL;
+
+        public static DisplayMode of(String name) {
+            if (name != null && name.matches("^(.+\\.)?parallel\\d+$")) {
+                return PARALLEL;
+            }
+            return SERIAL;
+        }
+
+
+        public boolean isParallel() {
+            return this == PARALLEL;
         }
     }
 }

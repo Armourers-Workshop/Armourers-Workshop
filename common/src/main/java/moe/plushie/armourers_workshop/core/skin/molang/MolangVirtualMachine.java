@@ -4,8 +4,8 @@ import moe.plushie.armourers_workshop.core.skin.molang.expressions.MolangValue;
 import moe.plushie.armourers_workshop.core.skin.molang.math.LazyVariable;
 import moe.plushie.armourers_workshop.core.skin.molang.math.Variable;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.DoubleSupplier;
 
 @SuppressWarnings("unused")
@@ -14,7 +14,7 @@ public class MolangVirtualMachine {
     private static final MolangVirtualMachine DEFAULT = new MolangVirtualMachine();
 
     private final MolangParser parser = new MolangParser();
-    private final HashMap<String, LazyVariable> variables = new HashMap<>();
+    private final Map<String, LazyVariable> variables = new ConcurrentHashMap<>();
 
     public final LazyVariable animTime = register("query.anim_time", 0);
 
@@ -55,7 +55,7 @@ public class MolangVirtualMachine {
     /**
      * Create a molang expression
      */
-    public MolangValue create(String expression) throws MolangException {
+    public MolangValue eval(String expression) throws MolangException {
         return parser.parseExpression(expression);
     }
 

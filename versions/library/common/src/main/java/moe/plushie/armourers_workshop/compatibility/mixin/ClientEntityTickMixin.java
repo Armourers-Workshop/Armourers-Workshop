@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.compatibility.mixin;
 
-import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
+import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,9 +13,6 @@ public class ClientEntityTickMixin {
 
     @Inject(method = "tickNonPassenger", at = @At("RETURN"))
     private void aw2$tickNonPassenger(Entity entity, CallbackInfo ci) {
-        EntityRenderData renderData = EntityRenderData.of(entity);
-        if (renderData != null) {
-            renderData.tick(entity);
-        }
+        ClientWardrobeHandler.tick(entity);
     }
 }

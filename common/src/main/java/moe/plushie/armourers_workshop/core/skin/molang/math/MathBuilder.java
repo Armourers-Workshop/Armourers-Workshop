@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Math builder This class is responsible for parsing math expressions provided by user in a string to an {@link IMathValue}
@@ -48,7 +49,7 @@ public class MathBuilder {
     /**
      * Named variables that can be used in math expression by this builder
      */
-    protected final Map<KeyPath, Variable> variables = new HashMap<>();
+    protected final Map<KeyPath, Variable> variables = new ConcurrentHashMap<>();
 
     /**
      * Map of functions which can be used in the math expressions

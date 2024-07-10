@@ -29,7 +29,9 @@
     },
     "Phalanx_R": {
       "target": "Chest"
-    }
+    },
+    "Float": "Root",
+    "Static": "Root"
   },
   "transform": {
     "translate": {

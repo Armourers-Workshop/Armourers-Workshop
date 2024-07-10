@@ -277,7 +277,7 @@ public class BedrockModelExporter {
                 if (script.isBlank()) {
                     return 0f;
                 }
-                var expr = MolangVirtualMachine.get().create(script);
+                var expr = MolangVirtualMachine.get().eval(script);
                 if (expr.isConstant()) {
                     return (float) expr.get();
                 }

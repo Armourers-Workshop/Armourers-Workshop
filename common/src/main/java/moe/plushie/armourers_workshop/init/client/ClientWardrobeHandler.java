@@ -58,6 +58,16 @@ public class ClientWardrobeHandler {
     public static void init() {
     }
 
+    public static void tick(Entity entity) {
+        var renderData = EntityRenderData.of(entity);
+        if (renderData != null) {
+            renderData.tick(entity);
+        }
+        for (var passenger : entity.getPassengers()) {
+            tick(passenger);
+        }
+    }
+
     public static void startRenderGuiItem(ItemStack itemStack) {
         RENDERING_GUI_ITEM = itemStack;
     }

@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
+import moe.plushie.armourers_workshop.core.data.EntityActions;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModArgumentTypes;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
@@ -62,6 +63,7 @@ public class ArmourersWorkshop {
             ModPermissions.init();
             SkinningRecipes.init();
             Armatures.init();
+            EntityActions.init();
 
             EnvironmentExecutor.run(() -> SkinLibraryManager::startClient, () -> SkinLibraryManager::startServer);
         });

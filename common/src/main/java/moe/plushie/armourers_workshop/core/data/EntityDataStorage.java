@@ -31,11 +31,13 @@ public class EntityDataStorage {
         protected final LazyOptional<SkinWardrobe> wardrobe;
         protected final LazyOptional<SkinWardrobeJS> wardrobeJS;
         protected final LazyOptional<EntityRenderData> renderData;
+        protected final LazyOptional<EntityActionSet> actionSet;
 
         public EntityImpl(Entity entity) {
             this.wardrobe = getLazyWardrobe(entity);
             this.wardrobeJS = getLazyWardrobeJS(wardrobe);
             this.renderData = getLazyRenderData(entity);
+            this.actionSet = getLazyActionSet(entity);
         }
 
         public Optional<SkinWardrobe> getWardrobe() {
@@ -49,6 +51,10 @@ public class EntityDataStorage {
         @Environment(EnvType.CLIENT)
         public Optional<EntityRenderData> getRenderData() {
             return renderData.resolve();
+        }
+
+        public Optional<EntityActionSet> getActionSet() {
+            return actionSet.resolve();
         }
 
         private static LazyOptional<SkinWardrobe> getLazyWardrobe(Entity entity) {
@@ -69,6 +75,10 @@ public class EntityDataStorage {
                 return LazyOptional.of(renderData::get);
             }
             return LazyOptional.empty();
+        }
+
+        private static LazyOptional<EntityActionSet> getLazyActionSet(Entity entity) {
+            return LazyOptional.of(EntityActionSet::new);
         }
     }
 

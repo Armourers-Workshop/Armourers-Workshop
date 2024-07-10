@@ -16,6 +16,8 @@ import moe.plushie.armourers_workshop.core.skin.molang.math.Variable;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Utility class for parsing and utilising MoLang functions and expressions
@@ -30,8 +32,8 @@ public class MolangParser extends MathBuilder {
 
     public static final String RETURN = "return ";
 
-    private final HashMap<String, KeyPath> keys = new HashMap<>();
-    private final ImmutableMap<String, String> aliases = ImmutableMap.<String, String>builder()
+    private final Map<String, KeyPath> keys = new ConcurrentHashMap<>();
+    private final Map<String, String> aliases = ImmutableMap.<String, String>builder()
             .put("c", "context")
             .put("q", "query")
             .put("t", "temp")

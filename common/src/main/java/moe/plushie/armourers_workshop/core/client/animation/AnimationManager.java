@@ -3,6 +3,10 @@ package moe.plushie.armourers_workshop.core.client.animation;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.other.BlockEntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
+import moe.plushie.armourers_workshop.core.data.EntityAction;
+import moe.plushie.armourers_workshop.core.data.EntityActionSet;
+import moe.plushie.armourers_workshop.core.data.EntityActionTarget;
+import moe.plushie.armourers_workshop.core.data.EntityActions;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.TickUtils;
@@ -12,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +27,11 @@ public class AnimationManager {
     private final HashMap<SkinDescriptor, Entry> entries = new HashMap<>();
     private final HashMap<AnimationController, AnimationState> states = new HashMap<>();
 
+    private final ArrayList<Entry> triggerableEntries = new ArrayList<>();
     private final ArrayList<AnimationController> animations = new ArrayList<>();
     private final ArrayList<AnimationController> removeOnCompletion = new ArrayList<>();
+
+    private EntityActionSet lastActionSet;
 
     public static AnimationManager of(Entity entity) {
         var renderData = EntityRenderData.of(entity);
@@ -51,36 +59,71 @@ public class AnimationManager {
             }
             entry.isLoaded = true;
             entry.animations = skin.getAnimationControllers();
-            if (entry.animations != null) {
-                entry.animations.forEach(animation -> {
-                    // auto play
-                    if (isParallelAnimation(animation)) {
-                        play(animation, TickUtils.animationTicks(), 0);
-                    }
-                });
-                animations.addAll(entry.animations);
+            if (entry.animations == null) {
+                return;
             }
+            var triggerableAnimations = entry.triggerableAnimations;
+            entry.animations.forEach(animationController -> {
+                // auto play
+                if (animationController.isParallel()) {
+                    play(animationController, TickUtils.animationTicks(), 0);
+                } else {
+                    triggerableAnimations.add(new TriggerableEntry(animationController));
+                }
+            });
+            triggerableAnimations.sort(Comparator.comparingDouble(TriggerableEntry::getPriority).reversed());
+            animations.addAll(entry.animations);
         });
         oldEntries.forEach((key, entry) -> {
             entries.remove(key);
-            if (entry.animations != null) {
-                entry.animations.forEach(this::stop);
-                animations.removeAll(entry.animations);
+            if (entry.animations == null) {
+                return;
             }
+            entry.animations.forEach(this::stop);
+            animations.removeAll(entry.animations);
         });
+        triggerableEntries.clear();
+        triggerableEntries.addAll(entries.values().stream().filter(Entry::hasTriggerableAnimation).toList());
     }
 
-    public void tick() {
-        // ignore when no task.
-        if (removeOnCompletion.isEmpty()) {
-            return;
+    public void tick(Object source, float animationTicks) {
+        // clear invalid animation.
+        if (!removeOnCompletion.isEmpty()) {
+            var animations = new ArrayList<>(removeOnCompletion);
+            for (var animation : animations) {
+                var state = states.get(animation);
+                if (state != null && state.isCompleted(animationTicks)) {
+                    stop(animation);
+                }
+            }
         }
-        var animationTicks = TickUtils.animationTicks();
-        var animations = new ArrayList<>(removeOnCompletion);
-        for (var animation : animations) {
-            var state = states.get(animation);
-            if (state != null && state.isCompleted(animationTicks)) {
-                stop(animation);
+        // play triggerable animation by the state.
+        if (!triggerableEntries.isEmpty() && source instanceof Entity entity) {
+            var actionSet = EntityActionSet.of(entity);
+            if (actionSet != null) {
+                actionSet.tick(entity);
+                if (!actionSet.equals(lastActionSet)) {
+                    ModLog.debug("{} => {} => {}", entity, actionSet, entity.getDeltaMovement());
+                    play(actionSet, animationTicks);
+                    lastActionSet = actionSet.copy();
+                }
+            }
+        }
+    }
+
+    public void play(EntityActionSet tracker, float animationTicks) {
+        // we allow each skin to perform a serial animation.
+        for (var entry : triggerableEntries) {
+            var newValue = entry.findTriggerableEntry(tracker);
+            var oldValue = entry.selectedEntry;
+            if (oldValue != newValue) {
+                if (oldValue != null) {
+                    stop(oldValue.animationController);
+                }
+                entry.selectedEntry = newValue;
+                if (newValue != null) {
+                    play(newValue.animationController, animationTicks, newValue.getPlayCount());
+                }
             }
         }
     }
@@ -135,12 +178,6 @@ public class AnimationManager {
         return states.get(animationController);
     }
 
-
-    private boolean isParallelAnimation(AnimationController animationController) {
-        var name = animationController.getName();
-        return name != null && name.matches("^(.+\\.)?parallel\\d+$");
-    }
-
     protected static class Entry {
 
         private final SkinDescriptor descriptor;
@@ -148,8 +185,61 @@ public class AnimationManager {
         private List<AnimationController> animations;
         private boolean isLoaded = false;
 
-        public Entry(SkinDescriptor descriptor) {
+        private final ArrayList<TriggerableEntry> triggerableAnimations = new ArrayList<>();
+
+        private TriggerableEntry selectedEntry;
+
+        protected Entry(SkinDescriptor descriptor) {
             this.descriptor = descriptor;
+        }
+
+        protected TriggerableEntry findTriggerableEntry(EntityActionSet tracker) {
+            for (var entry : triggerableAnimations) {
+                if (entry.isIdle || entry.test(tracker)) {
+                    return entry;
+                }
+            }
+            return null;
+        }
+
+        protected boolean hasTriggerableAnimation() {
+            return !triggerableAnimations.isEmpty();
+        }
+    }
+
+    protected static class TriggerableEntry {
+
+        private final String name;
+        private final EntityActionTarget target;
+        private final AnimationController animationController;
+        private final boolean isIdle;
+
+        protected TriggerableEntry(AnimationController animationController) {
+            this.name = animationController.getName();
+            this.target = EntityActions.by(animationController.getName());
+            this.animationController = animationController;
+            this.isIdle = target.getActions().contains(EntityAction.IDLE);
+        }
+
+        protected boolean test(EntityActionSet tracker) {
+            for (var action : target.getActions()) {
+                if (!tracker.get(action)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        protected String getName() {
+            return name;
+        }
+
+        protected double getPriority() {
+            return target.getPriority();
+        }
+
+        protected int getPlayCount() {
+            return target.getPlayCount();
         }
     }
 }

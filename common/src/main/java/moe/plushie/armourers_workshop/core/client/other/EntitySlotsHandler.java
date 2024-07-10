@@ -25,6 +25,7 @@ import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.DataStorage;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
@@ -74,7 +75,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
 
     protected void tick(T source, @Nullable SkinWardrobe wardrobe) {
         tickSlots(source, wardrobe);
-        animationManager.tick();
+        animationManager.tick(source, TickUtils.animationTicks());
     }
 
     private void tickSlots(T source, @Nullable SkinWardrobe wardrobe) {

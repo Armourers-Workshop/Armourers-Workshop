@@ -99,7 +99,9 @@ public class ModCommands {
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> literal(String name, String desc, ArgumentBuilder<CommandSourceStack, ?> builder1, ArgumentBuilder<CommandSourceStack, ?> builder2) {
-        return literal(name).then(literal("entity").then(entities().then(builder1).then(builder2))).then(literal("block").then(blockPos().then(builder1).then(builder2)));
+        return literal(name)
+                .then(literal("entity").then(entities().then(builder1).then(builder2)))
+                .then(literal("block").then(blockPos().then(builder1).then(builder2)));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> players() {
