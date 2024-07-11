@@ -38,7 +38,9 @@ public enum SkinSlotType {
     DYE(13, 80, 16, "dye", null),
 
     HORSE(14, 70, 10, "horse", SkinTypes.HORSE),
-    UNKNOWN(99, 0, 80, "unknown", null);
+    DEFAULT(15, 64, 6, "default", null),
+
+    ANY(99, 0, 96, "any", null);
 
     private final String name;
     private final int id;
@@ -74,7 +76,7 @@ public enum SkinSlotType {
                 return slotType;
             }
         }
-        return SkinSlotType.UNKNOWN;
+        return SkinSlotType.ANY;
     }
 
     @Nullable
@@ -169,7 +171,7 @@ public enum SkinSlotType {
         static int TOTAL_SIZE = 0;
 
         static SkinSlotType decode(String name) {
-            return NAMED_SLOTS.getOrDefault(name, SkinSlotType.UNKNOWN);
+            return NAMED_SLOTS.getOrDefault(name, SkinSlotType.ANY);
         }
 
         static String encode(SkinSlotType type) {

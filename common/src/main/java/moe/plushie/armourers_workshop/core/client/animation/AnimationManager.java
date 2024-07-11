@@ -196,7 +196,7 @@ public class AnimationManager {
         });
     }
 
-    public void mapping(String from, String to) {
+    public void rewrite(String from, String to) {
         lastActionSet = null;
         entries.forEach((key, entry) -> {
             entry.addMapping(from, to);
@@ -221,8 +221,8 @@ public class AnimationManager {
         private List<AnimationController> animations;
         private boolean isLoaded = false;
 
-        private final HashMap<String, String> redirecteFrom = new HashMap<>();
-        private final HashMap<String, String> redirecteTo = new HashMap<>();
+        private final HashMap<String, String> redirectFrom = new HashMap<>();
+        private final HashMap<String, String> redirectTo = new HashMap<>();
 
         private final ArrayList<TriggerableEntry> triggerableAnimations = new ArrayList<>();
 
@@ -234,22 +234,20 @@ public class AnimationManager {
         }
 
         protected void addMapping(String from, String to) {
+            to = redirectFrom.put(from, to);
+            if (to != null) {
+                redirectTo.remove(to);
+            }
             if (from.equals(to)) {
-                to = redirecteFrom.get(from);
-                if (to != null) {
-                    redirecteTo.remove(to);
-                }
-            } else {
-                redirecteFrom.put(from, to);
-                redirecteTo.put(to, from);
+                redirectFrom.remove(from);
             }
         }
 
         protected String resolve(String name) {
-            if (redirecteFrom.containsKey(name)) {
+            if (redirectFrom.containsKey(name)) {
                 return "disable:" + name;
             }
-            return redirecteTo.getOrDefault(name, name);
+            return redirectTo.getOrDefault(name, name);
         }
 
         protected void rebuild() {

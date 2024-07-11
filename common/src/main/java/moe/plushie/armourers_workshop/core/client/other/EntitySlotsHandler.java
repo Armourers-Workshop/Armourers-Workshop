@@ -383,15 +383,35 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
             if (wardrobe == null || profile == null) {
                 return;
             }
+            // load normal skin, and the record used skin slots.
+            var usedSlots = new HashSet<SkinSlotType>();
             for (var slotType : profile.getSlots()) {
                 if (slotType == SkinSlotType.DYE) {
+                    return;
+                }
+                for (int i = 0; i < slotType.getMaxSize(); ++i) {
+                    var itemStack = lastSlots.get(slotType.getIndex() + i);
+                    var descriptor = SkinDescriptor.of(itemStack);
+                    if (!descriptor.isEmpty()) {
+                        usedSlots.add(slotType); // mark the slot is used.
+                    }
+                    consumer.accept(itemStack, i * 10, EntitySlot.Type.IN_WARDROBE);
+                }
+            }
+            // load default skin when not user provided.
+            var slotType = SkinSlotType.DEFAULT;
+            for (int i = 0; i < slotType.getMaxSize(); ++i) {
+                var itemStack = lastSlots.get(slotType.getIndex() + i);
+                var descriptor = SkinDescriptor.of(itemStack);
+                if (descriptor.isEmpty()) {
                     continue;
                 }
-                int index = slotType.getIndex();
-                int size = slotType.getMaxSize();
-                for (int i = 0; i < size; ++i) {
-                    consumer.accept(lastSlots.get(index + i), i * 10, EntitySlot.Type.IN_WARDROBE);
+                // when slot is used, ignore it.
+                var realSlotType = SkinSlotType.byType(descriptor.getType());
+                if (usedSlots.contains(realSlotType)) {
+                    continue;
                 }
+                consumer.accept(itemStack, i * 10, EntitySlot.Type.IN_WARDROBE);
             }
         }
 

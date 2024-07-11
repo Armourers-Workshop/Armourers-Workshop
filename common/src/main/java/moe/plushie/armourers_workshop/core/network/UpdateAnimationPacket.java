@@ -38,7 +38,7 @@ public class UpdateAnimationPacket extends CustomPacket {
         return new UpdateAnimationPacket(Mode.STOP, tag);
     }
 
-    public static UpdateAnimationPacket mapping(Selector selector, String from, String to) {
+    public static UpdateAnimationPacket rewrite(Selector selector, String from, String to) {
         var tag = selector.save();
         tag.putString("from", from);
         tag.putString("to", to);
@@ -78,8 +78,8 @@ public class UpdateAnimationPacket extends CustomPacket {
                 if (animationManager != null) {
                     String from = value.getString("from");
                     String to = value.getString("to");
-                    ModLog.debug("remapping animation {} to {}", from, to);
-                    animationManager.mapping(from, to);
+                    ModLog.debug("rewrite animation {} to {}", from, to);
+                    animationManager.rewrite(from, to);
                 }
                 break;
             }

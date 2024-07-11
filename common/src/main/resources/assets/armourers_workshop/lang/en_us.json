@@ -56,6 +56,8 @@
   "commands.armourers.invalidColorFormat": "%1$s is not a valid color format.",
   "commands.armourers_workshop.armourers.error.missingItemSkinnable": "Unable found item stack in your main hand.",
   "commands.armourers_workshop.armourers.error.missingSkin": "Unable found skin in your main hand.",
+  "commands.armourers_workshop.armourers.error.notEnoughSlot": "Not Enough Slot.",
+  "commands.armourers_workshop.armourers.error.missingDyeSlot": "Unable found dye slot.",
   "commands.armourers_workshop.armourers.exportSkin.failure": "Export task occurred fatal error!",
   "commands.armourers_workshop.armourers.exportSkin.processing": "Start export '%s'",
   "commands.armourers_workshop.armourers.exportSkin.success": "Export task has been completed!",

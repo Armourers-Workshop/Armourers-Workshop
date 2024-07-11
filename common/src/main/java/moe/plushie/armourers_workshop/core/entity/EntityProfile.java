@@ -35,6 +35,9 @@ public class EntityProfile {
         if (provider != null) {
             return provider.apply(slotType);
         }
+        if (slotType == SkinSlotType.DEFAULT) {
+            return slotType.getMaxSize();
+        }
         return 0;
     }
 

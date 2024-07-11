@@ -235,7 +235,7 @@ public final class SkinUtils {
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe != null) {
-            ItemStack itemStack1 = wardrobe.getItem(SkinSlotType.UNKNOWN, 0);
+            ItemStack itemStack1 = wardrobe.getItem(SkinSlotType.ANY, 0);
             SkinDescriptor descriptor = SkinDescriptor.of(itemStack1);
             if (!descriptor.isEmpty()) {
                 itemStack.set(ModDataComponents.SKIN.get(), descriptor);
@@ -255,7 +255,7 @@ public final class SkinUtils {
         SkinDescriptor descriptor = new SkinDescriptor(tag.getCompound(Constants.Key.SKIN));
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe != null) {
-            wardrobe.setItem(SkinSlotType.UNKNOWN, 0, descriptor.asItemStack());
+            wardrobe.setItem(SkinSlotType.ANY, 0, descriptor.asItemStack());
             wardrobe.broadcast();
         }
     }
@@ -267,11 +267,11 @@ public final class SkinUtils {
         }
         Entity owner = projectile.getOwner();
         if (entity instanceof ThrownTrident) {
-            copySkin(owner, entity, SkinSlotType.TRIDENT, 0, SkinSlotType.UNKNOWN, 0);
+            copySkin(owner, entity, SkinSlotType.TRIDENT, 0, SkinSlotType.ANY, 0);
             return;
         }
         if (entity instanceof AbstractArrow) {
-            copySkin(owner, entity, SkinSlotType.BOW, 0, SkinSlotType.UNKNOWN, 0);
+            copySkin(owner, entity, SkinSlotType.BOW, 0, SkinSlotType.ANY, 0);
             return;
         }
         if (entity instanceof FishingHook && owner instanceof LivingEntity) {
@@ -279,7 +279,7 @@ public final class SkinUtils {
             if (!itemStack.is(Items.FISHING_ROD)) {
                 itemStack = ((LivingEntity) owner).getOffhandItem();
             }
-            copySkin(entity, itemStack, SkinSlotType.UNKNOWN, 0);
+            copySkin(entity, itemStack, SkinSlotType.ANY, 0);
             return;
         }
         // no supported projectile entity.

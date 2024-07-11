@@ -10,17 +10,14 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.UserNotifications;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.slot.ItemOverrideType;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.network.UpdateAnimationPacket;
-import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.exporter.SkinExportManager;
@@ -48,15 +45,13 @@ import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Container;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.spongepowered.include.com.google.common.base.Function;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Function;
 
 public class ModCommands {
 
@@ -70,7 +65,8 @@ public class ModCommands {
         return map;
     });
 
-    private static final DynamicCommandExceptionType ERROR_MISSING_DYE_SLOT = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.missingSkin", ob));
+    private static final DynamicCommandExceptionType ERROR_NOT_ENOUGH_SLOT = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.notEnoughSlot", ob));
+    private static final DynamicCommandExceptionType ERROR_MISSING_DYE_SLOT = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.missingDyeSlot", ob));
     private static final DynamicCommandExceptionType ERROR_MISSING_SKIN = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.missingSkin", ob));
     private static final DynamicCommandExceptionType ERROR_MISSING_ITEM_STACK = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.missingItemSkinnable", ob));
 
@@ -85,7 +81,7 @@ public class ModCommands {
                 .then(ReflectArgumentBuilder.literal("debug", ModDebugger.class))
                 .requires(source -> source.hasPermission(2))
                 .then(literal("library").then(literal("reload").executes(Executor::reloadLibrary)))
-                .then(literal("setSkin").then(entities().then(slots().then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))).then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))))
+                .then(literal("setSkin").then(entities().then(slotNames().then(slots().then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))).then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin)))))
                 .then(literal("giveSkin").then(players().then(skins().then(skinDying().executes(Executor::giveSkin)).executes(Executor::giveSkin))))
                 .then(literal("clearSkin").then(entities().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
                 .then(literal("exportSkin").then(skinFormats().then(name().then(scale().executes(Executor::exportSkin)).executes(Executor::exportSkin))))
@@ -131,7 +127,7 @@ public class ModCommands {
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> slots() {
-        return Commands.argument("slot", IntegerArgumentType.integer(1, 10));
+        return Commands.argument("slot", IntegerArgumentType.integer(1));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> skinFormats() {
@@ -208,20 +204,20 @@ public class ModCommands {
         }
 
         static int setColor(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            ISkinPaintType paintType = DYE_TYPES.get(ListArgumentType.getString(context, "dye_slot"));
+            var paintType = DYE_TYPES.get(ListArgumentType.getString(context, "dye_slot"));
             if (paintType == null) {
                 throw ERROR_MISSING_DYE_SLOT.create(null);
             }
-            PaintColor paintColor = ColorArgumentType.getColor(context, "color");
-            for (Entity entity : EntityArgument.getEntities(context, "entities")) {
+            var paintColor = ColorArgumentType.getColor(context, "color");
+            for (var entity : EntityArgument.getEntities(context, "entities")) {
                 SkinWardrobe wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe == null) {
                     continue;
                 }
                 int slot = SkinSlotType.getDyeSlotIndex(paintType);
-                ItemStack itemStack = new ItemStack(ModItems.BOTTLE.get());
+                var itemStack = new ItemStack(ModItems.BOTTLE.get());
                 ColorUtils.setColor(itemStack, paintColor);
-                Container inventory = wardrobe.getInventory();
+                var inventory = wardrobe.getInventory();
                 inventory.setItem(slot, itemStack);
                 wardrobe.broadcast();
             }
@@ -229,11 +225,8 @@ public class ModCommands {
         }
 
         static int giveSkin(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            SkinDescriptor descriptor = loadSkinDescriptor(context);
-            if (descriptor.isEmpty()) {
-                return 0;
-            }
-            ItemStack itemStack = descriptor.asItemStack();
+            var descriptor = loadSkinDescriptor(context);
+            var itemStack = descriptor.asItemStack();
             for (Player player : EntityArgument.getPlayers(context, "targets")) {
                 player.giveItem(itemStack);
                 context.getSource().sendSuccess(Component.translatable("commands.give.success.single", 1, itemStack.getDisplayName(), player.getDisplayName()), true);
@@ -242,20 +235,23 @@ public class ModCommands {
         }
 
         static int setSkin(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            SkinDescriptor descriptor = loadSkinDescriptor(context);
-            if (descriptor.isEmpty()) {
-                return 0;
-            }
-            ItemStack itemStack = descriptor.asItemStack();
-            for (Entity entity : EntityArgument.getEntities(context, "entities")) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
-                SkinSlotType slotType = SkinSlotType.byType(descriptor.getType());
-                if (slotType == null || wardrobe == null) {
+            var descriptor = loadSkinDescriptor(context);
+            var itemStack = descriptor.asItemStack();
+            for (var entity : EntityArgument.getEntities(context, "entities")) {
+                var wardrobe = SkinWardrobe.of(entity);
+                if (wardrobe == null) {
+                    continue;
+                }
+                var slotType = SkinSlotType.byName(ListArgumentType.getString(context, "slot_name"));
+                if (slotType == null) {
                     continue;
                 }
                 int slot = wardrobe.getFreeSlot(slotType);
                 if (containsNode(context, "slot")) {
                     slot = IntegerArgumentType.getInteger(context, "slot") - 1;
+                }
+                if (slot > slotType.getMaxSize()) {
+                    throw ERROR_NOT_ENOUGH_SLOT.create(slotType.getMaxSize());
                 }
                 wardrobe.setItem(slotType, slot, itemStack);
                 wardrobe.broadcast();
@@ -264,8 +260,8 @@ public class ModCommands {
         }
 
         static int clearSkin(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            for (Entity entity : EntityArgument.getEntities(context, "entities")) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+            for (var entity : EntityArgument.getEntities(context, "entities")) {
+                var wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe == null) {
                     continue;
                 }
@@ -274,10 +270,13 @@ public class ModCommands {
                     wardrobe.broadcast();
                     continue;
                 }
-                int slot = IntegerArgumentType.getInteger(context, "slot");
-                SkinSlotType slotType = SkinSlotType.byName(ListArgumentType.getString(context, "slot_name"));
+                var slot = IntegerArgumentType.getInteger(context, "slot");
+                var slotType = SkinSlotType.byName(ListArgumentType.getString(context, "slot_name"));
                 if (slotType == null) {
                     continue;
+                }
+                if (slot > slotType.getMaxSize()) {
+                    throw ERROR_NOT_ENOUGH_SLOT.create(slotType.getMaxSize());
                 }
                 wardrobe.setItem(slotType, slot - 1, ItemStack.EMPTY);
                 wardrobe.broadcast();
@@ -286,16 +285,16 @@ public class ModCommands {
         }
 
         static int exportSkin(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            String format = ListArgumentType.getString(context, "format");
-            String filename = StringArgumentType.getString(context, "name");
+            var format = ListArgumentType.getString(context, "format");
+            var filename = StringArgumentType.getString(context, "name");
             float scale = 1.0f;
             if (containsNode(context, "scale")) {
                 scale = FloatArgumentType.getFloat(context, "scale");
             }
-            Player player = context.getSource().getPlayerOrException();
-            ItemStack itemStack = player.getMainHandItem();
-            String identifier = SkinDescriptor.of(itemStack).getIdentifier();
-            Skin skin = SkinLoader.getInstance().loadSkin(identifier);
+            var player = context.getSource().getPlayerOrException();
+            var itemStack = player.getMainHandItem();
+            var identifier = SkinDescriptor.of(itemStack).getIdentifier();
+            var skin = SkinLoader.getInstance().loadSkin(identifier);
             if (skin == null) {
                 throw ERROR_MISSING_SKIN.create(identifier);
             }
@@ -319,16 +318,15 @@ public class ModCommands {
         }
 
         static int setItemSkinnable(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-
-            Player player = context.getSource().getPlayerOrException();
-            String operator = ListArgumentType.getString(context, "operator");
-            ItemOverrideType overrideType = ItemOverrideType.of(ListArgumentType.getString(context, "skin_type"));
-            ItemStack itemStack = player.getMainHandItem();
+            var player = context.getSource().getPlayerOrException();
+            var operator = ListArgumentType.getString(context, "operator");
+            var overrideType = ItemOverrideType.of(ListArgumentType.getString(context, "skin_type"));
+            var itemStack = player.getMainHandItem();
             if (overrideType == null || itemStack.isEmpty()) {
                 throw ERROR_MISSING_ITEM_STACK.create(player.getScoreboardName());
             }
-            IResourceLocation identifier = TypedRegistry.findKey(itemStack.getItem());
-            String key = String.format("%s:%s", overrideType.getName(), identifier);
+            var identifier = TypedRegistry.findKey(itemStack.getItem());
+            var key = String.format("%s:%s", overrideType.getName(), identifier);
             // we always remove and then add again
             if (operator.equals("add")) {
                 if (ModConfig.Common.overrides.contains(key)) {
@@ -360,9 +358,9 @@ public class ModCommands {
         }
 
         static int openWardrobe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            Player player = context.getSource().getPlayerOrException();
-            for (Entity entity : EntityArgument.getEntities(context, "entities")) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+            var player = context.getSource().getPlayerOrException();
+            for (var entity : EntityArgument.getEntities(context, "entities")) {
+                var wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe != null) {
                     ModMenuTypes.WARDROBE_OP.get().openMenu(player, wardrobe);
                     break;
@@ -372,12 +370,12 @@ public class ModCommands {
         }
 
         static int setUnlockedWardrobeSlots(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            for (Entity entity : EntityArgument.getEntities(context, "entities")) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+            for (var entity : EntityArgument.getEntities(context, "entities")) {
+                var wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe == null) {
                     continue;
                 }
-                SkinSlotType slotType = SkinSlotType.byName(ListArgumentType.getString(context, "slot_name"));
+                var slotType = SkinSlotType.byName(ListArgumentType.getString(context, "slot_name"));
                 if (slotType == null) {
                     continue;
                 }
@@ -388,12 +386,12 @@ public class ModCommands {
             return 1;
         }
 
-        static SkinDescriptor loadSkinDescriptor(CommandContext<CommandSourceStack> context) {
-            String identifier = FileArgumentType.getString(context, "skin");
+        static SkinDescriptor loadSkinDescriptor(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+            var identifier = FileArgumentType.getString(context, "skin");
             if (identifier.isEmpty()) {
-                return SkinDescriptor.EMPTY;
+                throw ERROR_MISSING_SKIN.create(identifier);
             }
-            ColorScheme scheme = ColorScheme.EMPTY;
+            var scheme = ColorScheme.EMPTY;
             if (containsNode(context, "dying")) {
                 scheme = ColorSchemeArgumentType.getColorScheme(context, "dying");
             }
@@ -402,7 +400,11 @@ public class ModCommands {
                 identifier = DataDomain.DEDICATED_SERVER.normalize(identifier);
                 needCopy = true; // save the skin to the database
             }
-            return SkinLoader.getInstance().loadSkinFromDB(identifier, scheme, needCopy);
+            var descriptor = SkinLoader.getInstance().loadSkinFromDB(identifier, scheme, needCopy);
+            if (descriptor.isEmpty()) {
+                throw ERROR_MISSING_SKIN.create(identifier);
+            }
+            return descriptor;
         }
 
         public static int playAnimation(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
@@ -432,7 +434,7 @@ public class ModCommands {
             var from = StringArgumentType.getString(context, "from");
             var to = StringArgumentType.getString(context, "to");
             for (var selector : getAnimationSelector(context)) {
-                NetworkManager.sendToAll(UpdateAnimationPacket.mapping(selector, from, to));
+                NetworkManager.sendToAll(UpdateAnimationPacket.rewrite(selector, from, to));
             }
             return 0;
         }
