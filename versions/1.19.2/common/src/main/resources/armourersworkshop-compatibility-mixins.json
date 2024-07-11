@@ -21,7 +21,11 @@
     "patch/BoatRendererMixin",
     "patch/FishingHookRendererMixin",
     "patch/MinecartRendererMixin",
-    "patch/ThrownTridentRendererMixin"
+    "patch/ThrownTridentRendererMixin",
+    "patch/model/ModelPartMixin",
+    "patch/model/ListModelMixin",
+    "patch/model/AgeableListModelMixin",
+    "patch/model/HierarchicalModelMixin"
   ],
   "mixins": [
     "EntityJSMixin",

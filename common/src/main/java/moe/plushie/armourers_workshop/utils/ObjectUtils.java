@@ -258,4 +258,13 @@ public class ObjectUtils {
         }
         return sum;
     }
+
+    public static String dumpStackTrace() {
+        StringBuilder sb = new StringBuilder();
+        StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+        for (StackTraceElement st : ste) {
+            sb.append(st.toString()).append(System.lineSeparator());
+        }
+        return sb.toString();
+    }
 }

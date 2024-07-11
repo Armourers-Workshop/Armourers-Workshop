@@ -1,0 +1,13 @@
+{
+  "type": "armourers_workshop:armature",
+  "target": "armourers_workshop:any",
+  "override": {
+    "hasType.unknown": "*"
+  },
+  "plugin": [
+    "armourers_workshop:plugin/fix_shulker_layer"
+  ],
+  "model": [
+    "minecraft:model/shulker"
+  ]
+}

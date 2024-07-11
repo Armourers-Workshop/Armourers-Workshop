@@ -12,7 +12,9 @@ import net.minecraft.client.model.HorseModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.IllagerModel;
 import net.minecraft.client.model.IronGolemModel;
+import net.minecraft.client.model.PigModel;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.ShulkerModel;
 import net.minecraft.client.model.SlimeModel;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.ZombieVillagerModel;
@@ -38,6 +40,9 @@ public class AbstractSkinnableModels {
     public static final Class<ChickenModel> CHICKEN = ChickenModel.class;
     public static final Class<CreeperModel> CREEPER = CreeperModel.class;
     public static final Class<HorseModel> HORSE = HorseModel.class;
+
+    public static final Class<PigModel> PIG = PigModel.class;
+    public static final Class<ShulkerModel> SHULKER = ShulkerModel.class;
 
     public static final Class<BoatModel> BOAT = BoatModel.class;
     public static final Class<SlimeModel> RAFT = null;

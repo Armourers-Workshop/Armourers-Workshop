@@ -23,6 +23,14 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
     private final ArrayList<Entry> entries = new ArrayList<>();
     private final ArrayList<EntryImpl<?, ?>> applying = new ArrayList<>();
 
+    public static DefaultLayerArmaturePlugin shulker(ArmatureTransformerContext context) {
+        var plugin = new DefaultLayerArmaturePlugin();
+        plugin.register(AbstractSkinnableLayers.SHULKER_HEAD, plugin::whenAnyVisible);
+        context.addEntityModelListener(plugin::setEntityModel);
+        context.addEntityRendererListener(plugin::setEntityRenderer);
+        return plugin;
+    }
+
     public static DefaultLayerArmaturePlugin villager(ArmatureTransformerContext context) {
         var plugin = new DefaultLayerArmaturePlugin();
         plugin.register(AbstractSkinnableLayers.VILLAGER_PROFESSION, plugin::whenHeadVisible);

@@ -1,0 +1,10 @@
+{
+  "type": "armourers_workshop:armature",
+  "target": "armourers_workshop:any",
+  "override": {
+    "hasType.unknown": "*"
+  },
+  "model": [
+    "minecraft:model/pig"
+  ]
+}

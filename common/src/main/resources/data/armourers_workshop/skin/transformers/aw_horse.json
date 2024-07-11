@@ -18,7 +18,9 @@
       "modifier": [
         "armourers_workshop:modifier/apply_horse_body"
       ]
-    }
+    },
+    "Float": "Root",
+    "Static": "Root"
   },
   "transform": {
     "translate": {

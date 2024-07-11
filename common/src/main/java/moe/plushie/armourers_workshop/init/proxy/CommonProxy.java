@@ -101,8 +101,13 @@ public class CommonProxy {
         EventManager.listen(PlayerEvent.LoggingIn.class, event -> {
             // when the player login, check and give gifts for holiday
             ModLog.debug("welcome back {}", event.getPlayer().getScoreboardName());
-            ReplayManager.startRecording(event.getPlayer().getServer(), event.getPlayer());
             ModHolidays.welcome(event.getPlayer());
+            ReplayManager.startRecording(event.getPlayer().getServer(), event.getPlayer());
+            // When the player login, initialize context and wardrobe.
+            if (event.getPlayer() instanceof ServerPlayer player) {
+                NetworkManager.sendTo(new UpdateContextPacket(player), player);
+                NetworkManager.sendWardrobeTo(player, player);
+            }
         });
         EventManager.listen(PlayerEvent.LoggingOut.class, event -> {
             ModLog.debug("good bye {}", event.getPlayer().getScoreboardName());
@@ -152,11 +157,6 @@ public class CommonProxy {
         });
         EventManager.listen(ServerLevelAddEntityEvent.class, event -> {
             SkinUtils.copySkinFromOwner(event.getEntity());
-            ServerPlayer player = ObjectUtils.safeCast(event.getEntity(), ServerPlayer.class);
-            if (player != null) {
-                NetworkManager.sendTo(new UpdateContextPacket(player), player);
-                NetworkManager.sendWardrobeTo(player, player);
-            }
         });
 
         EventManager.listen(BlockEvent.Place.class, BlockUtils::snapshot);

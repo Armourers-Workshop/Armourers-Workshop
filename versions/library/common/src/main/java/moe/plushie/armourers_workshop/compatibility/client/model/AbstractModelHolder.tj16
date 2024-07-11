@@ -1,0 +1,83 @@
+package moe.plushie.armourers_workshop.compatibility.client.model;
+
+import com.google.common.collect.ImmutableMap;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.model.IModelPartCollector;
+import moe.plushie.armourers_workshop.utils.ModelHolder;
+import net.minecraft.client.model.Model;
+import net.minecraft.client.model.geom.ModelPart;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+@Available("[1.16, 1.18)")
+public class AbstractModelHolder {
+
+    private static final ImmutableMap<Class<?>, Map<String, String>> FIXER = ImmutableMap.<Class<?>, Map<String, String>>builder()
+            .put(AbstractSkinnableModels.ILLAGER, ImmutableMap.<String, String>builder()
+                   .put("root.head", "parts[0]")
+                   .put("root.body", "parts[1]")
+                   .put("root.left_leg", "parts[2]")
+                   .put("root.right_leg", "parts[3]")
+                   .put("root.arms", "parts[4]")
+                   .put("root.right_arm", "parts[5]")
+                   .put("root.left_arm", "parts[6]")
+                   .put("root.head.hat", "parts[0].children[0]")
+                    .build()
+            )
+            .put(AbstractSkinnableModels.VILLAGER, ImmutableMap.<String, String>builder()
+                   .put("root.head.hat", "parts[0].children[0]")
+                   .put("root.head.hat.hat_rim", "parts[0].children[0].children[0]")
+                   .put("root.head", "parts[0]")
+                   .put("root.head.nose", "parts[0].children[1]")
+                   .put("root.body", "parts[1]")
+                   .put("root.right_leg", "parts[2]")
+                   .put("root.left_leg", "parts[3]")
+                   .put("root.arms", "parts[4]")
+                   .put("root.body.jacket", "parts[1].children[0]")
+                    .build()
+            )
+            .put(AbstractSkinnableModels.IRON_GOLEM, ImmutableMap.<String, String>builder()
+                   .put("root.head", "parts[0]")
+                   .put("root.body", "parts[1]")
+                   .put("root.right_leg", "parts[2]")
+                   .put("root.left_leg", "parts[3]")
+                   .put("root.right_arm", "parts[4]")
+                   .put("root.left_arm", "parts[5]")
+                    .build()
+            )
+            .put(AbstractSkinnableModels.CREEPER, ImmutableMap.<String, String>builder()
+                   .put("root.head", "parts[0]")
+                    .build()
+            )
+            .put(AbstractSkinnableModels.HORSE, ImmutableMap.<String, String>builder()
+                   .put("bodyParts[0].tail", "bodyParts[0].children[0]")
+                    .build()
+            )
+            .build();
+
+    public static void collect(String root, Iterable<ModelPart> parts, Map<String, ModelPart> collector) {
+        int i = 0;
+        for (var part : parts) {
+            var name = String.format("%s[%d]", root, i++);
+            collector.put(name, part);
+            if (!(part instanceof IModelPartCollector provider)) {
+                continue;
+            }
+            var child = new LinkedHashMap<String, ModelPart>();
+            provider.aw2$collect(child);
+            child.forEach((key, value) -> collector.put(name + "." + key, value));
+        }
+    }
+
+    public static <T extends Model> void register(Class<T> clazz, Map<String, String> mapper) {
+        // fast fix the name.
+        var fixer = FIXER.get(clazz);
+        if (fixer != null) {
+            var fixedMapper = new LinkedHashMap<String, String>();
+            mapper.forEach((key, value) -> fixedMapper.put(key, fixer.getOrDefault(value, value)));
+            mapper = fixedMapper;
+        }
+        ModelHolder.register(clazz, mapper);
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "locked": false,
+  "slots": {
+    "any": 1
+  },
+  "entities": [
+    "minecraft:pig",
+    "minecraft:shulker"
+  ]
+}

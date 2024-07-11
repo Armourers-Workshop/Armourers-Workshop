@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.data.EntityActionSet;
 import moe.plushie.armourers_workshop.core.data.EntityActionTarget;
 import moe.plushie.armourers_workshop.core.data.EntityActions;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.fabricmc.api.EnvType;
@@ -99,7 +100,9 @@ public class AnimationManager {
             if (actionSet != null) {
                 actionSet.tick(entity);
                 if (!actionSet.equals(lastActionSet)) {
-                    ModLog.debug("{} => {} => {}", entity, actionSet, entity.getDeltaMovement());
+                    if (ModConfig.Client.enableAnimationDebug) {
+                        ModLog.debug("{} => {} => {}", entity, actionSet, entity.getDeltaMovement());
+                    }
                     play(actionSet, animationTicks);
                     lastActionSet = actionSet.copy();
                 }
@@ -172,7 +175,9 @@ public class AnimationManager {
         state.setStartTime(atTime);
         state.setPlayCount(playCount);
         states.put(animationController, state);
-        ModLog.debug("start play {}", animationController);
+        if (ModConfig.Client.enableAnimationDebug) {
+            ModLog.debug("start play {}", animationController);
+        }
         // automatically remove on animation completion.
         if (playCount > 0) {
             removeOnCompletion.add(animationController);
@@ -186,7 +191,9 @@ public class AnimationManager {
         if (state == null) {
             return;
         }
-        ModLog.debug("stop play {}", animationController);
+        if (ModConfig.Client.enableAnimationDebug) {
+            ModLog.debug("stop play {}", animationController);
+        }
         removeOnCompletion.remove(animationController);
         entries.forEach((key, entry) -> {
             if (entry.selectedEntry != null && entry.selectedEntry.animationController == animationController) {
@@ -221,9 +228,7 @@ public class AnimationManager {
         private List<AnimationController> animations;
         private boolean isLoaded = false;
 
-        private final HashMap<String, String> redirectFrom = new HashMap<>();
-        private final HashMap<String, String> redirectTo = new HashMap<>();
-
+        private final HashMap<String, String> actionToName = new HashMap<>();
         private final ArrayList<TriggerableEntry> triggerableAnimations = new ArrayList<>();
 
         private boolean isLocked = false;
@@ -233,21 +238,25 @@ public class AnimationManager {
             this.descriptor = descriptor;
         }
 
-        protected void addMapping(String from, String to) {
-            to = redirectFrom.put(from, to);
-            if (to != null) {
-                redirectTo.remove(to);
-            }
-            if (from.equals(to)) {
-                redirectFrom.remove(from);
+        protected void addMapping(String action, String newName) {
+            if (action.equals(newName) || newName.isBlank()) {
+                actionToName.remove(action);
+            } else {
+                actionToName.put(action, newName);
             }
         }
 
         protected String resolve(String name) {
-            if (redirectFrom.containsKey(name)) {
-                return "disable:" + name;
+            // map idle sit/idle
+            for (var entry : actionToName.entrySet()) {
+                if (entry.getValue().equals(name)) {
+                    return entry.getKey(); // name to action.
+                }
+                if (entry.getKey().equals(name)) {
+                    return "redirected:" + name;  // name is action, but it was redirected.
+                }
             }
-            return redirectTo.getOrDefault(name, name);
+            return name;
         }
 
         protected void rebuild() {

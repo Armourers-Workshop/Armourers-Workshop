@@ -52,7 +52,9 @@
       "Wing_L": [ 0, 24, 2 ],
       "Wing_R": [ 0, 24, 2 ],
       "Phalanx_L": [ 0, 24, 2 ],
-      "Phalanx_R": [ 0, 24, 2 ]
+      "Phalanx_R": [ 0, 24, 2 ],
+      "Float": [ 0, 24, 0 ],
+      "Static": [ 0, 24, 0 ]
     }
   },
   "override": {

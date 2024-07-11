@@ -72,7 +72,7 @@ public class EntityActions {
         if (target != null) {
             return target;
         }
-        return new EntityActionTarget(name, 0, Lists.newArrayList(), -1);
+        return new EntityActionTarget(name, 0, Lists.newArrayList(), 0);
     }
 
     private static void register(float priority, String name, EntityAction... actions) {
