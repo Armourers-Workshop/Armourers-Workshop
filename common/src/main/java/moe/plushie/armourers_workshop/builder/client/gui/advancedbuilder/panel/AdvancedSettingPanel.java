@@ -36,6 +36,7 @@ public class AdvancedSettingPanel extends AdvancedPanel {
                     SkinProperty.OVERRIDE_OVERLAY_RIGHT_SLEEVE,
                     SkinProperty.OVERRIDE_OVERLAY_LEFT_PANTS,
                     SkinProperty.OVERRIDE_OVERLAY_RIGHT_PANTS,
+                    SkinProperty.OVERRIDE_OVERLAY_COLOR,
                     SkinProperty.OVERRIDE_EQUIPMENT_BOOTS,
                     SkinProperty.OVERRIDE_EQUIPMENT_CHESTPLATE,
                     SkinProperty.OVERRIDE_EQUIPMENT_HELMET,
@@ -45,6 +46,7 @@ public class AdvancedSettingPanel extends AdvancedPanel {
             .put(SkinTypes.ARMOR_HEAD, ObjectUtils.map(
                     SkinProperty.OVERRIDE_MODEL_HEAD,
                     SkinProperty.OVERRIDE_OVERLAY_HAT,
+                    SkinProperty.OVERRIDE_OVERLAY_COLOR,
                     SkinProperty.OVERRIDE_EQUIPMENT_HELMET
             ))
             .put(SkinTypes.ARMOR_CHEST, ObjectUtils.map(
@@ -54,6 +56,7 @@ public class AdvancedSettingPanel extends AdvancedPanel {
                     SkinProperty.OVERRIDE_OVERLAY_JACKET,
                     SkinProperty.OVERRIDE_OVERLAY_LEFT_SLEEVE,
                     SkinProperty.OVERRIDE_OVERLAY_RIGHT_SLEEVE,
+                    SkinProperty.OVERRIDE_OVERLAY_COLOR,
                     SkinProperty.OVERRIDE_EQUIPMENT_CHESTPLATE
             ))
             .put(SkinTypes.ARMOR_FEET, ObjectUtils.map(
@@ -61,6 +64,7 @@ public class AdvancedSettingPanel extends AdvancedPanel {
                     SkinProperty.OVERRIDE_MODEL_RIGHT_LEG,
                     SkinProperty.OVERRIDE_OVERLAY_LEFT_PANTS,
                     SkinProperty.OVERRIDE_OVERLAY_RIGHT_PANTS,
+                    SkinProperty.OVERRIDE_OVERLAY_COLOR,
                     SkinProperty.OVERRIDE_EQUIPMENT_LEGGINGS
             ))
             .put(SkinTypes.ARMOR_LEGS, ObjectUtils.map(
@@ -68,10 +72,13 @@ public class AdvancedSettingPanel extends AdvancedPanel {
                     SkinProperty.OVERRIDE_MODEL_RIGHT_LEG,
                     SkinProperty.OVERRIDE_OVERLAY_LEFT_PANTS,
                     SkinProperty.OVERRIDE_OVERLAY_RIGHT_PANTS,
+                    SkinProperty.OVERRIDE_OVERLAY_COLOR,
                     SkinProperty.OVERRIDE_EQUIPMENT_BOOTS,
                     SkinProperty.LIMIT_LEGS_LIMBS
             ))
-            .put(SkinTypes.ARMOR_WINGS, ObjectUtils.map())
+            .put(SkinTypes.ARMOR_WINGS, ObjectUtils.map(
+                    SkinProperty.OVERRIDE_OVERLAY_COLOR
+            ))
             .put(SkinTypes.ITEM_SWORD, ObjectUtils.map())
             .put(SkinTypes.ITEM_SHIELD, ObjectUtils.map())
             .put(SkinTypes.ITEM_BOW, ObjectUtils.map())
@@ -101,6 +108,7 @@ public class AdvancedSettingPanel extends AdvancedPanel {
                     SkinProperty.OVERRIDE_MODEL_LEFT_HIND_LEG,
                     SkinProperty.OVERRIDE_MODEL_RIGHT_HIND_LEG,
                     SkinProperty.OVERRIDE_MODEL_TAIL,
+                    SkinProperty.OVERRIDE_OVERLAY_COLOR,
                     SkinProperty.OVERRIDE_EQUIPMENT_CHESTPLATE
             ))
             .build();

@@ -327,6 +327,7 @@ public class ClientWardrobeHandler {
             itemSource.setItem(itemStack);
             itemSource.setRenderPriority(entry.getRenderPriority());
             context.setItemSource(itemSource);
+            context.setOverlay(entry.getOverrideOverlay(entity));
             bakedSkin.setupAnim(entity, bakedArmature, context);
             var colorScheme = bakedSkin.resolve(entity, entry.getBakedScheme());
             SkinRenderer.render(entity, bakedArmature, bakedSkin, colorScheme, context);

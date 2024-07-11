@@ -41,6 +41,7 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_RIGHT_SLEEVE = normal("hideOverlayArmRight", false);
     public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_LEFT_PANTS = normal("hideOverlayLegLeft", false);
     public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_RIGHT_PANTS = normal("hideOverlayLegRight", false);
+    public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_COLOR = normal("overrideOverlayColor", true);
 
     public static final SkinProperty<Boolean> OVERRIDE_EQUIPMENT_HELMET = normal("hideEquipmentHead", false);
     public static final SkinProperty<Boolean> OVERRIDE_EQUIPMENT_CHESTPLATE = normal("hideEquipmentChest", false);

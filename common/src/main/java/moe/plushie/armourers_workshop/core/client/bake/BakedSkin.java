@@ -24,6 +24,7 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinUsedCounter;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
@@ -129,6 +130,10 @@ public class BakedSkin implements IBakedSkin {
 
     public List<BakedSkinPart> getParts() {
         return skinParts;
+    }
+
+    public SkinProperties getProperties() {
+        return skin.getProperties();
     }
 
     public List<AnimationController> getAnimationControllers() {

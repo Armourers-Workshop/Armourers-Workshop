@@ -203,6 +203,7 @@
   "inventory.armourers_workshop.armourer.skinSettings.overrideModelLeftHindLeg": "Left Hind Leg Override?",
   "inventory.armourers_workshop.armourer.skinSettings.overrideModelRightHindLeg": "Right Hind Leg Override?",
   "inventory.armourers_workshop.armourer.skinSettings.overrideModelTail": "Tail Override?",
+  "inventory.armourers_workshop.armourer.skinSettings.overrideOverlayColor": "Overlay Color Override?",
   "inventory.armourers_workshop.armourer.skinSettings.wingsMatchingPose": "Matching the body pose?",
   "inventory.armourers_workshop.armourer.skinSettings.showOverlay": "Show head overlay?",
   "inventory.armourers_workshop.colour-mixer": "Color Mixer",

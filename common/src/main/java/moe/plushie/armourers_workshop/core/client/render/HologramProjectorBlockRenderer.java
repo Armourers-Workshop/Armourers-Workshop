@@ -78,6 +78,7 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
 
             renderPatch.setItemSource(itemSource);
             renderPatch.setColorScheme(entry.getBakedScheme());
+            //renderPatch.setOverlay(entry.getOverrideOverlay(entity));
 
             apply(entity, rect, renderPatch.getAnimationTicks(), poseStack, bufferSource);
 
