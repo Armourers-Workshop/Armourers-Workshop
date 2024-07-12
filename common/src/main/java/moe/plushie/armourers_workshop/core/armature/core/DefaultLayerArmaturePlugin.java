@@ -15,105 +15,39 @@ import net.minecraft.world.entity.LivingEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
+public abstract class DefaultLayerArmaturePlugin extends ArmaturePlugin {
 
-    private final ArrayList<Entry> entries = new ArrayList<>();
-    private final ArrayList<EntryImpl<?, ?>> applying = new ArrayList<>();
+    private ArmatureTransformerContext context;
 
-    public static DefaultLayerArmaturePlugin shulker(ArmatureTransformerContext context) {
-        var plugin = new DefaultLayerArmaturePlugin();
-        plugin.register(AbstractSkinnableLayers.SHULKER_HEAD, plugin::whenAnyVisible);
-        context.addEntityModelListener(plugin::setEntityModel);
-        context.addEntityRendererListener(plugin::setEntityRenderer);
-        return plugin;
+    protected final ArrayList<Applier<?, ?>> applying = new ArrayList<>();
+
+    public DefaultLayerArmaturePlugin(ArmatureTransformerContext context) {
+        this.context = context;
+    }
+
+    public static DefaultLayerArmaturePlugin any(ArmatureTransformerContext context) {
+        return new Blacklist(context, DefaultLayerArmaturePlugin::whenAnyVisible);
     }
 
     public static DefaultLayerArmaturePlugin villager(ArmatureTransformerContext context) {
-        var plugin = new DefaultLayerArmaturePlugin();
-        plugin.register(AbstractSkinnableLayers.VILLAGER_PROFESSION, plugin::whenHeadVisible);
-        context.addEntityModelListener(plugin::setEntityModel);
-        context.addEntityRendererListener(plugin::setEntityRenderer);
+        var plugin = new Whitelist(context);
+        plugin.register(AbstractSkinnableLayers.VILLAGER_PROFESSION, DefaultLayerArmaturePlugin::whenHeadVisible);
         return plugin;
     }
 
-    public static DefaultLayerArmaturePlugin slime(ArmatureTransformerContext context) {
-        var plugin = new DefaultLayerArmaturePlugin();
-        plugin.register(AbstractSkinnableLayers.SLIME_OUTER, plugin::whenAnyVisible);
-        context.addEntityModelListener(plugin::setEntityModel);
-        context.addEntityRendererListener(plugin::setEntityRenderer);
-        return plugin;
-    }
 
     public static DefaultLayerArmaturePlugin mob(ArmatureTransformerContext context) {
-        var plugin = new DefaultLayerArmaturePlugin();
-        plugin.register(AbstractSkinnableLayers.STRAY_CLOTHING, plugin::whenBodyVisible);
-        plugin.register(AbstractSkinnableLayers.DROWNED_OUTER, plugin::whenBodyVisible);
-        context.addEntityModelListener(plugin::setEntityModel);
-        context.addEntityRendererListener(plugin::setEntityRenderer);
+        var plugin = new Whitelist(context);
+        plugin.register(AbstractSkinnableLayers.STRAY_CLOTHING, DefaultLayerArmaturePlugin::whenBodyVisible);
+        plugin.register(AbstractSkinnableLayers.DROWNED_OUTER, DefaultLayerArmaturePlugin::whenBodyVisible);
         return plugin;
     }
 
-    @Override
-    public void activate(Entity entity, SkinRenderContext context) {
-        entries.forEach(it -> {
-            if (!it.tester.get()) {
-                it.impl.activate();
-                applying.add(it.impl);
-            }
-        });
-    }
-
-    @Override
-    public void deactivate(Entity entity, SkinRenderContext context) {
-        applying.forEach(EntryImpl::deactivate);
-        applying.clear();
-    }
-
-    @Override
-    public boolean freeze() {
-        entries.removeIf(it -> it.tester == null || it.impl == null);
-        return !entries.isEmpty();
-    }
-
-    private <T extends LivingEntity, M extends EntityModel<T>> void apply(LivingEntityRenderer<T, M> entityRenderer) {
-        var layers = entityRenderer.layers;
-        for (var targetLayer : layers) {
-            for (var entry : entries) {
-                if (!entry.layerClass.isInstance(targetLayer)) {
-                    continue;
-                }
-                var impl = new EntryImpl<T, M>();
-                impl.target = targetLayer;
-                impl.placeholder = new PlaceholderLayer<>(entityRenderer);
-                impl.layers = () -> entityRenderer.layers;
-                entry.impl = impl;
-            }
-        }
-    }
-
-    private void setEntityModel(IModel model) {
-        entries.forEach(it -> it.tester = it.testFactory.apply(model));
-    }
-
-    private void setEntityRenderer(EntityRenderer<?> entityRenderer) {
-        if (entityRenderer instanceof LivingEntityRenderer<?, ?> livingEntityRenderer) {
-            apply(livingEntityRenderer);
-        }
-    }
-
-    private void register(Class<?> clazz, Function<IModel, Supplier<Boolean>> testFactory) {
-        if (clazz != null) {
-            var entry = new Entry();
-            entry.layerClass = clazz;
-            entry.testFactory = testFactory;
-            entries.add(entry);
-        }
-    }
-
-    private Supplier<Boolean> whenHeadVisible(IModel model) {
+    public static BooleanSupplier whenHeadVisible(IModel model) {
         var modelPart = model.getPart("head");
         if (modelPart != null) {
             return modelPart::isVisible;
@@ -121,14 +55,14 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
         return null;
     }
 
-    private Supplier<Boolean> whenAnyVisible(IModel model) {
+    public static BooleanSupplier whenAnyVisible(IModel model) {
         for (var part : model.getAllParts()) {
             return part::isVisible;
         }
         return null;
     }
 
-    private Supplier<Boolean> whenBodyVisible(IModel model) {
+    public static BooleanSupplier whenBodyVisible(IModel model) {
         var modelPart = model.getPart("body");
         if (modelPart != null) {
             return modelPart::isVisible;
@@ -136,33 +70,98 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
         return null;
     }
 
-    private static class Entry {
+    public abstract <T extends LivingEntity, M extends EntityModel<T>> Selector search(RenderLayer<T, M> layer);
 
-        Class<?> layerClass;
-        Function<IModel, Supplier<Boolean>> testFactory;
-        Supplier<Boolean> tester;
-        EntryImpl<?, ?> impl;
+    @Override
+    public void activate(Entity entity, SkinRenderContext context) {
+        applying.forEach(Applier::activate);
     }
 
-    private static class EntryImpl<T extends Entity, M extends EntityModel<T>> {
+    @Override
+    public void deactivate(Entity entity, SkinRenderContext context) {
+        applying.forEach(Applier::deactivate);
+    }
 
-        RenderLayer<T, M> target;
-        RenderLayer<T, M> placeholder;
-        Supplier<List<RenderLayer<T, M>>> layers;
-        int lastIndex = 0;
+    @Override
+    public boolean freeze() {
+        // when requires to freeze, we need to attach the layer to the renderer.
+        if (context != null) {
+            apply(context.getEntityModel(), context.getEntityRenderer());
+            context = null;
+        }
+        return !applying.isEmpty();
+    }
 
-        private void activate() {
-            set(target, placeholder);
+    private void apply(IModel entityModel, EntityRenderer<?> entityRenderer) {
+        // bind layer to renderer.
+        if (entityRenderer instanceof LivingEntityRenderer<?, ?> livingEntityRenderer) {
+            apply(livingEntityRenderer);
+        }
+        // bind the entity model to tester.
+        if (entityModel != null) {
+            applying.forEach(it -> it.selector.tester = it.selector.testFactory.apply(entityModel));
+            applying.removeIf(it -> it.selector.tester == null);
+        }
+    }
+
+    private <T extends LivingEntity, M extends EntityModel<T>> void apply(LivingEntityRenderer<T, M> entityRenderer) {
+        for (var layer : entityRenderer.layers) {
+            var entry = search(layer);
+            if (entry == null) {
+                continue;
+            }
+            var applier = new Applier<T, M>(entry);
+            applier.target = layer;
+            applier.placeholder = new PlaceholderLayer<>(entityRenderer);
+            applier.layers = () -> entityRenderer.layers;
+            applying.add(applier);
+        }
+    }
+
+    public static class Selector {
+
+        private final Class<?> layerClass;
+        private final Function<IModel, BooleanSupplier> testFactory;
+
+        private BooleanSupplier tester;
+
+        public Selector(Class<?> layerClass, Function<IModel, BooleanSupplier> testFactory) {
+            this.layerClass = layerClass;
+            this.testFactory = testFactory;
+        }
+    }
+
+    public static class Applier<T extends Entity, M extends EntityModel<T>> {
+
+        private final Selector selector;
+        private RenderLayer<T, M> target;
+        private RenderLayer<T, M> placeholder;
+        private Supplier<List<RenderLayer<T, M>>> layers;
+        private int lastIndex = -1;
+        private boolean isEnabled = false;
+
+        public Applier(Selector selector) {
+            this.selector = selector;
         }
 
-        private void deactivate() {
-            set(placeholder, target);
+        public void activate() {
+            if (!isEnabled && selector.tester.getAsBoolean()) {
+                replace(target, placeholder);
+                isEnabled = true;
+            }
         }
 
-        private void set(RenderLayer<T, M> from, RenderLayer<T, M> to) {
+        public void deactivate() {
+            if (isEnabled) {
+                replace(placeholder, target);
+                isEnabled = false;
+            }
+        }
+
+        private void replace(RenderLayer<T, M> from, RenderLayer<T, M> to) {
             // we prioritize quick search.
             var layers = this.layers.get();
-            if (lastIndex < layers.size()) {
+            if (lastIndex >= 0 && lastIndex < layers.size()) {
                 if (layers.get(lastIndex) == from) {
                     layers.set(lastIndex, to);
                     return;
@@ -176,6 +175,57 @@ public class DefaultLayerArmaturePlugin extends ArmaturePlugin {
                     break;
                 }
             }
+        }
+    }
+
+    public static class Whitelist extends DefaultLayerArmaturePlugin {
+
+        protected final ArrayList<Selector> selectors = new ArrayList<>();
+
+        public Whitelist(ArmatureTransformerContext context) {
+            super(context);
+        }
+
+        public void register(Class<?> clazz, Function<IModel, BooleanSupplier> testFactory) {
+            if (clazz != null) {
+                selectors.add(new Selector(clazz, testFactory));
+            }
+        }
+
+        @Override
+        public <T extends LivingEntity, M extends EntityModel<T>> Selector search(RenderLayer<T, M> layer) {
+            for (var entry : selectors) {
+                if (entry.layerClass.isInstance(layer)) {
+                    return entry;
+                }
+            }
+            return null;
+        }
+    }
+
+    public static class Blacklist extends DefaultLayerArmaturePlugin {
+
+        protected final ArrayList<Class<?>> blocked = new ArrayList<>();
+
+        protected final Function<IModel, BooleanSupplier> testFactory;
+
+        public Blacklist(ArmatureTransformerContext context, Function<IModel, BooleanSupplier> testFactory) {
+            super(context);
+            this.testFactory = testFactory;
+        }
+
+        public void register(Class<?> clazz) {
+            blocked.add(clazz);
+        }
+
+        @Override
+        public <T extends LivingEntity, M extends EntityModel<T>> Selector search(RenderLayer<T, M> layer) {
+            for (var layerClass : blocked) {
+                if (layerClass.isInstance(layer)) {
+                    return null; // yep, we found it, ignore.
+                }
+            }
+            return new Selector(layer.getClass(), testFactory);
         }
     }
 }

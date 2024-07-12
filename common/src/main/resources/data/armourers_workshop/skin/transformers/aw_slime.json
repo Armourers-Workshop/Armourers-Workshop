@@ -10,7 +10,7 @@
     "overrideModelHead": "*"
   },
   "plugin": [
-    "armourers_workshop:plugin/fix_slime_layer"
+    "armourers_workshop:plugin/hidden_any_layer"
   ],
   "model": [
     "minecraft:model/slime"

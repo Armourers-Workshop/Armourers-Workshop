@@ -9,7 +9,9 @@ import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinUUID;
+import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -20,20 +22,33 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 
 public class LocalDataService implements ISkinFileManager {
 
+    private static final int NODE_DATA_VERSION = 2;
+    private static final int REFERENCE_DATA_VERSION = 1;
+
     private static LocalDataService RUNNING;
 
-    private final File rootPath;
-    private final HashMap<String, Node> nodes = new HashMap<>();
+    private final File nodeRootPath;
+    private final File nodeInfoRootPath;
+
+    private final Map<String, Node> nodes = new ConcurrentHashMap<>();
+    private final Map<String, NodeInfo> nodeInfos = new ConcurrentHashMap<>();
+
+    private final ExecutorService thread = ThreadUtils.newFixedThreadPool(1, "AW-SKIN-IO");
+
     private String lastGenUUID = "";
 
     public LocalDataService(File rootPath) {
-        this.rootPath = rootPath;
+        this.nodeRootPath = new File(rootPath, "objects");
+        this.nodeInfoRootPath = new File(rootPath, "references");
         this.loadNodes();
+        this.loadNodeInfos();
     }
 
     public static LocalDataService getInstance() {
@@ -49,6 +64,7 @@ public class LocalDataService implements ISkinFileManager {
 
     public static void stop() {
         if (RUNNING != null) {
+            RUNNING.thread.shutdown();
             RUNNING = null;
             ModLog.info("stop local service");
         }
@@ -59,20 +75,18 @@ public class LocalDataService implements ISkinFileManager {
     }
 
     private void loadNodes() {
-        File[] files = SkinFileUtils.listFiles(getRootFile());
-        if (files != null) {
-            for (File file : files) {
-                loadNode(file);
-            }
+        // objects/<skin-id>/0|1
+        for (var file : SkinFileUtils.listFiles(nodeRootPath)) {
+            loadNode(file);
         }
     }
 
     private Node loadNode(File parent) {
         try {
             File indexFile = new File(parent, "0");
-            CompoundTag nbt = SkinFileUtils.readNBT(indexFile);
-            if (nbt != null) {
-                Node node = new Node(nbt);
+            CompoundTag tag = SkinFileUtils.readNBT(indexFile);
+            if (tag != null) {
+                Node node = new Node(tag);
                 nodes.put(node.id, node);
                 return node;
             }
@@ -102,8 +116,46 @@ public class LocalDataService implements ISkinFileManager {
         return node;
     }
 
-    private File getRootFile() {
-        return new File(rootPath, "objects");
+    private void loadNodeInfos() {
+        // references/<domain>/<skin-id>
+        for (var parentFile : SkinFileUtils.listFiles(nodeInfoRootPath)) {
+            for (var infoFile : SkinFileUtils.listFiles(parentFile)) {
+                loadNodeInfo(parentFile.getName(), infoFile);
+            }
+        }
+    }
+
+    private void loadNodeInfo(String namespace, File referenceFile) {
+        try {
+            var tag = SkinFileUtils.readNBT(referenceFile);
+            if (tag != null) {
+                String id = namespace + ":" + referenceFile.getName();
+                nodeInfos.put(id, new NodeInfo(tag));
+            }
+        } catch (Exception e) {
+            ModLog.error("can't load file: {}, pls try fix or remove it.", referenceFile);
+        }
+    }
+
+    @Nullable
+    public LocalDataReference getSkinInfo(String identifier) {
+        return nodeInfos.get(identifier);
+    }
+
+    public LocalDataReference addSkinInfo(String identifier, Skin skin) {
+        ModLog.debug("Save skin info into db {}", identifier);
+        var info = new NodeInfo(identifier, skin);
+        nodeInfos.put(identifier, info);
+        info.save();
+        return info;
+    }
+
+    public void removeSkinInfo(String identifier) {
+        var reference = nodeInfos.remove(identifier);
+        ModLog.debug("Remove skin info from db {}", identifier);
+        if (reference != null) {
+            reference.remove();
+        }
     }
 
     public String saveSkinFile(Skin skin) {
@@ -156,7 +208,7 @@ public class LocalDataService implements ISkinFileManager {
         if (node == null) {
             // when the identifier not found in the nodes,
             // we will check the file once.
-            File parent = new File(getRootFile(), identifier);
+            File parent = new File(nodeRootPath, identifier);
             if (parent.isDirectory()) {
                 node = loadNode(parent);
             }
@@ -202,7 +254,7 @@ public class LocalDataService implements ISkinFileManager {
         Node(String id, ISkinType type, byte[] bytes, SkinProperties properties) {
             this.id = id;
             this.type = type;
-            this.version = 2;
+            this.version = NODE_DATA_VERSION;
             // file
             this.fileSize = bytes.length;
             this.fileHash = Arrays.hashCode(bytes);
@@ -211,44 +263,55 @@ public class LocalDataService implements ISkinFileManager {
             this.propertiesHash = properties.hashCode();
         }
 
-        Node(CompoundTag nbt) {
-            this.id = nbt.getString("UUID");
-            this.type = SkinTypes.byName(nbt.getString("Type"));
-            this.version = nbt.getInt("Version");
+        Node(CompoundTag tag) {
+            this.id = tag.getString("UUID");
+            this.type = SkinTypes.byName(tag.getString("Type"));
+            this.version = tag.getInt("Version");
             // file
-            this.fileSize = nbt.getInt("FileSize");
-            this.fileHash = nbt.getInt("FileHash");
+            this.fileSize = tag.getInt("FileSize");
+            this.fileHash = tag.getInt("FileHash");
             // properties
             this.properties = new SkinProperties();
-            this.properties.readFromNBT(nbt.getCompound("Properties"));
-            this.propertiesHash = nbt.getInt("PropertiesHash");
+            this.properties.readFromNBT(tag.getCompound("Properties"));
+            this.propertiesHash = tag.getInt("PropertiesHash");
         }
 
         public CompoundTag serializeNBT() {
-            CompoundTag nbt = new CompoundTag();
-            nbt.putString("UUID", id);
-            nbt.putString("Type", type.getRegistryName().toString());
-            nbt.putInt("Version", version);
+            CompoundTag tag = new CompoundTag();
+            tag.putString("UUID", id);
+            tag.putString("Type", type.getRegistryName().toString());
+            tag.putInt("Version", version);
             // file
-            nbt.putInt("FileSize", fileSize);
-            nbt.putInt("FileHash", fileHash);
+            tag.putInt("FileSize", fileSize);
+            tag.putInt("FileHash", fileHash);
             // properties
             CompoundTag props = new CompoundTag();
             properties.writeToNBT(props);
-            nbt.put("Properties", props);
-            nbt.putInt("PropertiesHash", propertiesHash);
-            return nbt;
+            tag.put("Properties", props);
+            tag.putInt("PropertiesHash", propertiesHash);
+            return tag;
         }
 
-        public void save(InputStream inputStream) throws IOException {
-            SkinFileUtils.forceMkdirParent(getFile());
-            FileOutputStream fs = new FileOutputStream(getFile());
-            SkinFileUtils.transferTo(inputStream, fs);
-            SkinFileUtils.writeNBT(serializeNBT(), getIndexFile());
+        public void save(InputStream inputStream) {
+            thread.execute(() -> {
+                try {
+                    var skinFile = getFile();
+                    var indexFile = getIndexFile();
+                    SkinFileUtils.forceMkdirParent(skinFile);
+                    FileOutputStream fs = new FileOutputStream(skinFile);
+                    SkinFileUtils.transferTo(inputStream, fs);
+                    SkinFileUtils.writeNBT(serializeNBT(), indexFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         }
 
         public void remove() {
-            SkinFileUtils.deleteQuietly(getFile().getParentFile());
+            thread.execute(() -> {
+                var skinFile = getFile();
+                SkinFileUtils.deleteQuietly(skinFile.getParentFile());
+            });
         }
 
         @Override
@@ -294,15 +357,60 @@ public class LocalDataService implements ISkinFileManager {
         }
 
         public File getFile() {
-            return new File(rootPath, "objects/" + id + "/1");
+            return new File(nodeRootPath, id + "/1");
         }
 
         public File getIndexFile() {
-            return new File(rootPath, "objects/" + id + "/0");
+            return new File(nodeRootPath, id + "/0");
         }
 
         public boolean isValid() {
             return getFile().exists();
+        }
+    }
+
+    public class NodeInfo extends LocalDataReference {
+
+        protected final int version;
+
+        public NodeInfo(String id, Skin skin) {
+            super(id, skin);
+            this.version = REFERENCE_DATA_VERSION;
+        }
+
+        public NodeInfo(CompoundTag tag) {
+            super(tag);
+            this.version = tag.getInt("Version");
+        }
+
+        @Override
+        public CompoundTag serializeNBT() {
+            var tag = super.serializeNBT();
+            tag.putInt("Version", version);
+            return tag;
+        }
+
+        public void save() {
+            thread.execute(() -> {
+                try {
+                    var infoFile = getFile();
+                    SkinFileUtils.forceMkdirParent(infoFile);
+                    SkinFileUtils.writeNBT(serializeNBT(), infoFile);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            });
+        }
+
+        public void remove() {
+            thread.execute(() -> {
+                var infoFile = getFile();
+                SkinFileUtils.deleteQuietly(infoFile);
+            });
+        }
+
+        private File getFile() {
+            return new File(nodeInfoRootPath, id.replace(':', '/'));
         }
     }
 }

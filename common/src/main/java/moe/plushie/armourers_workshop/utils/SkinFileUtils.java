@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.utils;
 
+import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import net.minecraft.nbt.CompoundTag;
@@ -19,8 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -58,24 +59,25 @@ public class SkinFileUtils {
         return FilenameUtils.concat(basePath, fullFilenameToAdd);
     }
 
-    public static File[] listFiles(final File directory) {
+    public static List<File> listFiles(final File directory) {
         try {
-            return directory.listFiles();
+            var files = directory.listFiles();
+            if (files != null) {
+                return Lists.newArrayList(files);
+            }
         } catch (Exception ignored) {
-            return null;
+            // ignore
         }
+        return Collections.emptyList();
     }
 
-    public static Collection<File> listAllFiles(final File directory) {
-        ArrayList<File> allFiles = new ArrayList<>();
+    public static List<File> listAllFiles(final File directory) {
+        var allFiles = new ArrayList<File>();
         allFiles.add(directory);
         for (int i = 0; i < allFiles.size(); ++i) {
-            File path = allFiles.get(i);
+            var path = allFiles.get(i);
             if (path.isDirectory()) {
-                File[] subfiles = listFiles(path);
-                if (subfiles != null) {
-                    Collections.addAll(allFiles, subfiles);
-                }
+                allFiles.addAll(listFiles(path));
             }
         }
         allFiles.remove(0);
@@ -238,7 +240,7 @@ public class SkinFileUtils {
         var tree = new StringBuilder();
         tree.append("<Skin ");
         tree.append("name=").append(skin.getCustomName()).append(",");
-        tree.append("author=").append(skin.getAuthorName()).append(",");;
+        tree.append("author=").append(skin.getAuthorName()).append(",");
         tree.append("type=").append(skin.getType().getRegistryName().getPath());
         tree.append(">\n");
         for (var part : skin.getParts()) {

@@ -74,7 +74,7 @@
     "hideOverlayHead": "hat"
   },
   "plugin": [
-    "armourers_workshop:plugin/fix_mob_layer"
+    "armourers_workshop:plugin/hidden_mob_layer"
   ],
   "model": [
     "minecraft:model/humanoid"

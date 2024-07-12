@@ -119,7 +119,7 @@ public class SkinSettings {
     private void writeCollisionBox(IOutputStream stream) throws IOException {
         if (collisionBox != null) {
             stream.writeVarInt(collisionBox.size() + 1);
-            for (Rectangle3i box : collisionBox) {
+            for (var box : collisionBox) {
                 stream.writeRectangle3i(box);
             }
         } else {

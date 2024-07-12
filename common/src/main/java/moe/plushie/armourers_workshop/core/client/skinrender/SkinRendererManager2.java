@@ -64,12 +64,11 @@ public class SkinRendererManager2 extends ArmatureSerializers {
 
     private static void registerPlugins() {
 
-        registerPlugin("armourers_workshop:plugin/fix_shulker_layer", DefaultLayerArmaturePlugin::shulker);
-        registerPlugin("armourers_workshop:plugin/fix_villager_layer", DefaultLayerArmaturePlugin::villager);
-        registerPlugin("armourers_workshop:plugin/fix_mob_layer", DefaultLayerArmaturePlugin::mob);
-        registerPlugin("armourers_workshop:plugin/fix_slime_layer", DefaultLayerArmaturePlugin::slime);
-        registerPlugin("armourers_workshop:plugin/fix_villager_model", VillagerModelArmaturePlugin::new);
+        registerPlugin("armourers_workshop:plugin/hidden_any_layer", DefaultLayerArmaturePlugin::any);
+        registerPlugin("armourers_workshop:plugin/hidden_villager_layer", DefaultLayerArmaturePlugin::villager);
+        registerPlugin("armourers_workshop:plugin/hidden_mob_layer", DefaultLayerArmaturePlugin::mob);
 
+        registerPlugin("armourers_workshop:plugin/fix_villager_model", VillagerModelArmaturePlugin::new);
         registerPlugin("armourers_workshop:plugin/fix_trident_model", TridentModelArmaturePlugin::new);
         registerPlugin("armourers_workshop:plugin/fix_arrow_model", ArrowModelArmaturePlugin::new);
         registerPlugin("armourers_workshop:plugin/fix_fishing_model", FishingModelArmaturePlugin::new);
@@ -172,6 +171,7 @@ public class SkinRendererManager2 extends ArmatureSerializers {
         });
 
         registerModel("minecraft:model/pig", AbstractSkinnableModels.PIG);
+        registerModel("minecraft:model/wolf", AbstractSkinnableModels.WOLF);
         registerModel("minecraft:model/shulker", AbstractSkinnableModels.SHULKER);
 
         registerModel("minecraft:model/boat", AbstractSkinnableModels.BOAT, it -> {

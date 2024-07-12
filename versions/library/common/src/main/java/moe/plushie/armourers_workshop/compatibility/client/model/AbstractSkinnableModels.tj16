@@ -17,6 +17,7 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.ShulkerModel;
 import net.minecraft.client.model.SlimeModel;
 import net.minecraft.client.model.VillagerModel;
+import net.minecraft.client.model.WolfModel;
 import net.minecraft.client.model.ZombieVillagerModel;
 
 @SuppressWarnings("rawtypes")
@@ -42,6 +43,7 @@ public class AbstractSkinnableModels {
     public static final Class<HorseModel> HORSE = HorseModel.class;
 
     public static final Class<PigModel> PIG = PigModel.class;
+    public static final Class<WolfModel> WOLF = WolfModel.class;
     public static final Class<ShulkerModel> SHULKER = ShulkerModel.class;
 
     public static final Class<BoatModel> BOAT = BoatModel.class;

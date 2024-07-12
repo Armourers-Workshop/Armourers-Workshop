@@ -36,15 +36,19 @@ public enum DataDomain {
     }
 
     public static boolean isLocal(String path) {
-        return DataDomain.LOCAL.matches(path);
+        return LOCAL.matches(path);
     }
 
     public static boolean isServer(String path) {
-        return DataDomain.DEDICATED_SERVER.matches(path);
+        return DEDICATED_SERVER.matches(path);
     }
 
     public static boolean isDatabase(String path) {
-        return DataDomain.DATABASE.matches(path) || DataDomain.DATABASE_LINK.matches(path);
+        return DATABASE.matches(path) || DATABASE_LINK.matches(path);
+    }
+
+    public static boolean isVolatile(String path) {
+        return isLocal(path) || isServer(path);
     }
 
     public boolean matches(String s) {

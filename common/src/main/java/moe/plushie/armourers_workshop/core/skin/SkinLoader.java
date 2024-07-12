@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.api.skin.ISkinFileProvider;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataManager;
+import moe.plushie.armourers_workshop.core.data.LocalDataReference;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.network.RequestSkinPacket;
@@ -60,6 +61,7 @@ public class SkinLoader {
     private final HashMap<String, ISkinFileProvider> loaders = new HashMap<>();
     private final ConcurrentHashMap<String, Entry> entries = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, GlobalEntry> globalEntries = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, InfoEntry> infoEntries = new ConcurrentHashMap<>();
 
     private SkinLoader() {
         this.setup(SkinServerType.CLIENT);
@@ -168,6 +170,16 @@ public class SkinLoader {
 //        });
 //    }
 
+    public LocalDataReference loadSkinInfo(String identifier) {
+        var entry = getOrCreateInfoEntry(identifier);
+        entry.resume();
+        return entry.info;
+    }
+
+    public void loadSkinInfo(String identifier, IResultHandler<LocalDataReference> handler) {
+        getOrCreateInfoEntry(identifier).resume(handler);
+    }
+
     public String saveSkin(String identifier, Skin skin) {
         if (DataDomain.isDatabase(identifier)) {
             return identifier;
@@ -217,6 +229,7 @@ public class SkinLoader {
         waiting.clear();
         entries.clear();
         globalEntries.clear();
+        infoEntries.clear();
         setup(SkinServerType.CLIENT);
     }
 
@@ -236,7 +249,12 @@ public class SkinLoader {
         return globalEntries.computeIfAbsent(identifier, GlobalEntry::new);
     }
 
+    private InfoEntry getOrCreateInfoEntry(String identifier) {
+        return infoEntries.computeIfAbsent(identifier, InfoEntry::new);
+    }
+
     private Entry removeEntry(String identifier) {
+        infoEntries.remove(identifier);
         return entries.remove(identifier);
     }
 
@@ -391,6 +409,81 @@ public class SkinLoader {
                 handler.apply(descriptor, exception);
             }
             pending.clear();
+        }
+    }
+
+    public static class InfoEntry {
+
+        private final String identifier;
+
+        private Exception exception;
+        private LocalDataReference info;
+
+        private List<IResultHandler<LocalDataReference>> callbacks;
+
+        public InfoEntry(String identifier) {
+            this.identifier = identifier;
+        }
+
+        public void resume() {
+            if (isCompleted()) {
+                return;
+            }
+            var skin = SkinLoader.getInstance().loadSkin(identifier);
+            if (skin == null || isCompleted()) {
+                return;
+            }
+            accept(skin, null);
+        }
+
+        public void resume(IResultHandler<LocalDataReference> handler) {
+            // fast hitting cache.
+            if (isCompleted()) {
+                handler.apply(info, exception);
+                return;
+            }
+            // fast load from data service.
+            if (LocalDataService.isRunning()) {
+                info = LocalDataService.getInstance().getSkinInfo(identifier);
+                if (isCompleted()) {
+                    handler.apply(info, exception);
+                    return;
+                }
+            }
+            // only needs to be requires once.
+            if (callbacks != null) {
+                callbacks.add(handler);
+                return;
+            }
+            // slow load
+            callbacks = new ArrayList<>();
+            callbacks.add(handler);
+            SkinLoader.getInstance().loadSkin(identifier, this::accept);
+        }
+
+        private void accept(Skin skin, Exception exception) {
+            this.info = generateSkinInfo(skin);
+            this.exception = exception;
+            var callbacks = this.callbacks;
+            this.callbacks = null;
+            for (var callback : callbacks) {
+                callback.apply(info, exception);
+            }
+        }
+
+        private LocalDataReference generateSkinInfo(Skin skin) {
+            if (skin == null) {
+                return null;
+            }
+            // when a file is volatile, this means that the cache may be faulty.
+            if (DataDomain.isVolatile(identifier) || !LocalDataService.isRunning()) {
+                return new LocalDataReference(identifier, skin);
+            }
+            return LocalDataService.getInstance().addSkinInfo(identifier, skin);
+        }
+
+        private boolean isCompleted() {
+            return info != null || exception != null;
         }
     }
 

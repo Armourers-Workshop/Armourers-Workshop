@@ -2,7 +2,7 @@
   "type": "armourers_workshop:armature",
   "parent": "armourers_workshop:skin/transformers/aw_humanoid",
   "plugin": [
-    "armourers_workshop:plugin/fix_villager_layer"
+    "armourers_workshop:plugin/hidden_villager_layer"
   ],
   "model": [
     "minecraft:model/zombie_villager"
