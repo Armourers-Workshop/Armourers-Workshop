@@ -1,10 +1,11 @@
 package moe.plushie.armourers_workshop.core.data.cache;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public abstract class AutoreleasePool {
 
-    private static final ArrayList<AutoreleasePool> POOLS = new ArrayList<>();
+    private static final Collection<AutoreleasePool> POOLS = new ConcurrentLinkedDeque<>();
 
     public AutoreleasePool() {
         POOLS.add(this);

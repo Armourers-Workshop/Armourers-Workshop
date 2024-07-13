@@ -116,9 +116,17 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
                 skinTypeToOverrides.put(skinType, buildParts(names, model));
                 return;
             }
+            if (key.startsWith("hasAnyType")) {
+                skinTypeToOverrides.put(SkinTypes.UNKNOWN, buildParts(names, model));
+                return;
+            }
             if (key.startsWith("hasPart.")) {
                 var skinPartType = SkinPartTypes.byName(key.replace("hasPart.", "armourers:"));
                 skinPartTypeToOverrides.put(skinPartType, buildParts(names, model));
+                return;
+            }
+            if (key.startsWith("hasAnyPart")) {
+                skinPartTypeToOverrides.put(SkinPartTypes.UNKNOWN, buildParts(names, model));
                 return;
             }
             // NOTE: we assume that all default values is false.

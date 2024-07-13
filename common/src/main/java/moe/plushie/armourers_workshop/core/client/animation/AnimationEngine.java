@@ -2,8 +2,7 @@ package moe.plushie.armourers_workshop.core.client.animation;
 
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.molang.MolangVirtualMachine;
-import moe.plushie.armourers_workshop.core.skin.molang.math.LazyVariable;
-import moe.plushie.armourers_workshop.core.skin.molang.math.Literal;
+import moe.plushie.armourers_workshop.core.skin.molang.core.Variable;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,20 +15,20 @@ public class AnimationEngine {
 
     private static final MolangVirtualMachine VM = MolangVirtualMachine.get();
 
-    private static final LazyVariable ANIM_TIME = VM.animTime;
-    private static final LazyVariable LIFE_TIME = VM.lifeTime;
-    private static final LazyVariable ACTOR_COUNT = VM.actorCount;
-    private static final LazyVariable TIME_OF_DAY = VM.timeOfDay;
-    private static final LazyVariable MOON_PHASE = VM.moonPhase;
-    private static final LazyVariable DISTANCE_FROM_CAMERA = VM.distanceFromCamera;
-    private static final LazyVariable IS_ON_GROUND = VM.isOnGround;
-    private static final LazyVariable IS_IN_WATER = VM.isInWater;
-    private static final LazyVariable IS_IN_WATER_OR_RAIN = VM.isInWaterOrRain;
-    private static final LazyVariable HEALTH = VM.health;
-    private static final LazyVariable MAX_HEALTH = VM.maxHealth;
-    private static final LazyVariable IS_ON_FIRE = VM.isOnFire;
-    private static final LazyVariable GROUND_SPEED = VM.groundSpeed;
-    private static final LazyVariable YAW_SPEED = VM.yawSpeed;
+    private static final Variable ANIM_TIME = VM.animTime;
+    private static final Variable LIFE_TIME = VM.lifeTime;
+    private static final Variable ACTOR_COUNT = VM.actorCount;
+    private static final Variable TIME_OF_DAY = VM.timeOfDay;
+    private static final Variable MOON_PHASE = VM.moonPhase;
+    private static final Variable DISTANCE_FROM_CAMERA = VM.distanceFromCamera;
+    private static final Variable IS_ON_GROUND = VM.isOnGround;
+    private static final Variable IS_IN_WATER = VM.isInWater;
+    private static final Variable IS_IN_WATER_OR_RAIN = VM.isInWaterOrRain;
+    private static final Variable HEALTH = VM.health;
+    private static final Variable MAX_HEALTH = VM.maxHealth;
+    private static final Variable IS_ON_FIRE = VM.isOnFire;
+    private static final Variable GROUND_SPEED = VM.groundSpeed;
+    private static final Variable YAW_SPEED = VM.yawSpeed;
 
     public static void start() {
     }
@@ -37,9 +36,7 @@ public class AnimationEngine {
     public static void stop() {
         // clear all binding.
         VM.getVariables().forEach((name, variable) -> {
-            if (!(variable instanceof Literal)) {
-                variable.set(0);
-            }
+            variable.set(0);
         });
     }
 

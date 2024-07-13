@@ -278,10 +278,10 @@ public class BedrockModelExporter {
                     return 0f;
                 }
                 var expr = MolangVirtualMachine.get().eval(script);
-                if (expr.isConstant()) {
-                    return (float) expr.get();
+                if (expr.isMutable()) {
+                    return script;
                 }
-                return script;
+                return (float) expr.getAsDouble();
             } catch (Exception exception) {
                 throw new RuntimeException("can't parse \"" + script + "\" in model!", exception);
             }

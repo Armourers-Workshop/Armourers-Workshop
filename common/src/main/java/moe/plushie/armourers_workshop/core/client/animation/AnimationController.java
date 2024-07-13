@@ -7,8 +7,8 @@ import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationFunction;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationLoop;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationValue;
 import moe.plushie.armourers_workshop.core.skin.molang.MolangVirtualMachine;
-import moe.plushie.armourers_workshop.core.skin.molang.math.Constant;
-import moe.plushie.armourers_workshop.core.skin.molang.math.IMathValue;
+import moe.plushie.armourers_workshop.core.skin.molang.core.Constant;
+import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -218,7 +218,7 @@ public class AnimationController {
         }
 
         private Pair<Point, Point> compile(List<Object> points, float defaultValue) {
-            var providers = new IMathValue[6];
+            var providers = new Expression[6];
             for (int i = 0; i < providers.length; ++i) {
                 if (i < points.size()) {
                     providers[i] = compile(points[i], defaultValue);
@@ -231,18 +231,18 @@ public class AnimationController {
             return Pair.of(left, right);
         }
 
-        private IMathValue compile(Object object, double defaultValue) {
+        private Expression compile(Object object, double defaultValue) {
             try {
                 if (object instanceof Number number) {
                     return new Constant(number.doubleValue());
                 }
                 if (object instanceof String script) {
                     var expr = MolangVirtualMachine.get().eval(script);
-                    if (!expr.isConstant()) {
+                    if (expr.isMutable()) {
                         return expr;
                     }
                     // to avoid any molang function calls.
-                    return new Constant(expr.get());
+                    return new Constant(expr.getAsDouble());
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();
@@ -455,7 +455,7 @@ public class AnimationController {
         private final Runnable updater;
         private final Vector3f variable = new Vector3f();
 
-        public Point(IMathValue x, IMathValue y, IMathValue z) {
+        public Point(Expression x, Expression y, Expression z) {
             this.updater = build(x, y, z);
         }
 
@@ -470,14 +470,14 @@ public class AnimationController {
             return updater == null;
         }
 
-        private Runnable build(IMathValue x, IMathValue y, IMathValue z) {
-            // all is constant.
-            if (x.isConstant() && y.isConstant() && z.isConstant()) {
-                variable.set((float) x.get(), (float) y.get(), (float) z.get());
-                return null;
-            }
+        private Runnable build(Expression x, Expression y, Expression z) {
             // something requires to be calculated.
-            return () -> variable.set((float) x.get(), (float) y.get(), (float) z.get());
+            if (x.isMutable() || y.isMutable() || z.isMutable()) {
+                return () -> variable.set((float) x.getAsDouble(), (float) y.getAsDouble(), (float) z.getAsDouble());
+            }
+            // all is constant.
+            variable.set((float) x.getAsDouble(), (float) y.getAsDouble(), (float) z.getAsDouble());
+            return null;
         }
     }
 

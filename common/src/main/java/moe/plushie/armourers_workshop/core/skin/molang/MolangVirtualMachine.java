@@ -1,52 +1,51 @@
 package moe.plushie.armourers_workshop.core.skin.molang;
 
-import moe.plushie.armourers_workshop.core.skin.molang.expressions.MolangValue;
-import moe.plushie.armourers_workshop.core.skin.molang.math.LazyVariable;
-import moe.plushie.armourers_workshop.core.skin.molang.math.Variable;
+import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
+import moe.plushie.armourers_workshop.core.skin.molang.core.Variable;
+import moe.plushie.armourers_workshop.core.skin.molang.impl.SyntaxException;
+import moe.plushie.armourers_workshop.core.skin.molang.impl.Compiler;
+import moe.plushie.armourers_workshop.core.skin.molang.impl.Optimizer;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.DoubleSupplier;
 
 @SuppressWarnings("unused")
 public class MolangVirtualMachine {
 
     private static final MolangVirtualMachine DEFAULT = new MolangVirtualMachine();
 
-    private final MolangParser parser = new MolangParser();
-    private final Map<String, LazyVariable> variables = new ConcurrentHashMap<>();
+    private final Compiler compiler = new Compiler();
+    private final Optimizer optimizer = new Optimizer();
 
-    public final LazyVariable animTime = register("query.anim_time", 0);
+    private final Map<String, Variable> variables = new ConcurrentHashMap<>();
 
-    public final LazyVariable lifeTime = register("query.life_time", 0);
+    public final Variable animTime = register("query.anim_time", 0);
 
-    public final LazyVariable actorCount = register("query.actor_count", 0);
+    public final Variable lifeTime = register("query.life_time", 0);
 
-    public final LazyVariable timeOfDay = register("query.time_of_day", 0);
+    public final Variable actorCount = register("query.actor_count", 0);
 
-    public final LazyVariable moonPhase = register("query.moon_phase", 0);
+    public final Variable timeOfDay = register("query.time_of_day", 0);
 
-    public final LazyVariable distanceFromCamera = register("query.distance_from_camera", 0);
+    public final Variable moonPhase = register("query.moon_phase", 0);
 
-    public final LazyVariable isOnGround = register("query.is_on_ground", 0);
+    public final Variable distanceFromCamera = register("query.distance_from_camera", 0);
 
-    public final LazyVariable isInWater = register("query.is_in_water", 0);
+    public final Variable isOnGround = register("query.is_on_ground", 0);
 
-    public final LazyVariable isInWaterOrRain = register("query.is_in_water_or_rain", 0);
+    public final Variable isInWater = register("query.is_in_water", 0);
 
-    public final LazyVariable health = register("query.health", 0);
+    public final Variable isInWaterOrRain = register("query.is_in_water_or_rain", 0);
 
-    public final LazyVariable maxHealth = register("query.max_health", 0);
+    public final Variable health = register("query.health", 0);
 
-    public final LazyVariable isOnFire = register("query.is_on_fire", 0);
+    public final Variable maxHealth = register("query.max_health", 0);
 
-    public final LazyVariable groundSpeed = register("query.ground_speed", 0);
+    public final Variable isOnFire = register("query.is_on_fire", 0);
 
-    public final LazyVariable yawSpeed = register("query.yaw_speed", 0);
+    public final Variable groundSpeed = register("query.ground_speed", 0);
 
-
-    public MolangVirtualMachine() {
-    }
+    public final Variable yawSpeed = register("query.yaw_speed", 0);
 
     public static MolangVirtualMachine get() {
         return DEFAULT;
@@ -55,50 +54,14 @@ public class MolangVirtualMachine {
     /**
      * Create a molang expression
      */
-    public MolangValue eval(String expression) throws MolangException {
-        return parser.parseExpression(expression);
+    public Expression eval(String expression) throws SyntaxException {
+        var value = compiler.compile(expression);
+        return optimizer.optimize(value);
     }
 
-    /**
-     * Set the value for a variable.<br>
-     *
-     * @param name  The name of the variable to set the value for
-     * @param value The value supplier to set
-     */
-    public void setValue(String name, Double value) {
-        var variable = parser.getVariable(name);
-        variable.set(value);
-    }
-
-    /**
-     * Set the value supplier for a variable.<br>
-     *
-     * @param name  The name of the variable to set the value for
-     * @param value The value supplier to set
-     */
-    public void setValue(String name, DoubleSupplier value) {
-        var variable = parser.getVariable(name);
-        if (variable instanceof LazyVariable lazyVariable) {
-            lazyVariable.set(value);
-        } else {
-            variable.set(value.getAsDouble());
-        }
-    }
-
-    public LazyVariable register(String name) {
-        return register(name, 0);
-    }
-
-    public LazyVariable register(String name, double value) {
-        var variable = new LazyVariable(name, value);
-        parser.register(variable);
-        variables.put(name, variable);
-        return variable;
-    }
-
-    public LazyVariable register(String name, DoubleSupplier value) {
-        var variable = new LazyVariable(name, value);
-        parser.register(variable);
+    public Variable register(String name, double value) {
+        var variable = new Variable(name, value);
+        compiler.registerVariable(name, variable);
         variables.put(name, variable);
         return variable;
     }

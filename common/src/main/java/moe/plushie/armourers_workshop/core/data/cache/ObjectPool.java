@@ -11,9 +11,10 @@ public class ObjectPool<T> extends AutoreleasePool {
 
     private final Supplier<T> creator;
     private final Deque<T> reusable;
-    private final ThreadLocal<Page<T>> autoreleasePages = ThreadLocal.withInitial(Page::new);
+    private final ThreadLocal<Page<T>> autoreleasePages;
 
     protected ObjectPool(Supplier<T> creator, boolean isConcurrent) {
+        this.autoreleasePages = ThreadLocal.withInitial(Page::new);
         this.creator = creator;
         if (isConcurrent) {
             this.reusable = new ConcurrentLinkedDeque<>();

@@ -2,7 +2,7 @@
   "type": "armourers_workshop:armature",
   "target": "armourers_workshop:any",
   "override": {
-    "hasType.unknown": "*"
+    "hasAnyType": "*"
   },
   "plugin": [
     "armourers_workshop:plugin/hidden_any_layer"
