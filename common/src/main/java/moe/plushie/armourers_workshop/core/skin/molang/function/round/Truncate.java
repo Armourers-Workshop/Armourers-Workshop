@@ -17,8 +17,8 @@ public final class Truncate extends Function {
 
     private final Expression value;
 
-    public Truncate(List<Expression> arguments) {
-        super("math.trunc", 1, arguments);
+    public Truncate(String name, List<Expression> arguments) {
+        super(name, 1, arguments);
         this.value = arguments.get(0);
     }
 

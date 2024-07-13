@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core;
 
 
+import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
+
 /**
  * {@link Expression} value supplier
  *
@@ -20,6 +22,11 @@ public final class Optimized implements Expression {
     }
 
     @Override
+    public Expression visit(Visitor visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
     public double getAsDouble() {
         return value;
     }
@@ -32,5 +39,9 @@ public final class Optimized implements Expression {
     @Override
     public String toString() {
         return expression.toString();
+    }
+
+    public Expression expression() {
+        return expression;
     }
 }

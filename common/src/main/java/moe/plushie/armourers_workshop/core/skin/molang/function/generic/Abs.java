@@ -17,8 +17,8 @@ public final class Abs extends Function {
 
     private final Expression value;
 
-    public Abs(List<Expression> arguments) {
-        super("math.abs", 1, arguments);
+    public Abs(String name, List<Expression> arguments) {
+        super(name, 1, arguments);
         this.value = arguments.get(0);
     }
 

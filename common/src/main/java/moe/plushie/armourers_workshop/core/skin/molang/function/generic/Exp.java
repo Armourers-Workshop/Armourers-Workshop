@@ -17,8 +17,8 @@ public final class Exp extends Function {
 
     private final Expression value;
 
-    public Exp(List<Expression> arguments) {
-        super("math.exp", 1, arguments);
+    public Exp(String name, List<Expression> arguments) {
+        super(name, 1, arguments);
         this.value = arguments.get(0);
     }
 

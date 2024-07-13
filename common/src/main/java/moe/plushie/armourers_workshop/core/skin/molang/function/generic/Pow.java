@@ -18,8 +18,8 @@ public final class Pow extends Function {
     private final Expression value;
     private final Expression power;
 
-    public Pow(List<Expression> arguments) {
-        super("math.pow", 2, arguments);
+    public Pow(String name, List<Expression> arguments) {
+        super(name, 2, arguments);
         this.value = arguments.get(0);
         this.power = arguments.get(1);
     }

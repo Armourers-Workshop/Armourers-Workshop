@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core;
 
+import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
+
 /**
  * {@link Expression} value supplier
  *
@@ -22,6 +24,11 @@ public final class Ternary implements Expression {
     }
 
     @Override
+    public Expression visit(Visitor visitor) {
+        return visitor.visitTernary(this);
+    }
+
+    @Override
     public boolean isMutable() {
         return condition.isMutable() || trueValue.isMutable() || falseValue.isMutable();
     }
@@ -34,5 +41,17 @@ public final class Ternary implements Expression {
     @Override
     public String toString() {
         return condition.toString() + " ? " + trueValue.toString() + " : " + falseValue.toString();
+    }
+
+    public Expression condition() {
+        return condition;
+    }
+
+    public Expression trueValue() {
+        return trueValue;
+    }
+
+    public Expression falseValue() {
+        return falseValue;
     }
 }

@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.core.skin.molang;
 
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Variable;
-import moe.plushie.armourers_workshop.core.skin.molang.impl.SyntaxException;
 import moe.plushie.armourers_workshop.core.skin.molang.impl.Compiler;
 import moe.plushie.armourers_workshop.core.skin.molang.impl.Optimizer;
+import moe.plushie.armourers_workshop.core.skin.molang.impl.SyntaxException;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,7 +15,7 @@ public class MolangVirtualMachine {
     private static final MolangVirtualMachine DEFAULT = new MolangVirtualMachine();
 
     private final Compiler compiler = new Compiler();
-    private final Optimizer optimizer = new Optimizer();
+    private final Optimizer optimizer = new Optimizer(compiler);
 
     private final Map<String, Variable> variables = new ConcurrentHashMap<>();
 

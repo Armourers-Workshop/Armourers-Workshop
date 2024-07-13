@@ -31,8 +31,8 @@ public final class RandomInteger extends Function {
     @Nullable
     private final Random random;
 
-    public RandomInteger(List<Expression> arguments) {
-        super("math.random_integer", 1, arguments);
+    public RandomInteger(String name, List<Expression> arguments) {
+        super(name, 1, arguments);
         this.valueA = arguments[0];
         this.valueB = arguments.size() >= 2 ? arguments.get(1) : null;
         this.seed = arguments.size() >= 3 ? arguments.get(2) : null;

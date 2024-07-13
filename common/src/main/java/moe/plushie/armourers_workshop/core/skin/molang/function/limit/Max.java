@@ -18,8 +18,8 @@ public final class Max extends Function {
     private final Expression valueA;
     private final Expression valueB;
 
-    public Max(List<Expression> arguments) {
-        super("math.max", 2, arguments);
+    public Max(String name, List<Expression> arguments) {
+        super(name, 2, arguments);
         this.valueA = arguments.get(0);
         this.valueB = arguments.get(1);
     }

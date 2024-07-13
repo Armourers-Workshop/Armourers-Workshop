@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.molang.function.generic;
 
-import moe.plushie.armourers_workshop.core.skin.molang.impl.MathHelper;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Function;
+import moe.plushie.armourers_workshop.core.skin.molang.impl.MathHelper;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ public final class ASin extends Function {
 
     private final Expression value;
 
-    public ASin(List<Expression> arguments) {
-        super("math.asin", 1, arguments);
+    public ASin(String name, List<Expression> arguments) {
+        super(name, 1, arguments);
         this.value = arguments.get(0);
     }
 

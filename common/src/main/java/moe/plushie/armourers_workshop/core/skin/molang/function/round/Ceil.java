@@ -17,8 +17,8 @@ public final class Ceil extends Function {
 
     private final Expression value;
 
-    public Ceil(List<Expression> arguments) {
-        super("math.ceil", 1, arguments);
+    public Ceil(String name, List<Expression> arguments) {
+        super(name, 1, arguments);
         this.value = arguments.get(0);
     }
 

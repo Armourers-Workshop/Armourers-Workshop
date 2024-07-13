@@ -17,8 +17,8 @@ public final class ToDeg extends Function {
 
     private final Expression value;
 
-    public ToDeg(List<Expression> arguments) {
-        super("math.to_deg", 1, arguments);
+    public ToDeg(String name, List<Expression> arguments) {
+        super(name, 1, arguments);
         this.value = arguments.get(0);
     }
 

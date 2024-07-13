@@ -1,38 +1,57 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core;
 
+import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
+
 /**
  * {@link Expression} value supplier
  *
  * <p>
  * <b>Contract:</b>
  * <br>
- * A computed value of argA and argB defined by the contract of the {@link Op}
+ * A computed value of lhs and right defined by the contract of the {@link Op}
  */
 public final class Binary implements Expression {
 
     private final Op op;
-    private final Expression lhs;
-    private final Expression rhs;
+    private final Expression left;
+    private final Expression right;
 
-    public Binary(Op op, Expression lhs, Expression rhs) {
+    public Binary(Op op, Expression left, Expression rhs) {
         this.op = op;
-        this.lhs = lhs;
-        this.rhs = rhs;
+        this.left = left;
+        this.right = rhs;
+    }
+
+    @Override
+    public Expression visit(Visitor visitor) {
+        return visitor.visitBinary(this);
     }
 
     @Override
     public boolean isMutable() {
-        return lhs.isMutable() || rhs.isMutable();
+        return left.isMutable() || right.isMutable();
     }
 
     @Override
     public double getAsDouble() {
-        return op.compute(lhs, rhs);
+        return op.compute(left, right);
     }
 
     @Override
     public String toString() {
-        return lhs + " " + op.symbol() + " " + rhs;
+        return left + " " + op.symbol() + " " + right;
+    }
+
+    public Op op() {
+        return op;
+    }
+
+    public Expression left() {
+        return left;
+    }
+
+    public Expression right() {
+        return right;
     }
 
     public enum Op {

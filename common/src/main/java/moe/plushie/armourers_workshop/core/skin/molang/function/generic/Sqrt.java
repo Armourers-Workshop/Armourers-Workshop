@@ -17,8 +17,8 @@ public final class Sqrt extends Function {
 
     private final Expression value;
 
-    public Sqrt(List<Expression> arguments) {
-        super("math.sqrt", 1, arguments);
+    public Sqrt(String name, List<Expression> arguments) {
+        super(name, 1, arguments);
         this.value = arguments.get(0);
     }
 

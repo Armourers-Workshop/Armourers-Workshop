@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.molang.function.generic;
 
-import moe.plushie.armourers_workshop.core.skin.molang.impl.MathHelper;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Function;
+import moe.plushie.armourers_workshop.core.skin.molang.impl.MathHelper;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ public final class ATan extends Function {
 
     private final Expression value;
 
-    public ATan(List<Expression> arguments) {
-        super("math.atan", 1, arguments);
+    public ATan(String name, List<Expression> arguments) {
+        super(name, 1, arguments);
         this.value = arguments.get(0);
     }
 

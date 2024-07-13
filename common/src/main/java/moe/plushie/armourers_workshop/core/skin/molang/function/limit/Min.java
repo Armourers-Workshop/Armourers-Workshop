@@ -18,8 +18,8 @@ public final class Min extends Function {
     private final Expression valueA;
     private final Expression valueB;
 
-    public Min(List<Expression> arguments) {
-        super("math.min", 2, arguments);
+    public Min(String name, List<Expression> arguments) {
+        super(name, 2, arguments);
         this.valueA = arguments.get(0);
         this.valueB = arguments.get(1);
     }

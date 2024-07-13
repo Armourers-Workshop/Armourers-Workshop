@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.molang.function.limit;
 
-import moe.plushie.armourers_workshop.core.skin.molang.impl.MathHelper;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Function;
+import moe.plushie.armourers_workshop.core.skin.molang.impl.MathHelper;
 
 import java.util.List;
 
@@ -20,8 +20,8 @@ public final class Clamp extends Function {
     private final Expression min;
     private final Expression max;
 
-    public Clamp(List<Expression> arguments) {
-        super("math.clamp", 3, arguments);
+    public Clamp(String name, List<Expression> arguments) {
+        super(name, 3, arguments);
         this.value = arguments.get(0);
         this.min = arguments.get(1);
         this.max = arguments.get(2);

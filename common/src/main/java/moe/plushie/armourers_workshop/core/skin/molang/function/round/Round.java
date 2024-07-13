@@ -17,8 +17,8 @@ public final class Round extends Function {
 
     private final Expression value;
 
-    public Round(List<Expression> arguments) {
-        super("math.round", 1, arguments);
+    public Round(String name, List<Expression> arguments) {
+        super(name, 1, arguments);
         this.value = arguments.get(0);
     }
 

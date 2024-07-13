@@ -29,8 +29,8 @@ public final class Random extends Function {
     @Nullable
     private final java.util.Random random;
 
-    public Random(List<Expression> arguments) {
-        super("math.random", 1, arguments);
+    public Random(String name, List<Expression> arguments) {
+        super(name, 1, arguments);
         this.valueA = arguments[0];
         this.valueB = arguments.size() >= 2 ? arguments.get(1) : null;
         this.seed = arguments.size() >= 3 ? arguments.get(2) : null;
@@ -44,7 +44,6 @@ public final class Random extends Function {
 
         if (this.random != null) {
             this.random.setSeed((long) this.seed.getAsDouble());
-
             result = this.random.nextDouble();
         } else {
             result = Math.random();

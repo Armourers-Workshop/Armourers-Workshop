@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core;
 
 
+import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
+
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -23,6 +25,11 @@ public abstract class Function implements Expression {
     }
 
     @Override
+    public Expression visit(Visitor visitor) {
+        return visitor.visitFunction(this);
+    }
+
+    @Override
     public boolean isMutable() {
         for (var value : arguments) {
             if (value.isMutable()) {
@@ -34,11 +41,19 @@ public abstract class Function implements Expression {
 
     @Override
     public String toString() {
-        final StringJoiner joiner = new StringJoiner(", ", "(", ")");
+        var joiner = new StringJoiner(", ", "(", ")");
         for (var arg : arguments) {
             joiner.add(arg.toString());
         }
         return name + joiner;
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public List<Expression> arguments() {
+        return arguments;
     }
 
     /**
@@ -50,6 +65,6 @@ public abstract class Function implements Expression {
         /**
          * Instantiate a new {@link Function} for the given input values
          */
-        T create(List<Expression> arguments);
+        T create(String name, List<Expression> arguments);
     }
 }

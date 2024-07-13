@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core;
 
+import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
+
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -26,6 +28,11 @@ public final class Variable implements Expression {
     public Variable(String name, DoubleSupplier provider) {
         this.name = name;
         this.provider = provider;
+    }
+
+    @Override
+    public Expression visit(Visitor visitor) {
+        return visitor.visitVariable(this);
     }
 
     public void set(final double value) {

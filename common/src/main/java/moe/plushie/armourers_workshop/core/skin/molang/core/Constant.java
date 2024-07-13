@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core;
 
+import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
+
 /**
  * {@link Expression} value supplier
  *
@@ -17,6 +19,11 @@ public final class Constant implements Expression {
 
     public Constant(double value) {
         this.value = value;
+    }
+
+    @Override
+    public Expression visit(Visitor visitor) {
+        return visitor.visitConstant(this);
     }
 
     @Override

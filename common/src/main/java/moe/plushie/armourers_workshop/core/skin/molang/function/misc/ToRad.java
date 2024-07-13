@@ -17,8 +17,8 @@ public final class ToRad extends Function {
 
     private final Expression value;
 
-    public ToRad(List<Expression> arguments) {
-        super("math.to_rad", 1, arguments);
+    public ToRad(String name, List<Expression> arguments) {
+        super(name, 1, arguments);
         this.value = arguments.get(0);
     }
 

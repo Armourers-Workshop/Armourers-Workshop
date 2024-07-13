@@ -1,11 +1,28 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core;
 
-public final class Identifier implements Expression {
+
+import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
+
+/**
+ * Identifier expression implementation for Molang.
+ *
+ * <p>Note that, identifiers in Molang are always
+ * <b>case-insensitive</b></p>
+ *
+ * <p>Example identifier expressions: {@code math},
+ * {@code name}, {@code this}, {@code print}</p>
+ */
+public final class Identifier implements Expression, StringSupplier {
 
     private final String name;
 
     public Identifier(String name) {
         this.name = name;
+    }
+
+    @Override
+    public Expression visit(Visitor visitor) {
+        return visitor.visitIdentifier(this);
     }
 
     @Override
@@ -16,6 +33,11 @@ public final class Identifier implements Expression {
     @Override
     public double getAsDouble() {
         return 0;
+    }
+
+    @Override
+    public String getAsString() {
+        return name;
     }
 
     @Override

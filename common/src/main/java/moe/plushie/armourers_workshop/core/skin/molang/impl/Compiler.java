@@ -2,19 +2,18 @@ package moe.plushie.armourers_workshop.core.skin.molang.impl;
 
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Binary;
-import moe.plushie.armourers_workshop.core.skin.molang.core.BooleanNegate;
-import moe.plushie.armourers_workshop.core.skin.molang.core.Break;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Compound;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Constant;
-import moe.plushie.armourers_workshop.core.skin.molang.core.Continue;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
+import moe.plushie.armourers_workshop.core.skin.molang.core.ForEach;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Function;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Identifier;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Literal;
-import moe.plushie.armourers_workshop.core.skin.molang.core.Negative;
-import moe.plushie.armourers_workshop.core.skin.molang.core.Return;
+import moe.plushie.armourers_workshop.core.skin.molang.core.Loop;
+import moe.plushie.armourers_workshop.core.skin.molang.core.Statement;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Subscript;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Ternary;
+import moe.plushie.armourers_workshop.core.skin.molang.core.Unary;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Variable;
 import moe.plushie.armourers_workshop.core.skin.molang.function.generic.ACos;
 import moe.plushie.armourers_workshop.core.skin.molang.function.generic.ASin;
@@ -47,6 +46,7 @@ import moe.plushie.armourers_workshop.core.skin.molang.function.round.Round;
 import moe.plushie.armourers_workshop.core.skin.molang.function.round.Truncate;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -110,6 +110,10 @@ public class Compiler {
         registerFunction("math.pi", Pi::new);
         registerFunction("math.to_deg", ToDeg::new);
         registerFunction("math.to_rad", ToRad::new);
+
+        // Built-in functions
+        registerFunction("loop", Loop::new);
+        registerFunction("for_each", ForEach::new);
     }
 
     /**
@@ -130,23 +134,28 @@ public class Compiler {
      * Technically supports overriding by matching keys, though you should try to update the existing variable instances instead if possible
      */
     public void registerVariable(String name, Variable variable) {
-        var key = resolveName(name);
+        var key = parseName(name);
         variables.put(key, variable);
+    }
+
+    /**
+     * @return The registered {@link Variable} functions for the given (aliased) name.
+     */
+    public Expression getFunction(String name, List<Expression> arguments) {
+        var key = KeyPath.of(name);
+        var factory = functions.get(key);
+        if (factory != null) {
+            return factory.create(key.toString(), arguments);
+        }
+        return null;
     }
 
     /**
      * @return The registered {@link Variable} instance for the given (aliased) name.
      */
     public Variable getVariable(String name) {
-        var key = resolveName(name);
+        var key = parseName(name);
         return variables.computeIfAbsent(key, it -> new Variable(it.toString(), 0));
-    }
-
-    /**
-     * @return The registered {@link Variable} functions for the given (aliased) name.
-     */
-    public Function.Factory<?> getFunction(String name) {
-        return functions.get(KeyPath.of(name));
     }
 
     /**
@@ -188,23 +197,6 @@ public class Compiler {
     }
 
     /**
-     * Get an {@link KeyPath} for a given aliased name.
-     */
-    protected KeyPath resolveName(String name) {
-        var key = mapping.get(name);
-        if (key != null) {
-            return key;
-        }
-        key = KeyPath.parse(name);
-        var resolvedName = aliases.get(key.getName());
-        if (resolvedName != null) {
-            key = new KeyPath(resolvedName, key.getChild());
-        }
-        mapping.put(name, key);
-        return key;
-    }
-
-    /**
      * Parses a single expression.
      * Single expressions don't require a left-hand expression
      * to be parsed, e.g. literals, statements, identifiers,
@@ -241,13 +233,12 @@ public class Compiler {
                 yield expression;
             }
             case LBRACE -> {
-                lexer.next();
+                token = lexer.next();
                 var expressions = new ArrayList<Expression>();
-                while (true) {
+                while (token.kind() != Lexer.TokenKind.RBRACE) {
                     expressions.add(parseCompoundExpression(lexer, 0));
                     token = lexer.current();
                     if (token.kind() == Lexer.TokenKind.RBRACE) {
-                        lexer.next();
                         break;
                     }
                     if (token.kind() == Lexer.TokenKind.EOF) {
@@ -260,17 +251,18 @@ public class Compiler {
                     if (token.kind() != Lexer.TokenKind.SEMICOLON) {
                         throw new SyntaxException("Missing semicolon", lexer.cursor());
                     }
-                    lexer.next();
+                    token = lexer.next();
                 }
+                lexer.next();
                 yield new Compound(expressions);
             }
             case BREAK -> {
                 lexer.next();
-                yield new Break();
+                yield new Statement(Statement.Op.BREAK);
             }
             case CONTINUE -> {
                 lexer.next();
-                yield new Continue();
+                yield new Statement(Statement.Op.CONTINUE);
             }
             case IDENTIFIER -> {
                 var name = token.value();
@@ -292,19 +284,21 @@ public class Compiler {
             case SUB -> {
                 lexer.next();
                 var expr = parseSingle(lexer);
-                yield new Negative(expr);
+                yield new Unary(Unary.Op.ARITHMETICAL_NEGATION, expr);
             }
             case BANG -> {
                 lexer.next();
                 var expr = parseSingle(lexer);
-                yield new BooleanNegate(expr);
+                yield new Unary(Unary.Op.LOGICAL_NEGATION, expr);
             }
             case RETURN -> {
                 lexer.next();
                 var expr = parseCompoundExpression(lexer, 0);
-                yield new Return(expr);
+                yield new Unary(Unary.Op.RETURN, expr);
             }
-            default -> Constant.ZERO;
+            default -> {
+                yield Constant.ZERO;
+            }
         };
     }
 
@@ -348,7 +342,8 @@ public class Compiler {
                     throw new SyntaxException("Expected a closing RBRACKET, found " + current, lexer.cursor());
                 }
                 lexer.next();
-                return new Subscript(left, index);
+                var variable = getVariable(left.toString());
+                return new Subscript(variable, index);
             }
             case LPAREN: { // CALL EXPRESSION: "left("
                 current = lexer.next();
@@ -380,11 +375,12 @@ public class Compiler {
                 }
                 lexer.next();
 
-                var factory = getFunction(left.toString());
-                if (factory == null) {
-                    throw new SyntaxException("Found an invalid function, got " + current.kind(), lexer.cursor());
+                var expr = getFunction(left.toString(), arguments);
+                if (expr == null) {
+                    throw new SyntaxException("Not found function: " + left, lexer.cursor());
                 }
-                return factory.create(arguments);
+                return expr;
+
             }
             case QUES: {
                 lexer.next();
@@ -412,8 +408,8 @@ public class Compiler {
             case STAR -> Binary.Op.MUL;
             case SLASH -> Binary.Op.DIV;
             case QUESQUES -> Binary.Op.NULL_COALESCE;
-            case ASSIGN -> Binary.Op.ASSIGN;
-            case EQ -> Binary.Op.EQ;
+            case EQ -> Binary.Op.ASSIGN;
+            case EQEQ -> Binary.Op.EQ;
             case BANGEQ -> Binary.Op.NEQ;
             case ARROW -> Binary.Op.ARROW;
             default -> null;
@@ -426,6 +422,23 @@ public class Compiler {
         lexer.next();
         var right = parseCompoundExpression(lexer, op.precedence());
         return new Binary(op, left, right);
+    }
+
+    /**
+     * Get an {@link KeyPath} for a given aliased name.
+     */
+    protected KeyPath parseName(String name) {
+        var key = mapping.get(name);
+        if (key != null) {
+            return key;
+        }
+        key = KeyPath.parse(name);
+        var resolvedName = aliases.get(key.getName());
+        if (resolvedName != null) {
+            key = new KeyPath(resolvedName, key.getChild());
+        }
+        mapping.put(name, key);
+        return key;
     }
 }
 

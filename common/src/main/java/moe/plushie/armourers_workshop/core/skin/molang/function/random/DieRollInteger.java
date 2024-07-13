@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.molang.function.random;
 
-import moe.plushie.armourers_workshop.core.skin.molang.impl.MathHelper;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Function;
+import moe.plushie.armourers_workshop.core.skin.molang.impl.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -31,8 +31,8 @@ public final class DieRollInteger extends Function {
     @Nullable
     private final Random random;
 
-    public DieRollInteger(List<Expression> arguments) {
-        super("math.die_roll", 3, arguments);
+    public DieRollInteger(String name, List<Expression> arguments) {
+        super(name, 3, arguments);
         this.rolls = arguments.get(0);
         this.min = arguments.get(1);
         this.max = arguments.get(2);

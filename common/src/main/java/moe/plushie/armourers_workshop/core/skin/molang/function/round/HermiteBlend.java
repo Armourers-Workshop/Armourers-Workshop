@@ -17,8 +17,8 @@ public final class HermiteBlend extends Function {
 
     private final Expression valueA;
 
-    public HermiteBlend(List<Expression> arguments) {
-        super("math.hermite_blend", 1, arguments);
+    public HermiteBlend(String name, List<Expression> arguments) {
+        super(name, 1, arguments);
         this.valueA = arguments.get(0);
     }
 

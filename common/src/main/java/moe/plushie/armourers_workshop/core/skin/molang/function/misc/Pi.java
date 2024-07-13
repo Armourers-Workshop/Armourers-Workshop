@@ -15,8 +15,8 @@ import java.util.List;
  */
 public final class Pi extends Function {
 
-    public Pi(List<Expression> arguments) {
-        super("math.pi", 0, arguments);
+    public Pi(String name, List<Expression> arguments) {
+        super(name, 0, arguments);
     }
 
     @Override

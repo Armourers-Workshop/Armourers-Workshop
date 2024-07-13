@@ -188,9 +188,9 @@ public final class Lexer {
                 c1 = read();
                 if (c1 == '=') {
                     read();
-                    yield TokenKind.EQ;
+                    yield TokenKind.EQEQ;
                 } else {
-                    yield TokenKind.ASSIGN;
+                    yield TokenKind.EQ;
                 }
             }
             case '-' -> {
@@ -446,12 +446,12 @@ public final class Lexer {
         /**
          * Equal symbol (=)
          */
-        ASSIGN,
+        EQ,
 
         /**
          * Equal-equal token (==)
          */
-        EQ,
+        EQEQ,
 
         /**
          * Bang-eq token (!=)

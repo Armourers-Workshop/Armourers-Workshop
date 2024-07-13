@@ -17,8 +17,8 @@ public final class Log extends Function {
 
     private final Expression value;
 
-    public Log(List<Expression> arguments) {
-        super("math.ln", 1, arguments);
+    public Log(String name, List<Expression> arguments) {
+        super(name, 1, arguments);
         this.value = arguments.get(0);
     }
 

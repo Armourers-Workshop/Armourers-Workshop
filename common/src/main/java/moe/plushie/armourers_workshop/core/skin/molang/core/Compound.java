@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core;
 
+import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
+
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -18,6 +20,11 @@ public final class Compound implements Expression {
 
     public Compound(List<Expression> expressions) {
         this.expressions = expressions;
+    }
+
+    @Override
+    public Expression visit(Visitor visitor) {
+        return visitor.visitCompound(this);
     }
 
     @Override
@@ -44,10 +51,14 @@ public final class Compound implements Expression {
 
     @Override
     public String toString() {
-        final var joiner = new StringJoiner("; ");
+        final var joiner = new StringJoiner("; ", "{", "}");
         for (var expr : expressions) {
             joiner.add(expr.toString());
         }
         return joiner.toString();
+    }
+
+    public List<Expression> expressions() {
+        return expressions;
     }
 }

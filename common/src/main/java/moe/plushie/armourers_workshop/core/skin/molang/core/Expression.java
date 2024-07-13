@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core;
 
+import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
+
 import java.util.function.DoubleSupplier;
 
 /**
@@ -13,6 +15,14 @@ import java.util.function.DoubleSupplier;
  * value</p>
  */
 public interface Expression extends DoubleSupplier {
+
+    /**
+     * Visits this expression with the given visitor.
+     *
+     * @param visitor The expression visitor
+     * @return The visit result
+     */
+    Expression visit(final Visitor visitor);
 
     /**
      * Return whether this type of MathValue should be considered mutable; its value could change.

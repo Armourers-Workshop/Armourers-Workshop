@@ -31,8 +31,8 @@ public final class DieRoll extends Function {
     @Nullable
     private final Random random;
 
-    public DieRoll(List<Expression> arguments) {
-        super("math.die_roll", 3, arguments);
+    public DieRoll(String name, List<Expression> arguments) {
+        super(name, 3, arguments);
         this.rolls = arguments.get(0);
         this.min = arguments.get(1);
         this.max = arguments.get(2);

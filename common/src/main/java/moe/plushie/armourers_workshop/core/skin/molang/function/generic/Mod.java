@@ -18,8 +18,8 @@ public final class Mod extends Function {
     private final Expression value;
     private final Expression modulus;
 
-    public Mod(List<Expression> arguments) {
-        super("math.mod", 2, arguments);
+    public Mod(String name, List<Expression> arguments) {
+        super(name, 2, arguments);
         this.value = arguments.get(0);
         this.modulus = arguments.get(1);
     }

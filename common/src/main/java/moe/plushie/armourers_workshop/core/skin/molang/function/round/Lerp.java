@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.molang.function.round;
 
-import moe.plushie.armourers_workshop.core.skin.molang.impl.MathHelper;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Function;
+import moe.plushie.armourers_workshop.core.skin.molang.impl.MathHelper;
 
 import java.util.List;
 
@@ -20,8 +20,8 @@ public final class Lerp extends Function {
     private final Expression max;
     private final Expression delta;
 
-    public Lerp(List<Expression> arguments) {
-        super("math.lerp", 3, arguments);
+    public Lerp(String name, List<Expression> arguments) {
+        super(name, 3, arguments);
         this.min = arguments.get(0);
         this.max = arguments.get(1);
         this.delta = arguments.get(2);

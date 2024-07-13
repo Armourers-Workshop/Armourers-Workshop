@@ -10,8 +10,8 @@ public final class Loop extends Function {
     private final Expression count;
     private final Expression expression;
 
-    public Loop(List<Expression> arguments) {
-        super("loop", 2, arguments);
+    public Loop(String name, List<Expression> arguments) {
+        super(name, 2, arguments);
         this.count = arguments.get(0);
         this.expression = arguments.get(1);
     }
@@ -24,5 +24,13 @@ public final class Loop extends Function {
             result = expression.getAsDouble();
         }
         return 0;
+    }
+
+    public Expression count() {
+        return count;
+    }
+
+    public Expression expression() {
+        return expression;
     }
 }
