@@ -35,6 +35,8 @@ public class AbstractForgeClientEvents {
         EventManager.post(ClientPlayerEvent.LoggingIn.class, AbstractForgeClientPlayerEvent.loggingInFactory());
         EventManager.post(ClientPlayerEvent.LoggingOut.class, AbstractForgeClientPlayerEvent.loggingOutFactory());
 
+        EventManager.post(ClientPlayerEvent.Clone.class, AbstractForgeClientPlayerEvent.cloneFactory());
+
         EventManager.post(RenderFrameEvent.Pre.class, AbstractForgeRenderFrameEvent.preFactory());
         EventManager.post(RenderFrameEvent.Post.class, AbstractForgeRenderFrameEvent.postFactory());
 

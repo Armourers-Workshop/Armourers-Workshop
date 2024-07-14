@@ -8,6 +8,8 @@ import moe.plushie.armourers_workshop.builder.client.render.PaintingHighlightPla
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationEngine;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.bake.SkinPreloadManager;
@@ -53,6 +55,7 @@ import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
@@ -145,6 +148,17 @@ public class ClientProxy {
             SkinLibraryManager.getClient().getPrivateSkinLibrary().reset();
             ModContext.reset();
             ModConfigSpec.COMMON.apply(null);
+        });
+
+        EventManager.listen(ClientPlayerEvent.Clone.class, event -> {
+            // we can use the old wardrobe data until the next wardrobe sync packet.
+            var oldWardrobe = SkinWardrobe.of(event.getOldPlayer());
+            var newWardrobe = SkinWardrobe.of(event.getNewPlayer());
+            if (newWardrobe != null && oldWardrobe != null) {
+                var tag = new CompoundTag();
+                oldWardrobe.serialize(AbstractDataSerializer.wrap(tag, event.getPlayer()));
+                newWardrobe.deserialize(AbstractDataSerializer.wrap(tag, event.getPlayer()));
+            }
         });
 
         EventManager.listen(RenderFrameEvent.Pre.class, event -> {

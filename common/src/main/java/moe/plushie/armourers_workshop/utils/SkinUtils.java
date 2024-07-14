@@ -218,13 +218,14 @@ public final class SkinUtils {
         return entity.getLevel().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY);
     }
 
-    public static void dropAll(Player player) {
+    public static void dropAllIfNeeded(Player player) {
         if (SkinUtils.shouldKeepWardrobe(player)) {
             return; // ignore
         }
         SkinWardrobe oldWardrobe = SkinWardrobe.of(player);
         if (oldWardrobe != null) {
             oldWardrobe.dropAll(player::spawnAtLocation);
+            oldWardrobe.broadcast();
         }
     }
 

@@ -20,6 +20,8 @@ public class AbstractForgeClientEventsImpl {
     public static final auto PLAYER_LOGIN = AbstractForgeEventBus.create(ClientPlayerNetworkEvent.LoggedInEvent.class);
     public static final auto PLAYER_LOGOUT = AbstractForgeEventBus.create(ClientPlayerNetworkEvent.LoggedOutEvent.class);
 
+    public static final auto PLAYER_CLONE = AbstractForgeEventBus.create(ClientPlayerNetworkEvent.RespawnEvent.class);
+
     public static final auto ITEM_COLOR_REGISTRY = AbstractForgeEventBus.create(ColorHandlerEvent.Item.class);
     public static final auto BLOCK_COLOR_REGISTRY = AbstractForgeEventBus.create(ColorHandlerEvent.Block.class);
 

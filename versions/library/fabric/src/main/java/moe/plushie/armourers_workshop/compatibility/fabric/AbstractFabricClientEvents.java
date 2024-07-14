@@ -35,6 +35,8 @@ public class AbstractFabricClientEvents {
         EventManager.post(ClientPlayerEvent.LoggingIn.class, AbstractFabricClientPlayerEvent.loggingInFactory());
         EventManager.post(ClientPlayerEvent.LoggingOut.class, AbstractFabricClientPlayerEvent.loggingOutFactory());
 
+        EventManager.post(ClientPlayerEvent.Clone.class, AbstractFabricClientPlayerEvent.cloneFactory());
+
         EventManager.post(RenderFrameEvent.Pre.class, AbstractFabricRenderFrameEvent.preFactory());
         EventManager.post(RenderFrameEvent.Post.class, AbstractFabricRenderFrameEvent.postFactory());
 

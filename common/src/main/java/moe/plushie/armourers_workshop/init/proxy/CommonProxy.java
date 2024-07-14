@@ -43,9 +43,6 @@ import moe.plushie.armourers_workshop.utils.SkinUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 
 public class CommonProxy {
 
@@ -116,14 +113,14 @@ public class CommonProxy {
         });
         EventManager.listen(PlayerEvent.Death.class, event -> {
             ModLog.debug("keep careful {}", event.getPlayer().getScoreboardName());
-            SkinUtils.dropAll(event.getPlayer());
+            SkinUtils.dropAllIfNeeded(event.getPlayer());
         });
         EventManager.listen(PlayerEvent.Clone.class, event -> {
             ModLog.debug("woa {}", event.getPlayer().getScoreboardName());
-            SkinWardrobe oldWardrobe = SkinWardrobe.of(event.getOriginal());
-            SkinWardrobe newWardrobe = SkinWardrobe.of(event.getPlayer());
+            var oldWardrobe = SkinWardrobe.of(event.getOriginal());
+            var newWardrobe = SkinWardrobe.of(event.getPlayer());
             if (newWardrobe != null && oldWardrobe != null) {
-                CompoundTag tag = new CompoundTag();
+                var tag = new CompoundTag();
                 oldWardrobe.serialize(AbstractDataSerializer.wrap(tag, event.getPlayer()));
                 newWardrobe.deserialize(AbstractDataSerializer.wrap(tag, event.getPlayer()));
                 newWardrobe.broadcast();
@@ -131,14 +128,14 @@ public class CommonProxy {
         });
 
         EventManager.listen(PlayerEvent.Attack.class, event -> {
-            Player player = event.getPlayer();
+            var player = event.getPlayer();
             if (player == null || player.isSpectator()) {
                 return;
             }
-            ItemStack itemStack = player.getMainHandItem();
-            IItemHandler handler = ObjectUtils.safeCast(itemStack.getItem(), IItemHandler.class);
+            var itemStack = player.getMainHandItem();
+            var handler = ObjectUtils.safeCast(itemStack.getItem(), IItemHandler.class);
             if (handler != null) {
-                InteractionResult result = handler.attackLivingEntity(itemStack, player, event.getTarget());
+                var result = handler.attackLivingEntity(itemStack, player, event.getTarget());
                 if (result.consumesAction()) {
                     event.setCancelled(true);
                 }
