@@ -41,6 +41,9 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_RIGHT_SLEEVE = normal("hideOverlayArmRight", false);
     public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_LEFT_PANTS = normal("hideOverlayLegLeft", false);
     public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_RIGHT_PANTS = normal("hideOverlayLegRight", false);
+
+    // remove in 3.0.0 release
+    @Deprecated
     public static final SkinProperty<Boolean> OVERRIDE_OVERLAY_COLOR = normal("overrideOverlayColor", true);
 
     public static final SkinProperty<Boolean> OVERRIDE_EQUIPMENT_HELMET = normal("hideEquipmentHead", false);
@@ -48,6 +51,7 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     public static final SkinProperty<Boolean> OVERRIDE_EQUIPMENT_LEGGINGS = normal("hideEquipmentLegs", false);
     public static final SkinProperty<Boolean> OVERRIDE_EQUIPMENT_BOOTS = normal("hideEquipmentFeet", false);
 
+    public static final SkinProperty<Boolean> KEEP_OVERLAY_COLOR = normal("keepOverlayColor", false);
     public static final SkinProperty<Boolean> LIMIT_LEGS_LIMBS = normal("limitLimbs", false);
 
     public static final SkinProperty<String> OUTFIT_PART_INDEXS = normal("partIndexs", "");

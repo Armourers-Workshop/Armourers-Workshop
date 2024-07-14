@@ -17,7 +17,7 @@ public class EntitySlot {
     protected final ColorScheme bakedScheme;
     protected final Type slotType;
     protected final float renderPriority;
-    protected final boolean overrideOverlayColor;
+    protected final boolean keepOverlayColor;
 
     public EntitySlot(ItemStack itemStack, SkinDescriptor descriptor, BakedSkin bakedSkin, ColorScheme entityScheme, float renderPriority, Type slotType) {
         this.itemStack = itemStack;
@@ -26,7 +26,7 @@ public class EntitySlot {
         this.bakedScheme = baking(descriptor.getColorScheme(), entityScheme, slotType);
         this.renderPriority = renderPriority;
         this.slotType = slotType;
-        this.overrideOverlayColor = bakedSkin.getProperties().get(SkinProperty.OVERRIDE_OVERLAY_COLOR);
+        this.keepOverlayColor = bakedSkin.getProperties().get(SkinProperty.KEEP_OVERLAY_COLOR);
     }
 
     public static ColorScheme baking(ColorScheme skinScheme, ColorScheme entityScheme, Type slotType) {
@@ -66,8 +66,8 @@ public class EntitySlot {
     }
 
     public int getOverrideOverlay(Entity entity) {
-        // when use overlay color, we only support living entity.
-        if (overrideOverlayColor || !(entity instanceof LivingEntity livingEntity)) {
+        // we only support keep living entity overlay color.
+        if (!keepOverlayColor || !(entity instanceof LivingEntity livingEntity)) {
             return OverlayTexture.NO_OVERLAY;
         }
         int u = OverlayTexture.u(0.0F);
