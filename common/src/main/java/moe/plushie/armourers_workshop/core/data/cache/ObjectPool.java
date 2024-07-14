@@ -21,6 +21,7 @@ public class ObjectPool<T> extends AutoreleasePool {
         } else {
             this.reusable = new ArrayDeque<>();
         }
+        this.addToPool(this);
     }
 
     public static <T> ObjectPool<T> create(Supplier<T> creator) {

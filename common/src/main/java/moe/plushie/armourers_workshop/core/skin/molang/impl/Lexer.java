@@ -195,15 +195,7 @@ public final class Lexer {
             }
             case '-' -> {
                 c1 = read();
-                if (isValidDigit(c1)) {
-                    var token = next0();
-                    if (token.kind() == Kind.NUMBER) {
-                        value = "-" + token.value();
-                    } else {
-                        value = token.value();
-                    }
-                    yield token.kind();
-                } else if (c1 == '>') {
+                if (c1 == '>') {
                     read();
                     yield Kind.ARROW;
                 } else {

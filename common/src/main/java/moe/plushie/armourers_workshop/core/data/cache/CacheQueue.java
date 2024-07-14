@@ -25,6 +25,7 @@ public class CacheQueue<K, V> extends AutoreleasePool {
     public CacheQueue(Duration expiredTime, Consumer<V> releaseHandler) {
         this.expiredTime = expiredTime.toMillis();
         this.releaseHandler = releaseHandler;
+        this.addToPool(this);
     }
 
 

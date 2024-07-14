@@ -7,6 +7,7 @@ public class CompilerTest {
     public static void main() {
         try {
             test1();
+            test2();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -20,6 +21,10 @@ public class CompilerTest {
         assertEquals("!math.abs(90)", 0); // !90 = 0
         assertEquals("!q.a[0]", 1); // !0 = 1
         assertEquals("v.a=1;loop(10,{v.a=v.a+1;(v.A>=3)?break;});return V.a;", 3.0);
+    }
+
+    private static void test2() throws Exception {
+        assertEquals("math.sin(q.modified_distance_moved*90)*0.05-0.05", -0.05);
     }
 
     private static void assertEquals(String source, double expectedValue) throws Exception {

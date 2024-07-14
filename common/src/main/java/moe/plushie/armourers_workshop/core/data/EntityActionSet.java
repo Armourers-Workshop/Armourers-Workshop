@@ -47,22 +47,20 @@ public class EntityActionSet {
             return;
         }
 
-        var delta = entity.getDeltaMovement();
         var vehicle = entity.getVehicle();
         if (vehicle == null) {
             vehicle = transitingVehicle;
         }
 
-
         boolean onGround = entity.onGround();
 
-        double x = delta.x();
-        double y = delta.y();
-        double z = delta.z();
+        double dx = entity.getX() - entity.xOld;
+        double dy = entity.getY() - entity.yOld;
+        double dz = entity.getZ() - entity.zOld;
 
-        boolean isWalk = (x * x + z * z) > 1e-5;
-        boolean isWalkUp = y > 1e-7;
-        boolean isWalkDown = y < -1e-7;
+        boolean isWalk = dx * dx + dz * dz > 2.5e-7;
+        boolean isWalkUp = dy > 1e-7;
+        boolean isWalkDown = dy < -1e-7;
 
         boolean isSprinting = entity.isSprinting();
         boolean isCrouching = entity.isCrouching();

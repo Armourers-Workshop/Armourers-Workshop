@@ -295,7 +295,7 @@ public class Compiler {
                 if (token.kind() == Lexer.Kind.LPAREN) {
                     yield parseCompound(lexer, new Identifier(name), 0);
                 }
-                // function calls have second precedence.
+                // array access have second precedence.
                 if (token.kind() == Lexer.Kind.LBRACKET) {
                     yield parseCompound(lexer, getVariable(name), 0);
                 }
@@ -304,6 +304,10 @@ public class Compiler {
             case SUB -> {
                 lexer.next();
                 var expr = parseSingle(lexer);
+                // this should be a negative value.
+                if (expr instanceof Constant constant) {
+                    yield new Constant(-constant.getAsDouble());
+                }
                 yield new Unary(Unary.Op.ARITHMETICAL_NEGATION, expr);
             }
             case BANG -> {

@@ -48,6 +48,11 @@ public final class Optimizer implements Visitor {
     }
 
     @Override
+    public Expression visit(Expression expression) {
+        return expression; // ignore
+    }
+
+    @Override
     public Expression visitSubscript(final Subscript expression) {
         return new Subscript(expression.variable(), optimize(expression.index()));
     }

@@ -56,7 +56,7 @@ public final class Unary implements Expression {
         LOGICAL_NEGATION("!") {
             @Override
             public double compute(Expression expression) {
-                return expression.getAsDouble() == 0 ? 1 : 0;
+                return expression.getAsBoolean() ? 0 : 1;
             }
         },
         ARITHMETICAL_NEGATION("-") {

@@ -7,10 +7,6 @@ public abstract class AutoreleasePool {
 
     private static final Collection<AutoreleasePool> POOLS = new ConcurrentLinkedDeque<>();
 
-    public AutoreleasePool() {
-        POOLS.add(this);
-    }
-
     public static void begin() {
         POOLS.forEach(AutoreleasePool::beginCapturing);
     }
@@ -19,7 +15,12 @@ public abstract class AutoreleasePool {
         POOLS.forEach(AutoreleasePool::endCapturing);
     }
 
+    protected final void addToPool(AutoreleasePool pool) {
+        POOLS.add(this);
+    }
+
     protected abstract void beginCapturing();
 
     protected abstract void endCapturing();
+
 }

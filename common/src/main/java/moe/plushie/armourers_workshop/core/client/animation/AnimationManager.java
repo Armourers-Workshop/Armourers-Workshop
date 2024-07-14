@@ -101,7 +101,7 @@ public class AnimationManager {
                 actionSet.tick(entity);
                 if (!actionSet.equals(lastActionSet)) {
                     if (ModConfig.Client.enableAnimationDebug) {
-                        ModLog.debug("{} => {} => {}", entity, actionSet, entity.getDeltaMovement());
+                        ModLog.debug("{} => {}", entity, actionSet);
                     }
                     play(actionSet, animationTicks);
                     lastActionSet = actionSet.copy();
@@ -316,12 +316,14 @@ public class AnimationManager {
         }
 
         protected boolean test(EntityActionSet tracker) {
+            int hit = 0;
             for (var action : target.getActions()) {
                 if (!tracker.get(action)) {
                     return false;
                 }
+                hit += 1;
             }
-            return true;
+            return hit != 0;
         }
 
         protected String getName() {

@@ -33,9 +33,7 @@ public interface Visitor {
      * @param expression The expression.
      * @return The result.
      */
-    default Expression visit(final Expression expression) {
-        return expression;
-    }
+    Expression visit(final Expression expression);
 
     /**
      * Evaluate for string expression.
