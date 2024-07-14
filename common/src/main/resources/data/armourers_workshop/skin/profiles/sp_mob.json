@@ -6,6 +6,8 @@
   "entities": [
     "minecraft:pig",
     "minecraft:wolf",
+    "minecraft:guardian",
+    "minecraft:phantom",
     "minecraft:shulker"
   ]
 }

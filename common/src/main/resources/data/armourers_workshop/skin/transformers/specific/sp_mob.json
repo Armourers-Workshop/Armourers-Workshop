@@ -8,6 +8,10 @@
     "armourers_workshop:plugin/hidden_any_layer"
   ],
   "model": [
-    "minecraft:model/wolf"
+    "minecraft:model/pig",
+    "minecraft:model/wolf",
+    "minecraft:model/guardian",
+    "minecraft:model/phantom",
+    "minecraft:model/shulker"
   ]
 }

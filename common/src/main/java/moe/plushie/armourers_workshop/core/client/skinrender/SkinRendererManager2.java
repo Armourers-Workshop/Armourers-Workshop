@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.compatibility.client.model.AbstractModelHolder;
-import moe.plushie.armourers_workshop.compatibility.client.model.AbstractSkinnableModels;
+import moe.plushie.armourers_workshop.compatibility.client.model.AbstractSkinnableModel;
 import moe.plushie.armourers_workshop.core.armature.ArmatureSerializers;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerManager;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultArmatureTransformerManager;
@@ -84,13 +84,13 @@ public class SkinRendererManager2 extends ArmatureSerializers {
 
     private static void registerModels() {
 
-        registerModel("minecraft:model/slime", AbstractSkinnableModels.SLIME);
-        registerModel("minecraft:model/ghast", AbstractSkinnableModels.GHAST);
+        registerModel("minecraft:model/slime", AbstractSkinnableModel.SLIME);
+        registerModel("minecraft:model/ghast", AbstractSkinnableModel.GHAST);
 
-        registerModel("minecraft:model/enderman", AbstractSkinnableModels.ENDERMAN);
-        registerModel("minecraft:model/zombie_villager", AbstractSkinnableModels.ZOMBIE_VILLAGER);
+        registerModel("minecraft:model/enderman", AbstractSkinnableModel.ENDERMAN);
+        registerModel("minecraft:model/zombie_villager", AbstractSkinnableModel.ZOMBIE_VILLAGER);
 
-        registerModel("minecraft:model/illager", AbstractSkinnableModels.ILLAGER, it -> {
+        registerModel("minecraft:model/illager", AbstractSkinnableModel.ILLAGER, it -> {
             it.put("head", "root.head");
             it.put("body", "root.body");
             it.put("left_leg", "root.left_leg");
@@ -102,7 +102,7 @@ public class SkinRendererManager2 extends ArmatureSerializers {
             it.put("nose", "root.head.nose");
         });
 
-        registerModel("minecraft:model/villager", AbstractSkinnableModels.VILLAGER, it -> {
+        registerModel("minecraft:model/villager", AbstractSkinnableModel.VILLAGER, it -> {
             it.put("hat", "root.head.hat");
             it.put("hat_rim", "root.head.hat.hat_rim");
             it.put("head", "root.head");
@@ -115,7 +115,7 @@ public class SkinRendererManager2 extends ArmatureSerializers {
             it.put("jacket", "root.body.jacket");
         });
 
-        registerModel("minecraft:model/iron_golem", AbstractSkinnableModels.IRON_GOLEM, it -> {
+        registerModel("minecraft:model/iron_golem", AbstractSkinnableModel.IRON_GOLEM, it -> {
             it.put("head", "root.head");
             it.put("body", "root.body");
             it.put("right_leg", "root.right_leg");
@@ -124,7 +124,7 @@ public class SkinRendererManager2 extends ArmatureSerializers {
             it.put("left_arm", "root.left_arm");
         });
 
-        registerModel("minecraft:model/humanoid", AbstractSkinnableModels.HUMANOID, it -> {
+        registerModel("minecraft:model/humanoid", AbstractSkinnableModel.HUMANOID, it -> {
             it.put("head", "headParts[0]");
             it.put("body", "bodyParts[0]");
             it.put("right_arm", "bodyParts[1]");
@@ -133,7 +133,7 @@ public class SkinRendererManager2 extends ArmatureSerializers {
             it.put("left_leg", "bodyParts[4]");
             it.put("hat", "bodyParts[5]");
         });
-        registerModel("minecraft:model/player", AbstractSkinnableModels.PLAYER, it -> {
+        registerModel("minecraft:model/player", AbstractSkinnableModel.PLAYER, it -> {
             it.put("left_pants", "bodyParts[6]");
             it.put("right_pants", "bodyParts[7]");
             it.put("left_sleeve", "bodyParts[8]");
@@ -141,7 +141,7 @@ public class SkinRendererManager2 extends ArmatureSerializers {
             it.put("jacket", "bodyParts[10]");
         });
 
-        registerModel("minecraft:model/chicken", AbstractSkinnableModels.CHICKEN, it -> {
+        registerModel("minecraft:model/chicken", AbstractSkinnableModel.CHICKEN, it -> {
             it.put("head", "headParts[0]");
             it.put("beak", "headParts[1]");
             it.put("red_thing", "headParts[2]");
@@ -152,11 +152,11 @@ public class SkinRendererManager2 extends ArmatureSerializers {
             it.put("left_wing", "bodyParts[4]");
         });
 
-        registerModel("minecraft:model/creeper", AbstractSkinnableModels.CREEPER, it -> {
+        registerModel("minecraft:model/creeper", AbstractSkinnableModel.CREEPER, it -> {
             it.put("head", "root.head");
         });
 
-        registerModel("minecraft:model/horse", AbstractSkinnableModels.HORSE, it -> {
+        registerModel("minecraft:model/horse", AbstractSkinnableModel.HORSE, it -> {
             it.put("head", "headParts[0]");
             it.put("body", "bodyParts[0]");
             it.put("right_hind_leg", "bodyParts[1]");
@@ -170,11 +170,13 @@ public class SkinRendererManager2 extends ArmatureSerializers {
             it.put("tail", "bodyParts[0].tail");
         });
 
-        registerModel("minecraft:model/pig", AbstractSkinnableModels.PIG);
-        registerModel("minecraft:model/wolf", AbstractSkinnableModels.WOLF);
-        registerModel("minecraft:model/shulker", AbstractSkinnableModels.SHULKER);
+        registerModel("minecraft:model/pig", AbstractSkinnableModel.PIG);
+        registerModel("minecraft:model/wolf", AbstractSkinnableModel.WOLF);
+        registerModel("minecraft:model/guardian", AbstractSkinnableModel.GUARDIAN);
+        registerModel("minecraft:model/phantom", AbstractSkinnableModel.PHANTOM);
+        registerModel("minecraft:model/shulker", AbstractSkinnableModel.SHULKER);
 
-        registerModel("minecraft:model/boat", AbstractSkinnableModels.BOAT, it -> {
+        registerModel("minecraft:model/boat", AbstractSkinnableModel.BOAT, it -> {
             it.put("bottom", "parts[0]");
             it.put("back", "parts[1]");
             it.put("front", "parts[2]");
@@ -184,13 +186,13 @@ public class SkinRendererManager2 extends ArmatureSerializers {
             it.put("right_paddle", "parts[6]");
         });
 
-        registerModel("minecraft:model/raft", AbstractSkinnableModels.RAFT, it -> {
+        registerModel("minecraft:model/raft", AbstractSkinnableModel.RAFT, it -> {
             it.put("bottom", "parts[0]");
             it.put("left_paddle", "parts[1]");
             it.put("right_paddle", "parts[2]");
         });
 
-        registerModel("minecraft:model/allay", AbstractSkinnableModels.ALLAY, it -> {
+        registerModel("minecraft:model/allay", AbstractSkinnableModel.ALLAY, it -> {
             it.put("root", "root");
             it.put("head", "root.head");
             it.put("body", "root.body");

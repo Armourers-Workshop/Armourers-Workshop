@@ -1,0 +1,31 @@
+package moe.plushie.armourers_workshop.compatibility.client.model;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.model.BoatModel;
+import net.minecraft.client.model.ChickenModel;
+import net.minecraft.client.model.CreeperModel;
+import net.minecraft.client.model.EndermanModel;
+import net.minecraft.client.model.GhastModel;
+import net.minecraft.client.model.HorseModel;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.IllagerModel;
+import net.minecraft.client.model.IronGolemModel;
+import net.minecraft.client.model.PigModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.ShulkerModel;
+import net.minecraft.client.model.SlimeModel;
+import net.minecraft.client.model.VillagerModel;
+import net.minecraft.client.model.WolfModel;
+import net.minecraft.client.model.ZombieVillagerModel;
+
+@Available("[1.16, 1.19)")
+@Environment(EnvType.CLIENT)
+public class AbstractSkinnableModelImpl {
+
+    public static final Class<SlimeModel> RAFT = null;
+
+    // a null to indicate the model can't be supported in this version.
+    public static final Class<SlimeModel> ALLAY = null;
+}
