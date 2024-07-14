@@ -66,6 +66,7 @@ public class ModConfig {
         public static boolean enablePartSubdivide = false;
         public static boolean enableShaderDebug = false;
         public static boolean enableAnimationDebug = false;
+        public static boolean enableMolangDebug = false;
 
         public static boolean enableEntityPlacementHighlight = true;
         public static boolean enableBlockPlacementHighlight = true;

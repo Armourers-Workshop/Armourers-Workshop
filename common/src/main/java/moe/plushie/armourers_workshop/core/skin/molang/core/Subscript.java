@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core;
 
+import moe.plushie.armourers_workshop.core.skin.molang.impl.Property;
 import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
 
 /**
@@ -9,14 +10,18 @@ import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
  * <p>Example array accessing expressions: {@code my_geometries[0]},
  * {@code array.my_geometries[query.anim_time]}, {@code array.my_geos[math.cos(90)]}</p>
  */
-public final class Subscript implements Expression {
+public final class Subscript implements Expression, Property {
 
-    private final Variable variable;
+    private final Expression variable;
     private final Expression index;
 
-    public Subscript(Variable variable, Expression index) {
+    public Subscript(Expression variable, Expression index) {
         this.variable = variable;
         this.index = index;
+    }
+
+    @Override
+    public void update(Expression expression) {
     }
 
     @Override
@@ -26,13 +31,17 @@ public final class Subscript implements Expression {
 
     @Override
     public boolean isMutable() {
-        return variable.isMutable();
+        return variable.isMutable() || index.isMutable();
     }
 
     @Override
     public double getAsDouble() {
-        // TODO: NO IMP
-        return 0;
+        return getAsExpression().getAsDouble();
+    }
+
+    @Override
+    public Expression getAsExpression() {
+        return Constant.ZERO;
     }
 
     @Override
@@ -40,7 +49,7 @@ public final class Subscript implements Expression {
         return variable + "[" + index + "]";
     }
 
-    public Variable variable() {
+    public Expression variable() {
         return variable;
     }
 

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core;
 
 
+import moe.plushie.armourers_workshop.core.skin.molang.impl.Supplier;
 import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
 
 /**
@@ -12,7 +13,7 @@ import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
  * <p>Example identifier expressions: {@code math},
  * {@code name}, {@code this}, {@code print}</p>
  */
-public final class Identifier implements Expression, StringSupplier {
+public final class Identifier implements Expression, Supplier {
 
     private final String name;
 

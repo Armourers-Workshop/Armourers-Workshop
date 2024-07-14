@@ -145,7 +145,7 @@ public abstract class DefaultLayerArmaturePlugin extends ArmaturePlugin {
         }
 
         public void activate() {
-            if (!isEnabled && selector.tester.getAsBoolean()) {
+            if (!isEnabled && !selector.tester.getAsBoolean()) {
                 replace(target, placeholder);
                 isEnabled = true;
             }

@@ -57,27 +57,27 @@ public final class Lexer {
         // additional spaces, lines, etc. at the end?
         if (c == -1) {
             // EOF reached
-            return new Token(TokenKind.EOF, null, cursor.index(), cursor.index() + 1);
+            return new Token(Kind.EOF, null, cursor.index(), cursor.index() + 1);
         }
 
         // read integer or float.
         int start = cursor.index();
-        if (Character.isDigit(c)) {
+        if (isValidDigit(c)) {
             // first char is a digit, continue reading number
             StringBuilder builder = new StringBuilder(8);
             builder.appendCodePoint(c);
-            while (Character.isDigit(c = read())) {
+            while (isValidDigit(c = read())) {
                 builder.appendCodePoint(c);
             }
 
             if (c == '.') {
                 builder.append('.');
-                while (Character.isDigit(c = read())) {
+                while (isValidDigit(c = read())) {
                     builder.appendCodePoint(c);
                 }
             }
 
-            return new Token(TokenKind.NUMBER, builder.toString(), start, cursor.index());
+            return new Token(Kind.NUMBER, builder.toString(), start, cursor.index());
         }
 
         // read keyword or identifier.
@@ -89,17 +89,17 @@ public final class Lexer {
             } while (isValidForWordContinuation(c = read())); // [A-z_0-9]
 
             String word = builder.toString();
-            TokenKind kind = switch (word.toLowerCase()) {
-                case "break" -> TokenKind.BREAK;
-                case "continue" -> TokenKind.CONTINUE;
-                case "return" -> TokenKind.RETURN;
-                case "true" -> TokenKind.TRUE;
-                case "false" -> TokenKind.FALSE;
-                default -> TokenKind.IDENTIFIER;
+            Kind kind = switch (word.toLowerCase()) {
+                case "break" -> Kind.BREAK;
+                case "continue" -> Kind.CONTINUE;
+                case "return" -> Kind.RETURN;
+                case "true" -> Kind.TRUE;
+                case "false" -> Kind.FALSE;
+                default -> Kind.IDENTIFIER;
             };
 
             // keywords do not have values
-            if (kind != TokenKind.IDENTIFIER) {
+            if (kind != Kind.IDENTIFIER) {
                 word = null;
             }
 
@@ -113,7 +113,7 @@ public final class Lexer {
                 c = read();
                 if (c == -1) {
                     // the heck? you didn't close the string
-                    return new Token(TokenKind.ERROR, "Found end-of-file before closing quote", start, cursor.index());
+                    return new Token(Kind.ERROR, "Found end-of-file before closing quote", start, cursor.index());
                 }
                 if (c == '\'') {
                     // string was closed!
@@ -125,7 +125,7 @@ public final class Lexer {
             }
             // Here, "c" should be a quote, so skip it and give it to the next person
             read();
-            return new Token(TokenKind.STRING, value.toString(), start, cursor.index());
+            return new Token(Kind.STRING, value.toString(), start, cursor.index());
         }
 
         // here we are sure that "c" is NOT:
@@ -136,104 +136,112 @@ public final class Lexer {
         // so it must be some sign like ?, *, +, -
         int c1 = -2; // only set if "c" may have a continuation, for example "==", "!=", "??"
         String value = null; // only set of token kind = ERROR, value is error message
-        TokenKind tokenKind = switch (c) {
+        Kind tokenKind = switch (c) {
             case '!' -> {
                 c1 = read();
                 if (c1 == '=') {
                     read();
-                    yield TokenKind.BANGEQ;
+                    yield Kind.BANGEQ;
                 } else {
-                    yield TokenKind.BANG;
+                    yield Kind.BANG;
                 }
             }
             case '&' -> {
                 c1 = read();
                 if (c1 == '&') {
                     read();
-                    yield TokenKind.AMPAMP;
+                    yield Kind.AMPAMP;
                 } else {
                     value = "Unexpected token '" + ((char) c1) + "', expected '&' (Molang doesn't support bitwise operators)";
-                    yield TokenKind.ERROR;
+                    yield Kind.ERROR;
                 }
             }
             case '|' -> {
                 c1 = read();
                 if (c1 == '|') {
                     read();
-                    yield TokenKind.BARBAR;
+                    yield Kind.BARBAR;
                 } else {
                     value = "Unexpected token '" + ((char) c1) + "', expected '|' (Molang doesn't support bitwise operators)";
-                    yield TokenKind.ERROR;
+                    yield Kind.ERROR;
                 }
             }
             case '<' -> {
                 c1 = read();
                 if (c1 == '=') {
                     read();
-                    yield TokenKind.LTE;
+                    yield Kind.LTE;
                 } else {
-                    yield TokenKind.LT;
+                    yield Kind.LT;
                 }
             }
             case '>' -> {
                 c1 = read();
                 if (c1 == '=') {
                     read();
-                    yield TokenKind.GTE;
+                    yield Kind.GTE;
                 } else {
-                    yield TokenKind.GT;
+                    yield Kind.GT;
                 }
             }
             case '=' -> {
                 c1 = read();
                 if (c1 == '=') {
                     read();
-                    yield TokenKind.EQEQ;
+                    yield Kind.EQEQ;
                 } else {
-                    yield TokenKind.EQ;
+                    yield Kind.EQ;
                 }
             }
             case '-' -> {
                 c1 = read();
-                if (c1 == '>') {
+                if (isValidDigit(c1)) {
+                    var token = next0();
+                    if (token.kind() == Kind.NUMBER) {
+                        value = "-" + token.value();
+                    } else {
+                        value = token.value();
+                    }
+                    yield token.kind();
+                } else if (c1 == '>') {
                     read();
-                    yield TokenKind.ARROW;
+                    yield Kind.ARROW;
                 } else {
-                    yield TokenKind.SUB;
+                    yield Kind.SUB;
                 }
             }
             case '?' -> {
                 c1 = read();
                 if (c1 == '?') {
                     read();
-                    yield TokenKind.QUESQUES;
+                    yield Kind.QUESQUES;
                 } else {
-                    yield TokenKind.QUES;
+                    yield Kind.QUES;
                 }
             }
-            case '/' -> TokenKind.SLASH;
-            case '*' -> TokenKind.STAR;
-            case '%' -> TokenKind.MOD;
-            case '^' -> TokenKind.POW;
-            case '+' -> TokenKind.PLUS;
-            case ',' -> TokenKind.COMMA;
-            case '.' -> TokenKind.DOT;
-            case '(' -> TokenKind.LPAREN;
-            case ')' -> TokenKind.RPAREN;
-            case '{' -> TokenKind.LBRACE;
-            case '}' -> TokenKind.RBRACE;
-            case ':' -> TokenKind.COLON;
-            case '[' -> TokenKind.LBRACKET;
-            case ']' -> TokenKind.RBRACKET;
-            case ';' -> TokenKind.SEMICOLON;
+            case '/' -> Kind.SLASH;
+            case '*' -> Kind.STAR;
+            case '%' -> Kind.MOD;
+            case '^' -> Kind.POW;
+            case '+' -> Kind.PLUS;
+            case ',' -> Kind.COMMA;
+            case '.' -> Kind.DOT;
+            case '(' -> Kind.LPAREN;
+            case ')' -> Kind.RPAREN;
+            case '{' -> Kind.LBRACE;
+            case '}' -> Kind.RBRACE;
+            case ':' -> Kind.COLON;
+            case '[' -> Kind.LBRACKET;
+            case ']' -> Kind.RBRACKET;
+            case ';' -> Kind.SEMICOLON;
             case '"' -> {
                 value = "Unexpected token '\"', expected single quote (') to start a string literal";
-                yield TokenKind.ERROR;
+                yield Kind.ERROR;
             }
             default -> {
                 // "c" is something we don't know about!
                 value = "Unexpected token '" + ((char) c) + "': invalid token";
-                yield TokenKind.ERROR;
+                yield Kind.ERROR;
             }
         };
 
@@ -257,6 +265,10 @@ public final class Lexer {
         }
     }
 
+    private boolean isValidDigit(final int c) {
+        return Character.isDigit(c);
+    }
+
     private boolean isValidForWordStart(final int c) {
         return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || c == '_';
     }
@@ -271,12 +283,12 @@ public final class Lexer {
      * token kind and optional value)
      */
     public static final class Token {
-        private final TokenKind kind;
+        private final Kind kind;
         private final String value;
         private final int start;
         private final int end;
 
-        public Token(TokenKind kind, String value, int start, int end) {
+        public Token(Kind kind, String value, int start, int end) {
             this.kind = kind;
             this.value = value;
             this.start = start;
@@ -288,7 +300,7 @@ public final class Lexer {
          *
          * @return The token kind
          */
-        public TokenKind kind() {
+        public Kind kind() {
             return kind;
         }
 
@@ -322,7 +334,7 @@ public final class Lexer {
 
         @Override
         public String toString() {
-            if (kind.hasTag(TokenKind.Tag.HAS_VALUE)) {
+            if (kind.hasTag(Kind.Tag.HAS_VALUE)) {
                 return kind + "(" + value + ")";
             } else {
                 return kind.toString();
@@ -351,7 +363,7 @@ public final class Lexer {
      * <p>Tokens do not have an specific behavior, they just group
      * certain characters that can be used by the parser.</p>
      */
-    public enum TokenKind {
+    public enum Kind {
         /**
          * End-of-file token, means that the end was reached
          */
@@ -551,11 +563,11 @@ public final class Lexer {
 
         private final Set<Tag> tags;
 
-        TokenKind(final Tag... tags) {
+        Kind(final Tag... tags) {
             this.tags = EnumSet.copyOf(Arrays.asList(tags));
         }
 
-        TokenKind() {
+        Kind() {
             this.tags = Collections.emptySet();
         }
 

@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Function;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Identifier;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Literal;
-import moe.plushie.armourers_workshop.core.skin.molang.core.Optimized;
+import moe.plushie.armourers_workshop.core.skin.molang.core.Return;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Statement;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Subscript;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Ternary;
@@ -24,8 +24,6 @@ import moe.plushie.armourers_workshop.core.skin.molang.core.Variable;
  *      Expression expr = ...;
  *      String str = expr.visit(new ToStringVisitor());
  * }</pre>
- *
- * @since 3.0.0
  */
 public interface Visitor {
 
@@ -46,7 +44,7 @@ public interface Visitor {
      * @return The result.
      */
     default Expression visitLiteral(final Literal expression) {
-        return expression;
+        return visit(expression);
     }
 
     /**
@@ -56,7 +54,7 @@ public interface Visitor {
      * @return The result.
      */
     default Expression visitIdentifier(final Identifier expression) {
-        return expression;
+        return visit(expression);
     }
 
     /**
@@ -66,7 +64,7 @@ public interface Visitor {
      * @return The result.
      */
     default Expression visitConstant(final Constant expression) {
-        return expression;
+        return visit(expression);
     }
 
     /**
@@ -76,7 +74,7 @@ public interface Visitor {
      * @return The result.
      */
     default Expression visitVariable(final Variable expression) {
-        return expression;
+        return visit(expression);
     }
 
     /**
@@ -86,7 +84,7 @@ public interface Visitor {
      * @return The result.
      */
     default Expression visitSubscript(final Subscript expression) {
-        return expression;
+        return visit(expression);
     }
 
     /**
@@ -96,7 +94,7 @@ public interface Visitor {
      * @return The result.
      */
     default Expression visitUnary(final Unary expression) {
-        return expression;
+        return visit(expression);
     }
 
     /**
@@ -106,7 +104,7 @@ public interface Visitor {
      * @return The result.
      */
     default Expression visitBinary(final Binary expression) {
-        return expression;
+        return visit(expression);
     }
 
     /**
@@ -116,7 +114,7 @@ public interface Visitor {
      * @return The result.
      */
     default Expression visitTernary(final Ternary expression) {
-        return expression;
+        return visit(expression);
     }
 
     /**
@@ -126,7 +124,7 @@ public interface Visitor {
      * @return The result.
      */
     default Expression visitFunction(final Function expression) {
-        return expression;
+        return visit(expression);
     }
 
     /**
@@ -136,7 +134,7 @@ public interface Visitor {
      * @return The result.
      */
     default Expression visitCompound(final Compound expression) {
-        return expression;
+        return visit(expression);
     }
 
     /**
@@ -146,6 +144,16 @@ public interface Visitor {
      * @return The result.
      */
     default Expression visitStatement(final Statement expression) {
-        return expression;
+        return visit(expression);
+    }
+
+    /**
+     * Evaluate for return expression.
+     *
+     * @param expression The expression.
+     * @return The result.
+     */
+    default Expression visitReturn(final Return expression) {
+        return visit(expression);
     }
 }

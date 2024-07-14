@@ -6,6 +6,8 @@ import moe.plushie.armourers_workshop.core.skin.molang.core.Constant;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Function;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Optimized;
+import moe.plushie.armourers_workshop.core.skin.molang.core.Return;
+import moe.plushie.armourers_workshop.core.skin.molang.core.Statement;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Subscript;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Ternary;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Unary;
@@ -28,6 +30,10 @@ public final class Optimizer implements Visitor {
         }
         // we don't need to wrap the constant expression.
         if (expression instanceof Constant) {
+            return expression;
+        }
+        // we can't optimize control flow statement, because should unexpect behavior.
+        if (hasControlFlow(expression)) {
             return expression;
         }
         return new Optimized(expression);
@@ -73,5 +79,18 @@ public final class Optimizer implements Visitor {
     @Override
     public Expression visitCompound(final Compound expression) {
         return new Compound(optimize(expression.expressions()));
+    }
+
+    @Override
+    public Expression visitReturn(final Return expression) {
+        return new Return(optimize(expression.value()));
+    }
+
+    private boolean hasControlFlow(Expression expression) {
+        var results = TreeVisitor.filter(expression, it -> {
+            // continue/break/return
+            return it instanceof Statement || it instanceof Return;
+        });
+        return !results.isEmpty();
     }
 }

@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core;
 
+import moe.plushie.armourers_workshop.core.skin.molang.impl.FlowController;
+import moe.plushie.armourers_workshop.core.skin.molang.impl.FlowControllable;
 import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
 
 import java.util.List;
@@ -14,11 +16,13 @@ import java.util.StringJoiner;
  * Contains a collection of sub-expressions that evaluate before returning the last expression, or 0 if no return is defined.
  * Sub-expressions have no bearing on the final return with exception for where they may be setting variable values
  */
-public final class Compound implements Expression {
+public final class Compound implements Expression, FlowControllable {
 
     private final List<Expression> expressions;
+    private final FlowController controller;
 
     public Compound(List<Expression> expressions) {
+        this.controller = FlowController.block(expressions);
         this.expressions = expressions;
     }
 
@@ -39,14 +43,19 @@ public final class Compound implements Expression {
 
     @Override
     public double getAsDouble() {
-        double result = 0;
+        return getAsExpression().getAsDouble();
+    }
+
+    @Override
+    public Expression getAsExpression() {
+        controller.begin();
         for (var expression : expressions) {
-            // break;
-            // continue;
-            // return i;
-            result = expression.getAsDouble();
+            expression.getAsDouble();
+            if (controller.interrupt().isContinueOrBreakOrReturn()) {
+                break;
+            }
         }
-        return result;
+        return controller.end();
     }
 
     @Override
@@ -56,6 +65,11 @@ public final class Compound implements Expression {
             joiner.add(expr.toString());
         }
         return joiner.toString();
+    }
+
+    @Override
+    public FlowController controller() {
+        return controller;
     }
 
     public List<Expression> expressions() {

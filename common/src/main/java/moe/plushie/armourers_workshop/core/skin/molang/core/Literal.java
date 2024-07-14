@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.molang.core;
 
 import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
 
-public final class Literal implements Expression, StringSupplier {
+public final class Literal implements Expression {
 
     private final String value;
 

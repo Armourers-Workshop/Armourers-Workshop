@@ -5,11 +5,10 @@ import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
 /**
  * Unary expression implementation, performs a single operation
  * to a single expression, like logical negation, arithmetical
- * negation, or "return expr;".
+ * negation
  *
  * <p>Example unary expressions: {@code -hello}, {@code !p},
- * {@code !q}, {@code -(10 * 5)}, {@code return this},
- * {@code return 5}</p>
+ * {@code !q}, {@code -(10 * 5)}</p>
  */
 public final class Unary implements Expression {
 
@@ -33,15 +32,13 @@ public final class Unary implements Expression {
 
     @Override
     public double getAsDouble() {
-        return op.compute(value.getAsDouble());
+        return op.compute(value);
     }
 
     @Override
     public String toString() {
         var contents = value.toString();
-        if (op == Op.RETURN) {
-            contents = contents + " ";
-        } else if (value instanceof Constant) {
+        if (value instanceof Constant) {
             contents = "(" + contents + ")";
         }
         return op.symbol() + contents;
@@ -58,17 +55,16 @@ public final class Unary implements Expression {
     public enum Op {
         LOGICAL_NEGATION("!") {
             @Override
-            public double compute(double value) {
-                return value == 0 ? 1 : 0;
+            public double compute(Expression expression) {
+                return expression.getAsDouble() == 0 ? 1 : 0;
             }
         },
         ARITHMETICAL_NEGATION("-") {
             @Override
-            public double compute(double value) {
-                return -value;
+            public double compute(Expression expression) {
+                return -expression.getAsDouble();
             }
-        },
-        RETURN("return");
+        };
 
         private final String symbol;
 
@@ -86,8 +82,6 @@ public final class Unary implements Expression {
          * @param value The first input argument
          * @return The computed value of the two inputs
          */
-        public double compute(double value) {
-            return value;
-        }
+        public abstract double compute(Expression value);
     }
 }

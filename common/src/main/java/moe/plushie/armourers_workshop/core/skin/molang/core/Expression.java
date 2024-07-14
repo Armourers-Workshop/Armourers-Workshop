@@ -1,8 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core;
 
+import moe.plushie.armourers_workshop.core.skin.molang.impl.Supplier;
 import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
-
-import java.util.function.DoubleSupplier;
 
 /**
  * The expression interface. It's the super-interface for
@@ -14,7 +13,7 @@ import java.util.function.DoubleSupplier;
  * <p>In Molang, almost every expression evaluates to a numerical
  * value</p>
  */
-public interface Expression extends DoubleSupplier {
+public interface Expression extends Supplier {
 
     /**
      * Visits this expression with the given visitor.

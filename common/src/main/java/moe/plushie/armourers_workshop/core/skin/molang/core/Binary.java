@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core;
 
+import moe.plushie.armourers_workshop.core.skin.molang.impl.Property;
 import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
 
 /**
@@ -39,7 +40,7 @@ public final class Binary implements Expression {
 
     @Override
     public String toString() {
-        return left + " " + op.symbol() + " " + right;
+        return escape(left) + " " + op.symbol() + " " + escape(right);
     }
 
     public Op op() {
@@ -52,6 +53,14 @@ public final class Binary implements Expression {
 
     public Expression right() {
         return right;
+    }
+
+    private String escape(Expression expression) {
+        // multiple operands have different precedence.
+        if (expression instanceof Binary || expression instanceof Ternary) {
+            return "(" + expression + ")";
+        }
+        return expression.toString();
     }
 
     public enum Op {
@@ -138,15 +147,17 @@ public final class Binary implements Expression {
         NULL_COALESCE("??", 2) {
             @Override
             public double compute(Expression lhs, Expression rhs) {
-                // TODO: ?
+                if (lhs instanceof Property property && property.isNull()) {
+                    property.update(rhs.getAsExpression());
+                }
                 return 0;
             }
         },
         ASSIGN("=", 1) {
             @Override
             public double compute(Expression lhs, Expression rhs) {
-                if (lhs instanceof Variable variable) {
-                    variable.set(rhs);
+                if (lhs instanceof Property property) {
+                    property.update(rhs.getAsExpression());
                 }
                 return 0;
             }
@@ -154,7 +165,7 @@ public final class Binary implements Expression {
         CONDITIONAL("?", 1) {
             @Override
             public double compute(Expression lhs, Expression rhs) {
-                return lhs.getAsDouble() != 0 ? rhs.getAsDouble() : 0;
+                return lhs.getAsBoolean() ? rhs.getAsDouble() : 0;
             }
         },
         EQ("==", 500) {

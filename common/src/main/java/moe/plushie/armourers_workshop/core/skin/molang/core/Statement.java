@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core;
 
 
+import moe.plushie.armourers_workshop.core.skin.molang.impl.FlowController;
+import moe.plushie.armourers_workshop.core.skin.molang.impl.FlowControllable;
 import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
 
 /**
@@ -10,12 +12,14 @@ import moe.plushie.armourers_workshop.core.skin.molang.impl.Visitor;
  *
  * <p>Example statement expressions: {@code break}, {@code continue}</p>
  */
-public final class Statement implements Expression {
+public final class Statement implements Expression, FlowControllable {
 
     private final Op op;
+    private final FlowController controller;
 
     public Statement(Op op) {
         this.op = op;
+        this.controller = FlowController.instruct();
     }
 
     @Override
@@ -30,6 +34,7 @@ public final class Statement implements Expression {
 
     @Override
     public double getAsDouble() {
+        controller.setInterrupt(op.mode());
         return 0;
     }
 
@@ -38,18 +43,29 @@ public final class Statement implements Expression {
         return op.symbol();
     }
 
+    @Override
+    public FlowController controller() {
+        return controller;
+    }
+
     public Op op() {
         return op;
     }
 
     public enum Op {
-        BREAK("break"),
-        CONTINUE("continue");
+        BREAK("break", FlowController.State.BREAK),
+        CONTINUE("continue", FlowController.State.CONTINUE);
 
+        private final FlowController.State mode;
         private final String symbol;
 
-        Op(final String symbol) {
+        Op(final String symbol, final FlowController.State mode) {
+            this.mode = mode;
             this.symbol = symbol;
+        }
+
+        public FlowController.State mode() {
+            return mode;
         }
 
         public String symbol() {

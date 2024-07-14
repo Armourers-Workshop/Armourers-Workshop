@@ -38,7 +38,7 @@ public final class Optimized implements Expression {
 
     @Override
     public String toString() {
-        return expression.toString();
+        return value + "/*" + expression + "*/";
     }
 
     public Expression expression() {

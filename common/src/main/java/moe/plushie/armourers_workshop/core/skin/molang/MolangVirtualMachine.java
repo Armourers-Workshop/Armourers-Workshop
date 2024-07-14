@@ -1,10 +1,12 @@
 package moe.plushie.armourers_workshop.core.skin.molang;
 
+import moe.plushie.armourers_workshop.core.skin.molang.core.Constant;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Variable;
 import moe.plushie.armourers_workshop.core.skin.molang.impl.Compiler;
-import moe.plushie.armourers_workshop.core.skin.molang.impl.Optimizer;
 import moe.plushie.armourers_workshop.core.skin.molang.impl.SyntaxException;
+import moe.plushie.armourers_workshop.init.ModConfig;
+import moe.plushie.armourers_workshop.init.ModLog;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,7 +17,6 @@ public class MolangVirtualMachine {
     private static final MolangVirtualMachine DEFAULT = new MolangVirtualMachine();
 
     private final Compiler compiler = new Compiler();
-    private final Optimizer optimizer = new Optimizer(compiler);
 
     private final Map<String, Variable> variables = new ConcurrentHashMap<>();
 
@@ -54,9 +55,13 @@ public class MolangVirtualMachine {
     /**
      * Create a molang expression
      */
-    public Expression eval(String expression) throws SyntaxException {
-        var value = compiler.compile(expression);
-        return optimizer.optimize(value);
+    public Expression eval(String source) throws SyntaxException {
+        var expr = compiler.compile(source);
+        if (ModConfig.Client.enableMolangDebug && !(expr instanceof Constant)) {
+            ModLog.debug("source: {}", source);
+            ModLog.debug("compiled: {}", expr);
+        }
+        return expr;
     }
 
     public Variable register(String name, double value) {

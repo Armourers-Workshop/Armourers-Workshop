@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.skin.molang.core.Function;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Identifier;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Literal;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Loop;
+import moe.plushie.armourers_workshop.core.skin.molang.core.Return;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Statement;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Subscript;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Ternary;
@@ -31,6 +32,7 @@ import moe.plushie.armourers_workshop.core.skin.molang.function.limit.Clamp;
 import moe.plushie.armourers_workshop.core.skin.molang.function.limit.Max;
 import moe.plushie.armourers_workshop.core.skin.molang.function.limit.Min;
 import moe.plushie.armourers_workshop.core.skin.molang.function.misc.Pi;
+import moe.plushie.armourers_workshop.core.skin.molang.function.misc.Print;
 import moe.plushie.armourers_workshop.core.skin.molang.function.misc.ToDeg;
 import moe.plushie.armourers_workshop.core.skin.molang.function.misc.ToRad;
 import moe.plushie.armourers_workshop.core.skin.molang.function.random.DieRoll;
@@ -57,6 +59,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Compiler {
 
+    protected final Optimizer optimizer;
+
     protected final Map<KeyPath, Variable> variables = new ConcurrentHashMap<>();
     protected final Map<KeyPath, Function.Factory<?>> functions = new ConcurrentHashMap<>();
 
@@ -69,6 +73,8 @@ public class Compiler {
             .build();
 
     public Compiler() {
+        optimizer = new Optimizer(this);
+
         // Some default values
         registerVariable("PI", new Variable("PI", Math.PI));
         registerVariable("E", new Variable("E", Math.E));
@@ -112,6 +118,7 @@ public class Compiler {
         registerFunction("math.to_rad", ToRad::new);
 
         // Built-in functions
+        registerFunction("print", Print::new);
         registerFunction("loop", Loop::new);
         registerFunction("for_each", ForEach::new);
     }
@@ -125,7 +132,7 @@ public class Compiler {
      * @param factory The constructor-factory for the given function
      */
     public void registerFunction(String name, Function.Factory<?> factory) {
-        functions.put(KeyPath.of(name), factory);
+        functions.put(KeyPath.of(name.toLowerCase()), factory);
     }
 
     /**
@@ -134,7 +141,7 @@ public class Compiler {
      * Technically supports overriding by matching keys, though you should try to update the existing variable instances instead if possible
      */
     public void registerVariable(String name, Variable variable) {
-        var key = parseName(name);
+        var key = parseName(name.toLowerCase());
         variables.put(key, variable);
     }
 
@@ -142,7 +149,7 @@ public class Compiler {
      * @return The registered {@link Variable} functions for the given (aliased) name.
      */
     public Expression getFunction(String name, List<Expression> arguments) {
-        var key = KeyPath.of(name);
+        var key = KeyPath.of(name.toLowerCase());
         var factory = functions.get(key);
         if (factory != null) {
             return factory.create(key.toString(), arguments);
@@ -154,8 +161,14 @@ public class Compiler {
      * @return The registered {@link Variable} instance for the given (aliased) name.
      */
     public Variable getVariable(String name) {
-        var key = parseName(name);
+        var key = parseName(name.toLowerCase());
         return variables.computeIfAbsent(key, it -> new Variable(it.toString(), 0));
+    }
+
+    public Expression compile(String source) throws SyntaxException {
+        var expression = parseAll(source);
+        expression = optimizer.optimize(expression);
+        return expression;
     }
 
     /**
@@ -164,16 +177,16 @@ public class Compiler {
      * @param source The math and/or Molang expression to be parsed
      * @return A compiled {@link Expression}, ready for use
      */
-    public Expression compile(String source) throws SyntaxException {
+    private Expression parseAll(String source) throws SyntaxException {
         var lexer = new Lexer(source);
         var expressions = new ArrayList<Expression>();
         while (true) {
             var token = lexer.next();
-            if (token.kind() == Lexer.TokenKind.EOF) {
+            if (token.kind() == Lexer.Kind.EOF) {
                 // reached end-of-file!
                 break;
             }
-            if (token.kind() == Lexer.TokenKind.ERROR) {
+            if (token.kind() == Lexer.Kind.ERROR) {
                 // tokenization error!
                 throw new SyntaxException("Found an invalid token (error): " + token.value(), lexer.cursor());
             }
@@ -182,17 +195,20 @@ public class Compiler {
 
             // check current token, should be a semicolon or an eof
             token = lexer.current();
-            if (token.kind() != Lexer.TokenKind.EOF && token.kind() != Lexer.TokenKind.SEMICOLON) {
+            if (token.kind() != Lexer.Kind.EOF && token.kind() != Lexer.Kind.SEMICOLON) {
                 throw new SyntaxException("Expected a semicolon, but was " + token, lexer.cursor());
             }
             expressions.add(expr);
         }
 
-        // only once, not need wrapper.
+        // In simple cases, the terminating ; is omitted and the expression result is returned.
         if (expressions.size() == 1) {
             return expressions.get(0);
         }
 
+        // In complex cases, multiple sub-expressions are each terminated with a semicolon ;.
+        // Complex expressions evaluate to 0.0 unless there is a return statement,
+        // in which case the evaluated value of the return's sub-expression will be returned out of the current scope.
         return new Compound(expressions);
     }
 
@@ -226,7 +242,7 @@ public class Compiler {
                 // wrapped expression: (expression)
                 var expression = parseCompoundExpression(lexer, 0);
                 token = lexer.current();
-                if (token.kind() != Lexer.TokenKind.RPAREN) {
+                if (token.kind() != Lexer.Kind.RPAREN) {
                     throw new SyntaxException("Non closed expression", lexer.cursor());
                 }
                 lexer.next();
@@ -235,20 +251,20 @@ public class Compiler {
             case LBRACE -> {
                 token = lexer.next();
                 var expressions = new ArrayList<Expression>();
-                while (token.kind() != Lexer.TokenKind.RBRACE) {
+                while (token.kind() != Lexer.Kind.RBRACE) {
                     expressions.add(parseCompoundExpression(lexer, 0));
                     token = lexer.current();
-                    if (token.kind() == Lexer.TokenKind.RBRACE) {
+                    if (token.kind() == Lexer.Kind.RBRACE) {
                         break;
                     }
-                    if (token.kind() == Lexer.TokenKind.EOF) {
+                    if (token.kind() == Lexer.Kind.EOF) {
                         // end reached but not closed yet, huh?
                         throw new SyntaxException("Found the end before the execution scope closing token", lexer.cursor());
                     }
-                    if (token.kind() == Lexer.TokenKind.ERROR) {
+                    if (token.kind() == Lexer.Kind.ERROR) {
                         throw new SyntaxException("Found an invalid token (error): " + token.value(), lexer.cursor());
                     }
-                    if (token.kind() != Lexer.TokenKind.SEMICOLON) {
+                    if (token.kind() != Lexer.Kind.SEMICOLON) {
                         throw new SyntaxException("Missing semicolon", lexer.cursor());
                     }
                     token = lexer.next();
@@ -267,19 +283,23 @@ public class Compiler {
             case IDENTIFIER -> {
                 var name = token.value();
                 token = lexer.next();
-                while (token.kind() == Lexer.TokenKind.DOT) {
+                while (token.kind() == Lexer.Kind.DOT) {
                     token = lexer.next();
-                    if (token.kind() != Lexer.TokenKind.IDENTIFIER) {
+                    if (token.kind() != Lexer.Kind.IDENTIFIER) {
                         throw new SyntaxException("Unexpected token, expected a valid field token", lexer.cursor());
                     }
                     name = name + "." + token.value();
                     token = lexer.next();
                 }
-                // determine type by the next token.
-                if (token.kind() != Lexer.TokenKind.LPAREN) {
-                    yield getVariable(name);
+                // function calls have first precedence.
+                if (token.kind() == Lexer.Kind.LPAREN) {
+                    yield parseCompound(lexer, new Identifier(name), 0);
                 }
-                yield new Identifier(name);
+                // function calls have second precedence.
+                if (token.kind() == Lexer.Kind.LBRACKET) {
+                    yield parseCompound(lexer, getVariable(name), 0);
+                }
+                yield getVariable(name);
             }
             case SUB -> {
                 lexer.next();
@@ -294,9 +314,10 @@ public class Compiler {
             case RETURN -> {
                 lexer.next();
                 var expr = parseCompoundExpression(lexer, 0);
-                yield new Unary(Unary.Op.RETURN, expr);
+                yield new Return(expr);
             }
             default -> {
+                // what's happened?
                 yield Constant.ZERO;
             }
         };
@@ -307,7 +328,7 @@ public class Compiler {
         while (true) {
             final var compoundExpr = parseCompound(lexer, expr, lastPrecedence);
             final var current = lexer.current();
-            if (current.kind() == Lexer.TokenKind.EOF || current.kind() == Lexer.TokenKind.SEMICOLON) {
+            if (current.kind() == Lexer.Kind.EOF || current.kind() == Lexer.Kind.SEMICOLON) {
                 // found eof, stop parsing, return expr
                 return compoundExpr;
             }
@@ -327,55 +348,54 @@ public class Compiler {
             }
             case LBRACKET: { // ARRAY ACCESS EXPRESSION: "left["
                 current = lexer.next();
-                if (current.kind() == Lexer.TokenKind.RBRACKET) {
+                if (current.kind() == Lexer.Kind.RBRACKET) {
                     throw new SyntaxException("Expected a expression, got RBRACKET", lexer.cursor());
                 }
-                if (current.kind() == Lexer.TokenKind.EOF) {
+                if (current.kind() == Lexer.Kind.EOF) {
                     throw new SyntaxException("Found EOF before closing RBRACKET", lexer.cursor());
                 }
                 final var index = parseCompoundExpression(lexer, 0);
                 current = lexer.current();
-                if (current.kind() == Lexer.TokenKind.EOF) {
+                if (current.kind() == Lexer.Kind.EOF) {
                     throw new SyntaxException("Found EOF before closing RBRACKET", lexer.cursor());
                 }
-                if (current.kind() != Lexer.TokenKind.RBRACKET) {
+                if (current.kind() != Lexer.Kind.RBRACKET) {
                     throw new SyntaxException("Expected a closing RBRACKET, found " + current, lexer.cursor());
                 }
                 lexer.next();
-                var variable = getVariable(left.toString());
-                return new Subscript(variable, index);
+                return new Subscript(left, index);
             }
             case LPAREN: { // CALL EXPRESSION: "left("
                 current = lexer.next();
                 final var arguments = new ArrayList<Expression>();
 
                 // start reading the arguments
-                if (current.kind() == Lexer.TokenKind.EOF) {
+                if (current.kind() == Lexer.Kind.EOF) {
                     throw new SyntaxException("Found EOF before closing RPAREN", lexer.cursor());
                 }
 
                 // find all arguments.
-                while (current.kind() != Lexer.TokenKind.RPAREN) {
+                while (current.kind() != Lexer.Kind.RPAREN) {
                     arguments.add(parseCompoundExpression(lexer, 0));
                     // update current character
                     current = lexer.current();
-                    if (current.kind() == Lexer.TokenKind.EOF) {
+                    if (current.kind() == Lexer.Kind.EOF) {
                         throw new SyntaxException("Found EOF before closing RPAREN", lexer.cursor());
                     }
-                    if (current.kind() == Lexer.TokenKind.ERROR) {
+                    if (current.kind() == Lexer.Kind.ERROR) {
                         throw new SyntaxException("Found error token: " + current.value(), lexer.cursor());
                     }
-                    if (current.kind() == Lexer.TokenKind.RPAREN) {
+                    if (current.kind() == Lexer.Kind.RPAREN) {
                         break;
                     }
-                    if (current.kind() != Lexer.TokenKind.COMMA) {
+                    if (current.kind() != Lexer.Kind.COMMA) {
                         throw new SyntaxException("Expected a comma, got " + current.kind(), lexer.cursor());
                     }
                     lexer.next();
                 }
                 lexer.next();
 
-                var expr = getFunction(left.toString(), arguments);
+                var expr = getFunction(left.getAsString(), arguments);
                 if (expr == null) {
                     throw new SyntaxException("Not found function: " + left, lexer.cursor());
                 }
@@ -385,7 +405,7 @@ public class Compiler {
             case QUES: {
                 lexer.next();
                 var trueValue = parseCompoundExpression(lexer, 0);
-                if (lexer.current().kind() == Lexer.TokenKind.COLON) {
+                if (lexer.current().kind() == Lexer.Kind.COLON) {
                     // then it's a ternary expression, since there is a ':', indicating the next expression
                     lexer.next();
                     var falseValue = parseCompoundExpression(lexer, 0);

@@ -237,12 +237,7 @@ public class AnimationController {
                     return new Constant(number.doubleValue());
                 }
                 if (object instanceof String script) {
-                    var expr = MolangVirtualMachine.get().eval(script);
-                    if (expr.isMutable()) {
-                        return expr;
-                    }
-                    // to avoid any molang function calls.
-                    return new Constant(expr.getAsDouble());
+                    return MolangVirtualMachine.get().eval(script);
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();
@@ -473,10 +468,10 @@ public class AnimationController {
         private Runnable build(Expression x, Expression y, Expression z) {
             // something requires to be calculated.
             if (x.isMutable() || y.isMutable() || z.isMutable()) {
-                return () -> variable.set((float) x.getAsDouble(), (float) y.getAsDouble(), (float) z.getAsDouble());
+                return () -> variable.set(x.getAsFloat(), y.getAsFloat(), z.getAsFloat());
             }
             // all is constant.
-            variable.set((float) x.getAsDouble(), (float) y.getAsDouble(), (float) z.getAsDouble());
+            variable.set(x.getAsFloat(), y.getAsFloat(), z.getAsFloat());
             return null;
         }
     }

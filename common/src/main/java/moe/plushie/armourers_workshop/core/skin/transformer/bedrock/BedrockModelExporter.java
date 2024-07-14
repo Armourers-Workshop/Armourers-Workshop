@@ -281,7 +281,7 @@ public class BedrockModelExporter {
                 if (expr.isMutable()) {
                     return script;
                 }
-                return (float) expr.getAsDouble();
+                return expr.getAsFloat();
             } catch (Exception exception) {
                 throw new RuntimeException("can't parse \"" + script + "\" in model!", exception);
             }
