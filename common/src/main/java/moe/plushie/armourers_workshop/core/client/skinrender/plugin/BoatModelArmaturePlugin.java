@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.client.model.IModelProvider;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.model.LinkedModel;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.world.entity.Entity;
 
@@ -24,12 +23,12 @@ public class BoatModelArmaturePlugin extends ArmaturePlugin {
     }
 
     @Override
-    public void activate(Entity entity, SkinRenderContext context) {
+    public void activate(Entity entity, Context context) {
         // link to placeholder model.
         placeholderModel.linkTo(modelProvider.getModel(entity));
 
         // fix the direction.
-        context.pose().scale(-1, -1, 1);
+        context.getPoseStack().scale(-1, -1, 1);
     }
 
     @Override

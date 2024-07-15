@@ -63,22 +63,23 @@ public final class ExtendedItemRenderer {
 
     private static int renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, Vector3f scale, @Nullable Vector3f target, float partialTicks, int light, SkinItemSource itemSource, IPoseStack poseStack, IBufferSource bufferSource) {
         var counter = 0;
-        var context = SkinRenderTesselator.create(bakedSkin);
-        if (context == null) {
+        var tesselator = SkinRenderTesselator.create(bakedSkin);
+        if (tesselator == null) {
             return counter;
         }
         poseStack.pushPose();
         poseStack.scale(-1, -1, 1);
 
-        context.setLightmap(light);
-        context.setPartialTicks(partialTicks);
-        context.setRenderData(EntityRenderData.of(context.getMannequin()));
-        context.setColorScheme(scheme);
-        context.setItemSource(itemSource);
+        tesselator.setLightmap(light);
+        tesselator.setPartialTicks(partialTicks);
+
+        tesselator.setRenderData(EntityRenderData.of(tesselator.getMannequin()));
+        tesselator.setColorScheme(scheme);
+        tesselator.setItemSource(itemSource);
 
         // ...
         if (target != null) {
-            var rect = context.getBakedRenderBounds();
+            var rect = tesselator.getBakedRenderBounds();
             float targetWidth = target.getX();
             float targetHeight = target.getY();
             float targetDepth = target.getZ();
@@ -95,7 +96,11 @@ public final class ExtendedItemRenderer {
             poseStack.scale(newScale, newScale, newScale);
         }
 
-        counter = context.draw(poseStack, bufferSource);
+        tesselator.setPoseStack(poseStack);
+        tesselator.setBufferSource(bufferSource);
+        tesselator.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+
+        counter = tesselator.draw();
 
         poseStack.popPose();
 

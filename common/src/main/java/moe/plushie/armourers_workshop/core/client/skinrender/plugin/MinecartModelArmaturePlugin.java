@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.data.IAssociatedContainerKey;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.DataStorageKey;
 import moe.plushie.armourers_workshop.utils.MathUtils;
@@ -24,9 +23,9 @@ public class MinecartModelArmaturePlugin extends ArmaturePlugin {
     }
 
     @Override
-    public void activate(Entity entity, SkinRenderContext context) {
+    public void activate(Entity entity, Context context) {
         var minecart = (AbstractMinecart) entity;
-        var poseStack = context.pose();
+        var poseStack = context.getPoseStack();
 
         // fix minecart render direction issue.
         if (isFlapped(minecart, context.getPartialTicks(), context.getRenderData())) {

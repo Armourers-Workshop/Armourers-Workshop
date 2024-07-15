@@ -16,7 +16,7 @@ public class BlockEntityRenderData extends EntitySlotsHandler<BlockEntity> {
     public BlockEntityRenderData(BlockEntity blockEntity) {
         super(new BlockEntityProvider(), new WardrobeProvider());
         this.renderPatch = new BlockEntityRenderPatch<>(blockEntity);
-        this.renderPatch.setAnimationManager(getAnimationManager());
+        this.renderPatch.getRenderingContext().setAnimationManager(getAnimationManager());
     }
 
     @Nullable

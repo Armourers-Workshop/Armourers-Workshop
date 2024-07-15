@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.renderer.RenderType;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,8 +31,5 @@ public interface ConcurrentRenderingContext {
 
     ConcurrentBufferBuilder getBuffer(@NotNull BakedSkin skin);
 
-    default IPoseStack getModelViewStack() {
-        return RenderSystem.getExtendedModelViewStack();
-    }
-
+    IPoseStack getModelViewStack();
 }

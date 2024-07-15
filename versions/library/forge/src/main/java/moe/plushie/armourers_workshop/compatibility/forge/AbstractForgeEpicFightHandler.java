@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.compatibility.forge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
@@ -12,7 +11,6 @@ import moe.plushie.armourers_workshop.core.client.skinrender.patch.EpicFightEnti
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.PoseUtils;
-import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,18 +27,18 @@ public class AbstractForgeEpicFightHandler extends AbstractForgeEpicFightHandler
 
     private static final FloatBuffer AW_MAT_BUFFER4 = ObjectUtils.createFloatBuffer(16);
 
-    public static void onRenderPre(LivingEntity entityIn, LivingEntityRenderer<?, ?> renderer, MultiBufferSource buffers, PoseStack poseStack, int packedLightIn, float partialTicks, boolean isFirstPerson) {
-        EpicFightEntityRendererPatch.activate(entityIn, partialTicks, packedLightIn, poseStack, buffers, renderer, patch -> {
+    public static void onRenderPre(LivingEntity entityIn, int packedLightIn, float partialTicks, boolean isFirstPerson, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, LivingEntityRenderer<?, ?> renderer) {
+        EpicFightEntityRendererPatch.activate(entityIn, partialTicks, packedLightIn, poseStackIn, renderer, patch -> {
             patch.setFirstPerson(isFirstPerson);
         });
     }
 
-    public static void onRenderEntity(LivingEntity entityIn, Armature armature, VertexConsumer builder, PoseStack poseStack, int packedLightIn, float partialTicks, CallbackInfoReturnable<OpenMatrix4f[]> cir) {
-        EpicFightEntityRendererPatch.apply(entityIn, patch -> {
+    public static void onRenderEntity(LivingEntity entityIn, Armature armature, int packedLightIn, float partialTicks, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, CallbackInfoReturnable<OpenMatrix4f[]> cir) {
+        EpicFightEntityRendererPatch.apply(entityIn, poseStackIn, bufferSourceIn, patch -> {
             var poses = cir.getReturnValue();
             var overridePoses = Arrays.copyOf(poses, poses.length);
             var transforms = new HashMap<String, IJointTransform>();
-            patch.setOverridePose(new OpenPoseStack(AbstractPoseStack.wrap(poseStack)));
+            patch.setOverridePose(AbstractPoseStack.create(poseStackIn));
             patch.setTransformProvider(name -> transforms.computeIfAbsent(name, it -> {
                 var joint = armature.searchJointByName(it);
                 if (joint == null) {
@@ -65,7 +63,7 @@ public class AbstractForgeEpicFightHandler extends AbstractForgeEpicFightHandler
         });
     }
 
-    public static void onRenderPost(LivingEntity entityIn, LivingEntityRenderer<?, ?> renderer, MultiBufferSource buffers, PoseStack poseStack, int packedLightIn, float partialTicks) {
+    public static void onRenderPost(LivingEntity entityIn, int packedLightIn, float partialTicks, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, LivingEntityRenderer<?, ?> renderer) {
         EpicFightEntityRendererPatch.deactivate(entityIn, patch -> {
             patch.setFirstPerson(false);
             patch.setOverridePose(null);

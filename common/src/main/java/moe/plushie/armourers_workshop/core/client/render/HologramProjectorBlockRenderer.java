@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.render;
 import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
@@ -11,6 +12,7 @@ import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -35,8 +37,8 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
             return;
         }
         renderData.tick(entity);
-        var skins = renderData.getAllSkins();
-        if (skins.isEmpty()) {
+        var renderingTasks = renderData.getAllSkins();
+        if (renderingTasks.isEmpty()) {
             return;
         }
 //        var itemStack = entity.getItem(0);
@@ -55,8 +57,6 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
         var renderPatch = renderData.getRenderPatch();
         var mannequinEntity = PlaceholderManager.MANNEQUIN.get();
 
-        renderPatch.activate(entity, partialTicks, overLight, overlay, poseStack, bufferSource);
-
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f);
         poseStack.rotate(entity.getRenderRotations(blockState));
@@ -65,26 +65,35 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
         poseStack.scale(f, f, f);
         poseStack.scale(-1, -1, 1);
 
-//        context.setLightmap(overLight);
-//        context.setAnimationTicks(animationTicks);
-//        context.setColorScheme(descriptor.getColorScheme());
-//        context.setReferenced(SkinItemSource.create(itemStack));
+        renderPatch.activate(entity, partialTicks, overLight, overlay, poseStack);
 
-        for (var entry : skins) {
+        var pluginContext = renderPatch.getPluginContext();
+        var renderingContext = renderPatch.getRenderingContext();
+
+        renderingContext.setOverlay(pluginContext.getOverlay());
+        renderingContext.setLightmap(pluginContext.getLightmap());
+        renderingContext.setPartialTicks(pluginContext.getPartialTicks());
+        renderingContext.setAnimationTicks(pluginContext.getAnimationTicks());
+
+        renderingContext.setPoseStack(poseStack);
+        renderingContext.setBufferSource(bufferSource);
+        renderingContext.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+
+        for (var entry : renderingTasks) {
             var itemSource = SkinItemSource.create(entry.getItemStack());
             var bakedSkin = entry.getBakedSkin();
             var bakedArmature = BakedArmature.defaultBy(bakedSkin.getType());
             var rect = bakedSkin.getRenderBounds(itemSource);
 
-            renderPatch.setItemSource(itemSource);
-            renderPatch.setColorScheme(entry.getBakedScheme());
+            renderingContext.setItemSource(itemSource);
+            renderingContext.setColorScheme(entry.getBakedScheme());
             //renderPatch.setOverlay(entry.getOverrideOverlay(entity));
 
-            apply(entity, rect, renderPatch.getAnimationTicks(), poseStack, bufferSource);
+            apply(entity, rect, renderingContext.getAnimationTicks(), poseStack, bufferSource);
 
-            bakedSkin.setupAnim(mannequinEntity, bakedArmature, renderPatch);
+            bakedSkin.setupAnim(mannequinEntity, bakedArmature, renderingContext);
             var colorScheme = bakedSkin.resolve(mannequinEntity, entry.getBakedScheme());
-            SkinRenderer.render(mannequinEntity, bakedArmature, bakedSkin, colorScheme, renderPatch);
+            SkinRenderer.render(mannequinEntity, bakedArmature, bakedSkin, colorScheme, renderingContext);
         }
 
         poseStack.popPose();
@@ -97,7 +106,7 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
             poseStack.popPose();
         }
 
-        renderPatch.deactivate(entity, partialTicks, light, overlay, poseStack, bufferSource);
+        renderPatch.deactivate(entity);
     }
 
     private void apply(T entity, Rectangle3f rect, float animationTicks, IPoseStack poseStack, IBufferSource bufferSource) {

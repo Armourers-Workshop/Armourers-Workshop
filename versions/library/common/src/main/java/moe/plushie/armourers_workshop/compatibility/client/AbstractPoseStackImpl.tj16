@@ -9,7 +9,9 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
+import moe.plushie.armourers_workshop.core.data.cache.ObjectPool;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -18,6 +20,8 @@ import java.nio.FloatBuffer;
 @Available("[1.16, 1.20)")
 @Environment(EnvType.CLIENT)
 public abstract class AbstractPoseStackImpl {
+
+    protected static final ObjectPool<OpenPoseStack> REUSABLE_QUEUE = ObjectPool.create(OpenPoseStack::new);
 
     private static final AbstractMatrix3f CONVERTER_MAT3 = new AbstractMatrix3f(new Matrix3f());
     private static final AbstractMatrix4f CONVERTER_MAT4 = new AbstractMatrix4f(new Matrix4f());

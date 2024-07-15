@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.client.skinrender.plugin;
 
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.client.Minecraft;
@@ -14,8 +13,8 @@ public class FishingModelArmaturePlugin extends ArmaturePlugin {
     }
 
     @Override
-    public void activate(Entity entity, SkinRenderContext context) {
-        var poseStack = context.pose();
+    public void activate(Entity entity, Context context) {
+        var poseStack = context.getPoseStack();
         var rotation = Minecraft.getInstance().getCameraOrientation().toYXZ();
         poseStack.rotate(OpenQuaternionf.fromYXZ(rotation.getY(), 0, 0));
         poseStack.rotate(Vector3f.YP.rotationDegrees(180.0f));

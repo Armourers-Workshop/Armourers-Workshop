@@ -42,6 +42,7 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
 
     protected final IPoseStack defaultPoseStack;
     protected IPoseStack poseStack;
+    protected IPoseStack modelViewStack;
 
     public SkinRenderContext() {
         this(new AbstractPoseStack());
@@ -52,20 +53,18 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         this.poseStack = defaultPoseStack;
     }
 
-    public static SkinRenderContext alloc(EntityRenderData renderData, int light, float partialTick, AbstractItemTransformType transformType, IPoseStack poseStack, IBufferSource bufferSource) {
+    public static SkinRenderContext alloc(EntityRenderData renderData, int light, float partialTick, AbstractItemTransformType transformType) {
         SkinRenderContext context = POOL.next();
         context.setRenderData(renderData);
         context.setLightmap(light);
         context.setPartialTicks(partialTick);
         context.setAnimationTicks(TickUtils.animationTicks());
         context.setTransformType(transformType);
-        context.setPose(poseStack);
-        context.setBufferSource(bufferSource);
         return context;
     }
 
-    public static SkinRenderContext alloc(EntityRenderData renderData, int light, float partialTick, IPoseStack poseStack, IBufferSource bufferSource) {
-        return alloc(renderData, light, partialTick, AbstractItemTransformType.NONE, poseStack, bufferSource);
+    public static SkinRenderContext alloc(EntityRenderData renderData, int light, float partialTick) {
+        return alloc(renderData, light, partialTick, AbstractItemTransformType.NONE);
     }
 
     public void release() {
@@ -164,11 +163,6 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         return animationManager;
     }
 
-    public void setPose(IPoseStack pose) {
-        this.poseStack = pose;
-    }
-
-
     public ConcurrentBufferBuilder getBuffer(@NotNull BakedSkin skin) {
         if (bufferProvider != null) {
             return bufferProvider.apply(skin);
@@ -181,14 +175,6 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         this.bufferProvider = bufferProvider;
     }
 
-    public void setBufferSource(IBufferSource bufferSource) {
-        this.bufferSource = bufferSource;
-    }
-
-    @Override
-    public IBufferSource getBufferSource() {
-        return bufferSource;
-    }
 
     @Override
     public float getRenderPriority() {
@@ -210,8 +196,30 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         return SkinItemSource.EMPTY;
     }
 
+    public void setPoseStack(IPoseStack pose) {
+        this.poseStack = pose;
+    }
+
     @Override
     public IPoseStack getPoseStack() {
         return poseStack;
+    }
+
+    public void setBufferSource(IBufferSource bufferSource) {
+        this.bufferSource = bufferSource;
+    }
+
+    @Override
+    public IBufferSource getBufferSource() {
+        return bufferSource;
+    }
+
+    public void setModelViewStack(IPoseStack modelViewStack) {
+        this.modelViewStack = modelViewStack;
+    }
+
+    @Override
+    public IPoseStack getModelViewStack() {
+        return modelViewStack;
     }
 }

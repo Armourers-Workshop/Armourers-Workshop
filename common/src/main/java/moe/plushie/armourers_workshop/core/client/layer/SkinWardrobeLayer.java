@@ -4,17 +4,18 @@ import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.model.IModel;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.AbstractRenderLayer;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.patch.EpicFightEntityRendererPatch;
 import moe.plushie.armourers_workshop.init.ModContributors;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -41,9 +42,12 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         if (entity.isInvisible()) {
             return;
         }
-        var poseStack1 = poseStack;
         var renderData = EntityRenderData.of(entity);
         if (renderData == null) {
+            return;
+        }
+        var renderingTasks = renderData.getArmorSkins();
+        if (renderingTasks.isEmpty()) {
             return;
         }
         var renderPatch = renderData.getRenderPatch();
@@ -54,6 +58,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         if (transformer == null) {
             return;
         }
+        var poseStack1 = poseStack;
         var epicFlightContext = ObjectUtils.safeCast(renderPatch, EpicFightEntityRendererPatch.class);
         if (epicFlightContext != null) {
             poseStack = epicFlightContext.getOverridePose();
@@ -76,16 +81,27 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         poseStack.scale(f, f, f);
 
         transformer.applyTo(armature);
-        var context = SkinRenderContext.alloc(renderData, packedLightIn, partialTicks, null, poseStack, bufferSource);
-        for (var entry : renderData.getArmorSkins()) {
-            context.setOverlay(entry.getOverrideOverlay(entity));
-            context.setItemSource(SkinItemSource.create(entry.getRenderPriority(), entry.getItemStack()));
+
+        var pluginContext = renderPatch.getPluginContext();
+        var renderingContext = renderPatch.getRenderingContext();
+
+        renderingContext.setOverlay(pluginContext.getOverlay());
+        renderingContext.setLightmap(pluginContext.getLightmap());
+        renderingContext.setPartialTicks(pluginContext.getPartialTicks());
+        renderingContext.setAnimationTicks(pluginContext.getAnimationTicks());
+
+        renderingContext.setPoseStack(poseStack);
+        renderingContext.setBufferSource(bufferSource);
+        renderingContext.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+
+        for (var entry : renderingTasks) {
+            renderingContext.setOverlay(entry.getOverrideOverlay(entity));
+            renderingContext.setItemSource(SkinItemSource.create(entry.getRenderPriority(), entry.getItemStack()));
             var bakedSkin = entry.getBakedSkin();
-            bakedSkin.setupAnim(entity, armature, context);
+            bakedSkin.setupAnim(entity, armature, renderingContext);
             var colorScheme = bakedSkin.resolve(entity, entry.getBakedScheme());
-            SkinRenderer.render(entity, armature, bakedSkin, colorScheme, context);
+            SkinRenderer.render(entity, armature, bakedSkin, colorScheme, renderingContext);
         }
-        context.release();
 
         poseStack.popPose();
     }

@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.compatibility.client.layer.AbstractSkinnab
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.layer.PlaceholderLayer;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -73,12 +72,12 @@ public abstract class DefaultLayerArmaturePlugin extends ArmaturePlugin {
     public abstract <T extends LivingEntity, M extends EntityModel<T>> Selector search(RenderLayer<T, M> layer);
 
     @Override
-    public void activate(Entity entity, SkinRenderContext context) {
+    public void activate(Entity entity, Context context) {
         applying.forEach(Applier::activate);
     }
 
     @Override
-    public void deactivate(Entity entity, SkinRenderContext context) {
+    public void deactivate(Entity entity, Context context) {
         applying.forEach(Applier::deactivate);
     }
 

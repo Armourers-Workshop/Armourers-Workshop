@@ -27,8 +27,8 @@ public class EpicFightEntityRendererPatch<T extends LivingEntity> extends Entity
         super(renderData);
     }
 
-    public static <T extends LivingEntity> void activate(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer, Consumer<EpicFightEntityRendererPatch<T>> handler) {
-        _activate(EpicFightEntityRendererPatch.class, entity, partialTicks, packedLight, poseStackIn, buffersIn, entityRenderer, handler, renderData -> {
+    public static <T extends LivingEntity> void activate(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, LivingEntityRenderer<?, ?> entityRenderer, Consumer<EpicFightEntityRendererPatch<T>> handler) {
+        _activate(EpicFightEntityRendererPatch.class, entity, partialTicks, packedLight, poseStackIn, entityRenderer, handler, renderData -> {
             var model = EpicFlightModel.ofNullable(entityRenderer.getModel());
             if (model != null) {
                 return new EpicFightEntityRendererPatch<>(renderData);
@@ -37,8 +37,8 @@ public class EpicFightEntityRendererPatch<T extends LivingEntity> extends Entity
         });
     }
 
-    public static <T extends LivingEntity> void apply(T entity, Consumer<EpicFightEntityRendererPatch<T>> handler) {
-        _apply(EpicFightEntityRendererPatch.class, entity, handler);
+    public static <T extends LivingEntity> void apply(T entity, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, Consumer<EpicFightEntityRendererPatch<T>> handler) {
+        _apply(EpicFightEntityRendererPatch.class, entity, poseStackIn, bufferSourceIn, handler);
     }
 
     public static <T extends LivingEntity> void deactivate(T entity, Consumer<EpicFightEntityRendererPatch<T>> handler) {
@@ -46,14 +46,14 @@ public class EpicFightEntityRendererPatch<T extends LivingEntity> extends Entity
     }
 
     @Override
-    protected final void onInit(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, EntityRenderer<?> entityRenderer) {
+    protected final void onInit(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, EntityRenderer<?> entityRenderer) {
         if (entityRenderer instanceof LivingEntityRenderer) {
-            onInit(entity, partialTicks, packedLight, poseStackIn, buffersIn, (LivingEntityRenderer<?, ?>) entityRenderer);
+            onInit(entity, partialTicks, packedLight, poseStackIn, (LivingEntityRenderer<?, ?>) entityRenderer);
         }
     }
 
-    protected void onInit(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
-        super.onInit(entity, partialTicks, packedLight, poseStackIn, buffersIn, entityRenderer);
+    protected void onInit(T entity, float partialTicks, int packedLight, PoseStack poseStackIn, LivingEntityRenderer<?, ?> entityRenderer) {
+        super.onInit(entity, partialTicks, packedLight, poseStackIn, entityRenderer);
         var entityModel = entityRenderer.getModel();
         if (this.entityModel != entityModel) {
             this.entityModel = entityModel;
@@ -94,7 +94,7 @@ public class EpicFightEntityRendererPatch<T extends LivingEntity> extends Entity
         if (overridePoseStack != null) {
             return overridePoseStack;
         }
-        return poseStack;
+        return pluginContext.getPoseStack();
     }
 
     private BakedArmatureTransformer createTransformer(Entity entity, EpicFlightModel model, LivingEntityRenderer<?, ?> entityRenderer) {

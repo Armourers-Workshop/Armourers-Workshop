@@ -4,7 +4,9 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
+import moe.plushie.armourers_workshop.core.data.cache.ObjectPool;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.joml.Matrix3f;
@@ -19,6 +21,8 @@ import java.nio.FloatBuffer;
 @Environment(EnvType.CLIENT)
 public abstract class AbstractPoseStackImpl {
 
+    protected static final ObjectPool<OpenPoseStack> REUSABLE_QUEUE = ObjectPool.create(OpenPoseStack::new);
+
     private static final Matrix3f CONVERTER_MAT3 = new Matrix3f();
     private static final Matrix4f CONVERTER_MAT4 = new Matrix4f();
 
@@ -26,6 +30,14 @@ public abstract class AbstractPoseStackImpl {
 
     private static final FloatBuffer BUFFER3x3 = ObjectUtils.createFloatBuffer(9);
     private static final FloatBuffer BUFFER4x4 = ObjectUtils.createFloatBuffer(16);
+
+    public static OpenPoseStack create(Matrix4f matrixStack) {
+        var poseStack = REUSABLE_QUEUE.get();
+        poseStack.last().pose().set(convertMatrix(matrixStack));
+        poseStack.last().normal().setIdentity();
+        poseStack.last().setProperties(0);
+        return poseStack;
+    }
 
     public static AbstractMatrix3f convertMatrix(Matrix3f mat) {
         return new AbstractMatrix3f(mat);

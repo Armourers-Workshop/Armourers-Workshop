@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.math.IQuaternionf;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -21,6 +22,18 @@ public class AbstractPoseStack extends AbstractPoseStackImpl implements IPoseSta
 
     public AbstractPoseStack(PoseStack poseStack) {
         this.stack = poseStack;
+    }
+
+    public static OpenPoseStack create(IPoseStack poseStack) {
+        var poseStack1 = REUSABLE_QUEUE.get();
+        poseStack1.last().set(poseStack.last());
+        return poseStack1;
+    }
+
+    public static OpenPoseStack create(PoseStack poseStack) {
+        var poseStack1 = REUSABLE_QUEUE.get();
+        poseStack1.last().set(IAssociatedObjectProvider.of(poseStack.last(), Pose::new));
+        return poseStack1;
     }
 
     public static void reset(PoseStack poseStack) {

@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
@@ -44,9 +42,7 @@ public class SkinRenderTesselator extends SkinRenderContext {
         return new SkinRenderTesselator(bakedSkin, bakedArmature, mannequin);
     }
 
-    public int draw(IPoseStack poseStack, IBufferSource bufferSource) {
-        setPose(poseStack);
-        setBufferSource(bufferSource);
+    public int draw() {
         bakedSkin.setupAnim(mannequin, bakedArmature, this);
         var colorScheme = bakedSkin.resolve(mannequin, getColorScheme());
         SkinRenderer.render(mannequin, bakedArmature, bakedSkin, colorScheme, this);

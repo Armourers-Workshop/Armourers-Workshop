@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
@@ -34,7 +33,7 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
     }
 
     @Override
-    public void prepare(Entity entity, SkinRenderContext context) {
+    public void prepare(Entity entity, Context context) {
         var renderData = context.getRenderData();
 
         // Limit the players limbs if they have a skirt equipped.
@@ -45,7 +44,7 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
     }
 
     @Override
-    public void activate(Entity entity, SkinRenderContext context) {
+    public void activate(Entity entity, Context context) {
         var renderData = context.getRenderData();
         var overriddenManager = renderData.getOverriddenManager();
 
@@ -74,7 +73,7 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
     }
 
     @Override
-    public void deactivate(Entity entity, SkinRenderContext context) {
+    public void deactivate(Entity entity, Context context) {
         var renderData = context.getRenderData();
         var overriddenManager = renderData.getOverriddenManager();
 

@@ -44,7 +44,6 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Collections;
-import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
@@ -81,15 +80,24 @@ public class ClientWardrobeHandler {
         if (renderData == null) {
             return;
         }
+        var renderingTasks = renderData.getArmorSkins();
+        if (renderingTasks.isEmpty()) {
+            return;
+        }
         var poseStack = AbstractPoseStack.wrap(poseStackIn);
-        var buffers = AbstractBufferSource.wrap(buffersIn);
+        var bufferSource = AbstractBufferSource.wrap(buffersIn);
         var armature = BakedFirstPersonArmature.defaultBy(transformType);
-        var context = SkinRenderContext.alloc(renderData, packedLight, partialTicks, transformType, poseStack, buffers);
 
         poseStack.pushPose();
         poseStack.scale(-SCALE, -SCALE, SCALE);
 
-        int count = render(entity, armature, context, renderData::getArmorSkins);
+        var context = SkinRenderContext.alloc(renderData, packedLight, partialTicks, transformType);
+
+        context.setPoseStack(poseStack);
+        context.setBufferSource(bufferSource);
+        context.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+
+        int count = render(entity, armature, context, renderData.getArmorSkins());
         if (count != 0 && !ModDebugger.handOverride) {
             cancelHandler.run();
         }
@@ -99,28 +107,28 @@ public class ClientWardrobeHandler {
     }
 
 
-    public static void onRenderEntityPre(Entity entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight) {
-        FallbackEntityRenderPatch.activate(entity, partialTicks, packedLight, poseStackIn, buffersIn, null);
+    public static void onRenderEntityPre(Entity entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, int packedLight) {
+        FallbackEntityRenderPatch.activate(entity, partialTicks, packedLight, poseStackIn, null);
     }
 
-    public static void onRenderEntity(Entity entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight) {
-        FallbackEntityRenderPatch.apply(entity, null);
+    public static void onRenderEntity(Entity entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, int packedLight) {
+        FallbackEntityRenderPatch.apply(entity, poseStackIn, bufferSourceIn, null);
     }
 
-    public static void onRenderEntityPost(Entity entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight) {
+    public static void onRenderEntityPost(Entity entity, float partialTicks, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, int packedLight) {
         FallbackEntityRenderPatch.deactivate(entity, null);
     }
 
 
-    public static void onRenderLivingEntityPre(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
-        LivingEntityRenderPatch.activate(entity, partialTicks, packedLight, poseStackIn, buffersIn, entityRenderer, null);
+    public static void onRenderLivingEntityPre(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, LivingEntityRenderer<?, ?> entityRenderer) {
+        LivingEntityRenderPatch.activate(entity, partialTicks, packedLight, poseStackIn, entityRenderer, null);
     }
 
-    public static void onRenderLivingEntity(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
-        LivingEntityRenderPatch.apply(entity, null);
+    public static void onRenderLivingEntity(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, LivingEntityRenderer<?, ?> entityRenderer) {
+        LivingEntityRenderPatch.apply(entity, poseStackIn, bufferSourceIn, null);
     }
 
-    public static void onRenderLivingEntityPost(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource buffersIn, LivingEntityRenderer<?, ?> entityRenderer) {
+    public static void onRenderLivingEntityPost(LivingEntity entity, float partialTicks, int packedLight, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, LivingEntityRenderer<?, ?> entityRenderer) {
         LivingEntityRenderPatch.deactivate(entity, null);
     }
 
@@ -189,16 +197,21 @@ public class ClientWardrobeHandler {
 //                    poseStack.translate(0, 1, -2);
 //                    RenderUtils.drawPoint(poseStack, null, 2, buffers);
                     var poseStack = AbstractPoseStack.wrap(poseStackIn);
-                    var buffers = AbstractBufferSource.wrap(buffersIn);
+                    var bufferSource = AbstractBufferSource.wrap(buffersIn);
                     var armature = BakedArmature.defaultBy(Armatures.ANY);
-                    var context = SkinRenderContext.alloc(renderData, packedLight, 0, transformType, poseStack, buffers);
 
                     poseStack.pushPose();
                     poseStack.scale(-SCALE, -SCALE, SCALE);
 
+                    var context = SkinRenderContext.alloc(renderData, packedLight, 0, transformType);
+                    context.setPoseStack(poseStack);
+                    context.setBufferSource(bufferSource);
+                    context.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+
                     context.setItemSource(SkinItemSource.create(800, itemStack, transformType));
-                    counter = render(entity, armature, context, () -> Collections.singleton(embeddedStack.getEntry()));
+                    counter = render(entity, armature, context, Collections.singleton(embeddedStack.getEntry()));
                     context.release();
+
                     poseStack.popPose();
                 }
                 break;
@@ -256,23 +269,27 @@ public class ClientWardrobeHandler {
     private static int _renderEmbeddedSkin(EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight, int overlay) {
         int count = 0;
         var descriptor = embeddedStack.getDescriptor();
-        var context = SkinRenderTesselator.create(descriptor, Tickets.INVENTORY);
-        if (context == null) {
+        var tesselator = SkinRenderTesselator.create(descriptor, Tickets.INVENTORY);
+        if (tesselator == null) {
             return count;
         }
         var poseStack = AbstractPoseStack.wrap(poseStackIn);
-        var buffers = AbstractBufferSource.wrap(buffersIn);
+        var bufferSource = AbstractBufferSource.wrap(buffersIn);
 
         poseStack.pushPose();
         poseStack.scale(-SCALE, -SCALE, SCALE);
 
-        context.setRenderData(EntityRenderData.of(context.getMannequin()));
-        context.setLightmap(packedLight);
-        context.setPartialTicks(0);
-        context.setItemSource(SkinItemSource.create(800, embeddedStack.getItemStack(), transformType));
-        context.setColorScheme(descriptor.getColorScheme());
+        tesselator.setRenderData(EntityRenderData.of(tesselator.getMannequin()));
+        tesselator.setLightmap(packedLight);
+        tesselator.setPartialTicks(0);
+        tesselator.setItemSource(SkinItemSource.create(800, embeddedStack.getItemStack(), transformType));
+        tesselator.setColorScheme(descriptor.getColorScheme());
 
-        count = context.draw(poseStack, buffers);
+        tesselator.setPoseStack(poseStack);
+        tesselator.setBufferSource(bufferSource);
+        tesselator.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+
+        count = tesselator.draw();
 
         poseStack.popPose();
         return count;
@@ -312,9 +329,9 @@ public class ClientWardrobeHandler {
         }
     }
 
-    public static int render(Entity entity, BakedArmature bakedArmature, SkinRenderContext context, Supplier<Iterable<EntitySlot>> provider) {
+    public static int render(Entity entity, BakedArmature bakedArmature, SkinRenderContext context, Iterable<EntitySlot> entries) {
         int r = 0;
-        for (var entry : provider.get()) {
+        for (var entry : entries) {
             var bakedSkin = entry.getBakedSkin();
             var itemSource = context.getItemSource();
             var itemStack = itemSource.getItem();

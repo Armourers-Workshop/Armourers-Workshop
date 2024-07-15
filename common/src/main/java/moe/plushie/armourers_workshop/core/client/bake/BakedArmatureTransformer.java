@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.api.client.model.IModelProvider;
 import moe.plushie.armourers_workshop.core.armature.Armature;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformer;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.render.EntityRendererStorage;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager2;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
@@ -93,19 +92,19 @@ public class BakedArmatureTransformer {
         });
     }
 
-    public void prepare(Entity entity, SkinRenderContext context) {
+    public void prepare(Entity entity, ArmaturePlugin.Context context) {
         for (var plugin : plugins) {
             plugin.prepare(entity, context);
         }
     }
 
-    public void activate(Entity entity, SkinRenderContext context) {
+    public void activate(Entity entity, ArmaturePlugin.Context context) {
         for (var plugin : plugins) {
             plugin.activate(entity, context);
         }
     }
 
-    public void deactivate(Entity entity, SkinRenderContext context) {
+    public void deactivate(Entity entity, ArmaturePlugin.Context context) {
         for (var plugin : plugins) {
             plugin.deactivate(entity, context);
         }

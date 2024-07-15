@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.model.TransformModel;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,7 +23,7 @@ public class VillagerModelArmaturePlugin extends ArmaturePlugin {
     }
 
     @Override
-    public void activate(Entity entity, SkinRenderContext context) {
+    public void activate(Entity entity, Context context) {
         if (!(entity instanceof LivingEntity livingEntity)) {
             return;
         }

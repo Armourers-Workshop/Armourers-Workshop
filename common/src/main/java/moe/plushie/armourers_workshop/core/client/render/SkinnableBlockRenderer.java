@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.render;
 import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
@@ -11,6 +12,7 @@ import moe.plushie.armourers_workshop.core.client.other.BlockEntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -31,8 +33,8 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
             return;
         }
         renderData.tick(entity);
-        var skins = renderData.getAllSkins();
-        if (skins.isEmpty()) {
+        var renderingTasks = renderData.getAllSkins();
+        if (renderingTasks.isEmpty()) {
             return;
         }
         var f = 1 / 16f;
@@ -43,8 +45,6 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
         var renderPatch = renderData.getRenderPatch();
         var mannequinEntity = PlaceholderManager.MANNEQUIN.get();
 
-        renderPatch.activate(entity, partialTicks, light, overlay, poseStack, bufferSource);
-
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f);
         poseStack.rotate(rotations);
@@ -52,11 +52,25 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
         poseStack.scale(f, f, f);
         poseStack.scale(-1, -1, 1);
 
-        for (var entry : skins) {
+        renderPatch.activate(entity, partialTicks, light, overlay, poseStack);
+
+        var pluginContext = renderPatch.getPluginContext();
+        var renderingContext = renderPatch.getRenderingContext();
+
+        renderingContext.setOverlay(pluginContext.getOverlay());
+        renderingContext.setLightmap(pluginContext.getLightmap());
+        renderingContext.setPartialTicks(pluginContext.getPartialTicks());
+        renderingContext.setAnimationTicks(pluginContext.getAnimationTicks());
+
+        renderingContext.setPoseStack(poseStack);
+        renderingContext.setBufferSource(bufferSource);
+        renderingContext.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+
+        for (var entry : renderingTasks) {
             var skin = entry.getBakedSkin();
-            skin.setupAnim(mannequinEntity, armature, renderPatch);
+            skin.setupAnim(mannequinEntity, armature, renderingContext);
             var colorScheme = skin.resolve(mannequinEntity, entry.getBakedScheme());
-            SkinRenderer.render(mannequinEntity, armature, skin, colorScheme, renderPatch);
+            SkinRenderer.render(mannequinEntity, armature, skin, colorScheme, renderingContext);
             if (ModDebugger.skinnable) {
                 skin.getBlockBounds().forEach((pos, rect) -> {
                     poseStack.pushPose();
@@ -68,6 +82,8 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
             }
         }
 
+        renderPatch.deactivate(entity);
+
         poseStack.popPose();
 
         if (ModDebugger.skinnable) {
@@ -77,7 +93,5 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
             ShapeTesselator.stroke(entity.getRenderShape(blockState), UIColor.ORANGE, poseStack, bufferSource);
             poseStack.popPose();
         }
-
-        renderPatch.deactivate(entity, partialTicks, light, overlay, poseStack, bufferSource);
     }
 }
