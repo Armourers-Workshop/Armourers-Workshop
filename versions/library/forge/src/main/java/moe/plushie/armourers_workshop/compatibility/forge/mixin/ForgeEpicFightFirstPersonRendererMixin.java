@@ -22,7 +22,7 @@ import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.client.mesh.HumanoidMesh;
 import yesman.epicfight.client.renderer.FirstPersonRenderer;
-import yesman.epicfight.client.renderer.patched.layer.PatchedLayer;
+import yesman.epicfight.client.renderer.patched.layer.EmptyLayer;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 
 @Available("[1.18, )")
@@ -50,7 +50,7 @@ public abstract class ForgeEpicFightFirstPersonRendererMixin {
     @Inject(method = "<init>", at = @At("TAIL"), remap = false)
     public void aw2$init(CallbackInfo callbackInfo) {
         FirstPersonRenderer renderer = ObjectUtils.unsafeCast(this);
-        renderer.addPatchedLayer(SkinWardrobeLayer.class, new PatchedLayer<>(null) {
+        renderer.addPatchedLayer(SkinWardrobeLayer.class, new EmptyLayer<>() {
             @Override
             protected void renderLayer(LocalPlayerPatch entityPatch, LocalPlayer entityIn, RenderLayer<LocalPlayer, PlayerModel<LocalPlayer>> layer, PoseStack poseStack, MultiBufferSource buffer, int packedLightIn, OpenMatrix4f[] poses, float bob, float yRot, float xRot, float partialTicks) {
                 layer.render(poseStack, buffer, packedLightIn, entityIn, partialTicks, 0, partialTicks, packedLightIn, xRot, yRot);

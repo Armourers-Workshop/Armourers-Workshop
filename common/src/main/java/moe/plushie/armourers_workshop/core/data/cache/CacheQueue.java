@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class CacheQueue<K, V> extends AutoreleasePool {
+public class CacheQueue<K, V> {
 
     private long nextCheckTime;
 
@@ -17,6 +17,7 @@ public class CacheQueue<K, V> extends AutoreleasePool {
 
     private final ArrayList<Pair<K, V>> queuing = new ArrayList<>();
     private final HashMap<K, Entry<V>> values = new HashMap<>();
+    private final AutoreleasePool<?> autoreleasePool;
 
     public CacheQueue(Duration expiredTime) {
         this(expiredTime, null);
@@ -25,18 +26,17 @@ public class CacheQueue<K, V> extends AutoreleasePool {
     public CacheQueue(Duration expiredTime, Consumer<V> releaseHandler) {
         this.expiredTime = expiredTime.toMillis();
         this.releaseHandler = releaseHandler;
-        this.addToPool(this);
-    }
+        this.autoreleasePool = new AutoreleasePool<>(() -> new AutoreleasePool.Lifecycle() {
+            @Override
+            public void begin() {
+                // nop.
+            }
 
-
-    @Override
-    protected void beginCapturing() {
-
-    }
-
-    @Override
-    protected void endCapturing() {
-        drain(System.currentTimeMillis());
+            @Override
+            public void end() {
+                drain(System.currentTimeMillis());
+            }
+        });
     }
 
     public void clearAll() {

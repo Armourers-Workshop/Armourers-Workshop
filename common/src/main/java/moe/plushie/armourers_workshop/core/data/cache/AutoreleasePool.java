@@ -2,25 +2,35 @@ package moe.plushie.armourers_workshop.core.data.cache;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.function.Supplier;
 
-public abstract class AutoreleasePool {
+public final class AutoreleasePool<T extends AutoreleasePool.Lifecycle> {
 
-    private static final Collection<AutoreleasePool> POOLS = new ConcurrentLinkedDeque<>();
+    private static final Collection<AutoreleasePool<?>> POOLS = new ConcurrentLinkedDeque<>();
 
-    public static void begin() {
-        POOLS.forEach(AutoreleasePool::beginCapturing);
-    }
+    private final ThreadLocal<T> lifecycles;
 
-    public static void end() {
-        POOLS.forEach(AutoreleasePool::endCapturing);
-    }
-
-    protected final void addToPool(AutoreleasePool pool) {
+    public AutoreleasePool(Supplier<T> supplier) {
+        lifecycles = ThreadLocal.withInitial(supplier);
         POOLS.add(this);
     }
 
-    protected abstract void beginCapturing();
+    public static void begin() {
+        POOLS.forEach(it -> it.get().begin());
+    }
 
-    protected abstract void endCapturing();
+    public static void end() {
+        POOLS.forEach(it -> it.get().end());
+    }
 
+    public T get() {
+        return lifecycles.get();
+    }
+
+    public interface Lifecycle {
+
+        void begin();
+
+        void end();
+    }
 }

@@ -7,21 +7,20 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.function.Supplier;
 
-public class ObjectPool<T> extends AutoreleasePool {
+public class ObjectPool<T> {
 
     private final Supplier<T> creator;
     private final Deque<T> reusable;
-    private final ThreadLocal<Page<T>> autoreleasePages;
+    private final AutoreleasePool<Page> autoreleasePool;
 
     protected ObjectPool(Supplier<T> creator, boolean isConcurrent) {
-        this.autoreleasePages = ThreadLocal.withInitial(Page::new);
+        this.autoreleasePool = new AutoreleasePool<>(Page::new);
         this.creator = creator;
         if (isConcurrent) {
             this.reusable = new ConcurrentLinkedDeque<>();
         } else {
             this.reusable = new ArrayDeque<>();
         }
-        this.addToPool(this);
     }
 
     public static <T> ObjectPool<T> create(Supplier<T> creator) {
@@ -30,16 +29,6 @@ public class ObjectPool<T> extends AutoreleasePool {
 
     public static <T> ObjectPool<T> create(Supplier<T> creator, boolean isConcurrent) {
         return new ObjectPool<>(creator, isConcurrent);
-    }
-
-    @Override
-    protected void beginCapturing() {
-        autoreleasePages.get().begin(this);
-    }
-
-    @Override
-    protected void endCapturing() {
-        autoreleasePages.get().end(this);
     }
 
     protected void recycle(List<T> objects) {
@@ -52,7 +41,7 @@ public class ObjectPool<T> extends AutoreleasePool {
     }
 
     public T get() {
-        var page = autoreleasePages.get();
+        var page = autoreleasePool.get();
         var value = reusable.poll();
         if (value == null) {
             value = creator.get();
@@ -61,28 +50,30 @@ public class ObjectPool<T> extends AutoreleasePool {
         return value;
     }
 
-    protected static class Page<T> {
+    protected class Page implements AutoreleasePool.Lifecycle {
 
-        private ArrayList<T> releasing;
-        private final ArrayList<T> queue = new ArrayList<>();
+        private List<T> releasing;
+        private final List<T> queue = new ArrayList<>();
 
-        public void begin(ObjectPool<T> pool) {
+        @Override
+        public void begin() {
             releasing = queue;
+        }
+
+        @Override
+        public void end() {
+            releasing = null;
+            if (queue.isEmpty()) {
+                return;
+            }
+            recycle(queue);
+            queue.clear();
         }
 
         public void track(T value) {
             if (releasing != null) {
                 releasing.add(value);
             }
-        }
-
-        public void end(ObjectPool<T> pool) {
-            releasing = null;
-            if (queue.isEmpty()) {
-                return;
-            }
-            pool.recycle(queue);
-            queue.clear();
         }
     }
 }
