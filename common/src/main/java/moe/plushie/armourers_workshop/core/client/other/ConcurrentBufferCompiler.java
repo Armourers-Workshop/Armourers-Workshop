@@ -2,9 +2,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
-import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferBuilder;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractVertexArrayObject;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
@@ -18,7 +16,6 @@ import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
@@ -183,6 +180,8 @@ public class ConcurrentBufferCompiler {
 
         private VertexBufferObject bufferObject;
 
+        private boolean isComplied = false;
+
         public Group(BakedSkinPart part, BakedSkin skin, int options, ColorScheme scheme) {
             this.skin = skin;
             this.part = part;
@@ -191,22 +190,34 @@ public class ConcurrentBufferCompiler {
         }
 
         public void upload(VertexBufferObject bufferObject) {
+            RenderSystem.assertOnRenderThread();
             if (mergedTasks == null) {
                 return; // is released or not init.
             }
             this.mergedTasks.forEach(it -> it.upload(bufferObject));
             this.bufferObject = bufferObject;
             this.bufferObject.retain();
+            this.isComplied = true;
         }
 
-        public void release() {
-            if (bufferObject == null) {
-                return;
+        public void close() {
+            RenderSystem.assertOnRenderThread();
+            if (this.bufferObject == null || this.mergedTasks == null) {
+                return; // is release
             }
             this.bufferObject.release();
             this.bufferObject = null;
             this.mergedTasks.forEach(Pass::release);
             this.mergedTasks = null;
+        }
+
+        public void release() {
+            if (!isComplied) {
+                return;
+            }
+            // set to false immediately, and then safely close and release later.
+            isComplied = false;
+            RenderSystem.recordRenderCall(this::close);
         }
 
         public List<Pass> getPasses() {
@@ -218,7 +229,7 @@ public class ConcurrentBufferCompiler {
         }
 
         public boolean isCompiled() {
-            return bufferObject != null;
+            return isComplied;
         }
 
         public boolean isOutline() {
@@ -246,6 +257,8 @@ public class ConcurrentBufferCompiler {
         VertexBufferObject bufferObject;
         VertexIndexObject indexObject;
 
+        boolean isCompiled = false;
+
         Pass(RenderType renderType, IRenderedBuffer bufferBuilder, float polygonOffset, ISkinPartType partType, boolean isOutline) {
             this.partType = partType;
             this.renderType = renderType;
@@ -260,12 +273,15 @@ public class ConcurrentBufferCompiler {
             this.arrayObject = AbstractVertexArrayObject.create(format, vertexOffset, bufferObject, INDEXER);
             this.bufferObject = bufferObject;
             this.indexObject = INDEXER;
+            this.isCompiled = true;
         }
 
         public void release() {
+            this.isCompiled = false;
             this.arrayObject.close();
             this.bufferObject = null;
             this.indexObject = null;
+            this.arrayObject = null;
         }
     }
 
@@ -307,68 +323,6 @@ public class ConcurrentBufferCompiler {
 
         public Key copy() {
             return new Key().set(hash, p1, p2, p3);
-        }
-    }
-
-    public static class Builder implements IVertexConsumer {
-
-        private final AbstractBufferBuilder mainBuilder;
-        private final AbstractBufferBuilder outlineBuilder;
-
-        public Builder(int total, RenderType mainRenderType, RenderType outlineRenderType) {
-            this.mainBuilder = new AbstractBufferBuilder(total * 8 * mainRenderType.format().getVertexSize());
-            this.outlineBuilder = new AbstractBufferBuilder(total * 8 * outlineRenderType.format().getVertexSize());
-            this.mainBuilder.begin(mainRenderType);
-            this.outlineBuilder.begin(outlineRenderType);
-        }
-
-        @Override
-        public IVertexConsumer vertex(float x, float y, float z) {
-            mainBuilder.vertex(x, y, z);
-            outlineBuilder.vertex(x, y, z);
-            return this;
-        }
-
-        @Override
-        public IVertexConsumer color(int r, int g, int b, int a) {
-            mainBuilder.color(r, g, b, a);
-            outlineBuilder.color(255, 255, 255, 255);
-            return this;
-        }
-
-        @Override
-        public IVertexConsumer uv(float u, float v) {
-            mainBuilder.uv(u, v);
-            outlineBuilder.uv(u, v);
-            return this;
-        }
-
-        @Override
-        public IVertexConsumer overlayCoords(int u, int v) {
-            mainBuilder.overlayCoords(u, v);
-            return this;
-        }
-
-        @Override
-        public IVertexConsumer uv2(int u, int v) {
-            mainBuilder.uv2(u, v);
-            return this;
-        }
-
-        @Override
-        public IVertexConsumer normal(float x, float y, float z) {
-            mainBuilder.normal(x, y, z);
-            return this;
-        }
-
-        @Override
-        public void endVertex() {
-            mainBuilder.endVertex();
-            outlineBuilder.endVertex();
-        }
-
-        public Pair<IRenderedBuffer, IRenderedBuffer> end() {
-            return Pair.of(mainBuilder.end(), outlineBuilder.end());
         }
     }
 }

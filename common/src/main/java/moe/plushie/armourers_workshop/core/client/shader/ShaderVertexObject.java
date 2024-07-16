@@ -42,5 +42,5 @@ public interface ShaderVertexObject {
 
     boolean isOutline();
 
-    void release();
+    boolean isReleased();
 }

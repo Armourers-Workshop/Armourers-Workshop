@@ -60,7 +60,7 @@ public class ConcurrentRenderingPipeline {
             usedCount = 0;
             for (var mergedTask : passes) {
                 // skip outline task, when not enable.
-                if (mergedTask.isOutline && !context.shouldRenderOutline()) {
+                if (!context.shouldRenderOutline() && mergedTask.isOutline) {
                     continue;
                 }
                 poll().fill(mergedTask, poseStack, context);
@@ -91,7 +91,6 @@ public class ConcurrentRenderingPipeline {
         float polygonOffset;
 
         OpenPoseStack poseStack;
-        RenderType renderType;
         ConcurrentBufferCompiler.Pass compiledTask;
 
         public Pass fill(ConcurrentBufferCompiler.Pass compiledTask, OpenPoseStack poseStack, ConcurrentRenderingContext context) {
@@ -102,17 +101,12 @@ public class ConcurrentRenderingPipeline {
             this.outlineColor = context.getOutlineColor();
             this.animationTicks = context.getAnimationTicks();
             this.polygonOffset = compiledTask.polygonOffset + context.getRenderPriority();
-            this.renderType = compiledTask.renderType;
             return this;
         }
 
         @Override
-        public void release() {
-        }
-
-        @Override
         public RenderType getType() {
-            return renderType;
+            return compiledTask.renderType;
         }
 
         @Override
@@ -155,7 +149,7 @@ public class ConcurrentRenderingPipeline {
             if (compiledTask.format != null) {
                 return compiledTask.format;
             }
-            return renderType.format();
+            return compiledTask.renderType.format();
         }
 
         @Override
@@ -186,6 +180,11 @@ public class ConcurrentRenderingPipeline {
         @Override
         public boolean isOutline() {
             return compiledTask.isOutline;
+        }
+
+        @Override
+        public boolean isReleased() {
+            return !compiledTask.isCompiled;
         }
     }
 }
