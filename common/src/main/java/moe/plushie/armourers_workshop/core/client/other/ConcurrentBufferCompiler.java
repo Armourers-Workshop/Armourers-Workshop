@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutorService;
 
 public class ConcurrentBufferCompiler {
 
-    private static final ExecutorService QUEUE = ThreadUtils.newFixedThreadPool(1, "AW-SKIN-VB");
+    private static final ExecutorService QUEUE = ThreadUtils.newFixedThreadPool(2, "AW-SKIN-VB");
     private static final CacheQueue<Object, Group> CACHING = new CacheQueue<>(Duration.ofSeconds(30), Group::release);
     private static final VertexIndexObject INDEXER = new VertexIndexObject(4, 6, (builder, index) -> {
         builder.accept(index);
@@ -85,7 +85,7 @@ public class ConcurrentBufferCompiler {
         if (pendingTasks == null || pendingTasks.isEmpty()) {
             return;
         }
-//        long startTime = System.currentTimeMillis();
+        //long startTime = System.nanoTime();
         var poseStack1 = new OpenPoseStack();
         var buildingTasks = new ArrayList<Pass>();
         for (var task : pendingTasks) {
@@ -109,8 +109,8 @@ public class ConcurrentBufferCompiler {
             task.mergedTasks = mergedTasks;
         }
         link(pendingTasks, buildingTasks);
-//        long totalTime = System.currentTimeMillis() - startTime;
-//        ModLog.debug("compile pendingTasks {}, times: {}ms", pendingTasks.size(), totalTime);
+        //long totalTime = System.nanoTime() - startTime;
+        //ModLog.debug("compile tasks {}, times: {}ms", pendingTasks.size(), totalTime / 1e6f);
     }
 
     private void link(ArrayList<Group> cachedTasks, ArrayList<Pass> buildingTasks) {

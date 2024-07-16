@@ -170,10 +170,7 @@ public class ConcurrentRenderingPipeline {
 
         @Override
         public int getOutlineColor() {
-            if (compiledTask.isOutline) {
-                return outlineColor;
-            }
-            return 0;
+            return outlineColor;
         }
 
         @Override
