@@ -26,6 +26,8 @@ public interface ShaderVertexObject {
 
     int getLightmap();
 
+    int getOutlineColor();
+
     float getPolygonOffset();
 
     OpenPoseStack getPoseStack();
@@ -35,6 +37,10 @@ public interface ShaderVertexObject {
     RenderType getType();
 
     boolean isGrowing();
+
+    boolean isTranslucent();
+
+    boolean isOutline();
 
     void release();
 }

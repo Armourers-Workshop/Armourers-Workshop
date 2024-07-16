@@ -167,6 +167,7 @@ public abstract class ShaderUniform {
             register("aw_TextureMatrix", RenderSystem::getExtendedTextureMatrix, Matrix4f::new);
             register("aw_NormalMatrix", RenderSystem::getExtendedNormalMatrix, Matrix3f::new);
             register("aw_ModelViewMat", RenderSystem::getExtendedModelViewMatrix, Matrix4f::new);
+            register("aw_ColorModulator", RenderSystem::getExtendedColorModulator, Vec4f::new);
         }
 
         private <T> void register(String name, Supplier<T> supplier, Factory<T> factory) {

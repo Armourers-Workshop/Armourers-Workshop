@@ -94,6 +94,8 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         renderingContext.setBufferSource(bufferSource);
         renderingContext.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
 
+        renderingContext.setOutlineColor(entity.getOutlineColor());
+
         for (var entry : renderingTasks) {
             renderingContext.setOverlay(entry.getOverrideOverlay(entity));
             renderingContext.setItemSource(SkinItemSource.create(entry.getRenderPriority(), entry.getItemStack()));

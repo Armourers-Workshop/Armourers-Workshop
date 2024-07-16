@@ -30,22 +30,26 @@ import org.jetbrains.annotations.Nullable;
 public final class ExtendedItemRenderer {
 
     public static void renderSkinInGUI(BakedSkin bakedSkin, float x, float y, float z, float width, float height, float rx, float ry, float rz, IPoseStack poseStack, IBufferSource bufferSource) {
-        renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, getTarget(bakedSkin), x, y, z, width, height, rx, ry, rz, 0, 0xf000f0, poseStack, bufferSource);
+        renderSkinInBox(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, getTarget(bakedSkin), x, y, z, width, height, rx, ry, rz, 0, 0xf000f0, 0, poseStack, bufferSource);
     }
 
     public static void renderSkinInGUI(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, float x, float y, float z, float width, float height, float rx, float ry, float rz, float partialTicks, int light, IPoseStack poseStack, IBufferSource bufferSource) {
-        renderSkinInBox(bakedSkin, scheme, itemStack, null, x, y, z, width, height, rx, ry, rz, partialTicks, light, poseStack, bufferSource);
+        renderSkinInBox(bakedSkin, scheme, itemStack, null, x, y, z, width, height, rx, ry, rz, partialTicks, light, 0, poseStack, bufferSource);
     }
 
     public static void renderSkinInTooltip(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, float x, float y, float z, float width, float height, float rx, float ry, float rz, float partialTicks, int light, IPoseStack poseStack, IBufferSource bufferSource) {
-        renderSkinInBox(bakedSkin, scheme, itemStack, Vector3f.ONE, x, y, z, width, height, rx, ry, rz, partialTicks, light, poseStack, bufferSource);
+        renderSkinInBox(bakedSkin, scheme, itemStack, Vector3f.ONE, x, y, z, width, height, rx, ry, rz, partialTicks, light, 0, poseStack, bufferSource);
     }
 
     public static int renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, Vector3f scale, float partialTicks, int light, SkinItemSource itemSource, IPoseStack poseStack, IBufferSource bufferSource) {
-        return renderSkinInBox(bakedSkin, scheme, scale, getTarget(bakedSkin), partialTicks, light, itemSource, poseStack, bufferSource);
+        return renderSkinInBox(bakedSkin, scheme, scale, getTarget(bakedSkin), partialTicks, light, 0, itemSource, poseStack, bufferSource);
     }
 
-    private static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, @Nullable Vector3f target, float x, float y, float z, float width, float height, float rx, float ry, float rz, float partialTicks, int light, IPoseStack poseStack, IBufferSource bufferSource) {
+    public static int renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, Vector3f scale, float partialTicks, int light, int outlineColor, SkinItemSource itemSource, IPoseStack poseStack, IBufferSource bufferSource) {
+        return renderSkinInBox(bakedSkin, scheme, scale, getTarget(bakedSkin), partialTicks, light, outlineColor, itemSource, poseStack, bufferSource);
+    }
+
+    private static void renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, @Nullable Vector3f target, float x, float y, float z, float width, float height, float rx, float ry, float rz, float partialTicks, int light, int outlineColor, IPoseStack poseStack, IBufferSource bufferSource) {
         if (bakedSkin != null) {
             float t = TickUtils.animationTicks();
             float si = Math.min(width, height);
@@ -56,12 +60,12 @@ public final class ExtendedItemRenderer {
             poseStack.rotate(Vector3f.YP.rotationDegrees(ry + ((t * 100) % 360)));
             poseStack.scale(0.625f, 0.625f, 0.625f);
             poseStack.scale(si, si, si);
-            renderSkinInBox(bakedSkin, scheme, Vector3f.ONE, target, partialTicks, light, SkinItemSource.create(itemStack), poseStack, bufferSource);
+            renderSkinInBox(bakedSkin, scheme, Vector3f.ONE, target, partialTicks, light, outlineColor, SkinItemSource.create(itemStack), poseStack, bufferSource);
             poseStack.popPose();
         }
     }
 
-    private static int renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, Vector3f scale, @Nullable Vector3f target, float partialTicks, int light, SkinItemSource itemSource, IPoseStack poseStack, IBufferSource bufferSource) {
+    private static int renderSkinInBox(BakedSkin bakedSkin, ColorScheme scheme, Vector3f scale, @Nullable Vector3f target, float partialTicks, int light, int outlineColor, SkinItemSource itemSource, IPoseStack poseStack, IBufferSource bufferSource) {
         var counter = 0;
         var tesselator = SkinRenderTesselator.create(bakedSkin);
         if (tesselator == null) {
@@ -76,6 +80,7 @@ public final class ExtendedItemRenderer {
         tesselator.setRenderData(EntityRenderData.of(tesselator.getMannequin()));
         tesselator.setColorScheme(scheme);
         tesselator.setItemSource(itemSource);
+        tesselator.setOutlineColor(outlineColor);
 
         // ...
         if (target != null) {

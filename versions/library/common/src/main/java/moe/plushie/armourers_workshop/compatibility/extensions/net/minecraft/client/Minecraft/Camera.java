@@ -7,8 +7,8 @@ import net.minecraft.client.Minecraft;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
-@Extension
 @Available("[1.20, )")
+@Extension
 public class Camera {
 
     public static OpenQuaternionf getCameraOrientation(@This Minecraft minecraft) {

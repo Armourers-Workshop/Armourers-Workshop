@@ -30,11 +30,13 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.EmbeddedSkinStack;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -93,9 +95,16 @@ public class ClientWardrobeHandler {
 
         var context = SkinRenderContext.alloc(renderData, packedLight, partialTicks, transformType);
 
+        context.setOverlay(OverlayTexture.NO_OVERLAY);
+        context.setLightmap(packedLight);
+        context.setPartialTicks(partialTicks);
+        context.setAnimationTicks(TickUtils.animationTicks());
+
         context.setPoseStack(poseStack);
         context.setBufferSource(bufferSource);
         context.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+
+        context.setOutlineColor(0); // no show in head?
 
         int count = render(entity, armature, context, renderData.getArmorSkins());
         if (count != 0 && !ModDebugger.handOverride) {
@@ -173,22 +182,28 @@ public class ClientWardrobeHandler {
             case GUI:
             case GROUND:
             case FIXED: {
-                counter = _renderEmbeddedSkinInBox(embeddedStack, transformType, leftHandHackery, poseStackIn, buffersIn, packedLight, overlay);
+                counter = _renderEmbeddedSkinInBox(embeddedStack, transformType, leftHandHackery, poseStackIn, buffersIn, packedLight, overlay, 0);
                 break;
             }
             case THIRD_PERSON_LEFT_HAND:
             case THIRD_PERSON_RIGHT_HAND:
             case FIRST_PERSON_LEFT_HAND:
             case FIRST_PERSON_RIGHT_HAND: {
+                // first person can't support render outline.
+                var outlineColor = 0;
+                if (transformType.isThirdPerson()) {
+                    outlineColor = entity.getOutlineColor();
+                }
+
                 // in special case, entity hold item type skin.
                 // so we need replace it to custom renderer.
                 if (embeddedStack.getEntry() == null) {
                     if (shouldRenderInBox(embeddedStack)) {
-                        counter = _renderEmbeddedSkinInBox(embeddedStack, transformType, leftHandHackery, poseStackIn, buffersIn, packedLight, overlay);
+                        counter = _renderEmbeddedSkinInBox(embeddedStack, transformType, leftHandHackery, poseStackIn, buffersIn, packedLight, overlay, outlineColor);
                     } else {
                         // use this case:
                         //  YDM's Weapon Master
-                        counter = _renderEmbeddedSkin(embeddedStack, transformType, leftHandHackery, poseStackIn, buffersIn, packedLight, overlay);
+                        counter = _renderEmbeddedSkin(embeddedStack, transformType, leftHandHackery, poseStackIn, buffersIn, packedLight, overlay, outlineColor);
                     }
                     break;
                 }
@@ -204,9 +219,17 @@ public class ClientWardrobeHandler {
                     poseStack.scale(-SCALE, -SCALE, SCALE);
 
                     var context = SkinRenderContext.alloc(renderData, packedLight, 0, transformType);
+
+                    context.setOverlay(OverlayTexture.NO_OVERLAY);
+                    context.setLightmap(packedLight);
+                    context.setPartialTicks(0);
+                    context.setAnimationTicks(TickUtils.animationTicks());
+
                     context.setPoseStack(poseStack);
                     context.setBufferSource(bufferSource);
                     context.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+
+                    context.setOutlineColor(outlineColor);
 
                     context.setItemSource(SkinItemSource.create(800, itemStack, transformType));
                     counter = render(entity, armature, context, Collections.singleton(embeddedStack.getEntry()));
@@ -226,7 +249,7 @@ public class ClientWardrobeHandler {
         }
     }
 
-    private static int _renderEmbeddedSkinInBox(EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight, int overlay) {
+    private static int _renderEmbeddedSkinInBox(EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight, int overlay, int outlineColor) {
         int count = 0;
         var descriptor = embeddedStack.getDescriptor();
         var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
@@ -259,14 +282,14 @@ public class ClientWardrobeHandler {
         itemSource.setTransformType(transformType);
 
         ColorScheme scheme = descriptor.getColorScheme();
-        count = ExtendedItemRenderer.renderSkinInBox(bakedSkin, scheme, scale, 0, packedLight, itemSource, poseStack, buffers);
+        count = ExtendedItemRenderer.renderSkinInBox(bakedSkin, scheme, scale, 0, packedLight, outlineColor, itemSource, poseStack, buffers);
 
         poseStack.popPose();
 
         return count;
     }
 
-    private static int _renderEmbeddedSkin(EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight, int overlay) {
+    private static int _renderEmbeddedSkin(EmbeddedSkinStack embeddedStack, AbstractItemTransformType transformType, boolean leftHandHackery, PoseStack poseStackIn, MultiBufferSource buffersIn, int packedLight, int overlay, int outlineColor) {
         int count = 0;
         var descriptor = embeddedStack.getDescriptor();
         var tesselator = SkinRenderTesselator.create(descriptor, Tickets.INVENTORY);
@@ -280,14 +303,17 @@ public class ClientWardrobeHandler {
         poseStack.scale(-SCALE, -SCALE, SCALE);
 
         tesselator.setRenderData(EntityRenderData.of(tesselator.getMannequin()));
-        tesselator.setLightmap(packedLight);
+
         tesselator.setPartialTicks(0);
-        tesselator.setItemSource(SkinItemSource.create(800, embeddedStack.getItemStack(), transformType));
-        tesselator.setColorScheme(descriptor.getColorScheme());
+        tesselator.setLightmap(packedLight);
 
         tesselator.setPoseStack(poseStack);
         tesselator.setBufferSource(bufferSource);
         tesselator.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+
+        tesselator.setColorScheme(descriptor.getColorScheme());
+        tesselator.setItemSource(SkinItemSource.create(800, embeddedStack.getItemStack(), transformType));
+        tesselator.setOutlineColor(outlineColor);
 
         count = tesselator.draw();
 

@@ -2,11 +2,14 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
+import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferBuilder;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractVertexArrayObject;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
+import moe.plushie.armourers_workshop.core.client.buffer.BufferBuilder;
+import moe.plushie.armourers_workshop.core.client.buffer.OutlineBufferBuilder;
 import moe.plushie.armourers_workshop.core.data.cache.CacheQueue;
 import moe.plushie.armourers_workshop.core.data.cache.ObjectPool;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -15,6 +18,7 @@ import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
@@ -44,17 +48,17 @@ public class ConcurrentBufferCompiler {
     }
 
     @Nullable
-    public Group compile(BakedSkinPart part, BakedSkin skin, ColorScheme scheme) {
-        var key = Key.of(part.getId(), part.requirements(scheme));
+    public Group compile(BakedSkinPart part, BakedSkin skin, ColorScheme scheme, boolean isOutline) {
+        var options = createOptions(isOutline);
+        var key = Key.of(part.getId(), options, part.requirements(scheme));
         var group = CACHING.get(key);
         if (group != null) {
             if (group.isCompiled()) {
                 return group;
             }
             return null; // wait compile
-
         }
-        group = new Group(part, skin, scheme);
+        group = new Group(part, skin, options, scheme);
         CACHING.put(key.copy(), group);
         startBatch(group);
         return null; // wait compile
@@ -89,8 +93,8 @@ public class ConcurrentBufferCompiler {
             var scheme = task.scheme;
             var mergedTasks = new ArrayList<Pass>();
             part.getQuads().forEach((renderType, quads) -> {
-                var builder = new AbstractBufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
-                builder.begin(renderType);
+                var builder = createBufferBuilder(renderType, quads.size(), task);
+                builder.begin();
                 quads.forEach((transform, faces) -> {
                     poseStack1.pushPose();
                     transform.apply(poseStack1);
@@ -98,7 +102,7 @@ public class ConcurrentBufferCompiler {
                     poseStack1.popPose();
                 });
                 var renderedBuffer = builder.end();
-                var compiledTask = new Pass(renderType, renderedBuffer, part.getRenderPolygonOffset(), part.getType());
+                var compiledTask = new Pass(builder.getRenderType(), renderedBuffer, part.getRenderPolygonOffset(), part.getType(), task.isOutline());
                 mergedTasks.add(compiledTask);
                 buildingTasks.add(compiledTask);
             });
@@ -151,19 +155,38 @@ public class ConcurrentBufferCompiler {
 //        renderState.load();
     }
 
+    private int createOptions(boolean isOutline) {
+        int options = 0;
+        if (isOutline) {
+            options |= 0x01;
+        }
+        return options;
+    }
+
+    private BufferBuilder createBufferBuilder(RenderType renderType, int total, Group task) {
+        // outline requires a special builder.
+        if (task.isOutline() && renderType.outline().isPresent()) {
+            return new OutlineBufferBuilder(renderType.outline().get(), total);
+        }
+        return new BufferBuilder(renderType, total);
+    }
+
     public static class Group {
 
         private final BakedSkinPart part;
         private final BakedSkin skin;
+
+        private final int options;
         private final ColorScheme scheme;
 
         private ArrayList<Pass> mergedTasks;
 
         private VertexBufferObject bufferObject;
 
-        public Group(BakedSkinPart part, BakedSkin skin, ColorScheme scheme) {
+        public Group(BakedSkinPart part, BakedSkin skin, int options, ColorScheme scheme) {
             this.skin = skin;
             this.part = part;
+            this.options = options;
             this.scheme = scheme;
         }
 
@@ -197,11 +220,18 @@ public class ConcurrentBufferCompiler {
         public boolean isCompiled() {
             return bufferObject != null;
         }
+
+        public boolean isOutline() {
+            return (options & 0x01) != 0;
+        }
     }
 
     public static class Pass {
 
         final boolean isGrowing;
+        final boolean isTranslucent;
+        final boolean isOutline;
+
         final float polygonOffset;
         final ISkinPartType partType;
         final RenderType renderType;
@@ -216,12 +246,14 @@ public class ConcurrentBufferCompiler {
         VertexBufferObject bufferObject;
         VertexIndexObject indexObject;
 
-        Pass(RenderType renderType, IRenderedBuffer bufferBuilder, float polygonOffset, ISkinPartType partType) {
+        Pass(RenderType renderType, IRenderedBuffer bufferBuilder, float polygonOffset, ISkinPartType partType, boolean isOutline) {
             this.partType = partType;
             this.renderType = renderType;
             this.bufferBuilder = bufferBuilder;
             this.polygonOffset = polygonOffset;
             this.isGrowing = SkinRenderType.isGrowing(renderType);
+            this.isTranslucent = SkinRenderType.isTranslucent(renderType);
+            this.isOutline = isOutline;
         }
 
         public void upload(VertexBufferObject bufferObject) {
@@ -242,27 +274,30 @@ public class ConcurrentBufferCompiler {
         protected static final ObjectPool<Key> POOL = ObjectPool.create(Key::new);
 
         private int p1;
-        private Object p2;
+        private int p2;
+        private Object p3;
         private int hash;
 
-        private Key set(int hash, int p1, Object p3) {
+        private Key set(int hash, int p1, int p2, Object p3) {
             this.hash = hash;
             this.p1 = p1;
-            this.p2 = p3;
+            this.p2 = p2;
+            this.p3 = p3;
             return this;
         }
 
-        public static Key of(int p1, Object p3) {
+        public static Key of(int p1, int p2, Object p3) {
             int hash = p1;
+            hash = 31 * hash + p2;
             hash = 31 * hash + (p3 == null ? 0 : p3.hashCode());
-            return POOL.get().set(hash, p1, p3);
+            return POOL.get().set(hash, p1, p2, p3);
         }
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (!(o instanceof Key that)) return false;
-            return p1 == that.p1 && Objects.equals(p2, that.p2);
+            return p1 == that.p1 && p2 == that.p2 && Objects.equals(p3, that.p3);
         }
 
         @Override
@@ -271,7 +306,69 @@ public class ConcurrentBufferCompiler {
         }
 
         public Key copy() {
-            return new Key().set(hash, p1, p2);
+            return new Key().set(hash, p1, p2, p3);
+        }
+    }
+
+    public static class Builder implements IVertexConsumer {
+
+        private final AbstractBufferBuilder mainBuilder;
+        private final AbstractBufferBuilder outlineBuilder;
+
+        public Builder(int total, RenderType mainRenderType, RenderType outlineRenderType) {
+            this.mainBuilder = new AbstractBufferBuilder(total * 8 * mainRenderType.format().getVertexSize());
+            this.outlineBuilder = new AbstractBufferBuilder(total * 8 * outlineRenderType.format().getVertexSize());
+            this.mainBuilder.begin(mainRenderType);
+            this.outlineBuilder.begin(outlineRenderType);
+        }
+
+        @Override
+        public IVertexConsumer vertex(float x, float y, float z) {
+            mainBuilder.vertex(x, y, z);
+            outlineBuilder.vertex(x, y, z);
+            return this;
+        }
+
+        @Override
+        public IVertexConsumer color(int r, int g, int b, int a) {
+            mainBuilder.color(r, g, b, a);
+            outlineBuilder.color(255, 255, 255, 255);
+            return this;
+        }
+
+        @Override
+        public IVertexConsumer uv(float u, float v) {
+            mainBuilder.uv(u, v);
+            outlineBuilder.uv(u, v);
+            return this;
+        }
+
+        @Override
+        public IVertexConsumer overlayCoords(int u, int v) {
+            mainBuilder.overlayCoords(u, v);
+            return this;
+        }
+
+        @Override
+        public IVertexConsumer uv2(int u, int v) {
+            mainBuilder.uv2(u, v);
+            return this;
+        }
+
+        @Override
+        public IVertexConsumer normal(float x, float y, float z) {
+            mainBuilder.normal(x, y, z);
+            return this;
+        }
+
+        @Override
+        public void endVertex() {
+            mainBuilder.endVertex();
+            outlineBuilder.endVertex();
+        }
+
+        public Pair<IRenderedBuffer, IRenderedBuffer> end() {
+            return Pair.of(mainBuilder.end(), outlineBuilder.end());
         }
     }
 }

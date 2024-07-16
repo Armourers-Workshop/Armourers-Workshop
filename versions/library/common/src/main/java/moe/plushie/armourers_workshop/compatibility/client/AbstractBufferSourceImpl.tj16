@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.OutlineBufferSource;
 
 @Available("[1.16, 1.21)")
 public class AbstractBufferSourceImpl {
@@ -14,5 +15,9 @@ public class AbstractBufferSourceImpl {
 
     public static MultiBufferSource bufferSource() {
         return Minecraft.getInstance().renderBuffers().bufferSource();
+    }
+
+    public static OutlineBufferSource outlineBufferSource() {
+        return Minecraft.getInstance().renderBuffers().outlineBufferSource();
     }
 }

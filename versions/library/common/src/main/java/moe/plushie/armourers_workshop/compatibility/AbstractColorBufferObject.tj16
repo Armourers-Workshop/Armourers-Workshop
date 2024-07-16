@@ -1,0 +1,62 @@
+package moe.plushie.armourers_workshop.compatibility;
+
+import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
+import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferBuilder;
+import moe.plushie.armourers_workshop.core.client.other.VertexBufferObject;
+import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.RenderType;
+import org.jetbrains.annotations.NotNull;
+import org.lwjgl.opengl.GL11;
+
+@Available("[1.16, 1.18)")
+@Environment(EnvType.CLIENT)
+public class AbstractColorBufferObject extends VertexBufferObject {
+
+    public static final RenderType TYPE = RenderType.create("", createDefaultFormat(), GL11.GL_QUADS, 256, false, false, RenderType.CompositeState.builder().createCompositeState(false));
+    public static final int PAGE_SIZE = 4096;
+    private static final SkinCache.LRU<Integer, AbstractColorBufferObject> SHARED_COLORS = new SkinCache.LRU<>();
+    private final int color;
+    private int capacity;
+
+    public AbstractColorBufferObject(int color) {
+        super();
+        this.color = color;
+        this.capacity = 0;
+    }
+
+    @NotNull
+    public static AbstractColorBufferObject getColorBuffer(int color) {
+        return SHARED_COLORS.computeIfAbsent(color, AbstractColorBufferObject::new);
+    }
+
+    private static VertexFormat createDefaultFormat() {
+        return new VertexFormat(ImmutableList.of(DefaultVertexFormat.ELEMENT_COLOR));
+    }
+
+    public void ensureCapacity(int capacity) {
+        if (capacity <= this.capacity) {
+            return;
+        }
+        int alignedCapacity = ((capacity / PAGE_SIZE) + 1) * PAGE_SIZE;
+        IBufferBuilder builder = new AbstractBufferBuilder(alignedCapacity * getFormat().getVertexSize());
+        builder.begin(TYPE);
+        for (int i = 0; i < alignedCapacity; ++i) {
+            builder.color(color).endVertex();
+        }
+        IRenderedBuffer renderedBuffer = builder.end();
+        this.upload(renderedBuffer.vertexBuffer());
+        this.capacity = alignedCapacity;
+        renderedBuffer.release();
+    }
+
+    public VertexFormat getFormat() {
+        return TYPE.format();
+    }
+}

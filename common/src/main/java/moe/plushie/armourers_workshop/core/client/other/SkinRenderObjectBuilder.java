@@ -4,6 +4,7 @@ import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
@@ -12,6 +13,8 @@ import moe.plushie.armourers_workshop.utils.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
+import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class SkinRenderObjectBuilder implements ConcurrentBufferBuilder {
@@ -31,12 +34,10 @@ public class SkinRenderObjectBuilder implements ConcurrentBufferBuilder {
             drawWithoutVBO(part, skin, scheme, context);
             return;
         }
-        // we need compile the skin part, but not render when part invisible.
-        var group = compiler.compile(part, skin, scheme);
-        if (group == null || group.isEmpty() || !part.isVisible()) {
-            return;
+        draw(part, skin, scheme, false, context);
+        if (context.shouldRenderOutline()) {
+            draw(part, skin, scheme, true, context);
         }
-        pipeline.add(group.getPasses(), context);
     }
 
     @Override
@@ -73,10 +74,17 @@ public class SkinRenderObjectBuilder implements ConcurrentBufferBuilder {
         }
     }
 
-    public void endBatch(SkinVertexBufferBuilder.Pipeline pipeline) {
-        this.pipeline.commit(pipeline::add);
+    public void endBatch(Consumer<ShaderVertexObject> consumer) {
+        pipeline.commit(consumer);
     }
 
+    private void draw(BakedSkinPart part, BakedSkin skin, ColorScheme scheme, boolean isOutline, ConcurrentRenderingContext context) {
+        // we need compile the skin part, but not render when part invisible.
+        var group = compiler.compile(part, skin, scheme, isOutline);
+        if (group != null && !group.isEmpty() && part.isVisible()) {
+            pipeline.add(group.getPasses(), context);
+        }
+    }
 
     private void drawWithoutVBO(BakedSkinPart part, BakedSkin skin, ColorScheme scheme, ConcurrentRenderingContext context) {
         var poseStack = context.getPoseStack();

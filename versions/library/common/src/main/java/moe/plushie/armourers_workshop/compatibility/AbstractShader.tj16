@@ -63,6 +63,16 @@ public class AbstractShader extends Shader {
         object.getFormat().setupBufferState(object.getOffset());
         object.getIndexObject().bind();
 
+        // when the outline color required, we need to modify the color attribute by `glColorPointer`.
+        if (object.isOutline()) {
+            var colorBuffer = AbstractColorBufferObject.getColorBuffer(object.getOutlineColor() | 0xff000000);
+            colorBuffer.ensureCapacity(maxVertexCount);
+            colorBuffer.bind();
+            colorBuffer.getFormat().setupBufferState(0L);
+            object.getBufferObject().bind();
+        }
+
+        // when the outline color required, we need to modify the lightmap texture attribute by `glVertexAttribPointer`.
         if (!object.isGrowing()) {
             var lightBuffer = AbstractLightBufferObject.getLightBuffer(object.getLightmap());
             lightBuffer.ensureCapacity(maxVertexCount);

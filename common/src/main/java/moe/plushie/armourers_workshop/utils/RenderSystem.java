@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractRenderSystem;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -27,6 +28,7 @@ public final class RenderSystem extends AbstractRenderSystem {
     private static final Storage<OpenMatrix4f> extendedOverlayTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
     private static final Storage<OpenMatrix4f> extendedLightmapTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
     private static final Storage<OpenMatrix4f> extendedModelViewMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
+    private static final Storage<Vector4f> extendedColorModulator = new Storage<>(Vector4f.ONE);
     private static final Storage<PaintColor> extendedTintColor = new Storage<>(PaintColor.WHITE);
 
     private static final Storage<Float> extendedFogStart = new Storage<>(0.0f);
@@ -76,6 +78,14 @@ public final class RenderSystem extends AbstractRenderSystem {
         setShaderColor(f, g, h, 1.0f);
     }
 
+
+    public static Vector4f getExtendedColorModulator() {
+        return extendedColorModulator.get();
+    }
+
+    public static void setExtendedColorModulator(Vector4f value) {
+        extendedColorModulator.set(value);
+    }
 
     public static OpenMatrix3f getExtendedNormalMatrix() {
         return extendedNormalMatrix.get();

@@ -69,12 +69,12 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
 
     public static RenderType customSolidFace(IResourceLocation texture) {
         var key = String.format("aw_custom_solid/%s", texture.getPath());
-        return FACE_SOLID_VARIANTS.computeIfAbsent(key, k -> _builder(SkinRenderFormat.SKIN_FACE_TEXTURE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build(k));
+        return FACE_SOLID_VARIANTS.computeIfAbsent(key, k -> _builder(SkinRenderFormat.SKIN_FACE_TEXTURE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).outline().build(k));
     }
 
     public static RenderType customLightingFace(IResourceLocation texture) {
         var key = String.format("aw_custom_lighting/%s", texture.getPath());
-        return FACE_LIGHTING_VARIANTS.computeIfAbsent(key, k -> _builder(SkinRenderFormat.SKIN_FACE_LIGHTING_TEXTURE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build(k));
+        return FACE_LIGHTING_VARIANTS.computeIfAbsent(key, k -> _builder(SkinRenderFormat.SKIN_FACE_LIGHTING_TEXTURE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).outline().build(k));
     }
 
     public static RenderType lines() {
@@ -128,6 +128,18 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
         return FACE_LIGHTING_VARIANTS.containsValue(renderType);
     }
 
+    public static boolean isTranslucent(RenderType renderType) {
+        // do fast hitting.
+        if (renderType == FACE_TRANSLUCENT || renderType == FACE_LIGHTING_TRANSLUCENT) {
+            return true;
+        }
+        // do fast missing.
+        if (renderType == FACE_SOLID || renderType == FACE_LIGHTING) {
+            return false;
+        }
+        return false;
+    }
+
     private static IRenderTypeBuilder _entity(SkinRenderFormat format, IResourceLocation texture) {
         return _builder(format).texture(texture).polygonOffset(0, 30).overlay().lightmap().sortOnUpload().crumbling().outline();
     }
@@ -137,7 +149,7 @@ public abstract class SkinRenderType implements IRenderTypeBuilder {
     }
 
     private static IRenderTypeBuilder _cube(SkinRenderFormat format) {
-        return _builder(format);
+        return _builder(format).outline();
     }
 
     private static IRenderTypeBuilder _texture(IResourceLocation texture) {

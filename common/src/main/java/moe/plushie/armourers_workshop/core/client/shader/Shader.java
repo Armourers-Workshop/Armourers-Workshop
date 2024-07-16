@@ -5,9 +5,11 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderState;
 import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
 import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -19,6 +21,7 @@ public abstract class Shader {
 
     private final Int2ObjectOpenHashMap<OpenMatrix4f> overlayMatrices = new Int2ObjectOpenHashMap<>();
     private final Int2ObjectOpenHashMap<OpenMatrix4f> lightmapMatrices = new Int2ObjectOpenHashMap<>();
+    private final Int2ObjectOpenHashMap<Vector4f> outlineColors = new Int2ObjectOpenHashMap<>();
     private final SkinRenderState renderState = new SkinRenderState();
 
     public void begin() {
@@ -72,6 +75,7 @@ public abstract class Shader {
         // so we're never using from vanilla uniforms.
         RenderSystem.setExtendedOverlayTextureMatrix(getOverlayTextureMatrix(object));
         RenderSystem.setExtendedLightmapTextureMatrix(getLightmapTextureMatrix(object));
+        RenderSystem.setExtendedColorModulator(getColorColorModulator(object));
         RenderSystem.setExtendedNormalMatrix(entry.normal());
         RenderSystem.setExtendedModelViewMatrix(entry.pose());
 
@@ -131,6 +135,22 @@ public abstract class Shader {
             newValue.m03 = u;
             newValue.m13 = v;
             return newValue;
+        });
+    }
+
+    protected Vector4f getColorColorModulator(ShaderVertexObject object) {
+        if (object.isOutline()) {
+            return getOutlineColor(object);
+        }
+        return Vector4f.ONE;
+    }
+
+    protected Vector4f getOutlineColor(ShaderVertexObject object) {
+        return outlineColors.computeIfAbsent(object.getOutlineColor() | 0xff000000, color -> {
+            float red = ColorUtils.getRed(color) / 255f;
+            float green = ColorUtils.getGreen(color) / 255f;
+            float blue = ColorUtils.getBlue(color) / 255f;
+            return new Vector4f(red, green, blue, 1f);
         });
     }
 }

@@ -15,6 +15,7 @@ public class AbstractBufferSource implements IBufferSource {
 
     private static final AbstractBufferSource DEFAULT = create(AbstractBufferSourceImpl.bufferSource());
     private static final AbstractBufferSource TESSELATOR = create(AbstractBufferSourceImpl.immediateSource(80000));
+    private static final AbstractBufferSource OUTLINE = create(AbstractBufferSourceImpl.outlineBufferSource());
 
     private static final Cache<Object, AbstractBufferSource> CACHED_BUFFER_SOURCES = CacheBuilder.newBuilder()
             .expireAfterAccess(3, TimeUnit.SECONDS)
@@ -38,6 +39,10 @@ public class AbstractBufferSource implements IBufferSource {
 
     public static AbstractBufferSource create(MultiBufferSource bufferSource) {
         return new AbstractBufferSource(bufferSource);
+    }
+
+    public static AbstractBufferSource outline() {
+        return OUTLINE;
     }
 
     public static AbstractBufferSource tesselator() {

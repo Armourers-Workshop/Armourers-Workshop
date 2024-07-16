@@ -28,7 +28,7 @@ public class ConcurrentRenderingPipeline {
         //lastNormal.set(modelViewStack.last().normal());
         lastNormal.set(poseStack.last().normal());
         lastNormal.invert();
-        passGroups.add(pass.fill(passes, context.getLightmap(), context.getOverlay(), context.getAnimationTicks(), context.getRenderPriority()));
+        passGroups.add(pass.fill(passes, context));
     }
 
     public void commit(Consumer<ShaderVertexObject> consumer) {
@@ -56,21 +56,27 @@ public class ConcurrentRenderingPipeline {
             }
         }
 
-        public Group fill(List<ConcurrentBufferCompiler.Pass> passes, int lightmap, int overlay, float animationTicks, float renderPriority) {
-            usedCount = passes.size();
-            for (int i = 0; i < usedCount; ++i) {
-                var mergedTask = passes.get(i);
-                if (i < totalCount) {
-                    var pass = pendingQueue.get(i);
-                    pass.fill(mergedTask, poseStack, lightmap, overlay, animationTicks, renderPriority);
-                } else {
-                    var pass = new Pass();
-                    pass.fill(mergedTask, poseStack, lightmap, overlay, animationTicks, renderPriority);
-                    pendingQueue.add(pass);
-                    totalCount += 1;
+        public Group fill(List<ConcurrentBufferCompiler.Pass> passes, ConcurrentRenderingContext context) {
+            usedCount = 0;
+            for (var mergedTask : passes) {
+                // skip outline task, when not enable.
+                if (mergedTask.isOutline && !context.shouldRenderOutline()) {
+                    continue;
                 }
+                poll().fill(mergedTask, poseStack, context);
             }
             return this;
+        }
+
+        private Pass poll() {
+            if (usedCount < totalCount) {
+                return pendingQueue.get(usedCount++);
+            }
+            var pass = new Pass();
+            pendingQueue.add(pass);
+            totalCount += 1;
+            usedCount += 1;
+            return pass;
         }
     }
 
@@ -78,20 +84,25 @@ public class ConcurrentRenderingPipeline {
 
         int overlay;
         int lightmap;
+        int outlineColor;
+
         float animationTicks;
 
-        float additionalPolygonOffset;
+        float polygonOffset;
 
         OpenPoseStack poseStack;
+        RenderType renderType;
         ConcurrentBufferCompiler.Pass compiledTask;
 
-        public Pass fill(ConcurrentBufferCompiler.Pass compiledTask, OpenPoseStack poseStack, int lightmap, int overlay, float animationTicks, float renderPriority) {
+        public Pass fill(ConcurrentBufferCompiler.Pass compiledTask, OpenPoseStack poseStack, ConcurrentRenderingContext context) {
             this.compiledTask = compiledTask;
             this.poseStack = poseStack;
-            this.overlay = overlay;
-            this.lightmap = lightmap;
-            this.animationTicks = animationTicks;
-            this.additionalPolygonOffset = renderPriority;
+            this.overlay = context.getOverlay();
+            this.lightmap = context.getLightmap();
+            this.outlineColor = context.getOutlineColor();
+            this.animationTicks = context.getAnimationTicks();
+            this.polygonOffset = compiledTask.polygonOffset + context.getRenderPriority();
+            this.renderType = compiledTask.renderType;
             return this;
         }
 
@@ -101,7 +112,7 @@ public class ConcurrentRenderingPipeline {
 
         @Override
         public RenderType getType() {
-            return compiledTask.renderType;
+            return renderType;
         }
 
         @Override
@@ -131,7 +142,7 @@ public class ConcurrentRenderingPipeline {
 
         @Override
         public float getPolygonOffset() {
-            return compiledTask.polygonOffset + additionalPolygonOffset;
+            return polygonOffset;
         }
 
         @Override
@@ -141,10 +152,10 @@ public class ConcurrentRenderingPipeline {
 
         @Override
         public VertexFormat getFormat() {
-            if (compiledTask.format == null) {
-                return compiledTask.renderType.format();
+            if (compiledTask.format != null) {
+                return compiledTask.format;
             }
-            return compiledTask.format;
+            return renderType.format();
         }
 
         @Override
@@ -158,8 +169,26 @@ public class ConcurrentRenderingPipeline {
         }
 
         @Override
+        public int getOutlineColor() {
+            if (compiledTask.isOutline) {
+                return outlineColor;
+            }
+            return 0;
+        }
+
+        @Override
         public boolean isGrowing() {
             return compiledTask.isGrowing;
+        }
+
+        @Override
+        public boolean isTranslucent() {
+            return compiledTask.isTranslucent;
+        }
+
+        @Override
+        public boolean isOutline() {
+            return compiledTask.isOutline;
         }
     }
 }

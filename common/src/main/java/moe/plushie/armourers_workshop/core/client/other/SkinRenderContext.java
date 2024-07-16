@@ -4,6 +4,7 @@ import com.google.common.collect.Iterators;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationManager;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -26,6 +27,7 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
 
     protected int lightmap = 0xf000f0;
     protected int overlay = OverlayTexture.NO_OVERLAY;
+    protected int outlineColor = 0;
     protected float partialTicks = 0;
     protected float animationTicks = 0;
 
@@ -70,6 +72,7 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
     public void release() {
         this.overlay = OverlayTexture.NO_OVERLAY;
         this.lightmap = 0xf000f0;
+        this.outlineColor = 0;
         this.partialTicks = 0;
 
         this.colorScheme = ColorScheme.EMPTY;
@@ -163,11 +166,16 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         return animationManager;
     }
 
+    @Override
     public ConcurrentBufferBuilder getBuffer(@NotNull BakedSkin skin) {
         if (bufferProvider != null) {
             return bufferProvider.apply(skin);
         }
-        var bufferBuilder = SkinVertexBufferBuilder.getBuffer(bufferSource);
+        var usedBufferSource = bufferSource;
+        if (outlineColor != 0) {
+            usedBufferSource = AbstractBufferSource.outline();
+        }
+        var bufferBuilder = SkinVertexBufferBuilder.getBuffer(usedBufferSource);
         return bufferBuilder.getBuffer(skin);
     }
 
@@ -175,6 +183,18 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         this.bufferProvider = bufferProvider;
     }
 
+    public void setOutlineColor(int outlineColor) {
+        this.outlineColor = outlineColor;
+    }
+
+    public int getOutlineColor() {
+        return outlineColor;
+    }
+
+    @Override
+    public boolean shouldRenderOutline() {
+        return outlineColor != 0;
+    }
 
     @Override
     public float getRenderPriority() {

@@ -43,6 +43,14 @@ public enum AbstractItemTransformType {
         return this == THIRD_PERSON_RIGHT_HAND || this == FIRST_PERSON_RIGHT_HAND;
     }
 
+    public boolean isFirstPerson() {
+        return this == FIRST_PERSON_LEFT_HAND || this == FIRST_PERSON_RIGHT_HAND;
+    }
+
+    public boolean isThirdPerson() {
+        return this == THIRD_PERSON_LEFT_HAND || this == THIRD_PERSON_RIGHT_HAND;
+    }
+
     private static class Codec {
         static final HashMap<String, AbstractItemTransformType> BY_NAME = new HashMap<>();
     }

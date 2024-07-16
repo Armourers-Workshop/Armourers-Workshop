@@ -9,9 +9,13 @@ import org.jetbrains.annotations.NotNull;
 
 public interface ConcurrentRenderingContext {
 
+    boolean shouldRenderOutline();
+
     int getOverlay();
 
     int getLightmap();
+
+    int getOutlineColor();
 
     float getPartialTicks();
 
