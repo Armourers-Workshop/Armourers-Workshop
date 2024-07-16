@@ -67,13 +67,14 @@ public class SkinWingsTransform implements ISkinTransform {
             flapTime = properties.get(SkinProperty.WINGS_FLYING_SPEED);
         }
 
-        var angle = animationTicks % (flapTime / 1000f);
+        var finalFlapTime = Math.max(flapTime / 1000f, 0.1f);
+        var angle = animationTicks % finalFlapTime;
 
         if (movementType == SkinProperty.MovementType.EASE) {
-            angle = Math.sin(angle / flapTime * Math.PI * 2);
+            angle = Math.sin(angle / finalFlapTime * Math.PI * 2);
         }
         if (movementType == SkinProperty.MovementType.LINEAR) {
-            angle = angle / flapTime;
+            angle = angle / finalFlapTime;
         }
 
         var fullAngle = maxAngle - minAngle;
