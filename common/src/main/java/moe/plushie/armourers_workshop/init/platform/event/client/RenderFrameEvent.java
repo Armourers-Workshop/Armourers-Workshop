@@ -2,13 +2,14 @@ package moe.plushie.armourers_workshop.init.platform.event.client;
 
 public interface RenderFrameEvent {
 
-    interface Pre {
+    boolean isPaused();
 
-        float getPartialTick();
+    boolean isFrozen();
+
+    interface Pre extends RenderFrameEvent {
+
     }
 
-    interface Post {
-
-        float getPartialTick();
+    interface Post extends RenderFrameEvent {
     }
 }

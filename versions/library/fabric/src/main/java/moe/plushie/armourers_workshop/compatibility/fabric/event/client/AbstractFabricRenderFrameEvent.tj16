@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.init.platform.event.client.RenderFrameEven
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 
-@Available("[1.21, )")
+@Available("[1.16, 1.21)")
 public class AbstractFabricRenderFrameEvent {
 
     public static IEventHandler<RenderFrameEvent.Pre> preFactory() {
@@ -16,6 +16,7 @@ public class AbstractFabricRenderFrameEvent {
     public static IEventHandler<RenderFrameEvent.Post> postFactory() {
         return subscriber -> ClientTickEvents.END_CLIENT_TICK.register(client -> subscriber.accept(ReusableEvent.INSTANCE));
     }
+
 
     private static class ReusableEvent implements RenderFrameEvent.Pre, RenderFrameEvent.Post {
 
@@ -28,8 +29,7 @@ public class AbstractFabricRenderFrameEvent {
 
         @Override
         public boolean isFrozen() {
-            var minecraft = Minecraft.getInstance();
-            return minecraft.level != null && !minecraft.level.tickRateManager().runsNormally();
+            return false;
         }
     }
 }

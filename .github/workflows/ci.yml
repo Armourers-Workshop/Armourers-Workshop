@@ -52,7 +52,7 @@ jobs:
     - name: Upload Fabric ${{ matrix.version }}
       uses: Kir-Antipov/mc-publish@v3.3
       with:
-        name: armourersworkshop-fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}.jar
+        name: armourersworkshop-fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
         version: fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
         version-type: beta
         #version-type: release
@@ -76,7 +76,7 @@ jobs:
     - name: Upload Forge ${{ matrix.version }}
       uses: Kir-Antipov/mc-publish@v3.3
       with:
-        name: armourersworkshop-forge-${{ matrix.version }}-${{ steps.release-version.outputs.version }}.jar
+        name: armourersworkshop-forge-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
         version: forge-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
         version-type: beta
 

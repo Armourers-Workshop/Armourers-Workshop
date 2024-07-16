@@ -162,10 +162,9 @@ public class ClientProxy {
         });
 
         EventManager.listen(RenderFrameEvent.Pre.class, event -> {
-            boolean isPaused = Minecraft.getInstance().isPaused();
             AutoreleasePool.begin();
-            TickUtils.tick(isPaused);
-            SkinPreloadManager.tick(isPaused);
+            TickUtils.tick(event.isPaused() || event.isFrozen()); // respect the /tick frozen command.
+            SkinPreloadManager.tick(event.isPaused());
         });
 
         EventManager.listen(RenderFrameEvent.Post.class, event -> {

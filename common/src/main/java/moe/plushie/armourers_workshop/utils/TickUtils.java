@@ -2,16 +2,17 @@ package moe.plushie.armourers_workshop.utils;
 
 public class TickUtils {
 
-    private static boolean isPaused;
+    private static boolean runsNormally;
 
+    private static long currentTime = System.nanoTime();
     private static long pausedTime;
     private static long ignoredTime = System.nanoTime();
 
     private static long time() {
-        if (isPaused) {
+        if (runsNormally) {
             return pausedTime - ignoredTime;
         }
-        return System.nanoTime() - ignoredTime;
+        return currentTime - ignoredTime;
     }
 
     public static float animationTicks() {
@@ -19,14 +20,16 @@ public class TickUtils {
         return time() / 1e9f;
     }
 
-    public static void tick(boolean newValue) {
-        if (isPaused != newValue) {
-            isPaused = newValue;
-            if (newValue) {
-                pausedTime = System.nanoTime();
-            } else {
-                ignoredTime += System.nanoTime() - pausedTime;
-            }
+    public static void tick(boolean isPaused) {
+        currentTime = System.nanoTime();
+        if (runsNormally == isPaused) {
+            return;
+        }
+        runsNormally = isPaused;
+        if (isPaused) {
+            pausedTime = currentTime;
+        } else {
+            ignoredTime += currentTime - pausedTime;
         }
     }
 
