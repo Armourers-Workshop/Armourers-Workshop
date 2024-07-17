@@ -238,6 +238,10 @@ public class SkinDocumentNode {
         if (!pivot.equals(Vector3f.ZERO)) {
             pivot = new Vector3f(-pivot.getX(), -pivot.getY(), pivot.getZ());
         }
+        var scale = this.scale;
+        if (isMirror) {
+            scale = scale.scaling(-1, 1, 1);
+        }
         transform = SkinTransform.create(translate, rotation, scale, pivot, Vector3f.ZERO);
         return transform;
     }
@@ -261,6 +265,7 @@ public class SkinDocumentNode {
 
     public void setMirror(boolean value) {
         isMirror = value;
+        transform = null;
         if (listener != null) {
             var tag = new CompoundTag();
             tag.putBoolean(Keys.MIRROR, value);

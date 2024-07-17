@@ -200,10 +200,6 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
             poseStack.scale(-1, -1, 1);
         }
 
-        if (node.isMirror()) {
-            poseStack.scale(-1, 1, 1);
-        }
-
         var descriptor = node.getSkin();
         var tesselator = SkinRenderTesselator.create(descriptor, Tickets.RENDERER);
         if (tesselator != null) {

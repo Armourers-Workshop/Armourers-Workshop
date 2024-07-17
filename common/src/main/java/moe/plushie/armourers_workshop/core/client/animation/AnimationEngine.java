@@ -41,11 +41,12 @@ public class AnimationEngine {
     }
 
     public static void apply(Object source, BakedSkin skin, float animationTicks, AnimationManager animationManager) {
-        // we can't apply when missing animation manager.
-        if (animationManager == null) {
-            return;
-        }
         for (var animationController : skin.getAnimationControllers()) {
+            // we can't apply when missing animation manager.
+            if (animationManager == null) {
+                animationController.reset();
+                continue;
+            }
             // we needs reset the applier.
             var state = animationManager.getAnimationState(animationController);
             if (state == null) {
