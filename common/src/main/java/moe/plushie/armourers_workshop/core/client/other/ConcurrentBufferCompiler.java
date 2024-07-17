@@ -8,9 +8,11 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.buffer.BufferBuilder;
 import moe.plushie.armourers_workshop.core.client.buffer.OutlineBufferBuilder;
+import moe.plushie.armourers_workshop.core.client.texture.TextureManager;
 import moe.plushie.armourers_workshop.core.data.cache.CacheQueue;
 import moe.plushie.armourers_workshop.core.data.cache.ObjectPool;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
@@ -21,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
@@ -88,10 +91,10 @@ public class ConcurrentBufferCompiler {
         for (var task : pendingTasks) {
             var part = task.part;
             var scheme = task.scheme;
+            var usingTypes = new HashSet<RenderType>();
             var mergedTasks = new ArrayList<Pass>();
             part.getQuads().forEach((renderType, quads) -> {
-                var builder = createBufferBuilder(renderType, quads.size(), task);
-                builder.begin();
+                var builder = createBufferBuilder(renderType, quads.size(), task).begin();
                 quads.forEach((transform, faces) -> {
                     poseStack1.pushPose();
                     transform.apply(poseStack1);
@@ -100,10 +103,12 @@ public class ConcurrentBufferCompiler {
                 });
                 var renderedBuffer = builder.end();
                 var compiledTask = new Pass(builder.getRenderType(), renderedBuffer, part.getRenderPolygonOffset(), part.getType(), task.isOutline());
+                usingTypes.add(builder.getRenderType());
                 mergedTasks.add(compiledTask);
                 buildingTasks.add(compiledTask);
             });
             task.mergedTasks = mergedTasks;
+            task.usingTypes = ObjectUtils.flatMap(usingTypes, TextureManager.Entry::of);
         }
         link(pendingTasks, buildingTasks);
         //long totalTime = System.nanoTime() - startTime;
@@ -147,9 +152,6 @@ public class ConcurrentBufferCompiler {
             cachedTask.upload(vertexBuffer);
         }
         vertexBuffer.release();
-//        var renderState = new SkinRenderState();
-//        renderState.save();
-//        renderState.load();
     }
 
     private int createOptions(boolean isOutline) {
@@ -177,6 +179,7 @@ public class ConcurrentBufferCompiler {
         private final ColorScheme scheme;
 
         private ArrayList<Pass> mergedTasks;
+        private ArrayList<TextureManager.Entry> usingTypes;
 
         private VertexBufferObject bufferObject;
 
@@ -189,22 +192,25 @@ public class ConcurrentBufferCompiler {
             this.scheme = scheme;
         }
 
-        public void upload(VertexBufferObject bufferObject) {
+        protected void upload(VertexBufferObject bufferObject) {
             RenderSystem.assertOnRenderThread();
-            if (mergedTasks == null) {
+            if (mergedTasks == null || usingTypes == null) {
                 return; // is released or not init.
             }
             this.mergedTasks.forEach(it -> it.upload(bufferObject));
             this.bufferObject = bufferObject;
             this.bufferObject.retain();
+            this.usingTypes.forEach(TextureManager.Entry::retain);
             this.isComplied = true;
         }
 
-        public void close() {
+        protected void close() {
             RenderSystem.assertOnRenderThread();
-            if (this.bufferObject == null || this.mergedTasks == null) {
+            if (this.bufferObject == null || this.mergedTasks == null || usingTypes == null) {
                 return; // is release
             }
+            this.isComplied = false;
+            this.usingTypes.forEach(TextureManager.Entry::release);
             this.bufferObject.release();
             this.bufferObject = null;
             this.mergedTasks.forEach(Pass::release);

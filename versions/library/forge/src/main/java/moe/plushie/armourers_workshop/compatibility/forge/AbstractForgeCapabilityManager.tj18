@@ -5,8 +5,8 @@ import moe.plushie.armourers_workshop.api.common.ICapabilityType;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
 import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -23,6 +23,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.ref.WeakReference;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -86,7 +87,7 @@ public class AbstractForgeCapabilityManager {
             if (!value.isPresent()) {
                 return;
             }
-            event.addCapability(registryName.toLocation(), new CapabilityProviderProxy<T>(value.get()) {
+            event.addCapability(registryName.toLocation(), new CapabilityProviderProxy<T>(event.getObject(), value.get()) {
                 @Override
                 public Capability<T> getCapability() {
                     return capability.get();
@@ -108,21 +109,23 @@ public class AbstractForgeCapabilityManager {
     public static abstract class CapabilityProviderProxy<T extends IDataSerializerProvider> implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
         protected final T value;
+        protected final WeakReference<Entity> entity;
 
-        protected CapabilityProviderProxy(T value) {
+        protected CapabilityProviderProxy(Entity entity, T value) {
             this.value = value;
+            this.entity = new WeakReference<>(entity);
         }
 
         @Override
         public CompoundTag serializeNBT() {
             CompoundTag tag = new CompoundTag();
-            value.serialize(AbstractDataSerializer.wrap(tag, value));
+            value.serialize(DataManager.createEntityDataReader(entity.get(), tag));
             return tag;
         }
 
         @Override
-        public void deserializeNBT(CompoundTag nbt) {
-            value.deserialize(AbstractDataSerializer.wrap(nbt, value));
+        public void deserializeNBT(CompoundTag tag) {
+            value.deserialize(DataManager.createEntityDataWriter(entity.get(), tag));
         }
 
         @Override

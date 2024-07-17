@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.utils;
 
 import com.mojang.serialization.Codec;
 import moe.plushie.armourers_workshop.api.data.IDataSerializerKey;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;
 

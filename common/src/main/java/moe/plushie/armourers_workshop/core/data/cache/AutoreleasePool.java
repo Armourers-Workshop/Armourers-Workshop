@@ -20,7 +20,7 @@ public final class AutoreleasePool<T extends AutoreleasePool.Lifecycle> {
     }
 
     public static void end() {
-        POOLS.forEach(it -> it.get().end());
+         POOLS.forEach(it -> it.get().end());
     }
 
     public T get() {

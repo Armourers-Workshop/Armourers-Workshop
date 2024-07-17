@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializerKey;
 import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.NonNullItemList;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -18,7 +19,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -51,7 +51,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
             .put(Pair.of(AttachFace.FLOOR, Direction.NORTH), new Vector3f(0, 0, 0))
             .build();
 
-    private final NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
+    private final NonNullItemList items = new NonNullItemList(1);
 
     private OpenQuaternionf renderRotations;
 
@@ -74,7 +74,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
     @Override
     public void readAdditionalData(IDataSerializer serializer) {
-        serializer.readItemList(items);
+        items.deserialize(serializer);
         modelAngle = serializer.read(ANGLE_KEY);
         modelOffset = serializer.read(OFFSET_KEY);
         rotationSpeed = serializer.read(ROTATION_SPEED_KEY);
@@ -88,7 +88,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
     @Override
     public void writeAdditionalData(IDataSerializer serializer) {
-        serializer.writeItemList(items);
+        items.serialize(serializer);
         serializer.write(ANGLE_KEY, modelAngle);
         serializer.write(OFFSET_KEY, modelOffset);
         serializer.write(ROTATION_SPEED_KEY, rotationSpeed);
@@ -174,7 +174,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     }
 
     @Override
-    protected NonNullList<ItemStack> getItems() {
+    protected NonNullItemList getItems() {
         return this.items;
     }
 

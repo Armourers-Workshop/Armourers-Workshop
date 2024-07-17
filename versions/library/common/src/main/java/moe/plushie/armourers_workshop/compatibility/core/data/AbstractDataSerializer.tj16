@@ -59,14 +59,4 @@ public class AbstractDataSerializer implements IDataSerializer {
             tag.put(name, it);
         });
     }
-
-    @Override
-    public void readItemList(NonNullList<ItemStack> items) {
-        ContainerHelper.loadAllItems(tag, items);
-    }
-
-    @Override
-    public void writeItemList(NonNullList<ItemStack> items) {
-        ContainerHelper.saveAllItems(tag, items);
-    }
 }

@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.skin;
 import moe.plushie.armourers_workshop.api.common.IResultHandler;
 import moe.plushie.armourers_workshop.api.skin.ISkinFileProvider;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
-import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.LocalDataReference;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -15,6 +14,7 @@ import moe.plushie.armourers_workshop.init.ModContext;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
+import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.SkinCipher;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
@@ -181,15 +181,22 @@ public class SkinLoader {
     }
 
     public String saveSkin(String identifier, Skin skin) {
-        if (DataDomain.isDatabase(identifier)) {
-            return identifier;
-        }
-        var newIdentifier = LocalDataService.getInstance().saveSkinFile(skin);
-        if (newIdentifier != null) {
+        try {
+            // when the skin is already in the database, we not need to modify it.
+            if (DataDomain.isDatabase(identifier)) {
+                return identifier;
+            }
+            var newIdentifier = LocalDataService.getInstance().saveSkinFile(skin);
+            if (newIdentifier == null) {
+                return identifier;
+            }
             identifier = DataDomain.DATABASE.normalize(newIdentifier);
             addSkin(identifier, skin);
+            return identifier;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return identifier;
         }
-        return identifier;
     }
 
 
@@ -661,7 +668,22 @@ public class SkinLoader {
 
         @Override
         public InputStream from(Request request) throws Exception {
-            return DataManager.getInstance().loadSkinData(request.identifier);
+            // db:<skin-id>
+            if (DataDomain.isDatabase(request.identifier)) {
+                var path = DataDomain.getPath(request.identifier);
+                return LocalDataService.getInstance().loadSkinFile(path, null);
+            }
+            // fs:<file-path> or ws:<file-path>
+            String path = SkinFileUtils.normalize(DataDomain.getPath(request.identifier));
+            var file = new File(EnvironmentManager.getSkinLibraryDirectory(), path);
+            if (file.exists()) {
+                return new FileInputStream(file);
+            }
+            file = new File(file.getParent(), file.getName() + Constants.EXT);
+            if (file.exists()) {
+                return new FileInputStream(file);
+            }
+            return null;
         }
     }
 

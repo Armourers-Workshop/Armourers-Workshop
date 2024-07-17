@@ -1,16 +1,15 @@
 package moe.plushie.armourers_workshop.compatibility.core.data;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DynamicOps;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.api.data.IDataSerializerKey;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.world.ContainerHelper;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -22,10 +21,16 @@ public class AbstractDataSerializer implements IDataSerializer {
 
     private final CompoundTag tag;
     private final HolderLookup.Provider provider;
+    private final DynamicOps<Tag> ops;
 
     public AbstractDataSerializer(CompoundTag tag, HolderLookup.Provider provider) {
         this.tag = tag;
         this.provider = provider;
+        if (provider != null) {
+            this.ops = provider.createSerializationContext(NbtOps.INSTANCE);
+        } else {
+            this.ops = NbtOps.INSTANCE;
+        }
     }
 
     public static AbstractDataSerializer wrap(CompoundTag tag, Entity entity) {
@@ -50,7 +55,7 @@ public class AbstractDataSerializer implements IDataSerializer {
         String name = key.getName();
         if (tag.contains(name)) {
             var codec = key.getCodec();
-            var value = codec.decode(NbtOps.INSTANCE, tag.get(key.getName())).result();
+            var value = codec.decode(ops, tag.get(key.getName())).result();
             if (value.isPresent()) {
                 T value2 = value.get().getFirst();
                 if (value2 != null) {
@@ -73,19 +78,9 @@ public class AbstractDataSerializer implements IDataSerializer {
         }
         String name = key.getName();
         Codec<T> codec = key.getCodec();
-        codec.encodeStart(NbtOps.INSTANCE, value).result().ifPresent(it -> {
+        codec.encodeStart(ops, value).result().ifPresent(it -> {
             // we need to merge new value into the item.
             tag.put(name, it);
         });
-    }
-
-    @Override
-    public void readItemList(NonNullList<ItemStack> items) {
-        ContainerHelper.loadAllItems(tag, items, provider);
-    }
-
-    @Override
-    public void writeItemList(NonNullList<ItemStack> items) {
-        ContainerHelper.saveAllItems(tag, items, provider);
     }
 }

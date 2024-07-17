@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.data.IAssociatedObjectProvider;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.fabricmc.api.EnvType;
@@ -38,8 +39,22 @@ public class TextureManager {
     }
 
     public synchronized void stop() {
-        textures.values().forEach(Entry::close);
+        textures.values().forEach(it -> it.bind(null));
         textures.clear();
+    }
+
+    public void open(RenderType renderType) {
+        var entry = Entry.of(renderType);
+        if (entry != null) {
+            entry.retain();
+        }
+    }
+
+    public void close(RenderType renderType) {
+        var entry = Entry.of(renderType);
+        if (entry != null) {
+            entry.release();
+        }
     }
 
     public synchronized RenderType register(ITextureProvider provider) {
@@ -59,12 +74,14 @@ public class TextureManager {
         private final Map<IResourceLocation, ByteBuffer> textureBuffers;
         private final TextureAnimationController animationController;
 
+        private final AtomicInteger counter = new AtomicInteger(0);
+
         public Entry(ITextureProvider provider) {
             this.location = resolveResourceLocation(provider);
             this.renderType = resolveRenderType(location, provider);
             this.textureBuffers = resolveTextureBuffers(location, provider);
             this.animationController = new TextureAnimationController((TextureAnimation) provider.getAnimation());
-            this.open();
+            this.bind(this);
         }
 
         @Nullable
@@ -72,30 +89,16 @@ public class TextureManager {
             return IAssociatedObjectProvider.get(renderType);
         }
 
-        protected void open() {
-            // bind entry to render type.
-            if (renderType instanceof IAssociatedObjectProvider provider) {
-                Entry entry = provider.getAssociatedObject();
-                if (entry != null) {
-                    entry.close();
-                }
-                provider.setAssociatedObject(this);
+        public void retain() {
+            if (counter.getAndIncrement() == 0) {
+                register();
             }
-            RenderSystem.recordRenderCall(() -> {
-                textureBuffers.forEach(SmartResourceManager.getInstance()::register);
-                Minecraft.getInstance().getTextureManager().register(location.toLocation(), new SimpleTexture(location.toLocation()));
-            });
         }
 
-        protected void close() {
-            // unbind entry from render type.
-            if (renderType instanceof IAssociatedObjectProvider provider) {
-                provider.setAssociatedObject(null);
+        public void release() {
+            if (counter.get() > 0 && counter.decrementAndGet() == 0) {
+                unregister();
             }
-            RenderSystem.recordRenderCall(() -> {
-                textureBuffers.keySet().forEach(SmartResourceManager.getInstance()::unregister);
-                Minecraft.getInstance().getTextureManager().unregister(location.toLocation());
-            });
         }
 
         public IResourceLocation getLocation() {
@@ -113,6 +116,31 @@ public class TextureManager {
         @Override
         public String toString() {
             return location.toString();
+        }
+
+        protected void bind(Entry newValue) {
+            // when a texture is open, automatic close it.
+            IAssociatedObjectProvider provider = ObjectUtils.unsafeCast(renderType);
+            Entry entry = provider.getAssociatedObject();
+            if (entry != null && entry.counter.get() > 0) {
+                entry.unregister();
+            }
+            provider.setAssociatedObject(newValue);
+        }
+
+        protected void register() {
+            RenderSystem.recordRenderCall(() -> {
+                textureBuffers.forEach(SmartResourceManager.getInstance()::register);
+                Minecraft.getInstance().getTextureManager().register(location.toLocation(), new SimpleTexture(location.toLocation()));
+            });
+        }
+
+        protected void unregister() {
+            counter.set(0);
+            RenderSystem.recordRenderCall(() -> {
+                textureBuffers.keySet().forEach(SmartResourceManager.getInstance()::unregister);
+                Minecraft.getInstance().getTextureManager().unregister(location.toLocation());
+            });
         }
 
         private IResourceLocation resolveResourceLocation(ITextureProvider provider) {

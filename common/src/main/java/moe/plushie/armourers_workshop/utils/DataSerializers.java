@@ -21,7 +21,6 @@ import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.Rotations;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -40,6 +39,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
@@ -291,7 +291,7 @@ public class DataSerializers {
         }
     }
 
-    public static void dropContents(Level level, BlockPos blockPos, NonNullList<ItemStack> itemStacks) {
+    public static void dropContents(Level level, BlockPos blockPos, List<ItemStack> itemStacks) {
         itemStacks.forEach(itemStack -> dropItemStack(level, blockPos, itemStack));
     }
 

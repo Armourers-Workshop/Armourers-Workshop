@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractRenderSheet;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexMerger;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -121,11 +120,6 @@ public class SkinVertexBufferBuilder implements IBufferSource {
     }
 
     private void uploadPass(ShaderVertexObject pass) {
-        // we will try to avoid it happens, but if occurred we will ignore it.
-        if (pass.isReleased()) {
-            ModLog.warn("draw a release task: {}", pass.getType());
-            return;
-        }
         if (pass.isOutline()) {
             outlinePipeline.add(pass);
         } else {

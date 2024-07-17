@@ -29,12 +29,13 @@ public class CacheQueue<K, V> {
         this.autoreleasePool = new AutoreleasePool<>(() -> new AutoreleasePool.Lifecycle() {
             @Override
             public void begin() {
-                // nop.
+                // only expire until next use.
+                drain(System.currentTimeMillis());
             }
 
             @Override
             public void end() {
-                drain(System.currentTimeMillis());
+                // nop.
             }
         });
     }

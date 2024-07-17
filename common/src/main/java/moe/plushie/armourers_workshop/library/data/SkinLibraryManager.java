@@ -279,10 +279,6 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
             return false;
         }
 
-        public LocalDataService getDatabaseLibrary() {
-            return LocalDataService.getInstance();
-        }
-
         public int getVersion() {
             return version;
         }

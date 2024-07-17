@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.blockentity;
 
 import moe.plushie.armourers_workshop.api.common.IHasInventory;
+import moe.plushie.armourers_workshop.utils.NonNullItemList;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
@@ -71,7 +71,7 @@ public abstract class UpdatableContainerBlockEntity extends UpdatableBlockEntity
         setChanged();
     }
 
-    protected abstract NonNullList<ItemStack> getItems();
+    protected abstract NonNullItemList getItems();
 
     @Override
     public Container getInventory() {

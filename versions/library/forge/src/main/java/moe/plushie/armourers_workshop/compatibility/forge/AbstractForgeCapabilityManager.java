@@ -5,8 +5,8 @@ import moe.plushie.armourers_workshop.api.common.ICapabilityType;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
 import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,6 +19,7 @@ import net.neoforged.neoforge.capabilities.EntityCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Function;
@@ -82,14 +83,16 @@ public class AbstractForgeCapabilityManager {
         protected static final ArrayList<String> DATA_KEYS = new ArrayList<>();
 
         protected final T value;
+        protected final WeakReference<Entity> entity;
 
-        protected Serializer(T value) {
+        protected Serializer(Entity entity, T value) {
             this.value = value;
+            this.entity = new WeakReference<>(entity);
         }
 
         public static <T extends IDataSerializerProvider> IRegistryHolder<AttachmentType<Serializer<T>>> register(IResourceLocation registryName, Function<Entity, Optional<T>> factory) {
             DATA_KEYS.add(registryName.toString());
-            Function<IAttachmentHolder, Serializer<T>> transformer = holder -> new Serializer<>(factory.apply((Entity) holder).orElse(null));
+            Function<IAttachmentHolder, Serializer<T>> transformer = holder -> new Serializer<>((Entity) holder, factory.apply((Entity) holder).orElse(null));
             return AbstractForgeRegistries.ATTACHMENT_TYPES.register(registryName.getPath(), () -> AttachmentType.serializable(transformer).build());
         }
 
@@ -97,7 +100,7 @@ public class AbstractForgeCapabilityManager {
         public CompoundTag serializeNBT(HolderLookup.Provider provider) {
             if (value != null) {
                 CompoundTag tag = new CompoundTag();
-                value.serialize(AbstractDataSerializer.wrap(tag, provider));
+                value.serialize(DataManager.createEntityDataReader(entity.get(), tag));
                 return tag;
             }
             return null;
@@ -106,7 +109,7 @@ public class AbstractForgeCapabilityManager {
         @Override
         public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
             if (value != null) {
-                value.deserialize(AbstractDataSerializer.wrap(tag, provider));
+                value.deserialize(DataManager.createEntityDataWriter(entity.get(), tag));
             }
         }
 

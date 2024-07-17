@@ -5,9 +5,8 @@ import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.utils.DataFixerUtils;
 import moe.plushie.armourers_workshop.utils.DataSerializerKey;
 import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
-import net.minecraft.core.NonNullList;
+import moe.plushie.armourers_workshop.utils.NonNullItemList;
 import net.minecraft.world.Container;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -36,16 +35,16 @@ public class SkinWardrobeStorage {
     }
 
     public static void saveInventoryItems(Container inventory, IDataSerializer serializer) {
-        var itemStacks = NonNullList.withSize(inventory.getContainerSize(), ItemStack.EMPTY);
+        var itemStacks = new NonNullItemList(inventory.getContainerSize());
         for (int i = 0; i < itemStacks.size(); ++i) {
             itemStacks.set(i, inventory.getItem(i));
         }
-        serializer.writeItemList(itemStacks);
+        itemStacks.serialize(serializer);
     }
 
     public static void loadInventoryItems(Container inventory, IDataSerializer serializer) {
-        var itemStacks = NonNullList.withSize(inventory.getContainerSize(), ItemStack.EMPTY);
-        serializer.readItemList(itemStacks);
+        var itemStacks = new NonNullItemList(inventory.getContainerSize());
+        itemStacks.deserialize(serializer);
         for (int i = 0; i < itemStacks.size(); ++i) {
             var newItemStack = itemStacks.get(i);
             var oldItemStack = inventory.getItem(i);

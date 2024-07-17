@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializerKey;
 import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
+import moe.plushie.armourers_workshop.utils.NonNullItemList;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.OpenQuaternionf;
@@ -25,7 +26,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Rotation;
@@ -71,7 +71,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     private BlockPos reference = BlockPos.ZERO;
     private Rectangle3i collisionShape = Rectangle3i.ZERO;
 
-    private NonNullList<ItemStack> items;
+    private NonNullItemList items;
     private List<BlockPos> refers;
     private List<SkinMarker> markers;
 
@@ -117,7 +117,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
             oldProperties.putAll(properties);
             properties = oldProperties;
         }
-        serializer.readItemList(getOrCreateItems());
+        getOrCreateItems().deserialize(serializer);
     }
 
     @Override
@@ -132,8 +132,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         serializer.write(SKIN_KEY, descriptor);
         serializer.write(SKIN_PROPERTIES_KEY, properties);
         serializer.write(LINKED_POS_KEY, linkedBlockPos);
-
-        serializer.writeItemList(getOrCreateItems());
+        getOrCreateItems().serialize(serializer);
     }
 
     public void updateBlockStates() {
@@ -194,7 +193,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     @Override
-    public NonNullList<ItemStack> getItems() {
+    public NonNullItemList getItems() {
         return getOrCreateItems();
     }
 
@@ -364,9 +363,9 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
 
-    private NonNullList<ItemStack> getOrCreateItems() {
+    private NonNullItemList getOrCreateItems() {
         if (items == null) {
-            items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
+            items = new NonNullItemList(getContainerSize());
         }
         return items;
     }

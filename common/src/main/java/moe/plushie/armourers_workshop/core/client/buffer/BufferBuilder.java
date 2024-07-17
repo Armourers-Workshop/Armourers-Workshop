@@ -12,8 +12,9 @@ public class BufferBuilder extends AbstractBufferBuilder {
         this.renderType = renderType;
     }
 
-    public void begin() {
+    public BufferBuilder begin() {
         super.begin(renderType);
+        return this;
     }
 
     public RenderType getRenderType() {
