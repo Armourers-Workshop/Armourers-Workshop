@@ -57,17 +57,17 @@ public class ObjectPool<T> {
 
         @Override
         public void begin() {
-            // only expire until next use.
-            if (!queue.isEmpty()) {
-                recycle(queue);
-                queue.clear();
-            }
             releasing = queue;
         }
 
         @Override
         public void end() {
             releasing = null;
+            if (queue.isEmpty()) {
+                return;
+            }
+            recycle(queue);
+            queue.clear();
         }
 
         public void track(T value) {

@@ -56,10 +56,21 @@ public class SkinVertexBufferBuilder implements IBufferSource {
     private static void attach(IBufferSource bufferSource, RenderType renderType, Runnable action) {
         var buffer = bufferSource.getBuffer(renderType);
         var attachable = ObjectUtils.safeCast(renderType, IRenderAttachable.class);
-        if (attachable == null) {
-            return;
+        if (attachable != null) {
+            attachable.attachRenderTask(buffer, action);
         }
-        attachable.attachRenderTask(buffer, action);
+    }
+
+    public static void beginFrame() {
+    }
+
+    public static void endFrame() {
+        // when end frame rendering,
+        // we will clear unused passes to avoid issue.
+        var builder = getInstance();
+        builder.pipeline.discard();
+        builder.translucentPipeline.discard();
+        builder.outlinePipeline.discard();
     }
 
     public static void clearAllCache() {
@@ -151,6 +162,14 @@ public class SkinVertexBufferBuilder implements IBufferSource {
 
         public void clear() {
             merger.clear();
+        }
+
+        public void discard() {
+            if (merger.isEmpty()) {
+                return;
+            }
+            //ModLog.debug("discard unused render task {}", merger.size());
+            merger.reset();
         }
     }
 }

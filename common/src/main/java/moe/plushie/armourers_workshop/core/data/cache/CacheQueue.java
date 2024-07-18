@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class CacheQueue<K, V> {
@@ -29,13 +30,13 @@ public class CacheQueue<K, V> {
         this.autoreleasePool = new AutoreleasePool<>(() -> new AutoreleasePool.Lifecycle() {
             @Override
             public void begin() {
-                // only expire until next use.
-                drain(System.currentTimeMillis());
+                // nop.
             }
 
             @Override
             public void end() {
-                // nop.
+                // check expire entries.
+                drain(System.currentTimeMillis());
             }
         });
     }
@@ -75,6 +76,16 @@ public class CacheQueue<K, V> {
             return entry.value;
         }
         return null;
+    }
+
+    public V computeIfAbsent(K key, Function<? super K, ? extends V> provider) {
+        var entry = get(key);
+        if (entry != null) {
+            return entry;
+        }
+        entry = provider.apply(key);
+        put(key, entry);
+        return entry;
     }
 
     private void drain(long time) {

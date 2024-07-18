@@ -51,10 +51,17 @@ public class ShaderVertexMerger {
         pending.clear();
     }
 
+    public int size() {
+        int total = 0;
+        for (var group : pending.values()) {
+            total += group.size();
+        }
+        return total;
+    }
+
     public boolean isEmpty() {
         return maxVertexCount == 0;
     }
-
 
     private ShaderVertexGroup addAndSort(RenderType type) {
         var group = new ShaderVertexGroup(type);

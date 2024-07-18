@@ -31,6 +31,10 @@ public class ShaderVertexGroup {
         return animationController.getTextureMatrix(animationTicks);
     }
 
+    public int size() {
+        return objects.size();
+    }
+
     public boolean isEmpty() {
         return objects.isEmpty();
     }
@@ -45,6 +49,10 @@ public class ShaderVertexGroup {
     }
 
     public void forEach(Consumer<ShaderVertexObject> consumer) {
-        objects.forEach(consumer);
+        for (var object : objects) {
+            if (!object.isReleased()) {
+                consumer.accept(object);
+            }
+        }
     }
 }
