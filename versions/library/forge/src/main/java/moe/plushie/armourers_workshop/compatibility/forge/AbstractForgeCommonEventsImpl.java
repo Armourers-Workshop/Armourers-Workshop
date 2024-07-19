@@ -36,6 +36,7 @@ public class AbstractForgeCommonEventsImpl {
     public static final auto SERVER_DID_STOP = AbstractForgeEventBus.create(ServerStoppedEvent.class);
 
     public static final auto SERVER_LEVEL_TICK_PRE = AbstractForgeEventBus.create(LevelTickEvent.Pre.class);
+    public static final auto SERVER_LEVEL_TICK_POST = AbstractForgeEventBus.create(LevelTickEvent.Post.class);
 
     public static final auto BLOCK_BREAK = AbstractForgeEventBus.create(BlockEvent.BreakEvent.class);
     public static final auto BLOCK_PLACE = AbstractForgeEventBus.create(BlockEvent.EntityPlaceEvent.class);

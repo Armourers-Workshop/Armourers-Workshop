@@ -27,6 +27,7 @@ public class AbstractForgeCommonEventsImpl {
     public static final auto FML_CONFIG = AbstractForgeEventBus.create(ModConfigEvent.class);
 
     public static final auto SERVER_LEVEL_TICK_PRE = AbstractForgeEventBus.create(TickEvent.LevelTickEvent.class);
+    public static final auto SERVER_LEVEL_TICK_POST = AbstractForgeEventBus.create(TickEvent.LevelTickEvent.class);
 
     public static final auto FML_LOAD_COMPLETE = AbstractForgeEventBus.create(FMLLoadCompleteEvent.class);
     public static final auto FML_CLIENT_SETUP = AbstractForgeEventBus.create(FMLClientSetupEvent.class);

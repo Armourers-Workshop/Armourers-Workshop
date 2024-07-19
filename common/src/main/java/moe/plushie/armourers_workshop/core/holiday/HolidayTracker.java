@@ -46,7 +46,7 @@ public class HolidayTracker extends AbstractSavedData {
     }
 
     @Override
-    public void readAdditionalData(IDataSerializer serializer) {
+    public void deserialize(IDataSerializer serializer) {
         logs.clear();
         var prefix = calendar.get(Calendar.YEAR) + ":";
         for (var log : serializer.read(LOG_KEY)) {
@@ -58,7 +58,7 @@ public class HolidayTracker extends AbstractSavedData {
     }
 
     @Override
-    public void writeAdditionalData(IDataSerializer serializer) {
+    public void serialize(IDataSerializer serializer) {
         var prefix = calendar.get(Calendar.YEAR) + ":";
         var logs = new ArrayList<String>();
         for (var log : logs) {

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractSavedData;
+import moe.plushie.armourers_workshop.core.data.TickTracker;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializerKey;
 import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
@@ -150,7 +151,8 @@ public class ModContext extends AbstractSavedData {
     }
 
     @Override
-    public void readAdditionalData(IDataSerializer serializer) {
+    public void deserialize(IDataSerializer serializer) {
+        TickTracker.server().deserialize(serializer);
         int count = 0;
         t0 = serializer.read(T0_KEY);
         if (t0 != null) {
@@ -162,13 +164,13 @@ public class ModContext extends AbstractSavedData {
         }
         if (count != 2) {
             random();
-            setDirty();
         }
         apply(t0, t1);
     }
 
     @Override
-    public void writeAdditionalData(IDataSerializer serializer) {
+    public void serialize(IDataSerializer serializer) {
+        TickTracker.server().serialize(serializer);
         serializer.write(T0_KEY, t0);
         serializer.write(T1_KEY, t1);
     }

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.data.IDataSerializer;
+import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Available("[1.16, 1.18)")
-public abstract class AbstractSavedData {
+public abstract class AbstractSavedData implements IDataSerializerProvider {
 
     private boolean dirty;
     private Consumer<Boolean> dirtyImpl;
@@ -50,12 +50,12 @@ public abstract class AbstractSavedData {
 
         @Override
         public void load(CompoundTag tag) {
-            this.value.readAdditionalData(AbstractDataSerializer.wrap(tag, null));
+            this.value.deserialize(AbstractDataSerializer.wrap(tag, null));
         }
 
         @Override
         public CompoundTag save(CompoundTag tag) {
-            this.value.writeAdditionalData(AbstractDataSerializer.wrap(tag, null));
+            this.value.serialize(AbstractDataSerializer.wrap(tag, null));
             return tag;
         }
 

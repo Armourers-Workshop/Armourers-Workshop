@@ -22,7 +22,7 @@ public class DataProvider {
     public static <T extends AbstractSavedData> T computeIfAbsent(@This DimensionDataStorage storage, Supplier<T> provider, int flags, String name) {
         BiFunction<CompoundTag, HolderLookup.Provider, T> deserializer = (tag, provider1) -> {
             T value = provider.get();
-            value.readAdditionalData(AbstractDataSerializer.wrap(tag, provider1));
+            value.deserialize(AbstractDataSerializer.wrap(tag, provider1));
             return value;
         };
         return storage.computeIfAbsent(new SavedData.Factory<>(provider, deserializer, DataFixTypes.SAVED_DATA_FORCED_CHUNKS), name);

@@ -17,6 +17,7 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
+import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
@@ -53,8 +54,10 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
     private final ArrayList<EntitySlot> allSkins = new ArrayList<>();
     private final ArrayList<EntitySlot> armorSkins = new ArrayList<>();
     private final ArrayList<EntitySlot> itemSkins = new ArrayList<>();
+    private final ArrayList<EntitySlot> containerSkins = new ArrayList<>();
 
     private final HashMap<SkinDescriptor, BakedSkin> activeSkins = new HashMap<>();
+    private final HashMap<SkinDescriptor, BakedSkin> animatedSkins = new HashMap<>();
 
     private final Ticket loadTicket = Ticket.wardrobe();
     private final AnimationManager animationManager = new AnimationManager();
@@ -75,7 +78,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
 
     protected void tick(T source, @Nullable SkinWardrobe wardrobe) {
         tickSlots(source, wardrobe);
-        animationManager.tick(source, TickUtils.animationTicks());
+        animationManager.serialTick(source, TickUtils.animationTicks());
     }
 
     private void tickSlots(T source, @Nullable SkinWardrobe wardrobe) {
@@ -102,8 +105,8 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         wardrobeProvider.load(wardrobe, this::loadSkin);
 
         loadSkinInfos();
+        loadSkinAnimations(source);
         loadMissingSkinIfNeeded();
-        loadSkinAnimations();
     }
 
     private void invalidateAll() {
@@ -117,8 +120,10 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         missingSkins.clear();
         armorSkins.clear();
         itemSkins.clear();
+        containerSkins.clear();
         allSkins.clear();
         activeSkins.clear();
+        animatedSkins.clear();
         overriddenManager.clear();
 
         loadTicket.invalidate();
@@ -154,6 +159,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
             }
             case IN_CONTAINER -> {
                 allSkins.add(slot);
+                containerSkins.add(slot);
             }
         }
     }
@@ -176,11 +182,6 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         }
     }
 
-    private void loadSkinAnimations() {
-        animationManager.load(activeSkins);
-        // try play
-    }
-
     private void loadMissingSkinIfNeeded() {
         if (missingSkins.isEmpty()) {
             if (isListening) {
@@ -195,6 +196,28 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         }
     }
 
+    private void loadSkinAnimations(T source) {
+        // the armour/container skin will play parallel animation unconditionally.
+        armorSkins.forEach(this::loadSkinAnimation);
+        containerSkins.forEach(this::loadSkinAnimation);
+
+        // the item skin will play parallel animation when item is active.
+        if (entityProvider instanceof EntityProvider entityProvider1) {
+            boolean isMannequinHand = source instanceof MannequinEntity;
+            for (var itemStack : entityProvider1.handSlots) {
+                getItemSkins(itemStack, isMannequinHand).forEach(this::loadSkinAnimation);
+            }
+        }
+
+        // submit data into animation manager.
+        animationManager.load(activeSkins);
+        animationManager.parallelTick(animatedSkins);
+    }
+
+    private void loadSkinAnimation(EntitySlot slot) {
+        animatedSkins.put(slot.getDescriptor(), slot.getBakedSkin());
+    }
+
     @Override
     public void didBake(String identifier, BakedSkin bakedSkin) {
         if (missingSkins.contains(identifier)) {
@@ -202,9 +225,9 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         }
     }
 
-    private SkinDescriptor getEmbeddedSkin(ItemStack itemStack, boolean replaceSkinItem) {
+    private SkinDescriptor getEmbeddedSkin(ItemStack itemStack, boolean inMannequinHand) {
         // for skin item, we don't consider it an embedded skin.
-        if (!replaceSkinItem && itemStack.is(ModItems.SKIN.get())) {
+        if (!inMannequinHand && itemStack.is(ModItems.SKIN.get())) {
             return SkinDescriptor.EMPTY;
         }
         var target = SkinDescriptor.of(itemStack);
@@ -215,8 +238,8 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
     }
 
 
-    public List<EntitySlot> getItemSkins(ItemStack itemStack, boolean replaceSkinItem) {
-        var target = getEmbeddedSkin(itemStack, replaceSkinItem);
+    public List<EntitySlot> getItemSkins(ItemStack itemStack, boolean inMannequinHand) {
+        var target = getEmbeddedSkin(itemStack, inMannequinHand);
         if (target.isEmpty()) {
             // the item stack is not embedded skin, using matching pattern,
             // only need to find the first matching skin by item.

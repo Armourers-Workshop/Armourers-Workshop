@@ -10,8 +10,12 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 @Available("[1.16, )")
 public class AbstractFabricServerLevelEvent {
 
-    public static IEventHandler<ServerLevelTickEvent> startTickFactory() {
+    public static IEventHandler<ServerLevelTickEvent.Pre> preTickFactory() {
         return subscriber -> ServerTickEvents.START_WORLD_TICK.register(level -> subscriber.accept(() -> level));
+    }
+
+    public static IEventHandler<ServerLevelTickEvent.Post> postTickFactory() {
+        return subscriber -> ServerTickEvents.END_WORLD_TICK.register(level -> subscriber.accept(() -> level));
     }
 
     public static IEventHandler<ServerLevelAddEntityEvent> addEntityFactory() {

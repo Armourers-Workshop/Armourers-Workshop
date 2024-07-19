@@ -66,11 +66,11 @@ public class SkinVertexBufferBuilder implements IBufferSource {
 
     public static void endFrame() {
         // when end frame rendering,
-        // we will clear unused passes to avoid issue.
-        var builder = getInstance();
-        builder.pipeline.discard();
-        builder.translucentPipeline.discard();
-        builder.outlinePipeline.discard();
+        // we will fork unused passes to avoid issue.
+//        var builder = getInstance();
+//        builder.pipeline.fork();
+//        builder.translucentPipeline.fork();
+//        builder.outlinePipeline.fork();
     }
 
     public static void clearAllCache() {
@@ -162,14 +162,6 @@ public class SkinVertexBufferBuilder implements IBufferSource {
 
         public void clear() {
             merger.clear();
-        }
-
-        public void discard() {
-            if (merger.isEmpty()) {
-                return;
-            }
-            //ModLog.debug("discard unused render task {}", merger.size());
-            merger.reset();
         }
     }
 }

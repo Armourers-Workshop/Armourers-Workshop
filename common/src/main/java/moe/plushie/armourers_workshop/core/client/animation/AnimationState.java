@@ -36,7 +36,6 @@ public class AnimationState {
 
     public float getPartialTicks(float animationTicks) {
         float offset = animationTicks - startTime0;
-        offset *= ModDebugger.animationSpeed;
         if (playCount == 0) {
             return offset;
         }

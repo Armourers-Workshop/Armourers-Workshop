@@ -5,12 +5,14 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
+import moe.plushie.armourers_workshop.core.data.TickTracker;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModContext;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.minecraft.world.entity.player.Player;
 
 import java.io.ObjectInputStream;
@@ -42,6 +44,7 @@ public class UpdateContextPacket extends CustomPacket {
             buffer.writeBoolean(true);
             buffer.writeUUID(ModContext.t2(token));
             buffer.writeUUID(ModContext.t3(token));
+            buffer.writeFloat(TickTracker.server().animationTicks());
             buffer.writeUtf(ModConstants.MOD_NET_ID);
         } else {
             buffer.writeBoolean(false);
@@ -55,6 +58,7 @@ public class UpdateContextPacket extends CustomPacket {
             IFriendlyByteBuf reader = IFriendlyByteBuf.wrap(buffer);
             if (buffer.readBoolean()) {
                 ModContext.init(reader.readUUID(), reader.readUUID());
+                TickTracker.client().setAnimationTicks(reader.readFloat());
                 checkNetworkVersion(reader.readUtf());
             }
             readConfigSpec(reader);
@@ -74,7 +78,7 @@ public class UpdateContextPacket extends CustomPacket {
             }
             ByteBufOutputStream bo = new ByteBufOutputStream(buffer.asByteBuf());
             ObjectOutputStream oo = new ObjectOutputStream(bo);
-            for (Map.Entry<String, Object> entry : fields.entrySet()) {
+            for (var entry : fields.entrySet()) {
                 oo.writeUTF(entry.getKey());
                 oo.writeObject(entry.getValue());
             }
@@ -85,11 +89,11 @@ public class UpdateContextPacket extends CustomPacket {
     }
 
     private void readConfigSpec(IFriendlyByteBuf buffer) {
-        int size = buffer.readInt();
-        if (size == 0) {
-            return;
-        }
         try {
+            int size = buffer.readInt();
+            if (size == 0) {
+                return;
+            }
             HashMap<String, Object> fields = new HashMap<>();
             ByteBufInputStream bi = new ByteBufInputStream(buffer.asByteBuf());
             ObjectInputStream oi = new ObjectInputStream(bi);

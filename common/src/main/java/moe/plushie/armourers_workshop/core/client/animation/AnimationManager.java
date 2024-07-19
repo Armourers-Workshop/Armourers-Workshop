@@ -28,6 +28,8 @@ public class AnimationManager {
     private final HashMap<SkinDescriptor, Entry> entries = new HashMap<>();
     private final HashMap<AnimationController, AnimationState> states = new HashMap<>();
 
+    private final HashMap<SkinDescriptor, Entry> activeEntries = new HashMap<>();
+
     private final ArrayList<Entry> triggerableEntries = new ArrayList<>();
     private final ArrayList<AnimationController> animations = new ArrayList<>();
     private final ArrayList<AnimationController> removeOnCompletion = new ArrayList<>();
@@ -59,32 +61,45 @@ public class AnimationManager {
                 return;
             }
             entry.isLoaded = true;
-            entry.animations = skin.getAnimationControllers();
-            if (entry.animations == null) {
-                return;
-            }
-            entry.animations.forEach(animationController -> {
-                // auto play
-                if (animationController.isParallel()) {
-                    play(animationController, TickUtils.animationTicks(), 0);
-                }
-            });
+            entry.animationControllers.addAll(skin.getAnimationControllers());
             entry.rebuild();
-            animations.addAll(entry.animations);
+            animations.addAll(entry.animationControllers);
         });
         oldEntries.forEach((key, entry) -> {
             entries.remove(key);
-            if (entry.animations == null) {
-                return;
-            }
-            entry.animations.forEach(this::stop);
-            animations.removeAll(entry.animations);
+            activeEntries.remove(key);
+            entry.animationControllers.forEach(this::stop);
+            animations.removeAll(entry.animationControllers);
         });
-        reloadCache();
+        rebuildTriggerableEntities();
         setChanged();
     }
 
-    public void tick(Object source, float animationTicks) {
+    public void parallelTick(Map<SkinDescriptor, BakedSkin> skins) {
+        var oldEntries = new HashMap<>(activeEntries);
+        skins.forEach((key, skin) -> {
+            var entry = oldEntries.remove(key);
+            if (entry != null) {
+                return; // no change, ignore.
+            }
+            entry = entries.get(key);
+            if (entry == null) {
+                return; // no found, ignore.
+            }
+            activeEntries.put(key, entry);
+            entry.animationControllers.stream().filter(AnimationController::isParallel).forEach(it -> {
+                // autoplay the parallel animation.
+                play(it, TickUtils.animationTicks(), 0);
+            });
+        });
+        oldEntries.forEach((key, entry) -> {
+            // when skin enter inactive state, stop all animations.
+            activeEntries.remove(key);
+            entry.animationControllers.forEach(this::stop);
+        });
+    }
+
+    public void serialTick(Object source, float animationTicks) {
         // clear invalid animation.
         if (!removeOnCompletion.isEmpty()) {
             var animations = new ArrayList<>(removeOnCompletion);
@@ -209,7 +224,7 @@ public class AnimationManager {
             entry.addMapping(from, to);
             entry.rebuild();
         });
-        reloadCache();
+        rebuildTriggerableEntities();
         setChanged();
     }
 
@@ -221,7 +236,7 @@ public class AnimationManager {
         return states.get(animationController);
     }
 
-    private void reloadCache() {
+    private void rebuildTriggerableEntities() {
         triggerableEntries.clear();
         triggerableEntries.addAll(entries.values().stream().filter(Entry::hasTriggerableAnimation).toList());
     }
@@ -230,11 +245,12 @@ public class AnimationManager {
 
         private final SkinDescriptor descriptor;
 
-        private List<AnimationController> animations;
         private boolean isLoaded = false;
 
         private final HashMap<String, String> actionToName = new HashMap<>();
         private final ArrayList<TriggerableEntry> triggerableAnimations = new ArrayList<>();
+
+        private final List<AnimationController> animationControllers = new ArrayList<>();
 
         private boolean isLocked = false;
         private TriggerableEntry selectedEntry;
@@ -266,7 +282,7 @@ public class AnimationManager {
 
         protected void rebuild() {
             var newValues = new ArrayList<TriggerableEntry>();
-            for (var animationController : animations) {
+            for (var animationController : animationControllers) {
                 if (!animationController.isParallel()) {
                     var name = animationController.getName();
                     var entry = new TriggerableEntry(resolve(name), animationController);

@@ -1,21 +1,17 @@
 package moe.plushie.armourers_workshop.compatibility.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.data.IDataSerializer;
+import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
 
 @Available("[1.18, 1.21)")
-public abstract class AbstractSavedData extends SavedData {
-
-    public abstract void readAdditionalData(IDataSerializer serializer);
-
-    public abstract void writeAdditionalData(IDataSerializer serializer);
+public abstract class AbstractSavedData extends SavedData implements IDataSerializerProvider {
 
     @Override
     public final CompoundTag save(CompoundTag tag) {
-        writeAdditionalData(AbstractDataSerializer.wrap(tag, null));
+        serialize(AbstractDataSerializer.wrap(tag, null));
         return tag;
     }
 }

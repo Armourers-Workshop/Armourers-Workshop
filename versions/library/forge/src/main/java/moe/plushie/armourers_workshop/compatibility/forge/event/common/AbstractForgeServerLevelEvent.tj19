@@ -12,10 +12,20 @@ import net.minecraftforge.event.TickEvent;
 @Available("[1.19, 1.21)")
 public class AbstractForgeServerLevelEvent {
 
-    public static IEventHandler<ServerLevelTickEvent> startTickFactory() {
+    public static IEventHandler<ServerLevelTickEvent.Pre> preTickFactory() {
         return AbstractForgeCommonEventsImpl.SERVER_LEVEL_TICK_PRE.flatMap(event -> {
             ServerLevel serverLevel = ObjectUtils.safeCast(event.level, ServerLevel.class);
             if (serverLevel != null && event.phase == TickEvent.Phase.START) {
+                return () -> serverLevel;
+            }
+            return null;
+        });
+    }
+
+    public static IEventHandler<ServerLevelTickEvent.Post> postTickFactory() {
+        return AbstractForgeCommonEventsImpl.SERVER_LEVEL_TICK_POST.flatMap(event -> {
+            ServerLevel serverLevel = ObjectUtils.safeCast(event.level, ServerLevel.class);
+            if (serverLevel != null && event.phase == TickEvent.Phase.END) {
                 return () -> serverLevel;
             }
             return null;

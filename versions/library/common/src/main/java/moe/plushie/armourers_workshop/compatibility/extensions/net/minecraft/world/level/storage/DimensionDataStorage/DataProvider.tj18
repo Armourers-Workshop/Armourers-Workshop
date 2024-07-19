@@ -17,7 +17,7 @@ public class DataProvider {
     public static <T extends AbstractSavedData> T computeIfAbsent(@This DimensionDataStorage storage, Supplier<T> provider, int flags, String name) {
         return storage.computeIfAbsent(tag -> {
             T value = provider.get();
-            value.readAdditionalData(AbstractDataSerializer.wrap(tag, null));
+            value.deserialize(AbstractDataSerializer.wrap(tag, null));
             return value;
         }, provider, name);
     }

@@ -40,7 +40,9 @@ public class AbstractForgeCommonEvents extends AbstractForgeCommonEventsImpl {
         EventManager.post(ServerStoppingEvent.class, AbstractForgeServerLifecycleEvent.stoppingFactory());
         EventManager.post(ServerStoppedEvent.class, AbstractForgeServerLifecycleEvent.stoppedFactory());
 
-        EventManager.post(ServerLevelTickEvent.class, AbstractForgeServerLevelEvent.startTickFactory());
+        EventManager.post(ServerLevelTickEvent.Pre.class, AbstractForgeServerLevelEvent.preTickFactory());
+        EventManager.post(ServerLevelTickEvent.Post.class, AbstractForgeServerLevelEvent.postTickFactory());
+
         EventManager.post(ServerLevelAddEntityEvent.class, AbstractForgeServerLevelEvent.addEntityFactory());
 
         EventManager.post(BlockEvent.Break.class, AbstractForgeBlockEvent.breakFactory());

@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
+import moe.plushie.armourers_workshop.core.data.TickTracker;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
@@ -149,9 +150,11 @@ public class CommonProxy {
             }
         });
 
-        EventManager.listen(ServerLevelTickEvent.class, event -> {
+        EventManager.listen(ServerLevelTickEvent.Pre.class, event -> {
+            TickTracker.server().update(false);
             WorldUpdater.getInstance().tick(event.getLevel());
         });
+
         EventManager.listen(ServerLevelAddEntityEvent.class, event -> {
             SkinUtils.copySkinFromOwner(event.getEntity());
         });

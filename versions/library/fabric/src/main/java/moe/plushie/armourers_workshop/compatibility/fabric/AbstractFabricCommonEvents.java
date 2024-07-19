@@ -40,7 +40,9 @@ public class AbstractFabricCommonEvents {
         EventManager.post(ServerStoppingEvent.class, AbstractFabricServerLifecycleEvent.stoppingFactory());
         EventManager.post(ServerStoppedEvent.class, AbstractFabricServerLifecycleEvent.stoppedFactory());
 
-        EventManager.post(ServerLevelTickEvent.class, AbstractFabricServerLevelEvent.startTickFactory());
+        EventManager.post(ServerLevelTickEvent.Pre.class, AbstractFabricServerLevelEvent.preTickFactory());
+        EventManager.post(ServerLevelTickEvent.Post.class, AbstractFabricServerLevelEvent.postTickFactory());
+
         EventManager.post(ServerLevelAddEntityEvent.class, AbstractFabricServerLevelEvent.addEntityFactory());
 
         EventManager.post(BlockEvent.Break.class, AbstractFabricBlockEvent.breakFactory());
