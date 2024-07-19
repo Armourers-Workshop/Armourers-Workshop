@@ -49,10 +49,6 @@ public class ShaderVertexGroup {
     }
 
     public void forEach(Consumer<ShaderVertexObject> consumer) {
-        for (var object : objects) {
-            if (!object.isReleased()) {
-                consumer.accept(object);
-            }
-        }
+        objects.forEach(consumer);
     }
 }

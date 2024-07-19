@@ -103,8 +103,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
 
         loadSkinInfos();
         loadMissingSkinIfNeeded();
-
-        animationManager.load(activeSkins);
+        loadSkinAnimations();
     }
 
     private void invalidateAll() {
@@ -177,7 +176,12 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         }
     }
 
-    protected void loadMissingSkinIfNeeded() {
+    private void loadSkinAnimations() {
+        animationManager.load(activeSkins);
+        // try play
+    }
+
+    private void loadMissingSkinIfNeeded() {
         if (missingSkins.isEmpty()) {
             if (isListening) {
                 SkinBakery.getInstance().removeListener(this);
@@ -223,7 +227,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
             }
         } else {
             // the item stack is embedded skin, find the baked skin for matched descriptor.
-            for (EntitySlot entry : itemSkins) {
+            for (var entry : itemSkins) {
                 if (entry.getDescriptor().equals(target)) {
                     return Collections.singletonList(entry);
                 }

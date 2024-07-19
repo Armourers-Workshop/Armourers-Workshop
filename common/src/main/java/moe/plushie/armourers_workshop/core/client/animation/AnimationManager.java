@@ -81,6 +81,7 @@ public class AnimationManager {
             animations.removeAll(entry.animations);
         });
         reloadCache();
+        setChanged();
     }
 
     public void tick(Object source, float animationTicks) {
@@ -198,18 +199,22 @@ public class AnimationManager {
         entries.forEach((key, entry) -> {
             if (entry.selectedEntry != null && entry.selectedEntry.animationController == animationController) {
                 entry.selectedEntry = null;
-                lastActionSet = null; // mark to re calc.
+                setChanged();
             }
         });
     }
 
     public void rewrite(String from, String to) {
-        lastActionSet = null;
         entries.forEach((key, entry) -> {
             entry.addMapping(from, to);
             entry.rebuild();
         });
         reloadCache();
+        setChanged();
+    }
+
+    public void setChanged() {
+        lastActionSet = null;
     }
 
     public AnimationState getAnimationState(AnimationController animationController) {
