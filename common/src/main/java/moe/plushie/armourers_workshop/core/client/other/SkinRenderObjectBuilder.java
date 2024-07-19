@@ -82,7 +82,7 @@ public class SkinRenderObjectBuilder implements ConcurrentBufferBuilder {
         // we need compile the skin part, but not render when part invisible.
         var group = compiler.compile(part, skin, scheme, isOutline);
         if (group != null && !group.isEmpty() && part.isVisible()) {
-            pipeline.add(group.getPasses(), context);
+            pipeline.add(group, context);
         }
     }
 
@@ -103,7 +103,7 @@ public class SkinRenderObjectBuilder implements ConcurrentBufferBuilder {
     private void drawWithVBO(ConcurrentBufferCompiler.Group group, ConcurrentRenderingContext context) {
         var pipeline1 = new ConcurrentRenderingPipeline();
         var pipeline2 = new SkinVertexBufferBuilder.Pipeline();
-        pipeline1.add(group.getPasses(), context);
+        pipeline1.add(group, context);
         pipeline1.commit(pipeline2::add);
         pipeline2.end();
     }

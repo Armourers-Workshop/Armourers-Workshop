@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.client.buffer.OutlineBufferBuilder;
 import moe.plushie.armourers_workshop.core.client.texture.TextureManager;
 import moe.plushie.armourers_workshop.core.data.cache.CacheQueue;
 import moe.plushie.armourers_workshop.core.data.cache.ObjectPool;
+import moe.plushie.armourers_workshop.core.data.cache.ReferenceCounted;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -31,7 +32,7 @@ import java.util.concurrent.ExecutorService;
 public class ConcurrentBufferCompiler {
 
     private static final ExecutorService QUEUE = ThreadUtils.newFixedThreadPool(2, "AW-SKIN-VB");
-    private static final CacheQueue<Object, Group> CACHING = new CacheQueue<>(Duration.ofSeconds(30), Group::release);
+    private static final CacheQueue<Object, Group> CACHING = new CacheQueue<>(Duration.ofSeconds(30), it -> RenderSystem.recordRenderCall(it::release));
     private static final VertexIndexObject INDEXER = new VertexIndexObject(4, 6, (builder, index) -> {
         builder.accept(index);
         builder.accept(index + 1);
@@ -103,7 +104,7 @@ public class ConcurrentBufferCompiler {
                 });
                 var renderedBuffer = builder.end();
                 var compiledTask = new Pass(builder.getRenderType(), renderedBuffer, part.getRenderPolygonOffset(), part.getType(), task.isOutline());
-                usingTypes.add(builder.getRenderType());
+                usingTypes.add(renderType);
                 mergedTasks.add(compiledTask);
                 buildingTasks.add(compiledTask);
             });
@@ -149,7 +150,8 @@ public class ConcurrentBufferCompiler {
         var vertexBuffer = new VertexBufferObject();
         vertexBuffer.upload(byteBuffer);
         for (var cachedTask : cachedTasks) {
-            cachedTask.upload(vertexBuffer);
+            cachedTask.bufferObject = vertexBuffer;
+            cachedTask.retain();
         }
         vertexBuffer.release();
     }
@@ -170,7 +172,7 @@ public class ConcurrentBufferCompiler {
         return new BufferBuilder(renderType, total);
     }
 
-    public static class Group {
+    public static class Group extends ReferenceCounted {
 
         private final BakedSkinPart part;
         private final BakedSkin skin;
@@ -179,7 +181,7 @@ public class ConcurrentBufferCompiler {
         private final ColorScheme scheme;
 
         private ArrayList<Pass> mergedTasks;
-        private ArrayList<TextureManager.Entry> usingTypes;
+        private ArrayList<ReferenceCounted> usingTypes;
 
         private VertexBufferObject bufferObject;
 
@@ -192,38 +194,28 @@ public class ConcurrentBufferCompiler {
             this.scheme = scheme;
         }
 
-        protected void upload(VertexBufferObject bufferObject) {
+        @Override
+        protected void init() {
             RenderSystem.assertOnRenderThread();
             if (mergedTasks == null || usingTypes == null) {
                 return; // is released or not init.
             }
-            this.mergedTasks.forEach(it -> it.upload(bufferObject));
-            this.bufferObject = bufferObject;
             this.bufferObject.retain();
-            this.usingTypes.forEach(TextureManager.Entry::retain);
+            this.mergedTasks.forEach(it -> it.upload(bufferObject));
+            this.usingTypes.forEach(ReferenceCounted::retain);
             this.isComplied = true;
         }
 
-        protected void close() {
+        @Override
+        protected void dispose() {
             RenderSystem.assertOnRenderThread();
             if (this.bufferObject == null || this.mergedTasks == null || usingTypes == null) {
                 return; // is release
             }
             this.isComplied = false;
-            this.usingTypes.forEach(TextureManager.Entry::release);
+            this.usingTypes.forEach(ReferenceCounted::release);
+            this.mergedTasks.forEach(Pass::close);
             this.bufferObject.release();
-            this.bufferObject = null;
-            this.mergedTasks.forEach(Pass::release);
-            this.mergedTasks = null;
-        }
-
-        public void release() {
-            if (!isComplied) {
-                return;
-            }
-            // set to false immediately, and then safely close and release later.
-            isComplied = false;
-            RenderSystem.recordRenderCall(this::close);
         }
 
         public List<Pass> getPasses() {
@@ -282,7 +274,7 @@ public class ConcurrentBufferCompiler {
             this.isCompiled = true;
         }
 
-        public void release() {
+        public void close() {
             this.isCompiled = false;
             this.arrayObject.close();
             this.bufferObject = null;

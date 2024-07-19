@@ -31,12 +31,19 @@ public class ObjectPool<T> {
         return new ObjectPool<>(creator, isConcurrent);
     }
 
-    protected void recycle(List<T> objects) {
+    protected void recycle(List<T> objects, List<T> rollback) {
         // when too many available, we will pause recycling.
         int recycled = objects.size();
         int available = reusable.size();
-        if (available < recycled * 2) {
-            reusable.addAll(objects);
+        if (available > recycled * 2) {
+            return;
+        }
+        for (var object : objects) {
+            if (object instanceof ReferenceCounted counted && counted.refCnt() != 0) {
+                rollback.add(object);
+                continue;
+            }
+            reusable.add(object);
         }
     }
 
@@ -53,21 +60,25 @@ public class ObjectPool<T> {
     protected class Page implements AutoreleasePool.Lifecycle {
 
         private List<T> releasing;
-        private final List<T> queue = new ArrayList<>();
+        private List<T> usedQueue = new ArrayList<>();
+        private List<T> rollbackQueue = new ArrayList<>();
 
         @Override
         public void begin() {
-            releasing = queue;
+            releasing = usedQueue;
         }
 
         @Override
         public void end() {
             releasing = null;
-            if (queue.isEmpty()) {
+            if (usedQueue.isEmpty()) {
                 return;
             }
-            recycle(queue);
-            queue.clear();
+            var oldQueue = usedQueue;
+            recycle(oldQueue, rollbackQueue);
+            oldQueue.clear();
+            usedQueue = rollbackQueue;
+            rollbackQueue = oldQueue;
         }
 
         public void track(T value) {

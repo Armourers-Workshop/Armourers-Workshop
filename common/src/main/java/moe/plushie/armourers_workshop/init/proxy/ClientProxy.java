@@ -13,7 +13,6 @@ import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationEngine;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.bake.SkinPreloadManager;
-import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager2;
 import moe.plushie.armourers_workshop.core.client.texture.TextureManager;
@@ -164,13 +163,11 @@ public class ClientProxy {
 
         EventManager.listen(RenderFrameEvent.Pre.class, event -> {
             AutoreleasePool.begin();
-            SkinVertexBufferBuilder.beginFrame();
             TickUtils.tick(event.isPaused() || event.isFrozen()); // respect the /tick frozen command.
             SkinPreloadManager.tick(event.isPaused());
         });
 
         EventManager.listen(RenderFrameEvent.Post.class, event -> {
-            SkinVertexBufferBuilder.endFrame();
             AutoreleasePool.end();
         });
 

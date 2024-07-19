@@ -3,18 +3,18 @@ package moe.plushie.armourers_workshop.core.client.other;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.core.data.cache.ObjectPool;
+import moe.plushie.armourers_workshop.core.data.cache.ReferenceCounted;
 import moe.plushie.armourers_workshop.utils.math.OpenPoseStack;
 import net.minecraft.client.renderer.RenderType;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class ConcurrentRenderingPipeline {
 
     protected final ArrayList<Group> passGroups = new ArrayList<>();
 
-    public void add(List<ConcurrentBufferCompiler.Pass> passes, ConcurrentRenderingContext context) {
+    public void add(ConcurrentBufferCompiler.Group group, ConcurrentRenderingContext context) {
         var pass = Group.POOL.get();
         var poseStack = context.getPoseStack();
         var modelViewStack = context.getModelViewStack();
@@ -28,7 +28,7 @@ public class ConcurrentRenderingPipeline {
         //lastNormal.set(modelViewStack.last().normal());
         lastNormal.set(poseStack.last().normal());
         lastNormal.invert();
-        passGroups.add(pass.fill(passes, context));
+        passGroups.add(pass.fill(group, context));
     }
 
     public void commit(Consumer<ShaderVertexObject> consumer) {
@@ -39,7 +39,7 @@ public class ConcurrentRenderingPipeline {
     }
 
 
-    public static class Group {
+    public static class Group extends ReferenceCounted {
 
         private static final ObjectPool<Group> POOL = ObjectPool.create(Group::new);
 
@@ -49,6 +49,8 @@ public class ConcurrentRenderingPipeline {
         private int usedCount = 0;
         private int totalCount = 0;
 
+        private ConcurrentBufferCompiler.Group compiledGroup;
+
         public void forEach(Consumer<ShaderVertexObject> consumer) {
             for (int i = 0; i < usedCount; ++i) {
                 var pass = pendingQueue.get(i);
@@ -56,9 +58,10 @@ public class ConcurrentRenderingPipeline {
             }
         }
 
-        public Group fill(List<ConcurrentBufferCompiler.Pass> passes, ConcurrentRenderingContext context) {
+        public Group fill(ConcurrentBufferCompiler.Group group, ConcurrentRenderingContext context) {
             usedCount = 0;
-            for (var mergedTask : passes) {
+            compiledGroup = group;
+            for (var mergedTask : group.getPasses()) {
                 // skip outline task, when not enable.
                 if (!context.shouldRenderOutline() && mergedTask.isOutline) {
                     continue;
@@ -68,11 +71,26 @@ public class ConcurrentRenderingPipeline {
             return this;
         }
 
+        @Override
+        protected void init() {
+            if (compiledGroup != null) {
+                compiledGroup.retain();
+            }
+        }
+
+        @Override
+        protected void dispose() {
+            if (compiledGroup != null) {
+                compiledGroup.release();
+                compiledGroup = null;
+            }
+        }
+
         private Pass poll() {
             if (usedCount < totalCount) {
                 return pendingQueue.get(usedCount++);
             }
-            var pass = new Pass();
+            var pass = new Pass(this);
             pendingQueue.add(pass);
             totalCount += 1;
             usedCount += 1;
@@ -93,6 +111,12 @@ public class ConcurrentRenderingPipeline {
         OpenPoseStack poseStack;
         ConcurrentBufferCompiler.Pass compiledTask;
 
+        private final Group group;
+
+        public Pass(Group group) {
+            this.group = group;
+        }
+
         public Pass fill(ConcurrentBufferCompiler.Pass compiledTask, OpenPoseStack poseStack, ConcurrentRenderingContext context) {
             this.compiledTask = compiledTask;
             this.poseStack = poseStack;
@@ -101,6 +125,7 @@ public class ConcurrentRenderingPipeline {
             this.outlineColor = context.getOutlineColor();
             this.animationTicks = context.getAnimationTicks();
             this.polygonOffset = compiledTask.polygonOffset + context.getRenderPriority();
+            this.retain();
             return this;
         }
 
@@ -182,9 +207,13 @@ public class ConcurrentRenderingPipeline {
             return compiledTask.isOutline;
         }
 
+        public void retain() {
+            group.retain();
+        }
+
         @Override
-        public boolean isReleased() {
-            return !compiledTask.isCompiled;
+        public void release() {
+            group.release();
         }
     }
 }

@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.common.ITextureProvider;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.data.IAssociatedObjectProvider;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.data.cache.ReferenceCounted;
 import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -66,15 +67,13 @@ public class TextureManager {
         return entry.getRenderType();
     }
 
-    public static class Entry {
+    public static class Entry extends ReferenceCounted {
 
         private final IResourceLocation location;
 
         private final RenderType renderType;
         private final Map<IResourceLocation, ByteBuffer> textureBuffers;
         private final TextureAnimationController animationController;
-
-        private final AtomicInteger counter = new AtomicInteger(0);
 
         public Entry(ITextureProvider provider) {
             this.location = resolveResourceLocation(provider);
@@ -89,16 +88,20 @@ public class TextureManager {
             return IAssociatedObjectProvider.get(renderType);
         }
 
-        public void retain() {
-            if (counter.getAndIncrement() == 0) {
-                register();
-            }
+        @Override
+        protected void init() {
+            RenderSystem.recordRenderCall(() -> {
+                textureBuffers.forEach(SmartResourceManager.getInstance()::register);
+                Minecraft.getInstance().getTextureManager().register(location.toLocation(), new SimpleTexture(location.toLocation()));
+            });
         }
 
-        public void release() {
-            if (counter.get() > 0 && counter.decrementAndGet() == 0) {
-                unregister();
-            }
+        @Override
+        protected void dispose() {
+            RenderSystem.recordRenderCall(() -> {
+                textureBuffers.keySet().forEach(SmartResourceManager.getInstance()::unregister);
+                Minecraft.getInstance().getTextureManager().unregister(location.toLocation());
+            });
         }
 
         public IResourceLocation getLocation() {
@@ -119,28 +122,8 @@ public class TextureManager {
         }
 
         protected void bind(Entry newValue) {
-            // when a texture is open, automatic close it.
             IAssociatedObjectProvider provider = ObjectUtils.unsafeCast(renderType);
-            Entry entry = provider.getAssociatedObject();
-            if (entry != null && entry.counter.get() > 0) {
-                entry.unregister();
-            }
             provider.setAssociatedObject(newValue);
-        }
-
-        protected void register() {
-            RenderSystem.recordRenderCall(() -> {
-                textureBuffers.forEach(SmartResourceManager.getInstance()::register);
-                Minecraft.getInstance().getTextureManager().register(location.toLocation(), new SimpleTexture(location.toLocation()));
-            });
-        }
-
-        protected void unregister() {
-            counter.set(0);
-            RenderSystem.recordRenderCall(() -> {
-                textureBuffers.keySet().forEach(SmartResourceManager.getInstance()::unregister);
-                Minecraft.getInstance().getTextureManager().unregister(location.toLocation());
-            });
         }
 
         private IResourceLocation resolveResourceLocation(ITextureProvider provider) {
