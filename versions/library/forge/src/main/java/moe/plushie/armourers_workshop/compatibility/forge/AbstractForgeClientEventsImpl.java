@@ -12,6 +12,7 @@ import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.event.RenderHighlightEvent;
 import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 import manifold.ext.rt.api.auto;
@@ -31,6 +32,7 @@ public class AbstractForgeClientEventsImpl {
     public static final auto ITEM_TOOLTIP_GATHER = AbstractForgeEventBus.create(ItemTooltipEvent.class);
     public static final auto MENU_SCREEN_REGISTRY = AbstractForgeEventBus.create(RegisterMenuScreensEvent.class);
     public static final auto ENTITY_RENDERER_REGISTRY = AbstractForgeEventBus.create(EntityRenderersEvent.RegisterRenderers.class);
+    public static final auto CLIENT_EXTENSIONS_REGISTRY = AbstractForgeEventBus.create(RegisterClientExtensionsEvent.class);
 
     public static final auto RENDER_HIGHLIGHT_BLOCK = AbstractForgeEventBus.create(RenderHighlightEvent.Block.class);
 

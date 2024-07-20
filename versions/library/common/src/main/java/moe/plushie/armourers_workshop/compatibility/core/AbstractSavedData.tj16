@@ -34,10 +34,6 @@ public abstract class AbstractSavedData implements IDataSerializerProvider {
         }
     }
 
-    public abstract void readAdditionalData(IDataSerializer serializer);
-
-    public abstract void writeAdditionalData(IDataSerializer serializer);
-
     public static class Storage<T extends AbstractSavedData> extends SavedData {
 
         private final T value;
