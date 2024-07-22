@@ -37,6 +37,16 @@ public class ObjectUtils {
         return null;
     }
 
+    public static void safeClose(AutoCloseable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
     public static String readableName(Class<?> clazz) {
         String simpleName = clazz.getSimpleName();
         if (simpleName.matches("^I[A-Z].+$") && clazz.isInterface()) {

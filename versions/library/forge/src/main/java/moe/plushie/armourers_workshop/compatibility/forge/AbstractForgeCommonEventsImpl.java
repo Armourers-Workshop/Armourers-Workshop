@@ -18,6 +18,7 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import manifold.ext.rt.api.auto;
 
@@ -34,6 +35,9 @@ public class AbstractForgeCommonEventsImpl {
     public static final auto SERVER_DID_START = AbstractForgeEventBus.create(ServerStartedEvent.class);
     public static final auto SERVER_WILL_STOP = AbstractForgeEventBus.create(ServerStoppingEvent.class);
     public static final auto SERVER_DID_STOP = AbstractForgeEventBus.create(ServerStoppedEvent.class);
+
+    public static final auto SERVER_TICK_PRE = AbstractForgeEventBus.create(ServerTickEvent.Pre.class);
+    public static final auto SERVER_TICK_POST = AbstractForgeEventBus.create(ServerTickEvent.Post.class);
 
     public static final auto SERVER_LEVEL_TICK_PRE = AbstractForgeEventBus.create(LevelTickEvent.Pre.class);
     public static final auto SERVER_LEVEL_TICK_POST = AbstractForgeEventBus.create(LevelTickEvent.Post.class);

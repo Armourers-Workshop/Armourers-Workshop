@@ -12,6 +12,10 @@ public interface IConfigBuilder {
         return builder().define(path, defaultValue, description);
     }
 
+    default IConfigValue<String> define(String path, String defaultValue, String... description) {
+        return builder().define(path, defaultValue, description);
+    }
+
     default IConfigValue<Integer> defineInRange(String path, int defaultValue, int min, int max, String... description) {
         return builder().defineInRange(path, defaultValue, min, max, description);
     }

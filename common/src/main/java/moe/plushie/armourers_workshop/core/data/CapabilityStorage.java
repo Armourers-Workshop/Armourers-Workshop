@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.common.ICapabilityType;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractCapabilityStorage;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobeStorage;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.nbt.CompoundTag;
@@ -65,7 +66,7 @@ public class CapabilityStorage {
         capabilities.values().forEach(pair -> {
             if (pair.getValue().orElse(null) instanceof IDataSerializerProvider provider) {
                 var tag1 = new CompoundTag();
-                provider.serialize(DataManager.createEntityDataReader(entity, tag1));
+                provider.serialize(SkinWardrobeStorage.writer(entity, tag1));
                 caps.put(pair.getKey().registryName.toString(), tag1);
             }
         });
@@ -88,7 +89,7 @@ public class CapabilityStorage {
             if (pair.getValue().orElse(null) instanceof IDataSerializerProvider provider) {
                 var tag1 = ObjectUtils.safeCast(caps.get(pair.getKey().registryName.toString()), CompoundTag.class);
                 if (tag1 != null) {
-                    provider.deserialize(DataManager.createEntityDataWriter(entity, tag1));
+                    provider.deserialize(SkinWardrobeStorage.reader(entity, tag1));
                 }
             }
         });

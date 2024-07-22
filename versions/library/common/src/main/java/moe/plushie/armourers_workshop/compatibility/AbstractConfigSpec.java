@@ -181,6 +181,11 @@ public class AbstractConfigSpec implements IConfigSpec {
         }
 
         @Override
+        public IConfigValue<String> define(String path, String defaultValue, String... description) {
+            return defineValue(path, comment(description).define(path, defaultValue));
+        }
+
+        @Override
         public IConfigValue<Integer> defineInRange(String path, int defaultValue, int min, int max, String... description) {
             return defineValue(path, comment(description).defineInRange(path, defaultValue, min, max));
         }
@@ -212,6 +217,8 @@ public class AbstractConfigSpec implements IConfigSpec {
         protected abstract Builder comment(String... comment);
 
         protected abstract Value<Boolean> define(String path, boolean defaultValue);
+
+        protected abstract Value<String> define(String path, String defaultValue);
 
         protected abstract Value<Integer> defineInRange(String path, int defaultValue, int minValue, int maxValue);
 

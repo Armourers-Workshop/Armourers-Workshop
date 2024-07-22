@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.data.IDataSerializerProvider;
 import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.data.DataManager;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobeStorage;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -100,7 +100,7 @@ public class AbstractForgeCapabilityManager {
         public CompoundTag serializeNBT(HolderLookup.Provider provider) {
             if (value != null) {
                 CompoundTag tag = new CompoundTag();
-                value.serialize(DataManager.createEntityDataReader(entity.get(), tag));
+                value.serialize(SkinWardrobeStorage.writer(entity.get(), tag));
                 return tag;
             }
             return null;
@@ -109,7 +109,7 @@ public class AbstractForgeCapabilityManager {
         @Override
         public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
             if (value != null) {
-                value.deserialize(DataManager.createEntityDataWriter(entity.get(), tag));
+                value.deserialize(SkinWardrobeStorage.reader(entity.get(), tag));
             }
         }
 

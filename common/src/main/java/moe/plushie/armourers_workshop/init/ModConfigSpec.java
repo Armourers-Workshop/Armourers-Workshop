@@ -126,6 +126,10 @@ public class ModConfigSpec {
 
                 defineList("skinServerURLs", String.class, "We priority use https for the access token APIs.").bind(v -> customSkinServerURLs = new ArrayList<>(v), () -> new ArrayList<>(customSkinServerURLs));
             });
+            defineCategory("database", "Setting for the Database.", () -> {
+                define("skin", "", "Save/Load skin data for the database.", "example1: \"jdbc:mysql://<localhost>[:3306]/<database>[?user=<username>][&password=<password>]\"", "example2: \"jdbc:sqlite://</path/name.db>\"").bind(v -> skinDatabaseURL = v, () -> null);
+                define("wardrobe", "", "Save/Load wardrobe data for the database.", "example1: \"jdbc:mysql://<localhost>[:3306]/<database>[?user=<username>][&password=<password>]\"", "example2: \"jdbc:sqlite://</path/name.db>\"").bind(v -> wardrobeDatabaseURL = v, () -> null);
+            });
 
             defineCategory("holiday-events", "Enable/disable holiday events.", () -> {
                 define("disableAllHolidayEvents", false, "Setting to true will disable all holiday events. What's wrong with you!").bind(v -> disableAllHolidayEvents = v, () -> disableAllHolidayEvents);

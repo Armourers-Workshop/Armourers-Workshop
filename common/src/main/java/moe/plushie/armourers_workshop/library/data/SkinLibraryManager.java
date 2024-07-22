@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.library.data;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
-import moe.plushie.armourers_workshop.core.data.LocalDataService;
+import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModPermissions;
@@ -105,7 +105,7 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
 
         @Override
         public boolean shouldDownloadFile(Player player) {
-            if (!LocalDataService.isRunning()) {
+            if (!DataManager.getInstance().isConnected()) {
                 if (shouldMaintenanceFile(player)) {
                     return true;
                 }
@@ -116,7 +116,7 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
 
         @Override
         public boolean shouldUploadFile(Player player) {
-            if (!LocalDataService.isRunning()) {
+            if (!DataManager.getInstance().isConnected()) {
                 if (shouldMaintenanceFile(player)) {
                     return true;
                 }

@@ -22,6 +22,9 @@ dependencies {
 
     modOptionalCompileOnly project.trinkets_api_version
 
+    //modLocalRuntime "maven.modrinth:sqlite-jdbc:3.41.2.1+20230506"
+    //modLocalRuntime "maven.modrinth:mysql-jdbc:8.0.33+20230506"
+
 //    modLocalRuntime "net.coderbot.iris:iris:mc1.18.2-1.3.1"
 //    modLocalRuntime "me.jellysquid.mods.sodium:sodium:fabric-mc1.18.2-0.4.1+build.15"
 }

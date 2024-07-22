@@ -1,0 +1,30 @@
+package moe.plushie.armourers_workshop.compatibility.forge.event.common;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.registry.IEventHandler;
+import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeCommonEventsImpl;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerTickEvent;
+import net.minecraftforge.event.TickEvent;
+
+@Available("[1.16, 1.21)")
+public class AbstractForgeServerTickEvent {
+
+    public static IEventHandler<ServerTickEvent.Pre> preTickFactory() {
+        return AbstractForgeCommonEventsImpl.SERVER_TICK_PRE.flatMap(event -> {
+            if (event.phase == TickEvent.Phase.END) {
+                return EnvironmentManager::getServer;
+            }
+            return null;
+        });
+    }
+
+    public static IEventHandler<ServerTickEvent.Post> postTickFactory() {
+        return AbstractForgeCommonEventsImpl.SERVER_TICK_POST.flatMap(event -> {
+            if (event.phase == TickEvent.Phase.END) {
+                return EnvironmentManager::getServer;
+            }
+            return null;
+        });
+    }
+}

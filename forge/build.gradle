@@ -27,6 +27,9 @@ dependencies {
     //modCompileOnly "maven.modrinth:cristel-lib:1.1.5-forge"
     //modLocalRuntime "maven.modrinth:cristel-lib:1.1.5-forge"
 
+    //modLocalRuntime "maven.modrinth:sqlite-jdbc:3.41.2.1+20230506"
+    //modLocalRuntime "maven.modrinth:mysql-jdbc:8.0.33+20230506"
+
     modOptionalCompileOnly project.jei_api_version
     modOptionalCompileOnly project.epicfight_api_version
     modOptionalCompileOnly project.curios_api_version

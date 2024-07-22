@@ -26,9 +26,6 @@ public class AbstractForgeCommonEventsImpl {
 
     public static final auto FML_CONFIG = AbstractForgeEventBus.create(ModConfig.ModConfigEvent.class);
 
-    public static final auto SERVER_LEVEL_TICK_PRE = AbstractForgeEventBus.create(TickEvent.WorldTickEvent.class);
-    public static final auto SERVER_LEVEL_TICK_POST = AbstractForgeEventBus.create(TickEvent.WorldTickEvent.class);
-
     public static final auto FML_LOAD_COMPLETE = AbstractForgeEventBus.create(FMLLoadCompleteEvent.class);
     public static final auto FML_CLIENT_SETUP = AbstractForgeEventBus.create(FMLClientSetupEvent.class);
     public static final auto FML_COMMON_SETUP = AbstractForgeEventBus.create(FMLCommonSetupEvent.class);
@@ -37,6 +34,12 @@ public class AbstractForgeCommonEventsImpl {
     public static final auto SERVER_DID_START = AbstractForgeEventBus.create(FMLServerStartedEvent.class);
     public static final auto SERVER_WILL_STOP = AbstractForgeEventBus.create(FMLServerStoppingEvent.class);
     public static final auto SERVER_DID_STOP = AbstractForgeEventBus.create(FMLServerStoppedEvent.class);
+
+    public static final auto SERVER_TICK_PRE = AbstractForgeEventBus.create(TickEvent.ServerTickEvent.class);
+    public static final auto SERVER_TICK_POST = AbstractForgeEventBus.create(TickEvent.ServerTickEvent.class);
+
+    public static final auto SERVER_LEVEL_TICK_PRE = AbstractForgeEventBus.create(TickEvent.WorldTickEvent.class);
+    public static final auto SERVER_LEVEL_TICK_POST = AbstractForgeEventBus.create(TickEvent.WorldTickEvent.class);
 
     public static final auto BLOCK_BREAK = AbstractForgeEventBus.create(BlockEvent.BreakEvent.class);
     public static final auto BLOCK_PLACE = AbstractForgeEventBus.create(BlockEvent.EntityPlaceEvent.class);

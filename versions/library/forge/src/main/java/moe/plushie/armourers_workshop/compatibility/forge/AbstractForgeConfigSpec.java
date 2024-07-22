@@ -53,6 +53,11 @@ public class AbstractForgeConfigSpec extends AbstractConfigSpec {
             }
 
             @Override
+            protected Value<String> define(String path, String defaultValue) {
+                return cast(path, builder.define(path, defaultValue));
+            }
+
+            @Override
             protected Value<Integer> defineInRange(String path, int defaultValue, int minValue, int maxValue) {
                 return cast(path, builder.defineInRange(path, defaultValue, minValue, maxValue));
             }

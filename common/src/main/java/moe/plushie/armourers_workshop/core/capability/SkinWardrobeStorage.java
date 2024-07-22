@@ -1,12 +1,16 @@
 package moe.plushie.armourers_workshop.core.capability;
 
 import moe.plushie.armourers_workshop.api.data.IDataSerializer;
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
+import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.utils.DataFixerUtils;
 import moe.plushie.armourers_workshop.utils.DataSerializerKey;
 import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import moe.plushie.armourers_workshop.utils.NonNullItemList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -20,6 +24,16 @@ public class SkinWardrobeStorage {
     private static final DataSerializerKey<Byte> VERSION_KEY = DataSerializerKey.create("DataVersion", DataTypeCodecs.BYTE, (byte) 0);
     private static final DataSerializerKey<Integer> VISIBILITY_KEY = DataSerializerKey.create("Visibility", DataTypeCodecs.INT, 0);
     private static final DataSerializerKey<List<Short>> SLOTS_KEY = DataSerializerKey.create("Slots", DataTypeCodecs.SHORT.listOf(), Collections.emptyList());
+
+    public static IDataSerializer reader(Entity entity, CompoundTag inputTag) {
+        inputTag = DataManager.getInstance().loadSkinWardrobeData(entity, inputTag);
+        return AbstractDataSerializer.wrap(inputTag, entity);
+    }
+
+    public static IDataSerializer writer(Entity entity, CompoundTag outputTag) {
+        outputTag = DataManager.getInstance().saveSkinWardrobeData(entity, outputTag);
+        return AbstractDataSerializer.wrap(outputTag, entity);
+    }
 
     public static void saveDataFixer(SkinWardrobe wardrobe, IDataSerializer serializer) {
         serializer.write(VERSION_KEY, (byte) 1);

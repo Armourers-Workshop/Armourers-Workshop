@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform;
 
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
-import moe.plushie.armourers_workshop.core.data.LocalDataService;
+import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinServerType;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -36,13 +36,13 @@ public class ReplayManager {
             case START_RECORDING: {
                 clean();
                 // if record an integrated server, we need to launch the data service.
-                IFriendlyByteBuf param = IFriendlyByteBuf.wrap(packet.getParameters());
-                SkinServerType clientType = param.readEnum(SkinServerType.class);
+                var param = IFriendlyByteBuf.wrap(packet.getParameters());
+                var clientType = param.readEnum(SkinServerType.class);
                 if (clientType == SkinServerType.INTEGRATED_SERVER) {
-                    File dbPath = new File(param.readUtf());
+                    var dbPath = new File(param.readUtf());
                     if (dbPath.exists()) {
-                        LocalDataService.start(dbPath);
-                        REPLAY_CLEANER.add(LocalDataService::stop);
+                        DataManager.getInstance().connect(dbPath);
+                        REPLAY_CLEANER.add(DataManager.getInstance()::disconnect);
                     } else {
                         ModLog.warn("replay skin-database missing");
                     }

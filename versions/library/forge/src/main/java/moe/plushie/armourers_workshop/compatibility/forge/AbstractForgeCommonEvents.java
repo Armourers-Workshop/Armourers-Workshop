@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.compatibility.forge.event.common.AbstractF
 import moe.plushie.armourers_workshop.compatibility.forge.event.common.AbstractForgeRegisterEntityAttributesEvent;
 import moe.plushie.armourers_workshop.compatibility.forge.event.common.AbstractForgeServerLevelEvent;
 import moe.plushie.armourers_workshop.compatibility.forge.event.common.AbstractForgeServerLifecycleEvent;
+import moe.plushie.armourers_workshop.compatibility.forge.event.common.AbstractForgeServerTickEvent;
 import moe.plushie.armourers_workshop.init.platform.EventManager;
 import moe.plushie.armourers_workshop.init.platform.event.common.BlockEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.LauncherClientSetupEvent;
@@ -25,6 +26,7 @@ import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartedEv
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartingEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppedEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppingEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerTickEvent;
 
 public class AbstractForgeCommonEvents extends AbstractForgeCommonEventsImpl {
 
@@ -39,6 +41,9 @@ public class AbstractForgeCommonEvents extends AbstractForgeCommonEventsImpl {
         EventManager.post(ServerStartedEvent.class, AbstractForgeServerLifecycleEvent.startedFactory());
         EventManager.post(ServerStoppingEvent.class, AbstractForgeServerLifecycleEvent.stoppingFactory());
         EventManager.post(ServerStoppedEvent.class, AbstractForgeServerLifecycleEvent.stoppedFactory());
+
+        EventManager.post(ServerTickEvent.Pre.class, AbstractForgeServerTickEvent.preTickFactory());
+        EventManager.post(ServerTickEvent.Post.class, AbstractForgeServerTickEvent.postTickFactory());
 
         EventManager.post(ServerLevelTickEvent.Pre.class, AbstractForgeServerLevelEvent.preTickFactory());
         EventManager.post(ServerLevelTickEvent.Post.class, AbstractForgeServerLevelEvent.postTickFactory());

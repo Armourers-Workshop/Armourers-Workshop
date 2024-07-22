@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.compatibility.fabric.event.common.Abstract
 import moe.plushie.armourers_workshop.compatibility.fabric.event.common.AbstractFabricRegisterEntityAttributesEvent;
 import moe.plushie.armourers_workshop.compatibility.fabric.event.common.AbstractFabricServerLevelEvent;
 import moe.plushie.armourers_workshop.compatibility.fabric.event.common.AbstractFabricServerLifecycleEvent;
+import moe.plushie.armourers_workshop.compatibility.fabric.event.common.AbstractFabricServerTickEvent;
 import moe.plushie.armourers_workshop.init.platform.EventManager;
 import moe.plushie.armourers_workshop.init.platform.event.common.BlockEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.LauncherClientSetupEvent;
@@ -25,6 +26,7 @@ import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartedEv
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartingEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppedEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppingEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerTickEvent;
 
 public class AbstractFabricCommonEvents {
 
@@ -39,6 +41,9 @@ public class AbstractFabricCommonEvents {
         EventManager.post(ServerStartedEvent.class, AbstractFabricServerLifecycleEvent.startedFactory());
         EventManager.post(ServerStoppingEvent.class, AbstractFabricServerLifecycleEvent.stoppingFactory());
         EventManager.post(ServerStoppedEvent.class, AbstractFabricServerLifecycleEvent.stoppedFactory());
+
+        EventManager.post(ServerTickEvent.Pre.class, AbstractFabricServerTickEvent.preTickFactory());
+        EventManager.post(ServerTickEvent.Post.class, AbstractFabricServerTickEvent.postTickFactory());
 
         EventManager.post(ServerLevelTickEvent.Pre.class, AbstractFabricServerLevelEvent.preTickFactory());
         EventManager.post(ServerLevelTickEvent.Post.class, AbstractFabricServerLevelEvent.postTickFactory());

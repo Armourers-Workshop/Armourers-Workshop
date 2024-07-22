@@ -5,10 +5,9 @@ import moe.plushie.armourers_workshop.builder.other.WorldUpdater;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
+import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
-import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.data.TickTracker;
-import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -36,13 +35,13 @@ import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartedEv
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartingEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppedEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppingEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.ServerTickEvent;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
 public class CommonProxy {
@@ -53,7 +52,7 @@ public class CommonProxy {
     }
 
     private static void setup() {
-        GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
+        var library = GlobalSkinLibrary.getInstance();
         SkinLoader.getInstance().register(DataDomain.GLOBAL_SERVER, library::downloadSkin);
         SkinLoader.getInstance().register(DataDomain.GLOBAL_SERVER_PREVIEW, library::downloadPreviewSkin);
         ReplayManager.init();
@@ -73,7 +72,7 @@ public class CommonProxy {
 
         EventManager.listen(ServerStartingEvent.class, event -> {
             ModLog.debug("hello");
-            LocalDataService.start(EnvironmentManager.getSkinDatabaseDirectory());
+            DataManager.getInstance().connect(EnvironmentManager.getSkinDatabaseDirectory());
             SkinLoader.getInstance().prepare(SkinServerType.of(event.getServer()));
         });
         EventManager.listen(ServerStartedEvent.class, event -> {
@@ -85,10 +84,10 @@ public class CommonProxy {
         EventManager.listen(ServerStoppingEvent.class, event -> {
             ModLog.debug("wait");
             // before server stopping, we need to sure that all data saved.
-            for (ServerLevel level : event.getServer().getAllLevels()) {
+            for (var level : event.getServer().getAllLevels()) {
                 WorldUpdater.getInstance().drain(level);
             }
-            LocalDataService.stop();
+            DataManager.getInstance().disconnect();
             SkinLoader.getInstance().stop();
         });
         EventManager.listen(ServerStoppedEvent.class, event -> {
@@ -144,7 +143,7 @@ public class CommonProxy {
         });
 
         EventManager.listen(PlayerEvent.StartTracking.class, event -> {
-            EntityProfile entityProfile = ModEntityProfiles.getProfile(event.getTarget());
+            var entityProfile = ModEntityProfiles.getProfile(event.getTarget());
             if (entityProfile != null) {
                 NetworkManager.sendWardrobeTo(event.getTarget(), (ServerPlayer) event.getPlayer());
             }
@@ -154,6 +153,11 @@ public class CommonProxy {
             TickTracker.server().update(false);
             WorldUpdater.getInstance().tick(event.getLevel());
         });
+
+        EventManager.listen(ServerTickEvent.Post.class, event -> {
+            DataManager.getInstance().tick();
+        });
+
 
         EventManager.listen(ServerLevelAddEntityEvent.class, event -> {
             SkinUtils.copySkinFromOwner(event.getEntity());
