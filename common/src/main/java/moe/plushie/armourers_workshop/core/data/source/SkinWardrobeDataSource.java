@@ -57,7 +57,7 @@ public abstract class SkinWardrobeDataSource implements IDataSource {
                 stmt.execute("CREATE TABLE IF NOT EXISTS `SkinWardrobe` (`id` VARCHAR(100) NOT NULL PRIMARY KEY, `tag` LONGBLOB NOT NULL)");
             }
             // create precompiled statement when create after;
-            queryStatement = connection.prepareStatement("SELECT `id` FROM `SkinWardrobe` where `id` = (?)");
+            queryStatement = connection.prepareStatement("SELECT `tag` FROM `SkinWardrobe` where `id` = (?)");
             updateStatement = connection.prepareStatement("UPDATE `SkinWardrobe` SET `tag` = (?) where `id` = (?)");
             insertStatement = connection.prepareStatement("INSERT INTO `SkinWardrobe` (`id`, `tag`) VALUES (?, ?)");
         }
@@ -130,6 +130,11 @@ public abstract class SkinWardrobeDataSource implements IDataSource {
         @Override
         public void save(String id, CompoundTag tag) throws Exception {
             // nop
+        }
+
+        @Override
+        public CompoundTag load(String id) throws Exception {
+            return null;
         }
 
         @Override

@@ -81,21 +81,21 @@ public abstract class SkinFileDataSource implements IDataSource {
 
         @Override
         public void connect() throws SQLException {
-            ModLog.debug("Connect to '{}'", name);
+            ModLog.debug("Connect to file db: '{}'", name);
             // try to create skin table if needed.
             try (var stmt = connection.createStatement()) {
                 stmt.execute("CREATE TABLE IF NOT EXISTS `Skin` (`id` VARCHAR(48) NOT NULL PRIMARY KEY, `hash` INT NOT NULL, `file` LONGBLOB NOT NULL)");
             }
             // create precompiled statement when create after;
-            existsStatement = connection.prepareStatement("SELECT `id` FROM `Skin` where `id` = (?)");
-            searchStatement = connection.prepareStatement("SELECT `id`, `file` FROM `Skin` where `hash` = (?)");
             queryStatement = connection.prepareStatement("SELECT `file` FROM `Skin` where `id` = (?)");
+            searchStatement = connection.prepareStatement("SELECT `id`, `file` FROM `Skin` where `hash` = (?)");
+            existsStatement = connection.prepareStatement("SELECT `id` FROM `Skin` where `id` = (?)");
             insertStatement = connection.prepareStatement("INSERT INTO `Skin` (`id`, `hash`, `file`) VALUES (?, ?, ?)");
         }
 
         @Override
         public void disconnect() throws SQLException {
-            ModLog.debug("Disconnect from '{}'", name);
+            ModLog.debug("Disconnect from file db: '{}'", name);
 
             ObjectUtils.safeClose(insertStatement);
             ObjectUtils.safeClose(existsStatement);
@@ -167,13 +167,13 @@ public abstract class SkinFileDataSource implements IDataSource {
 
         @Override
         public void connect() throws Exception {
-            ModLog.debug("Connect to skin db: '{}'", name);
+            ModLog.debug("Connect to file db: '{}'", name);
             this.loadNodes();
         }
 
         @Override
         public void disconnect() throws Exception {
-            ModLog.debug("Disconnect from skin db: '{}'", name);
+            ModLog.debug("Disconnect from file db: '{}'", name);
             this.thread.shutdown();
         }
 
