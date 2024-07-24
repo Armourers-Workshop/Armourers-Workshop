@@ -26,7 +26,7 @@ public class GlobalSkinLibraryBlockRenderer<T extends BlockEntity> extends Abstr
     @Override
     public void render(T entity, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
         poseStack.pushPose();
-        poseStack.translate(0.5f, 1.5f, 0.5f);
+        poseStack.translate(0.5f, 1.75f, 0.5f);
         poseStack.scale(-1, -1, 1);
 
         float f = 0.0625f;
