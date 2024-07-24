@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.forge.extensions.net.minecraft.client.renderer.GameRenderer;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractItemStackRendererProvider;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeClientEventsImpl;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeItemRenderer;
@@ -14,17 +15,17 @@ import manifold.ext.rt.api.ThisClass;
 @Extension
 public class ForgeItemRegistry {
 
-    public static void registerItemRendererFO(@ThisClass Class<?> clazz, Item item, AbstractItemStackRendererProvider provider) {
+    public static void registerItemRendererFO(@ThisClass Class<?> clazz, IRegistryHolder<? extends Item> item, AbstractItemStackRendererProvider provider) {
         AbstractForgeClientEventsImpl.CLIENT_EXTENSIONS_REGISTRY.listen(event -> {
-            BlockEntityWithoutLevelRenderer renderer = provider.create();
-            AbstractForgeItemRenderer extensions = new AbstractForgeItemRenderer() {
+            var renderer = provider.create();
+            var extensions = new AbstractForgeItemRenderer() {
 
                 @Override
                 public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                     return renderer;
                 }
             };
-            event.registerItem(extensions, item);
+            event.registerItem(extensions, item.get());
         });
     }
 }

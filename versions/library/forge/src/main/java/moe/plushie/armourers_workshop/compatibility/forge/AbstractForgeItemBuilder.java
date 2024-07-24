@@ -30,7 +30,7 @@ public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemB
     public IItemBuilder<T> bind(Supplier<AbstractItemStackRendererProvider> provider) {
         this.binder = () -> item -> {
             // here is safe call client registry.
-            GameRenderer.registerItemRendererFO(item.get(), provider.get());
+            GameRenderer.registerItemRendererFO(item, provider.get());
         };
         return this;
     }
@@ -44,7 +44,7 @@ public abstract class AbstractForgeItemBuilder<T extends Item> implements IItemB
             }
             return value;
         });
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, item));
+        EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, item));
         return item;
     }
 }
