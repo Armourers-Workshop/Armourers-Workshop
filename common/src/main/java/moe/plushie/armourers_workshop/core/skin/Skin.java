@@ -143,6 +143,10 @@ public class Skin implements ISkin {
         return properties.get(SkinProperty.ALL_AUTHOR_NAME);
     }
 
+    public String getAuthorUUID() {
+        return properties.get(SkinProperty.ALL_AUTHOR_UUID);
+    }
+
     public String getFlavourText() {
         return properties.get(SkinProperty.ALL_FLAVOUR_TEXT);
     }

@@ -52,10 +52,10 @@ public abstract class SkinWardrobeDataSource implements IDataSource {
         public void connect() throws Exception {
             ModLog.debug("Connect to wardrobe db: '{}'", name);
             // try to create skin table if needed.
-            try (var stmt = connection.createStatement()) {
-                // 100 = 48 + 4 + 48
-                stmt.execute("CREATE TABLE IF NOT EXISTS `SkinWardrobe` (`id` VARCHAR(100) NOT NULL PRIMARY KEY, `tag` LONGBLOB NOT NULL)");
-            }
+            var builder = new SQLTableBuilder("SkinWardrobe");
+            builder.add("id", "VARCHAR(100) NOT NULL PRIMARY KEY"); //  48 + 4 + 48
+            builder.add("tag", "LONGBLOB NOT NULL");
+            builder.execute(connection);
             // create precompiled statement when create after;
             queryStatement = connection.prepareStatement("SELECT `tag` FROM `SkinWardrobe` where `id` = (?)");
             updateStatement = connection.prepareStatement("UPDATE `SkinWardrobe` SET `tag` = (?) where `id` = (?)");

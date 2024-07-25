@@ -51,11 +51,15 @@ public class DataManager {
             tick(); // force tick
             reusableConnections.clear();
             // disconnect from file data source.
-            fileDataSource.disconnect();
-            fileDataSource = null;
+            if (fileDataSource != null) {
+                fileDataSource.disconnect();
+                fileDataSource = null;
+            }
             // disconnect from wardrobe data source.
-            wardrobeDataSource.disconnect();
-            wardrobeDataSource = null;
+            if (wardrobeDataSource != null) {
+                wardrobeDataSource.disconnect();
+                wardrobeDataSource = null;
+            }
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }

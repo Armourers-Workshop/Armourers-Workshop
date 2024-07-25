@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.document;
 
+import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -34,7 +35,7 @@ public class SkinDocumentExporter {
         this.document = document;
     }
 
-    public Skin execute(Player player) throws TranslatableException {
+    public Skin execute(Player player, GameProfile profile) throws TranslatableException {
         var skinType = document.getType().getSkinType();
         var settings = new SkinSettings();
         var properties = document.getProperties().copy();
@@ -69,6 +70,13 @@ public class SkinDocumentExporter {
             if (properties.get(SkinProperty.BLOCK_MULTIBLOCK) && !boxes.containsKey(Vector3i.ZERO)) {
                 throw SkinSaveException.Type.INVALID_MULTIBLOCK.build("missingMainBlock");
             }
+        }
+
+
+        properties.put(SkinProperty.ALL_AUTHOR_NAME, profile.getName());
+        // in the offline server the `player.getStringUUID()` is not real player uuid.
+        if (profile.getId() != null) {
+            properties.put(SkinProperty.ALL_AUTHOR_UUID, profile.getId().toString());
         }
 
         var builder = new Skin.Builder(skinType);

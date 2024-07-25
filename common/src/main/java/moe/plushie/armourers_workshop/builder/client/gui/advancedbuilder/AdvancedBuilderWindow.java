@@ -41,8 +41,10 @@ import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
+import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -208,7 +210,9 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
         alert.setMessage(NSString.localizedString("advanced-skin-builder.dialog.exporter.message"));
         alert.showInView(this, () -> {
             if (!alert.isCancelled()) {
-                AdvancedExportPacket packet = new AdvancedExportPacket(editor.getBlockEntity());
+                var origin = Minecraft.getInstance().getUser().getGameProfile();
+                var nbt = DataSerializers.writeGameProfile(new CompoundTag(), origin);
+                AdvancedExportPacket packet = new AdvancedExportPacket(editor.getBlockEntity(), nbt);
                 NetworkManager.sendToServer(packet);
             }
         });
