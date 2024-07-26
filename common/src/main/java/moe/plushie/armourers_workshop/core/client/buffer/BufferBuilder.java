@@ -10,11 +10,7 @@ public class BufferBuilder extends AbstractBufferBuilder {
     public BufferBuilder(RenderType renderType, int size) {
         super(size * 8 * renderType.format().getVertexSize());
         this.renderType = renderType;
-    }
-
-    public BufferBuilder begin() {
-        super.begin(renderType);
-        return this;
+        this.begin(renderType);
     }
 
     public RenderType getRenderType() {

@@ -20,23 +20,23 @@ public class SkinTransform implements ITransformf, ISkinTransform {
     private Vector3f translate = Vector3f.ZERO;
     private Vector3f rotation = Vector3f.ZERO;
     private Vector3f scale = Vector3f.ONE;
-    private Vector3f offset = Vector3f.ZERO;
+    private Vector3f afterTranslate = Vector3f.ZERO;
     private Vector3f pivot = Vector3f.ZERO;
 
     public static SkinTransform create(Vector3f translate, Vector3f rotation, Vector3f scale) {
         return create(translate, rotation, scale, Vector3f.ZERO, Vector3f.ZERO);
     }
 
-    public static SkinTransform create(Vector3f translate, Vector3f rotation, Vector3f scale, Vector3f pivot, Vector3f offset) {
+    public static SkinTransform create(Vector3f translate, Vector3f rotation, Vector3f scale, Vector3f pivot, Vector3f afterTranslate) {
         //
-        if (translate.equals(Vector3f.ZERO) && rotation.equals(Vector3f.ZERO) && scale.equals(Vector3f.ONE) && pivot.equals(Vector3f.ZERO) && offset.equals(Vector3f.ZERO)) {
+        if (translate.equals(Vector3f.ZERO) && rotation.equals(Vector3f.ZERO) && scale.equals(Vector3f.ONE) && pivot.equals(Vector3f.ZERO) && afterTranslate.equals(Vector3f.ZERO)) {
             return IDENTITY;
         }
         var transform = new SkinTransform();
         transform.translate = translate;
         transform.rotation = rotation;
         transform.scale = scale;
-        transform.offset = offset;
+        transform.afterTranslate = afterTranslate;
         transform.pivot = pivot;
         return transform;
     }
@@ -109,8 +109,8 @@ public class SkinTransform implements ITransformf, ISkinTransform {
         if (scale != Vector3f.ONE) {
             poseStack.scale(scale.getX(), scale.getY(), scale.getZ());
         }
-        if (offset != Vector3f.ZERO) {
-            poseStack.translate(offset.getX(), offset.getY(), offset.getZ());
+        if (afterTranslate != Vector3f.ZERO) {
+            poseStack.translate(afterTranslate.getX(), afterTranslate.getY(), afterTranslate.getZ());
         }
     }
 
@@ -119,7 +119,7 @@ public class SkinTransform implements ITransformf, ISkinTransform {
         translate = optimize(stream.readVector3f(), Vector3f.ZERO);
         rotation = optimize(stream.readVector3f(), Vector3f.ZERO);
         scale = optimize(stream.readVector3f(), Vector3f.ONE);
-        offset = optimize(stream.readVector3f(), Vector3f.ZERO);
+        afterTranslate = optimize(stream.readVector3f(), Vector3f.ZERO);
         pivot = optimize(stream.readVector3f(), Vector3f.ZERO);
     }
 
@@ -128,7 +128,7 @@ public class SkinTransform implements ITransformf, ISkinTransform {
         stream.writeVector3f(translate);
         stream.writeVector3f(rotation);
         stream.writeVector3f(scale);
-        stream.writeVector3f(offset);
+        stream.writeVector3f(afterTranslate);
         stream.writeVector3f(pivot);
     }
 
@@ -136,12 +136,12 @@ public class SkinTransform implements ITransformf, ISkinTransform {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof SkinTransform that)) return false;
-        return translate.equals(that.translate) && rotation.equals(that.rotation) && scale.equals(that.scale) && pivot.equals(that.pivot) && offset.equals(that.offset);
+        return translate.equals(that.translate) && rotation.equals(that.rotation) && scale.equals(that.scale) && pivot.equals(that.pivot) && afterTranslate.equals(that.afterTranslate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(translate, rotation, scale, pivot, offset);
+        return Objects.hash(translate, rotation, scale, pivot, afterTranslate);
     }
 
     @Override
@@ -165,8 +165,8 @@ public class SkinTransform implements ITransformf, ISkinTransform {
     }
 
     @Override
-    public Vector3f getOffset() {
-        return offset;
+    public Vector3f getAfterTranslate() {
+        return afterTranslate;
     }
 
     @Override

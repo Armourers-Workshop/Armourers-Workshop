@@ -19,7 +19,7 @@
       "transform": {
         "translate": [ -5, -2, 0 ],
         "rotation": [ 180, 180, -5 ],
-        "offset": [ 0, 4, 0 ]
+        "afterTranslate": [ 0, 4, 0 ]
       }
     },
     "Hand_R": {
@@ -27,7 +27,7 @@
       "transform": {
         "translate": [ 5, -2, 0 ],
         "rotation": [ 180, 180, 5 ],
-        "offset": [ 0, 4, 0 ]
+        "afterTranslate": [ 0, 4, 0 ]
       }
     }
   }

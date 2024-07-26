@@ -74,8 +74,8 @@ public class AdvancedPartOffset {
         public Builder<T> put(ISkinPartType partType, float tx, float ty, float tz, float xRot, float yRot, float zRot, float ax, float ay, float az) {
             Vector3f translate = new Vector3f(tx, ty, tz);
             Vector3f rotation = new Vector3f(xRot, yRot, zRot);
-            Vector3f offset = new Vector3f(ax, ay, az);
-            SkinTransform transform = SkinTransform.create(translate, rotation, Vector3f.ONE, Vector3f.ZERO, offset);
+            Vector3f afterTranslate = new Vector3f(ax, ay, az);
+            SkinTransform transform = SkinTransform.create(translate, rotation, Vector3f.ONE, Vector3f.ZERO, afterTranslate);
             return add(partType, it -> transform);
         }
 

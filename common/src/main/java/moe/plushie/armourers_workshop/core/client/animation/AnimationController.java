@@ -29,9 +29,11 @@ public class AnimationController {
 
     private final float duration;
     private final SkinAnimationLoop loop;
-    private final DisplayMode displayMode;
 
-    private final ArrayList<Section> sections = new ArrayList<>();
+    private final ArrayList<Bone> bones = new ArrayList<>();
+
+    private final boolean isParallel;
+    private final boolean isRequiresVirtualMachine;
 
     public AnimationController(SkinAnimation animation, Map<String, BakedSkinPart> bones) {
         this.name = animation.getName();
@@ -39,15 +41,17 @@ public class AnimationController {
 
         this.loop = animation.getLoop();
         this.duration = animation.getDuration();
-        this.displayMode = DisplayMode.of(animation.getName());
 
         // create all animation.
         animation.getValues().forEach((boneName, linkedValues) -> {
             var bone = bones.get(boneName);
             if (bone != null) {
-                sections.add(new Section(bone, AnimationController.toTime(duration), linkedValues));
+                this.bones.add(new Bone(bone, AnimationController.toTime(duration), linkedValues));
             }
         });
+
+        this.isParallel = calcParallel();
+        this.isRequiresVirtualMachine = calcRequiresVirtualMachine();
     }
 
     public static int toTime(float time) {
@@ -56,20 +60,13 @@ public class AnimationController {
 
     public void process(float animationTicks) {
         int time = AnimationController.toTime(animationTicks);
-        for (var section : sections) {
-            var snapshot = section.snapshot;
-            for (var channel : section.channels) {
+        for (var bone : bones) {
+            for (var channel : bone.channels) {
                 var fragment = channel.getFragmentAtTime(time);
                 if (fragment != null) {
-                    fragment.apply(channel.selector, snapshot, time - fragment.startTime);
+                    fragment.apply(channel.selector, bone.output, time - fragment.startTime);
                 }
             }
-        }
-    }
-
-    public void reset() {
-        for (var section : sections) {
-            section.snapshot.reset();
         }
     }
 
@@ -103,8 +100,24 @@ public class AnimationController {
     }
 
     public boolean isRequiresVirtualMachine() {
-        for (var section : sections) {
-            for (var channel : section.channels) {
+        return isRequiresVirtualMachine;
+    }
+
+    public boolean isParallel() {
+        return isParallel;
+    }
+
+    public boolean isEmpty() {
+        return bones.isEmpty();
+    }
+
+    private boolean calcParallel() {
+        return name != null && name.matches("^(.+\\.)?parallel\\d+$");
+    }
+
+    private boolean calcRequiresVirtualMachine() {
+        for (var bone : bones) {
+            for (var channel : bone.channels) {
                 for (var fragment : channel.fragments) {
                     if (!fragment.startValue.isConstant() || !fragment.endValue.isConstant()) {
                         return true;
@@ -115,25 +128,17 @@ public class AnimationController {
         return false;
     }
 
-    public boolean isParallel() {
-        return displayMode.isParallel();
-    }
+    public static class Bone {
 
-    public boolean isEmpty() {
-        return sections.isEmpty();
-    }
-
-    public static class Section {
-
-        private final BakedSkinPart bone;
+        private final BakedSkinPart part;
         private final List<Channel> channels;
 
-        private final Snapshot snapshot;
+        private final Output output;
 
-        public Section(BakedSkinPart bone, int duration, List<SkinAnimationValue> linkedValues) {
+        public Bone(BakedSkinPart part, int duration, List<SkinAnimationValue> linkedValues) {
             this.channels = create(duration, linkedValues);
-            this.bone = bone;
-            this.snapshot = linkTo(bone);
+            this.part = part;
+            this.output = linkTo(part);
         }
 
         private List<Channel> create(float duration, List<SkinAnimationValue> linkedValues) {
@@ -144,22 +149,22 @@ public class AnimationController {
             return namedValues.entrySet().stream().map(it -> new Channel(it.getKey(), duration, it.getValue())).toList();
         }
 
-        private Snapshot linkTo(BakedSkinPart bone) {
+        private Output linkTo(BakedSkinPart bone) {
             // when animation transform already been created, we just link it directly.
             for (var transform : bone.getTransform().getChildren()) {
-                if (transform instanceof AnimationTransform animatedTransform) {
-                    return new Snapshot(animatedTransform);
+                if (transform instanceof AnimatedTransform animatedTransform) {
+                    return new Output(animatedTransform);
                 }
             }
             // if part have a non-standard transform (preview mode),
             // we wil think this part can't be support animation.
             if (!(bone.getPart().getTransform() instanceof SkinTransform parent)) {
-                return new Snapshot(null);
+                return new Output(null);
             }
             // we will replace the standard transform to animated transform.
-            var animatedTransform = new AnimationTransform(parent);
+            var animatedTransform = new AnimatedTransform(parent);
             bone.getTransform().replaceChild(parent, animatedTransform);
-            return new Snapshot(animatedTransform);
+            return new Output(animatedTransform);
         }
     }
 
@@ -217,17 +222,17 @@ public class AnimationController {
             return builders.stream().map(FragmentBuilder::build).toList();
         }
 
-        private Pair<Point, Point> compile(List<Object> points, float defaultValue) {
-            var providers = new Expression[6];
-            for (int i = 0; i < providers.length; ++i) {
+        private Pair<Value, Value> compile(List<Object> points, float defaultValue) {
+            var expressions = new Expression[6];
+            for (int i = 0; i < expressions.length; ++i) {
                 if (i < points.size()) {
-                    providers[i] = compile(points[i], defaultValue);
+                    expressions[i] = compile(points[i], defaultValue);
                 } else {
-                    providers[i] = providers[i % points.size()];
+                    expressions[i] = expressions[i % points.size()];
                 }
             }
-            var left = new Point(providers[0], providers[1], providers[2]);
-            var right = new Point(providers[3], providers[4], providers[5]);
+            var left = new Value(expressions[0], expressions[1], expressions[2]);
+            var right = new Value(expressions[3], expressions[4], expressions[5]);
             return Pair.of(left, right);
         }
 
@@ -256,15 +261,15 @@ public class AnimationController {
     public static class Fragment {
 
         private final int startTime;
-        private final Point startValue;
+        private final Value startValue;
 
         private final int endTime;
-        private final Point endValue;
+        private final Value endValue;
 
         private final int length;
         private final SkinAnimationFunction function;
 
-        public Fragment(int startTime, Point startValue, int endTime, Point endValue, SkinAnimationFunction function) {
+        public Fragment(int startTime, Value startValue, int endTime, Value endValue, SkinAnimationFunction function) {
             this.startTime = startTime;
             this.startValue = startValue;
             this.endTime = endTime;
@@ -273,11 +278,11 @@ public class AnimationController {
             this.function = function;
         }
 
-        public void apply(Selector selector, Snapshot snapshot, int time) {
+        public void apply(Selector selector, Output output, int time) {
             if (time <= 0) {
-                selector.apply(snapshot, startValue.get());
+                selector.apply(output, startValue.get());
             } else if (time >= length) {
-                selector.apply(snapshot, endValue.get());
+                selector.apply(output, endValue.get());
             } else {
                 var from = startValue.get();
                 var to = endValue.get();
@@ -285,7 +290,7 @@ public class AnimationController {
                 var tx = lerp(from.getX(), to.getX(), t);
                 var ty = lerp(from.getY(), to.getY(), t);
                 var tz = lerp(from.getZ(), to.getZ(), t);
-                selector.apply(snapshot, tx, ty, tz);
+                selector.apply(output, tx, ty, tz);
             }
         }
 
@@ -303,12 +308,12 @@ public class AnimationController {
         private final SkinAnimationFunction function;
 
         private final int leftTime;
-        private final Point leftValue;
+        private final Value leftValue;
 
         private int rightTime;
-        private Point rightValue;
+        private Value rightValue;
 
-        FragmentBuilder(int time, SkinAnimationFunction function, Point leftValue, Point rightValue) {
+        FragmentBuilder(int time, SkinAnimationFunction function, Value leftValue, Value rightValue) {
             this.function = function;
             this.leftTime = time;
             this.leftValue = leftValue;
@@ -329,128 +334,75 @@ public class AnimationController {
         }
     }
 
-    public static abstract class Selector {
+    public static class Selector {
 
         public static Selector of(String channel) {
             return switch (channel) {
                 case "position" -> new Translation();
                 case "rotation" -> new Rotation();
                 case "scale" -> new Scale();
-                default -> new None();
+                default -> new Selector();
             };
         }
 
-        protected abstract void apply(Snapshot snapshot, float x, float y, float z);
-
-        protected void apply(Snapshot snapshot, Vector3f value) {
-            apply(snapshot, value.getX(), value.getY(), value.getZ());
+        protected void apply(Output output, float x, float y, float z) {
         }
 
-        public static class None extends Selector {
-
-            @Override
-            protected void apply(Snapshot snapshot, float x, float y, float z) {
-                // none
-            }
+        protected void apply(Output snapshot, Vector3f value) {
+            apply(snapshot, value.getX(), value.getY(), value.getZ());
         }
 
         public static class Translation extends Selector {
 
             @Override
-            protected void apply(Snapshot snapshot, float x, float y, float z) {
-                snapshot.setTranslate(x, y, z);
+            protected void apply(Output output, float x, float y, float z) {
+                output.setTranslate(x, y, z);
             }
         }
 
         public static class Rotation extends Selector {
 
             @Override
-            protected void apply(Snapshot snapshot, float x, float y, float z) {
-                snapshot.setRotate(x, y, z);
+            protected void apply(Output output, float x, float y, float z) {
+                output.setRotate(x, y, z);
             }
         }
 
         public static class Scale extends Selector {
 
             @Override
-            protected void apply(Snapshot snapshot, float x, float y, float z) {
-                snapshot.setScale(x, y, z);
+            protected void apply(Output output, float x, float y, float z) {
+                output.setScale(x, y, z);
             }
         }
     }
 
-    public static class Snapshot {
+    public static class Output extends AnimatedPoint {
 
-        protected int flags = 0x00;
+        private final AnimatedTransform transform;
 
-        protected final Vector3f translate = new Vector3f();
-        protected final Vector3f rotation = new Vector3f();
-        protected final Vector3f scale = new Vector3f(1, 1, 1);
-
-        private final AnimationTransform transform;
-
-        public Snapshot(AnimationTransform transform) {
+        public Output(AnimatedTransform transform) {
             this.transform = transform;
             if (transform != null) {
                 transform.link(this);
             }
         }
 
-        public void setTranslate(float x, float y, float z) {
-            translate.set(x, y, z);
-            mark(0x10);
-        }
-
-        public Vector3f getTranslate() {
-            if ((flags & 0x10) != 0) {
-                return translate;
-            }
-            return Vector3f.ZERO;
-        }
-
-        public void setRotate(float x, float y, float z) {
-            rotation.set(x, y, z);
-            mark(0x20);
-        }
-
-        public Vector3f getRotation() {
-            if ((flags & 0x20) != 0) {
-                return rotation;
-            }
-            return Vector3f.ZERO;
-        }
-
-        public void setScale(float x, float y, float z) {
-            scale.set(x, y, z);
-            mark(0x40);
-        }
-
-        public Vector3f getScale() {
-            if ((flags & 0x40) != 0) {
-                return scale;
-            }
-            return Vector3f.ONE;
-        }
-
-        public void reset() {
-            mark(flags);
-            flags = 0x00;
-        }
-
-        public void mark(int newFlags) {
-            flags |= newFlags;
+        @Override
+        public void setDirty(int newFlags) {
+            super.setDirty(newFlags);
             if (transform != null) {
-                transform.mark(newFlags);
+                transform.setDirty(newFlags);
             }
         }
     }
 
-    public static class Point {
+    public static class Value {
 
         private final Runnable updater;
         private final Vector3f variable = new Vector3f();
 
-        public Point(Expression x, Expression y, Expression z) {
+        public Value(Expression x, Expression y, Expression z) {
             this.updater = build(x, y, z);
         }
 
@@ -476,20 +428,65 @@ public class AnimationController {
         }
     }
 
-    public enum DisplayMode {
+    public static class PlayState {
 
-        SERIAL, PARALLEL;
+        private float startTime0;
+        private final float startTime;
+        private final float duration;
 
-        public static DisplayMode of(String name) {
-            if (name != null && name.matches("^(.+\\.)?parallel\\d+$")) {
-                return PARALLEL;
+        private int playCount;
+
+        private float adjustedTicks = 0;
+
+        public PlayState(AnimationController animationController, float atTime, int playCount) {
+            this.duration = animationController.getDuration();
+            this.startTime = atTime;
+            this.startTime0 = atTime;
+            this.playCount = calcPlayCount(playCount, animationController.getLoop());
+        }
+
+        public void tick(float animationTicks) {
+            adjustedTicks = animationTicks - startTime0;
+            if (playCount == 0 || adjustedTicks < duration) {
+                return;
             }
-            return SERIAL;
+            // 0 -> duration / 0 -> duration ...
+            if (playCount > 0) {
+                playCount -= 1;
+            }
+            if (playCount != 0) { // reset
+                adjustedTicks -= duration;
+                startTime0 = animationTicks - adjustedTicks;
+            }
         }
 
 
-        public boolean isParallel() {
-            return this == PARALLEL;
+        public float getStartTicks() {
+            return startTime;
+        }
+
+        public float getAdjustedTicks(float animationTicks) {
+            tick(animationTicks);
+            return adjustedTicks;
+        }
+
+        public int getPlayCount() {
+            return playCount;
+        }
+
+        public boolean isCompleted() {
+            return playCount == 0 && adjustedTicks > duration;
+        }
+
+        private int calcPlayCount(int playCount, SkinAnimationLoop loop) {
+            if (playCount == 0) {
+                return switch (loop) {
+                    case NONE -> 1;
+                    case LAST_FRAME -> 0;
+                    case LOOP -> -1;
+                };
+            }
+            return playCount;
         }
     }
 }

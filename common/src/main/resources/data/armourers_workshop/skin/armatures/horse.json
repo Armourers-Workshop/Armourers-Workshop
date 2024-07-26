@@ -55,7 +55,7 @@
       "transform": {
         "translate": [ 0, -4, -2 ],
         "rotation": [ 30, 0, 0 ],
-        "offset": [ 0, 4, 1 ]
+        "afterTranslate": [ 0, 4, 1 ]
       }
     },
     "Chest": {
@@ -232,7 +232,7 @@
       "transform": {
         "translate": [ 0, -2, 17 ],
         "rotation": [ 30, 0, 0 ],
-        "offset": [ 0, 2, 2 ]
+        "afterTranslate": [ 0, 2, 2 ]
       }
     },
     "Float": {

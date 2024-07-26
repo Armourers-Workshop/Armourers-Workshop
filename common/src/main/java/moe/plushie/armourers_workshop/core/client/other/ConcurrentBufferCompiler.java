@@ -95,7 +95,7 @@ public class ConcurrentBufferCompiler {
             var usingTypes = new HashSet<RenderType>();
             var mergedTasks = new ArrayList<Pass>();
             part.getQuads().forEach((renderType, quads) -> {
-                var builder = createBufferBuilder(renderType, quads.size(), task).begin();
+                var builder = createBufferBuilder(renderType, quads.size(), task);
                 quads.forEach((transform, faces) -> {
                     poseStack1.pushPose();
                     transform.apply(poseStack1);

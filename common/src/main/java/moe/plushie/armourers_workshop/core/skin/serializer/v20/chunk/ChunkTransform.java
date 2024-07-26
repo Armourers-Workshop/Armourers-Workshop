@@ -31,7 +31,7 @@ public class ChunkTransform {
     private Vector3f translate;
     private Vector3f rotation;
     private Vector3f scale;
-    private Vector3f offset;
+    private Vector3f afterTranslate;
     private Vector3f pivot;
 
     private FloatBuffer buffer;
@@ -47,7 +47,7 @@ public class ChunkTransform {
         this.translate = transform.getTranslate();
         this.rotation = transform.getRotation();
         this.scale = transform.getScale();
-        this.offset = transform.getOffset();
+        this.afterTranslate = transform.getAfterTranslate();
         this.pivot = transform.getPivot();
     }
 
@@ -87,7 +87,7 @@ public class ChunkTransform {
         translate = readVector(buffer, 0);
         rotation = readVector(buffer, 3);
         scale = readVector(buffer, 6);
-        offset = readVector(buffer, 9);
+        afterTranslate = readVector(buffer, 9);
         pivot = readVector(buffer, 12);
     }
 
@@ -106,7 +106,7 @@ public class ChunkTransform {
         buffer.put(translate.getX()).put(translate.getY()).put(translate.getZ());
         buffer.put(rotation.getX()).put(rotation.getY()).put(rotation.getZ());
         buffer.put(scale.getX()).put(scale.getY()).put(scale.getZ());
-        buffer.put(offset.getX()).put(offset.getY()).put(offset.getZ());
+        buffer.put(afterTranslate.getX()).put(afterTranslate.getY()).put(afterTranslate.getZ());
         buffer.put(pivot.getX()).put(pivot.getY()).put(pivot.getZ());
         buffer.rewind();
         writeZippedBuffer(stream, buffer, IDENTITY_VECTOR_BUFFER);
@@ -133,7 +133,7 @@ public class ChunkTransform {
             var normal = new OpenMatrix3f(buffer);
             return new FlatTransform(pose, normal);
         }
-        return SkinTransform.create(translate, rotation, scale, pivot, offset);
+        return SkinTransform.create(translate, rotation, scale, pivot, afterTranslate);
     }
 
     private static Vector3f readVector(FloatBuffer buffer, int offset) {

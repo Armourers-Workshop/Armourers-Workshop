@@ -78,7 +78,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
 
     protected void tick(T source, @Nullable SkinWardrobe wardrobe) {
         tickSlots(source, wardrobe);
-        animationManager.serialTick(source, TickUtils.animationTicks());
+        animationManager.tick(source, TickUtils.animationTicks());
     }
 
     private void tickSlots(T source, @Nullable SkinWardrobe wardrobe) {
@@ -211,7 +211,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
 
         // submit data into animation manager.
         animationManager.load(activeSkins);
-        animationManager.parallelTick(animatedSkins);
+        animationManager.active(animatedSkins);
     }
 
     private void loadSkinAnimation(EntitySlot slot) {

@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.client.animation.AnimationContext;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationController;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationEngine;
 import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
@@ -63,6 +64,8 @@ public class BakedSkin implements IBakedSkin {
 
     private final Range<Integer> useTickRange;
     private final List<BakedSkinPart> skinParts;
+
+    private final AnimationContext skinAnimationContext;
     private final List<AnimationController> skinAnimationControllers;
 
     private final ColorDescriptor colorDescriptor;
@@ -77,7 +80,8 @@ public class BakedSkin implements IBakedSkin {
         this.skin = skin;
         this.skinType = skinType;
         this.skinAnimationControllers = resolveAnimationControllers(bakedParts, skin.getAnimations());
-        this.skinParts = BakedSkinPartCombiner.apply(bakedParts);
+        this.skinAnimationContext = AnimationContext.from(bakedParts);
+        this.skinParts = BakedSkinPartCombiner.apply(bakedParts); // depends `resolveAnimationControllers`
         this.colorScheme = colorScheme;
         this.colorDescriptor = colorDescriptor;
         this.usedCounter = usedCounter;
@@ -90,7 +94,7 @@ public class BakedSkin implements IBakedSkin {
     public void setupAnim(Entity entity, BakedArmature bakedArmature, SkinRenderContext context) {
         cachedItemTransforms.forEach(it -> it.setup(entity, context.getItemSource()));
         cachedWingsTransforms.forEach(it -> it.setup(entity, context.getAnimationTicks()));
-        AnimationEngine.apply(entity, this, context.getAnimationTicks(), context.getAnimationManager());
+        AnimationEngine.apply(entity, this, context.getAnimationTicks(), context.getAnimationManager().getAnimationContext(this));
         SkinRenderHelper.apply(entity, this, bakedArmature, context.getItemSource());
     }
 
@@ -134,6 +138,10 @@ public class BakedSkin implements IBakedSkin {
 
     public SkinProperties getProperties() {
         return skin.getProperties();
+    }
+
+    public AnimationContext getAnimationContext() {
+        return skinAnimationContext;
     }
 
     public List<AnimationController> getAnimationControllers() {
@@ -298,11 +306,11 @@ public class BakedSkin implements IBakedSkin {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BakedSkin that)) return false;
-        return Objects.equals(identifier, that.identifier);
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        return identifier.hashCode();
+        return id;
     }
 }

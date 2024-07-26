@@ -68,9 +68,9 @@ public class ChunkCubeDecoderV2 extends ChunkCubeDecoder {
             Vector3f translate = getVector3f(28);
             Vector3f rotation = getVector3f(40);
             Vector3f scale = getVector3f(52);
-            Vector3f vector = getVector3f(64);
+            Vector3f afterTranslate = getVector3f(64);
             Vector3f pivot = getVector3f(76);
-            transform = SkinTransform.create(translate, rotation, scale, pivot, vector);
+            transform = SkinTransform.create(translate, rotation, scale, pivot, afterTranslate);
         }
         return transform;
     }

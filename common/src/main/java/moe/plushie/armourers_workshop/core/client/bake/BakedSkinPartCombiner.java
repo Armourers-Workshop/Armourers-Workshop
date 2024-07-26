@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
-import moe.plushie.armourers_workshop.core.client.animation.AnimationTransform;
+import moe.plushie.armourers_workshop.core.client.animation.AnimatedTransform;
 import moe.plushie.armourers_workshop.core.data.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.data.transform.SkinWingsTransform;
 import moe.plushie.armourers_workshop.init.ModDebugger;
@@ -116,7 +116,7 @@ public class BakedSkinPartCombiner {
                 if (transform instanceof SkinWingsTransform) {
                     return false;
                 }
-                if (transform instanceof AnimationTransform) {
+                if (transform instanceof AnimatedTransform) {
                     return false;
                 }
             }

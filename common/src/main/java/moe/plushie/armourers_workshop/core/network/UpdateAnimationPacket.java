@@ -79,7 +79,7 @@ public class UpdateAnimationPacket extends CustomPacket {
                     String from = value.getString("from");
                     String to = value.getString("to");
                     ModLog.debug("rewrite animation {} to {}", from, to);
-                    animationManager.rewrite(from, to);
+                    animationManager.map(from, to);
                 }
                 break;
             }

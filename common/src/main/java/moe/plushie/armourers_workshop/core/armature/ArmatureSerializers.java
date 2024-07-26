@@ -58,8 +58,8 @@ public class ArmatureSerializers {
         var scale = readVector(object.get("scale"), Vector3f.ONE);
         var rotation = readVector(object.get("rotation"), Vector3f.ZERO);
         var pivot = readVector(object.get("pivot"), Vector3f.ZERO);
-        var offset = readVector(object.get("offset"), Vector3f.ZERO);
-        return SkinTransform.create(translate, rotation, scale, pivot, offset);
+        var afterTranslate = readVector(object.get("afterTranslate"), Vector3f.ZERO);
+        return SkinTransform.create(translate, rotation, scale, pivot, afterTranslate);
     }
 
     public static JointShape readShape(IDataPackObject object) {

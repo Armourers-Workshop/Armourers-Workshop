@@ -15,7 +15,7 @@ public interface ITransformf {
 
     IVector3f getScale();
 
-    IVector3f getOffset();
+    IVector3f getAfterTranslate();
 
     IVector3f getPivot();
 

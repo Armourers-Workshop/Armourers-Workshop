@@ -15,6 +15,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,14 +26,14 @@ import java.util.Map;
 @Environment(EnvType.CLIENT)
 public class AnimationManager {
 
-    private final HashMap<SkinDescriptor, Entry> entries = new HashMap<>();
-    private final HashMap<AnimationController, AnimationState> states = new HashMap<>();
+    public static final AnimationManager NONE = new AnimationManager();
 
-    private final HashMap<SkinDescriptor, Entry> activeEntries = new HashMap<>();
+    private final HashMap<BakedSkin, Entry> allEntries = new HashMap<>();
+    private final HashMap<BakedSkin, Entry> activeEntries = new HashMap<>();
 
     private final ArrayList<Entry> triggerableEntries = new ArrayList<>();
-    private final ArrayList<AnimationController> animations = new ArrayList<>();
-    private final ArrayList<AnimationController> removeOnCompletion = new ArrayList<>();
+
+    private final ArrayList<Pair<AnimationController.PlayState, Runnable>> removeOnCompletion = new ArrayList<>();
 
     private EntityActionSet lastActionSet;
 
@@ -53,177 +54,86 @@ public class AnimationManager {
     }
 
     public void load(Map<SkinDescriptor, BakedSkin> skins) {
-        var oldEntries = new HashMap<>(entries);
+        var expiredEntries = new HashMap<>(allEntries);
         skins.forEach((key, skin) -> {
-            oldEntries.remove(key);
-            var entry = entries.computeIfAbsent(key, Entry::new);
-            if (entry.isLoaded || skin == null) {
-                return;
-            }
-            entry.isLoaded = true;
-            entry.animationControllers.addAll(skin.getAnimationControllers());
-            entry.rebuild();
-            animations.addAll(entry.animationControllers);
+            expiredEntries.remove(skin);
+            allEntries.computeIfAbsent(skin, Entry::new);
         });
-        oldEntries.forEach((key, entry) -> {
-            entries.remove(key);
-            activeEntries.remove(key);
-            entry.animationControllers.forEach(this::stop);
-            animations.removeAll(entry.animationControllers);
+        expiredEntries.forEach((key, entry) -> {
+            allEntries.remove(key);
+            entry.stop();
         });
         rebuildTriggerableEntities();
         setChanged();
     }
 
-    public void parallelTick(Map<SkinDescriptor, BakedSkin> skins) {
-        var oldEntries = new HashMap<>(activeEntries);
+    public void active(Map<SkinDescriptor, BakedSkin> skins) {
+        var expiredEntries = new HashMap<>(activeEntries);
         skins.forEach((key, skin) -> {
-            var entry = oldEntries.remove(key);
+            var entry = expiredEntries.remove(skin);
             if (entry != null) {
                 return; // no change, ignore.
             }
-            entry = entries.get(key);
+            entry = allEntries.get(skin);
             if (entry == null) {
                 return; // no found, ignore.
             }
-            activeEntries.put(key, entry);
-            entry.animationControllers.stream().filter(AnimationController::isParallel).forEach(it -> {
-                // autoplay the parallel animation.
-                play(it, TickUtils.animationTicks(), 0);
-            });
+            activeEntries.put(skin, entry);
+            entry.autoplay();
         });
-        oldEntries.forEach((key, entry) -> {
-            // when skin enter inactive state, stop all animations.
+        expiredEntries.forEach((key, entry) -> {
             activeEntries.remove(key);
-            entry.animationControllers.forEach(this::stop);
+            entry.stop();
         });
     }
 
-    public void serialTick(Object source, float animationTicks) {
+    public void tick(Object source, float animationTicks) {
         // clear invalid animation.
         if (!removeOnCompletion.isEmpty()) {
-            var animations = new ArrayList<>(removeOnCompletion);
-            for (var animation : animations) {
-                var state = states.get(animation);
-                if (state != null && state.isCompleted(animationTicks)) {
-                    stop(animation);
+            var iterator = removeOnCompletion.iterator();
+            while (iterator.hasNext()) {
+                var entry = iterator.next();
+                var state = entry.getKey();
+                state.tick(animationTicks);
+                if (state.isCompleted()) {
+                    iterator.remove();
+                    entry.getRight().run();
                 }
             }
         }
         // play triggerable animation by the state.
         if (!triggerableEntries.isEmpty() && source instanceof Entity entity) {
-            var actionSet = EntityActionSet.of(entity);
-            if (actionSet != null) {
-                actionSet.tick(entity);
-                if (!actionSet.equals(lastActionSet)) {
-                    if (ModConfig.Client.enableAnimationDebug) {
-                        ModLog.debug("{} => {}", entity, actionSet);
-                    }
-                    play(actionSet, animationTicks);
-                    lastActionSet = actionSet.copy();
-                }
-            }
-        }
-    }
-
-    public void play(EntityActionSet tracker, float animationTicks) {
-        // we allow each skin to perform a serial animation.
-        for (var entry : triggerableEntries) {
-            // If it's already locked, we won't switch.
-            if (entry.isLocked && entry.selectedEntry != null) {
-                continue;
-            }
-            var newValue = entry.findTriggerableEntry(tracker);
-            var oldValue = entry.selectedEntry;
-            if (oldValue != newValue) {
-                if (oldValue != null) {
-                    stop(oldValue.animationController);
-                }
-                entry.isLocked = false;
-                entry.selectedEntry = newValue;
-                if (newValue != null) {
-                    play(newValue.animationController, animationTicks, newValue.getPlayCount());
-                }
+            var actionSet = entity.getActionSet();
+            if (actionSet != null && !actionSet.equals(lastActionSet)) {
+                debugLog("{} action did change: {}", entity, actionSet);
+                triggerableEntries.forEach(entry -> entry.autoplay(actionSet, animationTicks));
+                lastActionSet = actionSet.copy();
             }
         }
     }
 
     public void play(String name, float atTime, int playCount) {
-        animations.forEach(animationController -> {
-            if (!name.equals(animationController.getName())) {
-                return;
-            }
-            if (animationController.isParallel()) {
-                play(animationController, atTime, playCount);
-                return;
-            }
-            entries.forEach((key, entry) -> {
-                var entry1 = entry.findTriggerableEntry(animationController);
-                if (entry1 != null && entry1 != entry.selectedEntry) {
-                    if (entry.selectedEntry != null) {
-                        stop(entry.selectedEntry.animationController);
-                    }
-                    entry.selectedEntry = entry1;
-                    entry.isLocked = true;
-                    play(animationController, atTime, playCount);
+        for (var entry : activeEntries.values()) {
+            for (var animationController : entry.getAnimationControllers()) {
+                if (name.equals(animationController.getName())) {
+                    entry.play(animationController, atTime, playCount);
                 }
-            });
-        });
+            }
+        }
     }
 
     public void stop(String name) {
-        animations.forEach(animation -> {
-            if (name.isEmpty() || name.equals(animation.getName())) {
-                stop(animation);
+        for (var entry : activeEntries.values()) {
+            for (var animationController : entry.getAnimationControllers()) {
+                if (name.isEmpty() || name.equals(animationController.getName())) {
+                    entry.stop(animationController);
+                }
             }
-        });
-    }
-
-    public void play(AnimationController animationController, float atTime, int playCount) {
-        var state = new AnimationState(animationController);
-        if (playCount == 0) {
-            playCount = switch (animationController.getLoop()) {
-                case NONE -> 1;
-                case LAST_FRAME -> 0;
-                case LOOP -> -1;
-            };
-        }
-        state.setStartTime(atTime);
-        state.setPlayCount(playCount);
-        states.put(animationController, state);
-        if (ModConfig.Client.enableAnimationDebug) {
-            ModLog.debug("start play {}", animationController);
-        }
-        // automatically remove on animation completion.
-        if (playCount > 0) {
-            removeOnCompletion.add(animationController);
-        } else {
-            removeOnCompletion.remove(animationController);
         }
     }
 
-    public void stop(AnimationController animationController) {
-        var state = states.remove(animationController);
-        if (state == null) {
-            return;
-        }
-        if (ModConfig.Client.enableAnimationDebug) {
-            ModLog.debug("stop play {}", animationController);
-        }
-        removeOnCompletion.remove(animationController);
-        entries.forEach((key, entry) -> {
-            if (entry.selectedEntry != null && entry.selectedEntry.animationController == animationController) {
-                entry.selectedEntry = null;
-                setChanged();
-            }
-        });
-    }
-
-    public void rewrite(String from, String to) {
-        entries.forEach((key, entry) -> {
-            entry.addMapping(from, to);
-            entry.rebuild();
-        });
+    public void map(String from, String to) {
+        allEntries.forEach((skin, entry) -> entry.map(from, to));
         rebuildTriggerableEntities();
         setChanged();
     }
@@ -232,42 +142,156 @@ public class AnimationManager {
         lastActionSet = null;
     }
 
-    public AnimationState getAnimationState(AnimationController animationController) {
-        return states.get(animationController);
+    public AnimationContext getAnimationContext(BakedSkin skin) {
+        var entry = allEntries.get(skin);
+        if (entry != null) {
+            return entry;
+        }
+        return skin.getAnimationContext();
     }
+
 
     private void rebuildTriggerableEntities() {
         triggerableEntries.clear();
-        triggerableEntries.addAll(entries.values().stream().filter(Entry::hasTriggerableAnimation).toList());
+        triggerableEntries.addAll(allEntries.values().stream().filter(Entry::hasTriggerableAnimation).toList());
     }
 
-    protected static class Entry {
+    protected void debugLog(String message, Object... arguments) {
+        if (ModConfig.Client.enableAnimationDebug) {
+            ModLog.debug(message, arguments);
+        }
+    }
 
-        private final SkinDescriptor descriptor;
+    public class Entry extends AnimationContext {
 
-        private boolean isLoaded = false;
+        protected final List<AnimationController> animationControllers;
+        protected final List<TriggerableController> triggerableControllers = new ArrayList<>();
 
-        private final HashMap<String, String> actionToName = new HashMap<>();
-        private final ArrayList<TriggerableEntry> triggerableAnimations = new ArrayList<>();
+        protected final HashMap<String, String> actionToName = new HashMap<>();
 
-        private final List<AnimationController> animationControllers = new ArrayList<>();
+        protected TriggerableController playing;
+        protected boolean isLocking;
 
-        private boolean isLocked = false;
-        private TriggerableEntry selectedEntry;
-
-        protected Entry(SkinDescriptor descriptor) {
-            this.descriptor = descriptor;
+        public Entry(BakedSkin skin) {
+            super(skin.getAnimationContext());
+            this.animationControllers = skin.getAnimationControllers();
+            this.rebuildTriggerableControllers();
         }
 
-        protected void addMapping(String action, String newName) {
+        public void map(String action, String newName) {
             if (action.equals(newName) || newName.isBlank()) {
                 actionToName.remove(action);
             } else {
                 actionToName.put(action, newName);
             }
+            rebuildTriggerableControllers();
         }
 
-        protected String resolve(String name) {
+        public void autoplay() {
+            animationControllers.stream().filter(AnimationController::isParallel).forEach(it -> {
+                // autoplay the parallel animation.
+                startPlay(it, TickUtils.animationTicks(), 0);
+            });
+        }
+
+        public void autoplay(EntityActionSet actionSet, float atTime) {
+            // If it's already locked, we won't switch.
+            if (isLocking && playing != null) {
+                return;
+            }
+            var newValue = findTriggerableController(actionSet);
+            var oldValue = playing;
+            if (oldValue == newValue) {
+                return; // ignore when no any changes.
+            }
+            if (oldValue != null) {
+                stopPlayIfNeeded(oldValue.animationController);
+            }
+            isLocking = false;
+            playing = newValue;
+            if (newValue != null) {
+                startPlay(newValue.animationController, atTime, newValue.getPlayCount());
+            }
+            applyTransiting(oldValue, newValue, atTime);
+        }
+
+        public void play(AnimationController animationController, float atTime, int playCount) {
+            // play parallel animation (simple).
+            if (animationController.isParallel()) {
+                startPlay(animationController, atTime, playCount);
+                return;
+            }
+            // play triggerable animation (lock).
+            var newValue = findTriggerableController(animationController);
+            var oldValue = playing;
+            if (newValue == null || newValue == oldValue) {
+                return; // ignore when no any changes.
+            }
+            if (oldValue != null) {
+                stopPlayIfNeeded(oldValue.animationController);
+            }
+            isLocking = true;
+            playing = newValue;
+            startPlay(newValue.animationController, atTime, playCount);
+            applyTransiting(oldValue, newValue, atTime);
+        }
+
+        public void stop(AnimationController animationController) {
+            var playState = playStates.get(animationController);
+            if (playState == null) {
+                return; // ignore non-playing animation.
+            }
+            // stop parallel animation (simple).
+            if (animationController.isParallel()) {
+                stopPlayIfNeeded(animationController);
+                return;
+            }
+            // ignore, when not found.
+            var oldValue = playing;
+            if (oldValue == null || oldValue.animationController != animationController) {
+                return;
+            }
+            playing = null;
+            isLocking = false;
+            stopPlayIfNeeded(animationController);
+            setChanged();
+        }
+
+        public void stop() {
+            animationControllers.forEach(this::stop);
+        }
+
+        public List<AnimationController> getAnimationControllers() {
+            return animationControllers;
+        }
+
+        public boolean hasTriggerableAnimation() {
+            return !triggerableControllers.isEmpty();
+        }
+
+        private void startPlay(AnimationController animationController, float atTime, int playCount) {
+            stopPlayIfNeeded(animationController);
+            var newPlayState = new AnimationController.PlayState(animationController, atTime, playCount);
+            playStates.put(animationController, newPlayState);
+            debugLog("start play {}", animationController);
+            if (newPlayState.getPlayCount() > 0) {
+                removeOnCompletion.add(Pair.of(newPlayState, () -> stop(animationController)));
+            }
+        }
+
+        private void stopPlayIfNeeded(AnimationController animationController) {
+            var oldPlayState = playStates.remove(animationController);
+            if (oldPlayState != null) {
+                debugLog("stop play {}", animationController);
+                removeOnCompletion.removeIf(it -> it.getLeft() == oldPlayState);
+            }
+        }
+
+        private void applyTransiting(TriggerableController from, TriggerableController to, float atTime) {
+            ModLog.debug("start transiting: {} => {}", from, to);
+        }
+
+        private String resolveMappingName(String name) {
             // map idle sit/idle
             for (var entry : actionToName.entrySet()) {
                 if (entry.getValue().equals(name)) {
@@ -280,26 +304,8 @@ public class AnimationManager {
             return name;
         }
 
-        protected void rebuild() {
-            var newValues = new ArrayList<TriggerableEntry>();
-            for (var animationController : animationControllers) {
-                if (!animationController.isParallel()) {
-                    var name = animationController.getName();
-                    var entry = new TriggerableEntry(resolve(name), animationController);
-                    newValues.add(entry);
-                }
-            }
-            newValues.sort(Comparator.comparingDouble(TriggerableEntry::getPriority).reversed());
-            triggerableAnimations.clear();
-            triggerableAnimations.addAll(newValues);
-            if (selectedEntry != null) {
-                selectedEntry = findTriggerableEntry(selectedEntry.animationController);
-                isLoaded = false;
-            }
-        }
-
-        protected TriggerableEntry findTriggerableEntry(EntityActionSet tracker) {
-            for (var entry : triggerableAnimations) {
+        private TriggerableController findTriggerableController(EntityActionSet tracker) {
+            for (var entry : triggerableControllers) {
                 if (entry.isIdle || entry.test(tracker)) {
                     return entry;
                 }
@@ -307,8 +313,8 @@ public class AnimationManager {
             return null;
         }
 
-        protected TriggerableEntry findTriggerableEntry(AnimationController animationController) {
-            for (var entry : triggerableAnimations) {
+        private TriggerableController findTriggerableController(AnimationController animationController) {
+            for (var entry : triggerableControllers) {
                 if (entry.animationController == animationController) {
                     return entry;
                 }
@@ -316,30 +322,43 @@ public class AnimationManager {
             return null;
         }
 
-        protected boolean hasTriggerableAnimation() {
-            return !triggerableAnimations.isEmpty();
+        private void rebuildTriggerableControllers() {
+            var newValues = new ArrayList<TriggerableController>();
+            for (var animationController : animationControllers) {
+                if (!animationController.isParallel()) {
+                    var name = resolveMappingName(animationController.getName());
+                    var controller = new TriggerableController(name, animationController);
+                    newValues.add(controller);
+                }
+            }
+            newValues.sort(Comparator.comparingDouble(TriggerableController::getPriority).reversed());
+            triggerableControllers.clear();
+            triggerableControllers.addAll(newValues);
+            if (playing == null) {
+                return;
+            }
+            playing = findTriggerableController(playing.animationController);
         }
     }
 
-    protected static class TriggerableEntry {
+    public static class TriggerableController {
 
         private final String name;
         private final EntityActionTarget target;
+        private final AnimationController animationController;
         private final boolean isIdle;
 
-        private AnimationController animationController;
-
-        protected TriggerableEntry(String name, AnimationController animationController) {
+        public TriggerableController(String name, AnimationController animationController) {
             this.name = name;
             this.target = EntityActions.by(name);
             this.animationController = animationController;
             this.isIdle = target.getActions().contains(EntityAction.IDLE);
         }
 
-        protected boolean test(EntityActionSet tracker) {
+        public boolean test(EntityActionSet actionSet) {
             int hit = 0;
             for (var action : target.getActions()) {
-                if (!tracker.get(action)) {
+                if (!actionSet.contains(action)) {
                     return false;
                 }
                 hit += 1;
@@ -347,16 +366,21 @@ public class AnimationManager {
             return hit != 0;
         }
 
-        protected String getName() {
+        public String getName() {
             return name;
         }
 
-        protected double getPriority() {
+        public double getPriority() {
             return target.getPriority();
         }
 
-        protected int getPlayCount() {
+        public int getPlayCount() {
             return target.getPlayCount();
+        }
+
+        @Override
+        public String toString() {
+            return animationController.toString();
         }
     }
 }

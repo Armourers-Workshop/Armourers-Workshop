@@ -127,7 +127,7 @@ public class EntityActionSet {
         }
     }
 
-    public boolean get(EntityAction action) {
+    public boolean contains(EntityAction action) {
         if (action == EntityAction.IDLE) {
             return flags.isEmpty();
         }
@@ -178,7 +178,7 @@ public class EntityActionSet {
         var lists = new LinkedHashMap<String, ArrayList<String>>();
         var results = new StringBuilder();
         for (var flag : EntityAction.values()) {
-            if (get(flag)) {
+            if (contains(flag)) {
                 var parts = flag.name().toLowerCase().split("_");
                 var sp = lists.computeIfAbsent(parts[0], k -> new ArrayList<>());
                 sp.addAll(Arrays.asList(parts).subList(1, parts.length));

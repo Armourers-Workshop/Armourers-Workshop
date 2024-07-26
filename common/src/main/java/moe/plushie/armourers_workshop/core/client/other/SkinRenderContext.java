@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.core.client.animation.AnimatedTransform;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationManager;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -163,7 +164,10 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         if (renderData != null) {
             return renderData.getAnimationManager();
         }
-        return animationManager;
+        if (animationManager != null) {
+            return animationManager;
+        }
+        return AnimationManager.NONE;
     }
 
     @Override

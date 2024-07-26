@@ -40,27 +40,23 @@ public class AnimationEngine {
         });
     }
 
-    public static void apply(Object source, BakedSkin skin, float animationTicks, AnimationManager animationManager) {
+    public static void apply(Object source, BakedSkin skin, float animationTicks, AnimationContext context) {
+        context.begin(animationTicks);
         for (var animationController : skin.getAnimationControllers()) {
-            // we can't apply when missing animation manager.
-            if (animationManager == null) {
-                animationController.reset();
-                continue;
-            }
-            // we needs reset the applier.
-            var state = animationManager.getAnimationState(animationController);
-            if (state == null) {
-                animationController.reset();
+            // query the current play state of the animation controller.
+            var playState = context.getPlayState(animationController);
+            if (playState == null) {
                 continue;
             }
             // we only bind it when transformer use the molang environment.
-            var partialTicks = state.getPartialTicks(animationTicks);
-            if (state.isRequiresVirtualMachine()) {
-                upload(source, partialTicks, state.getStartTime());
+            var adjustedTicks = playState.getAdjustedTicks(animationTicks);
+            if (animationController.isRequiresVirtualMachine()) {
+                upload(source, adjustedTicks, playState.getStartTicks());
             }
             // check/switch frames of animation and write to applier.
-            animationController.process(partialTicks);
+            animationController.process(adjustedTicks);
         }
+        context.commit();
     }
 
     public static void upload(Object source, double animTime, double startAnimTime) {

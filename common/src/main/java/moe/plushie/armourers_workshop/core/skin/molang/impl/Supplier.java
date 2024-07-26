@@ -8,8 +8,10 @@ import java.util.function.IntSupplier;
 
 public interface Supplier extends IntSupplier, DoubleSupplier {
 
+    @Override
     double getAsDouble();
 
+    @Override
     default int getAsInt() {
         return MathHelper.floor(getAsDouble());
     }
