@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.data;
 
+import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.source.SkinFileDataSource;
 import moe.plushie.armourers_workshop.core.data.source.SkinWardrobeDataSource;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -15,7 +17,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DataManager {
@@ -25,7 +26,6 @@ public class DataManager {
     private SkinFileDataSource fileDataSource;
     private SkinWardrobeDataSource wardrobeDataSource;
 
-    private final ArrayList<Runnable> tickTacks = new ArrayList<>();
     private final HashMap<String, Connection> reusableConnections = new HashMap<>();
 
     public static DataManager getInstance() {
@@ -37,10 +37,14 @@ public class DataManager {
             reusableConnections.clear();
             // connect to file data source.
             fileDataSource = createFileDataSource(new SkinFileDataSource.Local(rootPath));
-            fileDataSource.connect();
+            if (fileDataSource != null) {
+                fileDataSource.connect();
+            }
             // connect to wardrobe data source.
-            wardrobeDataSource = createWardrobeDataSource(new SkinWardrobeDataSource.Local());
-            wardrobeDataSource.connect();
+            wardrobeDataSource = createWardrobeDataSource(null);
+            if (wardrobeDataSource != null) {
+                wardrobeDataSource.connect();
+            }
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }
@@ -48,32 +52,20 @@ public class DataManager {
 
     public void disconnect() {
         try {
-            tick(); // force tick
             reusableConnections.clear();
-            // disconnect from file data source.
-            if (fileDataSource != null) {
-                fileDataSource.disconnect();
-                fileDataSource = null;
-            }
             // disconnect from wardrobe data source.
             if (wardrobeDataSource != null) {
                 wardrobeDataSource.disconnect();
                 wardrobeDataSource = null;
             }
+            // disconnect from file data source.
+            if (fileDataSource != null) {
+                fileDataSource.disconnect();
+                fileDataSource = null;
+            }
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }
-    }
-
-    public void tick() {
-        if (!tickTacks.isEmpty()) {
-            tickTacks.forEach(Runnable::run);
-            tickTacks.clear();
-        }
-    }
-
-    public void submit(Runnable task) {
-        tickTacks.add(task);
     }
 
     public String saveSkin(Skin skin) throws Exception {
@@ -102,18 +94,19 @@ public class DataManager {
         throw new Exception("Missing data source connect!");
     }
 
-    public CompoundTag saveSkinWardrobeData(Entity entity, CompoundTag tag) {
-        // only support save wardrobe data of the player.
+    public void saveSkinWardrobeData(Entity entity, SkinWardrobe wardrobe) {
+        // only support load wardrobe data of the player.
         if (wardrobeDataSource != null && entity instanceof Player player) {
             try {
                 // additional save wardrobe data to external database.
+                var tag = new CompoundTag();
+                wardrobe.serialize(AbstractDataSerializer.wrap(tag, player));
                 wardrobeDataSource.save(player.getStringUUID(), tag);
             } catch (Exception exception) {
                 // unable to save, ignore.
                 exception.printStackTrace();
             }
         }
-        return tag; // we always register data with vanilla
     }
 
     public CompoundTag loadSkinWardrobeData(Entity entity, CompoundTag tag) {

@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
+import moe.plushie.armourers_workshop.utils.ContainerChangeHandler;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -34,6 +35,7 @@ public class SkinWardrobe implements IDataSerializerProvider {
     private final HashMap<SkinSlotType, Integer> skinSlots = new HashMap<>();
 
     private final SimpleContainer inventory = new SimpleContainer(SkinSlotType.getTotalSize());
+    private final ContainerChangeHandler changeHandler = new ContainerChangeHandler(this::setChanged);
 
     private final WeakReference<Entity> entity;
 
@@ -44,6 +46,7 @@ public class SkinWardrobe implements IDataSerializerProvider {
         this.id = entity.getId();
         this.entity = new WeakReference<>(entity);
         this.profile = profile;
+        this.inventory.addListener(changeHandler);
     }
 
     @Nullable
@@ -72,10 +75,12 @@ public class SkinWardrobe implements IDataSerializerProvider {
 
     @Override
     public void deserialize(IDataSerializer serializer) {
-        SkinWardrobeStorage.loadSkinSlots(skinSlots, serializer);
-        SkinWardrobeStorage.loadFlags(flags, serializer);
-        SkinWardrobeStorage.loadInventoryItems(inventory, serializer);
-        SkinWardrobeStorage.loadDataFixer(this, serializer);
+        changeHandler.performWithoutChanges(() -> {
+            SkinWardrobeStorage.loadSkinSlots(skinSlots, serializer);
+            SkinWardrobeStorage.loadFlags(flags, serializer);
+            SkinWardrobeStorage.loadInventoryItems(inventory, serializer);
+            SkinWardrobeStorage.loadDataFixer(this, serializer);
+        });
     }
 
     public void setProfile(EntityProfile profile) {
@@ -111,22 +116,25 @@ public class SkinWardrobe implements IDataSerializerProvider {
     }
 
     public void dropAll(@Nullable Consumer<ItemStack> consumer) {
-        var containerSize = inventory.getContainerSize();
-        var ignoredStart = SkinSlotType.DYE.getIndex() + 8;
-        var ignoredEnd = SkinSlotType.DYE.getIndex() + SkinSlotType.DYE.getMaxSize();
-        for (var i = 0; i < containerSize; ++i) {
-            if (i >= ignoredStart && i < ignoredEnd) {
-                continue;
+        changeHandler.performWithoutChanges(() -> {
+            var containerSize = inventory.getContainerSize();
+            var ignoredStart = SkinSlotType.DYE.getIndex() + 8;
+            var ignoredEnd = SkinSlotType.DYE.getIndex() + SkinSlotType.DYE.getMaxSize();
+            for (int i = 0; i < containerSize; ++i) {
+                if (i >= ignoredStart && i < ignoredEnd) {
+                    continue;
+                }
+                var itemStack = inventory.getItem(i);
+                if (itemStack.isEmpty()) {
+                    continue;
+                }
+                if (consumer != null) {
+                    consumer.accept(itemStack);
+                }
+                inventory.setItem(i, ItemStack.EMPTY);
             }
-            var itemStack = inventory.getItem(i);
-            if (itemStack.isEmpty()) {
-                continue;
-            }
-            if (consumer != null) {
-                consumer.accept(itemStack);
-            }
-            inventory.setItem(i, ItemStack.EMPTY);
-        }
+        });
+        changeHandler.setChanged();
     }
 
     public void clear() {
@@ -149,6 +157,10 @@ public class SkinWardrobe implements IDataSerializerProvider {
         NetworkManager.sendTo(UpdateWardrobePacket.sync(this), player);
     }
 
+    public void setChanged() {
+        SkinWardrobeStorage.saveAll(this);
+    }
+
     public boolean shouldRenderEquipment(EquipmentSlot slotType) {
         return !flags.get(slotType.getFilterFlag());
     }
@@ -159,6 +171,7 @@ public class SkinWardrobe implements IDataSerializerProvider {
         } else {
             flags.set(slotType.getFilterFlag());
         }
+        changeHandler.setChanged();
     }
 
     public boolean shouldRenderExtra() {
@@ -171,6 +184,7 @@ public class SkinWardrobe implements IDataSerializerProvider {
         } else {
             flags.set(6);
         }
+        changeHandler.setChanged();
     }
 
     public BitSet getFlags() {
@@ -180,6 +194,7 @@ public class SkinWardrobe implements IDataSerializerProvider {
     public void setUnlockedSize(SkinSlotType slotType, int size) {
         if (slotType != SkinSlotType.DYE) {
             skinSlots.put(slotType, size);
+            changeHandler.setChanged();
         }
     }
 
@@ -244,6 +259,5 @@ public class SkinWardrobe implements IDataSerializerProvider {
     public boolean isSupported(SkinSlotType slotType) {
         return profile.isSupported(slotType);
     }
-
 }
 

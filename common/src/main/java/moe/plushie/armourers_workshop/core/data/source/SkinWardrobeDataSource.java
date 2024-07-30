@@ -1,9 +1,7 @@
 package moe.plushie.armourers_workshop.core.data.source;
 
 import moe.plushie.armourers_workshop.api.data.IDataSource;
-import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +10,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.HashMap;
+import java.util.Objects;
 
 public abstract class SkinWardrobeDataSource implements IDataSource {
 
@@ -38,6 +38,8 @@ public abstract class SkinWardrobeDataSource implements IDataSource {
 
         private final String name;
         private final Connection connection;
+
+        private final HashMap<String, CompoundTag> lastChanges = new HashMap<>();
 
         private PreparedStatement insertStatement;
         private PreparedStatement updateStatement;
@@ -71,23 +73,25 @@ public abstract class SkinWardrobeDataSource implements IDataSource {
             ObjectUtils.safeClose(queryStatement);
 
             connection.close();
+            lastChanges.clear();
+        }
+
+        @Override
+        public CompoundTag load(String id) throws Exception {
+            CompoundTag tag = super.load(id);
+            if (tag != null) {
+                lastChanges.put(id, tag);
+            }
+            return tag;
         }
 
         @Override
         public void save(String id, CompoundTag tag) throws Exception {
-            // we need wait write complete.
-            var server = EnvironmentManager.getServer();
-            if (server == null) {
-                throw new IllegalStateException("Can't found a server instance");
+            // when no any changes, we will skip insert for reduce database IO.
+            if (!Objects.equals(tag, lastChanges.get(id))) {
+                super.save(id, tag);
+                lastChanges.put(id, tag);
             }
-            // at the end of server tick we will batch save.
-            DataManager.getInstance().submit(() -> {
-                try {
-                    super.save(id, tag);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            });
         }
 
         @Override
@@ -111,39 +115,6 @@ public abstract class SkinWardrobeDataSource implements IDataSource {
                     return result.getBytes(1);
                 }
             }
-            return null;
-        }
-    }
-
-    public static class Local extends SkinWardrobeDataSource {
-
-        @Override
-        public void connect() throws Exception {
-            // nop
-        }
-
-        @Override
-        public void disconnect() throws Exception {
-            // nop
-        }
-
-        @Override
-        public void save(String id, CompoundTag tag) throws Exception {
-            // nop
-        }
-
-        @Override
-        public CompoundTag load(String id) throws Exception {
-            return null;
-        }
-
-        @Override
-        protected void insert(String id, byte[] tag) throws Exception {
-            // nop
-        }
-
-        @Override
-        protected byte[] query(String id) throws Exception {
             return null;
         }
     }

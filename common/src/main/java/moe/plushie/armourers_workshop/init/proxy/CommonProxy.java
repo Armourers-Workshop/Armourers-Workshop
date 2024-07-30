@@ -35,7 +35,6 @@ import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartedEv
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStartingEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppedEvent;
 import moe.plushie.armourers_workshop.init.platform.event.common.ServerStoppingEvent;
-import moe.plushie.armourers_workshop.init.platform.event.common.ServerTickEvent;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
@@ -153,11 +152,6 @@ public class CommonProxy {
             TickTracker.server().update(false);
             WorldUpdater.getInstance().tick(event.getLevel());
         });
-
-        EventManager.listen(ServerTickEvent.Post.class, event -> {
-            DataManager.getInstance().tick();
-        });
-
 
         EventManager.listen(ServerLevelAddEntityEvent.class, event -> {
             SkinUtils.copySkinFromOwner(event.getEntity());

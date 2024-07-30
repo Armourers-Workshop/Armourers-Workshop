@@ -8,25 +8,26 @@ import java.util.StringJoiner;
 public class SQLTableBuilder {
 
     private final String name;
-    private final LinkedHashMap<String, String> fileds = new LinkedHashMap<>();
+    private final LinkedHashMap<String, String> fields = new LinkedHashMap<>();
 
     public SQLTableBuilder(String name) {
         this.name = name;
     }
 
     public void add(String name, String type) {
-        fileds.put(name, type);
+        fields.put(name, type);
     }
 
     public int execute(Connection connection) throws SQLException {
         // check the table exists.
         var count = 0;
+        var catalog = connection.getCatalog();
         var metaData = connection.getMetaData();
-        try (var result = metaData.getTables(null, null, name, null)) {
+        try (var result = metaData.getTables(catalog, null, name, null)) {
             if (!result.next()) {
                 // create a table when not exists.
                 var joiner = new StringJoiner(", ", String.format("CREATE TABLE `%s` (", name), ")");
-                for (var entry : fileds.entrySet()) {
+                for (var entry : fields.entrySet()) {
                     joiner.add(String.format("`%s` %s", entry.getKey(), entry.getValue()));
                 }
                 return execute(connection, joiner.toString());
@@ -34,8 +35,8 @@ public class SQLTableBuilder {
         }
         // check the table fields exists.
         var joiner = new StringJoiner(";");
-        for (var entry : fileds.entrySet()) {
-            try (var result = metaData.getColumns(null, null, name, entry.getKey())) {
+        for (var entry : fields.entrySet()) {
+            try (var result = metaData.getColumns(catalog, null, name, entry.getKey())) {
                 if (!result.next()) {
                     joiner.add(String.format("ALTER TABLE `%s` ADD COLUMN `%s` %s", name, entry.getKey(), entry.getValue()));
                     count += 1;

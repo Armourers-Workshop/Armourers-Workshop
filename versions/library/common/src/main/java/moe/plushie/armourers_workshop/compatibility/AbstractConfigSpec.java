@@ -51,6 +51,8 @@ public class AbstractConfigSpec implements IConfigSpec {
         values.forEach((key, value) -> {
             if (value.getter != null) {
                 fields.put(key, value.getter.get());
+            } else {
+                fields.put(key, null);
             }
         });
         return fields;
