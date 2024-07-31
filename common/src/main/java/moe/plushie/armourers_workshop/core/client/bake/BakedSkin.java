@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationContext;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationController;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationEngine;
@@ -79,7 +80,7 @@ public class BakedSkin implements IBakedSkin {
         this.identifier = identifier;
         this.skin = skin;
         this.skinType = skinType;
-        this.skinAnimationControllers = resolveAnimationControllers(bakedParts, skin.getAnimations());
+        this.skinAnimationControllers = resolveAnimationControllers(bakedParts, skin.getAnimations(), skin.getProperties());
         this.skinAnimationContext = AnimationContext.from(bakedParts);
         this.skinParts = BakedSkinPartCombiner.apply(bakedParts); // depends `resolveAnimationControllers`
         this.colorScheme = colorScheme;
@@ -279,7 +280,7 @@ public class BakedSkin implements IBakedSkin {
         return overrides;
     }
 
-    private List<AnimationController> resolveAnimationControllers(List<BakedSkinPart> skinParts, Collection<SkinAnimation> animations) {
+    private List<AnimationController> resolveAnimationControllers(List<BakedSkinPart> skinParts, Collection<SkinAnimation> animations, ISkinProperties properties) {
         var results = new ArrayList<AnimationController>();
         if (animations.isEmpty()) {
             return results;
@@ -294,7 +295,7 @@ public class BakedSkin implements IBakedSkin {
             namedParts.put(partName, part);
         });
         animations.forEach(animation -> {
-            var controller = new AnimationController(animation, namedParts);
+            var controller = new AnimationController(animation, namedParts, properties);
             results.add(controller);
         });
         results.removeIf(AnimationController::isEmpty);

@@ -127,5 +127,9 @@ public class AnimatedTransform implements ISkinTransform {
     public void setDirty(int flags) {
         dirty |= flags;
     }
+
+    public SkinTransform getParent() {
+        return parent;
+    }
 }
 

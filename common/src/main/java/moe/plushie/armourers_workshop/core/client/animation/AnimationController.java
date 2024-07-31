@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.animation;
 
+import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
@@ -9,12 +10,14 @@ import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationValue;
 import moe.plushie.armourers_workshop.core.skin.molang.MolangVirtualMachine;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Constant;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -35,7 +38,7 @@ public class AnimationController {
     private final boolean isParallel;
     private final boolean isRequiresVirtualMachine;
 
-    public AnimationController(SkinAnimation animation, Map<String, BakedSkinPart> bones) {
+    public AnimationController(SkinAnimation animation, Map<String, BakedSkinPart> bones, ISkinProperties properties) {
         this.name = animation.getName();
         this.animation = animation;
 
@@ -85,6 +88,10 @@ public class AnimationController {
     @Override
     public String toString() {
         return ObjectUtils.makeDescription(this, "name", name, "duration", duration, "loop", loop);
+    }
+
+    public Collection<BakedSkinPart> getParts() {
+        return ObjectUtils.map(bones, it -> it.part);
     }
 
     public String getName() {
@@ -431,7 +438,8 @@ public class AnimationController {
     public static class PlayState {
 
         private float startTime0;
-        private final float startTime;
+        private float startTime;
+
         private final float duration;
 
         private int playCount;
@@ -461,11 +469,20 @@ public class AnimationController {
         }
 
 
+        public void setStartTime(float time) {
+            startTime = time;
+            startTime0 = time;
+        }
+
         public float getStartTicks() {
             return startTime;
         }
 
         public float getAdjustedTicks(float animationTicks) {
+            // this is a planned animation?
+            if (animationTicks < startTime) {
+                return 0;
+            }
             tick(animationTicks);
             return adjustedTicks;
         }

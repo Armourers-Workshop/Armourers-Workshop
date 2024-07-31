@@ -52,7 +52,8 @@ public class EntityActionSet {
             vehicle = transitingVehicle;
         }
 
-        boolean onGround = entity.onGround();
+        // when entity no gravity, everywhere is the ground.
+        boolean onGround = entity.onGround() || entity.isNoGravity();
 
         double dx = entity.getX() - entity.xOld;
         double dy = entity.getY() - entity.yOld;

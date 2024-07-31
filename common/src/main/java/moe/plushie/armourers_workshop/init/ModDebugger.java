@@ -18,6 +18,8 @@ public class ModDebugger {
     public static float sy = 1;
     public static float sz = 1;
 
+    public static float t = 1;
+
     public static int flag0 = 0;
     public static int flag1 = 0;
     public static int flag2 = 0;

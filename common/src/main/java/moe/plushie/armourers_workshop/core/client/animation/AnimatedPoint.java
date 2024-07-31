@@ -52,6 +52,18 @@ public class AnimatedPoint {
         return Vector3f.ONE;
     }
 
+    public void setTranslate(Vector3f value) {
+        setTranslate(value.getX(), value.getY(), value.getZ());
+    }
+
+    public void setRotate(Vector3f value) {
+        setRotate(value.getX(), value.getY(), value.getZ());
+    }
+
+    public void setScale(Vector3f value) {
+        setScale(value.getX(), value.getY(), value.getZ());
+    }
+
     public void clear() {
         dirty = 0x00;
     }

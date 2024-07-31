@@ -17,6 +17,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -201,19 +202,9 @@ public class AnimationManager {
                 return;
             }
             var newValue = findTriggerableController(actionSet);
-            var oldValue = playing;
-            if (oldValue == newValue) {
-                return; // ignore when no any changes.
+            if (newValue != null && newValue != playing) {
+                play(newValue, playing, atTime, newValue.getPlayCount(), false);
             }
-            if (oldValue != null) {
-                stopPlayIfNeeded(oldValue.animationController);
-            }
-            isLocking = false;
-            playing = newValue;
-            if (newValue != null) {
-                startPlay(newValue.animationController, atTime, newValue.getPlayCount());
-            }
-            applyTransiting(oldValue, newValue, atTime);
         }
 
         public void play(AnimationController animationController, float atTime, int playCount) {
@@ -224,17 +215,9 @@ public class AnimationManager {
             }
             // play triggerable animation (lock).
             var newValue = findTriggerableController(animationController);
-            var oldValue = playing;
-            if (newValue == null || newValue == oldValue) {
-                return; // ignore when no any changes.
+            if (newValue != null && newValue != playing) {
+                play(newValue, playing, atTime, playCount, true);
             }
-            if (oldValue != null) {
-                stopPlayIfNeeded(oldValue.animationController);
-            }
-            isLocking = true;
-            playing = newValue;
-            startPlay(newValue.animationController, atTime, playCount);
-            applyTransiting(oldValue, newValue, atTime);
         }
 
         public void stop(AnimationController animationController) {
@@ -270,6 +253,26 @@ public class AnimationManager {
             return !triggerableControllers.isEmpty();
         }
 
+        private void play(TriggerableController newValue, @Nullable TriggerableController oldValue, float atTime, int playCount, boolean needLock) {
+            var toAnimationController = newValue.animationController;
+            var fromAnimationController =  ObjectUtils.flatMap(oldValue, it -> it.animationController);
+
+            // clear prev play state.
+            if (fromAnimationController != null) {
+                stopPlayIfNeeded(fromAnimationController);
+            }
+
+            // set next play state.
+            startPlay(toAnimationController, atTime, playCount);
+
+            isLocking = needLock;
+            playing = newValue;
+
+            // TODO: @SAGESSE Add transition duration support.
+            var duration = 0.25f;
+            applyTransiting(fromAnimationController, toAnimationController, atTime, duration);
+        }
+
         private void startPlay(AnimationController animationController, float atTime, int playCount) {
             stopPlayIfNeeded(animationController);
             var newPlayState = new AnimationController.PlayState(animationController, atTime, playCount);
@@ -288,8 +291,13 @@ public class AnimationManager {
             }
         }
 
-        private void applyTransiting(TriggerableController from, TriggerableController to, float atTime) {
-            ModLog.debug("start transiting: {} => {}", from, to);
+        private void applyTransiting(AnimationController fromAnimationController, AnimationController toAnimationController, float atTime, float duration) {
+            // delay the animation start time.
+            var playState = playStates.get(toAnimationController);
+            if (playState != null) {
+                playState.setStartTime(atTime + duration);
+            }
+            addAnimation(fromAnimationController, toAnimationController, atTime, duration);
         }
 
         private String resolveMappingName(String name) {
