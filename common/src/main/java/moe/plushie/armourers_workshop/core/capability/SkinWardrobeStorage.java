@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.capability;
 
 import moe.plushie.armourers_workshop.api.data.IDataSerializer;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
-import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.utils.DataFixerUtils;
 import moe.plushie.armourers_workshop.utils.DataSerializerKey;
@@ -26,7 +25,6 @@ public class SkinWardrobeStorage {
     private static final DataSerializerKey<List<Short>> SLOTS_KEY = DataSerializerKey.create("Slots", DataTypeCodecs.SHORT.listOf(), Collections.emptyList());
 
     public static IDataSerializer reader(Entity entity, CompoundTag inputTag) {
-        inputTag = DataManager.getInstance().loadSkinWardrobeData(entity, inputTag);
         return AbstractDataSerializer.wrap(inputTag, entity);
     }
 
@@ -112,14 +110,6 @@ public class SkinWardrobeStorage {
             if (slotType != null) {
                 slots.put(slotType, encoded & 0xff);
             }
-        }
-    }
-
-    public static void saveAll(SkinWardrobe wardrobe) {
-        // save the skin wardrobe data when any changed.
-        var entity = wardrobe.getEntity();
-        if (entity != null && entity.getLevel() != null && !entity.getLevel().isClientSide()) {
-            DataManager.getInstance().saveSkinWardrobeData(entity, wardrobe);
         }
     }
 }

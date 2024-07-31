@@ -1,15 +1,9 @@
 package moe.plushie.armourers_workshop.core.data;
 
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
-import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.source.SkinFileDataSource;
-import moe.plushie.armourers_workshop.core.data.source.SkinWardrobeDataSource;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,7 +18,6 @@ public class DataManager {
     private static final DataManager INSTANCE = new DataManager();
 
     private SkinFileDataSource fileDataSource;
-    private SkinWardrobeDataSource wardrobeDataSource;
 
     private final HashMap<String, Connection> reusableConnections = new HashMap<>();
 
@@ -40,11 +33,6 @@ public class DataManager {
             if (fileDataSource != null) {
                 fileDataSource.connect();
             }
-            // connect to wardrobe data source.
-            wardrobeDataSource = createWardrobeDataSource(null);
-            if (wardrobeDataSource != null) {
-                wardrobeDataSource.connect();
-            }
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }
@@ -53,11 +41,6 @@ public class DataManager {
     public void disconnect() {
         try {
             reusableConnections.clear();
-            // disconnect from wardrobe data source.
-            if (wardrobeDataSource != null) {
-                wardrobeDataSource.disconnect();
-                wardrobeDataSource = null;
-            }
             // disconnect from file data source.
             if (fileDataSource != null) {
                 fileDataSource.disconnect();
@@ -94,38 +77,6 @@ public class DataManager {
         throw new Exception("Missing data source connect!");
     }
 
-    public void saveSkinWardrobeData(Entity entity, SkinWardrobe wardrobe) {
-        // only support load wardrobe data of the player.
-        if (wardrobeDataSource != null && entity instanceof Player player) {
-            try {
-                // additional save wardrobe data to external database.
-                var tag = new CompoundTag();
-                wardrobe.serialize(AbstractDataSerializer.wrap(tag, player));
-                wardrobeDataSource.save(player.getStringUUID(), tag);
-            } catch (Exception exception) {
-                // unable to save, ignore.
-                exception.printStackTrace();
-            }
-        }
-    }
-
-    public CompoundTag loadSkinWardrobeData(Entity entity, CompoundTag tag) {
-        // only support load wardrobe data of the player.
-        if (wardrobeDataSource != null && entity instanceof Player player) {
-            try {
-                // prioritize use wardrobe data from external database.
-                var newTag = wardrobeDataSource.load(player.getStringUUID());
-                if (newTag != null) {
-                    return newTag;
-                }
-            } catch (Exception e) {
-                // unable to load, rollback to vanilla data.
-                e.printStackTrace();
-            }
-        }
-        return tag;
-    }
-
     public boolean isConnected() {
         return fileDataSource != null;
     }
@@ -137,15 +88,6 @@ public class DataManager {
             var name = uri.replaceAll("jdbc:([^:]+):(.+)", "$1");
             var source = new SkinFileDataSource.SQL(name, createConnection(uri));
             return new SkinFileDataSource.Fallback(source, fallback);
-        }
-        return fallback;
-    }
-
-    private SkinWardrobeDataSource createWardrobeDataSource(SkinWardrobeDataSource fallback) throws Exception {
-        var uri = ModConfig.Common.wardrobeDatabaseURL;
-        if (uri.startsWith("jdbc:")) {
-            var name = uri.replaceAll("jdbc:([^:]+):(.+)", "$1");
-            return new SkinWardrobeDataSource.SQL(name, createConnection(uri));
         }
         return fallback;
     }

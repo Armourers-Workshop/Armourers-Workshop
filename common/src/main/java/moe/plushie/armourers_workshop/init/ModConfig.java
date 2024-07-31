@@ -134,7 +134,6 @@ public class ModConfig {
 
         // Database
         public static String skinDatabaseURL = "";
-        public static String wardrobeDatabaseURL = "";
 
         // Holiday events
         public static boolean disableAllHolidayEvents = false;
