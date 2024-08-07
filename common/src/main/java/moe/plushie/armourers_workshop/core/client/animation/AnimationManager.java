@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.data.EntityActions;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -153,7 +154,7 @@ public class AnimationManager {
 
     private void rebuildTriggerableEntities() {
         triggerableEntries.clear();
-        triggerableEntries.addAll(allEntries.values().stream().filter(Entry::hasTriggerableAnimation).toList());
+        triggerableEntries.addAll(ObjectUtils.filter(allEntries.values(), Entry::hasTriggerableAnimation));
     }
 
     protected void debugLog(String message, Object... arguments) {
@@ -179,7 +180,7 @@ public class AnimationManager {
         }
 
         public void map(String action, String newName) {
-            if (action.equals(newName) || newName.isBlank()) {
+            if (action.equals(newName) || newName.isEmpty()) {
                 actionToName.remove(action);
             } else {
                 actionToName.put(action, newName);

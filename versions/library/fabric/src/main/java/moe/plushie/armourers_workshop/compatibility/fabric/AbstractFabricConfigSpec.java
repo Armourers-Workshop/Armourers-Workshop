@@ -53,31 +53,31 @@ public class AbstractFabricConfigSpec extends AbstractConfigSpec {
 
             @Override
             protected Value<Boolean> define(String path, boolean defaultValue) {
-                return cast(path, builder.define(path, defaultValue));
+                return cast(path, builder.define(path, defaultValue), defaultValue);
             }
 
             @Override
             protected Value<String> define(String path, String defaultValue) {
-                return cast(path, builder.define(path, defaultValue));
+                return cast(path, builder.define(path, defaultValue), defaultValue);
             }
 
             @Override
             protected Value<Integer> defineInRange(String path, int defaultValue, int minValue, int maxValue) {
-                return cast(path, builder.defineInRange(path, defaultValue, minValue, maxValue));
+                return cast(path, builder.defineInRange(path, defaultValue, minValue, maxValue), defaultValue);
             }
 
             @Override
             protected Value<Double> defineInRange(String path, double defaultValue, double minValue, double maxValue) {
-                return cast(path, builder.defineInRange(path, defaultValue, minValue, maxValue));
+                return cast(path, builder.defineInRange(path, defaultValue, minValue, maxValue), defaultValue);
             }
 
             @Override
             protected <T> Value<List<? extends T>> defineList(String path, List<? extends T> defaultValue, Predicate<Object> elementValidator) {
-                return cast(path, builder.defineList(path, defaultValue, elementValidator));
+                return cast(path, builder.defineList(path, defaultValue, elementValidator), defaultValue);
             }
 
-            <T> Value<T> cast(String path, FabricConfigSpec.ConfigValue<T> value) {
-                return new Value<>(path, value::get, value::set);
+            <T> Value<T> cast(String path, FabricConfigSpec.ConfigValue<T> value, T defaultValue) {
+                return new Value<>(path, defaultValue, value::get, value::set);
             }
         }));
 

@@ -146,7 +146,7 @@ public class AnimationController {
             for (var value : linkedValues) {
                 namedValues.computeIfAbsent(value.getKey(), key -> new ArrayList<>()).add(value);
             }
-            return namedValues.entrySet().stream().map(it -> new Channel(it.getKey(), duration, it.getValue())).toList();
+            return ObjectUtils.map(namedValues.entrySet(), it -> new Channel(it.getKey(), duration, it.getValue()));
         }
 
         private Output linkTo(BakedSkinPart bone) {
@@ -219,7 +219,7 @@ public class AnimationController {
                 left.rightValue = right.leftValue;
             }
             builders.removeIf(it -> it.leftTime == it.rightTime);
-            return builders.stream().map(FragmentBuilder::build).toList();
+            return ObjectUtils.map(builders, FragmentBuilder::build);
         }
 
         private Pair<Value, Value> compile(List<Object> points, float defaultValue) {

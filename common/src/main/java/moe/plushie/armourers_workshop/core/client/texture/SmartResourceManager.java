@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.texture;
 
+import com.google.common.collect.Sets;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
@@ -18,7 +19,7 @@ public class SmartResourceManager extends AbstractPackResources {
 
     private static final SmartResourceManager INSTANCE = new SmartResourceManager();
 
-    private final Set<String> namespaces = Set.of(ModConstants.MOD_ID);
+    private final Set<String> namespaces = Sets.newHashSet(ModConstants.MOD_ID);
     private final HashMap<IResourceLocation, ByteBuffer> resources = new HashMap<>();
 
     protected SmartResourceManager() {

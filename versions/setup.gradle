@@ -83,6 +83,8 @@ targets.forEach {
         it.resources.srcDirs("../../${it.name}/src/main/resources")
         it.java.srcDirs("../library/${it.name}/src/main/java")
         it.resources.srcDirs("../library/${it.name}/src/main/resources")
+        it.java.srcDirs("../${minecraft_version}/${it.name}/src/main/java")
+        it.resources.srcDirs("../${minecraft_version}/${it.name}/src/main/resources")
     }
 }
 

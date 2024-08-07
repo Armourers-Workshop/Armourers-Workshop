@@ -274,7 +274,7 @@ public class BedrockModelExporter {
         if (value instanceof String script) {
             try {
                 // for blank script, we assume it to be a 0
-                if (script.isBlank()) {
+                if (script.isEmpty()) {
                     return 0f;
                 }
                 var expr = MolangVirtualMachine.get().eval(script);

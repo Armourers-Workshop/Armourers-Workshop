@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * because `commons.io` versions on some servers are too low,
@@ -257,7 +256,7 @@ public class SkinFileUtils {
     private static String dumpTree(SkinPart part) {
         var tree = new StringBuilder();
         tree.append("<SkinPart ");
-        tree.append("name=").append(Objects.requireNonNullElse(part.getName(), "")).append(",");
+        tree.append("name=").append(ObjectUtils.orElse(part.getName(), "")).append(",");
         tree.append("type=").append(part.getType().getRegistryName().getPath());
         tree.append(">\n");
         for (var childPart : part.getParts()) {

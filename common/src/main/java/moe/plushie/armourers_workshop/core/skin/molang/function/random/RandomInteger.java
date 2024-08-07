@@ -64,7 +64,7 @@ public final class RandomInteger extends Function {
 
             result = min + random.nextInt(max + 1 - min);
         } else {
-            result = random.nextInt(0, valueA + 1);
+            result = random.nextInt(valueA + 1);
         }
 
         return result;

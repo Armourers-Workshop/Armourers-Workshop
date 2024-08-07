@@ -14,6 +14,7 @@ import com.apple.library.uikit.UIView;
 import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +24,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class PartPickerView extends UIControl {
 
@@ -134,8 +134,8 @@ public class PartPickerView extends UIControl {
     private void setupData() {
         List<List<PartItem>> items = new ArrayList<>();
         items.add(Lists.newArrayList(PartItem.IMPORT, PartItem.CLEAR));
-        items.add(getInventorySkins().stream().filter(this::isValid).collect(Collectors.toList()));
-        items.add(getImportedSkins().stream().filter(this::isValid).collect(Collectors.toList()));
+        items.add(ObjectUtils.filter(getInventorySkins(), this::isValid));
+        items.add(ObjectUtils.filter(getImportedSkins(), this::isValid));
         buildSections(items);
     }
 

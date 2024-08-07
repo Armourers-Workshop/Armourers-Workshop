@@ -52,7 +52,7 @@ public class AbstractConfigSpec implements IConfigSpec {
             if (value.getter != null) {
                 fields.put(key, value.getter.get());
             } else {
-                fields.put(key, null);
+                fields.put(key, value.defaultValue);
             }
         });
         return fields;
@@ -131,6 +131,7 @@ public class AbstractConfigSpec implements IConfigSpec {
     public static class Value<T> implements IConfigValue<T> {
 
         protected final String path;
+        protected final T defaultValue;
 
         protected final Supplier<T> reader;
         protected final Consumer<T> writer;
@@ -138,8 +139,9 @@ public class AbstractConfigSpec implements IConfigSpec {
         protected Consumer<T> setter;
         protected Supplier<T> getter;
 
-        public Value(String path, Supplier<T> reader, Consumer<T> writer) {
+        public Value(String path, T defaultValue, Supplier<T> reader, Consumer<T> writer) {
             this.path = path;
+            this.defaultValue = defaultValue;
             this.reader = reader;
             this.writer = writer;
         }

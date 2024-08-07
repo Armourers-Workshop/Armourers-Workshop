@@ -82,6 +82,14 @@ public class ObjectUtils {
         return null;
     }
 
+    public static <V> V orElse(@Nullable V value, V defaultValue) {
+        if (value != null) {
+            return value;
+        }
+        return defaultValue;
+    }
+
+
     public static <S, T> ArrayList<T> map(S[] in, Function<? super S, T> transform) {
         ArrayList<T> results = new ArrayList<>(in.length);
         for (S value : in) {
