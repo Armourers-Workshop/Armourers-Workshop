@@ -258,7 +258,6 @@
   "item.armourers_workshop.palette": "Farbpalette",
   "item.armourers_workshop.rollover.colour": "§6Farbe:§r %s",
   "item.armourers_workshop.rollover.empty": "§6Leer.",
-  "item.armourers_workshop.rollover.hasSkin": "§6Hat Armourer's Workshop Skin",
   "item.armourers_workshop.rollover.intensity": "§6Intensität:§r %s",
   "item.armourers_workshop.rollover.noSettingsSaved": "§cKeine Einstellung gespeichert.",
   "item.armourers_workshop.rollover.nopaint": "§6Keine Farbe.",
@@ -336,8 +335,6 @@
   "skinPartType.armourers_workshop.feet.leftFoot": "Linker Fuß",
   "skinPartType.armourers_workshop.feet.rightFoot": "Rechter Fuß",
   "skinPartType.armourers_workshop.head.base": "Basis",
-  "skinPartType.armourers_workshop.legs.leftLeg": "Linkes Bein",
-  "skinPartType.armourers_workshop.legs.rightLeg": "Rechtes Bein",
   "skinPartType.armourers_workshop.legs.skirt": "Rock",
   "skinPartType.armourers_workshop.wings.leftWing": "Linker Flügel",
   "skinPartType.armourers_workshop.wings.rightWing": "Rechter Flügel",
@@ -360,13 +357,5 @@
   "skin_search_column.armourers_workshop.description": "Beschreibung",
   "sounds.armourers_workshop.burn": "Nachbelichten-Werkzeug",
   "sounds.armourers_workshop.dodge": "Aufhellen-Werkzeug",
-  "sounds.armourers_workshop.picker": "Pipette",
-  "inventory.armourers_workshop.toolOptions.changeBrightness": "Helligkeit ändern",
-  "inventory.armourers_workshop.toolOptions.changeHue": "Farbton ändern",
-  "inventory.armourers_workshop.toolOptions.changePaintType": "Farbtyp ändern",
-  "inventory.armourers_workshop.toolOptions.changeSaturation": "Sättigung ändern",
-  "inventory.armourers_workshop.toolOptions.effectRadius": "Effekt Radius",
-  "inventory.armourers_workshop.toolOptions.fullBlockMode": "ganze Würfel anstreichen",
-  "inventory.armourers_workshop.toolOptions.intensity": "Intensität",
-  "inventory.armourers_workshop.toolOptions.planeRestrict": "Einschränkungsbereich"
+  "sounds.armourers_workshop.picker": "Pipette"
 }

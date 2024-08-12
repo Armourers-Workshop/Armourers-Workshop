@@ -328,7 +328,6 @@
   "item.armourers_workshop.rollover.colour": "§6Cor:§r %s",
   "item.armourers_workshop.rollover.effectRadius": "§6Raio do efeito:§r %d",
   "item.armourers_workshop.rollover.empty": "§6Vazio.",
-  "item.armourers_workshop.rollover.hasSkin": "§6Possui visual do Armourer's Workshop",
   "item.armourers_workshop.rollover.intensity": "§6Intensidade:§r %s",
   "item.armourers_workshop.rollover.noSettingsSaved": "§cSem configuração salva.",
   "item.armourers_workshop.rollover.nopaint": "§6Sem pintura.",
@@ -422,8 +421,6 @@
   "skinPartType.armourers_workshop.feet.leftFoot": "Pé Esquerdo",
   "skinPartType.armourers_workshop.feet.rightFoot": "Pé Direito",
   "skinPartType.armourers_workshop.head.base": "Base",
-  "skinPartType.armourers_workshop.legs.leftLeg": "Perna Esquerda",
-  "skinPartType.armourers_workshop.legs.rightLeg": "Perna Direita",
   "skinPartType.armourers_workshop.legs.skirt": "Saia",
   "skinPartType.armourers_workshop.wings.leftWing": "Asa Esquerda",
   "skinPartType.armourers_workshop.wings.rightWing": "Asa Direita",
@@ -451,14 +448,5 @@
   "skin_search_column.armourers_workshop.skin_type": "Tipo de Visual",
   "sounds.armourers_workshop.burn": "Ferramenta de escurecimento",
   "sounds.armourers_workshop.dodge": "Ferramenta de clareamento",
-  "sounds.armourers_workshop.picker": "Selecionador de cores",
-  "inventory.armourers_workshop.toolOptions.changeBrightness": "Mudar brilho",
-  "inventory.armourers_workshop.toolOptions.changeHue": "Mudar matiz",
-  "inventory.armourers_workshop.toolOptions.changePaintType": "Mudar tipo de pintura",
-  "inventory.armourers_workshop.toolOptions.changeSaturation": "Mudar saturação",
-  "inventory.armourers_workshop.toolOptions.effectRadius": "Raio de efeito",
-  "inventory.armourers_workshop.toolOptions.fullBlockMode": "Modo bloco inteiro",
-  "inventory.armourers_workshop.toolOptions.intensity": "Intensidade",
-  "inventory.armourers_workshop.toolOptions.planeRestrict": "Restringir plano",
-  "inventory.armourers_workshop.toolOptions.radius": "Raio"
+  "sounds.armourers_workshop.picker": "Selecionador de cores"
 }

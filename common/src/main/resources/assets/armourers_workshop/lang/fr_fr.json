@@ -190,7 +190,6 @@
   "item.armourers_workshop.paintbrush.flavour": "Permet de peindre un bloc.",
   "item.armourers_workshop.rollover.colour": "§6Couleur:§r %s",
   "item.armourers_workshop.rollover.empty": "§6vide.",
-  "item.armourers_workshop.rollover.hasSkin": "§6Dispose d'un skin",
   "item.armourers_workshop.rollover.intensity": "§6Intensitee:§r %s",
   "item.armourers_workshop.rollover.noSettingsSaved": "§cAucun parametre sauvegarder.",
   "item.armourers_workshop.rollover.nopaint": "§6Aucune peinture.",
@@ -248,8 +247,6 @@
   "skinPartType.armourers_workshop.feet.leftFoot": "Pied gauche",
   "skinPartType.armourers_workshop.feet.rightFoot": "Pied droit",
   "skinPartType.armourers_workshop.head.base": "Base",
-  "skinPartType.armourers_workshop.legs.leftLeg": "Jambe gauche",
-  "skinPartType.armourers_workshop.legs.rightLeg": "Jambe droite",
   "skinPartType.armourers_workshop.legs.skirt": "Jupe",
   "skinPartType.armourers_workshop.wings.leftWing": "Aile gauche",
   "skinPartType.armourers_workshop.wings.rightWing": "Aile droite",
@@ -265,13 +262,5 @@
   "skinType.armourers_workshop.wings": "Ailes",
   "skin_search_column.armourers_workshop.downloads": "Telechargement",
   "skin_search_column.armourers_workshop.name": "Nom",
-  "skin_search_column.armourers_workshop.skin_type": "Type de skin",
-  "inventory.armourers_workshop.toolOptions.changeBrightness": "Changer la luminositee",
-  "inventory.armourers_workshop.toolOptions.changeHue": "Changer la teinte",
-  "inventory.armourers_workshop.toolOptions.changePaintType": "Changer le type de peinture",
-  "inventory.armourers_workshop.toolOptions.changeSaturation": "Changer la Saturation",
-  "inventory.armourers_workshop.toolOptions.effectRadius": "Taille a effet",
-  "inventory.armourers_workshop.toolOptions.fullBlockMode": "Mode Bloc entier",
-  "inventory.armourers_workshop.toolOptions.intensity": "Intensitee",
-  "inventory.armourers_workshop.toolOptions.radius": "Taille"
+  "skin_search_column.armourers_workshop.skin_type": "Type de skin"
 }

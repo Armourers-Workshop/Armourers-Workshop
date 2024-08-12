@@ -362,7 +362,6 @@
   "item.armourers_workshop.rollover.colour": "§6Цвет:§r %s",
   "item.armourers_workshop.rollover.effectRadius": "§6Радиус эффекта:§r %d",
   "item.armourers_workshop.rollover.empty": "§6Пусто.",
-  "item.armourers_workshop.rollover.hasSkin": "§6Применён скин из Armourer's Workshop",
   "item.armourers_workshop.rollover.intensity": "§6Интенсивность:§r %s",
   "item.armourers_workshop.rollover.noSettingsSaved": "§cНастройки не сохранены.",
   "item.armourers_workshop.rollover.nopaint": "§6Нет краски.",
@@ -462,8 +461,6 @@
   "skinPartType.armourers_workshop.feet.leftFoot": "Левая стопа",
   "skinPartType.armourers_workshop.feet.rightFoot": "Правая стопа",
   "skinPartType.armourers_workshop.head.base": "Основа головы",
-  "skinPartType.armourers_workshop.legs.leftLeg": "Левая нога",
-  "skinPartType.armourers_workshop.legs.rightLeg": "Правая нога",
   "skinPartType.armourers_workshop.legs.skirt": "Юбка",
   "skinPartType.armourers_workshop.wings.leftWing": "Левое крыло",
   "skinPartType.armourers_workshop.wings.rightWing": "Правое крыло",
@@ -491,14 +488,5 @@
   "skin_search_column.armourers_workshop.name": "Имя",
   "sounds.armourers_workshop.burn": "Затемнитель",
   "sounds.armourers_workshop.dodge": "Осветлитель",
-  "sounds.armourers_workshop.picker": "Пипетка",
-  "inventory.armourers_workshop.toolOptions.changeBrightness": "Изменить яркость",
-  "inventory.armourers_workshop.toolOptions.changeHue": "Изменить тон",
-  "inventory.armourers_workshop.toolOptions.changePaintType": "Изменить тип краски",
-  "inventory.armourers_workshop.toolOptions.changeSaturation": "Изменить насыщенность",
-  "inventory.armourers_workshop.toolOptions.effectRadius": "Радиус применения эффекта",
-  "inventory.armourers_workshop.toolOptions.fullBlockMode": "Режим полного блока",
-  "inventory.armourers_workshop.toolOptions.intensity": "Интенсивность",
-  "inventory.armourers_workshop.toolOptions.planeRestrict": "Ограничить плоскость",
-  "inventory.armourers_workshop.toolOptions.radius": "Радиус"
+  "sounds.armourers_workshop.picker": "Пипетка"
 }

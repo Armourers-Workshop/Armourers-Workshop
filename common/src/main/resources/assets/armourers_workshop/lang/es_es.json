@@ -205,7 +205,6 @@
   "item.armourers_workshop.paintbrush": "Brocha de Pintura",
   "item.armourers_workshop.paintbrush.flavour": "Pinta un bloque a la vez.",
   "item.armourers_workshop.rollover.empty": "§6Vacio.",
-  "item.armourers_workshop.rollover.hasSkin": "§6Contiene aspecto de Armourer's Workshop",
   "item.armourers_workshop.rollover.hex": "§6Hexadecimal:§r %s",
   "item.armourers_workshop.rollover.intensity": "§6Intensidad:§r %s",
   "item.armourers_workshop.rollover.noSettingsSaved": "§cSin Configuración Guardada.",
@@ -268,8 +267,6 @@
   "skinPartType.armourers_workshop.feet.leftFoot": "Pie Izquierdo",
   "skinPartType.armourers_workshop.feet.rightFoot": "Pie Derecho",
   "skinPartType.armourers_workshop.head.base": "Base",
-  "skinPartType.armourers_workshop.legs.leftLeg": "Pierna Izquierda",
-  "skinPartType.armourers_workshop.legs.rightLeg": "Pierna Derecha",
   "skinPartType.armourers_workshop.legs.skirt": "Falda",
   "skinPartType.armourers_workshop.wings.leftWing": "Ala Izquierda",
   "skinPartType.armourers_workshop.wings.rightWing": "Ala Derecha",
@@ -286,13 +283,5 @@
   "skin_search_column.armourers_workshop.description": "Descripción",
   "skin_search_column.armourers_workshop.downloads": "Descargas",
   "skin_search_column.armourers_workshop.name": "Nombre",
-  "skin_search_column.armourers_workshop.skin_type": "Tipo de Aspecto",
-  "inventory.armourers_workshop.toolOptions.changeBrightness": "Cambiar Brillo",
-  "inventory.armourers_workshop.toolOptions.changeHue": "Cambiar Tono",
-  "inventory.armourers_workshop.toolOptions.changePaintType": "Cambiar Tipo de Pintura",
-  "inventory.armourers_workshop.toolOptions.changeSaturation": "Cambiar Saturación",
-  "inventory.armourers_workshop.toolOptions.effectRadius": "Radio de Efecto",
-  "inventory.armourers_workshop.toolOptions.fullBlockMode": "Modo Bloque Completo",
-  "inventory.armourers_workshop.toolOptions.intensity": "Intensidad",
-  "inventory.armourers_workshop.toolOptions.radius": "Radio"
+  "skin_search_column.armourers_workshop.skin_type": "Tipo de Aspecto"
 }

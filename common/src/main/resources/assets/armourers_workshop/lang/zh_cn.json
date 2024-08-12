@@ -74,6 +74,7 @@
   "exception.armourers_workshop.save.missingMarker": "缺失 %s 的标记点",
   "exception.armourers_workshop.save.tooManyMarkers": "%s 的标记点过多",
   "exception.armourers_workshop.load.notFound": "没有找到时装文件",
+  "exception.armourers_workshop.load.notEditable": "皮肤不可编辑。",
   "action.armourers_workshop.block.load": "从时装加载方块",
   "action.armourers_workshop.block.clear": "清空方块",
   "action.armourers_workshop.block.copy": "复制方块",

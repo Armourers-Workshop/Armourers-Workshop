@@ -369,7 +369,6 @@
   "item.armourers_workshop.rollover.colour": "§6색상:§r %s",
   "item.armourers_workshop.rollover.effectRadius": "§6효과 범위:§r %d",
   "item.armourers_workshop.rollover.empty": "§6비었음.",
-  "item.armourers_workshop.rollover.hasSkin": "§6Armourer's Workshop(아머러스 워크샵) 스킨이 합성되었습니다.",
   "item.armourers_workshop.rollover.intensity": "§6강도:§r %s",
   "item.armourers_workshop.rollover.noSettingsSaved": "§c저장된 세팅 없음.",
   "item.armourers_workshop.rollover.nopaint": "§6색 없음.",
@@ -471,8 +470,6 @@
   "skinPartType.armourers_workshop.feet.leftFoot": "왼쪽 발",
   "skinPartType.armourers_workshop.feet.rightFoot": "오른쪽 발",
   "skinPartType.armourers_workshop.head.base": "기반",
-  "skinPartType.armourers_workshop.legs.leftLeg": "왼쪽 다리",
-  "skinPartType.armourers_workshop.legs.rightLeg": "오른쪽 다리",
   "skinPartType.armourers_workshop.legs.skirt": "치마",
   "skinPartType.armourers_workshop.trident.base": "삼지창 +3",
   "skinPartType.armourers_workshop.wings.leftWing": "왼쪽 날개",
@@ -501,14 +498,5 @@
   "skin_search_column.armourers_workshop.skin_type": "스킨 이름",
   "sounds.armourers_workshop.burn": "태닝 도구",
   "sounds.armourers_workshop.dodge": "미백 도구",
-  "sounds.armourers_workshop.picker": "색상 선택기",
-  "inventory.armourers_workshop.toolOptions.changeBrightness": "밝기 변경",
-  "inventory.armourers_workshop.toolOptions.changeHue": "색조 변경",
-  "inventory.armourers_workshop.toolOptions.changePaintType": "채색 유형 변경",
-  "inventory.armourers_workshop.toolOptions.changeSaturation": "채도 변경",
-  "inventory.armourers_workshop.toolOptions.effectRadius": "효과 반경",
-  "inventory.armourers_workshop.toolOptions.fullBlockMode": "전체 블럭 채색 모드",
-  "inventory.armourers_workshop.toolOptions.intensity": "강도",
-  "inventory.armourers_workshop.toolOptions.planeRestrict": "기본 블록 한정",
-  "inventory.armourers_workshop.toolOptions.radius": "넓이"
+  "sounds.armourers_workshop.picker": "색상 선택기"
 }
