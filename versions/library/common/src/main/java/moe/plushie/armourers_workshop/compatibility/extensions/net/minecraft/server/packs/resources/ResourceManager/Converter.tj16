@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.se
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractPackResources;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleReloadableResourceManager;
@@ -14,6 +15,10 @@ import manifold.ext.rt.api.This;
 public class Converter {
 
     public static ResourceManager asBundleManager(@This ResourceManager resourceManager) {
+        // the dedicated server does not support list packs.
+        if (EnvironmentManager.isDedicatedServer()) {
+            return resourceManager;
+        }
         SimpleReloadableResourceManager resourceManager1 = new SimpleReloadableResourceManager(PackType.SERVER_DATA);
         resourceManager.listPacks().forEach(it -> {
             // bundle data only contain data pack on mods.
