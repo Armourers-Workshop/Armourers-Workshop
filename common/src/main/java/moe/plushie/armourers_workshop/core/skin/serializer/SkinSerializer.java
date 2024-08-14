@@ -33,10 +33,10 @@ public class SkinSerializer {
     }
 
     public static void writeToStream(Skin skin, DataOutputStream stream, int fileVersion) throws IOException {
-        for (var impl : SERIALIZERS) {
-            if (impl.isSupportedVersion(fileVersion)) {
-                stream.writeInt(impl.getSupportedVersion());
-                impl.writeToStream(skin, IOutputStream.of(stream), fileVersion);
+        for (var serializer : SERIALIZERS) {
+            if (serializer.isSupportedVersion(fileVersion)) {
+                stream.writeInt(serializer.getSupportedVersion());
+                serializer.writeToStream(skin, IOutputStream.of(stream), fileVersion);
                 return;
             }
         }
@@ -45,9 +45,9 @@ public class SkinSerializer {
 
     public static Skin readSkinFromStream(DataInputStream stream) throws IOException, NewerFileVersionException, InvalidCubeTypeException {
         int fileVersion = stream.readInt();
-        for (var impl : SERIALIZERS) {
-            if (impl.isSupportedVersion(fileVersion)) {
-                return impl.readFromStream(IInputStream.of(stream), fileVersion);
+        for (var serializer : SERIALIZERS) {
+            if (serializer.isSupportedVersion(fileVersion)) {
+                return serializer.readFromStream(IInputStream.of(stream), fileVersion);
             }
         }
         throw new UnsupportedFileFormatException();

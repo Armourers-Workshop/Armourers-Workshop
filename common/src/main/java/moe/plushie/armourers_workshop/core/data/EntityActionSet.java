@@ -2,12 +2,12 @@ package moe.plushie.armourers_workshop.core.data;
 
 
 import joptsimple.internal.Strings;
+import moe.plushie.armourers_workshop.core.data.transform.SkinWingsTransform;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import org.jetbrains.annotations.Nullable;
 
@@ -135,11 +135,7 @@ public class EntityActionSet {
     }
 
     private boolean isFlying(LivingEntity entity) {
-        // ii
-        if (entity instanceof Player player && player.getAbilities().flying) {
-            return true;
-        }
-        return entity.isFallFlying();
+        return SkinWingsTransform.isFlying(entity);
     }
 
     private boolean isBoat(Entity entity) {

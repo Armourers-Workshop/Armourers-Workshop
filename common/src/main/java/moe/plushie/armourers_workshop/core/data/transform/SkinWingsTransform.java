@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 public class SkinWingsTransform implements ISkinTransform {
@@ -26,12 +27,20 @@ public class SkinWingsTransform implements ISkinTransform {
     public SkinWingsTransform(ISkinPartType partType, SkinProperties properties, SkinMarker marker) {
         this.marker = marker;
         this.properties = properties;
-        this.isMirror = ((ICanRotation) partType).isMirror();
+        this.isMirror = partType instanceof ICanRotation rotatableType && rotatableType.isMirror();
+    }
+
+    public static boolean isFlying(LivingEntity entity) {
+        // the player maybe is in creative flying.
+        if (entity instanceof Player player && player.getAbilities().flying) {
+            return true;
+        }
+        return entity.isFallFlying();
     }
 
     public void setup(@Nullable Entity entity, float animationTicks) {
         this.animationTicks = animationTicks;
-        this.isFallFlying = entity instanceof LivingEntity livingEntity && livingEntity.isFallFlying();
+        this.isFallFlying = entity instanceof LivingEntity livingEntity && isFlying(livingEntity);
     }
 
     @Override
