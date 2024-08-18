@@ -66,15 +66,20 @@ public final class TranslateUtils {
         }
 
         public static MutableComponent of(ISkinPartType skinPartType) {
+            return of("skinPartType.armourers_workshop", skinPartType);
+        }
+
+        public static MutableComponent of(String prefix, ISkinPartType skinPartType) {
             String path = skinPartType.getRegistryName().getPath();
-            String key = "skinPartType.armourers_workshop." + path;
+            String key = prefix + "." + path;
             MutableComponent text = title(key);
             if (!text.getString().equals(key)) {
                 return text;
             }
             ModLog.debug("missing translation text for key {}", key);
-            return title("skinPartType.armourers_workshop.all.base");
+            return title(prefix + ".part.base");
         }
+
 
         public static MutableComponent of(ISkinPaintType paintType) {
             String path = paintType.getRegistryName().getPath();

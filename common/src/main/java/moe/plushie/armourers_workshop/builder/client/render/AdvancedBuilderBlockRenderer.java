@@ -68,8 +68,8 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
             .put(SkinDocumentTypes.ITEM_BOW, new AdvancedItemGuideRenderer())
             .put(SkinDocumentTypes.ITEM_TRIDENT, new AdvancedItemGuideRenderer())
 
-            .put(SkinDocumentTypes.ITEM_BOAT, new AdvancedBoatGuideRenderer())
-            .put(SkinDocumentTypes.ITEM_MINECART, new AdvancedMinecartGuideRenderer())
+            .put(SkinDocumentTypes.ENTITY_BOAT, new AdvancedBoatGuideRenderer())
+            .put(SkinDocumentTypes.ENTITY_MINECART, new AdvancedMinecartGuideRenderer())
 
             .put(SkinDocumentTypes.ENTITY_HORSE, new AdvancedHorseGuideRenderer())
 

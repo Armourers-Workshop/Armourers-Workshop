@@ -385,7 +385,7 @@ public class ClientWardrobeHandler {
             return true;
         }
         var skinType = embeddedStack.getDescriptor().getType();
-        if (skinType == SkinTypes.ITEM_BOAT || skinType == SkinTypes.ITEM_FISHING || skinType == SkinTypes.HORSE) {
+        if (skinType == SkinTypes.BOAT || skinType == SkinTypes.ITEM_FISHING || skinType == SkinTypes.HORSE) {
             return true;
         }
         // for the tool type skin, don't render in the box.

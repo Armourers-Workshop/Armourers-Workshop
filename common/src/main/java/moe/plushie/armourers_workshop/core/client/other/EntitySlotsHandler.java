@@ -231,7 +231,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
             return SkinDescriptor.EMPTY;
         }
         var target = SkinDescriptor.of(itemStack);
-        if (target.getType() == SkinTypes.ITEM_BOAT || target.getType() == SkinTypes.ITEM_FISHING || target.getType() == SkinTypes.HORSE) {
+        if (target.getType() == SkinTypes.BOAT || target.getType() == SkinTypes.ITEM_FISHING || target.getType() == SkinTypes.HORSE) {
             return SkinDescriptor.EMPTY;
         }
         return target;

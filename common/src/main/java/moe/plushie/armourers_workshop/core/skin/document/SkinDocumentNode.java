@@ -141,7 +141,7 @@ public class SkinDocumentNode {
         var lhs = TranslateUtils.title("documentType.armourers_workshop.node.root");
         var rhs = TranslateUtils.title("documentType.armourers_workshop.node." + id);
         if (type != SkinPartTypes.ADVANCED) {
-            rhs = TranslateUtils.Name.of(type);
+            rhs = TranslateUtils.Name.of("documentType.armourers_workshop.node", type);
         }
         cachedTypeName = TranslateUtils.title("documentType.armourers_workshop.node", lhs, rhs).getString();
         return cachedTypeName;

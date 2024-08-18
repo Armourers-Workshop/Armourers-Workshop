@@ -17,8 +17,8 @@ public class SkinDocumentTypes {
 
     public static final SkinDocumentType GENERAL_ARMOR_HEAD = register("general", SkinTypes.ARMOR_HEAD);
     public static final SkinDocumentType GENERAL_ARMOR_CHEST = register("general", SkinTypes.ARMOR_CHEST);
-    public static final SkinDocumentType GENERAL_ARMOR_FEET = register("general", SkinTypes.ARMOR_FEET);
     public static final SkinDocumentType GENERAL_ARMOR_LEGS = register("general", SkinTypes.ARMOR_LEGS);
+    public static final SkinDocumentType GENERAL_ARMOR_FEET = register("general", SkinTypes.ARMOR_FEET);
     public static final SkinDocumentType GENERAL_ARMOR_WINGS = register("general", SkinTypes.ARMOR_WINGS);
     public static final SkinDocumentType GENERAL_ARMOR_OUTFIT = register("general", SkinTypes.OUTFIT);
 
@@ -41,10 +41,10 @@ public class SkinDocumentTypes {
     public static final SkinDocumentType ITEM_SHOVEL = register("item", SkinTypes.ITEM_SHOVEL);
     public static final SkinDocumentType ITEM_HOE = register("item", SkinTypes.ITEM_HOE);
     public static final SkinDocumentType ITEM_FISHING = register("item", SkinTypes.ITEM_FISHING);
-    public static final SkinDocumentType ITEM_BOAT = register("item", SkinTypes.ITEM_BOAT);
-    public static final SkinDocumentType ITEM_MINECART = register("item", SkinTypes.ITEM_MINECART);
 
     public static final SkinDocumentType ENTITY_HORSE = register("entity", SkinTypes.HORSE);
+    public static final SkinDocumentType ENTITY_BOAT = register("entity", SkinTypes.BOAT);
+    public static final SkinDocumentType ENTITY_MINECART = register("entity", SkinTypes.MINECART);
 
     public static final SkinDocumentType BLOCK = register("block", SkinTypes.BLOCK);
 

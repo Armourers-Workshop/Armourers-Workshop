@@ -38,14 +38,15 @@ public final class SkinTypes {
     public static final ISkinType ITEM_SHOVEL = registerItem("shovel", 12, ItemOverrideType.SHOVEL, SkinPartTypes.ITEM_SHOVEL);
     public static final ISkinType ITEM_HOE = registerItem("hoe", 13, ItemOverrideType.HOE, SkinPartTypes.ITEM_HOE);
 
-    public static final ISkinType ITEM_BOAT = registerItem("boat", 19, ItemOverrideType.BOAT, SkinPartTypes.BOAT_BODY, SkinPartTypes.BOAT_LEFT_PADDLE, SkinPartTypes.BOAT_RIGHT_PADDLE);
     public static final ISkinType ITEM_FISHING = registerItem("fishing", 20, ItemOverrideType.FISHING_ROD, SkinPartTypes.ITEM_FISHING_ROD, SkinPartTypes.ITEM_FISHING_HOOK);
-    public static final ISkinType ITEM_MINECART = registerItem("minecart", 21, ItemOverrideType.MINECART, SkinPartTypes.MINECART_BODY);
 
     public static final ISkinType ITEM = register("item", 14, SkinPartTypes.ITEM);
     public static final ISkinType BLOCK = register("block", 15, SkinPartTypes.BLOCK, SkinPartTypes.BLOCK_MULTI);
 
     public static final ISkinType HORSE = registerArmor("horse", 18, null, SkinPartTypes.HORSE_HEAD, SkinPartTypes.HORSE_NECK, SkinPartTypes.HORSE_CHEST, SkinPartTypes.HORSE_RIGHT_FRONT_THIGH, SkinPartTypes.HORSE_LEFT_FRONT_THIGH, SkinPartTypes.HORSE_RIGHT_FRONT_LEG, SkinPartTypes.HORSE_LEFT_FRONT_LEG, SkinPartTypes.HORSE_RIGHT_HIND_THIGH, SkinPartTypes.HORSE_LEFT_HIND_THIGH, SkinPartTypes.HORSE_RIGHT_HIND_LEG, SkinPartTypes.HORSE_LEFT_HIND_LEG, SkinPartTypes.HORSE_TAIL);
+    public static final ISkinType BOAT = registerItem("boat", 19, ItemOverrideType.BOAT, SkinPartTypes.BOAT_BODY, SkinPartTypes.BOAT_LEFT_PADDLE, SkinPartTypes.BOAT_RIGHT_PADDLE);
+    public static final ISkinType MINECART = registerItem("minecart", 21, ItemOverrideType.MINECART, SkinPartTypes.MINECART_BODY);
+
     public static final ISkinType ADVANCED = register("part", 16, SkinPartTypes.ADVANCED);
 
     public static ISkinType byName(String registryName) {
