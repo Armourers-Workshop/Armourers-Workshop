@@ -1,9 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.core.data;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
-import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.core.client.texture.SmartResourceManager;
 import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -18,23 +16,27 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.Set;
 
 @Available("[1.21, )")
-public abstract class AbstractPackResources implements PackResources {
+public class AbstractPackResources implements PackResources {
 
-    private final PackLocationInfo info;
+    private final PackLocationInfo location;
+    private final SmartResourceManager resourceManager;
 
-    protected AbstractPackResources(String id) {
-        this.info = new PackLocationInfo(id, Component.empty(), PackSource.DEFAULT, Optional.empty());
+    public AbstractPackResources(SmartResourceManager resourceManager, PackType packType) {
+        this.location = new PackLocationInfo(resourceManager.getId(), Component.empty(), PackSource.DEFAULT, Optional.empty());
+        this.resourceManager = resourceManager;
     }
 
     public static boolean isModResources(PackResources resources) {
         return !resources.packId().startsWith("file/");
     }
 
-    public abstract Supplier<InputStream> getResource(PackType packType, IResourceLocation location);
-
+    @Override
+    public Set<String> getNamespaces(PackType packType) {
+        return resourceManager.getNamespaces(packType);
+    }
 
     @Nullable
     @Override
@@ -45,7 +47,7 @@ public abstract class AbstractPackResources implements PackResources {
     @Nullable
     @Override
     public final IoSupplier<InputStream> getResource(PackType packType, ResourceLocation location) {
-        var supplier = getResource(packType, OpenResourceLocation.create(location));
+        var supplier = resourceManager.getResource(packType, OpenResourceLocation.create(location));
         if (supplier != null) {
             return supplier::get;
         }
@@ -65,6 +67,11 @@ public abstract class AbstractPackResources implements PackResources {
 
     @Override
     public final PackLocationInfo location() {
-        return info;
+        return location;
+    }
+
+    @Override
+    public void close() {
+        // reload or quit.
     }
 }

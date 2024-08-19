@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.core.data;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.core.client.texture.SmartResourceManager;
 import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.FilePackResources;
@@ -16,23 +16,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 @Available("[1.19, 1.20)")
-public abstract class AbstractPackResources implements PackResources {
+public class AbstractPackResources implements PackResources {
 
     private final String id;
+    private final SmartResourceManager resourceManager;
 
-    protected AbstractPackResources(String id) {
-        this.id = id;
+    public AbstractPackResources(SmartResourceManager resourceManager, PackType packType) {
+        this.id = resourceManager.getId();
+        this.resourceManager = resourceManager;
     }
 
     public static boolean isModResources(PackResources resources) {
         return !(resources instanceof FilePackResources || resources instanceof FolderPackResources);
     }
 
-    public abstract Supplier<InputStream> getResource(PackType packType, IResourceLocation location);
+    @Override
+    public Set<String> getNamespaces(PackType packType) {
+        return resourceManager.getNamespaces(packType);
+    }
 
     @Override
     public final InputStream getRootResource(String path) throws IOException {
@@ -41,13 +46,12 @@ public abstract class AbstractPackResources implements PackResources {
 
     @Override
     public final InputStream getResource(PackType packType, ResourceLocation location) throws IOException {
-        var supplier = getResource(packType, OpenResourceLocation.create(location));
+        var supplier = resourceManager.getResource(packType, OpenResourceLocation.create(location));
         if (supplier != null) {
             return supplier.get();
         }
         throw new FileNotFoundException(location.getPath());
     }
-
 
     @Override
     public Collection<ResourceLocation> getResources(PackType packType, String namespace, String path, Predicate<ResourceLocation> predicate) {
@@ -56,7 +60,7 @@ public abstract class AbstractPackResources implements PackResources {
 
     @Override
     public boolean hasResource(PackType packType, ResourceLocation location) {
-        var supplier = getResource(packType, OpenResourceLocation.create(location));
+        var supplier = resourceManager.getResource(packType, OpenResourceLocation.create(location));
         return supplier != null;
     }
 
@@ -69,5 +73,10 @@ public abstract class AbstractPackResources implements PackResources {
     @Override
     public final String getName() {
         return id;
+    }
+
+    @Override
+    public void close() {
+        // reload or quit.
     }
 }

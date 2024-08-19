@@ -15,15 +15,16 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class SmartResourceManager extends AbstractPackResources {
+public class SmartResourceManager {
 
     private static final SmartResourceManager INSTANCE = new SmartResourceManager();
 
-    private final Set<String> namespaces = Sets.newHashSet(ModConstants.MOD_ID);
-    private final HashMap<IResourceLocation, ByteBuffer> resources = new HashMap<>();
+    protected final String id;
+    protected final Set<String> namespaces = Sets.newHashSet(ModConstants.MOD_ID);
+    protected final HashMap<IResourceLocation, ByteBuffer> resources = new HashMap<>();
 
     protected SmartResourceManager() {
-        super(String.format("dynamic/%s", ModConstants.MOD_ID));
+        this.id = String.format("dynamic/%s", ModConstants.MOD_ID);
     }
 
     public static SmartResourceManager getInstance() {
@@ -40,12 +41,6 @@ public class SmartResourceManager extends AbstractPackResources {
         resources.remove(location);
     }
 
-    @Override
-    public Set<String> getNamespaces(PackType packType) {
-        return namespaces;
-    }
-
-    @Override
     public Supplier<InputStream> getResource(PackType packType, IResourceLocation location) {
         var buf = resources.get(location);
         if (buf != null) {
@@ -54,8 +49,15 @@ public class SmartResourceManager extends AbstractPackResources {
         return null;
     }
 
-    @Override
-    public void close() {
-        // reload or quit.
+    public AbstractPackResources getResources(PackType packType) {
+        return new AbstractPackResources(this, packType);
+    }
+
+    public Set<String> getNamespaces(PackType packType) {
+        return namespaces;
+    }
+
+    public String getId() {
+        return id;
     }
 }
