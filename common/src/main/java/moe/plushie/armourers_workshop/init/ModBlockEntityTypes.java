@@ -34,7 +34,7 @@ public final class ModBlockEntityTypes {
     public static final IRegistryHolder<IBlockEntityType<ArmourerBlockEntity>> ARMOURER = create(ArmourerBlockEntity::new).of(ModBlocks.ARMOURER).bind(() -> ArmourerBlockRenderer::new).build(ModConstants.BLOCK_ARMOURER);
     public static final IRegistryHolder<IBlockEntityType<AdvancedBuilderBlockEntity>> ADVANCED_SKIN_BUILDER = create(AdvancedBuilderBlockEntity::new).of(ModBlocks.ADVANCED_SKIN_BUILDER).bind(() -> AdvancedBuilderBlockRenderer::new).build(ModConstants.BLOCK_ADVANCED_SKIN_BUILDER);
 
-    public static final IRegistryHolder<IBlockEntityType<SkinLibraryBlockEntity>> SKIN_LIBRARY = create(SkinLibraryBlockEntity::new).of(ModBlocks.SKIN_LIBRARY).build(ModConstants.BLOCK_SKIN_LIBRARY);
+    public static final IRegistryHolder<IBlockEntityType<SkinLibraryBlockEntity>> SKIN_LIBRARY = create(SkinLibraryBlockEntity::new).of(ModBlocks.SKIN_LIBRARY).of(ModBlocks.SKIN_LIBRARY_CREATIVE).build(ModConstants.BLOCK_SKIN_LIBRARY);
     public static final IRegistryHolder<IBlockEntityType<GlobalSkinLibraryBlockEntity>> SKIN_LIBRARY_GLOBAL = create(GlobalSkinLibraryBlockEntity::new).of(ModBlocks.SKIN_LIBRARY_GLOBAL).bind(() -> GlobalSkinLibraryBlockRenderer::new).build(ModConstants.BLOCK_SKIN_LIBRARY_GLOBAL);
 
     public static final IRegistryHolder<IBlockEntityType<SkinnableBlockEntity>> SKINNABLE = create(SkinnableBlockEntity::new).of(ModBlocks.SKINNABLE).bind(() -> SkinnableBlockRenderer::new).build(ModConstants.BLOCK_SKINNABLE);
