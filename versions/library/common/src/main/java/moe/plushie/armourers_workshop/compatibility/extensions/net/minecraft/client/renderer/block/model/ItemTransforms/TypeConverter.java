@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.cl
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
+import moe.plushie.armourers_workshop.utils.EnumMap;
 import net.minecraft.world.item.ItemDisplayContext;
 
 import manifold.ext.rt.api.Extension;
@@ -11,14 +12,13 @@ import manifold.ext.rt.api.ThisClass;
 @Available("[1.20, )")
 public class TypeConverter {
 
-    private static final AbstractItemTransformType[] TYPES1 = AbstractItemTransformType.values();
-    private static final ItemDisplayContext[] TYPES2 = ItemDisplayContext.values();
+    private static final EnumMap<AbstractItemTransformType, ItemDisplayContext> MAPPER = EnumMap.byName(AbstractItemTransformType.NONE, ItemDisplayContext.NONE);
 
     public static ItemDisplayContext ofType(@ThisClass Class<?> clazz, AbstractItemTransformType transformType) {
-        return TYPES2[transformType.ordinal()];
+        return MAPPER.getValue(transformType);
     }
 
     public static AbstractItemTransformType ofType(@ThisClass Class<?> clazz, ItemDisplayContext transformType) {
-        return TYPES1[transformType.ordinal()];
+        return MAPPER.getKey(transformType);
     }
 }
