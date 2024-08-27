@@ -2,11 +2,11 @@ package moe.plushie.armourers_workshop.core.crafting.recipe;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinOptions;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-
 
 public abstract class SkinningRecipe {
 
@@ -17,12 +17,12 @@ public abstract class SkinningRecipe {
     }
 
     public void apply(Container inventory) {
-        ItemStack skinStack = ItemStack.EMPTY;
-        ItemStack targetStack = ItemStack.EMPTY;
+        var skinStack = ItemStack.EMPTY;
+        var targetStack = ItemStack.EMPTY;
 
         int size = inventory.getContainerSize();
-        for (int i = 0; i < size; ++i) {
-            ItemStack itemStack = inventory.getItem(i);
+        for (int i = 1; i < size; ++i) { // 0 is output
+            var itemStack = inventory.getItem(i);
             if (itemStack.isEmpty()) {
                 continue;
             }
@@ -44,13 +44,13 @@ public abstract class SkinningRecipe {
         shrink(targetStack, skinStack);
     }
 
-    public ItemStack test(Container inventory) {
-        ItemStack skinStack = ItemStack.EMPTY;
-        ItemStack targetStack = ItemStack.EMPTY;
+    public ItemStack test(Container inventory, SkinOptions options) {
+        var skinStack = ItemStack.EMPTY;
+        var targetStack = ItemStack.EMPTY;
 
         int size = inventory.getContainerSize();
-        for (int i = 0; i < size; ++i) {
-            ItemStack itemStack = inventory.getItem(i);
+        for (int i = 1; i < size; ++i) { // 0 is output
+            var itemStack = inventory.getItem(i);
             if (itemStack.isEmpty()) {
                 continue;
             }
@@ -69,7 +69,7 @@ public abstract class SkinningRecipe {
             return ItemStack.EMPTY;
         }
 
-        return build(targetStack, skinStack);
+        return build(targetStack, skinStack, options);
     }
 
     protected void shrink(ItemStack targetStack, ItemStack skinStack) {
@@ -77,10 +77,11 @@ public abstract class SkinningRecipe {
         skinStack.shrink(1);
     }
 
-    protected ItemStack build(ItemStack targetStack, ItemStack skinStack) {
-        ItemStack newItemStack = targetStack.copy();
+    protected ItemStack build(ItemStack targetStack, ItemStack skinStack, SkinOptions options) {
+        var skin = skinStack.getOrDefault(ModDataComponents.SKIN.get(), SkinDescriptor.EMPTY);
+        var newItemStack = targetStack.copy();
         newItemStack.setCount(1);
-        newItemStack.set(ModDataComponents.SKIN.get(), skinStack.get(ModDataComponents.SKIN.get()));
+        newItemStack.set(ModDataComponents.SKIN.get(), new SkinDescriptor(skin.getIdentifier(), skin.getType(), options, skin.getColorScheme()));
         return newItemStack;
     }
 

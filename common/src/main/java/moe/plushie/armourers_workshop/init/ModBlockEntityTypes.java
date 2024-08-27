@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.builder.client.render.SkinCubeBlockRendere
 import moe.plushie.armourers_workshop.core.blockentity.DyeTableBlockEntity;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
+import moe.plushie.armourers_workshop.core.blockentity.SkinningTableBlockEntity;
 import moe.plushie.armourers_workshop.core.client.render.HologramProjectorBlockRenderer;
 import moe.plushie.armourers_workshop.core.client.render.SkinnableBlockRenderer;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
@@ -29,6 +30,7 @@ public final class ModBlockEntityTypes {
     public static final IRegistryHolder<IBlockEntityType<HologramProjectorBlockEntity>> HOLOGRAM_PROJECTOR = create(HologramProjectorBlockEntity::new).of(ModBlocks.HOLOGRAM_PROJECTOR).bind(() -> HologramProjectorBlockRenderer::new).build(ModConstants.BLOCK_HOLOGRAM_PROJECTOR);
     public static final IRegistryHolder<IBlockEntityType<OutfitMakerBlockEntity>> OUTFIT_MAKER = create(OutfitMakerBlockEntity::new).of(ModBlocks.OUTFIT_MAKER).build(ModConstants.BLOCK_OUTFIT_MAKER);
     public static final IRegistryHolder<IBlockEntityType<DyeTableBlockEntity>> DYE_TABLE = create(DyeTableBlockEntity::new).of(ModBlocks.DYE_TABLE).build(ModConstants.BLOCK_DYE_TABLE);
+    public static final IRegistryHolder<IBlockEntityType<SkinningTableBlockEntity>> SKINNING_TABLE = create(SkinningTableBlockEntity::new).of(ModBlocks.SKINNING_TABLE).build(ModConstants.BLOCK_SKINNING_TABLE);
 
     public static final IRegistryHolder<IBlockEntityType<ColorMixerBlockEntity>> COLOR_MIXER = create(ColorMixerBlockEntity::new).of(ModBlocks.COLOR_MIXER).build(ModConstants.BLOCK_COLOR_MIXER);
     public static final IRegistryHolder<IBlockEntityType<ArmourerBlockEntity>> ARMOURER = create(ArmourerBlockEntity::new).of(ModBlocks.ARMOURER).bind(() -> ArmourerBlockRenderer::new).build(ModConstants.BLOCK_ARMOURER);

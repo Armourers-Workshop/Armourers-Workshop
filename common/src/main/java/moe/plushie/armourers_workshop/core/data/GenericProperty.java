@@ -16,7 +16,6 @@ public class GenericProperty<S, T> implements IGenericProperty<S, T> {
     protected Function<S, T> getter;
     protected BiConsumer<S, T> setter;
 
-
     public CustomPacket buildPacket(S source, T value) {
         return owner.encodePacket(this, value, source);
     }

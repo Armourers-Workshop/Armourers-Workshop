@@ -10,8 +10,8 @@ public class SkinningItemRecipe extends SkinningRecipe {
 
     public SkinningItemRecipe(ISkinType skinType) {
         super(skinType);
-        if (skinType instanceof ISkinToolType) {
-            this.toolType = (ISkinToolType) skinType;
+        if (skinType instanceof ISkinToolType toolType) {
+            this.toolType = toolType;
         }
     }
 

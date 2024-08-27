@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.menu;
 
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
+import moe.plushie.armourers_workshop.core.blockentity.SkinningTableBlockEntity;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
@@ -11,23 +11,17 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-public class SkinningTableMenu extends AbstractBlockMenu {
+public class SkinningTableMenu extends AbstractBlockEntityMenu<SkinningTableBlockEntity> {
 
-    private final Container craftingInventory = new SimpleContainer(2);
-    private final Container craftingResultInventory = new SimpleContainer(1);
+    private final Container inventory;
 
     public SkinningTableMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
         super(menuType, block, containerId, access);
+        this.inventory = blockEntity.getInventory();
         this.addPlayerSlots(playerInventory, 8, 94);
-        this.addInputSlot(craftingInventory, 0, 37, 22);
-        this.addInputSlot(craftingInventory, 1, 37, 58);
-        this.addOutputSlot(craftingResultInventory, 0, 119, 40);
-    }
-
-    @Override
-    public void removed(Player player) {
-        super.removed(player);
-        this.clearContainer(player, craftingInventory);
+        this.addInputSlot(inventory, 1, 37, 22);
+        this.addInputSlot(inventory, 2, 37, 58);
+        this.addOutputSlot(inventory, 0, 119, 40);
     }
 
     @Override
@@ -56,7 +50,7 @@ public class SkinningTableMenu extends AbstractBlockMenu {
             @Override
             public void set(ItemStack itemStack) {
                 if (itemStack.isEmpty()) {
-                    SkinningRecipes.onCraft(craftingInventory);
+                    SkinningRecipes.onCraft(inventory, blockEntity.getOptions());
                     super.set(itemStack);
                     onCraftSlotChanges();
                 }
@@ -64,7 +58,7 @@ public class SkinningTableMenu extends AbstractBlockMenu {
         });
     }
 
-    private void onCraftSlotChanges() {
-        craftingResultInventory.setItem(0, SkinningRecipes.getRecipeOutput(craftingInventory));
+    public void onCraftSlotChanges() {
+        inventory.setItem(0, SkinningRecipes.getRecipeOutput(inventory, blockEntity.getOptions()));
     }
 }

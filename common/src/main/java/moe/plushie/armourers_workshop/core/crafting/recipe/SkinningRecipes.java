@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.core.crafting.recipe;
 
+import moe.plushie.armourers_workshop.core.skin.SkinOptions;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
@@ -40,9 +42,9 @@ public class SkinningRecipes {
         recipes.add(new SkinningHorseArmorRecipe(SkinTypes.HORSE));
     }
 
-    public static ItemStack getRecipeOutput(Container inventory) {
-        for (SkinningRecipe recipe : recipes) {
-            ItemStack itemStack = recipe.test(inventory);
+    public static ItemStack getRecipeOutput(Container inventory, SkinOptions options) {
+        for (var recipe : recipes) {
+            var itemStack = recipe.test(inventory, options);
             if (!itemStack.isEmpty()) {
                 return itemStack;
             }
@@ -50,9 +52,9 @@ public class SkinningRecipes {
         return ItemStack.EMPTY;
     }
 
-    public static void onCraft(Container inventory) {
-        for (SkinningRecipe recipe : recipes) {
-            ItemStack itemStack = recipe.test(inventory);
+    public static void onCraft(Container inventory, SkinOptions options) {
+        for (var recipe : recipes) {
+            var itemStack = recipe.test(inventory, options);
             if (!itemStack.isEmpty()) {
                 recipe.apply(inventory);
                 return;

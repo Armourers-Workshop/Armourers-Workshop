@@ -24,8 +24,16 @@ public class SkinOptions {
 
     public CompoundTag serializeNBT() {
         var tag = new CompoundTag();
+        tag.putOptionalInt(Constants.Key.OPTIONS_TOOLTIP_FLAGS, tooltipFlags, 0);
         tag.putOptionalInt(Constants.Key.OPTIONS_EMBEDDED_ITEM_RENDERER, enableEmbeddedItemRenderer, 0);
         return tag;
+    }
+
+    public SkinOptions copy() {
+        var options = new SkinOptions();
+        options.tooltipFlags = tooltipFlags;
+        options.enableEmbeddedItemRenderer = enableEmbeddedItemRenderer;
+        return options;
     }
 
     @Override
@@ -40,12 +48,28 @@ public class SkinOptions {
         return Objects.hash(tooltipFlags, enableEmbeddedItemRenderer);
     }
 
+    public void set(TooltipFlags flags, boolean newValue) {
+        if (newValue) {
+            tooltipFlags &= ~flags.flags;
+        } else {
+            tooltipFlags |= flags.flags;
+        }
+    }
+
+    public boolean get(TooltipFlags flags) {
+        return (tooltipFlags & flags.flags) == 0;
+    }
+
     public boolean contains(TooltipFlags flags) {
         // the server disabled this feature.
         if ((tooltipFlags & flags.flags) != 0) {
             return false;
         }
         return flags.supplier.getAsBoolean();
+    }
+
+    public void setEnableEmbeddedItemRenderer(int enableEmbeddedItemRenderer) {
+        this.enableEmbeddedItemRenderer = enableEmbeddedItemRenderer;
     }
 
     public int getEmbeddedItemRenderer() {

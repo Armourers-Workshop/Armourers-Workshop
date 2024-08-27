@@ -16,7 +16,7 @@ public class ModConstants {
     private static final ArrayList<String> BLOCK_ENTITY_TYPES = new ArrayList<>();
 
     public static final String MOD_ID = "armourers_workshop";
-    public static final String MOD_NET_ID = "3.10";
+    public static final String MOD_NET_ID = "3.11";
 
     public static final String ENTITY_MANNEQUIN = entityType("mannequin");
     public static final String ENTITY_SEAT = entityType("seat");
@@ -24,6 +24,7 @@ public class ModConstants {
     public static final String BLOCK_HOLOGRAM_PROJECTOR = blockEntityType("hologram-projector");
     public static final String BLOCK_OUTFIT_MAKER = blockEntityType("outfit-maker");
     public static final String BLOCK_DYE_TABLE = blockEntityType("dye-table");
+    public static final String BLOCK_SKINNING_TABLE = blockEntityType("skinning-table");
 
     public static final String BLOCK_COLOR_MIXER = blockEntityType("colour-mixer");
     public static final String BLOCK_ARMOURER = blockEntityType("armourer");
