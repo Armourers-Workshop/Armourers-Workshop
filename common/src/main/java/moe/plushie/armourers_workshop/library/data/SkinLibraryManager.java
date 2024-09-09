@@ -283,6 +283,12 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
             return version;
         }
 
+        public String getToken() {
+            //var code = ModContext.t2(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+            //return ObjectUtils.md5(code.toString());
+            return null;
+        }
+
         public boolean isReady() {
             return isReady;
         }

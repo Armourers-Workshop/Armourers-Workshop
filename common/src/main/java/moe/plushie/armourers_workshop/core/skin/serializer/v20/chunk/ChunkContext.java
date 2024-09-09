@@ -1,8 +1,12 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk;
 
+import com.google.common.collect.ImmutableList;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileOptions;
+import moe.plushie.armourers_workshop.core.skin.serializer.v20.ChunkSerializer;
+import org.apache.commons.codec.binary.Hex;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -11,23 +15,40 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 public class ChunkContext {
 
-    public byte[] securityKey = null;
+    private static final ImmutableList<ChunkType> SIMPLE_ENCRYPT = new ImmutableList.Builder<ChunkType>()
+            .add(ChunkType.SKIN_PART)
+            .build();
 
-    public boolean enablePartData = true;
+    private boolean enablePartData = true;
+    private boolean enablePreviewData = false;
+    private boolean enableFastEncoder = true;
 
-    public boolean enablePreviewData = false;
+    private byte[] securityKey = null;
+    private List<ChunkType> securityTypes;
 
-    private boolean allowsFastEncoder = true;
+    private final SkinFileOptions options;
 
-    private final int fileVersion;
+    public ChunkContext(SkinFileOptions options) {
+        this.options = options;
+        try {
+            this.setupWithOptions(options);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-    public ChunkContext(int fileVersion) {
-        this.fileVersion = fileVersion;
+    private void setupWithOptions(SkinFileOptions options) throws Exception {
+        // decode security key from options.
+        if (options.getSecurityData() != null && options.getSecurityKey() != null) {
+            securityKey = Hex.decodeHex(options.getSecurityKey());
+            securityTypes = SIMPLE_ENCRYPT;
+        }
     }
 
     public InputStream createInputStream(ByteBuf buf, ChunkFlags flags) throws IOException {
@@ -74,6 +95,14 @@ public class ChunkContext {
         return outputStream;
     }
 
+    public <V, T> ChunkFlags createSerializerFlags(ChunkSerializer<V, T> serializer, V value) {
+        var flags = new ChunkFlags();
+        if (securityTypes != null && securityTypes.contains(serializer.getChunkType())) {
+            flags.add(ChunkFlag.ENCRYPT);
+        }
+        return flags;
+    }
+
     public boolean isEnablePartData() {
         return enablePartData;
     }
@@ -82,15 +111,23 @@ public class ChunkContext {
         return enablePreviewData;
     }
 
-    public void setFastEncoder(boolean allowsFastEncoder) {
-        this.allowsFastEncoder = allowsFastEncoder;
+    public void setFastEncoder(boolean enableFastEncoder) {
+        this.enableFastEncoder = enableFastEncoder;
     }
 
-    public boolean allowsFastEncoder() {
-        return allowsFastEncoder;
+    public boolean isEnableFastEncoder() {
+        return enableFastEncoder;
     }
 
-    public int getVersion() {
-        return fileVersion;
+    public int getFileVersion() {
+        return options.getFileVersion();
+    }
+
+    public String getSecurityData() {
+        return options.getSecurityData();
+    }
+
+    public SkinFileOptions getOptions() {
+        return options;
     }
 }

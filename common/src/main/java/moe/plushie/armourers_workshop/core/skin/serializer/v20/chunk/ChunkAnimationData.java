@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ChunkAnimationData {
 
-    public List<SkinAnimation> readFromStream(IInputStream stream) throws IOException {
+    public static List<SkinAnimation> readFromStream(IInputStream stream) throws IOException {
         var results = new ArrayList<SkinAnimation>();
         var count = stream.readVarInt();
         for (int i = 0; i < count; i++) {
@@ -24,7 +24,7 @@ public class ChunkAnimationData {
         return results;
     }
 
-    public void writeToStream(List<SkinAnimation> animations, IOutputStream stream) throws IOException {
+    public static void writeToStream(List<SkinAnimation> animations, IOutputStream stream) throws IOException {
         stream.writeVarInt(animations.size());
         for (var animation : animations) {
             var section = new Section(animation);
@@ -32,7 +32,7 @@ public class ChunkAnimationData {
         }
     }
 
-    private Section readSectionFromStream(IInputStream stream) throws IOException {
+    private static Section readSectionFromStream(IInputStream stream) throws IOException {
         var id = stream.readString();
         var duration = stream.readFloat();
         var loop = stream.readEnum(SkinAnimationLoop.class);
@@ -41,7 +41,7 @@ public class ChunkAnimationData {
         return section;
     }
 
-    private void writeSectionToStream(Section section, IOutputStream stream) throws IOException {
+    private static void writeSectionToStream(Section section, IOutputStream stream) throws IOException {
         stream.writeString(section.id);
         stream.writeFloat(section.duration);
         stream.writeEnum(section.loop);

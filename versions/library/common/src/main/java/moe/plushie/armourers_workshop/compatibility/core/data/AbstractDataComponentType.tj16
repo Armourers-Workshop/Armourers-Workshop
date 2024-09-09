@@ -23,6 +23,10 @@ public class AbstractDataComponentType<T> implements IDataComponentType<T> {
         return new AbstractDataComponentType<>(name, codec);
     }
 
+    public boolean isProxy() {
+        return false;
+    }
+
     @Override
     public boolean has(ItemStack itemStack) {
         var tag = itemStack.getTag();

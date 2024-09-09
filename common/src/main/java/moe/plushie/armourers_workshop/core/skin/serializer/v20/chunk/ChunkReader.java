@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.ChunkSerializer;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -32,29 +31,28 @@ public class ChunkReader {
             var builder = new EntryBuilder(length);
             readHeader(builder);
             if (chunkFilter != null && !chunkFilter.test(builder.name)) {
-                stream.getInputStream().skipBytes(builder.getBodySize());
+                stream.skipBytes(builder.getBodySize());
                 readFooter(builder);
                 continue;
             }
-            readContent(builder);
+            builder.buffer = stream.readBytes(builder.getBodySize());
             readFooter(builder);
             entries.add(builder.build(stream.getContext()));
         }
     }
 
-    @Nullable
     public <T> T read(ChunkSerializer<T, Void> serializer) throws IOException {
         return read(serializer, null);
     }
 
-    @Nullable
     public <T, C> T read(ChunkSerializer<T, C> serializer, C context) throws IOException {
         var iterator = entries.iterator();
         while (iterator.hasNext()) {
             var entry = iterator.next();
-            if (serializer.canRead(entry.name)) {
+            var decoder = serializer.createDecoder(entry.getName());
+            if (decoder != null) {
                 iterator.remove();
-                return entry.read(serializer, context);
+                return decoder.decode(entry.getInputStream(), context);
             }
         }
         return serializer.getDefaultValue();
@@ -69,12 +67,10 @@ public class ChunkReader {
         var iterator = entries.iterator();
         while (iterator.hasNext()) {
             var entry = iterator.next();
-            if (serializer.canRead(entry.name)) {
+            var decoder = serializer.createDecoder(entry.getName());
+            if (decoder != null) {
                 iterator.remove();
-                var result = entry.read(serializer, context);
-                if (result != null) {
-                    results.add(result);
-                }
+                results.add(decoder.decode(entry.getInputStream(), context));
             }
         }
         return results;
@@ -90,10 +86,6 @@ public class ChunkReader {
     protected void readHeader(EntryBuilder builder) throws IOException {
         builder.name = stream.readString(4);
         builder.flags = ChunkFlags.readFromStream(stream);
-    }
-
-    protected void readContent(EntryBuilder builder) throws IOException {
-        builder.buffer = stream.readBytes(builder.getBodySize());
     }
 
     protected void readFooter(EntryBuilder builder) throws IOException {
@@ -122,13 +114,6 @@ public class ChunkReader {
             this.context = context;
         }
 
-        public <T, C> T read(ChunkSerializer<T, C> serializer, C obj) throws IOException {
-            if (inputStream == null) {
-                inputStream = new ChunkInputStream(new DataInputStream(context.createInputStream(buffer, flags)), context, null);
-            }
-            return serializer.read(inputStream, name, obj);
-        }
-
         @Override
         public void writeToStream(IOutputStream stream) throws IOException {
             stream.writeBytes(buffer);
@@ -147,6 +132,13 @@ public class ChunkReader {
         @Override
         public ChunkFlags getFlags() {
             return flags;
+        }
+
+        public ChunkInputStream getInputStream() throws IOException {
+            if (inputStream == null) {
+                inputStream = new ChunkInputStream(new DataInputStream(context.createInputStream(buffer, flags)), context, null);
+            }
+            return inputStream;
         }
     }
 

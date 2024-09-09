@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileHeader;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileOptions;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.ISkinSerializer;
@@ -59,7 +60,7 @@ public final class SkinSerializerV12 implements ISkinSerializer {
     }
 
     @Override
-    public void writeToStream(Skin skin, IOutputStream stream, int fileVersion) throws IOException {
+    public void writeToStream(Skin skin, IOutputStream stream, SkinFileOptions options) throws IOException {
         // Write skin header.
         stream.writeString(TAG_SKIN_HEADER);
         // Write skin props.
@@ -95,7 +96,8 @@ public final class SkinSerializerV12 implements ISkinSerializer {
     }
 
     @Override
-    public Skin readFromStream(IInputStream stream, int fileVersion) throws IOException, InvalidCubeTypeException {
+    public Skin readFromStream(IInputStream stream, SkinFileOptions options) throws IOException, InvalidCubeTypeException {
+        int fileVersion = options.getFileVersion();
         if (fileVersion > 12) {
             String header = stream.readString();
             if (!header.equals(TAG_SKIN_HEADER)) {
@@ -247,7 +249,8 @@ public final class SkinSerializerV12 implements ISkinSerializer {
     }
 
     @Override
-    public SkinFileHeader readInfoFromStream(IInputStream stream, int fileVersion) throws IOException {
+    public SkinFileHeader readInfoFromStream(IInputStream stream, SkinFileOptions options) throws IOException {
+        int fileVersion = options.getFileVersion();
         if (fileVersion > 12) {
             String header = stream.readString();
             if (!header.equals(TAG_SKIN_HEADER)) {
@@ -338,7 +341,7 @@ public final class SkinSerializerV12 implements ISkinSerializer {
     }
 
     @Override
-    public boolean isSupportedVersion(int fileVersion) {
-        return fileVersion <= FILE_VERSION;
+    public boolean isSupportedVersion(SkinFileOptions options) {
+        return options.getFileVersion() <= FILE_VERSION;
     }
 }

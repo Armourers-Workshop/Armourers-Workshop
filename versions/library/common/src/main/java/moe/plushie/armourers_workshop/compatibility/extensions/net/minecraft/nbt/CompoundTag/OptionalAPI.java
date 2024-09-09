@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.transform.SkinItemTransforms;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinMarker;
-import moe.plushie.armourers_workshop.core.skin.SkinOptions;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
@@ -410,17 +409,17 @@ public class OptionalAPI {
         }
     }
 
-    public static SkinOptions getOptionalSkinOptions(@This CompoundTag tag, String key, SkinOptions defaultValue) {
+    public static SkinDescriptor.Options getOptionalSkinOptions(@This CompoundTag tag, String key, SkinDescriptor.Options defaultValue) {
         if (tag.contains(key, Constants.TagFlags.COMPOUND)) {
             CompoundTag nbt1 = tag.getCompound(key);
             if (!nbt1.isEmpty()) {
-                return new SkinOptions(nbt1);
+                return new SkinDescriptor.Options(nbt1);
             }
         }
         return defaultValue;
     }
 
-    public static void putOptionalSkinOptions(@This CompoundTag tag, String key, SkinOptions value, SkinOptions defaultValue) {
+    public static void putOptionalSkinOptions(@This CompoundTag tag, String key, SkinDescriptor.Options value, SkinDescriptor.Options defaultValue) {
         if (_shouldPutValue(tag, key, value, defaultValue)) {
             tag.put(key, value.serializeNBT());
         }

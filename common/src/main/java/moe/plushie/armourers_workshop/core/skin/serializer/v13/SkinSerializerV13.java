@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeExcepti
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileHeader;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileOptions;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.ISkinSerializer;
@@ -46,7 +47,7 @@ public final class SkinSerializerV13 implements ISkinSerializer {
     }
 
     @Override
-    public void writeToStream(Skin skin, IOutputStream stream, int fileVersion) throws IOException {
+    public void writeToStream(Skin skin, IOutputStream stream, SkinFileOptions options) throws IOException {
         // Write skin header.
         stream.writeString(TAG_SKIN_HEADER);
         // Write skin props.
@@ -82,7 +83,7 @@ public final class SkinSerializerV13 implements ISkinSerializer {
 
 
     @Override
-    public Skin readFromStream(IInputStream stream, int fileVersion) throws IOException, InvalidCubeTypeException {
+    public Skin readFromStream(IInputStream stream, SkinFileOptions options) throws IOException, InvalidCubeTypeException {
         if (!stream.readString().equals(TAG_SKIN_HEADER)) {
             ModLog.error("Error loading skin header.");
         }
@@ -165,7 +166,7 @@ public final class SkinSerializerV13 implements ISkinSerializer {
             if (!stream.readString().equals(TAG_SKIN_PART_HEADER)) {
                 ModLog.error("Error loading skin part header.");
             }
-            SkinPart part = partSerializer.loadSkinPart(stream, fileVersion);
+            var part = partSerializer.loadSkinPart(stream, options.getFileVersion());
             parts.add(part);
             if (!stream.readString().equals(TAG_SKIN_PART_FOOTER)) {
                 ModLog.error("Error loading skin part footer.");
@@ -176,7 +177,7 @@ public final class SkinSerializerV13 implements ISkinSerializer {
             ModLog.error("Error loading skin footer.");
         }
 
-        Skin.Builder builder = new Skin.Builder(skinType);
+        var builder = new Skin.Builder(skinType);
         builder.properties(properties);
         builder.paintData(paintData);
         builder.parts(parts);
@@ -184,7 +185,7 @@ public final class SkinSerializerV13 implements ISkinSerializer {
     }
 
     @Override
-    public SkinFileHeader readInfoFromStream(IInputStream stream, int fileVersion) throws IOException {
+    public SkinFileHeader readInfoFromStream(IInputStream stream, SkinFileOptions options) throws IOException {
         if (!stream.readString().equals(TAG_SKIN_HEADER)) {
             ModLog.error("Error loading skin header.");
         }
@@ -233,7 +234,12 @@ public final class SkinSerializerV13 implements ISkinSerializer {
             skinType = SkinTypes.byName(sb.toString());
             ModLog.info("got failed type " + skinType);
         }
-        return SkinFileHeader.optimized(fileVersion, skinType, properties);
+        return SkinFileHeader.optimized(options.getFileVersion(), skinType, properties);
+    }
+
+    @Override
+    public boolean isSupportedVersion(SkinFileOptions options) {
+        return options.getFileVersion() == FILE_VERSION;
     }
 
     @Override

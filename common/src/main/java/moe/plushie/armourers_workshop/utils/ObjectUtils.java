@@ -2,11 +2,14 @@ package moe.plushie.armourers_workshop.utils;
 
 import moe.plushie.armourers_workshop.api.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.math.IMatrix4f;
+import org.apache.commons.codec.binary.Hex;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -267,6 +270,17 @@ public class ObjectUtils {
 
     public static FloatBuffer createFloatBuffer(int capacity) {
         return createByteBuffer(Float.BYTES * capacity).asFloatBuffer();
+    }
+
+    public static String md5(String value) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] sig = md.digest(value.getBytes(StandardCharsets.UTF_8));
+            return new String(Hex.encodeHex(sig, true));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return value;
+        }
     }
 
     public static <T> int sum(Collection<T> elements, ToIntFunction<T> getter) {

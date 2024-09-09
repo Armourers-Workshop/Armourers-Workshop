@@ -37,13 +37,13 @@ public abstract class SkinFileDataSource implements IDataSource {
     }
 
     public String save(InputStream stream) throws Exception {
-        byte[] bytes = SkinFileUtils.readStreamToByteArray(stream);
-        int hash = Arrays.hashCode(bytes);
-        String identifier = search(hash, bytes);
+        var bytes = SkinFileUtils.readStreamToByteArray(stream);
+        var hash = Arrays.hashCode(bytes);
+        var identifier = search(hash, bytes);
         if (identifier != null) {
             return identifier;
         }
-        var skin = SkinFileStreamUtils.loadSkinFromStream2(new ByteArrayInputStream(bytes));
+        var skin = SkinFileStreamUtils.loadSkinFromStream(new ByteArrayInputStream(bytes));
         identifier = getFreeId();
         update(identifier, skin, hash, bytes);
         return identifier;
@@ -263,14 +263,13 @@ public abstract class SkinFileDataSource implements IDataSource {
             if (!skinFile.isFile()) {
                 return null;
             }
-            byte[] bytes = SkinFileUtils.readFileToByteArray(skinFile);
-            int hash = Arrays.hashCode(bytes);
-            ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
-            Skin skin = SkinFileStreamUtils.loadSkinFromStream2(stream);
+            var bytes = SkinFileUtils.readFileToByteArray(skinFile);
+            var stream = new ByteArrayInputStream(bytes);
+            var skin = SkinFileStreamUtils.loadSkinFromStream(stream);
             if (skin == null) {
                 return null;
             }
-            Node node = new Node(identifier, hash, bytes);
+            var node = new Node(identifier, Arrays.hashCode(bytes), bytes);
             node.save(new ByteArrayInputStream(bytes));
             return node;
         }

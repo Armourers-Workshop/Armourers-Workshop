@@ -30,6 +30,7 @@ public class SkinFileHeader implements ISkinFileHeader {
             result.put(SkinProperty.ALL_CUSTOM_NAME, properties.get(SkinProperty.ALL_CUSTOM_NAME));
             result.put(SkinProperty.ALL_AUTHOR_NAME, properties.get(SkinProperty.ALL_AUTHOR_NAME));
             result.put(SkinProperty.ALL_FLAVOUR_TEXT, properties.get(SkinProperty.ALL_FLAVOUR_TEXT));
+            result.put(SkinProperty.SECURITY_DATA, properties.get(SkinProperty.SECURITY_DATA));
         }
         return of(version, type, properties);
     }

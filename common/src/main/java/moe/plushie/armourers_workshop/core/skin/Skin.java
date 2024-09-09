@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.core.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.core.texture.SkinPreviewData;
@@ -34,7 +33,6 @@ public class Skin implements ISkin {
 
     private Object blobs;
     private HashMap<BlockPos, Rectangle3i> blockBounds;
-
     private int version;
 
     private final SkinPaintData paintData;
@@ -73,16 +71,17 @@ public class Skin implements ISkin {
         var collisionBox = settings.getCollisionBox();
         blockBounds.put(BlockPos.ZERO, Rectangle3i.ZERO);
         if (collisionBox != null) {
-            for (Rectangle3i rect : collisionBox) {
-                int bx = -Math.floorDiv(rect.getMinX(), 16);
-                int by = -Math.floorDiv(rect.getMinY(), 16);
-                int bz = Math.floorDiv(rect.getMinZ(), 16);
-                int tx = Math.floorMod(rect.getMinX(), 16) - 8;
-                int ty = Math.floorMod(rect.getMinY(), 16) - 8;
-                int tz = Math.floorMod(rect.getMinZ(), 16) - 8;
-                int tw = rect.getWidth();
-                int th = rect.getHeight();
-                int td = rect.getDepth();
+            for (var rect : collisionBox) {
+                var rect1 = new Rectangle3i(rect);
+                int bx = -Math.floorDiv(rect1.getMinX(), 16);
+                int by = -Math.floorDiv(rect1.getMinY(), 16);
+                int bz = Math.floorDiv(rect1.getMinZ(), 16);
+                int tx = Math.floorMod(rect1.getMinX(), 16) - 8;
+                int ty = Math.floorMod(rect1.getMinY(), 16) - 8;
+                int tz = Math.floorMod(rect1.getMinZ(), 16) - 8;
+                int tw = rect1.getWidth();
+                int th = rect1.getHeight();
+                int td = rect1.getDepth();
                 blockBounds.put(new BlockPos(bx, by, bz), new Rectangle3i(-tx, -ty, tz, -tw, -th, td));
             }
             return blockBounds;

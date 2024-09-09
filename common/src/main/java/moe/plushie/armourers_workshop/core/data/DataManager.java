@@ -52,15 +52,16 @@ public class DataManager {
     }
 
     public String saveSkin(Skin skin) throws Exception {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream(5 * 1024);
-        SkinFileStreamUtils.saveSkinToStream(stream, skin);
-        byte[] bytes = stream.toByteArray();
-        return saveSkinData(new ByteArrayInputStream(bytes));
+        try (var outputStream = new ByteArrayOutputStream(5 * 1024)) {
+            SkinFileStreamUtils.saveSkinToStream(outputStream, skin);
+            return saveSkinData(new ByteArrayInputStream(outputStream.toByteArray()));
+        }
     }
 
     public Skin loadSkin(String id) throws Exception {
-        var inputStream = loadSkinData(id);
-        return SkinFileStreamUtils.loadSkinFromStream2(inputStream);
+        try (var inputStream = loadSkinData(id)) {
+            return SkinFileStreamUtils.loadSkinFromStream(inputStream);
+        }
     }
 
     public String saveSkinData(InputStream inputStream) throws Exception {

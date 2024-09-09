@@ -183,13 +183,13 @@ public abstract class SkinPreviewList<T> extends UIView {
             return;
         }
         if (showsName) {
-            NSString name = new NSString(getItemName(entry));
-            List<NSString> properties = name.split(font, width - 2);
+            var name = new NSString(getItemName(entry));
+            var properties = name.split(font, width - 2);
             float iy = y + height - properties.size() * font.lineHeight() - 2;
             context.drawText(properties, x + 1, iy, 0xffeeeeee, false, font, 0);
         }
 
-        IResourceLocation texture = ArmourersWorkshop.getItemIcon(bakedSkin.getType());
+        var texture = ArmourersWorkshop.getItemIcon(bakedSkin.getType());
         if (texture != null) {
             context.drawResizableImage(texture, x + 1, y + 1, width / 4, height / 4, 0, 0, 16, 16, 16, 16);
         }

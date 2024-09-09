@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.api.library;
 
+import moe.plushie.armourers_workshop.api.skin.ISkinFileHeader;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -16,6 +17,8 @@ public interface ISkinLibrary {
         String getSkinIdentifier();
 
         ISkinType getSkinType();
+
+        ISkinFileHeader getSkinHeader();
 
         boolean isDirectory();
 

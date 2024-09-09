@@ -18,7 +18,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -94,22 +93,17 @@ public class AdvancedImportPacket extends CustomPacket {
     }
 
     private void encodeSkin(IFriendlyByteBuf buffer) {
-        try {
-            var stream = new GZIPOutputStream(new ByteBufOutputStream(buffer.asByteBuf()));
-            SkinFileStreamUtils.saveSkinToStream(stream, skin);
-            stream.close();
+        try (var outputStream = new GZIPOutputStream(new ByteBufOutputStream(buffer.asByteBuf()))) {
+            SkinFileStreamUtils.saveSkinToStream(outputStream, skin);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private Skin decodeSkin(IFriendlyByteBuf buffer) {
-        try {
-            var stream = new GZIPInputStream(new ByteBufInputStream(buffer.asByteBuf()));
-            var skin = SkinFileStreamUtils.loadSkinFromStream(stream);
-            stream.close();
-            return skin;
-        } catch (IOException e) {
+        try (var inputStream = new GZIPInputStream(new ByteBufInputStream(buffer.asByteBuf()))) {
+            return SkinFileStreamUtils.loadSkinFromStream(inputStream);
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

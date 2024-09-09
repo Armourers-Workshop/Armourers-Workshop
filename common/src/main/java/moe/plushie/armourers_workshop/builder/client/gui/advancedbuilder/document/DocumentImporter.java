@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.exception.TranslatableException;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
+import moe.plushie.armourers_workshop.core.skin.SkinSettings;
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinPackReader;
 import moe.plushie.armourers_workshop.core.skin.transformer.SkinSerializerV21;
 import moe.plushie.armourers_workshop.core.skin.transformer.bedrock.BedrockModelExporter;

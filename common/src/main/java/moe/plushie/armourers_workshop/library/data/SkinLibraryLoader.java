@@ -43,16 +43,16 @@ public class SkinLibraryLoader implements Runnable {
             return fileList;
         }
 
-        for (File file : templateFiles) {
-            String path = SkinFileUtils.getRelativePath(file, libraryDirectory, true);
-            String filename = file.getName();
+        for (var file : templateFiles) {
+            var path = SkinFileUtils.getRelativePath(file, libraryDirectory, true);
+            var filename = file.getName();
             if (file.isDirectory()) {
                 fileList.add(new SkinLibraryFile(library.domain, filename, path));
                 continue;
             }
             if (filename.toLowerCase().endsWith(Constants.EXT)) {
-                String name = SkinFileUtils.getBaseName(filename);
-                ISkinFileHeader header = getSkinFileHeader(file);
+                var name = SkinFileUtils.getBaseName(filename);
+                var header = getSkinFileHeader(file);
                 if (header == null) {
                     continue; // Armour file load fail.
                 }
@@ -62,7 +62,7 @@ public class SkinLibraryLoader implements Runnable {
         Collections.sort(fileList);
 
         if (recursive) {
-            for (File file : templateFiles) {
+            for (var file : templateFiles) {
                 if (file.isDirectory()) {
                     fileList.addAll(getSkinFiles(file, true));
                 }
@@ -73,13 +73,13 @@ public class SkinLibraryLoader implements Runnable {
     }
 
     private ISkinFileHeader getSkinFileHeader(File file) {
-        long modifiedTime = file.lastModified();
-        String key = file.getAbsolutePath();
-        CachedFileHeader cache = CACHED_FILE_HEADERS.get(key);
+        var key = file.getAbsolutePath();
+        var cache = CACHED_FILE_HEADERS.get(key);
+        var modifiedTime = file.lastModified();
         if (cache != null && cache.isValid(modifiedTime)) {
             return cache.getHeader();
         }
-        ISkinFileHeader header = SkinFileStreamUtils.readHeaderFromFile(file);
+        var header = SkinFileStreamUtils.readHeaderFromFile(file);
         if (header != null) {
             if (header instanceof SkinFileHeader) {
                 ((SkinFileHeader) header).setLastModified((int) modifiedTime);

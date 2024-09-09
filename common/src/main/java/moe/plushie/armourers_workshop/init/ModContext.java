@@ -7,11 +7,9 @@ import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializerKey;
 import moe.plushie.armourers_workshop.utils.DataTypeCodecs;
 import net.minecraft.server.MinecraftServer;
-import org.apache.commons.codec.binary.Hex;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Objects;
 import java.util.UUID;
@@ -80,17 +78,6 @@ public class ModContext extends AbstractSavedData {
             return current.x1;
         }
         return null;
-    }
-
-    public static String md5(String value) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] sig = md.digest(value.getBytes(StandardCharsets.UTF_8));
-            return new String(Hex.encodeHex(sig, true));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return value;
-        }
     }
 
     @NotNull

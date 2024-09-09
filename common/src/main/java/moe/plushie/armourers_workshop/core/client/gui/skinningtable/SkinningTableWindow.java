@@ -30,7 +30,7 @@ public class SkinningTableWindow extends MenuWindow<SkinningTableMenu> {
         settingView.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleBottomMargin);
         settingView.setContents(UIImage.of(ModTextures.SKINNING_TABLE).uv(228, 0).fixed(24, 16).build());
         settingView.addTarget(this, UIControl.Event.MOUSE_LEFT_UP, (self, sender) -> {
-            var alert = new SkinningTableSettingDialog(menu.getBlockEntity().getOptions());
+            var alert = new SkinningTableSettingWindow(menu.getBlockEntity().getOptions());
             alert.setTitle(NSString.localizedString("skinning-table.setting.title"));
             alert.sizeToFit();
             alert.showInView(this, () -> {

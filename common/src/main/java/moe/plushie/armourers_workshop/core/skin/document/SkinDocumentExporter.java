@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinMarker;
+import moe.plushie.armourers_workshop.core.skin.SkinSettings;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
 import moe.plushie.armourers_workshop.core.skin.cube.impl.SkinCubesV2;
@@ -13,9 +14,10 @@ import moe.plushie.armourers_workshop.core.skin.exception.SkinSaveException;
 import moe.plushie.armourers_workshop.core.skin.exception.TranslatableException;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
@@ -59,7 +61,7 @@ public class SkinDocumentExporter {
 
         if (skinType == SkinTypes.BLOCK) {
             var boxes = SkinDocumentCollider.generateCollisionBox(document.getRoot());
-            settings.setCollisionBox(new ArrayList<>(boxes.values()));
+            settings.setCollisionBox(ObjectUtils.map(boxes.values(), Rectangle3f::new));
 
             // check if the skin is not a seat and a bed.
             if (properties.get(SkinProperty.BLOCK_BED) && properties.get(SkinProperty.BLOCK_SEAT)) {

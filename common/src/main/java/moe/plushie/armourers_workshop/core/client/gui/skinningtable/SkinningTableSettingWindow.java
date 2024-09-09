@@ -5,15 +5,15 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UICheckBox;
 import com.apple.library.uikit.UIControl;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
-import moe.plushie.armourers_workshop.core.skin.SkinOptions;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 
-public class SkinningTableSettingDialog extends ConfirmDialog {
+public class SkinningTableSettingWindow extends ConfirmDialog {
 
-    private final SkinOptions options;
+    private final SkinDescriptor.Options options;
 
     private int contentHeight = 24; // 24 + n + 8
 
-    public SkinningTableSettingDialog(SkinOptions options) {
+    public SkinningTableSettingWindow(SkinDescriptor.Options options) {
         super();
         this.options = options.copy();
         this.setup();
@@ -52,19 +52,19 @@ public class SkinningTableSettingDialog extends ConfirmDialog {
         setBounds(new CGRect(0, 0, bounds().getWidth(), contentHeight + 30));
     }
 
-    public SkinOptions getOptions() {
+    public SkinDescriptor.Options getOptions() {
         return options.copy();
     }
 
     public static abstract class Option<T> {
 
-        public static final Option<Boolean> TOOLTIP_SHOW_NAME = flags("tooltip.showName", SkinOptions.TooltipFlags.NAME);
-        public static final Option<Boolean> TOOLTIP_SHOW_AUTHOR = flags("tooltip.showAuthor", SkinOptions.TooltipFlags.AUTHOR);
-        public static final Option<Boolean> TOOLTIP_SHOW_FLAVOUR = flags("tooltip.showFlavour", SkinOptions.TooltipFlags.AUTHOR);
-        public static final Option<Boolean> TOOLTIP_SHOW_HAS_SKIN = flags("tooltip.showHasSkin", SkinOptions.TooltipFlags.HAS_SKIN);
-        public static final Option<Boolean> TOOLTIP_SHOW_OPEN_WARDROBE = flags("tooltip.showOpenWardrobe", SkinOptions.TooltipFlags.OPEN_WARDROBE);
-        public static final Option<Boolean> TOOLTIP_SHOW_SKIN_TYPE = flags("tooltip.showSkinType", SkinOptions.TooltipFlags.TYPE);
-        public static final Option<Boolean> TOOLTIP_SHOW_SKIN_PREVIEW = flags("tooltip.showSkinPreview", SkinOptions.TooltipFlags.PREVIEW);
+        public static final Option<Boolean> TOOLTIP_SHOW_NAME = flags("tooltip.showName", SkinDescriptor.TooltipFlags.NAME);
+        public static final Option<Boolean> TOOLTIP_SHOW_AUTHOR = flags("tooltip.showAuthor", SkinDescriptor.TooltipFlags.AUTHOR);
+        public static final Option<Boolean> TOOLTIP_SHOW_FLAVOUR = flags("tooltip.showFlavour", SkinDescriptor.TooltipFlags.AUTHOR);
+        public static final Option<Boolean> TOOLTIP_SHOW_HAS_SKIN = flags("tooltip.showHasSkin", SkinDescriptor.TooltipFlags.HAS_SKIN);
+        public static final Option<Boolean> TOOLTIP_SHOW_OPEN_WARDROBE = flags("tooltip.showOpenWardrobe", SkinDescriptor.TooltipFlags.OPEN_WARDROBE);
+        public static final Option<Boolean> TOOLTIP_SHOW_SKIN_TYPE = flags("tooltip.showSkinType", SkinDescriptor.TooltipFlags.TYPE);
+        public static final Option<Boolean> TOOLTIP_SHOW_SKIN_PREVIEW = flags("tooltip.showSkinPreview", SkinDescriptor.TooltipFlags.PREVIEW);
 
         public static final Option<Boolean> ITEM_RENDERER_SHOW_SKIN = itemRenderer("itemRenderer.showSkin");
 
@@ -74,17 +74,17 @@ public class SkinningTableSettingDialog extends ConfirmDialog {
             this.key = key;
         }
 
-        public static Option<Boolean> flags(String key, SkinOptions.TooltipFlags flags) {
+        public static Option<Boolean> flags(String key, SkinDescriptor.TooltipFlags flags) {
             return new Option<>(key) {
 
                 @Override
-                public Boolean get(SkinOptions options) {
-                    return options.get(flags);
+                public Boolean get(SkinDescriptor.Options options) {
+                    return options.getTooltip(flags);
                 }
 
                 @Override
-                public void set(SkinOptions options, Boolean value) {
-                    options.set(flags, value);
+                public void set(SkinDescriptor.Options options, Boolean value) {
+                    options.setTooltip(flags, value);
                 }
             };
         }
@@ -93,12 +93,12 @@ public class SkinningTableSettingDialog extends ConfirmDialog {
             return new Option<>(key) {
 
                 @Override
-                public Boolean get(SkinOptions options) {
+                public Boolean get(SkinDescriptor.Options options) {
                     return options.getEmbeddedItemRenderer() == 2;
                 }
 
                 @Override
-                public void set(SkinOptions options, Boolean value) {
+                public void set(SkinDescriptor.Options options, Boolean value) {
                     if (value) {
                         options.setEnableEmbeddedItemRenderer(2);
                     } else {
@@ -108,8 +108,8 @@ public class SkinningTableSettingDialog extends ConfirmDialog {
             };
         }
 
-        public abstract T get(SkinOptions options);
+        public abstract T get(SkinDescriptor.Options options);
 
-        public abstract void set(SkinOptions options, T value);
+        public abstract void set(SkinDescriptor.Options options, T value);
     }
 }

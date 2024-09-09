@@ -5,6 +5,9 @@ import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.SkinSettings;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileOptions;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilePacket;
@@ -14,6 +17,7 @@ import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -79,15 +83,25 @@ public class SkinLibrary implements ISkinLibrary {
         return null;
     }
 
-    public void save(String path, Skin skin) {
+    public void save(String path, Skin skin, SkinFileOptions options) {
         File file = new File(basePath, SkinFileUtils.normalize(path));
         if (file.exists() && !SkinFileUtils.deleteQuietly(file)) {
             ModLog.error("Can't remove file '{}'", file);
             return;
         }
         ModLog.debug("Save file '{}'", file);
-        SkinFileStreamUtils.saveSkinToFile(file, skin);
-        reload();
+        try {
+            SkinFileUtils.forceMkdirParent(file);
+            if (file.exists()) {
+                SkinFileUtils.deleteQuietly(file);
+            }
+            try (var outputStream = new FileOutputStream(file)) {
+                SkinFileStreamUtils.saveSkinToStream(outputStream, skin, options);
+            }
+            reload();
+        } catch (Exception e) {
+            ModLog.debug("Save file '{}' failed, {}", file, e);
+        }
     }
 
     public void mkdir(String path) {

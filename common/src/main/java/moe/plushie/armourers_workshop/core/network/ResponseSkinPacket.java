@@ -94,35 +94,27 @@ public class ResponseSkinPacket extends CustomPacket {
         if (mode != Mode.STREAM) {
             return null;
         }
-        InputStream inputStream = null;
-        try {
-            inputStream = createInputStream(buffer);
+        try (var inputStream = createInputStream(buffer)) {
             return SkinFileStreamUtils.loadSkinFromStream(inputStream);
         } catch (Exception exception) {
             exception.printStackTrace();
-        } finally {
-            StreamUtils.closeQuietly(inputStream);
+            return null;
         }
-        return null;
     }
 
     private void writeSkinStream(IFriendlyByteBuf buffer, Skin skin) {
         if (mode != Mode.STREAM) {
             return;
         }
-        OutputStream outputStream = null;
-        try {
-            outputStream = createOutputStream(buffer);
+        try (var outputStream = createOutputStream(buffer)) {
             SkinFileStreamUtils.saveSkinToStream(outputStream, skin);
         } catch (Exception exception) {
             exception.printStackTrace();
-        } finally {
-            StreamUtils.closeQuietly(outputStream);
         }
     }
 
     private InputStream createInputStream(IFriendlyByteBuf buffer) throws Exception {
-        InputStream inputStream = new ByteBufInputStream(buffer.asByteBuf());
+        var inputStream = new ByteBufInputStream(buffer.asByteBuf());
         if (this.compress) {
             return new GZIPInputStream(inputStream);
         }
@@ -130,7 +122,7 @@ public class ResponseSkinPacket extends CustomPacket {
     }
 
     private OutputStream createOutputStream(IFriendlyByteBuf buffer) throws Exception {
-        ByteBufOutputStream outputStream = new ByteBufOutputStream(buffer.asByteBuf());
+        var outputStream = new ByteBufOutputStream(buffer.asByteBuf());
         if (this.compress) {
             return new GZIPOutputStream(outputStream);
         }

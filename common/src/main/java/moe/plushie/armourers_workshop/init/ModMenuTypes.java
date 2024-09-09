@@ -28,7 +28,7 @@ import moe.plushie.armourers_workshop.core.menu.SkinnableMenu;
 import moe.plushie.armourers_workshop.core.menu.SkinningTableMenu;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
-import moe.plushie.armourers_workshop.library.client.gui.SkinLibraryWindow;
+import moe.plushie.armourers_workshop.library.client.gui.skinlibrary.SkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.menu.CreativeSkinLibraryMenu;
 import moe.plushie.armourers_workshop.library.menu.GlobalSkinLibraryMenu;
 import moe.plushie.armourers_workshop.library.menu.SkinLibraryMenu;

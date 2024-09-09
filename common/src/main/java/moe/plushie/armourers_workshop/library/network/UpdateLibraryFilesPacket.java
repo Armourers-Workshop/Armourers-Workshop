@@ -62,7 +62,7 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
 
     @Override
     public void accept(IClientPacketHandler packetHandler, Player player) {
-        SkinLibraryManager.Client client = SkinLibraryManager.getClient();
+        var client = SkinLibraryManager.getClient();
         client.setSetting(setting);
         client.getPublicSkinLibrary().reloadFiles(publicFiles);
         client.getPrivateSkinLibrary().reloadFiles(privateFiles);

@@ -29,6 +29,10 @@ public interface IInputStream {
 
     DataInputStream getInputStream();
 
+    default void skipBytes(int len) throws IOException {
+        getInputStream().skipBytes(len);
+    }
+
     default void read(byte[] b) throws IOException {
         getInputStream().readFully(b);
     }

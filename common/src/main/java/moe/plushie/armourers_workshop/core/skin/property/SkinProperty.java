@@ -82,6 +82,10 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     public static final SkinProperty<Double> TRANSFORM_ROTATION_Z = normal("transformRotationZ", 0D);
     public static final SkinProperty<Double> TRANSFORM_SCALE = normal("transformScale", 1D);
 
+    public static final SkinProperty<String> SECURITY_DATA = normal("securityData", null);
+    public static final SkinProperty<String> SECURITY_KEY = normal("securityKey", null);
+
+
     private final String key;
     private final T defaultValue;
     private final boolean multipleKey;

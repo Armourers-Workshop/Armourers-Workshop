@@ -113,6 +113,11 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
         return null;
     }
 
+    @Override
+    public ISkinFileHeader getSkinHeader() {
+        return header;
+    }
+
     public ISkinProperties getSkinProperties() {
         if (header != null) {
             return header.getProperties();

@@ -3,20 +3,19 @@ package moe.plushie.armourers_workshop.core.skin.serializer.io;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileHeader;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileOptions;
 
 import java.io.IOException;
 
 public interface ISkinSerializer {
 
-    void writeToStream(Skin skin, IOutputStream stream, int fileVersion) throws IOException;
+    void writeToStream(Skin skin, IOutputStream stream, SkinFileOptions options) throws IOException;
 
-    Skin readFromStream(IInputStream stream, int fileVersion) throws IOException, InvalidCubeTypeException;
+    Skin readFromStream(IInputStream stream, SkinFileOptions options) throws IOException, InvalidCubeTypeException;
 
-    SkinFileHeader readInfoFromStream(IInputStream stream, int fileVersion) throws IOException;
+    SkinFileHeader readInfoFromStream(IInputStream stream, SkinFileOptions options) throws IOException;
 
     int getSupportedVersion();
 
-    default boolean isSupportedVersion(int fileVersion) {
-        return getSupportedVersion() == fileVersion;
-    }
+    boolean isSupportedVersion(SkinFileOptions options);
 }

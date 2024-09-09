@@ -2,8 +2,7 @@ package moe.plushie.armourers_workshop.utils;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinFileHeader;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
-import moe.plushie.armourers_workshop.core.skin.exception.NewerFileVersionException;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileOptions;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.init.ModLog;
 import org.jetbrains.annotations.Nullable;
@@ -14,112 +13,42 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 public final class SkinFileStreamUtils {
 
-    public static Skin loadSkinFromFile(File file) {
-        try {
-            var fis = new FileInputStream(file);
-            var skin = loadSkinFromStream2(fis);
-            fis.close();
-            return skin;
-        } catch (FileNotFoundException e) {
-            ModLog.warn("skin file not found.");
-            e.printStackTrace();
-        } catch (Exception e) {
-            ModLog.error("skin file load failed.");
-            e.printStackTrace();
-        }
-        return null;
+    public static void saveSkinToStream(OutputStream outputStream, Skin skin) throws Exception {
+        saveSkinToStream(outputStream, skin, null);
     }
 
-    public static boolean saveSkinToFile(File file, Skin skin) {
-        ModLog.debug("save skin into '{}'", file);
-        try {
-            SkinFileUtils.forceMkdirParent(file);
-            if (file.exists()) {
-                SkinFileUtils.deleteQuietly(file);
-            }
-            FileOutputStream fos = new FileOutputStream(file);
-            saveSkinToStream(fos, skin);
-            fos.close();
-        } catch (FileNotFoundException e) {
-            ModLog.warn("skin file not found.");
-            e.printStackTrace();
-            return false;
-        } catch (Exception e) {
-            ModLog.error("skin file save failed.");
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    public static boolean saveSkinToStream(OutputStream outputStream, Skin skin) {
-        try (BufferedOutputStream bos = new BufferedOutputStream(outputStream); DataOutputStream dos = new DataOutputStream(bos)) {
-            SkinSerializer.writeToStream(skin, dos);
+    public static void saveSkinToStream(OutputStream outputStream, Skin skin, SkinFileOptions options) throws Exception {
+        try (var bos = new BufferedOutputStream(outputStream); var dos = new DataOutputStream(bos)) {
+            SkinSerializer.writeToStream(skin, dos, options);
             dos.flush();
             bos.flush();
-        } catch (Exception e) {
-            ModLog.error("Skin file save failed.");
-            e.printStackTrace();
-            return false;
         }
-        return true;
     }
 
-    public static Skin loadSkinFromStream(InputStream inputStream) {
-        Skin skin = null;
-        try {
-            skin = loadSkinFromStream2(inputStream);
-        } catch (IOException e) {
-            ModLog.error("Skin file load failed.");
-            e.printStackTrace();
-        } catch (NewerFileVersionException e) {
-            ModLog.error("Can not load skin file it was saved in newer version.");
-            e.printStackTrace();
-        } catch (InvalidCubeTypeException e) {
-            ModLog.error("Unable to load skin. Unknown cube types found.");
-            e.printStackTrace();
-        } catch (Exception e) {
-            ModLog.error("Unable to load skin. Unknown error.");
-            e.printStackTrace();
-        }
-
-        return skin;
+    public static Skin loadSkinFromStream(InputStream inputStream) throws Exception {
+        return loadSkinFromStream(inputStream, null);
     }
 
-    public static Skin loadSkinFromStream2(InputStream inputStream) throws Exception {
-        if (inputStream == null) {
-            return null;
+    public static Skin loadSkinFromStream(InputStream inputStream, SkinFileOptions options) throws Exception {
+        try (var bis = new BufferedInputStream(inputStream); var dis = new DataInputStream(bis)) {
+            return SkinSerializer.readSkinFromStream(dis, options);
         }
-        Skin skin = null;
-        BufferedInputStream bis = new BufferedInputStream(inputStream);
-        DataInputStream dis = new DataInputStream(bis);
-        try {
-            skin = SkinSerializer.readSkinFromStream(dis);
-        } finally {
-            StreamUtils.closeQuietly(dis, bis);
-        }
-        return skin;
     }
 
     @Nullable
     public static ISkinFileHeader readHeaderFromFile(File file) {
         DataInputStream stream = null;
         ISkinFileHeader header = null;
-
         try {
             stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
             header = SkinSerializer.readSkinInfoFromStream(stream);
         } catch (IOException e) {
-            ModLog.error("{} in {}", e, file.getName());
-        } catch (NewerFileVersionException e) {
             ModLog.error("{} in {}", e, file.getName());
         } catch (Exception e) {
             ModLog.error("Unable to load skin name. Unknown error.");

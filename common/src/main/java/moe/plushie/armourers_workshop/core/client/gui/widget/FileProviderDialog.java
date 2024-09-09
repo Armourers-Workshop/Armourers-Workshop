@@ -11,6 +11,7 @@ import com.apple.library.uikit.UIImageView;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
+import moe.plushie.armourers_workshop.api.skin.ISkinFileHeader;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -195,6 +196,11 @@ public class FileProviderDialog extends ConfirmDialog {
 
         @Override
         public ISkinType getSkinType() {
+            return null;
+        }
+
+        @Override
+        public ISkinFileHeader getSkinHeader() {
             return null;
         }
 

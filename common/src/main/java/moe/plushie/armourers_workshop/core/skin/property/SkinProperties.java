@@ -10,12 +10,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -29,6 +31,10 @@ public class SkinProperties implements ISkinProperties {
 
     public SkinProperties() {
         this.properties = new LinkedHashMap<>();
+    }
+
+    public SkinProperties(SkinProperties properties) {
+        this.properties = new LinkedHashMap<>(properties.properties);
     }
 
     public SkinProperties(CompoundTag tag) {
@@ -110,25 +116,30 @@ public class SkinProperties implements ISkinProperties {
             var key = (String) properties.keySet().toArray()[i];
             var value = properties.get(key);
             stream.writeString(key);
-            if (value instanceof String) {
+            if (value instanceof String stringValue) {
                 stream.writeByte(DataTypes.STRING.ordinal());
-                stream.writeString((String) value);
+                stream.writeString(stringValue);
             }
-            if (value instanceof Integer) {
+            if (value instanceof Integer intValue) {
                 stream.writeByte(DataTypes.INT.ordinal());
-                stream.writeInt((Integer) value);
+                stream.writeInt(intValue);
             }
-            if (value instanceof Double) {
+            if (value instanceof Double doubleValue) {
                 stream.writeByte(DataTypes.DOUBLE.ordinal());
-                stream.writeDouble((Double) value);
+                stream.writeDouble(doubleValue);
             }
-            if (value instanceof Boolean) {
+            if (value instanceof Boolean boolValue) {
                 stream.writeByte(DataTypes.BOOLEAN.ordinal());
-                stream.writeBoolean((Boolean) value);
+                stream.writeBoolean(boolValue);
             }
-            if (value instanceof CompoundTag) {
-                stream.writeByte(DataTypes.COMPOUND_TAG.ordinal());
-                stream.writeCompoundTag((CompoundTag) value);
+            if (value instanceof Collection<?> listValue) {
+                stream.writeByte(DataTypes.LIST.ordinal());
+                stream.writeInt(listValue.size());
+                // TODO: NO IMPL
+            }
+            if (value instanceof SkinProperties compoundValue) {
+                stream.writeByte(DataTypes.COMPOUND.ordinal());
+                compoundValue.writeToStream(stream);
             }
         }
     }
@@ -147,7 +158,16 @@ public class SkinProperties implements ISkinProperties {
                 case INT -> stream.readInt();
                 case DOUBLE -> stream.readDouble();
                 case BOOLEAN -> stream.readBoolean();
-                case COMPOUND_TAG -> stream.readCompoundTag();
+                case LIST -> {
+                    int size = stream.readInt();
+                    // TODO: NO IMPL
+                    yield new ArrayList<>(size);
+                }
+                case COMPOUND -> {
+                    var properties1 = new SkinProperties();
+                    properties1.readFromStream(stream);
+                    yield properties1;
+                }
             });
         }
     }
@@ -157,7 +177,7 @@ public class SkinProperties implements ISkinProperties {
     }
 
     public SkinProperties copy() {
-        return new SkinProperties(new LinkedHashMap<>(properties));
+        return new SkinProperties(this);
     }
 
     public CompoundTag serializeNBT() {
@@ -175,7 +195,7 @@ public class SkinProperties implements ISkinProperties {
 
     @Override
     public int hashCode() {
-        return Objects.hash(properties);
+        return properties.hashCode();
     }
 
     @Override
@@ -186,38 +206,50 @@ public class SkinProperties implements ISkinProperties {
     public void readFromNBT(CompoundTag nbt) {
         for (String key : nbt.getAllKeys()) {
             Tag value = nbt.get(key);
-            if (value instanceof StringTag) {
-                properties.put(key, value.getAsString());
-            } else if (value instanceof IntTag) {
-                properties.put(key, ((IntTag) value).getAsInt());
-            } else if (value instanceof FloatTag) {
-                properties.put(key, ((FloatTag) value).getAsFloat());
-            } else if (value instanceof DoubleTag) {
-                properties.put(key, ((DoubleTag) value).getAsDouble());
-            } else if (value instanceof ByteTag) {
-                properties.put(key, ((ByteTag) value).getAsByte() != 0);
+            if (value instanceof StringTag stringTag) {
+                properties.put(key, stringTag.getAsString());
+            } else if (value instanceof IntTag intTag) {
+                properties.put(key, intTag.getAsInt());
+            } else if (value instanceof FloatTag floatTag) {
+                properties.put(key, floatTag.getAsFloat());
+            } else if (value instanceof DoubleTag doubleTag) {
+                properties.put(key, doubleTag.getAsDouble());
+            } else if (value instanceof ByteTag byteTag) {
+                properties.put(key, byteTag.getAsByte() != 0);
+            } else if (value instanceof ListTag listTag) {
+                // TODO: NO IMPL
+            } else if (value instanceof CompoundTag compoundTag) {
+                var compoundValue = new SkinProperties();
+                compoundValue.readFromNBT(compoundTag);
+                properties.put(key, compoundValue);
             }
         }
     }
 
     public void writeToNBT(CompoundTag nbt) {
         properties.forEach((key, value) -> {
-            if (value instanceof String) {
-                nbt.putString(key, (String) value);
-            } else if (value instanceof Integer) {
-                nbt.putInt(key, (int) value);
-            } else if (value instanceof Float) {
-                nbt.putDouble(key, (float) value);
-            } else if (value instanceof Double) {
-                nbt.putDouble(key, (double) value);
-            } else if (value instanceof Boolean) {
-                nbt.putBoolean(key, (boolean) value);
+            if (value instanceof String stringValue) {
+                nbt.putString(key, stringValue);
+            } else if (value instanceof Integer intValue) {
+                nbt.putInt(key, intValue);
+            } else if (value instanceof Float floatValue) {
+                nbt.putDouble(key, floatValue);
+            } else if (value instanceof Double doubleValue) {
+                nbt.putDouble(key, doubleValue);
+            } else if (value instanceof Boolean boolValue) {
+                nbt.putBoolean(key, boolValue);
+            } else if (value instanceof Collection<?> listValue) {
+                // TODO: NO IMPL
+            } else if (value instanceof SkinProperties compoundValue) {
+                var compoundTag = new CompoundTag();
+                compoundValue.writeToNBT(compoundTag);
+                nbt.put(key, compoundTag);
             }
         });
     }
 
     public enum DataTypes {
-        STRING, INT, DOUBLE, BOOLEAN, COMPOUND_TAG;
+        STRING, INT, DOUBLE, BOOLEAN, LIST, COMPOUND;
 
         @Nullable
         public static DataTypes byId(int id) {

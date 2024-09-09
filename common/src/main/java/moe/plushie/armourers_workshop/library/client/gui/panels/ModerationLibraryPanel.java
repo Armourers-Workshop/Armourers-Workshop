@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.library.client.gui.panels;
 
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSString;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
 import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.client.gui.widget.ReportList;
@@ -48,7 +49,7 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
         Report report = skinReports.get(index);
         GlobalSkinLibrary.getInstance().getSkin(report.getSkinId(), (result, exception) -> {
             if (exception != null) {
-                UserNotificationCenter.showToast(exception, "Error", null);
+                UserNotificationCenter.showToast(exception, NSString.localizedString("common.text.error"), null);
                 return;
             }
             if (result != null) {

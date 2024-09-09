@@ -266,10 +266,10 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         GlobalSkinLibrary.getInstance().downloadSkin(entry.getId(), target, ((result, exception) -> {
             if (exception != null) {
                 buttonDownload.setEnabled(true);
-                UserNotificationCenter.showToast(exception, skinName, skinDescriptor.asItemStack());
+                UserNotificationCenter.showToast(exception, new NSString(skinName), skinDescriptor.asItemStack());
             } else {
                 SkinLibraryManager.getClient().getLocalSkinLibrary().reload();
-                UserNotificationCenter.showToast(getDisplayText("downloadFinished"), skinName, skinDescriptor.asItemStack());
+                UserNotificationCenter.showToast(getDisplayText("downloadFinished"), new NSString(skinName), skinDescriptor.asItemStack());
             }
         }));
     }

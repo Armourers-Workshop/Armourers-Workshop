@@ -25,7 +25,6 @@ import moe.plushie.armourers_workshop.library.data.impl.ServerToken;
 import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
-import moe.plushie.armourers_workshop.utils.StreamUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
@@ -80,17 +79,17 @@ public class GlobalSkinLibrary extends ServerSession {
     }
 
     public void auth() throws Exception {
-        ServerUser user = getUser();
+        var user = getUser();
         if (user.isAuthenticated()) {
             return;
         }
-        HashMap<String, Object> parameters = authenticationFromMinecraft();
-        ServerToken accessToken = request("/user/auth", parameters, ServerToken::new);
+        var parameters = authenticationFromMinecraft();
+        var accessToken = request("/user/auth", parameters, ServerToken::new);
         user.setAccessToken(accessToken);
     }
 
     public void auth2() {
-        ServerToken accessToken = getUser().getAccessToken();
+        var accessToken = getUser().getAccessToken();
         if (accessToken == null || accessToken.getRemainingTime() < 0 || accessToken.getRemainingTime() > TOKEN_UPDATE_TIME || state.updatingToken) {
             return;
         }
@@ -118,7 +117,7 @@ public class GlobalSkinLibrary extends ServerSession {
     }
 
     public void searchSkin(String keyword, int pageIndex, int pageSize, SearchColumnType searchOrderColumn, SearchOrderType searchOrder, ISkinType searchType, IResultHandler<SearchResult> handler) {
-        HashMap<String, Object> parameters = new HashMap<>();
+        var parameters = new HashMap<String, Object>();
         parameters.put("search", keyword);
         parameters.put("pageIndex", pageIndex);
         parameters.put("pageSize", pageSize);
@@ -133,7 +132,7 @@ public class GlobalSkinLibrary extends ServerSession {
     }
 
     public void getUserSkinList(String userId, int pageIndex, int pageSize, ISkinType searchType, IResultHandler<SearchResult> handler) {
-        HashMap<String, Object> parameters = new HashMap<>();
+        var parameters = new HashMap<String, Object>();
         parameters.put("userId", userId);
         parameters.put("pageIndex", pageIndex);
         parameters.put("pageSize", pageSize);
@@ -142,7 +141,7 @@ public class GlobalSkinLibrary extends ServerSession {
     }
 
     public void getSkin(String skinId, IResultHandler<ServerSkin> handler) {
-        HashMap<String, Object> parameters = new HashMap<>();
+        var parameters = new HashMap<String, Object>();
         parameters.put("skinid", skinId);
         parameters.put("searchTypes", buildSearchTypes(SkinTypes.UNKNOWN));
         request("/skin/info", parameters, SearchResult::fromJSON, (result, exception) -> {
@@ -159,28 +158,27 @@ public class GlobalSkinLibrary extends ServerSession {
     }
 
     public void uploadSkin(String name, String desc, Skin skin, IResultHandler<Void> handler) {
-        HashMap<String, Object> parameters = new HashMap<>();
+        var parameters = new HashMap<String, Object>();
         parameters.put("name", name);
         parameters.put("description", desc);
         parameters.put("fileToUpload", new ServerRequest.MultipartFormFile(name, () -> {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            SkinFileStreamUtils.saveSkinToStream(outputStream, skin);
-            byte[] fileBytes = outputStream.toByteArray();
-            StreamUtils.closeQuietly(outputStream);
-            return Unpooled.wrappedBuffer(fileBytes);
+            try (var outputStream = new ByteArrayOutputStream()) {
+                SkinFileStreamUtils.saveSkinToStream(outputStream, skin);
+                return Unpooled.wrappedBuffer(outputStream.toByteArray());
+            }
         }));
         request("/skin/upload", parameters, null, handler);
     }
 
     public InputStream downloadPreviewSkin(String skinId) throws Exception {
-        HashMap<String, Object> parameters = new HashMap<>();
+        var parameters = new HashMap<String, Object>();
         parameters.put("skinid", skinId);
         parameters.put("skinFileName", "");
         return buildTask("/skin/preview", parameters).call();
     }
 
     public InputStream downloadSkin(String skinId) throws Exception {
-        HashMap<String, Object> parameters = new HashMap<>();
+        var parameters = new HashMap<String, Object>();
         parameters.put("skinid", skinId);
         parameters.put("skinFileName", "");
         return buildTask("/skin/download", parameters).call();
@@ -231,13 +229,13 @@ public class GlobalSkinLibrary extends ServerSession {
 
     @Override
     protected HashMap<String, Object> defaultParameters() {
-        HashMap<String, Object> parameters = super.defaultParameters();
-        ServerUser user = getUser();
-        ServerToken accessToken = user.getAccessToken();
+        var parameters = super.defaultParameters();
         parameters.put("maxFileVersion", SkinSerializer.Versions.V13);
+        var user = getUser();
         if (user.getId() != null) {
             parameters.put("userId", user.getId());
         }
+        var accessToken = user.getAccessToken();
         if (accessToken != null && accessToken.getValue() != null) {
             parameters.put("accessToken", accessToken.getValue());
         }
@@ -246,7 +244,7 @@ public class GlobalSkinLibrary extends ServerSession {
 
     @Override
     protected ArrayList<String> getBaseURLs() {
-        ArrayList<String> customURLs = ModConfig.Common.customSkinServerURLs;
+        var customURLs = ModConfig.Common.customSkinServerURLs;
         if (!customURLs.isEmpty()) {
             return customURLs;
         }

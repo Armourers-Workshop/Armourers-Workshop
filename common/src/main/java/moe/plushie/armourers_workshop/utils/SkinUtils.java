@@ -302,15 +302,6 @@ public final class SkinUtils {
         }
     }
 
-
-    public static Skin copySkin(Skin skin) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        SkinFileStreamUtils.saveSkinToStream(outputStream, skin);
-        byte[] skinData = outputStream.toByteArray();
-        Skin skinCopy = SkinFileStreamUtils.loadSkinFromStream(new ByteArrayInputStream(skinData));
-        return skinCopy;
-    }
-
     public static ItemStack getSkin(Entity entity, SkinSlotType slotType, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
         if (entity instanceof LivingEntity) {

@@ -19,12 +19,14 @@ import com.apple.library.uikit.UITableViewDataSource;
 import com.apple.library.uikit.UITableViewDelegate;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
+import moe.plushie.armourers_workshop.api.skin.ISkinFileHeader;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
@@ -196,6 +198,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
         private final UIView iconView = new UIView(CGRect.ZERO);
 
         private SkinDescriptor descriptor = SkinDescriptor.EMPTY;
+        private String securityData;
 
         public Entry(ISkinLibrary.Entry entry) {
             super(CGRect.ZERO);
@@ -203,6 +206,7 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             this.entry = entry;
             if (!entry.isDirectory() && entry.getSkinIdentifier() != null) {
                 this.descriptor = new SkinDescriptor(entry.getSkinIdentifier(), entry.getSkinType(), ColorScheme.EMPTY);
+                this.securityData = getSecurityData(entry.getSkinHeader());
             }
             this.iconView.setFrame(new CGRect(0, 0, 16, 14));
             this.addSubview(iconView);
@@ -228,6 +232,9 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             }
             if (entry.isPrivateDirectory()) {
                 textColor = 0xff8888ff;
+            }
+            if (securityData != null) {
+                textColor = 0xffff8888;
             }
             if (selectedItem == this) {
                 textColor = 0xff000000;
@@ -266,6 +273,10 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             if (window == null) {
                 return;
             }
+            if (securityData != null) {
+                context.drawTooltip(NSString.localizedString("skin-library.rollover.canNotPreview"), rect);
+                return;
+            }
             var bakedSkin = SkinBakery.getInstance().loadSkin(getDescriptor(), loadTicket);
             if (bakedSkin == null) {
                 return;
@@ -277,10 +288,10 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
             float dy = MathUtils.clamp(context.state().mousePos().getY() - size / 2f, 0, bounds.height - size);
             context.drawTilableImage(ModTextures.GUI_PREVIEW, dx, dy, size, size, 0, 0, 62, 62, 4, 4, 4, 4);
 
-            var poseStack = context.state().ctm();
             var tooltips = ObjectUtils.map(ItemTooltipManager.createSkinInfo(bakedSkin), NSString::new);
             context.drawMultilineText(tooltips, dx + 4, dy + 4, size - 8, 0xffffffff, true, font, 0);
 
+            var poseStack = context.state().ctm();
             var buffers = AbstractBufferSource.buffer();
             ExtendedItemRenderer.renderSkinInGUI(bakedSkin, dx, dy, 100, size, size, 30, 45, 0, poseStack, buffers);
             buffers.endBatch();
@@ -297,10 +308,25 @@ public class SkinFileList extends UIControl implements UITableViewDataSource, UI
         }
 
         public SkinDescriptor getDescriptor() {
-            if (ModConfig.Common.allowLibraryPreviews) {
-                return descriptor;
+            // the server allow preview feature?
+            if (!ModConfig.Common.allowLibraryPreviews) {
+                return SkinDescriptor.EMPTY;
             }
-            return SkinDescriptor.EMPTY;
+            // the skin allow preview feature?
+            if (securityData != null) {
+                return SkinDescriptor.EMPTY;
+            }
+            return descriptor;
+        }
+
+        public String getSecurityData(ISkinFileHeader header) {
+            if (header != null) {
+                var properties = header.getProperties();
+                if (properties != null) {
+                    return properties.get(SkinProperty.SECURITY_DATA);
+                }
+            }
+            return null;
         }
     }
 

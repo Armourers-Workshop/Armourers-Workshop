@@ -23,7 +23,7 @@ import moe.plushie.armourers_workshop.core.skin.molang.MolangVirtualMachine;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
+import moe.plushie.armourers_workshop.core.skin.SkinSettings;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchAnimation;
 import moe.plushie.armourers_workshop.core.skin.transformer.blockbench.BlockBenchAnimator;

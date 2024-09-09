@@ -41,6 +41,10 @@ public class AbstractDataComponentType<T> implements DataComponentType<T>, IData
         return new AbstractDataComponentType<>(tag, codec);
     }
 
+    public boolean isProxy() {
+        return this instanceof Proxy;
+    }
+
     @Override
     public boolean has(ItemStack itemStack) {
         return itemStack.has(key);

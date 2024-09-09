@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.crafting.recipe;
 
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.skin.SkinOptions;
 import moe.plushie.armourers_workshop.init.ModItems;
 import net.minecraft.world.item.ItemStack;
 
@@ -12,7 +11,7 @@ public class SkinningCopyRecipe extends SkinningRecipe {
     }
 
     @Override
-    protected ItemStack build(ItemStack targetStack, ItemStack skinStack, SkinOptions options) {
+    protected ItemStack build(ItemStack targetStack, ItemStack skinStack, SkinDescriptor.Options options) {
         var descriptor = SkinDescriptor.of(skinStack);
         return descriptor.asItemStack();
     }

@@ -65,6 +65,7 @@ public class InputDialog extends ConfirmDialog implements UITextFieldDelegate {
 
     public void setVerifier(Predicate<String> verifier) {
         this.verifier = verifier;
+        this.checkValue(value());
     }
 
     @Override

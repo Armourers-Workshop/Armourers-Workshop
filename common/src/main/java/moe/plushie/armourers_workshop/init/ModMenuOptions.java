@@ -1,33 +1,26 @@
 package moe.plushie.armourers_workshop.init;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import moe.plushie.armourers_workshop.api.data.IDataPackObject;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import moe.plushie.armourers_workshop.utils.StreamUtils;
+import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
+import net.minecraft.nbt.CompoundTag;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.LinkedHashMap;
 
 public class ModMenuOptions {
 
     private static final ModMenuOptions INSTANCE = new ModMenuOptions();
 
     private final File contentPath;
-    private final LinkedHashMap<String, IDataPackObject> values = new LinkedHashMap<>();
+    private final CompoundTag values = new CompoundTag();
 
     private ModMenuOptions() {
-        contentPath = new File(EnvironmentManager.getRootDirectory(), "options.json");
-        try {
-            if (contentPath.exists()) {
-                load();
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        contentPath = new File(EnvironmentManager.getRootDirectory(), "options.dat");
+        if (contentPath.exists()) {
+            load();
         }
     }
 
@@ -36,7 +29,7 @@ public class ModMenuOptions {
     }
 
     public void putString(String key, String value) {
-        values.put(key, IDataPackObject.of(new JsonPrimitive(value)));
+        values.putString(key, value);
         setChanged();
     }
 
@@ -45,15 +38,11 @@ public class ModMenuOptions {
     }
 
     public String getString(String key, String defaultValue) {
-        IDataPackObject obj = values.get(key);
-        if (obj != null) {
-            return obj.stringValue();
-        }
-        return defaultValue;
+        return values.getOptionalString(key, defaultValue);
     }
 
     public void putInt(String key, int value) {
-        values.put(key, IDataPackObject.of(new JsonPrimitive(value)));
+        values.putInt(key, value);
         setChanged();
     }
 
@@ -62,43 +51,42 @@ public class ModMenuOptions {
     }
 
     public int getInt(String key, int defaultValue) {
-        IDataPackObject obj = values.get(key);
-        if (obj != null) {
-            return obj.intValue();
-        }
-        return defaultValue;
+        return values.getOptionalInt(key, defaultValue);
     }
 
     public void putBoolean(String key, boolean value) {
-        values.put(key, IDataPackObject.of(new JsonPrimitive(value)));
+        values.putBoolean(key, value);
         setChanged();
     }
 
-    public boolean getBoolean(String key) {
-        return getBoolean(key, false);
-    }
-
     public boolean getBoolean(String key, boolean defaultValue) {
-        IDataPackObject obj = values.get(key);
-        if (obj != null) {
-            return obj.boolValue();
-        }
-        return defaultValue;
+        return values.getOptionalBoolean(key, defaultValue);
     }
 
-    private void load() throws IOException {
-        IDataPackObject object = StreamUtils.fromPackObject(new FileInputStream(contentPath));
-        if (object == null) {
-            return;
+    public void putTag(String key, CompoundTag tag) {
+        values.put(key, tag);
+        setChanged();
+    }
+
+    public CompoundTag getTag(String key) {
+        if (values.contains(key, Constants.TagFlags.COMPOUND)) {
+            return values.getCompound(key);
         }
-        object.entrySet().forEach(it -> values.put(it.getKey(), it.getValue()));
+        return null;
+    }
+
+    private void load() {
+        try (var inputStream = new FileInputStream(contentPath)) {
+            var tag = SkinFileUtils.readNBT(inputStream);
+            values.merge(tag);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void save() {
-        try {
-            IDataPackObject packObject = IDataPackObject.of(new JsonObject());
-            values.forEach(packObject::set);
-            StreamUtils.writePackObject(packObject, new FileOutputStream(contentPath));
+        try (var outputStream = new FileOutputStream(contentPath)) {
+            SkinFileUtils.writeNBT(values, outputStream);
         } catch (Exception e) {
             e.printStackTrace();
         }

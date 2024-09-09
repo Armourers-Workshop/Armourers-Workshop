@@ -26,8 +26,10 @@ public class DataComponentTypeBuilderImpl<T> implements IDataComponentTypeBuilde
 
     @Override
     public IRegistryHolder<IDataComponentType<T>> build(String name) {
-        AbstractDataComponentType<T> proxy = AbstractDataComponentType.create(tag, codec);
-        AbstractFabricRegistries.DATA_COMPONENT_TYPES.register(name, () -> proxy);
-        return TypedRegistry.Entry.of(ModConstants.key(name), () -> proxy);
+        var componentType = AbstractDataComponentType.create(tag, codec);
+        if (!componentType.isProxy()) {
+            AbstractFabricRegistries.DATA_COMPONENT_TYPES.register(name, () -> componentType);
+        }
+        return TypedRegistry.Entry.of(ModConstants.key(name), () -> componentType);
     }
 }

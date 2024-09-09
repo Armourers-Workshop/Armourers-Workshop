@@ -10,10 +10,10 @@ import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileOptions;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.library.data.SkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.menu.SkinLibraryMenu;
 import moe.plushie.armourers_workshop.utils.Constants;
@@ -22,45 +22,44 @@ import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 public class SaveSkinPacket extends CustomPacket {
 
-    protected final String source;
-    protected final String destination;
+    protected final Target source;
+    protected final Target destination;
 
     protected Skin skin;
     protected Mode mode;
 
-    public SaveSkinPacket(String source, String destination) {
-        this.source = source;
-        this.destination = destination;
+    public SaveSkinPacket(String source, SkinFileOptions sourceOptions, String destination, SkinFileOptions destinationOptions) {
+        this.source = new Target(source, sourceOptions);
+        this.destination = new Target(destination, destinationOptions);
         this.mode = Mode.NONE;
-        boolean shouldUpload = DataDomain.isLocal(source) && !DataDomain.isLocal(destination);
+        boolean shouldUpload = this.source.isLocal() && !this.destination.isLocal();
         if (shouldUpload) {
             this.mode = Mode.UPLOAD;
             if (SkinLibraryManager.getClient().shouldUploadFile(null)) {
-                this.skin = SkinLoader.getInstance().loadSkin(source);
+                this.skin = loadSkin(source, sourceOptions);
             }
         }
     }
 
     public SaveSkinPacket(IFriendlyByteBuf buffer) {
-        this.source = decodeResourceLocation(buffer);
-        this.destination = decodeResourceLocation(buffer);
+        this.source = Target.readFromStream(buffer);
+        this.destination = Target.readFromStream(buffer);
         this.mode = buffer.readEnum(Mode.class);
         switch (mode) {
             case UPLOAD: {
-                boolean shouldUpload = DataDomain.isLocal(source) && !DataDomain.isLocal(destination);
+                boolean shouldUpload = source.isLocal() && !destination.isLocal();
                 if (shouldUpload && SkinLibraryManager.getServer().shouldUploadFile(null)) {
                     this.skin = decodeSkin(buffer);
                 }
                 break;
             }
             case DOWNLOAD: {
-                boolean shouldDownload = !DataDomain.isLocal(source) && DataDomain.isLocal(destination);
+                boolean shouldDownload = !source.isLocal() && destination.isLocal();
                 if (shouldDownload) {
                     this.skin = decodeSkin(buffer);
                 }
@@ -71,39 +70,44 @@ public class SaveSkinPacket extends CustomPacket {
 
     @Override
     public void encode(IFriendlyByteBuf buffer) {
-        buffer.writeUtf(source);
-        buffer.writeUtf(destination);
-        encodeSkin(buffer);
+        source.writeToStream(buffer);
+        destination.writeToStream(buffer);
+        if (skin != null) {
+            buffer.writeEnum(mode);
+            encodeSkin(skin, buffer);
+        } else {
+            buffer.writeEnum(Mode.NONE);
+        }
     }
 
     @Override
     public void accept(IClientPacketHandler packetHandler, Player player) {
-        if (!DataDomain.isLocal(destination)) {
+        if (!destination.isLocal()) {
             return; // ignore
         }
-        Skin skin = getSkin();
+        var skin = getSkin();
         if (skin == null) {
             abort(player, "load", "missing from skin loader");
             return;
         }
-        SkinLibrary library = SkinLibraryManager.getClient().getLocalSkinLibrary();
-        library.save(getPath(destination), skin);
+        var library = SkinLibraryManager.getClient().getLocalSkinLibrary();
+        library.save(destination.getPath(), skin, destination.getOptions());
     }
 
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // this is an unauthorized operation, ignore it
-        if (!isAuthorized(source, player) || !isAuthorized(destination, player) || !(player.containerMenu instanceof SkinLibraryMenu container)) {
+        if (!source.isAuthorized(player) || !destination.isAuthorized(player) || !(player.containerMenu instanceof SkinLibraryMenu container)) {
             abort(player, "unauthorized", "user status is incorrect or the path is invalid");
             return;
         }
-        SkinLibraryManager.Server server = SkinLibraryManager.getServer();
-        if (DataDomain.isLocal(source) && !server.shouldUploadFile(player)) {
+        var server = SkinLibraryManager.getServer();
+        if (source.isLocal() && !server.shouldUploadFile(player)) {
             abort(player, "upload", "uploading prohibited in the config file");
             return;
         }
         // load: fs -> db/ln/ws -> db/ln
-        if (DataDomain.isDatabase(destination)) {
+        if (destination.isDatabase()) {
             if (!ModPermissions.SKIN_LIBRARY_SKIN_LOAD.accept(player)) {
                 abort(player, "load", "load prohibited in the config file");
                 return;
@@ -116,39 +120,47 @@ public class SaveSkinPacket extends CustomPacket {
             if (container.shouldLoadStack()) {
                 accept(player, "load");
                 // TODO: fix db-link
-                String identifier = SkinLoader.getInstance().saveSkin(source, skin);
+                String identifier = SkinLoader.getInstance().saveSkin(source.getIdentifier(), skin);
                 container.crafting(new SkinDescriptor(identifier, skin.getType()));
             }
             return;
         }
         // save: fs -> ws/db -> ws/ws -> ws
-        if (DataDomain.isServer(destination)) {
+        if (destination.isServer()) {
             if (!ModPermissions.SKIN_LIBRARY_SKIN_SAVE.accept(player)) {
                 abort(player, "save", "save prohibited in the config file");
                 return;
             }
-            Skin skin = getSkin();
+            var skin = getSkin();
             if (skin == null) {
                 abort(player, "save", "missing from skin loader");
                 return;
             }
+            if (!skin.getSettings().isSavable()) {
+                abort(player, "save", "save prohibited from the skin author");
+                return;
+            }
             if (container.shouldSaveStack()) {
                 accept(player, "save");
-                SkinLoader.getInstance().removeSkin(destination); // remove skin cache.
-                server.getLibrary().save(getPath(destination), skin);
+                SkinLoader.getInstance().removeSkin(destination.getIdentifier()); // remove skin cache.
+                server.getLibrary().save(destination.getPath(), skin, destination.getOptions());
                 container.crafting(null);
             }
             return;
         }
         // download: ws -> fs/db -> fs/fs -> fs
-        if (DataDomain.isLocal(destination)) {
-            if (!DataDomain.isLocal(source) && !server.shouldDownloadFile(player)) {
-                abort(player, "download", "downloading prohibited in the config file");
+        if (destination.isLocal()) {
+            if (!source.isLocal() && !server.shouldDownloadFile(player)) {
+                abort(player, "download", "download prohibited in the config file");
                 return;
             }
-            if (!DataDomain.isLocal(source)) {
+            if (!source.isLocal()) {
                 this.skin = getSkin();
                 this.mode = Mode.DOWNLOAD;
+            }
+            if (skin != null && !skin.getSettings().isSavable()) {
+                abort(player, "download", "download prohibited from the skin author");
+                return;
             }
             if (container.shouldSaveStack()) {
                 // send skin data to client again, except case: fs -> fs
@@ -162,103 +174,151 @@ public class SaveSkinPacket extends CustomPacket {
     }
 
     public boolean isReady(Player player) {
-        SkinLibraryManager libraryManager = SkinLibraryManager.getClient();
+        var libraryManager = SkinLibraryManager.getClient();
         // when a remote server, check the config.
-        if (DataDomain.isLocal(source) && !DataDomain.isLocal(destination) && !libraryManager.shouldUploadFile(player)) {
+        if (source.isLocal() && !destination.isLocal() && !libraryManager.shouldUploadFile(player)) {
             return false; // can't upload
         }
-        if (!DataDomain.isLocal(source) && DataDomain.isLocal(destination) && !libraryManager.shouldDownloadFile(player)) {
+        if (!source.isLocal() && destination.isLocal() && !libraryManager.shouldDownloadFile(player)) {
             return false; // can't download
         }
         return mode == Mode.NONE || skin != null;
     }
 
     private void accept(Player player, String op) {
-        String playerName = player.getScoreboardName();
-        ModLog.info("accept {} request of the '{}', from: '{}', to: '{}'", op, playerName, source, destination);
+        ModLog.info("accept {} request of the '{}', from: '{}', to: '{}'", op, player.getScoreboardName(), source, destination);
     }
 
     private void abort(Player player, String op, String reason) {
-        String playerName = player.getScoreboardName();
-        ModLog.info("abort {} request of the '{}', reason: '{}', from: '{}', to: '{}'", op, playerName, reason, source, destination);
+        ModLog.info("abort {} request of the '{}', reason: '{}', from: '{}', to: '{}'", op, player.getScoreboardName(), reason, source, destination);
     }
 
-    private void encodeSkin(IFriendlyByteBuf buffer) {
-        if (skin == null) {
-            buffer.writeEnum(Mode.NONE);
-            return;
-        }
-        try {
-            buffer.writeEnum(mode);
-            GZIPOutputStream stream = new GZIPOutputStream(new ByteBufOutputStream(buffer.asByteBuf()));
-            SkinFileStreamUtils.saveSkinToStream(stream, skin);
-            stream.close();
+    private void encodeSkin(Skin skin, IFriendlyByteBuf buffer) {
+        try (var outputStream = new GZIPOutputStream(new ByteBufOutputStream(buffer.asByteBuf()))) {
+            SkinFileStreamUtils.saveSkinToStream(outputStream, skin);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private Skin decodeSkin(IFriendlyByteBuf buffer) {
-        Skin skin = null;
-        try {
-            GZIPInputStream stream = new GZIPInputStream(new ByteBufInputStream(buffer.asByteBuf()));
-            skin = SkinFileStreamUtils.loadSkinFromStream(stream);
-            stream.close();
-        } catch (IOException e) {
+        try (var inputStream = new GZIPInputStream(new ByteBufInputStream(buffer.asByteBuf()))) {
+            return SkinFileStreamUtils.loadSkinFromStream(inputStream);
+        } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return skin;
     }
 
-    private String decodeResourceLocation(IFriendlyByteBuf buffer) {
-        String location = buffer.readUtf();
-        int index = location.indexOf(':');
-        if (index < 0) {
-            return "";
+    private Skin loadSkin(String identifier, SkinFileOptions options) {
+        try {
+            var stream = SkinLoader.getInstance().loadSkinData(identifier);
+            return SkinFileStreamUtils.loadSkinFromStream(stream, options);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        String path = SkinFileUtils.normalize(location.substring(index + 1), true); // security check
-        if (path != null) {
-            return location.subSequence(0, index + 1) + path;
-        }
-        return "";
-    }
-
-    public String getPath(String location) {
-        int index = location.indexOf(':');
-        if (index < 0) {
-            return "";
-        }
-        String path = SkinFileUtils.normalize(location.substring(index + 1), true); // security check
-        if (path != null) {
-            return path;
-        }
-        return "";
     }
 
     private Skin getSkin() {
         if (skin != null) {
             return skin;
         }
-        skin = SkinLoader.getInstance().loadSkin(source);
+        skin = loadSkin(source.getIdentifier(), source.getOptions());
         return skin;
     }
 
-    private boolean isAuthorized(String location, Player player) {
-        if (DataDomain.isServer(location)) {
-            String path = getPath(location);
-            if (path.startsWith(Constants.PRIVATE + "/" + player.getStringUUID())) {
-                return true; // any operation has been accepted in the player's own directory.
+
+    public enum Mode {
+        NONE, UPLOAD, DOWNLOAD
+    }
+
+    public static class Target {
+
+        protected final String identifier;
+        protected final SkinFileOptions options;
+
+        public Target(String identifier, SkinFileOptions options) {
+            this.identifier = identifier;
+            this.options = options;
+        }
+
+        public static Target readFromStream(IFriendlyByteBuf buffer) {
+            String identifier = buffer.readUtf();
+            int index = identifier.indexOf(':');
+            if (index < 0) {
+                throw new RuntimeException("illegal identifier!!!");
             }
-            return !path.startsWith(Constants.PRIVATE); // any operation has been rejected in the other player's private directory.
+            String path = SkinFileUtils.normalize(identifier.substring(index + 1), true); // security check
+            if (path != null) {
+                identifier = identifier.subSequence(0, index + 1) + path;
+            }
+            SkinFileOptions options = null;
+            var optionsTag = buffer.readNbt();
+            if (optionsTag != null) {
+                options = new SkinFileOptions(optionsTag);
+            }
+            return new Target(identifier, options);
+        }
+
+        public void writeToStream(IFriendlyByteBuf buffer) {
+            buffer.writeUtf(identifier);
+            if (options != null) {
+                buffer.writeNbt(options.serializeNBT());
+            } else {
+                buffer.writeNbt(null);
+            }
+        }
+
+        public boolean isLocal() {
+            return DataDomain.isLocal(identifier);
+        }
+
+        public boolean isServer() {
+            return DataDomain.isServer(identifier);
+        }
+
+        public boolean isDatabase() {
+            return DataDomain.isDatabase(identifier);
+        }
+
+        public boolean isUnknown() {
+            return identifier.isEmpty();
+        }
+
+        public boolean isAuthorized(Player player) {
+            if (isServer()) {
+                var path = getPath();
+                if (path.startsWith(Constants.PRIVATE + "/" + player.getStringUUID())) {
+                    return true; // any operation has been accepted in the player's own directory.
+                }
+                if (path.startsWith(Constants.PRIVATE)) {
+                    return false; // any operation has been rejected in the other player's private directory.
+                }
+                return path.startsWith("/");
 //            if (SkinLibraryManager.getServer().getLibrary().get(path) != null) {
 //                // required auth when on files already in public directory
 //                return SkinLibraryManager.getServer().shouldModifierFile(player);
 //            }
+            }
+            return !isUnknown();
         }
-        return !location.isEmpty();
-    }
 
-    public enum Mode {
-        NONE, UPLOAD, DOWNLOAD
+        public String getPath() {
+            return DataDomain.getPath(identifier);
+        }
+
+        public String getIdentifier() {
+            return identifier;
+        }
+
+        public SkinFileOptions getOptions() {
+            return options;
+        }
+
+        @Override
+        public String toString() {
+            return identifier;
+        }
     }
 }

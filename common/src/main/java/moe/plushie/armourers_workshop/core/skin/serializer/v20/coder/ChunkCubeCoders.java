@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinCubeType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileOptions;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkContext;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkCubeSection;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk.ChunkCubeSelector;
@@ -40,14 +41,14 @@ public class ChunkCubeCoders {
         return new ChunkCubeDecoderV1(startIndex, endIndex, selector, section);
     }
 
-    public static ChunkContext createEncodeContext(Skin skin) {
-        var context = new ChunkContext(skin.getVersion());
+    public static ChunkContext createEncodeContext(Skin skin, SkinFileOptions options) {
+        var context = new ChunkContext(options);
         context.setFastEncoder(canFastEncoding(skin.getParts()));
         return context;
     }
 
-    public static ChunkContext createDecodeContext(int fileVersion) {
-        return new ChunkContext(fileVersion);
+    public static ChunkContext createDecodeContext(SkinFileOptions options) {
+        return new ChunkContext(options);
     }
 
     public static int getStride(int options, ISkinCubeType cubeType, ChunkPaletteData palette) {

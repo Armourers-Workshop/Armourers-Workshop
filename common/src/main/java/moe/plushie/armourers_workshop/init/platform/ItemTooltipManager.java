@@ -6,11 +6,8 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
-import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.skin.SkinOptions;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeTypes;
-import moe.plushie.armourers_workshop.core.skin.serializer.SkinUsedCounter;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -29,13 +26,14 @@ import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 @Environment(EnvType.CLIENT)
 public class ItemTooltipManager {
 
-    public static ArrayList<Component> createSkinInfo(BakedSkin bakedSkin) {
-        Skin skin = bakedSkin.getSkin();
-        ArrayList<Component> tooltip = new ArrayList<>();
+    public static List<Component> createSkinInfo(BakedSkin bakedSkin) {
+        var skin = bakedSkin.getSkin();
+        var tooltip = new ArrayList<Component>();
         if (Strings.isNotBlank(skin.getCustomName().trim())) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinName", skin.getCustomName().trim()));
         }
@@ -43,50 +41,53 @@ public class ItemTooltipManager {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinAuthor", skin.getAuthorName().trim()));
         }
         tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinType", TranslateUtils.Name.of(skin.getType())));
+        if (ModDebugger.tooltip) {
+            appendSettingInfo(tooltip, bakedSkin);
+        }
         return tooltip;
     }
 
-    public static ArrayList<Component> createSkinTooltip(ItemStack itemStack) {
-        boolean isItemOwner = itemStack.is(ModItems.SKIN.get());
-        ArrayList<Component> tooltip = new ArrayList<>();
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+    public static List<Component> createSkinTooltip(ItemStack itemStack) {
+        var isItemOwner = itemStack.is(ModItems.SKIN.get());
+        var tooltip = new ArrayList<Component>();
+        var descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
             if (isItemOwner) {
                 tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinInvalidItem"));
             }
             return tooltip;
         }
-        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.TOOLTIP);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.TOOLTIP);
         if (bakedSkin == null) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skindownloading", descriptor.getIdentifier()));
             return tooltip;
         }
-        Skin skin = bakedSkin.getSkin();
-        SkinOptions options = descriptor.getOptions();
-        SkinUsedCounter counter = bakedSkin.getUsedCounter();
+        var skin = bakedSkin.getSkin();
+        var options = descriptor.getOptions();
+        var counter = bakedSkin.getUsedCounter();
 
         if (!isItemOwner) {
-            if (options.contains(SkinOptions.TooltipFlags.HAS_SKIN)) {
+            if (options.contains(SkinDescriptor.TooltipFlags.HAS_SKIN)) {
                 tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.hasSkin"));
             }
-            if (options.contains(SkinOptions.TooltipFlags.NAME) && Strings.isNotBlank(skin.getCustomName())) {
+            if (options.contains(SkinDescriptor.TooltipFlags.NAME) && Strings.isNotBlank(skin.getCustomName())) {
                 tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinName", skin.getCustomName().trim()));
             }
         }
 
-        if (isItemOwner && options.contains(SkinOptions.TooltipFlags.FLAVOUR) && Strings.isNotBlank(skin.getFlavourText())) {
+        if (isItemOwner && options.contains(SkinDescriptor.TooltipFlags.FLAVOUR) && Strings.isNotBlank(skin.getFlavourText())) {
             tooltip.add(TranslateUtils.title("item.armourers_workshop.rollover.flavour", skin.getFlavourText().trim()));
         }
 
-        if (options.contains(SkinOptions.TooltipFlags.AUTHOR) && Strings.isNotBlank(skin.getAuthorName())) {
+        if (options.contains(SkinDescriptor.TooltipFlags.AUTHOR) && Strings.isNotBlank(skin.getAuthorName())) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinAuthor", skin.getAuthorName().trim()));
         }
 
-        if (options.contains(SkinOptions.TooltipFlags.TYPE)) {
+        if (options.contains(SkinDescriptor.TooltipFlags.TYPE)) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinType", TranslateUtils.Name.of(skin.getType())));
         }
 
-        if (!isItemOwner && options.contains(SkinOptions.TooltipFlags.FLAVOUR) && Strings.isNotBlank(skin.getFlavourText())) {
+        if (!isItemOwner && options.contains(SkinDescriptor.TooltipFlags.FLAVOUR) && Strings.isNotBlank(skin.getFlavourText())) {
             tooltip.add(TranslateUtils.title("item.armourers_workshop.rollover.flavour", skin.getFlavourText().trim()));
         }
 
@@ -117,6 +118,7 @@ public class ItemTooltipManager {
                     tooltip.add(Component.literal(" " + prop));
                 }
             }
+            appendSettingInfo(tooltip, bakedSkin);
         }
 
         // Skin ID error.
@@ -127,25 +129,43 @@ public class ItemTooltipManager {
 //            }
 //        }
 
-        if (options.contains(SkinOptions.TooltipFlags.OPEN_WARDROBE) && isItemOwner && skin.getType() instanceof ISkinEquipmentType) {
-            Component keyName = ModKeyBindings.OPEN_WARDROBE_KEY.getKeyName();
+        if (options.contains(SkinDescriptor.TooltipFlags.OPEN_WARDROBE) && isItemOwner && skin.getType() instanceof ISkinEquipmentType) {
+            var keyName = ModKeyBindings.OPEN_WARDROBE_KEY.getKeyName();
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinOpenWardrobe", keyName));
         }
 
         return tooltip;
     }
 
+    private static void appendSettingInfo(List<Component> tooltip, BakedSkin bakedSkin) {
+        var flags = new StringJoiner(",");
+        var settings = bakedSkin.getSkin().getSettings();
+        if (!settings.isEditable()) {
+            flags.add("NE");
+        }
+        if (!settings.isSavable()) {
+            flags.add("NS");
+        }
+        if (!settings.isExportable()) {
+            flags.add("NP");
+        }
+        if (settings.isCompressed()) {
+            flags.add("C");
+        }
+        tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinSettings", flags.toString()));
+    }
+
     public static void gatherSkinTooltip(ItemTooltipEvent.Gather event) {
-        ItemStack itemStack = event.getItemStack();
-        List<Component> newTooltips = createSkinTooltip(itemStack);
+        var itemStack = event.getItemStack();
+        var newTooltips = createSkinTooltip(itemStack);
         if (newTooltips.isEmpty()) {
             return;
         }
-        List<Component> tooltips = event.getTooltips();
+        var tooltips = event.getTooltips();
         if (event.getContext().getFlags().isAdvanced()) {
-            String registryName = TypedRegistry.findKey(itemStack.getItem()).toString();
+            var registryName = TypedRegistry.findKey(itemStack.getItem()).toString();
             for (int index = tooltips.size(); index > 0; --index) {
-                Component text = tooltips.get(index - 1);
+                var text = tooltips.get(index - 1);
                 if (registryName.equals(text.getString())) {
                     tooltips.addAll(index - 1, newTooltips);
                     return;
@@ -162,7 +182,7 @@ public class ItemTooltipManager {
         var itemStack = event.getItemStack();
         var descriptor = SkinDescriptor.of(itemStack);
         var options = descriptor.getOptions();
-        if (!options.contains(SkinOptions.TooltipFlags.PREVIEW)) {
+        if (!options.contains(SkinDescriptor.TooltipFlags.PREVIEW)) {
             return;
         }
         var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.TOOLTIP);

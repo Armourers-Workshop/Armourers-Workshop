@@ -22,16 +22,17 @@ public class ChunkWriter {
 
     public <V, T> void write(ChunkSerializer<V, T> serializer, @Nullable V value, T obj) throws IOException {
         // we allow user write a null values, but it doesn't visible in the stream.
-        if (!serializer.canWrite(value, obj, stream)) {
+        var encoder = serializer.createEncoder(value, obj, stream.getContext());
+        if (encoder == null) {
             return;
         }
-        String name = serializer.getChunkType().getName();
-        ChunkFlags flags = serializer.getChunkFlags(value, stream.getContext());
-        Sum sum = new Sum();
+        var name = serializer.getChunkType().getName();
+        var flags = serializer.getChunkFlags(value, stream.getContext());
+        var sum = new Sum();
         stream.writeVariable(sum);
         stream.sumTask(sum, () -> {
             writeHeader(name, flags);
-            stream.compressTask(flags, () -> writeContent(serializer, value, obj, flags));
+            stream.compressTask(flags, () -> encoder.encode(value, obj, stream));
             writeFooter(name, flags);
         });
     }
@@ -54,10 +55,6 @@ public class ChunkWriter {
     protected void writeHeader(String name, ChunkFlags flags) throws IOException {
         stream.writeString(name, 4);
         flags.writeToStream(stream);
-    }
-
-    protected <V, T> void writeContent(ChunkSerializer<V, T> serializer, @Nullable V value, T obj, ChunkFlags flags) throws IOException {
-        serializer.write(value, obj, stream);
     }
 
     protected void writeFooter(String name, ChunkFlags flags) throws IOException {

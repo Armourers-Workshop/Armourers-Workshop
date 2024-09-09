@@ -64,15 +64,7 @@ public class UserNotificationCenter {
         showToast(message, UIColor.WHITE, title, icon);
     }
 
-    public static void showToast(NSString message, String title, Object icon) {
-        showToast(message, UIColor.WHITE, new NSString(title), icon);
-    }
-
-    public static void showToast(String message, String title, Object icon) {
-        showToast(new NSString(message), UIColor.WHITE, new NSString(title), icon);
-    }
-
-    public static void showToast(Exception exception, String title, Object icon) {
+    public static void showToast(Exception exception, NSString title, Object icon) {
         NSString message;
         if (exception instanceof TranslatableException) {
             message = new NSString(((TranslatableException) exception).getComponent());
@@ -80,8 +72,9 @@ public class UserNotificationCenter {
             message = new NSString(exception.getMessage());
         }
         exception.printStackTrace();
-        showToast(message, UIColor.RED, new NSString(title), icon);
+        showToast(message, UIColor.RED, title, icon);
     }
+
 
     private static class Impl extends BaseDialog {
 
@@ -94,7 +87,7 @@ public class UserNotificationCenter {
             super();
             this.messageLabel.setNumberOfLines(0);
             this.addSubview(messageLabel);
-            this.setConfirmText(NSString .localizedTableString("commands", "notify.confirm"));
+            this.setConfirmText(NSString.localizedTableString("commands", "notify.confirm"));
             this.setup();
         }
 

@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.network.RequestSkinPacket;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileOptions;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinServerType;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModContext;
@@ -14,6 +15,7 @@ import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinCipher;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
@@ -156,7 +158,7 @@ public class SkinLoader {
         });
     }
 
-//    public void loadSkinFromDB(String identifier, ColorScheme scheme, boolean needCopy, IResultHandler<SkinDescriptor> handler) {
+    //    public void loadSkinFromDB(String identifier, ColorScheme scheme, boolean needCopy, IResultHandler<SkinDescriptor> handler) {
 //        backend.execute(() -> {
 //            try {
 //                ModLog.debug("'{}' => preload into database", identifier);
@@ -167,6 +169,18 @@ public class SkinLoader {
 //            }
 //        });
 //    }
+
+    public InputStream loadSkinData(String identifier) throws Exception {
+        var session = taskManager.get(DataDomain.byName(identifier));
+        if (session == null) {
+            throw new NoSuchElementException("can't found session");
+        }
+        var loadingSection = ObjectUtils.safeCast(session, LoadingSession.class);
+        if (loadingSection == null) {
+            throw new RuntimeException("can't support method in session");
+        }
+        return loadingSection.loadData(identifier);
+    }
 
     public String saveSkin(String identifier, Skin skin) {
         try {
@@ -401,6 +415,8 @@ public class SkinLoader {
     public static class Request {
 
         private final String identifier;
+        private final SkinFileOptions options;
+
         private int level = 0;
         private boolean isRunning = false;
         private Method method = Method.ASYNC;
@@ -408,6 +424,7 @@ public class SkinLoader {
 
         public Request(String identifier) {
             this.identifier = identifier;
+            this.options = null;
         }
 
         public void accept(Skin skin) {
@@ -541,22 +558,18 @@ public class SkinLoader {
 
         @Override
         public Skin load(Request request) throws Exception {
-            InputStream inputStream = null;
-            try {
-                inputStream = from(request);
+            try (var inputStream = loadData(request.identifier)) {
                 var startTime = System.currentTimeMillis();
-                var skin = SkinFileStreamUtils.loadSkinFromStream2(inputStream);
+                var skin = SkinFileStreamUtils.loadSkinFromStream(inputStream, request.options);
                 var totalTime = System.currentTimeMillis() - startTime;
                 loadDidFinish(request, skin, totalTime);
                 return skin;
-            } finally {
-                StreamUtils.closeQuietly(inputStream);
             }
         }
 
         public abstract void loadDidFinish(Request request, Skin skin, long loadTime);
 
-        public abstract InputStream from(Request request) throws Exception;
+        public abstract InputStream loadData(String identifier) throws Exception;
     }
 
     public static class LocalDataSession extends LoadingSession {
@@ -566,19 +579,14 @@ public class SkinLoader {
         }
 
         @Override
-        public void loadDidFinish(Request request, Skin skin, long loadTime) {
-            ModLog.debug("'{}' => did load skin from local session, time: {}ms", request.identifier, loadTime);
-        }
-
-        @Override
-        public InputStream from(Request request) throws Exception {
+        public InputStream loadData(String identifier) throws Exception {
             // db:<skin-id>
-            if (DataDomain.isDatabase(request.identifier)) {
-                var id = DataDomain.getPath(request.identifier);
+            if (DataDomain.isDatabase(identifier)) {
+                var id = DataDomain.getPath(identifier);
                 return DataManager.getInstance().loadSkinData(id);
             }
             // fs:<file-path> or ws:<file-path>
-            String path = SkinFileUtils.normalize(DataDomain.getPath(request.identifier));
+            String path = SkinFileUtils.normalize(DataDomain.getPath(identifier));
             var file = new File(EnvironmentManager.getSkinLibraryDirectory(), path);
             if (file.exists()) {
                 return new FileInputStream(file);
@@ -588,6 +596,11 @@ public class SkinLoader {
                 return new FileInputStream(file);
             }
             return null;
+        }
+
+        @Override
+        public void loadDidFinish(Request request, Skin skin, long loadTime) {
+            ModLog.debug("'{}' => did load skin from local session, time: {}ms", request.identifier, loadTime);
         }
     }
 
@@ -700,19 +713,19 @@ public class SkinLoader {
         }
 
         @Override
-        public void loadDidFinish(Request request, Skin skin, long loadTime) {
-            ModLog.debug("'{}' => did load skin from download session, time: {}ms", request.identifier, loadTime);
-            caching.add(request.identifier, skin);
+        public InputStream loadData(String identifier) throws Exception {
+            var domain = DataDomain.getNamespace(identifier);
+            var loader = LOADER.loaders.get(domain);
+            if (loader != null) {
+                return loader.loadSkin(DataDomain.getPath(identifier));
+            }
+            throw new RuntimeException("can't support the '" + domain + "' protocol");
         }
 
         @Override
-        public InputStream from(Request request) throws Exception {
-            var domain = DataDomain.getNamespace(request.identifier);
-            var loader = LOADER.loaders.get(domain);
-            if (loader != null) {
-                return loader.loadSkin(DataDomain.getPath(request.identifier));
-            }
-            throw new RuntimeException("can't support the '" + domain + "' protocol");
+        public void loadDidFinish(Request request, Skin skin, long loadTime) {
+            ModLog.debug("'{}' => did load skin from download session, time: {}ms", request.identifier, loadTime);
+            caching.add(request.identifier, skin);
         }
 
         @Override
@@ -736,19 +749,18 @@ public class SkinLoader {
             if (isGlobalLibraryResource(identifier)) {
                 ModLog.debug("'{}' => add global skin cache", identifier);
                 executor.execute(() -> {
-                    FileOutputStream outputStream = null;
                     try {
                         SkinFileUtils.forceMkdirParent(cachedFile);
                         if (cachedFile.exists()) {
                             SkinFileUtils.deleteQuietly(cachedFile);
                         }
-                        outputStream = new FileOutputStream(cachedFile);
-                        SkinFileStreamUtils.saveSkinToStream(outputStream, skin);
-                        outputStream.flush();
+                        try (var outputStream = new FileOutputStream(cachedFile)) {
+                            SkinFileStreamUtils.saveSkinToStream(outputStream, skin);
+                            outputStream.flush();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    StreamUtils.closeQuietly(outputStream);
                 });
                 return;
             }
@@ -794,18 +806,13 @@ public class SkinLoader {
         }
 
         @Override
-        public void loadDidFinish(Request request, Skin skin, long loadTime) {
-            ModLog.debug("'{}' => did load skin from cache session, time: {}ms", request.identifier, loadTime);
-        }
-
-        @Override
-        public InputStream from(Request request) throws Exception {
-            var cacheFile = cachingFile(request.identifier);
+        public InputStream loadData(String identifier) throws Exception {
+            var cacheFile = cachingFile(identifier);
             if (cacheFile == null) {
-                throw new FileNotFoundException(request.identifier);
+                throw new FileNotFoundException(identifier);
             }
             // global data no need decrypt/encrypt
-            if (isGlobalLibraryResource(request.identifier)) {
+            if (isGlobalLibraryResource(identifier)) {
                 return new FileInputStream(cacheFile);
             }
             var x0 = ModContext.x0();
@@ -823,6 +830,11 @@ public class SkinLoader {
             var aes = Cipher.getInstance("AES/ECB/PKCS5Padding");
             aes.init(Cipher.DECRYPT_MODE, key);
             return new CipherInputStream(inputStream, aes);
+        }
+
+        @Override
+        public void loadDidFinish(Request request, Skin skin, long loadTime) {
+            ModLog.debug("'{}' => did load skin from cache session, time: {}ms", request.identifier, loadTime);
         }
 
         private File cachingFile(String identifier) {

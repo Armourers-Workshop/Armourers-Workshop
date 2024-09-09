@@ -92,7 +92,7 @@ public class ChunkCubeData implements ChunkVariable {
     public void writeReferenceToStream(SkinCubes cubes, ChunkOutputStream streamIn) throws IOException {
         // for the fast encoder mode,
         // we will reuse the cube data.
-        if (streamIn.getContext().allowsFastEncoder() && cubes instanceof ChunkCubeSlices slices) {
+        if (streamIn.getContext().isEnableFastEncoder() && cubes instanceof ChunkCubeSlices slices) {
             var selectors = pending.computeIfAbsent(cubes, k -> slices.getSelectors());
             palette.copyFrom(slices.getPalette());
             streamIn.writeVarInt(selectors.size());

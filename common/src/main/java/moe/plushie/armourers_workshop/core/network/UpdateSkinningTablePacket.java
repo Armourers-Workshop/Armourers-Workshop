@@ -5,8 +5,7 @@ import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.blockentity.SkinningTableBlockEntity;
 import moe.plushie.armourers_workshop.core.menu.SkinningTableMenu;
-import moe.plushie.armourers_workshop.core.skin.SkinOptions;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,14 +14,14 @@ import net.minecraft.world.entity.player.Player;
 public class UpdateSkinningTablePacket extends CustomPacket {
 
     private final BlockPos pos;
-    private final SkinOptions options;
+    private final SkinDescriptor.Options options;
 
     public UpdateSkinningTablePacket(IFriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
-        this.options = new SkinOptions(buffer.readNbt());
+        this.options = new SkinDescriptor.Options(buffer.readNbt());
     }
 
-    public UpdateSkinningTablePacket(SkinningTableBlockEntity entity, SkinOptions options) {
+    public UpdateSkinningTablePacket(SkinningTableBlockEntity entity, SkinDescriptor.Options options) {
         this.pos = entity.getBlockPos();
         this.options = options;
     }
