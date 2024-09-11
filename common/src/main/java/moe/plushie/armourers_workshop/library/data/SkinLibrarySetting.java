@@ -8,11 +8,11 @@ public class SkinLibrarySetting {
     public static final SkinLibrarySetting DEFAULT = new SkinLibrarySetting();
 
     private final int flags;
-    private final String token;
+    private final String publicKey;
 
     public SkinLibrarySetting() {
         this.flags = 0x0f;
-        this.token = null;
+        this.publicKey = null;
     }
 
     public SkinLibrarySetting(Player player) {
@@ -28,12 +28,12 @@ public class SkinLibrarySetting {
             flags |= 0x04;
         }
         this.flags = flags;
-        this.token = manager.getToken();
+        this.publicKey = manager.getPublicKey();
     }
 
     public SkinLibrarySetting(CompoundTag tag) {
         this.flags = tag.getOptionalInt("Flags", 0);
-        this.token = tag.getOptionalString("Token", null);
+        this.publicKey = tag.getOptionalString("PublicKey", null);
     }
 
     public boolean allowsUpload() {
@@ -48,14 +48,14 @@ public class SkinLibrarySetting {
         return (flags & 0x04) != 0;
     }
 
-    public String getToken() {
-        return token;
+    public String getPublicKey() {
+        return publicKey;
     }
 
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         tag.putOptionalInt("Flags", flags, 0);
-        tag.putOptionalString("Token", token, null);
+        tag.putOptionalString("PublicKey", publicKey, null);
         return tag;
     }
 }

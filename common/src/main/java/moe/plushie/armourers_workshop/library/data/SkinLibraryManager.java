@@ -4,22 +4,27 @@ import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataManager;
+import moe.plushie.armourers_workshop.core.data.DataEncryptMethod;
 import moe.plushie.armourers_workshop.init.ModConfig;
+import moe.plushie.armourers_workshop.init.ModContext;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilesPacket;
 import moe.plushie.armourers_workshop.utils.Constants;
+import moe.plushie.armourers_workshop.utils.SkinUUID;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.UUID;
 
 public abstract class SkinLibraryManager implements ISkinLibraryListener {
 
+    protected boolean isRunning = false;
     protected final ArrayList<ISkinLibraryListener> listeners = new ArrayList<>();
 
     public static Client getClient() {
@@ -48,6 +53,10 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
 
     public void removeListener(ISkinLibraryListener listener) {
         this.listeners.remove(listener);
+    }
+
+    public boolean isRunning() {
+        return isRunning;
     }
 
     public boolean shouldDownloadFile(Player player) {
@@ -95,10 +104,12 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         public void start() {
             this.localSkinLibrary.markBaseDir();
             this.localSkinLibrary.reload();
+            this.isRunning = true;
         }
 
         @Override
         public void stop() {
+            this.isRunning = false;
             this.publicSkinLibrary.reset();
             this.privateSkinLibrary.reset();
         }
@@ -161,6 +172,8 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         private final HashSet<String> syncedPlayers = new HashSet<>();
 
         private int version = 0;
+        private String publicKey;
+        private String privateKey;
         private boolean isReady = false;
 
         public Server() {
@@ -172,15 +185,19 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         public void start() {
             this.skinLibrary.markBaseDir();
             this.skinLibrary.reload();
+            this.isRunning = true;
         }
 
         @Override
         public void stop() {
+            this.isRunning = false;
             this.skinLibrary.reset();
             this.publicFiles.clear();
             this.privateFiles.clear();
             this.syncedPlayers.clear();
             this.version = 0;
+            this.publicKey = null;
+            this.privateKey = null;
             this.isReady = false;
         }
 
@@ -283,10 +300,22 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
             return version;
         }
 
-        public String getToken() {
-            //var code = ModContext.t2(UUID.fromString("00000000-0000-0000-0000-000000000000"));
-            //return ObjectUtils.md5(code.toString());
-            return null;
+        public String getPublicKey() {
+            if (publicKey != null) {
+                return publicKey;
+            }
+            var key = DataEncryptMethod.AUTH.key(getPrivateKey());
+            publicKey = DataEncryptMethod.AUTH.signature(key);
+            return publicKey;
+        }
+
+        public String getPrivateKey() {
+            if (privateKey != null) {
+                return privateKey;
+            }
+            var code = ModContext.t2(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+            privateKey = new SkinUUID(code.getMostSignificantBits(), code.getLeastSignificantBits()).toString();
+            return privateKey;
         }
 
         public boolean isReady() {

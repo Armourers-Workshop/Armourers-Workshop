@@ -15,11 +15,22 @@ public class SkinUUID {
     private final String value;
 
     public SkinUUID() {
-        StringBuilder builder = new StringBuilder(10);
-        long number = RANDOM.nextLong() & Long.MAX_VALUE;
-        for (int i = 0; i < 10; ++i) {
-            builder.append(ALPHABET[(int) (number % 62)]);
-            number /= 62;
+        this(RANDOM.nextLong());
+    }
+
+    public SkinUUID(long... values) {
+        int idx = 0;
+        var words = new int[10];
+        for (long value : values) {
+            while (value != 0) {
+                words[idx % 10] += (int) (value % 62);
+                value /= 62;
+                idx += 1;
+            }
+        }
+        var builder = new StringBuilder(10);
+        for (int word : words) {
+            builder.append(ALPHABET[Math.abs(word % 62)]);
         }
         this.value = builder.reverse().toString();
     }

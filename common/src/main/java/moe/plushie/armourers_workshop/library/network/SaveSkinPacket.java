@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
+import moe.plushie.armourers_workshop.core.data.DataEncryptMethod;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -22,6 +23,7 @@ import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.Objects;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -213,7 +215,7 @@ public class SaveSkinPacket extends CustomPacket {
     private Skin loadSkin(String identifier, SkinFileOptions options) {
         try {
             var stream = SkinLoader.getInstance().loadSkinData(identifier);
-            return SkinFileStreamUtils.loadSkinFromStream(stream, options);
+            return SkinFileStreamUtils.loadSkinFromStream(stream, resolveLoadOptions(options));
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -226,6 +228,20 @@ public class SaveSkinPacket extends CustomPacket {
         }
         skin = loadSkin(source.getIdentifier(), source.getOptions());
         return skin;
+    }
+
+    private SkinFileOptions resolveLoadOptions(SkinFileOptions options) {
+        if (options != null) {
+            var server = SkinLibraryManager.getServer();
+            if (server.isRunning() && Objects.equals(options.getSecurityData(), server.getPublicKey())) {
+                var fixedOptions = new SkinFileOptions();
+                fixedOptions.merge(options);
+                fixedOptions.setSecurityKey(DataEncryptMethod.AUTH.key(server.getPrivateKey()));
+                fixedOptions.setSecurityData(server.getPublicKey());
+                return fixedOptions;
+            }
+        }
+        return options;
     }
 
 

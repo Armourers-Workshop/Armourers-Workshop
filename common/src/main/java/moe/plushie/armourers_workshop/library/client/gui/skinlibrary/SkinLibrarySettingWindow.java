@@ -10,6 +10,7 @@ import com.apple.library.uikit.UITextField;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.data.DataEncryptMethod;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileOptions;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.init.ModMenuOptions;
@@ -62,10 +63,11 @@ public class SkinLibrarySettingWindow extends ConfirmDialog {
         options.setCompressed(values.get(Option.IS_COMPRESSED));
         if (values.get(Option.IS_ENCRYPTED)) {
             var selectedIndex = values.get(Option.ENCRYPTED_MODE);
-            var algorithms = SkinLibraryKeychainWindow.Algorithm.values();
+            var algorithms = DataEncryptMethod.values();
             var algorithm = algorithms[selectedIndex % algorithms.length];
             var key = algorithm.key(values.get(Option.ENCRYPTED_KEY));
-            options.setSecurityData(algorithm.signature(key));
+            var signature = algorithm.signature(key);
+            options.setSecurityData(signature);
             options.setSecurityKey(key);
         } else {
             values.remove(Option.ENCRYPTED_MODE);
@@ -108,7 +110,7 @@ public class SkinLibrarySettingWindow extends ConfirmDialog {
     }
 
     private void addEncryptView() {
-        var modes = ObjectUtils.map(SkinLibraryKeychainWindow.Algorithm.values(), it -> it.method() + "Mode");
+        var modes = ObjectUtils.map(DataEncryptMethod.values(), it -> it.method() + "Mode");
         int defaultSelectedIndex = properties.get(Option.ENCRYPTED_MODE);
         if (defaultSelectedIndex >= modes.size()) {
             defaultSelectedIndex = 0;

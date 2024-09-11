@@ -66,6 +66,7 @@ public class ModCommands {
     });
 
     private static final DynamicCommandExceptionType ERROR_NOT_ENOUGH_SLOT = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.notEnoughSlot", ob));
+    private static final DynamicCommandExceptionType ERROR_NOT_RUNNING_IN_SERVER = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.notRunningInServer"));
     private static final DynamicCommandExceptionType ERROR_MISSING_DYE_SLOT = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.missingDyeSlot", ob));
     private static final DynamicCommandExceptionType ERROR_MISSING_SKIN = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.missingSkin", ob));
     private static final DynamicCommandExceptionType ERROR_MISSING_ITEM_STACK = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.missingItemSkinnable", ob));
@@ -80,7 +81,7 @@ public class ModCommands {
                 .then(ReflectArgumentBuilder.literal("config", ModConfig.Client.class))
                 .then(ReflectArgumentBuilder.literal("debug", ModDebugger.class))
                 .requires(source -> source.hasPermission(2))
-                .then(literal("library").then(literal("reload").executes(Executor::reloadLibrary)))
+                .then(literal("library").then(literal("reload").executes(Executor::reloadLibrary)).then(literal("auth").executes(Executor::printPrivateKey)))
                 .then(literal("setSkin").then(entities().then(slotNames().then(slots().then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin))).then(skins().then(skinDying().executes(Executor::setSkin)).executes(Executor::setSkin)))))
                 .then(literal("giveSkin").then(players().then(skins().then(skinDying().executes(Executor::giveSkin)).executes(Executor::giveSkin))))
                 .then(literal("clearSkin").then(entities().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
@@ -188,6 +189,16 @@ public class ModCommands {
     }
 
     private static class Executor {
+
+        static int printPrivateKey(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+            var server = SkinLibraryManager.getServer();
+            if (!server.isRunning()) {
+                throw ERROR_NOT_RUNNING_IN_SERVER.create(null);
+            }
+            var token = server.getPrivateKey();
+            context.getSource().sendSuccess(Component.translatable("commands.armourers_workshop.armourers.library.printToken", token), true);
+            return 0;
+        }
 
         static int reloadLibrary(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
             SkinLibraryManager.getServer().start();
