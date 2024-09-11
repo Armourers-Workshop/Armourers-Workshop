@@ -88,7 +88,10 @@ public class DataManager {
         if (uri.startsWith("jdbc:")) {
             var name = uri.replaceAll("jdbc:([^:]+):(.+)", "$1");
             var source = new SkinFileDataSource.SQL(name, createConnection(uri));
-            return new SkinFileDataSource.Fallback(source, fallback);
+            if (ModConfig.Common.skinDatabaseFallback) {
+                return new SkinFileDataSource.Fallback(source, fallback);
+            }
+            return source;
         }
         return fallback;
     }
