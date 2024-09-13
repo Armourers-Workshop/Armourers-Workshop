@@ -11,6 +11,7 @@
     "ShaderOptifineMixin",
     "ShaderIrisMixin",
     "RenderStateMixin",
+    "ItemRendererREIMixin",
     "ItemRendererMixin",
     "InventoryScreenMixin",
     "GuiGraphicsMixin",

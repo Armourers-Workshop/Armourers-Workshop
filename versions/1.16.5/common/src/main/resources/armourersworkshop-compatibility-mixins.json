@@ -5,6 +5,7 @@
   "client": [
     "PoseStackMixin",
     "RenderStateMixin",
+    "ItemRendererREIMixin",
     "ItemRendererMixin",
     "InventoryScreenMixin",
     "HttpTextureMixin",
