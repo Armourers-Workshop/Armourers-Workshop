@@ -129,6 +129,7 @@ public class ModConfigSpec {
             defineCategory("database", "Setting for the Database.", () -> {
                 define("skin", "", "Save/Load skin data for the database.", "example1: \"jdbc:mysql://<localhost>[:3306]/<database>[?user=<username>][&password=<password>]\"", "example2: \"jdbc:sqlite://</path/name.db>\"").bind(v -> skinDatabaseURL = v, null);
                 define("fallback", true, "Use fallback when database is specified.").bind(v -> skinDatabaseFallback = v, null);
+                defineInRange("keepalive", 600, 0, 86400, "Keep alive time check when database is specified.", "the unit is seconds, 0 is disabled.").bind(v -> skinDatabaseKeepAlive = v, null);
             });
 
             defineCategory("holiday-events", "Enable/disable holiday events.", () -> {

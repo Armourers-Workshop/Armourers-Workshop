@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.data.source;
 
 import moe.plushie.armourers_workshop.api.data.IDataSource;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.SkinFileStreamUtils;
@@ -26,10 +27,16 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public abstract class SkinFileDataSource implements IDataSource {
 
     private String lastGenUUID = "";
+
+    public void setReconnectHandler(Runnable reconnectHandler) {
+    }
 
     public InputStream load(String id) throws Exception {
         var bytes = query(id);
@@ -71,6 +78,9 @@ public abstract class SkinFileDataSource implements IDataSource {
         private final String name;
         private final Connection connection;
 
+        private Runnable reconnectHandler;
+        private ScheduledExecutorService keepAliveChecker;
+
         private PreparedStatement insertStatement;
         private PreparedStatement existsStatement;
         private PreparedStatement searchStatement;
@@ -79,6 +89,11 @@ public abstract class SkinFileDataSource implements IDataSource {
         public SQL(String name, Connection connection) {
             this.name = name;
             this.connection = connection;
+        }
+
+        @Override
+        public void setReconnectHandler(Runnable reconnectHandler) {
+            this.reconnectHandler = reconnectHandler;
         }
 
         @Override
@@ -100,11 +115,20 @@ public abstract class SkinFileDataSource implements IDataSource {
             searchStatement = connection.prepareStatement("SELECT `id`, `file` FROM `Skin` where `hash` = (?)");
             existsStatement = connection.prepareStatement("SELECT `id` FROM `Skin` where `id` = (?)");
             insertStatement = connection.prepareStatement("INSERT INTO `Skin` (`id`, `type`, `author`, `name`, `flavour`, `created_at`, `hash`, `file`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            // we need to check the validity of the connection.
+            if (ModConfig.Common.skinDatabaseKeepAlive > 0) {
+                keepAliveChecker = createKeepAliveChecker(ModConfig.Common.skinDatabaseKeepAlive);
+            }
         }
 
         @Override
         public void disconnect() throws SQLException {
             ModLog.debug("Disconnect from file db: '{}'", name);
+
+            if (keepAliveChecker != null) {
+                keepAliveChecker.shutdownNow();
+                keepAliveChecker = null;
+            }
 
             ObjectUtils.safeClose(insertStatement);
             ObjectUtils.safeClose(existsStatement);
@@ -160,6 +184,24 @@ public abstract class SkinFileDataSource implements IDataSource {
             try (var result = existsStatement.executeQuery()) {
                 return result.next();
             }
+        }
+
+        private ScheduledExecutorService createKeepAliveChecker(int seconds) {
+            var executor = Executors.newScheduledThreadPool(1);
+            executor.scheduleAtFixedRate(() -> {
+                try {
+                    if (!connection.isValid(2)) {
+                        if (reconnectHandler != null) {
+                            reconnectHandler.run();
+                        }
+                    }
+                } catch (SQLException e) {
+                    if (reconnectHandler != null) {
+                        reconnectHandler.run();
+                    }
+                }
+            }, 0, seconds, TimeUnit.SECONDS);
+            return executor;
         }
     }
 
@@ -397,6 +439,11 @@ public abstract class SkinFileDataSource implements IDataSource {
             this.fallbackSource = fallbackSource;
         }
 
+        @Override
+        public void setReconnectHandler(Runnable reconnectHandler) {
+            super.setReconnectHandler(reconnectHandler);
+            fallbackSource.setReconnectHandler(reconnectHandler);
+        }
 
         @Override
         public void connect() throws Exception {

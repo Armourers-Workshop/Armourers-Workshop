@@ -12,6 +12,9 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class DataManager {
 
@@ -32,6 +35,10 @@ public class DataManager {
             fileDataSource = createFileDataSource(new SkinFileDataSource.Local(rootPath));
             if (fileDataSource != null) {
                 fileDataSource.connect();
+                fileDataSource.setReconnectHandler(() -> {
+                    disconnect();
+                    connect(rootPath);
+                });
             }
         } catch (Exception exception) {
             throw new RuntimeException(exception);
@@ -108,7 +115,6 @@ public class DataManager {
         reusableConnections.put(uri, connection);
         return connection;
     }
-
 }
 
 

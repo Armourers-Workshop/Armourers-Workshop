@@ -134,6 +134,7 @@ public class ModConfig {
 
         // Database
         public static String skinDatabaseURL = "";
+        public static int skinDatabaseKeepAlive = 600;
         public static boolean skinDatabaseFallback = true;
 
         // Holiday events
