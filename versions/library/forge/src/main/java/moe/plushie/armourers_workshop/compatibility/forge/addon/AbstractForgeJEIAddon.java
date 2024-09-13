@@ -1,9 +1,10 @@
-package moe.plushie.armourers_workshop.init.platform.forge.addon;
+package moe.plushie.armourers_workshop.compatibility.forge.addon;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.handlers.IGuiProperties;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
+import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ContainerMenuScreen;
 import moe.plushie.armourers_workshop.core.client.gui.widget.SlotListView;
 import moe.plushie.armourers_workshop.init.ModConstants;
@@ -11,8 +12,9 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.resources.ResourceLocation;
 
+@Available("[1.21, )")
 @JeiPlugin
-public class JEIAddon implements IModPlugin {
+public class AbstractForgeJEIAddon implements IModPlugin {
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -50,37 +52,37 @@ public class JEIAddon implements IModPlugin {
         }
 
         @Override
-        public Class<? extends Screen> getScreenClass() {
+        public Class<? extends Screen> screenClass() {
             return screenClass;
         }
 
         @Override
-        public int getGuiLeft() {
+        public int guiLeft() {
             return guiLeft;
         }
 
         @Override
-        public int getGuiTop() {
+        public int guiTop() {
             return guiTop;
         }
 
         @Override
-        public int getGuiXSize() {
+        public int guiXSize() {
             return guiXSize;
         }
 
         @Override
-        public int getGuiYSize() {
+        public int guiYSize() {
             return guiYSize;
         }
 
         @Override
-        public int getScreenWidth() {
+        public int screenWidth() {
             return screenWidth;
         }
 
         @Override
-        public int getScreenHeight() {
+        public int screenHeight() {
             return screenHeight;
         }
     }
