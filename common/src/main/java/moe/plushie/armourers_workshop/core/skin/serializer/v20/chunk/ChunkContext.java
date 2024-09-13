@@ -46,7 +46,7 @@ public class ChunkContext {
     private void setupWithOptions(SkinFileOptions options) throws Exception {
         // decode security key from options.
         if (options.getSecurityData() != null && options.getSecurityKey() != null) {
-            securityKey = Hex.decodeHex(options.getSecurityKey());
+            securityKey = Hex.decodeHex(options.getSecurityKey().toCharArray());
             securityTypes = SIMPLE_ENCRYPT;
         }
     }
