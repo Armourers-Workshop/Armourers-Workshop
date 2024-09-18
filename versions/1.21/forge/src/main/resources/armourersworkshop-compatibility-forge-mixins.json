@@ -6,6 +6,7 @@
     "ForgeBlockEntityRendererMixin",
     "ForgeEpicFightRendererMixin",
     "ForgeEpicFightFirstPersonRendererMixin",
+    "ForgeEpicFightShieldRendererMixin",
     "ForgeCuriosAddonMixin",
     "ForgeKeyMappingMixin"
   ],

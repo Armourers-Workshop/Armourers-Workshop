@@ -6,6 +6,7 @@
     "ForgeItemRendererMixin",
     "ForgeEpicFightRendererMixin",
     "ForgeEpicFightFirstPersonRendererMixin",
+    "ForgeEpicFightShieldRendererMixin",
     "ForgeCuriosAddonMixin"
   ],
   "mixins": [
