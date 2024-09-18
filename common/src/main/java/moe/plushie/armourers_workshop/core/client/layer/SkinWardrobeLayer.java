@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.patch.EpicFightEntityRendererPatch;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModContributors;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -73,7 +74,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
 
         // render the contributor
         var contributor = ModContributors.by(entity);
-        if (contributor != null && renderData.shouldRenderExtra()) {
+        if (contributor != null && renderData.shouldRenderExtra() && epicFlightContext == null) {
             renderMagicCircle(poseStack1, bufferSource, entity.tickCount + entity.getId() * 31, partialTicks, 24, contributor.color, packedLightIn, OverlayTexture.NO_OVERLAY);
         }
 
