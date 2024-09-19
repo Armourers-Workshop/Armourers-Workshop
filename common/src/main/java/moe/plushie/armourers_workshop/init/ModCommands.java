@@ -312,6 +312,11 @@ public class ModCommands {
             float resolvedScale = scale;
             CompoundTag tag = new CompoundTag();
             tag.putString("Skin", identifier);
+            if (!skin.getSettings().isExportable()) {
+                player.sendSystemMessage(Component.translatable("commands.armourers_workshop.armourers.error.notExportInServer", identifier));
+                UserNotifications.sendSystemToast(Component.translatable("commands.armourers_workshop.armourers.error.notExportInServer", identifier), tag, player);
+                return 0;
+            }
             player.sendSystemMessage(Component.translatable("commands.armourers_workshop.armourers.exportSkin.processing", filename));
             UserNotifications.sendSystemToast(Component.translatable("commands.armourers_workshop.notify.exportSkin.processing"), tag, player);
             EnvironmentExecutor.runOnBackground(() -> () -> {
