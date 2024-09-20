@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.other.BlockEntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
+import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
@@ -93,5 +94,10 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
             ShapeTesselator.stroke(entity.getRenderShape(blockState), UIColor.ORANGE, poseStack, bufferSource);
             poseStack.popPose();
         }
+    }
+
+    @Override
+    public int getViewDistance() {
+        return ModConfig.Client.renderDistanceBlockSkin;
     }
 }

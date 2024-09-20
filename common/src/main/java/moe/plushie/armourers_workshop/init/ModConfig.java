@@ -18,7 +18,7 @@ public class ModConfig {
 
         // Performance
         public static int renderDistanceSkin;
-        public static int renderDistanceBlockSkin;
+        public static int renderDistanceBlockSkin = 64;
         public static int renderDistanceMannequinEquipment;
         public static int modelBakingThreadCount = 4;
         public static double lodDistance = 32F;
