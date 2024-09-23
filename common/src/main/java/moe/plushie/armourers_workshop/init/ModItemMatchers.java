@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 @SuppressWarnings({"unused", "SameParameterValue"})
 public class ModItemMatchers {
 
-    public static final ItemMatcher SWORDS = builder()
+    public static final ItemMatcher SWORDS = MatcherBuilder.of()
             .match("sword")
             .match("machete")
             .match("gladius")
@@ -39,46 +39,68 @@ public class ModItemMatchers {
             .match("shamshir")
             .build();
 
-    public static final ItemMatcher TRIDENTS = builder()
+    public static final ItemMatcher TRIDENTS = MatcherBuilder.of()
             .match("trident")
             .match("lance")
             .match("halbred")
             .match("spear")
             .build();
 
-    public static final ItemMatcher SHIELDS = simple("shield");
-    public static final ItemMatcher BOWS = simple("bow");
+    public static final ItemMatcher SHIELDS = MatcherBuilder.of()
+            .match("shield")
+            .build();
 
-    public static final ItemMatcher PICKAXES = simple("pickaxe");
-    public static final ItemMatcher AXES = simple("(?<!pick)axe");
-    public static final ItemMatcher SHOVELS = simple("shovel");
-    public static final ItemMatcher HOES = simple("hoe");
+    public static final ItemMatcher BOWS = MatcherBuilder.of()
+            .match("bow")
+            .nonMatch("bowl")
+            .build();
 
+    public static final ItemMatcher PICKAXES = MatcherBuilder.of()
+            .match("pickaxe")
+            .build();
 
-    private static ItemMatcher simple(String name) {
-        return builder().match(name).build();
-    }
+    public static final ItemMatcher AXES = MatcherBuilder.of()
+            .match("axe")
+            .nonMatch("pickaxe")
+            .nonMatch("waxed")
+            .build();
 
-    private static MatcherBuilder builder() {
-        return new MatcherBuilder();
-    }
+    public static final ItemMatcher SHOVELS = MatcherBuilder.of()
+            .match("shovel")
+            .build();
+
+    public static final ItemMatcher HOES = MatcherBuilder.of()
+            .match("hoe")
+            .build();
+
 
     private static class MatcherBuilder {
 
-        private final StringBuffer buffer;
+        private final StringBuffer mathBuffer = new StringBuffer();
+        private final StringBuffer nonMathBuffer = new StringBuffer();
+
         private final ArrayList<String> whitelist = new ArrayList<>();
         private final ArrayList<String> blacklist = new ArrayList<>();
+
         private Predicate<ItemStack> requirements;
 
-        private MatcherBuilder() {
-            buffer = new StringBuffer();
+        private static MatcherBuilder of() {
+            return new MatcherBuilder();
         }
 
         private MatcherBuilder match(String tag) {
-            if (buffer.length() != 0) {
-                buffer.append("|");
+            if (!mathBuffer.isEmpty()) {
+                mathBuffer.append("|");
             }
-            buffer.append(tag);
+            mathBuffer.append(tag);
+            return this;
+        }
+
+        private MatcherBuilder nonMatch(String tag) {
+            if (!nonMathBuffer.isEmpty()) {
+                nonMathBuffer.append("|");
+            }
+            nonMathBuffer.append(tag);
             return this;
         }
 
@@ -93,7 +115,7 @@ public class ModItemMatchers {
         }
 
         private ItemMatcher build() {
-            return new ItemMatcher(buffer.toString(), whitelist, blacklist, requirements);
+            return new ItemMatcher(mathBuffer.toString(), nonMathBuffer.toString(), whitelist, blacklist, requirements);
         }
     }
 }
