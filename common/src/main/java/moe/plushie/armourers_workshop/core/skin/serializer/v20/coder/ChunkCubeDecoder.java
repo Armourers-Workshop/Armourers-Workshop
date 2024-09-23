@@ -25,7 +25,7 @@ public abstract class ChunkCubeDecoder extends ChunkCubeSlice {
     }
 
     protected int getInt(int offset) {
-        int ch1 = getByte(offset) & 0xff;
+        int ch1 = getByte(offset + 0) & 0xff;
         int ch2 = getByte(offset + 1) & 0xff;
         int ch3 = getByte(offset + 2) & 0xff;
         int ch4 = getByte(offset + 3) & 0xff;

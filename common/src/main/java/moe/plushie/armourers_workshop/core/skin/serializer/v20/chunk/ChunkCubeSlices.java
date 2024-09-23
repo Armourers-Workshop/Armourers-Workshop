@@ -19,8 +19,8 @@ public class ChunkCubeSlices extends SkinCubes {
     private final List<ChunkCubeSelector> selectors;
     private final ChunkPaletteData palette;
 
-    public ChunkCubeSlices(int owner, List<ChunkCubeSelector> selectors, ChunkPaletteData palette) {
-        this.owner = owner;
+    public ChunkCubeSlices(int id, List<ChunkCubeSelector> selectors, ChunkPaletteData palette) {
+        this.id = id;
         this.palette = palette;
         this.selectors = selectors;
         this.accessor = ThreadLocal.withInitial(() -> build(selectors));

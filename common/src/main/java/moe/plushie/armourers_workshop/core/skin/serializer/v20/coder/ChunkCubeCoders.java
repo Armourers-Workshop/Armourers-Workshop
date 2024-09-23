@@ -43,7 +43,7 @@ public class ChunkCubeCoders {
 
     public static ChunkContext createEncodeContext(Skin skin, SkinFileOptions options) {
         var context = new ChunkContext(options);
-        context.setFastEncoder(canFastEncoding(skin.getParts()));
+        context.setFastEncoder(canFastEncoding(skin.getId(), skin.getParts()));
         return context;
     }
 
@@ -59,16 +59,17 @@ public class ChunkCubeCoders {
         return ChunkCubeDecoderV1.getStride(options, palette);
     }
 
-    public static boolean canFastEncoding(List<SkinPart> parts) {
+    public static boolean canFastEncoding(int skinOwner, List<SkinPart> parts) {
         // when the skin have multiple data owner, we can't enable fast encoder,
         // because it must to recompile and resort it.
-        var owners = new HashSet<Integer>();
+        var owners = new HashSet<>();
+        owners.add(skinOwner);
         ObjectUtils.search(parts, SkinPart::getParts, part -> {
             var cubeData = part.getCubeData();
             if (cubeData.getCubeTotal() != 0) {
-                owners.add(cubeData.getOwner());
+                owners.add(cubeData.getId());
             }
         });
-        return owners.size() <= 1 && !owners.contains(-1);
+        return owners.size() <= 1;
     }
 }

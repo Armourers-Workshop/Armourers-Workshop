@@ -12,20 +12,21 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ChunkCubeData implements ChunkVariable {
 
-    private static final AtomicInteger ID = new AtomicInteger(0);
-
-    private final int owner;
+    private final int id;
     private final ChunkPaletteData palette;
     private final LinkedHashMap<Integer, ChunkCubeSection> sections = new LinkedHashMap<>();
     private final IdentityHashMap<SkinCubes, Collection<ChunkCubeSelector>> pending = new IdentityHashMap<>();
 
-    public ChunkCubeData(ChunkPaletteData palette) {
-        this.owner = ID.incrementAndGet();
+    public ChunkCubeData(int id, ChunkPaletteData palette) {
+        this.id = id;
         this.palette = palette;
+    }
+
+    public int getId() {
+        return id;
     }
 
     @Override
@@ -86,7 +87,7 @@ public class ChunkCubeData implements ChunkVariable {
                 selectors.add(new ChunkCubeSelector(section, offset, offset + size));
             }
         }
-        return new ChunkCubeSlices(owner, selectors, palette);
+        return new ChunkCubeSlices(id, selectors, palette);
     }
 
     public void writeReferenceToStream(SkinCubes cubes, ChunkOutputStream streamIn) throws IOException {

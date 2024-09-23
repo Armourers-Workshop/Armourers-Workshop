@@ -85,6 +85,7 @@ public class ChunkSerializers {
                 builder.parts(it.read(SKIN_PART, chunkCubes));
                 builder.animations(it.read(SKIN_ANIMATION_DATA));
                 builder.blobs(it.readBlobs());
+                builder.id(chunkCubes.getId());
                 builder.version(context.getFileVersion());
                 return builder.build();
             });
@@ -96,7 +97,7 @@ public class ChunkSerializers {
             stream.writeType(skin.getType());
             stream.writeChunk(it -> {
                 var palette = new ChunkPaletteData();
-                var chunkCubes = new ChunkCubeData(palette);
+                var chunkCubes = new ChunkCubeData(skin.getId(), palette);
                 it.write(SKIN_PROPERTIES, skin.getProperties());
                 it.write(SKIN_SETTINGS, skin.getSettings().copyWithOptions(context.getOptions()));
                 it.write(SKIN_TEXTURE_DATA, palette);
@@ -188,7 +189,7 @@ public class ChunkSerializers {
 
         @Override
         public ChunkCubeData read(ChunkInputStream stream, ChunkPaletteData palette) throws IOException {
-            var chunkCubes = new ChunkCubeData(palette);
+            var chunkCubes = new ChunkCubeData(Skin.Builder.generateId(), palette);
             chunkCubes.readFromStream(stream);
             return chunkCubes;
         }
@@ -301,7 +302,7 @@ public class ChunkSerializers {
                 settings.setItemTransforms(itemTransforms);
                 return settings;
             });
-            // DEPRECATED: "3.0.0-beta.15"
+            // DEPRECATED: "3.0.0-beta.14"
             encoders.put("SET3", (stream, obj) -> {
                 SkinItemTransforms itemTransforms = null;
                 int dataVersion = stream.readVarInt();

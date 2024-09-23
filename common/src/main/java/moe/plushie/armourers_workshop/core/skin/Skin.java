@@ -23,7 +23,8 @@ import java.util.Map;
 
 public class Skin implements ISkin {
 
-    private final int id = ThreadUtils.nextId(Skin.class);
+    private final int id;
+    private final int version;
 
     private final SkinSettings settings;
     private final SkinProperties properties;
@@ -31,17 +32,19 @@ public class Skin implements ISkin {
     private final List<SkinPart> parts;
     private final List<SkinAnimation> animations;
 
-    private Object blobs;
     private HashMap<BlockPos, Rectangle3i> blockBounds;
-    private int version;
 
     private final SkinPaintData paintData;
     private final SkinPreviewData previewData;
+    private final Object blobs;
 
-    public Skin(ISkinType skinType, SkinProperties properties, SkinSettings settings, SkinPaintData paintData, SkinPreviewData previewData, Collection<SkinAnimation> skinAnimations, Collection<SkinPart> skinParts) {
+    public Skin(int id, int version, ISkinType skinType, SkinProperties properties, SkinSettings settings, SkinPaintData paintData, SkinPreviewData previewData, Collection<SkinAnimation> skinAnimations, Collection<SkinPart> skinParts, Object blobs) {
+        this.id = id;
+        this.version = version;
+        this.skinType = skinType;
         this.properties = properties;
         this.settings = settings;
-        this.skinType = skinType;
+        this.blobs = blobs;
         this.paintData = paintData;
         this.previewData = previewData;
         this.animations = new ArrayList<>(skinAnimations);
@@ -187,6 +190,7 @@ public class Skin implements ISkin {
         private SkinSettings settings = new SkinSettings();
         private SkinProperties properties = SkinProperties.EMPTY;
         private Object blobs;
+        private int id = -1;
         private int version = SkinSerializer.Versions.V13;
 
         public Builder(ISkinType skinType) {
@@ -195,6 +199,10 @@ public class Skin implements ISkin {
             if (this.skinType == SkinTypes.OUTFIT) {
                 this.settings.setEditable(false);
             }
+        }
+
+        public static int generateId() {
+            return ThreadUtils.nextId(Skin.class);
         }
 
         public Builder properties(SkinProperties properties) {
@@ -216,13 +224,6 @@ public class Skin implements ISkin {
             return this;
         }
 
-        public Builder animations(List<SkinAnimation> animations) {
-            if (animations != null) {
-                this.skinAnimations.addAll(animations);
-            }
-            return this;
-        }
-
         public Builder previewData(SkinPreviewData previewData) {
             this.previewData = previewData;
             return this;
@@ -235,8 +236,20 @@ public class Skin implements ISkin {
             return this;
         }
 
+        public Builder animations(List<SkinAnimation> animations) {
+            if (animations != null) {
+                this.skinAnimations.addAll(animations);
+            }
+            return this;
+        }
+
         public Builder blobs(Object blobs) {
             this.blobs = blobs;
+            return this;
+        }
+
+        public Builder id(int id) {
+            this.id = id;
             return this;
         }
 
@@ -246,13 +259,16 @@ public class Skin implements ISkin {
         }
 
         public Skin build() {
+            updateIdIfNeeded();
             updateSettingIfNeeded();
             updatePropertiesIfNeeded();
-            bindPropertiesIfNeeded();
-            var skin = new Skin(skinType, properties, settings, paintData, previewData, skinAnimations, skinParts);
-            skin.version = version;
-            skin.blobs = blobs;
-            return skin;
+            return new Skin(id, version, skinType, properties, settings, paintData, previewData, skinAnimations, skinParts, blobs);
+        }
+
+        private void updateIdIfNeeded() {
+            if (id == -1) {
+                id = generateId();
+            }
         }
 
         private void updateSettingIfNeeded() {
@@ -305,16 +321,13 @@ public class Skin implements ISkin {
                 properties.put(SkinProperty.KEEP_OVERLAY_COLOR, true);
                 properties.remove(SkinProperty.OVERRIDE_OVERLAY_COLOR);
             }
-        }
-
-        private void bindPropertiesIfNeeded() {
             // bind properties to part.
             for (var part : skinParts) {
                 part.setProperties(properties);
             }
-            var skinIndexs = properties.get(SkinProperty.OUTFIT_PART_INDEXS);
-            if (skinIndexs != null && !skinIndexs.equals("")) {
-                var split = skinIndexs.split(":");
+            var skinIndexes = properties.get(SkinProperty.OUTFIT_PART_INDEXS);
+            if (skinIndexes != null && !skinIndexes.isEmpty()) {
+                var split = skinIndexes.split(":");
                 var partIndex = 0;
                 for (var skinIndex = 0; skinIndex < split.length; ++skinIndex) {
                     var stub = properties.slice(skinIndex);
