@@ -33,7 +33,8 @@ public class ModConfigSpec {
                 defineInRange("renderDistanceSkin", 128, 16, 512, "The max distance in blocks that skins will render.").bind(v -> renderDistanceSkin = v, () -> renderDistanceSkin);
                 defineInRange("renderDistanceBlockSkin", 128, 16, 512, "The max distance in blocks that block skins will be rendered.").bind(v -> renderDistanceBlockSkin = v, () -> renderDistanceBlockSkin);
                 defineInRange("renderDistanceMannequinEquipment", 64, 16, 512, "The max distance in blocks that equipment will be rendered on mannequins.").bind(v -> renderDistanceMannequinEquipment = v, () -> renderDistanceMannequinEquipment);
-                defineInRange("modelBakingThreadCount", getBakingCores(), 1, 16, "The maximum number of threads that will be used to bake models. ", "[range: " + 1 + " ~ " + 16 + ", default: " + "core count / 2" + "]").bind(v -> modelBakingThreadCount = v, () -> modelBakingThreadCount);
+                defineInRange("modelBakingThreadCount", getBakingCores(), 1, 16, "The maximum number of threads that will be used to bake models. ").bind(v -> modelBakingThreadCount = v, () -> modelBakingThreadCount);
+                defineInRange("vertexCompileThreadCount", 2, 1, 16, "The maximum number of threads that will be used to build model vertexes. ").bind(v -> vertexCompileThreadCount = v, () -> vertexCompileThreadCount);
                 define("multipassSkinRendering", true, "When enabled skin will render in multiple passes to reduce visual artifacts.", "Disabling this will improve skin rendering performance at the cost of visual quality.").bind(v -> multipassSkinRendering = v, () -> multipassSkinRendering);
                 defineInRange("lodDistance", 32.0, 8.0, 128.0, "Distance away that skins will have lod applied to them.").bind(v -> lodDistance = v, () -> lodDistance);
                 defineInRange("maxLodLevels", 4, 0, 4, "Number of LOD models to create. Higher number should give a boost to framerate at a small cost to VRAM.").bind(v -> maxLodLevels = v, () -> maxLodLevels);
@@ -124,7 +125,7 @@ public class ModConfigSpec {
             });
             defineCategory("database", "Setting for the Database.", () -> {
                 define("skin", "", "Save/Load skin data for the database.", "example1: \"jdbc:mysql://<localhost>[:3306]/<database>[?user=<username>][&password=<password>]\"", "example2: \"jdbc:sqlite://</path/name.db>\"").bind(v -> skinDatabaseURL = v, null);
-                defineInRange("fallback", 0, 0, 2, "Use fallback when database is specified.", "0 = migrate", "1 = disable", "2 = enable").bind(v -> skinDatabaseFallback = v, null);
+                defineInRange("fallback", 0, 0, 2, "Use fallback when database is specified.", "0 = enable", "1 = disable", "2 = migrate to database").bind(v -> skinDatabaseFallback = v, null);
                 defineInRange("keepalive", 600, 0, 86400, "Keep alive time check when database is specified.", "the unit is seconds, 0 is disabled.").bind(v -> skinDatabaseKeepAlive = v, null);
             });
 

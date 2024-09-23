@@ -21,6 +21,7 @@ public class ModConfig {
         public static int renderDistanceBlockSkin = 64;
         public static int renderDistanceMannequinEquipment;
         public static int modelBakingThreadCount = 4;
+        public static int vertexCompileThreadCount = 2;
         public static double lodDistance = 32F;
         public static boolean multipassSkinRendering = true;
         public static int maxLodLevels = 4;
@@ -136,7 +137,7 @@ public class ModConfig {
         // Database
         public static String skinDatabaseURL = "";
         public static int skinDatabaseKeepAlive = 600;
-        public static int skinDatabaseFallback = 0; // 0 migrate, 1 disable, 2 enable
+        public static int skinDatabaseFallback = 0;
 
         // Holiday events
         public static boolean disableAllHolidayEvents = false;
