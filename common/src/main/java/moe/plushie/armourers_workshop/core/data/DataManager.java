@@ -12,9 +12,6 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class DataManager {
 
@@ -95,10 +92,11 @@ public class DataManager {
         if (uri.startsWith("jdbc:")) {
             var name = uri.replaceAll("jdbc:([^:]+):(.+)", "$1");
             var source = new SkinFileDataSource.SQL(name, createConnection(uri));
-            if (ModConfig.Common.skinDatabaseFallback) {
-                return new SkinFileDataSource.Fallback(source, fallback);
-            }
-            return source;
+            return switch (ModConfig.Common.skinDatabaseFallback) {
+                case 0 -> new SkinFileDataSource.Fallback(source, fallback, true);
+                case 2 -> new SkinFileDataSource.Fallback(source, fallback, false);
+                default -> source; // only use database source.
+            };
         }
         return fallback;
     }

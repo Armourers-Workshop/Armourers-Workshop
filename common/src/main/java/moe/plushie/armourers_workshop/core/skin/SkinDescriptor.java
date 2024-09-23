@@ -227,15 +227,15 @@ public class SkinDescriptor implements ISkinDescriptor {
 
     public enum TooltipFlags {
 
-        NAME(0x01, () -> ModConfig.Client.tooltipSkinName),
-        AUTHOR(0x02, () -> ModConfig.Client.tooltipSkinAuthor),
-        TYPE(0x04, () -> ModConfig.Client.tooltipSkinType),
-        FLAVOUR(0x08, () -> ModConfig.Client.tooltipFlavour),
+        NAME(0x01, () -> ModConfig.Common.tooltipSkinName),
+        AUTHOR(0x02, () -> ModConfig.Common.tooltipSkinAuthor),
+        TYPE(0x04, () -> ModConfig.Common.tooltipSkinType),
+        FLAVOUR(0x08, () -> ModConfig.Common.tooltipFlavour),
 
-        HAS_SKIN(0x10, () -> ModConfig.Client.tooltipHasSkin),
-        OPEN_WARDROBE(0x20, () -> ModConfig.Client.tooltipHasSkin),
+        HAS_SKIN(0x10, () -> ModConfig.Common.tooltipHasSkin),
+        OPEN_WARDROBE(0x20, () -> ModConfig.Common.tooltipHasSkin),
 
-        PREVIEW(0x80, () -> ModConfig.Client.skinPreEnabled);
+        PREVIEW(0x80, () -> ModConfig.Common.tooltipSkinPreview);
 
         private final int flags;
         private final BooleanSupplier supplier;

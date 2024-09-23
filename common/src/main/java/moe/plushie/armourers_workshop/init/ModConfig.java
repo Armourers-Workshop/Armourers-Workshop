@@ -50,14 +50,6 @@ public class ModConfig {
         public static double skinPreLocVertical = 0.5;
         public static boolean skinPreLocFollowMouse = true;
 
-        // Tool-tip
-        public static boolean tooltipHasSkin = true;
-        public static boolean tooltipSkinName = true;
-        public static boolean tooltipSkinAuthor = true;
-        public static boolean tooltipSkinType = true;
-        public static boolean tooltipFlavour = true;
-        public static boolean tooltipOpenWardrobe = true;
-
         // Debug
         public static int texturePaintingType;
         public static boolean showF3DebugInfo;
@@ -111,6 +103,15 @@ public class ModConfig {
         public static int enableFirstPersonSkinRenderer = 0;
         public static boolean enableMatchingByItemId = true;
 
+        // Tooltip
+        public static boolean tooltipHasSkin = true;
+        public static boolean tooltipSkinName = true;
+        public static boolean tooltipSkinAuthor = true;
+        public static boolean tooltipSkinType = true;
+        public static boolean tooltipFlavour = true;
+        public static boolean tooltipSkinPreview = true;
+        public static boolean tooltipOpenWardrobe = true;
+
         // Wardrobe
         public static boolean wardrobeAllowOpening = true;
         public static boolean showWardrobeSkins = true;
@@ -135,7 +136,7 @@ public class ModConfig {
         // Database
         public static String skinDatabaseURL = "";
         public static int skinDatabaseKeepAlive = 600;
-        public static boolean skinDatabaseFallback = true;
+        public static int skinDatabaseFallback = 0; // 0 migrate, 1 disable, 2 enable
 
         // Holiday events
         public static boolean disableAllHolidayEvents = false;

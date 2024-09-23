@@ -86,7 +86,7 @@ public final class SkinSerializerV12 implements ISkinSerializer {
         stream.writeString(TAG_SKIN_PAINT_FOOTER);
         //Write parts
         stream.writeByte(skin.getParts().size());
-        for (SkinPart skinPart : skin.getParts()) {
+        for (var skinPart : skin.getParts()) {
             stream.writeString(TAG_SKIN_PART_HEADER);
             partSerializer.saveSkinPart(skinPart, stream);
             stream.writeString(TAG_SKIN_PART_FOOTER);

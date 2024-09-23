@@ -61,14 +61,6 @@ public class ModConfigSpec {
                 defineInRange("skinPreLocVertical", 0.5F, 0F, 1F, "Vertical location of the skin preview: 0 = top, 1 = bottom.").bind(v -> skinPreLocVertical = v, () -> skinPreLocVertical);
                 define("skinPreLocFollowMouse", true, "Skin preview will be rendered next to the mouse.").bind(v -> skinPreLocFollowMouse = v, () -> skinPreLocFollowMouse);
             });
-            defineCategory("tooltip", "Setting to configure tooltips on skinned items.", () -> {
-                define("tooltipHasSkin", true, "Show has skin tooltip on skinned items.").bind(v -> tooltipHasSkin = v, () -> tooltipHasSkin);
-                define("tooltipSkinName", true, "Show skin name tooltip on items.").bind(v -> tooltipSkinName = v, () -> tooltipSkinName);
-                define("tooltipSkinAuthor", true, "Show skin author tooltip on items.").bind(v -> tooltipSkinAuthor = v, () -> tooltipSkinAuthor);
-                define("tooltipSkinType", true, "Show skin type tooltip on items.").bind(v -> tooltipSkinType = v, () -> tooltipSkinType);
-                define("tooltipFlavour", true, "Show skin flavoue text tooltip on items.").bind(v -> tooltipFlavour = v, () -> tooltipFlavour);
-                define("tooltipOpenWardrobe", true, "Show open wardrobe message on skins.").bind(v -> tooltipOpenWardrobe = v, () -> tooltipOpenWardrobe);
-            });
             defineCategory("debug", "Debug Settings.", () -> {
                 define("shader", false, "Shows shader mixin results in logs.").bind(v -> enableShaderDebug = v, () -> enableShaderDebug);
                 define("animation", false, "Shows animation running states in logs.").bind(v -> enableAnimationDebug = v, () -> enableAnimationDebug);
@@ -99,11 +91,15 @@ public class ModConfigSpec {
                 define("serverCompressesSkins", true, "If enabled the server will compress skins before sending them to clients.", "Highly recommended unless the server has a very slow CPU.").bind(v -> enableServerCompressesSkins = v, () -> enableServerCompressesSkins);
                 defineInRange("enableEmbeddedSkinRenderer", 0, 0, 2, "Using embedded skin renderer to replace the original item renderer.", "0 = use client config", "1 = always disable", "2 = always enable").bind(v -> enableEmbeddedSkinRenderer = v, () -> enableEmbeddedSkinRenderer);
                 defineInRange("enableFirstPersonSkinRenderer", 0, 0, 2, "Using skin renderer to replace the original first person hands renderer.", "0 = use client config", "1 = always disable", "2 = always enable").bind(v -> enableFirstPersonSkinRenderer = v, () -> enableFirstPersonSkinRenderer);
-
-//                if (!LibModInfo.MOD_VERSION.startsWith("@VER")) {
-//                    lastVersion = config.getString("lastVersion", CATEGORY_GENERAL, "0.0",
-//                            "Used by the mod to check if it has been updated.");
-//                }
+            });
+            defineCategory("tooltip", "Setting to configure tooltips on skinned items.", () -> {
+                define("tooltipHasSkin", true, "Show has skin tooltip on skinned items.").bind(v -> tooltipHasSkin = v, () -> tooltipHasSkin);
+                define("tooltipSkinName", true, "Show skin name tooltip on items.").bind(v -> tooltipSkinName = v, () -> tooltipSkinName);
+                define("tooltipSkinAuthor", true, "Show skin author tooltip on items.").bind(v -> tooltipSkinAuthor = v, () -> tooltipSkinAuthor);
+                define("tooltipSkinType", true, "Show skin type tooltip on items.").bind(v -> tooltipSkinType = v, () -> tooltipSkinType);
+                define("tooltipFlavour", true, "Show skin flavour text tooltip on items.").bind(v -> tooltipFlavour = v, () -> tooltipFlavour);
+                define("tooltipSkinPreview", true, "Show skin preview tooltip on items.").bind(v -> tooltipSkinPreview = v, () -> tooltipSkinPreview);
+                define("tooltipOpenWardrobe", true, "Show open wardrobe message on skins.").bind(v -> tooltipOpenWardrobe = v, () -> tooltipOpenWardrobe);
             });
             defineCategory("wardrobe", "Setting for the players wardrobe.", () -> {
                 define("allowOpening", true, "Allow the player to open the wardrobe GUI.").bind(v -> wardrobeAllowOpening = v, () -> wardrobeAllowOpening);
@@ -128,7 +124,7 @@ public class ModConfigSpec {
             });
             defineCategory("database", "Setting for the Database.", () -> {
                 define("skin", "", "Save/Load skin data for the database.", "example1: \"jdbc:mysql://<localhost>[:3306]/<database>[?user=<username>][&password=<password>]\"", "example2: \"jdbc:sqlite://</path/name.db>\"").bind(v -> skinDatabaseURL = v, null);
-                define("fallback", true, "Use fallback when database is specified.").bind(v -> skinDatabaseFallback = v, null);
+                defineInRange("fallback", 0, 0, 2, "Use fallback when database is specified.", "0 = migrate", "1 = disable", "2 = enable").bind(v -> skinDatabaseFallback = v, null);
                 defineInRange("keepalive", 600, 0, 86400, "Keep alive time check when database is specified.", "the unit is seconds, 0 is disabled.").bind(v -> skinDatabaseKeepAlive = v, null);
             });
 

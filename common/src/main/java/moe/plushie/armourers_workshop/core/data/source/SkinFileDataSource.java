@@ -45,20 +45,22 @@ public abstract class SkinFileDataSource implements IDataSource {
 
     public String save(InputStream stream) throws Exception {
         var bytes = SkinFileUtils.readStreamToByteArray(stream);
-        var hash = Arrays.hashCode(bytes);
-        var identifier = search(hash, bytes);
+        var fileHash = Arrays.hashCode(bytes);
+        var identifier = search(fileHash, bytes);
         if (identifier != null) {
             return identifier;
         }
         var skin = SkinFileStreamUtils.loadSkinFromStream(new ByteArrayInputStream(bytes));
         identifier = getFreeId();
-        update(identifier, skin, hash, bytes);
+        update(identifier, skin, fileHash, bytes);
         return identifier;
     }
 
     protected abstract void update(String id, Skin skin, int hash, byte[] bytes) throws Exception;
 
     protected abstract byte[] query(String id) throws Exception;
+
+    protected abstract void remove(String id) throws Exception;
 
     protected abstract String search(int hash, byte[] bytes) throws Exception;
 
@@ -85,6 +87,7 @@ public abstract class SkinFileDataSource implements IDataSource {
         private PreparedStatement existsStatement;
         private PreparedStatement searchStatement;
         private PreparedStatement queryStatement;
+        private PreparedStatement removeStatement;
 
         public SQL(String name, Connection connection) {
             this.name = name;
@@ -99,6 +102,7 @@ public abstract class SkinFileDataSource implements IDataSource {
         @Override
         public void connect() throws SQLException {
             ModLog.debug("Connect to file db: '{}'", name);
+
             // try to create skin table if needed.
             var builder = new SQLTableBuilder("Skin");
             builder.add("id", "VARCHAR(48) NOT NULL PRIMARY KEY");
@@ -110,11 +114,14 @@ public abstract class SkinFileDataSource implements IDataSource {
             builder.add("hash", "INT NOT NULL");
             builder.add("file", "LONGBLOB NOT NULL");
             builder.execute(connection);
+
             // create precompiled statement when create after;
             queryStatement = connection.prepareStatement("SELECT `file` FROM `Skin` where `id` = (?)");
             searchStatement = connection.prepareStatement("SELECT `id`, `file` FROM `Skin` where `hash` = (?)");
             existsStatement = connection.prepareStatement("SELECT `id` FROM `Skin` where `id` = (?)");
             insertStatement = connection.prepareStatement("INSERT INTO `Skin` (`id`, `type`, `author`, `name`, `flavour`, `created_at`, `hash`, `file`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            removeStatement = connection.prepareStatement("DELETE FROM `Skin` where `id` = (?)");
+
             // we need to check the validity of the connection.
             if (ModConfig.Common.skinDatabaseKeepAlive > 0) {
                 keepAliveChecker = createKeepAliveChecker(ModConfig.Common.skinDatabaseKeepAlive);
@@ -130,6 +137,7 @@ public abstract class SkinFileDataSource implements IDataSource {
                 keepAliveChecker = null;
             }
 
+            ObjectUtils.safeClose(removeStatement);
             ObjectUtils.safeClose(insertStatement);
             ObjectUtils.safeClose(existsStatement);
             ObjectUtils.safeClose(searchStatement);
@@ -162,6 +170,12 @@ public abstract class SkinFileDataSource implements IDataSource {
                 }
             }
             throw new FileNotFoundException("the file '" + id + "' not found in " + name + "!");
+        }
+
+        @Override
+        protected void remove(String id) throws Exception {
+            removeStatement.setString(1, id);
+            removeStatement.executeUpdate();
         }
 
         @Override
@@ -260,6 +274,14 @@ public abstract class SkinFileDataSource implements IDataSource {
         }
 
         @Override
+        protected void remove(String id) throws Exception {
+            var node = nodes.remove(id);
+            if (node != null) {
+                node.remove();
+            }
+        }
+
+        @Override
         protected String search(int hash, byte[] bytes) throws Exception {
             for (var node : nodes.values()) {
                 if (node.isValid() && node.fileHash == hash && node.equalContents(bytes)) {
@@ -283,14 +305,14 @@ public abstract class SkinFileDataSource implements IDataSource {
 
         private Node loadNode(File parent) {
             try {
-                File indexFile = new File(parent, "0");
-                CompoundTag tag = SkinFileUtils.readNBT(indexFile);
+                var indexFile = new File(parent, "0");
+                var tag = SkinFileUtils.readNBT(indexFile);
                 if (tag != null) {
-                    Node node = new Node(tag);
+                    var node = new Node(tag);
                     nodes.put(node.id, node);
                     return node;
                 }
-                Node node = generateNode(parent.getName(), new File(parent, "1"));
+                var node = generateNode(parent.getName(), new File(parent, "1"));
                 if (node != null) {
                     nodes.put(node.id, node);
                     return node;
@@ -341,7 +363,7 @@ public abstract class SkinFileDataSource implements IDataSource {
             }
 
             public CompoundTag serializeNBT() {
-                CompoundTag tag = new CompoundTag();
+                var tag = new CompoundTag();
                 tag.putString("UUID", id);
                 tag.putInt("Version", version);
                 // file
@@ -356,8 +378,8 @@ public abstract class SkinFileDataSource implements IDataSource {
                         var skinFile = getFile();
                         var indexFile = getIndexFile();
                         SkinFileUtils.forceMkdirParent(skinFile);
-                        FileOutputStream fs = new FileOutputStream(skinFile);
-                        SkinFileUtils.transferTo(inputStream, fs);
+                        var outputStream = new FileOutputStream(skinFile);
+                        SkinFileUtils.transferTo(inputStream, outputStream);
                         SkinFileUtils.writeNBT(serializeNBT(), indexFile);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -381,7 +403,7 @@ public abstract class SkinFileDataSource implements IDataSource {
 
             public boolean equalContents(byte[] bytes) {
                 int index = 0;
-                try (FileInputStream stream = new FileInputStream(getFile())) {
+                try (var stream = new FileInputStream(getFile())) {
                     byte[] buff = new byte[1024];
                     while (index < bytes.length) {
                         // when the readable content is smaller than the chunk size,
@@ -434,9 +456,12 @@ public abstract class SkinFileDataSource implements IDataSource {
         private final SkinFileDataSource source;
         private final SkinFileDataSource fallbackSource;
 
-        public Fallback(SkinFileDataSource source, SkinFileDataSource fallbackSource) {
+        private final boolean isMoveFiles;
+
+        public Fallback(SkinFileDataSource source, SkinFileDataSource fallbackSource, boolean isMoveFiles) {
             this.source = source;
             this.fallbackSource = fallbackSource;
+            this.isMoveFiles = isMoveFiles;
         }
 
         @Override
@@ -468,11 +493,25 @@ public abstract class SkinFileDataSource implements IDataSource {
                 return source.query(id);
             } catch (FileNotFoundException exception) {
                 // when the file exists in fallback, we will try using fallback version.
-                if (fallbackSource.contains(id)) {
-                    return fallbackSource.query(id);
+                if (!fallbackSource.contains(id)) {
+                    throw exception;
                 }
-                throw exception;
+                // when load from fallback source, we will try to move the file.
+                var bytes = fallbackSource.query(id);
+                if (!isMoveFiles) {
+                    return bytes;
+                }
+                var skin = SkinFileStreamUtils.loadSkinFromStream(new ByteArrayInputStream(bytes));
+                var fileHash = Arrays.hashCode(bytes);
+                source.update(id, skin, fileHash, bytes);
+                fallbackSource.remove(id);
+                return bytes;
             }
+        }
+
+        @Override
+        protected void remove(String id) throws Exception {
+            source.remove(id);
         }
 
         @Override
