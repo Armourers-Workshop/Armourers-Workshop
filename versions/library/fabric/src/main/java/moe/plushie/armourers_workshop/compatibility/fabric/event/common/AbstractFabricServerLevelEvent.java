@@ -11,14 +11,14 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 public class AbstractFabricServerLevelEvent {
 
     public static IEventHandler<ServerLevelTickEvent.Pre> preTickFactory() {
-        return subscriber -> ServerTickEvents.START_WORLD_TICK.register(level -> subscriber.accept(() -> level));
+        return (priority, receiveCancelled, subscriber) -> ServerTickEvents.START_WORLD_TICK.register(level -> subscriber.accept(() -> level));
     }
 
     public static IEventHandler<ServerLevelTickEvent.Post> postTickFactory() {
-        return subscriber -> ServerTickEvents.END_WORLD_TICK.register(level -> subscriber.accept(() -> level));
+        return (priority, receiveCancelled, subscriber) -> ServerTickEvents.END_WORLD_TICK.register(level -> subscriber.accept(() -> level));
     }
 
     public static IEventHandler<ServerLevelAddEntityEvent> addEntityFactory() {
-        return subscriber -> ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> subscriber.accept(() -> entity));
+        return (priority, receiveCancelled, subscriber) -> ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> subscriber.accept(() -> entity));
     }
 }

@@ -41,7 +41,7 @@ public class PlayerTextureDescriptor {
             this.value = nbt.getString(Constants.Key.TEXTURE_URL);
         }
         if (nbt != null && nbt.contains(Constants.Key.TEXTURE_PROFILE, Constants.TagFlags.COMPOUND)) {
-            CompoundTag tag = nbt.getCompound(Constants.Key.TEXTURE_PROFILE);
+            var tag = nbt.getCompound(Constants.Key.TEXTURE_PROFILE);
             if (tag.contains("Name", Constants.TagFlags.STRING)) {
                 this.source = Source.USER;
                 this.value = tag.getString("Name");
@@ -60,11 +60,11 @@ public class PlayerTextureDescriptor {
         if (!itemStack.is(ModItems.MANNEQUIN.get())) {
             return EMPTY;
         }
-        CompoundTag entityTag = itemStack.get(ModDataComponents.ENTITY_DATA.get());
+        var entityTag = itemStack.get(ModDataComponents.ENTITY_DATA.get());
         if (entityTag == null || !entityTag.contains(Constants.Key.ENTITY_TEXTURE, Constants.TagFlags.COMPOUND)) {
             return EMPTY;
         }
-        PlayerTextureDescriptor descriptor = DESCRIPTOR_CACHES.getIfPresent(itemStack);
+        var descriptor = DESCRIPTOR_CACHES.getIfPresent(itemStack);
         if (descriptor != null) {
             return descriptor;
         }
@@ -90,7 +90,7 @@ public class PlayerTextureDescriptor {
     }
 
     public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
+        var nbt = new CompoundTag();
         switch (source) {
             case URL:
                 if (value != null) {
@@ -99,7 +99,7 @@ public class PlayerTextureDescriptor {
                 break;
             case USER:
                 if (value != null) {
-                    CompoundTag tag = new CompoundTag();
+                    var tag = new CompoundTag();
                     tag.putString("Name", value);
                     nbt.put(Constants.Key.TEXTURE_PROFILE, tag);
                 }

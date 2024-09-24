@@ -32,7 +32,7 @@ public class GenericProperties<S> implements IGenericProperties<S> {
 
     @Override
     public IGenericValue<S, ?> read(IFriendlyByteBuf buf) {
-        int ordinal = buf.readVarInt();
+        var ordinal = buf.readVarInt();
         var property = properties.get(ordinal);
         return decodePacket(property, buf);
     }

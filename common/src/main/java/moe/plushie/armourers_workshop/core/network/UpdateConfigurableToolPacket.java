@@ -44,7 +44,7 @@ public class UpdateConfigurableToolPacket extends CustomPacket {
             abort(player, "update", "tried change item type.");
             return;
         }
-        ItemStack newItemStack = oldItemStack.copy();
+        var newItemStack = oldItemStack.copy();
         copyTo(itemStack, newItemStack, ModDataComponents.TOOL_OPTIONS.get());
         copyTo(itemStack, newItemStack, ModDataComponents.TOOL_COLOR.get());
         player.setItemInHand(hand, newItemStack);

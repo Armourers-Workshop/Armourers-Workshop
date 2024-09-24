@@ -5,8 +5,8 @@ import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeCommonEve
 import moe.plushie.armourers_workshop.init.platform.event.common.RegisterDataPackEvent;
 
 public class AbstractForgeRegisterDataPackEvent {
+
     public static IEventHandler<RegisterDataPackEvent> registryFactory() {
         return AbstractForgeCommonEventsImpl.DATA_PACK_REGISTRY.map(event -> event::addListener);
     }
-
 }

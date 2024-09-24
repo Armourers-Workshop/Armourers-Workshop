@@ -53,7 +53,7 @@ public class SkinLibrarySetting {
     }
 
     public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
+        var tag = new CompoundTag();
         tag.putOptionalInt("Flags", flags, 0);
         tag.putOptionalString("PublicKey", publicKey, null);
         return tag;

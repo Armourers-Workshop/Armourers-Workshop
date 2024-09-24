@@ -10,11 +10,11 @@ import net.minecraft.client.Minecraft;
 public class AbstractFabricRenderFrameEvent {
 
     public static IEventHandler<RenderFrameEvent.Pre> preFactory() {
-        return subscriber -> ClientFrameRenderEvents.START.register(client -> subscriber.accept(ReusableEvent.INSTANCE));
+        return (priority, receiveCancelled, subscriber) -> ClientFrameRenderEvents.START.register(client -> subscriber.accept(ReusableEvent.INSTANCE));
     }
 
     public static IEventHandler<RenderFrameEvent.Post> postFactory() {
-        return subscriber -> ClientFrameRenderEvents.END.register(client -> subscriber.accept(ReusableEvent.INSTANCE));
+        return (priority, receiveCancelled, subscriber) -> ClientFrameRenderEvents.END.register(client -> subscriber.accept(ReusableEvent.INSTANCE));
     }
 
     private static class ReusableEvent implements RenderFrameEvent.Pre, RenderFrameEvent.Post {

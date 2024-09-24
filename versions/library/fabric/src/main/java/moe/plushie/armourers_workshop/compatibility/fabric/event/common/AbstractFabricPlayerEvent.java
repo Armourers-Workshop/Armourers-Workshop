@@ -15,16 +15,16 @@ import net.minecraft.world.entity.player.Player;
 public class AbstractFabricPlayerEvent {
 
     public static IEventHandler<PlayerEvent.LoggingIn> loggingInFactory() {
-        return subscriber -> ServerPlayConnectionEvents.JOIN.register(((handler, sender, server) -> subscriber.accept(() -> handler.player)));
+        return (priority, receiveCancelled, subscriber) -> ServerPlayConnectionEvents.JOIN.register(((handler, sender, server) -> subscriber.accept(() -> handler.player)));
     }
 
     public static IEventHandler<PlayerEvent.LoggingOut> loggingOutFactory() {
-        return subscriber -> ServerPlayConnectionEvents.DISCONNECT.register(((handler, server) -> subscriber.accept(() -> handler.player)));
+        return (priority, receiveCancelled, subscriber) -> ServerPlayConnectionEvents.DISCONNECT.register(((handler, server) -> subscriber.accept(() -> handler.player)));
     }
 
 
     public static IEventHandler<PlayerEvent.Clone> cloneFactory() {
-        return subscriber -> ServerPlayerEvents.COPY_FROM.register(((oldPlayer, newPlayer, alive) -> subscriber.accept(new PlayerEvent.Clone() {
+        return (priority, receiveCancelled, subscriber) -> ServerPlayerEvents.COPY_FROM.register(((oldPlayer, newPlayer, alive) -> subscriber.accept(new PlayerEvent.Clone() {
             @Override
             public Player getOriginal() {
                 return oldPlayer;
@@ -38,14 +38,14 @@ public class AbstractFabricPlayerEvent {
     }
 
     public static IEventHandler<PlayerEvent.Death> deathFactory() {
-        return subscriber -> ServerPlayerEvents.ALLOW_DEATH.register(((player, damageSource, damageAmount) -> {
+        return (priority, receiveCancelled, subscriber) -> ServerPlayerEvents.ALLOW_DEATH.register(((player, damageSource, damageAmount) -> {
             subscriber.accept(() -> player);
             return true;
         }));
     }
 
     public static IEventHandler<PlayerEvent.Attack> attackFactory() {
-        return subscriber -> AttackEntityCallback.EVENT.register(((player, world, hand, entity, hitResult) -> {
+        return (priority, receiveCancelled, subscriber) -> AttackEntityCallback.EVENT.register(((player, world, hand, entity, hitResult) -> {
             InteractionResult[] results = {InteractionResult.PASS};
             subscriber.accept(new PlayerEvent.Attack() {
                 @Override
@@ -73,7 +73,7 @@ public class AbstractFabricPlayerEvent {
     }
 
     public static IEventHandler<PlayerEvent.StartTracking> startTrackingFactory() {
-        return subscriber -> EntityLifecycleEvents.DID_START_TRACKING.register((target, player) -> subscriber.accept(new PlayerEvent.StartTracking() {
+        return (priority, receiveCancelled, subscriber) -> EntityLifecycleEvents.DID_START_TRACKING.register((target, player) -> subscriber.accept(new PlayerEvent.StartTracking() {
             @Override
             public Entity getTarget() {
                 return target;

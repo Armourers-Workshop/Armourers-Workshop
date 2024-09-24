@@ -10,15 +10,15 @@ import moe.plushie.armourers_workshop.init.platform.event.common.LauncherLoadCom
 public class AbstractFabricLauncherLifecycleEvent {
 
     public static IEventHandler<LauncherClientSetupEvent> clientSetupFactory() {
-        return subscriber -> subscriber.accept(Runnable::run);
+        return (priority, receiveCancelled, subscriber) -> subscriber.accept(Runnable::run);
     }
 
     public static IEventHandler<LauncherCommonSetupEvent> commonSetupFactory() {
-        return subscriber -> subscriber.accept(Runnable::run);
+        return (priority, receiveCancelled, subscriber) -> subscriber.accept(Runnable::run);
     }
 
     public static IEventHandler<LauncherLoadCompleteEvent> loadCompleteFactory() {
-        return subscriber -> subscriber.accept(Runnable::run);
+        return (priority, receiveCancelled, subscriber) -> subscriber.accept(Runnable::run);
     }
 
 

@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
-import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,15 +74,15 @@ public class SkinPart implements ISkinPart {
         HashMap<Long, Rectangle3i> blockGrid = new HashMap<>();
         blockBounds = new HashMap<>();
         cubeData.forEach(cube -> {
-            Vector3i pos = cube.getPosition();
-            int x = pos.getX();
-            int y = pos.getY();
-            int z = pos.getZ();
-            int tx = MathUtils.floor((x + 8) / 16f);
-            int ty = MathUtils.floor((y + 8) / 16f);
-            int tz = MathUtils.floor((z + 8) / 16f);
-            long key = BlockPos.asLong(-tx, -ty, tz);
-            Rectangle3i rec = new Rectangle3i(-(x - tx * 16) - 1, -(y - ty * 16) - 1, z - tz * 16, 1, 1, 1);
+            var pos = cube.getPosition();
+            var x = pos.getX();
+            var y = pos.getY();
+            var z = pos.getZ();
+            var tx = MathUtils.floor((x + 8) / 16f);
+            var ty = MathUtils.floor((y + 8) / 16f);
+            var tz = MathUtils.floor((z + 8) / 16f);
+            var key = BlockPos.asLong(-tx, -ty, tz);
+            var rec = new Rectangle3i(-(x - tx * 16) - 1, -(y - ty * 16) - 1, z - tz * 16, 1, 1, 1);
             blockGrid.computeIfAbsent(key, k -> rec).union(rec);
         });
         blockGrid.forEach((key, value) -> blockBounds.put(BlockPos.of(key), value));
@@ -193,7 +192,7 @@ public class SkinPart implements ISkinPart {
         }
 
         public SkinPart build() {
-            SkinPart skinPart = new SkinPart(partType, markers, cubes);
+            var skinPart = new SkinPart(partType, markers, cubes);
             skinPart.setName(name);
             skinPart.setTransform(transform);
             skinPart.setBlobs(blobs);

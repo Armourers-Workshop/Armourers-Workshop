@@ -13,7 +13,7 @@ import net.minecraft.world.InteractionHand;
 public class AbstractFabricRenderSpecificHandEvent {
 
     public static IEventHandler<RenderSpecificHandEvent> armFactory() {
-        return subscriber -> RenderSpecificArmEvents.ARM.register((poseStack, buffers, light, player, hand) -> {
+        return (priority, receiveCancelled, subscriber) -> RenderSpecificArmEvents.ARM.register((poseStack, buffers, light, player, hand) -> {
             boolean[] flags = {false};
             subscriber.accept(new RenderSpecificHandEvent() {
 

@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.registry.IEventHandler;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeCommonEventsImpl;
 import moe.plushie.armourers_workshop.init.platform.event.common.PlayerEvent;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
@@ -36,8 +35,7 @@ public class AbstractForgePlayerEvent {
 
     public static IEventHandler<PlayerEvent.Death> deathFactory() {
         return AbstractForgeCommonEventsImpl.PLAYER_DEATH.flatMap(event -> {
-            Player player = ObjectUtils.safeCast(event.getEntity(), Player.class);
-            if (player != null) {
+            if (event.getEntity() instanceof Player player) {
                 return () -> player;
             }
             return null;

@@ -33,9 +33,9 @@ public class ColorSchemeArgumentType implements IArgumentType<ColorScheme> {
 
     @Override
     public ColorScheme parse(final StringReader reader) throws CommandSyntaxException {
-        ColorSchemeParser parser = new ColorSchemeParser(reader).parse();
-        ColorScheme colorScheme = new ColorScheme();
-        for (Map.Entry<ISkinPaintType, PaintColor> entry : parser.getProperties().entrySet()) {
+        var parser = new ColorSchemeParser(reader).parse();
+        var colorScheme = new ColorScheme();
+        for (var entry : parser.getProperties().entrySet()) {
             colorScheme.setColor(entry.getKey(), entry.getValue());
         }
         return colorScheme;
@@ -43,9 +43,9 @@ public class ColorSchemeArgumentType implements IArgumentType<ColorScheme> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        StringReader stringReader = new StringReader(builder.getInput());
+        var stringReader = new StringReader(builder.getInput());
         stringReader.setCursor(builder.getStart());
-        ColorSchemeParser parser = new ColorSchemeParser(stringReader);
+        var parser = new ColorSchemeParser(stringReader);
         try {
             parser.parse();
         } catch (CommandSyntaxException commandSyntaxException) {

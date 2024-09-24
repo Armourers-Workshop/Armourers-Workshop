@@ -13,10 +13,15 @@ public class EventManager {
     private static final HashMap<Class<?>, IEventHandler<?>> SOURCES = new HashMap<>();
     private static final HashMap<Class<?>, ArrayList<Consumer<?>>> HANDLERS = new HashMap<>();
 
+
     public static <E> void listen(Class<E> eventType, Consumer<E> subscriber) {
+        listen(eventType, IEventHandler.Priority.NORMAL, false, subscriber);
+    }
+
+    public static <E> void listen(Class<E> eventType, IEventHandler.Priority priority, boolean receiveCancelled, Consumer<E> subscriber) {
         var handler = SOURCES.get(eventType);
         if (handler != null) {
-            handler.listen(ObjectUtils.unsafeCast(subscriber));
+            handler.listen(priority, receiveCancelled, ObjectUtils.unsafeCast(subscriber));
         }
         // save it to custom post.
         HANDLERS.computeIfAbsent(eventType, key -> new ArrayList<>()).add(subscriber);

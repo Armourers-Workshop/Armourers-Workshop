@@ -43,8 +43,8 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
 
     public boolean shouldLoadArmourItem(Player player) {
         var stackInput = inventory.getItem(0);
-        var stackOuput = inventory.getItem(1);
-        if (stackInput.isEmpty() || !stackOuput.isEmpty()) {
+        var stackOutput = inventory.getItem(1);
+        if (stackInput.isEmpty() || !stackOutput.isEmpty()) {
             return false;
         }
         var descriptor = SkinDescriptor.of(stackInput);

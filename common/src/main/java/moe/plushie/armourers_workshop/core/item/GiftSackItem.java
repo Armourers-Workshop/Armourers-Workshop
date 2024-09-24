@@ -60,7 +60,7 @@ public class GiftSackItem extends FlavouredItem implements IItemGroupProvider, I
     @Override
     public void fillItemGroup(List<ItemStack> results, IItemGroup group) {
         // add all the gifts into creative inventory
-        for (Holiday holiday : ModHolidays.getHolidays()) {
+        for (var holiday : ModHolidays.getHolidays()) {
             if (holiday.getHandler() != null) {
                 results.add(of(holiday));
             }

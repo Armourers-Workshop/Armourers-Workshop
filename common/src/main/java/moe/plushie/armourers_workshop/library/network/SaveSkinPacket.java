@@ -114,7 +114,7 @@ public class SaveSkinPacket extends CustomPacket {
                 abort(player, "load", "load prohibited in the config file");
                 return;
             }
-            Skin skin = getSkin();
+            var skin = getSkin();
             if (skin == null) {
                 abort(player, "load", "missing from skin loader");
                 return;
@@ -122,7 +122,7 @@ public class SaveSkinPacket extends CustomPacket {
             if (container.shouldLoadStack()) {
                 accept(player, "load");
                 // TODO: fix db-link
-                String identifier = SkinLoader.getInstance().saveSkin(source.getIdentifier(), skin);
+                var identifier = SkinLoader.getInstance().saveSkin(source.getIdentifier(), skin);
                 container.crafting(new SkinDescriptor(identifier, skin.getType()));
             }
             return;

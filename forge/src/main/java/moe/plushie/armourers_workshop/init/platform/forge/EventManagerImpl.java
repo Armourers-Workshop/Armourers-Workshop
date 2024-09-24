@@ -17,10 +17,12 @@ public class EventManagerImpl {
     }
 
     public static <E> IEventHandler<E> factory(Supplier<E> factory) {
-        return handler -> handler.accept(factory.get());
+        return (priority, receiveCancelled, handler) -> handler.accept(factory.get());
     }
 
     public static <E> IEventHandler<E> placeholder(Class<E> type) {
-        return Objects::hash;
+        return (priority, receiveCancelled, handler) -> {
+            // ignore
+        };
     }
 }

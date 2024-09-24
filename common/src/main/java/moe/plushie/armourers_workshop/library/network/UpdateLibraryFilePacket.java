@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.permission.BlockPermission;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModPermissions;
-import moe.plushie.armourers_workshop.library.data.SkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryFile;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
@@ -54,11 +53,11 @@ public class UpdateLibraryFilePacket extends CustomPacket {
 
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
-        String playerName = player.getScoreboardName();
+        var playerName = player.getScoreboardName();
         if (!mode.permission.accept(player)) {
             return;
         }
-        SkinLibrary library = SkinLibraryManager.getServer().getLibrary();
+        var library = SkinLibraryManager.getServer().getLibrary();
         if (mode == Mode.RELOAD) {
             library.reload();
             return;
@@ -76,7 +75,7 @@ public class UpdateLibraryFilePacket extends CustomPacket {
     }
 
     private String decodePath(IFriendlyByteBuf buffer) {
-        String path = SkinFileUtils.normalize(buffer.readUtf(), true); // security check
+        var path = SkinFileUtils.normalize(buffer.readUtf(), true); // security check
         if (path != null) {
             return path;
         }
@@ -91,7 +90,7 @@ public class UpdateLibraryFilePacket extends CustomPacket {
         if (destination.isEmpty()) {
             return false;
         }
-        String key = "/private/" + player.getStringUUID();
+        var key = "/private/" + player.getStringUUID();
         if (destination.startsWith(key) && source.startsWith(key)) {
             return true;
         }

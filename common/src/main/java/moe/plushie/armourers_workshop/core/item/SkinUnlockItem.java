@@ -40,7 +40,7 @@ public class SkinUnlockItem extends FlavouredItem {
         wardrobe.broadcast();
         player.sendSystemMessage(Component.translatable("chat.armourers_workshop.slotUnlocked", skinName, Integer.toString(count)));
         // we need consume item stack even in creative mode.
-        ItemStack resultStack = itemStack.copy();
+        var resultStack = itemStack.copy();
         resultStack.shrink(1);
         player.setItemInHand(hand, resultStack);
         return InteractionResultHolder.consume(itemStack);

@@ -73,7 +73,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         poseStack.scale(-1, -1, 1);
 
         var polygonOffset = 0f;
-        for (ISkinPartType partType : skinType.getParts()) {
+        for (var partType : skinType.getParts()) {
             var origin = partType.getOffset();
             var rect = partType.getBuildingSpace();
             var rect2 = partType.getGuideSpace();

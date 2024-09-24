@@ -59,12 +59,12 @@ public class FileArgumentType implements IArgumentType<String> {
 
     @Override
     public String parse(final StringReader reader) throws CommandSyntaxException {
-        String inputPath = reader.getRemaining();
+        var inputPath = reader.getRemaining();
         if (inputPath.startsWith("\"")) {
             return stringType.parse(reader);
         }
         if (inputPath.startsWith("/")) { // file
-            ArrayList<String> fileList = getFileList(inputPath);
+            var fileList = getFileList(inputPath);
             if (fileList.isEmpty()) {
                 throw ERROR_NOT_FOUND.createWithContext(reader);
             }
@@ -81,9 +81,9 @@ public class FileArgumentType implements IArgumentType<String> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        String inputPath = builder.getRemaining();
+        var inputPath = builder.getRemaining();
         if (inputPath.startsWith("/")) {
-            ArrayList<String> fileList = getFileList(inputPath);
+            var fileList = getFileList(inputPath);
             if (!fileList.isEmpty()) {
                 return suggestFiles(fileList, inputPath, builder);
             }
@@ -97,10 +97,10 @@ public class FileArgumentType implements IArgumentType<String> {
     }
 
     private CompletableFuture<Suggestions> suggestFiles(ArrayList<String> fileList, String inputPath, SuggestionsBuilder builder) {
-        String parent = getParentPath(inputPath);
+        var parent = getParentPath(inputPath);
         builder = builder.createOffset(builder.getStart() + parent.length());
-        for (String file : fileList) {
-            String name = SkinFileUtils.getRelativePath(file, parent);
+        for (var file : fileList) {
+            var name = SkinFileUtils.getRelativePath(file, parent);
             if (!name.isEmpty()) {
                 builder.suggest(name);
             }
@@ -172,7 +172,7 @@ public class FileArgumentType implements IArgumentType<String> {
 
         @Override
         public void serializeToNetwork(FileArgumentType argument, IFriendlyByteBuf buffer) {
-            ArrayList<String> lists = argument.getFileList("/");
+            var lists = argument.getFileList("/");
             buffer.writeInt(lists.size());
             lists.forEach(buffer::writeUtf);
         }

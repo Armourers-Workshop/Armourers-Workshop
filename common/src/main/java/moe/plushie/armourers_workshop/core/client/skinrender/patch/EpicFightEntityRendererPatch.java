@@ -22,6 +22,7 @@ public class EpicFightEntityRendererPatch<T extends LivingEntity> extends Entity
 
     private IPoseStack overridePoseStack;
     private EpicFlightModel transformerModel;
+    private EpicFlightTransformProvider transformProvider;
 
     public EpicFightEntityRendererPatch(EntityRenderData renderData) {
         super(renderData);
@@ -80,10 +81,15 @@ public class EpicFightEntityRendererPatch<T extends LivingEntity> extends Entity
         }
     }
 
-    public void setTransformProvider(EpicFlightTransformProvider transformProvider) {
+    public void setTransformProvider(EpicFlightTransformProvider newTransformProvider) {
+        transformProvider = newTransformProvider;
         if (transformerModel != null) {
-            transformerModel.setAssociatedObject(transformProvider, EpicFlightTransformProvider.KEY);
+            transformerModel.setAssociatedObject(newTransformProvider, EpicFlightTransformProvider.KEY);
         }
+    }
+
+    public EpicFlightTransformProvider getTransformProvider() {
+        return transformProvider;
     }
 
     public void setOverridePose(IPoseStack pose) {
@@ -95,6 +101,15 @@ public class EpicFightEntityRendererPatch<T extends LivingEntity> extends Entity
             return overridePoseStack;
         }
         return pluginContext.getPoseStack();
+    }
+
+    @Override
+    public BakedArmatureTransformer getTransformer() {
+        // the transformer status is abnormal when transform provider is null.
+        if (transformProvider != null) {
+            return super.getTransformer();
+        }
+        return null;
     }
 
     private BakedArmatureTransformer createTransformer(Entity entity, EpicFlightModel model, LivingEntityRenderer<?, ?> entityRenderer) {

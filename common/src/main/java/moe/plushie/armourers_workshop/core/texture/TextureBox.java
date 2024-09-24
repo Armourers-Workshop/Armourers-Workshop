@@ -57,9 +57,9 @@ public class TextureBox implements ITextureBox {
     }
 
     public TextureBox separated() {
-        TextureBox box = new TextureBox(width, height, depth, mirror, null, defaultTexture);
-        for (Direction dir : Direction.values()) {
-            ITextureKey key = getTexture(dir);
+        var box = new TextureBox(width, height, depth, mirror, null, defaultTexture);
+        for (var dir : Direction.values()) {
+            var key = getTexture(dir);
             if (key == null) {
                 continue;
             }
@@ -102,17 +102,17 @@ public class TextureBox implements ITextureBox {
 
     @Nullable
     private ITextureKey makeTexture(Direction dir, float u, float v, float s, float t) {
-        ITextureProvider texture = getTextureProvider(dir);
+        var texture = getTextureProvider(dir);
         if (texture == null) {
             return null;
         }
         // specifies the uv origin for the face.
-        Rectangle2f rect = getTextureRect(dir);
+        var rect = getTextureRect(dir);
         if (rect != null) {
-            ITextureOptions options = getTextureOptions(dir);
+            var options = getTextureOptions(dir);
             return new TextureKey(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight(), options, texture);
         }
-        Vector2f pos = texturePos;
+        var pos = texturePos;
         if (pos != null) {
             return new Entry(pos.getX() + u, pos.getY() + v, s, t, texture, pos);
         }

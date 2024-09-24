@@ -285,8 +285,8 @@ public class DataTransformer<K, V, T> {
 
         @Override
         public synchronized boolean test(K key) {
-            for (WeakReference<Ticket> ticket : tickets) {
-                Ticket oldTicket = ticket.get();
+            for (var ticket : tickets) {
+                var oldTicket = ticket.get();
                 if (oldTicket != null) {
                     if (oldTicket.contains(key)) {
                         return true;
@@ -302,9 +302,9 @@ public class DataTransformer<K, V, T> {
         }
 
         private void addTicket(Ticket ticket) {
-            Iterator<WeakReference<Ticket>> iterator = tickets.iterator();
+            var iterator = tickets.iterator();
             while (iterator.hasNext()) {
-                Ticket oldTicket = iterator.next().get();
+                var oldTicket = iterator.next().get();
                 if (oldTicket == ticket) {
                     return; // yep, we found the old ticket.
                 }
@@ -328,7 +328,7 @@ public class DataTransformer<K, V, T> {
 
         public Builder<K, V, T> thread(String name, int newPriority) {
             this.configure = r -> {
-                Thread thread = new Thread(r, name);
+                var thread = new Thread(r, name);
                 thread.setPriority(newPriority);
                 return thread;
             };

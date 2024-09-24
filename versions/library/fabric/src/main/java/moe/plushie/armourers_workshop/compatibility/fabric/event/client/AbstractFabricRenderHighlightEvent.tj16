@@ -15,7 +15,7 @@ import net.minecraft.world.phys.BlockHitResult;
 public class AbstractFabricRenderHighlightEvent {
 
     public static IEventHandler<RenderHighlightEvent.Block> blockFactory() {
-        return subscriber -> WorldRenderEvents.BLOCK_OUTLINE.register(((context, outlineContext) -> {
+        return (priority, receiveCancelled, subscriber) -> WorldRenderEvents.BLOCK_OUTLINE.register(((context, outlineContext) -> {
             subscriber.accept(new RenderHighlightEvent.Block() {
                 @Override
                 public float getPartialTick() {

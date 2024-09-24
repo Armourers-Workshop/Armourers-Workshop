@@ -5,7 +5,6 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
-import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -55,7 +54,7 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
 
     @Override
     public void encode(IFriendlyByteBuf buffer) {
-        int totalSize = publicFiles.size() + privateFiles.size();
+        var totalSize = publicFiles.size() + privateFiles.size();
         buffer.writeNbt(setting.serializeNBT());
         writeCompressedBuffer(new ByteBufOutputStream(buffer.asByteBuf()), Iterables.concat(publicFiles, privateFiles), totalSize);
     }
@@ -71,10 +70,10 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
     private void writeCompressedBuffer(ByteBufOutputStream stream, Iterable<SkinLibraryFile> files, int totalSize) {
         try {
             stream.writeInt(totalSize);
-            DataOutputStream dataStream = new DataOutputStream(new GZIPOutputStream(stream));
-            IOutputStream outputStream = IOutputStream.of(dataStream);
-            for (SkinLibraryFile file : files) {
-                SkinProperties properties = ObjectUtils.safeCast(file.getSkinProperties(), SkinProperties.class);
+            var dataStream = new DataOutputStream(new GZIPOutputStream(stream));
+            var outputStream = IOutputStream.of(dataStream);
+            for (var file : files) {
+                var properties = ObjectUtils.safeCast(file.getSkinProperties(), SkinProperties.class);
                 outputStream.writeString(file.getPath());
                 outputStream.writeBoolean(properties == null); // is directory
                 if (properties != null) {
@@ -93,22 +92,22 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
     private Iterable<SkinLibraryFile> readCompressedBuffer(ByteBufInputStream stream) {
         ArrayList<SkinLibraryFile> files = new ArrayList<>();
         try {
-            int totalSize = stream.readInt();
-            DataInputStream dataStream = new DataInputStream(new GZIPInputStream(stream));
-            IInputStream inputStream = IInputStream.of(dataStream);
+            var totalSize = stream.readInt();
+            var dataStream = new DataInputStream(new GZIPInputStream(stream));
+            var inputStream = IInputStream.of(dataStream);
             for (int index = 0; index < totalSize; ++index) {
-                String path = inputStream.readString();
-                String basename = SkinFileUtils.getBaseName(path);
+                var path = inputStream.readString();
+                var basename = SkinFileUtils.getBaseName(path);
                 if (inputStream.readBoolean()) { // is directory
                     files.add(new SkinLibraryFile(DataDomain.DEDICATED_SERVER, basename, path));
                     continue;
                 }
-                ISkinType skinType = inputStream.readType(SkinTypes::byName);
-                int fileVersion = inputStream.readInt();
-                int lastModified = inputStream.readInt();
-                SkinProperties properties = new SkinProperties();
+                var skinType = inputStream.readType(SkinTypes::byName);
+                var fileVersion = inputStream.readInt();
+                var lastModified = inputStream.readInt();
+                var properties = new SkinProperties();
                 properties.readFromStream(inputStream);
-                SkinFileHeader header = SkinFileHeader.of(fileVersion, skinType, properties);
+                var header = SkinFileHeader.of(fileVersion, skinType, properties);
                 header.setLastModified(lastModified);
                 files.add(new SkinLibraryFile(DataDomain.DEDICATED_SERVER, basename, path, header));
             }

@@ -9,6 +9,6 @@ import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 public class AbstractFabricRegisterCommandsEvent {
 
     public static IEventHandler<RegisterCommandsEvent> registryFactory() {
-        return subscriber -> CommandRegistrationCallback.EVENT.register(((dispatcher, dedicated) -> subscriber.accept(dispatcher::register)));
+        return (priority, receiveCancelled, subscriber) -> CommandRegistrationCallback.EVENT.register(((dispatcher, dedicated) -> subscriber.accept(dispatcher::register)));
     }
 }

@@ -49,12 +49,12 @@ public class SkinPaintData {
 
     public static SkinPaintData uncompress(ByteBuffer buffer) {
         try {
-            ByteArrayInputStream bufferedStream = new ByteArrayInputStream(buffer.array());
-            GZIPInputStream compressedStream = new GZIPInputStream(bufferedStream);
-            DataInputStream dataStream = new DataInputStream(compressedStream);
-            SkinPaintData paintData = SkinPaintData.v2();
-            int length = dataStream.readInt();
-            int[] colors = paintData.getData();
+            var bufferedStream = new ByteArrayInputStream(buffer.array());
+            var compressedStream = new GZIPInputStream(bufferedStream);
+            var dataStream = new DataInputStream(compressedStream);
+            var paintData = SkinPaintData.v2();
+            var length = dataStream.readInt();
+            var colors = paintData.getData();
             for (int i = 0; i < length; ++i) {
                 if (i < colors.length) {
                     colors[i] = dataStream.readInt();
@@ -69,7 +69,7 @@ public class SkinPaintData {
 
     @Override
     public SkinPaintData clone() {
-        SkinPaintData paintData = new SkinPaintData(width, height);
+        var paintData = new SkinPaintData(width, height);
         System.arraycopy(data, 0, paintData.data, 0, data.length);
         return paintData;
     }
@@ -90,18 +90,18 @@ public class SkinPaintData {
         if (height <= TEXTURE_OLD_HEIGHT) {
             return;
         }
-        PlayerTextureModel source = PlayerTextureModel.of(paintData.getWidth(), paintData.getHeight(), false);
-        PlayerTextureModel destination = PlayerTextureModel.of(getWidth(), getHeight(), false);
+        var source = PlayerTextureModel.of(paintData.getWidth(), paintData.getHeight(), false);
+        var destination = PlayerTextureModel.of(getWidth(), getHeight(), false);
         source.forEach((partType, sourceBox) -> {
-            SkyBox destinationBox = destination.get(partType);
+            var destinationBox = destination.get(partType);
             if (sourceBox.equals(destinationBox) || destinationBox == null) {
                 return;
             }
-            ArrayList<ITexturePos> sourceTextures = new ArrayList<>(0);
+            var sourceTextures = new ArrayList<ITexturePos>(0);
             sourceBox.forEach((texture, x, y, z, dir) -> sourceTextures.add(texture));
             destinationBox.forEach((texture, x, y, z, dir) -> {
                 if (!sourceTextures.isEmpty()) {
-                    int color = paintData.getColor(sourceTextures.remove(0));
+                    var color = paintData.getColor(sourceTextures.remove(0));
                     setColor(texture, color);
                 }
             });
@@ -148,10 +148,10 @@ public class SkinPaintData {
 
     public ByteBuffer compress() {
         try {
-            int[] colors = getData();
-            ByteArrayOutputStream bufferedStream = new ByteArrayOutputStream();
-            GZIPOutputStream compressedStream = new GZIPOutputStream(bufferedStream);
-            DataOutputStream dataStream = new DataOutputStream(compressedStream);
+            var colors = getData();
+            var bufferedStream = new ByteArrayOutputStream();
+            var compressedStream = new GZIPOutputStream(bufferedStream);
+            var dataStream = new DataOutputStream(compressedStream);
             dataStream.writeInt(colors.length);
             for (int color : colors) {
                 dataStream.writeInt(color);

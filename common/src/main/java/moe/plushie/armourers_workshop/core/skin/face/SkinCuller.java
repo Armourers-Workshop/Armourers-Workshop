@@ -46,7 +46,7 @@ public class SkinCuller {
 
     private static Partition getPartition(ISkinPartType partType) {
         if (ModConfig.Client.enablePartSubdivide) {
-            Partition partition = PARTITIONS2.get(partType);
+            var partition = PARTITIONS2.get(partType);
             if (partition != null) {
                 return partition;
             }

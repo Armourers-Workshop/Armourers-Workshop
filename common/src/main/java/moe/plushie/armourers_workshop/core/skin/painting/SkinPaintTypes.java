@@ -56,7 +56,7 @@ public final class SkinPaintTypes {
     }
 
     public static SkinPaintType byId(int index) {
-        SkinPaintType paintType = ALL_PAINT_MAPPING[index & 0xff];
+        var paintType = ALL_PAINT_MAPPING[index & 0xff];
         if (paintType != null) {
             return paintType;
         }
@@ -64,7 +64,7 @@ public final class SkinPaintTypes {
     }
 
     private static SkinPaintType register(String name, int id, int index) {
-        SkinPaintType paintType = new SkinPaintType(index, id);
+        var paintType = new SkinPaintType(index, id);
         paintType.setRegistryName(OpenResourceLocation.create("armourers", name));
         if (ALL_PAINT_TYPES.containsKey(paintType.getRegistryName().toString())) {
             ModLog.warn("A mod tried to register a paint type with an id that is in use.");

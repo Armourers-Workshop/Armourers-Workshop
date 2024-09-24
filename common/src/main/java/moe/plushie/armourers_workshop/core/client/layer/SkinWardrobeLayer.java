@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.patch.EpicFightEntityRendererPatch;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModContributors;
 import moe.plushie.armourers_workshop.utils.ModelHolder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;

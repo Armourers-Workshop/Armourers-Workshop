@@ -40,17 +40,11 @@ public final class LegacyCubeHelper {
 
     // Used by file versions less than 3
     public static void loadLegacyCube(SkinCubesV1 cubeData, SkinCubesV1.BufferSlice slice, IInputStream stream, int version, ISkinPartType skinPart) throws IOException {
-        byte x;
-        byte y;
-        byte z;
-        int color;
-        byte blockType;
-
-        x = stream.readByte();
-        y = stream.readByte();
-        z = stream.readByte();
-        color = stream.readInt();
-        blockType = stream.readByte();
+        byte x = stream.readByte();
+        byte y = stream.readByte();
+        byte z = stream.readByte();
+        int color = stream.readInt();
+        byte blockType = stream.readByte();
 
         if (version < 2) {
             if (skinPart == SkinPartTypes.ITEM_SWORD) {

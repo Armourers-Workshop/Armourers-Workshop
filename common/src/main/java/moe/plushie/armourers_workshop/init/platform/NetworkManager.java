@@ -38,11 +38,11 @@ public class NetworkManager {
     }
 
     public static void sendToTrackingBlock(final CustomPacket message, final BlockEntity blockEntity) {
-        Level level = blockEntity.getLevel();
+        var level = blockEntity.getLevel();
         if (level == null) {
             return;
         }
-        LevelChunk chunk = level.getChunkAt(blockEntity.getBlockPos());
+        var chunk = level.getChunkAt(blockEntity.getBlockPos());
         dispatcher.split(message, distributors.trackingChunk(() -> chunk));
     }
 
@@ -63,7 +63,7 @@ public class NetworkManager {
     }
 
     public static void sendWardrobeTo(Entity entity, ServerPlayer player) {
-        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        var wardrobe = SkinWardrobe.of(entity);
         if (wardrobe != null) {
             wardrobe.broadcast(player);
         }

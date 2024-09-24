@@ -118,7 +118,7 @@ public class CustomReplyPacket<R> extends CustomPacket {
             int timeout = 30;
             REQUESTS.put(id, new Request<>(packet, handler));
             TIMER.scheduleAtFixedRate(() -> {
-                Request<?> request = REQUESTS.remove(id);
+                var request = REQUESTS.remove(id);
                 if (request != null && request.handler != null) {
                     request.handler.throwing(new RuntimeException("Request timeout"));
                 }
@@ -154,7 +154,7 @@ public class CustomReplyPacket<R> extends CustomPacket {
         }
 
         private Request<R> popPendingRequest() {
-            Request<?> req = REQUESTS.remove(id);
+            var req = REQUESTS.remove(id);
             if (req != null) {
                 return ObjectUtils.unsafeCast(req);
             }

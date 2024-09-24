@@ -36,8 +36,8 @@ public final class SkinSerializerV21 {
             if (entry.isDirectory()) {
                 continue;
             }
-            String fileName = entry.getName();
-            ZipEntry fileEntry = entry;
+            var fileName = entry.getName();
+            var fileEntry = entry;
             resources.add(new IResource() {
                 @Override
                 public String getName() {

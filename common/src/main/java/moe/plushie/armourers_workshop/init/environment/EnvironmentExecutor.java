@@ -106,7 +106,7 @@ public class EnvironmentExecutor {
         }
 
         public synchronized void run(EnvironmentType type) {
-            ArrayList<Supplier<Runnable>> tasks = this.tasks.remove(type);
+            var tasks = this.tasks.remove(type);
             status.add(type);
             if (tasks != null) {
                 tasks.forEach(task -> task.get().run());

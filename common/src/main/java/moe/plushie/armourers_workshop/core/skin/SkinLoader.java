@@ -586,7 +586,7 @@ public class SkinLoader {
                 return DataManager.getInstance().loadSkinData(id);
             }
             // fs:<file-path> or ws:<file-path>
-            String path = SkinFileUtils.normalize(DataDomain.getPath(identifier));
+            var path = SkinFileUtils.normalize(DataDomain.getPath(identifier));
             var file = new File(EnvironmentManager.getSkinLibraryDirectory(), path);
             if (file.exists()) {
                 return new FileInputStream(file);
@@ -901,7 +901,7 @@ public class SkinLoader {
 
         SkinPart extractPart(String keyPath, List<SkinPart> parts) {
             SkinPart part = null;
-            for (String key : keyPath.split("[.]")) {
+            for (var key : keyPath.split("[.]")) {
                 part = findPart(key, parts);
                 if (part == null) {
                     return null;
@@ -912,7 +912,7 @@ public class SkinLoader {
         }
 
         SkinPart findPart(String key, List<SkinPart> parts) {
-            for (SkinPart part : parts) {
+            for (var part : parts) {
                 if (key.equals(part.getName())) {
                     return part;
                 }

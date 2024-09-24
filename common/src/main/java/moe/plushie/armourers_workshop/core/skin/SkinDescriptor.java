@@ -61,8 +61,8 @@ public class SkinDescriptor implements ISkinDescriptor {
         if (itemStack.isEmpty()) {
             return EMPTY;
         }
-        ItemStackStorage storage = ItemStackStorage.of(itemStack);
-        SkinDescriptor descriptor = storage.skinDescriptor;
+        var storage = ItemStackStorage.of(itemStack);
+        var descriptor = storage.skinDescriptor;
         if (descriptor != null) {
             return descriptor;
         }
@@ -75,7 +75,7 @@ public class SkinDescriptor implements ISkinDescriptor {
         if (itemStack.isEmpty() || isEmpty()) {
             return false;
         }
-        ISkinType skinType = getType();
+        var skinType = getType();
         if (skinType == SkinTypes.ITEM) {
             return true;
         }
@@ -86,7 +86,7 @@ public class SkinDescriptor implements ISkinDescriptor {
     }
 
     public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
+        var nbt = new CompoundTag();
         if (isEmpty()) {
             return nbt;
         }
@@ -104,7 +104,7 @@ public class SkinDescriptor implements ISkinDescriptor {
         if (skinItemStack != null) {
             return skinItemStack;
         }
-        ItemStack itemStack = new ItemStack(ModItems.SKIN.get());
+        var itemStack = new ItemStack(ModItems.SKIN.get());
         itemStack.set(ModDataComponents.SKIN.get(), this);
         skinItemStack = itemStack;
         return itemStack;

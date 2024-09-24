@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.texture;
 
-import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkinTransform;
 import moe.plushie.armourers_workshop.core.data.transform.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.data.transform.SkinTransform;
@@ -27,20 +26,20 @@ public class SkinPreviewData {
         if (skin.getPreviewData() != null) {
             return skin.getPreviewData();
         }
-        ArrayList<Pair<ISkinTransform, SkinCubes>> allCubes = new ArrayList<>();
+        var allCubes = new ArrayList<Pair<ISkinTransform, SkinCubes>>();
         eachPart(skin.getParts(), part -> {
             // apply the origin offset.
-            IVector3i pos = part.getType().getRenderOffset();
-            SkinTransform offset = SkinTransform.createTranslateTransform(pos.getX(), pos.getY(), pos.getZ());
+            var pos = part.getType().getRenderOffset();
+            var offset = SkinTransform.createTranslateTransform(pos.getX(), pos.getY(), pos.getZ());
             // apply the marker rotation and offset.
-            SkinPartTransform transform = new SkinPartTransform(part, offset);
+            var transform = new SkinPartTransform(part, offset);
             allCubes.add(Pair.of(transform, part.getCubeData()));
         });
         return new SkinPreviewData(allCubes);
     }
 
     private static void eachPart(Collection<SkinPart> parts, Consumer<SkinPart> consumer) {
-        for (SkinPart part : parts) {
+        for (var part : parts) {
             consumer.accept(part);
             eachPart(part.getParts(), consumer);
         }

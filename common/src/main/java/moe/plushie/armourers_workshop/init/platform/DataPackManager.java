@@ -23,7 +23,7 @@ public class DataPackManager {
     }
 
     public static void register(DataPackType packType, String path, Function<IResourceLocation, IDataPackBuilder> provider, Runnable willLoadHandler, Runnable didLoadHandler, int order) {
-        DataPackLoader loader = byType(packType);
+        var loader = byType(packType);
         if (loader != null) {
             loader.add(new DataPackLoader.Entry(path, provider, willLoadHandler, didLoadHandler, order));
         }
@@ -42,7 +42,7 @@ public class DataPackManager {
 
         @Override
         public void build(TaskQueue taskQueue, ResourceManager resourceManager) {
-            DataPackLoader loader = byType(DataPackType.BUNDLED_DATA);
+            var loader = byType(DataPackType.BUNDLED_DATA);
             if (loader != null && !loader.isEmpty()) {
                 loader.build(taskQueue, resourceManager.asBundleManager());
             }
@@ -54,7 +54,7 @@ public class DataPackManager {
 
         @Override
         public void build(TaskQueue taskQueue, ResourceManager resourceManager) {
-            DataPackLoader loader = byType(DataPackType.BUNDLED_DATA);
+            var loader = byType(DataPackType.BUNDLED_DATA);
             if (loader != null && !loader.isEmpty()) {
                 loader.build(taskQueue, resourceManager.asBundleManager());
             }

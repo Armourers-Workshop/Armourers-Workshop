@@ -12,15 +12,15 @@ import net.minecraft.world.entity.player.Player;
 public class AbstractFabricClientPlayerEvent {
 
     public static IEventHandler<ClientPlayerEvent.LoggingIn> loggingInFactory() {
-        return subscriber -> ClientPlayConnectionEvents.JOIN.register((listener, sender, client) -> RenderSystem.recordRenderCall(() -> subscriber.accept(() -> client.player)));
+        return (priority, receiveCancelled, subscriber) -> ClientPlayConnectionEvents.JOIN.register((listener, sender, client) -> RenderSystem.recordRenderCall(() -> subscriber.accept(() -> client.player)));
     }
 
     public static IEventHandler<ClientPlayerEvent.LoggingOut> loggingOutFactory() {
-        return subscriber -> ClientPlayConnectionEvents.DISCONNECT.register((listener, client) -> RenderSystem.recordRenderCall(() -> subscriber.accept(() -> client.player)));
+        return (priority, receiveCancelled, subscriber) -> ClientPlayConnectionEvents.DISCONNECT.register((listener, client) -> RenderSystem.recordRenderCall(() -> subscriber.accept(() -> client.player)));
     }
 
     public static IEventHandler<ClientPlayerEvent.Clone> cloneFactory() {
-        return subscriber -> ClientPlayerLifecycleEvents.CLONE.register(((oldPlayer, newPlayer) -> subscriber.accept(new ClientPlayerEvent.Clone() {
+        return (priority, receiveCancelled, subscriber) -> ClientPlayerLifecycleEvents.CLONE.register(((oldPlayer, newPlayer) -> subscriber.accept(new ClientPlayerEvent.Clone() {
             @Override
             public Player getOldPlayer() {
                 return oldPlayer;

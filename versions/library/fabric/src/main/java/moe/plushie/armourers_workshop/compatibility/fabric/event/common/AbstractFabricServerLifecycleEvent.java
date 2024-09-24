@@ -12,18 +12,18 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 public class AbstractFabricServerLifecycleEvent {
 
     public static IEventHandler<ServerStartingEvent> aboutToStartFactory() {
-        return subscriber -> ServerLifecycleEvents.SERVER_STARTING.register(server -> subscriber.accept(() -> server));
+        return (priority, receiveCancelled, subscriber) -> ServerLifecycleEvents.SERVER_STARTING.register(server -> subscriber.accept(() -> server));
     }
 
     public static IEventHandler<ServerStartedEvent> startedFactory() {
-        return subscriber -> ServerLifecycleEvents.SERVER_STARTED.register(server -> subscriber.accept(() -> server));
+        return (priority, receiveCancelled, subscriber) -> ServerLifecycleEvents.SERVER_STARTED.register(server -> subscriber.accept(() -> server));
     }
 
     public static IEventHandler<ServerStoppingEvent> stoppingFactory() {
-        return subscriber -> ServerLifecycleEvents.SERVER_STOPPING.register(server -> subscriber.accept(() -> server));
+        return (priority, receiveCancelled, subscriber) -> ServerLifecycleEvents.SERVER_STOPPING.register(server -> subscriber.accept(() -> server));
     }
 
     public static IEventHandler<ServerStoppedEvent> stoppedFactory() {
-        return subscriber -> ServerLifecycleEvents.SERVER_STOPPED.register(server -> subscriber.accept(() -> server));
+        return (priority, receiveCancelled, subscriber) -> ServerLifecycleEvents.SERVER_STOPPED.register(server -> subscriber.accept(() -> server));
     }
 }

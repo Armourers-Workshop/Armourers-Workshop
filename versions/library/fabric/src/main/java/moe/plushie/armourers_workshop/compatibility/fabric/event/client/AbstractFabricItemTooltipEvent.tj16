@@ -18,7 +18,7 @@ import java.util.List;
 public class AbstractFabricItemTooltipEvent {
 
     public static IEventHandler<ItemTooltipEvent.Gather> gatherFactory() {
-        return subscriber -> ItemTooltipCallback.EVENT.register((stack, flags, lines) -> subscriber.accept(new ItemTooltipEvent.Gather() {
+        return (priority, receiveCancelled, subscriber) -> ItemTooltipCallback.EVENT.register((stack, flags, lines) -> subscriber.accept(new ItemTooltipEvent.Gather() {
             @Override
             public ItemStack getItemStack() {
                 return stack;
@@ -37,7 +37,7 @@ public class AbstractFabricItemTooltipEvent {
     }
 
     public static IEventHandler<ItemTooltipEvent.Render> renderFactory() {
-        return subscriber -> RenderTooltipEvents.BEFORE.register((itemStack, x, y, width, height, screenWidth, screenHeight, context) -> subscriber.accept(new ItemTooltipEvent.Render() {
+        return (priority, receiveCancelled, subscriber) -> RenderTooltipEvents.BEFORE.register((itemStack, x, y, width, height, screenWidth, screenHeight, context) -> subscriber.accept(new ItemTooltipEvent.Render() {
             @Override
             public ItemStack getItemStack() {
                 return itemStack;

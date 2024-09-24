@@ -28,8 +28,8 @@ public class ColorParser {
     private static final List<String> DEFAULT_COLORS = Lists.newArrayList("#ffffff", "0xffffff", "255,255,255");
 
     private static final HashMap<String, ISkinPaintType> PAINT_TYPES = Util.make(() -> {
-        HashMap<String, ISkinPaintType> map = new HashMap<>();
-        for (ISkinPaintType paintType : SkinPaintTypes.values()) {
+        var map = new HashMap<String, ISkinPaintType>();
+        for (var paintType : SkinPaintTypes.values()) {
             String name = paintType.getRegistryName().getPath();
             map.put(name.replaceAll("_", ""), paintType);
         }

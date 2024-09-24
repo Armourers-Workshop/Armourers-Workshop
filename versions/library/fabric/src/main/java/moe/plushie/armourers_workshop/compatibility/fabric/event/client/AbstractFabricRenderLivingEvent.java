@@ -13,7 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 public class AbstractFabricRenderLivingEvent {
 
     public static IEventHandler<RenderLivingEntityEvent.Pre> preFactory() {
-        return subscriber -> RenderLivingEntityEvents.PRE.register((entity, partialTicks, light, poseStack, buffers, renderer) -> subscriber.accept(new RenderLivingEntityEvent.Pre() {
+        return (priority, receiveCancelled, subscriber) -> RenderLivingEntityEvents.PRE.register((entity, partialTicks, light, poseStack, buffers, renderer) -> subscriber.accept(new RenderLivingEntityEvent.Pre() {
             @Override
             public float getPartialTicks() {
                 return partialTicks;
@@ -47,7 +47,7 @@ public class AbstractFabricRenderLivingEvent {
     }
 
     public static IEventHandler<RenderLivingEntityEvent.Post> postFactory() {
-        return subscriber -> RenderLivingEntityEvents.POST.register((entity, partialTicks, light, poseStack, buffers, renderer) -> subscriber.accept(new RenderLivingEntityEvent.Post() {
+        return (priority, receiveCancelled, subscriber) -> RenderLivingEntityEvents.POST.register((entity, partialTicks, light, poseStack, buffers, renderer) -> subscriber.accept(new RenderLivingEntityEvent.Post() {
 
             @Override
             public float getPartialTicks() {

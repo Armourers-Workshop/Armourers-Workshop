@@ -130,7 +130,7 @@ public class ColorSchemeParser {
 
     private CompletableFuture<Suggestions> suggestPropertyName(SuggestionsBuilder builder) {
         String string = builder.getRemaining().toLowerCase(Locale.ROOT);
-        for (Map.Entry<String, ISkinPaintType> entry : DYE_TYPES.entrySet()) {
+        for (var entry : DYE_TYPES.entrySet()) {
             String name = entry.getKey();
             if (properties.containsKey(entry.getValue()) || !name.startsWith(string)) {
                 continue;

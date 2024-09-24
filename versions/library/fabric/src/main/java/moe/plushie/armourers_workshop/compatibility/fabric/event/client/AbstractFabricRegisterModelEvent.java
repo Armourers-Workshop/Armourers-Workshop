@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 public class AbstractFabricRegisterModelEvent {
 
     public static IEventHandler<RegisterModelEvent> registryFactory() {
-        return subscriber -> ModelLoadingPlugin.register(pluginContext -> subscriber.accept(registryName -> {
+        return (priority, receiveCancelled, subscriber) -> ModelLoadingPlugin.register(pluginContext -> subscriber.accept(registryName -> {
             pluginContext.addModels(ResourceLocation.create(registryName.getNamespace(), "item/" + registryName.getPath()));
         }));
     }

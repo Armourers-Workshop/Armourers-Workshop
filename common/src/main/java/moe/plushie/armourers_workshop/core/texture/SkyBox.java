@@ -53,11 +53,11 @@ public class SkyBox {
     }
 
     public void forEach(IPixelConsumer consumer) {
-        for (Direction dir : Direction.values()) {
+        for (var dir : Direction.values()) {
             for (int ix = rect.getMinX(); ix < rect.getMaxX(); ++ix) {
                 for (int iy = rect.getMinY(); iy < rect.getMaxY(); ++iy) {
                     for (int iz = rect.getMinZ(); iz < rect.getMaxZ(); ++iz) {
-                        TexturePos texture = get(ix, iy, iz, dir);
+                        var texture = get(ix, iy, iz, dir);
                         if (texture != null) {
                             consumer.accept(texture, ix, iy, iz, dir);
                         }
@@ -85,9 +85,9 @@ public class SkyBox {
         y -= rect.getY();
         z -= rect.getZ();
         if (isInside(x, y, z)) {
-            ToIntFunction<Vector3i> predicate = validator.get(dir);
-            Function<Vector3i, TexturePos> eval = evaluator.get(dir);
-            Vector3i pos = new Vector3i(x, y, z);
+            var predicate = validator.get(dir);
+            var eval = evaluator.get(dir);
+            var pos = new Vector3i(x, y, z);
             if (eval != null && predicate.applyAsInt(pos) == 0) {
                 return eval.apply(pos);
             }

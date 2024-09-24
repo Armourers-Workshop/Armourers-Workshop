@@ -9,26 +9,31 @@ import moe.plushie.armourers_workshop.init.platform.forge.proxy.CommonProxyImpl;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
 
 @Available("[1.21, )")
 @Mod(ModConstants.MOD_ID)
 public class AbstractForgeInitializer {
 
-    private static ModContainer CONTAINER;
-    private static IEventBus EVENT_BUS;
+    private static ModContainer MOD_CONTAINER;
+    private static IEventBus MOD_EVENT_BUS;
 
     public AbstractForgeInitializer(IEventBus modEventBus, ModContainer modContainer) {
-        AbstractForgeInitializer.CONTAINER = modContainer;
-        AbstractForgeInitializer.EVENT_BUS = modEventBus;
+        AbstractForgeInitializer.MOD_CONTAINER = modContainer;
+        AbstractForgeInitializer.MOD_EVENT_BUS = modEventBus;
         CommonProxyImpl.init();
         EnvironmentExecutor.runOn(EnvironmentType.CLIENT, () -> ClientProxyImpl::init);
     }
 
     public static IEventBus getEventBus() {
-        return EVENT_BUS;
+        return NeoForge.EVENT_BUS;
+    }
+
+    public static IEventBus getModEventBus() {
+        return MOD_EVENT_BUS;
     }
 
     public static ModContainer getModContainer() {
-        return CONTAINER;
+        return MOD_CONTAINER;
     }
 }

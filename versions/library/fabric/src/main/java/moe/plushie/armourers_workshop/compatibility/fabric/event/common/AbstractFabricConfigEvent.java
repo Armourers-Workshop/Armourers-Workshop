@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfigEv
 public class AbstractFabricConfigEvent {
 
     public static IEventHandler<LauncherConfigSetupEvent> registryFactory() {
-        return subscriber -> {
+        return (priority, receiveCancelled, subscriber) -> {
             FabricConfigEvents.LOADING.register(config -> subscriber.accept(config::getSpec));
             FabricConfigEvents.RELOADING.register(config -> subscriber.accept(config::getSpec));
         };

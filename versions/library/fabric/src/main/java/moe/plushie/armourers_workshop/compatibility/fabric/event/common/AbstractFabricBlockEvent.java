@@ -19,10 +19,10 @@ import net.minecraft.world.level.block.state.BlockState;
 public class AbstractFabricBlockEvent {
 
     public static IEventHandler<BlockEvent.Place> placeFactory() {
-        return subscriber -> PlayerBlockPlaceEvents.BEFORE.register((context, blockState) -> {
-            Player player = context.getPlayer();
-            Level level = context.getLevel();
-            BlockPos blockPos = context.getClickedPos();
+        return (priority, receiveCancelled, subscriber) -> PlayerBlockPlaceEvents.BEFORE.register((context, blockState) -> {
+            var player = context.getPlayer();
+            var level = context.getLevel();
+            var blockPos = context.getClickedPos();
             subscriber.accept(new BlockEvent.Place() {
 
                 @Override
@@ -69,7 +69,7 @@ public class AbstractFabricBlockEvent {
     }
 
     public static IEventHandler<BlockEvent.Break> breakFactory() {
-        return subscriber -> PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) -> {
+        return (priority, receiveCancelled, subscriber) -> PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) -> {
             subscriber.accept(new BlockEvent.Break() {
 
                 @Override

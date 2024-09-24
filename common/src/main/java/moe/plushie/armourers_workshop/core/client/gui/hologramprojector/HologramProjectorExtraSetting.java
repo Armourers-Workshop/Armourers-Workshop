@@ -37,7 +37,7 @@ public class HologramProjectorExtraSetting extends HologramProjectorBaseSetting 
     }
 
     private void setupOption(int x, int y, UpdateHologramProjectorPacket.Field<Boolean> property, String key) {
-        UICheckBox checkBox = new UICheckBox(new CGRect(x, y, 178, 10));
+        var checkBox = new UICheckBox(new CGRect(x, y, 178, 10));
         checkBox.setTitle(getDisplayText(key));
         checkBox.setSelected(property.get(entity));
         checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, c) -> {
@@ -49,11 +49,11 @@ public class HologramProjectorExtraSetting extends HologramProjectorBaseSetting 
     }
 
     private void setupComboList(int x, int y, UpdateHologramProjectorPacket.Field<Integer> property) {
-        ArrayList<UIComboItem> items = new ArrayList<>();
+        var items = new ArrayList<UIComboItem>();
         items.add(new UIComboItem(getDisplayText("powerMode.ignored")));
         items.add(new UIComboItem(getDisplayText("powerMode.high")));
         items.add(new UIComboItem(getDisplayText("powerMode.low")));
-        UIComboBox comboBox = new UIComboBox(new CGRect(x, y, 80, 14));
+        var comboBox = new UIComboBox(new CGRect(x, y, 80, 14));
         comboBox.setSelectedIndex(property.get(entity));
         comboBox.reloadData(items);
         comboBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, e) -> {

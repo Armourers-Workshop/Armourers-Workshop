@@ -24,7 +24,7 @@ public class AbstractForgeRegistry {
 
     private static <T> TypedRegistry.RegisterProvider<T> build(DeferredRegister<T> register) {
         // auto register
-        register.register(AbstractForgeInitializer.getEventBus());
+        register.register(AbstractForgeInitializer.getModEventBus());
         return new TypedRegistry.RegisterProvider<T>() {
             @Override
             public <I extends T> Supplier<I> register(IResourceLocation registryName, Supplier<? extends I> provider) {

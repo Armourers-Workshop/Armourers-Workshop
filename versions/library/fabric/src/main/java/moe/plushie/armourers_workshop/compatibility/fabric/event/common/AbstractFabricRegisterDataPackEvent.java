@@ -18,8 +18,8 @@ import java.util.concurrent.Executor;
 public class AbstractFabricRegisterDataPackEvent {
 
     public static IEventHandler<RegisterDataPackEvent> registryFactory() {
-        return subscriber -> subscriber.accept(provider -> {
-            ResourceLocation registryName = ModConstants.key("custom-data-pack").toLocation();
+        return (priority, receiveCancelled, subscriber) -> subscriber.accept(provider -> {
+            var registryName = ModConstants.key("custom-data-pack").toLocation();
             ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new IdentifiableResourceReloadListener() {
                 @Override
                 public ResourceLocation getFabricId() {

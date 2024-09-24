@@ -121,7 +121,7 @@ public class UpdateAnimationPacket extends CustomPacket {
         }
 
         public CompoundTag save() {
-            CompoundTag tag = new CompoundTag();
+            var tag = new CompoundTag();
             if (pos != null) {
                 tag.putOptionalBlockPos("block", pos, null);
             } else {
