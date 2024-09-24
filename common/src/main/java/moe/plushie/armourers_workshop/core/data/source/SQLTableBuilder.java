@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.data.source;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.StringJoiner;
 
@@ -20,7 +21,6 @@ public class SQLTableBuilder {
 
     public int execute(Connection connection) throws SQLException {
         // check the table exists.
-        var count = 0;
         var catalog = connection.getCatalog();
         var metaData = connection.getMetaData();
         try (var result = metaData.getTables(catalog, null, name, null)) {
@@ -34,19 +34,19 @@ public class SQLTableBuilder {
             }
         }
         // check the table fields exists.
-        var joiner = new StringJoiner(";");
+        var instructs = new ArrayList<String>();
         for (var entry : fields.entrySet()) {
             try (var result = metaData.getColumns(catalog, null, name, entry.getKey())) {
                 if (!result.next()) {
-                    joiner.add(String.format("ALTER TABLE `%s` ADD COLUMN `%s` %s", name, entry.getKey(), entry.getValue()));
-                    count += 1;
+                    instructs.add(String.format("ALTER TABLE `%s` ADD COLUMN `%s` %s", name, entry.getKey(), entry.getValue()));
                 }
             }
         }
-        if (count != 0) {
-            return execute(connection, joiner.toString());
+        var result = 0;
+        for (var instruct : instructs) {
+            result += execute(connection, instruct);
         }
-        return 0;
+        return result;
     }
 
     private int execute(Connection connection, String sql) throws SQLException {

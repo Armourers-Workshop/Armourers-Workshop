@@ -93,7 +93,7 @@ public class TypedRegistry<T> implements IRegistry<T> {
 
 
     public static <T> IResourceLocation findKey(T value) {
-        for (TypedRegistry<?> registry : INSTANCES) {
+        for (var registry : INSTANCES) {
             if (registry.getType().isInstance(value)) {
                 TypedRegistry<T> registry1 = ObjectUtils.unsafeCast(registry);
                 return registry1.getKey(value);
@@ -103,7 +103,7 @@ public class TypedRegistry<T> implements IRegistry<T> {
     }
 
     public static <T> Collection<IRegistryHolder<? extends T>> findEntries(Class<T> clazz) {
-        for (TypedRegistry<?> registry : INSTANCES) {
+        for (var registry : INSTANCES) {
             if (clazz.isAssignableFrom(registry.getType())) {
                 TypedRegistry<T> registry1 = ObjectUtils.unsafeCast(registry);
                 return registry1.getEntries();

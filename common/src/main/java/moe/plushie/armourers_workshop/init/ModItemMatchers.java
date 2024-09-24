@@ -89,7 +89,7 @@ public class ModItemMatchers {
         }
 
         private MatcherBuilder match(String tag) {
-            if (!mathBuffer.isEmpty()) {
+            if (mathBuffer.length() != 0) {
                 mathBuffer.append("|");
             }
             mathBuffer.append(tag);
@@ -97,7 +97,7 @@ public class ModItemMatchers {
         }
 
         private MatcherBuilder nonMatch(String tag) {
-            if (!nonMathBuffer.isEmpty()) {
+            if (nonMathBuffer.length() != 0) {
                 nonMathBuffer.append("|");
             }
             nonMathBuffer.append(tag);

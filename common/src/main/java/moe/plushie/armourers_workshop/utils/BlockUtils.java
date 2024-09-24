@@ -1,19 +1,20 @@
 package moe.plushie.armourers_workshop.utils;
 
-import moe.plushie.armourers_workshop.api.common.IBlockSnapshot;
+import com.google.common.collect.ImmutableSet;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
+import moe.plushie.armourers_workshop.api.registry.IRegistryHolder;
 import moe.plushie.armourers_workshop.builder.data.undo.UndoManager;
 import moe.plushie.armourers_workshop.builder.data.undo.action.NamedUserAction;
 import moe.plushie.armourers_workshop.builder.data.undo.action.SetBlockAction;
+import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.platform.event.common.BlockEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,17 +23,25 @@ import java.util.Map;
 
 public final class BlockUtils {
 
-    private static final ThreadLocal<Map<BlockEntity, Runnable>> pending = ThreadLocal.withInitial(() -> null);
+    private static final ImmutableSet<IRegistryHolder<Block>> SNAPSHOT_BLOCKS = new ImmutableSet.Builder<IRegistryHolder<Block>>()
+            .add(ModBlocks.SKIN_CUBE)
+            .add(ModBlocks.SKIN_CUBE_GLASS)
+            .add(ModBlocks.SKIN_CUBE_GLASS_GLOWING)
+            .add(ModBlocks.SKIN_CUBE_GLOWING)
+            .add(ModBlocks.ADVANCED_SKIN_BUILDER)
+            .build();
+
+    private static final ThreadLocal<Map<BlockEntity, Runnable>> SNAPSHOT_QUEUE = ThreadLocal.withInitial(() -> null);
 
     public static void beginCombiner() {
-        Map<BlockEntity, Runnable> queue = pending.get();
+        var queue = SNAPSHOT_QUEUE.get();
         if (queue == null) {
-            pending.set(new IdentityHashMap<>());
+            SNAPSHOT_QUEUE.set(new IdentityHashMap<>());
         }
     }
 
     public static <T extends BlockEntity> void combine(T blockEntity, Runnable handler) {
-        Map<BlockEntity, Runnable> queue = pending.get();
+        var queue = SNAPSHOT_QUEUE.get();
         if (queue == null) {
             handler.run();
             blockEntity.setChanged();
@@ -42,32 +51,23 @@ public final class BlockUtils {
     }
 
     public static void snapshot(BlockEvent event) {
-        Component reason = null;
         // only work in server side
-        if (!(event.getEntity() instanceof ServerPlayer player) || !(event.getLevel() instanceof Level)) {
+        if (!(event.getEntity() instanceof ServerPlayer player) || !(event.getLevel() instanceof Level level)) {
             return;
         }
-        // is place skin cube block.
-        BlockState blockState = event.getState();
-        if (blockState != null && blockState.getBlock() instanceof SkinCubeBlock) {
-            reason = Component.translatable("chat.armourers_workshop.undo.placeBlock");
-        }
-        // is break skin cube block.
-        IBlockSnapshot snapshot = event.getSnapshot();
-        if (blockState == null && snapshot.getState().getBlock() instanceof SkinCubeBlock) {
-            reason = Component.translatable("chat.armourers_workshop.undo.breakBlock");
-        }
-        // when reason is null, we can't snapshot it.
-        if (reason == null) {
+        // when action type is null, we can't snapshot it.
+        var actionType = ActionType.of(event);
+        if (actionType == null) {
             return;
         }
-        NamedUserAction group = new NamedUserAction(reason);
-        group.push(new SetBlockAction((Level) event.getLevel(), event.getPos(), snapshot.getState(), snapshot.getTag()));
+        var snapshot = event.getSnapshot();
+        var group = new NamedUserAction(actionType.getTitle());
+        group.push(new SetBlockAction(level, event.getPos(), snapshot.getState(), snapshot.getTag()));
         UndoManager.of(player.getUUID()).push(group);
     }
 
     public static void endCombiner() {
-        var queue = pending.get();
+        var queue = SNAPSHOT_QUEUE.get();
         if (queue == null) {
             return;
         }
@@ -75,7 +75,7 @@ public final class BlockUtils {
             v.run();
             k.setChanged();
         });
-        pending.set(null);
+        SNAPSHOT_QUEUE.remove();
     }
 
     public static void performBatch(Runnable handler) {
@@ -204,7 +204,7 @@ public final class BlockUtils {
         for (int ix = 0; ix < 3; ix++) {
             for (int iy = 0; iy < 3; iy++) {
                 for (int iz = 0; iz < 3; iz++) {
-                    BlockEntity stateValid = level.getBlockEntity(pos.offset(ix - 1, iy - 1, iz - 1));
+                    var stateValid = level.getBlockEntity(pos.offset(ix - 1, iy - 1, iz - 1));
                     if (stateValid instanceof IPaintable) {
                         return true;
                     }
@@ -221,5 +221,36 @@ public final class BlockUtils {
             }
         }
         return false;
+    }
+
+    private static boolean isSnapshotBlock(Block block) {
+        return SNAPSHOT_BLOCKS.stream().anyMatch(it -> it.get() == block);
+    }
+
+    public static class ActionType {
+
+        private final Component title;
+
+        private ActionType(Component title) {
+            this.title = title;
+        }
+
+        public static ActionType of(BlockEvent event) {
+            // is place skin cube block.
+            var blockState = event.getState();
+            if (blockState != null && isSnapshotBlock(blockState.getBlock())) {
+                return new ActionType(Component.translatable("chat.armourers_workshop.undo.placeBlock"));
+            }
+            // is break skin cube block.
+            var snapshot = event.getSnapshot();
+            if (blockState == null && isSnapshotBlock(snapshot.getState().getBlock())) {
+                return new ActionType(Component.translatable("chat.armourers_workshop.undo.breakBlock"));
+            }
+            return null;
+        }
+
+        public Component getTitle() {
+            return title;
+        }
     }
 }

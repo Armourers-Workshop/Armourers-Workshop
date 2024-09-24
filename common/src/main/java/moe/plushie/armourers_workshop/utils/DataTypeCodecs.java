@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.holiday.Holiday;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinMarker;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor.Options;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentAnimation;
 import moe.plushie.armourers_workshop.core.skin.document.SkinDocumentNode;
