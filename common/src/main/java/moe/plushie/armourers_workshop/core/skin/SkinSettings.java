@@ -175,16 +175,16 @@ public class SkinSettings {
             }
         };
 
-        static final DataItem<SkinItemTransforms> ITEM_TRANSFORMS = new DataItem<SkinItemTransforms>(3, null) {
+        static final DataItem<SkinItemTransforms> ITEM_TRANSFORMS = new DataItem<SkinItemTransforms>(2, null) {
             @Override
             SkinItemTransforms read(IInputStream inputStream) throws IOException {
                 var itemTransforms = new SkinItemTransforms();
                 var size = inputStream.readVarInt();
                 for (int i = 1; i < size; ++i) {
-                    String name = inputStream.readString();
-                    Vector3f translate = inputStream.readVector3f();
-                    Vector3f rotation = inputStream.readVector3f();
-                    Vector3f scale = inputStream.readVector3f();
+                    var name = inputStream.readString();
+                    var translate = inputStream.readVector3f();
+                    var rotation = inputStream.readVector3f();
+                    var scale = inputStream.readVector3f();
                     itemTransforms.put(name, SkinTransform.create(translate, rotation, scale));
                 }
                 return itemTransforms;
