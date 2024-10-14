@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init.platform;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
+import moe.plushie.armourers_workshop.api.core.IResourceManager;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentPlatformType;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.utils.Constants;
@@ -55,6 +56,11 @@ public class EnvironmentManager {
     @Environment(EnvType.CLIENT)
     public static Player getPlayer() {
         return Minecraft.getInstance().player;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static IResourceManager getResourceManager() {
+        return Minecraft.getInstance().getResourceManager().asResourceManager();
     }
 
     public static boolean isDedicatedServer() {

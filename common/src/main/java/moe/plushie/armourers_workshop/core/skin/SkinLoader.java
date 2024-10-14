@@ -22,6 +22,7 @@ import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.WorkQueue;
+import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,6 +30,7 @@ import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.spec.SecretKeySpec;
+import javax.imageio.metadata.IIOInvalidTreeException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -73,12 +75,15 @@ public class SkinLoader {
 
     public void setup(SkinServerType type) {
         taskManager.values().forEach(Session::shutdown);
+        taskManager.clear();
         var local = new LocalDataSession();
+        var pack = new ResourcePackSession();
         var download = new DownloadSession();
         var slice = new SliceSession();
         if (type == SkinServerType.CLIENT) {
             var proxy = new ProxySession();
             taskManager.put(DataDomain.LOCAL, local);
+            taskManager.put(DataDomain.RESOURCE_PACK, pack);
             taskManager.put(DataDomain.DATABASE, proxy);
             taskManager.put(DataDomain.DATABASE_LINK, proxy);
             taskManager.put(DataDomain.DEDICATED_SERVER, proxy);
@@ -87,6 +92,7 @@ public class SkinLoader {
             taskManager.put(DataDomain.SLICE_LOAD, slice);
         } else {
             taskManager.put(DataDomain.LOCAL, local);
+            taskManager.put(DataDomain.RESOURCE_PACK, pack);
             taskManager.put(DataDomain.DATABASE, local);
             taskManager.put(DataDomain.DATABASE_LINK, local);
             taskManager.put(DataDomain.DEDICATED_SERVER, local);
@@ -595,12 +601,44 @@ public class SkinLoader {
             if (file.exists()) {
                 return new FileInputStream(file);
             }
-            return null;
+            throw new FileNotFoundException(identifier);
         }
 
         @Override
         public void loadDidFinish(Request request, Skin skin, long loadTime) {
             ModLog.debug("'{}' => did load skin from local session, time: {}ms", request.identifier, loadTime);
+        }
+    }
+
+    public static class ResourcePackSession extends LoadingSession {
+
+        public ResourcePackSession() {
+            super("AW-SKIN-RS");
+        }
+
+        @Override
+        public InputStream loadData(String identifier) throws Exception {
+            // never get resource manager in dedicated server.
+            if (EnvironmentManager.isDedicatedServer()) {
+                throw new IllegalAccessException("the resource pack session only work in the client side.");
+            }
+            // pk:<pack-id>:<skin-path>
+            var file = OpenResourceLocation.parse(DataDomain.getPath(identifier));
+            var resourceManager = EnvironmentManager.getResourceManager();
+            if (resourceManager.hasResource(file)) {
+                return resourceManager.readResource(file).getInputStream();
+            }
+            // pk:<pack-id>:<skin-path>.armour
+            file = OpenResourceLocation.create(file.getNamespace(), file.getPath() + Constants.EXT);
+            if (resourceManager.hasResource(file)) {
+                return resourceManager.readResource(file).getInputStream();
+            }
+            throw new FileNotFoundException(identifier);
+        }
+
+        @Override
+        public void loadDidFinish(Request request, Skin skin, long loadTime) {
+            ModLog.debug("'{}' => did load skin from resource pack session, time: {}ms", request.identifier, loadTime);
         }
     }
 

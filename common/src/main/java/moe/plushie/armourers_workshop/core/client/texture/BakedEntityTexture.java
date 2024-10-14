@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.color.TexturedPaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureModel;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import net.fabricmc.api.EnvType;
@@ -42,7 +43,7 @@ public class BakedEntityTexture {
         this.resourceLocation = resourceLocation;
         BufferedImage bufferedImage;
         try {
-            var resourceManager = Minecraft.getInstance().getResourceManager().asResourceManager();
+            var resourceManager = EnvironmentManager.getResourceManager();
             bufferedImage = ImageIO.read(resourceManager.readResource(resourceLocation).getInputStream());
             if (bufferedImage != null) {
 //                slim = (bufferedImage.getRGB(54, 20) & 0xff000000) == 0;

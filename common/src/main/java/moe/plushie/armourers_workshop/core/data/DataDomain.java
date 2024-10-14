@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.data;
 
 public enum DataDomain {
-    LOCAL("fs"), DEDICATED_SERVER("ws"), DATABASE("db"), DATABASE_LINK("ln"), GLOBAL_SERVER("ks"), GLOBAL_SERVER_PREVIEW("kv"), SLICE_LOAD("sp");
+    LOCAL("fs"), RESOURCE_PACK("rs"), DEDICATED_SERVER("ws"), DATABASE("db"), DATABASE_LINK("ln"), GLOBAL_SERVER("ks"), GLOBAL_SERVER_PREVIEW("kv"), SLICE_LOAD("sp");
 
     private final String namespace;
 
@@ -36,7 +36,7 @@ public enum DataDomain {
     }
 
     public static boolean isLocal(String path) {
-        return LOCAL.matches(path);
+        return LOCAL.matches(path) || RESOURCE_PACK.matches(path);
     }
 
     public static boolean isServer(String path) {

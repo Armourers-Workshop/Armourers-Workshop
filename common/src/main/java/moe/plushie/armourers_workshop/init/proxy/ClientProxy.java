@@ -112,7 +112,7 @@ public class ClientProxy {
         // register custom model.
         EventManager.listen(RegisterModelEvent.class, event -> SkinPartTypes.registeredTypes().forEach(partType -> {
             var rl = ArmourersWorkshop.getCustomModel(partType.getRegistryName());
-            var resourceManager = Minecraft.getInstance().getResourceManager().asResourceManager();
+            var resourceManager = EnvironmentManager.getResourceManager();
             if (resourceManager.hasResource(OpenResourceLocation.create(rl.getNamespace(), "models/item/" + rl.getPath() + ".json"))) {
                 event.register(rl);
             }
