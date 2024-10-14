@@ -15,6 +15,7 @@ import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 public class SkinRenderHelper {
 
@@ -28,7 +29,7 @@ public class SkinRenderHelper {
         return count;
     }
 
-    public static void apply(Entity entity, BakedSkin bakedSkin, BakedArmature bakedArmature, SkinItemSource itemSource) {
+    public static void apply(@Nullable Entity entity, BakedSkin bakedSkin, BakedArmature bakedArmature, SkinItemSource itemSource) {
         for (var part : bakedSkin.getParts()) {
             boolean shouldRender = false;
             if (bakedArmature != null && bakedArmature.getTransform(part) != null) {
@@ -41,7 +42,7 @@ public class SkinRenderHelper {
         }
     }
 
-    public static boolean shouldRenderPart(Entity entity, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinItemSource itemSource) {
+    public static boolean shouldRenderPart(@Nullable Entity entity, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinItemSource itemSource) {
         var partType = bakedPart.getType();
         // hook part only render in hook entity.
         if (partType == SkinPartTypes.ITEM_FISHING_HOOK) {
@@ -84,11 +85,11 @@ public class SkinRenderHelper {
         return true;
     }
 
-    private static boolean isHookEntity(Entity entity) {
+    private static boolean isHookEntity(@Nullable Entity entity) {
         return entity instanceof FishingHook;
     }
 
-    private static boolean isArrowEntity(Entity entity) {
+    private static boolean isArrowEntity(@Nullable Entity entity) {
         // in vanilla considers trident to be a special arrow,
         // but this no fits we definition of arrow skin.
         if (entity instanceof ThrownTrident) {

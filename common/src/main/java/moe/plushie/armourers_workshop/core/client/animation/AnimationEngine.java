@@ -9,6 +9,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public class AnimationEngine {
@@ -40,7 +41,7 @@ public class AnimationEngine {
         });
     }
 
-    public static void apply(Object source, BakedSkin skin, float animationTicks, AnimationContext context) {
+    public static void apply(@Nullable Object source, BakedSkin skin, float animationTicks, AnimationContext context) {
         context.begin(animationTicks);
         for (var animationController : skin.getAnimationControllers()) {
             // query the current play state of the animation controller.
@@ -59,7 +60,7 @@ public class AnimationEngine {
         context.commit();
     }
 
-    public static void upload(Object source, double animTime, double startAnimTime) {
+    public static void upload(@Nullable Object source, double animTime, double startAnimTime) {
         var mc = Minecraft.getInstance();
         var level = mc.level;
         if (level == null) {

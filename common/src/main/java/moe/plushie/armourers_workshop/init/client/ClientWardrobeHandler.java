@@ -42,6 +42,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -191,7 +192,7 @@ public class ClientWardrobeHandler {
             case FIRST_PERSON_RIGHT_HAND: {
                 // first person can't support render outline.
                 var outlineColor = 0;
-                if (transformType.isThirdPerson()) {
+                if (entity != null && transformType.isThirdPerson()) {
                     outlineColor = entity.getOutlineColor();
                 }
 

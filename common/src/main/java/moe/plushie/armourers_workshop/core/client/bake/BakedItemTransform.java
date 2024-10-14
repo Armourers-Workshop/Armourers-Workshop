@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinModelManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 public class BakedItemTransform implements ISkinTransform {
 
@@ -23,7 +24,7 @@ public class BakedItemTransform implements ISkinTransform {
         this.itemModel = bakedSkin.getItemModel();
     }
 
-    public void setup(Entity entity, SkinItemSource itemSource) {
+    public void setup(@Nullable Entity entity, SkinItemSource itemSource) {
         this.entity = entity;
         this.transformType = itemSource.getTransformType();
         this.itemStack = itemSource.getItem();
