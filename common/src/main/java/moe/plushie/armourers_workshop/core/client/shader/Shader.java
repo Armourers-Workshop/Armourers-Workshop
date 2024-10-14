@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderState;
 import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
+import moe.plushie.armourers_workshop.core.skin.molang.function.generic.Mod;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -79,11 +80,11 @@ public abstract class Shader {
         RenderSystem.setExtendedNormalMatrix(entry.normal());
         RenderSystem.setExtendedModelViewMatrix(entry.pose());
 
-        // https://sites.google.com/site/threejstuts/home/polygon_offset
+        // https://web.archive.org/web/20201010072314/https://sites.google.com/site/threejstuts/home/polygon_offset
         // For polygons that are parallel to the near and far clipping planes, the depth slope is zero.
         // For the polygons in your scene with a depth slope near zero, only a small, constant offset is needed.
         // To create a small, constant offset, you can pass factor = 0.0 and units = 1.0.
-        RenderSystem.polygonOffset(0, object.getPolygonOffset() * -1);
+        RenderSystem.polygonOffset(0, -100000.0f - object.getPolygonOffset() * 1000.0f);
 
         // yes, we need update the uniform every render call.
         // maybe need query uniform from current shader.
