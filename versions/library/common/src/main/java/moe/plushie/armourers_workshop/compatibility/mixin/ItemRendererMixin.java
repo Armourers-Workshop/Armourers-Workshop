@@ -18,14 +18,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ItemRenderer.class)
 @Available("[1.20, )")
+@Mixin(ItemRenderer.class)
 public class ItemRendererMixin {
 
     @Inject(method = "getModel", at = @At("RETURN"), cancellable = true)
     private void aw2$getModel(ItemStack itemStack, Level level, LivingEntity entity, int i, CallbackInfoReturnable<BakedModel> cir) {
         var bakedModel = cir.getReturnValue();
-        var embeddedStack = ClientWardrobeHandler.getEmbeddedSkinStack(entity, level, itemStack, null);
+        var embeddedStack = ClientWardrobeHandler.getEmbeddedSkinStack(entity, level, itemStack, null, bakedModel);
         if (embeddedStack != null) {
             cir.setReturnValue(BakedModelStorage.wrap(bakedModel, itemStack, embeddedStack, entity, level));
         }

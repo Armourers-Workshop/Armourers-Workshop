@@ -20,7 +20,7 @@ public class ABI {
     public static void setIdentity(@This PoseStack poseStack) {
         poseStack.last().pose().setIdentity();
         poseStack.last().normal().setIdentity();
-        AbstractPoseStack.Pose pose = IAssociatedObjectProvider.get(poseStack.last());
+        AbstractPoseStack.Pose pose = IAssociatedObjectProvider.get(poseStack.last(), null);
         if (pose != null) {
             pose.setProperties(0);
         }

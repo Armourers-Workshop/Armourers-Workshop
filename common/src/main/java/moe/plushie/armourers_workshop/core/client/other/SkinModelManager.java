@@ -23,14 +23,14 @@ import java.util.HashMap;
 @Environment(EnvType.CLIENT)
 public class SkinModelManager {
 
-    final static SkinModelManager INSTANCE = new SkinModelManager();
+    private final static SkinModelManager INSTANCE = new SkinModelManager();
 
-    final ModelManager modelManager;
+    private final ModelManager modelManager;
 
-    final HashMap<ISkinPartType, BakedModel> cachedModels = new HashMap<>();
-    final HashMap<ISkinPartType, BakedModel> cachedItemModels = new HashMap<>();
+    private final HashMap<ISkinPartType, BakedModel> cachedModels = new HashMap<>();
+    private final HashMap<ISkinPartType, BakedModel> cachedItemModels = new HashMap<>();
 
-    SkinModelManager() {
+    private SkinModelManager() {
         modelManager = Minecraft.getInstance().getModelManager();
     }
 

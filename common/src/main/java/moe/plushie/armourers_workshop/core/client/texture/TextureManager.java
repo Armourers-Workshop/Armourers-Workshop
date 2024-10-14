@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.data.cache.ReferenceCounted;
 import moe.plushie.armourers_workshop.core.texture.TextureAnimation;
 import moe.plushie.armourers_workshop.init.ModConstants;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.fabricmc.api.EnvType;
@@ -85,7 +84,7 @@ public class TextureManager {
 
         @Nullable
         public static TextureManager.Entry of(RenderType renderType) {
-            return IAssociatedObjectProvider.get(renderType);
+            return IAssociatedObjectProvider.get(renderType, null);
         }
 
         @Override
@@ -122,8 +121,7 @@ public class TextureManager {
         }
 
         protected void bind(Entry newValue) {
-            IAssociatedObjectProvider provider = ObjectUtils.unsafeCast(renderType);
-            provider.setAssociatedObject(newValue);
+            IAssociatedObjectProvider.set(renderType, newValue);
         }
 
         private IResourceLocation resolveResourceLocation(ITextureProvider provider) {

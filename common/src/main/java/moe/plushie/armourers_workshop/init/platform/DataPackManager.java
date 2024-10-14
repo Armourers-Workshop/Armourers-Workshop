@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.data.IDataPackBuilder;
 import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
-import moe.plushie.armourers_workshop.init.platform.event.common.RegisterDataPackEvent;
+import moe.plushie.armourers_workshop.init.platform.event.common.DataPackEvent;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.util.function.Function;
@@ -35,6 +35,7 @@ public class DataPackManager {
         public void build(TaskQueue taskQueue, ResourceManager resourceManager) {
             super.build(taskQueue, resourceManager);
             entries.clear();
+            EventManager.post(DataPackEvent.Reloading.class, () -> DataPackType.BUNDLED_DATA);
         }
     }
 
@@ -47,6 +48,7 @@ public class DataPackManager {
                 loader.build(taskQueue, resourceManager.asBundleManager());
             }
             super.build(taskQueue, resourceManager);
+            EventManager.post(DataPackEvent.Reloading.class, () -> DataPackType.SERVER_DATA);
         }
     }
 
@@ -59,6 +61,7 @@ public class DataPackManager {
                 loader.build(taskQueue, resourceManager.asBundleManager());
             }
             super.build(taskQueue, resourceManager);
+            EventManager.post(DataPackEvent.Reloading.class, () -> DataPackType.CLIENT_RESOURCES);
         }
     }
 }

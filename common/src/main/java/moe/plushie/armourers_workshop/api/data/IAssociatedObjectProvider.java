@@ -4,9 +4,18 @@ import java.util.function.Function;
 
 public interface IAssociatedObjectProvider {
 
-    static <T, V> V get(T object) {
+    static <T, V> void set(T object, V value) {
         IAssociatedObjectProvider provider = (IAssociatedObjectProvider) object;
-        return provider.getAssociatedObject();
+        provider.setAssociatedObject(value);
+    }
+
+    static <T, V> V get(T object, V defaultValue) {
+        IAssociatedObjectProvider provider = (IAssociatedObjectProvider) object;
+        V value = provider.getAssociatedObject();
+        if (value != null) {
+            return value;
+        }
+        return defaultValue;
     }
 
     static <T, V> V of(T object, Function<T, V> supplier) {

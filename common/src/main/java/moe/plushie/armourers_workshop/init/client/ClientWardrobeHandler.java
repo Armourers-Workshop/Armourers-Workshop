@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.EntitySlot;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
+import moe.plushie.armourers_workshop.core.client.other.FindableSkinManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderHelper;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
@@ -42,7 +43,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -143,10 +143,10 @@ public class ClientWardrobeHandler {
     }
 
     @Nullable
-    public static EmbeddedSkinStack getEmbeddedSkinStack(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, AbstractItemTransformType transformType) {
+    public static EmbeddedSkinStack getEmbeddedSkinStack(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, AbstractItemTransformType transformType, BakedModel bakedModel) {
+        // when the wardrobe has override skin of the item,
+        // we easily got a conclusion of the needs embedded skin.
         if (RENDERING_GUI_ITEM != itemStack) {
-            // when the wardrobe has override skin of the item,
-            // we easily got a conclusion of the needs embedded skin.
             var renderData = EntityRenderData.of(entity);
             if (renderData != null) {
                 for (var entry : renderData.getItemSkins(itemStack, entity instanceof MannequinEntity)) {
@@ -154,8 +154,14 @@ public class ClientWardrobeHandler {
                 }
             }
         }
+        // Try to get skin descriptor from item stack.
         var descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
+            // Try to get skin descriptor from item model config.
+            descriptor = FindableSkinManager.getInstance().getSkin(bakedModel);
+            if (!descriptor.isEmpty()) {
+                return new EmbeddedSkinStack(1, descriptor, itemStack);
+            }
             return null;
         }
         // when the item is a skin item itself,

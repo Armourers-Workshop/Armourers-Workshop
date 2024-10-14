@@ -17,6 +17,8 @@
     "GuiGraphicsMixin",
     "HttpTextureMixin",
     "FallbackResourceManagerMixin",
+    "ModelBakeryMixin$ModelPatch",
+    "ModelBakeryMixin$BakeryPatch",
     "CameraMixin",
     "ClientEntityTickMixin",
     "patch/ArrowRendererMixin",

@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
+import moe.plushie.armourers_workshop.core.client.other.FindableSkinManager;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -15,10 +16,11 @@ public class SkinPreloadManager {
 
     public static void start() {
         lastInventoryVersion = null;
+        FindableSkinManager.getInstance().start();
     }
 
     public static void stop() {
-
+        FindableSkinManager.getInstance().stop();
     }
 
     public static void tick(boolean isPaused) {

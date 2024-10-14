@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 @Environment(EnvType.CLIENT)
 public class EmbeddedSkinStack {
 
-    private final int mode;
+    private final int mode; // 2 force render in box
     private final ItemStack itemStack;
 
     private final SkinDescriptor descriptor;
