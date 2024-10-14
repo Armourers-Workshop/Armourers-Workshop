@@ -103,6 +103,7 @@ public class ModConfig {
         public static int enableEmbeddedSkinRenderer = 0;
         public static int enableFirstPersonSkinRenderer = 0;
         public static boolean enableMatchingByItemId = true;
+        public static boolean enableServerSkinsInResourcePack = false;
 
         // Tooltip
         public static boolean tooltipHasSkin = true;

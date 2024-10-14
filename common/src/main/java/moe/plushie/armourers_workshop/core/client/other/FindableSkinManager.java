@@ -3,9 +3,11 @@ package moe.plushie.armourers_workshop.core.client.other;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.EventManager;
@@ -58,7 +60,7 @@ public class FindableSkinManager {
 
     public SkinDescriptor getSkin(BakedModel bakedModel) {
         var entry = bakedModels.get(bakedModel);
-        if (entry != null) {
+        if (entry != null && entry.canUse()) {
             return entry.descriptor;
         }
         return SkinDescriptor.EMPTY;
@@ -120,15 +122,21 @@ public class FindableSkinManager {
     public static class Entry {
 
         private final String identifier;
+        private final boolean isLocalFile;
 
         private SkinDescriptor descriptor;
 
         public Entry(String identifier) {
             this.identifier = identifier;
+            this.isLocalFile = DataDomain.isLocal(identifier);
             this.descriptor = new SkinDescriptor(identifier);
         }
 
         public void preload(SkinBakery bakery) {
+            // when we can't use this skin, don't preload it.
+            if (!canUse()) {
+                return;
+            }
             ModLog.debug("'{}' => start preload skin", identifier);
             descriptor = new SkinDescriptor(identifier);
             bakery.loadSkin(identifier, Tickets.PRELOAD, this::complete);
@@ -141,6 +149,11 @@ public class FindableSkinManager {
             }
             ModLog.debug("'{}' => did preload skin", identifier);
             descriptor = new SkinDescriptor(identifier, bakedSkin.getType());
+        }
+
+        public boolean canUse() {
+            // because some server disallow user to bind skin to item by self, so we need respect the server options.
+            return isLocalFile || ModConfig.Common.enableServerSkinsInResourcePack;
         }
     }
 }

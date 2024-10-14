@@ -92,6 +92,7 @@ public class ModConfigSpec {
                 define("serverCompressesSkins", true, "If enabled the server will compress skins before sending them to clients.", "Highly recommended unless the server has a very slow CPU.").bind(v -> enableServerCompressesSkins = v, () -> enableServerCompressesSkins);
                 defineInRange("enableEmbeddedSkinRenderer", 0, 0, 2, "Using embedded skin renderer to replace the original item renderer.", "0 = use client config", "1 = always disable", "2 = always enable").bind(v -> enableEmbeddedSkinRenderer = v, () -> enableEmbeddedSkinRenderer);
                 defineInRange("enableFirstPersonSkinRenderer", 0, 0, 2, "Using skin renderer to replace the original first person hands renderer.", "0 = use client config", "1 = always disable", "2 = always enable").bind(v -> enableFirstPersonSkinRenderer = v, () -> enableFirstPersonSkinRenderer);
+                define("enableServerSkinsInResourcePack", false, "If enabled the server will allow client use server skins in the resource pack.").bind(v -> enableServerSkinsInResourcePack = v, () -> enableServerSkinsInResourcePack);
             });
             defineCategory("tooltip", "Setting to configure tooltips on skinned items.", () -> {
                 define("tooltipHasSkin", true, "Show has skin tooltip on skinned items.").bind(v -> tooltipHasSkin = v, () -> tooltipHasSkin);
