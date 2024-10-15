@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[${forge_loader_version},)"
+loaderVersion = "[${required_forge_loader_version},)"
 issueTrackerURL = "https://github.com/Armourers-Workshop/Armourers-Workshop/issues"
 displayURL = "https://github.com/Armourers-Workshop/Armourers-Workshop"
 logoFile = "icon.png"
@@ -17,13 +17,13 @@ Minecraft armour customization mod.
 [[dependencies.armourers_workshop]]
 modId = "forge"
 mandatory = true
-versionRange = "[${forge_api_version},)"
+versionRange = "[${required_forge_api_version},)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.armourers_workshop]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[${minecraft_version},)"
+versionRange = "[${required_minecraft_version},)"
 ordering = "NONE"
 side = "BOTH"

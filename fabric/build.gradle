@@ -31,9 +31,9 @@ dependencies {
 
 processResources {
     inputs.property "version", project.version
-    inputs.property "fabric_api_version", project.required_fabric_api_version
-    inputs.property "fabric_loader_version", project.required_fabric_loader_version
-    inputs.property "minecraft_version", project.required_minecraft_version
+    inputs.property "required_fabric_api_version", project.required_fabric_api_version
+    inputs.property "required_fabric_loader_version", project.required_fabric_loader_version
+    inputs.property "required_minecraft_version", project.required_minecraft_version
 
     filesMatching("fabric.mod.json") {
         expand inputs.properties

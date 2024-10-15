@@ -40,9 +40,9 @@ dependencies {
 
 processResources {
     inputs.property "version", project.version
-    inputs.property "forge_api_version", project.required_forge_api_version
-    inputs.property "forge_loader_version", project.required_forge_loader_version
-    inputs.property "minecraft_version", project.required_minecraft_version
+    inputs.property "required_forge_api_version", project.required_forge_api_version
+    inputs.property "required_forge_loader_version", project.required_forge_loader_version
+    inputs.property "required_minecraft_version", project.required_minecraft_version
 
     filesMatching("META-INF/mods.toml") {
         expand inputs.properties
