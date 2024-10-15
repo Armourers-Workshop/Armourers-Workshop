@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
+import moe.plushie.armourers_workshop.compatibility.api.AbstractItemTransformType;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
@@ -120,6 +121,16 @@ public class SkinOverriddenManager {
 
     public boolean overrideAnyModel() {
         return !disabledModelByProperties.isEmpty();
+    }
+
+    public boolean overrideHandModel(AbstractItemTransformType transformType) {
+        if (transformType.isLeftHand()) {
+            return contains(SkinProperty.OVERRIDE_MODEL_LEFT_ARM);
+        }
+        if (transformType.isRightHand()) {
+            return contains(SkinProperty.OVERRIDE_MODEL_RIGHT_ARM);
+        }
+        return false;
     }
 
     public void clear() {

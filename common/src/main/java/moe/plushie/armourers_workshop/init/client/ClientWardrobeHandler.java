@@ -12,8 +12,8 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedItemModel;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.EntitySlot;
-import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.FindableSkinManager;
+import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderHelper;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
@@ -94,6 +94,7 @@ public class ClientWardrobeHandler {
         poseStack.pushPose();
         poseStack.scale(-SCALE, -SCALE, SCALE);
 
+        var overrideHandModel = renderData.getOverriddenManager().overrideHandModel(transformType);
         var context = SkinRenderContext.alloc(renderData, packedLight, partialTicks, transformType);
 
         context.setOverlay(OverlayTexture.NO_OVERLAY);
@@ -108,7 +109,7 @@ public class ClientWardrobeHandler {
         context.setOutlineColor(0); // no show in head?
 
         int count = render(entity, armature, context, renderData.getArmorSkins());
-        if (count != 0 && !ModDebugger.handOverride) {
+        if (count != 0 && overrideHandModel && !ModDebugger.handOverride) {
             cancelHandler.run();
         }
         context.release();
