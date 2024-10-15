@@ -40,6 +40,7 @@ import moe.plushie.armourers_workshop.utils.TypedRegistry;
 import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.nbt.CompoundTag;
@@ -106,7 +107,7 @@ public class ModCommands {
 
     static ArgumentBuilder<CommandSourceStack, ?> animationCommands(ArgumentBuilder<CommandSourceStack, ?> parent) {
         return parent
-                .then(literal("play").then(name().then(playCount().executes(Executor::playAnimation)).executes(Executor::playAnimation)))
+                .then(literal("play").then(name().then(animationProperties().executes(Executor::playAnimation)).executes(Executor::playAnimation)))
                 .then(literal("stop").then(name().executes(Executor::stopAnimation)).executes(Executor::stopAnimation))
                 .then(literal("map").then(string("from").then(string("to").executes(Executor::mappingAnimation))));
     }
@@ -155,8 +156,8 @@ public class ModCommands {
         return Commands.argument("name", StringArgumentType.string());
     }
 
-    static ArgumentBuilder<CommandSourceStack, ?> playCount() {
-        return Commands.argument("play_count", IntegerArgumentType.integer(-1));
+    static ArgumentBuilder<CommandSourceStack, ?> animationProperties() {
+        return Commands.argument("properties", CompoundTagArgument.compoundTag());
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> resizableSlotAmounts() {
@@ -424,13 +425,13 @@ public class ModCommands {
         }
 
         public static int playAnimation(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            var playCount = 0;
-            if (containsNode(context, "play_count")) {
-                playCount = IntegerArgumentType.getInteger(context, "play_count");
+            var properties = new CompoundTag();
+            if (containsNode(context, "properties")) {
+                properties = CompoundTagArgument.getCompoundTag(context, "properties");
             }
             var animationName = StringArgumentType.getString(context, "name");
             for (var selector : getAnimationSelector(context)) {
-                NetworkManager.sendToAll(UpdateAnimationPacket.play(selector, animationName, playCount));
+                NetworkManager.sendToAll(UpdateAnimationPacket.play(selector, animationName, properties));
             }
             return 0;
         }

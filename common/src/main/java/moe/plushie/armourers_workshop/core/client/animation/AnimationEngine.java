@@ -52,7 +52,7 @@ public class AnimationEngine {
             // we only bind it when transformer use the molang environment.
             var adjustedTicks = playState.getAdjustedTicks(animationTicks);
             if (animationController.isRequiresVirtualMachine()) {
-                upload(source, adjustedTicks, playState.getStartTicks());
+                upload(source, adjustedTicks, playState.getBeginTime());
             }
             // check/switch frames of animation and write to applier.
             animationController.process(adjustedTicks);

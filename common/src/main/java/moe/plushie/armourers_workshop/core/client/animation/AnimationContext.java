@@ -50,14 +50,14 @@ public class AnimationContext {
         }
     }
 
-    public void addAnimation(@Nullable AnimationController fromAnimationController, @Nullable AnimationController toAnimationController, float beginTime, float duration) {
+    public void addAnimation(@Nullable AnimationController fromAnimationController, @Nullable AnimationController toAnimationController, float time, float speed, float duration) {
         // Find affected parts by from/to animation.
         var affectedParts = new ArrayList<BakedSkinPart>();
         affectedParts.addAll(ObjectUtils.flatMap(fromAnimationController, AnimationController::getParts, Collections.emptyList()));
         affectedParts.addAll(ObjectUtils.flatMap(toAnimationController, AnimationController::getParts, Collections.emptyList()));
         for (var snapshot : snapshots) {
             if (snapshot instanceof Snapshot.Variant variant && affectedParts.contains(snapshot.part)) {
-                variant.beginTransiting(beginTime, duration);
+                variant.beginTransiting(time, speed, duration);
             }
         }
     }
@@ -138,7 +138,7 @@ public class AnimationContext {
                 }
             }
 
-            protected void beginTransiting(float time, float duration) {
+            protected void beginTransiting(float time, float speed, float duration) {
                 transitingAnimation = new Transiting(time, duration);
                 var fromValue = transitingAnimation.getFromValue();
                 if (isExported) {

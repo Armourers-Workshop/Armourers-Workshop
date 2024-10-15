@@ -28,6 +28,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NumericTag;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
@@ -81,6 +82,33 @@ public class OptionalAPI {
     public static void putOptionalFloat(@This CompoundTag tag, String key, float value, float defaultValue) {
         if (_shouldPutValue(tag, key, value, defaultValue)) {
             tag.putFloat(key, value);
+        }
+    }
+
+    public static Number getOptionalNumber(@This CompoundTag tag, String key, Number defaultValue) {
+        if (tag.contains(key, Constants.TagFlags.ANY_NUMERIC)) {
+            if (tag.get(key) instanceof NumericTag numericTag) {
+                return numericTag.getAsNumber();
+            }
+        }
+        return defaultValue;
+    }
+
+    public static void putOptionalNumber(@This CompoundTag tag, String key, Number value, Number defaultValue) {
+        if (_shouldPutValue(tag, key, value, defaultValue)) {
+            if (value instanceof Byte byteValue) {
+                tag.putByte(key, byteValue);
+            } else if (value instanceof Short shortValue) {
+                tag.putShort(key, shortValue);
+            } else if (value instanceof Integer intValue) {
+                tag.putInt(key, intValue);
+            } else if (value instanceof Long longValue) {
+                tag.putLong(key, longValue);
+            } else if (value instanceof Float floatValue) {
+                tag.putFloat(key, floatValue);
+            } else if (value instanceof Double doubleValue) {
+                tag.putDouble(key, doubleValue);
+            }
         }
     }
 

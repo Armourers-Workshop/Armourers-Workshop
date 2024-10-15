@@ -10,10 +10,12 @@ import moe.plushie.armourers_workshop.core.data.EntityActions;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.commons.lang3.tuple.Pair;
@@ -114,11 +116,11 @@ public class AnimationManager {
         }
     }
 
-    public void play(String name, float atTime, int playCount) {
+    public void play(String name, float atTime, CompoundTag properties) {
         for (var entry : activeEntries.values()) {
             for (var animationController : entry.getAnimationControllers()) {
                 if (name.equals(animationController.getName())) {
-                    entry.play(animationController, atTime, playCount);
+                    entry.play(animationController, atTime, properties);
                 }
             }
         }
@@ -192,31 +194,34 @@ public class AnimationManager {
         public void autoplay() {
             animationControllers.stream().filter(AnimationController::isParallel).forEach(it -> {
                 // autoplay the parallel animation.
-                startPlay(it, TickUtils.animationTicks(), 0);
+                startPlay(it, TickUtils.animationTicks(), 1, 0);
             });
         }
 
-        public void autoplay(EntityActionSet actionSet, float atTime) {
+        public void autoplay(EntityActionSet actionSet, float time) {
             // If it's already locked, we won't switch.
             if (isLocking && playing != null) {
                 return;
             }
             var newValue = findTriggerableController(actionSet);
             if (newValue != null && newValue != playing) {
-                play(newValue, playing, atTime, newValue.getPlayCount(), false);
+                play(newValue, playing, time, 1, newValue.getPlayCount(), false);
             }
         }
 
-        public void play(AnimationController animationController, float atTime, int playCount) {
+        public void play(AnimationController animationController, float time, CompoundTag properties) {
+            var speed = MathUtils.clamp(properties.getOptionalNumber("speed", 1).floatValue(), 0.0001f, 1000.0f);
+            var playCount = MathUtils.clamp(properties.getOptionalInt("repeat", 0), -1, 1000);
+            var needsLock = properties.getOptionalBoolean("lock", true);
             // play parallel animation (simple).
             if (animationController.isParallel()) {
-                startPlay(animationController, atTime, playCount);
+                startPlay(animationController, time, speed, playCount);
                 return;
             }
             // play triggerable animation (lock).
             var newValue = findTriggerableController(animationController);
             if (newValue != null && newValue != playing) {
-                play(newValue, playing, atTime, playCount, true);
+                play(newValue, playing, time, speed, playCount, needsLock);
             }
         }
 
@@ -253,9 +258,9 @@ public class AnimationManager {
             return !triggerableControllers.isEmpty();
         }
 
-        private void play(TriggerableController newValue, @Nullable TriggerableController oldValue, float atTime, int playCount, boolean needLock) {
+        private void play(TriggerableController newValue, @Nullable TriggerableController oldValue, float time, float speed, int playCount, boolean needLock) {
             var toAnimationController = newValue.animationController;
-            var fromAnimationController =  ObjectUtils.flatMap(oldValue, it -> it.animationController);
+            var fromAnimationController = ObjectUtils.flatMap(oldValue, it -> it.animationController);
 
             // clear prev play state.
             if (fromAnimationController != null) {
@@ -263,19 +268,19 @@ public class AnimationManager {
             }
 
             // set next play state.
-            startPlay(toAnimationController, atTime, playCount);
+            startPlay(toAnimationController, time, speed, playCount);
 
             isLocking = needLock;
             playing = newValue;
 
             // TODO: @SAGESSE Add transition duration support.
             var duration = 0.25f;
-            applyTransiting(fromAnimationController, toAnimationController, atTime, duration);
+            applyTransiting(fromAnimationController, toAnimationController, time, speed, duration);
         }
 
-        private void startPlay(AnimationController animationController, float atTime, int playCount) {
+        private void startPlay(AnimationController animationController, float time, float speed, int playCount) {
             stopPlayIfNeeded(animationController);
-            var newPlayState = new AnimationController.PlayState(animationController, atTime, playCount);
+            var newPlayState = new AnimationController.PlayState(animationController, time, speed, playCount);
             playStates.put(animationController, newPlayState);
             debugLog("start play {}", animationController);
             if (newPlayState.getPlayCount() > 0) {
@@ -291,13 +296,13 @@ public class AnimationManager {
             }
         }
 
-        private void applyTransiting(AnimationController fromAnimationController, AnimationController toAnimationController, float atTime, float duration) {
+        private void applyTransiting(AnimationController fromAnimationController, AnimationController toAnimationController, float time, float speed, float duration) {
             // delay the animation start time.
             var playState = playStates.get(toAnimationController);
             if (playState != null) {
-                playState.setStartTime(atTime + duration);
+                playState.setBeginTime(playState.getBeginTime() + duration);
             }
-            addAnimation(fromAnimationController, toAnimationController, atTime, duration);
+            addAnimation(fromAnimationController, toAnimationController, time, speed, duration);
         }
 
         private String resolveMappingName(String name) {

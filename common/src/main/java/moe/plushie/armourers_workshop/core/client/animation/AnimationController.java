@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationValue;
 import moe.plushie.armourers_workshop.core.skin.molang.MolangVirtualMachine;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Constant;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.ThreadUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -437,54 +436,60 @@ public class AnimationController {
 
     public static class PlayState {
 
-        private float startTime0;
-        private float startTime;
+        private float beginTime;
 
         private final float duration;
 
         private int playCount;
+        private boolean isCompleted = false;
 
-        private float adjustedTicks = 0;
+        private float loopProgress;
+        private float loopBeginTime;
+        private float loopDuration;
 
-        public PlayState(AnimationController animationController, float atTime, int playCount) {
+
+        public PlayState(AnimationController animationController, float beginTime, float speed, int playCount) {
             this.duration = animationController.getDuration();
-            this.startTime = atTime;
-            this.startTime0 = atTime;
+            this.beginTime = beginTime;
             this.playCount = calcPlayCount(playCount, animationController.getLoop());
+            this.loopProgress = 0;
+            this.loopBeginTime = beginTime;
+            this.loopDuration = duration / speed;
         }
 
         public void tick(float animationTicks) {
-            adjustedTicks = animationTicks - startTime0;
-            if (playCount == 0 || adjustedTicks < duration) {
+            loopProgress = (animationTicks - loopBeginTime) / loopDuration;
+            if (playCount == 0 || loopProgress < 1.0f) {
                 return;
             }
-            // 0 -> duration / 0 -> duration ...
+            // 0 -> 1 / 0 -> 1 ...
             if (playCount > 0) {
                 playCount -= 1;
             }
             if (playCount != 0) { // reset
-                adjustedTicks -= duration;
-                startTime0 = animationTicks - adjustedTicks;
+                loopProgress -= 1.0f;
+                loopBeginTime += loopDuration;
+            } else {
+                isCompleted = true; // yep, completed!
             }
         }
 
-
-        public void setStartTime(float time) {
-            startTime = time;
-            startTime0 = time;
+        public void setBeginTime(float time) {
+            beginTime = time;
+            loopBeginTime = time;
         }
 
-        public float getStartTicks() {
-            return startTime;
+        public float getBeginTime() {
+            return beginTime;
         }
 
         public float getAdjustedTicks(float animationTicks) {
-            // this is a planned animation?
-            if (animationTicks < startTime) {
+            // this is a future animation?
+            if (animationTicks < beginTime) {
                 return 0;
             }
             tick(animationTicks);
-            return adjustedTicks;
+            return loopProgress * duration;
         }
 
         public int getPlayCount() {
@@ -492,7 +497,7 @@ public class AnimationController {
         }
 
         public boolean isCompleted() {
-            return playCount == 0 && adjustedTicks > duration;
+            return isCompleted;
         }
 
         private int calcPlayCount(int playCount, SkinAnimationLoop loop) {

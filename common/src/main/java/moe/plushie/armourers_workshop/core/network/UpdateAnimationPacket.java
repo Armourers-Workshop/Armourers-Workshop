@@ -25,10 +25,10 @@ public class UpdateAnimationPacket extends CustomPacket {
         this.value = buffer.readNbt();
     }
 
-    public static UpdateAnimationPacket play(Selector selector, String name, int playCount) {
+    public static UpdateAnimationPacket play(Selector selector, String name, CompoundTag properties) {
         var tag = selector.save();
         tag.putString("name", name);
-        tag.putInt("count", playCount);
+        tag.put("properties", properties);
         return new UpdateAnimationPacket(Mode.PLAY, tag);
     }
 
@@ -58,9 +58,9 @@ public class UpdateAnimationPacket extends CustomPacket {
                 var animationManager = getTargetRenderData(player);
                 if (animationManager != null) {
                     var name = value.getString("name");
-                    var playCount = value.getInt("count");
+                    var properties = value.getCompound("properties");
                     ModLog.debug("play animation {}", value);
-                    animationManager.play(name, TickUtils.animationTicks(), playCount);
+                    animationManager.play(name, TickUtils.animationTicks(), properties);
                 }
                 break;
             }
