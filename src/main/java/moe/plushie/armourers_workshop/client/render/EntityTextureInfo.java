@@ -2,7 +2,12 @@ package moe.plushie.armourers_workshop.client.render;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import moe.plushie.armourers_workshop.api.common.IExtraColours;
 import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
@@ -22,9 +27,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.*;
+import net.minecraft.client.resources.data.IMetadataSection;
+import net.minecraft.client.resources.data.MetadataSerializer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+
+import javax.imageio.ImageIO;
 
 public class EntityTextureInfo {
 
@@ -345,6 +354,7 @@ public class EntityTextureInfo {
         SkinTextureObject sto = new SkinTextureObject(bufferedEntitySkinnedImage);
         replacementTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), String.valueOf(bufferedEntitySkinnedImage.hashCode()));
         renderEngine.loadTexture(replacementTexture, sto);
+        exposeTexture(replacementTexture, bufferedEntitySkinnedImage);
     }
 
     public ResourceLocation preRender() {
@@ -376,6 +386,88 @@ public class EntityTextureInfo {
         public void loadTexture(IResourceManager resourceManager) throws IOException {
             getGlTextureId();
             TextureUtil.uploadTextureImage(glTextureId, texture);
+        }
+    }
+
+    private void exposeTexture(ResourceLocation location, BufferedImage texture) {
+        try {
+            Field resourceManagerField = Minecraft.class.getDeclaredField("field_110451_am"); // field_110451_am mcResourceManager
+            resourceManagerField.setAccessible(true);
+            SimpleReloadableResourceManager resourceManager = (SimpleReloadableResourceManager) resourceManagerField.get(Minecraft.getMinecraft());
+            // Add our custom resource
+            Map<String, FallbackResourceManager> domainResourceManagers = ObfuscationReflectionHelper.getPrivateValue(
+                    SimpleReloadableResourceManager.class,
+                    resourceManager,
+                    "field_110548_a" // field_110548_a domainResourceManagers
+            );
+            FallbackResourceManager modManager = domainResourceManagers.get(LibModInfo.ID);
+            if (modManager != null) {
+                List<IResourcePack> resourcePacks = ObfuscationReflectionHelper.getPrivateValue(
+                        FallbackResourceManager.class,
+                        modManager,
+                        "field_110540_a" // field_110540_a resourcePacks
+                );
+                CustomResourcePack customPack = new CustomResourcePack(location, texture);
+                if (!resourcePacks.contains(customPack)) {
+                    resourcePacks.add(customPack);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private class CustomResourcePack implements IResourcePack {
+        private final ResourceLocation textureLocation;
+        private final byte[] textureData;
+
+        public CustomResourcePack(ResourceLocation location, BufferedImage image) {
+            this.textureLocation = location;
+            this.textureData = imageToByteArray(image);
+        }
+
+        private byte[] imageToByteArray(BufferedImage image) {
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(image, "PNG", baos);
+                return baos.toByteArray();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return new byte[0];
+            }
+        }
+
+        @Override
+        public InputStream getInputStream(ResourceLocation location) throws IOException {
+            if (location.equals(textureLocation)) {
+                return new ByteArrayInputStream(textureData);
+            }
+            throw new FileNotFoundException(location.toString());
+        }
+
+        @Override
+        public boolean resourceExists(ResourceLocation location) {
+            return location.equals(textureLocation);
+        }
+
+        @Override
+        public Set<String> getResourceDomains() {
+            return Collections.singleton(LibModInfo.ID);
+        }
+
+        @Override
+        public <T extends IMetadataSection> T getPackMetadata(MetadataSerializer metadataSerializer, String metadataSectionName) throws IOException {
+            return null;
+        }
+
+        @Override
+        public BufferedImage getPackImage() throws IOException {
+            return null;
+        }
+
+        @Override
+        public String getPackName() {
+            return LibModInfo.ID + "_dynamic_textures";
         }
     }
 }
