@@ -23,9 +23,8 @@ public class ConcurrentRenderingPipeline {
         var lastNormal = last.normal();
         lastPose.set(modelViewStack.last().pose());
         lastPose.multiply(poseStack.last().pose());
-        //lastNormal.set(modelViewStack.last().normal());
-        lastNormal.set(poseStack.last().normal());
-        lastNormal.invert();
+        lastNormal.set(modelViewStack.last().normal());
+        lastNormal.multiply(poseStack.last().normal());
         // https://web.archive.org/web/20240125142900/http://www.songho.ca/opengl/gl_normaltransform.html
         last.setProperties(poseStack.last().properties());
         passGroups.add(pass.fill(group, context));

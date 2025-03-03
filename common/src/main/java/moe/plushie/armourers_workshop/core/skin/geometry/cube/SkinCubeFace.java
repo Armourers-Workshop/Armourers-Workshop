@@ -129,7 +129,7 @@ public class SkinCubeFace extends SkinGeometryFace {
 
     private float roundUp(float edg) {
         if (edg == 0) {
-            return 0.0001f;
+            return 0.0004f;
         }
         return edg;
     }
@@ -137,9 +137,9 @@ public class SkinCubeFace extends SkinGeometryFace {
     // avoid out-of-bounds behavior caused by floating point precision.
     private float roundDown(float edg) {
         if (edg < 0) {
-            return edg + 0.0001f;
+            return edg + 0.0004f;
         } else {
-            return edg - 0.0001f;
+            return edg - 0.0004f;
         }
     }
 
