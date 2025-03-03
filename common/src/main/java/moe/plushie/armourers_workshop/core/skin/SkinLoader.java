@@ -203,7 +203,7 @@ public class SkinLoader {
             return identifier;
         } catch (Exception exception) {
             exception.printStackTrace();
-            return identifier;
+            return "";
         }
     }
 
