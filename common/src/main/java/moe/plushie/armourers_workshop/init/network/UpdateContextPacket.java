@@ -126,9 +126,9 @@ public class UpdateContextPacket extends CustomPacket {
     }
 
     private CompoundTag getDataPack() {
+        var dataPack = new DataPack();
         var serializer = new TagSerializer();
-        var pack = new DataPack();
-        pack.serialize(serializer);
+        dataPack.serialize(serializer);
         return serializer.getTag();
     }
 

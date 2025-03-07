@@ -5,24 +5,21 @@ import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 @Available("[1.16, 1.21)")
 public class AbstractDataSerializer implements IDataSerializer {
 
-    private final CompoundTag tag;
+    protected final CompoundTag tag;
 
-    public AbstractDataSerializer(CompoundTag tag, Object registryAccess) {
+    public AbstractDataSerializer(CompoundTag tag, @Nullable Object context) {
         this.tag = tag;
     }
 
-    public static AbstractDataSerializer wrap(CompoundTag tag) {
-        return new AbstractDataSerializer(tag, null);
-    }
-
-    public static AbstractDataSerializer wrap(CompoundTag tag, Object registryAccess) {
-        return new AbstractDataSerializer(tag, registryAccess);
+    public static AbstractDataSerializer wrap(CompoundTag tag, @Nullable Object context) {
+        return new AbstractDataSerializer(tag, context);
     }
 
     @Override

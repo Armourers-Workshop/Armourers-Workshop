@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
@@ -52,13 +52,13 @@ public interface IDataCodec<A> {
 
     default <T extends IDataSerializable.Immutable> IDataCodec<T> serializer(Function<? super IDataSerializer, ? extends T> factory) {
         return xmap(tag -> {
-            var serializer = AbstractDataSerializer.wrap((CompoundTag) tag);
+            var serializer = new TagSerializer((CompoundTag) tag);
             return factory.apply(serializer);
         }, it -> {
-            var tag = new CompoundTag();
-            it.serialize(AbstractDataSerializer.wrap(tag));
+            var serializer = new TagSerializer();
+            it.serialize(serializer);
             // noinspection unchecked
-            return (A) tag;
+            return (A) serializer.getTag();
         });
     }
 

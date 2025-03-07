@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class ItemStackProvider implements IItemStackProvider {
+public final class ItemStackProvider implements IItemStackProvider {
 
     private static final List<ItemStack> DEFAULT_EMPTY_LIST = Collections.emptyList();
     private static final ItemStackProvider DEFAULT_ITEM_PROVIDER = new ItemStackProvider();

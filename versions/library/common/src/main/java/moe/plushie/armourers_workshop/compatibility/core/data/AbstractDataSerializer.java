@@ -17,13 +17,13 @@ import org.jetbrains.annotations.Nullable;
 @Available("[1.21, )")
 public class AbstractDataSerializer implements IDataSerializer {
 
-    private final CompoundTag tag;
-    private final HolderLookup.Provider provider;
-    private final DynamicOps<Tag> ops;
+    protected final CompoundTag tag;
+    protected final HolderLookup.Provider provider;
+    protected final DynamicOps<Tag> ops;
 
-    public AbstractDataSerializer(CompoundTag tag, HolderLookup.Provider provider) {
+    public AbstractDataSerializer(CompoundTag tag, @Nullable Object context) {
         this.tag = tag;
-        this.provider = provider;
+        this.provider = unwrap(context);
         if (provider != null) {
             this.ops = provider.createSerializationContext(NbtOps.INSTANCE);
         } else {
@@ -31,26 +31,25 @@ public class AbstractDataSerializer implements IDataSerializer {
         }
     }
 
-    public static AbstractDataSerializer wrap(CompoundTag tag) {
-        return new AbstractDataSerializer(tag, null);
+    public static AbstractDataSerializer wrap(CompoundTag tag, @Nullable Object context) {
+        return new AbstractDataSerializer(tag, context);
     }
 
-    public static AbstractDataSerializer wrap(CompoundTag tag, @Nullable Entity entity) {
-        return wrap(tag, Objects.flatMap(entity, Entity::level));
+    private static HolderLookup.Provider unwrap(@Nullable Object context) {
+        if (context instanceof HolderLookup.Provider provider) {
+            return provider;
+        }
+        if (context instanceof Level level) {
+            return level.registryAccess();
+        }
+        if (context instanceof Entity entity) {
+            return entity.registryAccess();
+        }
+        if (context instanceof BlockEntity blockEntity) {
+            return unwrap(blockEntity.getLevel());
+        }
+        return null;
     }
-
-    public static AbstractDataSerializer wrap(CompoundTag tag, @Nullable BlockEntity blockEntity) {
-        return wrap(tag, Objects.flatMap(blockEntity, BlockEntity::getLevel));
-    }
-
-    public static AbstractDataSerializer wrap(CompoundTag tag, @Nullable Level level) {
-        return new AbstractDataSerializer(tag, Objects.flatMap(level, Level::registryAccess));
-    }
-
-    public static AbstractDataSerializer wrap(CompoundTag tag, @Nullable HolderLookup.Provider provider) {
-        return new AbstractDataSerializer(tag, provider);
-    }
-
 
     @Override
     public <T> T read(IDataSerializerKey<T> key) {

@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.utils.RectangleTesselator;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -14,7 +15,6 @@ import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)

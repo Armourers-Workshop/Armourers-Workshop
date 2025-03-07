@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.wo
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractSavedData;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.datafix.DataFixTypes;
@@ -22,7 +22,7 @@ public class DataProvider {
     public static <T extends AbstractSavedData> T computeIfAbsent(@This DimensionDataStorage storage, Supplier<T> provider, int flags, String name) {
         BiFunction<CompoundTag, HolderLookup.Provider, T> deserializer = (tag, provider1) -> {
             T value = provider.get();
-            value.deserialize(AbstractDataSerializer.wrap(tag, provider1));
+            value.deserialize(new TagSerializer(tag, provider1));
             return value;
         };
         return storage.computeIfAbsent(new SavedData.Factory<>(provider, deserializer, DataFixTypes.SAVED_DATA_FORCED_CHUNKS), name);

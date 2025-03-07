@@ -7,11 +7,8 @@ import moe.plushie.armourers_workshop.api.event.EventBus;
 import moe.plushie.armourers_workshop.builder.client.render.PaintingHighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
-import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.bake.SkinPreloadManager;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderMode;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.client.sound.SmartSoundManager;
@@ -25,6 +22,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import moe.plushie.armourers_workshop.core.utils.Scheduler;
+import moe.plushie.armourers_workshop.core.utils.SkinUtils;
 import moe.plushie.armourers_workshop.core.utils.TickUtils;
 import moe.plushie.armourers_workshop.core.utils.TypedRegistry;
 import moe.plushie.armourers_workshop.init.ModConfig;
@@ -46,7 +44,6 @@ import moe.plushie.armourers_workshop.init.event.client.RegisterTextureEvent;
 import moe.plushie.armourers_workshop.init.event.client.RenderFrameEvent;
 import moe.plushie.armourers_workshop.init.event.client.RenderHighlightEvent;
 import moe.plushie.armourers_workshop.init.event.client.RenderLivingEntityEvent;
-import moe.plushie.armourers_workshop.init.event.client.RenderScreenEvent;
 import moe.plushie.armourers_workshop.init.event.client.RenderSpecificHandEvent;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
@@ -57,7 +54,6 @@ import moe.plushie.armourers_workshop.library.data.impl.MinecraftAuth;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
@@ -170,13 +166,7 @@ public class ClientProxy {
 
         EventBus.register(ClientPlayerEvent.Clone.class, event -> {
             // we can use the old wardrobe data until the next wardrobe sync packet.
-            var oldWardrobe = SkinWardrobe.of(event.getOldPlayer());
-            var newWardrobe = SkinWardrobe.of(event.getNewPlayer());
-            if (newWardrobe != null && oldWardrobe != null) {
-                var tag = new CompoundTag();
-                oldWardrobe.serialize(AbstractDataSerializer.wrap(tag, event.getPlayer()));
-                newWardrobe.deserialize(AbstractDataSerializer.wrap(tag, event.getPlayer()));
-            }
+            SkinUtils.copySkinWardrobe(event.getOldPlayer(), event.getNewPlayer());
         });
 
         EventBus.register(RenderFrameEvent.Pre.class, event -> {

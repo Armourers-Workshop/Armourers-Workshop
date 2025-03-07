@@ -7,11 +7,10 @@ import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.core.utils.Constants;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,7 +69,7 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
         if (descriptor != null) {
             return descriptor;
         }
-        descriptor = new EntityTextureDescriptor(AbstractDataSerializer.wrap(entityTag.getCompound(Constants.Key.ENTITY_TEXTURE), (Entity) null));
+        descriptor = new EntityTextureDescriptor(new TagSerializer(entityTag.getCompound(Constants.Key.ENTITY_TEXTURE)));
         DESCRIPTOR_CACHES.put(itemStack, descriptor);
         return descriptor;
     }

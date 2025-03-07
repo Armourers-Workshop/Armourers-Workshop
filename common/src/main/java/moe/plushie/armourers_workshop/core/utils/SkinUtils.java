@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -107,13 +108,25 @@ public final class SkinUtils {
         return consumer.andThen(itemStack -> itemStack.set(ModDataComponents.SKIN.get(), descriptor));
     }
 
+    public static void copySkinWardrobe(Entity from, Entity to) {
+        var oldWardrobe = SkinWardrobe.of(from);
+        var newWardrobe = SkinWardrobe.of(to);
+        if (newWardrobe != null && oldWardrobe != null) {
+            var serializer = new TagSerializer(new CompoundTag(), to);
+            oldWardrobe.serialize(serializer);
+            newWardrobe.deserialize(serializer);
+            if (!to.getLevel().isClientSide()) {
+                newWardrobe.broadcast();
+            }
+        }
+    }
 
     public static void copySkinFromOwner(Entity entity) {
-        Projectile projectile = Objects.safeCast(entity, Projectile.class);
+        var projectile = Objects.safeCast(entity, Projectile.class);
         if (projectile == null) {
             return;
         }
-        Entity owner = projectile.getOwner();
+        var owner = projectile.getOwner();
         if (entity instanceof ThrownTrident) {
             copySkin(owner, entity, SkinSlotType.TRIDENT, 0, SkinSlotType.ANY, 0);
             return;
@@ -122,10 +135,10 @@ public final class SkinUtils {
             copySkin(owner, entity, SkinSlotType.BOW, 0, SkinSlotType.ANY, 0);
             return;
         }
-        if (entity instanceof FishingHook && owner instanceof LivingEntity) {
-            ItemStack itemStack = ((LivingEntity) owner).getMainHandItem();
+        if (entity instanceof FishingHook && owner instanceof LivingEntity livingEntity) {
+            var itemStack = livingEntity.getMainHandItem();
             if (!itemStack.is(Items.FISHING_ROD)) {
-                itemStack = ((LivingEntity) owner).getOffhandItem();
+                itemStack = livingEntity.getOffhandItem();
             }
             copySkin(entity, itemStack, SkinSlotType.ANY, 0);
             return;
@@ -134,7 +147,7 @@ public final class SkinUtils {
     }
 
     public static void copySkin(Entity src, Entity dest, SkinSlotType fromSlotType, int fromIndex, SkinSlotType toSlotType, int toIndex) {
-        ItemStack itemStack = getSkin(src, fromSlotType, fromIndex);
+        var itemStack = getSkin(src, fromSlotType, fromIndex);
         if (itemStack.isEmpty()) {
             return;
         }
@@ -142,7 +155,7 @@ public final class SkinUtils {
     }
 
     public static void copySkin(Entity dest, ItemStack itemStack, SkinSlotType toSlotType, int toIndex) {
-        SkinWardrobe wardrobe = SkinWardrobe.of(dest);
+        var wardrobe = SkinWardrobe.of(dest);
         if (wardrobe != null) {
             wardrobe.setItem(toSlotType, toIndex, itemStack.copy());
             wardrobe.broadcast();
@@ -161,7 +174,7 @@ public final class SkinUtils {
         }
         var wardrobe = SkinWardrobe.of(entity);
         if (wardrobe != null) {
-            ItemStack itemStack1 = wardrobe.getItem(slotType, index);
+            var itemStack1 = wardrobe.getItem(slotType, index);
             descriptor = SkinDescriptor.of(itemStack1);
             if (Objects.equals(slotType.getSkinType(), descriptor.getType())) {
                 return itemStack1;

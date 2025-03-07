@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -12,7 +12,7 @@ public abstract class AbstractSavedData extends SavedData implements IDataSerial
 
     @Override
     public final CompoundTag save(CompoundTag tag, HolderLookup.Provider provider) {
-        serialize(AbstractDataSerializer.wrap(tag, provider));
+        serialize(new TagSerializer(tag, provider));
         return tag;
     }
 }

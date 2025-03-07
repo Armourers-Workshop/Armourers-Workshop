@@ -4,13 +4,13 @@ import moe.plushie.armourers_workshop.api.common.IBlockHandler;
 import moe.plushie.armourers_workshop.api.common.ILootContext;
 import moe.plushie.armourers_workshop.api.common.ILootContextParam;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.math.OpenVector3d;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -88,7 +88,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
             level.setBlock(target, blockState, 11);
             var blockEntity = getBlockEntity(level, target);
             if (blockEntity != null) {
-                var serializer = AbstractDataSerializer.wrap(new CompoundTag(), level);
+                var serializer = new TagSerializer(new CompoundTag(), level);
                 part.serialize(serializer);
                 blockEntity.readAdditionalData(serializer);
                 blockEntity.updateBlockStates();

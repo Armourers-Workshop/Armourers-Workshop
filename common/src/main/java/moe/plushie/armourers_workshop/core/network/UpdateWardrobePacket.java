@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractEntityDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.GenericProperties;
@@ -16,6 +15,7 @@ import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.menu.SkinWardrobeMenu;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -64,10 +64,9 @@ public class UpdateWardrobePacket extends CustomPacket {
     }
 
     public static UpdateWardrobePacket sync(SkinWardrobe wardrobe) {
-        var tag = new CompoundTag();
-        var serializer = AbstractDataSerializer.wrap(tag, wardrobe.getEntity());
+        var serializer = new TagSerializer(new CompoundTag(), wardrobe.getEntity());
         wardrobe.serialize(serializer);
-        return new UpdateWardrobePacket(wardrobe, Type.SYNC, tag, null);
+        return new UpdateWardrobePacket(wardrobe, Type.SYNC, serializer.getTag(), null);
     }
 
     public static UpdateWardrobePacket dying(SkinWardrobe wardrobe, int slot, ISkinPaintColor color) {
@@ -124,7 +123,8 @@ public class UpdateWardrobePacket extends CustomPacket {
         }
         return switch (type) {
             case SYNC -> {
-                wardrobe.deserialize(AbstractDataSerializer.wrap(compoundTag, player));
+                var serializer = new TagSerializer(compoundTag, player);
+                wardrobe.deserialize(serializer);
                 yield wardrobe;
             }
             case SYNC_OPTION -> {

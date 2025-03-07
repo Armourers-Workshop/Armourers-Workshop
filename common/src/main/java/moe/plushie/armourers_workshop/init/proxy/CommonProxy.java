@@ -4,8 +4,6 @@ import moe.plushie.armourers_workshop.api.common.IItemHandler;
 import moe.plushie.armourers_workshop.api.event.EventBus;
 import moe.plushie.armourers_workshop.builder.other.BlockUtils;
 import moe.plushie.armourers_workshop.builder.other.WorldUpdater;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
-import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
@@ -41,7 +39,6 @@ import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.init.platform.ReplayManager;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 
 public class CommonProxy {
@@ -126,14 +123,7 @@ public class CommonProxy {
         });
         EventBus.register(PlayerEvent.Clone.class, event -> {
             ModLog.debug("woa {}", event.getPlayer().getScoreboardName());
-            var oldWardrobe = SkinWardrobe.of(event.getOriginal());
-            var newWardrobe = SkinWardrobe.of(event.getPlayer());
-            if (newWardrobe != null && oldWardrobe != null) {
-                var tag = new CompoundTag();
-                oldWardrobe.serialize(AbstractDataSerializer.wrap(tag, event.getPlayer()));
-                newWardrobe.deserialize(AbstractDataSerializer.wrap(tag, event.getPlayer()));
-                newWardrobe.broadcast();
-            }
+            SkinUtils.copySkinWardrobe(event.getOriginal(), event.getPlayer());
         });
 
         EventBus.register(PlayerEvent.Attack.class, event -> {

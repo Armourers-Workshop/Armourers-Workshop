@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compatibility.core;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -33,13 +33,13 @@ public abstract class AbstractBlockEntityImpl extends BlockEntity {
     @Override
     public final void load(BlockState state, CompoundTag tag) {
         super.load(state, tag);
-        this.readAdditionalData(AbstractDataSerializer.wrap(tag, null));
+        this.readAdditionalData(new TagSerializer(tag));
     }
 
     @Override
     public final CompoundTag save(CompoundTag tag) {
         super.save(tag);
-        this.writeAdditionalData(AbstractDataSerializer.wrap(tag, null));
+        this.writeAdditionalData(new TagSerializer(tag));
         return tag;
     }
 
@@ -50,7 +50,7 @@ public abstract class AbstractBlockEntityImpl extends BlockEntity {
             return null;
         }
         var tag = new CompoundTag();
-        this.writeAdditionalData(AbstractDataSerializer.wrap(tag, null));
+        this.writeAdditionalData(new TagSerializer(tag));
         return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, tag);
     }
 

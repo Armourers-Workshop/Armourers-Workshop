@@ -1,12 +1,11 @@
 package moe.plushie.armourers_workshop.core.utils;
 
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
-import moe.plushie.armourers_workshop.api.core.IDataSerializer;
-import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.TagParser;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -14,18 +13,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class TagSerializer implements IDataSerializer {
-
-    protected final CompoundTag tag;
-    protected final IDataSerializer impl;
+public class TagSerializer extends AbstractDataSerializer {
 
     public TagSerializer() {
-        this(new CompoundTag());
+        super(new CompoundTag(), null);
     }
 
     public TagSerializer(CompoundTag tag) {
-        this.tag = tag;
-        this.impl = AbstractDataSerializer.wrap(tag);
+        super(tag, null);
+    }
+
+    public TagSerializer(CompoundTag tag, @Nullable Object context) {
+        super(tag, context);
     }
 
     public TagSerializer(InputStream inputStream) throws IOException {
@@ -56,17 +55,6 @@ public class TagSerializer implements IDataSerializer {
         } catch (Exception e) {
             return new CompoundTag();
         }
-    }
-
-
-    @Override
-    public <T> T read(IDataSerializerKey<T> key) {
-        return impl.read(key);
-    }
-
-    @Override
-    public <T> void write(IDataSerializerKey<T> key, T value) {
-        impl.write(key, value);
     }
 
     public CompoundTag getTag() {

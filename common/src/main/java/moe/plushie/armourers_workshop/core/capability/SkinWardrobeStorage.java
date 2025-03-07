@@ -3,10 +3,11 @@ package moe.plushie.armourers_workshop.core.capability;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.core.data.EntityCollisionContainer;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
+import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.NonNullItemList;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModLog;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
@@ -15,7 +16,6 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -23,11 +23,11 @@ import java.util.Objects;
 public class SkinWardrobeStorage {
 
     public static IDataSerializer decoder(Entity entity, CompoundTag inputTag) {
-        return AbstractDataSerializer.wrap(inputTag, entity);
+        return new TagSerializer(inputTag, entity);
     }
 
     public static IDataSerializer encoder(Entity entity, CompoundTag outputTag) {
-        return AbstractDataSerializer.wrap(outputTag, entity);
+        return new TagSerializer(outputTag, entity);
     }
 
     public static void saveDataFixer(SkinWardrobe wardrobe, IDataSerializer serializer) {

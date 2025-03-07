@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compatibility.core;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -28,13 +28,13 @@ public abstract class AbstractBlockEntityImpl extends BlockEntity {
     @Override
     protected final void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
         super.loadAdditional(compoundTag, provider);
-        this.readAdditionalData(AbstractDataSerializer.wrap(compoundTag, provider));
+        this.readAdditionalData(new TagSerializer(compoundTag, provider));
     }
 
     @Override
     protected final void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
         super.saveAdditional(compoundTag, provider);
-        this.writeAdditionalData(AbstractDataSerializer.wrap(compoundTag, provider));
+        this.writeAdditionalData(new TagSerializer(compoundTag, provider));
     }
 
     @Override
@@ -48,9 +48,9 @@ public abstract class AbstractBlockEntityImpl extends BlockEntity {
 
     @Override
     public final CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        var tag = new CompoundTag();
-        this.writeAdditionalData(AbstractDataSerializer.wrap(tag, provider));
-        return tag;
+        var serializer = new TagSerializer(new CompoundTag(), provider);
+        this.writeAdditionalData(serializer);
+        return serializer.getTag();
     }
 }
 

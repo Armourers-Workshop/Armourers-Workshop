@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.compatibility.forge.mixin;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntity;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractDataSerializer;
 import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeBlockEntity;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -29,7 +29,7 @@ public abstract class ForgeBlockEntityHandlerMixin implements AbstractForgeBlock
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider provider) {
         if (this instanceof IBlockEntityHandler handler) {
             var blockEntity = AbstractBlockEntity.class.cast(this);
-            handler.handleUpdatePacket(blockEntity.getBlockState(), AbstractDataSerializer.wrap(pkt.getTag(), provider));
+            handler.handleUpdatePacket(blockEntity.getBlockState(), new TagSerializer(pkt.getTag(), provider));
         }
     }
 }
