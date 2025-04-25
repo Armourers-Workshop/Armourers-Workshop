@@ -61,7 +61,7 @@ public class SkinDescriptor implements IDataSerializable.Immutable, ISkinDescrip
     }
 
     public static SkinDescriptor of(ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
+        if (itemStack == null || itemStack.isEmpty()) {
             return EMPTY;
         }
         var storage = ItemStackStorage.of(itemStack);
