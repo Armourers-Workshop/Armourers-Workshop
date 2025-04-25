@@ -483,7 +483,7 @@
   "inventory.armourers_workshop.wardrobe.man_extras.label.isExtraRenders": "启用特殊渲染？",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isFlying": "是否飞行？",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isVisible": "是否可见？",
-  "inventory.armourers_workshop.wardrobe.man_extras.label.noclip": "是否无碰撞？",
+  "inventory.armourers_workshop.wardrobe.man_extras.label.noClip": "是否无碰撞？",
   "inventory.armourers_workshop.wardrobe.man_offsets": "模特偏移",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.1": "加 1/16",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.2": "加 1/8",

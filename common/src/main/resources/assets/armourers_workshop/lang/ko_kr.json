@@ -484,7 +484,7 @@
   "inventory.armourers_workshop.wardrobe.man_extras.label.isExtraRenders": "추가 렌더링",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isFlying": "비행",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isVisible": "투명",
-  "inventory.armourers_workshop.wardrobe.man_extras.label.noclip": "블럭 통과",
+  "inventory.armourers_workshop.wardrobe.man_extras.label.noClip": "블럭 통과",
   "inventory.armourers_workshop.wardrobe.man_offsets": "마네킹 위치",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.1": "1/16 앞으로",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.2": "1/8 앞으로",

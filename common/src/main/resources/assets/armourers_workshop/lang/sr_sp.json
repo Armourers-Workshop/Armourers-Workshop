@@ -480,7 +480,7 @@
   "inventory.armourers_workshop.wardrobe.man_extras.label.isExtraRenders": "Ектра Рендерс?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isFlying": "Летење?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isVisible": "Видљиво?",
-  "inventory.armourers_workshop.wardrobe.man_extras.label.noclip": "Ноцлип?",
+  "inventory.armourers_workshop.wardrobe.man_extras.label.noClip": "Ноцлип?",
   "inventory.armourers_workshop.wardrobe.man_offsets": "Маннекуин Оффсетс",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.1": "Додајте 1/16",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.2": "Додајте 1/8",

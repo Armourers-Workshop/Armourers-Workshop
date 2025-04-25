@@ -486,7 +486,7 @@
   "inventory.armourers_workshop.wardrobe.man_extras.label.isExtraRenders": "Extra Renders?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isFlying": "Flygande?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isVisible": "Synligt?",
-  "inventory.armourers_workshop.wardrobe.man_extras.label.noclip": "Noclip?",
+  "inventory.armourers_workshop.wardrobe.man_extras.label.noClip": "Noclip?",
   "inventory.armourers_workshop.wardrobe.man_offsets": "Mannequin Offsets",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.1": "Lägg till 1/16",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.2": "Lägg till 1/8",

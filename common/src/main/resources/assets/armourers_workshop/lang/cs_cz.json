@@ -483,7 +483,7 @@
   "inventory.armourers_workshop.wardrobe.man_extras.label.isExtraRenders": "Další zobrazení?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isFlying": "Létáte?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isVisible": "Viditelné?",
-  "inventory.armourers_workshop.wardrobe.man_extras.label.noclip": "Noclip?",
+  "inventory.armourers_workshop.wardrobe.man_extras.label.noClip": "Noclip?",
   "inventory.armourers_workshop.wardrobe.man_offsets": "Mannequin Offsets",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.1": "Přidat 1/16",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.2": "Přidat 1/8",

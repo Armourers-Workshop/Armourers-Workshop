@@ -482,7 +482,7 @@
   "inventory.armourers_workshop.wardrobe.man_extras.label.isExtraRenders": "Επιπλέον Καταγραφές?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isFlying": "Flying?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isVisible": "Ορατό?",
-  "inventory.armourers_workshop.wardrobe.man_extras.label.noclip": "Noclip?",
+  "inventory.armourers_workshop.wardrobe.man_extras.label.noClip": "Noclip?",
   "inventory.armourers_workshop.wardrobe.man_offsets": "Mannequin Offsets",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.1": "Προσθήκη 1/16",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.2": "Προσθήκη 1/8",

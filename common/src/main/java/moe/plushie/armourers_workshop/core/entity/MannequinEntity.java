@@ -65,6 +65,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
     public static final EntityDataAccessor<Boolean> DATA_IS_VISIBLE = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.BOOLEAN);
     public static final EntityDataAccessor<Float> DATA_SCALE = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.FLOAT);
     public static final EntityDataAccessor<Boolean> DATA_EXTRA_RENDERER = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> DATA_NO_GRAVITY = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.BOOLEAN);
     public static final EntityDataAccessor<EntityTextureDescriptor> DATA_TEXTURE = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.PLAYER_TEXTURE);
 
     private boolean isDropEquipment = false;
@@ -82,6 +83,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         builder.define(DATA_IS_GHOST, false);
         builder.define(DATA_IS_VISIBLE, true);
         builder.define(DATA_EXTRA_RENDERER, true);
+        builder.define(DATA_NO_GRAVITY, true); // default is no gravity
         builder.define(DATA_SCALE, 1.0f);
         builder.define(DATA_TEXTURE, EntityTextureDescriptor.EMPTY);
     }
@@ -105,6 +107,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         serializer.write(CodingKeys.IS_GHOST, entityData.get(DATA_IS_GHOST));
         serializer.write(CodingKeys.IS_VISIBLE, entityData.get(DATA_IS_VISIBLE));
         serializer.write(CodingKeys.EXTRA_RENDER, entityData.get(DATA_EXTRA_RENDERER));
+        serializer.write(CodingKeys.NO_GRAVITY, entityData.get(DATA_NO_GRAVITY));
 
         serializer.write(CodingKeys.SCALE, getScale());
         serializer.write(CodingKeys.TEXTURE, getTextureDescriptor());
@@ -119,11 +122,15 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         entityData.set(DATA_IS_GHOST, serializer.read(CodingKeys.IS_GHOST));
         entityData.set(DATA_IS_VISIBLE, serializer.read(CodingKeys.IS_VISIBLE));
         entityData.set(DATA_EXTRA_RENDERER, serializer.read(CodingKeys.EXTRA_RENDER));
+        entityData.set(DATA_NO_GRAVITY, serializer.read(CodingKeys.NO_GRAVITY));
 
         entityData.set(DATA_SCALE, serializer.read(CodingKeys.SCALE));
         entityData.set(DATA_TEXTURE, serializer.read(CodingKeys.TEXTURE));
 
         readCustomPose(serializer.read(CodingKeys.POSE));
+
+        refreshDimensions();
+        refreshPhysics();
     }
 
     @Override
@@ -133,6 +140,9 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         }
         if (DATA_SCALE.equals(dataParameter)) {
             refreshDimensions();
+        }
+        if (DATA_NO_GRAVITY.equals(dataParameter)) {
+            refreshPhysics();
         }
         super.onSyncedDataUpdated(dataParameter);
     }
@@ -157,7 +167,12 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
 
     @Override
     public boolean isNoGravity() {
-        return true; // never gravity
+        return entityData.get(DATA_NO_GRAVITY);
+    }
+
+    @Override
+    public void setNoGravity(boolean bl) {
+        entityData.set(DATA_NO_GRAVITY, bl);
     }
 
     public boolean isFakeFlying() {
@@ -274,6 +289,14 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         }
     }
 
+    protected void refreshPhysics() {
+        this.noPhysics = !hasPhysics();
+    }
+
+    protected boolean hasPhysics() {
+        return !isMarker() && !isNoGravity();
+    }
+
     @Override
     @Environment(EnvType.CLIENT)
     public AABB getBoundingBoxForCulling() {
@@ -381,6 +404,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         public static final IDataSerializerKey<Boolean> IS_GHOST = IDataSerializerKey.create("Ghost", IDataCodec.BOOL, false);
         public static final IDataSerializerKey<Boolean> IS_VISIBLE = IDataSerializerKey.create("ModelVisible", IDataCodec.BOOL, true);
         public static final IDataSerializerKey<Boolean> EXTRA_RENDER = IDataSerializerKey.create("ExtraRender", IDataCodec.BOOL, true);
+        public static final IDataSerializerKey<Boolean> NO_GRAVITY = IDataSerializerKey.create("NoGravity", IDataCodec.BOOL, true);
         public static final IDataSerializerKey<Float> SCALE = IDataSerializerKey.create("Scale", IDataCodec.FLOAT, 1.0f);
         public static final IDataSerializerKey<EntityTextureDescriptor> TEXTURE = IDataSerializerKey.create("Texture", EntityTextureDescriptor.CODEC, EntityTextureDescriptor.EMPTY);
         public static final IDataSerializerKey<CompoundTag> POSE = IDataSerializerKey.create("Pose", IDataCodec.COMPOUND_TAG, new CompoundTag());

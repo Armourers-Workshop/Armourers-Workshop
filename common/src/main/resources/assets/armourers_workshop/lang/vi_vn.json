@@ -481,7 +481,7 @@
   "inventory.armourers_workshop.wardrobe.man_extras.label.isExtraRenders": "Bản kết xuất bổ sung?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isFlying": "Bay?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isVisible": "Dễ thấy?",
-  "inventory.armourers_workshop.wardrobe.man_extras.label.noclip": "Không có clip?",
+  "inventory.armourers_workshop.wardrobe.man_extras.label.noClip": "Không có clip?",
   "inventory.armourers_workshop.wardrobe.man_offsets": "Bù trừ Mannequin",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.1": "Thêm 1/16",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.2": "Thêm 1/8",

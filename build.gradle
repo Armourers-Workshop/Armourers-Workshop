@@ -4,7 +4,7 @@ plugins {
     id "java"
     id "architectury-plugin" version "3.4.161"
     id "dev.architectury.loom" version "1.10.430" apply false
-    id "moe.plushie.armourers_workshop.loom" version "2.1.5" apply false
+    id "moe.plushie.armourers_workshop.loom" version "2.1.8" apply false
 }
 
 architectury {
@@ -13,7 +13,7 @@ architectury {
 
 subprojects {
     apply plugin: "dev.architectury.loom"
-    apply plugin: 'moe.plushie.armourers_workshop.loom'
+    apply plugin: "moe.plushie.armourers_workshop.loom"
 
     sourceSets.forEach {
         it.java.srcDirs "../versions/${rootProject.minecraft_version}/${project.name}/src/${it.name}/java"

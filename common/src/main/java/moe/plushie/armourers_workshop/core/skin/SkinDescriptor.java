@@ -49,10 +49,6 @@ public class SkinDescriptor implements IDataSerializable.Immutable, ISkinDescrip
         this.paintScheme = paintScheme;
     }
 
-    public SkinDescriptor(SkinDescriptor descriptor, SkinPaintScheme paintScheme) {
-        this(descriptor.getIdentifier(), descriptor.getType(), descriptor.getOptions(), paintScheme);
-    }
-
     public SkinDescriptor(IDataSerializer serializer) {
         this.identifier = serializer.read(CodingKeys.IDENTIFIER);
         this.type = serializer.read(CodingKeys.TYPE);
@@ -94,6 +90,18 @@ public class SkinDescriptor implements IDataSerializable.Immutable, ISkinDescrip
         serializer.write(CodingKeys.TYPE, type);
         serializer.write(CodingKeys.OPTIONS, options);
         serializer.write(CodingKeys.SCHEME, paintScheme);
+    }
+
+    public SkinDescriptor withType(SkinType type) {
+        return new SkinDescriptor(identifier, type, options, paintScheme);
+    }
+
+    public SkinDescriptor withOptions(Options options) {
+        return new SkinDescriptor(identifier, type, options, paintScheme);
+    }
+
+    public SkinDescriptor withPaintScheme(SkinPaintScheme paintScheme) {
+        return new SkinDescriptor(identifier, type, options, paintScheme);
     }
 
     public ItemStack sharedItemStack() {

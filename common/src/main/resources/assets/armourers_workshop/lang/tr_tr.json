@@ -481,7 +481,7 @@
   "inventory.armourers_workshop.wardrobe.man_extras.label.isExtraRenders": "Ekstra Render?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isFlying": "Uçan?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isVisible": "Görünür?",
-  "inventory.armourers_workshop.wardrobe.man_extras.label.noclip": "Klips yok mu?",
+  "inventory.armourers_workshop.wardrobe.man_extras.label.noClip": "Klips yok mu?",
   "inventory.armourers_workshop.wardrobe.man_offsets": "Manken Ofsetleri",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.1": "1/16'yı ekle",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.2": "1/8 ekle",

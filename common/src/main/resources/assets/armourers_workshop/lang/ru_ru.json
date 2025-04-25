@@ -486,7 +486,7 @@
   "inventory.armourers_workshop.wardrobe.man_extras.label.isExtraRenders": "Особое",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isFlying": "В полете",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isVisible": "Видимый",
-  "inventory.armourers_workshop.wardrobe.man_extras.label.noclip": "Без хитбокса",
+  "inventory.armourers_workshop.wardrobe.man_extras.label.noClip": "Без хитбокса",
   "inventory.armourers_workshop.wardrobe.man_offsets": "Настройки смещения",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.1": "Добавить 1/16",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.2": "Добавить 1/8",

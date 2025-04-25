@@ -199,6 +199,7 @@ public class UpdateWardrobePacket extends CustomPacket {
         public static final auto MANNEQUIN_IS_VISIBLE = entity(MannequinEntity.DATA_IS_VISIBLE);
         public static final auto MANNEQUIN_IS_GHOST = entity(MannequinEntity.DATA_IS_GHOST);
         public static final auto MANNEQUIN_EXTRA_RENDER = entity(MannequinEntity.DATA_EXTRA_RENDERER);
+        public static final auto MANNEQUIN_NO_GRAVITY = entity(MannequinEntity.DATA_NO_GRAVITY);
 
         public static final auto MANNEQUIN_POSE = entity(MannequinEntity::saveCustomPose, MannequinEntity::readCustomPose, DataSerializers.COMPOUND_TAG);
         public static final auto MANNEQUIN_POSITION = entity(MannequinEntity::position, MannequinEntity::moveTo, DataSerializers.VECTOR_3D);

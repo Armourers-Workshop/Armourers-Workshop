@@ -486,7 +486,7 @@
   "inventory.armourers_workshop.wardrobe.man_extras.label.isExtraRenders": "Randări Extra?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isFlying": "Cădere?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isVisible": "Vizibil?",
-  "inventory.armourers_workshop.wardrobe.man_extras.label.noclip": "Noclip?",
+  "inventory.armourers_workshop.wardrobe.man_extras.label.noClip": "Noclip?",
   "inventory.armourers_workshop.wardrobe.man_offsets": "Mannequin Offsets",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.1": "Adaugă 1/16",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.2": "Adaugă 1/8",

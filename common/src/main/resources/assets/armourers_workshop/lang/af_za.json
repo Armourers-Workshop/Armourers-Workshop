@@ -480,7 +480,7 @@
   "inventory.armourers_workshop.wardrobe.man_extras.label.isExtraRenders": "Ekstra lewerings?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isFlying": "Vlieg?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isVisible": "Sigbaar?",
-  "inventory.armourers_workshop.wardrobe.man_extras.label.noclip": "Geen clip?",
+  "inventory.armourers_workshop.wardrobe.man_extras.label.noClip": "Geen clip?",
   "inventory.armourers_workshop.wardrobe.man_offsets": "Mannequin Offsets",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.1": "Voeg 1/16 by",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.2": "Voeg 1/8 by",

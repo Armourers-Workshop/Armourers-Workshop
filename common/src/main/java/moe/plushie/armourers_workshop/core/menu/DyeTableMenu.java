@@ -149,7 +149,7 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
         if (newScheme.equals(descriptor.getPaintScheme())) {
             return; // not any changes.
         }
-        descriptor = new SkinDescriptor(descriptor, newScheme);
+        descriptor = descriptor.withPaintScheme(newScheme);
         var newItemStack = itemStack.copy();
         newItemStack.set(ModDataComponents.SKIN.get(), descriptor);
         setOutputStack(newItemStack);

@@ -480,7 +480,7 @@
   "inventory.armourers_workshop.wardrobe.man_extras.label.isExtraRenders": "Renders addicionals?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isFlying": "Volar?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isVisible": "Visible?",
-  "inventory.armourers_workshop.wardrobe.man_extras.label.noclip": "Noclip?",
+  "inventory.armourers_workshop.wardrobe.man_extras.label.noClip": "Noclip?",
   "inventory.armourers_workshop.wardrobe.man_offsets": "Desplaçaments de maniquí",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.1": "Afegeix 1/16",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.2": "Afegeix 1/8",

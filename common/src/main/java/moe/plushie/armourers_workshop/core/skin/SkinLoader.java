@@ -161,7 +161,7 @@ public class SkinLoader {
         // merge all request into one.
         getOrCreateGlobalEntry(identifier).resume((descriptor, exception) -> {
             if (descriptor != null) {
-                descriptor = new SkinDescriptor(descriptor, scheme);
+                descriptor = descriptor.withPaintScheme(scheme);
             }
             handler.apply(descriptor, exception);
         });

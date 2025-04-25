@@ -22,15 +22,16 @@ public class SkinWardrobeExtraSetting extends SkinWardrobeBaseSetting {
     }
 
     private void setup() {
-        setupOptionView(83, 27, UpdateWardrobePacket.Field.MANNEQUIN_IS_CHILD, "label.isChild");
-        setupOptionView(83, 47, UpdateWardrobePacket.Field.MANNEQUIN_EXTRA_RENDER, "label.isExtraRenders");
-        setupOptionView(83, 67, UpdateWardrobePacket.Field.MANNEQUIN_IS_FLYING, "label.isFlying");
-        setupOptionView(83, 87, UpdateWardrobePacket.Field.MANNEQUIN_IS_VISIBLE, "label.isVisible");
-        setupOptionView(83, 107, UpdateWardrobePacket.Field.MANNEQUIN_IS_GHOST, "label.noclip");
+        setupOptionView(0, UpdateWardrobePacket.Field.MANNEQUIN_IS_CHILD, "label.isChild");
+        setupOptionView(1, UpdateWardrobePacket.Field.MANNEQUIN_EXTRA_RENDER, "label.isExtraRenders");
+        setupOptionView(2, UpdateWardrobePacket.Field.MANNEQUIN_IS_FLYING, "label.isFlying");
+        setupOptionView(3, UpdateWardrobePacket.Field.MANNEQUIN_IS_VISIBLE, "label.isVisible");
+        setupOptionView(4, UpdateWardrobePacket.Field.MANNEQUIN_IS_GHOST, "label.noClip");
+        setupOptionView(5, UpdateWardrobePacket.Field.MANNEQUIN_NO_GRAVITY, "label.noGravity");
     }
 
-    private void setupOptionView(int x, int y, UpdateWardrobePacket.Field<Boolean> option, String key) {
-        var checkBox = new UICheckBox(new CGRect(x, y, 185, 10));
+    private void setupOptionView(int index, UpdateWardrobePacket.Field<Boolean> option, String key) {
+        var checkBox = new UICheckBox(new CGRect(83, 27 + 14 * index, 185, 10));
         checkBox.setTitle(getDisplayText(key));
         checkBox.setSelected(option.getOrDefault(wardrobe, true));
         checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, c) -> {

@@ -483,7 +483,7 @@
   "inventory.armourers_workshop.wardrobe.man_extras.label.isExtraRenders": "追加レンダリング?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isFlying": "飛行中?",
   "inventory.armourers_workshop.wardrobe.man_extras.label.isVisible": "可視?",
-  "inventory.armourers_workshop.wardrobe.man_extras.label.noclip": "ノークリップ?",
+  "inventory.armourers_workshop.wardrobe.man_extras.label.noClip": "ノークリップ?",
   "inventory.armourers_workshop.wardrobe.man_offsets": "マネキンのオフセット",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.1": "1/16を加算",
   "inventory.armourers_workshop.wardrobe.man_offsets.button.add.2": "1/8を加算",
