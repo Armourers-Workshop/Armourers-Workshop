@@ -8,12 +8,12 @@ import net.minecraft.server.packs.resources.ResourceProvider;
 import java.util.function.Function;
 
 @Available("[1.18, )")
-public class AbstractProgramProvider extends AbstractProgramProviderImpl {
+public class AbstractResourceTransformer extends AbstractResourceProviderImpl {
 
     private final String type;
     private final ShaderPreprocessor preprocessor;
 
-    public AbstractProgramProvider(String type, ShaderPreprocessor preprocessor, ResourceProvider provider) {
+    public AbstractResourceTransformer(String type, ShaderPreprocessor preprocessor, ResourceProvider provider) {
         super(provider);
         this.type = type;
         this.preprocessor = preprocessor;

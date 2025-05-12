@@ -12,11 +12,11 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Available("[1.20, )")
-public abstract class AbstractProgramProviderImpl implements ResourceProvider {
+public abstract class AbstractResourceProviderImpl implements ResourceProvider {
 
     private final ResourceProvider impl;
 
-    public AbstractProgramProviderImpl(ResourceProvider provider) {
+    public AbstractResourceProviderImpl(ResourceProvider provider) {
         this.impl = provider;
     }
 

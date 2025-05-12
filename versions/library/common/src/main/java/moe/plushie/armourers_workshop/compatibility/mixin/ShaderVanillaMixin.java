@@ -2,7 +2,8 @@ package moe.plushie.armourers_workshop.compatibility.mixin;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compatibility.client.shader.AbstractProgramProvider;
+import moe.plushie.armourers_workshop.compatibility.client.shader.AbstractResourceProvider;
+import moe.plushie.armourers_workshop.compatibility.client.shader.AbstractResourceTransformer;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderPreprocessor;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderUniforms;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -18,9 +19,13 @@ public abstract class ShaderVanillaMixin {
     @ModifyVariable(method = "<init>", at = @At(value = "HEAD"), argsOnly = true)
     private static ResourceProvider aw2$createVanillaShader(ResourceProvider arg1, ResourceProvider arg2, String arg3, VertexFormat arg4) {
         ShaderUniforms.clear();
-        // We just need to rewrite the used shader.
+        // ..
+        if (arg1 instanceof AbstractResourceProvider provider) {
+            return new AbstractResourceTransformer("vsh", new ShaderPreprocessor(provider.getType()), arg1);
+        }
+        // ..
         if (ShaderPreprocessor.PATCHED_VANILLA_SHADERS.contains(arg3)) {
-            return new AbstractProgramProvider("vsh", new ShaderPreprocessor(""), arg1);
+            return new AbstractResourceTransformer("vsh", new ShaderPreprocessor(""), arg1);
         }
         return arg1;
     }
