@@ -18,15 +18,21 @@ public class AbstractFabricPermissionManager {
 
             @Override
             public boolean resolve(Player player, IPermissionContext context) {
+                // only work in server side.
                 if (player instanceof ServerPlayer) {
                     return Permissions.check(player, node, level);
                 }
-                return super.resolve(player, context);
+                return true;
             }
 
             @Override
             public boolean resolve(GameProfile profile, IPermissionContext context) {
-                return Permissions.check(profile, node, level, EnvironmentManagerImpl.getServer()).join();
+                // only work in server side.
+                var server = EnvironmentManagerImpl.getServer();
+                if (server != null) {
+                    return Permissions.check(profile, node, level, server).join();
+                }
+                return true;
             }
         };
     }
