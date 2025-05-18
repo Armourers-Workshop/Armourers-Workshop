@@ -162,8 +162,9 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     protected void childTick() {
         // when the parent block is broken for some reason, the child will be automatically destroyed.
+        var level = getLevel();
         var parent = getParent();
-        if (parent == null) {
+        if (parent == null && level != null && !level.isClientSide()) {
             ModLog.warn("found a zombie block at {}, destroy it.", getBlockPos());
             kill();
         }
