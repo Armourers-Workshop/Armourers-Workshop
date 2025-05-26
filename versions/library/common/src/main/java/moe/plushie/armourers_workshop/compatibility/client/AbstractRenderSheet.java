@@ -12,6 +12,8 @@ public class AbstractRenderSheet {
 
     private static final RenderType SOLID = Sheets.solidBlockSheet();
     private static final RenderType TRANSLUCENT = Sheets.translucentCullBlockSheet();
+    private static final RenderType GLINT = RenderType.glint();
+    private static final RenderType GLINT_TRANSLUCENT = RenderType.glintTranslucent();
     private static final RenderType OUTLINE = Sheets.solidBlockSheet().outline().orElse(null);
 
     public static RenderType solidBlockSheet() {
@@ -20,6 +22,14 @@ public class AbstractRenderSheet {
 
     public static RenderType translucentBlockSheet() {
         return TRANSLUCENT;
+    }
+
+    public static RenderType glintSheet() {
+        return GLINT;
+    }
+
+    public static RenderType glintTranslucentSheet() {
+        return GLINT_TRANSLUCENT;
     }
 
     public static RenderType outlineBlockSheet() {

@@ -59,7 +59,7 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
     }
 
     public static SkinRenderContext alloc(EntityRenderData renderData, int light, float partialTick, OpenItemDisplayContext itemDisplayContext) {
-        SkinRenderContext context = POOL.next();
+        var context = POOL.next();
         context.setRenderData(renderData);
         context.setLightmap(light);
         context.setPartialTicks(partialTick);
@@ -193,7 +193,7 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         if (outlineColor != 0) {
             usedBufferSource = AbstractBufferSource.outline();
         }
-        var bufferBuilder = SkinVertexBufferBuilder.getBuffer(usedBufferSource);
+        var bufferBuilder = SkinVertexBufferBuilder.of(usedBufferSource, skin.getRenderInfo());
         return bufferBuilder.getBuffer(skin);
     }
 

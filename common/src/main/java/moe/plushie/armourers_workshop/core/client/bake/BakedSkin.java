@@ -64,6 +64,7 @@ public class BakedSkin {
 
     private final ColorDescriptor colorDescriptor;
     private final SkinUsedCounter usedCounter;
+    private final BakedRenderInfo renderInfo;
 
     private final BakedItemTransform itemTransform;
 
@@ -72,7 +73,7 @@ public class BakedSkin {
 
     private final BakedSkinAnimationHandler animationHandler = new BakedSkinAnimationHandler();
 
-    public BakedSkin(String identifier, SkinType skinType, ArrayList<BakedSkinPart> bakedParts, Skin skin, SkinPaintScheme paintScheme, ColorDescriptor colorDescriptor, SkinUsedCounter usedCounter) {
+    public BakedSkin(String identifier, SkinType skinType, ArrayList<BakedSkinPart> bakedParts, Skin skin, SkinPaintScheme paintScheme, ColorDescriptor colorDescriptor, BakedRenderInfo renderInfo, SkinUsedCounter usedCounter) {
         this.identifier = identifier;
         this.skin = skin;
         this.skinType = skinType;
@@ -81,6 +82,7 @@ public class BakedSkin {
         this.paintScheme = paintScheme;
         this.colorDescriptor = colorDescriptor;
         this.usedCounter = usedCounter;
+        this.renderInfo = renderInfo;
         this.useTickRange = getUseTickRange(skinParts);
         this.itemTransform = resolvedItemTransform(skinParts, skin);
         this.loadBlockBounds(skinParts);
@@ -153,6 +155,10 @@ public class BakedSkin {
 
     public SkinUsedCounter getUsedCounter() {
         return usedCounter;
+    }
+
+    public BakedRenderInfo getRenderInfo() {
+        return renderInfo;
     }
 
     public Map<OpenVector3i, OpenRectangle3f> getBlockBounds() {

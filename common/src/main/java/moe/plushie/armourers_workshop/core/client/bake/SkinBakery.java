@@ -166,6 +166,7 @@ public final class SkinBakery implements ISkinLibraryListener {
 
         var scheme = new SkinPaintScheme();
         var colorInfo = new ColorDescriptor();
+        var renderInfo = new BakedRenderInfo();
 
         eachPart(skin.getParts(), null, (parent, part) -> {
             var children = new ArrayList<BakedSkinPart>();
@@ -223,6 +224,7 @@ public final class SkinBakery implements ISkinLibraryListener {
         // collect color info from the all child parts.
         Collections.eachTree(bakedParts, BakedSkinPart::getChildren, bakedPart -> {
             colorInfo.add(bakedPart.getColorInfo());
+            bakedPart.getQuads().forEach((renderType, it) -> renderInfo.add(renderType));
         });
 
         usedCounter.addPaintType(colorInfo.getPaintTypes());
@@ -235,7 +237,7 @@ public final class SkinBakery implements ISkinLibraryListener {
 //            }
 //            bakeTimes.set(index, (int) totalTime);
 
-        var bakedSkin = new BakedSkin(identifier, skin.getType(), rootParts, skin, scheme, colorInfo, usedCounter);
+        var bakedSkin = new BakedSkin(identifier, skin.getType(), rootParts, skin, scheme, colorInfo, renderInfo, usedCounter);
         ModLog.debug("'{}' => accept baked skin, time: {}ms", identifier, totalTime);
         complete.accept(bakedSkin);
         RenderSystem.recordRenderCall(() -> notifyBake(identifier, bakedSkin));

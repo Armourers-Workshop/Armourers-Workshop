@@ -3,11 +3,12 @@ package moe.plushie.armourers_workshop.core.client.other;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractShader;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferBuilder;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractRenderSheet;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractShader;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.bake.BakedRenderInfo;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexMerger;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import net.fabricmc.api.EnvType;
@@ -42,10 +43,23 @@ public class SkinVertexBufferBuilder implements IBufferSource {
         return INSTANCE;
     }
 
-    public static SkinVertexBufferBuilder getBuffer(IBufferSource bufferSource) {
+    public static SkinVertexBufferBuilder of(IBufferSource bufferSource) {
         var builder = getInstance();
         attach(bufferSource, AbstractRenderSheet.solidBlockSheet(), builder::endBatch);
-        //attach(bufferSource, AbstractRenderSheet.translucentBlockSheet(), builder::endTranslucentBatch);
+        if (bufferSource == AbstractBufferSource.outline()) {
+            attach(bufferSource, AbstractRenderSheet.outlineBlockSheet(), builder::endOutlineBatch);
+        }
+        return builder;
+    }
+
+    public static SkinVertexBufferBuilder of(IBufferSource bufferSource, BakedRenderInfo renderInfo) {
+        var builder = getInstance();
+        if (renderInfo.hasSolid()) {
+            attach(bufferSource, AbstractRenderSheet.solidBlockSheet(), builder::endBatch);
+        }
+        if (renderInfo.hasTranslucent()) {
+            attach(bufferSource, AbstractRenderSheet.glintTranslucentSheet(), builder::endTranslucentBatch);
+        }
         if (bufferSource == AbstractBufferSource.outline()) {
             attach(bufferSource, AbstractRenderSheet.outlineBlockSheet(), builder::endOutlineBatch);
         }
@@ -119,6 +133,8 @@ public class SkinVertexBufferBuilder implements IBufferSource {
     private void uploadPass(ShaderVertexObject pass) {
         if (pass.isOutline()) {
             outlinePipeline.add(pass);
+        } else if (pass.isTranslucent()) {
+            translucentPipeline.add(pass);
         } else {
             pipeline.add(pass);
         }
