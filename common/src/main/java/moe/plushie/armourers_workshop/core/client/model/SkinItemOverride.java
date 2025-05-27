@@ -1,26 +1,26 @@
 package moe.plushie.armourers_workshop.core.client.model;
 
-public class ItemOverride {
+public class SkinItemOverride {
 
-    private ItemModel model;
+    private SkinItemModel model;
 
-    private final ItemProperty[] properties;
+    private final SkinItemProperty[] properties;
     private final float[] values;
 
-    public ItemOverride(ItemProperty[] properties, float[] values) {
+    public SkinItemOverride(SkinItemProperty[] properties, float[] values) {
         this.properties = properties;
         this.values = values;
     }
 
-    public void setModel(ItemModel model) {
+    public void setModel(SkinItemModel model) {
         this.model = model;
     }
 
-    public ItemModel getModel() {
+    public SkinItemModel getModel() {
         return model;
     }
 
-    public ItemProperty[] getProperties() {
+    public SkinItemProperty[] getProperties() {
         return properties;
     }
 

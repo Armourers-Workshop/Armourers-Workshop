@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import moe.plushie.armourers_workshop.api.skin.part.features.ICanUse;
 import moe.plushie.armourers_workshop.core.client.animation.AnimatedTransform;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationController;
-import moe.plushie.armourers_workshop.core.client.model.ItemTransform;
+import moe.plushie.armourers_workshop.core.client.model.SkinItemTransform;
 import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
@@ -166,10 +166,10 @@ public class BakedSkin {
     }
 
     public OpenRectangle3f getRenderBounds() {
-        return getRenderBounds(ItemTransform.NO_TRANSFORM, OpenItemDisplayContext.NONE);
+        return getRenderBounds(SkinItemTransform.NO_TRANSFORM, OpenItemDisplayContext.NONE);
     }
 
-    public OpenRectangle3f getRenderBounds(ItemTransform itemTransform, OpenItemDisplayContext displayContext) {
+    public OpenRectangle3f getRenderBounds(SkinItemTransform itemTransform, OpenItemDisplayContext displayContext) {
         var rotation = itemTransform.getRotation();
         var key = PrimaryKey.of(rotation, displayContext);
         var bounds = cachedBounds.get(key);
@@ -313,6 +313,6 @@ public class BakedSkin {
 
     @Override
     public String toString() {
-        return Objects.toString(this, "id", id, "skin", identifier, "type", skinType);
+        return Objects.toString(this, "id", id, "skin", identifier, "type", skinType.getRegistryName().toString());
     }
 }

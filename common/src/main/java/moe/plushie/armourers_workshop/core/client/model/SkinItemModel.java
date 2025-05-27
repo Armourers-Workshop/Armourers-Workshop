@@ -12,19 +12,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public class ItemModel {
+public class SkinItemModel {
 
     private final IResourceLocation name;
-    private final Map<OpenItemDisplayContext, ItemTransform> transforms;
+    private final Map<OpenItemDisplayContext, SkinItemTransform> transforms;
 
-    private final ItemProperty[] properties;
-    private final List<ItemPropertyMatcher> matchers = new ArrayList<>();
+    private final SkinItemProperty[] properties;
+    private final List<Matcher> matchers = new ArrayList<>();
 
-    public ItemModel(IResourceLocation name, List<ItemOverride> overrides, Map<OpenItemDisplayContext, ItemTransform> transforms) {
+    public SkinItemModel(IResourceLocation name, List<SkinItemOverride> overrides, Map<OpenItemDisplayContext, SkinItemTransform> transforms) {
         this.name = name;
         this.transforms = transforms;
         // bake
-        var indexedProperties = new ArrayList<ItemProperty>();
+        var indexedProperties = new ArrayList<SkinItemProperty>();
         for (var override : overrides) {
             var childTester = new ArrayList<Predicate<float[]>>();
             var childProperties = override.getProperties();
@@ -40,12 +40,12 @@ public class ItemModel {
                 var index = idx;
                 childTester.add(result -> result[index] >= childValue);
             }
-            this.matchers.add(new ItemPropertyMatcher(override, childTester));
+            this.matchers.add(new Matcher(override, childTester));
         }
-        this.properties = indexedProperties.toArray(new ItemProperty[0]);
+        this.properties = indexedProperties.toArray(new SkinItemProperty[0]);
     }
 
-    public ItemModel resolve(ItemStack itemStack, @Nullable Entity entity, @Nullable Level level, int flags) {
+    public SkinItemModel resolve(ItemStack itemStack, @Nullable Entity entity, @Nullable Level level, int flags, OpenItemDisplayContext displayContext) {
         int length = properties.length;
         if (length == 0) {
             return this;
@@ -53,7 +53,7 @@ public class ItemModel {
         // evaluate all properties.
         var results = new float[length];
         for (int i = 0; i < length; ++i) {
-            results[i] = properties[i].apply(itemStack, entity, level, flags);
+            results[i] = properties[i].apply(itemStack, entity, level, flags, displayContext);
         }
         // test all properties
         for (var matcher : matchers) {
@@ -68,20 +68,20 @@ public class ItemModel {
         return this;
     }
 
-    public ItemTransform getTransform(OpenItemDisplayContext transformType) {
-        return transforms.getOrDefault(transformType, ItemTransform.NO_TRANSFORM);
+    public SkinItemTransform getTransform(OpenItemDisplayContext transformType) {
+        return transforms.getOrDefault(transformType, SkinItemTransform.NO_TRANSFORM);
     }
 
     public IResourceLocation getName() {
         return name;
     }
 
-    private static class ItemPropertyMatcher {
+    private static class Matcher {
 
         private final List<Predicate<float[]>> testers;
-        private final ItemOverride override;
+        private final SkinItemOverride override;
 
-        public ItemPropertyMatcher(ItemOverride override, List<Predicate<float[]>> tester) {
+        public Matcher(SkinItemOverride override, List<Predicate<float[]>> tester) {
             this.testers = tester;
             this.override = override;
         }

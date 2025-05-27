@@ -17,7 +17,7 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
-import moe.plushie.armourers_workshop.core.client.model.ItemModelManager;
+import moe.plushie.armourers_workshop.core.client.model.SkinItemModelManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
@@ -257,7 +257,7 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
         } else {
             poseStack.translate(0, -2, -2);
             //var entity = PlaceholderManager.MANNEQUIN.get();
-            var model = ItemModelManager.getInstance().getModel(skinType);
+            var model = SkinItemModelManager.getInstance().getModel(skinType);
             model.getTransform(displayContext).apply(false, poseStack);
         }
     }

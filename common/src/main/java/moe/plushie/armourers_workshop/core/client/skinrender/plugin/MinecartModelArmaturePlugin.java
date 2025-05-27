@@ -3,10 +3,9 @@ package moe.plushie.armourers_workshop.core.client.skinrender.plugin;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
+import moe.plushie.armourers_workshop.core.data.DataContainerKey;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
-import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.core.data.DataContainerKey;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
@@ -36,7 +35,6 @@ public class MinecartModelArmaturePlugin extends ArmaturePlugin {
         // fix the direction.
         poseStack.scale(-1, -1, 1);
         poseStack.translate(0, -0.125f, 0);  // 0, -2, 0
-        ModDebugger.translate(poseStack);
         poseStack.rotate(OpenVector3f.YP.rotationDegrees(180));
     }
 

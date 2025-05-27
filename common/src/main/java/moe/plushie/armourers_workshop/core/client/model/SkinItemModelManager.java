@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.model;
 
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.core.IResourceManager;
+import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
@@ -29,23 +30,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ItemModelManager {
+public class SkinItemModelManager {
 
-    private static final ItemModelManager INSTANCE = new ItemModelManager();
+    private static final SkinItemModelManager INSTANCE = new SkinItemModelManager();
 
-    private ItemModel missingModel;
+    private SkinItemModel missingModel;
 
-    private final Map<SkinType, ItemModel> typedItemModels = new ConcurrentHashMap<>();
-    private final Map<IResourceLocation, ItemModel> namedItemModels = new ConcurrentHashMap<>();
+    private final Map<SkinType, SkinItemModel> typedItemModels = new ConcurrentHashMap<>();
+    private final Map<IResourceLocation, SkinItemModel> namedItemModels = new ConcurrentHashMap<>();
 
-    private final Map<IResourceLocation, ItemProperty> namedItemProperties = Collections.immutableMap(builder -> {
-        builder.put(ModConstants.key("is_skin"), vanilla("armourers_workshop:is_skin"));
+    private final Map<IResourceLocation, SkinItemProperty> namedItemProperties = Collections.immutableMap(builder -> {
+        builder.put(ModConstants.key("is_skin"), handOnly("armourers_workshop:is_skin"));
         builder.put(ModConstants.key("is_crossbow"), vanilla("armourers_workshop:is_crossbow"));
         builder.put(ModConstants.key("is_blocking"), vanilla("minecraft:blocking"));
         builder.put(ModConstants.key("is_throwing"), vanilla("minecraft:throwing"));
     });
 
-    public static ItemModelManager getInstance() {
+    public static SkinItemModelManager getInstance() {
         return INSTANCE;
     }
 
@@ -54,7 +55,7 @@ public class ItemModelManager {
     }
 
 
-    public ItemModel getModel(SkinType skinType) {
+    public SkinItemModel getModel(SkinType skinType) {
         return typedItemModels.computeIfAbsent(skinType, it -> {
             var id = ModConstants.key("skin/" + skinType.getRegistryName().getPath());
             return namedItemModels.getOrDefault(id, missingModel);
@@ -62,16 +63,16 @@ public class ItemModelManager {
     }
 
     @Nullable
-    public ItemProperty getProperty(IResourceLocation id) {
+    public SkinItemProperty getProperty(IResourceLocation id) {
         return namedItemProperties.get(id);
     }
 
-    private static ItemProperty vanilla(String id) {
+    private static SkinItemProperty vanilla(String id) {
         var registryName = OpenResourceLocation.parse(id);
         var location = registryName.toLocation();
-        return new ItemProperty() {
+        return new SkinItemProperty() {
             @Override
-            public float apply(ItemStack itemStack, @Nullable Entity entity, @Nullable Level level, int flags) {
+            public float apply(ItemStack itemStack, @Nullable Entity entity, @Nullable Level level, int flags, OpenItemDisplayContext displayContext) {
                 var func = ItemProperties.getProperty(itemStack, location);
                 if (func != null) {
                     return func.call(itemStack, (ClientLevel) level, (LivingEntity) entity, flags);
@@ -86,15 +87,34 @@ public class ItemModelManager {
         };
     }
 
+    private static SkinItemProperty handOnly(String id) {
+        var property = vanilla(id);
+        return new SkinItemProperty() {
+            @Override
+            public float apply(ItemStack itemStack, @Nullable Entity entity, @Nullable Level level, int flags, OpenItemDisplayContext displayContext) {
+                // ignore head,ground,fixed,gui
+                if (displayContext.isFirstPerson() || displayContext.isThirdPerson()) {
+                    return property.apply(itemStack, entity, level, flags, displayContext);
+                }
+                return 0;
+            }
+
+            @Override
+            public String toString() {
+                return property.toString();
+            }
+        };
+    }
+
     private static class SimpleLoader {
 
-        private final ItemModelManager modelManager;
+        private final SkinItemModelManager modelManager;
         private final IResourceManager resourceManager;
 
         private final Map<IResourceLocation, SimpleBuilder> builders = new LinkedHashMap<>();
-        private final Map<IResourceLocation, ItemModel> models = new LinkedHashMap<>();
+        private final Map<IResourceLocation, SkinItemModel> models = new LinkedHashMap<>();
 
-        public SimpleLoader(ItemModelManager modelManager) {
+        public SimpleLoader(SkinItemModelManager modelManager) {
             this.modelManager = modelManager;
             this.resourceManager = EnvironmentManager.getResourceManager();
         }
@@ -118,10 +138,7 @@ public class ItemModelManager {
                     var translation = parseVector3f(value.get("translation"), OpenVector3f.ZERO);
                     var rotation = parseVector3f(value.get("rotation"), OpenVector3f.ZERO);
                     var scale = parseVector3f(value.get("scale"), OpenVector3f.ONE);
-                    var rightTranslation = parseVector3f(value.get("post_translation"), OpenVector3f.ZERO);
-                    var rightRotation = parseVector3f(value.get("post_rotation"), OpenVector3f.ZERO);
-                    var rightScale = parseVector3f(value.get("post_scale"), OpenVector3f.ONE);
-                    builder.addTransform(name, SkinItemTransform.create(translation, rotation, scale, rightTranslation, rightRotation, rightScale));
+                    builder.addTransform(name, new SimpleTransform(translation, rotation, scale));
                 });
                 object.get("overrides").allValues().forEach(it -> {
                     var model = it.get("model").stringValue();
@@ -136,7 +153,7 @@ public class ItemModelManager {
                 });
             });
             // resolve the parent depends.
-            var references = new IdentityHashMap<ItemOverride, IResourceLocation>();
+            var references = new IdentityHashMap<SkinItemOverride, IResourceLocation>();
             builders.forEach((name, builder) -> {
                 var itemModel = builder.build(references);
                 models.put(name, itemModel);
@@ -172,7 +189,7 @@ public class ItemModelManager {
         private final IResourceLocation name;
 
         private final Map<IResourceLocation, List<Pair<IResourceLocation, Number>>> overrides = new LinkedHashMap<>();
-        private final Map<OpenItemDisplayContext, ItemTransform> transforms = new LinkedHashMap<>();
+        private final Map<OpenItemDisplayContext, SkinItemTransform> transforms = new LinkedHashMap<>();
 
         public SimpleBuilder(IResourceLocation name) {
             this.name = name;
@@ -182,34 +199,34 @@ public class ItemModelManager {
             overrides.put(OpenResourceLocation.parse(name), predicate);
         }
 
-        public void addTransform(String name, ItemTransform transform) {
+        public void addTransform(String name, SkinItemTransform transform) {
             transforms.put(OpenItemDisplayContext.byName(name), transform);
         }
 
-        public ItemModel build(Map<ItemOverride, IResourceLocation> references) {
+        public SkinItemModel build(Map<SkinItemOverride, IResourceLocation> references) {
             // ..
-            var itemOverrides = new ArrayList<ItemOverride>();
+            var itemOverrides = new ArrayList<SkinItemOverride>();
             for (var override : overrides.entrySet()) {
                 var it = override.getValue();
-                var properties = new ItemProperty[it.size()];
+                var properties = new SkinItemProperty[it.size()];
                 var values = new float[it.size()];
                 for (int i = 0; i < properties.length; i++) {
                     properties[i] = getInstance().getProperty(it.get(i).getKey());
                     values[i] = it.get(i).getValue().floatValue();
                 }
-                var itemOverride = new ItemOverride(properties, values);
+                var itemOverride = new SkinItemOverride(properties, values);
                 itemOverrides.add(itemOverride);
                 references.put(itemOverride, override.getKey());
             }
             // ..
-            var itemTransforms = new EnumMap<OpenItemDisplayContext, ItemTransform>(OpenItemDisplayContext.class);
+            var itemTransforms = new EnumMap<OpenItemDisplayContext, SkinItemTransform>(OpenItemDisplayContext.class);
             for (var displayContext : OpenItemDisplayContext.values()) {
-                itemTransforms.put(displayContext, resolveTransformValue(displayContext, ItemTransform.NO_TRANSFORM));
+                itemTransforms.put(displayContext, resolveTransformValue(displayContext, SkinItemTransform.NO_TRANSFORM));
             }
-            return new ItemModel(name, itemOverrides, itemTransforms);
+            return new SkinItemModel(name, itemOverrides, itemTransforms);
         }
 
-        private ItemTransform resolveTransformValue(OpenItemDisplayContext transformType, ItemTransform defaultValue) {
+        private SkinItemTransform resolveTransformValue(OpenItemDisplayContext transformType, SkinItemTransform defaultValue) {
             var transform = transforms.get(transformType);
             if (transform != null) {
                 return transform;
@@ -218,6 +235,28 @@ public class ItemModelManager {
                 return parent.resolveTransformValue(transformType, defaultValue);
             }
             return defaultValue;
+        }
+    }
+
+    private static class SimpleTransform extends SkinItemTransform {
+
+
+        public SimpleTransform(OpenVector3f translation, OpenVector3f rotation, OpenVector3f scale) {
+            super(scale(translation, new OpenVector3f(-1, -1, 1), OpenVector3f.ZERO), scale(rotation, new OpenVector3f(-1, -1, 1), OpenVector3f.ZERO), optimize(scale, OpenVector3f.ONE));
+        }
+
+        private static OpenVector3f scale(OpenVector3f value, OpenVector3f scale, OpenVector3f defaultValue) {
+            var result = value.scaling(scale);
+            return optimize(result, defaultValue);
+        }
+
+        @Override
+        public void apply(boolean applyLeftHandTransform, IPoseStack poseStack) {
+            super.apply(applyLeftHandTransform, poseStack);
+            // the skin need automatic mirror model.
+            if (applyLeftHandTransform) {
+                poseStack.scale(-1, 1, 1);
+            }
         }
     }
 }
