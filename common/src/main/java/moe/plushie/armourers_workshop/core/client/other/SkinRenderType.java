@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.core.client.other;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IRenderTypeBuilder;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractRenderTypeImpl;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import net.fabricmc.api.EnvType;
@@ -54,7 +54,7 @@ public abstract class SkinRenderType implements IRenderType {
 
     private static final IRenderType[] RENDER_ORDERING_FACES = {BLOCK_FACE_SOLID, BLOCK_FACE_LIGHTING, BLOCK_FACE_TRANSLUCENT, BLOCK_FACE_LIGHTING_TRANSLUCENT};
 
-    public static IRenderType by(ISkinGeometryType geometryType) {
+    public static IRenderType by(SkinGeometryType geometryType) {
         if (geometryType == SkinGeometryTypes.BLOCK_GLASS) {
             return BLOCK_FACE_TRANSLUCENT;
         }
@@ -83,7 +83,7 @@ public abstract class SkinRenderType implements IRenderType {
         });
     }
 
-    public static IRenderType geometryFace(ISkinGeometryType type, IResourceLocation texture, boolean isGrowing) {
+    public static IRenderType geometryFace(SkinGeometryType type, IResourceLocation texture, boolean isGrowing) {
         // ..
         if (isGrowing) {
             if (type == SkinGeometryTypes.CUBE) {

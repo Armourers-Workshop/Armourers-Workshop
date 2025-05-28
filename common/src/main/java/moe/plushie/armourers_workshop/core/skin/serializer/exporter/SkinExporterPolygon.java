@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.exporter;
 
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector4f;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.skin.geometry.cube.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.geometry.cube.SkinCubeFaceCuller;
@@ -44,7 +44,7 @@ public class SkinExporterPolygon implements SkinExporter {
         var task = new Task(skin, skinPart);
         // user maybe need apply some effects for the glass or glowing blocks,
         // so we need split the glass and glowing block into separate layers.
-        var faces = new HashMap<ISkinGeometryType, ArrayList<SkinCubeFace>>();
+        var faces = new HashMap<SkinGeometryType, ArrayList<SkinCubeFace>>();
         for (var face : task.cubeFaces) {
             if (face.isVisible()) {
                 faces.computeIfAbsent(face.getType(), k -> new ArrayList<>()).add(face);

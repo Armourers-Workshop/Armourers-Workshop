@@ -8,10 +8,12 @@ import moe.plushie.armourers_workshop.core.client.animation.bind.ClientExecution
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.other.BlockEntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
-import moe.plushie.armourers_workshop.core.data.EntityAction;
-import moe.plushie.armourers_workshop.core.data.EntityActionSet;
-import moe.plushie.armourers_workshop.core.data.EntityActionTarget;
-import moe.plushie.armourers_workshop.core.data.EntityActions;
+import moe.plushie.armourers_workshop.core.data.BlockEntityAnimationState;
+import moe.plushie.armourers_workshop.core.data.EntityAnimationState;
+import moe.plushie.armourers_workshop.core.data.action.EntityAction;
+import moe.plushie.armourers_workshop.core.data.action.EntityActionSet;
+import moe.plushie.armourers_workshop.core.data.action.EntityActionTarget;
+import moe.plushie.armourers_workshop.core.data.action.EntityActions;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationLoop;
@@ -49,7 +51,7 @@ public class AnimationManager {
 
     private final HashMap<String, PlayAction> lastActions = new HashMap<>();
 
-    private EntityActionSet lastActionSet;
+    private EntityActionSet lastAnimationState;
     private double lastAnimationTicks = 0;
 
     private final ClientExecutionContextImpl executionContext;
@@ -123,15 +125,15 @@ public class AnimationManager {
                 }
             }
         }
-        // play triggerable animation by the state.
-        if (!triggerableEntries.isEmpty() && source instanceof Entity entity) {
-            var actionSet = entity.getActionSet();
-            if (actionSet != null && !actionSet.equals(lastActionSet)) {
+        // play triggerable animation by the entity state.
+        if (!triggerableEntries.isEmpty()) {
+            var animationState = getAnimationState(source);
+            if (animationState != null && !animationState.equals(lastAnimationState)) {
                 if (ModConfig.Client.enableAnimationDebug) {
-                    ModLog.debug("{} action did change: {}", entity, actionSet);
+                    ModLog.debug("{} action did change: {}", source, animationState);
                 }
-                triggerableEntries.forEach(entry -> entry.autoplay(actionSet, animationTime));
-                lastActionSet = actionSet.copy();
+                triggerableEntries.forEach(entry -> entry.autoplay(animationState, animationTime));
+                lastAnimationState = animationState.copy();
             }
         }
         lastAnimationTicks = animationTime;
@@ -174,8 +176,27 @@ public class AnimationManager {
         return allEntries.get(skin);
     }
 
+    @Nullable
+    private EntityActionSet getAnimationState(Object source) {
+        if (source instanceof Entity entity) {
+            var animationState = EntityAnimationState.of(entity);
+            if (animationState != null) {
+                animationState.tick(entity);
+                return animationState;
+            }
+        }
+        if (source instanceof BlockEntity entity) {
+            var animationState = BlockEntityAnimationState.of(entity);
+            if (animationState != null) {
+                animationState.tick(entity);
+                return animationState;
+            }
+        }
+        return null;
+    }
+
     private void setChanged() {
-        lastActionSet = null;
+        lastAnimationState = null;
     }
 
     private void resumeState(Entry entry) {
@@ -350,9 +371,9 @@ public class AnimationManager {
             return name;
         }
 
-        private TriggerableController findTriggerableController(EntityActionSet tracker) {
+        private TriggerableController findTriggerableController(EntityActionSet actionSet) {
             for (var entry : triggerableControllers) {
-                if (entry.isIdle || entry.test(tracker)) {
+                if (entry.isIdle || entry.test(actionSet)) {
                     return entry;
                 }
             }

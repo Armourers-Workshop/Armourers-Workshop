@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.skin.geometry.cube;
 
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
 import moe.plushie.armourers_workshop.core.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometry;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTexturePos;
@@ -20,7 +20,7 @@ public abstract class SkinCube extends SkinGeometry {
 
     protected final EnumMap<OpenDirection, SkinPaintColor> paintColors = new EnumMap<>(OpenDirection.class);
 
-    public void setType(ISkinGeometryType type) {
+    public void setType(SkinGeometryType type) {
         throw new UnsupportedOperationException();
     }
 

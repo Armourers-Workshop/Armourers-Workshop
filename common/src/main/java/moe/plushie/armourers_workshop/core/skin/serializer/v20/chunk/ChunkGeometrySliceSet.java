@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk;
 
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometry;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometrySet;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.utils.OpenSliceAccessor;
 
 import java.util.ArrayList;
@@ -37,8 +37,8 @@ public class ChunkGeometrySliceSet extends SkinGeometrySet<SkinGeometry> {
     }
 
     @Override
-    public Collection<ISkinGeometryType> getSupportedTypes() {
-        var supportedTypes = new HashSet<ISkinGeometryType>();
+    public Collection<SkinGeometryType> getSupportedTypes() {
+        var supportedTypes = new HashSet<SkinGeometryType>();
         for (var selector : selectors) {
             supportedTypes.add(selector.getSection().getGeometryType());
         }

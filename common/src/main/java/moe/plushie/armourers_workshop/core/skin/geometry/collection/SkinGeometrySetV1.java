@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.skin.geometry.collection;
 
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometrySet;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.skin.geometry.cube.SkinCube;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
@@ -224,12 +224,12 @@ public class SkinGeometrySetV1 extends SkinGeometrySet<SkinCube> {
         }
 
         @Override
-        public void setType(ISkinGeometryType type) {
+        public void setType(SkinGeometryType type) {
             setId((byte) type.getId());
         }
 
         @Override
-        public ISkinGeometryType getType() {
+        public SkinGeometryType getType() {
             return SkinGeometryTypes.byId(getId());
         }
 

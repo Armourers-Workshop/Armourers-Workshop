@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.texture;
 
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractSimpleTexture;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -47,7 +47,7 @@ public class SmartTextureManager {
         }
     }
 
-    public synchronized IRenderType register(SkinTextureData provider, ISkinGeometryType type) {
+    public synchronized IRenderType register(SkinTextureData provider, SkinGeometryType type) {
         var texture = textures.get(provider);
         if (texture == null) {
             texture = new SmartTexture(provider);

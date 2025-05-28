@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.skin.serializer.importer.blockbench;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle2f;
@@ -19,6 +18,7 @@ import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationFunction;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationKeyframe;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationLoop;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationPoint;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryVertex;
 import moe.plushie.armourers_workshop.core.skin.geometry.collection.SkinGeometrySetV2;
@@ -420,7 +420,7 @@ public class BlockBenchExporter {
             rotation = rotation.transforming(poseStack.last().normal());
         }
 
-        public ISkinGeometryType getType(boolean isCulling) {
+        public SkinGeometryType getType(boolean isCulling) {
             if (isCulling) {
                 return SkinGeometryTypes.CUBE_CULL;
             }
@@ -461,7 +461,7 @@ public class BlockBenchExporter {
         }
 
 
-        public ISkinGeometryType getType(boolean isCulling) {
+        public SkinGeometryType getType(boolean isCulling) {
             //if (isCulling) {
             //    return SkinGeometryTypes.MESH_CULL;
             //}

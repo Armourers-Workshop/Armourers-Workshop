@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.geometry;
 
 import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometrySet;
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.core.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.core.utils.Objects;
@@ -41,7 +40,7 @@ public abstract class SkinGeometrySet<T extends SkinGeometry> implements ISkinGe
 
     @Nullable
     @Override
-    public Collection<ISkinGeometryType> getSupportedTypes() {
+    public Collection<SkinGeometryType> getSupportedTypes() {
         // we don't know the included cube types.
         return null;
     }

@@ -19,6 +19,9 @@ public abstract class SkinGeometry implements ISkinGeometry {
     public abstract OpenVoxelShape getShape();
 
     @Override
+    public abstract SkinGeometryType getType();
+
+    @Override
     public Iterable<? extends SkinGeometryFace> getFaces() {
         return Collections.emptyList();
     }

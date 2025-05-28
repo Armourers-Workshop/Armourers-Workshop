@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk;
 
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.geometry.ChunkGeometrySerializer;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.geometry.ChunkGeometrySerializers;
 
@@ -13,9 +13,9 @@ public abstract class ChunkGeometrySection {
     protected boolean resolved;
 
     private final int geometryOptions;
-    private final ISkinGeometryType geometryType;
+    private final SkinGeometryType geometryType;
 
-    public ChunkGeometrySection(int geometryTotal, int geometryOptions, ISkinGeometryType geometryType) {
+    public ChunkGeometrySection(int geometryTotal, int geometryOptions, SkinGeometryType geometryType) {
         this.geometryTotal = geometryTotal;
         this.geometryOptions = geometryOptions;
         this.geometryType = geometryType;
@@ -48,7 +48,7 @@ public abstract class ChunkGeometrySection {
         return geometryOptions;
     }
 
-    public ISkinGeometryType getGeometryType() {
+    public SkinGeometryType getGeometryType() {
         return geometryType;
     }
 
@@ -59,7 +59,7 @@ public abstract class ChunkGeometrySection {
         private final byte[] bytes;
         private final ChunkPaletteData palette;
 
-        public Immutable(int geometryTotal, int options, ISkinGeometryType geometryType, ChunkPaletteData palette) {
+        public Immutable(int geometryTotal, int options, SkinGeometryType geometryType, ChunkPaletteData palette) {
             super(geometryTotal, options, geometryType);
             this.stride = ChunkGeometrySerializers.getStride(geometryType, options, palette);
             this.bytes = new byte[stride * geometryTotal];
@@ -88,7 +88,7 @@ public abstract class ChunkGeometrySection {
 
         private final ChunkDataOutputStream outputStream;
 
-        public Mutable(int options, ISkinGeometryType geometryType, ChunkContext context) {
+        public Mutable(int options, SkinGeometryType geometryType, ChunkContext context) {
             super(0, options, geometryType);
             this.outputStream = new ChunkDataOutputStream(context);
         }

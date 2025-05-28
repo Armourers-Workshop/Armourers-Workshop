@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk;
 
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector2f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometry;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.geometry.ChunkGeometrySerializer;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.geometry.ChunkGeometrySerializers;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
@@ -27,7 +27,7 @@ public class ChunkGeometrySlice implements OpenSliceAccessor.Provider<SkinGeomet
     protected final byte[] bytes;
     protected final ChunkPaletteData palette;
 
-    protected final ISkinGeometryType geometryType;
+    protected final SkinGeometryType geometryType;
     protected final int geometryOptions;
 
     protected final BitSet flags = new BitSet();
@@ -79,7 +79,7 @@ public class ChunkGeometrySlice implements OpenSliceAccessor.Provider<SkinGeomet
         return palette;
     }
 
-    public ISkinGeometryType getGeometryType() {
+    public SkinGeometryType getGeometryType() {
         return geometryType;
     }
 

@@ -28,6 +28,9 @@ public abstract class SkinGeometryFace implements ISkinGeometryFace {
     }
 
     @Override
+    public abstract SkinGeometryType getType();
+
+    @Override
     public abstract Iterable<? extends SkinGeometryVertex> getVertices();
 
     public float getPriority() {

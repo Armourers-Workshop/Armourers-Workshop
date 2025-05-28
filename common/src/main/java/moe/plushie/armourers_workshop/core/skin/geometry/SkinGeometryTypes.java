@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.geometry;
 
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -15,18 +14,18 @@ public final class SkinGeometryTypes {
     private static final SkinGeometryType[] ALL_GEOMETRY_TYPE_MAPPING = new SkinGeometryType[256];
     private static final LinkedHashMap<String, SkinGeometryType> ALL_GEOMETRY_TYPES = new LinkedHashMap<>();
 
-    public static final ISkinGeometryType BLOCK_SOLID = register("solid", 0, ModBlocks.SKIN_CUBE);
-    public static final ISkinGeometryType BLOCK_GLOWING = register("glowing", 1, ModBlocks.SKIN_CUBE_GLOWING);
-    public static final ISkinGeometryType BLOCK_GLASS = register("glass", 2, ModBlocks.SKIN_CUBE_GLASS);
-    public static final ISkinGeometryType BLOCK_GLASS_GLOWING = register("glass_glowing", 3, ModBlocks.SKIN_CUBE_GLASS_GLOWING);
+    public static final SkinGeometryType BLOCK_SOLID = register("solid", 0, ModBlocks.SKIN_CUBE);
+    public static final SkinGeometryType BLOCK_GLOWING = register("glowing", 1, ModBlocks.SKIN_CUBE_GLOWING);
+    public static final SkinGeometryType BLOCK_GLASS = register("glass", 2, ModBlocks.SKIN_CUBE_GLASS);
+    public static final SkinGeometryType BLOCK_GLASS_GLOWING = register("glass_glowing", 3, ModBlocks.SKIN_CUBE_GLASS_GLOWING);
 
-    public static final ISkinGeometryType CUBE = register("cube", 4, ModBlocks.BOUNDING_BOX);
-    public static final ISkinGeometryType CUBE_CULL = register("cube_cull", 6, ModBlocks.BOUNDING_BOX);
+    public static final SkinGeometryType CUBE = register("cube", 4, ModBlocks.BOUNDING_BOX);
+    public static final SkinGeometryType CUBE_CULL = register("cube_cull", 6, ModBlocks.BOUNDING_BOX);
 
-    public static final ISkinGeometryType MESH = register("mesh", 5, ModBlocks.BOUNDING_BOX);
-    public static final ISkinGeometryType MESH_CULL = register("mesh_cull", 7, ModBlocks.BOUNDING_BOX);
+    public static final SkinGeometryType MESH = register("mesh", 5, ModBlocks.BOUNDING_BOX);
+    public static final SkinGeometryType MESH_CULL = register("mesh_cull", 7, ModBlocks.BOUNDING_BOX);
 
-    public static ISkinGeometryType byName(String name) {
+    public static SkinGeometryType byName(String name) {
         var cube = ALL_GEOMETRY_TYPES.get(name);
         if (cube != null) {
             return cube;
@@ -34,7 +33,7 @@ public final class SkinGeometryTypes {
         return BLOCK_SOLID;
     }
 
-    public static ISkinGeometryType byId(int index) {
+    public static SkinGeometryType byId(int index) {
         var cubeType = ALL_GEOMETRY_TYPE_MAPPING[index & 0xFF];
         if (cubeType != null) {
             return cubeType;
@@ -42,7 +41,7 @@ public final class SkinGeometryTypes {
         return BLOCK_SOLID;
     }
 
-    public static ISkinGeometryType byBlock(Block block) {
+    public static SkinGeometryType byBlock(Block block) {
         for (var cubeType : ALL_GEOMETRY_TYPES.values()) {
             if (cubeType.getBlock() == block) {
                 return cubeType;
@@ -54,14 +53,14 @@ public final class SkinGeometryTypes {
     /**
      * Should this cube be rendered after the world?
      */
-    public static boolean isGlassBlock(ISkinGeometryType geometryType) {
+    public static boolean isGlassBlock(SkinGeometryType geometryType) {
         return geometryType == BLOCK_GLASS || geometryType == BLOCK_GLASS_GLOWING;
     }
 
     /**
      * Will this cube glow in the dark?
      */
-    public static boolean isGlowingBlock(ISkinGeometryType geometryType) {
+    public static boolean isGlowingBlock(SkinGeometryType geometryType) {
         return geometryType == BLOCK_GLOWING || geometryType == BLOCK_GLASS_GLOWING;
     }
 
@@ -74,7 +73,7 @@ public final class SkinGeometryTypes {
         }
         ALL_GEOMETRY_TYPES.put(geometryType.getRegistryName().toString(), geometryType);
         ALL_GEOMETRY_TYPE_MAPPING[geometryType.getId() & 0xFF] = geometryType;
-        ModLog.debug("Registering Skin Cube '{}'", geometryType.getRegistryName());
+        ModLog.debug("Registering Skin Geometry '{}'", geometryType.getRegistryName());
         return geometryType;
     }
 

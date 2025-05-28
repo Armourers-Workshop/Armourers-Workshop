@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.client.IRenderTypeBuilder;
 import moe.plushie.armourers_workshop.api.client.IVertexFormat;
 import moe.plushie.armourers_workshop.api.data.IAssociatedContainerKey;
 import moe.plushie.armourers_workshop.api.data.IAssociatedContainerProvider;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.other.SkinVertexFormat;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
 import net.minecraft.client.renderer.RenderType;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class AbstractRenderType implements IRenderType, IAssociatedContainerProvider {
+public class AbstractRenderType extends SkinRenderType implements IAssociatedContainerProvider {
 
     private boolean isGrowing = false;
     private boolean isOutline = false;

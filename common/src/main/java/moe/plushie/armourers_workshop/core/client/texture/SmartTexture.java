@@ -4,10 +4,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.other.SmartResourceManager;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureProperties;
 import moe.plushie.armourers_workshop.core.utils.FileUtils;
@@ -29,7 +29,7 @@ public class SmartTexture extends ReferenceCounted {
 
     private final Map<IResourceLocation, ByteBuf> textureBuffers;
 
-    private final Map<ISkinGeometryType, IRenderType> bindingRenderTypes = new LinkedHashMap<>();
+    private final Map<SkinGeometryType, IRenderType> bindingRenderTypes = new LinkedHashMap<>();
 
     public SmartTexture(SkinTextureData provider) {
         this.location = ModConstants.key("textures/dynamic/" + OpenRandomSource.nextInt(SmartTexture.class) + ".png");
@@ -59,7 +59,7 @@ public class SmartTexture extends ReferenceCounted {
         });
     }
 
-    public IRenderType getRenderType(ISkinGeometryType type) {
+    public IRenderType getRenderType(SkinGeometryType type) {
         return bindingRenderTypes.computeIfAbsent(type, it -> {
             var renderType = SkinRenderType.geometryFace(it, location, properties.isEmissive());
             DataContainer.set(renderType, this);

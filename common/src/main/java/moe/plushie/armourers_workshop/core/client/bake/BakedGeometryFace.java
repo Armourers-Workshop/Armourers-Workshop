@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.core.math.ITransform3f;
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.client.texture.SmartTextureManager;
@@ -12,6 +11,7 @@ import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryFace;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryVertex;
 import moe.plushie.armourers_workshop.core.skin.geometry.cube.SkinCubeVertex;
@@ -175,7 +175,7 @@ public class BakedGeometryFace {
         return paintColor;
     }
 
-    private List<? extends SkinGeometryVertex> triangulation(Iterable<? extends SkinGeometryVertex> verticesIn, ISkinGeometryType geometryType) {
+    private List<? extends SkinGeometryVertex> triangulation(Iterable<? extends SkinGeometryVertex> verticesIn, SkinGeometryType geometryType) {
         var vertices = Collections.newList(verticesIn);
         if (geometryType != SkinGeometryTypes.MESH && geometryType != SkinGeometryTypes.MESH_CULL) {
             return vertices;

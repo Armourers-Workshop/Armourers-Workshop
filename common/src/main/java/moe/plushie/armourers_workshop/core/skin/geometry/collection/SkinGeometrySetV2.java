@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.skin.geometry.collection;
 
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometry;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometrySet;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.skin.geometry.cube.SkinCube;
 import moe.plushie.armourers_workshop.core.skin.geometry.cube.SkinCubeFace;
@@ -43,16 +43,16 @@ public class SkinGeometrySetV2 extends SkinGeometrySet<SkinGeometry> {
     }
 
     @Override
-    public Collection<ISkinGeometryType> getSupportedTypes() {
+    public Collection<SkinGeometryType> getSupportedTypes() {
         return Collections.singleton(SkinGeometryTypes.CUBE);
     }
 
     public static class Box extends SkinCube {
 
-        private final ISkinGeometryType type;
+        private final SkinGeometryType type;
         private final SkinTextureBox skyBox;
 
-        public Box(OpenRectangle3f boundingBox, ISkinGeometryType type, OpenTransform3f transform, SkinTextureBox skyBox) {
+        public Box(OpenRectangle3f boundingBox, SkinGeometryType type, OpenTransform3f transform, SkinTextureBox skyBox) {
             this.type = type;
             this.transform = transform;
             this.boundingBox = boundingBox;
@@ -60,7 +60,7 @@ public class SkinGeometrySetV2 extends SkinGeometrySet<SkinGeometry> {
         }
 
         @Override
-        public ISkinGeometryType getType() {
+        public SkinGeometryType getType() {
             return type;
         }
 
@@ -85,10 +85,10 @@ public class SkinGeometrySetV2 extends SkinGeometrySet<SkinGeometry> {
 
     public static class Mesh extends SkinMesh {
 
-        private final ISkinGeometryType type;
+        private final SkinGeometryType type;
         private final List<SkinMeshFace> faces;
 
-        public Mesh(ISkinGeometryType type, OpenTransform3f transform, SkinTexturePos texturePos, List<SkinMeshFace> faces) {
+        public Mesh(SkinGeometryType type, OpenTransform3f transform, SkinTexturePos texturePos, List<SkinMeshFace> faces) {
             this.type = type;
             this.transform = transform;
             this.texturePos = texturePos;
@@ -96,7 +96,7 @@ public class SkinGeometrySetV2 extends SkinGeometrySet<SkinGeometry> {
         }
 
         @Override
-        public ISkinGeometryType getType() {
+        public SkinGeometryType getType() {
             return type;
         }
 

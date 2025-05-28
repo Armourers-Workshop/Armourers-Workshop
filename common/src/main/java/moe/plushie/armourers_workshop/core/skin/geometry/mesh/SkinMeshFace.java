@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.geometry.mesh;
 
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryFace;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryVertex;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTexturePos;
 
@@ -10,10 +10,10 @@ import java.util.List;
 
 public class SkinMeshFace extends SkinGeometryFace {
 
-    protected ISkinGeometryType type;
+    protected SkinGeometryType type;
     protected List<SkinGeometryVertex> vertices;
 
-    public SkinMeshFace(int id, ISkinGeometryType type, OpenTransform3f transform, SkinTexturePos texturePos, List<SkinGeometryVertex> vertices) {
+    public SkinMeshFace(int id, SkinGeometryType type, OpenTransform3f transform, SkinTexturePos texturePos, List<SkinGeometryVertex> vertices) {
         this.id = id;
         this.type = type;
         this.transform = transform;
@@ -22,7 +22,7 @@ public class SkinMeshFace extends SkinGeometryFace {
     }
 
     @Override
-    public ISkinGeometryType getType() {
+    public SkinGeometryType getType() {
         return type;
     }
 

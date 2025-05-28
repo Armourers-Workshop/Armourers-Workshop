@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop;
 
 import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
-import moe.plushie.armourers_workshop.core.data.EntityActions;
+import moe.plushie.armourers_workshop.core.data.action.EntityActions;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;

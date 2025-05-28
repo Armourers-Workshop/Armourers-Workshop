@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.serializer;
 
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinDyeType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
@@ -40,7 +40,7 @@ public class SkinUsedCounter {
         }
     }
 
-    public void addGeometryType(ISkinGeometryType geometryType) {
+    public void addGeometryType(SkinGeometryType geometryType) {
         geometryTotal += 1;
         geometryTotals[geometryType.getId()] += 1;
     }
@@ -78,7 +78,7 @@ public class SkinUsedCounter {
         return markerTotal;
     }
 
-    public int getGeometryTotal(ISkinGeometryType geometryType) {
+    public int getGeometryTotal(SkinGeometryType geometryType) {
         return geometryTotals[geometryType.getId()];
     }
 

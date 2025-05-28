@@ -31,14 +31,14 @@ public class EntityDataStorage {
         protected final LazyOptional<SkinWardrobe> wardrobe;
         protected final LazyOptional<SkinWardrobeJS> wardrobeJS;
         protected final LazyOptional<EntityRenderData> renderData;
-        protected final LazyOptional<EntityActionSet> actionSet;
+        protected final LazyOptional<EntityAnimationState> animationState;
         protected final LazyOptional<EntityVariableStorageImpl> variableStorage;
 
         public EntityImpl(Entity entity) {
             this.wardrobe = LazyOptional.of(() -> ModCapabilities.ENTITY_WARDROBE.get().get(entity));
             this.wardrobeJS = LazyOptional.of(() -> wardrobe.resolve().map(SkinWardrobeJS::new));
             this.renderData = LazyOptional.of(() -> EnvironmentExecutor.callOn(EnvironmentType.CLIENT, () -> () -> new EntityRenderData(entity)));
-            this.actionSet = LazyOptional.ofNullable(EntityActionSet::new);
+            this.animationState = LazyOptional.ofNullable(EntityAnimationState::new);
             this.variableStorage = LazyOptional.ofNullable(EntityVariableStorageImpl::new);
         }
 
@@ -50,13 +50,13 @@ public class EntityDataStorage {
             return wardrobeJS.resolve();
         }
 
+        public Optional<EntityAnimationState> getAnimationState() {
+            return animationState.resolve();
+        }
+
         @Environment(EnvType.CLIENT)
         public Optional<EntityRenderData> getRenderData() {
             return renderData.resolve();
-        }
-
-        public Optional<EntityActionSet> getActionSet() {
-            return actionSet.resolve();
         }
 
         public Optional<EntityVariableStorageImpl> getVariableStorage() {
@@ -67,11 +67,17 @@ public class EntityDataStorage {
     public static class BlockEntityImpl {
 
         protected final LazyOptional<BlockEntityRenderData> renderData;
+        protected final LazyOptional<BlockEntityAnimationState> animationState;
         protected final LazyOptional<EntityVariableStorageImpl> variableStorage;
 
         public BlockEntityImpl(BlockEntity entity) {
             this.renderData = LazyOptional.of(() -> EnvironmentExecutor.callOn(EnvironmentType.CLIENT, () -> () -> new BlockEntityRenderData(entity)));
+            this.animationState = LazyOptional.ofNullable(BlockEntityAnimationState::new);
             this.variableStorage = LazyOptional.ofNullable(EntityVariableStorageImpl::new);
+        }
+
+        public Optional<BlockEntityAnimationState> getAnimationState() {
+            return animationState.resolve();
         }
 
         @Environment(EnvType.CLIENT)

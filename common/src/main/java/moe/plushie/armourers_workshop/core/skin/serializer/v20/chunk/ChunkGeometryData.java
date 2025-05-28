@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk;
 
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometrySet;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.geometry.ChunkGeometrySerializer;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.geometry.ChunkGeometrySerializers;
@@ -21,7 +21,7 @@ public class ChunkGeometryData implements ChunkVariable {
     private final LinkedHashMap<Integer, ChunkGeometrySection> sections = new LinkedHashMap<>();
     private final IdentityHashMap<SkinGeometrySet<?>, Collection<ChunkGeometrySelector>> pending = new IdentityHashMap<>();
 
-    private final LinkedHashMap<ISkinGeometryType, ChunkGeometrySerializer.Encoder<?>> encoders = new LinkedHashMap<>();
+    private final LinkedHashMap<SkinGeometryType, ChunkGeometrySerializer.Encoder<?>> encoders = new LinkedHashMap<>();
 
     public ChunkGeometryData(int id, ChunkPaletteData palette) {
         this.id = id;
@@ -167,7 +167,7 @@ public class ChunkGeometryData implements ChunkVariable {
         return _key(section.getGeometryType(), section.getGeometryOptions());
     }
 
-    private Integer _key(ISkinGeometryType geometryType, int options) {
+    private Integer _key(SkinGeometryType geometryType, int options) {
         return geometryType.getId() << 24 | options;
     }
 
@@ -182,13 +182,13 @@ public class ChunkGeometryData implements ChunkVariable {
         return null;
     }
 
-    private ChunkGeometrySection.Mutable _mutableSectionAt(ISkinGeometryType geometryType, int options, ChunkContext context) {
+    private ChunkGeometrySection.Mutable _mutableSectionAt(SkinGeometryType geometryType, int options, ChunkContext context) {
         var key = _key(geometryType, options);
         var section = sections.computeIfAbsent(key, it -> new ChunkGeometrySection.Mutable(options, geometryType, context));
         return (ChunkGeometrySection.Mutable) section;
     }
 
-    private ChunkGeometrySerializer.Encoder<?> _encoderByType(ISkinGeometryType geometryType) {
+    private ChunkGeometrySerializer.Encoder<?> _encoderByType(SkinGeometryType geometryType) {
         return encoders.computeIfAbsent(geometryType, ChunkGeometrySerializers::createEncoder);
     }
 }

@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.v20.geometry.impl;
 
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector2f;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryVertex;
 import moe.plushie.armourers_workshop.core.skin.geometry.mesh.SkinMesh;
 import moe.plushie.armourers_workshop.core.skin.geometry.mesh.SkinMeshFace;
@@ -21,23 +21,23 @@ import java.util.List;
 public class ChunkGeometrySerializerV3 extends ChunkGeometrySerializer {
 
     @Override
-    public int stride(ISkinGeometryType geometryType, int options, ChunkPaletteData palette) {
+    public int stride(SkinGeometryType geometryType, int options, ChunkPaletteData palette) {
         return Encoder.HEADER_SIZE + options; // header + bytes
     }
 
     @Override
-    public ChunkGeometrySerializer.Encoder<?> encoder(ISkinGeometryType geometryType) {
+    public ChunkGeometrySerializer.Encoder<?> encoder(SkinGeometryType geometryType) {
         return new Encoder();
     }
 
     @Override
-    public ChunkGeometrySerializer.Decoder<?> decoder(ISkinGeometryType geometryType, ChunkGeometrySlice slice) {
+    public ChunkGeometrySerializer.Decoder<?> decoder(SkinGeometryType geometryType, ChunkGeometrySlice slice) {
         return new Decoder(geometryType, slice);
     }
 
     protected static class Decoder extends SkinMesh implements ChunkGeometrySerializer.Decoder<SkinMesh> {
 
-        private final ISkinGeometryType type;
+        private final SkinGeometryType type;
 
         private final ChunkGeometrySlice slice;
         private final ChunkPaletteData palette;
@@ -47,7 +47,7 @@ public class ChunkGeometrySerializerV3 extends ChunkGeometrySerializer {
 
         private SkinTextureData textureProvider;
 
-        public Decoder(ISkinGeometryType type, ChunkGeometrySlice slice) {
+        public Decoder(SkinGeometryType type, ChunkGeometrySlice slice) {
             this.type = type;
             this.palette = slice.getPalette();
             this.slice = slice;
@@ -63,7 +63,7 @@ public class ChunkGeometrySerializerV3 extends ChunkGeometrySerializer {
         }
 
         @Override
-        public ISkinGeometryType getType() {
+        public SkinGeometryType getType() {
             return type;
         }
 

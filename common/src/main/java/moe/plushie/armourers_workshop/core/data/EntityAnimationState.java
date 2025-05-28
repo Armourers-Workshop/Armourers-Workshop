@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.core.data;
 
 
+import moe.plushie.armourers_workshop.core.data.action.EntityAction;
+import moe.plushie.armourers_workshop.core.data.action.EntityActionSet;
 import moe.plushie.armourers_workshop.core.skin.part.wings.WingPartTransform;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,22 +12,15 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.vehicle.Boat;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.LinkedHashMap;
-
-public class EntityActionSet {
-
-    private final BitSet flags = new BitSet(EntityAction.values().length);
+public class EntityAnimationState extends EntityActionSet {
 
     private Entity transitingVehicle = null;
     private TransitingMode transitingMode = null;
 
     @Nullable
-    public static EntityActionSet of(@Nullable Entity entity) {
+    public static EntityAnimationState of(@Nullable Entity entity) {
         if (entity != null) {
-            return EntityDataStorage.of(entity).getActionSet().orElse(null);
+            return EntityDataStorage.of(entity).getAnimationState().orElse(null);
         }
         return null;
     }
@@ -121,19 +116,6 @@ public class EntityActionSet {
         set(EntityAction.JUMP, !onGround);
     }
 
-    public void set(EntityAction action, boolean value) {
-        if (value) {
-            flags.set(action.ordinal());
-        }
-    }
-
-    public boolean contains(EntityAction action) {
-        if (action == EntityAction.IDLE) {
-            return flags.isEmpty();
-        }
-        return flags.get(action.ordinal());
-    }
-
     private boolean isFlying(LivingEntity entity) {
         return WingPartTransform.isFlying(entity);
     }
@@ -148,47 +130,6 @@ public class EntityActionSet {
 
     private boolean isHorse(Entity entity) {
         return entity instanceof AbstractHorse;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof EntityActionSet that)) return false;
-        return flags.equals(that.flags);
-    }
-
-    @Override
-    public int hashCode() {
-        return flags.hashCode();
-    }
-
-    public EntityActionSet copy() {
-        var result = new EntityActionSet();
-        result.flags.or(flags);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        var prefix = "";
-        var lists = new LinkedHashMap<String, ArrayList<String>>();
-        var results = new StringBuilder();
-        for (var flag : EntityAction.values()) {
-            if (contains(flag)) {
-                var parts = flag.name().toLowerCase().split("_");
-                var sp = lists.computeIfAbsent(parts[0], k -> new ArrayList<>());
-                sp.addAll(Arrays.asList(parts).subList(1, parts.length));
-            }
-        }
-        for (var entry : lists.entrySet()) {
-            results.append(prefix);
-            results.append(entry.getKey());
-            prefix = "; ";
-            if (!entry.getValue().isEmpty()) {
-                results.append(entry.getValue());
-            }
-        }
-        return results.toString();
     }
 
     public enum TransitingMode {

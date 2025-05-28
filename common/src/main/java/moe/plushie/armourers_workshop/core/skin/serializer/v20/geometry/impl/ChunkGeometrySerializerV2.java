@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.v20.geometry.impl;
 
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector2f;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.cube.SkinCube;
 import moe.plushie.armourers_workshop.core.skin.geometry.cube.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOConsumer2;
@@ -26,18 +26,18 @@ import java.util.LinkedHashMap;
 public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
 
     @Override
-    public int stride(ISkinGeometryType geometryType, int options, ChunkPaletteData palette) {
+    public int stride(SkinGeometryType geometryType, int options, ChunkPaletteData palette) {
         int faceCount = options & 0x0F;
         return Decoder.calcStride(palette.getTextureIndexBytes(), faceCount);
     }
 
     @Override
-    public ChunkGeometrySerializer.Encoder<?> encoder(ISkinGeometryType geometryType) {
+    public ChunkGeometrySerializer.Encoder<?> encoder(SkinGeometryType geometryType) {
         return new Encoder();
     }
 
     @Override
-    public ChunkGeometrySerializer.Decoder<?> decoder(ISkinGeometryType geometryType, ChunkGeometrySlice slice) {
+    public ChunkGeometrySerializer.Decoder<?> decoder(SkinGeometryType geometryType, ChunkGeometrySlice slice) {
         return new Decoder(geometryType, slice);
     }
 
@@ -45,7 +45,7 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
 
         private final int faceCount;
 
-        private final ISkinGeometryType type;
+        private final SkinGeometryType type;
 
         private final ChunkGeometrySlice slice;
         private final ChunkPaletteData palette;
@@ -57,7 +57,7 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
 
         private OpenTransform3f transform = OpenTransform3f.IDENTITY;
 
-        public Decoder(ISkinGeometryType type, ChunkGeometrySlice slice) {
+        public Decoder(SkinGeometryType type, ChunkGeometrySlice slice) {
             this.type = type;
             this.palette = slice.getPalette();
             this.slice = slice;
@@ -75,7 +75,7 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
         }
 
         @Override
-        public ISkinGeometryType getType() {
+        public SkinGeometryType getType() {
             return type;
         }
 

@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.data;
+package moe.plushie.armourers_workshop.core.data.action;
 
 public enum EntityAction {
 

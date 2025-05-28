@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin.geometry.cube;
 
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector2f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryFace;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryVertex;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
@@ -19,13 +19,13 @@ public class SkinCubeFace extends SkinGeometryFace {
 
     public final int alpha;
 
-    private final ISkinGeometryType type;
+    private final SkinGeometryType type;
     private final OpenDirection direction;
     private final SkinPaintColor paintColor;
 
     private final OpenRectangle3f boundingBox;
 
-    public SkinCubeFace(int id, ISkinGeometryType type, OpenTransform3f transform, SkinTexturePos texturePos, OpenRectangle3f boundingBox, OpenDirection direction, SkinPaintColor color, int alpha) {
+    public SkinCubeFace(int id, SkinGeometryType type, OpenTransform3f transform, SkinTexturePos texturePos, OpenRectangle3f boundingBox, OpenDirection direction, SkinPaintColor color, int alpha) {
         this.id = id;
         this.type = type;
         this.transform = transform;
@@ -70,7 +70,7 @@ public class SkinCubeFace extends SkinGeometryFace {
     }
 
     @Override
-    public ISkinGeometryType getType() {
+    public SkinGeometryType getType() {
         return type;
     }
 

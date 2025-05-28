@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.skin.geometry.cube;
 
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryFace;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometrySet;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -236,7 +236,7 @@ public class SkinCubeFaceCuller {
             this.faces.add(face);
         }
 
-        public void addLog(ISkinGeometryType geometryType) {
+        public void addLog(SkinGeometryType geometryType) {
             this.usedCounter.addGeometryType(geometryType);
         }
 

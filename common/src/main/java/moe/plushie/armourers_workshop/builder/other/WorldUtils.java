@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.builder.other;
 
 import moe.plushie.armourers_workshop.api.common.IPaintable;
 import moe.plushie.armourers_workshop.api.core.math.IVector3i;
-import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractDirection;
@@ -15,6 +14,7 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.skin.geometry.collection.SkinGeometrySetV1;
 import moe.plushie.armourers_workshop.core.skin.geometry.cube.SkinCube;
@@ -243,7 +243,7 @@ public final class WorldUtils {
         }
     }
 
-    private static void loadSkinBlockIntoWorld(CubeChangesCollector collector, CubeTransform transform, BlockPos origin, ISkinGeometryType geometryType, IVector3i cubePos, OptionalDirection markerFacing, SkinCube cube, boolean mirror) {
+    private static void loadSkinBlockIntoWorld(CubeChangesCollector collector, CubeTransform transform, BlockPos origin, SkinGeometryType geometryType, IVector3i cubePos, OptionalDirection markerFacing, SkinCube cube, boolean mirror) {
         var shiftX = -cubePos.x() - 1;
         var shiftY = cubePos.y() + 1;
         var shiftZ = cubePos.z();

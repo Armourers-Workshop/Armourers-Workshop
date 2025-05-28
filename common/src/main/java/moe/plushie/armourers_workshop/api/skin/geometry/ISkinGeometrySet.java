@@ -28,7 +28,7 @@ public interface ISkinGeometrySet<T extends ISkinGeometry> extends Iterable<T> {
      * Gets the contains geometry types.
      */
     @Nullable
-    Collection<ISkinGeometryType> getSupportedTypes();
+    Collection<? extends ISkinGeometryType> getSupportedTypes();
 
 
     @NotNull
