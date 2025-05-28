@@ -34,7 +34,7 @@ public class ColorLogicProvider extends RenderType {
                 return switch (state) {
                     case OR_REVERSE -> builder.setTexturingState(OR_REVERSE_COLOR_LOGIC);
                     default -> builder.setTexturingState(DEFAULT_TEXTURING);
-                }
+                };
             }
         }
     }
