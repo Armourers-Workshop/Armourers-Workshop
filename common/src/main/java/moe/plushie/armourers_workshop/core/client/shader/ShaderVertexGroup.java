@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.core.client.texture.TextureAnimationController;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.RenderType;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -14,16 +14,16 @@ public class ShaderVertexGroup {
 
     public int maxVertexCount;
 
-    private final RenderType renderType;
+    private final IRenderType renderType;
     private final TextureAnimationController animationController;
     private final ArrayList<ShaderVertexObject> objects = new ArrayList<>();
 
-    public ShaderVertexGroup(RenderType renderType) {
+    public ShaderVertexGroup(IRenderType renderType) {
         this.renderType = renderType;
         this.animationController = TextureAnimationController.of(renderType);
     }
 
-    public RenderType getRenderType() {
+    public IRenderType getRenderType() {
         return renderType;
     }
 

@@ -1,36 +1,25 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import net.minecraft.client.renderer.RenderType;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 
 public class BakedRenderInfo {
 
-    private boolean hasSoild = false;
-    private boolean hasGlowing = false;
+    private boolean hasSolid = false;
     private boolean hasTranslucent = false;
 
-    public void add(RenderType renderType) {
-        // ii
-        if (SkinRenderType.isTranslucent(renderType)) {
+    public void add(IRenderType renderType) {
+        if (renderType.isTranslucent()) {
             hasTranslucent = true;
         } else {
-            hasSoild = true;
+            hasSolid = true;
         }
-        if (!hasGlowing && SkinRenderType.isGrowing(renderType)) {
-            hasGlowing = true;
-        }
-    }
-
-    public boolean hasGlowing() {
-        return hasGlowing;
     }
 
     public boolean hasSolid() {
-        return hasSoild;
+        return hasSolid;
     }
 
     public boolean hasTranslucent() {
         return hasTranslucent;
     }
-
 }

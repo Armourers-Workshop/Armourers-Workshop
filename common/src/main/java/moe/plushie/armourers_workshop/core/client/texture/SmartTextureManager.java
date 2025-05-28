@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.texture;
 
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractSimpleTexture;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
@@ -8,7 +9,6 @@ import moe.plushie.armourers_workshop.init.ModLog;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureManager;
 
 import java.util.IdentityHashMap;
@@ -33,21 +33,21 @@ public class SmartTextureManager {
         textures.clear();
     }
 
-    public void open(RenderType renderType) {
+    public void open(IRenderType renderType) {
         var texture = SmartTexture.of(renderType);
         if (texture != null) {
             texture.retain();
         }
     }
 
-    public void close(RenderType renderType) {
+    public void close(IRenderType renderType) {
         var texture = SmartTexture.of(renderType);
         if (texture != null) {
             texture.release();
         }
     }
 
-    public synchronized RenderType register(SkinTextureData provider, ISkinGeometryType type) {
+    public synchronized IRenderType register(SkinTextureData provider, ISkinGeometryType type) {
         var texture = textures.get(provider);
         if (texture == null) {
             texture = new SmartTexture(provider);

@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
-import net.minecraft.client.renderer.RenderType;
 import org.jetbrains.annotations.NotNull;
 
 public interface ConcurrentRenderingContext {
@@ -29,7 +29,7 @@ public interface ConcurrentRenderingContext {
 
     IBufferSource getBufferSource();
 
-    default IVertexConsumer getBuffer(RenderType renderType) {
+    default IVertexConsumer getBuffer(IRenderType renderType) {
         return getBufferSource().getBuffer(renderType);
     }
 

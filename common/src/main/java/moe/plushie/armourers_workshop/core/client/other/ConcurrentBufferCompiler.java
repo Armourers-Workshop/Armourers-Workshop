@@ -1,7 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import com.mojang.blaze3d.vertex.VertexFormat;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
+import moe.plushie.armourers_workshop.api.client.IVertexFormat;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractVertexArrayObject;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
@@ -18,7 +19,6 @@ import moe.plushie.armourers_workshop.core.utils.Executors;
 import moe.plushie.armourers_workshop.core.utils.ReferenceCounted;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.jetbrains.annotations.Nullable;
 
@@ -93,7 +93,7 @@ public class ConcurrentBufferCompiler {
         for (var task : pendingTasks) {
             var part = task.part;
             var scheme = task.scheme;
-            var usingTypes = new HashSet<RenderType>();
+            var usingTypes = new HashSet<IRenderType>();
             var mergedTasks = new ArrayList<Pass>();
             part.getQuads().forEach((renderType, quads) -> {
                 var builder = createBufferBuilder(renderType, quads.size(), task);
@@ -165,7 +165,7 @@ public class ConcurrentBufferCompiler {
         return options;
     }
 
-    private BufferBuilder createBufferBuilder(RenderType renderType, int total, Group task) {
+    private BufferBuilder createBufferBuilder(IRenderType renderType, int total, Group task) {
         // outline requires a special builder.
         if (task.isOutline() && renderType.outline().isPresent()) {
             return new OutlineBufferBuilder(renderType.outline().get(), total);
@@ -245,13 +245,13 @@ public class ConcurrentBufferCompiler {
 
         final float polygonOffset;
         final SkinPartType partType;
-        final RenderType renderType;
+        final IRenderType renderType;
 
         int vertexCount;
         int vertexOffset;
 
         IRenderedBuffer bufferBuilder;
-        VertexFormat format;
+        IVertexFormat format;
 
         VertexArrayObject arrayObject;
         VertexBufferObject bufferObject;
@@ -259,15 +259,15 @@ public class ConcurrentBufferCompiler {
 
         boolean isCompiled = false;
 
-        Pass(RenderType renderType, IRenderedBuffer bufferBuilder, float polygonOffset, SkinPartType partType, boolean isOutline) {
+        Pass(IRenderType renderType, IRenderedBuffer bufferBuilder, float polygonOffset, SkinPartType partType, boolean isOutline) {
             this.partType = partType;
             this.renderType = renderType;
             this.bufferBuilder = bufferBuilder;
             this.polygonOffset = polygonOffset;
-            this.isGrowing = SkinRenderType.isGrowing(renderType);
-            this.isTranslucent = SkinRenderType.isTranslucent(renderType);
+            this.isGrowing = renderType.isGrowing();
+            this.isTranslucent = renderType.isTranslucent();
             this.isOutline = isOutline;
-            this.isUsingIndex = SkinRenderType.isUsingIndex(renderType);
+            this.isUsingIndex = renderType.mode() == IVertexFormat.Mode.QUADS;
         }
 
         public void upload(VertexBufferObject bufferObject) {

@@ -2,10 +2,10 @@ package moe.plushie.armourers_workshop.compatibility.client;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.core.data.cache.CacheQueue;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 
 import java.time.Duration;
 import java.util.function.Supplier;
@@ -63,8 +63,8 @@ public class AbstractBufferSource implements IBufferSource {
     }
 
     @Override
-    public IVertexConsumer getBuffer(RenderType renderType) {
-        var builder = bufferSource().getBuffer(renderType);
+    public IVertexConsumer getBuffer(IRenderType renderType) {
+        var builder = bufferSource().getBuffer(renderType.get());
         return CACHED_BUFFER_BUILDERS.computeIfAbsent(builder, AbstractVertexConsumer::of);
     }
 

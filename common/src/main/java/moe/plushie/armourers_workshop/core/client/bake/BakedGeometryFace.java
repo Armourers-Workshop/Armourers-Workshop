@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.core.math.ITransform3f;
@@ -24,7 +25,6 @@ import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.RenderType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,8 +35,8 @@ public class BakedGeometryFace {
 
     private static final SkinPaintColor RAINBOW_TARGET = SkinPaintColor.of(0xff7f7f7f, SkinPaintTypes.RAINBOW);
 
-    private final RenderType renderType;
-    private final Collection<RenderType> renderTypeVariants;
+    private final IRenderType renderType;
+    private final Collection<IRenderType> renderTypeVariants;
 
     private final float priority;
     private final ITransform3f transform;
@@ -203,7 +203,7 @@ public class BakedGeometryFace {
         return null;
     }
 
-    private RenderType resolveRenderType(SkinGeometryFace face) {
+    private IRenderType resolveRenderType(SkinGeometryFace face) {
         var texturePos = face.getTexturePos();
         if (texturePos != null && texturePos.getProvider() != null) {
             return SmartTextureManager.getInstance().register(texturePos.getProvider(), face.getType());
@@ -211,13 +211,13 @@ public class BakedGeometryFace {
         return SkinRenderType.by(face.getType());
     }
 
-    private Collection<RenderType> resolveRenderTypeVariants(SkinGeometryFace face) {
+    private Collection<IRenderType> resolveRenderTypeVariants(SkinGeometryFace face) {
         var texture = face.getTexturePos();
         if (texture == null || texture.getProvider() == null) {
             return null;
         }
         var parent = texture.getProvider();
-        var renderTypes = new ArrayList<RenderType>();
+        var renderTypes = new ArrayList<IRenderType>();
         for (var variant : parent.getVariants()) {
             var properties = variant.getProperties();
             if (properties.isNormal() || properties.isSpecular()) {
@@ -232,11 +232,11 @@ public class BakedGeometryFace {
         return priority;
     }
 
-    public RenderType getRenderType() {
+    public IRenderType getRenderType() {
         return renderType;
     }
 
-    public Collection<RenderType> getRenderTypeVariants() {
+    public Collection<IRenderType> getRenderTypeVariants() {
         return renderTypeVariants;
     }
 

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.cl
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.client.IRenderTypeBuilder;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.renderer.RenderType;
 
@@ -30,16 +30,12 @@ public class ColorLogicProvider extends RenderType {
         @Extension
         public static class CompositeStateBuilder {
 
-            public static RenderType.CompositeState.CompositeStateBuilder setColorLogicState(@This RenderType.CompositeState.CompositeStateBuilder builder, IRenderTypeBuilder.ColorLogic state) {
-                switch (state) {
-                    case OR_REVERSE:
-                        return builder.setTexturingState(OR_REVERSE_COLOR_LOGIC);
-
-                    default:
-                        return builder.setTexturingState(DEFAULT_TEXTURING);
+            public static RenderType.CompositeState.CompositeStateBuilder setColorLogicState(@This RenderType.CompositeState.CompositeStateBuilder builder, IRenderType.ColorLogic state) {
+                return switch (state) {
+                    case OR_REVERSE -> builder.setTexturingState(OR_REVERSE_COLOR_LOGIC);
+                    default -> builder.setTexturingState(DEFAULT_TEXTURING);
                 }
             }
-
         }
     }
 }

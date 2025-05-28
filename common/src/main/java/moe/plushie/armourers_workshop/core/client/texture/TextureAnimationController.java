@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.core.client.texture;
 
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureAnimation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.RenderType;
 
 @Environment(EnvType.CLIENT)
 public class TextureAnimationController {
@@ -31,7 +31,7 @@ public class TextureAnimationController {
         this.frameCount = frames.length;
     }
 
-    public static TextureAnimationController of(RenderType renderType) {
+    public static TextureAnimationController of(IRenderType renderType) {
         // is default?
         if (renderType == SkinRenderType.BLOCK_FACE_SOLID || renderType == SkinRenderType.BLOCK_FACE_LIGHTING || renderType == SkinRenderType.BLOCK_FACE_TRANSLUCENT || renderType == SkinRenderType.BLOCK_FACE_LIGHTING_TRANSLUCENT) {
             return DEFAULT;

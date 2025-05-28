@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.RenderType;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,7 +16,7 @@ public class ShaderVertexMerger {
     private int maxVertexCount = 0;
 
     private final ArrayList<ShaderVertexGroup> sortedGroups = new ArrayList<>();
-    private final HashMap<RenderType, ShaderVertexGroup> pending = new HashMap<>();
+    private final HashMap<IRenderType, ShaderVertexGroup> pending = new HashMap<>();
 
     public void add(ShaderVertexObject pass) {
         var group = pending.get(pass.getType());
@@ -63,7 +63,7 @@ public class ShaderVertexMerger {
         return maxVertexCount == 0;
     }
 
-    private ShaderVertexGroup addAndSort(RenderType type) {
+    private ShaderVertexGroup addAndSort(IRenderType type) {
         var group = new ShaderVertexGroup(type);
         sortedGroups.add(group);
         sortedGroups.sort(Comparator.comparing(this::getRenderOrder));

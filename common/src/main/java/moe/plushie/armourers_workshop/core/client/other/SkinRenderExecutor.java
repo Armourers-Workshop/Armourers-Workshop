@@ -1,23 +1,23 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
-import net.minecraft.client.renderer.RenderType;
 
 public class SkinRenderExecutor {
 
     private static Runnable pendingTask;
 
-    public static void execute(RenderType renderType, Runnable action) {
+    public static void execute(IRenderType renderType, Runnable action) {
         pendingTask = () -> callout(action);
         callout(() -> {
             // we'll use vanilla's rendering system to immediately draw a transparent point,
             // and then we will get this call in `GlStateManager._drawElements`.
-            var buffers = AbstractBufferSource.tesselator();
-            var buffer = buffers.getBuffer(renderType);
+            var tesselator = AbstractBufferSource.tesselator();
+            var buffer = tesselator.getBuffer(renderType);
             for (var i = 0; i < 4; ++i) {
                 buffer.vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             }
-            buffers.endBatch();
+            tesselator.endBatch();
         });
         pendingTask = null;
     }
@@ -26,7 +26,7 @@ public class SkinRenderExecutor {
         if (pendingTask == null) {
             return;
         }
-        Runnable action = pendingTask;
+        var action = pendingTask;
         pendingTask = null;
         action.run();
     }

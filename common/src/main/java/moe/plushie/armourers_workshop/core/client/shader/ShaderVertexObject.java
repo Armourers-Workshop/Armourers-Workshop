@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
-import com.mojang.blaze3d.vertex.VertexFormat;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
+import moe.plushie.armourers_workshop.api.client.IVertexFormat;
 import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexBufferObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.RenderType;
 
 @Environment(EnvType.CLIENT)
 public interface ShaderVertexObject {
@@ -32,9 +32,9 @@ public interface ShaderVertexObject {
 
     OpenPoseStack getPoseStack();
 
-    VertexFormat getFormat();
+    IVertexFormat getFormat();
 
-    RenderType getType();
+    IRenderType getType();
 
     boolean isGrowing();
 

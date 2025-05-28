@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.api.registry;
 
-import net.minecraft.client.renderer.RenderType;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -53,7 +53,7 @@ public interface IBlockBuilder<T extends Block> extends IRegistryBuilder<T> {
 
     IBlockBuilder<T> requiresCorrectToolForDrops();
 
-    IBlockBuilder<T> bind(Supplier<Supplier<RenderType>> provider);
+    IBlockBuilder<T> bind(Supplier<Supplier<IRenderType>> provider);
 
     default IBlockBuilder<T> lightLevel(int level) {
         return lightLevel(state -> level);

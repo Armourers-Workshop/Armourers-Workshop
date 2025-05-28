@@ -14,10 +14,10 @@ import moe.plushie.armourers_workshop.core.block.DyeTableBlock;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.block.SkinningTableBlock;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderSheets;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import moe.plushie.armourers_workshop.library.block.GlobalSkinLibraryBlock;
 import moe.plushie.armourers_workshop.library.block.SkinLibraryBlock;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -39,7 +39,7 @@ public class ModBlocks {
     public static final IRegistryHolder<Block> SKIN_LIBRARY_GLOBAL = half(GlobalSkinLibraryBlock::new).build("skin-library-global");
 
     public static final IRegistryHolder<Block> OUTFIT_MAKER = half(OutfitMakerBlock::new).build("outfit-maker");
-    public static final IRegistryHolder<Block> COLOR_MIXER = normal(ColorMixerBlock::new).bind(() -> RenderType::cutout).build("colour-mixer");
+    public static final IRegistryHolder<Block> COLOR_MIXER = normal(ColorMixerBlock::new).bind(() -> SkinRenderSheets::cutoutSheet).build("colour-mixer");
     public static final IRegistryHolder<Block> ARMOURER = normal(ArmourerBlock::new).build("armourer");
     public static final IRegistryHolder<Block> ADVANCED_SKIN_BUILDER = half(AdvancedBuilderBlock::new).build("advanced-skin-builder");
 
@@ -63,11 +63,11 @@ public class ModBlocks {
     }
 
     private static IBlockBuilder<Block> half(Function<BlockBehaviour.Properties, Block> supplier) {
-        return normal(supplier).noOcclusion().bind(() -> RenderType::cutout);
+        return normal(supplier).noOcclusion().bind(() -> SkinRenderSheets::cutoutSheet);
     }
 
     private static IBlockBuilder<Block> glass(Function<BlockBehaviour.Properties, Block> supplier) {
-        return create(supplier, AbstractBlockMaterial.GLASS, AbstractBlockMaterialColor.NONE).noOcclusion().bind(() -> RenderType::translucent);
+        return create(supplier, AbstractBlockMaterial.GLASS, AbstractBlockMaterialColor.NONE).noOcclusion().bind(() -> SkinRenderSheets::translucentSheet);
     }
 
     public static void init() {

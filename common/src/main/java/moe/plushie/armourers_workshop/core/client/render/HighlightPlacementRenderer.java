@@ -70,7 +70,7 @@ public class HighlightPlacementRenderer {
         if (model != null) {
             var f = target.getScale() * 0.9375f; // base scale from player model
             var buffers1 = AbstractBufferSource.unwrap(bufferSource);
-            var builder = buffers1.getBuffer(SkinRenderType.HIGHLIGHTED_ENTITY_LINES);
+            var builder = buffers1.getBuffer(SkinRenderType.HIGHLIGHTED_ENTITY_LINES.get());
             poseStack.pushPose();
             poseStack.scale(f, f, f);
             poseStack.scale(-1, -1, 1);

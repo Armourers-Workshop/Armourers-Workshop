@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import com.mojang.blaze3d.vertex.VertexFormat;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
+import moe.plushie.armourers_workshop.api.client.IVertexFormat;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.core.data.cache.ObjectPool;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.core.utils.ReferenceCounted;
-import net.minecraft.client.renderer.RenderType;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -126,7 +126,7 @@ public class ConcurrentRenderingPipeline {
         }
 
         @Override
-        public RenderType getType() {
+        public IRenderType getType() {
             return compiledTask.renderType;
         }
 
@@ -166,7 +166,7 @@ public class ConcurrentRenderingPipeline {
         }
 
         @Override
-        public VertexFormat getFormat() {
+        public IVertexFormat getFormat() {
             if (compiledTask.format != null) {
                 return compiledTask.format;
             }

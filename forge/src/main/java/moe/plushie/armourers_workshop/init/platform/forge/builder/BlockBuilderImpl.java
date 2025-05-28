@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.registry.IBlockBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
@@ -9,7 +10,6 @@ import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeRegistrie
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -152,10 +152,10 @@ public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
     }
 
     @Override
-    public IBlockBuilder<T> bind(Supplier<Supplier<RenderType>> provider) {
+    public IBlockBuilder<T> bind(Supplier<Supplier<IRenderType>> provider) {
         this.binder = () -> block -> {
             // here is safe call client registry.
-            ItemBlockRenderTypes.setRenderLayer(block.get(), provider.get().get());
+            ItemBlockRenderTypes.setRenderLayer(block.get(), provider.get().get().get());
         };
         return this;
     }

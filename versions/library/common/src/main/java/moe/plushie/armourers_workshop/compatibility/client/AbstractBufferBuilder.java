@@ -2,11 +2,11 @@ package moe.plushie.armourers_workshop.compatibility.client;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
-import net.minecraft.client.renderer.RenderType;
+import moe.plushie.armourers_workshop.api.client.IVertexFormat;
 
 import java.nio.ByteBuffer;
 
@@ -21,16 +21,18 @@ public class AbstractBufferBuilder extends AbstractVertexConsumer implements IBu
         this.buffers = new ByteBufferBuilder(size);
     }
 
-    public static void upload(RenderType renderType, AbstractBufferBuilder builder) {
+    public static void upload(IRenderType renderType, AbstractBufferBuilder builder) {
+        var renderType1 = renderType.get();
         var meshData = builder.bufferBuilder.build();
         if (meshData != null) {
-            renderType.draw(meshData);
+            renderType1.draw(meshData);
         }
     }
 
     @Override
-    public void begin(RenderType renderType) {
-        var builder = new BufferBuilder(buffers, renderType.mode(), renderType.format());
+    public void begin(IRenderType renderType) {
+        var renderType1 = renderType.get();
+        var builder = new BufferBuilder(buffers, renderType1.mode(), renderType1.format());
         parent = builder;
         bufferBuilder = builder;
     }
@@ -38,11 +40,12 @@ public class AbstractBufferBuilder extends AbstractVertexConsumer implements IBu
     @Override
     public IRenderedBuffer end() {
         var meshData = bufferBuilder.buildOrThrow();
+        var format = AbstractVertexFormat.of(meshData.drawState().format());
         return new IRenderedBuffer() {
 
             @Override
-            public VertexFormat format() {
-                return meshData.drawState().format();
+            public IVertexFormat format() {
+                return format;
             }
 
             @Override

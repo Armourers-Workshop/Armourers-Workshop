@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
@@ -20,7 +21,6 @@ import moe.plushie.armourers_workshop.core.utils.TextureUtils;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 
 import java.util.HashMap;
@@ -148,7 +148,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
 
     public static class PlayerTextureOverride implements IBufferSource {
 
-        protected final HashMap<RenderType, Supplier<RenderType>> overrides = new HashMap<>();
+        protected final HashMap<IRenderType, Supplier<IRenderType>> overrides = new HashMap<>();
         protected IResourceLocation texture;
         protected IBufferSource bufferSource;
 
@@ -167,7 +167,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         }
 
         @Override
-        public IVertexConsumer getBuffer(RenderType renderType) {
+        public IVertexConsumer getBuffer(IRenderType renderType) {
             var overrideRenderType = overrides.get(renderType);
             if (overrideRenderType != null) {
                 renderType = overrideRenderType.get();

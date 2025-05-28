@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.core.math.ITransform;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
@@ -24,7 +25,6 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.RenderType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -39,7 +39,7 @@ import java.util.function.BiConsumer;
 public class BakedGeometryQuads {
 
     //private final HashMap<Direction, ArrayList<BakedCubeFace>> dirFaces = new HashMap<>();
-    private final HashMap<RenderType, CompressedList<BakedGeometryFace>> splitFaces = new HashMap<>();
+    private final HashMap<IRenderType, CompressedList<BakedGeometryFace>> splitFaces = new HashMap<>();
 
     private final OpenVoxelShape shape;
     private final ColorDescriptor colorInfo;
@@ -150,7 +150,7 @@ public class BakedGeometryQuads {
         return mergedQuads;
     }
 
-    public void forEach(BiConsumer<RenderType, CompressedList<BakedGeometryFace>> action) {
+    public void forEach(BiConsumer<IRenderType, CompressedList<BakedGeometryFace>> action) {
         splitFaces.forEach(action);
     }
 
@@ -193,7 +193,7 @@ public class BakedGeometryQuads {
 //        }));
 //    }
 
-    private void addSplitFace(RenderType renderType, BakedGeometryFace bakedFace) {
+    private void addSplitFace(IRenderType renderType, BakedGeometryFace bakedFace) {
         splitFaces.computeIfAbsent(renderType, CompressedList::new).add(bakedFace);
     }
 
@@ -211,11 +211,11 @@ public class BakedGeometryQuads {
 
     public static class CompressedList<T> {
 
-        private final RenderType renderType;
+        private final IRenderType renderType;
         private final ArrayList<T> values = new ArrayList<>();
         private final ArrayList<Pair<ITransform, List<T>>> transformedValues = new ArrayList<>();
 
-        public CompressedList(RenderType renderType) {
+        public CompressedList(IRenderType renderType) {
             this.renderType = renderType;
         }
 
@@ -252,7 +252,7 @@ public class BakedGeometryQuads {
             return total;
         }
 
-        public RenderType renderType() {
+        public IRenderType renderType() {
             return renderType;
         }
 

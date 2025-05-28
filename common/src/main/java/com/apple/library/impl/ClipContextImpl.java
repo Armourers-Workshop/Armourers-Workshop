@@ -3,8 +3,8 @@ package com.apple.library.impl;
 import com.apple.library.coregraphics.CGRect;
 import com.google.common.base.Objects;
 import com.mojang.blaze3d.platform.Window;
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -153,9 +153,8 @@ public class ClipContextImpl {
             int readTargetId = GL30.glGetInteger(GL30.GL_READ_FRAMEBUFFER_BINDING);
             int drawTargetId = GL30.glGetInteger(GL30.GL_DRAW_FRAMEBUFFER_BINDING);
 
-//            var buffers = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-            IBufferSource buffers = null;
-            int mainTextureId = GL30.glGetFramebufferAttachmentParameteri(GL30.GL_READ_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL30.GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);
+            var buffers = AbstractBufferSource.tesselator();
+            var mainTextureId = GL30.glGetFramebufferAttachmentParameteri(GL30.GL_READ_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL30.GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);
 
             GL30.glDisable(GL30.GL_SCISSOR_TEST);
             GL30.glEnable(GL30.GL_STENCIL_TEST);

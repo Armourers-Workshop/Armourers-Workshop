@@ -4,8 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferBuilder;
+import moe.plushie.armourers_workshop.api.client.IVertexFormat;
 import moe.plushie.armourers_workshop.core.client.other.VertexBufferObject;
 import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import net.fabricmc.api.EnvType;
@@ -18,7 +19,7 @@ import org.lwjgl.opengl.GL11;
 @Environment(EnvType.CLIENT)
 public class AbstractLightBufferObject extends VertexBufferObject {
 
-    public static final RenderType TYPE = RenderType.create("", createDefaultFormat(), GL11.GL_QUADS, 256, false, false, RenderType.CompositeState.builder().createCompositeState(false));
+    public static final IRenderType TYPE = AbstractRenderType.of(RenderType.create("", createDefaultFormat(), GL11.GL_QUADS, 256, false, false, RenderType.CompositeState.builder().createCompositeState(false)));
     public static final int PAGE_SIZE = 4096;
     private static final SkinCache.LRU<Integer, AbstractLightBufferObject> SHARED_LIGHTS = new SkinCache.LRU<>();
     private final int light;
@@ -44,7 +45,7 @@ public class AbstractLightBufferObject extends VertexBufferObject {
             return;
         }
         int alignedCapacity = ((capacity / PAGE_SIZE) + 1) * PAGE_SIZE;
-       var builder = new AbstractBufferBuilder(alignedCapacity * getFormat().getVertexSize());
+        var builder = new AbstractBufferBuilder(alignedCapacity * format().vertexSize());
         builder.begin(TYPE);
         for (int i = 0; i < alignedCapacity; ++i) {
             builder.uv2(light).endVertex();
@@ -55,7 +56,7 @@ public class AbstractLightBufferObject extends VertexBufferObject {
         renderedBuffer.release();
     }
 
-    public VertexFormat getFormat() {
+    public IVertexFormat format() {
         return TYPE.format();
     }
 }

@@ -3,17 +3,16 @@ package moe.plushie.armourers_workshop.core.client.other;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferBuilder;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractRenderSheet;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractShader;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedRenderInfo;
+import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexMerger;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.RenderType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -26,12 +25,13 @@ public class SkinVertexBufferBuilder implements IBufferSource {
     protected final HashMap<BakedSkin, SkinRenderObjectBuilder> skinBufferBuilders = new HashMap<>();
     protected final HashMap<BakedSkin, SkinRenderObjectBuilder> startedSkinBufferBuilders = new HashMap<>();
 
-    protected final HashMap<RenderType, AbstractBufferBuilder> userBufferBuilders = new HashMap<>();
-    protected final HashMap<RenderType, AbstractBufferBuilder> startedUserBufferBuilders = new HashMap<>();
+    protected final HashMap<IRenderType, AbstractBufferBuilder> userBufferBuilders = new HashMap<>();
+    protected final HashMap<IRenderType, AbstractBufferBuilder> startedUserBufferBuilders = new HashMap<>();
 
-    protected final Pipeline pipeline = new Pipeline();
+    protected final Pipeline solidPipeline = new Pipeline();
     protected final Pipeline translucentPipeline = new Pipeline();
-    protected final Pipeline outlinePipeline = new Pipeline();
+    protected final Pipeline outlineSolidPipeline = new Pipeline();
+    protected final Pipeline outlineTranslucentPipeline = new Pipeline();
 
     public SkinVertexBufferBuilder() {
     }
@@ -45,30 +45,32 @@ public class SkinVertexBufferBuilder implements IBufferSource {
 
     public static SkinVertexBufferBuilder of(IBufferSource bufferSource) {
         var builder = getInstance();
-        attach(bufferSource, AbstractRenderSheet.solidBlockSheet(), builder::endBatch);
+        attach(bufferSource, SkinRenderSheets.solidBlockSheet(), builder::endBatch);
         if (bufferSource == AbstractBufferSource.outline()) {
-            attach(bufferSource, AbstractRenderSheet.outlineBlockSheet(), builder::endOutlineBatch);
+            attach(bufferSource, SkinRenderSheets.outlineSolidBlockSheet(), builder::endOutlineBatch);
         }
         return builder;
     }
 
     public static SkinVertexBufferBuilder of(IBufferSource bufferSource, BakedRenderInfo renderInfo) {
         var builder = getInstance();
-        if (renderInfo.hasSolid()) {
-            attach(bufferSource, AbstractRenderSheet.solidBlockSheet(), builder::endBatch);
-        }
-        if (renderInfo.hasTranslucent()) {
-            attach(bufferSource, AbstractRenderSheet.glintTranslucentSheet(), builder::endTranslucentBatch);
-        }
+        attach(bufferSource, SkinRenderSheets.solidBlockSheet(), builder::endBatch);
         if (bufferSource == AbstractBufferSource.outline()) {
-            attach(bufferSource, AbstractRenderSheet.outlineBlockSheet(), builder::endOutlineBatch);
+            attach(bufferSource, SkinRenderSheets.outlineSolidBlockSheet(), builder::endOutlineBatch);
+            if (renderInfo.hasTranslucent()) {
+                attach(bufferSource, SkinRenderSheets.outlineTranslucentBlockSheet(), builder::endOutlineTranslucentBatch);
+            }
+        } else {
+            if (renderInfo.hasTranslucent()) {
+                attach(bufferSource, SkinRenderSheets.glintTranslucentSheet(), builder::endTranslucentBatch);
+            }
         }
         return builder;
     }
 
-    private static void attach(IBufferSource bufferSource, RenderType renderType, Runnable action) {
+    private static void attach(IBufferSource bufferSource, IRenderType renderType, Runnable action) {
         var buffer = bufferSource.getBuffer(renderType);
-        if (renderType instanceof IRenderAttachable attachable) {
+        if (renderType.get() instanceof IRenderAttachable attachable) {
             attachable.attachRenderTask(buffer, action);
         }
     }
@@ -77,14 +79,15 @@ public class SkinVertexBufferBuilder implements IBufferSource {
         var builder = getInstance();
         builder.skinBufferBuilders.clear();
         builder.userBufferBuilders.clear();
-        builder.pipeline.clear();
+        builder.solidPipeline.clear();
         builder.translucentPipeline.clear();
-        builder.outlinePipeline.clear();
+        builder.outlineSolidPipeline.clear();
+        builder.outlineTranslucentPipeline.clear();
         ConcurrentBufferCompiler.clearAllCache();
     }
 
     @NotNull
-    public IBufferBuilder getBuffer(@NotNull RenderType renderType) {
+    public IBufferBuilder getBuffer(@NotNull IRenderType renderType) {
         var buffer = startedUserBufferBuilders.get(renderType);
         if (buffer != null) {
             return buffer;
@@ -113,7 +116,7 @@ public class SkinVertexBufferBuilder implements IBufferSource {
             }
             startedSkinBufferBuilders.clear();
         }
-        pipeline.end();
+        solidPipeline.end();
         if (!startedUserBufferBuilders.isEmpty()) {
             startedUserBufferBuilders.forEach(AbstractBufferBuilder::upload);
             startedUserBufferBuilders.clear();
@@ -121,22 +124,30 @@ public class SkinVertexBufferBuilder implements IBufferSource {
     }
 
     public void endTranslucentBatch() {
-        // follow the solid rendering task.
         translucentPipeline.end();
     }
 
     public void endOutlineBatch() {
-        // follow the solid rendering task.
-        outlinePipeline.end();
+        outlineSolidPipeline.end();
+    }
+
+    public void endOutlineTranslucentBatch() {
+        outlineTranslucentPipeline.end();
     }
 
     private void uploadPass(ShaderVertexObject pass) {
         if (pass.isOutline()) {
-            outlinePipeline.add(pass);
-        } else if (pass.isTranslucent()) {
-            translucentPipeline.add(pass);
+            if (pass.isTranslucent()) {
+                outlineTranslucentPipeline.add(pass);
+            } else {
+                outlineSolidPipeline.add(pass);
+            }
         } else {
-            pipeline.add(pass);
+            if (pass.isTranslucent()) {
+                translucentPipeline.add(pass);
+            } else {
+                solidPipeline.add(pass);
+            }
         }
     }
 

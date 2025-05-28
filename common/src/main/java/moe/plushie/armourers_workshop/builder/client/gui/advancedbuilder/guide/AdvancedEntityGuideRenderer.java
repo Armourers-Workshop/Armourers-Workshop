@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide;
 
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.armature.JointShape;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
@@ -15,7 +16,6 @@ import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 
 @Environment(EnvType.CLIENT)
@@ -24,7 +24,7 @@ public abstract class AdvancedEntityGuideRenderer extends AdvancedAbstractGuideR
     protected final BakedArmature armature;
     protected final SkinTextureData texture;
 
-    protected final RenderType renderType;
+    protected final IRenderType renderType;
 
     public AdvancedEntityGuideRenderer() {
         this.armature = getArmature();
@@ -36,7 +36,7 @@ public abstract class AdvancedEntityGuideRenderer extends AdvancedAbstractGuideR
 
     public abstract BakedArmature getArmature();
 
-    public RenderType getRenderType(SkinTextureData texture) {
+    public IRenderType getRenderType(SkinTextureData texture) {
         return SkinRenderType.entityCutoutNoCull(OpenResourceLocation.parse(texture.getName()));
     }
 

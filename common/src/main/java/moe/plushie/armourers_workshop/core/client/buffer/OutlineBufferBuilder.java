@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.buffer;
 
+import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
-import net.minecraft.client.renderer.RenderType;
 
 public class OutlineBufferBuilder extends BufferBuilder {
 
@@ -10,7 +10,7 @@ public class OutlineBufferBuilder extends BufferBuilder {
     private int blue = 255;
     private int alpha = 255;
 
-    public OutlineBufferBuilder(RenderType renderType, int size) {
+    public OutlineBufferBuilder(IRenderType renderType, int size) {
         super(renderType, size);
     }
 
