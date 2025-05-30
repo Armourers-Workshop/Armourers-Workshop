@@ -16,6 +16,11 @@ public interface ISkinGeometryFace {
     ISkinGeometryType getType();
 
     /**
+     * Gets the geometry options;
+     */
+    ISkinGeometryOptions getOptions();
+
+    /**
      * Gets the face transform.
      */
     ITransform3f getTransform();

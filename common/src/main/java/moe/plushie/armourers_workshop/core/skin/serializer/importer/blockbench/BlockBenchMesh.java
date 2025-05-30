@@ -13,6 +13,8 @@ public class BlockBenchMesh extends BlockBenchElement {
     private final boolean mirrorUV;
     private final boolean allowMirrorModeling;
 
+    private final String renderOrder;
+
     private final OpenVector2f uvOffset;
 
     private final OpenVector3f origin;
@@ -21,13 +23,14 @@ public class BlockBenchMesh extends BlockBenchElement {
     private final Map<String, BlockBenchMeshFace> faces;
     private final Map<String, OpenVector3f> vertices;
 
-    public BlockBenchMesh(String uuid, String name, String type, boolean allowExport, boolean allowMirrorModeling, boolean boxUV, boolean mirrorUV, OpenVector2f uvOffset, OpenVector3f origin, OpenVector3f rotation, Map<String, BlockBenchMeshFace> faces, Map<String, OpenVector3f> vertices) {
+    public BlockBenchMesh(String uuid, String name, String type, boolean allowExport, boolean allowMirrorModeling, String renderOrder, boolean boxUV, boolean mirrorUV, OpenVector2f uvOffset, OpenVector3f origin, OpenVector3f rotation, Map<String, BlockBenchMeshFace> faces, Map<String, OpenVector3f> vertices) {
         super(uuid, name, type, allowExport);
         this.origin = origin;
         this.rotation = rotation;
         this.boxUV = boxUV;
         this.mirrorUV = mirrorUV;
         this.allowMirrorModeling = allowMirrorModeling;
+        this.renderOrder = renderOrder;
         this.uvOffset = uvOffset;
         this.faces = faces;
         this.vertices = vertices;
@@ -49,6 +52,10 @@ public class BlockBenchMesh extends BlockBenchElement {
         return mirrorUV;
     }
 
+    public String getRenderOrder() {
+        return renderOrder;
+    }
+
     public OpenVector2f getUVOffset() {
         return uvOffset;
     }
@@ -66,6 +73,8 @@ public class BlockBenchMesh extends BlockBenchElement {
         protected boolean boxUV = false;
         protected boolean mirrorUV = false;
         protected boolean allowMirrorModeling = false;
+
+        protected String renderOrder = "default"; // default,behind,in_front
 
         protected OpenVector2f uvOffset = OpenVector2f.ZERO;
 
@@ -85,6 +94,10 @@ public class BlockBenchMesh extends BlockBenchElement {
 
         public void allowMirrorModeling(boolean allowMirrorModeling) {
             this.allowMirrorModeling = allowMirrorModeling;
+        }
+
+        public void renderOrder(String renderOrder) {
+            this.renderOrder = renderOrder;
         }
 
         public void origin(OpenVector3f origin) {
@@ -109,7 +122,7 @@ public class BlockBenchMesh extends BlockBenchElement {
 
         @Override
         public BlockBenchMesh build() {
-            return new BlockBenchMesh(uuid, name, type, allowExport, allowMirrorModeling, boxUV, mirrorUV, uvOffset, origin, rotation, faces, vertices);
+            return new BlockBenchMesh(uuid, name, type, allowExport, allowMirrorModeling, renderOrder, boxUV, mirrorUV, uvOffset, origin, rotation, faces, vertices);
         }
     }
 }

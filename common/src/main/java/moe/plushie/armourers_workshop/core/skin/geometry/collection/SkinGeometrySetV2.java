@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.geometry.collection;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometry;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryOptions;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometrySet;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
@@ -52,8 +53,9 @@ public class SkinGeometrySetV2 extends SkinGeometrySet<SkinGeometry> {
         private final SkinGeometryType type;
         private final SkinTextureBox skyBox;
 
-        public Box(OpenRectangle3f boundingBox, SkinGeometryType type, OpenTransform3f transform, SkinTextureBox skyBox) {
+        public Box(OpenRectangle3f boundingBox, SkinGeometryType type, SkinGeometryOptions options, OpenTransform3f transform, SkinTextureBox skyBox) {
             this.type = type;
+            this.options = options;
             this.transform = transform;
             this.boundingBox = boundingBox;
             this.skyBox = skyBox;
@@ -88,8 +90,9 @@ public class SkinGeometrySetV2 extends SkinGeometrySet<SkinGeometry> {
         private final SkinGeometryType type;
         private final List<SkinMeshFace> faces;
 
-        public Mesh(SkinGeometryType type, OpenTransform3f transform, SkinTexturePos texturePos, List<SkinMeshFace> faces) {
+        public Mesh(SkinGeometryType type, SkinGeometryOptions options, OpenTransform3f transform, SkinTexturePos texturePos, List<SkinMeshFace> faces) {
             this.type = type;
+            this.options = options;
             this.transform = transform;
             this.texturePos = texturePos;
             this.faces = faces;

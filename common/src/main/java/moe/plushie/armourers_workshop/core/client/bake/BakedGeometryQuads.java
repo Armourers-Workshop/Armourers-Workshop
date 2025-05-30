@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.core.skin.SkinPreviewData;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryFace;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryOptions;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.skin.geometry.cube.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.geometry.cube.SkinCubeFaceCuller;
@@ -105,7 +106,7 @@ public class BakedGeometryQuads {
                 var id = dir.get3DDataValue();
                 var shape = new OpenRectangle3f(x, y, z, 1, 1, 1);
                 var transform = OpenTransform3f.IDENTITY;
-                faces.add(new SkinCubeFace(id, SkinGeometryTypes.BLOCK_SOLID, transform, null, shape, dir, paintColor, 255));
+                faces.add(new SkinCubeFace(id, SkinGeometryTypes.BLOCK_SOLID, SkinGeometryOptions.EMPTY, transform, null, shape, dir, paintColor, 255));
             });
             if (!faces.isEmpty()) {
                 var quads = new BakedGeometryQuads(OpenVoxelShape.box(box.getBounds()), new ColorDescriptor(), new SkinUsedCounter());

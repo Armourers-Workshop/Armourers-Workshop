@@ -101,7 +101,7 @@ public class SkinCubeFaceCuller {
         var indexedMap = new IndexedMap(geometries, bounds);
         var rect = new OpenRectangle3i(0, 0, 0, bounds.width(), bounds.height(), bounds.depth());
         var flags = cullFaceFlags(geometries, indexedMap, rect);
-        var faces = new ArrayList<SkinGeometryFace>();
+        var result = new SearchResult(SkinPartTypes.UNKNOWN, rect, OpenVector3i.ZERO);
         for (int i = 0; i < geometries.size(); ++i) {
             SkinCube geometry = null;
             for (var dir : OpenDirection.values()) {
@@ -111,12 +111,12 @@ public class SkinCubeFaceCuller {
                     }
                     var face = geometry.getFace(dir);
                     if (face != null) {
-                        faces.add(face);
+                        result.addFace(face);
                     }
                 }
             }
         }
-        return faces;
+        return result.getFaces();
     }
 
     private static BitSet cullFaceFlags(SkinGeometrySet<?> geometries, IndexedMap map, OpenRectangle3i rect) {

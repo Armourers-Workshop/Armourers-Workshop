@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.core.math.OpenRectangle2f;
 import moe.plushie.armourers_workshop.core.math.OpenVector2f;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
-import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureOptions;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureProperties;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 
@@ -205,17 +204,16 @@ public class ChunkTextureData {
 
     public static class OptionsRef implements ChunkVariable {
 
-        private final SkinTextureOptions textureOptions;
+        private final long value;
         private final ChunkColorSection section;
 
-        public OptionsRef(ChunkColorSection section, SkinTextureOptions options) {
+        public OptionsRef(ChunkColorSection section, long value) {
+            this.value = value;
             this.section = section;
-            this.textureOptions = options;
         }
 
         @Override
         public void writeToStream(ChunkOutputStream stream) throws IOException {
-            long value = textureOptions.asLong();
             stream.writeFixedInt((int) (value), section.textureIndexBytes);
             stream.writeFixedInt((int) (value >> 32), section.textureIndexBytes);
         }

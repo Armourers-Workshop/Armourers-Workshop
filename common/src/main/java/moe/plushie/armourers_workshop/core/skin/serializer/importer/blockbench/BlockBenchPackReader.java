@@ -75,6 +75,7 @@ public class BlockBenchPackReader {
                 object.at("inflate", it -> builder.inflate(it.floatValue()));
 
                 object.at("allow_mirror_modeling", it -> builder.allowMirrorModeling(it.boolValue()));
+                object.at("render_order", it -> builder.renderOrder(it.stringValue()));
                 object.at("box_uv", it -> builder.boxUV(it.boolValue()));
                 object.at("mirror_uv", it -> builder.mirrorUV(it.boolValue()));
                 object.at("uv_offset", it -> builder.uvOffset(it.vector2fValue()));
@@ -94,6 +95,7 @@ public class BlockBenchPackReader {
                 object.at("rotation", it -> builder.rotation(it.vector3fValue()));
 
                 object.at("allow_mirror_modeling", it -> builder.allowMirrorModeling(it.boolValue()));
+                object.at("render_order", it -> builder.renderOrder(it.stringValue()));
                 object.at("box_uv", it -> builder.boxUV(it.boolValue()));
                 object.at("mirror_uv", it -> builder.mirrorUV(it.boolValue()));
                 object.at("uv_offset", it -> builder.uvOffset(it.vector2fValue()));

@@ -18,6 +18,7 @@ import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationFunction;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationKeyframe;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationLoop;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationPoint;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryOptions;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryVertex;
@@ -196,12 +197,15 @@ public class BlockBenchExporter {
 
         var rect = new OpenRectangle3f(x, y, z, w, h, d).inflate(inflate);
         var type = cube.getType(isCulling());
+        var options = new SkinGeometryOptions();
         var transform = OpenTransform3f.create(OpenVector3f.ZERO, cube.rotation, OpenVector3f.ONE, cube.pivot, OpenVector3f.ZERO);
-        return new SkinGeometrySetV2.Box(rect, type, transform, skyBox);
+        options.setRenderOrder(exportRenderOrder(cube.renderOrder));
+        return new SkinGeometrySetV2.Box(rect, type, options, transform, skyBox);
     }
 
     protected SkinGeometrySetV2.Mesh exportMesh(Mesh mesh, TextureSet texture) {
         var type = mesh.getType(isCulling());
+        var options = new SkinGeometryOptions();
         var faces = new ArrayList<SkinMeshFace>();
         var transform = OpenTransform3f.create(mesh.origin, mesh.rotation, OpenVector3f.ONE, OpenVector3f.ZERO, OpenVector3f.ZERO);
         var defaultTexturePos = new SkinTexturePos[1];
@@ -222,10 +226,11 @@ public class BlockBenchExporter {
                 vertices.add(new SkinGeometryVertex(vertexId, position, normal, textureCoords));
                 TextureResolution.applyBoundary(texturePos.getProvider(), textureCoords.x(), textureCoords.y());
             });
-            faces.add(new SkinMeshFace(faceId, type, transform, texturePos, vertices));
+            faces.add(new SkinMeshFace(faceId, type, options, transform, texturePos, vertices));
             defaultTexturePos[0] = texturePos;
         });
-        return new SkinGeometrySetV2.Mesh(type, transform, defaultTexturePos[0], faces);
+        options.setRenderOrder(exportRenderOrder(mesh.renderOrder));
+        return new SkinGeometrySetV2.Mesh(type, options, transform, defaultTexturePos[0], faces);
     }
 
     protected OpenItemTransforms exportItemTransforms(Map<String, BlockBenchDisplay> transforms) {
@@ -272,6 +277,13 @@ public class BlockBenchExporter {
         return results;
     }
 
+    protected int exportRenderOrder(String name) {
+        return switch (name) {
+            case "behind" -> 1;
+            case "in_front" -> 2;
+            default -> 0;
+        };
+    }
 
     public void setOffset(OpenVector3f offset) {
         this.offset = offset;
@@ -399,6 +411,7 @@ public class BlockBenchExporter {
         public TextureUV uv;
 
         public float inflate;
+        public String renderOrder;
         public boolean mirror = false;
 
         public Cube(BlockBenchCube cube) {
@@ -410,6 +423,7 @@ public class BlockBenchExporter {
             this.rotation = cube.getRotation();
 
             this.uv = TextureUV.createUV(cube);
+            this.renderOrder = cube.getRenderOrder();
         }
 
         public void transform(OpenPoseStack poseStack) {
@@ -430,6 +444,8 @@ public class BlockBenchExporter {
 
     protected static class Mesh {
 
+        public String renderOrder;
+
         public OpenVector3f origin;
         public OpenVector3f pivot;
         public OpenVector3f rotation;
@@ -440,6 +456,7 @@ public class BlockBenchExporter {
             this.origin = mesh.getOrigin();
             this.pivot = mesh.getOrigin();
             this.rotation = mesh.getRotation();
+            this.renderOrder = mesh.getRenderOrder();
             for (var entry : mesh.getFaces().entrySet()) {
                 try {
                     faces.add(new MeshFace(entry.getKey(), entry.getValue(), mesh));

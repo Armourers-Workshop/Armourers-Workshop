@@ -51,7 +51,7 @@ import java.util.List;
  * palette data:          | length | PALE | flag | opt(VB)/reserved(VB) |< paint type(1B)/used bytes(1B) >[ palette entry(VB) ]|
  * geometry entry (v1):   | x(1B)/y(1B)/z(1B) |[ face options(1B) | color index(VB) ](1-6)]|
  * geometry entry (v2):   | origin(12B)/size(12B) | type(4b)/translate(12B)/rotation(12B)/scale(12B)/pivot(12B)/offset(12B) |[ face options(1B) | u(VB)/v(VB):first or s(VB)/t(VB):second(optional) ]|
- * geometry entry (v3):   | type(4B)/transform(4B)/vertex count(4B)/index count(4B)/reserved(52B) |[ vertex(12B)/normal(12B)/uv(VB) ]|[ index(4B) ]|
+ * geometry entry (v3):   | type(4B)/transform(4B)/vertex count(4B)/index count(4B)/options(8B)/reserved(44B) |[ vertex(12B)/normal(12B)/uv(VB) ]|[ index(4B) ]|
  * palette entry (v1):    | RRGGBB/AARRGGBB |
  * palette entry (v2):    | id(VB)/parent id(VB)/x(4B)/y(4B)/w(4B)/h(4B)/ani(4B)/opt(VB) | data count(4B)/raw data(nB) |
  * chunk flag:            1 encrypt, 2 gzip, 3 encrypt+gzip

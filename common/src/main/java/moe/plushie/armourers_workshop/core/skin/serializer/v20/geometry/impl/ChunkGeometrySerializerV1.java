@@ -15,6 +15,9 @@ import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
+/**
+ * geometry entry (v1):   | x(1B)/y(1B)/z(1B) |[ face options(1B) | color index(VB) ](1-6)]|
+ */
 public class ChunkGeometrySerializerV1 extends ChunkGeometrySerializer {
 
     @Override

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.serializer.v20.geometry.impl;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector2f;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryOptions;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.cube.SkinCube;
 import moe.plushie.armourers_workshop.core.skin.geometry.cube.SkinCubeFace;
@@ -23,6 +24,9 @@ import java.io.IOException;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
 
+/**
+ * geometry entry (v2):   | origin(12B)/size(12B) | type(4b)/translate(12B)/rotation(12B)/scale(12B)/pivot(12B)/offset(12B) |[ face options(1B) | u(VB)/v(VB):first or s(VB)/t(VB):second(optional) ]|
+ */
 public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
 
     @Override
@@ -122,17 +126,28 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
         }
 
         protected void parseTextures() {
+            // dir: texture pos.
+            // dir | 0x80: sky box.
+            // dir | 0x40: texture options .
+            // 0xff: cube options.
             startUVs.clear();
             endUVs.clear();
             optionsValues.clear();
             texturePoss.clear();
+            options = SkinGeometryOptions.EMPTY;
             SkinTextureBox textureBox = null;
             int usedBytes = palette.getTextureIndexBytes();
             for (int i = 0; i < faceCount; ++i) {
                 int index = calcStride(usedBytes, i);
                 int face = slice.getByte(index);
+                // a cube options.
+                if ((face & 0xff) == 0xff) {
+                    options = new SkinGeometryOptions(slice.getTextureOptions(index + 1));
+                    continue;
+                }
+                // a texture options.
                 if ((face & 0x40) != 0) {
-                    var opt = slice.getTextureOptions(index + 1);
+                    var opt = new SkinTextureOptions(slice.getTextureOptions(index + 1));
                     for (var dir : OpenDirection.valuesFromSet(face)) {
                         optionsValues.put(dir, opt);
                     }
@@ -145,6 +160,7 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
                         startUVs.put(dir, pos);
                     }
                 }
+                // a sky texture pos.
                 if ((face & 0x80) != 0) {
                     var ref = palette.readTexture(pos);
                     if (ref == null) {
@@ -181,6 +197,7 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
     protected static class Encoder implements ChunkGeometrySerializer.Encoder<SkinCube> {
 
         private OpenRectangle3f boundingBox = OpenRectangle3f.ZERO;
+        private SkinGeometryOptions options = SkinGeometryOptions.EMPTY;
         private OpenTransform3f transform = OpenTransform3f.IDENTITY;
 
         private final SortedMap<OpenVector2f> startValues = new SortedMap<>();
@@ -212,9 +229,10 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
                     optionsValues.put(face, value.getOptions(), provider);
                 }
             }
+            options = geometry.getOptions();
             transform = geometry.getTransform();
             boundingBox = geometry.getBoundingBox();
-            return startValues.size() + endValues.size() + optionsValues.size();
+            return getEstimatedTotal();
         }
 
         @Override
@@ -223,10 +241,16 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
             stream.writeRectangle3f(boundingBox);
             stream.writeTransformf(transform);
 
+            // geometry options(8b).
+            if (!options.isEmpty()) {
+                stream.writeByte(0xff);
+                stream.writeVariable(palette.writeTextureOptions(options.asLong()));
+            }
+
             // face: <texture ref>
             optionsValues.forEach((key, value) -> {
                 stream.writeByte(0x40 | value);
-                stream.writeVariable(palette.writeTextureOptions(key.getKey(), key.getValue()));
+                stream.writeVariable(palette.writeTextureOptions(key.getKey().asLong()));
             });
             startValues.forEach((key, value) -> {
                 stream.writeByte(value);
@@ -240,6 +264,14 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
             startValues.clear();
             endValues.clear();
             optionsValues.clear();
+        }
+
+        protected int getEstimatedTotal() {
+            int total = startValues.size() + endValues.size() + optionsValues.size();
+            if (!options.isEmpty()) {
+                return total + 1; // a geometry options.
+            }
+            return total;
         }
     }
 

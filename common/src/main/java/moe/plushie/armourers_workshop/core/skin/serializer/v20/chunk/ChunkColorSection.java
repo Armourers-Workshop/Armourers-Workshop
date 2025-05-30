@@ -226,7 +226,7 @@ public abstract class ChunkColorSection {
             return textureList.add(uv, this);
         }
 
-        public ChunkTextureData.OptionsRef putTextureOptions(SkinTextureOptions options) {
+        public ChunkTextureData.OptionsRef putTextureOptions(long options) {
             return new ChunkTextureData.OptionsRef(this, options);
         }
 

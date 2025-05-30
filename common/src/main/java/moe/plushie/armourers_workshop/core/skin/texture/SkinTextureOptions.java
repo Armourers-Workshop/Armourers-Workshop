@@ -27,6 +27,11 @@ public class SkinTextureOptions implements ISkinTextureOptions {
         return this.rotation;
     }
 
+    public boolean isEmpty() {
+        return value == 0;
+    }
+
+    @Override
     public long asLong() {
         return value;
     }

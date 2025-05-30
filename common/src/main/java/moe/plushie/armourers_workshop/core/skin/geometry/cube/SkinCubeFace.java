@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector2f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryFace;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryOptions;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryVertex;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
@@ -20,14 +21,16 @@ public class SkinCubeFace extends SkinGeometryFace {
     public final int alpha;
 
     private final SkinGeometryType type;
+    private final SkinGeometryOptions options;
     private final OpenDirection direction;
     private final SkinPaintColor paintColor;
 
     private final OpenRectangle3f boundingBox;
 
-    public SkinCubeFace(int id, SkinGeometryType type, OpenTransform3f transform, SkinTexturePos texturePos, OpenRectangle3f boundingBox, OpenDirection direction, SkinPaintColor color, int alpha) {
+    public SkinCubeFace(int id, SkinGeometryType type, SkinGeometryOptions options, OpenTransform3f transform, SkinTexturePos texturePos, OpenRectangle3f boundingBox, OpenDirection direction, SkinPaintColor color, int alpha) {
         this.id = id;
         this.type = type;
+        this.options = options;
         this.transform = transform;
         this.texturePos = texturePos;
         this.paintColor = color;
@@ -75,6 +78,11 @@ public class SkinCubeFace extends SkinGeometryFace {
     }
 
     @Override
+    public SkinGeometryOptions getOptions() {
+        return options;
+    }
+
+    @Override
     public SkinTexturePos getTexturePos() {
         if (texturePos != null) {
             return texturePos;
@@ -84,7 +92,12 @@ public class SkinCubeFace extends SkinGeometryFace {
 
     @Override
     public float getPriority() {
-        return direction.get3DDataValue();
+        var priority = direction.get3DDataValue();
+        return switch (options.getRenderOrder()) {
+            case 1 -> priority - 1000; // behind
+            case 2 -> priority + 1000; // in_front
+            default -> priority;
+        };
     }
 
     @Override

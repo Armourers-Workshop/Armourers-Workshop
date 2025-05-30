@@ -13,6 +13,8 @@ public class BlockBenchCube extends BlockBenchElement {
     private final boolean mirrorUV;
     private final boolean allowMirrorModeling;
 
+    private final String renderOrder;
+
     private final OpenVector2f uvOffset;
 
     private final OpenVector3f from;
@@ -24,11 +26,12 @@ public class BlockBenchCube extends BlockBenchElement {
 
     private final Map<OpenDirection, BlockBenchCubeFace> faces;
 
-    public BlockBenchCube(String uuid, String name, String type, boolean allowExport, boolean allowMirrorModeling, boolean boxUV, boolean mirrorUV, OpenVector2f uvOffset, OpenVector3f from, OpenVector3f to, OpenVector3f origin, OpenVector3f rotation, float inflate, Map<OpenDirection, BlockBenchCubeFace> faces) {
+    public BlockBenchCube(String uuid, String name, String type, boolean allowExport, boolean allowMirrorModeling, String renderOrder, boolean boxUV, boolean mirrorUV, OpenVector2f uvOffset, OpenVector3f from, OpenVector3f to, OpenVector3f origin, OpenVector3f rotation, float inflate, Map<OpenDirection, BlockBenchCubeFace> faces) {
         super(uuid, name, type, allowExport);
         this.boxUV = boxUV;
         this.mirrorUV = mirrorUV;
         this.allowMirrorModeling = allowMirrorModeling;
+        this.renderOrder = renderOrder;
         this.uvOffset = uvOffset;
         this.from = from;
         this.to = to;
@@ -66,6 +69,10 @@ public class BlockBenchCube extends BlockBenchElement {
         return mirrorUV;
     }
 
+    public String getRenderOrder() {
+        return renderOrder;
+    }
+
     public OpenVector2f getUVOffset() {
         return uvOffset;
     }
@@ -88,6 +95,8 @@ public class BlockBenchCube extends BlockBenchElement {
         protected OpenVector3f origin = OpenVector3f.ZERO;
         protected OpenVector3f rotation = OpenVector3f.ZERO;
 
+        protected String renderOrder = "default"; // default,behind,in_front
+
         protected float inflate = 0;
 
         protected final Map<OpenDirection, BlockBenchCubeFace> faces = new HashMap<>();
@@ -102,6 +111,10 @@ public class BlockBenchCube extends BlockBenchElement {
 
         public void allowMirrorModeling(boolean allowMirrorModeling) {
             this.allowMirrorModeling = allowMirrorModeling;
+        }
+
+        public void renderOrder(String renderOrder) {
+            this.renderOrder = renderOrder;
         }
 
         public void from(OpenVector3f from) {
@@ -134,7 +147,7 @@ public class BlockBenchCube extends BlockBenchElement {
 
         @Override
         public BlockBenchCube build() {
-            return new BlockBenchCube(uuid, name, type, allowExport, allowMirrorModeling, boxUV, mirrorUV, uvOffset, from, to, origin, rotation, inflate, faces);
+            return new BlockBenchCube(uuid, name, type, allowExport, allowMirrorModeling, renderOrder, boxUV, mirrorUV, uvOffset, from, to, origin, rotation, inflate, faces);
         }
     }
 }

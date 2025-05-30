@@ -84,7 +84,7 @@ public class ChunkPaletteData implements ChunkVariable {
         return _sectionAt(SkinPaintTypes.TEXTURE, 0).getTexture(uv);
     }
 
-    public ChunkTextureData.OptionsRef writeTextureOptions(SkinTextureOptions options, SkinTextureData provider) {
+    public ChunkTextureData.OptionsRef writeTextureOptions(long options) {
         // texture + black(0x000000) + 0(used bytes)
         return _mutableSectionAt(SkinPaintTypes.TEXTURE, 0).putTextureOptions(options);
     }

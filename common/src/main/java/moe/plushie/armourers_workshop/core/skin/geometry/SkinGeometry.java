@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 
 public abstract class SkinGeometry implements ISkinGeometry {
 
+    protected SkinGeometryOptions options = SkinGeometryOptions.EMPTY;
     protected OpenTransform3f transform = OpenTransform3f.IDENTITY;
 
     @Override
@@ -20,6 +21,11 @@ public abstract class SkinGeometry implements ISkinGeometry {
 
     @Override
     public abstract SkinGeometryType getType();
+
+    @Override
+    public SkinGeometryOptions getOptions() {
+        return options;
+    }
 
     @Override
     public Iterable<? extends SkinGeometryFace> getFaces() {

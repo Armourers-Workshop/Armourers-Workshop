@@ -54,7 +54,7 @@ public abstract class SkinCube extends SkinGeometry {
         }
         var transform = getTransform();
         var boundingBox = getBoundingBox();
-        return new SkinCubeFace(id, geometryType, transform, texturePos, boundingBox, dir, paintColor, alpha);
+        return new SkinCubeFace(id, geometryType, options, transform, texturePos, boundingBox, dir, paintColor, alpha);
     }
 
     @Override

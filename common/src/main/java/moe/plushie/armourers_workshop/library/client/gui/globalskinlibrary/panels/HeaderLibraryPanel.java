@@ -128,15 +128,9 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
     private BiConsumer<HeaderLibraryPanel, UIControl> redirect(GlobalSkinLibraryWindow.Page page) {
         return (self, sender) -> {
             switch (page) {
-                case HOME:
-                    self.router.showNewHome();
-                    break;
-                case LIST_USER_SKINS:
-                    self.router.showSkinList(library.getUser());
-                    break;
-                default:
-                    self.router.showPage(page);
-                    break;
+                case HOME -> self.router.showNewHome();
+                case LIST_USER_SKINS -> self.router.showSkinList(library.getUser());
+                default -> self.router.showPage(page);
             }
         };
     }

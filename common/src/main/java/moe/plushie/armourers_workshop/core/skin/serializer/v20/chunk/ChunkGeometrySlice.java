@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.geometry.ChunkGeometrySerializer;
 import moe.plushie.armourers_workshop.core.skin.serializer.v20.geometry.ChunkGeometrySerializers;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
-import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureOptions;
 import moe.plushie.armourers_workshop.core.utils.OpenSliceAccessor;
 
 import java.util.BitSet;
@@ -167,10 +166,10 @@ public class ChunkGeometrySlice implements OpenSliceAccessor.Provider<SkinGeomet
         return new OpenVector2f(x, y);
     }
 
-    public SkinTextureOptions getTextureOptions(int offset) {
+    public long getTextureOptions(int offset) {
         int usedBytes = palette.getTextureIndexBytes();
         int x = getFixedInt(offset, usedBytes);
         int y = getFixedInt(offset + usedBytes, usedBytes);
-        return new SkinTextureOptions(((long) y << 32) | x);
+        return ((long) y << 32) | x;
     }
 }
