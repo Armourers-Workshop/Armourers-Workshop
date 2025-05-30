@@ -29,9 +29,8 @@ public class SkinVertexBufferBuilder implements IBufferSource {
     protected final HashMap<IRenderType, AbstractBufferBuilder> startedUserBufferBuilders = new HashMap<>();
 
     protected final Pipeline solidPipeline = new Pipeline();
+    protected final Pipeline outlinePipeline = new Pipeline();
     protected final Pipeline translucentPipeline = new Pipeline();
-    protected final Pipeline outlineSolidPipeline = new Pipeline();
-    protected final Pipeline outlineTranslucentPipeline = new Pipeline();
 
     public SkinVertexBufferBuilder() {
     }
@@ -45,22 +44,20 @@ public class SkinVertexBufferBuilder implements IBufferSource {
 
     public static SkinVertexBufferBuilder of(IBufferSource bufferSource) {
         var builder = getInstance();
-        attach(bufferSource, SkinRenderSheets.solidBlockSheet(), builder::endBatch);
         if (bufferSource == AbstractBufferSource.outline()) {
             attach(bufferSource, SkinRenderSheets.outlineSolidBlockSheet(), builder::endOutlineBatch);
+        } else {
+            attach(bufferSource, SkinRenderSheets.solidBlockSheet(), builder::endBatch);
         }
         return builder;
     }
 
     public static SkinVertexBufferBuilder of(IBufferSource bufferSource, BakedRenderInfo renderInfo) {
         var builder = getInstance();
-        attach(bufferSource, SkinRenderSheets.solidBlockSheet(), builder::endBatch);
         if (bufferSource == AbstractBufferSource.outline()) {
             attach(bufferSource, SkinRenderSheets.outlineSolidBlockSheet(), builder::endOutlineBatch);
-            if (renderInfo.hasTranslucent()) {
-                attach(bufferSource, SkinRenderSheets.outlineTranslucentBlockSheet(), builder::endOutlineTranslucentBatch);
-            }
         } else {
+            attach(bufferSource, SkinRenderSheets.solidBlockSheet(), builder::endBatch);
             if (renderInfo.hasTranslucent()) {
                 attach(bufferSource, SkinRenderSheets.glintTranslucentSheet(), builder::endTranslucentBatch);
             }
@@ -81,8 +78,7 @@ public class SkinVertexBufferBuilder implements IBufferSource {
         builder.userBufferBuilders.clear();
         builder.solidPipeline.clear();
         builder.translucentPipeline.clear();
-        builder.outlineSolidPipeline.clear();
-        builder.outlineTranslucentPipeline.clear();
+        builder.outlinePipeline.clear();
         ConcurrentBufferCompiler.clearAllCache();
     }
 
@@ -128,20 +124,13 @@ public class SkinVertexBufferBuilder implements IBufferSource {
     }
 
     public void endOutlineBatch() {
-        outlineSolidPipeline.end();
-    }
-
-    public void endOutlineTranslucentBatch() {
-        outlineTranslucentPipeline.end();
+        endBatch();
+        outlinePipeline.end();
     }
 
     private void uploadPass(ShaderVertexObject pass) {
         if (pass.isOutline()) {
-            if (pass.isTranslucent()) {
-                outlineTranslucentPipeline.add(pass);
-            } else {
-                outlineSolidPipeline.add(pass);
-            }
+            outlinePipeline.add(pass);
         } else {
             if (pass.isTranslucent()) {
                 translucentPipeline.add(pass);
