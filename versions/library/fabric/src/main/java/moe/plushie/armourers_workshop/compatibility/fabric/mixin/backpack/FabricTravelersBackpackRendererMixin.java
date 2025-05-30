@@ -43,9 +43,9 @@ public class FabricTravelersBackpackRendererMixin {
                 if (methods[0] == null) {
                     methods[0] = ComponentUtils.class.getDeclaredMethod("getWearingBackpack", Player.class);
                 }
-                return (ItemStack) methods[0].invoke(player);
+                return (ItemStack) methods[0].invoke(ComponentUtils.class, player);
             } catch (Exception e) {
-                return null;
+                return ItemStack.EMPTY;
             }
         };
         TravelersBackpackAddon.register(getWearingBackpack);
