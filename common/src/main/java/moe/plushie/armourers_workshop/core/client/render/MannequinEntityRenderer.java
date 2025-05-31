@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -37,7 +38,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
     private OpenResourceLocation texture;
     private BakedEntityTexture bakedTexture;
 
-    private boolean modelState = false;
+    private EntityTextureModel.Type textureModel = EntityTextureModel.Type.STEVE;
     private boolean enableChildRenderer = false;
 
     public MannequinEntityRenderer(Context context) {
@@ -71,7 +72,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
         var textureLoader = PlayerTextureLoader.getInstance();
         this.texture = textureLoader.getTextureLocation(entity);
         this.bakedTexture = textureLoader.getTextureModel(texture);
-        this.applyTextureModel(bakedTexture);
+        this.applyTextureModel(entity.getTextureModel());
         super.getModel().setAllVisible(entity.isModelVisible());
         this.enableChildRenderer = true;
         super.render(entity, f, partialTicks, poseStack, bufferSource, packedLightIn);
@@ -112,22 +113,21 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
         return mannequinRenderer;
     }
 
-    private void applyTextureModel(BakedEntityTexture texture) {
-        boolean newModelState = texture != null && texture.isSlimModel();
-        if (modelState == newModelState) {
+    private void applyTextureModel(EntityTextureModel.Type newValue) {
+        if (textureModel == newValue) {
             return;
         }
-        modelState = newModelState;
-        if (modelState) {
-            setModel(slimModel);
-            replaceLayer(slimArmorLayer, normalArmorLayer);
-        } else {
+        textureModel = newValue;
+        if (newValue == EntityTextureModel.Type.STEVE) {
             setModel(normalModel);
-            replaceLayer(normalArmorLayer, slimArmorLayer);
+            replaceTo(slimArmorLayer, normalArmorLayer);
+        } else {
+            setModel(slimModel);
+            replaceTo(normalArmorLayer, slimArmorLayer);
         }
     }
 
-    private void replaceLayer(RenderLayer<T, MannequinModel<T>> toLayer, RenderLayer<T, MannequinModel<T>> fromLayer) {
+    private void replaceTo(RenderLayer<T, MannequinModel<T>> fromLayer, RenderLayer<T, MannequinModel<T>> toLayer) {
         int index = layers.indexOf(fromLayer);
         if (index >= 0) {
             layers[index] = toLayer;

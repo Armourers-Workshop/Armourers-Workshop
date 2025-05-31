@@ -492,7 +492,7 @@
   "inventory.armourers_workshop.wardrobe.man_rotations.random": "Рандом",
   "inventory.armourers_workshop.wardrobe.man_rotations.reset": "Ресетуј",
   "inventory.armourers_workshop.wardrobe.man_texture": "Маннекуин Тектуре",
-  "inventory.armourers_workshop.wardrobe.man_texture.dropdown.user": "Корисник",
+  "inventory.armourers_workshop.wardrobe.man_texture.userType.user": "Корисник",
   "inventory.armourers_workshop.wardrobe.man_texture.set": "Сет",
   "inventory.armourers_workshop.wardrobe.outfits": "Одећа",
   "inventory.armourers_workshop.wardrobe.skins": "Скинс",

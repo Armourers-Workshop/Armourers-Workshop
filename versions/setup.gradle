@@ -138,7 +138,7 @@ tasks.register("switchCoreSource") {
             apply.each {
                 if (it.key != it.value && !it.value.exists()) {
                     it.key.renameTo(it.value)
-                    println "Switch ${it.value.toString().replaceAll("(/.+/main/java/)", "")}"
+                    println "Change ${it.value.toString().replaceAll("(/.+/main/java/)", "")}"
                 }
             }
         }

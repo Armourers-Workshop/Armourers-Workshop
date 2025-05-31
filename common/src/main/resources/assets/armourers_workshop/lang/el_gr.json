@@ -494,7 +494,7 @@
   "inventory.armourers_workshop.wardrobe.man_rotations.random": "Τυχαία",
   "inventory.armourers_workshop.wardrobe.man_rotations.reset": "Reset",
   "inventory.armourers_workshop.wardrobe.man_texture": "Mannequin Texture",
-  "inventory.armourers_workshop.wardrobe.man_texture.dropdown.user": "Χρήστης",
+  "inventory.armourers_workshop.wardrobe.man_texture.userType.user": "Χρήστης",
   "inventory.armourers_workshop.wardrobe.man_texture.set": "Ορισμός",
   "inventory.armourers_workshop.wardrobe.outfits": "Εξαρτήματα",
   "inventory.armourers_workshop.wardrobe.skins": "Θέματα",

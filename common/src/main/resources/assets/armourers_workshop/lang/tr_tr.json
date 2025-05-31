@@ -493,7 +493,7 @@
   "inventory.armourers_workshop.wardrobe.man_rotations.random": "Rastgele",
   "inventory.armourers_workshop.wardrobe.man_rotations.reset": "Sıfırla",
   "inventory.armourers_workshop.wardrobe.man_texture": "Manken Dokusu",
-  "inventory.armourers_workshop.wardrobe.man_texture.dropdown.user": "Kullanıcı",
+  "inventory.armourers_workshop.wardrobe.man_texture.userType.user": "Kullanıcı",
   "inventory.armourers_workshop.wardrobe.man_texture.set": "Ayarlamak",
   "inventory.armourers_workshop.wardrobe.outfits": "Kıyafetler",
   "inventory.armourers_workshop.wardrobe.skins": "Deriler",

@@ -116,10 +116,10 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         if (newValue != null) {
             return;
         }
-        Pair<Integer, Integer> page = getPageBySkin(skinId);
+        var page = getPageBySkin(skinId);
         if (page != null) {
             // removed skin in here
-            for (int key : downloadedPageList.keySet()) {
+            for (var key : downloadedPageList.keySet()) {
                 if (key >= page.getKey()) {
                     downloadedPageList.remove(key);
                 }
@@ -146,7 +146,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     }
 
     private void addIconButton(float x, float y, float width, float height, float u, float v, String key, BiConsumer<SearchResultsLibraryPanel, UIControl> handler) {
-        UIButton button = new UIButton(new CGRect(x, y, width, height));
+        var button = new UIButton(new CGRect(x, y, width, height));
         button.setImage(ModTextures.iconImage(u, v, width, height, ModTextures.GLOBAL_SKIN_LIBRARY), UIControl.State.ALL);
         button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
         button.setTooltip(getDisplayText(key));
@@ -156,7 +156,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     }
 
     private UIButton addCommonButton(float x, float y, float width, float height, int u, int v, String key, BiConsumer<SearchResultsLibraryPanel, UIControl> handler) {
-        UIButton button = new UIButton(new CGRect(x, y, width, height));
+        var button = new UIButton(new CGRect(x, y, width, height));
         button.setImage(ModTextures.iconImage(u, v, width, height, ModTextures.BUTTONS), UIControl.State.ALL);
         button.setTooltip(NSString.localizedString(key));
         button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, handler);
@@ -231,7 +231,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     }
 
     protected void onPageJsonDownload(int pageIndex, SearchResult result) {
-        ArrayList<ServerSkin> entries = result.getSkins();
+        var entries = result.getSkins();
         totalPages = result.getTotalPages();
         totalResults = result.getTotalResults();
         downloadedPageList.put(pageIndex, entries);
@@ -246,7 +246,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     }
 
     private void onPageDidChange() {
-        ArrayList<ServerSkin> entries = downloadedPageList.getOrDefault(currentPage, new ArrayList<>());
+        var entries = downloadedPageList.getOrDefault(currentPage, new ArrayList<>());
         skinPanelResults.setEntries(entries);
         skinPanelResults.reloadData();
         resultTitle.setText(getResultsTitle());

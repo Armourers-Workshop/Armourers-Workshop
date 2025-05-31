@@ -21,6 +21,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
+import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.core.utils.Collections;
@@ -126,6 +127,20 @@ public class DataSerializers {
             return buffer.readNbtWithCodec(EntityTextureDescriptor.CODEC);
         }
     };
+
+    public static final IEntitySerializer<EntityTextureModel.Type> PLAYER_TEXTURE_MODEL = new IEntitySerializer<EntityTextureModel.Type>() {
+
+        @Override
+        public void write(IFriendlyByteBuf buffer, EntityTextureModel.Type descriptor) {
+            buffer.writeInt(descriptor.ordinal());
+        }
+
+        @Override
+        public EntityTextureModel.Type read(IFriendlyByteBuf buffer) {
+            return EntityTextureModel.Type.values()[buffer.readInt()];
+        }
+    };
+
 
     public static final IEntitySerializer<EntityCollisionShape> COLLISION_SHAPE_OPT = new IEntitySerializer<EntityCollisionShape>() {
         @Override

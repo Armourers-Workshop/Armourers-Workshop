@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.texture;
 
+import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle2f;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.math.OpenVector2i;
@@ -240,6 +241,22 @@ public class EntityTextureModel {
 
         public interface IPixelConsumer {
             void accept(OpenVector2i texture, int x, int y, int z, OpenDirection dir);
+        }
+    }
+
+    public enum Type {
+        STEVE,
+        ALEX;
+
+        public static final IDataCodec<Type> CODEC = IDataCodec.STRING.xmap(Type::byName, it -> it.name().toLowerCase());
+
+        public static Type byName(String name) {
+            for (var value : Type.values()) {
+                if (value.name().toLowerCase().equals(name)) {
+                    return value;
+                }
+            }
+            return STEVE;
         }
     }
 }

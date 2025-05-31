@@ -493,7 +493,7 @@
   "inventory.armourers_workshop.wardrobe.man_rotations.random": "Ngẫu nhiên",
   "inventory.armourers_workshop.wardrobe.man_rotations.reset": "Cài lại",
   "inventory.armourers_workshop.wardrobe.man_texture": "Kết cấu ma-nơ-canh",
-  "inventory.armourers_workshop.wardrobe.man_texture.dropdown.user": "Người sử dụng",
+  "inventory.armourers_workshop.wardrobe.man_texture.userType.user": "Người sử dụng",
   "inventory.armourers_workshop.wardrobe.man_texture.set": "Bộ",
   "inventory.armourers_workshop.wardrobe.outfits": "Trang phục",
   "inventory.armourers_workshop.wardrobe.skins": "Da",

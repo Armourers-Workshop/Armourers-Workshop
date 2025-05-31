@@ -205,6 +205,7 @@ public class UpdateWardrobePacket extends CustomPacket {
         public static final auto MANNEQUIN_POSITION = entity(MannequinEntity::position, MannequinEntity::moveTo, DataSerializers.VECTOR_3D);
 
         public static final auto MANNEQUIN_TEXTURE = entity(MannequinEntity.DATA_TEXTURE);
+        public static final auto MANNEQUIN_TEXTURE_MODEL = entity(MannequinEntity.DATA_TEXTURE_MODEL);
 
 
         private static Field<Boolean> wardrobe(EquipmentSlot slotType) {

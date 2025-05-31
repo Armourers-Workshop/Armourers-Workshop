@@ -495,7 +495,7 @@
   "inventory.armourers_workshop.wardrobe.man_rotations.random": "随机",
   "inventory.armourers_workshop.wardrobe.man_rotations.reset": "重置",
   "inventory.armourers_workshop.wardrobe.man_texture": "模特皮肤",
-  "inventory.armourers_workshop.wardrobe.man_texture.dropdown.user": "玩家",
+  "inventory.armourers_workshop.wardrobe.man_texture.userType.user": "玩家",
   "inventory.armourers_workshop.wardrobe.man_texture.set": "设置",
   "inventory.armourers_workshop.wardrobe.outfits": "套装",
   "inventory.armourers_workshop.wardrobe.skins": "时装",

@@ -495,7 +495,7 @@
   "inventory.armourers_workshop.wardrobe.man_rotations.random": "ランダム",
   "inventory.armourers_workshop.wardrobe.man_rotations.reset": "リセット",
   "inventory.armourers_workshop.wardrobe.man_texture": "マネキンのテクスチャ",
-  "inventory.armourers_workshop.wardrobe.man_texture.dropdown.user": "ユーザー",
+  "inventory.armourers_workshop.wardrobe.man_texture.userType.user": "ユーザー",
   "inventory.armourers_workshop.wardrobe.man_texture.set": "設定",
   "inventory.armourers_workshop.wardrobe.outfits": "コーディネート",
   "inventory.armourers_workshop.wardrobe.skins": "スキン",

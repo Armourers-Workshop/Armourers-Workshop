@@ -495,7 +495,7 @@
   "inventory.armourers_workshop.wardrobe.man_rotations.random": "Zufällig",
   "inventory.armourers_workshop.wardrobe.man_rotations.reset": "Reset",
   "inventory.armourers_workshop.wardrobe.man_texture": "Mannequin Texture",
-  "inventory.armourers_workshop.wardrobe.man_texture.dropdown.user": "Benutzer",
+  "inventory.armourers_workshop.wardrobe.man_texture.userType.user": "Benutzer",
   "inventory.armourers_workshop.wardrobe.man_texture.set": "Bestätigen",
   "inventory.armourers_workshop.wardrobe.outfits": "Outfits",
   "inventory.armourers_workshop.wardrobe.skins": "Skins",
